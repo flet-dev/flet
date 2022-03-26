@@ -54,6 +54,10 @@
         <td>Card</td>
         <td>-</td>
     </tr>
+    <tr>
+        <td>ExpansionPanel</td>
+        <td>-</td>
+    </tr>
     <tr><th colspan="2">Base controls</th></tr>
     <tr>
         <td>Text</td>
@@ -130,7 +134,7 @@
         <td>-</td>
     </tr>
     <tr>
-        <td>TextField with an icon</td>
+        <td>-</td>
         <td>SearchBox</td>
     </tr>
     <tr>
@@ -138,7 +142,7 @@
         <td>Slider</td>
     </tr>
     <tr>
-        <td>-</td>
+        <td><a href="https://pub.dev/packages/flutter_spinbox">SpinBox</a></td>
         <td>SpinButton</td>
     </tr>
     <tr>
@@ -218,6 +222,10 @@ Docs: https://api.flutter.dev/flutter/widgets/Divider-class.html
 Docs: https://pub.dev/packages/split_view
 
 ## Text
+
+Docs: https://api.flutter.dev/flutter/material/Text-class.html
+
+Selectable text docs: https://api.flutter.dev/flutter/material/SelectableText-class.html
 
 * Value
 * Border? (inside Container)
