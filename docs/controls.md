@@ -1,25 +1,168 @@
 # Controls
 
-* Layout
-  * Container
-  * Row
-  * Column
-  * Expanded
-  * Stack
-  * Wrap
-  * ListView
-  * GridView
-  * Card
-  * Spacer
-  * Divider
-
-* Forms
-  * 
-
-* Utility
-  * Icon
-  * Image
-  * Text
+<table>
+    <tr>
+        <th>Flet</td>
+        <th>Pglet</td>
+    </tr>
+    <tr><th colspan="2">Layout</th></tr>
+    <tr>
+        <td>Container</td>
+        <td>Stack</td>
+    </tr>
+    <tr>
+        <td>Row</td>
+        <td>Stack horizontal=True</td>
+    </tr>
+    <tr>
+        <td>Column</td>
+        <td>Stack horizontal=False</td>
+    </tr>
+    <tr>
+        <td>Spacer</td>
+        <td>-</td>
+    </tr>    
+    <tr>
+        <td>Expanded</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>Stack</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>Wrap</td>
+        <td>Stack wrap=True</td>
+    </tr>
+    <tr>
+        <td>ListView</td>
+        <td>Stack horizontal=False</td>
+    </tr>
+    <tr>
+        <td>Divider</td>
+        <td>-</td>
+    </tr>    
+    <tr>
+        <td>GridView</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>SplitView</td>
+        <td>SplitStack</td>
+    </tr>
+    <tr>
+        <td>Card</td>
+        <td>-</td>
+    </tr>
+    <tr><th colspan="2">Base controls</th></tr>
+    <tr>
+        <td>Text</td>
+        <td>Text</td>
+    </tr>
+    <tr>
+        <td>Icon</td>
+        <td>Icon</td>
+    </tr>
+    <tr>
+        <td>Image</td>
+        <td>Image</td>
+    </tr>
+    <tr>
+        <td><a href="https://stackoverflow.com/questions/43583411/how-to-create-a-hyperlink-in-flutter-widget">To-Do</a></td>
+        <td>Link</td>
+    </tr>
+    <tr>
+        <td>ProgressBar</td>
+        <td>Progress</td>
+    </tr>
+    <tr>
+        <td>ProgressRing</td>
+        <td>Spinner</td>
+    </tr>
+    <tr><th colspan="2">Buttons</th></tr>
+    <tr>
+        <td>ElevatedButton</td>
+        <td>Button primary=True</td>
+    </tr>
+    <tr>
+        <td>OutlinedButton</td>
+        <td>Button primary=False</td>
+    </tr>
+    <tr>
+        <td>TextButton</td>
+        <td>Button action=True</td>
+    </tr>
+    <tr>
+        <td>IconButton</td>
+        <td>Button icon={icon_name}</td>
+    </tr>
+    <tr>
+        <td>PopupMenuButton</td>
+        <td>Button with MenuItems</td>
+    </tr>    
+    <tr>
+        <td>Any Button with a custom "child"</td>
+        <td>Button compound=True</td>
+    </tr>
+    <tr><th colspan="2">Forms</th></tr>
+    <tr>
+        <td>Checkbox</td>
+        <td>Checkbox</td>
+    </tr>
+    <tr>
+        <td>Radio</td>
+        <td>ChoiceGroup</td>
+    </tr>
+    <tr>
+        <td>Dropdown</td>
+        <td>Dropdown</td>
+    </tr>
+    <tr>
+        <td>-</td>
+        <td>ComboBox</td>
+    </tr>
+    <tr>
+        <td>DatePicker</td>
+        <td>DatePicker</td>
+    </tr>
+    <tr>
+        <td>TimePicker</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>TextField with an icon</td>
+        <td>SearchBox</td>
+    </tr>
+    <tr>
+        <td>Slider</td>
+        <td>Slider</td>
+    </tr>
+    <tr>
+        <td>-</td>
+        <td>SpinButton</td>
+    </tr>
+    <tr>
+        <td>TextField</td>
+        <td>Textbox</td>
+    </tr>
+    <tr>
+        <td>Switch</td>
+        <td>Toggle</td>
+    </tr>
+    <tr><th colspan="2">Utility controls</th></tr>
+    <tr>
+        <td>-</td>
+        <td>Html</td>
+    </tr>
+    <tr>
+        <td>-</td>
+        <td>IFrame</td>
+    </tr>
+    <tr>
+        <td>-</td>
+        <td>Persona</td>
+    </tr>
+</table>
 
 ## Container
 
@@ -70,6 +213,10 @@ Docs: https://api.flutter.dev/flutter/widgets/Spacer-class.html
 
 Docs: https://api.flutter.dev/flutter/widgets/Divider-class.html
 
+## SplitView
+
+Docs: https://pub.dev/packages/split_view
+
 ## Text
 
 * Value
@@ -99,3 +246,9 @@ Properties:
 * Opacity
 * Fit: contain, cover, fill, fitHeight, fitWidth, none, scaleDown
 * Border? (inside Container)
+
+## TextField
+
+Docs: https://api.flutter.dev/flutter/material/TextField-class.html
+
+Example: https://gallery.flutter.dev/#/demo/text-field
