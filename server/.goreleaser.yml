@@ -1,0 +1,73 @@
+project_name: flet
+
+builds:
+  - id: flet
+    main: cmd/flet/main.go
+    binary: flet
+    env:
+      - CGO_ENABLED=0  
+    flags:
+      - -tags=release
+    ldflags:
+      - -s -w -X github.com/flet-dev/flet/server/commands.version={{.Version}}
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+      - arm
+    goarm:
+      - 7
+    ignore:
+      - goos: windows
+        goarch: arm64
+      - goos: windows
+        goarch: arm
+
+dockers:
+  -
+    ids:
+    - flet
+    
+    goos: linux
+    goarch: amd64
+    goarm: ''
+
+    image_templates:
+    - "flet/server:latest"
+    - "flet/server:{{ .Version }}"
+    - "us.gcr.io/flet-app/flet-server:{{ .Version }}"
+
+    skip_push: true
+    dockerfile: Dockerfile
+    use: buildx
+
+    # Template of the docker build flags.
+    build_flag_templates:
+    - "--pull"
+    - "--label=org.opencontainers.image.created={{.Date}}"
+    - "--label=org.opencontainers.image.title={{.ProjectName}}"
+    - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+    - "--label=org.opencontainers.image.version={{.Version}}"
+    #- "--build-arg=FOO={{.Env.Bar}}"
+    - "--platform=linux/amd64"
+
+archives:
+  - id: flet-binaries
+    builds:
+    - flet  
+    format: binary
+    name_template: "flet-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
+  -
+    id: flet-tars
+    builds:
+    - flet
+    name_template: "flet-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip 
+
+release:
+  prerelease: auto

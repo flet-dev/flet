@@ -1,0 +1,175 @@
+skip_branch_with_pr: true
+
+environment:
+  GO_VERSION: 1.18
+  GO_TAGS: --tags release
+  GITHUB_TOKEN:
+    secure: uX7wMPjOz72c6zs4QS2/m3vsOE5Fh7e68YqMNSf0mRmb6hP9Ij8haCefQjxBDlEb
+  DOCKER_REGISTRY_USER:
+    secure: NJVK0u9M6ZhmQKUeR6Gnxg==
+  DOCKER_REGISTRY_PASS:
+    secure: V9nRzVDlIGS0a+dhkC2/vw==
+
+  matrix:
+    # - job_name: Windows
+    #   job_group: tests
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+
+    # - job_name: Linux
+    #   job_group: tests
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+
+    # - job_name: macOS
+    #   job_group: tests
+    #   APPVEYOR_BUILD_WORKER_IMAGE: macOS
+
+    - job_name: Release
+      job_depends_on: tests
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+
+matrix:
+  fast_finish: true
+  
+for:
+  
+# ======================================
+#      Windows
+# ======================================
+
+-
+  matrix:
+    only:
+    - job_name: Windows
+
+  install:
+  - ps: .\install_go.ps1
+  - set GOPATH=%USERPROFILE%\go
+  - set PATH=%GOPATH%\bin;%PATH%
+  - echo %GOPATH%
+  - echo %GOROOT%
+  - go version
+
+  build_script:
+  - ps: Install-Product node 12 x64
+  - cd client
+  - yarn
+  - yarn build
+  - cd ..
+  - mkdir internal\server\content
+  - xcopy client\build internal\server\content\ /E /Y
+  - .\build.cmd
+  - dir %USERPROFILE%\Go\bin
+
+  test_script:
+  - run-tests.cmd
+
+# ======================================
+#      Linux
+# ======================================
+
+-
+  matrix:
+    only:
+    - job_name: Linux
+
+  install:
+  - gvm install go${GO_VERSION} -B
+  - gvm use go${GO_VERSION}
+  - go version
+
+  build_script:
+  - nvm use 12
+  - cd client
+  - yarn
+  - yarn build
+  - cd ..
+  - mkdir server/content
+  - cp -r client/build/* server/content
+  - ./build.sh
+  - ls $GOPATH/bin
+
+  test_script:
+  - ./run-tests.sh
+
+# ======================================
+#      macOS
+# ======================================
+
+-
+  matrix:
+    only:
+    - job_name: macOS
+
+  install:
+  - gvm install go${GO_VERSION} -B
+  - gvm use go${GO_VERSION}
+  - go version
+  - HOMEBREW_NO_AUTO_UPDATE=1 brew install yarn
+
+  build_script:
+  - nvm use 14
+  - cd client
+  - yarn
+  - yarn build
+  - cd ..
+  - mkdir server/content
+  - cp -r client/build/* server/content
+  - ./build.sh
+  - ls $GOPATH/bin
+
+  test_script:
+  - ./run-tests.sh
+
+# ======================================
+#      Release
+# ======================================
+
+-
+  matrix:
+    only:
+    - job_name: Release
+
+  install:
+  - gvm install go${GO_VERSION} -B
+  - gvm use go${GO_VERSION}
+  - go version
+  - bash ./ci/install_goreleaser.sh
+  - goreleaser --version
+  # - sh: |
+  #    sudo snap install --classic goreleaser
+  #    goreleaser --version
+
+  build_script:
+  #- nvm use 12
+  #- cd client
+  #- yarn
+  #- GENERATE_SOURCEMAP=false yarn build
+  #- ls -alR build
+  #- cd ..
+    #- cp -r client/build/* server/content
+  - cd server
+  - mkdir server/content
+  - echo "Hello, world!" > server/content/index.html
+  - sh: |
+      if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+        goreleaser
+      else
+        goreleaser --snapshot --skip-publish
+      fi
+  - cd ..
+
+  test_script:
+  - docker images
+  - docker run --name flet-test -d flet/server
+  - sleep 10
+  - docker logs flet-test
+
+  # publish to docker.io on tagged builds only
+  - sh: |
+      if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+        echo "$DOCKER_REGISTRY_PASS" | docker login --username $DOCKER_REGISTRY_USER --password-stdin
+        docker image push --all-tags flet/server
+      fi
+
+  artifacts:
+  - path: server/dist/flet-*
