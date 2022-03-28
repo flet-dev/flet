@@ -41,7 +41,7 @@ func newServerCommand() *cobra.Command {
 
 			err = m.TryLock()
 			if err != nil {
-				log.Fatalf("Another instance of Pglet Server is already listening on port %d", serverPort)
+				log.Fatalf("Another instance of Flet Server is already listening on port %d", serverPort)
 			}
 
 			defer m.Unlock()
@@ -64,7 +64,7 @@ func newServerCommand() *cobra.Command {
 }
 
 func startServerService(attached bool) {
-	log.Traceln("Starting Pglet Server")
+	log.Traceln("Starting Flet Server")
 
 	// run server
 	execPath, _ := os.Executable()
@@ -88,5 +88,5 @@ func startServerService(attached bool) {
 }
 
 func getLockFilename(serverPort int) string {
-	return filepath.Join(os.TempDir(), fmt.Sprintf("pglet-%d.lock", serverPort))
+	return filepath.Join(os.TempDir(), fmt.Sprintf("flet-%d.lock", serverPort))
 }

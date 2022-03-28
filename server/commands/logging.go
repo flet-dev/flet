@@ -38,9 +38,9 @@ func configLogging() {
 	log.SetFormatter(formatter)
 
 	if os.Getenv(config.LogToFileFlag) == "true" {
-		logPath := "/tmp/pglet.log"
+		logPath := "/tmp/flet-server.log"
 		if runtime.GOOS == "windows" {
-			logPath = filepath.Join(os.TempDir(), "pglet.log")
+			logPath = filepath.Join(os.TempDir(), "flet-server.log")
 		}
 		pathMap := lfshook.PathMap{
 			log.DebugLevel: logPath,

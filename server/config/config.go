@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	LogToFileFlag = "PGLET_LOG_TO_FILE"
-	LogLevelFlag  = "PGLET_LOG_LEVEL"
+	LogToFileFlag = "FLET_LOG_TO_FILE"
+	LogLevelFlag  = "FLET_LOG_LEVEL"
 
 	// Google Secret Manager
 	googleSecretManagerProject = "GOOGLE_SECRET_MANAGER_PROJECT"
@@ -75,11 +75,11 @@ func init() {
 	viper.SetConfigType("yaml")
 
 	if runtime.GOOS == "windows" {
-		viper.AddConfigPath(filepath.Join(os.Getenv("ProgramData"), "pglet"))
-		viper.AddConfigPath(filepath.Join(os.Getenv("USERPROFILE"), ".pglet"))
+		viper.AddConfigPath(filepath.Join(os.Getenv("ProgramData"), "flet"))
+		viper.AddConfigPath(filepath.Join(os.Getenv("USERPROFILE"), ".flet"))
 	} else {
-		viper.AddConfigPath("/etc/pglet")
-		viper.AddConfigPath("$HOME/.config/pglet")
+		viper.AddConfigPath("/etc/flet")
+		viper.AddConfigPath("$HOME/.config/flet")
 	}
 	viper.AddConfigPath(".")
 	err := viper.ReadInConfig() // Find and read the config file
@@ -88,7 +88,7 @@ func init() {
 			panic(fmt.Errorf("error reading config file: %s", err))
 		}
 	}
-	viper.SetEnvPrefix("pglet")
+	viper.SetEnvPrefix("flet")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
 

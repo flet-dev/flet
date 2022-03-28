@@ -33,7 +33,7 @@ func TestUnquote(t *testing.T) {
 
 func TestUnquote2(t *testing.T) {
 
-	cmdText := "add text markdown text='\"line 1\"' value='```powershell\\nInvoke-Pglet \"clean page\"\\n```'"
+	cmdText := "add text markdown text='\"line 1\"' value='```powershell\\nInvoke-Flet \"clean page\"\\n```'"
 	fmt.Println(cmdText)
 
 	cmd, err := Parse(cmdText, true)

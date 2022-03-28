@@ -38,19 +38,19 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-type pgletFS struct {
+type fletFS struct {
 	prefix string
 	httpFS http.FileSystem
 }
 
-func newPgletFS(prefix string, efs embed.FS) pgletFS {
-	return pgletFS{
+func newFletFS(prefix string, efs embed.FS) fletFS {
+	return fletFS{
 		prefix: prefix,
 		httpFS: http.FS(efs),
 	}
 }
 
-func (pfs pgletFS) Exists(prefix string, path string) bool {
+func (pfs fletFS) Exists(prefix string, path string) bool {
 	f, err := pfs.httpFS.Open(pfs.fileName(path))
 	if f != nil {
 		f.Close()
@@ -58,11 +58,11 @@ func (pfs pgletFS) Exists(prefix string, path string) bool {
 	return err == nil
 }
 
-func (pfs pgletFS) Open(name string) (http.File, error) {
+func (pfs fletFS) Open(name string) (http.File, error) {
 	return pfs.httpFS.Open(pfs.fileName(name))
 }
 
-func (pfs pgletFS) fileName(name string) string {
+func (pfs fletFS) fileName(name string) string {
 	return pfs.prefix + strings.TrimLeft(name, "/")
 }
 
@@ -96,7 +96,7 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 	}
 
 	// Serve frontend static files
-	router.Use(static.Serve("/", newPgletFS(contentRootFolder, f)))
+	router.Use(static.Serve("/", newFletFS(contentRootFolder, f)))
 
 	// WebSockets
 	router.GET("/ws", func(c *gin.Context) {
