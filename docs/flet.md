@@ -10,6 +10,10 @@ Pglet is for web apps and is based on Fluent UI React components.
 
 Flet is for web, desktop and mobile platforms and is based on Flutter.
 
+Fluent UI is mostly an internal project...
+
+Flutter will give access to mobile experiences: camera, location services, accelerometer, etc.
+
 A lot of renamings would create a mess in a project repo - it's easier to start over in a new repository.
 
 A lot of functionality was added to support Bash: a custom protocol via named pipes with commands serialization/deserialization, CLI support with `pglet page` and `pglet app` commands. It's not necessary anymore with high level languages such like Python which communicate with Flet server via WebSockets directly.

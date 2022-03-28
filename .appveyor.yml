@@ -130,6 +130,13 @@ for:
     - job_name: Release
 
   install:
+  # Flutter SDK
+  - sudo snap install flutter --classic
+  - flutter sdk-path
+  - flutter --version
+  - flutter build --help
+
+  # Go and GoReleaser
   - gvm install go${GO_VERSION} -B
   - gvm use go${GO_VERSION}
   - go version
