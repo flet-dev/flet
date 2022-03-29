@@ -134,7 +134,6 @@ for:
   - sudo snap install flutter --classic
   - flutter sdk-path
   - flutter --version
-  - flutter build web --help
 
   # Go and GoReleaser
   - gvm install go${GO_VERSION} -B
@@ -142,9 +141,6 @@ for:
   - go version
   - bash ./ci/install_goreleaser.sh
   - goreleaser --version
-  # - sh: |
-  #    sudo snap install --classic goreleaser
-  #    goreleaser --version
 
   build_script:
   - cd client
