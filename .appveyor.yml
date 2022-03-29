@@ -237,6 +237,7 @@ for:
 
     install:
       - python --version
+      - cd sdk/python
       - pip install --upgrade setuptools wheel twine pdm
       - pdm install
 
