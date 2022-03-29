@@ -211,7 +211,7 @@ for:
 
     artifacts:
       - path: server/dist/flet-*
-      - path: server/dist/flet_
+      - path: server/dist/flet_*/*
 
   ######################
   #    Python Tests    #
