@@ -3,6 +3,7 @@ skip_branch_with_pr: true
 environment:
   GO_VERSION: 1.18
   GO_TAGS: --tags release
+  python_version: 3.10
   GITHUB_TOKEN:
     secure: uX7wMPjOz72c6zs4QS2/m3vsOE5Fh7e68YqMNSf0mRmb6hP9Ij8haCefQjxBDlEb
   DOCKER_REGISTRY_USER:
@@ -54,7 +55,6 @@ environment:
     - job_name: Build package
       job_group: python_build
       job_depends_on: python_tests
-      python_version: 3.10
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
       TWINE_USERNAME: __token__
       TWINE_NON_INTERACTIVE: true
@@ -65,6 +65,8 @@ environment:
 
 matrix:
   fast_finish: true
+
+stack: python $python_version
 
 for:
   # ======================================
@@ -162,9 +164,9 @@ for:
 
     install:
       # Flutter SDK
-      - sudo snap install flutter --classic
-      - flutter sdk-path
-      - flutter --version
+      # - sudo snap install flutter --classic
+      # - flutter sdk-path
+      # - flutter --version
 
       # Go and GoReleaser
       - gvm install go${GO_VERSION} -B
@@ -216,8 +218,6 @@ for:
       only:
         - job_group: python_tests
 
-    stack: python $python_version
-
     install:
       - python --version
       - pip install pdm
@@ -234,8 +234,6 @@ for:
   - matrix:
       only:
         - job_group: python_build
-
-    stack: python $python_version
 
     install:
       - python --version
