@@ -161,7 +161,7 @@ for:
 
   - matrix:
       only:
-        - job_name: build_server
+        - job_group: build_server
 
     install:
       # Flutter SDK
