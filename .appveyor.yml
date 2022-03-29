@@ -220,6 +220,7 @@ for:
 
     install:
       - python --version
+      - cd sdk/python
       - pip install pdm
       - pdm install
 
