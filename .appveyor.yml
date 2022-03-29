@@ -61,8 +61,6 @@ environment:
 matrix:
   fast_finish: true
 
-stack: python $python_version
-
 for:
   # ======================================
   #      Windows
@@ -213,6 +211,8 @@ for:
       only:
         - job_group: python_tests
 
+    stack: python $python_version
+
     install:
       - python --version
       - pip install pdm
@@ -223,12 +223,14 @@ for:
     test_script:
       - pdm run pytest tests
 
-  ###############
-  #    Build    #
-  ###############
+  ######################
+  #    Python Build    #
+  ######################
   - matrix:
       only:
         - job_group: python_build
+
+    stack: python $python_version
 
     install:
       - python --version
