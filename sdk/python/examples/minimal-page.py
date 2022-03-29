@@ -1,8 +1,7 @@
-from concurrent.futures import thread
-from pickletools import string1
 from time import sleep
+
 import flet
-from flet import Stack, Text, Textbox, Button
+from flet import Button, Stack, Text, Textbox
 
 page = flet.page("page-1", no_window=True)
 
@@ -11,41 +10,37 @@ txt2 = Text("Text B")
 tb1 = Textbox(label="Your name", value="John")
 btn1 = Button("Click me!", on_click=lambda e: print("I'm clicked!", tb1.value))
 
+
 def btn2_click(e):
-    tb1.value = tb1.value + "A";
-    tb1.label = tb1.label + "B";
+    tb1.value = tb1.value + "A"
+    tb1.label = tb1.label + "B"
     page.update()
+
 
 btn2 = Button("Append", on_click=btn2_click)
 
 st1 = Stack(
-        horizontal=False,
-        controls=[
-            txt1, txt2
-        ],
-    )
-page.add(
-    st1,
-    btn1,
-    btn2
+    horizontal=False,
+    controls=[txt1, txt2],
 )
+page.add(st1, btn1, btn2)
 
 sleep(3)
 
 for i in range(1, 10):
-    #txt1.value = f"Hello, world - {i}"
+    # txt1.value = f"Hello, world - {i}"
     st1.controls.append(Text(f"Hello, world - {i}"))
     if len(st1.controls) > 5:
         st1.controls.pop(0)
     page.update()
-    #sleep(1)
+    # sleep(1)
 
 st1.controls.append(tb1)
 page.update()
 
 sleep(5)
 
-#st1.bgcolor = "red"
+# st1.bgcolor = "red"
 btn1.text = "Boo!"
 page.update()
 

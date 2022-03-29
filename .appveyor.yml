@@ -27,151 +27,257 @@ environment:
       job_depends_on: tests
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
+    - job_name: Test Python 3.7
+      job_group: python_tests
+      job_depends_on: Release
+      python_version: 3.7
+      
+    - job_name: Test Python 3.8
+      job_group: python_tests
+      job_depends_on: Release
+      python_version: 3.8
+      
+    - job_name: Test Python 3.9
+      job_group: python_tests
+      job_depends_on: Release
+      python_version: 3.9
+      
+    - job_name: Test Python 3.10
+      job_group: python_tests
+      job_depends_on: Release
+      python_version: 3.10
+
+    - job_name: Build package
+      job_group: python_build
+      job_depends_on: python_tests
+      python_version: 3.10
+      TWINE_USERNAME: __token__
+      TWINE_NON_INTERACTIVE: true
+      pypi_key: 
+        secure: bPSgMbRTG8EIrSW8RUbb8go0xbmg4/E4NnYfGl8h+L+KlWEk5mHLojLG/b6S6nVSCRXEHU/Vc0KjxLO+6mDrC3OT13kwv3fRRT90JNkOIlxePeoEhRFnh3u9nxlxeWncYBayef3U/zdxTTBd4YXqMPZ22qvCqeIRcOi/fzTRrfZ84Wr5V/JS7Jpmzg2yc2B/kzUBiQlfvflY7YUw/QFaiPhYytIglE7XY+r04JwNfgA=
+      test_pypi_key: 
+        secure: LAsjCb0tqzjUEPxHTq8TPmTDzERQpSS0po96HhXEEczG8EaWqCUdtb+bhT3QLihy+4X4MvErEYXYieUT+KjpuVdgjc/UrqDEuQngBL9r7k5cRMV878c232zbLGljHckNr4TCzHJosANrYBrx0sNg9gVnAoJOxNbu40A1rVB8Qj9ob/eCKwXHHRxfrf0d/NwoLZViCE4toV333tVr5vshlLkQA3oRiS2OZG3VKagTI4nsKCaOFqJHFlvy2a0LEUdc
+
 matrix:
   fast_finish: true
-  
+
+stack: python $python_version
+
 for:
+  # ======================================
+  #      Windows
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: Windows
+
+    install:
+      - ps: .\install_go.ps1
+      - set GOPATH=%USERPROFILE%\go
+      - set PATH=%GOPATH%\bin;%PATH%
+      - echo %GOPATH%
+      - echo %GOROOT%
+      - go version
+
+    build_script:
+      - ps: Install-Product node 12 x64
+      - cd client
+      - yarn
+      - yarn build
+      - cd ..
+      - mkdir internal\server\content
+      - xcopy client\build internal\server\content\ /E /Y
+      - .\build.cmd
+      - dir %USERPROFILE%\Go\bin
+
+    test_script:
+      - run-tests.cmd
+
+  # ======================================
+  #      Linux
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: Linux
+
+    install:
+      - gvm install go${GO_VERSION} -B
+      - gvm use go${GO_VERSION}
+      - go version
+
+    build_script:
+      - nvm use 12
+      - cd client
+      - yarn
+      - yarn build
+      - cd ..
+      - mkdir server/content
+      - cp -r client/build/* server/content
+      - ./build.sh
+      - ls $GOPATH/bin
+
+    test_script:
+      - ./run-tests.sh
+
+  # ======================================
+  #      macOS
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: macOS
+
+    install:
+      - gvm install go${GO_VERSION} -B
+      - gvm use go${GO_VERSION}
+      - go version
+      - HOMEBREW_NO_AUTO_UPDATE=1 brew install yarn
+
+    build_script:
+      - nvm use 14
+      - cd client
+      - yarn
+      - yarn build
+      - cd ..
+      - mkdir server/content
+      - cp -r client/build/* server/content
+      - ./build.sh
+      - ls $GOPATH/bin
+
+    test_script:
+      - ./run-tests.sh
+
+  # ======================================
+  #      Release
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: Release
+
+    install:
+      # Flutter SDK
+      - sudo snap install flutter --classic
+      - flutter sdk-path
+      - flutter --version
+
+      # Go and GoReleaser
+      - gvm install go${GO_VERSION} -B
+      - gvm use go${GO_VERSION}
+      - go version
+      - bash ./ci/install_goreleaser.sh
+      - goreleaser --version
+
+    build_script:
+      # Flutter Web client
+      - cd client
+      - flutter build web --release --web-renderer auto
+      - rm -rf build/web/canvaskit
+      - ls -alR build/web
+
+      # Flet Server in Go
+      - cd ..
+      - mkdir server/server/content
+      - cp -r client/build/web/* server/server/content
+      - cd server
+      - sh: |
+          if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+            goreleaser
+          else
+            goreleaser --snapshot --skip-publish
+          fi
+      - cd ..
+
+    test_script:
+      - docker images
+      - docker run --name flet-test -d flet/server
+      - sleep 10
+      - docker logs flet-test
+
+      # publish to docker.io on tagged builds only
+      - sh: |
+          if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+            echo "$DOCKER_REGISTRY_PASS" | docker login --username $DOCKER_REGISTRY_USER --password-stdin
+            docker image push --all-tags flet/server
+          fi
+
+    artifacts:
+      - path: server/dist/flet-*
+
+######################
+#    Python Tests    #
+######################
+-
+  matrix:
+    only:
+    - job_group: python_tests
+
+  install:
+  - python --version
+  - pip install pdm
+  - pdm install
+
+  build: off
   
-# ======================================
-#      Windows
-# ======================================
-
--
-  matrix:
-    only:
-    - job_name: Windows
-
-  install:
-  - ps: .\install_go.ps1
-  - set GOPATH=%USERPROFILE%\go
-  - set PATH=%GOPATH%\bin;%PATH%
-  - echo %GOPATH%
-  - echo %GOROOT%
-  - go version
-
-  build_script:
-  - ps: Install-Product node 12 x64
-  - cd client
-  - yarn
-  - yarn build
-  - cd ..
-  - mkdir internal\server\content
-  - xcopy client\build internal\server\content\ /E /Y
-  - .\build.cmd
-  - dir %USERPROFILE%\Go\bin
-
   test_script:
-  - run-tests.cmd
+  - pdm run pytest tests
 
-# ======================================
-#      Linux
-# ======================================
-
--
+###############
+#    Build    #
+###############
+- 
   matrix:
     only:
-    - job_name: Linux
-
+    - job_group: python_build
+  
   install:
-  - gvm install go${GO_VERSION} -B
-  - gvm use go${GO_VERSION}
-  - go version
+  - python --version
+  - pip install --upgrade setuptools wheel twine pdm
+  - pdm install
+
+  test: off
 
   build_script:
-  - nvm use 12
-  - cd client
-  - yarn
-  - yarn build
-  - cd ..
-  - mkdir server/content
-  - cp -r client/build/* server/content
-  - ./build.sh
-  - ls $GOPATH/bin
+  - ps: |
+      $ErrorActionPreference = "Stop"
 
-  test_script:
-  - ./run-tests.sh
+      if ($env:APPVEYOR_REPO_TAG -eq 'true') {
+        # release mode
 
-# ======================================
-#      macOS
-# ======================================
+        # version
+        $ver = $env:APPVEYOR_REPO_TAG_NAME
+        if ($ver.StartsWith('v')) { $ver = $ver.Substring(1) }
 
--
-  matrix:
-    only:
-    - job_name: macOS
+        # prerelease moniker
+        $idx = $ver.indexOf('-')
+        if ($idx -ne -1) {
+          $prerelease = $ver.Substring($idx + 1)
+          $ver = $ver.Substring(0, $idx)
+        }
+        $env:TWINE_PASSWORD = $env:pypi_key
+      } else {
 
-  install:
-  - gvm install go${GO_VERSION} -B
-  - gvm use go${GO_VERSION}
-  - go version
-  - HOMEBREW_NO_AUTO_UPDATE=1 brew install yarn
+        # build mode
+        $ver = $env:APPVEYOR_BUILD_VERSION
+        $env:TWINE_PASSWORD = $env:test_pypi_key
+        $env:TWINE_REPOSITORY = 'testpypi'
+      }
 
-  build_script:
-  - nvm use 14
-  - cd client
-  - yarn
-  - yarn build
-  - cd ..
-  - mkdir server/content
-  - cp -r client/build/* server/content
-  - ./build.sh
-  - ls $GOPATH/bin
+      # patch version
+      $env:PACKAGE_VERSION = $ver
+      (Get-Content pyproject.toml).replace("version = `"0.1.0`"", "version = `"$ver`"") | Set-Content pyproject.toml
 
-  test_script:
-  - ./run-tests.sh
+  # build package
+  - pdm build
+  - python3 build-wheels.py
 
-# ======================================
-#      Release
-# ======================================
-
--
-  matrix:
-    only:
-    - job_name: Release
-
-  install:
-  # Flutter SDK
-  - sudo snap install flutter --classic
-  - flutter sdk-path
-  - flutter --version
-
-  # Go and GoReleaser
-  - gvm install go${GO_VERSION} -B
-  - gvm use go${GO_VERSION}
-  - go version
-  - bash ./ci/install_goreleaser.sh
-  - goreleaser --version
-
-  build_script:
-  - cd client
-  - flutter build web --release --web-renderer auto
-  - rm -rf build/web/canvaskit
-  - ls -alR build/web
-
-  - cd ..
-  - mkdir server/server/content
-  - cp -r client/build/web/* server/server/content
-  - cd server
+  # publish package
   - sh: |
-      if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-        goreleaser
-      else
-        goreleaser --snapshot --skip-publish
-      fi
-  - cd ..
-
-  test_script:
-  - docker images
-  - docker run --name flet-test -d flet/server
-  - sleep 10
-  - docker logs flet-test
-
-  # publish to docker.io on tagged builds only
-  - sh: |
-      if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-        echo "$DOCKER_REGISTRY_PASS" | docker login --username $DOCKER_REGISTRY_USER --password-stdin
-        docker image push --all-tags flet/server
+      if [[ "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
+          twine upload dist/*
       fi
 
   artifacts:
-  - path: server/dist/flet-*
+    path: dist/*
