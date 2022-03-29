@@ -33,10 +33,10 @@ class WebSocketClient {
     _serverUrl = serverUrl;
     _store = store;
 
-    debugPrint("Connecting to WS server...");
+    debugPrint("Connecting to WebSocket server $serverUrl...");
     try {
       _channel = WebSocketChannel.connect(Uri.parse(_serverUrl));
-      debugPrint("Connected to WS server");
+      debugPrint("Connected to WebSocket server");
       _connected = true;
       _channel!.stream.listen(_onMessage, onDone: () async {
         debugPrint("WS stream closed");
@@ -45,7 +45,7 @@ class WebSocketClient {
       });
       debugPrint("Started listening for WS messages");
     } catch (e) {
-      debugPrint("WS connection error: $e");
+      debugPrint("WebSocket connection error: $e");
     }
   }
 

@@ -14,8 +14,8 @@ class PageControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Page build: ${control.id}");
 
-    MediaQueryData media = MediaQuery.of(context);
-    debugPrint("Screen size: ${media.size}");
+    // MediaQueryData media = MediaQuery.of(context);
+    // debugPrint("Screen size: ${media.size}");
     return MaterialApp(
       home: Scaffold(
         body: Column(

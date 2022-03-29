@@ -134,7 +134,7 @@ for:
   - sudo snap install flutter --classic
   - flutter sdk-path
   - flutter --version
-  - flutter build --help
+  - flutter build web --help
 
   # Go and GoReleaser
   - gvm install go${GO_VERSION} -B
@@ -147,16 +147,15 @@ for:
   #    goreleaser --version
 
   build_script:
-  #- nvm use 12
-  #- cd client
-  #- yarn
-  #- GENERATE_SOURCEMAP=false yarn build
-  #- ls -alR build
-  #- cd ..
-    #- cp -r client/build/* server/content
+  - cd client
+  - flutter build web --release --web-renderer auto
+  - rm -rf build/web/canvaskit
+  - ls -alR build/web
+
+  - cd ..
+  - mkdir server/server/content
+  - cp -r client/build/web/* server/server/content
   - cd server
-  - mkdir server/content
-  - echo "Hello, world!" > server/content/index.html
   - sh: |
       if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
         goreleaser

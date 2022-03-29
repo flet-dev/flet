@@ -68,6 +68,9 @@ const (
 	defaultCookieSecret    = "secret_signing_key"
 	masterSecretKey        = "MASTER_SECRET_KEY"
 	defaultMasterSecretKey = "master_secret_key"
+
+	// development
+	staticRootDir = "STATIC_ROOT_DIR"
 )
 
 func init() {
@@ -268,4 +271,10 @@ func CookieSecret() string {
 
 func MasterSecretKey() string {
 	return viper.GetString(masterSecretKey)
+}
+
+// Development
+
+func StaticRootDir() string {
+	return viper.GetString(staticRootDir)
 }

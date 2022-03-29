@@ -9,32 +9,51 @@ import 'package:redux/redux.dart';
 import 'models/app_state.dart';
 import 'models/page_view_model.dart';
 import 'reducers.dart';
+import 'utils/uri.dart';
 import 'web_socket_client.dart';
 import 'controls/create_control.dart';
 
-void main() {
-  debugPrint("Current page URL: " + Uri.base.toString());
-
+void main([List<String>? args]) {
   //setupWindow();
 
   final store = Store<AppState>(appReducer, initialState: AppState.initial());
 
+  var pageUri = Uri.base;
+
+  if (kDebugMode) {
+    pageUri = Uri.parse("http://localhost:8550/p/page-1");
+  }
+
+  if (kIsWeb) {
+    debugPrint("Flet View is running in Web mode");
+  } else if ((Platform.isWindows || Platform.isMacOS || Platform.isLinux) &&
+      !kDebugMode) {
+    debugPrint("Flet View is running in Desktop mode");
+    // first argument must be
+    if (args!.isEmpty) {
+      throw Exception('Page URL must be provided as a first argument.');
+    }
+    pageUri = Uri.parse(args[0]);
+  }
+
+  debugPrint("Page URL: $pageUri");
+
   // connect WS
-  ws.connect(serverUrl: "ws://localhost:8550/ws", store: store);
+  ws.connect(serverUrl: getWebSocketEndpoint(pageUri), store: store);
 
-  ws.registerWebClient(pageName: "p/page-1");
+  ws.registerWebClient(pageName: getWebPageName(pageUri));
 
-  runApp(FlutterReduxApp(
-    title: 'Flutter Redux Demo',
+  runApp(FletApp(
+    title: 'Flet',
     store: store,
   ));
 }
 
-class FlutterReduxApp extends StatelessWidget {
+class FletApp extends StatelessWidget {
   final Store<AppState> store;
   final String title;
 
-  const FlutterReduxApp({
+  const FletApp({
     Key? key,
     required this.store,
     required this.title,
@@ -55,13 +74,19 @@ class FlutterReduxApp extends StatelessWidget {
                   body: Center(child: CircularProgressIndicator()),
                 ));
           } else if (viewModel.error != "") {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.error_outline, color: Colors.red, size: 25),
-                Text(viewModel.error, style: const TextStyle(color: Colors.red))
-              ],
-            );
+            return MaterialApp(
+                title: title,
+                home: Scaffold(
+                  body: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.error_outline,
+                          color: Colors.red, size: 25),
+                      Text(viewModel.error,
+                          style: const TextStyle(color: Colors.red))
+                    ],
+                  ),
+                ));
           } else {
             return createControl("page");
           }

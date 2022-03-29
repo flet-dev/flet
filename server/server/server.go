@@ -1,10 +1,11 @@
 package server
 
 import (
+	"bytes"
 	"context"
-	"embed"
 	"fmt"
 	"io/ioutil"
+	"mime"
 	"net/http"
 	"strings"
 	"sync"
@@ -38,34 +39,6 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-type fletFS struct {
-	prefix string
-	httpFS http.FileSystem
-}
-
-func newFletFS(prefix string, efs embed.FS) fletFS {
-	return fletFS{
-		prefix: prefix,
-		httpFS: http.FS(efs),
-	}
-}
-
-func (pfs fletFS) Exists(prefix string, path string) bool {
-	f, err := pfs.httpFS.Open(pfs.fileName(path))
-	if f != nil {
-		f.Close()
-	}
-	return err == nil
-}
-
-func (pfs fletFS) Open(name string) (http.File, error) {
-	return pfs.httpFS.Open(pfs.fileName(name))
-}
-
-func (pfs fletFS) fileName(name string) string {
-	return pfs.prefix + strings.TrimLeft(name, "/")
-}
-
 func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 	defer wg.Done()
 
@@ -95,8 +68,11 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 		}))
 	}
 
+	mime.AddExtensionType(".js", "application/javascript")
+
 	// Serve frontend static files
-	router.Use(static.Serve("/", newFletFS(contentRootFolder, f)))
+	staticFs := newStaticFS()
+	router.Use(static.Serve("/", staticFs))
 
 	// WebSockets
 	router.GET("/ws", func(c *gin.Context) {
@@ -121,11 +97,18 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 
 	// unknown API routes - 404, all the rest - index.html
 	router.NoRoute(func(c *gin.Context) {
+
 		if !strings.HasPrefix(c.Request.RequestURI, apiRoutePrefix+"/") {
-			// SPA index.html
-			index, _ := f.Open(contentRootFolder + siteDefaultDocument)
+			urlPath := strings.TrimRight(c.Request.URL.Path, "/") + "/"
+			log.Debugln("Request path:", urlPath)
+
+			index, _ := staticFs.Open(siteDefaultDocument)
 			indexData, _ := ioutil.ReadAll(index)
-			c.Data(http.StatusOK, "text/html", indexData)
+
+			c.Data(http.StatusOK, "text/html",
+				bytes.Replace(indexData,
+					[]byte("<base href=\"/\">"),
+					[]byte("<base href=\""+urlPath+"\">"), 1))
 		} else {
 			// API not found
 			c.JSON(http.StatusNotFound, gin.H{
