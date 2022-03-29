@@ -24,35 +24,36 @@ environment:
     #   job_group: tests
     #   APPVEYOR_BUILD_WORKER_IMAGE: macOS
 
-    - job_name: Release
+    - job_name: Build Server binaries
+      job_group: build_server
       job_depends_on: tests
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.7
       job_group: python_tests
-      job_depends_on: Release
+      job_depends_on: build_server
       python_version: 3.7
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.8
       job_group: python_tests
-      job_depends_on: Release
+      job_depends_on: build_server
       python_version: 3.8
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.9
       job_group: python_tests
-      job_depends_on: Release
+      job_depends_on: build_server
       python_version: 3.9
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.10
       job_group: python_tests
-      job_depends_on: Release
+      job_depends_on: build_server
       python_version: 3.10
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    - job_name: Build package
+    - job_name: Build Python wheel
       job_group: python_build
       job_depends_on: python_tests
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
@@ -155,18 +156,18 @@ for:
       - ./run-tests.sh
 
   # ======================================
-  #      Release
+  #      Build Server binaries
   # ======================================
 
   - matrix:
       only:
-        - job_name: Release
+        - job_name: build_server
 
     install:
       # Flutter SDK
-      # - sudo snap install flutter --classic
-      # - flutter sdk-path
-      # - flutter --version
+      - sudo snap install flutter --classic
+      - flutter sdk-path
+      - flutter --version
 
       # Go and GoReleaser
       - gvm install go${GO_VERSION} -B
@@ -175,41 +176,42 @@ for:
       - bash ./ci/install_goreleaser.sh
       - goreleaser --version
 
-    # build_script:
-    #   # Flutter Web client
-    #   - cd client
-    #   - flutter build web --release --web-renderer auto
-    #   - rm -rf build/web/canvaskit
-    #   - ls -alR build/web
+    build_script:
+      # Flutter Web client
+      - cd client
+      - flutter build web --release --web-renderer auto
+      - rm -rf build/web/canvaskit
+      - ls -alR build/web
 
-    #   # Flet Server in Go
-    #   - cd ..
-    #   - mkdir server/server/content
-    #   - cp -r client/build/web/* server/server/content
-    #   - cd server
-    #   - sh: |
-    #       if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-    #         goreleaser
-    #       else
-    #         goreleaser --snapshot --skip-publish
-    #       fi
-    #   - cd ..
+      # Flet Server in Go
+      - cd ..
+      - mkdir server/server/content
+      - cp -r client/build/web/* server/server/content
+      - cd server
+      - sh: |
+          if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+            goreleaser
+          else
+            goreleaser --snapshot --skip-publish
+          fi
+      - cd ..
 
-    # test_script:
-    #   - docker images
-    #   - docker run --name flet-test -d flet/server
-    #   - sleep 10
-    #   - docker logs flet-test
+    test_script:
+      - docker images
+      - docker run --name flet-test -d flet/server
+      - sleep 10
+      - docker logs flet-test
 
-    #   # publish to docker.io on tagged builds only
-    #   - sh: |
-    #       if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-    #         echo "$DOCKER_REGISTRY_PASS" | docker login --username $DOCKER_REGISTRY_USER --password-stdin
-    #         docker image push --all-tags flet/server
-    #       fi
+      # publish to docker.io on tagged builds only
+      - sh: |
+          if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+            echo "$DOCKER_REGISTRY_PASS" | docker login --username $DOCKER_REGISTRY_USER --password-stdin
+            docker image push --all-tags flet/server
+          fi
 
     artifacts:
       - path: server/dist/flet-*
+      - path: server/dist/flet_
 
   ######################
   #    Python Tests    #
