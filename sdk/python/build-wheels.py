@@ -66,7 +66,7 @@ def unpack_zip(zip_path, dest_dir):
 
 
 def download_flet_server(jobId, asset, exec_filename, dest_file):
-    flet_url = f"https://ci.appveyor.com/api/buildjobs/${jobId}/artifacts/server%2Fdist%2Fflet_${asset}%2F${exec_filename}"
+    flet_url = f"https://ci.appveyor.com/api/buildjobs/{jobId}/artifacts/server%2Fdist%2Fflet_{asset}%2F{exec_filename}"
     print(f"Downloading {flet_url}...")
     urllib.request.urlretrieve(flet_url, dest_file)
     st = os.stat(dest_file)
@@ -77,8 +77,8 @@ def get_flet_server_job_id():
     account_name = os.environ.get("APPVEYOR_ACCOUNT_NAME")
     project_slug = os.environ.get("APPVEYOR_PROJECT_SLUG")
     build_id = os.environ.get("APPVEYOR_BUILD_ID")
-    url = f"https://ci.appveyor.com/api/projects/${account_name}/${project_slug}/builds/${build_id}"
-    print(f"Fetching build details at ${url}")
+    url = f"https://ci.appveyor.com/api/projects/{account_name}/{project_slug}/builds/{build_id}"
+    print(f"Fetching build details at {url}")
     req = urllib.request.Request(url)
     req.add_header("Content-type", "application/json")
     project = json.loads(urllib.request.urlopen(req).read().decode())
