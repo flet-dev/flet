@@ -24,34 +24,34 @@ environment:
     #   job_group: tests
     #   APPVEYOR_BUILD_WORKER_IMAGE: macOS
 
-    - job_name: Build Server binaries
-      job_group: build_server
-      job_depends_on: tests
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Build Server binaries
+    #   job_group: build_server
+    #   job_depends_on: tests
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    - job_name: Test Python 3.7
-      job_group: python_tests
-      job_depends_on: build_server
-      python_version: 3.7
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Test Python 3.7
+    #   job_group: python_tests
+    #   job_depends_on: build_server
+    #   python_version: 3.7
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    - job_name: Test Python 3.8
-      job_group: python_tests
-      job_depends_on: build_server
-      python_version: 3.8
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Test Python 3.8
+    #   job_group: python_tests
+    #   job_depends_on: build_server
+    #   python_version: 3.8
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    - job_name: Test Python 3.9
-      job_group: python_tests
-      job_depends_on: build_server
-      python_version: 3.9
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Test Python 3.9
+    #   job_group: python_tests
+    #   job_depends_on: build_server
+    #   python_version: 3.9
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    - job_name: Test Python 3.10
-      job_group: python_tests
-      job_depends_on: build_server
-      python_version: 3.10
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Test Python 3.10
+    #   job_group: python_tests
+    #   job_depends_on: build_server
+    #   python_version: 3.10
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Build Python wheels
       job_group: python_build
