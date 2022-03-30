@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import signal
@@ -184,11 +185,7 @@ def _start_flet_server():
             logging.info(f"Flet Server found in PATH")
 
     # start Flet server
-    args = [flet_path, "server", "--background"]
-
-    # auto-detect Replit environment
-    if os.getenv("REPL_ID") != None:
-        args.append("--attached")
+    args = [flet_path, "server", "--background", "--attached"]
 
     subprocess.run(args, check=True)
 
@@ -209,7 +206,10 @@ def _download_flet():
     flet_bin = Path.home().joinpath(".flet", "bin")
     flet_bin.mkdir(parents=True, exist_ok=True)
 
-    flet_version = constants.FLET_SERVER_VERSION
+    flet_version = _get_latest_flet_release()
+
+    if flet_version == None:
+        raise Exception("There are no Flet releases yet.")
 
     installed_ver = None
     flet_path = flet_bin.joinpath(flet_exe)
@@ -239,6 +239,20 @@ def _download_flet():
         finally:
             os.remove(temp_arch)
     return str(flet_path)
+
+
+def _get_latest_flet_release():
+    releases = json.loads(
+        urllib.request.urlopen(
+            f"https://api.github.com/repos/flet-dev/flet/releases?per_page=5"
+        )
+        .read()
+        .decode()
+    )
+    if len(releases) > 0:
+        return releases[0]["tag_name"].lstrip("v")
+    else:
+        return None
 
 
 # Fix: https://bugs.python.org/issue35935
