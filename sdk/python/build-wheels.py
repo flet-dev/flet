@@ -77,9 +77,9 @@ def get_flet_server_job_id():
     account_name = os.environ.get("APPVEYOR_ACCOUNT_NAME")
     project_slug = os.environ.get("APPVEYOR_PROJECT_SLUG")
     build_id = os.environ.get("APPVEYOR_BUILD_ID")
-    req = urllib.request.Request(
-        f"https://ci.appveyor.com/api/projects/${account_name}/${project_slug}/builds/${build_id}"
-    )
+    url = f"https://ci.appveyor.com/api/projects/${account_name}/${project_slug}/builds/${build_id}"
+    print(f"Fetching build details at ${url}")
+    req = urllib.request.Request(url)
     req.add_header("Content-type", "application/json")
     project = json.loads(urllib.request.urlopen(req).read().decode())
     jobId = None

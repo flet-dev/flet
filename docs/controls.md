@@ -21,7 +21,11 @@
     <tr>
         <td>Spacer</td>
         <td>-</td>
-    </tr>    
+    </tr>
+    <tr>
+        <td>Padding</td>
+        <td>-</td>
+    </tr>        
     <tr>
         <td>Expanded</td>
         <td>-</td>
@@ -172,10 +176,10 @@
 
 Docs: https://api.flutter.dev/flutter/widgets/Container-class.html
 
-* Padding
-* Color (background color)
-* Alignment
-* Border
+- Padding
+- Color (background color)
+- Alignment
+- Border
 
 ## Row
 
@@ -188,6 +192,10 @@ Docs: https://api.flutter.dev/flutter/widgets/Column-class.html
 ## Expanded
 
 Docs: https://api.flutter.dev/flutter/widgets/Expanded-class.html
+
+## Padding
+
+Docs: https://api.flutter.dev/flutter/widgets/Padding-class.html
 
 ## Stack
 
@@ -227,8 +235,8 @@ Docs: https://api.flutter.dev/flutter/material/Text-class.html
 
 Selectable text docs: https://api.flutter.dev/flutter/material/SelectableText-class.html
 
-* Value
-* Border? (inside Container)
+- Value
+- Border? (inside Container)
 
 ## Icon
 
@@ -236,9 +244,9 @@ Docs: https://api.flutter.dev/flutter/widgets/Icon-class.html
 
 Properties:
 
-* Name ([The list of icons](https://api.flutter.dev/flutter/material/Icons-class.html))
-* Color ([more](https://api.flutter.dev/flutter/dart-ui/Color-class.html))
-* Size
+- Name ([The list of icons](https://api.flutter.dev/flutter/material/Icons-class.html))
+- Color ([more](https://api.flutter.dev/flutter/dart-ui/Color-class.html))
+- Size
 
 ## Image
 
@@ -246,14 +254,14 @@ Docs: https://api.flutter.dev/flutter/widgets/Image-class.html
 
 Properties:
 
-* Width
-* Height
-* Src
-* SemanticLabel (Alt)
-* Repeat: noRepeat, repeat, repeatX, repeatY
-* Opacity
-* Fit: contain, cover, fill, fitHeight, fitWidth, none, scaleDown
-* Border? (inside Container)
+- Width
+- Height
+- Src
+- SemanticLabel (Alt)
+- Repeat: noRepeat, repeat, repeatX, repeatY
+- Opacity
+- Fit: contain, cover, fill, fitHeight, fitWidth, none, scaleDown
+- Border? (inside Container)
 
 ## TextField
 
