@@ -1,7 +1,11 @@
+import os
+
 import flet
 from flet import Button, Dropdown, Stack, dropdown
 
-page = flet.page("page-1", no_window=True)
+# os.environ["FLET_SERVER_PORT"] = "8566"
+
+page = flet.page()
 
 dd = Dropdown(
     options=[

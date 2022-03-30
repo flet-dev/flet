@@ -12,6 +12,7 @@ import (
 
 const (
 	publicAccount = "p"
+	indexPage     = "index"
 	maxSlugSize   = 60
 )
 
@@ -21,6 +22,13 @@ type PageName struct {
 }
 
 func ParsePageName(pageName string) (*PageName, error) {
+
+	if strings.TrimSpace(pageName) == "" {
+		return &PageName{
+			Account: publicAccount,
+			Name:    indexPage,
+		}, nil
+	}
 
 	p := &PageName{}
 	p.Name = strings.ToLower(strings.Trim(strings.ReplaceAll(pageName, "\\", "/"), "/"))

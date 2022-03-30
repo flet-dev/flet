@@ -20,7 +20,7 @@ from flet.utils import *
 
 
 def page(
-    name=None,
+    name="",
     web=False,
     update=False,
     server=None,
@@ -38,7 +38,7 @@ def page(
 
 
 def app(
-    name=None,
+    name="",
     web=False,
     server=None,
     token=None,
@@ -78,7 +78,7 @@ def app(
 
 
 def _connect_internal(
-    name=None,
+    page_name=None,
     is_app=False,
     update=False,
     web=False,
@@ -133,13 +133,16 @@ def _connect_internal(
 
     def _on_ws_connect():
         if conn.page_name == None:
-            conn.page_name = "*" if name == "" or name == None else name
+            conn.page_name = page_name
         result = conn.register_host_client(
             conn.host_client_id, conn.page_name, is_app, update, token, permissions
         )
         conn.host_client_id = result.hostClientID
         conn.page_name = result.pageName
-        conn.page_url = f"{server.rstrip('/')}/{result.pageName}"
+        conn.page_url = server.rstrip("/")
+        if conn.page_name != constants.INDEX_PAGE:
+            conn.page_url += f"/{conn.page_name}"
+
         if not no_window and not conn.browser_opened:
             open_in_browser(conn.page_url)
             conn.browser_opened = True

@@ -179,6 +179,7 @@ for:
     build_script:
       # Flutter Web client
       - cd client
+      - flutter test
       - flutter build web --release --web-renderer auto
       - rm -rf build/web/canvaskit
       - ls -alR build/web
