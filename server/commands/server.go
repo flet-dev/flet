@@ -2,12 +2,12 @@ package commands
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"os/exec"
-	"path/filepath"
+	"strconv"
 	"sync"
 
-	"github.com/alexflint/go-filemutex"
 	"github.com/flet-dev/flet/server/cache"
 	"github.com/flet-dev/flet/server/config"
 	"github.com/flet-dev/flet/server/server"
@@ -28,23 +28,18 @@ func newServerCommand() *cobra.Command {
 		Long:  `Server is for ...`,
 		Run: func(cmd *cobra.Command, args []string) {
 
+			if serverPort == 0 {
+				var err error
+				serverPort, err = getFreePort()
+				if err != nil {
+					log.Fatalf("Error finding a free TCP port: %s.", err)
+				}
+			}
+
 			if background {
-				startServerService(attachedProcess)
+				startServerService(serverPort, attachedProcess)
 				return
 			}
-
-			// ensure one executable instance is running
-			m, err := filemutex.New(getLockFilename(serverPort))
-			if err != nil {
-				log.Fatalln("Cannot create mutex - directory did not exist or file could not be created")
-			}
-
-			err = m.TryLock()
-			if err != nil {
-				log.Fatalf("Another instance of Flet Server is already listening on port %d", serverPort)
-			}
-
-			defer m.Unlock()
 
 			// init cache
 			cache.Init()
@@ -63,17 +58,18 @@ func newServerCommand() *cobra.Command {
 	return cmd
 }
 
-func startServerService(attached bool) {
-	log.Traceln("Starting Flet Server")
+func startServerService(serverPort int, attached bool) {
+	log.Debugln("Starting Flet Server")
 
 	// run server
 	execPath, _ := os.Executable()
 
 	var cmd *exec.Cmd
+	args := []string{"server", "--port", strconv.Itoa(serverPort)}
 	if attached {
-		cmd = exec.Command(execPath, "server")
+		cmd = exec.Command(execPath, args...)
 	} else {
-		cmd = utils.GetDetachedCmd(execPath, "server")
+		cmd = utils.GetDetachedCmd(execPath, args...)
 	}
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, fmt.Sprintf("%s=true", config.LogToFileFlag))
@@ -84,9 +80,20 @@ func startServerService(attached bool) {
 		log.Fatalln(err)
 	}
 
-	log.Traceln("Server process started with PID:", cmd.Process.Pid)
+	log.Debugln("Server process started with PID:", cmd.Process.Pid)
+	fmt.Println(serverPort)
 }
 
-func getLockFilename(serverPort int) string {
-	return filepath.Join(os.TempDir(), fmt.Sprintf("flet-%d.lock", serverPort))
+func getFreePort() (int, error) {
+	addr, err := net.ResolveTCPAddr("tcp", "localhost:0")
+	if err != nil {
+		return 0, err
+	}
+
+	l, err := net.ListenTCP("tcp", addr)
+	if err != nil {
+		return 0, err
+	}
+	defer l.Close()
+	return l.Addr().(*net.TCPAddr).Port, nil
 }
