@@ -50,6 +50,7 @@ class ReconnectingWebSocket:
         self._on_message_handler = handler
 
     def _on_open(self, wsapp) -> None:
+        logging.info(f"Successfully connected to {self._url}")
         self.connected.set()
         self.retry = 0
         if self._on_connect_handler != None:

@@ -21,7 +21,7 @@ void main([List<String>? args]) {
   var pageUri = Uri.base;
 
   if (kDebugMode) {
-    pageUri = Uri.parse("http://localhost:8550/p/page-1");
+    pageUri = Uri.parse("http://localhost:8550");
   }
 
   if (kIsWeb) {

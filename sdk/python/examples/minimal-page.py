@@ -3,7 +3,7 @@ from time import sleep
 import flet
 from flet import Button, Stack, Text, Textbox
 
-page = flet.page(no_window=True)
+page = flet.page()
 
 txt1 = Text("Text A")
 txt2 = Text("Text B")
@@ -51,4 +51,4 @@ st1.controls[1].value = "Line 2"
 st1.controls[3].value = "Line 4"
 page.update()
 
-# input()
+input("Press ENTER to exit...")

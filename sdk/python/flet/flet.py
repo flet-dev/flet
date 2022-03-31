@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import signal
+import socket
 import tarfile
 import tempfile
 import threading
@@ -99,7 +100,10 @@ def _connect_internal(
         if env_port != None and env_port != "":
             port = env_port
 
-        port = _start_flet_server(port)
+        # page with a custom port starts detached process
+        attached = False if not is_app and port != 0 else True
+
+        port = _start_flet_server(port, attached)
         server = f"http://localhost:{port}"
 
     connected = threading.Event()
@@ -171,12 +175,13 @@ def _connect_internal(
     return conn
 
 
-def _start_flet_server(port):
+def _start_flet_server(port, attached):
 
     if port == 0:
-        print("Starting local Flet Server on random port...")
-    else:
-        print(f"Starting local Flet Server on port {port}...")
+        port = _get_free_tcp_port()
+
+    logging.info(f"Starting local Flet Server on port {port}...")
+    logging.info(f"Attached process: {attached}")
 
     flet_exe = "flet.exe" if is_windows() else "flet"
 
@@ -194,11 +199,29 @@ def _start_flet_server(port):
         else:
             logging.info(f"Flet Server found in PATH")
 
-    # start Flet server
-    args = [flet_path, "server", "--background", "--attached", "--port", str(port)]
+    flet_env = {**os.environ, "FLET_LOG_TO_FILE": "true"}
 
-    pr = subprocess.run(args, check=True, capture_output=True, universal_newlines=True)
-    port = pr.stdout.strip()
+    args = [flet_path, "server", "--port", str(port)]
+
+    if attached:
+        args.append("--attached")
+
+    log_level = logging.getLogger().getEffectiveLevel()
+    if log_level == logging.CRITICAL:
+        log_level = logging.FATAL
+
+    if log_level != logging.NOTSET:
+        log_level_name = logging.getLevelName(log_level).lower()
+        args.extend(["--log-level", log_level_name])
+
+    subprocess.Popen(
+        args,
+        env=flet_env,
+        # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
     return port
 
 
@@ -265,6 +288,12 @@ def _get_latest_flet_release():
         return releases[0]["tag_name"].lstrip("v")
     else:
         return None
+
+
+def _get_free_tcp_port():
+    sock = socket.socket()
+    sock.bind(("", 0))
+    return sock.getsockname()[1]
 
 
 # Fix: https://bugs.python.org/issue35935

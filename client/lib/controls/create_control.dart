@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flet_view/controls/dropdown.dart';
-import 'package:flet_view/models/control_view_model.dart';
-import '../models/app_state.dart';
-import 'textfield.dart';
 
+import '../models/control_view_model.dart';
+import '../models/app_state.dart';
+import 'expanded.dart';
+import 'row.dart';
+import 'textfield.dart';
+import 'dropdown.dart';
 import 'button.dart';
 import 'page.dart';
 import 'stack.dart';
@@ -32,8 +34,14 @@ Widget createControl(String id) {
           return TextControl(control: controlView.control);
         case "button":
           return ButtonControl(control: controlView.control);
+        case "expanded":
+          return ExpandedControl(
+              control: controlView.control, children: controlView.children);
         case "column":
           return ColumnControl(
+              control: controlView.control, children: controlView.children);
+        case "row":
+          return RowControl(
               control: controlView.control, children: controlView.children);
         case "stack":
           return StackControl(

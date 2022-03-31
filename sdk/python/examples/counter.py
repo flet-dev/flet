@@ -1,6 +1,8 @@
-import flet
-from flet import Button, Stack, Textbox
 import logging
+
+import flet
+from flet import Button, Column, Row, Textbox
+from flet.expanded import Expanded
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -29,15 +31,16 @@ def main(page):
     txt_number = Textbox(value="0", align="right")
 
     page.add(
-        Stack(
-            horizontal=True,
-            controls=[
-                Button("-", on_click=on_click, data="-"),
-                txt_number,
-                Button("+", on_click=on_click, data="+"),
-            ],
+        Expanded(
+            Row(
+                controls=[
+                    Button("-", on_click=on_click, data="-"),
+                    Expanded(txt_number),
+                    Button("+", on_click=on_click, data="+"),
+                ],
+            )
         )
     )
 
 
-flet.app("counter", target=main)
+flet.app(port=8550, target=main)

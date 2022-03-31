@@ -1,9 +1,10 @@
+import logging
 import os
 
 import flet
 from flet import Button, Dropdown, Stack, dropdown
 
-# os.environ["FLET_SERVER_PORT"] = "8566"
+logging.basicConfig(level=logging.INFO)
 
 page = flet.page()
 
