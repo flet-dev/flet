@@ -21,7 +21,8 @@ from flet.utils import *
 
 def page(
     name="",
-    web=False,
+    port=0,
+    share=False,
     update=False,
     server=None,
     token=None,
@@ -29,7 +30,7 @@ def page(
     no_window=False,
 ):
     conn = _connect_internal(
-        name, False, update, web, server, token, permissions, no_window
+        name, port, False, update, share, server, token, permissions, no_window
     )
     print("Page URL:", conn.page_url)
     page = Page(conn, constants.ZERO_SESSION)
@@ -39,7 +40,8 @@ def page(
 
 def app(
     name="",
-    web=False,
+    port=0,
+    share=False,
     server=None,
     token=None,
     target=None,
@@ -51,7 +53,7 @@ def app(
         raise Exception("target argument is not specified")
 
     conn = _connect_internal(
-        name, True, False, web, server, token, permissions, no_window, target
+        name, port, True, False, share, server, token, permissions, no_window, target
     )
     print("App URL:", conn.page_url)
 
@@ -79,24 +81,25 @@ def app(
 
 def _connect_internal(
     page_name=None,
+    port=0,
     is_app=False,
     update=False,
-    web=False,
+    share=False,
     server=None,
     token=None,
     permissions=None,
     no_window=False,
     session_handler=None,
 ):
-    if server == None and web:
+    if share and server == None:
         server = constants.HOSTED_SERVICE_URL
     elif server == None:
+        # local mode
         env_port = os.getenv("FLET_SERVER_PORT")
-        port = (
-            env_port
-            if env_port != None and env_port != ""
-            else constants.FLET_SERVER_DEFAULT_PORT
-        )
+        if env_port != None and env_port != "":
+            port = env_port
+
+        port = _start_flet_server(port)
         server = f"http://localhost:{port}"
 
     connected = threading.Event()
@@ -150,8 +153,8 @@ def _connect_internal(
 
     def _on_ws_failed_connect():
         logging.info(f"Failed to connect: {ws_url}")
-        if is_localhost_url(ws_url):
-            _start_flet_server()
+        # if is_localhost_url(ws_url):
+        #     _start_flet_server()
 
     ws.on_connect = _on_ws_connect
     ws.on_failed_connect = _on_ws_failed_connect
@@ -168,8 +171,12 @@ def _connect_internal(
     return conn
 
 
-def _start_flet_server():
-    print("Starting Flet Server in local mode...")
+def _start_flet_server(port):
+
+    if port == 0:
+        print("Starting local Flet Server on random port...")
+    else:
+        print(f"Starting local Flet Server on port {port}...")
 
     flet_exe = "flet.exe" if is_windows() else "flet"
 
@@ -188,9 +195,11 @@ def _start_flet_server():
             logging.info(f"Flet Server found in PATH")
 
     # start Flet server
-    args = [flet_path, "server", "--background", "--attached"]
+    args = [flet_path, "server", "--background", "--attached", "--port", str(port)]
 
-    subprocess.run(args, check=True)
+    pr = subprocess.run(args, check=True, capture_output=True, universal_newlines=True)
+    port = pr.stdout.strip()
+    return port
 
 
 def _get_ws_url(server: str):

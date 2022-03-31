@@ -3,7 +3,7 @@ from time import sleep
 import flet
 from flet import Button, Stack, Text, Textbox
 
-page = flet.page("page-1", no_window=True)
+page = flet.page(port=8560)
 
 txt1 = Text("Text A")
 # page.add(txt1)

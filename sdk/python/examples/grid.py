@@ -200,4 +200,4 @@ def main(page):
     )
 
 
-flet.app("python-grid", target=main, web=False)
+flet.app("python-grid", target=main, share=False)

@@ -91,4 +91,4 @@ def main(page):
     page.add(messages_pane, form, dlg)
 
 
-flet.app("chat", target=main, web=False)
+flet.app("chat", target=main, share=False)

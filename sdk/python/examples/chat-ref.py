@@ -100,4 +100,4 @@ def main(page):
     )
 
 
-flet.app("chat", target=main, web=False)
+flet.app("chat", target=main, share=False)
