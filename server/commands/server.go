@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"os"
@@ -16,7 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newServerCommand() *cobra.Command {
+func newServerCommand(cancel context.CancelFunc) *cobra.Command {
 
 	var serverPort int
 	var background bool
@@ -41,6 +42,10 @@ func newServerCommand() *cobra.Command {
 				return
 			}
 
+			if attachedProcess {
+				go monitorParentProcess(cancel)
+			}
+
 			// init cache
 			cache.Init()
 
@@ -56,6 +61,24 @@ func newServerCommand() *cobra.Command {
 	cmd.Flags().BoolVarP(&attachedProcess, "attached", "a", false, "attach background server process to the parent one")
 
 	return cmd
+}
+
+func monitorParentProcess(cancel context.CancelFunc) {
+
+	ppid := os.Getppid()
+	pp, err := os.FindProcess(ppid)
+	if err != nil {
+		log.Fatalf("Cannot find parent process with PID %d: %s", ppid, err)
+	}
+
+	ps, err := pp.Wait()
+	if err != nil {
+		log.Fatalf("Error waiting parent process to exit: %s", err)
+	}
+
+	log.Println("Parent process exited with code", ps.ExitCode())
+
+	cancel()
 }
 
 func startServerService(serverPort int, attached bool) {

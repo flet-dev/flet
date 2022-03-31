@@ -7,7 +7,8 @@ port = 8570
 flet_path = "flet.exe"
 args = [flet_path, "server", "--attached", "--port", str(port)]
 
-subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+subprocess.Popen(args, stdout=subprocess.DEVNULL)
+print("started")
 
 sleep(5)
 

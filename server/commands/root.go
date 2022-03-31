@@ -1,6 +1,8 @@
 package commands
 
 import (
+	"context"
+
 	"github.com/spf13/cobra"
 )
 
@@ -9,7 +11,7 @@ var (
 	LogLevel string
 )
 
-func NewRootCmd() *cobra.Command {
+func NewRootCmd(cancel context.CancelFunc) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "flet",
 		Short:   "Flet",
@@ -24,7 +26,7 @@ func NewRootCmd() *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&LogLevel, "log-level", "l", "info", "verbosity level for logs")
 
 	cmd.AddCommand(
-		newServerCommand(),
+		newServerCommand(cancel),
 	)
 
 	return cmd
