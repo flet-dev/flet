@@ -39,4 +39,4 @@ class Expanded(Control):
         self.__control = value
 
     def _get_children(self):
-        return [self.__control]
+        return [] if not self.__control else [self.__control]

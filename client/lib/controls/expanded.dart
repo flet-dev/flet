@@ -1,3 +1,4 @@
+import 'package:flet_view/controls/error.dart';
 import 'package:flutter/widgets.dart';
 import '../models/control.dart';
 import 'create_control.dart';
@@ -14,7 +15,8 @@ class ExpandedControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Expanded build: ${control.id}");
     if (control.childIds.isEmpty) {
-      return const SizedBox.shrink();
+      return ErrorControl(
+          'Error drawing Expanded with ID ${control.id}: it doesn\'t contain child control.');
     } else {
       return Expanded(child: createControl(control.childIds.first));
     }

@@ -33,7 +33,7 @@ Widget createControl(String id) {
         case "text":
           return TextControl(control: controlView.control);
         case "button":
-          return ButtonControl(control: controlView.control);
+          return ButtonControl(control: controlView.control, disabled: true);
         case "expanded":
           return ExpandedControl(
               control: controlView.control, children: controlView.children);

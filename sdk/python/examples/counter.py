@@ -36,10 +36,12 @@ def main(page):
                 controls=[
                     Button("-", on_click=on_click, data="-"),
                     Expanded(txt_number),
+                    Expanded(Textbox(label="Another textbox")),
                     Button("+", on_click=on_click, data="+"),
                 ],
             )
-        )
+        ),
+        Expanded(),
     )
 
 

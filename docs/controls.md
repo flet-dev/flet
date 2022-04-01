@@ -172,6 +172,27 @@
     </tr>
 </table>
 
+## Control
+
+Base control class.
+
+Properties:
+
+- Expanded (int) - The control is forced to fill the available space inside Row or Column. Flex factor specified by the property. Default is 1. The property has affect only for direct descendants of Row and Column controls. (Wrap control into Expanded).
+- Expand (bool) - SizedBox.expand
+- Flex (int) - The child can be at most as large as the available space (but is allowed to be smaller) inside Row or Column. Flex factor specified by the property. Default is 1. The property has affect only for direct descendants of Row and Column controls. (Wrap control into Flexible with fit=FlexFit.loose).
+- Width - wrap into SizedBox
+- Height - wrap into SizedBox
+- MinHeight - wrap into ConstrainedBox
+- MaxHeight - wrap into ConstrainedBox
+- MinWidth - wrap into ConstrainedBox
+- MaxWidth - wrap into ConstrainedBox
+
+More info:
+
+- https://api.flutter.dev/flutter/widgets/Expanded-class.html
+- https://api.flutter.dev/flutter/widgets/Flexible-class.html
+
 ## Container
 
 Docs: https://api.flutter.dev/flutter/widgets/Container-class.html
@@ -184,6 +205,9 @@ Docs: https://api.flutter.dev/flutter/widgets/Container-class.html
 ## Row
 
 Docs: https://api.flutter.dev/flutter/widgets/Row-class.html
+
+- Gap - could be made with SizedBox()
+- Wrap - switch to "Wrap" control
 
 ## Column
 

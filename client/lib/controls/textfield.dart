@@ -50,7 +50,8 @@ class _TextFieldControlState extends State<TextFieldControl> {
           return TextFormField(
               //initialValue: widget.control.attrs["value"] ?? "",
               decoration: InputDecoration(
-                  labelText: widget.control.attrs["label"] ?? ""),
+                  labelText: widget.control.attrs["label"] ?? "",
+                  border: const OutlineInputBorder()),
               controller: _controller,
               onChanged: (String value) {
                 debugPrint(value);
