@@ -1,7 +1,9 @@
-import flet
 import pytest
 from beartype.roar import BeartypeCallHintPepParamException
-from flet import Grid, Column
+
+import flet
+from flet import Grid
+from flet.grid import Column
 from flet.protocol import Command
 
 
@@ -16,7 +18,12 @@ expected_result = [
         indent=0,
         name=None,
         values=["grid"],
-        attrs={"compact": "true", "headervisible": "true", "selection": "multiple", "shimmerlines": "1"},
+        attrs={
+            "compact": "true",
+            "headervisible": "true",
+            "selection": "multiple",
+            "shimmerlines": "1",
+        },
         lines=[],
         commands=[],
     ),
