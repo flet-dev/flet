@@ -13,7 +13,11 @@ import 'utils/uri.dart';
 import 'web_socket_client.dart';
 import 'controls/create_control.dart';
 
-void main([List<String>? args]) {
+import 'session_store/session_store.dart'
+    if (dart.library.io) "session_store/session_store_io.dart"
+    if (dart.library.js) "session_store/session_store_js.dart";
+
+void main([List<String>? args]) async {
   //setupWindow();
 
   final store = Store<AppState>(appReducer, initialState: AppState.initial());
@@ -21,7 +25,7 @@ void main([List<String>? args]) {
   var pageUri = Uri.base;
 
   if (kDebugMode) {
-    pageUri = Uri.parse("http://localhost:8550");
+    pageUri = Uri.parse("http://localhost:8550/p/test1");
   }
 
   if (kIsWeb) {
@@ -38,10 +42,12 @@ void main([List<String>? args]) {
 
   debugPrint("Page URL: $pageUri");
 
+  String? sessionId = SessionStore.get("sessionId");
+
   // connect WS
   ws.connect(serverUrl: getWebSocketEndpoint(pageUri), store: store);
 
-  ws.registerWebClient(pageName: getWebPageName(pageUri));
+  ws.registerWebClient(pageName: getWebPageName(pageUri), sessionId: sessionId);
 
   runApp(FletApp(
     title: 'Flet',
