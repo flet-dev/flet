@@ -317,6 +317,10 @@
     </tr>
 </table>
 
+## Color
+
+[Full list of colors](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/colors.dart)
+
 ## Page
 
 Properties:
@@ -435,12 +439,27 @@ Docs: https://api.flutter.dev/flutter/material/Text-class.html
 
 Selectable text docs: https://api.flutter.dev/flutter/material/SelectableText-class.html
 
-- Value
-- Border? (inside Container)
+TextTheme: https://api.flutter.dev/flutter/material/TextTheme-class.html
+
+- value
+- textAlign - `center`, `end`, `justify`, `left`, `right`, `start` (for RTL and LTR texts)
+- size
+- bold (weight=w700)
+- weight
+- italic
+- themeStyle ([more details](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/text_theme.dart))
+- pre (P2) - [more info](https://stackoverflow.com/questions/64145307/full-list-of-font-families-provided-with-flutter)
+- color
+- bgColor
+- overflow - (TextOverflow) `clip`, `ellipsis`, `fade`, `visible`
+- selectable
+
 
 ## Icon
 
 Docs: https://api.flutter.dev/flutter/widgets/Icon-class.html
+
+Icons list: https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/src/material/icons.dart
 
 Properties:
 

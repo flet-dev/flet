@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flet_view/widgets/loading_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:window_size/window_size.dart';
 import 'package:flutter/material.dart';
@@ -42,27 +43,32 @@ void main([List<String>? args]) async {
 
   debugPrint("Page URL: $pageUri");
 
+  String pageName = getWebPageName(pageUri);
   String? sessionId = SessionStore.get("sessionId");
 
   // connect WS
   ws.connect(serverUrl: getWebSocketEndpoint(pageUri), store: store);
 
-  ws.registerWebClient(pageName: getWebPageName(pageUri), sessionId: sessionId);
-
   runApp(FletApp(
     title: 'Flet',
     store: store,
+    pageName: pageName,
+    sessionId: sessionId,
   ));
 }
 
 class FletApp extends StatelessWidget {
   final Store<AppState> store;
   final String title;
+  final String pageName;
+  final String? sessionId;
 
   const FletApp({
     Key? key,
     required this.store,
     required this.title,
+    required this.pageName,
+    required this.sessionId,
   }) : super(key: key);
 
   @override
@@ -74,11 +80,11 @@ class FletApp extends StatelessWidget {
         converter: (store) => PageViewModel.fromStore(store),
         builder: (context, viewModel) {
           if (viewModel.isLoading) {
-            return MaterialApp(
-                title: title,
-                home: const Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
-                ));
+            return LoadingPage(
+              title: title,
+              pageName: pageName,
+              sessionId: sessionId,
+            );
           } else if (viewModel.error != "") {
             return MaterialApp(
                 title: title,
