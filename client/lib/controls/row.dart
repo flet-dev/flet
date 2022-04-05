@@ -12,6 +12,7 @@ class RowControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Row build: ${control.id}");
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children:

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'protocol/append_control_props_request.dart';
 import 'protocol/clean_control_payload.dart';
 import 'protocol/page_controls_batch_payload.dart';
@@ -9,6 +11,11 @@ import 'protocol/app_become_inactive_payload.dart';
 import 'protocol/register_webclient_response.dart';
 import 'protocol/session_crashed_payload.dart';
 import 'protocol/signout_payload.dart';
+
+class PageSizeChangeAction {
+  final Size newSize;
+  PageSizeChangeAction(this.newSize);
+}
 
 class RegisterWebClientAction {
   final RegisterWebClientResponse payload;

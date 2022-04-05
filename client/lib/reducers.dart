@@ -6,6 +6,7 @@ import 'package:flet_view/protocol/clean_control_payload.dart';
 import 'package:flet_view/protocol/message.dart';
 import 'package:flet_view/protocol/remove_control_payload.dart';
 import 'package:flet_view/protocol/update_control_props_payload.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'actions.dart';
 import 'models/app_state.dart';
@@ -18,7 +19,13 @@ import 'session_store/session_store.dart'
 enum Actions { increment, setText, setError }
 
 AppState appReducer(AppState state, dynamic action) {
-  if (action is RegisterWebClientAction) {
+  if (action is PageSizeChangeAction) {
+    //
+    // page size changed
+    //
+    debugPrint("New page size: ${action.newSize}");
+    return state.copyWith(size: action.newSize);
+  } else if (action is RegisterWebClientAction) {
     //
     // register web client
     //
