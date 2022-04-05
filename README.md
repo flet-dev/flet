@@ -1,5 +1,3 @@
-# Flet
+# Flet - build realtime cross-platform apps in your favorite language
 
-Build beautiful realtime web, mobile and desktop apps in your favorite language and share them with your team.
-
-
+Flet enables you to easily build realtime web, mobile and desktop apps in your favorite language and securely share them with your team.
