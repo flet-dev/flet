@@ -4,7 +4,7 @@ skip_commits:
   files:
     - docs/**/*
     - media/**/*
-    - *.md
+    - '*.md'
 
 environment:
   GO_VERSION: 1.18
