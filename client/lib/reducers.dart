@@ -23,8 +23,19 @@ AppState appReducer(AppState state, dynamic action) {
     //
     // page size changed
     //
-    debugPrint("New page size: ${action.newSize}");
-    return state.copyWith(size: action.newSize);
+    // calculate break point
+    final width = action.newSize.width;
+    String newBreakpoint = "";
+    state.sizeBreakpoints.forEach((bpName, bpWidth) {
+      if (width >= bpWidth) {
+        newBreakpoint = bpName;
+      }
+    });
+
+    debugPrint(
+        "New page size: ${action.newSize}, new breakpoint: $newBreakpoint");
+
+    return state.copyWith(size: action.newSize, sizeBreakpoint: newBreakpoint);
   } else if (action is RegisterWebClientAction) {
     //
     // register web client
