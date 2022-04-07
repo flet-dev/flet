@@ -11,7 +11,6 @@ import urllib.request
 import zipfile
 from pathlib import Path
 from time import sleep
-from typing import Literal
 
 from flet import constants
 from flet.connection import Connection
@@ -19,6 +18,12 @@ from flet.event import Event
 from flet.page import Page
 from flet.reconnecting_websocket import ReconnectingWebSocket
 from flet.utils import *
+
+try:
+    from typing import Literal
+except:
+    from typing_extensions import Literal
+
 
 WEB_BROWSER = Literal[1]
 FLET_VIEW = Literal[2]
