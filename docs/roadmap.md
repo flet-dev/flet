@@ -3,40 +3,52 @@
 ## Sprint 1
 
 * Controls
+  * Common
+    * [ ] Control
+    * [ ] Page
   * Layout
     * [ ] Container
-    * Row (flex - default mode, wrap)
-    * Column (flex - default mode, wrap)
-    * Stack
-    * ListView
-    * GridView
-  * Base controls
-    * Text
-    * Icon
-    * Image (+custom assets directory for Flet server [see here](https://docs.flutter.dev/development/platform-integration/web-images)).
-    * ProgressBar
-    * ProgressRing
+    * [ ] Row (flex - default mode, wrap)
+    * [ ] Column (flex - default mode, wrap)
+    * [ ] Stack
+    * [ ] ListView
+    * [ ] GridView
+  * Basic controls
+    * [ ] Text
+    * [ ] Icon
+    * [ ] Image (+custom assets directory for Flet server [see here](https://docs.flutter.dev/development/platform-integration/web-images)).
+    * [ ] ProgressBar
+    * [ ] ProgressRing
   * Buttons
-    * ElevatedButton
-    * OutlinedButton
-    * TextButton
-    * IconButton
-  * Forms
-    * TextField
-    * Checkbox
-    * Radio
-    * Dropdown
-    * Slider
-    * Switch
+    * [ ] ElevatedButton
+    * [ ] OutlinedButton
+    * [ ] TextButton
+    * [ ] IconButton
+  * Input and selections
+    * [ ] TextField
+    * [ ] Checkbox
+    * [ ] Radio
+    * [ ] Dropdown
+    * [ ] Slider
+    * [ ] Switch
   * Dialogs, alerts and panels
-    * Banner
-    * SnackBar
-    * AlertDialog
+    * [ ] Banner
+    * [ ] SnackBar
+    * [ ] AlertDialog
 
-* Python Guide
-  * Deployment (+how to change favicon.ico)
-    * Deployment to Replit
-    * Deployment to Fly.io
+* Flet View (client)
+  * [ ] Web
+  * [ ] Windows
+  * [ ] macOS
+
+* Website
+  * [ ] Controls S1 reference
+  * [ ] Introduction
+  * [ ] Blog post
+  * [ ] Python Guide
+    * Deployment (+how to change favicon.ico)
+      * Deployment to Replit
+      * Deployment to Fly.io
 
 ## Sprint 2
 
@@ -116,7 +128,7 @@
         <td>-</td>
         <td></td>
     </tr>
-    <tr><th colspan="4">Base controls</th></tr>
+    <tr><th colspan="4">Basic controls</th></tr>
     <tr>
         <td></td>
         <td>Text</td>
@@ -202,7 +214,7 @@
         <td>-</td>
         <td></td>
     </tr>
-    <tr><th colspan="4">Forms</th></tr>
+    <tr><th colspan="4">Input and selections</th></tr>
     <tr>
         <td></td>
         <td>Checkbox</td>
