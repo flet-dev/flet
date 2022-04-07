@@ -17,7 +17,6 @@ class Connection:
         self.host_client_id = None
         self.page_name = None
         self.page_url = None
-        self.browser_opened = False
         self.sessions = {}
 
     @property

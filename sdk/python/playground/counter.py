@@ -49,4 +49,4 @@ def main(page):
     )
 
 
-flet.app(name="test1", port=8550, target=main)
+flet.app(name="test1", port=8550, target=main, view=flet.FLET_VIEW)

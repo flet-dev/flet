@@ -11,6 +11,7 @@ import urllib.request
 import zipfile
 from pathlib import Path
 from time import sleep
+from typing import Literal
 
 from flet import constants
 from flet.connection import Connection
@@ -19,42 +20,55 @@ from flet.page import Page
 from flet.reconnecting_websocket import ReconnectingWebSocket
 from flet.utils import *
 
+WEB_BROWSER = Literal[1]
+FLET_VIEW = Literal[2]
+
+AppViewer = Literal[
+    None,
+    WEB_BROWSER,
+    FLET_VIEW,
+]
+
 
 def page(
     name="",
     port=0,
-    share=False,
-    update=False,
-    server=None,
-    token=None,
     permissions=None,
-    no_window=False,
+    view: AppViewer = WEB_BROWSER,
 ):
     conn = _connect_internal(
-        name, port, False, update, share, server, token, permissions, no_window
+        page_name=name,
+        port=port,
+        is_app=False,
+        permissions=permissions,
     )
     print("Page URL:", conn.page_url)
     page = Page(conn, constants.ZERO_SESSION)
     conn.sessions[constants.ZERO_SESSION] = page
+
+    if view == WEB_BROWSER:
+        open_in_browser(conn.page_url)
+
     return page
 
 
 def app(
     name="",
     port=0,
-    share=False,
-    server=None,
-    token=None,
     target=None,
     permissions=None,
-    no_window=False,
+    view: AppViewer = FLET_VIEW,
 ):
 
     if target == None:
         raise Exception("target argument is not specified")
 
     conn = _connect_internal(
-        name, port, True, False, share, server, token, permissions, no_window, target
+        page_name=name,
+        port=port,
+        is_app=True,
+        permissions=permissions,
+        session_handler=target,
     )
     print("App URL:", conn.page_url)
 
@@ -67,15 +81,22 @@ def app(
     signal.signal(signal.SIGINT, exit_gracefully)
     signal.signal(signal.SIGTERM, exit_gracefully)
 
-    try:
-        print("Connected to Flet app and handling user sessions...")
+    print("Connected to Flet app and handling user sessions...")
 
-        if is_windows():
-            input()
-        else:
-            terminate.wait()
-    except (Exception) as e:
-        pass
+    if view == WEB_BROWSER:
+        open_in_browser(conn.page_url)
+        try:
+            if is_windows():
+                input()
+            else:
+                terminate.wait()
+        except (Exception) as e:
+            pass
+    elif view == FLET_VIEW:
+        try:
+            subprocess.call(["flet_view.exe", conn.page_url])
+        except (Exception) as e:
+            pass
 
     conn.close()
 
@@ -89,7 +110,6 @@ def _connect_internal(
     server=None,
     token=None,
     permissions=None,
-    no_window=False,
     session_handler=None,
 ):
     if share and server == None:
@@ -149,10 +169,6 @@ def _connect_internal(
         conn.page_url = server.rstrip("/")
         if conn.page_name != constants.INDEX_PAGE:
             conn.page_url += f"/{conn.page_name}"
-
-        if not no_window and not conn.browser_opened:
-            open_in_browser(conn.page_url)
-            conn.browser_opened = True
         connected.set()
 
     def _on_ws_failed_connect():
@@ -203,8 +219,11 @@ def _start_flet_server(port, attached):
 
     args = [flet_path, "server", "--port", str(port)]
 
+    creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
+
     if attached:
         args.append("--attached")
+        creationflags = 0
 
     log_level = logging.getLogger().getEffectiveLevel()
     if log_level == logging.CRITICAL:
@@ -217,7 +236,7 @@ def _start_flet_server(port, attached):
     subprocess.Popen(
         args,
         env=flet_env,
-        # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+        creationflags=creationflags,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
