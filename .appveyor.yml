@@ -84,6 +84,9 @@ for:
       only:
         - job_name: Build Flet View for Windows
 
+    environment:
+      VC_REDIST_DIR: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.29.30133\x64\Microsoft.VC142.CRT'
+
     install:
       - ps: .\ci\install_flutter.ps1
       - set PATH=C:\flutter\bin;%PATH%
@@ -93,12 +96,16 @@ for:
       - cd client
       - flutter test
       - flutter build windows
-      - dir build\windows\runner\Release
+      - set RELEASE_DIR=build\windows\runner\Release
+      - copy %VC_REDIST_DIR%\msvcp140.dll %RELEASE_DIR%
+      - copy %VC_REDIST_DIR%\vcruntime140.dll %RELEASE_DIR%
+      - copy %VC_REDIST_DIR%\vcruntime140_1.dll %RELEASE_DIR%
+      - dir %RELEASE_DIR%
 
     test: off
 
     artifacts:
-      - path: client\build\windows\runner\Release\*
+      - path: client\build\windows\runner\Release\
         name: flet_view_windows
 
   # ======================================
