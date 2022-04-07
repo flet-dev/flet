@@ -1,5 +1,11 @@
 skip_branch_with_pr: true
 
+skip_commits:
+  files:
+    - docs/**/*
+    - media/**/*
+    - "*.md"
+
 environment:
   GO_VERSION: 1.18
   GO_TAGS: --tags release
