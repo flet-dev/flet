@@ -14,6 +14,8 @@ Fluent UI is mostly an internal project...
 
 Flutter is fresh and awesome ... Flutter is [ideal for Single Page Apps (SPA)](https://docs.flutter.dev/development/platform-integration/web#what-scenarios-are-ideal-for-flutter-on-the-web). Many developers critisize Flutter for rendering everything on canvas making SEO impossible. But I personally see rendering on canvas as an advantage: 1) the app looks less clunky, 2) the app looks the same as on desktop and mobile. Non-selectable text? Have you ever tried to select something in AWS or Azure console? If you strongly need SEO then you should choose HTML-based framework such as Next.js or similar. You obviously don't need SEO for your internal dashboard, game or admin panel.
 
+Flutter is broader. We'll start from Material design and then add platform specific controls: [Fluent UI](https://bdlukaa.github.io/fluent_ui/) for Windows, [macOS UI](https://pub.dev/packages/macos_ui#macoswindow) for macOS and [Cupertino widgets](https://docs.flutter.dev/development/ui/widgets/cupertino) for iOS. We could probably implement "adaptive" Fler controls which look-n-feel depends on the platform the app is running on.
+
 Flutter will give access to mobile experiences: camera, location services, accelerometer, etc.
 
 A lot of renamings would create a mess in a project repo - it's easier to start over in a new repository.
