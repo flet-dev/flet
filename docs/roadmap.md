@@ -1,5 +1,51 @@
 # Flet Roadmap
 
+## Sprint 1
+
+* Controls
+  * Layout
+    * [ ] Container
+    * Row (flex - default mode, wrap)
+    * Column (flex - default mode, wrap)
+    * Stack
+    * ListView
+    * GridView
+  * Base controls
+    * Text
+    * Icon
+    * Image (+custom assets directory for Flet server [see here](https://docs.flutter.dev/development/platform-integration/web-images)).
+    * ProgressBar
+    * ProgressRing
+  * Buttons
+    * ElevatedButton
+    * OutlinedButton
+    * TextButton
+    * IconButton
+  * Forms
+    * TextField
+    * Checkbox
+    * Radio
+    * Dropdown
+    * Slider
+    * Switch
+  * Dialogs, alerts and panels
+    * Banner
+    * SnackBar
+    * AlertDialog
+
+* Python Guide
+  * Deployment (+how to change favicon.ico)
+    * Deployment to Replit
+    * Deployment to Fly.io
+
+## Sprint 2
+
+* Controls
+  * Layout
+    * Row (responsive)
+    * Column (responsive)
+
+
 ## Controls
 
 <table>
@@ -7,7 +53,7 @@
         <th>✓ Status</th>
         <th>Flet</th>
         <th>Pglet</th>
-        <th>Phase</th>
+        <th>Sprint</th>
     </tr>
     <tr><th colspan="4">Layout</th></tr>
     <tr>
@@ -240,7 +286,7 @@
         <td></td>
         <td>AlertDialog</td>
         <td>Dialog</td>
-        <td></td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
@@ -319,6 +365,14 @@
     </tr>
 </table>
 
+## Clients (Flet View)
+
+* Web - S1
+* Windows - S1
+* macOS - S1
+* iOS
+* Android
+
 ## Colors
 
 [Full list of Material colors](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/colors.dart)
@@ -332,15 +386,14 @@
 Properties:
 
 - title
-- design - `material` (default), `cupertino`, `fluent`, `macos`.
-- theme - `light`, `dark`, `system`
+- design (S2) - `material` (default), `cupertino`, `fluent`, `macos`.
+- themeMode - `system` (default), `light`, `dark` ([more info](https://stackoverflow.com/questions/60232070/how-to-implement-dark-mode-in-flutter))
 - horizontalAlignment - `start` (default), `center`, `end`, `stretch`
 - verticalAlignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
 - spacing - gap between adjacent items, default
 - color - background color
 - windowWidth - current window width
 - windowHeight - current window height
-- themeMode - `system` (default), `light`, `dark` ([more info](https://stackoverflow.com/questions/60232070/how-to-implement-dark-mode-in-flutter))
 
 ## Control
 
