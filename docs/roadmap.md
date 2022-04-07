@@ -1,4 +1,6 @@
-# Controls
+# Flet Roadmap
+
+## Controls
 
 <table>
     <tr>
@@ -12,43 +14,49 @@
         <td></td>
         <td>Container</td>
         <td>Stack</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>Row</td>
         <td>Stack horizontal=True</td>
-        <td>P1</td>
+        <td>S1 (flex, wrap)</td>
     </tr>
     <tr>
         <td></td>
         <td>Column</td>
         <td>Stack horizontal=False</td>
-        <td>P1</td>
+        <td>S1 (flex, wrap)</td>
     </tr>
     <tr>
         <td></td>
         <td>Stack</td>
         <td>-</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>ListView</td>
         <td>Stack horizontal=False</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>Divider</td>
         <td>-</td>
-        <td>P1</td>
-    </tr>    
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Spacer</td>
+        <td>-</td>
+        <td></td>
+    </tr>
     <tr>
         <td></td>
         <td>GridView</td>
         <td>-</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
@@ -60,32 +68,32 @@
         <td></td>
         <td>Card</td>
         <td>-</td>
-        <td>P1</td>
+        <td></td>
     </tr>
     <tr><th colspan="4">Base controls</th></tr>
     <tr>
         <td></td>
         <td>Text</td>
         <td>Text</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>Markdown</td>
         <td>Text markdown=True</td>
-        <td>P1</td>
+        <td></td>
     </tr>    
     <tr>
         <td></td>
         <td>Icon</td>
         <td>Icon</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>Image</td>
         <td>Image</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
@@ -97,81 +105,75 @@
         <td></td>
         <td><a href="https://stackoverflow.com/questions/43583411/how-to-create-a-hyperlink-in-flutter-widget">To-Do</a></td>
         <td>Link</td>
-        <td>P1</td>
+        <td></td>
     </tr>
     <tr>
         <td></td>
         <td>ProgressBar</td>
         <td>Progress</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>ProgressRing</td>
         <td>Spinner</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr><th colspan="4">Buttons</th></tr>
     <tr>
         <td></td>
         <td>ElevatedButton</td>
         <td>Button primary=True</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>OutlinedButton</td>
         <td>Button primary=False</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>TextButton</td>
         <td>Button action=True</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>IconButton</td>
         <td>Button icon={icon_name}</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>PopupMenuButton</td>
         <td>Button with MenuItems</td>
-        <td>P1</td>
+        <td></td>
     </tr>
     <tr>
         <td></td>
         <td>FloatingActionButton</td>
         <td>-</td>
-        <td>P1</td>
-    </tr>    
-    <tr>
         <td></td>
-        <td>Any Button with a custom "child"</td>
-        <td>Button compound=True</td>
-        <td>P1</td>
     </tr>
     <tr><th colspan="4">Forms</th></tr>
     <tr>
         <td></td>
         <td>Checkbox</td>
         <td>Checkbox</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>Radio</td>
         <td>ChoiceGroup</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>Dropdown</td>
         <td>Dropdown</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
@@ -201,19 +203,19 @@
         <td></td>
         <td>Slider</td>
         <td>Slider</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>TextField</td>
         <td>Textbox</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>Switch</td>
         <td>Toggle</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
@@ -226,13 +228,13 @@
         <td></td>
         <td>Banner</td>
         <td>Message</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
         <td>SnackBar</td>
         <td>-</td>
-        <td>P1</td>
+        <td>S1</td>
     </tr>
     <tr>
         <td></td>
@@ -317,9 +319,13 @@
     </tr>
 </table>
 
-## Color
+## Colors
 
-[Full list of colors](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/colors.dart)
+[Full list of Material colors](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/colors.dart)
+
+## Icons
+
+[Full list of Material icons](https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/src/material/icons.dart)
 
 ## Page
 
