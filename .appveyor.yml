@@ -18,9 +18,9 @@ environment:
     secure: V9nRzVDlIGS0a+dhkC2/vw==
 
   matrix:
-    # - job_name: Windows
-    #   job_group: tests
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    - job_name: Build Flet View for Windows
+      job_group: build_flet_view
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
     # - job_name: Linux
     #   job_group: tests
@@ -32,7 +32,7 @@ environment:
 
     - job_name: Build Server binaries
       job_group: build_server
-      job_depends_on: tests
+      job_depends_on: build_flet_view
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.7
@@ -77,34 +77,29 @@ stack: python $python_version
 
 for:
   # ======================================
-  #      Windows
+  #      Build Flet View for Windows
   # ======================================
 
   - matrix:
       only:
-        - job_name: Windows
+        - job_name: Build Flet View for Windows
 
     install:
-      - ps: .\install_go.ps1
-      - set GOPATH=%USERPROFILE%\go
-      - set PATH=%GOPATH%\bin;%PATH%
-      - echo %GOPATH%
-      - echo %GOROOT%
-      - go version
+      - ps: .\ci\install_flutter.ps1
+      - set PATH=C:\flutter\bin;%PATH%
+      - flutter --version
 
     build_script:
-      - ps: Install-Product node 12 x64
       - cd client
-      - yarn
-      - yarn build
-      - cd ..
-      - mkdir internal\server\content
-      - xcopy client\build internal\server\content\ /E /Y
-      - .\build.cmd
-      - dir %USERPROFILE%\Go\bin
+      - flutter test
+      - flutter build windows
+      - dir build\windows\runner\Release
 
-    test_script:
-      - run-tests.cmd
+    test: off
+
+    artifacts:
+      - path: client\build\windows\runner\Release\*
+        name: flet_view_windows
 
   # ======================================
   #      Linux

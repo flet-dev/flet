@@ -94,7 +94,7 @@ def app(
             pass
     elif view == FLET_VIEW:
         try:
-            subprocess.call(["flet_view.exe", conn.page_url])
+            _open_flet_view(conn.page_url)
         except (Exception) as e:
             pass
 
@@ -242,6 +242,29 @@ def _start_flet_server(port, attached):
     )
 
     return port
+
+
+def _open_flet_view(page_url):
+
+    logging.info(f"Starting Flet View app...")
+
+    flet_view_exe = "flet_view.exe" if is_windows() else "flet_view"
+
+    # check if flet_view.exe exists in "bin" directory (user mode)
+    p = Path(__file__).parent.joinpath("bin", flet_view_exe)
+    if p.exists():
+        flet_view_path = str(p)
+        logging.info(f"Flet View found in: {flet_view_path}")
+    else:
+        # check if flet.exe is in PATH (flet developer mode)
+        flet_view_path = which(flet_view_exe)
+        if flet_view_path:
+            logging.info(f"Flet View found in PATH: {flet_view_path}")
+        else:
+            logging.info(f"No Flet View found in PATH or 'bin' directory.")
+            return
+
+    subprocess.call([flet_view_path, page_url])
 
 
 def _get_ws_url(server: str):
