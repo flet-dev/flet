@@ -7,6 +7,7 @@ void main() {
         getWebPageName(Uri.parse('http://localhost:8550/p/test/')), "p/test");
     expect(getWebPageName(Uri.parse('http://localhost:8550/p/test')), "p/test");
     expect(getWebPageName(Uri.parse('http://localhost:8550/')), "");
+    expect(getWebPageName(Uri.parse('http://localhost:8550/#/')), "");
   });
 
   test("getWebSocketEndpoint returns correct URL", () {

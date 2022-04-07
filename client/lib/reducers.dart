@@ -6,15 +6,37 @@ import 'package:flet_view/protocol/clean_control_payload.dart';
 import 'package:flet_view/protocol/message.dart';
 import 'package:flet_view/protocol/remove_control_payload.dart';
 import 'package:flet_view/protocol/update_control_props_payload.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'actions.dart';
 import 'models/app_state.dart';
 import 'models/control.dart';
 
+import 'session_store/session_store.dart'
+    if (dart.library.io) "session_store/session_store_io.dart"
+    if (dart.library.js) "session_store/session_store_js.dart";
+
 enum Actions { increment, setText, setError }
 
 AppState appReducer(AppState state, dynamic action) {
-  if (action is RegisterWebClientAction) {
+  if (action is PageSizeChangeAction) {
+    //
+    // page size changed
+    //
+    // calculate break point
+    final width = action.newSize.width;
+    String newBreakpoint = "";
+    state.sizeBreakpoints.forEach((bpName, bpWidth) {
+      if (width >= bpWidth) {
+        newBreakpoint = bpName;
+      }
+    });
+
+    debugPrint(
+        "New page size: ${action.newSize}, new breakpoint: $newBreakpoint");
+
+    return state.copyWith(size: action.newSize, sizeBreakpoint: newBreakpoint);
+  } else if (action is RegisterWebClientAction) {
     //
     // register web client
     //
@@ -22,10 +44,15 @@ AppState appReducer(AppState state, dynamic action) {
       // error
       return state.copyWith(isLoading: false, error: action.payload.error);
     } else {
+      final sessionId = action.payload.session!.id;
+
+      // store sessionId in a cookie
+      SessionStore.set("sessionId", sessionId);
+
       // connected to the session
       return state.copyWith(
           isLoading: false,
-          sessionId: action.payload.session!.id,
+          sessionId: sessionId,
           controls: action.payload.session!.controls);
     }
   } else if (action is AppBecomeInactiveAction) {

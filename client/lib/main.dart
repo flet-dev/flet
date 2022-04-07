@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flet_view/widgets/loading_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:window_size/window_size.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,11 @@ import 'utils/uri.dart';
 import 'web_socket_client.dart';
 import 'controls/create_control.dart';
 
-void main([List<String>? args]) {
+import 'session_store/session_store.dart'
+    if (dart.library.io) "session_store/session_store_io.dart"
+    if (dart.library.js) "session_store/session_store_js.dart";
+
+void main([List<String>? args]) async {
   //setupWindow();
 
   final store = Store<AppState>(appReducer, initialState: AppState.initial());
@@ -21,7 +26,7 @@ void main([List<String>? args]) {
   var pageUri = Uri.base;
 
   if (kDebugMode) {
-    pageUri = Uri.parse("http://localhost:8550/p/page-1");
+    pageUri = Uri.parse("http://localhost:8550/p/test1");
   }
 
   if (kIsWeb) {
@@ -38,25 +43,32 @@ void main([List<String>? args]) {
 
   debugPrint("Page URL: $pageUri");
 
+  String pageName = getWebPageName(pageUri);
+  String? sessionId = SessionStore.get("sessionId");
+
   // connect WS
   ws.connect(serverUrl: getWebSocketEndpoint(pageUri), store: store);
-
-  ws.registerWebClient(pageName: getWebPageName(pageUri));
 
   runApp(FletApp(
     title: 'Flet',
     store: store,
+    pageName: pageName,
+    sessionId: sessionId,
   ));
 }
 
 class FletApp extends StatelessWidget {
   final Store<AppState> store;
   final String title;
+  final String pageName;
+  final String? sessionId;
 
   const FletApp({
     Key? key,
     required this.store,
     required this.title,
+    required this.pageName,
+    required this.sessionId,
   }) : super(key: key);
 
   @override
@@ -68,11 +80,11 @@ class FletApp extends StatelessWidget {
         converter: (store) => PageViewModel.fromStore(store),
         builder: (context, viewModel) {
           if (viewModel.isLoading) {
-            return MaterialApp(
-                title: title,
-                home: const Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
-                ));
+            return LoadingPage(
+              title: title,
+              pageName: pageName,
+              sessionId: sessionId,
+            );
           } else if (viewModel.error != "") {
             return MaterialApp(
                 title: title,

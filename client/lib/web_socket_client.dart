@@ -28,6 +28,11 @@ class WebSocketClient {
   String _serverUrl = "";
   Store? _store;
   bool _connected = false;
+  String _pageName = "";
+  String _pageHash = "";
+  String _winWidth = "";
+  String _winHeight = "";
+  String? _sessionId;
 
   connect({required String serverUrl, required Store store}) async {
     _serverUrl = serverUrl;
@@ -51,18 +56,32 @@ class WebSocketClient {
 
   registerWebClient(
       {required String pageName,
-      String? pageHash,
-      String? winWidth,
-      String? winHeight,
+      required String pageHash,
+      required String winWidth,
+      required String winHeight,
       String? sessionId}) {
+    bool firstCall = _pageName == "";
+    _pageName = pageName;
+    _pageHash = pageHash;
+    _winWidth = winWidth;
+    _winHeight = winHeight;
+    _sessionId = sessionId;
+
+    if (firstCall) {
+      _registerWebClient();
+    }
+  }
+
+  _registerWebClient() {
+    debugPrint("_registerWebClient");
     send(Message(
         action: MessageAction.registerWebClient,
         payload: RegisterWebClientRequest(
-            pageName: pageName,
-            pageHash: pageHash,
-            winWidth: winWidth,
-            winHeight: winHeight,
-            sessionId: sessionId)));
+            pageName: _pageName,
+            pageHash: _pageHash,
+            winWidth: _winWidth,
+            winHeight: _winHeight,
+            sessionId: _sessionId)));
   }
 
   pageEventFromWeb(

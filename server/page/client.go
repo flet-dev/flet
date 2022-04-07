@@ -202,8 +202,14 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 
 	sessionCreated = false
 
+	pageName, err := model.ParsePageName(request.PageName)
+	if err != nil {
+		response.Error = err.Error()
+		return
+	}
+
 	// get page
-	page := store.GetPageByName(request.PageName)
+	page := store.GetPageByName(pageName.String())
 	if page == nil {
 		response.Error = pageNotFoundMessage
 		return

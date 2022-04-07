@@ -24,7 +24,7 @@ func main() {
 		}
 	}()
 
-	if err := commands.NewRootCmd().ExecuteContext(ctx); err != nil {
+	if err := commands.NewRootCmd(cancel).ExecuteContext(ctx); err != nil {
 		os.Exit(1)
 	}
 }

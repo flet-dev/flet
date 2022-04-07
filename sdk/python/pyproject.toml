@@ -1,0 +1,44 @@
+[project]
+name = "flet"
+version = "0.1.0"
+description = "Flet for Python - easily build interactive multi-platform apps in Python"
+readme = "README.md"
+authors = [
+    { name = "Appveyor Systems Inc.", email = "hello@flet.dev" },
+]
+dependencies = [
+    "websocket-client>=1.2.1",
+    "beartype>=0.9.1",
+    'typing_extensions; python_version < "3.8"'
+]
+requires-python = ">=3.7"
+license = { text = "MIT" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+repository = "https://github.com/flet-dev/flet"
+documentation = "https://flet.dev/docs/"
+
+[project.optional-dependencies]
+
+[tool.pdm.dev-dependencies]
+tests = [
+    "pytest>=6.1.2",
+]
+dev = [
+    "pre-commit>=2.17.0",
+]
+
+[build-system]
+requires = ["pdm-pep517"]
+build-backend = "pdm.pep517.api"
+
+[tool.isort]
+profile = "black"
+float_to_top = true

@@ -12,8 +12,7 @@ class StackControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Stack build: ${control.id}");
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
       children:
           control.childIds.map((childId) => createControl(childId)).toList(),
     );

@@ -1,0 +1,9 @@
+repos:
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+  - repo: https://github.com/ambv/black
+    rev: 22.1.0
+    hooks:
+      - id: black

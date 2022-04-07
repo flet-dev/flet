@@ -1,5 +1,5 @@
+import '../widgets/screen_size.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'create_control.dart';
 import '../models/control.dart';
 
@@ -14,14 +14,12 @@ class PageControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Page build: ${control.id}");
 
-    // MediaQueryData media = MediaQuery.of(context);
-    // debugPrint("Screen size: ${media.size}");
     return MaterialApp(
       home: Scaffold(
         body: Column(
-          children: control.childIds
-              .map((childId) => createControl(childId))
-              .toList(),
+          children:
+              control.childIds.map((childId) => createControl(childId)).toList()
+                ..add(const ScreenSize()),
         ),
       ),
     );
