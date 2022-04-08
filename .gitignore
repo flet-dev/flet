@@ -15,4 +15,5 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-server/content/
+# mac specific
+.DS_Store

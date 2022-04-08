@@ -220,15 +220,20 @@ def _start_flet_server(port, attached):
         else:
             logging.info(f"Flet Server found in PATH")
 
-    flet_env = {**os.environ, "FLET_LOG_TO_FILE": "true"}
+    # flet_env = {**os.environ, "FLET_LOG_TO_FILE": "true"}
 
     args = [flet_path, "server", "--port", str(port)]
 
-    creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
+    creationflags = 0
+    start_new_session = False
 
     if attached:
         args.append("--attached")
-        creationflags = 0
+    else:
+        if is_windows():
+            creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
+        else:
+            start_new_session = True
 
     log_level = logging.getLogger().getEffectiveLevel()
     if log_level == logging.CRITICAL:
@@ -240,10 +245,11 @@ def _start_flet_server(port, attached):
 
     subprocess.Popen(
         args,
-        env=flet_env,
+        # env=flet_env,
         creationflags=creationflags,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
+        start_new_session=start_new_session,
+        stdout=subprocess.DEVNULL if log_level >= logging.WARNING else None,
+        stderr=subprocess.DEVNULL if log_level >= logging.WARNING else None,
     )
 
     return port

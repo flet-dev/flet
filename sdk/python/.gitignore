@@ -131,3 +131,6 @@ dmypy.json
 # PDM
 .pdm.toml
 __pypackages__/
+
+# bin
+flet/bin/
