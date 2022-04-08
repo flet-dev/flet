@@ -4,7 +4,7 @@ import flet
 from flet import Button, Column, Row, Text, Textbox
 from flet.expanded import Expanded
 
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 
 
 def main(page):

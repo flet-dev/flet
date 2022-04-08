@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"os/exec"
+	"runtime"
 	"strconv"
 	"sync"
 	"time"
@@ -65,15 +66,42 @@ func newServerCommand(cancel context.CancelFunc) *cobra.Command {
 }
 
 func monitorParentProcess(cancel context.CancelFunc) {
+	if runtime.GOOS == "windows" {
+		monitorParentProcessWindows(cancel)
+	} else {
+		monitorParentProcessUnix(cancel)
+	}
+}
+
+func monitorParentProcessUnix(cancel context.CancelFunc) {
 	defer cancel()
 	ppid := os.Getppid()
 	for {
+		log.Debugln("Parent process ID", ppid, os.Getppid())
 		if ppid != os.Getppid() {
 			log.Debugln("Parent process has been closed. Exiting...")
 			return
 		}
 		time.Sleep(1 * time.Second)
 	}
+}
+
+func monitorParentProcessWindows(cancel context.CancelFunc) {
+
+	ppid := os.Getppid()
+	pp, err := os.FindProcess(ppid)
+	if err != nil {
+		log.Fatalf("Cannot find parent process with PID %d: %s", ppid, err)
+	}
+
+	ps, err := pp.Wait()
+	if err != nil {
+		log.Fatalf("Error waiting parent process to exit: %s", err)
+	}
+
+	log.Println("Parent process exited with code", ps.ExitCode())
+
+	cancel()
 }
 
 func startServerService(serverPort int, attached bool) {

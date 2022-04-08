@@ -108,7 +108,7 @@ def app(
 
     conn.close()
 
-    if fvp != None:
+    if fvp != None and not is_windows():
         try:
             logging.debug(f"Flet View process {fvp.pid}")
             os.kill(fvp.pid + 1, signal.SIGKILL)
