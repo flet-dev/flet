@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/flet-dev/flet/server/cache"
 	"github.com/flet-dev/flet/server/config"
@@ -64,21 +65,15 @@ func newServerCommand(cancel context.CancelFunc) *cobra.Command {
 }
 
 func monitorParentProcess(cancel context.CancelFunc) {
-
+	defer cancel()
 	ppid := os.Getppid()
-	pp, err := os.FindProcess(ppid)
-	if err != nil {
-		log.Fatalf("Cannot find parent process with PID %d: %s", ppid, err)
+	for {
+		if ppid != os.Getppid() {
+			log.Debugln("Parent process has been closed. Exiting...")
+			return
+		}
+		time.Sleep(1 * time.Second)
 	}
-
-	ps, err := pp.Wait()
-	if err != nil {
-		log.Fatalf("Error waiting parent process to exit: %s", err)
-	}
-
-	log.Println("Parent process exited with code", ps.ExitCode())
-
-	cancel()
 }
 
 func startServerService(serverPort int, attached bool) {

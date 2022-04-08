@@ -29,7 +29,7 @@ def get_arch():
     elif a == "arm64" or a == "aarch64":
         return "arm64"
     elif a.startswith("arm"):
-        return "arm"
+        return "arm_7"
     else:
         raise Exception(f"Unsupported architecture: {a}")
 

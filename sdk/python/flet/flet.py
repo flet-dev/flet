@@ -3,6 +3,7 @@ import logging
 import os
 import signal
 import socket
+import sys
 import tarfile
 import tempfile
 import threading
@@ -88,6 +89,7 @@ def app(
 
     print("Connected to Flet app and handling user sessions...")
 
+    fvp = None
     if view == WEB_BROWSER:
         open_in_browser(conn.page_url)
         try:
@@ -98,12 +100,20 @@ def app(
         except (Exception) as e:
             pass
     elif view == FLET_VIEW:
+        fvp = _open_flet_view(conn.page_url)
         try:
-            _open_flet_view(conn.page_url)
+            fvp.wait()
         except (Exception) as e:
             pass
 
     conn.close()
+
+    if fvp != None:
+        try:
+            logging.debug(f"Flet View process {fvp.pid}")
+            os.kill(fvp.pid + 1, signal.SIGKILL)
+        except:
+            pass
 
 
 def _connect_internal(
@@ -204,10 +214,11 @@ def _start_flet_server(port, attached):
     logging.info(f"Starting local Flet Server on port {port}...")
     logging.info(f"Attached process: {attached}")
 
+    platform_path = f"{get_platform()}_{get_arch()}"
     flet_exe = "flet.exe" if is_windows() else "flet"
 
     # check if flet.exe exists in "bin" directory (user mode)
-    p = Path(__file__).parent.joinpath("bin", flet_exe)
+    p = Path(__file__).parent.joinpath("bin", platform_path, flet_exe)
     if p.exists():
         flet_path = str(p)
         logging.info(f"Flet Server found in: {flet_path}")
@@ -259,23 +270,41 @@ def _open_flet_view(page_url):
 
     logging.info(f"Starting Flet View app...")
 
-    flet_view_exe = "flet_view.exe" if is_windows() else "flet_view"
+    platform_path = f"{get_platform()}_{get_arch()}"
+    args = []
 
-    # check if flet_view.exe exists in "bin" directory (user mode)
-    p = Path(__file__).parent.joinpath("bin", flet_view_exe)
-    if p.exists():
-        flet_view_path = str(p)
-        logging.info(f"Flet View found in: {flet_view_path}")
-    else:
-        # check if flet.exe is in PATH (flet developer mode)
-        flet_view_path = which(flet_view_exe)
-        if flet_view_path:
-            logging.info(f"Flet View found in PATH: {flet_view_path}")
+    if is_windows():
+        flet_view_exe = "flet_view.exe"
+
+        # check if flet_view.exe exists in "bin" directory (user mode)
+        p = Path(__file__).parent.joinpath(
+            "bin", platform_path, "flet_view", flet_view_exe
+        )
+        if p.exists():
+            flet_view_path = str(p)
+            logging.info(f"Flet View found in: {flet_view_path}")
         else:
-            logging.info(f"No Flet View found in PATH or 'bin' directory.")
+            # check if flet.exe is in PATH (flet developer mode)
+            flet_view_path = which(flet_view_exe)
+            if flet_view_path:
+                logging.info(f"Flet View found in PATH: {flet_view_path}")
+            else:
+                logging.info(f"No Flet View found in PATH or 'bin' directory.")
+                return
+        args = [flet_view_path, page_url]
+    elif is_macos():
+        # check if flet_view.app exists in "bin" directory
+        p = Path(__file__).parent.joinpath("bin", platform_path, "flet_view.app")
+        if not p.exists():
+            logging.info(f"No flet_view.app found in 'bin' directory.")
             return
 
-    subprocess.call([flet_view_path, page_url])
+        flet_view_path = str(p)
+        logging.info(f"Flet View App found in: {flet_view_path}")
+        args = ["open", flet_view_path, "-W", "--args", page_url]
+
+    # execute process
+    return subprocess.Popen(args)
 
 
 def _get_ws_url(server: str):
