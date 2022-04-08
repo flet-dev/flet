@@ -14,13 +14,13 @@ from base64 import urlsafe_b64encode
 packages = {
     "Windows amd64": {
         "asset": "windows_amd64",
-        "exec": "flet.exe",
+        "exec": "fletd.exe",
         "wheel_tags": ["py3-none-win_amd64"],
         "file_suffix": "py3-none-win_amd64",
     },
     "Linux amd64": {
         "asset": "linux_amd64",
-        "exec": "flet",
+        "exec": "fletd",
         "wheel_tags": [
             "py3-none-manylinux_2_17_x86_64",
             "py3-none-manylinux2014_x86_64",
@@ -29,7 +29,7 @@ packages = {
     },
     "Linux arm64": {
         "asset": "linux_arm64",
-        "exec": "flet",
+        "exec": "fletd",
         "wheel_tags": [
             "py3-none-manylinux_2_17_aarch64",
             "py3-none-manylinux2014_aarch64",
@@ -38,7 +38,7 @@ packages = {
     },
     "Linux arm": {
         "asset": "linux_arm_7",
-        "exec": "flet",
+        "exec": "fletd",
         "wheel_tags": [
             "py3-none-manylinux_2_17_armv7l",
             "py3-none-manylinux2014_armv7l",
@@ -47,13 +47,13 @@ packages = {
     },
     "macOS amd64": {
         "asset": "darwin_amd64",
-        "exec": "flet",
+        "exec": "fletd",
         "wheel_tags": ["py3-none-macosx_10_14_x86_64"],
         "file_suffix": "py3-none-macosx_10_14_x86_64",
     },
     "macOS arm64": {
         "asset": "darwin_arm64",
-        "exec": "flet",
+        "exec": "fletd",
         "wheel_tags": ["py3-none-macosx_12_0_arm64"],
         "file_suffix": "py3-none-macosx_12_0_arm64",
     },
@@ -66,9 +66,9 @@ def unpack_zip(zip_path, dest_dir):
 
 
 def download_flet_server(jobId, asset, exec_filename, dest_file):
-    flet_url = f"https://ci.appveyor.com/api/buildjobs/{jobId}/artifacts/server%2Fdist%2Fflet_{asset}%2F{exec_filename}"
-    print(f"Downloading {flet_url}...")
-    urllib.request.urlretrieve(flet_url, dest_file)
+    fletd_url = f"https://ci.appveyor.com/api/buildjobs/{jobId}/artifacts/server%2Fdist%2Ffletd_{asset}%2F{exec_filename}"
+    print(f"Downloading {fletd_url}...")
+    urllib.request.urlretrieve(fletd_url, dest_file)
     st = os.stat(dest_file)
     os.chmod(dest_file, st.st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
 

@@ -215,7 +215,7 @@ def _start_flet_server(port, attached):
     logging.info(f"Attached process: {attached}")
 
     platform_path = f"{get_platform()}_{get_arch()}"
-    flet_exe = "flet.exe" if is_windows() else "flet"
+    flet_exe = "fletd.exe" if is_windows() else "fletd"
 
     # check if flet.exe exists in "bin" directory (user mode)
     p = Path(__file__).parent.joinpath("bin", platform_path, flet_exe)

@@ -1,11 +1,11 @@
-project_name: flet
+project_name: fletd
 
 builds:
-  - id: flet
-    main: cmd/flet/main.go
-    binary: flet
+  - id: fletd
+    main: cmd/fletd/main.go
+    binary: fletd
     env:
-      - CGO_ENABLED=0  
+      - CGO_ENABLED=0
     flags:
       - -tags=release
     ldflags:
@@ -26,48 +26,46 @@ builds:
       - goos: windows
         goarch: arm
 
-dockers:
-  -
-    ids:
-    - flet
-    
-    goos: linux
-    goarch: amd64
-    goarm: ''
+# dockers:
+#   - ids:
+#       - fletd
 
-    image_templates:
-    - "flet/server:latest"
-    - "flet/server:{{ .Version }}"
-    - "us.gcr.io/flet-app/flet-server:{{ .Version }}"
+#     goos: linux
+#     goarch: amd64
+#     goarm: ""
 
-    skip_push: true
-    dockerfile: Dockerfile
-    use: buildx
+#     image_templates:
+#       - "flet-dev/fletd:latest"
+#       - "flet-dev/fletd:{{ .Version }}"
+#       #- "us.gcr.io/flet-app/flet-server:{{ .Version }}"
 
-    # Template of the docker build flags.
-    build_flag_templates:
-    - "--pull"
-    - "--label=org.opencontainers.image.created={{.Date}}"
-    - "--label=org.opencontainers.image.title={{.ProjectName}}"
-    - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-    - "--label=org.opencontainers.image.version={{.Version}}"
-    #- "--build-arg=FOO={{.Env.Bar}}"
-    - "--platform=linux/amd64"
+#     skip_push: true
+#     dockerfile: Dockerfile
+#     use: buildx
+
+#     # Template of the docker build flags.
+#     build_flag_templates:
+#       - "--pull"
+#       - "--label=org.opencontainers.image.created={{.Date}}"
+#       - "--label=org.opencontainers.image.title={{.ProjectName}}"
+#       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+#       - "--label=org.opencontainers.image.version={{.Version}}"
+#       #- "--build-arg=FOO={{.Env.Bar}}"
+#       - "--platform=linux/amd64"
 
 archives:
-  - id: flet-binaries
+  - id: fletd-binaries
     builds:
-    - flet  
+      - fletd
     format: binary
-    name_template: "flet-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
-  -
-    id: flet-tars
+    name_template: "fletd-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
+  - id: fletd-tars
     builds:
-    - flet
-    name_template: "flet-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
+      - fletd
+    name_template: "fletd-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
     format_overrides:
       - goos: windows
-        format: zip 
+        format: zip
 
 release:
   prerelease: auto

@@ -205,22 +205,22 @@ for:
           fi
       - cd ..
 
-    test_script:
-      - docker images
-      - docker run --name flet-test -d flet/server
-      - sleep 10
-      - docker logs flet-test
+    # test_script:
+    #   - docker images
+    #   - docker run --name flet-test -d flet/server
+    #   - sleep 10
+    #   - docker logs flet-test
 
-      # publish to docker.io on tagged builds only
-      - sh: |
-          if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-            echo "$DOCKER_REGISTRY_PASS" | docker login --username $DOCKER_REGISTRY_USER --password-stdin
-            docker image push --all-tags flet/server
-          fi
+    #   # publish to docker.io on tagged builds only
+    #   - sh: |
+    #       if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+    #         echo "$DOCKER_REGISTRY_PASS" | docker login --username $DOCKER_REGISTRY_USER --password-stdin
+    #         docker image push --all-tags flet/server
+    #       fi
 
     artifacts:
-      - path: server/dist/flet-*
-      - path: server/dist/flet_*/*
+      - path: server/dist/fletd-*
+      - path: server/dist/fletd_*/*
 
   ######################
   #    Python Tests    #
