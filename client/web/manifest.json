@@ -1,6 +1,6 @@
 {
-    "name": "flet_view",
-    "short_name": "flet_view",
+    "name": "Flet",
+    "short_name": "Flet",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
