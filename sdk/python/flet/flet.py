@@ -274,34 +274,32 @@ def _open_flet_view(page_url):
     args = []
 
     if is_windows():
-        flet_view_exe = "flet_view.exe"
+        flet_exe = "flet.exe"
 
         # check if flet_view.exe exists in "bin" directory (user mode)
-        p = Path(__file__).parent.joinpath(
-            "bin", platform_path, "flet_view", flet_view_exe
-        )
+        p = Path(__file__).parent.joinpath("bin", "flet", flet_exe)
         if p.exists():
-            flet_view_path = str(p)
-            logging.info(f"Flet View found in: {flet_view_path}")
+            flet_path = str(p)
+            logging.info(f"Flet View found in: {flet_path}")
         else:
             # check if flet.exe is in PATH (flet developer mode)
-            flet_view_path = which(flet_view_exe)
-            if flet_view_path:
-                logging.info(f"Flet View found in PATH: {flet_view_path}")
+            flet_path = which(flet_exe)
+            if flet_path:
+                logging.info(f"Flet View found in PATH: {flet_path}")
             else:
                 logging.info(f"No Flet View found in PATH or 'bin' directory.")
                 return
-        args = [flet_view_path, page_url]
+        args = [flet_path, page_url]
     elif is_macos():
         # check if flet_view.app exists in "bin" directory
-        p = Path(__file__).parent.joinpath("bin", platform_path, "flet_view.app")
+        p = Path(__file__).parent.joinpath("bin", "flet.app")
         if not p.exists():
             logging.info(f"No flet_view.app found in 'bin' directory.")
             return
 
-        flet_view_path = str(p)
-        logging.info(f"Flet View App found in: {flet_view_path}")
-        args = ["open", flet_view_path, "-W", "--args", page_url]
+        flet_path = str(p)
+        logging.info(f"Flet View found in: {flet_path}")
+        args = ["open", flet_path, "-W", "--args", page_url]
 
     # execute process
     return subprocess.Popen(args)
