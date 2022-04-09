@@ -130,7 +130,10 @@ for:
       - cd client
       - flutter test
       - flutter build macos
-      - ls -alR build/macos/Build/Products/Release
+      - tar -czvf flet.app.tar.gz -C build/macos/Build/Products/Release Flet.app
+    
+    artifacts:
+      - path: client/flet.app.tar.gz
 
   # ======================================
   #      Linux
