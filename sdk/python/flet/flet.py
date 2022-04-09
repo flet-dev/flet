@@ -292,7 +292,7 @@ def _open_flet_view(page_url):
         args = [flet_path, page_url]
     elif is_macos():
         # check if flet_view.app exists in "bin" directory
-        p = Path(__file__).parent.joinpath("bin", "flet.app")
+        p = Path(__file__).parent.joinpath("bin", "Flet.app")
         if not p.exists():
             logging.info(f"No flet_view.app found in 'bin' directory.")
             return
