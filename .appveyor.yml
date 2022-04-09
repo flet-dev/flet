@@ -18,17 +18,17 @@ environment:
     secure: V9nRzVDlIGS0a+dhkC2/vw==
 
   matrix:
-    - job_name: Build Flet View for Windows
+    # - job_name: Build Flet View for Windows
+    #   job_group: build_flet_view
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+
+    - job_name: Build Flet View for macOS
       job_group: build_flet_view
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     # - job_name: Linux
     #   job_group: tests
     #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-
-    # - job_name: macOS
-    #   job_group: tests
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macOS
 
     - job_name: Build Server binaries
       job_group: build_server
@@ -107,6 +107,35 @@ for:
     artifacts:
       - path: client\build\windows\runner\Release\
         name: flet_view_windows
+  
+  # ======================================
+  #      Build Flet View for macOS
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: Build Flet View for macOS
+
+    install:
+      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip -o flutter_macos_stable.zip
+      - unzip flutter_macos_stable.zip
+      - export PATH="$PATH:`pwd`/flutter/bin"
+      - flutter --version
+      - flutter doctor
+
+    build_script:
+      - nvm use 14
+      - cd client
+      - yarn
+      - yarn build
+      - cd ..
+      - mkdir server/content
+      - cp -r client/build/* server/content
+      - ./build.sh
+      - ls $GOPATH/bin
+
+    test_script:
+      - ./run-tests.sh
 
   # ======================================
   #      Linux
@@ -123,34 +152,6 @@ for:
 
     build_script:
       - nvm use 12
-      - cd client
-      - yarn
-      - yarn build
-      - cd ..
-      - mkdir server/content
-      - cp -r client/build/* server/content
-      - ./build.sh
-      - ls $GOPATH/bin
-
-    test_script:
-      - ./run-tests.sh
-
-  # ======================================
-  #      macOS
-  # ======================================
-
-  - matrix:
-      only:
-        - job_name: macOS
-
-    install:
-      - gvm install go${GO_VERSION} -B
-      - gvm use go${GO_VERSION}
-      - go version
-      - HOMEBREW_NO_AUTO_UPDATE=1 brew install yarn
-
-    build_script:
-      - nvm use 14
       - cd client
       - yarn
       - yarn build
