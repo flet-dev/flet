@@ -118,7 +118,7 @@ for:
 
     install:
       - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip -o flutter_macos_stable.zip
-      - unzip flutter_macos_stable.zip
+      - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter --version
       - flutter doctor
