@@ -122,6 +122,7 @@ for:
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter --version
+      - flutter config --enable-macos-desktop
       - flutter doctor
 
     build_script:
