@@ -110,7 +110,7 @@ for:
 
     artifacts:
       - path: client\build\windows\runner\flet.zip
-        name: flet_view_windows
+        name: flet_windows
 
   # ======================================
   #      Build Flet View for macOS
@@ -138,6 +138,7 @@ for:
 
     artifacts:
       - path: client/flet.app.tar.gz
+        name: flet_macos
 
   # ======================================
   #      Linux
