@@ -10,10 +10,11 @@ import threading
 import traceback
 import urllib.request
 import zipfile
+from ensurepip import version
 from pathlib import Path
 from time import sleep
 
-from flet import constants
+from flet import constants, version
 from flet.connection import Connection
 from flet.event import Event
 from flet.page import Page
@@ -269,7 +270,6 @@ def _open_flet_view(page_url):
 
     logging.info(f"Starting Flet View app...")
 
-    platform_path = f"{get_platform()}_{get_arch()}"
     args = []
 
     if is_windows():
@@ -290,15 +290,25 @@ def _open_flet_view(page_url):
                 return
         args = [flet_path, page_url]
     elif is_macos():
-        # check if flet_view.app exists in "bin" directory
-        p = Path(__file__).parent.joinpath("bin", "Flet.app")
-        if not p.exists():
-            logging.info(f"No flet_view.app found in 'bin' directory.")
+        # check if flet.tar.gz exists
+        tar_file = Path(__file__).parent.joinpath("bin", "flet.tar.gz")
+        if not tar_file.exists():
+            logging.info(f"Flet.app archive does not exist: {tar_file}")
             return
 
-        flet_path = str(p)
-        logging.info(f"Flet View found in: {flet_path}")
-        args = ["open", flet_path, "-W", "--args", page_url]
+        # build version-specific path to Flet.app
+        temp_flet_dir = Path(tempfile.gettempdir()).joinpath(f"flet-{version.version}")
+
+        # check if flet_view.app exists in "bin" directory
+        if not temp_flet_dir.exists():
+            logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
+            temp_flet_dir.mkdir(parents=True, exist_ok=True)
+            with tarfile.open(str(tar_file), "r:gz") as tar_arch:
+                tar_arch.extractall(str(temp_flet_dir))
+            return
+
+        app_path = temp_flet_dir.joinpath("Flet.app")
+        args = ["open", str(app_path), "-W", "--args", page_url]
 
     # execute process
     return subprocess.Popen(args)

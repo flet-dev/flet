@@ -26,6 +26,15 @@ packages = {
         "wheel_tags": ["py3-none-win_amd64"],
         "file_suffix": "py3-none-win_amd64",
     },
+    "Windows x86": {
+        "fletd_asset": "windows_386",
+        "fletd_exec": "fletd.exe",
+        "flet_client_job": "Build Flet for Windows",
+        "flet_client_artifact": "flet_windows",
+        "flet_client_filename": "flet.zip",
+        "wheel_tags": ["py3-none-win32"],
+        "file_suffix": "py3-none-win32",
+    },
     "Linux amd64": {
         "fletd_asset": "linux_amd64",
         "fletd_exec": "fletd",
@@ -207,14 +216,11 @@ for name, package in packages.items():
         download_artifact_by_name(
             build_jobs[flet_client_job], flet_client_artifact, client_arch_path
         )
-        try:
-            if flet_client_filename.endswith(".zip"):
-                with zipfile.ZipFile(client_arch_path, "r") as zip_arch:
-                    zip_arch.extractall(bin_path)
-            else:
-                with tarfile.open(client_arch_path, "r:gz") as tar_arch:
-                    tar_arch.extractall(bin_path)
-        finally:
+
+        # unpack zip only; tar.gz stays as is and unpacked during runtime
+        if flet_client_filename.endswith(".zip"):
+            with zipfile.ZipFile(client_arch_path, "r") as zip_arch:
+                zip_arch.extractall(bin_path)
             os.remove(client_arch_path)
 
     # update WHEEL file
