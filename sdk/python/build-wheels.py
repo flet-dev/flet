@@ -12,7 +12,7 @@ import urllib.request
 import zipfile
 from base64 import urlsafe_b64encode
 
-fletd_job_name = "Build Server binaries"
+fletd_job_name = "Build Fletd"
 
 build_jobs = {}
 
@@ -20,7 +20,7 @@ packages = {
     "Windows amd64": {
         "fletd_asset": "windows_amd64",
         "fletd_exec": "fletd.exe",
-        "flet_client_job": "Build Flet View for Windows",
+        "flet_client_job": "Build Flet for Windows",
         "flet_client_artifact": "flet_windows",
         "flet_client_filename": "flet.zip",
         "wheel_tags": ["py3-none-win_amd64"],
@@ -56,7 +56,7 @@ packages = {
     "macOS amd64": {
         "fletd_asset": "darwin_amd64",
         "fletd_exec": "fletd",
-        "flet_client_job": "Build Flet View for macOS",
+        "flet_client_job": "Build Flet for macOS",
         "flet_client_artifact": "flet_macos",
         "flet_client_filename": "flet.tar.gz",
         "wheel_tags": ["py3-none-macosx_10_14_x86_64"],
@@ -65,7 +65,7 @@ packages = {
     "macOS arm64": {
         "fletd_asset": "darwin_arm64",
         "fletd_exec": "fletd",
-        "flet_client_job": "Build Flet View for macOS",
+        "flet_client_job": "Build Flet for macOS",
         "flet_client_artifact": "flet_macos",
         "flet_client_filename": "flet.tar.gz",
         "wheel_tags": ["py3-none-macosx_12_0_arm64"],

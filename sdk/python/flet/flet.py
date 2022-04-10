@@ -27,12 +27,12 @@ except:
 
 
 WEB_BROWSER = Literal[1]
-FLET_VIEW = Literal[2]
+FLET_APP = Literal[2]
 
 AppViewer = Literal[
     None,
     WEB_BROWSER,
-    FLET_VIEW,
+    FLET_APP,
 ]
 
 
@@ -63,7 +63,7 @@ def app(
     port=0,
     target=None,
     permissions=None,
-    view: AppViewer = FLET_VIEW,
+    view: AppViewer = FLET_APP,
 ):
 
     if target == None:
@@ -99,7 +99,7 @@ def app(
                 terminate.wait()
         except (Exception) as e:
             pass
-    elif view == FLET_VIEW:
+    elif view == FLET_APP:
         fvp = _open_flet_view(conn.page_url)
         try:
             fvp.wait()
