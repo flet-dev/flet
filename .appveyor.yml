@@ -18,9 +18,9 @@ environment:
     secure: V9nRzVDlIGS0a+dhkC2/vw==
 
   matrix:
-    # - job_name: Build Flet View for Windows
-    #   job_group: build_flet_view
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    - job_name: Build Flet View for Windows
+      job_group: build_flet_view
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
     - job_name: Build Flet View for macOS
       job_group: build_flet_view
@@ -101,13 +101,17 @@ for:
       - copy "%VC_REDIST_DIR%\vcruntime140.dll" %RELEASE_DIR%
       - copy "%VC_REDIST_DIR%\vcruntime140_1.dll" %RELEASE_DIR%
       - dir %RELEASE_DIR%
+      - ren build\windows\runner\Release flet
+      - cd build\windows\runner
+      - 7z a flet.zip flet
+      - cd %APPVEYOR_BUILD_FOLDER%
 
     test: off
 
     artifacts:
-      - path: client\build\windows\runner\Release\
+      - path: client\build\windows\runner\flet.zip
         name: flet_view_windows
-  
+
   # ======================================
   #      Build Flet View for macOS
   # ======================================
@@ -131,7 +135,7 @@ for:
       - flutter test
       - flutter build macos
       - tar -czvf flet.app.tar.gz -C build/macos/Build/Products/Release Flet.app
-    
+
     artifacts:
       - path: client/flet.app.tar.gz
 
