@@ -226,7 +226,7 @@ for name, package in packages.items():
         f.writelines(wheel_lines)
 
     # update and save RECORD
-    record_lines = rehash_record_lines(unpacked_whl)
+    record_lines = rehash_record_lines(str(unpacked_whl))
     record_path = str(
         unpacked_whl.joinpath(f"flet-{package_version}.dist-info", "RECORD")
     )
