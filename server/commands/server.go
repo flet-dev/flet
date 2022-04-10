@@ -89,7 +89,7 @@ func monitorParentProcessUnix(cancel context.CancelFunc) {
 	defer cancel()
 	ppid := os.Getppid()
 	for {
-		log.Debugln("Parent process ID", ppid, os.Getppid())
+		//log.Debugln("Parent process ID", ppid, os.Getppid())
 		if ppid != os.Getppid() {
 			log.Debugln("Parent process has been closed. Exiting...")
 			return

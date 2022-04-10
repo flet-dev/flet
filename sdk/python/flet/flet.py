@@ -305,7 +305,6 @@ def _open_flet_view(page_url):
             temp_flet_dir.mkdir(parents=True, exist_ok=True)
             with tarfile.open(str(tar_file), "r:gz") as tar_arch:
                 tar_arch.extractall(str(temp_flet_dir))
-            return
 
         app_path = temp_flet_dir.joinpath("Flet.app")
         args = ["open", str(app_path), "-W", "--args", page_url]
