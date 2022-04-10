@@ -214,17 +214,16 @@ def _start_flet_server(port, attached):
     logging.info(f"Starting local Flet Server on port {port}...")
     logging.info(f"Attached process: {attached}")
 
-    platform_path = f"{get_platform()}_{get_arch()}"
-    flet_exe = "fletd.exe" if is_windows() else "fletd"
+    fletd_exe = "fletd.exe" if is_windows() else "fletd"
 
     # check if flet.exe exists in "bin" directory (user mode)
-    p = Path(__file__).parent.joinpath("bin", platform_path, flet_exe)
+    p = Path(__file__).parent.joinpath("bin", fletd_exe)
     if p.exists():
         flet_path = str(p)
         logging.info(f"Flet Server found in: {flet_path}")
     else:
         # check if flet.exe is in PATH (flet developer mode)
-        flet_path = which(flet_exe)
+        flet_path = which(fletd_exe)
         if not flet_path:
             # download flet from GitHub (python module developer mode)
             flet_path = _download_flet()
