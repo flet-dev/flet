@@ -199,9 +199,9 @@ for name, package in packages.items():
     download_flet_server(build_jobs[fletd_job_name], asset, exec_filename, exec_path)
 
     # download Flet client
-    flet_client_job = package["flet_client_job"]
-    flet_client_artifact = package["flet_client_artifact"]
-    flet_client_filename = package["flet_client_filename"]
+    flet_client_job = package.get("flet_client_job")
+    flet_client_artifact = package.get("flet_client_artifact")
+    flet_client_filename = package.get("flet_client_filename")
     if flet_client_job:
         client_arch_path = str(bin_path.joinpath(flet_client_filename))
         download_artifact_by_name(
