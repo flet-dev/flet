@@ -167,12 +167,12 @@ for:
       - ./run-tests.sh
 
   # ======================================
-  #      Build Server binaries
+  #      Build Fletd
   # ======================================
 
   - matrix:
       only:
-        - job_group: build_fletd
+        - job_name: Build Fletd
 
     install:
       # Flutter SDK
