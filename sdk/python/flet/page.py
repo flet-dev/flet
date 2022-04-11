@@ -7,7 +7,7 @@ from beartype.typing import List, Optional
 
 from flet import constants
 from flet.connection import Connection
-from flet.control import Control
+from flet.control import Control, CrossAxisAlignment, MainAxisAlignment
 from flet.control_event import ControlEvent
 from flet.protocol import Command
 
@@ -17,27 +17,8 @@ except:
     from typing_extensions import Literal
 
 
-MainAxisAlignment = Literal[
-    None,
-    "start",
-    "end",
-    "center",
-    "spaceBetween",
-    "spaceAround",
-    "spaceEvenly",
-]
-
-CrossAxisAlignment = Literal[
-    None,
-    "start",
-    "end",
-    "center",
-    "stretch",
-    "baseline",
-]
-
-DESIGN = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
-THEME = Literal[None, "system", "light", "dark"]
+PageDesign = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
+ThemeMode = Literal[None, "system", "light", "dark"]
 
 
 class Page(Control):
@@ -302,6 +283,16 @@ class Page(Control):
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
 
+    # design
+    @property
+    def design(self):
+        return self._get_attr("design")
+
+    @design.setter
+    @beartype
+    def design(self, value: PageDesign):
+        self._set_attr("design", value)
+
     # theme_mode
     @property
     def theme_mode(self):
@@ -309,7 +300,7 @@ class Page(Control):
 
     @theme_mode.setter
     @beartype
-    def theme_mode(self, value: THEME):
+    def theme_mode(self, value: ThemeMode):
         self._set_attr("themeMode", value)
 
     # window_width

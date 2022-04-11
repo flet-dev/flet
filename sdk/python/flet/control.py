@@ -13,16 +13,30 @@ try:
 except:
     from typing_extensions import Literal
 
+MainAxisAlignment = Literal[
+    None,
+    "start",
+    "end",
+    "center",
+    "spaceBetween",
+    "spaceAround",
+    "spaceEvenly",
+]
 
-BorderStyles = Literal[
+CrossAxisAlignment = Literal[
+    None,
+    "start",
+    "end",
+    "center",
+    "stretch",
+    "baseline",
+]
+
+BorderStyle = Literal[
+    None,
     "none",
     "solid",
 ]
-
-BorderStyle = Union[None, BorderStyles, List[BorderStyles]]
-BorderWidth = Union[None, str, int, float, List[str], List[int], List[float]]
-BorderColor = Union[None, str, List[str]]
-BorderRadius = Union[None, str, int, float, List[str], List[int], List[float]]
 
 TextSize = Literal[
     None,
