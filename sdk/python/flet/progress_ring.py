@@ -1,9 +1,14 @@
-from typing import Literal, Optional
+from typing import Optional
 
 from beartype import beartype
 
 from flet.control import Control
 from flet.ref import Ref
+
+try:
+    from typing import Literal
+except:
+    from typing_extensions import Literal
 
 LabelPosition = Literal[None, "left", "top", "right", "bottom"]
 

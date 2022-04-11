@@ -2,7 +2,9 @@ from typing import Optional
 
 from beartype import beartype
 
-from flet.control import Control
+from flet.control import Control, InputBorder
+from flet.form_field import FormField
+from flet.ref import Ref
 
 try:
     from typing import Literal
@@ -10,32 +12,43 @@ except:
     from typing_extensions import Literal
 
 
-ItemType = Literal[None, "normal", "divider", "header"]
-
-
-class Dropdown(Control):
+class Dropdown(FormField):
     def __init__(
         self,
-        label=None,
-        id=None,
-        ref=None,
-        value=None,
-        placeholder=None,
-        error_message=None,
+        id: str = None,
+        ref: Ref = None,
+        width: float = None,
+        height: float = None,
+        padding: float = None,
+        margin: float = None,
+        expand: int = None,
+        opacity: float = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # FormField specific
+        #
+        label: str = None,
+        icon: str = None,
+        border: InputBorder = None,
+        filled: bool = None,
+        hint_text: str = None,
+        helper_text: str = None,
+        counter_text: str = None,
+        error_text: str = None,
+        prefix_icon: str = None,
+        prefix_text: str = None,
+        suffix_icon: str = None,
+        suffix_text: str = None,
+        #
+        # DropDown Specific
+        #
+        value: str = None,
         on_change=None,
-        on_focus=None,
-        on_blur=None,
         options=None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
-        focused=None,
-        data=None,
     ):
-        Control.__init__(
+        FormField.__init__(
             self,
             id=id,
             ref=ref,
@@ -43,22 +56,29 @@ class Dropdown(Control):
             height=height,
             padding=padding,
             margin=margin,
+            expand=expand,
+            opacity=opacity,
             visible=visible,
             disabled=disabled,
             data=data,
+            # FormField
+            label=label,
+            icon=icon,
+            border=border,
+            filled=filled,
+            hint_text=hint_text,
+            helper_text=helper_text,
+            counter_text=counter_text,
+            error_text=error_text,
+            prefix_icon=prefix_icon,
+            prefix_text=prefix_text,
+            suffix_icon=suffix_icon,
+            suffix_text=suffix_text,
         )
-        self.label = label
+
         self.value = value
-        self.placeholder = placeholder
-        self.error_message = error_message
-        self.focused = focused
+        self.options = options
         self.on_change = on_change
-        self.on_focus = on_focus
-        self.on_blur = on_blur
-        self.__options = []
-        if options != None:
-            for option in options:
-                self.__options.append(option)
 
     def _get_control_name(self):
         return "dropdown"
@@ -72,24 +92,6 @@ class Dropdown(Control):
     def options(self, value):
         self.__options = value
 
-    # on_change
-    @property
-    def on_change(self):
-        return self._get_event_handler("change")
-
-    @on_change.setter
-    def on_change(self, handler):
-        self._add_event_handler("change", handler)
-
-    # label
-    @property
-    def label(self):
-        return self._get_attr("label")
-
-    @label.setter
-    def label(self, value):
-        self._set_attr("label", value)
-
     # value
     @property
     def value(self):
@@ -99,65 +101,25 @@ class Dropdown(Control):
     def value(self, value):
         self._set_attr("value", value)
 
-    # placeholder
+    # on_change
     @property
-    def placeholder(self):
-        return self._get_attr("placeholder")
+    def on_change(self):
+        return self._get_event_handler("change")
 
-    @placeholder.setter
-    def placeholder(self, value):
-        self._set_attr("placeholder", value)
-
-    # error_message
-    @property
-    def error_message(self):
-        return self._get_attr("errorMessage")
-
-    @error_message.setter
-    def error_message(self, value):
-        self._set_attr("errorMessage", value)
+    @on_change.setter
+    def on_change(self, handler):
+        self._add_event_handler("change", handler)
 
     def _get_children(self):
         return self.__options
 
-    # focused
-    @property
-    def focused(self):
-        return self._get_attr("focused", data_type="bool", def_value=False)
-
-    @focused.setter
-    @beartype
-    def focused(self, value: Optional[bool]):
-        self._set_attr("focused", value)
-
-    # on_focus
-    @property
-    def on_focus(self):
-        return self._get_event_handler("focus")
-
-    @on_focus.setter
-    def on_focus(self, handler):
-        self._add_event_handler("focus", handler)
-
-    # on_blur
-    @property
-    def on_blur(self):
-        return self._get_event_handler("blur")
-
-    @on_blur.setter
-    def on_blur(self, handler):
-        self._add_event_handler("blur", handler)
-
 
 class Option(Control):
-    def __init__(
-        self, key=None, text=None, item_type: ItemType = None, disabled=None, ref=None
-    ):
+    def __init__(self, key=None, text=None, disabled=None, ref=None):
         Control.__init__(self, ref=ref, disabled=disabled)
         assert key != None or text != None, "key or text must be specified"
         self.key = key
         self.text = text
-        self.item_type = item_type
         self.disabled = disabled
 
     def _get_control_name(self):
@@ -180,13 +142,3 @@ class Option(Control):
     @text.setter
     def text(self, value):
         self._set_attr("text", value)
-
-    # item_type
-    @property
-    def item_type(self):
-        return self._get_attr("itemtype")
-
-    @item_type.setter
-    @beartype
-    def item_type(self, value: ItemType):
-        self._set_attr("itemtype", value)

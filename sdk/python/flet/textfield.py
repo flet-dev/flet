@@ -2,46 +2,52 @@ from typing import Optional
 
 from beartype import beartype
 
-from flet.control import Control, TextAlign
+from flet.control import Control, InputBorder, TextAlign
+from flet.form_field import FormField
+from flet.ref import Ref
 
 
-class TextField(Control):
+class TextField(FormField):
     def __init__(
         self,
-        label=None,
-        id=None,
-        ref=None,
-        value=None,
-        placeholder=None,
-        error_message=None,
-        description=None,
-        icon=None,
-        icon_color=None,
-        prefix=None,
-        suffix=None,
-        multiline=None,
-        rows=None,
-        shift_enter=None,
-        password=None,
-        required=None,
-        read_only=None,
-        auto_adjust_height=None,
-        resizable=None,
-        underlined=None,
-        borderless=None,
-        focused=None,
+        id: str = None,
+        ref: Ref = None,
+        width: float = None,
+        height: float = None,
+        padding: float = None,
+        margin: float = None,
+        expand: int = None,
+        opacity: float = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # FormField specific
+        #
+        label: str = None,
+        icon: str = None,
+        border: InputBorder = None,
+        filled: bool = None,
+        hint_text: str = None,
+        helper_text: str = None,
+        counter_text: str = None,
+        error_text: str = None,
+        prefix_icon: str = None,
+        prefix_text: str = None,
+        suffix_icon: str = None,
+        suffix_text: str = None,
+        #
+        # TextField Specific
+        #
+        value: str = None,
         on_change=None,
-        on_focus=None,
-        on_blur=None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        align: TextAlign = None,
-        visible=None,
-        disabled=None,
+        min_lines: int = None,
+        max_lines: int = None,
+        password: int = None,
+        read_only=None,
+        text_align: TextAlign = None,
     ):
-        Control.__init__(
+        FormField.__init__(
             self,
             id=id,
             ref=ref,
@@ -49,45 +55,36 @@ class TextField(Control):
             height=height,
             padding=padding,
             margin=margin,
+            expand=expand,
+            opacity=opacity,
             visible=visible,
             disabled=disabled,
+            data=data,
+            # FormField
+            label=label,
+            icon=icon,
+            border=border,
+            filled=filled,
+            hint_text=hint_text,
+            helper_text=helper_text,
+            counter_text=counter_text,
+            error_text=error_text,
+            prefix_icon=prefix_icon,
+            prefix_text=prefix_text,
+            suffix_icon=suffix_icon,
+            suffix_text=suffix_text,
         )
         self.label = label
         self.value = value
-        self.placeholder = placeholder
-        self.error_message = error_message
-        self.description = description
-        self.icon = icon
-        self.icon_color = icon_color
-        self.suffix = suffix
-        self.prefix = prefix
-        self.align = align
-        self.multiline = multiline
-        self.rows = rows
-        self.shift_enter = shift_enter
+        self.text_align = text_align
+        self.min_lines = min_lines
+        self.max_lines = max_lines
         self.read_only = read_only
-        self.auto_adjust_height = auto_adjust_height
-        self.resizable = resizable
-        self.underlined = underlined
-        self.borderless = borderless
         self.password = password
-        self.required = required
-        self.focused = focused
         self.on_change = on_change
-        self.on_focus = on_focus
-        self.on_blur = on_blur
 
     def _get_control_name(self):
         return "textfield"
-
-    # label
-    @property
-    def label(self):
-        return self._get_attr("label")
-
-    @label.setter
-    def label(self, value):
-        self._set_attr("label", value)
 
     # value
     @property
@@ -98,108 +95,35 @@ class TextField(Control):
     def value(self, value):
         self._set_attr("value", value)
 
-    # placeholder
+    # text_align
     @property
-    def placeholder(self):
-        return self._get_attr("placeholder")
+    def text_align(self):
+        return self._get_attr("textAlign")
 
-    @placeholder.setter
-    def placeholder(self, value):
-        self._set_attr("placeholder", value)
-
-    # error_message
-    @property
-    def error_message(self):
-        return self._get_attr("errorMessage")
-
-    @error_message.setter
-    def error_message(self, value):
-        self._set_attr("errorMessage", value)
-
-    # description
-    @property
-    def description(self):
-        return self._get_attr("description")
-
-    @description.setter
-    def description(self, value):
-        self._set_attr("description", value)
-
-    # icon
-    @property
-    def icon(self):
-        return self._get_attr("icon")
-
-    @icon.setter
-    def icon(self, value):
-        self._set_attr("icon", value)
-
-    # icon_color
-    @property
-    def icon_color(self):
-        return self._get_attr("iconColor")
-
-    @icon_color.setter
-    def icon_color(self, value):
-        self._set_attr("iconColor", value)
-
-    # prefix
-    @property
-    def prefix(self):
-        return self._get_attr("prefix")
-
-    @prefix.setter
-    def prefix(self, value):
-        self._set_attr("prefix", value)
-
-    # suffix
-    @property
-    def suffix(self):
-        return self._get_attr("suffix")
-
-    @suffix.setter
-    def suffix(self, value):
-        self._set_attr("suffix", value)
-
-    # align
-    @property
-    def align(self):
-        return self._get_attr("align")
-
-    @align.setter
+    @text_align.setter
     @beartype
-    def align(self, value: TextAlign):
-        self._set_attr("align", value)
+    def text_align(self, value: TextAlign):
+        self._set_attr("textAlign", value)
 
-    # multiline
+    # min_lines
     @property
-    def multiline(self):
-        return self._get_attr("multiline", data_type="bool", def_value=False)
+    def min_lines(self):
+        return self._get_attr("minLines")
 
-    @multiline.setter
+    @min_lines.setter
     @beartype
-    def multiline(self, value: Optional[bool]):
-        self._set_attr("multiline", value)
+    def min_lines(self, value: Optional[int]):
+        self._set_attr("minLines", value)
 
-    # rows
+    # max_lines
     @property
-    def rows(self):
-        return self._get_attr("rows")
+    def max_lines(self):
+        return self._get_attr("maxLines")
 
-    @rows.setter
+    @max_lines.setter
     @beartype
-    def rows(self, value: Optional[int]):
-        self._set_attr("rows", value)
-
-    # shift_enter
-    @property
-    def shift_enter(self):
-        return self._get_attr("shiftenter", data_type="bool", def_value=False)
-
-    @shift_enter.setter
-    @beartype
-    def shift_enter(self, value: Optional[bool]):
-        self._set_attr("shiftenter", value)
+    def max_lines(self, value: Optional[int]):
+        self._set_attr("maxLines", value)
 
     # read_only
     @property
@@ -211,46 +135,6 @@ class TextField(Control):
     def read_only(self, value: Optional[bool]):
         self._set_attr("readOnly", value)
 
-    # auto_adjust_height
-    @property
-    def auto_adjust_height(self):
-        return self._get_attr("autoadjustheight", data_type="bool", def_value=False)
-
-    @auto_adjust_height.setter
-    @beartype
-    def auto_adjust_height(self, value: Optional[bool]):
-        self._set_attr("autoadjustheight", value)
-
-    # resizable
-    @property
-    def resizable(self):
-        return self._get_attr("resizable", data_type="bool", def_value=True)
-
-    @resizable.setter
-    @beartype
-    def resizable(self, value: Optional[bool]):
-        self._set_attr("resizable", value)
-
-    # underlined
-    @property
-    def underlined(self):
-        return self._get_attr("underlined", data_type="bool", def_value=False)
-
-    @underlined.setter
-    @beartype
-    def underlined(self, value: Optional[bool]):
-        self._set_attr("underlined", value)
-
-    # borderless
-    @property
-    def borderless(self):
-        return self._get_attr("borderless", data_type="bool", def_value=False)
-
-    @borderless.setter
-    @beartype
-    def borderless(self, value: Optional[bool]):
-        self._set_attr("borderless", value)
-
     # password
     @property
     def password(self):
@@ -260,26 +144,6 @@ class TextField(Control):
     @beartype
     def password(self, value: Optional[bool]):
         self._set_attr("password", value)
-
-    # required
-    @property
-    def required(self):
-        return self._get_attr("required", data_type="bool", def_value=False)
-
-    @required.setter
-    @beartype
-    def required(self, value: Optional[bool]):
-        self._set_attr("required", value)
-
-    # focused
-    @property
-    def focused(self):
-        return self._get_attr("focused", data_type="bool", def_value=False)
-
-    @focused.setter
-    @beartype
-    def focused(self, value: Optional[bool]):
-        self._set_attr("focused", value)
 
     # on_change
     @property
@@ -293,21 +157,3 @@ class TextField(Control):
             self._set_attr("onchange", True)
         else:
             self._set_attr("onchange", None)
-
-    # on_focus
-    @property
-    def on_focus(self):
-        return self._get_event_handler("focus")
-
-    @on_focus.setter
-    def on_focus(self, handler):
-        self._add_event_handler("focus", handler)
-
-    # on_blur
-    @property
-    def on_blur(self):
-        return self._get_event_handler("blur")
-
-    @on_blur.setter
-    def on_blur(self, handler):
-        self._add_event_handler("blur", handler)

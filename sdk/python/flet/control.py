@@ -59,6 +59,8 @@ TextSize = Literal[
 
 TextAlign = Literal[None, "left", "right", "center", "justify", "start", "end"]
 
+InputBorder = Literal[None, "outline", "underline", "none"]
+
 
 class Control:
     def __init__(

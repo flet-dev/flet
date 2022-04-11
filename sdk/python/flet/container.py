@@ -1,9 +1,14 @@
-from typing import List, Literal, Optional
+from typing import List, Optional
 
 from beartype import beartype
 
 from flet.control import BorderStyle, Control
 from flet.ref import Ref
+
+try:
+    from typing import Literal
+except:
+    from typing_extensions import Literal
 
 Alignment = Literal[
     None,
