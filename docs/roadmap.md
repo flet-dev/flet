@@ -36,10 +36,13 @@
     * [ ] SnackBar
     * [ ] AlertDialog
 
-* Flet View (client)
+* Flet Client
   * [ ] Web
-  * [ ] Windows
-  * [ ] macOS
+  * [ ] Windows ("client" mode - started from Python)
+  * [ ] macOS ("client" mode - started from Python)
+
+* Flet Daemon
+  * [ ] "assets" directory with static content
 
 * Website
   * [ ] Controls S1 reference
@@ -57,6 +60,9 @@
     * Row (responsive)
     * Column (responsive)
 
+* Flet Client
+  * [ ] Windows ("host" mode with hot reload)
+  * [ ] macOS ("host" mode with hot reload)
 
 ## Controls
 
@@ -387,7 +393,8 @@
 
 ## Colors
 
-[Full list of Material colors](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/colors.dart)
+* [Full list of Material colors](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/colors.dart)
+* [Themed colors](https://api.flutter.dev/flutter/material/ColorScheme-class.html)
 
 ## Icons
 
@@ -400,8 +407,8 @@ Properties:
 - title
 - design (S2) - `material` (default), `cupertino`, `fluent`, `macos`.
 - themeMode - `system` (default), `light`, `dark` ([more info](https://stackoverflow.com/questions/60232070/how-to-implement-dark-mode-in-flutter))
-- horizontalAlignment - `start` (default), `center`, `end`, `stretch`
 - verticalAlignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
+- horizontalAlignment - `start` (default), `center`, `end`, `stretch`
 - spacing - gap between adjacent items, default
 - color - background color
 - windowWidth - current window width
@@ -417,20 +424,20 @@ Properties:
 - visible
 - disabled
 
-- Expanded (int) - The control is forced to fill the available space inside Row or Column. Flex factor specified by the property. Default is 1. The property has affect only for direct descendants of Row and Column controls. (Wrap control into Expanded).
-- Flexible (int) - The child can be at most as large as the available space (but is allowed to be smaller) inside Row or Column. Flex factor specified by the property. Default is 1. The property has affect only for direct descendants of Row and Column controls. (Wrap control into Flexible with fit=FlexFit.loose).
+- expand (int) - The control is forced to fill the available space inside Row or Column. Flex factor specified by the property. Default is 1. The property has affect only for direct descendants of Row and Column controls. (Wrap control into Expanded).
+- flex (int) - The child can be at most as large as the available space (but is allowed to be smaller) inside Row or Column. Flex factor specified by the property. Default is 1. The property has affect only for direct descendants of Row and Column controls. (Wrap control into Flexible with fit=FlexFit.loose).
 
 The only difference if you use Flexible instead of Expanded, is that Flexible lets its child have the same or smaller width than the Flexible itself, while Expanded forces its child to have the exact same width of the Expanded. But both Expanded and Flexible ignore their children’s width when sizing themselves.
 
 - width - wrap into SizedBox
 - height - wrap into SizedBox
-- minHeight - wrap into ConstrainedBox
-- maxHeight - wrap into ConstrainedBox
-- minWidth - wrap into ConstrainedBox
-- maxWidth - wrap into ConstrainedBox
+- minHeight (S2) - wrap into ConstrainedBox
+- maxHeight (S2) - wrap into ConstrainedBox
+- minWidth (S2) - wrap into ConstrainedBox
+- maxWidth (S2) - wrap into ConstrainedBox
 
-- fit
-- fitAlign - Wrap into FittedBox
+- fit (S2)
+- fitAlign (S2) - Wrap into FittedBox
 
 - opacity - allows to specify transparency of the control, hide it completely or blend with another if used with Stack. 0.0 - hidden, 1.0 - fully visible. See https://api.flutter.dev/flutter/widgets/Opacity-class.html.
 
@@ -446,43 +453,85 @@ More info:
 
 Docs: https://api.flutter.dev/flutter/widgets/Container-class.html
 
+Properties:
+
 - color (background color - `decoration: BoxDecoration.color`)
 - alignment - `topLeft`, `topCenter`, `topRight`, `centerLeft`, `center`, `centerRight`, `bottomLeft`, `bottomCenter`, `bottomRight`
 - borderColor
 - borderWidth
-- borderStyle - `solid`, `node`
+- borderStyle - `solid`, `none`
 - borderRadius
-- verticalScroll
-- horizontalScroll
-- autoScroll - `end`, `start` ([example](https://stackoverflow.com/questions/43485529/programmatically-scrolling-to-the-end-of-a-listview)).
+- verticalScroll (S2)
+- horizontalScroll (S2)
+- autoScroll (S2) - `end`, `start` ([example](https://stackoverflow.com/questions/43485529/programmatically-scrolling-to-the-end-of-a-listview)).
+- control - child control of any type
 
 ## Row
 
 Docs: https://api.flutter.dev/flutter/widgets/Row-class.html
 
+Properties:
+
+- horizontalAlignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
+- verticalAlignment - `start` (default), `center`, `end`, `stretch`, `baseline`
 - spacing - gap between adjacent items (SizedBox)
 - wrap - switch to "Wrap" control
 - runSpacing - gap between runs
+- controls - child controls of any type
 
 ## Column
 
 Docs: https://api.flutter.dev/flutter/widgets/Column-class.html
 
+Properties:
+
+- verticalAlignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
+- horizontalAlignment - `start` (default), `center`, `end`, `stretch`
 - spacing - gap between adjacent items (SizedBox)
 - wrap - switch to "Wrap" control
 - runSpacing - gap between runs
+- controls - child controls of any type
 
 ## Stack
 
 Docs: https://api.flutter.dev/flutter/widgets/Stack-class.html
 
+Properties:
+
+- controls - child controls of any type
+
 ## ListView
 
-Docs: https://api.flutter.dev/flutter/widgets/ListView-class.html
+Docs:
+
+* https://api.flutter.dev/flutter/widgets/ListView-class.html
+* https://docs.flutter.dev/cookbook/lists/basic-list
+
+Properties:
+
+- scrollDirection - `vertical` (default), `horizontal`.
+- padding
+
+### ListTile
+
+Docs: https://api.flutter.dev/flutter/material/ListTile-class.html
+
+Properties:
+
+- contentPadding
+- ...
 
 ## GridView
 
 Docs: https://api.flutter.dev/flutter/widgets/GridView-class.html
+
+Properties:
+
+- scrollDirection - `vertical` (default), `horizontal`.
+- padding
+- crossAxisCount
+- mainAxisSpacing
+- crossAxisSpacing
 
 ## Card
 
@@ -515,11 +564,10 @@ TextTheme: https://api.flutter.dev/flutter/material/TextTheme-class.html
 - value
 - textAlign - `center`, `end`, `justify`, `left`, `right`, `start` (for RTL and LTR texts)
 - size
-- bold (weight=w700)
-- weight
+- weight - `bold`, `normal`, `w100`, `w200`, ... [see all](https://api.flutter.dev/flutter/dart-ui/FontWeight-class.html)
 - italic
 - themeStyle ([more details](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/text_theme.dart))
-- pre (P2) - [more info](https://stackoverflow.com/questions/64145307/full-list-of-font-families-provided-with-flutter)
+- pre (S2) - [more info](https://stackoverflow.com/questions/64145307/full-list-of-font-families-provided-with-flutter)
 - color
 - bgColor
 - overflow - (TextOverflow) `clip`, `ellipsis`, `fade`, `visible`
@@ -534,9 +582,10 @@ Icons list: https://raw.githubusercontent.com/flutter/flutter/master/packages/fl
 
 Properties:
 
-- Name ([The list of icons](https://api.flutter.dev/flutter/material/Icons-class.html))
-- Color ([more](https://api.flutter.dev/flutter/dart-ui/Color-class.html))
-- Size
+- name ([The list of icons](https://api.flutter.dev/flutter/material/Icons-class.html))
+- color ([more](https://api.flutter.dev/flutter/dart-ui/Color-class.html))
+- size
+- semanticLabel - Text to announce in accessibility modes
 
 ## Image
 
@@ -544,14 +593,34 @@ Docs: https://api.flutter.dev/flutter/widgets/Image-class.html
 
 Properties:
 
-- Width
-- Height
-- Src
-- SemanticLabel (Alt)
-- Repeat: noRepeat, repeat, repeatX, repeatY
-- Opacity
-- Fit: contain, cover, fill, fitHeight, fitWidth, none, scaleDown
-- Border? (inside Container)
+- width - override control's width
+- height - override control's height
+- src
+- repeat: noRepeat, repeat, repeatX, repeatY
+- opacity - override control's opacity
+- fit: contain, cover, fill, fitHeight, fitWidth, none, scaleDown
+
+## ProgressBar
+
+Docs: https://api.flutter.dev/flutter/material/LinearProgressIndicator-class.html
+
+Properties:
+
+- color
+- bgColor
+- height - override control's height
+- value
+
+## ProgressRing
+
+Docs: https://api.flutter.dev/flutter/material/CircularProgressIndicator-class.html
+
+Properties:
+
+- color
+- bgColor
+- strokeWidth
+- value
 
 ## TextField
 
