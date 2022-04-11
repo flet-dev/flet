@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from beartype import beartype
 
-from flet.control import Control, CrossAxisAlignment, MainAxisAlignment
+from flet.control import Control, CrossAxisAlignment, MainAxisAlignment, MainAxisSize
 from flet.ref import Ref
 
 
@@ -21,6 +21,7 @@ class Row(Control):
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
+        horizontal_size: MainAxisSize = None,
         horizontal_alignment: MainAxisAlignment = None,
         vertical_alignment: CrossAxisAlignment = None,
         spacing: float = None,
@@ -40,6 +41,7 @@ class Row(Control):
             visible=visible,
             disabled=disabled,
             data=data,
+            horizontal_size=horizontal_size,
             horizontal_alignment=horizontal_alignment,
             vertical_alignment=vertical_alignment,
             spacing=spacing,
@@ -54,6 +56,16 @@ class Row(Control):
 
     def _get_control_name(self):
         return "row"
+
+    # horizontal_size
+    @property
+    def horizontal_size(self):
+        return self._get_attr("horizontalSize")
+
+    @horizontal_size.setter
+    @beartype
+    def horizontal_size(self, value: MainAxisSize):
+        self._set_attr("horizontalSize", value)
 
     # horizontal_alignment
     @property

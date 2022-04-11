@@ -13,6 +13,8 @@ try:
 except:
     from typing_extensions import Literal
 
+MainAxisSize = Literal[None, "min", "max"]
+
 MainAxisAlignment = Literal[
     None,
     "start",

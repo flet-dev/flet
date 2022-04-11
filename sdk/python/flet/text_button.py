@@ -3,25 +3,31 @@ from typing import Optional
 from beartype import beartype
 
 from flet.control import Control
+from flet.ref import Ref
 
 
 class TextButton(Control):
     def __init__(
         self,
-        text=None,
-        id=None,
-        ref=None,
-        focused=None,
-        data=None,
+        id: str = None,
+        ref: Ref = None,
+        width: float = None,
+        height: float = None,
+        padding: float = None,
+        margin: float = None,
+        expand: int = None,
+        opacity: float = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # Specific
+        #
+        text: str = None,
+        icon: str = None,
+        icon_color: str = None,
+        content: Control = None,
         on_click=None,
-        on_focus=None,
-        on_blur=None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
     ):
         Control.__init__(
             self,
@@ -31,17 +37,18 @@ class TextButton(Control):
             height=height,
             padding=padding,
             margin=margin,
+            expand=expand,
+            opacity=opacity,
             visible=visible,
             disabled=disabled,
             data=data,
         )
 
         self.text = text
-        self.focused = focused
+        self.icon = icon
+        self.icon_color = icon_color
+        self.content = content
         self.on_click = on_click
-        self.on_focus = on_focus
-        self.on_blur = on_blur
-        self.__menu_items = []
 
     def _get_control_name(self):
         return "textbutton"
@@ -55,15 +62,23 @@ class TextButton(Control):
     def text(self, value):
         self._set_attr("text", value)
 
-    # focused
+    # icon
     @property
-    def focused(self):
-        return self._get_attr("focused", data_type="bool", def_value=False)
+    def icon(self):
+        return self._get_attr("icon")
 
-    @focused.setter
-    @beartype
-    def focused(self, value: Optional[bool]):
-        self._set_attr("focused", value)
+    @icon.setter
+    def icon(self, value):
+        self._set_attr("icon", value)
+
+    # icon_color
+    @property
+    def icon_color(self):
+        return self._get_attr("iconColor")
+
+    @icon_color.setter
+    def icon_color(self, value):
+        self._set_attr("iconColor", value)
 
     # on_click
     @property
@@ -74,20 +89,17 @@ class TextButton(Control):
     def on_click(self, handler):
         self._add_event_handler("click", handler)
 
-    # on_focus
+    # content
     @property
-    def on_focus(self):
-        return self._get_event_handler("focus")
+    def content(self):
+        return self.__content
 
-    @on_focus.setter
-    def on_focus(self, handler):
-        self._add_event_handler("focus", handler)
+    @content.setter
+    @beartype
+    def content(self, value: Optional[Control]):
+        self.__content = value
 
-    # on_blur
-    @property
-    def on_blur(self):
-        return self._get_event_handler("blur")
-
-    @on_blur.setter
-    def on_blur(self, handler):
-        self._add_event_handler("blur", handler)
+    def _get_children(self):
+        if self.__content == None:
+            return []
+        return [self.__content]

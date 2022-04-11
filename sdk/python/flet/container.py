@@ -22,7 +22,6 @@ Alignment = Literal[
 class Container(Control):
     def __init__(
         self,
-        control: Control = None,
         id: str = None,
         ref: Ref = None,
         width: float = None,
@@ -34,6 +33,10 @@ class Container(Control):
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
+        #
+        # Specific
+        #
+        content: Control = None,
         alignment: Alignment = None,
         bgcolor: str = None,
         border_color: str = None,
@@ -54,13 +57,15 @@ class Container(Control):
             visible=visible,
             disabled=disabled,
             data=data,
-            alignment=alignment,
-            bgcolor=bgcolor,
-            border_color=border_color,
-            border_width=border_width,
-            border_style=border_style,
-            border_radius=border_radius,
         )
+
+        self.content = content
+        self.alignment = alignment
+        self.bgcolor = bgcolor
+        self.border_color = border_color
+        self.border_width = border_width
+        self.border_style = border_style
+        self.border_radius = border_radius
 
     def _get_control_name(self):
         return "container"
@@ -121,16 +126,17 @@ class Container(Control):
     def border_radius(self, value):
         self._set_attr("borderRadius", value)
 
-    # control
+    # content
     @property
-    def property(self):
-        return self.__control
+    def content(self):
+        return self.__content
 
-    @property.setter
-    def controls(self, value):
-        self.__control = value
+    @content.setter
+    @beartype
+    def content(self, value: Optional[Control]):
+        self.__content = value
 
     def _get_children(self):
-        if self.__control == None:
-            raise Exception("Container does not have a child control set.")
-        return [self.__control]
+        if self.__content == None:
+            raise Exception("Container does not have any content set.")
+        return [self.__content]
