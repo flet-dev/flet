@@ -55,7 +55,7 @@ TextSize = Literal[
     "mega",
 ]
 
-TextAlign = Literal[None, "left", "right", "center", "justify"]
+TextAlign = Literal[None, "left", "right", "center", "justify", "start", "end"]
 
 
 class Control:

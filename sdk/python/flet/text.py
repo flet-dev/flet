@@ -3,12 +3,29 @@ from typing import Optional
 from beartype import beartype
 
 from flet.control import Control, TextAlign, TextSize
+from flet.ref import Ref
 
 try:
     from typing import Literal
 except:
     from typing_extensions import Literal
 
+FontWeight = Literal[
+    None,
+    "normal",
+    "bold",
+    "w100",
+    "w200",
+    "w300",
+    "w400",
+    "w500",
+    "w600",
+    "w700",
+    "w800",
+    "w900",
+]
+
+TextOverflow = Literal[None, "clip", "ellipsis", "fade", "visible"]
 
 VerticalAlign = Literal[None, "top", "center", "bottom"]
 
@@ -16,26 +33,30 @@ VerticalAlign = Literal[None, "top", "center", "bottom"]
 class Text(Control):
     def __init__(
         self,
-        value=None,
-        id=None,
-        ref=None,
-        markdown=None,
-        align: TextAlign = None,
-        vertical_align: VerticalAlign = None,
-        size: TextSize = None,
-        bold=None,
-        italic=None,
-        pre=None,
-        nowrap=None,
-        block=None,
+        id: str = None,
+        ref: Ref = None,
+        width: float = None,
+        height: float = None,
+        padding: float = None,
+        margin: float = None,
+        expand: int = None,
+        opacity: float = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # text-specific
+        #
+        value: str = None,
+        text_align: TextAlign = None,
+        size: float = None,
+        weight: FontWeight = None,
+        italic: bool = None,
+        themeStyle: str = None,
+        overflow: TextOverflow = None,
+        selectable: bool = None,
         color=None,
         bgcolor=None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
     ):
 
         Control.__init__(
@@ -46,20 +67,21 @@ class Text(Control):
             height=height,
             padding=padding,
             margin=margin,
+            expand=expand,
+            opacity=opacity,
             visible=visible,
             disabled=disabled,
+            data=data,
         )
 
         self.value = value
-        self.markdown = markdown
-        self.align = align
-        self.vertical_align = vertical_align
+        self.text_align = text_align
         self.size = size
-        self.bold = bold
+        self.weight = weight
         self.italic = italic
-        self.pre = pre
-        self.nowrap = nowrap
-        self.block = block
+        self.themeStyle = themeStyle
+        self.overflow = overflow
+        self.selectable = selectable
         self.color = color
         self.bgcolor = bgcolor
 
@@ -75,35 +97,15 @@ class Text(Control):
     def value(self, value):
         self._set_attr("value", value)
 
-    # markdown
+    # text_align
     @property
-    def markdown(self):
-        return self._get_attr("markdown", data_type="bool", def_value=False)
+    def text_align(self):
+        return self._get_attr("textAlign")
 
-    @markdown.setter
+    @text_align.setter
     @beartype
-    def markdown(self, value: Optional[bool]):
-        self._set_attr("markdown", value)
-
-    # align
-    @property
-    def align(self):
-        return self._get_attr("align")
-
-    @align.setter
-    @beartype
-    def align(self, value: TextAlign):
-        self._set_attr("align", value)
-
-    # vertical_align
-    @property
-    def vertical_align(self):
-        return self._get_attr("verticalAlign")
-
-    @vertical_align.setter
-    @beartype
-    def vertical_align(self, value: VerticalAlign):
-        self._set_attr("verticalAlign", value)
+    def text_align(self, value: TextAlign):
+        self._set_attr("textAlign", value)
 
     # size
     @property
@@ -112,18 +114,28 @@ class Text(Control):
 
     @size.setter
     @beartype
-    def size(self, value: TextSize):
+    def size(self, value: Optional[float]):
         self._set_attr("size", value)
 
-    # bold
+    # weight
     @property
-    def bold(self):
-        return self._get_attr("bold", data_type="bool", def_value=False)
+    def weight(self):
+        return self._get_attr("weight")
 
-    @bold.setter
+    @weight.setter
     @beartype
-    def bold(self, value: Optional[bool]):
-        self._set_attr("bold", value)
+    def weight(self, value: FontWeight):
+        self._set_attr("weight", value)
+
+    # theme_style
+    @property
+    def theme_style(self):
+        return self._get_attr("themeStyle")
+
+    @theme_style.setter
+    @beartype
+    def theme_style(self, value: Optional[str]):
+        self._set_attr("themeStyle", value)
 
     # italic
     @property
@@ -135,35 +147,25 @@ class Text(Control):
     def italic(self, value: Optional[bool]):
         self._set_attr("italic", value)
 
-    # pre
+    # selectable
     @property
-    def pre(self):
-        return self._get_attr("pre", data_type="bool", def_value=False)
+    def selectable(self):
+        return self._get_attr("selectable", data_type="bool", def_value=False)
 
-    @pre.setter
+    @selectable.setter
     @beartype
-    def pre(self, value: Optional[bool]):
-        self._set_attr("pre", value)
+    def selectable(self, value: Optional[bool]):
+        self._set_attr("v", value)
 
-    # nowrap
+    # overflow
     @property
-    def nowrap(self):
-        return self._get_attr("nowrap", data_type="bool", def_value=False)
+    def overflow(self):
+        return self._get_attr("overflow")
 
-    @nowrap.setter
+    @overflow.setter
     @beartype
-    def nowrap(self, value: Optional[bool]):
-        self._set_attr("nowrap", value)
-
-    # block
-    @property
-    def block(self):
-        return self._get_attr("block", data_type="bool", def_value=False)
-
-    @block.setter
-    @beartype
-    def block(self, value: Optional[bool]):
-        self._set_attr("block", value)
+    def overflow(self, value: TextOverflow):
+        self._set_attr("overflow", value)
 
     # color
     @property
