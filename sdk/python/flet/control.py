@@ -38,6 +38,8 @@ BorderStyle = Literal[
     "solid",
 ]
 
+ScrollDirection = Literal[None, "vertical", "horizontal"]
+
 TextSize = Literal[
     None,
     "tiny",
