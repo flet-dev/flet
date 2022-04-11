@@ -3,6 +3,7 @@ from typing import Optional
 from beartype import beartype
 
 from flet.control import Control
+from flet.ref import Ref
 
 try:
     from typing import Literal
@@ -10,27 +11,30 @@ except:
     from typing_extensions import Literal
 
 
-BoxSide = Literal[None, "start", "end"]
+LabelPosition = Literal[None, "right", "left"]
 
 
 class Checkbox(Control):
     def __init__(
         self,
+        id: str = None,
+        ref: Ref = None,
+        width: float = None,
+        height: float = None,
+        padding: float = None,
+        margin: float = None,
+        expand: int = None,
+        opacity: float = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # Specific
+        #
         label=None,
-        id=None,
-        ref=None,
+        label_position: LabelPosition = None,
         value=None,
-        value_field=None,
-        box_side: BoxSide = None,
-        focused=None,
-        data=None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
         on_change=None,
-        visible=None,
-        disabled=None,
     ):
         Control.__init__(
             self,
@@ -40,28 +44,19 @@ class Checkbox(Control):
             height=height,
             padding=padding,
             margin=margin,
+            expand=expand,
+            opacity=opacity,
             visible=visible,
             disabled=disabled,
             data=data,
         )
         self.value = value
-        self.value_field = value_field
         self.label = label
-        self.box_side = box_side
-        self.focused = focused
+        self.label_position = label_position
         self.on_change = on_change
 
     def _get_control_name(self):
         return "checkbox"
-
-    # on_change
-    @property
-    def on_change(self):
-        return self._get_event_handler("change")
-
-    @on_change.setter
-    def on_change(self, handler):
-        self._add_event_handler("change", handler)
 
     # value
     @property
@@ -73,16 +68,6 @@ class Checkbox(Control):
     def value(self, value: Optional[bool]):
         self._set_attr("value", value)
 
-    # value_field
-    @property
-    def value_field(self):
-        return self._get_attr("value")
-
-    @value_field.setter
-    def value_field(self, value):
-        if value != None:
-            self._set_attr("value", f"{{{value}}}")
-
     # label
     @property
     def label(self):
@@ -92,22 +77,21 @@ class Checkbox(Control):
     def label(self, value):
         self._set_attr("label", value)
 
-    # box_side
+    # label_position
     @property
-    def box_side(self):
-        return self._get_attr("boxSide")
+    def label_position(self):
+        return self._get_attr("labelPosition")
 
-    @box_side.setter
+    @label_position.setter
     @beartype
-    def box_side(self, value: BoxSide):
-        self._set_attr("boxSide", value)
+    def label_position(self, value: LabelPosition):
+        self._set_attr("labelPosition", value)
 
-    # focused
+    # on_change
     @property
-    def focused(self):
-        return self._get_attr("focused", data_type="bool", def_value=False)
+    def on_change(self):
+        return self._get_event_handler("change")
 
-    @focused.setter
-    @beartype
-    def focused(self, value: Optional[bool]):
-        self._set_attr("focused", value)
+    @on_change.setter
+    def on_change(self, handler):
+        self._add_event_handler("change", handler)
