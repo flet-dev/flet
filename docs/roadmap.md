@@ -59,6 +59,8 @@
   * Layout
     * Row (responsive)
     * Column (responsive)
+  * Behavior
+    * Complex embeddable values for `padding`, `marging`, etc, e.g. `.padding = { 'left': 10, 'right': 20 }`
 
 * Flet Client
   * [ ] Windows ("host" mode with hot reload)
@@ -410,9 +412,17 @@ Properties:
 - verticalAlignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
 - horizontalAlignment - `start` (default), `center`, `end`, `stretch`
 - spacing - gap between adjacent items, default
-- color - background color
+- padding
+- bgColor - background color
 - windowWidth - current window width
 - windowHeight - current window height
+
+Events:
+
+- onClose
+- onConnect
+- onDisconnect
+- onResize
 
 ## Control
 
@@ -425,7 +435,7 @@ Properties:
 - disabled
 
 - expand (int) - The control is forced to fill the available space inside Row or Column. Flex factor specified by the property. Default is 1. The property has affect only for direct descendants of Row and Column controls. (Wrap control into Expanded).
-- flex (int) - The child can be at most as large as the available space (but is allowed to be smaller) inside Row or Column. Flex factor specified by the property. Default is 1. The property has affect only for direct descendants of Row and Column controls. (Wrap control into Flexible with fit=FlexFit.loose).
+- flex (S2) (int) - The child can be at most as large as the available space (but is allowed to be smaller) inside Row or Column. Flex factor specified by the property. Default is 1. The property has affect only for direct descendants of Row and Column controls. (Wrap control into Flexible with fit=FlexFit.loose).
 
 The only difference if you use Flexible instead of Expanded, is that Flexible lets its child have the same or smaller width than the Flexible itself, while Expanded forces its child to have the exact same width of the Expanded. But both Expanded and Flexible ignore their children’s width when sizing themselves.
 
@@ -455,7 +465,7 @@ Docs: https://api.flutter.dev/flutter/widgets/Container-class.html
 
 Properties:
 
-- color (background color - `decoration: BoxDecoration.color`)
+- bgColor (background color - `decoration: BoxDecoration.color`)
 - alignment - `topLeft`, `topCenter`, `topRight`, `centerLeft`, `center`, `centerRight`, `bottomLeft`, `bottomCenter`, `bottomRight`
 - borderColor
 - borderWidth
@@ -549,10 +559,6 @@ Properties:
 - endIndent
 - color
 
-## SplitView
-
-Docs: https://pub.dev/packages/split_view
-
 ## Text
 
 Docs: https://api.flutter.dev/flutter/material/Text-class.html
@@ -627,3 +633,25 @@ Properties:
 Docs: https://api.flutter.dev/flutter/material/TextField-class.html
 
 Example: https://gallery.flutter.dev/#/demo/text-field
+
+## ElevatedButton
+
+Docs: https://api.flutter.dev/flutter/material/ElevatedButton-class.html
+
+
+
+## OutlinedButton
+
+Docs: https://api.flutter.dev/flutter/material/OutlinedButton-class.html
+
+## TextButton
+
+Docs: https://api.flutter.dev/flutter/material/TextButton-class.html
+
+## IconButton
+
+Docs: https://api.flutter.dev/flutter/material/IconButton-class.html
+
+## SplitView
+
+Docs: https://pub.dev/packages/split_view

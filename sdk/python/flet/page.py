@@ -3,8 +3,8 @@ import logging
 import threading
 
 from beartype import beartype
-from beartype.typing import List
-from beartype.typing import Optional
+from beartype.typing import List, Optional
+
 from flet import constants
 from flet.connection import Connection
 from flet.control import Control
@@ -17,19 +17,27 @@ except:
     from typing_extensions import Literal
 
 
-Align = Literal[
+MainAxisAlignment = Literal[
     None,
     "start",
     "end",
     "center",
-    "space-between",
-    "space-around",
-    "space-evenly",
-    "baseline",
-    "stretch",
+    "spaceBetween",
+    "spaceAround",
+    "spaceEvenly",
 ]
 
-THEME = Literal[None, "light", "dark"]
+CrossAxisAlignment = Literal[
+    None,
+    "start",
+    "end",
+    "center",
+    "stretch",
+    "baseline",
+]
+
+DESIGN = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
+THEME = Literal[None, "system", "light", "dark"]
 
 
 class Page(Control):
@@ -62,26 +70,12 @@ class Page(Control):
             self._conn.page_name,
             self._session_id,
             [
-                Command(0, "get", ["page", "hash"], None, None, None),
-                Command(0, "get", ["page", "winwidth"], None, None, None),
-                Command(0, "get", ["page", "winheight"], None, None, None),
-                Command(0, "get", ["page", "userauthprovider"], None, None, None),
-                Command(0, "get", ["page", "userid"], None, None, None),
-                Command(0, "get", ["page", "userlogin"], None, None, None),
-                Command(0, "get", ["page", "username"], None, None, None),
-                Command(0, "get", ["page", "useremail"], None, None, None),
-                Command(0, "get", ["page", "userclientip"], None, None, None),
+                Command(0, "get", ["page", "windowWidth"], None, None, None),
+                Command(0, "get", ["page", "windowHeight"], None, None, None),
             ],
         ).results
-        self._set_attr("hash", values[0], False)
-        self._set_attr("winwidth", values[1], False)
-        self._set_attr("winheight", values[2], False)
-        self._set_attr("userauthprovider", values[3], False)
-        self._set_attr("userid", values[4], False)
-        self._set_attr("userlogin", values[5], False)
-        self._set_attr("username", values[6], False)
-        self._set_attr("useremail", values[7], False)
-        self._set_attr("userclientip", values[8], False)
+        self._set_attr("windowWidth", values[0], False)
+        self._set_attr("windowHeight", values[1], False)
 
     def update(self, *controls):
         with self._lock:
@@ -260,45 +254,35 @@ class Page(Control):
     def title(self, value):
         self._set_attr("title", value)
 
-    # vertical_fill
+    # horizontal_alignment
     @property
-    def vertical_fill(self):
-        return self._get_attr("verticalFill", data_type="bool", def_value=False)
+    def horizontal_alignment(self):
+        return self._get_attr("horizontalAlignment")
 
-    @vertical_fill.setter
+    @horizontal_alignment.setter
     @beartype
-    def vertical_fill(self, value: Optional[bool]):
-        self._set_attr("verticalFill", value)
+    def horizontal_alignment(self, value: CrossAxisAlignment):
+        self._set_attr("horizontalAlignment", value)
 
-    # horizontal_align
+    # vertical_alignment
     @property
-    def horizontal_align(self):
-        return self._get_attr("horizontalAlign")
+    def vertical_alignment(self):
+        return self._get_attr("verticalAlignment")
 
-    @horizontal_align.setter
+    @vertical_alignment.setter
     @beartype
-    def horizontal_align(self, value: Align):
-        self._set_attr("horizontalAlign", value)
+    def vertical_alignment(self, value: MainAxisAlignment):
+        self._set_attr("verticalAlignment", value)
 
-    # vertical_align
+    # spacing
     @property
-    def vertical_align(self):
-        return self._get_attr("verticalAlign")
+    def spacing(self):
+        return self._get_attr("spacing")
 
-    @vertical_align.setter
+    @spacing.setter
     @beartype
-    def vertical_align(self, value: Align):
-        self._set_attr("verticalAlign", value)
-
-    # gap
-    @property
-    def gap(self):
-        return self._get_attr("gap")
-
-    @gap.setter
-    @beartype
-    def gap(self, value: Optional[int]):
-        self._set_attr("gap", value)
+    def spacing(self, value: Optional[float]):
+        self._set_attr("spacing", value)
 
     # padding
     @property
@@ -318,153 +302,31 @@ class Page(Control):
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
 
-    # theme
+    # theme_mode
     @property
-    def theme(self):
-        return self._get_attr("theme")
+    def theme_mode(self):
+        return self._get_attr("themeMode")
 
-    @theme.setter
+    @theme_mode.setter
     @beartype
-    def theme(self, value: THEME):
-        self._set_attr("theme", value)
+    def theme_mode(self, value: THEME):
+        self._set_attr("themeMode", value)
 
-    # theme_primary_color
+    # window_width
     @property
-    def theme_primary_color(self):
-        return self._get_attr("themePrimaryColor")
-
-    @theme_primary_color.setter
-    def theme_primary_color(self, value):
-        self._set_attr("themePrimaryColor", value)
-
-    # theme_text_color
-    @property
-    def theme_text_color(self):
-        return self._get_attr("themeTextColor")
-
-    @theme_text_color.setter
-    def theme_text_color(self, value):
-        self._set_attr("themeTextColor", value)
-
-    # theme_background_color
-    @property
-    def theme_background_color(self):
-        return self._get_attr("themeBackgroundColor")
-
-    @theme_background_color.setter
-    def theme_background_color(self, value):
-        self._set_attr("themeBackgroundColor", value)
-
-    # hash
-    @property
-    def hash(self):
-        return self._get_attr("hash")
-
-    @hash.setter
-    def hash(self, value):
-        self._set_attr("hash", value)
-
-    # win_width
-    @property
-    def win_width(self):
-        w = self._get_attr("winwidth")
+    def window_width(self):
+        w = self._get_attr("windowWidth")
         if w != None and w != "":
             return int(w)
         return 0
 
-    # win_height
+    # window_height
     @property
-    def win_height(self):
-        h = self._get_attr("winheight")
+    def window_height(self):
+        h = self._get_attr("windowHeight")
         if h != None and h != "":
             return int(h)
         return 0
-
-    # signin
-    @property
-    def signin(self):
-        return self._get_attr("signin")
-
-    @signin.setter
-    def signin(self, value):
-        self._set_attr("signin", value)
-
-    # signin_allow_dismiss
-    @property
-    def signin_allow_dismiss(self):
-        return self._get_attr("signinAllowDismiss", data_type="bool", def_value=False)
-
-    @signin_allow_dismiss.setter
-    @beartype
-    def signin_allow_dismiss(self, value: Optional[bool]):
-        self._set_attr("signinAllowDismiss", value)
-
-    # signin_groups
-    @property
-    def signin_groups(self):
-        return self._get_attr("signinGroups", data_type="bool", def_value=False)
-
-    @signin_groups.setter
-    @beartype
-    def signin_groups(self, value: Optional[bool]):
-        self._set_attr("signinGroups", value)
-
-    # user_auth_provider
-    @property
-    def user_auth_provider(self):
-        return self._get_attr("userauthprovider")
-
-    # user_id
-    @property
-    def user_id(self):
-        return self._get_attr("userId")
-
-    # user_login
-    @property
-    def user_login(self):
-        return self._get_attr("userLogin")
-
-    # user_name
-    @property
-    def user_name(self):
-        return self._get_attr("userName")
-
-    # user_email
-    @property
-    def user_email(self):
-        return self._get_attr("userEmail")
-
-    # user_client_ip
-    @property
-    def user_client_ip(self):
-        return self._get_attr("userClientIP")
-
-    # on_signin
-    @property
-    def on_signin(self):
-        return self._get_event_handler("signin")
-
-    @on_signin.setter
-    def on_signin(self, handler):
-        self._add_event_handler("signin", handler)
-
-    # on_dismiss_signin
-    @property
-    def on_dismiss_signin(self):
-        return self._get_event_handler("dismissSignin")
-
-    @on_dismiss_signin.setter
-    def on_dismiss_signin(self, handler):
-        self._add_event_handler("dismissSignin", handler)
-
-    # on_signout
-    @property
-    def on_signout(self):
-        return self._get_event_handler("signout")
-
-    @on_signout.setter
-    def on_signout(self, handler):
-        self._add_event_handler("signout", handler)
 
     # on_close
     @property
@@ -474,15 +336,6 @@ class Page(Control):
     @on_close.setter
     def on_close(self, handler):
         self._add_event_handler("close", handler)
-
-    # on_hash_change
-    @property
-    def on_hash_change(self):
-        return self._get_event_handler("hashChange")
-
-    @on_hash_change.setter
-    def on_hash_change(self, handler):
-        self._add_event_handler("hashChange", handler)
 
     # on_resize
     @property

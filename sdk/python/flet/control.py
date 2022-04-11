@@ -1,9 +1,9 @@
 import datetime as dt
 import threading
 from difflib import SequenceMatcher
-from beartype.typing import List, Optional, Union
 
 from beartype import beartype
+from beartype.typing import List, Optional, Union
 
 from flet.protocol import Command
 from flet.ref import Ref
@@ -16,15 +16,7 @@ except:
 
 BorderStyles = Literal[
     "none",
-    "hidden",
-    "dotted",
-    "dashed",
     "solid",
-    "double",
-    "groove",
-    "ridge",
-    "inset",
-    "outset",
 ]
 
 BorderStyle = Union[None, BorderStyles, List[BorderStyles]]
@@ -53,15 +45,17 @@ TextAlign = Literal[None, "left", "right", "center", "justify"]
 class Control:
     def __init__(
         self,
-        id=None,
+        id: str = None,
         ref: Ref = None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
-        data=None,
+        width: float = None,
+        height: float = None,
+        padding: float = None,
+        margin: float = None,
+        expand: int = None,
+        opacity: float = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
     ):
         self.__page = None
         self.__attrs = {}
@@ -74,6 +68,8 @@ class Control:
         self.height = height
         self.padding = padding
         self.margin = margin
+        self.expand = expand
+        self.opacity = opacity
         self.visible = visible
         self.disabled = disabled
         self.data = data
@@ -161,22 +157,22 @@ class Control:
     def id(self):
         return self._get_attr("id")
 
+    @id.setter
+    def id(self, value):
+        self._set_attr("id", value)
+
     # uid
     @property
     def uid(self):
         return self.__uid
 
-    @id.setter
-    def id(self, value):
-        self._set_attr("id", value)
-
     # width
     @property
-    def width(self):
+    def width(self) -> float:
         return self._get_attr("width")
 
     @width.setter
-    def width(self, value):
+    def width(self, value: float):
         self._set_attr("width", value)
 
     # height
@@ -205,6 +201,24 @@ class Control:
     @margin.setter
     def margin(self, value):
         self._set_attr("margin", value)
+
+    # expand
+    @property
+    def expand(self):
+        return self._get_attr("expand")
+
+    @expand.setter
+    def expand(self, value):
+        self._set_attr("expand", value)
+
+    # opacity
+    @property
+    def opacity(self):
+        return self._get_attr("opacity")
+
+    @opacity.setter
+    def opacity(self, value):
+        self._set_attr("opacity", value)
 
     # visible
     @property

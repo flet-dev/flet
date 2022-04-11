@@ -29,3 +29,8 @@ With Flet we are switching to monorepo storing Flet server, Flutter client and a
 ## Why changing name?
 
 * Confusing name. It's been almost a year and I haven't used to the name yet. Is it a "page-let", "p-g-let" or "piglet"? Is there connection to "PostgreSQL" or Paul Graham? On the other hand "flet" is short, simple and easy to pronounce.
+
+## Migration
+
+* All sizes are float numbers. Not "px", "pt", "rem", "%" or something else from CSS, but just numbers meaning "virtual pixels".
+* All percentage values are rational numbers between 0 and 1, i.e. 0.5 means 50%.
