@@ -3,6 +3,7 @@ from typing import Optional
 from beartype import beartype
 
 from flet.control import Control
+from flet.ref import Ref
 
 try:
     from typing import Literal
@@ -10,27 +11,33 @@ except:
     from typing_extensions import Literal
 
 
-Fit = Literal[
-    None, "none", "contain", "cover", "center", "centerContain", "centerCover"
+ImageFit = Literal[
+    None, "none", "contain", "cover", "fill", "fitHeight", "fitWidth", "scaleDown"
 ]
+
+ImageRepeat = Literal[None, "noRepeat", "repeat", "repeatX", "repeatY"]
 
 
 class Image(Control):
     def __init__(
         self,
+        id: str = None,
+        ref: Ref = None,
+        width: float = None,
+        height: float = None,
+        padding: float = None,
+        margin: float = None,
+        expand: int = None,
+        opacity: float = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # Specific
+        #
         src=None,
-        id=None,
-        ref=None,
-        alt=None,
-        title=None,
-        maximize_frame=None,
-        fit: Fit = None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
+        repeat: ImageRepeat = None,
+        fit: ImageFit = None,
     ):
 
         Control.__init__(
@@ -41,15 +48,16 @@ class Image(Control):
             height=height,
             padding=padding,
             margin=margin,
+            expand=expand,
+            opacity=opacity,
             visible=visible,
             disabled=disabled,
+            data=data,
         )
 
         self.src = src
-        self.alt = alt
-        self.title = title
         self.fit = fit
-        self.maximize_frame = maximize_frame
+        self.repeat = repeat
 
     def _get_control_name(self):
         return "image"
@@ -63,34 +71,6 @@ class Image(Control):
     def src(self, value):
         self._set_attr("src", value)
 
-    # alt
-    @property
-    def alt(self):
-        return self._get_attr("alt")
-
-    @alt.setter
-    def alt(self, value):
-        self._set_attr("alt", value)
-
-    # title
-    @property
-    def title(self):
-        return self._get_attr("title")
-
-    @title.setter
-    def title(self, value):
-        self._set_attr("title", value)
-
-    # maximize_frame
-    @property
-    def maximize_frame(self):
-        return self._get_attr("maximizeFrame", data_type="bool", def_value=False)
-
-    @maximize_frame.setter
-    @beartype
-    def maximize_frame(self, value: Optional[bool]):
-        self._set_attr("maximizeFrame", value)
-
     # fit
     @property
     def fit(self):
@@ -98,5 +78,15 @@ class Image(Control):
 
     @fit.setter
     @beartype
-    def fit(self, value: Fit):
+    def fit(self, value: ImageFit):
         self._set_attr("fit", value)
+
+    # repeat
+    @property
+    def repeat(self):
+        return self._get_attr("repeat")
+
+    @repeat.setter
+    @beartype
+    def repeat(self, value: ImageRepeat):
+        self._set_attr("repeat", value)

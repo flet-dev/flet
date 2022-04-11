@@ -1,20 +1,27 @@
 from flet.control import Control
+from flet.ref import Ref
 
 
 class Icon(Control):
     def __init__(
         self,
-        name=None,
-        id=None,
-        ref=None,
-        color=None,
-        size=None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
+        id: str = None,
+        ref: Ref = None,
+        width: float = None,
+        height: float = None,
+        padding: float = None,
+        margin: float = None,
+        expand: int = None,
+        opacity: float = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # Specific
+        #
+        name: str = None,
+        color: str = None,
+        size: float = None,
     ):
 
         Control.__init__(
@@ -25,8 +32,11 @@ class Icon(Control):
             height=height,
             padding=padding,
             margin=margin,
+            expand=expand,
+            opacity=opacity,
             visible=visible,
             disabled=disabled,
+            data=data,
         )
 
         self.name = name
