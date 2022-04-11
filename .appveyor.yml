@@ -240,8 +240,8 @@ for:
 
     build: off
 
-    #test_script:
-    #  - pdm run pytest tests
+    test_script:
+      - pdm run pytest tests
 
   ######################
   #    Python Build    #

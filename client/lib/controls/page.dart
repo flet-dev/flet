@@ -18,7 +18,12 @@ class PageControl extends StatelessWidget {
 
     bool disabled = control.attrBool("disabled", false);
 
+    var themeMode = ThemeMode.values.firstWhere(
+        (element) => element.name == control.attrString("themeMode"),
+        orElse: () => ThemeMode.system);
+
     return MaterialApp(
+      themeMode: themeMode,
       home: Scaffold(
         body: Column(
           children: control.childIds

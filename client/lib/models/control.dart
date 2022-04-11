@@ -32,16 +32,16 @@ class Control extends Equatable {
   }
 
   bool attrBool(String name, [bool defValue = false]) {
-    var r = attrs[name];
+    var r = attrs[name.toLowerCase()];
     return r != null ? r.toLowerCase() == "true" : defValue;
   }
 
   String attrString(String name, [String defValue = ""]) {
-    return attrs[name] ?? defValue;
+    return attrs[name.toLowerCase()] ?? defValue;
   }
 
   int attrInt(String name, [int defValue = 0]) {
-    var r = attrs[name];
+    var r = attrs[name.toLowerCase()];
     if (r != null) {
       var i = int.tryParse(r);
       return i ?? defValue;
@@ -50,7 +50,7 @@ class Control extends Equatable {
   }
 
   double attrDouble(String name, [double defValue = 0]) {
-    var r = attrs[name];
+    var r = attrs[name.toLowerCase()];
     if (r != null) {
       var i = double.tryParse(r);
       return i ?? defValue;
