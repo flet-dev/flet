@@ -1,5 +1,5 @@
 import flet
-from flet import Button, Stack, Textbox
+from flet import ElevatedButton, Stack, TextField
 from flet.protocol import Command
 
 
@@ -13,7 +13,7 @@ def test_stack_add():
         wrap=True,
         scroll_x=True,
         scroll_y=True,
-        controls=[Textbox(id="firstName"), Textbox(id="lastName")],
+        controls=[TextField(id="firstName"), TextField(id="lastName")],
     )
     assert isinstance(s, flet.Control)
     assert isinstance(s, flet.Stack)
@@ -36,21 +36,35 @@ def test_stack_add():
             lines=[],
             commands=[],
         ),
-        Command(indent=2, name=None, values=["textbox"], attrs={"id": ("firstName", True)}, lines=[], commands=[]),
-        Command(indent=2, name=None, values=["textbox"], attrs={"id": ("lastName", True)}, lines=[], commands=[]),
+        Command(
+            indent=2,
+            name=None,
+            values=["textbox"],
+            attrs={"id": ("firstName", True)},
+            lines=[],
+            commands=[],
+        ),
+        Command(
+            indent=2,
+            name=None,
+            values=["textbox"],
+            attrs={"id": ("lastName", True)},
+            lines=[],
+            commands=[],
+        ),
     ], "Test failed"
 
 
 def test_nested_stacks_add():
     s = Stack(
         controls=[
-            Textbox(id="firstName"),
-            Textbox(id="lastName"),
+            TextField(id="firstName"),
+            TextField(id="lastName"),
             Stack(
                 horizontal=True,
                 controls=[
-                    Button(id="ok", text="OK", primary=True),
-                    Button(id="cancel", text="Cancel"),
+                    ElevatedButton(id="ok", text="OK", primary=True),
+                    ElevatedButton(id="cancel", text="Cancel"),
                 ],
             ),
         ]
@@ -60,9 +74,30 @@ def test_nested_stacks_add():
     # raise Exception(s.get_cmd_str())
     assert s.get_cmd_str() == [
         Command(indent=0, name=None, values=["stack"], attrs={}, lines=[], commands=[]),
-        Command(indent=2, name=None, values=["textbox"], attrs={"id": ("firstName", True)}, lines=[], commands=[]),
-        Command(indent=2, name=None, values=["textbox"], attrs={"id": ("lastName", True)}, lines=[], commands=[]),
-        Command(indent=2, name=None, values=["stack"], attrs={"horizontal": "true"}, lines=[], commands=[]),
+        Command(
+            indent=2,
+            name=None,
+            values=["textbox"],
+            attrs={"id": ("firstName", True)},
+            lines=[],
+            commands=[],
+        ),
+        Command(
+            indent=2,
+            name=None,
+            values=["textbox"],
+            attrs={"id": ("lastName", True)},
+            lines=[],
+            commands=[],
+        ),
+        Command(
+            indent=2,
+            name=None,
+            values=["stack"],
+            attrs={"horizontal": "true"},
+            lines=[],
+            commands=[],
+        ),
         Command(
             indent=4,
             name=None,

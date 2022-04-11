@@ -1,7 +1,7 @@
 import logging
 
 import flet
-from flet import Button, Column, Row, Text, Textbox
+from flet import Button, Column, Row, Text, TextField
 from flet.expanded import Expanded
 
 # logging.basicConfig(level=logging.DEBUG)
@@ -30,7 +30,7 @@ def main(page):
 
         page.update()
 
-    txt_number = Textbox(value="0", align="right")
+    txt_number = TextField(value="0", align="right")
     result = Text()
 
     page.add(
@@ -39,7 +39,7 @@ def main(page):
                 controls=[
                     Button("-", on_click=on_click, data="-"),
                     Expanded(txt_number),
-                    Expanded(Textbox(label="Another textbox")),
+                    Expanded(TextField(label="Another textbox")),
                     Button("+", on_click=on_click, data="+"),
                     Column(controls=[result]),
                 ],

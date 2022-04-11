@@ -1,5 +1,5 @@
 import flet
-from flet import Button, Stack, Text
+from flet import ElevatedButton, Stack, Text
 from flet.protocol import Command
 
 
@@ -59,17 +59,31 @@ def test_text_double_quotes():
     c = Text(value='Hello, "world!"')
     # raise Exception(c.get_cmd_str())
     assert c.get_cmd_str() == [
-        Command(indent=0, name=None, values=["text"], attrs={"value": 'Hello, "world!"'}, lines=[], commands=[])
+        Command(
+            indent=0,
+            name=None,
+            values=["text"],
+            attrs={"value": 'Hello, "world!"'},
+            lines=[],
+            commands=[],
+        )
     ], "Test failed"
 
 
 def test_add_text_inside_stack():
     text = Text(id="txt1", value='Hello, "world!"')
-    button = Button(text="Super button")
+    button = ElevatedButton(text="Super button")
     stack = Stack(id="header", controls=[text, button])
 
     assert stack.get_cmd_str() == [
-        Command(indent=0, name=None, values=["stack"], attrs={"id": ("header", True)}, lines=[], commands=[]),
+        Command(
+            indent=0,
+            name=None,
+            values=["stack"],
+            attrs={"id": ("header", True)},
+            lines=[],
+            commands=[],
+        ),
         Command(
             indent=2,
             name=None,
@@ -78,5 +92,12 @@ def test_add_text_inside_stack():
             lines=[],
             commands=[],
         ),
-        Command(indent=2, name=None, values=["button"], attrs={"text": "Super button"}, lines=[], commands=[]),
+        Command(
+            indent=2,
+            name=None,
+            values=["button"],
+            attrs={"text": "Super button"},
+            lines=[],
+            commands=[],
+        ),
     ], "Test failed"
