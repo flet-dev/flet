@@ -6,19 +6,22 @@ import '../models/control.dart';
 import 'create_control.dart';
 
 class RowControl extends StatelessWidget {
+  final Control? parent;
   final Control control;
+  final bool parentDisabled;
   final List<Control> children;
 
-  const RowControl({Key? key, required this.control, required this.children})
+  const RowControl(
+      {Key? key,
+      this.parent,
+      required this.control,
+      required this.children,
+      required this.parentDisabled})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // debugPrint("Row build: ${control.id}");
-    // return Row(
-    //     mainAxisAlignment: MainAxisAlignment.start,
-    //     children:
-    //         control.childIds.map((childId) => createControl(childId)).toList());
+    bool disabled = control.attrBool("disabled", false) || parentDisabled;
 
     return StoreConnector<AppState, PageBreakpointViewModel>(
         distinct: true,
@@ -27,12 +30,14 @@ class RowControl extends StatelessWidget {
           debugPrint(
               "Row build: ${control.id} with breakpoint: ${viewModel.breakpoint}");
 
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: control.childIds
-                .map((childId) => createControl(childId))
-                .toList(),
-          );
+          return expandable(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: control.childIds
+                    .map((childId) => createControl(control, childId, disabled))
+                    .toList(),
+              ),
+              control);
         });
   }
 }

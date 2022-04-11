@@ -4,22 +4,27 @@ import 'create_control.dart';
 import '../models/control.dart';
 
 class PageControl extends StatelessWidget {
+  final Control? parent;
   final Control control;
   final List<Control> children;
 
-  const PageControl({Key? key, required this.control, required this.children})
+  const PageControl(
+      {Key? key, this.parent, required this.control, required this.children})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Page build: ${control.id}");
 
+    bool disabled = control.attrBool("disabled", false);
+
     return MaterialApp(
       home: Scaffold(
         body: Column(
-          children:
-              control.childIds.map((childId) => createControl(childId)).toList()
-                ..add(const ScreenSize()),
+          children: control.childIds
+              .map((childId) => createControl(control, childId, disabled))
+              .toList()
+            ..add(const ScreenSize()),
         ),
       ),
     );

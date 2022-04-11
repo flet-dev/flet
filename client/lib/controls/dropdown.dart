@@ -1,3 +1,4 @@
+import 'package:flet_view/controls/create_control.dart';
 import 'package:flutter/material.dart';
 import 'package:flet_view/protocol/update_control_props_payload.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -9,9 +10,16 @@ import '../models/control_children_view_model.dart';
 import '../web_socket_client.dart';
 
 class DropdownControl extends StatefulWidget {
+  final Control? parent;
   final Control control;
+  final bool parentDisabled;
 
-  const DropdownControl({Key? key, required this.control}) : super(key: key);
+  const DropdownControl(
+      {Key? key,
+      this.parent,
+      required this.control,
+      required this.parentDisabled})
+      : super(key: key);
 
   @override
   State<DropdownControl> createState() => _DropdownControlState();
@@ -32,6 +40,9 @@ class _DropdownControlState extends State<DropdownControl> {
         builder: (context, itemsView) {
           debugPrint("Dropdown StoreConnector build: ${widget.control.id}");
 
+          bool disabled = widget.control.attrBool("disabled", false) ||
+              widget.parentDisabled;
+
           String? value = widget.control.attrs["value"];
           if (value == "") {
             value = null;
@@ -40,7 +51,7 @@ class _DropdownControlState extends State<DropdownControl> {
             _value = value;
           }
 
-          return DropdownButton<String>(
+          var dropDown = DropdownButton<String>(
             value: _value,
             // icon: const Icon(Icons.arrow_downward),
             // elevation: 16,
@@ -64,6 +75,7 @@ class _DropdownControlState extends State<DropdownControl> {
             items: itemsView.children
                 .map<DropdownMenuItem<String>>((Control itemCtrl) {
               return DropdownMenuItem<String>(
+                enabled: !(disabled || itemCtrl.attrBool("disabled", false)),
                 value: itemCtrl.attrs["key"] ??
                     itemCtrl.attrs["text"] ??
                     itemCtrl.id,
@@ -73,6 +85,8 @@ class _DropdownControlState extends State<DropdownControl> {
               );
             }).toList(),
           );
+
+          return expandable(dropDown, widget.control);
         });
   }
 }

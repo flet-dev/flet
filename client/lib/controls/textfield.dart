@@ -1,3 +1,4 @@
+import 'package:flet_view/controls/create_control.dart';
 import 'package:flutter/material.dart';
 import 'package:flet_view/protocol/update_control_props_payload.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -8,9 +9,16 @@ import '../models/control.dart';
 import '../web_socket_client.dart';
 
 class TextFieldControl extends StatefulWidget {
+  final Control? parent;
   final Control control;
+  final bool parentDisabled;
 
-  const TextFieldControl({Key? key, required this.control}) : super(key: key);
+  const TextFieldControl(
+      {Key? key,
+      this.parent,
+      required this.control,
+      required this.parentDisabled})
+      : super(key: key);
 
   @override
   State<TextFieldControl> createState() => _TextFieldControlState();
@@ -35,6 +43,10 @@ class _TextFieldControlState extends State<TextFieldControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("TextField build: ${widget.control.id}");
+
+    bool disabled =
+        widget.control.attrBool("disabled", false) || widget.parentDisabled;
+
     return StoreConnector<AppState, Function>(
         distinct: true,
         converter: (store) => store.dispatch,
@@ -47,8 +59,9 @@ class _TextFieldControlState extends State<TextFieldControl> {
             _controller.text = value;
           }
 
-          return TextFormField(
+          var textField = TextFormField(
               //initialValue: widget.control.attrs["value"] ?? "",
+              enabled: !disabled,
               decoration: InputDecoration(
                   labelText: widget.control.attrs["label"] ?? "",
                   border: const OutlineInputBorder()),
@@ -65,6 +78,8 @@ class _TextFieldControlState extends State<TextFieldControl> {
                     UpdateControlPropsPayload(props: props)));
                 ws.updateControlProps(props: props);
               });
+
+          return expandable(textField, widget.control);
         });
   }
 }

@@ -31,6 +31,33 @@ class Control extends Equatable {
         attrs: attrs);
   }
 
+  bool attrBool(String name, [bool defValue = false]) {
+    var r = attrs[name];
+    return r != null ? r.toLowerCase() == "true" : defValue;
+  }
+
+  String attrString(String name, [String defValue = ""]) {
+    return attrs[name] ?? defValue;
+  }
+
+  int attrInt(String name, [int defValue = 0]) {
+    var r = attrs[name];
+    if (r != null) {
+      var i = int.tryParse(r);
+      return i ?? defValue;
+    }
+    return defValue;
+  }
+
+  double attrDouble(String name, [double defValue = 0]) {
+    var r = attrs[name];
+    if (r != null) {
+      var i = double.tryParse(r);
+      return i ?? defValue;
+    }
+    return defValue;
+  }
+
   Control copyWith(
           {String? id,
           String? pid,

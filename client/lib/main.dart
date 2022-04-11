@@ -100,7 +100,7 @@ class FletApp extends StatelessWidget {
                   ),
                 ));
           } else {
-            return createControl("page");
+            return createControl(null, "page", false);
           }
         },
       ),
