@@ -522,7 +522,7 @@ Properties:
 - scrollDirection - `vertical` (default), `horizontal`.
 - padding
 
-### ListTile
+### ListTile (S2)
 
 Docs: https://api.flutter.dev/flutter/material/ListTile-class.html
 
