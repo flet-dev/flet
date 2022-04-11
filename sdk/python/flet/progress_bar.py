@@ -3,23 +3,32 @@ from typing import Optional
 from beartype import beartype
 
 from flet.control import Control
+from flet.ref import Ref
 
 
 class ProgressBar(Control):
     def __init__(
         self,
-        label=None,
-        id=None,
-        ref=None,
-        description=None,
-        value=None,
-        bar_height=None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
+        id: str = None,
+        ref: Ref = None,
+        width: float = None,
+        height: float = None,
+        padding: float = None,
+        margin: float = None,
+        expand: int = None,
+        opacity: float = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # Specific
+        #
+        value: float = None,
+        label: str = None,
+        description: str = None,
+        bar_height: float = None,
+        color: str = None,
+        bgcolor: str = None,
     ):
         Control.__init__(
             self,
@@ -29,13 +38,18 @@ class ProgressBar(Control):
             height=height,
             padding=padding,
             margin=margin,
+            expand=expand,
+            opacity=opacity,
             visible=visible,
             disabled=disabled,
+            data=data,
         )
         self.value = value
-        self.description = description
         self.label = label
+        self.description = description
         self.bar_height = bar_height
+        self.color = color
+        self.bgcolor = bgcolor
 
     def _get_control_name(self):
         return "progressbar"
@@ -47,8 +61,17 @@ class ProgressBar(Control):
 
     @value.setter
     @beartype
-    def value(self, value: Optional[int]):
+    def value(self, value: Optional[float]):
         self._set_attr("value", value)
+
+    # label
+    @property
+    def label(self):
+        return self._get_attr("label")
+
+    @label.setter
+    def label(self, value):
+        self._set_attr("label", value)
 
     # description
     @property
@@ -65,14 +88,24 @@ class ProgressBar(Control):
         return self._get_attr("barheight")
 
     @bar_height.setter
-    def bar_height(self, value):
+    @beartype
+    def bar_height(self, value: float):
         self._set_attr("barheight", value)
 
-    # label
+    # color
     @property
-    def label(self):
-        return self._get_attr("label")
+    def color(self):
+        return self._get_attr("color")
 
-    @label.setter
-    def label(self, value):
-        self._set_attr("label", value)
+    @color.setter
+    def color(self, value):
+        self._set_attr("color", value)
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
