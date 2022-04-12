@@ -61,6 +61,7 @@
     * Column (responsive)
   * Behavior
     * Complex embeddable values for `padding`, `marging`, etc, e.g. `.padding = { 'left': 10, 'right': 20 }`
+    * Visual Density ([more](https://api.flutter.dev/flutter/material/VisualDensity-class.html))
 
 * Flet Client
   * [ ] Windows ("host" mode with hot reload)
@@ -474,7 +475,7 @@ Properties:
 - verticalScroll (S2)
 - horizontalScroll (S2)
 - autoScroll (S2) - `end`, `start` ([example](https://stackoverflow.com/questions/43485529/programmatically-scrolling-to-the-end-of-a-listview)).
-- control - child control of any type
+- content - child control of any type
 
 ## Row
 
@@ -591,7 +592,7 @@ Properties:
 - name ([The list of icons](https://api.flutter.dev/flutter/material/Icons-class.html))
 - color ([more](https://api.flutter.dev/flutter/dart-ui/Color-class.html))
 - size
-- semanticLabel - Text to announce in accessibility modes
+- semanticLabel (S2) - Text to announce in accessibility modes
 
 ## Image
 
@@ -605,6 +606,7 @@ Properties:
 - repeat: noRepeat, repeat, repeatX, repeatY
 - opacity - override control's opacity
 - fit: contain, cover, fill, fitHeight, fitWidth, none, scaleDown
+- semanticLabel (S2)
 
 ## ProgressBar
 
@@ -614,8 +616,10 @@ Properties:
 
 - color
 - bgColor
-- height - override control's height
+- barHeight
 - value
+- label
+- description
 
 ## ProgressRing
 
@@ -627,6 +631,8 @@ Properties:
 - bgColor
 - strokeWidth
 - value
+- label
+- labelPosition
 
 ## TextField
 
@@ -638,19 +644,214 @@ Example: https://gallery.flutter.dev/#/demo/text-field
 
 Docs: https://api.flutter.dev/flutter/material/ElevatedButton-class.html
 
+Properties:
 
+- text
+- icon
+- iconColor
+- content - a Control representing custom button content
+
+Events:
+
+- click
 
 ## OutlinedButton
 
 Docs: https://api.flutter.dev/flutter/material/OutlinedButton-class.html
 
+Properties:
+
+- text
+- icon
+- iconColor
+- content - a Control representing custom button content
+
+Events:
+
+- click
+
 ## TextButton
 
 Docs: https://api.flutter.dev/flutter/material/TextButton-class.html
 
+Properties:
+
+- text
+- icon
+- iconColor
+- content - a Control representing custom button content
+
+Events:
+
+- click
+
 ## IconButton
 
 Docs: https://api.flutter.dev/flutter/material/IconButton-class.html
+
+Properties:
+
+- tooltip
+- icon
+- iconColor
+- iconSize
+- content - a Control representing custom button content
+
+Events:
+
+- click
+
+## Radio
+
+Docs: https://api.flutter.dev/flutter/material/Radio-class.html
+
+Properties:
+
+- label
+- labelPosition
+- value
+
+Events:
+
+- change
+
+## Slider
+
+Docs: https://api.flutter.dev/flutter/material/Switch-class.html
+
+Properties:
+
+- value
+- min
+- max
+- divisions
+
+Events:
+
+- change
+
+## Switch
+
+Docs: https://api.flutter.dev/flutter/material/Switch-class.html
+
+Properties:
+
+- label
+- labelPosition
+- value
+
+Events:
+
+- change
+
+## Checkbox
+
+Docs: https://api.flutter.dev/flutter/material/Checkbox-class.html
+
+Properties:
+
+- label
+- labelPosition
+- value
+
+Events:
+
+- change
+
+## Dropdown
+
+Docs: https://api.flutter.dev/flutter/material/DropdownButtonFormField-class.html
+
+Properties:
+
+- label
+- icon
+- border
+- filled
+- hintText
+- helperText
+- counterText
+- errorText
+- prefixIcon
+- prefixText
+- suffixIcon
+- suffixText
+
+- value
+- options
+
+Events:
+
+- change
+
+## TextField
+
+Docs: https://api.flutter.dev/flutter/material/TextFormField-class.html
+
+Properties:
+
+- label
+- icon
+- border
+- filled
+- hintText
+- helperText
+- counterText
+- errorText
+- prefixIcon
+- prefixText
+- suffixIcon
+- suffixText
+
+- value
+- keyboardType
+- minLines
+- maxLines
+- password
+- readOnly
+- textAlign
+
+Events:
+
+- change
+
+## AlertDialog
+
+Docs: https://api.flutter.dev/flutter/material/AlertDialog-class.html
+
+Properties:
+
+- open - bool
+- title (Control)
+- titlePadding
+- content (Control)
+- contentPadding
+- actions (Controls)
+- actionsPadding
+- actionsAlignment (mainAxisAlignment)
+
+## Banner
+
+Docs: https://api.flutter.dev/flutter/material/MaterialBanner-class.html
+
+Properties:
+
+- open - bool
+- padding
+- leading (Control)
+- leadingPadding
+- content (Control)
+- actions (Controls)
+- forceActionsBelow
+- backgroundColor
+
+## SnackBar
+
+Docs: https://api.flutter.dev/flutter/material/MaterialBanner-class.html
+
+Properties:
+
+- TBD
 
 ## SplitView
 
