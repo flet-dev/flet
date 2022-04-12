@@ -851,7 +851,12 @@ Docs: https://api.flutter.dev/flutter/material/MaterialBanner-class.html
 
 Properties:
 
-- TBD
+- open
+- content (Control)
+- action (SnackBarAction)
+- bgColor (S2)
+- margin (S2)
+- padding (S2)
 
 ## SplitView
 

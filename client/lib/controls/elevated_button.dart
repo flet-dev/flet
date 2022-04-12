@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import '../web_socket_client.dart';
 
-class ButtonControl extends StatelessWidget {
+class ElevatedButtonControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
 
-  const ButtonControl(
+  const ElevatedButtonControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -20,7 +20,7 @@ class ButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Button build: ${control.id}");
 
-    bool disabled = control.attrBool("disabled", false) || parentDisabled;
+    bool disabled = control.attrBool("disabled", false)! || parentDisabled;
 
     var button = ElevatedButton(
       onPressed: disabled

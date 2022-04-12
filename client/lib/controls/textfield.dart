@@ -45,7 +45,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
     debugPrint("TextField build: ${widget.control.id}");
 
     bool disabled =
-        widget.control.attrBool("disabled", false) || widget.parentDisabled;
+        widget.control.attrBool("disabled", false)! || widget.parentDisabled;
 
     return StoreConnector<AppState, Function>(
         distinct: true,

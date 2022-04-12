@@ -40,7 +40,7 @@ class _DropdownControlState extends State<DropdownControl> {
         builder: (context, itemsView) {
           debugPrint("Dropdown StoreConnector build: ${widget.control.id}");
 
-          bool disabled = widget.control.attrBool("disabled", false) ||
+          bool disabled = widget.control.attrBool("disabled", false)! ||
               widget.parentDisabled;
 
           String? value = widget.control.attrs["value"];
@@ -75,7 +75,7 @@ class _DropdownControlState extends State<DropdownControl> {
             items: itemsView.children
                 .map<DropdownMenuItem<String>>((Control itemCtrl) {
               return DropdownMenuItem<String>(
-                enabled: !(disabled || itemCtrl.attrBool("disabled", false)),
+                enabled: !(disabled || itemCtrl.attrBool("disabled", false)!),
                 value: itemCtrl.attrs["key"] ??
                     itemCtrl.attrs["text"] ??
                     itemCtrl.id,

@@ -20,7 +20,7 @@ class StackControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Stack build: ${control.id}");
 
-    bool disabled = control.attrBool("disabled", false) || parentDisabled;
+    bool disabled = control.attrBool("disabled", false)! || parentDisabled;
 
     return expandable(
         Stack(

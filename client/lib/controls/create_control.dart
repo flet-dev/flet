@@ -1,3 +1,4 @@
+import 'package:flet_view/controls/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -8,7 +9,7 @@ import '../models/app_state.dart';
 import 'row.dart';
 import 'textfield.dart';
 import 'dropdown.dart';
-import 'button.dart';
+import 'elevated_button.dart';
 import 'page.dart';
 import 'stack.dart';
 import 'text.dart';
@@ -32,8 +33,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control, children: controlView.children);
         case "text":
           return TextControl(control: controlView.control);
-        case "button":
-          return ButtonControl(
+        case "elevatedbutton":
+          return ElevatedButtonControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);
@@ -65,6 +66,11 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);
+        case "snackbar":
+          return SnackBarControl(
+              parent: parent,
+              control: controlView.control,
+              parentDisabled: parentDisabled);
         default:
           throw Exception("Unknown control type: ${controlView.control.type}");
       }
@@ -73,6 +79,6 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
 }
 
 Widget expandable(Widget widget, Control control) {
-  int expand = control.attrInt("expand");
-  return expand > 0 ? Expanded(child: widget, flex: expand) : widget;
+  int? expand = control.attrInt("expand");
+  return expand != null ? Expanded(child: widget, flex: expand) : widget;
 }

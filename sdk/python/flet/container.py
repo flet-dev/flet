@@ -105,11 +105,12 @@ class Container(Control):
 
     # border_width
     @property
-    def border_width(self):
+    def border_width(self) -> float:
         return self._get_attr("borderWidth")
 
     @border_width.setter
-    def border_width(self, value):
+    @beartype
+    def border_width(self, value: Optional[float]):
         self._set_attr("borderWidth", value)
 
     # border_style

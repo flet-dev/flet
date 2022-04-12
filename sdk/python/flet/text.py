@@ -33,6 +33,7 @@ VerticalAlign = Literal[None, "top", "center", "bottom"]
 class Text(Control):
     def __init__(
         self,
+        value: str = None,
         id: str = None,
         ref: Ref = None,
         width: float = None,
@@ -47,7 +48,6 @@ class Text(Control):
         #
         # text-specific
         #
-        value: str = None,
         text_align: TextAlign = None,
         size: float = None,
         weight: FontWeight = None,

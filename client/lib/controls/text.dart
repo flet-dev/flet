@@ -13,6 +13,6 @@ class TextControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Text build: ${control.id}");
-    return expandable(Text(control.attrString("value")), control);
+    return expandable(Text(control.attrString("value", "")!), control);
   }
 }

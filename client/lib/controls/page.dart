@@ -16,7 +16,7 @@ class PageControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Page build: ${control.id}");
 
-    bool disabled = control.attrBool("disabled", false);
+    bool disabled = control.attrBool("disabled", false)!;
 
     var themeMode = ThemeMode.values.firstWhere(
         (element) => element.name == control.attrString("themeMode"),

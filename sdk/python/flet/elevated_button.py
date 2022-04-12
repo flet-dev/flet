@@ -9,6 +9,7 @@ from flet.ref import Ref
 class ElevatedButton(Control):
     def __init__(
         self,
+        text: str = None,
         id: str = None,
         ref: Ref = None,
         width: float = None,
@@ -23,7 +24,6 @@ class ElevatedButton(Control):
         #
         # Specific
         #
-        text: str = None,
         icon: str = None,
         icon_color: str = None,
         content: Control = None,

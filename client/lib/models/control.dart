@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
 
 class Control extends Equatable {
-  static const reservedProps = ['i', 'p', 't', 'c'];
+  static const reservedProps = ['i', 'p', 't', 'c', 'n'];
 
   final String id;
   final String pid;
   final String type;
+  final String? name;
   final List<String> childIds;
   final Map<String, String> attrs;
 
@@ -13,6 +14,7 @@ class Control extends Equatable {
       {required this.id,
       required this.pid,
       required this.type,
+      required this.name,
       required this.childIds,
       required this.attrs});
 
@@ -27,20 +29,21 @@ class Control extends Equatable {
         id: json['i'] as String,
         pid: json['p'] as String,
         type: json['t'] as String,
+        name: json['n'] as String?,
         childIds: List<String>.from(json['c']),
         attrs: attrs);
   }
 
-  bool attrBool(String name, [bool defValue = false]) {
+  bool? attrBool(String name, [bool? defValue]) {
     var r = attrs[name.toLowerCase()];
     return r != null ? r.toLowerCase() == "true" : defValue;
   }
 
-  String attrString(String name, [String defValue = ""]) {
+  String? attrString(String name, [String? defValue]) {
     return attrs[name.toLowerCase()] ?? defValue;
   }
 
-  int attrInt(String name, [int defValue = 0]) {
+  int? attrInt(String name, [int? defValue]) {
     var r = attrs[name.toLowerCase()];
     if (r != null) {
       var i = int.tryParse(r);
@@ -49,7 +52,7 @@ class Control extends Equatable {
     return defValue;
   }
 
-  double attrDouble(String name, [double defValue = 0]) {
+  double? attrDouble(String name, [double? defValue]) {
     var r = attrs[name.toLowerCase()];
     if (r != null) {
       var i = double.tryParse(r);
@@ -62,15 +65,17 @@ class Control extends Equatable {
           {String? id,
           String? pid,
           String? type,
+          String? name,
           List<String>? childIds,
           Map<String, String>? attrs}) =>
       Control(
           id: id ?? this.id,
           pid: pid ?? this.pid,
           type: type ?? this.type,
+          name: name ?? this.name,
           childIds: childIds ?? this.childIds,
           attrs: attrs ?? this.attrs);
 
   @override
-  List<Object?> get props => [id, pid, type, childIds, attrs];
+  List<Object?> get props => [id, pid, type, name, childIds, attrs];
 }

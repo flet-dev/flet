@@ -20,7 +20,7 @@ class ColumnControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Column build: ${control.id}");
 
-    bool disabled = control.attrBool("disabled", false) || parentDisabled;
+    bool disabled = control.attrBool("disabled", false)! || parentDisabled;
 
     return expandable(
         Column(
