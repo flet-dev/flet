@@ -2,9 +2,29 @@ from typing import Optional
 
 from beartype import beartype
 
-from flet.control import Control, InputBorder, TextAlign
+from flet.control import InputBorder, TextAlign
 from flet.form_field import FormField
 from flet.ref import Ref
+
+try:
+    from typing import Literal
+except:
+    from typing_extensions import Literal
+
+TextInputType = Literal[
+    None,
+    "text",
+    "multiline",
+    "number",
+    "phone",
+    "datetime",
+    "emailAddress",
+    "url",
+    "visiblePassword",
+    "name",
+    "streetAddress",
+    "none",
+]
 
 
 class TextField(FormField):
@@ -40,6 +60,7 @@ class TextField(FormField):
         # TextField Specific
         #
         value: str = None,
+        keyboard_type: TextInputType = None,
         on_change=None,
         min_lines: int = None,
         max_lines: int = None,
@@ -76,6 +97,7 @@ class TextField(FormField):
         )
         self.label = label
         self.value = value
+        self.keyboard_type = keyboard_type
         self.text_align = text_align
         self.min_lines = min_lines
         self.max_lines = max_lines
@@ -94,6 +116,16 @@ class TextField(FormField):
     @value.setter
     def value(self, value):
         self._set_attr("value", value)
+
+    # keyboard_type
+    @property
+    def keyboard_type(self):
+        return self._get_attr("keyboardType")
+
+    @keyboard_type.setter
+    @beartype
+    def keyboard_type(self, value: TextAlign):
+        self._set_attr("keyboardType", value)
 
     # text_align
     @property

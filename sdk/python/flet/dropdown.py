@@ -6,11 +6,6 @@ from flet.control import Control, InputBorder
 from flet.form_field import FormField
 from flet.ref import Ref
 
-try:
-    from typing import Literal
-except:
-    from typing_extensions import Literal
-
 
 class Dropdown(FormField):
     def __init__(

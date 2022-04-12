@@ -3,7 +3,7 @@ import threading
 from difflib import SequenceMatcher
 
 from beartype import beartype
-from beartype.typing import List, Optional, Union
+from beartype.typing import List, Optional
 
 from flet.protocol import Command
 from flet.ref import Ref

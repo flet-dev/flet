@@ -31,9 +31,9 @@ class Switch(Control):
         #
         # Specific
         #
-        label=None,
+        label: str = None,
         label_position: LabelPosition = None,
-        value=None,
+        value: bool = None,
         on_change=None,
     ):
         Control.__init__(

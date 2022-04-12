@@ -21,6 +21,9 @@ class Column(Control):
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
+        #
+        # Column specific
+        #
         vertical_size: MainAxisSize = None,
         vertical_alignment: MainAxisAlignment = None,
         horizontal_alignment: CrossAxisAlignment = None,

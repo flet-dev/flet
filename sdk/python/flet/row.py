@@ -21,6 +21,9 @@ class Row(Control):
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
+        #
+        # Row specific
+        #
         horizontal_size: MainAxisSize = None,
         horizontal_alignment: MainAxisAlignment = None,
         vertical_alignment: CrossAxisAlignment = None,
