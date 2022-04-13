@@ -3,7 +3,7 @@ from typing import List, Optional
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, CrossAxisAlignment, MainAxisAlignment, MainAxisSize
+from flet.control import Control, CrossAxisAlignment, MainAxisAlignment
 from flet.ref import Ref
 
 
@@ -22,10 +22,10 @@ class Column(ConstrainedControl):
         #
         # Column specific
         #
-        vertical_size: MainAxisSize = None,
-        vertical_alignment: MainAxisAlignment = None,
+        alignment: MainAxisAlignment = None,
         horizontal_alignment: CrossAxisAlignment = None,
         spacing: float = None,
+        tight: bool = None,
         wrap: bool = None,
         run_spacing: float = None,
     ):
@@ -43,25 +43,35 @@ class Column(ConstrainedControl):
 
         self.__controls = []
         self.controls = controls
-        self.vertical_size = vertical_size
         self.horizontal_alignment = horizontal_alignment
-        self.vertical_alignment = vertical_alignment
+        self.alignment = alignment
         self.spacing = spacing
+        self.tight = tight
         self.wrap = wrap
         self.run_spacing = run_spacing
 
     def _get_control_name(self):
         return "column"
 
-    # vertical_size
+    # tight
     @property
-    def vertical_size(self):
-        return self._get_attr("verticalSize")
+    def tight(self):
+        return self._get_attr("tight", data_type="bool", def_value=False)
 
-    @vertical_size.setter
+    @tight.setter
     @beartype
-    def vertical_size(self, value: MainAxisSize):
-        self._set_attr("verticalSize", value)
+    def tight(self, value: Optional[bool]):
+        self._set_attr("tight", value)
+
+    # alignment
+    @property
+    def alignment(self):
+        return self._get_attr("alignment")
+
+    @alignment.setter
+    @beartype
+    def alignment(self, value: MainAxisAlignment):
+        self._set_attr("alignment", value)
 
     # horizontal_alignment
     @property
@@ -72,16 +82,6 @@ class Column(ConstrainedControl):
     @beartype
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self._set_attr("horizontalAlignment", value)
-
-    # vertical_alignment
-    @property
-    def vertical_alignment(self):
-        return self._get_attr("verticalAlignment")
-
-    @vertical_alignment.setter
-    @beartype
-    def vertical_alignment(self, value: MainAxisAlignment):
-        self._set_attr("verticalAlignment", value)
 
     # spacing
     @property

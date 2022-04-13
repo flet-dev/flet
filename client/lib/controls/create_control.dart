@@ -1,4 +1,5 @@
 import 'package:flet_view/controls/snack_bar.dart';
+import 'package:flet_view/models/control_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -28,45 +29,45 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
     builder: (context, controlView) {
       //debugPrint("${control.type} ${control.id} builder");
       switch (controlView.control.type) {
-        case "page":
+        case ControlType.page:
           return PageControl(
               control: controlView.control, children: controlView.children);
-        case "text":
+        case ControlType.text:
           return TextControl(control: controlView.control);
-        case "elevatedbutton":
+        case ControlType.elevatedButton:
           return ElevatedButtonControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);
-        case "column":
+        case ControlType.column:
           return ColumnControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case "row":
+        case ControlType.row:
           return RowControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case "stack":
+        case ControlType.stack:
           return StackControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case "textbox":
+        case ControlType.textField:
           return TextFieldControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);
-        case "dropdown":
+        case ControlType.dropdown:
           return DropdownControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);
-        case "snackbar":
+        case ControlType.snackBar:
           return SnackBarControl(
               parent: parent,
               control: controlView.control,

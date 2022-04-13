@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:flet_view/models/control_type.dart';
 
 class Control extends Equatable {
   static const reservedProps = ['i', 'p', 't', 'c', 'n'];
 
   final String id;
   final String pid;
-  final String type;
+  final ControlType type;
   final String? name;
   final List<String> childIds;
   final Map<String, String> attrs;
@@ -25,10 +26,12 @@ class Control extends Equatable {
         attrs[key] = json[key] as String;
       }
     }
+
     return Control(
         id: json['i'] as String,
         pid: json['p'] as String,
-        type: json['t'] as String,
+        type: ControlType.values.firstWhere(
+            (t) => t.name.toLowerCase() == (json['t'] as String).toLowerCase()),
         name: json['n'] as String?,
         childIds: List<String>.from(json['c']),
         attrs: attrs);
@@ -64,7 +67,7 @@ class Control extends Equatable {
   Control copyWith(
           {String? id,
           String? pid,
-          String? type,
+          ControlType? type,
           String? name,
           List<String>? childIds,
           Map<String, String>? attrs}) =>

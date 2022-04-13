@@ -3,7 +3,7 @@ from typing import List, Optional
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, CrossAxisAlignment, MainAxisAlignment, MainAxisSize
+from flet.control import Control, CrossAxisAlignment, MainAxisAlignment
 from flet.ref import Ref
 
 
@@ -22,10 +22,10 @@ class Row(ConstrainedControl):
         #
         # Row specific
         #
-        horizontal_size: MainAxisSize = None,
-        horizontal_alignment: MainAxisAlignment = None,
+        alignment: MainAxisAlignment = None,
         vertical_alignment: CrossAxisAlignment = None,
         spacing: float = None,
+        tight: bool = None,
         wrap: bool = None,
         run_spacing: float = None,
     ):
@@ -43,10 +43,10 @@ class Row(ConstrainedControl):
 
         self.__controls: List[Control] = []
         self.controls = controls
-        self.horizontal_size = horizontal_size
-        self.horizontal_alignment = horizontal_alignment
+        self.alignment = alignment
         self.vertical_alignment = vertical_alignment
         self.spacing = spacing
+        self.tight = tight
         self.wrap = wrap
         self.run_spacing = run_spacing
 
@@ -56,25 +56,25 @@ class Row(ConstrainedControl):
     def _get_children(self):
         return self.__controls
 
-    # horizontal_size
+    # tight
     @property
-    def horizontal_size(self):
-        return self._get_attr("horizontalSize")
+    def tight(self):
+        return self._get_attr("tight", data_type="bool", def_value=False)
 
-    @horizontal_size.setter
+    @tight.setter
     @beartype
-    def horizontal_size(self, value: MainAxisSize):
-        self._set_attr("horizontalSize", value)
+    def tight(self, value: Optional[bool]):
+        self._set_attr("tight", value)
 
     # horizontal_alignment
     @property
-    def horizontal_alignment(self):
-        return self._get_attr("horizontalAlignment")
+    def alignment(self):
+        return self._get_attr("alignment")
 
-    @horizontal_alignment.setter
+    @alignment.setter
     @beartype
-    def horizontal_alignment(self, value: MainAxisAlignment):
-        self._set_attr("horizontalAlignment", value)
+    def alignment(self, value: MainAxisAlignment):
+        self._set_attr("alignment", value)
 
     # vertical_alignment
     @property

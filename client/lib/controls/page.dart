@@ -1,3 +1,5 @@
+import 'package:flet_view/utils/colors.dart';
+
 import '../widgets/screen_size.dart';
 import 'package:flutter/material.dart';
 import 'create_control.dart';
@@ -26,12 +28,24 @@ class PageControl extends StatelessWidget {
       title: control.attrString("title", "")!,
       themeMode: themeMode,
       home: Scaffold(
-        body: Column(
-          children: control.childIds
-              .map((childId) => createControl(control, childId, disabled))
-              .toList()
-            ..add(const ScreenSize()),
-        ),
+        body: Stack(children: [
+          SizedBox.expand(
+              child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(color: HexColor.fromHex("#AA0088")),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: control.childIds
+                    .map((childId) => createControl(control, childId, disabled))
+                    .toList()),
+            // child: ListView(
+            //     children: control.childIds
+            //         .map((childId) => createControl(control, childId, disabled))
+            //         .toList()),
+          )),
+          const ScreenSize()
+        ]),
       ),
     );
   }

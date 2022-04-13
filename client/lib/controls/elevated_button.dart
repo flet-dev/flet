@@ -35,8 +35,6 @@ class ElevatedButtonControl extends StatelessWidget {
       child: Text(control.attrs["text"] ?? ""),
     );
 
-    return SizedBox(
-      child: expandable(button, control),
-    );
+    return expandable(button, control);
   }
 }

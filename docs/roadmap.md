@@ -33,7 +33,7 @@
     * [ ] Switch
   * Dialogs, alerts and panels
     * [ ] Banner
-    * [ ] SnackBar
+    * [x] SnackBar
     * [ ] AlertDialog
 
 * Flet Client
@@ -481,8 +481,9 @@ Docs: https://api.flutter.dev/flutter/widgets/Row-class.html
 
 Properties:
 
-- horizontalAlignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
+- alignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
 - verticalAlignment - `start` (default), `center`, `end`, `stretch`, `baseline`
+- tight - [more info](https://api.flutter.dev/flutter/widgets/Flex/mainAxisSize.html)
 - spacing - gap between adjacent items (SizedBox)
 - wrap - switch to "Wrap" control
 - runSpacing - gap between runs
@@ -494,8 +495,9 @@ Docs: https://api.flutter.dev/flutter/widgets/Column-class.html
 
 Properties:
 
-- verticalAlignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
+- alignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
 - horizontalAlignment - `start` (default), `center`, `end`, `stretch`
+- tight - [more info](https://api.flutter.dev/flutter/widgets/Flex/mainAxisSize.html)
 - spacing - gap between adjacent items (SizedBox)
 - wrap - switch to "Wrap" control
 - runSpacing - gap between runs
@@ -859,7 +861,7 @@ Properties:
 
 Events:
 
-- action
+- action - when action button clicked
 
 ## SplitView
 

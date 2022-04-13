@@ -1,0 +1,28 @@
+enum ControlType {
+  alertDialog,
+  banner,
+  checkbox,
+  column,
+  container,
+  dropdown,
+  elevatedButton,
+  gridView,
+  icon,
+  iconButton,
+  image,
+  listView,
+  outlinedButton,
+  page,
+  progressBar,
+  progressRing,
+  radio,
+  row,
+  slider,
+  snackBar,
+  stack,
+  // ignore: constant_identifier_names
+  Switch,
+  text,
+  textButton,
+  textField
+}
