@@ -3,12 +3,14 @@ from datetime import datetime
 
 import flet
 from flet import ElevatedButton, Text
+from flet.page import Page
 
-# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 
-def main(page):
+def main(page: Page):
     page.title = "Simple Example"
+    page.theme_mode = "dark"
     page.update()
 
     def on_click(e):

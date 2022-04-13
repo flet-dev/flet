@@ -24,15 +24,25 @@ class PageControl extends StatelessWidget {
         (element) => element.name == control.attrString("themeMode"),
         orElse: () => ThemeMode.system);
 
+    debugPrint("Page theme: $themeMode");
+
     return MaterialApp(
       title: control.attrString("title", "")!,
+      theme: ThemeData(
+          colorSchemeSeed: Color.fromARGB(255, 20, 136, 224),
+          brightness: Brightness.light,
+          useMaterial3: true),
+      darkTheme: ThemeData(
+          colorSchemeSeed: Color.fromARGB(255, 104, 192, 233),
+          brightness: Brightness.dark,
+          useMaterial3: true),
       themeMode: themeMode,
       home: Scaffold(
         body: Stack(children: [
           SizedBox.expand(
               child: Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(color: HexColor.fromHex("#AA0088")),
+            //decoration: BoxDecoration(color: HexColor.fromHex("#AA0088")),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,

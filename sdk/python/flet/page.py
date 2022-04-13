@@ -26,12 +26,12 @@ class Page(Control):
         Control.__init__(self)
 
         self._id = "page"
-        self.__uid = "page"
+        self._Control__uid = "page"
         self._conn = conn
         self._session_id = session_id
         self._controls = []  # page controls
         self._index = {}  # index with all page controls
-        self._index[self.__uid] = self
+        self._index[self._Control__uid] = self
         self._last_event = None
         self._event_available = threading.Event()
         self._fetch_page_details()
