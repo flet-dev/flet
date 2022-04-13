@@ -56,12 +56,12 @@ class TextField(FormFieldControl):
         #
         value: str = None,
         keyboard_type: TextInputType = None,
-        on_change=None,
         min_lines: int = None,
         max_lines: int = None,
-        password: int = None,
-        read_only=None,
+        password: bool = None,
+        read_only: bool = None,
         text_align: TextAlign = None,
+        on_change=None,
     ):
         FormFieldControl.__init__(
             self,

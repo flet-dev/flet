@@ -74,6 +74,11 @@ class Container(ConstrainedControl):
     def _get_control_name(self):
         return "container"
 
+    def _get_children(self):
+        if self.__content == None:
+            raise Exception("Container does not have any content set.")
+        return [self.__content]
+
     # alignment
     @property
     def alignment(self):
@@ -158,8 +163,3 @@ class Container(ConstrainedControl):
     @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
-
-    def _get_children(self):
-        if self.__content == None:
-            raise Exception("Container does not have any content set.")
-        return [self.__content]

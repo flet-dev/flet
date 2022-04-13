@@ -41,17 +41,14 @@ class Column(ConstrainedControl):
             data=data,
         )
 
+        self.__controls = []
+        self.controls = controls
         self.vertical_size = vertical_size
         self.horizontal_alignment = horizontal_alignment
         self.vertical_alignment = vertical_alignment
         self.spacing = spacing
         self.wrap = wrap
         self.run_spacing = run_spacing
-
-        self.__controls = []
-        if controls != None:
-            for control in controls:
-                self.__controls.append(control)
 
     def _get_control_name(self):
         return "column"
@@ -123,7 +120,7 @@ class Column(ConstrainedControl):
 
     @controls.setter
     def controls(self, value):
-        self.__controls = value
+        self.__controls = value or []
 
     def _get_children(self):
         return self.__controls

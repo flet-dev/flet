@@ -39,12 +39,15 @@ class Banner(Control):
             data=data,
         )
 
+        self.__leading: Control = None
+        self.__content: Control = None
+        self.__actions = []
+
         self.open = open
         self.leading = leading
         self.leading_padding = leading_padding
         self.content = content
         self.content_padding = content_padding
-        self.__actions = []
         self.actions = actions
         self.force_actions_below = force_actions_below
         self.bgcolor = bgcolor
@@ -53,7 +56,11 @@ class Banner(Control):
         return "banner"
 
     def _get_children(self):
-        return []
+        self.__leading._set_attr_internal("n", "title")
+        self.__content._set_attr_internal("n", "content")
+        return [self.__leading, self.__content].append(
+            a._set_attr_internal("n", "action") for a in self.__actions
+        )
 
     # open
     @property
@@ -78,11 +85,11 @@ class Banner(Control):
     # leading
     @property
     def leading(self):
-        return self.__title
+        return self.__leading
 
     @leading.setter
     def leading(self, value):
-        self.__title = value
+        self.__leading = value
 
     # leading_padding
     @property

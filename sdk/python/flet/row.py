@@ -41,6 +41,8 @@ class Row(ConstrainedControl):
             data=data,
         )
 
+        self.__controls: List[Control] = []
+        self.controls = controls
         self.horizontal_size = horizontal_size
         self.horizontal_alignment = horizontal_alignment
         self.vertical_alignment = vertical_alignment
@@ -48,13 +50,11 @@ class Row(ConstrainedControl):
         self.wrap = wrap
         self.run_spacing = run_spacing
 
-        self.__controls = []
-        if controls != None:
-            for control in controls:
-                self.__controls.append(control)
-
     def _get_control_name(self):
         return "row"
+
+    def _get_children(self):
+        return self.__controls
 
     # horizontal_size
     @property
@@ -123,7 +123,4 @@ class Row(ConstrainedControl):
 
     @controls.setter
     def controls(self, value):
-        self.__controls = value
-
-    def _get_children(self):
-        return self.__controls
+        self.__controls = value or []

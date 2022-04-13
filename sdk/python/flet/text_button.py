@@ -48,6 +48,11 @@ class TextButton(ConstrainedControl):
     def _get_control_name(self):
         return "textbutton"
 
+    def _get_children(self):
+        if self.__content == None:
+            return []
+        return [self.__content]
+
     # text
     @property
     def text(self):
@@ -93,8 +98,3 @@ class TextButton(ConstrainedControl):
     @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
-
-    def _get_children(self):
-        if self.__content == None:
-            return []
-        return [self.__content]

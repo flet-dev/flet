@@ -88,6 +88,11 @@ class SnackBar(Control):
     def _get_control_name(self):
         return "snackbar"
 
+    def _get_children(self):
+        if self.__content == None:
+            return []
+        return [self.__content]
+
     # open
     @property
     def open(self):

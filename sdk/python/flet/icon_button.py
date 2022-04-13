@@ -1,8 +1,8 @@
 from typing import Optional
 
 from beartype import beartype
-from flet.constrained_control import ConstrainedControl
 
+from flet.constrained_control import ConstrainedControl
 from flet.control import Control
 from flet.ref import Ref
 
@@ -49,6 +49,11 @@ class IconButton(ConstrainedControl):
 
     def _get_control_name(self):
         return "iconbutton"
+
+    def _get_children(self):
+        if self.__content == None:
+            return []
+        return [self.__content]
 
     # tooltip
     @property
@@ -104,8 +109,3 @@ class IconButton(ConstrainedControl):
     @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
-
-    def _get_children(self):
-        if self.__content == None:
-            return []
-        return [self.__content]

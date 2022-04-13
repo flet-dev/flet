@@ -1,8 +1,8 @@
 from typing import Optional
 
 from beartype import beartype
-from flet.constrained_control import ConstrainedControl
 
+from flet.constrained_control import ConstrainedControl
 from flet.control import Control
 from flet.ref import Ref
 
@@ -47,6 +47,11 @@ class ElevatedButton(ConstrainedControl):
 
     def _get_control_name(self):
         return "elevatedbutton"
+
+    def _get_children(self):
+        if self.__content == None:
+            return []
+        return [self.__content]
 
     # text
     @property
@@ -93,8 +98,3 @@ class ElevatedButton(ConstrainedControl):
     @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
-
-    def _get_children(self):
-        if self.__content == None:
-            return []
-        return [self.__content]

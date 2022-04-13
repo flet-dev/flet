@@ -1,8 +1,8 @@
 from typing import List, Optional
 
 from beartype import beartype
-from flet.constrained_control import ConstrainedControl
 
+from flet.constrained_control import ConstrainedControl
 from flet.control import Control, ScrollDirection
 from flet.ref import Ref
 
@@ -39,18 +39,18 @@ class GridView(ConstrainedControl):
             data=data,
         )
 
+        self.__controls: List[Control] = []
+        self.controls = controls
         self.scroll_direction = scroll_direction
         self.cross_axis_count = cross_axis_count
         self.main_axis_spacing = main_axis_spacing
         self.cross_axis_spacing = cross_axis_spacing
 
-        self.__controls = []
-        if controls != None:
-            for control in controls:
-                self.__controls.append(control)
-
     def _get_control_name(self):
         return "gridview"
+
+    def _get_children(self):
+        return self.__controls
 
     # scroll_direction
     @property
@@ -99,7 +99,4 @@ class GridView(ConstrainedControl):
 
     @controls.setter
     def controls(self, value):
-        self.__controls = value
-
-    def _get_children(self):
-        return self.__controls
+        self.__controls = value or []

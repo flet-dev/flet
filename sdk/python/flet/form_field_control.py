@@ -44,6 +44,9 @@ class FormFieldControl(ConstrainedControl):
             data=data,
         )
 
+        self.__prefix: Control = None
+        self.__suffix: Control = None
+
         self.label = label
         self.icon = icon
         self.border = border
@@ -54,6 +57,16 @@ class FormFieldControl(ConstrainedControl):
         self.error_text = error_text
         self.prefix = prefix
         self.suffix = suffix
+
+    def _get_children(self):
+        children = []
+        if self.__prefix:
+            self.__prefix._set_attr_internal("n", "prefix")
+            children.append(self.__prefix)
+        if self.__suffix:
+            self.__suffix._set_attr_internal("n", "prefix")
+            children.append(self.__suffix)
+        return children
 
     # label
     @property

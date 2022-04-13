@@ -29,10 +29,8 @@ class Dropdown(FormFieldControl):
         helper_text: str = None,
         counter_text: str = None,
         error_text: str = None,
-        prefix_icon: str = None,
-        prefix_text: str = None,
-        suffix_icon: str = None,
-        suffix_text: str = None,
+        prefix: Control = None,
+        suffix: Control = None,
         #
         # DropDown Specific
         #
@@ -61,18 +59,20 @@ class Dropdown(FormFieldControl):
             helper_text=helper_text,
             counter_text=counter_text,
             error_text=error_text,
-            prefix_icon=prefix_icon,
-            prefix_text=prefix_text,
-            suffix_icon=suffix_icon,
-            suffix_text=suffix_text,
+            prefix=prefix,
+            suffix=suffix,
         )
 
+        self.__options = []
         self.value = value
         self.options = options
         self.on_change = on_change
 
     def _get_control_name(self):
         return "dropdown"
+
+    def _get_children(self):
+        return FormFieldControl._get_children().extend(self.__options)
 
     # options
     @property
@@ -81,7 +81,7 @@ class Dropdown(FormFieldControl):
 
     @options.setter
     def options(self, value):
-        self.__options = value
+        self.__options = value or []
 
     # value
     @property
@@ -100,9 +100,6 @@ class Dropdown(FormFieldControl):
     @on_change.setter
     def on_change(self, handler):
         self._add_event_handler("change", handler)
-
-    def _get_children(self):
-        return self.__options
 
 
 class Option(Control):

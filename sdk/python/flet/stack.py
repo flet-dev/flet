@@ -30,11 +30,14 @@ class Stack(ConstrainedControl):
             data=data,
         )
 
-        self.__controls = []
+        self.__controls: List[Control] = []
         self.controls = controls
 
     def _get_control_name(self):
         return "stack"
+
+    def _get_children(self):
+        return self.__controls
 
     # controls
     @property
@@ -44,6 +47,3 @@ class Stack(ConstrainedControl):
     @controls.setter
     def controls(self, value):
         self.__controls = value or []
-
-    def _get_children(self):
-        return self.__controls

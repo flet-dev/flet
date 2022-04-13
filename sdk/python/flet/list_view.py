@@ -36,15 +36,15 @@ class ListView(ConstrainedControl):
             data=data,
         )
 
+        self.__controls: List[Control] = []
+        self.controls = controls
         self.scroll_direction = scroll_direction
-
-        self.__controls = []
-        if controls != None:
-            for control in controls:
-                self.__controls.append(control)
 
     def _get_control_name(self):
         return "listview"
+
+    def _get_children(self):
+        return self.__controls
 
     # scroll_direction
     @property
@@ -63,7 +63,4 @@ class ListView(ConstrainedControl):
 
     @controls.setter
     def controls(self, value):
-        self.__controls = value
-
-    def _get_children(self):
-        return self.__controls
+        self.__controls = value or []

@@ -30,7 +30,7 @@ class Image(Control):
         #
         # Specific
         #
-        src=None,
+        src: str = None,
         repeat: ImageRepeat = None,
         fit: ImageFit = None,
     ):
@@ -47,9 +47,9 @@ class Image(Control):
 
         self.width = width
         self.height = height
-        self.src: str = src
-        self.fit: ImageFit = fit
-        self.repeat: ImageRepeat = repeat
+        self.src = src
+        self.fit = fit
+        self.repeat = repeat
 
     def _get_control_name(self):
         return "image"

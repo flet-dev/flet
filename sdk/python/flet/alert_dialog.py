@@ -40,13 +40,16 @@ class AlertDialog(Control):
             data=data,
         )
 
+        self.__title: Control = None
+        self.__content: Control = None
+        self.__actions: List[Control] = []
+
         self.open = open
         self.modal = modal
         self.title = title
         self.title_padding = title_padding
         self.content = content
         self.content_padding = content_padding
-        self.__actions = []
         self.actions = actions
         self.actions_padding = actions_padding
         self.actions_alignment = actions_alignment
@@ -55,7 +58,11 @@ class AlertDialog(Control):
         return "snackbar"
 
     def _get_children(self):
-        return []
+        self.__title._set_attr_internal("n", "title")
+        self.__content._set_attr_internal("n", "content")
+        return [self.__title, self.__content].append(
+            a._set_attr_internal("n", "action") for a in self.__actions
+        )
 
     # open
     @property
