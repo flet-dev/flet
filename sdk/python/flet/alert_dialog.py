@@ -1,8 +1,9 @@
-from typing import Optional
+from typing import List, Optional
 
 from beartype import beartype
 
-from flet.control import Control
+from flet.control import Control, MainAxisAlignment
+from flet.ref import Ref
 
 try:
     from typing import Literal
@@ -10,87 +11,51 @@ except:
     from typing_extensions import Literal
 
 
-DialogType = Literal[None, "normal", "largeHeader", "close"]
-
-
 class AlertDialog(Control):
     def __init__(
         self,
-        id=None,
-        ref=None,
-        open=None,
-        title=None,
-        sub_text=None,
-        type: DialogType = None,
-        auto_dismiss=None,
-        width=None,
-        max_width=None,
-        height=None,
-        fixed_top=None,
-        blocking=None,
-        data=None,
-        controls=None,
-        footer=None,
-        on_dismiss=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
+        ref: Ref = None,
+        disabled: bool = None,
+        visible: bool = None,
+        data: any = None,
+        #
+        # Specific
+        #
+        open: bool = False,
+        modal: bool = False,
+        title: Control = None,
+        title_padding: float = None,
+        content: Control = None,
+        content_padding: float = None,
+        actions: List[Control] = None,
+        actions_padding: float = None,
+        actions_alignment: MainAxisAlignment = None,
     ):
 
         Control.__init__(
             self,
-            id=id,
             ref=ref,
-            width=width,
-            height=height,
-            padding=padding,
-            margin=margin,
-            visible=visible,
             disabled=disabled,
+            visible=visible,
             data=data,
         )
 
         self.open = open
+        self.modal = modal
         self.title = title
-        self.sub_text = sub_text
-        self.type = type
-        self.auto_dismiss = auto_dismiss
-        self.max_width = max_width
-        self.fixed_top = fixed_top
-        self.blocking = blocking
-        self.on_dismiss = on_dismiss
-        self.__footer = Footer(controls=footer)
-        self.__controls = []
-        if controls != None:
-            for control in controls:
-                self.__controls.append(control)
+        self.title_padding = title_padding
+        self.content = content
+        self.content_padding = content_padding
+        self.__actions = []
+        self.actions = actions
+        self.actions_padding = actions_padding
+        self.actions_alignment = actions_alignment
 
     def _get_control_name(self):
-        return "alertdialog"
+        return "snackbar"
 
-    # controls
-    @property
-    def controls(self):
-        return self.__controls
-
-    @controls.setter
-    def controls(self, value):
-        self.__controls = value
-
-    # footer
-    @property
-    def footer(self):
-        return self.__footer
-
-    # on_dismiss
-    @property
-    def on_dismiss(self):
-        return self._get_event_handler("dismiss")
-
-    @on_dismiss.setter
-    def on_dismiss(self, handler):
-        self._add_event_handler("dismiss", handler)
+    def _get_children(self):
+        return []
 
     # open
     @property
@@ -102,102 +67,76 @@ class AlertDialog(Control):
     def open(self, value: Optional[bool]):
         self._set_attr("open", value)
 
+    # modal
+    @property
+    def modal(self):
+        return self._get_attr("modal", data_type="bool", def_value=False)
+
+    @modal.setter
+    @beartype
+    def modal(self, value: Optional[bool]):
+        self._set_attr("modal", value)
+
     # title
     @property
     def title(self):
-        return self._get_attr("title")
+        return self.__title
 
     @title.setter
     def title(self, value):
-        self._set_attr("title", value)
+        self.__title = value
 
-    # sub_text
+    # title_padding
     @property
-    def sub_text(self):
-        return self._get_attr("subText")
+    def title_padding(self):
+        return self._get_attr("titlePadding")
 
-    @sub_text.setter
-    def sub_text(self, value):
-        self._set_attr("subText", value)
+    @title_padding.setter
+    def title_padding(self, value):
+        self._set_attr("titlePadding", value)
 
-    # type
+    # content
     @property
-    def type(self):
-        return self._get_attr("type")
+    def content(self):
+        return self.__content
 
-    @type.setter
+    @content.setter
+    def content(self, value):
+        self.__content = value
+
+    # content_padding
+    @property
+    def content_padding(self):
+        return self._get_attr("contentPadding")
+
+    @content_padding.setter
+    def content_padding(self, value):
+        self._set_attr("contentPadding", value)
+
+    # actions
+    @property
+    def actions(self):
+        return self.__actions
+
+    @actions.setter
+    def actions(self, value):
+        self.__actions = value or []
+
+    # actions_padding
+    @property
+    def actions_padding(self):
+        return self._get_attr("actionsPadding")
+
+    @actions_padding.setter
+    def actions_padding(self, value):
+        self._set_attr("actionsPadding", value)
+
+    # actions_alignment
+    @property
+    def actions_alignment(self):
+        return self._get_attr("actionsAlignment")
+
+    @actions_alignment.setter
     @beartype
-    def type(self, value: DialogType):
-        self._set_attr("type", value)
-
-    # auto_dismiss
-    @property
-    def auto_dismiss(self):
-        return self._get_attr("autoDismiss", data_type="bool", def_value=True)
-
-    @auto_dismiss.setter
-    @beartype
-    def auto_dismiss(self, value: Optional[bool]):
-        self._set_attr("autoDismiss", value)
-
-    # max_width
-    @property
-    def max_width(self):
-        return self._get_attr("maxWidth")
-
-    @max_width.setter
-    def max_width(self, value):
-        self._set_attr("maxWidth", value)
-
-    # fixed_top
-    @property
-    def fixed_top(self):
-        return self._get_attr("fixedTop", data_type="bool", def_value=False)
-
-    @fixed_top.setter
-    @beartype
-    def fixed_top(self, value: Optional[bool]):
-        self._set_attr("fixedTop", value)
-
-    # blocking
-    @property
-    def blocking(self):
-        return self._get_attr("blocking", data_type="bool", def_value=False)
-
-    @blocking.setter
-    @beartype
-    def blocking(self, value: Optional[bool]):
-        self._set_attr("blocking", value)
-
-    def _get_children(self):
-        result = []
-        if self.__controls and len(self.__controls) > 0:
-            for control in self.__controls:
-                result.append(control)
-        result.append(self.__footer)
-        return result
-
-
-class Footer(Control):
-    def __init__(self, id=None, ref=None, controls=None):
-        Control.__init__(self, id=id, ref=ref)
-
-        self.__controls = []
-        if controls != None:
-            for control in controls:
-                self.__controls.append(control)
-
-    # controls
-    @property
-    def controls(self):
-        return self.__controls
-
-    @controls.setter
-    def controls(self, value):
-        self.__controls = value
-
-    def _get_control_name(self):
-        return "footer"
-
-    def _get_children(self):
-        return self.__controls
+    def actions_alignment(self, value: MainAxisAlignment):
+        self._set_attr("actionsAlignment", value)

@@ -3,19 +3,16 @@ from typing import Optional
 from beartype import beartype
 
 from flet.control import Control, InputBorder
-from flet.form_field import FormField
+from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
 
 
-class Dropdown(FormField):
+class Dropdown(FormFieldControl):
     def __init__(
         self,
-        id: str = None,
         ref: Ref = None,
         width: float = None,
         height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
@@ -43,20 +40,19 @@ class Dropdown(FormField):
         on_change=None,
         options=None,
     ):
-        FormField.__init__(
+        FormFieldControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,
             disabled=disabled,
             data=data,
-            # FormField
+            #
+            # FormField specific
+            #
             label=label,
             icon=icon,
             border=border,

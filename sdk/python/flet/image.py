@@ -19,12 +19,9 @@ ImageRepeat = Literal[None, "noRepeat", "repeat", "repeatX", "repeatY"]
 class Image(Control):
     def __init__(
         self,
-        id: str = None,
         ref: Ref = None,
         width: float = None,
         height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
@@ -40,12 +37,7 @@ class Image(Control):
 
         Control.__init__(
             self,
-            id=id,
             ref=ref,
-            width=width,
-            height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,
@@ -53,9 +45,11 @@ class Image(Control):
             data=data,
         )
 
-        self.src = src
-        self.fit = fit
-        self.repeat = repeat
+        self.width = width
+        self.height = height
+        self.src: str = src
+        self.fit: ImageFit = fit
+        self.repeat: ImageRepeat = repeat
 
     def _get_control_name(self):
         return "image"
@@ -88,3 +82,21 @@ class Image(Control):
     @beartype
     def repeat(self, value: ImageRepeat):
         self._set_attr("repeat", value)
+
+    # width
+    @property
+    def width(self) -> float:
+        return self._get_attr("width")
+
+    @width.setter
+    def width(self, value: float):
+        self._set_attr("width", value)
+
+    # height
+    @property
+    def height(self):
+        return self._get_attr("height")
+
+    @height.setter
+    def height(self, value):
+        self._set_attr("height", value)

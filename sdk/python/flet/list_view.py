@@ -2,42 +2,41 @@ from typing import List
 
 from beartype import beartype
 
+from flet.constrained_control import ConstrainedControl
 from flet.control import Control, ScrollDirection
 from flet.ref import Ref
 
 
-class ListView(Control):
+class ListView(ConstrainedControl):
     def __init__(
         self,
         controls: List[Control] = None,
-        id: str = None,
         ref: Ref = None,
         width: float = None,
         height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
+        #
+        # Specific
+        #
         scroll_direction: ScrollDirection = None,
     ):
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,
             disabled=disabled,
             data=data,
-            scroll_direction=scroll_direction,
         )
+
+        self.scroll_direction = scroll_direction
 
         self.__controls = []
         if controls != None:

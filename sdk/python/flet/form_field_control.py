@@ -2,26 +2,24 @@ from typing import Optional
 
 from beartype import beartype
 
+from flet.constrained_control import ConstrainedControl
 from flet.control import Control, InputBorder
 from flet.ref import Ref
 
 
-class FormField(Control):
+class FormFieldControl(ConstrainedControl):
     def __init__(
         self,
-        id: str = None,
         ref: Ref = None,
         width: float = None,
         height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
         #
-        # Specific
+        # FormField specific
         #
         label: str = None,
         icon: str = None,
@@ -31,19 +29,14 @@ class FormField(Control):
         helper_text: str = None,
         counter_text: str = None,
         error_text: str = None,
-        prefix_icon: str = None,
-        prefix_text: str = None,
-        suffix_icon: str = None,
-        suffix_text: str = None,
+        prefix: Control = None,
+        suffix: Control = None,
     ):
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,
@@ -59,10 +52,8 @@ class FormField(Control):
         self.helper_text = helper_text
         self.counter_text = counter_text
         self.error_text = error_text
-        self.prefix_icon = prefix_icon
-        self.prefix_text = prefix_text
-        self.suffix_icon = suffix_icon
-        self.suffix_text = suffix_text
+        self.prefix = prefix
+        self.suffix = suffix
 
     # label
     @property
@@ -137,38 +128,20 @@ class FormField(Control):
     def error_text(self, value):
         self._set_attr("errorText", value)
 
-    # prefix_icon
+    # prefix
     @property
-    def prefix_icon(self):
-        return self._get_attr("prefixIcon")
+    def prefix(self):
+        return self.__prefix
 
-    @prefix_icon.setter
-    def prefix_icon(self, value):
-        self._set_attr("prefixIcon", value)
+    @prefix.setter
+    def prefix(self, value):
+        self.__prefix = value
 
-    # prefix_text
+    # suffix
     @property
-    def prefix_text(self):
-        return self._get_attr("prefixText")
+    def suffix(self):
+        return self.__suffix
 
-    @prefix_text.setter
-    def prefix_text(self, value):
-        self._set_attr("prefixText", value)
-
-    # suffix_icon
-    @property
-    def suffix_icon(self):
-        return self._get_attr("suffixIcon")
-
-    @suffix_icon.setter
-    def suffix_icon(self, value):
-        self._set_attr("suffixIcon", value)
-
-    # suffix_text
-    @property
-    def suffix_text(self):
-        return self._get_attr("suffixText")
-
-    @suffix_text.setter
-    def suffix_text(self, value):
-        self._set_attr("suffixText", value)
+    @suffix.setter
+    def suffix(self, value):
+        self.__suffix = value

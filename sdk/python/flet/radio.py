@@ -1,6 +1,7 @@
 from typing import Optional
 
 from beartype import beartype
+from flet.constrained_control import ConstrainedControl
 
 from flet.control import Control
 from flet.ref import Ref
@@ -14,15 +15,12 @@ except:
 LabelPosition = Literal[None, "right", "left"]
 
 
-class Radio(Control):
+class Radio(ConstrainedControl):
     def __init__(
         self,
-        id: str = None,
         ref: Ref = None,
         width: float = None,
         height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
@@ -36,14 +34,11 @@ class Radio(Control):
         value: bool = None,
         on_change=None,
     ):
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,

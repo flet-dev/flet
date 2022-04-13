@@ -1,8 +1,9 @@
-from typing import Optional
+from typing import List, Optional
 
 from beartype import beartype
 
-from flet.control import Control
+from flet.control import Control, MainAxisAlignment
+from flet.ref import Ref
 
 try:
     from typing import Literal
@@ -10,153 +11,131 @@ except:
     from typing_extensions import Literal
 
 
-MessageType = Literal[
-    None, "info", "error", "blocked", "severeWarning", "success", "warning"
-]
-
-
 class Banner(Control):
     def __init__(
         self,
-        value=None,
-        type: MessageType = None,
-        id=None,
-        ref=None,
-        multiline=None,
-        truncated=None,
-        dismiss=None,
-        data=None,
-        on_dismiss=None,
-        buttons=None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
+        ref: Ref = None,
+        disabled: bool = None,
+        visible: bool = None,
+        data: any = None,
+        #
+        # Specific
+        #
+        open: bool = False,
+        leading: Control = None,
+        leading_padding: float = None,
+        content: Control = None,
+        content_padding: float = None,
+        actions: List[Control] = None,
+        force_actions_below: bool = None,
+        bgcolor: str = None,
     ):
 
         Control.__init__(
             self,
-            id=id,
             ref=ref,
-            width=width,
-            height=height,
-            padding=padding,
-            margin=margin,
-            visible=visible,
             disabled=disabled,
+            visible=visible,
             data=data,
         )
 
-        self.type = type
-        self.value = value
-        self.multiline = multiline
-        self.truncated = truncated
-        self.dismiss = dismiss
-        self.on_dismiss = on_dismiss
-        self.__buttons = []
-        if buttons != None:
-            for button in buttons:
-                self.__buttons.append(button)
+        self.open = open
+        self.leading = leading
+        self.leading_padding = leading_padding
+        self.content = content
+        self.content_padding = content_padding
+        self.__actions = []
+        self.actions = actions
+        self.force_actions_below = force_actions_below
+        self.bgcolor = bgcolor
 
     def _get_control_name(self):
         return "banner"
 
-    # buttons
-    @property
-    def buttons(self):
-        return self.__buttons
-
-    @buttons.setter
-    def buttons(self, value):
-        self.__buttons = value
-
-    # on_dismiss
-    @property
-    def on_dismiss(self):
-        return self._get_event_handler("dismiss")
-
-    @on_dismiss.setter
-    def on_dismiss(self, handler):
-        self._add_event_handler("dismiss", handler)
-
-    # value
-    @property
-    def value(self):
-        return self._get_attr("value")
-
-    @value.setter
-    def value(self, value):
-        self._set_attr("value", value)
-
-    # type
-    @property
-    def type(self):
-        return self._get_attr("type")
-
-    @type.setter
-    @beartype
-    def type(self, value: MessageType):
-        self._set_attr("type", value)
-
-    # multiline
-    @property
-    def multiline(self):
-        return self._get_attr("multiline", data_type="bool", def_value=False)
-
-    @multiline.setter
-    @beartype
-    def multiline(self, value: Optional[bool]):
-        self._set_attr("multiline", value)
-
-    # truncated
-    @property
-    def truncated(self):
-        return self._get_attr("truncated", data_type="bool", def_value=False)
-
-    @truncated.setter
-    @beartype
-    def truncated(self, value: Optional[bool]):
-        self._set_attr("truncated", value)
-
-    # dismiss
-    @property
-    def dismiss(self):
-        return self._get_attr("dismiss", data_type="bool", def_value=False)
-
-    @dismiss.setter
-    @beartype
-    def dismiss(self, value: Optional[bool]):
-        self._set_attr("dismiss", value)
-
     def _get_children(self):
-        return self.__buttons
+        return []
 
-
-class MessageButton(Control):
-    def __init__(self, text, action=None):
-        Control.__init__(self)
-        self.text = text
-        self.action = action
-
-    def _get_control_name(self):
-        return "button"
-
-    # text
+    # open
     @property
-    def text(self):
-        return self._get_attr("text")
+    def open(self):
+        return self._get_attr("open", data_type="bool", def_value=False)
 
-    @text.setter
-    def text(self, value):
-        self._set_attr("text", value)
+    @open.setter
+    @beartype
+    def open(self, value: Optional[bool]):
+        self._set_attr("open", value)
 
-    # action
+    # modal
     @property
-    def action(self):
-        return self._get_attr("action")
+    def modal(self):
+        return self._get_attr("modal", data_type="bool", def_value=False)
 
-    @action.setter
-    def action(self, value):
-        self._set_attr("action", value)
+    @modal.setter
+    @beartype
+    def modal(self, value: Optional[bool]):
+        self._set_attr("modal", value)
+
+    # leading
+    @property
+    def leading(self):
+        return self.__title
+
+    @leading.setter
+    def leading(self, value):
+        self.__title = value
+
+    # leading_padding
+    @property
+    def leading_padding(self):
+        return self._get_attr("titlePadding")
+
+    @leading_padding.setter
+    def leading_padding(self, value):
+        self._set_attr("titlePadding", value)
+
+    # content
+    @property
+    def content(self):
+        return self.__content
+
+    @content.setter
+    def content(self, value):
+        self.__content = value
+
+    # content_padding
+    @property
+    def content_padding(self):
+        return self._get_attr("contentPadding")
+
+    @content_padding.setter
+    def content_padding(self, value):
+        self._set_attr("contentPadding", value)
+
+    # actions
+    @property
+    def actions(self):
+        return self.__actions
+
+    @actions.setter
+    def actions(self, value):
+        self.__actions = value or []
+
+    # force_actions_below
+    @property
+    def force_actions_below(self):
+        return self._get_attr("forceActionsBelow", data_type="bool", def_value=False)
+
+    @force_actions_below.setter
+    @beartype
+    def force_actions_below(self, value: Optional[bool]):
+        self._set_attr("forceActionsBelow", value)
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgColor")
+
+    @bgcolor.setter
+    @beartype
+    def bgcolor(self, value):
+        self._set_attr("bgColor", value)

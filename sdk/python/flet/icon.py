@@ -5,12 +5,7 @@ from flet.ref import Ref
 class Icon(Control):
     def __init__(
         self,
-        id: str = None,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
@@ -26,12 +21,7 @@ class Icon(Control):
 
         Control.__init__(
             self,
-            id=id,
             ref=ref,
-            width=width,
-            height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,

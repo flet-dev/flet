@@ -23,6 +23,7 @@ class PageControl extends StatelessWidget {
         orElse: () => ThemeMode.system);
 
     return MaterialApp(
+      title: control.attrString("title", "")!,
       themeMode: themeMode,
       home: Scaffold(
         body: Column(

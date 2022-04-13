@@ -23,13 +23,15 @@ ThemeMode = Literal[None, "system", "light", "dark"]
 
 class Page(Control):
     def __init__(self, conn: Connection, session_id):
-        Control.__init__(self, id="page")
+        Control.__init__(self)
 
+        self._id = "page"
+        self.__uid = "page"
         self._conn = conn
         self._session_id = session_id
         self._controls = []  # page controls
         self._index = {}  # index with all page controls
-        self._index[self.id] = self
+        self._index[self.__uid] = self
         self._last_event = None
         self._event_available = threading.Event()
         self._fetch_page_details()

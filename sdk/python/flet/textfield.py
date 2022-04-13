@@ -2,8 +2,8 @@ from typing import Optional
 
 from beartype import beartype
 
-from flet.control import InputBorder, TextAlign
-from flet.form_field import FormField
+from flet.control import Control, InputBorder, TextAlign
+from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
 
 try:
@@ -27,15 +27,12 @@ TextInputType = Literal[
 ]
 
 
-class TextField(FormField):
+class TextField(FormFieldControl):
     def __init__(
         self,
-        id: str = None,
         ref: Ref = None,
         width: float = None,
         height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
@@ -52,10 +49,8 @@ class TextField(FormField):
         helper_text: str = None,
         counter_text: str = None,
         error_text: str = None,
-        prefix_icon: str = None,
-        prefix_text: str = None,
-        suffix_icon: str = None,
-        suffix_text: str = None,
+        prefix: Control = None,
+        suffix: Control = None,
         #
         # TextField Specific
         #
@@ -68,20 +63,19 @@ class TextField(FormField):
         read_only=None,
         text_align: TextAlign = None,
     ):
-        FormField.__init__(
+        FormFieldControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,
             disabled=disabled,
             data=data,
+            #
             # FormField
+            #
             label=label,
             icon=icon,
             border=border,
@@ -90,10 +84,8 @@ class TextField(FormField):
             helper_text=helper_text,
             counter_text=counter_text,
             error_text=error_text,
-            prefix_icon=prefix_icon,
-            prefix_text=prefix_text,
-            suffix_icon=suffix_icon,
-            suffix_text=suffix_text,
+            prefix=prefix,
+            suffix=suffix,
         )
         self.label = label
         self.value = value

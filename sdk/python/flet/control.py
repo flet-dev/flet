@@ -42,21 +42,6 @@ BorderStyle = Literal[
 
 ScrollDirection = Literal[None, "vertical", "horizontal"]
 
-TextSize = Literal[
-    None,
-    "tiny",
-    "xSmall",
-    "small",
-    "smallPlus",
-    "medium",
-    "mediumPlus",
-    "large",
-    "xLarge",
-    "xxLarge",
-    "superLarge",
-    "mega",
-]
-
 TextAlign = Literal[None, "left", "right", "center", "justify", "start", "end"]
 
 InputBorder = Literal[None, "outline", "underline", "none"]
@@ -65,12 +50,7 @@ InputBorder = Literal[None, "outline", "underline", "none"]
 class Control:
     def __init__(
         self,
-        id: str = None,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
@@ -80,14 +60,8 @@ class Control:
         self.__page = None
         self.__attrs = {}
         self.__previous_children = []
-        self.id = id
+        self._id = None
         self.__uid = None
-        if id == "page":
-            self.__uid = "page"
-        self.width = width
-        self.height = height
-        self.padding = padding
-        self.margin = margin
         self.expand = expand
         self.opacity = opacity
         self.visible = visible
@@ -163,6 +137,15 @@ class Control:
     def _previous_children(self):
         return self.__previous_children
 
+    # _id
+    @property
+    def _id(self):
+        return self._get_attr("id")
+
+    @_id.setter
+    def _id(self, value):
+        self._set_attr("id", value)
+
     # page
     @property
     def page(self):
@@ -172,55 +155,10 @@ class Control:
     def page(self, page):
         self.__page = page
 
-    # id
-    @property
-    def id(self):
-        return self._get_attr("id")
-
-    @id.setter
-    def id(self, value):
-        self._set_attr("id", value)
-
     # uid
     @property
     def uid(self):
         return self.__uid
-
-    # width
-    @property
-    def width(self) -> float:
-        return self._get_attr("width")
-
-    @width.setter
-    def width(self, value: float):
-        self._set_attr("width", value)
-
-    # height
-    @property
-    def height(self):
-        return self._get_attr("height")
-
-    @height.setter
-    def height(self, value):
-        self._set_attr("height", value)
-
-    # padding
-    @property
-    def padding(self):
-        return self._get_attr("padding")
-
-    @padding.setter
-    def padding(self, value):
-        self._set_attr("padding", value)
-
-    # margin
-    @property
-    def margin(self):
-        return self._get_attr("margin")
-
-    @margin.setter
-    def margin(self, value):
-        self._set_attr("margin", value)
 
     # expand
     @property

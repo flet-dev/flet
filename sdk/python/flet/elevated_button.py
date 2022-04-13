@@ -1,21 +1,19 @@
 from typing import Optional
 
 from beartype import beartype
+from flet.constrained_control import ConstrainedControl
 
 from flet.control import Control
 from flet.ref import Ref
 
 
-class ElevatedButton(Control):
+class ElevatedButton(ConstrainedControl):
     def __init__(
         self,
         text: str = None,
-        id: str = None,
         ref: Ref = None,
         width: float = None,
         height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
@@ -29,14 +27,11 @@ class ElevatedButton(Control):
         content: Control = None,
         on_click=None,
     ):
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,

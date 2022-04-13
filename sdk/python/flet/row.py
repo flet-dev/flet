@@ -2,20 +2,18 @@ from typing import List, Optional
 
 from beartype import beartype
 
+from flet.constrained_control import ConstrainedControl
 from flet.control import Control, CrossAxisAlignment, MainAxisAlignment, MainAxisSize
 from flet.ref import Ref
 
 
-class Row(Control):
+class Row(ConstrainedControl):
     def __init__(
         self,
         controls: List[Control] = None,
-        id: str = None,
         ref: Ref = None,
         width: float = None,
         height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
@@ -31,26 +29,24 @@ class Row(Control):
         wrap: bool = None,
         run_spacing: float = None,
     ):
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,
             disabled=disabled,
             data=data,
-            horizontal_size=horizontal_size,
-            horizontal_alignment=horizontal_alignment,
-            vertical_alignment=vertical_alignment,
-            spacing=spacing,
-            wrap=wrap,
-            run_spacing=run_spacing,
         )
+
+        self.horizontal_size = horizontal_size
+        self.horizontal_alignment = horizontal_alignment
+        self.vertical_alignment = vertical_alignment
+        self.spacing = spacing
+        self.wrap = wrap
+        self.run_spacing = run_spacing
 
         self.__controls = []
         if controls != None:

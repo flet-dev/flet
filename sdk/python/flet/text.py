@@ -1,8 +1,9 @@
 from typing import Optional
 
 from beartype import beartype
+from flet.constrained_control import ConstrainedControl
 
-from flet.control import Control, TextAlign, TextSize
+from flet.control import Control, TextAlign
 from flet.ref import Ref
 
 try:
@@ -30,16 +31,13 @@ TextOverflow = Literal[None, "clip", "ellipsis", "fade", "visible"]
 VerticalAlign = Literal[None, "top", "center", "bottom"]
 
 
-class Text(Control):
+class Text(ConstrainedControl):
     def __init__(
         self,
         value: str = None,
-        id: str = None,
         ref: Ref = None,
         width: float = None,
         height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
@@ -59,14 +57,11 @@ class Text(Control):
         bgcolor=None,
     ):
 
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,

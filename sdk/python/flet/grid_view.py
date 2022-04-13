@@ -1,49 +1,48 @@
 from typing import List, Optional
 
 from beartype import beartype
+from flet.constrained_control import ConstrainedControl
 
 from flet.control import Control, ScrollDirection
 from flet.ref import Ref
 
 
-class GridView(Control):
+class GridView(ConstrainedControl):
     def __init__(
         self,
         controls: List[Control] = None,
-        id: str = None,
         ref: Ref = None,
         width: float = None,
         height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
+        #
+        # Specific
+        #
         scroll_direction: ScrollDirection = None,
         cross_axis_count: int = None,
         main_axis_spacing: float = None,
         cross_axis_spacing: float = None,
     ):
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,
             disabled=disabled,
             data=data,
-            scroll_direction=scroll_direction,
-            cross_axis_count=cross_axis_count,
-            main_axis_spacing=main_axis_spacing,
-            cross_axis_spacing=cross_axis_spacing,
         )
+
+        self.scroll_direction = scroll_direction
+        self.cross_axis_count = cross_axis_count
+        self.main_axis_spacing = main_axis_spacing
+        self.cross_axis_spacing = cross_axis_spacing
 
         self.__controls = []
         if controls != None:

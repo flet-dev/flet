@@ -431,7 +431,6 @@ Base control class.
 
 Properties:
 
-- id
 - visible
 - disabled
 
@@ -451,9 +450,6 @@ The only difference if you use Flexible instead of Expanded, is that Flexible le
 - fitAlign (S2) - Wrap into FittedBox
 
 - opacity - allows to specify transparency of the control, hide it completely or blend with another if used with Stack. 0.0 - hidden, 1.0 - fully visible. See https://api.flutter.dev/flutter/widgets/Opacity-class.html.
-
-- marging
-- padding
 
 More info:
 
@@ -476,6 +472,8 @@ Properties:
 - horizontalScroll (S2)
 - autoScroll (S2) - `end`, `start` ([example](https://stackoverflow.com/questions/43485529/programmatically-scrolling-to-the-end-of-a-listview)).
 - content - child control of any type
+- marging
+- padding
 
 ## Row
 
@@ -699,7 +697,7 @@ Properties:
 
 Events:
 
-- click
+- onPressed
 
 ## Radio
 
@@ -772,10 +770,8 @@ Properties:
 - helperText
 - counterText
 - errorText
-- prefixIcon
-- prefixText
-- suffixIcon
-- suffixText
+- prefix: Control
+- suffix: Control
 
 - value
 - options
@@ -798,10 +794,8 @@ Properties:
 - helperText
 - counterText
 - errorText
-- prefixIcon
-- prefixText
-- suffixIcon
-- suffixText
+- prefix: Control
+- suffix: Control
 
 - value
 - keyboardType
@@ -822,6 +816,7 @@ Docs: https://api.flutter.dev/flutter/material/AlertDialog-class.html
 Properties:
 
 - open - bool
+- modal - true/false (barrierDismissible)
 - title (Control)
 - titlePadding
 - content (Control)
@@ -837,26 +832,43 @@ Docs: https://api.flutter.dev/flutter/material/MaterialBanner-class.html
 Properties:
 
 - open - bool
-- padding
 - leading (Control)
 - leadingPadding
 - content (Control)
+- contentPadding
 - actions (Controls)
 - forceActionsBelow
-- backgroundColor
+- bgColor
 
 ## SnackBar
 
-Docs: https://api.flutter.dev/flutter/material/MaterialBanner-class.html
+Docs: https://api.flutter.dev/flutter/material/SnackBar-class.html
 
 Properties:
 
 - open
 - content (Control)
 - action (SnackBarAction)
+- duration (S2)
+- behavior (S2)
 - bgColor (S2)
 - margin (S2)
 - padding (S2)
+- width (S2)
+
+### SnackBarAction
+
+Docs: https://api.flutter.dev/flutter/material/SnackBarAction-class.html
+
+Properties:
+
+- label
+
+Events:
+
+- click
+
+
 
 ## SplitView
 

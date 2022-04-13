@@ -2,6 +2,7 @@ from typing import Optional
 
 from beartype import beartype
 
+from flet.constrained_control import ConstrainedControl
 from flet.control import BorderStyle, Control
 from flet.ref import Ref
 
@@ -24,15 +25,12 @@ Alignment = Literal[
 ]
 
 
-class Container(Control):
+class Container(ConstrainedControl):
     def __init__(
         self,
-        id: str = None,
         ref: Ref = None,
         width: float = None,
         height: float = None,
-        padding: float = None,
-        margin: float = None,
         expand: int = None,
         opacity: float = None,
         visible: bool = None,
@@ -42,6 +40,8 @@ class Container(Control):
         # Specific
         #
         content: Control = None,
+        padding: float = None,
+        margin: float = None,
         alignment: Alignment = None,
         bgcolor: str = None,
         border_color: str = None,
@@ -49,14 +49,11 @@ class Container(Control):
         border_style: BorderStyle = None,
         border_radius: float = None,
     ):
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
             expand=expand,
             opacity=opacity,
             visible=visible,
@@ -65,6 +62,8 @@ class Container(Control):
         )
 
         self.content = content
+        self.padding = padding
+        self.margin = margin
         self.alignment = alignment
         self.bgcolor = bgcolor
         self.border_color = border_color
@@ -84,6 +83,24 @@ class Container(Control):
     @beartype
     def alignment(self, value: Alignment):
         self._set_attr("alignment", value)
+
+    # padding
+    @property
+    def padding(self):
+        return self._get_attr("padding")
+
+    @padding.setter
+    def padding(self, value):
+        self._set_attr("padding", value)
+
+    # margin
+    @property
+    def margin(self):
+        return self._get_attr("margin")
+
+    @margin.setter
+    def margin(self, value):
+        self._set_attr("margin", value)
 
     # bgcolor
     @property
