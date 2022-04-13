@@ -70,6 +70,7 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return SnackBarControl(
               parent: parent,
               control: controlView.control,
+              children: controlView.children,
               parentDisabled: parentDisabled);
         default:
           throw Exception("Unknown control type: ${controlView.control.type}");

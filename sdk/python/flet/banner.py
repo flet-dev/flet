@@ -56,9 +56,14 @@ class Banner(Control):
         return "banner"
 
     def _get_children(self):
-        self.__leading._set_attr_internal("n", "title")
-        self.__content._set_attr_internal("n", "content")
-        return [self.__leading, self.__content].append(
+        children = []
+        if self.__leading:
+            self.__leading._set_attr_internal("n", "leading")
+            children.append(self.__leading)
+        if self.__content:
+            self.__content._set_attr_internal("n", "content")
+            children.append(self.__content)
+        return children.extend(
             a._set_attr_internal("n", "action") for a in self.__actions
         )
 

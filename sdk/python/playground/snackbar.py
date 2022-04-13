@@ -1,7 +1,7 @@
 import logging
 
 import flet
-from flet import ElevatedButton, SnackBar
+from flet import ElevatedButton, SnackBar, Text
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -18,10 +18,18 @@ def main(page):
     page.title = "SnackBar Example"
     page.update()
 
-    sb = SnackBar(content=f"Hello, world!")
+    def action_click(e):
+        print("I've got my snacks!")
+
+    sb = SnackBar(
+        content=Text("Hello, world!"),
+        remove_current_snackbar=True,
+        action="Alright!",
+        on_action=action_click,
+    )
 
     def on_click(e):
-        sb.content = f"Hello, world: {d.counter}"
+        sb.content.value = f"Hello, world: {d.counter}"
         sb.open = True
         d.counter += 1
         page.update()

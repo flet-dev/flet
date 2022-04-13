@@ -58,9 +58,14 @@ class AlertDialog(Control):
         return "snackbar"
 
     def _get_children(self):
-        self.__title._set_attr_internal("n", "title")
-        self.__content._set_attr_internal("n", "content")
-        return [self.__title, self.__content].append(
+        children = []
+        if self.__title:
+            self.__title._set_attr_internal("n", "title")
+            children.append(self.__title)
+        if self.__content:
+            self.__content._set_attr_internal("n", "content")
+            children.append(self.__content)
+        return children.extend(
             a._set_attr_internal("n", "action") for a in self.__actions
         )
 

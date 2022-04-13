@@ -20,7 +20,7 @@ from flet.radio import Radio
 from flet.ref import Ref
 from flet.row import Row
 from flet.slider import Slider
-from flet.snack_bar import SnackBar, SnackBarAction
+from flet.snack_bar import SnackBar
 from flet.stack import Stack
 from flet.switch import Switch
 from flet.text import Text

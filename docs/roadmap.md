@@ -847,8 +847,9 @@ Docs: https://api.flutter.dev/flutter/material/SnackBar-class.html
 Properties:
 
 - open
+- removeCurrentSnackBar
 - content (Control)
-- action (SnackBarAction)
+- action - action button label
 - duration (S2)
 - behavior (S2)
 - bgColor (S2)
@@ -856,19 +857,9 @@ Properties:
 - padding (S2)
 - width (S2)
 
-### SnackBarAction
-
-Docs: https://api.flutter.dev/flutter/material/SnackBarAction-class.html
-
-Properties:
-
-- label
-
 Events:
 
-- click
-
-
+- action
 
 ## SplitView
 

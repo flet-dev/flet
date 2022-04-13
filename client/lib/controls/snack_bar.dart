@@ -1,4 +1,5 @@
 import 'package:flet_view/controls/create_control.dart';
+import 'package:flet_view/controls/error.dart';
 import 'package:flutter/material.dart';
 import 'package:flet_view/protocol/update_control_props_payload.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -11,12 +12,14 @@ import '../web_socket_client.dart';
 class SnackBarControl extends StatefulWidget {
   final Control? parent;
   final Control control;
+  final List<Control> children;
   final bool parentDisabled;
 
   const SnackBarControl(
       {Key? key,
       this.parent,
       required this.control,
+      required this.children,
       required this.parentDisabled})
       : super(key: key);
 
@@ -37,6 +40,34 @@ class _SnackBarControlState extends State<SnackBarControl> {
     super.dispose();
   }
 
+  Widget _createSnackBar() {
+    bool disabled =
+        widget.control.attrBool("disabled", false)! || widget.parentDisabled;
+    var contentCtrls = widget.children.where((c) => c.name == "content");
+
+    if (contentCtrls.isEmpty) {
+      return const ErrorControl("SnackBar does not have a content.");
+    }
+
+    var actionName = widget.control.attrString("action", "")!;
+
+    SnackBarAction? action = actionName != ""
+        ? SnackBarAction(
+            label: actionName,
+            onPressed: () {
+              debugPrint("SnackBar ${widget.control.id} clicked!");
+              ws.pageEventFromWeb(
+                  eventTarget: widget.control.id,
+                  eventName: "action",
+                  eventData: widget.control.attrs["data"] ?? "");
+            })
+        : null;
+
+    return SnackBar(
+        content: createControl(widget.control, contentCtrls.first.id, disabled),
+        action: action);
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("SnackBar build: ${widget.control.id}");
@@ -47,19 +78,25 @@ class _SnackBarControlState extends State<SnackBarControl> {
         builder: (context, dispatch) {
           debugPrint("SnackBar StoreConnector build: ${widget.control.id}");
 
-          // bool disabled = widget.control.attrBool("disabled", false)! ||
-          //     widget.parentDisabled;
-
           var open = widget.control.attrBool("open", false)!;
+          var removeCurrentSnackbar =
+              widget.control.attrBool("removeCurrentSnackBar", false)!;
 
           debugPrint("Current open state: $_open");
           debugPrint("New open state: $open");
 
           if (open && (open != _open)) {
+            var snackBar = _createSnackBar();
+            if (snackBar is ErrorControl) {
+              return snackBar;
+            }
+
             WidgetsBinding.instance!.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(widget.control.attrString("content", "")!),
-              ));
+              if (removeCurrentSnackbar) {
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              }
+
+              ScaffoldMessenger.of(context).showSnackBar(snackBar as SnackBar);
 
               List<Map<String, String>> props = [
                 {"i": widget.control.id, "open": "false"}
@@ -71,26 +108,6 @@ class _SnackBarControlState extends State<SnackBarControl> {
           }
 
           _open = open;
-
-          // if (open != _open) {
-          //   setState(() {
-          //     _open = open;
-          //   });
-          // }
-          // String value = widget.control.attrs["value"] ?? "";
-          // if (_value != value) {
-          //   _value = value;
-          //   _controller.text = value;
-          // }
-
-          // _snackBar = SnackBar(
-          //   content: Text(widget.control.attrString("content", "")!),
-          // );
-
-          // bool open = widget.control.attrBool("open", false)!;
-          // if (open) {
-          //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          // }
 
           return const SizedBox.shrink();
         });
