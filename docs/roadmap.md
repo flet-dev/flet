@@ -10,7 +10,7 @@
     * [ ] Container
     * [x] Row (flex - default mode, wrap)
     * [x] Column (flex - default mode, wrap)
-    * [ ] Stack
+    * [x] Stack
     * [ ] ListView
     * [ ] GridView
   * Basic controls

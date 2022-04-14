@@ -1,9 +1,10 @@
 import json
 import logging
 from datetime import datetime
+from msilib.schema import Icon
 
 import flet
-from flet import Column, ElevatedButton, Page, Row, Text, Theme
+from flet import Column, ElevatedButton, Icon, Page, Row, Text, Theme
 from flet.stack import Stack
 
 logging.basicConfig(level=logging.DEBUG)
@@ -34,6 +35,13 @@ def main(page: Page):
         page.update()
 
     page.add(
+        Row(
+            [
+                Icon(name="favorite", size=24, color="pink"),
+                Icon(name="audiotrack", size=30, color="green"),
+                Icon(name="beach_access", size=36, color="blue"),
+            ]
+        ),
         Stack([Text("Text 1"), Text("sdfjsdf")]),
         Row([Text("This is a button:"), ElevatedButton("Button!")]),
         Column(

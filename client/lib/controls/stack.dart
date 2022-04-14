@@ -22,7 +22,7 @@ class StackControl extends StatelessWidget {
 
     bool disabled = control.isDisabled || parentDisabled;
 
-    return expandable(
+    return commonControl(
         Stack(
           children: children
               .where((c) => c.isVisible)

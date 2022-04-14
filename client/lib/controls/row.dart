@@ -49,7 +49,7 @@ class RowControl extends StatelessWidget {
       controls.add(createControl(parent, ctrl.id, disabled));
     }
 
-    return expandable(
+    return commonControl(
         wrap
             ? Wrap(
                 direction: Axis.horizontal,

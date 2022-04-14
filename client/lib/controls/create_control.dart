@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:flet_view/controls/icon.dart';
 import 'package:flet_view/controls/snack_bar.dart';
 import 'package:flet_view/models/control_type.dart';
 import 'package:flet_view/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../models/control.dart';
@@ -38,6 +38,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control, children: controlView.children);
         case ControlType.text:
           return TextControl(control: controlView.control);
+        case ControlType.icon:
+          return IconControl(control: controlView.control);
         case ControlType.elevatedButton:
           return ElevatedButtonControl(
               parent: parent,
@@ -84,7 +86,11 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
   );
 }
 
-Widget expandable(Widget widget, Control? parent, Control control) {
+Widget commonControl(Widget widget, Control? parent, Control control) {
+  return _expandable(widget, parent, control);
+}
+
+Widget _expandable(Widget widget, Control? parent, Control control) {
   if (parent != null &&
       (parent.type == ControlType.page ||
           parent.type == ControlType.column ||
