@@ -84,9 +84,15 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
   );
 }
 
-Widget expandable(Widget widget, Control control) {
-  int? expand = control.attrInt("expand");
-  return expand != null ? Expanded(child: widget, flex: expand) : widget;
+Widget expandable(Widget widget, Control? parent, Control control) {
+  if (parent != null &&
+      (parent.type == ControlType.page ||
+          parent.type == ControlType.column ||
+          parent.type == ControlType.row)) {
+    int? expand = control.attrInt("expand");
+    return expand != null ? Expanded(child: widget, flex: expand) : widget;
+  }
+  return widget;
 }
 
 MainAxisAlignment parseMainAxisAlignment(

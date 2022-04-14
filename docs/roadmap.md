@@ -5,11 +5,11 @@
 * Controls
   * Common
     * [ ] Control
-    * [ ] Page
+    * [x] Page
   * Layout
     * [ ] Container
-    * [ ] Row (flex - default mode, wrap)
-    * [ ] Column (flex - default mode, wrap)
+    * [x] Row (flex - default mode, wrap)
+    * [x] Column (flex - default mode, wrap)
     * [ ] Stack
     * [ ] ListView
     * [ ] GridView

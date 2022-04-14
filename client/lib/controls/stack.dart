@@ -24,10 +24,12 @@ class StackControl extends StatelessWidget {
 
     return expandable(
         Stack(
-          children: control.childIds
-              .map((childId) => createControl(control, childId, disabled))
+          children: children
+              .where((c) => c.isVisible)
+              .map((c) => createControl(control, c.id, disabled))
               .toList(),
         ),
+        parent,
         control);
   }
 }

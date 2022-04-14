@@ -68,6 +68,7 @@ class RowControl extends StatelessWidget {
                     control, "verticalAlignment", CrossAxisAlignment.center),
                 children: controls,
               ),
+        parent,
         control);
   }
 }

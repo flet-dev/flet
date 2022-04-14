@@ -65,6 +65,7 @@ class ColumnControl extends StatelessWidget {
                     control, "horizontalAlignment", CrossAxisAlignment.start),
                 children: controls,
               ),
+        parent,
         control);
   }
 }

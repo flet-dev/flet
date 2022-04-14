@@ -4,6 +4,7 @@ from datetime import datetime
 
 import flet
 from flet import Column, ElevatedButton, Page, Row, Text, Theme
+from flet.stack import Stack
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -33,6 +34,7 @@ def main(page: Page):
         page.update()
 
     page.add(
+        Stack([Text("Text 1"), Text("sdfjsdf")]),
         Row([Text("This is a button:"), ElevatedButton("Button!")]),
         Column(
             [

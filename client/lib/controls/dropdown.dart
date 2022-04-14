@@ -85,7 +85,7 @@ class _DropdownControlState extends State<DropdownControl> {
             }).toList(),
           );
 
-          return expandable(dropDown, widget.control);
+          return expandable(dropDown, widget.parent, widget.control);
         });
   }
 }

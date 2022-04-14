@@ -78,7 +78,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
                 ws.updateControlProps(props: props);
               });
 
-          return expandable(textField, widget.control);
+          return expandable(textField, widget.parent, widget.control);
         });
   }
 }
