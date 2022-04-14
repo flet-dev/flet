@@ -410,6 +410,8 @@ Properties:
 - title
 - design (S2) - `material` (default), `cupertino`, `fluent`, `macos`.
 - themeMode - `system` (default), `light`, `dark` ([more info](https://stackoverflow.com/questions/60232070/how-to-implement-dark-mode-in-flutter))
+- lightThemeSeedColor
+- darkThemeSeedColor
 - verticalAlignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
 - horizontalAlignment - `start` (default), `center`, `end`, `stretch`
 - spacing - gap between adjacent items, default

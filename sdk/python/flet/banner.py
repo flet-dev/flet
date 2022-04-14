@@ -63,9 +63,8 @@ class Banner(Control):
         if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
-        return children.extend(
-            a._set_attr_internal("n", "action") for a in self.__actions
-        )
+        children.extend(a._set_attr_internal("n", "action") for a in self.__actions)
+        return children
 
     # open
     @property

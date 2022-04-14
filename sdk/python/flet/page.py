@@ -1,15 +1,18 @@
 import json
 import logging
 import threading
+from typing import Union
 
 from beartype import beartype
 from beartype.typing import List, Optional
 
 from flet import constants
+from flet.banner import Banner
 from flet.connection import Connection
-from flet.control import Control, CrossAxisAlignment, MainAxisAlignment
+from flet.control import Control, CrossAxisAlignment, MainAxisAlignment, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.protocol import Command
+from flet.snack_bar import SnackBar
 
 try:
     from typing import Literal
@@ -27,14 +30,18 @@ class Page(Control):
 
         self._id = "page"
         self._Control__uid = "page"
-        self._conn = conn
+        self.__conn = conn
         self._session_id = session_id
-        self._controls = []  # page controls
+        self._content = []  # page controls
         self._index = {}  # index with all page controls
         self._index[self._Control__uid] = self
         self._last_event = None
         self._event_available = threading.Event()
         self._fetch_page_details()
+
+        self.__banner: Banner = None
+        self.__snack_bar: SnackBar = None
+        self.__dialog = None
 
     def __enter__(self):
         return self
@@ -46,19 +53,30 @@ class Page(Control):
         return self._index.get(id)
 
     def _get_children(self):
-        return self._controls
+        children = []
+        if self.__banner:
+            self.__banner._set_attr_internal("n", "offstage")
+            children.append(self.__banner)
+        if self.__snack_bar:
+            self.__snack_bar._set_attr_internal("n", "offstage")
+            children.append(self.__snack_bar)
+        if self.__dialog:
+            self.__dialog._set_attr_internal("n", "offstage")
+            children.append(self.__dialog)
+        children.extend(self._content)
+        return children
 
     def _fetch_page_details(self):
-        values = self._conn.send_commands(
-            self._conn.page_name,
+        values = self.__conn.send_commands(
+            self.__conn.page_name,
             self._session_id,
             [
-                Command(0, "get", ["page", "windowWidth"], None, None, None),
-                Command(0, "get", ["page", "windowHeight"], None, None, None),
+                Command(0, "get", ["page", "winWidth"], None, None, None),
+                Command(0, "get", ["page", "winHeight"], None, None, None),
             ],
         ).results
-        self._set_attr("windowWidth", values[0], False)
-        self._set_attr("windowHeight", values[1], False)
+        self._set_attr("winWidth", values[0], False)
+        self._set_attr("winHeight", values[1], False)
 
     def update(self, *controls):
         with self._lock:
@@ -79,8 +97,8 @@ class Page(Control):
             return
 
         # execute commands
-        results = self._conn.send_commands(
-            self._conn.page_name, self._session_id, commands
+        results = self.__conn.send_commands(
+            self.__conn.page_name, self._session_id, commands
         ).results
 
         if len(results) > 0:
@@ -96,26 +114,26 @@ class Page(Control):
 
     def add(self, *controls):
         with self._lock:
-            self._controls.extend(controls)
+            self._content.extend(controls)
             return self.__update(self)
 
     def insert(self, at, *controls):
         with self._lock:
             n = at
             for control in controls:
-                self._controls.insert(n, control)
+                self._content.insert(n, control)
                 n += 1
             return self.__update(self)
 
     def remove(self, *controls):
         with self._lock:
             for control in controls:
-                self._controls.remove(control)
+                self._content.remove(control)
             return self.__update(self)
 
     def remove_at(self, index):
         with self._lock:
-            self._controls.pop(index)
+            self._content.pop(index)
             return self.__update(self)
 
     def clean(self):
@@ -123,7 +141,7 @@ class Page(Control):
             self._previous_children.clear()
             for child in self._get_children():
                 self._remove_control_recursively(self._index, child)
-            self._controls.clear()
+            self._content.clear()
             return self._send_command("clean", [self.uid])
 
     def error(self, message=""):
@@ -185,11 +203,11 @@ class Page(Control):
 
     def close(self):
         if self._session_id == constants.ZERO_SESSION:
-            self._conn.close()
+            self.__conn.close()
 
     def _send_command(self, name: str, values: List[str]):
-        return self._conn.send_command(
-            self._conn.page_name,
+        return self.__conn.send_command(
+            self.__conn.page_name,
             self._session_id,
             Command(0, name, values, None, None, None),
         )
@@ -197,17 +215,17 @@ class Page(Control):
     # url
     @property
     def url(self):
-        return self._conn.page_url
+        return self.__conn.page_url
 
     # name
     @property
     def name(self):
-        return self._conn.page_name
+        return self.__conn.page_name
 
     # connection
     @property
     def connection(self):
-        return self._conn
+        return self.__conn
 
     # index
     @property
@@ -219,14 +237,15 @@ class Page(Control):
     def session_id(self):
         return self._session_id
 
-    # controls
+    # content
     @property
-    def controls(self):
-        return self._controls
+    def content(self):
+        return self._content
 
-    @controls.setter
-    def controls(self, value):
-        self._controls = value
+    @content.setter
+    @beartype
+    def content(self, value: List[Control]):
+        self._content = value or []
 
     # title
     @property
@@ -264,7 +283,7 @@ class Page(Control):
 
     @spacing.setter
     @beartype
-    def spacing(self, value: Optional[float]):
+    def spacing(self, value: OptionalNumber):
         self._set_attr("spacing", value)
 
     # padding
@@ -273,7 +292,8 @@ class Page(Control):
         return self._get_attr("padding")
 
     @padding.setter
-    def padding(self, value):
+    @beartype
+    def padding(self, value: OptionalNumber):
         self._set_attr("padding", value)
 
     # bgcolor
@@ -295,6 +315,36 @@ class Page(Control):
     def design(self, value: PageDesign):
         self._set_attr("design", value)
 
+    # banner
+    @property
+    def banner(self):
+        return self.__banner
+
+    @banner.setter
+    @beartype
+    def banner(self, value: Optional[Banner]):
+        self.__banner = value
+
+    # snack_bar
+    @property
+    def snack_bar(self):
+        return self.__snack_bar
+
+    @snack_bar.setter
+    @beartype
+    def snack_bar(self, value: Optional[SnackBar]):
+        self.__snack_bar = value
+
+    # dialog
+    @property
+    def dialog(self):
+        return self.__dialog
+
+    @dialog.setter
+    @beartype
+    def dialog(self, value: Optional[Control]):
+        self.__dialog = value
+
     # theme_mode
     @property
     def theme_mode(self):
@@ -308,7 +358,7 @@ class Page(Control):
     # window_width
     @property
     def window_width(self):
-        w = self._get_attr("windowWidth")
+        w = self._get_attr("winWidth")
         if w != None and w != "":
             return int(w)
         return 0
@@ -316,7 +366,7 @@ class Page(Control):
     # window_height
     @property
     def window_height(self):
-        h = self._get_attr("windowHeight")
+        h = self._get_attr("winHeight")
         if h != None and h != "":
             return int(h)
         return 0

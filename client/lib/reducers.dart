@@ -6,6 +6,7 @@ import 'package:flet_view/protocol/clean_control_payload.dart';
 import 'package:flet_view/protocol/message.dart';
 import 'package:flet_view/protocol/remove_control_payload.dart';
 import 'package:flet_view/protocol/update_control_props_payload.dart';
+import 'package:flet_view/web_socket_client.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'actions.dart';
@@ -34,6 +35,25 @@ AppState appReducer(AppState state, dynamic action) {
 
     debugPrint(
         "New page size: ${action.newSize}, new breakpoint: $newBreakpoint");
+
+    var page = state.controls["page"];
+    if (page != null) {
+      var controls = Map.of(state.controls);
+      var pageAttrs = Map.of(page.attrs);
+      pageAttrs["winWidth"] = action.newSize.width.toString();
+      pageAttrs["winHeight"] = action.newSize.height.toString();
+      controls[page.id] = page.copyWith(attrs: pageAttrs);
+
+      List<Map<String, String>> props = [
+        {"i": "page", "winWidth": action.newSize.width.toString()},
+        {"i": "page", "winHeight": action.newSize.height.toString()}
+      ];
+      ws.updateControlProps(props: props);
+      ws.pageEventFromWeb(
+          eventTarget: "page",
+          eventName: "resize",
+          eventData: "${action.newSize.width},${action.newSize.height}");
+    }
 
     return state.copyWith(size: action.newSize, sizeBreakpoint: newBreakpoint);
   } else if (action is RegisterWebClientAction) {

@@ -1,6 +1,7 @@
 import datetime as dt
 import threading
 from difflib import SequenceMatcher
+from typing import Union
 
 from beartype import beartype
 from beartype.typing import List, Optional
@@ -43,6 +44,8 @@ ScrollDirection = Literal[None, "vertical", "horizontal"]
 TextAlign = Literal[None, "left", "right", "center", "justify", "start", "end"]
 
 InputBorder = Literal[None, "outline", "underline", "none"]
+
+OptionalNumber = Union[None, int, float]
 
 
 class Control:

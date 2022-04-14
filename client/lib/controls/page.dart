@@ -26,6 +26,37 @@ class PageControl extends StatelessWidget {
 
     debugPrint("Page theme: $themeMode");
 
+    final padding = control.attrDouble("padding", 10)!;
+    final spacing = control.attrDouble("spacing", 10)!;
+    final mainAlignment = MainAxisAlignment.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() == control.attrString("verticalAlignment", ""),
+        orElse: () => MainAxisAlignment.start);
+    final crossAlignment = CrossAxisAlignment.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("horizontalAlignment", ""),
+        orElse: () => CrossAxisAlignment.start);
+
+    List<Widget> offstage = [];
+    List<Widget> controls = [];
+    bool firstControl = true;
+
+    for (var ctrl in children) {
+      // offstage control
+      if (ctrl.name == "offstage") {
+        offstage.add(createControl(parent, ctrl.id, disabled));
+        continue;
+      }
+
+      // displayed control
+      if (spacing > 0 && !firstControl) {
+        controls.add(SizedBox(height: spacing));
+      }
+      controls.add(createControl(parent, ctrl.id, disabled));
+      firstControl = false;
+    }
+
     return MaterialApp(
       title: control.attrString("title", "")!,
       theme: ThemeData(
@@ -41,19 +72,14 @@ class PageControl extends StatelessWidget {
         body: Stack(children: [
           SizedBox.expand(
               child: Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(padding),
             //decoration: BoxDecoration(color: HexColor.fromHex("#AA0088")),
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: control.childIds
-                    .map((childId) => createControl(control, childId, disabled))
-                    .toList()),
-            // child: ListView(
-            //     children: control.childIds
-            //         .map((childId) => createControl(control, childId, disabled))
-            //         .toList()),
+                mainAxisAlignment: mainAlignment,
+                crossAxisAlignment: crossAlignment,
+                children: controls),
           )),
+          ...offstage,
           const ScreenSize()
         ]),
       ),
