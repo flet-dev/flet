@@ -1,8 +1,8 @@
 from typing import Optional
 
 from beartype import beartype
-from flet.constrained_control import ConstrainedControl
 
+from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber, TextAlign
 from flet.ref import Ref
 
@@ -50,7 +50,7 @@ class Text(ConstrainedControl):
         size: OptionalNumber = None,
         weight: FontWeight = None,
         italic: bool = None,
-        themeStyle: str = None,
+        style: str = None,
         overflow: TextOverflow = None,
         selectable: bool = None,
         color=None,
@@ -74,7 +74,7 @@ class Text(ConstrainedControl):
         self.size = size
         self.weight = weight
         self.italic = italic
-        self.themeStyle = themeStyle
+        self.style = style
         self.overflow = overflow
         self.selectable = selectable
         self.color = color
@@ -122,15 +122,15 @@ class Text(ConstrainedControl):
     def weight(self, value: FontWeight):
         self._set_attr("weight", value)
 
-    # theme_style
+    # style
     @property
-    def theme_style(self):
-        return self._get_attr("themeStyle")
+    def style(self):
+        return self._get_attr("style")
 
-    @theme_style.setter
+    @style.setter
     @beartype
-    def theme_style(self, value: Optional[str]):
-        self._set_attr("themeStyle", value)
+    def style(self, value: Optional[str]):
+        self._set_attr("style", value)
 
     # italic
     @property

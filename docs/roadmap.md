@@ -575,7 +575,7 @@ TextTheme: https://api.flutter.dev/flutter/material/TextTheme-class.html
 - size
 - weight - `bold`, `normal`, `w100`, `w200`, ... [see all](https://api.flutter.dev/flutter/dart-ui/FontWeight-class.html)
 - italic
-- themeStyle ([more details](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/text_theme.dart))
+- style ([more details](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/text_theme.dart))
 - pre (S2) - [more info](https://stackoverflow.com/questions/64145307/full-list-of-font-families-provided-with-flutter)
 - color
 - bgColor
