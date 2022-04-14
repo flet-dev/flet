@@ -15,6 +15,7 @@ def main(page: Page):
     page.spacing = 30
     page.vertical_alignment = "center"
     page.horizontal_alignment = "end"
+    page.bgcolor = "cyanAccent2003"
     page.update()
 
     def on_click1(e):

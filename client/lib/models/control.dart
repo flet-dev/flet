@@ -37,6 +37,14 @@ class Control extends Equatable {
         attrs: attrs);
   }
 
+  bool get isDisabled {
+    return attrBool("disabled", false)!;
+  }
+
+  bool get isVisible {
+    return attrBool("visible", true)!;
+  }
+
   bool? attrBool(String name, [bool? defValue]) {
     var r = attrs[name.toLowerCase()];
     return r != null ? r.toLowerCase() == "true" : defValue;

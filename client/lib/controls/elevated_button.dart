@@ -20,7 +20,7 @@ class ElevatedButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Button build: ${control.id}");
 
-    bool disabled = control.attrBool("disabled", false)! || parentDisabled;
+    bool disabled = control.isDisabled || parentDisabled;
 
     var button = ElevatedButton(
       onPressed: disabled

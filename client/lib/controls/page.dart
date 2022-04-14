@@ -18,7 +18,7 @@ class PageControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Page build: ${control.id}");
 
-    bool disabled = control.attrBool("disabled", false)!;
+    bool disabled = control.isDisabled;
 
     var themeMode = ThemeMode.values.firstWhere(
         (element) => element.name == control.attrString("themeMode"),
@@ -26,35 +26,34 @@ class PageControl extends StatelessWidget {
 
     debugPrint("Page theme: $themeMode");
 
-    final padding = control.attrDouble("padding", 10)!;
     final spacing = control.attrDouble("spacing", 10)!;
-    final mainAlignment = MainAxisAlignment.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() == control.attrString("verticalAlignment", ""),
-        orElse: () => MainAxisAlignment.start);
-    final crossAlignment = CrossAxisAlignment.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("horizontalAlignment", ""),
-        orElse: () => CrossAxisAlignment.start);
+    final mainAlignment = parseMainAxisAlignment(control, "verticalAlignment");
+    final crossAlignment =
+        parseCrossAxisAlignment(control, "horizontalAlignment");
 
     List<Widget> offstage = [];
     List<Widget> controls = [];
     bool firstControl = true;
 
-    for (var ctrl in children) {
+    for (var ctrl in children.where((c) => c.isVisible)) {
       // offstage control
       if (ctrl.name == "offstage") {
-        offstage.add(createControl(parent, ctrl.id, disabled));
+        offstage.add(createControl(parent, ctrl.id, control.isDisabled));
         continue;
       }
 
-      // displayed control
-      if (spacing > 0 && !firstControl) {
+      // spacer between displayed controls
+      if (spacing > 0 &&
+          !firstControl &&
+          mainAlignment != MainAxisAlignment.spaceAround &&
+          mainAlignment != MainAxisAlignment.spaceBetween &&
+          mainAlignment != MainAxisAlignment.spaceEvenly) {
         controls.add(SizedBox(height: spacing));
       }
-      controls.add(createControl(parent, ctrl.id, disabled));
       firstControl = false;
+
+      // displayed control
+      controls.add(createControl(parent, ctrl.id, disabled));
     }
 
     return MaterialApp(
@@ -72,8 +71,8 @@ class PageControl extends StatelessWidget {
         body: Stack(children: [
           SizedBox.expand(
               child: Container(
-            padding: EdgeInsets.all(padding),
-            //decoration: BoxDecoration(color: HexColor.fromHex("#AA0088")),
+            padding: parseEdgeInsets(control, "padding"),
+            decoration: BoxDecoration(color: parseColor(control, "bgColor")),
             child: Column(
                 mainAxisAlignment: mainAlignment,
                 crossAxisAlignment: crossAlignment,

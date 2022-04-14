@@ -21,7 +21,7 @@ class RowControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool disabled = control.attrBool("disabled", false)! || parentDisabled;
+    bool disabled = control.isDisabled || parentDisabled;
 
     return StoreConnector<AppState, PageBreakpointViewModel>(
         distinct: true,

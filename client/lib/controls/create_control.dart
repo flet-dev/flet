@@ -1,5 +1,6 @@
 import 'package:flet_view/controls/snack_bar.dart';
 import 'package:flet_view/models/control_type.dart';
+import 'package:flet_view/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -83,4 +84,37 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
 Widget expandable(Widget widget, Control control) {
   int? expand = control.attrInt("expand");
   return expand != null ? Expanded(child: widget, flex: expand) : widget;
+}
+
+MainAxisAlignment parseMainAxisAlignment(Control control, String propName) {
+  return MainAxisAlignment.values.firstWhere(
+      (e) => e.name.toLowerCase() == control.attrString(propName, ""),
+      orElse: () => MainAxisAlignment.start);
+}
+
+CrossAxisAlignment parseCrossAxisAlignment(Control control, String propName) {
+  return CrossAxisAlignment.values.firstWhere(
+      (e) => e.name.toLowerCase() == control.attrString(propName, ""),
+      orElse: () => CrossAxisAlignment.start);
+}
+
+EdgeInsetsGeometry? parseEdgeInsets(Control control, String propName) {
+  var d = control.attrDouble(propName, null);
+  if (d == null) {
+    return null;
+  }
+  return EdgeInsets.all(d);
+}
+
+Color? parseColor(Control control, String propName) {
+  var c = control.attrString(propName, null);
+  if (c == null) {
+    return null;
+  }
+
+  if (c.startsWith("#")) {
+    return HexColor.fromHex(c);
+  } else {
+    return HexColor.fromNamedColor(c);
+  }
 }
