@@ -33,7 +33,7 @@ class PageControl extends StatelessWidget {
     for (var ctrl in children.where((c) => c.isVisible)) {
       // offstage control
       if (ctrl.name == "offstage") {
-        offstage.add(createControl(parent, ctrl.id, control.isDisabled));
+        offstage.add(createControl(control, ctrl.id, control.isDisabled));
         continue;
       }
 
@@ -48,7 +48,7 @@ class PageControl extends StatelessWidget {
       firstControl = false;
 
       // displayed control
-      controls.add(createControl(parent, ctrl.id, disabled));
+      controls.add(createControl(control, ctrl.id, disabled));
     }
 
     // theme

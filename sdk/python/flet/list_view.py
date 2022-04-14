@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Optional
 
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber, ScrollDirection
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
 
@@ -22,7 +22,7 @@ class ListView(ConstrainedControl):
         #
         # Specific
         #
-        scroll_direction: ScrollDirection = None,
+        horizontal: bool = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -38,7 +38,7 @@ class ListView(ConstrainedControl):
 
         self.__controls: List[Control] = []
         self.controls = controls
-        self.scroll_direction = scroll_direction
+        self.horizontal = horizontal
 
     def _get_control_name(self):
         return "listview"
@@ -46,15 +46,15 @@ class ListView(ConstrainedControl):
     def _get_children(self):
         return self.__controls
 
-    # scroll_direction
+    # horizontal
     @property
-    def scroll_direction(self):
-        return self._get_attr("scrollDirection")
+    def horizontal(self):
+        return self._get_attr("horizontal")
 
-    @scroll_direction.setter
+    @horizontal.setter
     @beartype
-    def scroll_direction(self, value: ScrollDirection):
-        self._set_attr("scrollDirection", value)
+    def horizontal(self, value: Optional[bool]):
+        self._set_attr("horizontal", value)
 
     # controls
     @property

@@ -43,7 +43,7 @@ class ColumnControl extends StatelessWidget {
       firstControl = false;
 
       // displayed control
-      controls.add(createControl(parent, ctrl.id, disabled));
+      controls.add(createControl(control, ctrl.id, disabled));
     }
 
     return commonControl(

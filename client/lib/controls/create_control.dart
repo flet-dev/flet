@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flet_view/controls/icon.dart';
+import 'package:flet_view/controls/list_view.dart';
 import 'package:flet_view/controls/snack_bar.dart';
 import 'package:flet_view/models/control_type.dart';
 import 'package:flet_view/utils/colors.dart';
@@ -59,6 +60,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.stack:
           return StackControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.listView:
+          return ListViewControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

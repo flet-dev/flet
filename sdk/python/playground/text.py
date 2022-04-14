@@ -6,7 +6,7 @@ from msilib.schema import Icon
 from click import style
 
 import flet
-from flet import Column, ElevatedButton, Icon, Page, Row, Text, Theme
+from flet import Column, ElevatedButton, ListView, Page, Row, Text, Theme
 from flet.stack import Stack
 
 logging.basicConfig(level=logging.DEBUG)
@@ -21,21 +21,29 @@ def main(page: Page):
     page.update()
 
     page.add(
-        Text("Display Large", style="displayLarge"),
-        Text("Display Medium", style="displayMedium"),
-        Text("Display Small", style="displaySmall"),
-        Text("Headline Large", style="headlineLarge"),
-        Text("Headline Medium", style="headlineMedium"),
-        Text("Headline Small", style="headlineSmall"),
-        Text("Title Large", style="titleLarge"),
-        Text("Title Medium", style="titleMedium"),
-        Text("Title Small", style="titleSmall"),
-        Text("Label Large", style="labelLarge"),
-        Text("Label Medium", style="labelMedium"),
-        Text("Label Small", style="labelSmall"),
-        Text("Body Large", style="bodylLarge"),
-        Text("Body Medium", style="bodyMedium"),
-        Text("Body Small", style="bodySmall"),
+        ListView(
+            [
+                Text("Display Large", style="displayLarge"),
+                Text("Display Medium", style="displayMedium"),
+                Text("Display Small", style="displaySmall"),
+                Text("Headline Large", style="headlineLarge"),
+                Text("Headline Medium", style="headlineMedium"),
+                Text("Headline Small", style="headlineSmall"),
+                Text("Title Large", style="titleLarge"),
+                Text("Title Medium", style="titleMedium"),
+                Text("Title Small", style="titleSmall"),
+                Text("Label Large", style="labelLarge"),
+                Text("Label Medium", style="labelMedium"),
+                Text("Label Small", style="labelSmall"),
+                Text("Body Large", style="bodylLarge"),
+                Text("Body Medium", style="bodyMedium"),
+                Text("Body Small", style="bodySmall"),
+                Text("Size 10", size=10),
+                Text("Size 30", size=20, color="pink600"),
+                Text("Size 50", size=50, color="white", bgcolor="orange800"),
+            ],
+            expand=1,
+        )
     )
 
 
