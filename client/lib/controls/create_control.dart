@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flet_view/controls/snack_bar.dart';
 import 'package:flet_view/models/control_type.dart';
 import 'package:flet_view/utils/colors.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
 import '../models/app_state.dart';
+import '../utils/theme.dart';
 import 'row.dart';
 import 'textfield.dart';
 import 'dropdown.dart';
@@ -112,9 +115,15 @@ Color? parseColor(Control control, String propName) {
     return null;
   }
 
-  if (c.startsWith("#")) {
-    return HexColor.fromHex(c);
-  } else {
-    return HexColor.fromNamedColor(c);
+  return HexColor.fromString(c);
+}
+
+ThemeData? parseTheme(Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
   }
+
+  final j1 = json.decode(v);
+  return themeFromJson(j1);
 }

@@ -13,6 +13,7 @@ from flet.control import Control, CrossAxisAlignment, MainAxisAlignment, Optiona
 from flet.control_event import ControlEvent
 from flet.protocol import Command
 from flet.snack_bar import SnackBar
+from flet.theme import Theme
 
 try:
     from typing import Literal
@@ -42,6 +43,8 @@ class Page(Control):
         self.__banner: Banner = None
         self.__snack_bar: SnackBar = None
         self.__dialog = None
+        self.__theme = None
+        self.__dark_theme = None
 
     def __enter__(self):
         return self
@@ -352,8 +355,34 @@ class Page(Control):
 
     @theme_mode.setter
     @beartype
-    def theme_mode(self, value: ThemeMode):
+    def theme_mode(self, value: Optional[ThemeMode]):
         self._set_attr("themeMode", value)
+
+    # theme
+    @property
+    def theme(self):
+        return self.__theme
+
+    @theme.setter
+    @beartype
+    def theme(self, value: Optional[Theme]):
+        self.__theme = value
+        if self.__theme:
+            self.__theme.brightness = "light"
+        self._set_attr("theme", json.dumps(value, default=vars) if value else None)
+
+    # dark_theme
+    @property
+    def dark_theme(self):
+        return self.__dark_theme
+
+    @dark_theme.setter
+    @beartype
+    def dark_theme(self, value: Optional[Theme]):
+        self.__dark_theme = value
+        if self.__dark_theme:
+            self.__dark_theme.brightness = "dark"
+        self._set_attr("darkTheme", json.dumps(value, default=vars) if value else None)
 
     # window_width
     @property

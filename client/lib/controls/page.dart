@@ -20,12 +20,6 @@ class PageControl extends StatelessWidget {
 
     bool disabled = control.isDisabled;
 
-    var themeMode = ThemeMode.values.firstWhere(
-        (element) => element.name == control.attrString("themeMode"),
-        orElse: () => ThemeMode.system);
-
-    debugPrint("Page theme: $themeMode");
-
     final spacing = control.attrDouble("spacing", 10)!;
     final mainAlignment = parseMainAxisAlignment(control, "verticalAlignment");
     final crossAlignment =
@@ -56,16 +50,27 @@ class PageControl extends StatelessWidget {
       controls.add(createControl(parent, ctrl.id, disabled));
     }
 
+    // theme
+    var theme = parseTheme(control, "theme") ??
+        ThemeData(
+            colorSchemeSeed: const Color.fromARGB(255, 20, 136, 224),
+            brightness: Brightness.light);
+
+    var darkTheme = parseTheme(control, "darkTheme") ??
+        ThemeData(
+            colorSchemeSeed: const Color.fromARGB(255, 104, 192, 233),
+            brightness: Brightness.dark);
+
+    var themeMode = ThemeMode.values.firstWhere(
+        (element) => element.name == control.attrString("themeMode"),
+        orElse: () => ThemeMode.system);
+
+    debugPrint("Page theme: $themeMode");
+
     return MaterialApp(
       title: control.attrString("title", "")!,
-      theme: ThemeData(
-          colorSchemeSeed: Color.fromARGB(255, 20, 136, 224),
-          brightness: Brightness.light,
-          useMaterial3: true),
-      darkTheme: ThemeData(
-          colorSchemeSeed: Color.fromARGB(255, 104, 192, 233),
-          brightness: Brightness.dark,
-          useMaterial3: true),
+      theme: theme,
+      darkTheme: darkTheme,
       themeMode: themeMode,
       home: Scaffold(
         body: Stack(children: [

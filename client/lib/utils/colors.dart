@@ -44,6 +44,14 @@ Map<String, MaterialAccentColor> _materialAccentColors = {
 
 // https://stackoverflow.com/questions/50081213/how-do-i-use-hexadecimal-color-strings-in-flutter
 extension HexColor on Color {
+  static Color? fromString(String colorString) {
+    if (colorString.startsWith("#")) {
+      return HexColor.fromHex(colorString);
+    } else {
+      return HexColor.fromNamedColor(colorString);
+    }
+  }
+
   static Color? fromNamedColor(String colorName) {
     RegExp namedColor = RegExp(r'^([a-zA-Z]+)([0-9]*)$');
     var matches = namedColor.allMatches(colorName);

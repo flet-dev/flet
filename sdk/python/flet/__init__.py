@@ -26,3 +26,4 @@ from flet.switch import Switch
 from flet.text import Text
 from flet.text_button import TextButton
 from flet.textfield import TextField
+from flet.theme import Theme
