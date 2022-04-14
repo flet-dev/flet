@@ -18,6 +18,7 @@ def main(page: Page):
     page.spacing = 30
     page.vertical_alignment = "start"
     page.horizontal_alignment = "center"
+    page.bgcolor = "blueGrey200"
     page.update()
 
     page.add(
@@ -28,7 +29,12 @@ def main(page: Page):
                 Text("Display Small", style="displaySmall"),
                 Text("Headline Large", style="headlineLarge"),
                 Text("Headline Medium", style="headlineMedium"),
-                Text("Headline Small", style="headlineSmall"),
+                Text(
+                    "Headline Small",
+                    size=40,
+                    color="onPrimary",
+                    bgcolor="primary",
+                ),
                 Text("Title Large", style="titleLarge"),
                 Text("Title Medium", style="titleMedium"),
                 Text("Title Small", style="titleSmall"),
@@ -39,8 +45,29 @@ def main(page: Page):
                 Text("Body Medium", style="bodyMedium"),
                 Text("Body Small", style="bodySmall"),
                 Text("Size 10", size=10),
-                Text("Size 30", size=20, color="pink600"),
-                Text("Size 50", size=50, color="white", bgcolor="orange800"),
+                Text("Size 30, Italic", size=20, color="pink600", italic=True),
+                Text(
+                    "Size 40, w100",
+                    size=40,
+                    color="white",
+                    bgcolor="blue600",
+                    weight="w100",
+                ),
+                Text(
+                    "Size 50, Normal",
+                    size=50,
+                    color="white",
+                    bgcolor="orange800",
+                    weight="normal",
+                ),
+                Text(
+                    "Size 60, Bold",
+                    size=50,
+                    color="white",
+                    bgcolor="green700",
+                    weight="bold",
+                ),
+                Text("Size 70, w900", size=70, weight="w900", selectable=True),
             ],
             expand=1,
         )

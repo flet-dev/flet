@@ -53,8 +53,8 @@ class Text(ConstrainedControl):
         style: str = None,
         overflow: TextOverflow = None,
         selectable: bool = None,
-        color=None,
-        bgcolor=None,
+        color: str = None,
+        bgcolor: str = None,
     ):
 
         ConstrainedControl.__init__(
@@ -150,7 +150,7 @@ class Text(ConstrainedControl):
     @selectable.setter
     @beartype
     def selectable(self, value: Optional[bool]):
-        self._set_attr("v", value)
+        self._set_attr("selectable", value)
 
     # overflow
     @property

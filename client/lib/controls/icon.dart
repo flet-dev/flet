@@ -18,7 +18,7 @@ class IconControl extends StatelessWidget {
 
     var name = control.attrString("name", "")!;
     var size = control.attrDouble("size", null);
-    var color = HexColor.fromString(control.attrString("color", "")!);
+    var color = HexColor.fromString(context, control.attrString("color", "")!);
 
     return commonControl(
         Icon(

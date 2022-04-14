@@ -18,6 +18,8 @@ class PageControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Page build: ${control.id}");
 
+    debugPrint(Theme.of(context).colorScheme.primary.toString());
+
     bool disabled = control.isDisabled;
 
     final spacing = control.attrDouble("spacing", 10)!;
@@ -78,7 +80,9 @@ class PageControl extends StatelessWidget {
           SizedBox.expand(
               child: Container(
             padding: parseEdgeInsets(control, "padding"),
-            decoration: BoxDecoration(color: parseColor(control, "bgColor")),
+            decoration: BoxDecoration(
+                color: HexColor.fromString(
+                    context, control.attrString("bgcolor", "")!)),
             child: Column(
                 mainAxisAlignment: mainAlignment,
                 crossAxisAlignment: crossAlignment,

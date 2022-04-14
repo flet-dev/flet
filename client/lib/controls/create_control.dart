@@ -144,15 +144,6 @@ EdgeInsetsGeometry? parseEdgeInsets(Control control, String propName) {
   return EdgeInsets.all(d);
 }
 
-Color? parseColor(Control control, String propName) {
-  var c = control.attrString(propName, null);
-  if (c == null) {
-    return null;
-  }
-
-  return HexColor.fromString(c);
-}
-
 ThemeData? parseTheme(Control control, String propName) {
   var v = control.attrString(propName, null);
   if (v == null) {

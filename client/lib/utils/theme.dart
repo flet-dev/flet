@@ -6,6 +6,6 @@ ThemeData themeFromJson(Map<String, dynamic> json) {
       brightness: Brightness.values.firstWhere(
           (b) => b.name.toLowerCase() == json["brightness"],
           orElse: () => Brightness.light),
-      colorSchemeSeed: HexColor.fromString(json["color_scheme_seed"]),
+      colorSchemeSeed: HexColor.fromString(null, json["color_scheme_seed"]),
       useMaterial3: json["use_material3"]);
 }
