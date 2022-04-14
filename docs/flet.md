@@ -16,6 +16,8 @@ Flutter is fresh and awesome ... Flutter is [ideal for Single Page Apps (SPA)](h
 
 Flutter is broader. We'll start from Material design and then add platform specific controls: [Fluent UI](https://bdlukaa.github.io/fluent_ui/) for Windows, [macOS UI](https://pub.dev/packages/macos_ui#macoswindow) for macOS and [Cupertino widgets](https://docs.flutter.dev/development/ui/widgets/cupertino) for iOS. We could probably implement "adaptive" Fler controls which look-n-feel depends on the platform the app is running on.
 
+Flutter gives precise layout. No more hacks with vertical alignment or horizontal alignment in nested divs.
+
 Flutter will give access to mobile experiences: camera, location services, accelerometer, etc.
 
 A lot of renamings would create a mess in a project repo - it's easier to start over in a new repository.

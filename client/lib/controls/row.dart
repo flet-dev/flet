@@ -21,23 +21,53 @@ class RowControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Row build: ${control.id}");
+
+    final spacing = control.attrDouble("spacing", 10)!;
+    final mainAlignment =
+        parseMainAxisAlignment(control, "alignment", MainAxisAlignment.start);
+    bool tight = control.attrBool("tight", false)!;
+    bool wrap = control.attrBool("wrap", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
-    return StoreConnector<AppState, PageBreakpointViewModel>(
-        distinct: true,
-        converter: (store) => PageBreakpointViewModel.fromStore(store),
-        builder: (context, viewModel) {
-          debugPrint(
-              "Row build: ${control.id} with breakpoint: ${viewModel.breakpoint}");
+    List<Widget> controls = [];
 
-          return expandable(
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: control.childIds
-                    .map((childId) => createControl(control, childId, disabled))
-                    .toList(),
+    bool firstControl = true;
+    for (var ctrl in children.where((c) => c.isVisible)) {
+      // spacer between displayed controls
+      if (!wrap &&
+          spacing > 0 &&
+          !firstControl &&
+          mainAlignment != MainAxisAlignment.spaceAround &&
+          mainAlignment != MainAxisAlignment.spaceBetween &&
+          mainAlignment != MainAxisAlignment.spaceEvenly) {
+        controls.add(SizedBox(width: spacing));
+      }
+      firstControl = false;
+
+      // displayed control
+      controls.add(createControl(parent, ctrl.id, disabled));
+    }
+
+    return expandable(
+        wrap
+            ? Wrap(
+                direction: Axis.horizontal,
+                children: controls,
+                spacing: spacing,
+                runSpacing: control.attrDouble("runSpacing", 10)!,
+                alignment: parseWrapAlignment(
+                    control, "alignment", WrapAlignment.start),
+                crossAxisAlignment: parseWrapCrossAlignment(
+                    control, "verticalAlignment", WrapCrossAlignment.center),
+              )
+            : Row(
+                mainAxisAlignment: mainAlignment,
+                mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
+                crossAxisAlignment: parseCrossAxisAlignment(
+                    control, "verticalAlignment", CrossAxisAlignment.center),
+                children: controls,
               ),
-              control);
-        });
+        control);
   }
 }

@@ -3,10 +3,7 @@ import logging
 from datetime import datetime
 
 import flet
-from flet import ElevatedButton, Text
-from flet.column import Column
-from flet.page import Page
-from flet.theme import Theme
+from flet import Column, ElevatedButton, Page, Row, Text, Theme
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -36,6 +33,7 @@ def main(page: Page):
         page.update()
 
     page.add(
+        Row([Text("This is a button:"), ElevatedButton("Button!")]),
         Column(
             [
                 ElevatedButton("Click me!", on_click=on_click1),
@@ -44,7 +42,7 @@ def main(page: Page):
             alignment="center",
             horizontal_alignment="end",
             spacing=30,
-        )
+        ),
     )
 
 
