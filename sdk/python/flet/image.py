@@ -1,6 +1,6 @@
 from beartype import beartype
 
-from flet.control import Control
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
 try:
@@ -20,10 +20,10 @@ class Image(Control):
     def __init__(
         self,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
@@ -85,11 +85,12 @@ class Image(Control):
 
     # width
     @property
-    def width(self) -> float:
+    def width(self) -> OptionalNumber:
         return self._get_attr("width")
 
     @width.setter
-    def width(self, value: float):
+    @beartype
+    def width(self, value: OptionalNumber):
         self._set_attr("width", value)
 
     # height
@@ -98,5 +99,6 @@ class Image(Control):
         return self._get_attr("height")
 
     @height.setter
-    def height(self, value):
+    @beartype
+    def height(self, value: OptionalNumber):
         self._set_attr("height", value)

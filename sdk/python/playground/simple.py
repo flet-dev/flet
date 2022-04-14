@@ -4,6 +4,7 @@ from datetime import datetime
 
 import flet
 from flet import ElevatedButton, Text
+from flet.column import Column
 from flet.page import Page
 from flet.theme import Theme
 
@@ -19,8 +20,8 @@ def main(page: Page):
     page.theme_mode = "light"
     page.padding = 50
     page.spacing = 30
-    page.vertical_alignment = "center"
-    page.horizontal_alignment = "end"
+    page.vertical_alignment = "start"
+    page.horizontal_alignment = "center"
     # page.bgcolor = "cyanAccent2003"
     page.theme = Theme(color_scheme_seed="red300")
     page.dark_theme = Theme(color_scheme_seed="cyan")
@@ -35,8 +36,15 @@ def main(page: Page):
         page.update()
 
     page.add(
-        ElevatedButton("Click me!", on_click=on_click1),
-        ElevatedButton("Remove last control", on_click=on_click2),
+        Column(
+            [
+                ElevatedButton("Click me!", on_click=on_click1),
+                ElevatedButton("Remove last control", on_click=on_click2),
+            ],
+            alignment="center",
+            horizontal_alignment="end",
+            spacing=30,
+        )
     )
 
 

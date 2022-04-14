@@ -3,7 +3,7 @@ from typing import List, Optional
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, ScrollDirection
+from flet.control import Control, OptionalNumber, ScrollDirection
 from flet.ref import Ref
 
 
@@ -12,10 +12,10 @@ class GridView(ConstrainedControl):
         self,
         controls: List[Control] = None,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
@@ -24,8 +24,8 @@ class GridView(ConstrainedControl):
         #
         scroll_direction: ScrollDirection = None,
         cross_axis_count: int = None,
-        main_axis_spacing: float = None,
-        cross_axis_spacing: float = None,
+        main_axis_spacing: OptionalNumber = None,
+        cross_axis_spacing: OptionalNumber = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -79,7 +79,7 @@ class GridView(ConstrainedControl):
 
     @main_axis_spacing.setter
     @beartype
-    def main_axis_spacing(self, value: Optional[float]):
+    def main_axis_spacing(self, value: OptionalNumber):
         self._set_attr("mainAxisSpacing", value)
 
     # cross_axis_spacing
@@ -89,7 +89,7 @@ class GridView(ConstrainedControl):
 
     @cross_axis_spacing.setter
     @beartype
-    def cross_axis_spacing(self, value: Optional[float]):
+    def cross_axis_spacing(self, value: OptionalNumber):
         self._set_attr("crossAxisSpacing", value)
 
     # controls

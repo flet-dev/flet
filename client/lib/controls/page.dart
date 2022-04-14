@@ -21,9 +21,10 @@ class PageControl extends StatelessWidget {
     bool disabled = control.isDisabled;
 
     final spacing = control.attrDouble("spacing", 10)!;
-    final mainAlignment = parseMainAxisAlignment(control, "verticalAlignment");
-    final crossAlignment =
-        parseCrossAxisAlignment(control, "horizontalAlignment");
+    final mainAlignment = parseMainAxisAlignment(
+        control, "verticalAlignment", MainAxisAlignment.start);
+    final crossAlignment = parseCrossAxisAlignment(
+        control, "horizontalAlignment", CrossAxisAlignment.start);
 
     List<Widget> offstage = [];
     List<Widget> controls = [];

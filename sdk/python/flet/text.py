@@ -3,7 +3,7 @@ from typing import Optional
 from beartype import beartype
 from flet.constrained_control import ConstrainedControl
 
-from flet.control import Control, TextAlign
+from flet.control import Control, OptionalNumber, TextAlign
 from flet.ref import Ref
 
 try:
@@ -36,10 +36,10 @@ class Text(ConstrainedControl):
         self,
         value: str = None,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
@@ -47,7 +47,7 @@ class Text(ConstrainedControl):
         # text-specific
         #
         text_align: TextAlign = None,
-        size: float = None,
+        size: OptionalNumber = None,
         weight: FontWeight = None,
         italic: bool = None,
         themeStyle: str = None,
@@ -109,7 +109,7 @@ class Text(ConstrainedControl):
 
     @size.setter
     @beartype
-    def size(self, value: Optional[float]):
+    def size(self, value: OptionalNumber):
         self._set_attr("size", value)
 
     # weight

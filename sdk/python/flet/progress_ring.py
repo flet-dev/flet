@@ -3,7 +3,7 @@ from typing import Optional
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
 try:
@@ -18,20 +18,20 @@ class ProgressRing(ConstrainedControl):
     def __init__(
         self,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
         #
         # Specific
         #
-        value: float = None,
+        value: OptionalNumber = None,
         label: str = None,
         label_position: LabelPosition = None,
-        stroke_width: float = None,
+        stroke_width: OptionalNumber = None,
         color: str = None,
         bgcolor: str = None,
     ):
@@ -63,7 +63,7 @@ class ProgressRing(ConstrainedControl):
 
     @value.setter
     @beartype
-    def value(self, value: Optional[float]):
+    def value(self, value: OptionalNumber):
         self._set_attr("value", value)
 
     # label
@@ -92,7 +92,7 @@ class ProgressRing(ConstrainedControl):
 
     @stroke_width.setter
     @beartype
-    def stroke_width(self, value: float):
+    def stroke_width(self, value: OptionalNumber):
         self._set_attr("strokeWidth", value)
 
     # color

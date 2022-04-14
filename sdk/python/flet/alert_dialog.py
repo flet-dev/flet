@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from beartype import beartype
 
-from flet.control import Control, MainAxisAlignment
+from flet.control import Control, MainAxisAlignment, OptionalNumber
 from flet.ref import Ref
 
 try:
@@ -24,11 +24,11 @@ class AlertDialog(Control):
         open: bool = False,
         modal: bool = False,
         title: Control = None,
-        title_padding: float = None,
+        title_padding: OptionalNumber = None,
         content: Control = None,
-        content_padding: float = None,
+        content_padding: OptionalNumber = None,
         actions: List[Control] = None,
-        actions_padding: float = None,
+        actions_padding: OptionalNumber = None,
         actions_alignment: MainAxisAlignment = None,
     ):
 

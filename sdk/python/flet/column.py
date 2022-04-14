@@ -3,7 +3,7 @@ from typing import List, Optional
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, CrossAxisAlignment, MainAxisAlignment
+from flet.control import Control, CrossAxisAlignment, MainAxisAlignment, OptionalNumber
 from flet.ref import Ref
 
 
@@ -12,10 +12,10 @@ class Column(ConstrainedControl):
         self,
         controls: List[Control] = None,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
@@ -24,10 +24,10 @@ class Column(ConstrainedControl):
         #
         alignment: MainAxisAlignment = None,
         horizontal_alignment: CrossAxisAlignment = None,
-        spacing: float = None,
+        spacing: OptionalNumber = None,
         tight: bool = None,
         wrap: bool = None,
-        run_spacing: float = None,
+        run_spacing: OptionalNumber = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -90,7 +90,7 @@ class Column(ConstrainedControl):
 
     @spacing.setter
     @beartype
-    def spacing(self, value: Optional[float]):
+    def spacing(self, value: OptionalNumber):
         self._set_attr("spacing", value)
 
     # wrap
@@ -110,7 +110,7 @@ class Column(ConstrainedControl):
 
     @run_spacing.setter
     @beartype
-    def run_spacing(self, value: Optional[float]):
+    def run_spacing(self, value: OptionalNumber):
         self._set_attr("runSpacing", value)
 
     # controls

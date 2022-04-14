@@ -3,7 +3,7 @@ from typing import Optional
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
 
@@ -11,19 +11,19 @@ class Slider(ConstrainedControl):
     def __init__(
         self,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
         #
         # Specific
         #
-        value: float = None,
-        min: float = None,
-        max: float = None,
+        value: OptionalNumber = None,
+        min: OptionalNumber = None,
+        max: OptionalNumber = None,
         divisions: int = None,
         on_change=None,
     ):
@@ -54,7 +54,7 @@ class Slider(ConstrainedControl):
 
     @value.setter
     @beartype
-    def value(self, value: Optional[float]):
+    def value(self, value: OptionalNumber):
         self._set_attr("value", value)
 
     # min
@@ -64,7 +64,7 @@ class Slider(ConstrainedControl):
 
     @min.setter
     @beartype
-    def min(self, value: Optional[float]):
+    def min(self, value: OptionalNumber):
         self._set_attr("min", value)
 
     # max
@@ -74,7 +74,7 @@ class Slider(ConstrainedControl):
 
     @max.setter
     @beartype
-    def max(self, value: Optional[float]):
+    def max(self, value: OptionalNumber):
         self._set_attr("max", value)
 
     # step

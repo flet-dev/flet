@@ -2,7 +2,7 @@ from typing import Optional
 
 from beartype import beartype
 
-from flet.control import Control, InputBorder
+from flet.control import Control, InputBorder, OptionalNumber
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
 
@@ -11,10 +11,10 @@ class Dropdown(FormFieldControl):
     def __init__(
         self,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,

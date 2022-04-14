@@ -89,16 +89,32 @@ Widget expandable(Widget widget, Control control) {
   return expand != null ? Expanded(child: widget, flex: expand) : widget;
 }
 
-MainAxisAlignment parseMainAxisAlignment(Control control, String propName) {
+MainAxisAlignment parseMainAxisAlignment(
+    Control control, String propName, MainAxisAlignment defValue) {
   return MainAxisAlignment.values.firstWhere(
       (e) => e.name.toLowerCase() == control.attrString(propName, ""),
-      orElse: () => MainAxisAlignment.start);
+      orElse: () => defValue);
 }
 
-CrossAxisAlignment parseCrossAxisAlignment(Control control, String propName) {
+CrossAxisAlignment parseCrossAxisAlignment(
+    Control control, String propName, CrossAxisAlignment defValue) {
   return CrossAxisAlignment.values.firstWhere(
       (e) => e.name.toLowerCase() == control.attrString(propName, ""),
-      orElse: () => CrossAxisAlignment.start);
+      orElse: () => defValue);
+}
+
+WrapAlignment parseWrapAlignment(
+    Control control, String propName, WrapAlignment defValue) {
+  return WrapAlignment.values.firstWhere(
+      (e) => e.name.toLowerCase() == control.attrString(propName, ""),
+      orElse: () => defValue);
+}
+
+WrapCrossAlignment parseWrapCrossAlignment(
+    Control control, String propName, WrapCrossAlignment defValue) {
+  return WrapCrossAlignment.values.firstWhere(
+      (e) => e.name.toLowerCase() == control.attrString(propName, ""),
+      orElse: () => defValue);
 }
 
 EdgeInsetsGeometry? parseEdgeInsets(Control control, String propName) {

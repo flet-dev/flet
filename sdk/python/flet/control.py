@@ -53,7 +53,7 @@ class Control:
         self,
         ref: Ref = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,

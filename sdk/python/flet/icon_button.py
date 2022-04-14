@@ -3,7 +3,7 @@ from typing import Optional
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
 
@@ -11,10 +11,10 @@ class IconButton(ConstrainedControl):
     def __init__(
         self,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
@@ -23,7 +23,7 @@ class IconButton(ConstrainedControl):
         #
         tooltip: str = None,
         icon: str = None,
-        icon_size: float = None,
+        icon_size: OptionalNumber = None,
         icon_color: str = None,
         content: Control = None,
         on_click=None,

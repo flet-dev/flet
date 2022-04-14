@@ -3,7 +3,7 @@ from typing import List
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, ScrollDirection
+from flet.control import Control, OptionalNumber, ScrollDirection
 from flet.ref import Ref
 
 
@@ -12,10 +12,10 @@ class ListView(ConstrainedControl):
         self,
         controls: List[Control] = None,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,

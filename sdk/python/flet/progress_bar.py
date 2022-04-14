@@ -3,7 +3,7 @@ from typing import Optional
 from beartype import beartype
 from flet.constrained_control import ConstrainedControl
 
-from flet.control import Control
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
 
@@ -11,20 +11,20 @@ class ProgressBar(ConstrainedControl):
     def __init__(
         self,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
         #
         # Specific
         #
-        value: float = None,
+        value: OptionalNumber = None,
         label: str = None,
         description: str = None,
-        bar_height: float = None,
+        bar_height: OptionalNumber = None,
         color: str = None,
         bgcolor: str = None,
     ):
@@ -56,7 +56,7 @@ class ProgressBar(ConstrainedControl):
 
     @value.setter
     @beartype
-    def value(self, value: Optional[float]):
+    def value(self, value: OptionalNumber):
         self._set_attr("value", value)
 
     # label
@@ -84,7 +84,7 @@ class ProgressBar(ConstrainedControl):
 
     @bar_height.setter
     @beartype
-    def bar_height(self, value: float):
+    def bar_height(self, value: OptionalNumber):
         self._set_attr("barheight", value)
 
     # color

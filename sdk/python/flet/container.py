@@ -3,7 +3,7 @@ from typing import Optional
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import BorderStyle, Control
+from flet.control import BorderStyle, Control, OptionalNumber
 from flet.ref import Ref
 
 try:
@@ -29,10 +29,10 @@ class Container(ConstrainedControl):
     def __init__(
         self,
         ref: Ref = None,
-        width: float = None,
-        height: float = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
@@ -40,14 +40,14 @@ class Container(ConstrainedControl):
         # Specific
         #
         content: Control = None,
-        padding: float = None,
-        margin: float = None,
+        padding: OptionalNumber = None,
+        margin: OptionalNumber = None,
         alignment: Alignment = None,
         bgcolor: str = None,
         border_color: str = None,
-        border_width: float = None,
+        border_width: OptionalNumber = None,
         border_style: BorderStyle = None,
-        border_radius: float = None,
+        border_radius: OptionalNumber = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -127,12 +127,12 @@ class Container(ConstrainedControl):
 
     # border_width
     @property
-    def border_width(self) -> float:
+    def border_width(self) -> OptionalNumber:
         return self._get_attr("borderWidth")
 
     @border_width.setter
     @beartype
-    def border_width(self, value: Optional[float]):
+    def border_width(self, value: OptionalNumber):
         self._set_attr("borderWidth", value)
 
     # border_style

@@ -1,4 +1,4 @@
-from flet.control import Control
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
 
@@ -7,7 +7,7 @@ class Icon(Control):
         self,
         ref: Ref = None,
         expand: int = None,
-        opacity: float = None,
+        opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
