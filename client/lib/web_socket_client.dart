@@ -34,9 +34,12 @@ class WebSocketClient {
   String _winHeight = "";
   String? _sessionId;
 
-  connect({required String serverUrl, required Store store}) async {
-    _serverUrl = serverUrl;
+  set store(Store store) {
     _store = store;
+  }
+
+  connect({required String serverUrl}) async {
+    _serverUrl = serverUrl;
 
     debugPrint("Connecting to WebSocket server $serverUrl...");
     try {

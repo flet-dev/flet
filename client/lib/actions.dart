@@ -12,6 +12,12 @@ import 'protocol/register_webclient_response.dart';
 import 'protocol/session_crashed_payload.dart';
 import 'protocol/signout_payload.dart';
 
+class PageLoadAction {
+  final Uri pageUri;
+  final String sessionId;
+  PageLoadAction(this.pageUri, this.sessionId);
+}
+
 class PageSizeChangeAction {
   final Size newSize;
   PageSizeChangeAction(this.newSize);

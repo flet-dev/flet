@@ -16,11 +16,16 @@ import 'models/control.dart';
 import 'session_store/session_store.dart'
     if (dart.library.io) "session_store/session_store_io.dart"
     if (dart.library.js) "session_store/session_store_js.dart";
+import 'utils/uri.dart';
 
 enum Actions { increment, setText, setError }
 
 AppState appReducer(AppState state, dynamic action) {
-  if (action is PageSizeChangeAction) {
+  if (action is PageLoadAction) {
+    ws.connect(serverUrl: getWebSocketEndpoint(action.pageUri));
+    return state.copyWith(
+        pageUri: action.pageUri, sessionId: action.sessionId, isLoading: true);
+  } else if (action is PageSizeChangeAction) {
     //
     // page size changed
     //

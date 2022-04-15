@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flet_view/actions.dart';
 import 'package:flet_view/widgets/loading_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:window_size/window_size.dart';
@@ -20,8 +21,6 @@ import 'session_store/session_store.dart'
 
 void main([List<String>? args]) async {
   //setupWindow();
-
-  final store = Store<AppState>(appReducer, initialState: AppState.initial());
 
   var pageUri = Uri.base;
 
@@ -43,32 +42,28 @@ void main([List<String>? args]) async {
 
   debugPrint("Page URL: $pageUri");
 
-  String pageName = getWebPageName(pageUri);
-  String? sessionId = SessionStore.get("sessionId");
+  final store = Store<AppState>(appReducer, initialState: AppState.initial());
+  ws.store = store;
 
-  // connect WS
-  ws.connect(serverUrl: getWebSocketEndpoint(pageUri), store: store);
+  String sessionId = SessionStore.get("sessionId") ?? "";
+
+  // connect to a page
+  store.dispatch(PageLoadAction(pageUri, sessionId));
 
   runApp(FletApp(
     title: 'Flet',
     store: store,
-    pageName: pageName,
-    sessionId: sessionId,
   ));
 }
 
 class FletApp extends StatelessWidget {
   final Store<AppState> store;
   final String title;
-  final String pageName;
-  final String? sessionId;
 
   const FletApp({
     Key? key,
     required this.store,
     required this.title,
-    required this.pageName,
-    required this.sessionId,
   }) : super(key: key);
 
   @override
@@ -82,8 +77,6 @@ class FletApp extends StatelessWidget {
           if (viewModel.isLoading) {
             return LoadingPage(
               title: title,
-              pageName: pageName,
-              sessionId: sessionId,
             );
           } else if (viewModel.error != "") {
             return MaterialApp(

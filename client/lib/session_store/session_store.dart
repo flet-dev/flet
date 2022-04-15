@@ -1,5 +1,5 @@
 class SessionStore {
-  static String get(String name) {
+  static String? get(String name) {
     throw UnsupportedError("Not supported!");
   }
 
