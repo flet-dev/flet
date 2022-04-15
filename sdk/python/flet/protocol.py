@@ -1,5 +1,24 @@
+import json
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
+
+
+class CommandEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Message):
+            return obj.__dict__
+        elif isinstance(obj, Command):
+            # return obj.__dict__
+            return {
+                "i": obj.indent,
+                "n": obj.name,
+                "v": obj.values,
+                "a": obj.attrs,
+                "c": obj.commands,
+            }
+        elif isinstance(obj, object):
+            return obj.__dict__
+        return json.JSONEncoder.default(self, obj)
 
 
 class Actions:

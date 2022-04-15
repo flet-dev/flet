@@ -40,11 +40,11 @@ var (
 )
 
 type Command struct {
-	Indent   int
-	Name     string // mandatory command name
-	Values   []string
-	Attrs    map[string]string
-	Commands []*Command
+	Indent   int               `json:"i"`
+	Name     string            `json:"n"`
+	Values   []string          `json:"v"`
+	Attrs    map[string]string `json:"a"`
+	Commands []*Command        `json:"c"`
 }
 
 type CommandMetadata struct {

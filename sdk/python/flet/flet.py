@@ -233,7 +233,7 @@ def _start_flet_server(port, attached):
 
     # flet_env = {**os.environ, "FLET_LOG_TO_FILE": "true"}
 
-    args = [flet_path, "server", "--port", str(port)]
+    args = [flet_path, "--port", str(port)]
 
     creationflags = 0
     start_new_session = False
