@@ -37,9 +37,15 @@ def main(page):
     page.add(
         Row(
             controls=[
-                ElevatedButton("-", on_click=on_click, data="-"),
+                ElevatedButton("-", on_click=on_click, width=100, data="-"),
                 txt_number,
-                ElevatedButton("+", on_click=on_click, height=50, data="+"),
+                ElevatedButton(
+                    "+",
+                    on_click=on_click,
+                    width=50,
+                    height=float("inf"),
+                    data="+",
+                ),
                 Column(controls=[result]),
             ],
             width=400,

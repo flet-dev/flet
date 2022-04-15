@@ -604,9 +604,9 @@ Docs: https://api.flutter.dev/flutter/widgets/Image-class.html
 
 Properties:
 
+- src
 - width - override control's width
 - height - override control's height
-- src
 - repeat: noRepeat, repeat, repeatX, repeatY
 - opacity - override control's opacity
 - fit: contain, cover, fill, fitHeight, fitWidth, none, scaleDown

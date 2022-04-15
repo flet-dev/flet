@@ -65,7 +65,9 @@ class Control extends Equatable {
 
   double? attrDouble(String name, [double? defValue]) {
     var r = attrs[name.toLowerCase()];
-    if (r != null) {
+    if (r != null && r.toLowerCase() == "inf") {
+      return double.infinity;
+    } else if (r != null) {
       var i = double.tryParse(r);
       return i ?? defValue;
     }
