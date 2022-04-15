@@ -1,7 +1,11 @@
-from dataclasses import MISSING, dataclass, field
-from typing import Dict, List, Literal, Optional
+from dataclasses import dataclass, field
 
 from beartype._decor.main import beartype
+
+try:
+    from typing import Literal
+except:
+    from typing_extensions import Literal
 
 
 @beartype
