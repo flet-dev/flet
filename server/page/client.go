@@ -13,7 +13,6 @@ import (
 	"github.com/flet-dev/flet/server/cache"
 	"github.com/flet-dev/flet/server/config"
 	"github.com/flet-dev/flet/server/model"
-	"github.com/flet-dev/flet/server/page/command"
 	"github.com/flet-dev/flet/server/page/connection"
 	"github.com/flet-dev/flet/server/pubsub"
 	"github.com/flet-dev/flet/server/store"
@@ -514,7 +513,7 @@ response:
 
 func cleanPage(session *model.Session) error {
 	handler := newSessionHandler(session)
-	_, err := handler.executeBatch([]*command.Command{
+	_, err := handler.executeBatch([]*model.Command{
 		{
 			Name:   "clean",
 			Values: []string{"page"},
@@ -590,7 +589,7 @@ func (c *Client) executeCommandFromHostClient(message *Message) {
 			result, err := handler.execute(payload.Command)
 			responsePayload.Result = result
 
-			if payload.Command.Name == command.Error {
+			if payload.Command.Name == model.ErrorCommand {
 				// session crashed on the client
 				store.DeleteSession(page.ID, session.ID)
 			} else if err != nil {
