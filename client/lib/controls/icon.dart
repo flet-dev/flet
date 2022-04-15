@@ -20,7 +20,7 @@ class IconControl extends StatelessWidget {
     var size = control.attrDouble("size", null);
     var color = HexColor.fromString(context, control.attrString("color", "")!);
 
-    return commonControl(
+    return baseControl(
         Icon(
           getMaterialIcon(name),
           size: size,

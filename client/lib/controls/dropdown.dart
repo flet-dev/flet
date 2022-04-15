@@ -85,7 +85,7 @@ class _DropdownControlState extends State<DropdownControl> {
             }).toList(),
           );
 
-          return commonControl(dropDown, widget.parent, widget.control);
+          return constrainedControl(dropDown, widget.parent, widget.control);
         });
   }
 }

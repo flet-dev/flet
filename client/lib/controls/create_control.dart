@@ -93,8 +93,24 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
   );
 }
 
-Widget commonControl(Widget widget, Control? parent, Control control) {
+Widget baseControl(Widget widget, Control? parent, Control control) {
   return _expandable(widget, parent, control);
+}
+
+Widget constrainedControl(Widget widget, Control? parent, Control control) {
+  return _expandable(_sizedControl(widget, parent, control), parent, control);
+}
+
+Widget _sizedControl(Widget widget, Control? parent, Control control) {
+  var width = control.attrDouble("width", null);
+  var height = control.attrDouble("height", null);
+  if (width != null || height != null) {
+    return ConstrainedBox(
+      constraints: BoxConstraints.tightFor(width: width, height: height),
+      child: widget,
+    );
+  }
+  return widget;
 }
 
 Widget _expandable(Widget widget, Control? parent, Control control) {

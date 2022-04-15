@@ -11,11 +11,11 @@
     * [x] Row (flex - default mode, wrap)
     * [x] Column (flex - default mode, wrap)
     * [x] Stack
-    * [ ] ListView
+    * [x] ListView
     * [ ] GridView
   * Basic controls
-    * [ ] Text
-    * [ ] Icon
+    * [x] Text
+    * [x] Icon
     * [ ] Image (+custom assets directory for Flet server [see here](https://docs.flutter.dev/development/platform-integration/web-images)).
     * [ ] ProgressBar
     * [ ] ProgressRing
@@ -398,6 +398,7 @@
 
 * [Full list of Material colors](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/colors.dart)
 * [Themed colors](https://api.flutter.dev/flutter/material/ColorScheme-class.html)
+* [Material color roles](https://m3.material.io/styles/color/the-color-system/color-roles)
 
 ## Icons
 
@@ -524,6 +525,7 @@ Properties:
 
 - scrollDirection - `vertical` (default), `horizontal`.
 - padding
+- spacing
 
 ### ListTile (S2)
 

@@ -22,7 +22,7 @@ def main(page: Page):
     page.update()
 
     page.add(
-        ListView(
+        Column(
             [
                 Text("Display Large", style="displayLarge"),
                 Text("Display Medium", style="displayMedium"),
@@ -70,6 +70,7 @@ def main(page: Page):
                 Text("Size 70, w900", size=70, weight="w900", selectable=True),
             ],
             expand=1,
+            wrap=True,
         )
     )
 

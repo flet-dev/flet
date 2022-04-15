@@ -23,6 +23,8 @@ class ListView(ConstrainedControl):
         # Specific
         #
         horizontal: bool = None,
+        spacing: OptionalNumber = None,
+        padding: OptionalNumber = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -39,6 +41,8 @@ class ListView(ConstrainedControl):
         self.__controls: List[Control] = []
         self.controls = controls
         self.horizontal = horizontal
+        self.spacing = spacing
+        self.padding = padding
 
     def _get_control_name(self):
         return "listview"
@@ -55,6 +59,25 @@ class ListView(ConstrainedControl):
     @beartype
     def horizontal(self, value: Optional[bool]):
         self._set_attr("horizontal", value)
+
+    # spacing
+    @property
+    def spacing(self):
+        return self._get_attr("spacing")
+
+    @spacing.setter
+    @beartype
+    def spacing(self, value: OptionalNumber):
+        self._set_attr("spacing", value)
+
+    # padding
+    @property
+    def padding(self):
+        return self._get_attr("padding")
+
+    @padding.setter
+    def padding(self, value):
+        self._set_attr("padding", value)
 
     # controls
     @property

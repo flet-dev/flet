@@ -78,7 +78,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
                 ws.updateControlProps(props: props);
               });
 
-          return commonControl(textField, widget.parent, widget.control);
+          return constrainedControl(textField, widget.parent, widget.control);
         });
   }
 }

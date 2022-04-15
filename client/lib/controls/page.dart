@@ -79,7 +79,8 @@ class PageControl extends StatelessWidget {
         body: Stack(children: [
           SizedBox.expand(
               child: Container(
-            padding: parseEdgeInsets(control, "padding"),
+            padding:
+                parseEdgeInsets(control, "padding") ?? const EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: HexColor.fromString(
                     context, control.attrString("bgcolor", "")!)),

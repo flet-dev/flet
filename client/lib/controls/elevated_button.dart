@@ -35,6 +35,6 @@ class ElevatedButtonControl extends StatelessWidget {
       child: Text(control.attrs["text"] ?? ""),
     );
 
-    return commonControl(button, parent, control);
+    return constrainedControl(button, parent, control);
   }
 }
