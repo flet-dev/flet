@@ -74,8 +74,8 @@ class Page(Control):
             self.__conn.page_name,
             self._session_id,
             [
-                Command(0, "get", ["page", "winWidth"], None, None, None),
-                Command(0, "get", ["page", "winHeight"], None, None, None),
+                Command(0, "get", ["page", "winWidth"], None, None),
+                Command(0, "get", ["page", "winHeight"], None, None),
             ],
         ).results
         self._set_attr("winWidth", values[0], False)
@@ -212,7 +212,7 @@ class Page(Control):
         return self.__conn.send_command(
             self.__conn.page_name,
             self._session_id,
-            Command(0, name, values, None, None, None),
+            Command(0, name, values, None, None),
         )
 
     # url

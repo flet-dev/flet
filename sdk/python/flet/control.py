@@ -256,7 +256,7 @@ class Control:
                     ctrl = hashes[h]
                     self._remove_control_recursively(index, ctrl)
                     ids.append(ctrl.__uid)
-                commands.append(Command(0, "remove", ids, None, None, None))
+                commands.append(Command(0, "remove", ids, None, None))
             elif tag == "equal":
                 # unchanged control
                 for h in previous_ints[a1:a2]:
@@ -270,7 +270,7 @@ class Control:
                     ctrl = hashes[h]
                     self._remove_control_recursively(index, ctrl)
                     ids.append(ctrl.__uid)
-                commands.append(Command(0, "remove", ids, None, None, None))
+                commands.append(Command(0, "remove", ids, None, None))
                 for h in current_ints[b1:b2]:
                     # add
                     ctrl = hashes[h]
@@ -283,7 +283,6 @@ class Control:
                             "add",
                             None,
                             {"to": self.__uid, "at": str(n)},
-                            None,
                             innerCmds,
                         )
                     )
@@ -301,7 +300,6 @@ class Control:
                             "add",
                             None,
                             {"to": self.__uid, "at": str(n)},
-                            None,
                             innerCmds,
                         )
                     )
@@ -349,7 +347,7 @@ class Control:
         return commands
 
     def _get_cmd_attrs(self, update=False):
-        command = Command(0, None, [], {}, [], [])
+        command = Command(0, None, [], {}, [])
 
         if update and not self.__uid:
             return command

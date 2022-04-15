@@ -17,7 +17,6 @@ def test_image_add():
             attrs={
                 "src": "https://www.w3schools.com/css/img_5terre.jpg",
             },
-            lines=[],
             commands=[],
         )
     ], "Test failed"

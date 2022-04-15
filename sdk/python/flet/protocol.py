@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, List
-from typing import Optional
+from typing import Dict, List, Optional
 
 
 class Actions:
@@ -17,7 +16,6 @@ class Command:
     name: Optional[str]
     values: List[str] = field(default_factory=list)
     attrs: Dict[str, str] = field(default_factory=dict)
-    lines: List[str] = field(default_factory=list)
     commands: List[any] = field(default_factory=list)
 
 
