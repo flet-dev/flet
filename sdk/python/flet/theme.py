@@ -1,4 +1,5 @@
-from dataclasses import dataclass, field
+import dataclasses
+from dataclasses import field
 
 from beartype._decor.main import beartype
 
@@ -9,7 +10,7 @@ except:
 
 
 @beartype
-@dataclass
+@dataclasses.dataclass
 class Theme:
     color_scheme_seed: str = field(default=None)
     brightness: Literal[None, "dark", "light"] = field(default="light")

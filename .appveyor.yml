@@ -34,11 +34,11 @@ environment:
       job_group: build_flet
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    - job_name: Test Python 3.7
-      job_group: python_tests
-      job_depends_on: build_flet
-      python_version: 3.7
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Test Python 3.7
+    #   job_group: python_tests
+    #   job_depends_on: build_flet
+    #   python_version: 3.7
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.8
       job_group: python_tests
