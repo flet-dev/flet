@@ -38,16 +38,14 @@ AppViewer = Literal[
 
 
 def page(
-    name="",
-    port=0,
-    permissions=None,
-    view: AppViewer = WEB_BROWSER,
+    name="", port=0, permissions=None, view: AppViewer = WEB_BROWSER, assets_dir=None
 ):
     conn = _connect_internal(
         page_name=name,
         port=port,
         is_app=False,
         permissions=permissions,
+        assets_dir=assets_dir,
     )
     print("Page URL:", conn.page_url)
     page = Page(conn, constants.ZERO_SESSION)
@@ -65,6 +63,7 @@ def app(
     target=None,
     permissions=None,
     view: AppViewer = FLET_APP,
+    assets_dir=None,
 ):
 
     if target == None:
@@ -76,6 +75,7 @@ def app(
         is_app=True,
         permissions=permissions,
         session_handler=target,
+        assets_dir=assets_dir,
     )
     print("App URL:", conn.page_url)
 
@@ -127,6 +127,7 @@ def _connect_internal(
     token=None,
     permissions=None,
     session_handler=None,
+    assets_dir=None,
 ):
     if share and server == None:
         server = constants.HOSTED_SERVICE_URL
@@ -139,7 +140,7 @@ def _connect_internal(
         # page with a custom port starts detached process
         attached = False if not is_app and port != 0 else True
 
-        port = _start_flet_server(port, attached)
+        port = _start_flet_server(port, attached, assets_dir)
         server = f"http://localhost:{port}"
 
     connected = threading.Event()
@@ -207,7 +208,7 @@ def _connect_internal(
     return conn
 
 
-def _start_flet_server(port, attached):
+def _start_flet_server(port, attached, assets_dir):
 
     if port == 0:
         port = _get_free_tcp_port()
@@ -220,20 +221,28 @@ def _start_flet_server(port, attached):
     # check if flet.exe exists in "bin" directory (user mode)
     p = Path(__file__).parent.joinpath("bin", fletd_exe)
     if p.exists():
-        flet_path = str(p)
-        logging.info(f"Flet Server found in: {flet_path}")
+        fletd_path = str(p)
+        logging.info(f"Flet Server found in: {fletd_path}")
     else:
         # check if flet.exe is in PATH (flet developer mode)
-        flet_path = which(fletd_exe)
-        if not flet_path:
+        fletd_path = which(fletd_exe)
+        if not fletd_path:
             # download flet from GitHub (python module developer mode)
-            flet_path = _download_flet()
+            fletd_path = _download_flet()
         else:
             logging.info(f"Flet Server found in PATH")
 
-    # flet_env = {**os.environ, "FLET_LOG_TO_FILE": "true"}
+    fletd_env = {**os.environ}
 
-    args = [flet_path, "--port", str(port)]
+    if assets_dir:
+        if not Path(assets_dir).is_absolute():
+            assets_dir = str(
+                Path(get_current_script_dir()).joinpath(assets_dir).resolve()
+            )
+        logging.info(f"Assets path configured: {assets_dir}")
+        fletd_env["FLET_STATIC_ROOT_DIR"] = assets_dir
+
+    args = [fletd_path, "--port", str(port)]
 
     creationflags = 0
     start_new_session = False
@@ -256,7 +265,7 @@ def _start_flet_server(port, attached):
 
     subprocess.Popen(
         args,
-        # env=flet_env,
+        env=fletd_env,
         creationflags=creationflags,
         start_new_session=start_new_session,
         stdout=subprocess.DEVNULL if log_level >= logging.WARNING else None,

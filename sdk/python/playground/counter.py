@@ -55,4 +55,11 @@ def main(page):
     )
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(
+    name="test1",
+    port=8550,
+    target=main,
+    view=flet.WEB_BROWSER,
+    # assets_dir="assets"
+    assets_dir="C:\\Projects\\flet-dev\\flet\\client\\build\\web",
+)

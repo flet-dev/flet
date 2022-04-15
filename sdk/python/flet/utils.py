@@ -1,5 +1,7 @@
+import os
 import platform
 import subprocess
+import sys
 
 
 def is_windows():
@@ -63,3 +65,8 @@ def which(program):
 
 def is_localhost_url(url):
     return "://localhost/" in url or "://localhost:" in url
+
+
+def get_current_script_dir():
+    pathname = os.path.dirname(sys.argv[0])
+    return os.path.abspath(pathname)

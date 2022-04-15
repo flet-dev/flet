@@ -71,7 +71,7 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 	mime.AddExtensionType(".js", "application/javascript")
 
 	// Serve frontend static files
-	staticFs := newStaticFS()
+	staticFs := newAssetsFS()
 	router.Use(static.Serve("/", staticFs))
 
 	// WebSockets
