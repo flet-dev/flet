@@ -3,7 +3,13 @@ from typing import List, Optional
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, CrossAxisAlignment, MainAxisAlignment, OptionalNumber
+from flet.control import (
+    Control,
+    CrossAxisAlignment,
+    MainAxisAlignment,
+    OptionalNumber,
+    ScrollMode,
+)
 from flet.ref import Ref
 
 
@@ -28,7 +34,7 @@ class Column(ConstrainedControl):
         tight: bool = None,
         wrap: bool = None,
         run_spacing: OptionalNumber = None,
-        auto_scroll: bool = None,
+        scroll: ScrollMode = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -50,7 +56,8 @@ class Column(ConstrainedControl):
         self.tight = tight
         self.wrap = wrap
         self.run_spacing = run_spacing
-        self.auto_scroll = auto_scroll
+        self.__scroll = False
+        self.scroll = scroll
 
     def _get_control_name(self):
         return "column"
@@ -115,15 +122,20 @@ class Column(ConstrainedControl):
     def run_spacing(self, value: OptionalNumber):
         self._set_attr("runSpacing", value)
 
-    # auto_scroll
+    # scroll
     @property
-    def auto_scroll(self):
-        return self._get_attr("autoScroll", data_type="bool", def_value=False)
+    def scroll(self):
+        return self.__scroll
 
-    @auto_scroll.setter
+    @scroll.setter
     @beartype
-    def auto_scroll(self, value: Optional[bool]):
-        self._set_attr("autoScroll", value)
+    def scroll(self, value: ScrollMode):
+        self.__scroll = value
+        if value == True:
+            value = "auto"
+        elif value == False:
+            value = "none"
+        self._set_attr("scroll", value)
 
     # controls
     @property

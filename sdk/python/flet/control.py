@@ -45,6 +45,8 @@ InputBorder = Literal[None, "outline", "underline", "none"]
 
 OptionalNumber = Union[None, int, float]
 
+ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always"]
+
 
 class Control:
     def __init__(

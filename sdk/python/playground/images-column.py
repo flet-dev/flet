@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 def main(page: Page):
-    page.title = "Images Example"
+    page.title = "Images in Column Example"
     page.theme_mode = "light"
     page.padding = 50
     page.update()
@@ -21,7 +21,7 @@ def main(page: Page):
         height=100,
         fit="contain",
     )
-    images = Row(expand=1, wrap=False, scroll="always")
+    images = Column(expand=1, wrap=True, scroll=True)
 
     page.add(img, images)
 

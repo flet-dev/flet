@@ -1,10 +1,12 @@
+import 'package:flutter/rendering.dart';
+
 import '../models/page_breakpoint_view_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import 'create_control.dart';
-import 'visible_scrollbar.dart';
+import 'scrollable_control.dart';
 
 class RowControl extends StatelessWidget {
   final Control? parent;
@@ -29,7 +31,9 @@ class RowControl extends StatelessWidget {
         parseMainAxisAlignment(control, "alignment", MainAxisAlignment.start);
     bool tight = control.attrBool("tight", false)!;
     bool wrap = control.attrBool("wrap", false)!;
-    bool autoScroll = control.attrBool("autoScroll", false)!;
+    ScrollMode scrollMode = ScrollMode.values.firstWhere(
+        (m) => m.name == control.attrString("scroll", ""),
+        orElse: () => ScrollMode.none);
     bool disabled = control.isDisabled || parentDisabled;
 
     List<Widget> controls = [];
@@ -72,19 +76,19 @@ class RowControl extends StatelessWidget {
                     children: controls,
                   ),
             wrap: wrap,
-            autoScroll: autoScroll),
+            scrollMode: scrollMode),
         parent,
         control);
   }
 
   Widget wrapAutoScroll(Widget child,
-      {required bool wrap, required bool autoScroll}) {
-    return autoScroll
-        ? VisibleScrollbar(
-            child: SingleChildScrollView(
+      {required bool wrap, required ScrollMode scrollMode}) {
+    return scrollMode != ScrollMode.none
+        ? ScrollableControl(
             child: child,
             scrollDirection: wrap ? Axis.vertical : Axis.horizontal,
-          ))
+            scrollMode: scrollMode,
+          )
         : child;
   }
 }
