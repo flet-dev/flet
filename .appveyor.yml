@@ -143,27 +143,27 @@ for:
   #      Linux
   # ======================================
 
-  - matrix:
-      only:
-        - job_name: Linux
+  # - matrix:
+  #     only:
+  #       - job_name: Linux
 
-    install:
-      - gvm install go${GO_VERSION} -B
-      - gvm use go${GO_VERSION}
-      - go version
+  #   install:
+  #     - gvm install go${GO_VERSION} -B
+  #     - gvm use go${GO_VERSION}
+  #     - go version
 
-    build_script:
-      - nvm use 12
-      - cd client
-      - yarn
-      - yarn build
-      - cd ..
-      - cp -rf client/build/* server/content
-      - ./build.sh
-      - ls $GOPATH/bin
+  #   build_script:
+  #     - nvm use 12
+  #     - cd client
+  #     - yarn
+  #     - yarn build
+  #     - cd ..
+  #     - cp -rf client/build/* server/content
+  #     - ./build.sh
+  #     - ls $GOPATH/bin
 
-    test_script:
-      - ./run-tests.sh
+  #   test_script:
+  #     - ./run-tests.sh
 
   # ======================================
   #      Build Fletd
@@ -196,8 +196,7 @@ for:
 
       # Flet Server in Go
       - cd ..
-      - mkdir server/server/content
-      - cp -r client/build/web/* server/server/content
+      - cp -rf client/build/web/* server/server/content
       - cd server
       - sh: |
           if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
