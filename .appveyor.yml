@@ -158,8 +158,7 @@ for:
       - yarn
       - yarn build
       - cd ..
-      - mkdir server/content
-      - cp -r client/build/* server/content
+      - cp -rf client/build/* server/content
       - ./build.sh
       - ls $GOPATH/bin
 
