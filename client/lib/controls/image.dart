@@ -26,10 +26,14 @@ class ImageControl extends StatelessWidget {
     double? width = control.attrDouble("width", null);
     double? height = control.attrDouble("height", null);
     var repeat = ImageRepeat.values.firstWhere(
-        (e) => e.name.toLowerCase() == control.attrString("repeat", "")!,
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("repeat", "")!.toLowerCase(),
         orElse: () => ImageRepeat.noRepeat);
     var fit = BoxFit.values.firstWhere(
-        (e) => e.name.toLowerCase() == control.attrString("fit", "")!,
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("fit", "")!.toLowerCase(),
         orElse: () => BoxFit.none);
 
     var uri = Uri.parse(src);

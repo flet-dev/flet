@@ -48,6 +48,7 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return ElevatedButtonControl(
               parent: parent,
               control: controlView.control,
+              children: controlView.children,
               parentDisabled: parentDisabled);
         case ControlType.column:
           return ColumnControl(
@@ -130,28 +131,36 @@ Widget _expandable(Widget widget, Control? parent, Control control) {
 MainAxisAlignment parseMainAxisAlignment(
     Control control, String propName, MainAxisAlignment defValue) {
   return MainAxisAlignment.values.firstWhere(
-      (e) => e.name.toLowerCase() == control.attrString(propName, ""),
+      (e) =>
+          e.name.toLowerCase() ==
+          control.attrString(propName, "")!.toLowerCase(),
       orElse: () => defValue);
 }
 
 CrossAxisAlignment parseCrossAxisAlignment(
     Control control, String propName, CrossAxisAlignment defValue) {
   return CrossAxisAlignment.values.firstWhere(
-      (e) => e.name.toLowerCase() == control.attrString(propName, ""),
+      (e) =>
+          e.name.toLowerCase() ==
+          control.attrString(propName, "")!.toLowerCase(),
       orElse: () => defValue);
 }
 
 WrapAlignment parseWrapAlignment(
     Control control, String propName, WrapAlignment defValue) {
   return WrapAlignment.values.firstWhere(
-      (e) => e.name.toLowerCase() == control.attrString(propName, ""),
+      (e) =>
+          e.name.toLowerCase() ==
+          control.attrString(propName, "")!.toLowerCase(),
       orElse: () => defValue);
 }
 
 WrapCrossAlignment parseWrapCrossAlignment(
     Control control, String propName, WrapCrossAlignment defValue) {
   return WrapCrossAlignment.values.firstWhere(
-      (e) => e.name.toLowerCase() == control.attrString(propName, ""),
+      (e) =>
+          e.name.toLowerCase() ==
+          control.attrString(propName, "")!.toLowerCase(),
       orElse: () => defValue);
 }
 

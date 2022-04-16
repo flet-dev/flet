@@ -32,7 +32,9 @@ class RowControl extends StatelessWidget {
     bool tight = control.attrBool("tight", false)!;
     bool wrap = control.attrBool("wrap", false)!;
     ScrollMode scrollMode = ScrollMode.values.firstWhere(
-        (m) => m.name == control.attrString("scroll", ""),
+        (m) =>
+            m.name.toLowerCase() ==
+            control.attrString("scroll", "")!.toLowerCase(),
         orElse: () => ScrollMode.none);
     bool disabled = control.isDisabled || parentDisabled;
 

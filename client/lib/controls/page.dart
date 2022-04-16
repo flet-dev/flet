@@ -65,7 +65,9 @@ class PageControl extends StatelessWidget {
             brightness: Brightness.dark);
 
     var themeMode = ThemeMode.values.firstWhere(
-        (element) => element.name == control.attrString("themeMode"),
+        (t) =>
+            t.name.toLowerCase() ==
+            control.attrString("themeMode", "")!.toLowerCase(),
         orElse: () => ThemeMode.system);
 
     debugPrint("Page theme: $themeMode");

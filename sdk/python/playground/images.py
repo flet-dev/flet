@@ -21,7 +21,7 @@ def main(page: Page):
         height=100,
         fit="contain",
     )
-    images = Row(expand=1, wrap=False, scroll="always")
+    images = Row(width=float("inf"), wrap=False, scroll="always")
 
     page.add(img, images)
 

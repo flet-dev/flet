@@ -20,6 +20,10 @@ Flutter gives precise layout. No more hacks with vertical alignment or horizonta
 
 Flutter will give access to mobile experiences: camera, location services, accelerometer, etc.
 
+Flet is language-agnostic. It includes DOM server (Fletd) which translates language-specific DOM changes to commands and then into Flutter widgets.
+
+Flet is opinionated framework based on Flutter. Flutter is extemely powerful and flexible, but has a steep learning curve especially for developers without React experience. Flet hides that complexity by a) replacing Flutter's declarative model (re-build a UI tree on app state changes) to a imperative (modify UI tree as program progresses).
+
 A lot of renamings would create a mess in a project repo - it's easier to start over in a new repository.
 
 Less scope.
