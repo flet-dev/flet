@@ -10,6 +10,7 @@ from flet.ref import Ref
 class OutlinedButton(ConstrainedControl):
     def __init__(
         self,
+        text: str = None,
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -21,7 +22,6 @@ class OutlinedButton(ConstrainedControl):
         #
         # Specific
         #
-        text: str = None,
         icon: str = None,
         icon_color: str = None,
         content: Control = None,
@@ -51,6 +51,7 @@ class OutlinedButton(ConstrainedControl):
     def _get_children(self):
         if self.__content == None:
             return []
+        self.__content._set_attr_internal("n", "content")
         return [self.__content]
 
     # text

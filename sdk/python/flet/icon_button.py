@@ -53,6 +53,7 @@ class IconButton(ConstrainedControl):
     def _get_children(self):
         if self.__content == None:
             return []
+        self.__content._set_attr_internal("n", "content")
         return [self.__content]
 
     # tooltip

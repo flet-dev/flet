@@ -5,7 +5,6 @@ import 'package:flet_view/controls/image.dart';
 import 'package:flet_view/controls/list_view.dart';
 import 'package:flet_view/controls/snack_bar.dart';
 import 'package:flet_view/models/control_type.dart';
-import 'package:flet_view/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -13,7 +12,10 @@ import '../models/control.dart';
 import '../models/control_view_model.dart';
 import '../models/app_state.dart';
 import '../utils/theme.dart';
+import 'icon_button.dart';
+import 'outlined_button.dart';
 import 'row.dart';
+import 'text_button.dart';
 import 'textfield.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
@@ -46,6 +48,24 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return ImageControl(parent: parent, control: controlView.control);
         case ControlType.elevatedButton:
           return ElevatedButtonControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.outlinedButton:
+          return OutlinedButtonControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.textButton:
+          return TextButtonControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.iconButton:
+          return IconButtonControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

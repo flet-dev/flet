@@ -3,7 +3,17 @@ from datetime import datetime
 from time import sleep
 
 import flet
-from flet import ElevatedButton, Icon, Page, Row, Text
+from flet import (
+    Column,
+    ElevatedButton,
+    Icon,
+    IconButton,
+    OutlinedButton,
+    Page,
+    Row,
+    Text,
+    TextButton,
+)
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -14,21 +24,87 @@ def main(page: Page):
     page.padding = 50
 
     page.add(
-        Text("Elevated buttons", style="headlineMedium"),
-        ElevatedButton("Normal button"),
-        ElevatedButton("Disabled button", disabled=True),
-        ElevatedButton("Button with icon", icon="chair_outlined"),
-        ElevatedButton(
-            width=150,
-            content=Row(
-                [
-                    Icon(name="favorite", color="pink"),
-                    Icon(name="audiotrack", color="green"),
-                    Icon(name="beach_access", color="blue"),
-                ],
-                alignment="spaceAround",
-            ),
-        ),
+        Column(
+            expand=1,
+            scroll=True,
+            controls=[
+                Text("Elevated buttons", style="headlineMedium"),
+                ElevatedButton("Normal button"),
+                ElevatedButton("Disabled button", disabled=True),
+                ElevatedButton("Button with icon", icon="chair_outlined"),
+                ElevatedButton(
+                    "Button with colorful icon",
+                    icon="park_rounded",
+                    icon_color="green400",
+                ),
+                ElevatedButton(
+                    width=150,
+                    content=Row(
+                        [
+                            Icon(name="favorite", color="pink"),
+                            Icon(name="audiotrack", color="green"),
+                            Icon(name="beach_access", color="blue"),
+                        ],
+                        alignment="spaceAround",
+                    ),
+                ),
+                Text("Outlined buttons", style="headlineMedium"),
+                OutlinedButton("Normal button"),
+                OutlinedButton("Disabled button", disabled=True),
+                OutlinedButton("Button with icon", icon="chair_outlined"),
+                OutlinedButton(
+                    "Button with colorful icon",
+                    icon="park_rounded",
+                    icon_color="green400",
+                ),
+                OutlinedButton(
+                    width=150,
+                    content=Row(
+                        [
+                            Icon(name="favorite", color="pink"),
+                            Icon(name="audiotrack", color="green"),
+                            Icon(name="beach_access", color="blue"),
+                        ],
+                        alignment="spaceAround",
+                    ),
+                ),
+                Text("Text buttons", style="headlineMedium"),
+                TextButton("Normal button"),
+                TextButton("Disabled button", disabled=True),
+                TextButton("Button with icon", icon="chair_outlined"),
+                TextButton(
+                    "Button with colorful icon",
+                    icon="park_rounded",
+                    icon_color="green400",
+                ),
+                TextButton(
+                    width=150,
+                    content=Row(
+                        [
+                            Icon(name="favorite", color="pink"),
+                            Icon(name="audiotrack", color="green"),
+                            Icon(name="beach_access", color="blue"),
+                        ],
+                        alignment="spaceAround",
+                    ),
+                ),
+                Text("Icon buttons", style="headlineMedium"),
+                Row(
+                    [
+                        IconButton(
+                            icon="pause_circle_filled_sharp",
+                            icon_color="blue400",
+                            tooltip="Pause record",
+                        ),
+                        IconButton(
+                            icon="delete_forever_rounded",
+                            icon_color="pink600",
+                            tooltip="Delete record",
+                        ),
+                    ]
+                ),
+            ],
+        )
     )
 
 
