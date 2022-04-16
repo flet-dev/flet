@@ -2,7 +2,7 @@ import logging
 import os
 
 import flet
-from flet import Button, Dropdown, dropdown
+from flet import Dropdown, ElevatedButton, dropdown
 
 logging.basicConfig(level=logging.INFO)
 
@@ -24,10 +24,10 @@ def main(page):
         dd.options[1].text = "Item Blah Blah Blah"
         page.update()
 
-    btn2 = flet.Button("Add new item!", on_click=btn2_click)
-    btn3 = Button("Change second item", on_click=btn3_click)
+    btn2 = ElevatedButton("Add new item!", on_click=btn2_click)
+    btn3 = ElevatedButton("Change second item", on_click=btn3_click)
 
     page.add(dd, btn2, btn3)
 
 
-flet.app(port=8550, target=main)
+flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)

@@ -23,7 +23,7 @@ class ListViewControl extends StatelessWidget {
     bool disabled = control.isDisabled || parentDisabled;
 
     final horizontal = control.attrBool("horizontal", false)!;
-    final spacing = control.attrDouble("spacing", 10)!;
+    final spacing = control.attrDouble("spacing", 0)!;
     final padding = parseEdgeInsets(control, "padding");
 
     List<Widget> controls = [];

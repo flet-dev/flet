@@ -72,7 +72,9 @@ class Dropdown(FormFieldControl):
         return "dropdown"
 
     def _get_children(self):
-        return FormFieldControl._get_children().extend(self.__options)
+        result = FormFieldControl._get_children(self)
+        result.extend(self.__options)
+        return result
 
     # options
     @property
@@ -111,7 +113,7 @@ class Option(Control):
         self.disabled = disabled
 
     def _get_control_name(self):
-        return "option"
+        return "dropdownoption"
 
     # key
     @property

@@ -5,6 +5,7 @@ enum ControlType {
   column,
   container,
   dropdown,
+  dropdownOption,
   elevatedButton,
   gridView,
   icon,

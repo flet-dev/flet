@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import 'create_control.dart';
+import 'visible_scrollbar.dart';
 
 class RowControl extends StatelessWidget {
   final Control? parent;
@@ -28,6 +29,7 @@ class RowControl extends StatelessWidget {
         parseMainAxisAlignment(control, "alignment", MainAxisAlignment.start);
     bool tight = control.attrBool("tight", false)!;
     bool wrap = control.attrBool("wrap", false)!;
+    bool autoScroll = control.attrBool("autoScroll", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     List<Widget> controls = [];
@@ -50,25 +52,39 @@ class RowControl extends StatelessWidget {
     }
 
     return constrainedControl(
-        wrap
-            ? Wrap(
-                direction: Axis.horizontal,
-                children: controls,
-                spacing: spacing,
-                runSpacing: control.attrDouble("runSpacing", 10)!,
-                alignment: parseWrapAlignment(
-                    control, "alignment", WrapAlignment.start),
-                crossAxisAlignment: parseWrapCrossAlignment(
-                    control, "verticalAlignment", WrapCrossAlignment.center),
-              )
-            : Row(
-                mainAxisAlignment: mainAlignment,
-                mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
-                crossAxisAlignment: parseCrossAxisAlignment(
-                    control, "verticalAlignment", CrossAxisAlignment.center),
-                children: controls,
-              ),
+        wrapAutoScroll(
+            wrap
+                ? Wrap(
+                    direction: Axis.horizontal,
+                    children: controls,
+                    spacing: spacing,
+                    runSpacing: control.attrDouble("runSpacing", 10)!,
+                    alignment: parseWrapAlignment(
+                        control, "alignment", WrapAlignment.start),
+                    crossAxisAlignment: parseWrapCrossAlignment(control,
+                        "verticalAlignment", WrapCrossAlignment.center),
+                  )
+                : Row(
+                    mainAxisAlignment: mainAlignment,
+                    mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
+                    crossAxisAlignment: parseCrossAxisAlignment(control,
+                        "verticalAlignment", CrossAxisAlignment.center),
+                    children: controls,
+                  ),
+            wrap: wrap,
+            autoScroll: autoScroll),
         parent,
         control);
+  }
+
+  Widget wrapAutoScroll(Widget child,
+      {required bool wrap, required bool autoScroll}) {
+    return autoScroll
+        ? VisibleScrollbar(
+            child: SingleChildScrollView(
+            child: child,
+            scrollDirection: wrap ? Axis.vertical : Axis.horizontal,
+          ))
+        : child;
   }
 }

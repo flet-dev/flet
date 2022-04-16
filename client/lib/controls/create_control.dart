@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flet_view/controls/icon.dart';
+import 'package:flet_view/controls/image.dart';
 import 'package:flet_view/controls/list_view.dart';
 import 'package:flet_view/controls/snack_bar.dart';
 import 'package:flet_view/models/control_type.dart';
@@ -41,6 +42,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return TextControl(control: controlView.control);
         case ControlType.icon:
           return IconControl(control: controlView.control);
+        case ControlType.image:
+          return ImageControl(parent: parent, control: controlView.control);
         case ControlType.elevatedButton:
           return ElevatedButtonControl(
               parent: parent,

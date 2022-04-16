@@ -28,6 +28,7 @@ class Row(ConstrainedControl):
         tight: bool = None,
         wrap: bool = None,
         run_spacing: OptionalNumber = None,
+        auto_scroll: bool = None
     ):
         ConstrainedControl.__init__(
             self,
@@ -49,6 +50,7 @@ class Row(ConstrainedControl):
         self.tight = tight
         self.wrap = wrap
         self.run_spacing = run_spacing
+        self.auto_scroll = auto_scroll
 
     def _get_control_name(self):
         return "row"
@@ -115,6 +117,16 @@ class Row(ConstrainedControl):
     @beartype
     def run_spacing(self, value: OptionalNumber):
         self._set_attr("runSpacing", value)
+
+    # auto_scroll
+    @property
+    def auto_scroll(self):
+        return self._get_attr("autoScroll", data_type="bool", def_value=False)
+
+    @auto_scroll.setter
+    @beartype
+    def auto_scroll(self, value: Optional[bool]):
+        self._set_attr("autoScroll", value)        
 
     # controls
     @property

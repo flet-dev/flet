@@ -71,8 +71,8 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 	mime.AddExtensionType(".js", "application/javascript")
 
 	// Serve frontend static files
-	staticFs := newAssetsFS()
-	router.Use(static.Serve("/", staticFs))
+	assetsFS := newAssetsFS()
+	router.Use(static.Serve("/", assetsFS))
 
 	// WebSockets
 	router.GET("/ws", func(c *gin.Context) {
@@ -102,7 +102,7 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 			urlPath := strings.TrimRight(c.Request.URL.Path, "/") + "/"
 			log.Debugln("Request path:", urlPath)
 
-			index, _ := staticFs.Open(siteDefaultDocument)
+			index, _ := assetsFS.Open(siteDefaultDocument)
 			indexData, _ := ioutil.ReadAll(index)
 
 			c.Data(http.StatusOK, "text/html",
