@@ -197,6 +197,7 @@ for:
       # Flet Server in Go
       - cd ..
       - cp -rf client/build/web/* server/server/content
+      - ls -alR server/server/content
       - cd server
       - sh: |
           if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
