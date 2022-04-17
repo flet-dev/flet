@@ -1,8 +1,10 @@
+import json
 from typing import List, Optional
 
 from beartype import beartype
 
-from flet.control import Control, MainAxisAlignment, OptionalNumber
+from flet import padding
+from flet.control import Control, MainAxisAlignment, OptionalNumber, PaddingValue
 from flet.ref import Ref
 
 try:
@@ -23,9 +25,9 @@ class Banner(Control):
         #
         open: bool = False,
         leading: Control = None,
-        leading_padding: OptionalNumber = None,
+        leading_padding: PaddingValue = None,
         content: Control = None,
-        content_padding: OptionalNumber = None,
+        content_padding: PaddingValue = None,
         actions: List[Control] = None,
         force_actions_below: bool = None,
         bgcolor: str = None,
@@ -98,11 +100,17 @@ class Banner(Control):
     # leading_padding
     @property
     def leading_padding(self):
-        return self._get_attr("titlePadding")
+        return self.__leading_padding
 
     @leading_padding.setter
-    def leading_padding(self, value):
-        self._set_attr("titlePadding", value)
+    @beartype
+    def leading_padding(self, value: PaddingValue):
+        self.__leading_padding = value
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr(
+            "leadingPadding", json.dumps(value, default=vars) if value else None
+        )
 
     # content
     @property
@@ -116,11 +124,17 @@ class Banner(Control):
     # content_padding
     @property
     def content_padding(self):
-        return self._get_attr("contentPadding")
+        return self.__content_padding
 
     @content_padding.setter
-    def content_padding(self, value):
-        self._set_attr("contentPadding", value)
+    @beartype
+    def content_padding(self, value: PaddingValue):
+        self.__content_padding = value
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr(
+            "contentPadding", json.dumps(value, default=vars) if value else None
+        )
 
     # actions
     @property

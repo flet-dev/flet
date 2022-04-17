@@ -3,7 +3,7 @@ from datetime import datetime
 from time import sleep
 
 import flet
-from flet import Column, ElevatedButton, Image, Page, Row, Text, Theme
+from flet import Column, ElevatedButton, Image, Page, Row, Text, Theme, padding
 from flet.stack import Stack
 
 logging.basicConfig(level=logging.DEBUG)
@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.DEBUG)
 def main(page: Page):
     page.title = "Images Example"
     page.theme_mode = "light"
-    page.padding = 50
+    page.padding = padding.symmetric(20, 100)
     page.update()
 
     st = Stack(

@@ -1,8 +1,10 @@
+import json
 from typing import List, Optional
 
 from beartype import beartype
 
-from flet.control import Control, MainAxisAlignment, OptionalNumber
+from flet import padding
+from flet.control import Control, MainAxisAlignment, OptionalNumber, PaddingValue
 from flet.ref import Ref
 
 try:
@@ -24,11 +26,11 @@ class AlertDialog(Control):
         open: bool = False,
         modal: bool = False,
         title: Control = None,
-        title_padding: OptionalNumber = None,
+        title_padding: PaddingValue = None,
         content: Control = None,
-        content_padding: OptionalNumber = None,
+        content_padding: PaddingValue = None,
         actions: List[Control] = None,
-        actions_padding: OptionalNumber = None,
+        actions_padding: PaddingValue = None,
         actions_alignment: MainAxisAlignment = None,
     ):
 
@@ -100,11 +102,17 @@ class AlertDialog(Control):
     # title_padding
     @property
     def title_padding(self):
-        return self._get_attr("titlePadding")
+        return self.__title_padding
 
     @title_padding.setter
-    def title_padding(self, value):
-        self._set_attr("titlePadding", value)
+    @beartype
+    def title_padding(self, value: PaddingValue):
+        self.__title_padding = value
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr(
+            "titlePadding", json.dumps(value, default=vars) if value else None
+        )
 
     # content
     @property
@@ -118,11 +126,17 @@ class AlertDialog(Control):
     # content_padding
     @property
     def content_padding(self):
-        return self._get_attr("contentPadding")
+        return self.__content_padding
 
     @content_padding.setter
-    def content_padding(self, value):
-        self._set_attr("contentPadding", value)
+    @beartype
+    def content_padding(self, value: PaddingValue):
+        self.__content_padding = value
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr(
+            "contentPadding", json.dumps(value, default=vars) if value else None
+        )
 
     # actions
     @property
@@ -136,11 +150,17 @@ class AlertDialog(Control):
     # actions_padding
     @property
     def actions_padding(self):
-        return self._get_attr("actionsPadding")
+        return self.__actions_padding
 
     @actions_padding.setter
-    def actions_padding(self, value):
-        self._set_attr("actionsPadding", value)
+    @beartype
+    def actions_padding(self, value: PaddingValue):
+        self.__actions_padding = value
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr(
+            "actionsPadding", json.dumps(value, default=vars) if value else None
+        )
 
     # actions_alignment
     @property

@@ -1,28 +1,18 @@
+import json
 from typing import Optional
 
 from beartype import beartype
 
+from flet import margin, padding
+from flet.alignment import Alignment
 from flet.constrained_control import ConstrainedControl
-from flet.control import BorderStyle, Control, OptionalNumber
+from flet.control import BorderStyle, Control, MarginValue, OptionalNumber, PaddingValue
 from flet.ref import Ref
 
 try:
     from typing import Literal
 except:
     from typing_extensions import Literal
-
-Alignment = Literal[
-    None,
-    "topLeft",
-    "topCenter",
-    "topRight",
-    "centerLeft",
-    "center",
-    "centerRight",
-    "bottomLeft",
-    "bottomCenter",
-    "bottomRight",
-]
 
 
 class Container(ConstrainedControl):
@@ -40,8 +30,8 @@ class Container(ConstrainedControl):
         # Specific
         #
         content: Control = None,
-        padding: OptionalNumber = None,
-        margin: OptionalNumber = None,
+        padding: PaddingValue = None,
+        margin: MarginValue = None,
         alignment: Alignment = None,
         bgcolor: str = None,
         border_color: str = None,
@@ -77,35 +67,45 @@ class Container(ConstrainedControl):
     def _get_children(self):
         if self.__content == None:
             raise Exception("Container does not have any content set.")
+        self.__content._set_attr_internal("n", "content")
         return [self.__content]
 
     # alignment
     @property
     def alignment(self):
-        return self._get_attr("alignment")
+        return self.__alignment
 
     @alignment.setter
     @beartype
-    def alignment(self, value: Alignment):
-        self._set_attr("alignment", value)
+    def alignment(self, value: Optional[Alignment]):
+        self.__alignment = value
+        self._set_attr("alignment", json.dumps(value, default=vars) if value else None)
 
     # padding
     @property
     def padding(self):
-        return self._get_attr("padding")
+        return self.__padding
 
     @padding.setter
-    def padding(self, value):
-        self._set_attr("padding", value)
+    @beartype
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr("padding", json.dumps(value, default=vars) if value else None)
 
     # margin
     @property
     def margin(self):
-        return self._get_attr("margin")
+        return self.__margin
 
     @margin.setter
-    def margin(self, value):
-        self._set_attr("margin", value)
+    @beartype
+    def margin(self, value: MarginValue):
+        self.__margin = value
+        if value and isinstance(value, (int, float)):
+            value = margin.all(value)
+        self._set_attr("margin", json.dumps(value, default=vars) if value else None)
 
     # bgcolor
     @property

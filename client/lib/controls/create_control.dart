@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:flet_view/controls/container.dart';
 import 'package:flet_view/controls/icon.dart';
 import 'package:flet_view/controls/image.dart';
 import 'package:flet_view/controls/list_view.dart';
 import 'package:flet_view/controls/snack_bar.dart';
 import 'package:flet_view/models/control_type.dart';
+import 'package:flet_view/utils/alignment.dart';
+import 'package:flet_view/utils/edge_insets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -84,6 +87,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.stack:
           return StackControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.container:
+          return ContainerControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
@@ -197,14 +206,6 @@ WrapCrossAlignment parseWrapCrossAlignment(
       orElse: () => defValue);
 }
 
-EdgeInsetsGeometry? parseEdgeInsets(Control control, String propName) {
-  var d = control.attrDouble(propName, null);
-  if (d == null) {
-    return null;
-  }
-  return EdgeInsets.all(d);
-}
-
 ThemeData? parseTheme(Control control, String propName) {
   var v = control.attrString(propName, null);
   if (v == null) {
@@ -213,4 +214,24 @@ ThemeData? parseTheme(Control control, String propName) {
 
   final j1 = json.decode(v);
   return themeFromJson(j1);
+}
+
+EdgeInsets? parseEdgeInsets(Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return edgeInsetsFromJson(j1);
+}
+
+Alignment? parseAlignment(Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return alignmentFromJson(j1);
 }

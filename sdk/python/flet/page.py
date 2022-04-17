@@ -6,10 +6,16 @@ from typing import Union
 from beartype import beartype
 from beartype.typing import List, Optional
 
-from flet import constants
+from flet import constants, padding
 from flet.banner import Banner
 from flet.connection import Connection
-from flet.control import Control, CrossAxisAlignment, MainAxisAlignment, OptionalNumber
+from flet.control import (
+    Control,
+    CrossAxisAlignment,
+    MainAxisAlignment,
+    OptionalNumber,
+    PaddingValue,
+)
 from flet.control_event import ControlEvent
 from flet.protocol import Command
 from flet.snack_bar import SnackBar
@@ -292,12 +298,15 @@ class Page(Control):
     # padding
     @property
     def padding(self):
-        return self._get_attr("padding")
+        return self.__padding
 
     @padding.setter
     @beartype
-    def padding(self, value: OptionalNumber):
-        self._set_attr("padding", value)
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr("padding", json.dumps(value, default=vars) if value else None)
 
     # bgcolor
     @property

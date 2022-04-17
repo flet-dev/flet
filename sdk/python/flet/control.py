@@ -6,6 +6,8 @@ from typing import Union
 from beartype import beartype
 from beartype.typing import List, Optional
 
+from flet.margin import Margin
+from flet.padding import Padding
 from flet.protocol import Command
 from flet.ref import Ref
 
@@ -44,6 +46,10 @@ TextAlign = Literal[None, "left", "right", "center", "justify", "start", "end"]
 InputBorder = Literal[None, "outline", "underline", "none"]
 
 OptionalNumber = Union[None, int, float]
+
+PaddingValue = Union[None, int, float, Padding]
+
+MarginValue = Union[None, int, float, Margin]
 
 ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always"]
 

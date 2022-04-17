@@ -1,9 +1,11 @@
+import json
 from typing import List, Optional
 
 from beartype import beartype
 
+from flet import padding
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber
+from flet.control import Control, OptionalNumber, PaddingValue
 from flet.ref import Ref
 
 
@@ -24,7 +26,7 @@ class ListView(ConstrainedControl):
         #
         horizontal: bool = None,
         spacing: OptionalNumber = None,
-        padding: OptionalNumber = None,
+        padding: PaddingValue = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -73,11 +75,15 @@ class ListView(ConstrainedControl):
     # padding
     @property
     def padding(self):
-        return self._get_attr("padding")
+        return self.__padding
 
     @padding.setter
-    def padding(self, value):
-        self._set_attr("padding", value)
+    @beartype
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr("padding", json.dumps(value, default=vars) if value else None)
 
     # controls
     @property
