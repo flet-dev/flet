@@ -21,7 +21,7 @@ def main(page: Page):
         height=100,
         fit="contain",
     )
-    images = Row(width=float("inf"), wrap=False, scroll="always")
+    images = Row(expand=1, wrap=True, scroll="always")
 
     page.add(img, images)
 
@@ -38,4 +38,4 @@ def main(page: Page):
     page.update()
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(name="test1", port=8550, target=main, view=flet.FLET_APP)

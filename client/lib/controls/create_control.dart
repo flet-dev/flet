@@ -118,11 +118,24 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
 }
 
 Widget baseControl(Widget widget, Control? parent, Control control) {
-  return _expandable(widget, parent, control);
+  return _expandable(_opacity(widget, parent, control), parent, control);
 }
 
 Widget constrainedControl(Widget widget, Control? parent, Control control) {
-  return _expandable(_sizedControl(widget, parent, control), parent, control);
+  return _expandable(
+      _sizedControl(_opacity(widget, parent, control), parent, control),
+      parent,
+      control);
+}
+
+Widget _opacity(Widget widget, Control? parent, Control control) {
+  var opacity = control.attrDouble("opacity");
+  return opacity != null
+      ? Opacity(
+          opacity: opacity,
+          child: widget,
+        )
+      : widget;
 }
 
 Widget _sizedControl(Widget widget, Control? parent, Control control) {
