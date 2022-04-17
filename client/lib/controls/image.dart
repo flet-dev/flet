@@ -44,17 +44,31 @@ class ImageControl extends StatelessWidget {
           converter: (store) => store.state.pageUri,
           builder: (context, pageUri) {
             return baseControl(
-                Image.network(getAssetUrl(pageUri!, src),
-                    width: width, height: height, repeat: repeat, fit: fit),
+                _clipCorners(
+                    Image.network(getAssetUrl(pageUri!, src),
+                        width: width, height: height, repeat: repeat, fit: fit),
+                    control),
                 parent,
                 control);
           });
     } else {
       return baseControl(
-          Image.network(src,
-              width: width, height: height, repeat: repeat, fit: fit),
+          _clipCorners(
+              Image.network(src,
+                  width: width, height: height, repeat: repeat, fit: fit),
+              control),
           parent,
           control);
     }
+  }
+
+  Widget _clipCorners(Widget image, Control control) {
+    var borderRadius = parseBorderRadius(control, "borderRadius");
+    return borderRadius != null
+        ? ClipRRect(
+            borderRadius: borderRadius,
+            child: image,
+          )
+        : image;
   }
 }

@@ -1,6 +1,12 @@
+import json
+from typing import Optional
+
 from beartype import beartype
 
+from flet import border_radius
+from flet.border_radius import BorderRadius
 from flet.control import Control, OptionalNumber
+from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
 
 try:
@@ -33,6 +39,7 @@ class Image(Control):
         src: str = None,
         repeat: ImageRepeat = None,
         fit: ImageFit = None,
+        border_radius: BorderRadius = None,
     ):
 
         Control.__init__(
@@ -50,6 +57,7 @@ class Image(Control):
         self.src = src
         self.fit = fit
         self.repeat = repeat
+        self.border_radius = border_radius
 
     def _get_control_name(self):
         return "image"
@@ -102,3 +110,18 @@ class Image(Control):
     @beartype
     def height(self, value: OptionalNumber):
         self._set_attr("height", value)
+
+    # border_radius
+    @property
+    def border_radius(self):
+        return self.__border_radius
+
+    @border_radius.setter
+    @beartype
+    def border_radius(self, value: Optional[BorderRadius]):
+        self.__border_radius = value
+        if value and isinstance(value, (int, float)):
+            value = border_radius.all(value)
+        self._set_attr(
+            "borderRadius", json.dumps(value, cls=EmbedJsonEncoder) if value else None
+        )
