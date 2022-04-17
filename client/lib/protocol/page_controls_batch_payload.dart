@@ -1,4 +1,4 @@
-import 'package:flet_view/protocol/message.dart';
+import 'message.dart';
 
 class PageControlsBatchPayload {
   final List<Message> messages;

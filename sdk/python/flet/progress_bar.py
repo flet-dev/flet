@@ -1,8 +1,8 @@
 from typing import Optional
 
 from beartype import beartype
-from flet.constrained_control import ConstrainedControl
 
+from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
@@ -22,8 +22,6 @@ class ProgressBar(ConstrainedControl):
         # Specific
         #
         value: OptionalNumber = None,
-        label: str = None,
-        description: str = None,
         bar_height: OptionalNumber = None,
         color: str = None,
         bgcolor: str = None,
@@ -40,8 +38,6 @@ class ProgressBar(ConstrainedControl):
             data=data,
         )
         self.value = value
-        self.label = label
-        self.description = description
         self.bar_height = bar_height
         self.color = color
         self.bgcolor = bgcolor
@@ -58,24 +54,6 @@ class ProgressBar(ConstrainedControl):
     @beartype
     def value(self, value: OptionalNumber):
         self._set_attr("value", value)
-
-    # label
-    @property
-    def label(self):
-        return self._get_attr("label")
-
-    @label.setter
-    def label(self, value):
-        self._set_attr("label", value)
-
-    # description
-    @property
-    def description(self):
-        return self._get_attr("description")
-
-    @description.setter
-    def description(self, value):
-        self._set_attr("description", value)
 
     # bar_height
     @property

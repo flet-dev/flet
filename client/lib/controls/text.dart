@@ -1,9 +1,9 @@
-import 'package:flet_view/controls/create_control.dart';
-import 'package:flet_view/utils/colors.dart';
-import 'package:flet_view/utils/text.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/colors.dart';
+import '../utils/text.dart';
+import 'create_control.dart';
 
 class TextControl extends StatelessWidget {
   final Control? parent;

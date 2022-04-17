@@ -1,10 +1,8 @@
-import 'dart:ui';
-
 import 'package:equatable/equatable.dart';
-import 'package:flet_view/models/page_size_view_model.dart';
 import 'package:redux/redux.dart';
 
 import 'app_state.dart';
+import 'page_size_view_model.dart';
 
 class PageLoadViewModel extends Equatable {
   final Uri? pageUri;

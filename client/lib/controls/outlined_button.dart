@@ -1,10 +1,10 @@
-import 'package:flet_view/controls/create_control.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../web_socket_client.dart';
+import 'create_control.dart';
 
 class OutlinedButtonControl extends StatelessWidget {
   final Control? parent;

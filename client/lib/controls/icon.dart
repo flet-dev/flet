@@ -1,9 +1,9 @@
-import 'package:flet_view/controls/create_control.dart';
-import 'package:flet_view/utils/colors.dart';
-import 'package:flet_view/utils/icons.dart';
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
+import '../utils/colors.dart';
+import '../utils/icons.dart';
+import 'create_control.dart';
 
 class IconControl extends StatelessWidget {
   final Control? parent;

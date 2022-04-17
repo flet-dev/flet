@@ -1,5 +1,3 @@
-import 'package:flet_view/controls/create_control.dart';
-import 'package:flet_view/controls/error.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -7,6 +5,8 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/uri.dart';
+import 'create_control.dart';
+import 'error.dart';
 
 class ImageControl extends StatelessWidget {
   final Control? parent;

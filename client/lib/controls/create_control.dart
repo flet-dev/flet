@@ -1,28 +1,29 @@
-import 'package:flet_view/controls/container.dart';
-import 'package:flet_view/controls/icon.dart';
-import 'package:flet_view/controls/image.dart';
-import 'package:flet_view/controls/list_view.dart';
-import 'package:flet_view/controls/snack_bar.dart';
-import 'package:flet_view/models/control_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import '../models/control.dart';
-import '../models/control_view_model.dart';
 import '../models/app_state.dart';
-import 'grid_view.dart';
-import 'icon_button.dart';
-import 'outlined_button.dart';
-import 'progress_ring.dart';
-import 'row.dart';
-import 'text_button.dart';
-import 'textfield.dart';
+import '../models/control.dart';
+import '../models/control_type.dart';
+import '../models/control_view_model.dart';
+import 'column.dart';
+import 'container.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
+import 'grid_view.dart';
+import 'icon.dart';
+import 'icon_button.dart';
+import 'image.dart';
+import 'list_view.dart';
+import 'outlined_button.dart';
 import 'page.dart';
+import 'progress_bar.dart';
+import 'progress_ring.dart';
+import 'row.dart';
+import 'snack_bar.dart';
 import 'stack.dart';
 import 'text.dart';
-import 'column.dart';
+import 'text_button.dart';
+import 'textfield.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled) {
   return StoreConnector<AppState, ControlViewModel>(
@@ -48,6 +49,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return ImageControl(parent: parent, control: controlView.control);
         case ControlType.progressRing:
           return ProgressRingControl(control: controlView.control);
+        case ControlType.progressBar:
+          return ProgressBarControl(control: controlView.control);
         case ControlType.elevatedButton:
           return ElevatedButtonControl(
               parent: parent,

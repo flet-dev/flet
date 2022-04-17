@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:flet_view/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import 'colors.dart';
 
 ThemeData? parseTheme(Control control, String propName) {
   var v = control.attrString(propName, null);

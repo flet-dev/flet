@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:flet_view/models/control_type.dart';
+
+import 'control_type.dart';
 
 class Control extends Equatable {
   static const reservedProps = ['i', 'p', 't', 'c', 'n'];
