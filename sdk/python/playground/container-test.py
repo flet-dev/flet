@@ -4,7 +4,7 @@ from datetime import datetime
 from time import sleep
 
 import flet
-from flet import Page, alignment, padding
+from flet import Page, alignment, border, border_radius, padding
 from flet.container import Container
 from flet.text import Text
 
@@ -25,6 +25,8 @@ def main(page: Page):
         bgcolor="amber",
         width=300,
         height=300,
+        border=border.all(10, "pink"),
+        border_radius=border_radius.all(30),
     )
 
     page.add(c)

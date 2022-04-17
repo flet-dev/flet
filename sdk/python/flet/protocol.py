@@ -8,7 +8,6 @@ class CommandEncoder(json.JSONEncoder):
         if isinstance(obj, Message):
             return obj.__dict__
         elif isinstance(obj, Command):
-            # return obj.__dict__
             return {
                 "i": obj.indent,
                 "n": obj.name,

@@ -35,10 +35,13 @@ class ContainerControl extends StatelessWidget {
 
     return constrainedControl(
         Container(
-            color: bgColor,
             padding: parseEdgeInsets(control, "padding"),
             margin: parseEdgeInsets(control, "margin"),
             alignment: parseAlignment(control, "alignment"),
+            decoration: BoxDecoration(
+                color: bgColor,
+                border: parseBorder(context, control, "border"),
+                borderRadius: parseBorderRadius(control, "borderRadius")),
             child: createControl(control, contentCtrls.first.id, disabled)),
         parent,
         control);

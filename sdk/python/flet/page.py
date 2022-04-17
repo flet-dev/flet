@@ -17,6 +17,7 @@ from flet.control import (
     PaddingValue,
 )
 from flet.control_event import ControlEvent
+from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.protocol import Command
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
@@ -306,7 +307,7 @@ class Page(Control):
         self.__padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr("padding", json.dumps(value, default=vars) if value else None)
+        self._set_attr("padding", json.dumps(value, cls=EmbedJsonEncoder) if value else None)
 
     # bgcolor
     @property

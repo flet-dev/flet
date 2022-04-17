@@ -3,10 +3,13 @@ from typing import Optional
 
 from beartype import beartype
 
-from flet import margin, padding
+from flet import border_radius, margin, padding
 from flet.alignment import Alignment
+from flet.border import Border
+from flet.border_radius import BorderRadius
 from flet.constrained_control import ConstrainedControl
 from flet.control import BorderStyle, Control, MarginValue, OptionalNumber, PaddingValue
+from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
 
 try:
@@ -34,10 +37,8 @@ class Container(ConstrainedControl):
         margin: MarginValue = None,
         alignment: Alignment = None,
         bgcolor: str = None,
-        border_color: str = None,
-        border_width: OptionalNumber = None,
-        border_style: BorderStyle = None,
-        border_radius: OptionalNumber = None,
+        border: Border = None,
+        border_radius: BorderRadius = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -56,9 +57,7 @@ class Container(ConstrainedControl):
         self.margin = margin
         self.alignment = alignment
         self.bgcolor = bgcolor
-        self.border_color = border_color
-        self.border_width = border_width
-        self.border_style = border_style
+        self.border = border
         self.border_radius = border_radius
 
     def _get_control_name(self):
@@ -92,7 +91,9 @@ class Container(ConstrainedControl):
         self.__padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr("padding", json.dumps(value, default=vars) if value else None)
+        self._set_attr(
+            "padding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
+        )
 
     # margin
     @property
@@ -105,7 +106,9 @@ class Container(ConstrainedControl):
         self.__margin = value
         if value and isinstance(value, (int, float)):
             value = margin.all(value)
-        self._set_attr("margin", json.dumps(value, default=vars) if value else None)
+        self._set_attr(
+            "margin", json.dumps(value, cls=EmbedJsonEncoder) if value else None
+        )
 
     # bgcolor
     @property
@@ -116,43 +119,33 @@ class Container(ConstrainedControl):
     def bgcolor(self, value):
         self._set_attr("bgColor", value)
 
-    # border_color
+    # border
     @property
-    def border_color(self):
-        return self._get_attr("borderColor")
+    def border(self):
+        return self.__border
 
-    @border_color.setter
-    def border_color(self, value):
-        self._set_attr("borderColor", value)
-
-    # border_width
-    @property
-    def border_width(self) -> OptionalNumber:
-        return self._get_attr("borderWidth")
-
-    @border_width.setter
+    @border.setter
     @beartype
-    def border_width(self, value: OptionalNumber):
-        self._set_attr("borderWidth", value)
-
-    # border_style
-    @property
-    def border_style(self):
-        return self._get_attr("borderStyle")
-
-    @border_style.setter
-    @beartype
-    def border_style(self, value: BorderStyle):
-        self._set_attr("borderStyle", value)
+    def border(self, value: Optional[Border]):
+        self.__border = value
+        self._set_attr(
+            "border", json.dumps(value, cls=EmbedJsonEncoder) if value else None
+        )
 
     # border_radius
     @property
     def border_radius(self):
-        return self._get_attr("borderRadius")
+        return self.__border_radius
 
     @border_radius.setter
-    def border_radius(self, value):
-        self._set_attr("borderRadius", value)
+    @beartype
+    def border_radius(self, value: Optional[BorderRadius]):
+        self.__border_radius = value
+        if value and isinstance(value, (int, float)):
+            value = border_radius.all(value)
+        self._set_attr(
+            "borderRadius", json.dumps(value, cls=EmbedJsonEncoder) if value else None
+        )
 
     # content
     @property

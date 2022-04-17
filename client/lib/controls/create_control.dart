@@ -7,6 +7,7 @@ import 'package:flet_view/controls/list_view.dart';
 import 'package:flet_view/controls/snack_bar.dart';
 import 'package:flet_view/models/control_type.dart';
 import 'package:flet_view/utils/alignment.dart';
+import 'package:flet_view/utils/borders.dart';
 import 'package:flet_view/utils/edge_insets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -234,4 +235,24 @@ Alignment? parseAlignment(Control control, String propName) {
 
   final j1 = json.decode(v);
   return alignmentFromJson(j1);
+}
+
+BorderRadius? parseBorderRadius(Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return borderRadiusFromJSON(j1);
+}
+
+Border? parseBorder(BuildContext context, Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return borderFromJSON(context, j1);
 }

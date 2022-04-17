@@ -6,6 +6,7 @@ from beartype import beartype
 from flet import padding
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber, PaddingValue
+from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
 
 
@@ -83,7 +84,9 @@ class ListView(ConstrainedControl):
         self.__padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr("padding", json.dumps(value, default=vars) if value else None)
+        self._set_attr(
+            "padding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
+        )
 
     # controls
     @property

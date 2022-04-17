@@ -5,6 +5,7 @@ from beartype import beartype
 
 from flet import padding
 from flet.control import Control, MainAxisAlignment, OptionalNumber, PaddingValue
+from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
 
 try:
@@ -109,7 +110,7 @@ class Banner(Control):
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
         self._set_attr(
-            "leadingPadding", json.dumps(value, default=vars) if value else None
+            "leadingPadding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
         )
 
     # content
@@ -133,7 +134,7 @@ class Banner(Control):
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
         self._set_attr(
-            "contentPadding", json.dumps(value, default=vars) if value else None
+            "contentPadding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
         )
 
     # actions
