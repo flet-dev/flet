@@ -3,13 +3,13 @@ import '../models/control.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 
-class ListViewControl extends StatelessWidget {
+class GridViewControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final List<Control> children;
 
-  const ListViewControl(
+  const GridViewControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -19,32 +19,25 @@ class ListViewControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("ListViewControl build: ${control.id}");
+    debugPrint("GridViewControl build: ${control.id}");
 
     bool disabled = control.isDisabled || parentDisabled;
 
     final horizontal = control.attrBool("horizontal", false)!;
-    final spacing = control.attrDouble("spacing", 0)!;
+    final runsCount = control.attrInt("runsCount", 1)!;
+    final spacing = control.attrDouble("spacing", 10)!;
+    final runSpacing = control.attrDouble("runSpacing", 10)!;
     final padding = parseEdgeInsets(control, "padding");
 
-    List<Widget> controls = [];
-
-    bool firstControl = true;
-    for (var ctrl in children.where((c) => c.isVisible)) {
-      // spacer between displayed controls
-      if (spacing > 0 && !firstControl) {
-        controls.add(
-            horizontal ? SizedBox(width: spacing) : SizedBox(height: spacing));
-      }
-      firstControl = false;
-
-      // displayed control
-      controls.add(createControl(control, ctrl.id, disabled));
-    }
+    List<Widget> controls =
+        children.map((c) => createControl(control, c.id, disabled)).toList();
 
     return constrainedControl(
-        ListView(
+        GridView.count(
           scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+          crossAxisCount: runsCount,
+          mainAxisSpacing: spacing,
+          crossAxisSpacing: runSpacing,
           padding: padding,
           children: controls,
         ),

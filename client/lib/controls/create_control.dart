@@ -16,6 +16,7 @@ import '../models/control.dart';
 import '../models/control_view_model.dart';
 import '../models/app_state.dart';
 import '../utils/theme.dart';
+import 'grid_view.dart';
 import 'icon_button.dart';
 import 'outlined_button.dart';
 import 'row.dart';
@@ -104,6 +105,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
+        case ControlType.gridView:
+          return GridViewControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
         case ControlType.textField:
           return TextFieldControl(
               parent: parent,
@@ -169,90 +176,4 @@ Widget _expandable(Widget widget, Control? parent, Control control) {
     return expand != null ? Expanded(child: widget, flex: expand) : widget;
   }
   return widget;
-}
-
-MainAxisAlignment parseMainAxisAlignment(
-    Control control, String propName, MainAxisAlignment defValue) {
-  return MainAxisAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
-}
-
-CrossAxisAlignment parseCrossAxisAlignment(
-    Control control, String propName, CrossAxisAlignment defValue) {
-  return CrossAxisAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
-}
-
-WrapAlignment parseWrapAlignment(
-    Control control, String propName, WrapAlignment defValue) {
-  return WrapAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
-}
-
-WrapCrossAlignment parseWrapCrossAlignment(
-    Control control, String propName, WrapCrossAlignment defValue) {
-  return WrapCrossAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
-}
-
-ThemeData? parseTheme(Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  final j1 = json.decode(v);
-  return themeFromJson(j1);
-}
-
-EdgeInsets? parseEdgeInsets(Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  final j1 = json.decode(v);
-  return edgeInsetsFromJson(j1);
-}
-
-Alignment? parseAlignment(Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  final j1 = json.decode(v);
-  return alignmentFromJson(j1);
-}
-
-BorderRadius? parseBorderRadius(Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  final j1 = json.decode(v);
-  return borderRadiusFromJSON(j1);
-}
-
-Border? parseBorder(BuildContext context, Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  final j1 = json.decode(v);
-  return borderFromJSON(context, j1);
 }

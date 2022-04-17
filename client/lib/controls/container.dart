@@ -1,10 +1,13 @@
-import 'package:flet_view/controls/create_control.dart';
-import 'package:flet_view/controls/error.dart';
-import 'package:flet_view/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../utils/alignment.dart';
+import '../utils/borders.dart';
+import 'create_control.dart';
+import 'error.dart';
+import '../utils/colors.dart';
 import '../models/control.dart';
+import '../utils/edge_insets.dart';
 
 class ContainerControl extends StatelessWidget {
   final Control? parent;

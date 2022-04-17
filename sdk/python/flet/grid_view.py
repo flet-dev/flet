@@ -1,9 +1,12 @@
+import json
 from typing import List, Optional
 
 from beartype import beartype
 
+from flet import padding
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber
+from flet.control import Control, OptionalNumber, PaddingValue
+from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
 
 
@@ -23,9 +26,10 @@ class GridView(ConstrainedControl):
         # Specific
         #
         horizontal: bool = None,
-        cross_axis_count: int = None,
-        main_axis_spacing: OptionalNumber = None,
-        cross_axis_spacing: OptionalNumber = None,
+        runs_count: int = None,
+        spacing: OptionalNumber = None,
+        run_spacing: OptionalNumber = None,
+        padding: PaddingValue = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -42,9 +46,10 @@ class GridView(ConstrainedControl):
         self.__controls: List[Control] = []
         self.controls = controls
         self.horizontal = horizontal
-        self.cross_axis_count = cross_axis_count
-        self.main_axis_spacing = main_axis_spacing
-        self.cross_axis_spacing = cross_axis_spacing
+        self.runs_count = runs_count
+        self.spacing = spacing
+        self.run_spacing = run_spacing
+        self.padding = padding
 
     def _get_control_name(self):
         return "gridview"
@@ -62,35 +67,50 @@ class GridView(ConstrainedControl):
     def horizontal(self, value: Optional[bool]):
         self._set_attr("horizontal", value)
 
-    # cross_axis_count
+    # runs_count
     @property
-    def cross_axis_count(self):
-        return self._get_attr("crossAxisCount")
+    def runs_count(self):
+        return self._get_attr("runsCount")
 
-    @cross_axis_count.setter
+    @runs_count.setter
     @beartype
-    def cross_axis_count(self, value: Optional[int]):
-        self._set_attr("crossAxisCount", value)
+    def runs_count(self, value: Optional[int]):
+        self._set_attr("runsCount", value)
 
-    # main_axis_spacing
+    # spacing
     @property
-    def main_axis_spacing(self):
-        return self._get_attr("mainAxisSpacing")
+    def spacing(self):
+        return self._get_attr("spacing")
 
-    @main_axis_spacing.setter
+    @spacing.setter
     @beartype
-    def main_axis_spacing(self, value: OptionalNumber):
-        self._set_attr("mainAxisSpacing", value)
+    def spacing(self, value: OptionalNumber):
+        self._set_attr("spacing", value)
 
-    # cross_axis_spacing
+    # run_spacing
     @property
-    def cross_axis_spacing(self):
-        return self._get_attr("crossAxisSpacing")
+    def run_spacing(self):
+        return self._get_attr("runSpacing")
 
-    @cross_axis_spacing.setter
+    @run_spacing.setter
     @beartype
-    def cross_axis_spacing(self, value: OptionalNumber):
-        self._set_attr("crossAxisSpacing", value)
+    def run_spacing(self, value: OptionalNumber):
+        self._set_attr("runSpacing", value)
+
+    # padding
+    @property
+    def padding(self):
+        return self.__padding
+
+    @padding.setter
+    @beartype
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr(
+            "padding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
+        )
 
     # controls
     @property

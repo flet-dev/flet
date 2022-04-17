@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/uri.dart';
 
 class ImageControl extends StatelessWidget {

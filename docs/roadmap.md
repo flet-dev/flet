@@ -7,7 +7,7 @@
     * [ ] Control
     * [x] Page
   * Layout
-    * [ ] Container
+    * [x] Container
     * [x] Row (flex - default mode, wrap)
     * [x] Column (flex - default mode, wrap)
     * [x] Stack
@@ -16,14 +16,14 @@
   * Basic controls
     * [x] Text
     * [x] Icon
-    * [ ] Image (+custom assets directory for Flet server [see here](https://docs.flutter.dev/development/platform-integration/web-images)).
+    * [x] Image (+custom assets directory for Flet server [see here](https://docs.flutter.dev/development/platform-integration/web-images)).
     * [ ] ProgressBar
     * [ ] ProgressRing
   * Buttons
-    * [ ] ElevatedButton
-    * [ ] OutlinedButton
-    * [ ] TextButton
-    * [ ] IconButton
+    * [x] ElevatedButton
+    * [x] OutlinedButton
+    * [x] TextButton
+    * [x] IconButton
   * Input and selections
     * [ ] TextField
     * [ ] Checkbox
@@ -62,8 +62,11 @@
   * Behavior
     * Complex embeddable values for `padding`, `marging`, etc, e.g. `.padding = { 'left': 10, 'right': 20 }`
     * Visual Density ([more](https://api.flutter.dev/flutter/material/VisualDensity-class.html))
+    * Early detection of layout issues (like enabling scrolling in unbounded controls) with [Layout Builder](https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html).
 
 * Flet Client
+  * Web
+    * [Loading splash](https://github.com/flutter/flutter/issues/76009#issuecomment-1095663169)
   * [ ] Windows ("host" mode with hot reload)
   * [ ] macOS ("host" mode with hot reload)
 
@@ -467,9 +470,7 @@ Properties:
 
 - bgColor (background color - `decoration: BoxDecoration.color`)
 - alignment - `topLeft`, `topCenter`, `topRight`, `centerLeft`, `center`, `centerRight`, `bottomLeft`, `bottomCenter`, `bottomRight`
-- borderColor
-- borderWidth
-- borderStyle - `solid`, `none`
+- border - width, color
 - borderRadius
 - verticalScroll (S2)
 - horizontalScroll (S2)
@@ -491,6 +492,7 @@ Properties:
 - wrap - switch to "Wrap" control
 - runSpacing - gap between runs
 - controls - child controls of any type
+- scroll - "none", "auto", "adaptive", "always"
 
 ## Column
 
@@ -505,6 +507,7 @@ Properties:
 - wrap - switch to "Wrap" control
 - runSpacing - gap between runs
 - controls - child controls of any type
+- scroll - "none", "auto", "adaptive", "always"
 
 ## Stack
 
@@ -608,9 +611,11 @@ Properties:
 - width - override control's width
 - height - override control's height
 - repeat: noRepeat, repeat, repeatX, repeatY
-- opacity - override control's opacity
 - fit: contain, cover, fill, fitHeight, fitWidth, none, scaleDown
+- opacity (S2) - override control's opacity
 - semanticLabel (S2)
+- border_radius - to make rounded corners
+
 
 ## ProgressBar
 
@@ -695,10 +700,10 @@ Docs: https://api.flutter.dev/flutter/material/IconButton-class.html
 
 Properties:
 
-- tooltip
 - icon
 - iconColor
 - iconSize
+- tooltip
 - content - a Control representing custom button content
 
 Events:

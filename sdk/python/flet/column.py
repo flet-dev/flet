@@ -62,6 +62,9 @@ class Column(ConstrainedControl):
     def _get_control_name(self):
         return "column"
 
+    def _get_children(self):
+        return self.__controls
+
     # tight
     @property
     def tight(self):
@@ -145,6 +148,3 @@ class Column(ConstrainedControl):
     @controls.setter
     def controls(self, value):
         self.__controls = value or []
-
-    def _get_children(self):
-        return self.__controls
