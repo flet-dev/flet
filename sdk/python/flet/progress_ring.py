@@ -11,8 +11,6 @@ try:
 except:
     from typing_extensions import Literal
 
-LabelPosition = Literal[None, "left", "top", "right", "bottom"]
-
 
 class ProgressRing(ConstrainedControl):
     def __init__(
@@ -29,8 +27,6 @@ class ProgressRing(ConstrainedControl):
         # Specific
         #
         value: OptionalNumber = None,
-        label: str = None,
-        label_position: LabelPosition = None,
         stroke_width: OptionalNumber = None,
         color: str = None,
         bgcolor: str = None,
@@ -47,8 +43,6 @@ class ProgressRing(ConstrainedControl):
             data=data,
         )
         self.value = value
-        self.label = label
-        self.label_position = label_position
         self.stroke_width = stroke_width
         self.color = color
         self.bgcolor = bgcolor
@@ -66,26 +60,7 @@ class ProgressRing(ConstrainedControl):
     def value(self, value: OptionalNumber):
         self._set_attr("value", value)
 
-    # label
-    @property
-    def label(self):
-        return self._get_attr("label")
-
-    @label.setter
-    def label(self, value):
-        self._set_attr("label", value)
-
-    # label_position
-    @property
-    def label_position(self):
-        return self._get_attr("labelPosition")
-
-    @label_position.setter
-    @beartype
-    def label_position(self, value: LabelPosition):
-        self._set_attr("label_position", value)
-
-    # bar_height
+    # stroke_width
     @property
     def stroke_width(self):
         return self._get_attr("strokeWidth")

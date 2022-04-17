@@ -12,7 +12,7 @@
     * [x] Column (flex - default mode, wrap)
     * [x] Stack
     * [x] ListView
-    * [ ] GridView
+    * [x] GridView
   * Basic controls
     * [x] Text
     * [x] Icon
@@ -547,9 +547,9 @@ Properties:
 
 - scrollDirection - `vertical` (default), `horizontal`.
 - padding
-- crossAxisCount
-- mainAxisSpacing
-- crossAxisSpacing
+- runsCount
+- spacing
+- runSpacing
 
 ## Card
 
