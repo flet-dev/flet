@@ -5,6 +5,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_type.dart';
 import '../models/control_view_model.dart';
+import 'checkbox.dart';
 import 'column.dart';
 import 'container.dart';
 import 'dropdown.dart';
@@ -113,6 +114,11 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.textField:
           return TextFieldControl(
+              parent: parent,
+              control: controlView.control,
+              parentDisabled: parentDisabled);
+        case ControlType.checkbox:
+          return CheckboxControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);

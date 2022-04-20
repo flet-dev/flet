@@ -32,6 +32,7 @@ class Checkbox(ConstrainedControl):
         label: str = None,
         label_position: LabelPosition = None,
         value: bool = None,
+        tristate: bool = None,
         on_change=None,
     ):
         ConstrainedControl.__init__(
@@ -46,6 +47,7 @@ class Checkbox(ConstrainedControl):
             data=data,
         )
         self.value = value
+        self.tristate = tristate
         self.label = label
         self.label_position = label_position
         self.on_change = on_change
@@ -62,6 +64,16 @@ class Checkbox(ConstrainedControl):
     @beartype
     def value(self, value: Optional[bool]):
         self._set_attr("value", value)
+
+    # tristate
+    @property
+    def tristate(self):
+        return self._get_attr("tristate", data_type="bool", def_value=False)
+
+    @tristate.setter
+    @beartype
+    def tristate(self, value: Optional[bool]):
+        self._set_attr("tristate", value)
 
     # label
     @property

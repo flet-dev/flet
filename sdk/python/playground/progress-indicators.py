@@ -4,6 +4,7 @@ from time import sleep
 
 import flet
 from flet import Column, ElevatedButton, Image, Page, Row, Text, Theme, padding
+from flet.progress_bar import ProgressBar
 from flet.progress_ring import ProgressRing
 from flet.stack import Stack
 
@@ -17,22 +18,25 @@ def main(page: Page):
     page.update()
 
     pr = ProgressRing(width=16, height=16, stroke_width=2)
-    r = Row([pr, Text("Wait for the completion...")])
-
-    pr2 = ProgressRing()
-    c = Column(
-        [pr2, Text("I'm going to run for ages...")], horizontal_alignment="center"
-    )
+    pb = ProgressBar(width=400)
 
     page.add(
         Text("Circle progress indicator", style="headlineSmall"),
-        r,
+        Row([pr, Text("Wait for the completion...")]),
         Text("Indeterminate cicrular progress", style="headlineSmall"),
-        c,
+        Column(
+            [ProgressRing(), Text("I'm going to run for ages...")],
+            horizontal_alignment="center",
+        ),
+        Text("Linear progress indicator", style="headlineSmall"),
+        Column([Text("Doing something..."), pb]),
+        Text("Indeterminated progress bar", style="headlineSmall"),
+        ProgressBar(width=400, color="amber", bgcolor="#eeeeee"),
     )
 
     for i in range(0, 101):
         pr.value = i * 0.01
+        pb.value = i * 0.01
         sleep(0.1)
         page.update()
 

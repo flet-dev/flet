@@ -17,8 +17,8 @@
     * [x] Text
     * [x] Icon
     * [x] Image (+custom assets directory for Flet server [see here](https://docs.flutter.dev/development/platform-integration/web-images)).
-    * [ ] ProgressBar
-    * [ ] ProgressRing
+    * [x] ProgressBar
+    * [x] ProgressRing
   * Buttons
     * [x] ElevatedButton
     * [x] OutlinedButton
@@ -759,9 +759,10 @@ Docs: https://api.flutter.dev/flutter/material/Checkbox-class.html
 
 Properties:
 
+- value
+- tristate
 - label
 - labelPosition
-- value
 
 Events:
 
