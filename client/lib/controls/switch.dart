@@ -10,12 +10,12 @@ import 'create_control.dart';
 
 enum LabelPosition { right, left }
 
-class CheckboxControl extends StatefulWidget {
+class SwitchControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
 
-  const CheckboxControl(
+  const SwitchControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -23,11 +23,11 @@ class CheckboxControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<CheckboxControl> createState() => _CheckboxControlState();
+  State<SwitchControl> createState() => _SwitchControlState();
 }
 
-class _CheckboxControlState extends State<CheckboxControl> {
-  bool? _value;
+class _SwitchControlState extends State<SwitchControl> {
+  bool _value = false;
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Checkbox build: ${widget.control.id}");
+    debugPrint("SwitchControl build: ${widget.control.id}");
 
     String label = widget.control.attrString("label", "")!;
     LabelPosition labelPosition = LabelPosition.values.firstWhere(
@@ -49,7 +49,6 @@ class _CheckboxControlState extends State<CheckboxControl> {
             p.name.toLowerCase() ==
             widget.control.attrString("labelPosition", "")!.toLowerCase(),
         orElse: () => LabelPosition.right);
-    bool tristate = widget.control.attrBool("tristate", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     return StoreConnector<AppState, Function>(
@@ -58,14 +57,13 @@ class _CheckboxControlState extends State<CheckboxControl> {
         builder: (context, dispatch) {
           debugPrint("Checkbox StoreConnector build: ${widget.control.id}");
 
-          bool? value =
-              widget.control.attrBool("value", tristate ? null : false);
+          bool value = widget.control.attrBool("value", false)!;
           if (_value != value) {
             _value = value;
           }
 
-          onChange(bool? value) {
-            var svalue = value != null ? value.toString() : "";
+          onChange(bool value) {
+            var svalue = value.toString();
             debugPrint(svalue);
             setState(() {
               _value = value;
@@ -82,16 +80,15 @@ class _CheckboxControlState extends State<CheckboxControl> {
                 eventData: svalue);
           }
 
-          var checkbox = Checkbox(
+          var swtch = Switch(
               value: _value,
-              tristate: tristate,
               onChanged: !disabled
-                  ? (bool? value) {
+                  ? (bool value) {
                       onChange(value);
                     }
                   : null);
 
-          Widget result = checkbox;
+          Widget result = swtch;
           if (label != "") {
             var labelWidget = disabled
                 ? Text(label,
@@ -101,20 +98,12 @@ class _CheckboxControlState extends State<CheckboxControl> {
             result = GestureDetector(
                 onTap: !disabled
                     ? () {
-                        bool? newValue;
-                        if (!tristate) {
-                          newValue = !_value!;
-                        } else if (tristate && _value == null) {
-                          newValue = false;
-                        } else if (tristate && _value == false) {
-                          newValue = true;
-                        }
-                        onChange(newValue);
+                        onChange(!_value);
                       }
                     : null,
                 child: labelPosition == LabelPosition.right
-                    ? Row(children: [checkbox, labelWidget])
-                    : Row(children: [labelWidget, checkbox]));
+                    ? Row(children: [swtch, labelWidget])
+                    : Row(children: [labelWidget, swtch]));
           }
 
           return constrainedControl(result, widget.parent, widget.control);

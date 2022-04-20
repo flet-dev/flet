@@ -7,16 +7,19 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../web_socket_client.dart';
 import 'create_control.dart';
+import 'form_field.dart';
 
 class TextFieldControl extends StatefulWidget {
   final Control? parent;
   final Control control;
+  final List<Control> children;
   final bool parentDisabled;
 
   const TextFieldControl(
       {Key? key,
       this.parent,
       required this.control,
+      required this.children,
       required this.parentDisabled})
       : super(key: key);
 
@@ -26,6 +29,7 @@ class TextFieldControl extends StatefulWidget {
 
 class _TextFieldControlState extends State<TextFieldControl> {
   String _value = "";
+  bool _revealPassword = false;
   late TextEditingController _controller;
 
   @override
@@ -58,12 +62,59 @@ class _TextFieldControlState extends State<TextFieldControl> {
             _controller.text = value;
           }
 
+          var prefixControls = widget.children.where((c) => c.name == "prefix");
+          var suffixControls = widget.children.where((c) => c.name == "suffix");
+
+          int? minLines = widget.control.attrInt("minLines");
+          int? maxLines = widget.control.attrInt("maxLines");
+
+          bool readOnly = widget.control.attrBool("readOnly", false)!;
+          bool password = widget.control.attrBool("password", false)!;
+          bool canRevealPassword =
+              widget.control.attrBool("canRevealPassword", false)!;
+
+          Widget? revealPasswordIcon;
+          if (password && canRevealPassword) {
+            revealPasswordIcon = GestureDetector(
+                child: Icon(
+                  _revealPassword ? Icons.visibility_off : Icons.visibility,
+                ),
+                onTap: () {
+                  setState(() {
+                    _revealPassword = !_revealPassword;
+                  });
+                });
+          }
+
+          TextInputType keyboardType = parseTextInputType(
+              widget.control.attrString("keyboardType", "")!);
+
+          if (keyboardType == TextInputType.none &&
+              minLines != null &&
+              minLines > 0) {
+            keyboardType = TextInputType.multiline;
+          }
+
+          TextAlign textAlign = TextAlign.values.firstWhere(
+            ((b) =>
+                b.name ==
+                widget.control.attrString("textAlign", "")!.toLowerCase()),
+            orElse: () => TextAlign.start,
+          );
+
           var textField = TextFormField(
-              //initialValue: widget.control.attrs["value"] ?? "",
               enabled: !disabled,
-              decoration: InputDecoration(
-                  labelText: widget.control.attrs["label"] ?? "",
-                  border: const OutlineInputBorder()),
+              decoration: buildInputDecoration(
+                  widget.control,
+                  prefixControls.isNotEmpty ? prefixControls.first : null,
+                  suffixControls.isNotEmpty ? suffixControls.first : null,
+                  revealPasswordIcon),
+              keyboardType: keyboardType,
+              textAlign: textAlign,
+              minLines: minLines,
+              maxLines: password ? 1 : maxLines,
+              readOnly: readOnly,
+              obscureText: password && !_revealPassword,
               controller: _controller,
               onChanged: (String value) {
                 debugPrint(value);

@@ -5,6 +5,7 @@ from flet.ref import Ref
 class Icon(Control):
     def __init__(
         self,
+        name: str = None,
         ref: Ref = None,
         expand: int = None,
         opacity: OptionalNumber = None,
@@ -14,7 +15,6 @@ class Icon(Control):
         #
         # Specific
         #
-        name: str = None,
         color: str = None,
         size: float = None,
     ):

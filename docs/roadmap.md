@@ -26,11 +26,11 @@
     * [x] IconButton
   * Input and selections
     * [ ] TextField
-    * [ ] Checkbox
-    * [ ] Radio
     * [ ] Dropdown
+    * [x] Checkbox
+    * [x] RadioGroup and Radio
     * [ ] Slider
-    * [ ] Switch
+    * [x] Switch
   * Dialogs, alerts and panels
     * [ ] Banner
     * [x] SnackBar
@@ -710,6 +710,17 @@ Events:
 
 - onPressed
 
+## RadioGroup
+
+Properties:
+
+- value - selected value
+- content
+
+Events:
+
+- change
+
 ## Radio
 
 Docs: https://api.flutter.dev/flutter/material/Radio-class.html
@@ -718,11 +729,7 @@ Properties:
 
 - label
 - labelPosition
-- value
-
-Events:
-
-- change
+- value - radio's value
 
 ## Slider
 
@@ -814,6 +821,7 @@ Properties:
 - minLines
 - maxLines
 - password
+- canRevealPassword - true/false
 - readOnly
 - textAlign
 

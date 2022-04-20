@@ -24,6 +24,7 @@ import 'radio_group.dart';
 import 'row.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
+import 'switch.dart';
 import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
@@ -118,9 +119,15 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return TextFieldControl(
               parent: parent,
               control: controlView.control,
+              children: controlView.children,
               parentDisabled: parentDisabled);
         case ControlType.checkbox:
           return CheckboxControl(
+              parent: parent,
+              control: controlView.control,
+              parentDisabled: parentDisabled);
+        case ControlType.Switch:
+          return SwitchControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);

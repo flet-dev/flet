@@ -2,7 +2,7 @@ from typing import Optional
 
 from beartype import beartype
 
-from flet.control import Control, InputBorder, OptionalNumber
+from flet.control import Control, InputBorder, OptionalNumber, PaddingValue
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
 
@@ -24,13 +24,18 @@ class Dropdown(FormFieldControl):
         label: str = None,
         icon: str = None,
         border: InputBorder = None,
+        content_padding: PaddingValue = None,
         filled: bool = None,
         hint_text: str = None,
         helper_text: str = None,
         counter_text: str = None,
         error_text: str = None,
         prefix: Control = None,
+        prefix_icon: str = None,
+        prefix_text: str = None,
         suffix: Control = None,
+        suffix_icon: str = None,
+        suffix_text: str = None,
         #
         # DropDown Specific
         #
@@ -54,13 +59,18 @@ class Dropdown(FormFieldControl):
             label=label,
             icon=icon,
             border=border,
+            content_padding=content_padding,
             filled=filled,
             hint_text=hint_text,
             helper_text=helper_text,
             counter_text=counter_text,
             error_text=error_text,
             prefix=prefix,
+            prefix_icon=prefix_icon,
+            prefix_text=prefix_text,
             suffix=suffix,
+            suffix_icon=suffix_icon,
+            suffix_text=suffix_text,
         )
 
         self.__options = []

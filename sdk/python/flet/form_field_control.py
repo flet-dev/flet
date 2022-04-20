@@ -1,9 +1,12 @@
+import json
 from typing import Optional
 
 from beartype import beartype
 
+from flet import padding
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, InputBorder, OptionalNumber
+from flet.control import Control, InputBorder, OptionalNumber, PaddingValue
+from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
 
 
@@ -24,13 +27,18 @@ class FormFieldControl(ConstrainedControl):
         label: str = None,
         icon: str = None,
         border: InputBorder = None,
+        content_padding: PaddingValue = None,
         filled: bool = None,
         hint_text: str = None,
         helper_text: str = None,
         counter_text: str = None,
         error_text: str = None,
         prefix: Control = None,
+        prefix_icon: str = None,
+        prefix_text: str = None,
         suffix: Control = None,
+        suffix_icon: str = None,
+        suffix_text: str = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -50,13 +58,18 @@ class FormFieldControl(ConstrainedControl):
         self.label = label
         self.icon = icon
         self.border = border
+        self.content_padding = content_padding
         self.filled = filled
         self.hint_text = hint_text
         self.helper_text = helper_text
         self.counter_text = counter_text
         self.error_text = error_text
         self.prefix = prefix
+        self.prefix_icon = prefix_icon
+        self.prefix_text = prefix_text
         self.suffix = suffix
+        self.suffix_icon = suffix_icon
+        self.suffix_text = suffix_text
 
     def _get_children(self):
         children = []
@@ -64,7 +77,7 @@ class FormFieldControl(ConstrainedControl):
             self.__prefix._set_attr_internal("n", "prefix")
             children.append(self.__prefix)
         if self.__suffix:
-            self.__suffix._set_attr_internal("n", "prefix")
+            self.__suffix._set_attr_internal("n", "suffix")
             children.append(self.__suffix)
         return children
 
@@ -95,6 +108,21 @@ class FormFieldControl(ConstrainedControl):
     @beartype
     def border(self, value: InputBorder):
         self._set_attr("border", value)
+
+    # content_padding
+    @property
+    def content_padding(self):
+        return self.__content_padding
+
+    @content_padding.setter
+    @beartype
+    def content_padding(self, value: PaddingValue):
+        self.__content_padding = value
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr(
+            "contentPadding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
+        )
 
     # filled
     @property
@@ -150,6 +178,24 @@ class FormFieldControl(ConstrainedControl):
     def prefix(self, value):
         self.__prefix = value
 
+    # prefix_icon
+    @property
+    def prefix_icon(self):
+        return self._get_attr("prefixIcon")
+
+    @prefix_icon.setter
+    def prefix_icon(self, value):
+        self._set_attr("prefixIcon", value)
+
+    # prefix_text
+    @property
+    def prefix_text(self):
+        return self._get_attr("prefixText")
+
+    @prefix_text.setter
+    def prefix_text(self, value):
+        self._set_attr("prefixText", value)
+
     # suffix
     @property
     def suffix(self):
@@ -158,3 +204,21 @@ class FormFieldControl(ConstrainedControl):
     @suffix.setter
     def suffix(self, value):
         self.__suffix = value
+
+    # suffix_icon
+    @property
+    def suffix_icon(self):
+        return self._get_attr("suffixIcon")
+
+    @suffix_icon.setter
+    def suffix_icon(self, value):
+        self._set_attr("suffixIcon", value)
+
+    # suffix_text
+    @property
+    def suffix_text(self):
+        return self._get_attr("suffixText")
+
+    @suffix_text.setter
+    def suffix_text(self, value):
+        self._set_attr("suffixText", value)

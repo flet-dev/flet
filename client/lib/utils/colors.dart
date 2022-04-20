@@ -138,19 +138,19 @@ extension HexColor on Color {
     if (matches.isEmpty) {
       return null;
     }
-    var name = matches.first.group(1);
+    var name = matches.first.group(1) ?? "";
     var shade = int.tryParse(matches.first.group(2)!) ?? 0;
 
     // scheme color
     if (context != null) {
-      Color? color = _getThemeColor(context, name!);
+      Color? color = _getThemeColor(context, name);
       if (color != null) {
         return color;
       }
     }
 
     // plain color
-    Color? color = _plainColors[name!.toLowerCase()];
+    Color? color = _plainColors[colorName.toLowerCase()];
     if (color != null) {
       return color;
     }

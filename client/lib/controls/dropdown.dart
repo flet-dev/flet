@@ -8,6 +8,7 @@ import '../models/control_children_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../web_socket_client.dart';
 import 'create_control.dart';
+import 'form_field.dart';
 
 class DropdownControl extends StatefulWidget {
   final Control? parent;
@@ -42,23 +43,23 @@ class _DropdownControlState extends State<DropdownControl> {
 
           bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-          String? value = widget.control.attrs["value"];
-          if (value == "") {
-            value = null;
-          }
+          String? value = widget.control.attrString("value");
           if (_value != value) {
             _value = value;
           }
 
-          var dropDown = DropdownButton<String>(
+          var prefixControls =
+              itemsView.children.where((c) => c.name == "prefix");
+          var suffixControls =
+              itemsView.children.where((c) => c.name == "suffix");
+
+          var dropDown = DropdownButtonFormField<String>(
             value: _value,
-            // icon: const Icon(Icons.arrow_downward),
-            // elevation: 16,
-            // style: const TextStyle(color: Colors.deepPurple),
-            // underline: Container(
-            //   height: 1,
-            //   color: Colors.deepPurpleAccent,
-            // ),
+            decoration: buildInputDecoration(
+                widget.control,
+                prefixControls.isNotEmpty ? prefixControls.first : null,
+                suffixControls.isNotEmpty ? suffixControls.first : null,
+                null),
             onChanged: (String? value) {
               debugPrint("Dropdown selected value: $value");
               setState(() {
@@ -70,8 +71,13 @@ class _DropdownControlState extends State<DropdownControl> {
               itemsView.dispatch(UpdateControlPropsAction(
                   UpdateControlPropsPayload(props: props)));
               ws.updateControlProps(props: props);
+              ws.pageEventFromWeb(
+                  eventTarget: widget.control.id,
+                  eventName: "change",
+                  eventData: value);
             },
             items: itemsView.children
+                .where((c) => c.name == null)
                 .map<DropdownMenuItem<String>>((Control itemCtrl) {
               return DropdownMenuItem<String>(
                 enabled: !(disabled || itemCtrl.isDisabled),

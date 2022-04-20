@@ -2,7 +2,7 @@ from typing import Optional
 
 from beartype import beartype
 
-from flet.control import Control, InputBorder, OptionalNumber, TextAlign
+from flet.control import Control, InputBorder, OptionalNumber, PaddingValue, TextAlign
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
 
@@ -18,7 +18,7 @@ TextInputType = Literal[
     "number",
     "phone",
     "datetime",
-    "emailAddress",
+    "email",
     "url",
     "visiblePassword",
     "name",
@@ -44,13 +44,18 @@ class TextField(FormFieldControl):
         label: str = None,
         icon: str = None,
         border: InputBorder = None,
+        content_padding: PaddingValue = None,
         filled: bool = None,
         hint_text: str = None,
         helper_text: str = None,
         counter_text: str = None,
         error_text: str = None,
         prefix: Control = None,
+        prefix_icon: str = None,
+        prefix_text: str = None,
         suffix: Control = None,
+        suffix_icon: str = None,
+        suffix_text: str = None,
         #
         # TextField Specific
         #
@@ -59,6 +64,7 @@ class TextField(FormFieldControl):
         min_lines: int = None,
         max_lines: int = None,
         password: bool = None,
+        can_reveal_password: bool = None,
         read_only: bool = None,
         text_align: TextAlign = None,
         on_change=None,
@@ -79,15 +85,19 @@ class TextField(FormFieldControl):
             label=label,
             icon=icon,
             border=border,
+            content_padding=content_padding,
             filled=filled,
             hint_text=hint_text,
             helper_text=helper_text,
             counter_text=counter_text,
             error_text=error_text,
             prefix=prefix,
+            prefix_icon=prefix_icon,
+            prefix_text=prefix_text,
             suffix=suffix,
+            suffix_icon=suffix_icon,
+            suffix_text=suffix_text,
         )
-        self.label = label
         self.value = value
         self.keyboard_type = keyboard_type
         self.text_align = text_align
@@ -95,6 +105,7 @@ class TextField(FormFieldControl):
         self.max_lines = max_lines
         self.read_only = read_only
         self.password = password
+        self.can_reveal_password = can_reveal_password
         self.on_change = on_change
 
     def _get_control_name(self):
@@ -116,7 +127,7 @@ class TextField(FormFieldControl):
 
     @keyboard_type.setter
     @beartype
-    def keyboard_type(self, value: TextAlign):
+    def keyboard_type(self, value: TextInputType):
         self._set_attr("keyboardType", value)
 
     # text_align
@@ -168,6 +179,16 @@ class TextField(FormFieldControl):
     @beartype
     def password(self, value: Optional[bool]):
         self._set_attr("password", value)
+
+    # can_reveal_password
+    @property
+    def can_reveal_password(self):
+        return self._get_attr("canRevealPassword", data_type="bool", def_value=False)
+
+    @can_reveal_password.setter
+    @beartype
+    def can_reveal_password(self, value: Optional[bool]):
+        self._set_attr("canRevealPassword", value)
 
     # on_change
     @property
