@@ -22,6 +22,7 @@ class Slider(ConstrainedControl):
         # Specific
         #
         value: OptionalNumber = None,
+        label: str = None,
         min: OptionalNumber = None,
         max: OptionalNumber = None,
         divisions: int = None,
@@ -39,6 +40,7 @@ class Slider(ConstrainedControl):
             data=data,
         )
         self.value = value
+        self.label = label
         self.min = min
         self.max = max
         self.divisions = divisions
@@ -56,6 +58,15 @@ class Slider(ConstrainedControl):
     @beartype
     def value(self, value: OptionalNumber):
         self._set_attr("value", value)
+
+    # label
+    @property
+    def label(self):
+        return self._get_attr("label")
+
+    @label.setter
+    def label(self, value):
+        self._set_attr("label", value)
 
     # min
     @property

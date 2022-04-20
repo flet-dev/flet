@@ -17,6 +17,7 @@ from flet import (
     border,
     border_radius,
     dropdown,
+    icons,
     padding,
 )
 from flet.border_radius import BorderRadius
@@ -71,14 +72,14 @@ def main(page: Page):
                 ),
                 TextField(
                     label="Email",
-                    prefix_icon="email",
+                    prefix_icon=icons.EMAIL,
                     border="underline",
                     keyboard_type="email",
                     filled=True,
                 ),
                 TextField(
                     label="Password",
-                    prefix_icon="password",
+                    prefix_icon=icons.PASSWORD_SHARP,
                     border="underline",
                     password=True,
                     can_reveal_password=True,

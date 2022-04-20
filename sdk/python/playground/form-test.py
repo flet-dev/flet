@@ -25,6 +25,7 @@ from flet.icon import Icon
 from flet.list_view import ListView
 from flet.radio import Radio
 from flet.radio_group import RadioGroup
+from flet.slider import Slider
 from flet.stack import Stack
 from flet.switch import Switch
 
@@ -141,6 +142,9 @@ def main(page: Page):
                 dd1,
                 Text("Dropdown with all decoration", style="headlineMedium"),
                 dd2,
+                Text("Slider", style="headlineMedium"),
+                Slider(value=0.5),
+                Slider(min=0, max=100, divisions=10, value=30, label="{value}%"),
             ],
             scroll="always",
             expand=1,

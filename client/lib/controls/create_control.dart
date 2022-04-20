@@ -22,6 +22,7 @@ import 'progress_ring.dart';
 import 'radio.dart';
 import 'radio_group.dart';
 import 'row.dart';
+import 'slider.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
 import 'switch.dart';
@@ -128,6 +129,11 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.Switch:
           return SwitchControl(
+              parent: parent,
+              control: controlView.control,
+              parentDisabled: parentDisabled);
+        case ControlType.slider:
+          return SliderControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);
