@@ -19,6 +19,8 @@ import 'outlined_button.dart';
 import 'page.dart';
 import 'progress_bar.dart';
 import 'progress_ring.dart';
+import 'radio.dart';
+import 'radio_group.dart';
 import 'row.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
@@ -119,6 +121,17 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.checkbox:
           return CheckboxControl(
+              parent: parent,
+              control: controlView.control,
+              parentDisabled: parentDisabled);
+        case ControlType.radioGroup:
+          return RadioGroupControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.radio:
+          return RadioControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);

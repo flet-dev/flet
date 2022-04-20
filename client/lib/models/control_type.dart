@@ -16,6 +16,7 @@ enum ControlType {
   page,
   progressBar,
   progressRing,
+  radioGroup,
   radio,
   row,
   slider,

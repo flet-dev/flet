@@ -1,3 +1,6 @@
+import 'package:flet_view/controls/error.dart';
+import 'package:flet_view/models/control_ancestor_view_model.dart';
+import 'package:flet_view/models/control_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -10,12 +13,12 @@ import 'create_control.dart';
 
 enum LabelPosition { right, left }
 
-class CheckboxControl extends StatefulWidget {
+class RadioControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
 
-  const CheckboxControl(
+  const RadioControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -23,12 +26,10 @@ class CheckboxControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<CheckboxControl> createState() => _CheckboxControlState();
+  State<RadioControl> createState() => _RadioControlState();
 }
 
-class _CheckboxControlState extends State<CheckboxControl> {
-  bool? _value;
-
+class _RadioControlState extends State<RadioControl> {
   @override
   void initState() {
     super.initState();
@@ -41,60 +42,56 @@ class _CheckboxControlState extends State<CheckboxControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Checkbox build: ${widget.control.id}");
+    debugPrint("Radio build: ${widget.control.id}");
 
     String label = widget.control.attrString("label", "")!;
+    String value = widget.control.attrString("value", "")!;
     LabelPosition labelPosition = LabelPosition.values.firstWhere(
         (p) =>
             p.name.toLowerCase() ==
             widget.control.attrString("labelPosition", "")!.toLowerCase(),
         orElse: () => LabelPosition.right);
-    bool tristate = widget.control.attrBool("tristate", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    return StoreConnector<AppState, Function>(
+    return StoreConnector<AppState, ControlAncestorViewModel>(
         distinct: true,
-        converter: (store) => store.dispatch,
-        builder: (context, dispatch) {
-          debugPrint("Checkbox StoreConnector build: ${widget.control.id}");
+        converter: (store) => ControlAncestorViewModel.fromStore(
+            store, widget.control.id, ControlType.radioGroup),
+        builder: (context, viewModel) {
+          debugPrint("Radio StoreConnector build: ${widget.control.id}");
 
-          bool? value =
-              widget.control.attrBool("value", tristate ? null : false);
-          if (_value != value) {
-            _value = value;
+          if (viewModel.ancestor == null) {
+            return const ErrorControl(
+                "Radio control must be enclosed with RadioGroup.");
           }
 
-          onChange(bool? value) {
+          String groupValue = viewModel.ancestor!.attrString("value", "")!;
+
+          onChange(String? value) {
             var svalue = value != null ? value.toString() : "";
             debugPrint(svalue);
-            setState(() {
-              _value = value;
-            });
             List<Map<String, String>> props = [
-              {
-                "i": widget.control.id,
-                "value": value != null ? value.toString() : ""
-              }
+              {"i": viewModel.ancestor!.id, "value": svalue}
             ];
-            dispatch(UpdateControlPropsAction(
+            viewModel.dispatch(UpdateControlPropsAction(
                 UpdateControlPropsPayload(props: props)));
             ws.updateControlProps(props: props);
             ws.pageEventFromWeb(
-                eventTarget: widget.control.id,
+                eventTarget: viewModel.ancestor!.id,
                 eventName: "change",
                 eventData: svalue);
           }
 
-          var checkbox = Checkbox(
-              value: _value,
-              tristate: tristate,
+          var radio = Radio<String>(
+              groupValue: groupValue,
+              value: value,
               onChanged: !disabled
-                  ? (bool? value) {
+                  ? (String? value) {
                       onChange(value);
                     }
                   : null);
 
-          Widget result = checkbox;
+          Widget result = radio;
           if (label != "") {
             var labelWidget = disabled
                 ? Text(label,
@@ -104,20 +101,12 @@ class _CheckboxControlState extends State<CheckboxControl> {
             result = GestureDetector(
                 onTap: !disabled
                     ? () {
-                        bool? newValue;
-                        if (!tristate) {
-                          newValue = !_value!;
-                        } else if (tristate && _value == null) {
-                          newValue = false;
-                        } else if (tristate && _value == false) {
-                          newValue = true;
-                        }
-                        onChange(newValue);
+                        onChange(value);
                       }
                     : null,
                 child: labelPosition == LabelPosition.right
-                    ? Row(children: [checkbox, labelWidget])
-                    : Row(children: [labelWidget, checkbox]));
+                    ? Row(children: [radio, labelWidget])
+                    : Row(children: [labelWidget, radio]));
           }
 
           return constrainedControl(result, widget.parent, widget.control);

@@ -1,8 +1,8 @@
 from typing import Optional
 
 from beartype import beartype
-from flet.constrained_control import ConstrainedControl
 
+from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
@@ -31,7 +31,7 @@ class Radio(ConstrainedControl):
         #
         label: str = None,
         label_position: LabelPosition = None,
-        value: bool = None,
+        value: str = None,
         on_change=None,
     ):
         ConstrainedControl.__init__(
@@ -56,11 +56,10 @@ class Radio(ConstrainedControl):
     # value
     @property
     def value(self):
-        return self._get_attr("value", data_type="bool", def_value=False)
+        return self._get_attr("value", def_value="")
 
     @value.setter
-    @beartype
-    def value(self, value: Optional[bool]):
+    def value(self, value):
         self._set_attr("value", value)
 
     # label
