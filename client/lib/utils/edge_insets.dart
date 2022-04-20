@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import '../models/control.dart';
+import 'numbers.dart';
 
 EdgeInsets? parseEdgeInsets(Control control, String propName) {
   var v = control.attrString(propName, null);
@@ -15,6 +16,6 @@ EdgeInsets? parseEdgeInsets(Control control, String propName) {
 }
 
 EdgeInsets edgeInsetsFromJson(Map<String, dynamic> json) {
-  return EdgeInsets.fromLTRB(json['l'] as double, json['t'] as double,
-      json['r'] as double, json['b'] as double);
+  return EdgeInsets.fromLTRB(parseDouble(json['l']), parseDouble(json['t']),
+      parseDouble(json['r']), parseDouble(json['b']));
 }

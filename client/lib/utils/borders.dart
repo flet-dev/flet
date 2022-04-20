@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'colors.dart';
+import 'numbers.dart';
 
 BorderRadius? parseBorderRadius(Control control, String propName) {
   var v = control.attrString(propName, null);
@@ -27,10 +28,10 @@ Border? parseBorder(BuildContext context, Control control, String propName) {
 
 BorderRadius borderRadiusFromJSON(Map<String, dynamic> json) {
   return BorderRadius.only(
-    topLeft: Radius.circular(json['tl'] as double),
-    topRight: Radius.circular(json['tr'] as double),
-    bottomLeft: Radius.circular(json['bl'] as double),
-    bottomRight: Radius.circular(json['br'] as double),
+    topLeft: Radius.circular(parseDouble(json['tl'])),
+    topRight: Radius.circular(parseDouble(json['tr'])),
+    bottomLeft: Radius.circular(parseDouble(json['bl'])),
+    bottomRight: Radius.circular(parseDouble(json['br'])),
   );
 }
 
@@ -48,6 +49,6 @@ BorderSide borderSideFromJSON(
       color: json['c'] != null
           ? HexColor.fromString(context, json['c'] as String) ?? Colors.black
           : Colors.black,
-      width: json['w'] ?? 1,
+      width: parseDouble(json['w'], 1),
       style: BorderStyle.solid);
 }
