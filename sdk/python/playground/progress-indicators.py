@@ -30,7 +30,7 @@ def main(page: Page):
         ),
         Text("Linear progress indicator", style="headlineSmall"),
         Column([Text("Doing something..."), pb]),
-        Text("Indeterminated progress bar", style="headlineSmall"),
+        Text("Indeterminate progress bar", style="headlineSmall"),
         ProgressBar(width=400, color="amber", bgcolor="#eeeeee"),
     )
 

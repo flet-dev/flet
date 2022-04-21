@@ -37,4 +37,4 @@ def main(page):
     page.add(ElevatedButton("Open SnackBar", on_click=on_click))
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(name="test1", port=8550, target=main, view=flet.FLET_APP)

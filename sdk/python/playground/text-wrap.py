@@ -75,4 +75,4 @@ def main(page: Page):
     )
 
 
-flet.app(name="test1", target=main, view=flet.WEB_BROWSER)
+flet.app(name="test1", target=main, view=flet.FLET_APP)
