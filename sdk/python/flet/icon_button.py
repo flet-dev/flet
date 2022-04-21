@@ -10,6 +10,7 @@ from flet.ref import Ref
 class IconButton(ConstrainedControl):
     def __init__(
         self,
+        icon: str = None,
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -22,7 +23,6 @@ class IconButton(ConstrainedControl):
         # Specific
         #
         tooltip: str = None,
-        icon: str = None,
         icon_size: OptionalNumber = None,
         icon_color: str = None,
         content: Control = None,

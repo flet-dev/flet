@@ -1,3 +1,4 @@
+import 'package:flet_view/utils/desktop.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -75,8 +76,11 @@ class PageControl extends StatelessWidget {
 
     debugPrint("Page theme: $themeMode");
 
+    String title = control.attrString("title", "")!;
+    setWindowTitle(title);
+
     return MaterialApp(
-      title: control.attrString("title", "")!,
+      title: title,
       theme: theme,
       darkTheme: darkTheme,
       themeMode: themeMode,

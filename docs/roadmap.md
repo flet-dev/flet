@@ -644,12 +644,6 @@ Properties:
 - label
 - labelPosition
 
-## TextField
-
-Docs: https://api.flutter.dev/flutter/material/TextField-class.html
-
-Example: https://gallery.flutter.dev/#/demo/text-field
-
 ## ElevatedButton
 
 Docs: https://api.flutter.dev/flutter/material/ElevatedButton-class.html
@@ -825,6 +819,7 @@ Properties:
 - password
 - canRevealPassword - true/false
 - readOnly
+- shiftEnter
 - textAlign
 
 Events:

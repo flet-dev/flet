@@ -25,7 +25,7 @@ class IconButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Button build: ${control.id}");
 
-    String? tooltip = control.attrString("tooltip")!;
+    String? tooltip = control.attrString("tooltip");
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
     Color? iconColor =
         HexColor.fromString(context, control.attrString("iconColor", "")!);
