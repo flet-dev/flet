@@ -29,7 +29,7 @@
     * [x] Dropdown
     * [x] Checkbox
     * [x] RadioGroup and Radio
-    * [ ] Slider
+    * [x] Slider
     * [x] Switch
   * Dialogs, alerts and panels
     * [ ] Banner
@@ -738,6 +738,7 @@ Docs: https://api.flutter.dev/flutter/material/Switch-class.html
 Properties:
 
 - value
+- label - use `{value}`
 - min
 - max
 - divisions
