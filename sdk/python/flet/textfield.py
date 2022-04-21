@@ -66,8 +66,10 @@ class TextField(FormFieldControl):
         password: bool = None,
         can_reveal_password: bool = None,
         read_only: bool = None,
+        shift_enter: bool = None,
         text_align: TextAlign = None,
         on_change=None,
+        on_submit=None,
     ):
         FormFieldControl.__init__(
             self,
@@ -104,9 +106,11 @@ class TextField(FormFieldControl):
         self.min_lines = min_lines
         self.max_lines = max_lines
         self.read_only = read_only
+        self.shift_enter = shift_enter
         self.password = password
         self.can_reveal_password = can_reveal_password
         self.on_change = on_change
+        self.on_submit = on_submit
 
     def _get_control_name(self):
         return "textfield"
@@ -170,6 +174,16 @@ class TextField(FormFieldControl):
     def read_only(self, value: Optional[bool]):
         self._set_attr("readOnly", value)
 
+    # shift_enter
+    @property
+    def shift_enter(self):
+        return self._get_attr("shiftEnter", data_type="bool", def_value=False)
+
+    @shift_enter.setter
+    @beartype
+    def shift_enter(self, value: Optional[bool]):
+        self._set_attr("shiftEnter", value)
+
     # password
     @property
     def password(self):
@@ -202,3 +216,12 @@ class TextField(FormFieldControl):
             self._set_attr("onchange", True)
         else:
             self._set_attr("onchange", None)
+
+    # on_submit
+    @property
+    def on_submit(self):
+        return self._get_event_handler("submit")
+
+    @on_submit.setter
+    def on_submit(self, handler):
+        self._add_event_handler("submit", handler)

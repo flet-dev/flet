@@ -39,7 +39,17 @@ def main(page: Page):
     page.theme_mode = "light"
     page.padding = padding.all(20)
 
-    results = Column(scroll="always", height=100)
+    def chat_submit(e):
+        print(f"Submit FieldText: {e.control.value}")
+        e.control.value = ""
+        page.update()
+
+    chat_input = TextField(
+        hint_text="Say something...",
+        min_lines=1,
+        shift_enter=True,
+        on_submit=chat_submit,
+    )
 
     page.add(
         Column(
@@ -66,6 +76,11 @@ def main(page: Page):
                     filled=True,
                     min_lines=1,
                 ),
+                Text(
+                    "New line - Shift + Enter and submit on Enter",
+                    style="headlineSmall",
+                ),
+                chat_input,
                 Text(
                     "Login with email/password",
                     style="headlineSmall",

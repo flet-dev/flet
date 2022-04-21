@@ -63,6 +63,7 @@
     * Complex embeddable values for `padding`, `marging`, etc, e.g. `.padding = { 'left': 10, 'right': 20 }`
     * Visual Density ([more](https://api.flutter.dev/flutter/material/VisualDensity-class.html))
     * Early detection of layout issues (like enabling scrolling in unbounded controls) with [Layout Builder](https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html).
+    * Scroll speed on Windows Desktop [The issue](https://github.com/flutter/flutter/issues/67985)
 
 * Flet Client
   * Web

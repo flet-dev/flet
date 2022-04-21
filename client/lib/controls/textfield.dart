@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
@@ -31,6 +32,22 @@ class _TextFieldControlState extends State<TextFieldControl> {
   String _value = "";
   bool _revealPassword = false;
   late TextEditingController _controller;
+
+  late final _focusNode = FocusNode(
+    onKey: (FocusNode node, RawKeyEvent evt) {
+      if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
+        if (evt is RawKeyDownEvent) {
+          ws.pageEventFromWeb(
+              eventTarget: widget.control.id,
+              eventName: "submit",
+              eventData: "");
+        }
+        return KeyEventResult.handled;
+      } else {
+        return KeyEventResult.ignored;
+      }
+    },
+  );
 
   @override
   void initState() {
@@ -70,8 +87,10 @@ class _TextFieldControlState extends State<TextFieldControl> {
 
           bool readOnly = widget.control.attrBool("readOnly", false)!;
           bool password = widget.control.attrBool("password", false)!;
+          bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
           bool canRevealPassword =
               widget.control.attrBool("canRevealPassword", false)!;
+          bool onChange = widget.control.attrBool("onChange", false)!;
 
           Widget? revealPasswordIcon;
           if (password && canRevealPassword) {
@@ -116,6 +135,9 @@ class _TextFieldControlState extends State<TextFieldControl> {
               readOnly: readOnly,
               obscureText: password && !_revealPassword,
               controller: _controller,
+              focusNode: keyboardType == TextInputType.multiline && shiftEnter
+                  ? _focusNode
+                  : null,
               onChanged: (String value) {
                 debugPrint(value);
                 setState(() {
@@ -127,6 +149,12 @@ class _TextFieldControlState extends State<TextFieldControl> {
                 dispatch(UpdateControlPropsAction(
                     UpdateControlPropsPayload(props: props)));
                 ws.updateControlProps(props: props);
+                if (onChange) {
+                  ws.pageEventFromWeb(
+                      eventTarget: widget.control.id,
+                      eventName: "change",
+                      eventData: value);
+                }
               });
 
           return constrainedControl(textField, widget.parent, widget.control);
