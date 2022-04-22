@@ -1,7 +1,11 @@
+import 'package:flet_view/models/control_type.dart';
 import 'package:flet_view/utils/desktop.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
+import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/control_children_view_model.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
@@ -22,8 +26,6 @@ class PageControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Page build: ${control.id}");
 
-    debugPrint(Theme.of(context).colorScheme.primary.toString());
-
     bool disabled = control.isDisabled;
 
     final spacing = control.attrDouble("spacing", 10)!;
@@ -32,14 +34,14 @@ class PageControl extends StatelessWidget {
     final crossAlignment = parseCrossAxisAlignment(
         control, "horizontalAlignment", CrossAxisAlignment.start);
 
-    List<Widget> offstage = [];
+    Control? offstage;
     List<Widget> controls = [];
     bool firstControl = true;
 
     for (var ctrl in children.where((c) => c.isVisible)) {
       // offstage control
-      if (ctrl.name == "offstage") {
-        offstage.add(createControl(control, ctrl.id, control.isDisabled));
+      if (ctrl.type == ControlType.offstage) {
+        offstage = ctrl;
         continue;
       }
 
@@ -79,29 +81,47 @@ class PageControl extends StatelessWidget {
     String title = control.attrString("title", "")!;
     setWindowTitle(title);
 
-    return MaterialApp(
-      title: title,
-      theme: theme,
-      darkTheme: darkTheme,
-      themeMode: themeMode,
-      home: Scaffold(
-        body: Stack(children: [
-          SizedBox.expand(
-              child: Container(
-            padding:
-                parseEdgeInsets(control, "padding") ?? const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: HexColor.fromString(
-                    context, control.attrString("bgcolor", "")!)),
-            child: Column(
-                mainAxisAlignment: mainAlignment,
-                crossAxisAlignment: crossAlignment,
-                children: controls),
-          )),
-          ...offstage,
-          const ScreenSize()
-        ]),
-      ),
-    );
+    return StoreConnector<AppState, ControlChildrenViewModel?>(
+        distinct: true,
+        converter: (store) => offstage != null
+            ? ControlChildrenViewModel.fromStore(store, offstage.id,
+                dispatch: store.dispatch)
+            : null,
+        builder: (context, offstageView) {
+          debugPrint("Offstage StoreConnector build");
+
+          // offstage
+          List<Widget> offstageWidgets = offstageView != null
+              ? offstageView.children
+                  .where((c) => c.isVisible)
+                  .map((c) => createControl(offstage, c.id, disabled))
+                  .toList()
+              : [];
+
+          return MaterialApp(
+            title: title,
+            theme: theme,
+            darkTheme: darkTheme,
+            themeMode: themeMode,
+            home: Scaffold(
+              body: Stack(children: [
+                SizedBox.expand(
+                    child: Container(
+                  padding: parseEdgeInsets(control, "padding") ??
+                      const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: HexColor.fromString(
+                          context, control.attrString("bgcolor", "")!)),
+                  child: Column(
+                      mainAxisAlignment: mainAlignment,
+                      crossAxisAlignment: crossAlignment,
+                      children: controls),
+                )),
+                ...offstageWidgets,
+                const ScreenSize()
+              ]),
+            ),
+          );
+        });
   }
 }

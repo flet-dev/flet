@@ -18,7 +18,7 @@ import 'session_store/session_store.dart'
 import 'web_socket_client.dart';
 
 void main([List<String>? args]) async {
-  setupDesktop();
+  await setupDesktop();
 
   var pageUri = Uri.base;
 

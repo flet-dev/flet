@@ -13,6 +13,7 @@ enum ControlType {
   image,
   listView,
   outlinedButton,
+  offstage,
   page,
   progressBar,
   progressRing,

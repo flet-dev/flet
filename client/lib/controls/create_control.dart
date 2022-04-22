@@ -5,6 +5,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_type.dart';
 import '../models/control_view_model.dart';
+import 'alert_dialog.dart';
 import 'checkbox.dart';
 import 'column.dart';
 import 'container.dart';
@@ -155,6 +156,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.snackBar:
           return SnackBarControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.alertDialog:
+          return AlertDialogControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

@@ -47,9 +47,7 @@ class Page(Control):
         self._event_available = threading.Event()
         self._fetch_page_details()
 
-        self.__banner: Banner = None
-        self.__snack_bar: SnackBar = None
-        self.__dialog = None
+        self.__offstage = Offstage()
         self.__theme = None
         self.__dark_theme = None
 
@@ -63,16 +61,7 @@ class Page(Control):
         return self._index.get(id)
 
     def _get_children(self):
-        children = []
-        if self.__banner:
-            self.__banner._set_attr_internal("n", "offstage")
-            children.append(self.__banner)
-        if self.__snack_bar:
-            self.__snack_bar._set_attr_internal("n", "offstage")
-            children.append(self.__snack_bar)
-        if self.__dialog:
-            self.__dialog._set_attr_internal("n", "offstage")
-            children.append(self.__dialog)
+        children = [self.__offstage]
         children.extend(self._content)
         return children
 
@@ -307,7 +296,9 @@ class Page(Control):
         self.__padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr("padding", json.dumps(value, cls=EmbedJsonEncoder) if value else None)
+        self._set_attr(
+            "padding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
+        )
 
     # bgcolor
     @property
@@ -328,35 +319,45 @@ class Page(Control):
     def design(self, value: PageDesign):
         self._set_attr("design", value)
 
+    # splash
+    @property
+    def splash(self):
+        return self.__offstage.splash
+
+    @splash.setter
+    @beartype
+    def splash(self, value: Optional[Control]):
+        self.__offstage.splash = value
+
     # banner
     @property
     def banner(self):
-        return self.__banner
+        return self.__offstage.banner
 
     @banner.setter
     @beartype
     def banner(self, value: Optional[Banner]):
-        self.__banner = value
+        self.__offstage.banner = value
 
     # snack_bar
     @property
     def snack_bar(self):
-        return self.__snack_bar
+        return self.__offstage.snack_bar
 
     @snack_bar.setter
     @beartype
     def snack_bar(self, value: Optional[SnackBar]):
-        self.__snack_bar = value
+        self.__offstage.snack_bar = value
 
     # dialog
     @property
     def dialog(self):
-        return self.__dialog
+        return self.__offstage.dialog
 
     @dialog.setter
     @beartype
     def dialog(self, value: Optional[Control]):
-        self.__dialog = value
+        self.__offstage.dialog = value
 
     # theme_mode
     @property
@@ -445,3 +446,79 @@ class Page(Control):
     @on_disconnect.setter
     def on_disconnect(self, handler):
         self._add_event_handler("disconnect", handler)
+
+
+class Offstage(Control):
+    def __init__(
+        self,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+    ):
+
+        Control.__init__(
+            self,
+            visible=visible,
+            disabled=disabled,
+            data=data,
+        )
+
+        self.__banner = None
+        self.__snack_bar = None
+        self.__dialog = None
+        self.__splash = None
+
+    def _get_control_name(self):
+        return "offstage"
+
+    def _get_children(self):
+        children = []
+        if self.__banner:
+            children.append(self.__banner)
+        if self.__snack_bar:
+            children.append(self.__snack_bar)
+        if self.__dialog:
+            children.append(self.__dialog)
+        if self.__splash:
+            children.append(self.__splash)
+        return children
+
+    # splash
+    @property
+    def splash(self):
+        return self.__splash
+
+    @splash.setter
+    @beartype
+    def splash(self, value: Optional[Control]):
+        self.__splash = value
+
+    # banner
+    @property
+    def banner(self):
+        return self.__banner
+
+    @banner.setter
+    @beartype
+    def banner(self, value: Optional[Banner]):
+        self.__banner = value
+
+    # snack_bar
+    @property
+    def snack_bar(self):
+        return self.__snack_bar
+
+    @snack_bar.setter
+    @beartype
+    def snack_bar(self, value: Optional[SnackBar]):
+        self.__snack_bar = value
+
+    # dialog
+    @property
+    def dialog(self):
+        return self.__dialog
+
+    @dialog.setter
+    @beartype
+    def dialog(self, value: Optional[Control]):
+        self.__dialog = value

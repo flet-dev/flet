@@ -58,7 +58,7 @@ class AlertDialog(Control):
         self.actions_alignment = actions_alignment
 
     def _get_control_name(self):
-        return "snackbar"
+        return "alertdialog"
 
     def _get_children(self):
         children = []
@@ -68,7 +68,9 @@ class AlertDialog(Control):
         if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
-        children.extend(a._set_attr_internal("n", "action") for a in self.__actions)
+        for action in self.__actions:
+            action._set_attr_internal("n", "action")
+            children.append(action)
         return children
 
     # open
