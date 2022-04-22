@@ -6,16 +6,8 @@ from flet import Banner, ElevatedButton, Icon, Text, TextButton, colors, icons
 logging.basicConfig(level=logging.DEBUG)
 
 
-class Data:
-    def __init__(self) -> None:
-        self.counter = 0
-
-
-d = Data()
-
-
 def main(page):
-    page.title = "SnackBar Example"
+    page.title = "Banner Example"
     page.update()
 
     def close_banner(e):
@@ -42,4 +34,4 @@ def main(page):
     page.add(ElevatedButton("Show Banner", on_click=show_banner_click))
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(name="test1", port=8550, target=main, view=flet.FLET_APP)

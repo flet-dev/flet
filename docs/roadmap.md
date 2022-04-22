@@ -32,9 +32,9 @@
     * [x] Slider
     * [x] Switch
   * Dialogs, alerts and panels
-    * [ ] Banner
+    * [x] Banner
     * [x] SnackBar
-    * [ ] AlertDialog
+    * [x] AlertDialog
 
 * Flet Client
   * [ ] Web

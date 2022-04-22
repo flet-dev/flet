@@ -10,13 +10,24 @@ class ListViewControl extends StatelessWidget {
   final bool parentDisabled;
   final List<Control> children;
 
-  const ListViewControl(
+  ListViewControl(
       {Key? key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled})
       : super(key: key);
+
+  final ScrollController _controller = ScrollController();
+
+// This is what you're looking for!
+  void _scrollDown() {
+    _controller.animateTo(
+      _controller.position.maxScrollExtent,
+      duration: const Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +36,7 @@ class ListViewControl extends StatelessWidget {
     bool disabled = control.isDisabled || parentDisabled;
 
     final horizontal = control.attrBool("horizontal", false)!;
+    final autoScroll = control.attrBool("autoScroll", false)!;
     final spacing = control.attrDouble("spacing", 0)!;
     final padding = parseEdgeInsets(control, "padding");
 
@@ -43,8 +55,15 @@ class ListViewControl extends StatelessWidget {
       controls.add(createControl(control, ctrl.id, disabled));
     }
 
+    if (autoScroll) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        _scrollDown();
+      });
+    }
+
     return constrainedControl(
         ListView(
+          controller: _controller,
           scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
           padding: padding,
           children: controls,
