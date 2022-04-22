@@ -842,6 +842,10 @@ Properties:
 - actionsPadding
 - actionsAlignment (mainAxisAlignment)
 
+Events:
+
+- dismiss - fires when non-modal dialog is dismissed by clicking an area outside it.
+
 ## Banner
 
 Docs: https://api.flutter.dev/flutter/material/MaterialBanner-class.html

@@ -105,14 +105,22 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
                   barrierDismissible: !modal,
                   context: context,
                   builder: (context) => _createAlertDialog()).then((value) {
-                debugPrint("Dialog dismissed");
+                debugPrint("Dialog dismissed: $_open");
+                bool shouldDismiss = _open;
                 _open = false;
-                List<Map<String, String>> props = [
-                  {"i": widget.control.id, "open": "false"}
-                ];
-                dispatch(UpdateControlPropsAction(
-                    UpdateControlPropsPayload(props: props)));
-                ws.updateControlProps(props: props);
+
+                if (shouldDismiss) {
+                  List<Map<String, String>> props = [
+                    {"i": widget.control.id, "open": "false"}
+                  ];
+                  dispatch(UpdateControlPropsAction(
+                      UpdateControlPropsPayload(props: props)));
+                  ws.updateControlProps(props: props);
+                  ws.pageEventFromWeb(
+                      eventTarget: widget.control.id,
+                      eventName: "dismiss",
+                      eventData: "");
+                }
               });
             });
           } else if (open != _open && _open) {

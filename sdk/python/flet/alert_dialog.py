@@ -33,6 +33,7 @@ class AlertDialog(Control):
         actions: List[Control] = None,
         actions_padding: PaddingValue = None,
         actions_alignment: MainAxisAlignment = None,
+        on_dismiss=None,
     ):
 
         Control.__init__(
@@ -56,6 +57,7 @@ class AlertDialog(Control):
         self.actions = actions
         self.actions_padding = actions_padding
         self.actions_alignment = actions_alignment
+        self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
         return "alertdialog"
@@ -174,3 +176,12 @@ class AlertDialog(Control):
     @beartype
     def actions_alignment(self, value: MainAxisAlignment):
         self._set_attr("actionsAlignment", value)
+
+    # on_dismiss
+    @property
+    def on_dismiss(self):
+        return self._get_event_handler("dismiss")
+
+    @on_dismiss.setter
+    def on_dismiss(self, handler):
+        self._add_event_handler("dismiss", handler)

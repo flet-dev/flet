@@ -18,7 +18,9 @@ def main(page: Page):
     page.title = "Dialog Example"
     page.update()
 
-    dlg = AlertDialog(title=Text("Hello, you!"))
+    dlg = AlertDialog(
+        title=Text("Hello, you!"), on_dismiss=lambda e: print("Dialog dismissed!")
+    )
 
     def close_dlg(e):
         dlg_modal.open = False
@@ -33,6 +35,7 @@ def main(page: Page):
             TextButton("No", on_click=close_dlg),
         ],
         actions_alignment="end",
+        on_dismiss=lambda e: print("Modal dialog dismissed!"),
     )
 
     def open_dlg(e):
