@@ -6,6 +6,7 @@ import '../models/control.dart';
 import '../models/control_type.dart';
 import '../models/control_view_model.dart';
 import 'alert_dialog.dart';
+import 'banner.dart';
 import 'checkbox.dart';
 import 'column.dart';
 import 'container.dart';
@@ -30,6 +31,16 @@ import 'switch.dart';
 import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
+
+abstract class ControlWidget extends Widget {
+  const ControlWidget(
+      {Key? key,
+      required Control parent,
+      required Control control,
+      required List<Control> children,
+      required bool parentDisabled})
+      : super(key: key);
+}
 
 Widget createControl(Control? parent, String id, bool parentDisabled) {
   return StoreConnector<AppState, ControlViewModel>(
@@ -166,6 +177,13 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
+        case ControlType.banner:
+          ControlWidget w = BannerControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+          return w;
         default:
           throw Exception("Unknown control type: ${controlView.control.type}");
       }
