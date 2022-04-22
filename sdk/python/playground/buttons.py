@@ -13,6 +13,7 @@ from flet import (
     Row,
     Text,
     TextButton,
+    icons,
 )
 
 logging.basicConfig(level=logging.DEBUG)
@@ -74,7 +75,7 @@ def main(page: Page):
                 TextButton("Button with icon", icon="chair_outlined"),
                 TextButton(
                     "Button with colorful icon",
-                    icon="park_rounded",
+                    icon=icons.PARK_ROUNDED,
                     icon_color="green400",
                 ),
                 TextButton(
