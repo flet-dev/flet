@@ -25,6 +25,8 @@ enum ControlType {
   stack,
   // ignore: constant_identifier_names
   Switch,
+  tabs,
+  tab,
   text,
   textButton,
   textField

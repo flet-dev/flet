@@ -530,6 +530,7 @@ Properties:
 - scrollDirection - `vertical` (default), `horizontal`.
 - padding
 - spacing
+- autoScroll - scroll to end on items update
 
 ### ListTile (S2)
 

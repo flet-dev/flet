@@ -24,6 +24,7 @@ from flet.slider import Slider
 from flet.snack_bar import SnackBar
 from flet.stack import Stack
 from flet.switch import Switch
+from flet.tabs import Tab, Tabs
 from flet.text import Text
 from flet.text_button import TextButton
 from flet.textfield import TextField

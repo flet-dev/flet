@@ -28,19 +28,20 @@ import 'slider.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
 import 'switch.dart';
+import 'tabs.dart';
 import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
 
-abstract class ControlWidget extends Widget {
-  const ControlWidget(
-      {Key? key,
-      required Control parent,
-      required Control control,
-      required List<Control> children,
-      required bool parentDisabled})
-      : super(key: key);
-}
+// abstract class ControlWidget extends Widget {
+//   const ControlWidget(
+//       {Key? key,
+//       required Control parent,
+//       required Control control,
+//       required List<Control> children,
+//       required bool parentDisabled})
+//       : super(key: key);
+// }
 
 Widget createControl(Control? parent, String id, bool parentDisabled) {
   return StoreConnector<AppState, ControlViewModel>(
@@ -178,12 +179,17 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               children: controlView.children,
               parentDisabled: parentDisabled);
         case ControlType.banner:
-          ControlWidget w = BannerControl(
+          return BannerControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-          return w;
+        case ControlType.tabs:
+          return TabsControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
         default:
           throw Exception("Unknown control type: ${controlView.control.type}");
       }

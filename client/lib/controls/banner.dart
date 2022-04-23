@@ -8,7 +8,7 @@ import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
 
-class BannerControl extends StatefulWidget implements ControlWidget {
+class BannerControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;

@@ -63,12 +63,14 @@ class PageControl extends StatelessWidget {
     var theme = parseTheme(control, "theme") ??
         ThemeData(
             colorSchemeSeed: const Color.fromARGB(255, 20, 136, 224),
-            brightness: Brightness.light);
+            brightness: Brightness.light,
+            visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var darkTheme = parseTheme(control, "darkTheme") ??
         ThemeData(
             colorSchemeSeed: const Color.fromARGB(255, 104, 192, 233),
-            brightness: Brightness.dark);
+            brightness: Brightness.dark,
+            visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var themeMode = ThemeMode.values.firstWhere(
         (t) =>
