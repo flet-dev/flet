@@ -6,6 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
+import '../web_socket_client.dart';
 import 'create_control.dart';
 
 class TabsControl extends StatefulWidget {
@@ -28,7 +29,6 @@ class TabsControl extends StatefulWidget {
 
 class _TabsControlState extends State<TabsControl>
     with TickerProviderStateMixin {
-  int _tabsCount = 0;
   List<String> _tabsIndex = [];
   String? _value;
   TabController? _tabController;
@@ -37,27 +37,37 @@ class _TabsControlState extends State<TabsControl>
   void initState() {
     super.initState();
     _tabsIndex = widget.children.map((c) => c.attrString("key", "")!).toList();
-    _tabsCount = widget.children.length;
-    _tabController = TabController(length: _tabsCount, vsync: this);
-    _tabController!.addListener(() {
-      if (_tabController!.indexIsChanging == true) {
-        return;
-      }
-      var value = _tabsIndex[_tabController!.index];
-      if (_value != value) {
-        debugPrint("Selected tab: $value");
-      }
-      _value = value;
-    });
+    _tabController = TabController(length: _tabsIndex.length, vsync: this);
+    _tabController!.addListener(_tabChanged);
+  }
+
+  void _tabChanged() {
+    if (_tabController!.indexIsChanging == true) {
+      return;
+    }
+    var value = _tabsIndex[_tabController!.index];
+    if (_value != value) {
+      debugPrint("Selected tab: $value");
+      ws.pageEventFromWeb(
+          eventTarget: widget.control.id,
+          eventName: "change",
+          eventData: value);
+    }
+    _value = value;
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("TabsControl build: ${widget.control.id}");
 
-    if (widget.children.length != _tabsCount) {
-      _tabsCount = widget.children.length;
-      _tabController = TabController(length: _tabsCount, vsync: this);
+    var tabsIndex =
+        widget.children.map((c) => c.attrString("key", "")!).toList();
+    if (tabsIndex.length != _tabsIndex.length ||
+        !tabsIndex.every((item) => _tabsIndex.contains(item))) {
+      _tabsIndex =
+          widget.children.map((c) => c.attrString("key", "")!).toList();
+      _tabController = TabController(length: _tabsIndex.length, vsync: this);
+      _tabController!.addListener(_tabChanged);
     }
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
