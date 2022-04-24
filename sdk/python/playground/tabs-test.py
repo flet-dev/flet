@@ -46,7 +46,29 @@ def main(page: Page):
     page.update()
     sleep(3)
     t.value = "tab2"
+    t.tabs.pop(0)
     t.tabs[1].content = Text("Blah blah blah")
+    page.update()
+    sleep(3)
+    t.tabs.clear()
+    page.update()
+    sleep(3)
+    t.tabs.append(
+        Tab(
+            key="tab4",
+            text="Tab 4",
+            icon=icons.LOCK,
+            content=Text("This is Tab 4"),
+        )
+    )
+    t.tabs.append(
+        Tab(
+            key="tab5",
+            text="Tab 5",
+            icon=icons.SIP_SHARP,
+            content=Text("This is Tab 5"),
+        )
+    )
     page.update()
 
 

@@ -27,7 +27,8 @@ class TabsControl extends StatefulWidget {
 }
 
 class _TabsControlState extends State<TabsControl>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
+  int _tabsCount = 0;
   List<String> _tabsIndex = [];
   String? _value;
   TabController? _tabController;
@@ -36,7 +37,8 @@ class _TabsControlState extends State<TabsControl>
   void initState() {
     super.initState();
     _tabsIndex = widget.children.map((c) => c.attrString("key", "")!).toList();
-    _tabController = TabController(length: widget.children.length, vsync: this);
+    _tabsCount = widget.children.length;
+    _tabController = TabController(length: _tabsCount, vsync: this);
     _tabController!.addListener(() {
       if (_tabController!.indexIsChanging == true) {
         return;
@@ -52,6 +54,11 @@ class _TabsControlState extends State<TabsControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("TabsControl build: ${widget.control.id}");
+
+    if (widget.children.length != _tabsCount) {
+      _tabsCount = widget.children.length;
+      _tabController = TabController(length: _tabsCount, vsync: this);
+    }
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
