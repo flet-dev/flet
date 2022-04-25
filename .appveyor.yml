@@ -196,6 +196,7 @@ for:
       - cd ..
 
       # Flet Server in Go
+      - mkdir server/server/content
       - cp -rf client/build/web/* server/server/content
       - cd server
       - sh: |
