@@ -897,6 +897,7 @@ Properties:
 
 - tabs
 - value
+- animationDuration - in milliseconds
 
 Events:
 

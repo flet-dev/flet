@@ -14,8 +14,8 @@ class Tab(Control):
         content: Control = None,
         tab_content: Control = None,
         ref: Ref = None,
-        key=None,
-        icon=None,
+        key: str = None,
+        icon: str = None,
     ):
         Control.__init__(self, ref=ref)
         assert key or text, "key or text must be specified"
@@ -101,6 +101,7 @@ class Tabs(ConstrainedControl):
         # Tabs-specific
         tabs: List[Tab] = None,
         value: str = None,
+        animation_duration: int = None,
         on_change=None,
     ):
 
@@ -118,6 +119,7 @@ class Tabs(ConstrainedControl):
 
         self.tabs = tabs
         self.value = value
+        self.animation_duration = animation_duration
         self.on_change = on_change
 
     def _get_control_name(self):
@@ -164,3 +166,13 @@ class Tabs(ConstrainedControl):
                 value in keys for keys in [(tab.key, tab.text) for tab in self.tabs]
             ), f"'{value}' is not a key for any tab"
         self._set_attr("value", value or "")
+
+    # animation_duration
+    @property
+    def animation_duration(self):
+        return self._get_attr("animationDuration")
+
+    @animation_duration.setter
+    @beartype
+    def animation_duration(self, value: Optional[int]):
+        self._set_attr("animationDuration", value)

@@ -13,6 +13,7 @@ def main(page: Page):
 
     t = Tabs(
         value="tab2",
+        animation_duration=300,
         tabs=[
             Tab(
                 key="tab1",
