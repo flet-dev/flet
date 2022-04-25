@@ -4,7 +4,6 @@ import flet
 from flet import (
     Checkbox,
     Column,
-    ElevatedButton,
     FloatingActionButton,
     IconButton,
     OutlinedButton,
@@ -37,12 +36,12 @@ class Task:
                     controls=[
                         IconButton(
                             icon=icons.EDIT,
-                            tooltip="Edit todo",
+                            tooltip="Edit To-Do",
                             on_click=self.edit_clicked,
                         ),
                         IconButton(
                             icons.DELETE,
-                            tooltip="Delete todo",
+                            tooltip="Delete To-Do",
                             on_click=self.delete_clicked,
                         ),
                     ],
@@ -51,11 +50,11 @@ class Task:
         )
         self.edit_view = Row(
             visible=False,
-            alignment="spaceBetween",
-            vertical_alignment="center",
             controls=[
                 self.edit_name,
-                ElevatedButton(text="Save", on_click=self.save_clicked),
+                IconButton(
+                    icon=icons.DONE, tooltip="Update To-Do", on_click=self.save_clicked
+                ),
             ],
         )
         self.view = Column(controls=[self.display_view, self.edit_view])
@@ -67,9 +66,13 @@ class Task:
         self.view.update()
 
     def save_clicked(self, e):
-        self.display_task.label = self.edit_name.value
-        self.display_view.visible = True
-        self.edit_view.visible = False
+        if self.edit_name.value != "":
+            self.edit_name.error_text = ""
+            self.display_task.label = self.edit_name.value
+            self.display_view.visible = True
+            self.edit_view.visible = False
+        else:
+            self.edit_name.error_text = "To-Do cannot be blank"
         self.view.update()
 
     def delete_clicked(self, e):
@@ -133,14 +136,17 @@ class TodoApp:
             if task.display_task.value == False:
                 count += 1
         self.items_left.value = f"{count} active item(s) left"
-        print("add before update111")
         self.view.update()
 
     def add_clicked(self, e):
-        task = Task(self, self.new_task.value)
-        self.tasks.append(task)
-        self.tasks_view.controls.append(task.view)
-        self.new_task.value = ""
+        self.new_task.error_text = ""
+        if self.new_task.value != "":
+            task = Task(self, self.new_task.value)
+            self.tasks.append(task)
+            self.tasks_view.controls.append(task.view)
+            self.new_task.value = ""
+        else:
+            self.new_task.error_text = "Please enter To-Do text"
         self.update()
 
     def delete_task(self, task):
@@ -161,9 +167,10 @@ def main(page: Page):
     page.title = "ToDo App"
     page.horizontal_alignment = "center"
     page.scroll = "adaptive"
+    page.theme_mode = "light"
     page.update()
     app = TodoApp()
     page.add(app.view)
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(name="test1", port=8550, target=main, view=flet.FLET_APP)
