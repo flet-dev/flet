@@ -100,7 +100,7 @@ def app(
                 terminate.wait()
         except (Exception) as e:
             pass
-    elif view == FLET_APP:
+    elif view == FLET_APP and (is_macos() or is_windows()):
         fvp = _open_flet_view(conn.page_url)
         try:
             fvp.wait()
