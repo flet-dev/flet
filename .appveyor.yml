@@ -11,7 +11,7 @@ environment:
   GO_TAGS: --tags release
   python_version: 3.10
   GITHUB_TOKEN:
-    secure: uX7wMPjOz72c6zs4QS2/m3vsOE5Fh7e68YqMNSf0mRmb6hP9Ij8haCefQjxBDlEb
+    secure: doX0dwjWhBmT56aJqR9NCbtMFJpDpdYxPCIB4vQoHfSR+nTa+pLCo6Yv5qWpD/90
   DOCKER_REGISTRY_USER:
     secure: NJVK0u9M6ZhmQKUeR6Gnxg==
   DOCKER_REGISTRY_PASS:
