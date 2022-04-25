@@ -5,6 +5,7 @@ from flet import (
     Checkbox,
     Column,
     ElevatedButton,
+    FloatingActionButton,
     IconButton,
     OutlinedButton,
     Page,
@@ -92,12 +93,12 @@ class TodoApp:
         self.view = Column(
             width=600,
             controls=[
-                Row([Text(value="Todos", size=30)], alignment="center"),
+                Row([Text(value="Todos", style="headlineMedium")], alignment="center"),
                 Row(
                     # on_submit=self.add_clicked,
                     controls=[
                         self.new_task,
-                        ElevatedButton(text="Add", on_click=self.add_clicked),
+                        FloatingActionButton(icon=icons.ADD, on_click=self.add_clicked),
                     ],
                 ),
                 Column(
@@ -159,6 +160,7 @@ class TodoApp:
 def main(page: Page):
     page.title = "ToDo App"
     page.horizontal_alignment = "center"
+    page.scroll = "adaptive"
     page.update()
     app = TodoApp()
     page.add(app.view)

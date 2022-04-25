@@ -15,6 +15,7 @@ from flet.control import (
     MainAxisAlignment,
     OptionalNumber,
     PaddingValue,
+    ScrollMode,
 )
 from flet.control_event import ControlEvent
 from flet.embed_json_encoder import EmbedJsonEncoder
@@ -394,6 +395,21 @@ class Page(Control):
         if self.__dark_theme:
             self.__dark_theme.brightness = "dark"
         self._set_attr("darkTheme", json.dumps(value, default=vars) if value else None)
+
+    # scroll
+    @property
+    def scroll(self):
+        return self.__scroll
+
+    @scroll.setter
+    @beartype
+    def scroll(self, value: ScrollMode):
+        self.__scroll = value
+        if value == True:
+            value = "auto"
+        elif value == False:
+            value = "none"
+        self._set_attr("scroll", value)
 
     # window_width
     @property

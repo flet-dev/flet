@@ -12,6 +12,7 @@ import 'column.dart';
 import 'container.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
+import 'floating_action_button.dart';
 import 'grid_view.dart';
 import 'icon.dart';
 import 'icon_button.dart';
@@ -89,6 +90,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.iconButton:
           return IconButtonControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.floatingActionButton:
+          return FloatingActionButtonControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

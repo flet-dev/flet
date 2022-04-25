@@ -12,6 +12,7 @@ import '../utils/edge_insets.dart';
 import '../utils/theme.dart';
 import '../widgets/screen_size.dart';
 import 'create_control.dart';
+import 'scrollable_control.dart';
 
 class PageControl extends StatelessWidget {
   final Control? parent;
@@ -33,6 +34,14 @@ class PageControl extends StatelessWidget {
         control, "verticalAlignment", MainAxisAlignment.start);
     final crossAlignment = parseCrossAxisAlignment(
         control, "horizontalAlignment", CrossAxisAlignment.start);
+
+    ScrollMode scrollMode = ScrollMode.values.firstWhere(
+        (m) =>
+            m.name.toLowerCase() ==
+            control.attrString("scroll", "")!.toLowerCase(),
+        orElse: () => ScrollMode.none);
+
+    debugPrint("scrollMode: $scrollMode");
 
     Control? offstage;
     List<Widget> controls = [];
@@ -100,6 +109,11 @@ class PageControl extends StatelessWidget {
                   .toList()
               : [];
 
+          var column = Column(
+              mainAxisAlignment: mainAlignment,
+              crossAxisAlignment: crossAlignment,
+              children: controls);
+
           return MaterialApp(
             title: title,
             theme: theme,
@@ -109,16 +123,18 @@ class PageControl extends StatelessWidget {
               body: Stack(children: [
                 SizedBox.expand(
                     child: Container(
-                  padding: parseEdgeInsets(control, "padding") ??
-                      const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: HexColor.fromString(
-                          context, control.attrString("bgcolor", "")!)),
-                  child: Column(
-                      mainAxisAlignment: mainAlignment,
-                      crossAxisAlignment: crossAlignment,
-                      children: controls),
-                )),
+                        padding: parseEdgeInsets(control, "padding") ??
+                            const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            color: HexColor.fromString(
+                                context, control.attrString("bgcolor", "")!)),
+                        child: scrollMode != ScrollMode.none
+                            ? ScrollableControl(
+                                child: column,
+                                scrollDirection: Axis.vertical,
+                                scrollMode: scrollMode,
+                              )
+                            : column)),
                 ...offstageWidgets,
                 const ScreenSize()
               ]),

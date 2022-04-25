@@ -7,6 +7,7 @@ from flet.control import Control
 from flet.dropdown import Dropdown
 from flet.elevated_button import ElevatedButton
 from flet.flet import *
+from flet.floating_action_button import FloatingActionButton
 from flet.grid_view import GridView
 from flet.icon import Icon
 from flet.icon_button import IconButton

@@ -26,6 +26,7 @@
     * [x] OutlinedButton
     * [x] TextButton
     * [x] IconButton
+    * [x] FloatingActionButton
   * Input and selections
     * [x] TextField
     * [x] Dropdown
@@ -224,10 +225,10 @@
         <td></td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>FloatingActionButton</td>
         <td>-</td>
-        <td></td>
+        <td>S1</td>
     </tr>
     <tr><th colspan="4">Input and selections</th></tr>
     <tr>
@@ -713,6 +714,21 @@ Properties:
 Events:
 
 - onPressed
+
+## FloatingActionButton (FAB)
+
+Docs: https://api.flutter.dev/flutter/material/FloatingActionButton-class.html
+
+Properties:
+
+- text
+- icon
+- bgColor
+- content - a Control representing custom button content
+
+Events:
+
+- click
 
 ## RadioGroup
 
