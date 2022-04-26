@@ -13,6 +13,7 @@ from flet import (
     Tabs,
     Text,
     TextField,
+    colors,
     icons,
 )
 
@@ -35,12 +36,12 @@ class Task:
                     spacing=0,
                     controls=[
                         IconButton(
-                            icon=icons.EDIT,
+                            icon=icons.CREATE_OUTLINED,
                             tooltip="Edit To-Do",
                             on_click=self.edit_clicked,
                         ),
                         IconButton(
-                            icons.DELETE,
+                            icons.DELETE_OUTLINE,
                             tooltip="Delete To-Do",
                             on_click=self.delete_clicked,
                         ),
@@ -53,7 +54,10 @@ class Task:
             controls=[
                 self.edit_name,
                 IconButton(
-                    icon=icons.DONE, tooltip="Update To-Do", on_click=self.save_clicked
+                    icon=icons.DONE_OUTLINE_OUTLINED,
+                    icon_color=colors.GREEN,
+                    tooltip="Update To-Do",
+                    on_click=self.save_clicked,
                 ),
             ],
         )
