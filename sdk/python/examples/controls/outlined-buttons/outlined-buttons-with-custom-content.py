@@ -2,8 +2,8 @@ import flet
 from flet import (
     Column,
     Container,
-    ElevatedButton,
     Icon,
+    OutlinedButton,
     Page,
     Row,
     Text,
@@ -13,9 +13,9 @@ from flet import (
 
 
 def main(page: Page):
-    page.title = "Elevated buttons with custom content"
+    page.title = "Outlined buttons with custom content"
     page.add(
-        ElevatedButton(
+        OutlinedButton(
             width=150,
             content=Row(
                 [
@@ -26,7 +26,7 @@ def main(page: Page):
                 alignment="spaceAround",
             ),
         ),
-        ElevatedButton(
+        OutlinedButton(
             content=Container(
                 content=Column(
                     [

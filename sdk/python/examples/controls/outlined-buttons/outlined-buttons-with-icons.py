@@ -1,12 +1,12 @@
 import flet
-from flet import ElevatedButton, Page
+from flet import OutlinedButton, Page
 
 
 def main(page: Page):
-    page.title = "Elevated buttons with icons"
+    page.title = "Outlined buttons with icons"
     page.add(
-        ElevatedButton("Button with icon", icon="chair_outlined"),
-        ElevatedButton(
+        OutlinedButton("Button with icon", icon="chair_outlined"),
+        OutlinedButton(
             "Button with colorful icon",
             icon="park_rounded",
             icon_color="green400",
