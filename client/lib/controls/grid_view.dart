@@ -26,21 +26,34 @@ class GridViewControl extends StatelessWidget {
 
     final horizontal = control.attrBool("horizontal", false)!;
     final runsCount = control.attrInt("runsCount", 1)!;
+    final maxExtent = control.attrDouble("maxExtent");
     final spacing = control.attrDouble("spacing", 10)!;
     final runSpacing = control.attrDouble("runSpacing", 10)!;
     final padding = parseEdgeInsets(control, "padding");
 
-    List<Widget> controls =
-        children.map((c) => createControl(control, c.id, disabled)).toList();
+    List<Control> visibleControls = children.where((c) => c.isVisible).toList();
+
+    var gridDelegate = maxExtent == null
+        ? SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: runsCount,
+            mainAxisSpacing: spacing,
+            crossAxisSpacing: runSpacing,
+            childAspectRatio: 1)
+        : SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: maxExtent,
+            mainAxisSpacing: spacing,
+            crossAxisSpacing: runSpacing,
+            childAspectRatio: 1);
 
     return constrainedControl(
-        GridView.count(
+        GridView.builder(
           scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
-          crossAxisCount: runsCount,
-          mainAxisSpacing: spacing,
-          crossAxisSpacing: runSpacing,
           padding: padding,
-          children: controls,
+          gridDelegate: gridDelegate,
+          itemCount: visibleControls.length,
+          itemBuilder: (context, index) {
+            return createControl(control, visibleControls[index].id, disabled);
+          },
         ),
         parent,
         control);

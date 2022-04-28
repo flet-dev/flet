@@ -27,6 +27,7 @@ class GridView(ConstrainedControl):
         #
         horizontal: bool = None,
         runs_count: int = None,
+        max_extent: int = None,
         spacing: OptionalNumber = None,
         run_spacing: OptionalNumber = None,
         padding: PaddingValue = None,
@@ -47,6 +48,7 @@ class GridView(ConstrainedControl):
         self.controls = controls
         self.horizontal = horizontal
         self.runs_count = runs_count
+        self.max_extent = max_extent
         self.spacing = spacing
         self.run_spacing = run_spacing
         self.padding = padding
@@ -76,6 +78,16 @@ class GridView(ConstrainedControl):
     @beartype
     def runs_count(self, value: Optional[int]):
         self._set_attr("runsCount", value)
+
+    # max_extent
+    @property
+    def max_extent(self):
+        return self._get_attr("maxExtent")
+
+    @max_extent.setter
+    @beartype
+    def max_extent(self, value: OptionalNumber):
+        self._set_attr("maxExtent", value)
 
     # spacing
     @property
