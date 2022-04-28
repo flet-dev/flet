@@ -2,6 +2,7 @@ import logging
 import os
 from datetime import datetime
 from time import sleep
+from turtle import onclick
 
 import flet
 from flet import (
@@ -54,6 +55,11 @@ def main(page: Page):
     )
     status_bar = Text()
 
+    def copy_to_clipboard(e):
+        print("Copy to clipboard:", e.control.data)
+        page.clipboard = e.control.data
+        page.update()
+
     def display_icons(search_term: str):
 
         # clean search results
@@ -91,6 +97,8 @@ def main(page: Page):
                             border_radius=border_radius.all(3),
                         ),
                         tooltip="Click to copy icon name to a clipboard",
+                        on_click=copy_to_clipboard,
+                        data=icons_list[i],
                     )
                 )
 

@@ -8,6 +8,7 @@ import '../models/control_view_model.dart';
 import 'alert_dialog.dart';
 import 'banner.dart';
 import 'checkbox.dart';
+import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'dropdown.dart';
@@ -64,6 +65,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return TextControl(control: controlView.control);
         case ControlType.icon:
           return IconControl(control: controlView.control);
+        case ControlType.clipboard:
+          return ClipboardControl(control: controlView.control);
         case ControlType.image:
           return ImageControl(parent: parent, control: controlView.control);
         case ControlType.progressRing:
