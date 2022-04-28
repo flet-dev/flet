@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import '../models/control.dart';
+import 'numbers.dart';
 
 MainAxisAlignment parseMainAxisAlignment(
     Control control, String propName, MainAxisAlignment defValue) {
@@ -51,5 +52,5 @@ Alignment? parseAlignment(Control control, String propName) {
 }
 
 Alignment alignmentFromJson(Map<String, dynamic> json) {
-  return Alignment(json['x'] as double, json['y'] as double);
+  return Alignment(parseDouble(json['x']), parseDouble(json['y']));
 }

@@ -62,12 +62,13 @@ class ListViewControl extends StatelessWidget {
     }
 
     return constrainedControl(
-        ListView(
-          controller: _controller,
-          scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
-          padding: padding,
-          children: controls,
-        ),
+        ListView.builder(
+            controller: _controller,
+            scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+            padding: padding,
+            itemBuilder: (context, index) {
+              return null;
+            }),
         parent,
         control);
   }
