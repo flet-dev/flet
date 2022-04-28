@@ -89,7 +89,8 @@ def main(page: Page):
                             # border=border.all(1, colors.BLACK26),
                             # bgcolor="#f0f0f0",
                             border_radius=border_radius.all(3),
-                        )
+                        ),
+                        tooltip="Click to copy icon name to a clipboard",
                     )
                 )
 

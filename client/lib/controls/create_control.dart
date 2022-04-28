@@ -237,6 +237,7 @@ Widget _tooltip(Widget widget, Control? parent, Control control) {
       ? Tooltip(
           message: tooltip,
           child: widget,
+          waitDuration: const Duration(milliseconds: 800),
         )
       : widget;
 }
