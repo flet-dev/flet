@@ -57,8 +57,7 @@ def main(page: Page):
     def display_icons(search_term: str):
 
         # clean search results
-        search_results.controls.clear()
-        page.update()
+        search_results.clean()
 
         # add matching icons
         for i in range(0, len(icons_list)):
@@ -93,6 +92,11 @@ def main(page: Page):
                         )
                     )
                 )
+
+                # update page on every 500 icons added
+                if i > 0 and i % 500 == 0:
+                    status_bar.value = f"Icons found: {len(search_results.controls)}"
+                    page.update()
         status_bar.value = f"Icons found: {len(search_results.controls)}"
         if len(search_results.controls) == 0:
             search_results.controls.append(

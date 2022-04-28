@@ -16,13 +16,13 @@ class IconButton(ConstrainedControl):
         height: OptionalNumber = None,
         expand: int = None,
         opacity: OptionalNumber = None,
+        tooltip: str = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
         #
         # Specific
         #
-        tooltip: str = None,
         icon_size: OptionalNumber = None,
         icon_color: str = None,
         content: Control = None,
@@ -35,12 +35,12 @@ class IconButton(ConstrainedControl):
             height=height,
             expand=expand,
             opacity=opacity,
+            tooltip=tooltip,
             visible=visible,
             disabled=disabled,
             data=data,
         )
 
-        self.tooltip = tooltip
         self.icon = icon
         self.icon_size = icon_size
         self.icon_color = icon_color
@@ -55,15 +55,6 @@ class IconButton(ConstrainedControl):
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
-
-    # tooltip
-    @property
-    def tooltip(self):
-        return self._get_attr("tooltip")
-
-    @tooltip.setter
-    def tooltip(self, value):
-        self._set_attr("tooltip", value)
 
     # icon
     @property

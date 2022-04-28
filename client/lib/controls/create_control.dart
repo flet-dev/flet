@@ -205,12 +205,18 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
 }
 
 Widget baseControl(Widget widget, Control? parent, Control control) {
-  return _expandable(_opacity(widget, parent, control), parent, control);
+  return _expandable(
+      _tooltip(_opacity(widget, parent, control), parent, control),
+      parent,
+      control);
 }
 
 Widget constrainedControl(Widget widget, Control? parent, Control control) {
   return _expandable(
-      _sizedControl(_opacity(widget, parent, control), parent, control),
+      _sizedControl(
+          _tooltip(_opacity(widget, parent, control), parent, control),
+          parent,
+          control),
       parent,
       control);
 }
@@ -220,6 +226,16 @@ Widget _opacity(Widget widget, Control? parent, Control control) {
   return opacity != null
       ? Opacity(
           opacity: opacity,
+          child: widget,
+        )
+      : widget;
+}
+
+Widget _tooltip(Widget widget, Control? parent, Control control) {
+  var tooltip = control.attrString("tooltip");
+  return tooltip != null
+      ? Tooltip(
+          message: tooltip,
           child: widget,
         )
       : widget;

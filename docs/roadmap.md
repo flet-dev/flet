@@ -436,10 +436,10 @@ Properties:
 
 Events:
 
-- onClose
-- onConnect
-- onDisconnect
-- onResize
+- on_close
+- on_connect
+- on_disconnect
+- on_resize
 
 ## Control
 
@@ -488,6 +488,7 @@ Properties:
 - content - child control of any type
 - marging
 - padding
+- tooltip
 
 ## Row
 
@@ -597,7 +598,7 @@ TextTheme: https://api.flutter.dev/flutter/material/TextTheme-class.html
 - bgColor
 - overflow - (TextOverflow) `clip`, `ellipsis`, `fade`, `visible`
 - selectable
-
+- tooltip
 
 ## Icon
 
@@ -611,6 +612,7 @@ Properties:
 - color ([more](https://api.flutter.dev/flutter/dart-ui/Color-class.html))
 - size
 - semanticLabel (S2) - Text to announce in accessibility modes
+- tooltip
 
 ## Image
 
@@ -626,7 +628,7 @@ Properties:
 - opacity (S2) - override control's opacity
 - semanticLabel (S2)
 - border_radius - to make rounded corners
-
+- tooltip
 
 ## ProgressBar
 
@@ -640,6 +642,7 @@ Properties:
 - value
 - label
 - description
+- tooltip
 
 ## ProgressRing
 
@@ -653,6 +656,7 @@ Properties:
 - value
 - label
 - labelPosition
+- tooltip
 
 ## ElevatedButton
 
@@ -664,6 +668,7 @@ Properties:
 - icon
 - iconColor
 - content - a Control representing custom button content
+- tooltip
 
 Events:
 
@@ -679,6 +684,7 @@ Properties:
 - icon
 - iconColor
 - content - a Control representing custom button content
+- tooltip
 
 Events:
 
@@ -694,6 +700,7 @@ Properties:
 - icon
 - iconColor
 - content - a Control representing custom button content
+- tooltip
 
 Events:
 
@@ -725,6 +732,7 @@ Properties:
 - icon
 - bgColor
 - content - a Control representing custom button content
+- tooltip
 
 Events:
 
@@ -750,6 +758,7 @@ Properties:
 - label
 - labelPosition
 - value - radio's value
+- tooltip
 
 ## Slider
 
@@ -762,6 +771,7 @@ Properties:
 - min
 - max
 - divisions
+- tooltip
 
 Events:
 
@@ -776,6 +786,7 @@ Properties:
 - label
 - labelPosition
 - value
+- tooltip
 
 Events:
 
@@ -791,6 +802,7 @@ Properties:
 - tristate
 - label
 - labelPosition
+- tooltip
 
 Events:
 
@@ -812,6 +824,7 @@ Properties:
 - errorText
 - prefix: Control
 - suffix: Control
+- tooltip
 
 - value
 - options
@@ -836,6 +849,7 @@ Properties:
 - errorText
 - prefix: Control
 - suffix: Control
+- tooltip
 
 - value
 - keyboardType
