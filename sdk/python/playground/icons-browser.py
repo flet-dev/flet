@@ -46,7 +46,12 @@ def main(page: Page):
     # search_results = ListView(expand=1, wrap=True, scroll="always")
     # search_results = ListView(expand=1, spacing=2)
     search_results = GridView(
-        expand=1, runs_count=10, max_extent=100, spacing=5, run_spacing=5
+        expand=1,
+        runs_count=10,
+        max_extent=150,
+        spacing=5,
+        run_spacing=5,
+        child_aspect_ratio=2,
     )
 
     def display_icons(search_term: str):
@@ -101,4 +106,4 @@ def main(page: Page):
     )
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.FLET_APP)
+flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)

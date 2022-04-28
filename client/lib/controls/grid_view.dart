@@ -30,6 +30,7 @@ class GridViewControl extends StatelessWidget {
     final spacing = control.attrDouble("spacing", 10)!;
     final runSpacing = control.attrDouble("runSpacing", 10)!;
     final padding = parseEdgeInsets(control, "padding");
+    final childAspectRatio = control.attrDouble("childAspectRatio", 1)!;
 
     List<Control> visibleControls = children.where((c) => c.isVisible).toList();
 
@@ -38,12 +39,12 @@ class GridViewControl extends StatelessWidget {
             crossAxisCount: runsCount,
             mainAxisSpacing: spacing,
             crossAxisSpacing: runSpacing,
-            childAspectRatio: 1)
+            childAspectRatio: childAspectRatio)
         : SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: maxExtent,
             mainAxisSpacing: spacing,
             crossAxisSpacing: runSpacing,
-            childAspectRatio: 1);
+            childAspectRatio: childAspectRatio);
 
     return constrainedControl(
         GridView.builder(

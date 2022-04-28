@@ -30,6 +30,7 @@ class GridView(ConstrainedControl):
         max_extent: int = None,
         spacing: OptionalNumber = None,
         run_spacing: OptionalNumber = None,
+        child_aspect_ratio: OptionalNumber = None,
         padding: PaddingValue = None,
     ):
         ConstrainedControl.__init__(
@@ -51,6 +52,7 @@ class GridView(ConstrainedControl):
         self.max_extent = max_extent
         self.spacing = spacing
         self.run_spacing = run_spacing
+        self.child_aspect_ratio = child_aspect_ratio
         self.padding = padding
 
     def _get_control_name(self):
@@ -108,6 +110,16 @@ class GridView(ConstrainedControl):
     @beartype
     def run_spacing(self, value: OptionalNumber):
         self._set_attr("runSpacing", value)
+
+    # child_aspect_ratio
+    @property
+    def child_aspect_ratio(self):
+        return self._get_attr("childAspectRatio")
+
+    @child_aspect_ratio.setter
+    @beartype
+    def child_aspect_ratio(self, value: OptionalNumber):
+        self._set_attr("childAspectRatio", value)
 
     # padding
     @property
