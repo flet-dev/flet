@@ -15,6 +15,7 @@ from flet import (
     Page,
     Row,
     Text,
+    TextButton,
     TextField,
     Theme,
     alignment,
@@ -43,8 +44,6 @@ def main(page: Page):
     page.title = "Flet icons browser"
 
     search_txt = TextField(expand=1, hint_text="Enter keyword and press search button")
-    # search_results = ListView(expand=1, wrap=True, scroll="always")
-    # search_results = ListView(expand=1, spacing=2)
     search_results = GridView(
         expand=1,
         runs_count=10,
@@ -53,6 +52,7 @@ def main(page: Page):
         run_spacing=5,
         child_aspect_ratio=2,
     )
+    status_bar = Text()
 
     def display_icons(search_term: str):
 
@@ -64,33 +64,36 @@ def main(page: Page):
         for i in range(0, len(icons_list)):
             if search_term != "" and search_term in icons_list[i]:
                 search_results.controls.append(
-                    Container(
-                        content=Column(
-                            [
-                                Icon(
-                                    name=icons_list[i],
-                                ),
-                                Text(
-                                    value=icons_list[i],
-                                    size=10,
-                                    width=100,
-                                    # selectable=True,
-                                    text_align="center",
-                                    color=colors.BLACK87,
-                                ),
-                            ],
-                            spacing=5,
-                            alignment="center",
-                            horizontal_alignment="center",
-                        ),
-                        alignment=alignment.center,
-                        padding=padding.only(left=5, right=5),
-                        # border=border.all(1, colors.BLACK26),
-                        bgcolor="#f0f0f0",
-                        border_radius=border_radius.all(3),
+                    OutlinedButton(
+                        content=Container(
+                            content=Column(
+                                [
+                                    Icon(
+                                        name=icons_list[i],
+                                    ),
+                                    Text(
+                                        value=icons_list[i],
+                                        size=10,
+                                        width=100,
+                                        # selectable=True,
+                                        text_align="center",
+                                        overflow="fade",
+                                        color=colors.BLACK87,
+                                    ),
+                                ],
+                                spacing=5,
+                                alignment="center",
+                                horizontal_alignment="center",
+                            ),
+                            alignment=alignment.center,
+                            padding=padding.only(left=5, right=5),
+                            # border=border.all(1, colors.BLACK26),
+                            # bgcolor="#f0f0f0",
+                            border_radius=border_radius.all(3),
+                        )
                     )
                 )
-        print("Icons found:", len(search_results.controls))
+        status_bar.value = f"Icons found: {len(search_results.controls)}"
         if len(search_results.controls) == 0:
             search_results.controls.append(
                 Text(f'No icons found with text "{search_term}".')
@@ -103,6 +106,7 @@ def main(page: Page):
     page.add(
         Row([search_txt, IconButton(icon=icons.SEARCH, on_click=search_click)]),
         search_results,
+        status_bar,
     )
 
 
