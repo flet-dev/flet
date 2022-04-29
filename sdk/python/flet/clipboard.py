@@ -1,5 +1,20 @@
+import dataclasses
+import json
+import time
+from typing import Optional
+
+from beartype._decor.main import beartype
+
 from flet.control import Control
+from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
+
+
+@beartype
+@dataclasses.dataclass
+class ClipboardData:
+    ts: str
+    d: Optional[str]
 
 
 class Clipboard(Control):
@@ -27,8 +42,11 @@ class Clipboard(Control):
     # value
     @property
     def value(self):
-        return self._get_attr("value")
+        return self.__value
 
     @value.setter
-    def value(self, value):
-        self._set_attr("value", value)
+    @beartype
+    def value(self, value: Optional[str]):
+        self.__value = value
+        cd = ClipboardData(str(time.time()), value)
+        self._set_attr("value", json.dumps(cd, cls=EmbedJsonEncoder) if value else None)

@@ -11,16 +11,13 @@ from flet import (
     GridView,
     Icon,
     IconButton,
-    ListView,
     OutlinedButton,
     Page,
     Row,
+    SnackBar,
     Text,
-    TextButton,
     TextField,
-    Theme,
     alignment,
-    border,
     border_radius,
     colors,
     icons,
@@ -32,8 +29,8 @@ from flet import (
 # fetch all icon constants from icons.py module
 icons_list = []
 list_started = False
-for name, value in vars(icons).items():
-    if name == "TEN_K":
+for key, value in vars(icons).items():
+    if key == "TEN_K":
         list_started = True
     if list_started:
         icons_list.append(value)
@@ -56,8 +53,10 @@ def main(page: Page):
     status_bar = Text()
 
     def copy_to_clipboard(e):
-        print("Copy to clipboard:", e.control.data)
+        icon_key = e.control.data
+        print("Copy to clipboard:", icon_key)
         page.clipboard = e.control.data
+        page.snack_bar = SnackBar(Text(f"Copied {icon_key}"), open=True)
         page.update()
 
     def display_icons(search_term: str):
@@ -68,16 +67,18 @@ def main(page: Page):
         # add matching icons
         for i in range(0, len(icons_list)):
             if search_term != "" and search_term in icons_list[i]:
+                icon_name = icons_list[i]
+                icon_key = f"icons.{icon_name.upper()}"
                 search_results.controls.append(
                     OutlinedButton(
                         content=Container(
                             content=Column(
                                 [
                                     Icon(
-                                        name=icons_list[i],
+                                        name=icon_name,
                                     ),
                                     Text(
-                                        value=icons_list[i],
+                                        value=icon_name,
                                         size=10,
                                         width=100,
                                         # selectable=True,
@@ -96,9 +97,9 @@ def main(page: Page):
                             # bgcolor="#f0f0f0",
                             border_radius=border_radius.all(3),
                         ),
-                        tooltip="Click to copy icon name to a clipboard",
+                        tooltip=f"{icon_key}\nClick to copy to a clipboard",
                         on_click=copy_to_clipboard,
-                        data=icons_list[i],
+                        data=icon_key,
                     )
                 )
 

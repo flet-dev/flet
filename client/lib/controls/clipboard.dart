@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
@@ -16,7 +19,10 @@ class ClipboardControl extends StatelessWidget {
     var value = control.attrString("value");
 
     if (value != null) {
-      debugPrint("Clipboard value: $value");
+      debugPrint("Clipboard JSON value: $value");
+
+      var jv = json.decode(value);
+      Clipboard.setData(ClipboardData(text: jv["d"] as String?));
     }
 
     return const SizedBox.shrink();
