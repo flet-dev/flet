@@ -40,6 +40,7 @@ os.environ["FLET_WS_MAX_MESSAGE_SIZE"] = "8000000"
 
 def main(page: Page):
     page.title = "Flet icons browser"
+    page.theme_mode = "light"
 
     search_txt = TextField(expand=1, hint_text="Enter keyword and press search button")
     search_results = GridView(
@@ -84,7 +85,7 @@ def main(page: Page):
                                         # selectable=True,
                                         text_align="center",
                                         overflow="fade",
-                                        color=colors.BLACK87,
+                                        color=colors.ON_SURFACE_VARIANT,
                                     ),
                                 ],
                                 spacing=5,
