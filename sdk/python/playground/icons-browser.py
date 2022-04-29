@@ -42,7 +42,9 @@ def main(page: Page):
     page.title = "Flet icons browser"
     page.theme_mode = "light"
 
-    search_txt = TextField(expand=1, hint_text="Enter keyword and press search button")
+    search_txt = TextField(
+        expand=1, hint_text="Enter keyword and press search button", autofocus=True
+    )
     search_results = GridView(
         expand=1,
         runs_count=10,
