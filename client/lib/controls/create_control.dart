@@ -46,17 +46,22 @@ import 'textfield.dart';
 // }
 
 Widget createControl(Control? parent, String id, bool parentDisabled) {
+  //debugPrint("createControl(): $id");
   return StoreConnector<AppState, ControlViewModel>(
     distinct: true,
     converter: (store) {
       //debugPrint("ControlViewModel $id converter");
       return ControlViewModel.fromStore(store, id);
     },
-    onWillChange: (prev, next) {
-      //debugPrint("${next.type} $id will change");
+    // onWillChange: (prev, next) {
+    //   debugPrint("onWillChange() $id: $prev, $next");
+    // },
+    ignoreChange: (state) {
+      //debugPrint("ignoreChange: $id");
+      return state.controls[id] == null;
     },
     builder: (context, controlView) {
-      //debugPrint("${control.type} ${control.id} builder");
+      //debugPrint("createControl builder(): $id");
       switch (controlView.control.type) {
         case ControlType.page:
           return PageControl(
@@ -239,6 +244,7 @@ Widget _tooltip(Widget widget, Control? parent, Control control) {
   return tooltip != null
       ? Tooltip(
           message: tooltip,
+          padding: const EdgeInsets.all(4.0),
           child: widget,
           waitDuration: const Duration(milliseconds: 800),
         )
