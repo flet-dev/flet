@@ -25,7 +25,6 @@ class IconButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Button build: ${control.id}");
 
-    String? tooltip = control.attrString("tooltip");
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
     Color? iconColor =
         HexColor.fromString(context, control.attrString("iconColor", "")!);
@@ -52,13 +51,11 @@ class IconButtonControl extends StatelessWidget {
             color: iconColor,
           ),
           iconSize: iconSize,
-          tooltip: tooltip,
           onPressed: onPressed);
     } else if (contentCtrls.isNotEmpty) {
       button = IconButton(
           onPressed: onPressed,
           iconSize: iconSize,
-          tooltip: tooltip,
           icon: createControl(control, contentCtrls.first.id, disabled));
     } else {
       return const ErrorControl(
