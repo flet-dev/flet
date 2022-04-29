@@ -30,6 +30,7 @@ class IconButtonControl extends StatelessWidget {
         HexColor.fromString(context, control.attrString("iconColor", "")!);
     double? iconSize = control.attrDouble("iconSize");
     var contentCtrls = children.where((c) => c.name == "content");
+    bool autofocus = control.attrBool("autofocus", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = disabled
@@ -46,6 +47,7 @@ class IconButtonControl extends StatelessWidget {
 
     if (icon != null) {
       button = IconButton(
+          autofocus: autofocus,
           icon: Icon(
             icon,
             color: iconColor,
@@ -54,6 +56,7 @@ class IconButtonControl extends StatelessWidget {
           onPressed: onPressed);
     } else if (contentCtrls.isNotEmpty) {
       button = IconButton(
+          autofocus: autofocus,
           onPressed: onPressed,
           iconSize: iconSize,
           icon: createControl(control, contentCtrls.first.id, disabled));

@@ -669,6 +669,7 @@ Properties:
 - iconColor
 - content - a Control representing custom button content
 - tooltip
+- autofocus
 
 Events:
 
@@ -685,6 +686,7 @@ Properties:
 - iconColor
 - content - a Control representing custom button content
 - tooltip
+- autofocus
 
 Events:
 
@@ -701,6 +703,7 @@ Properties:
 - iconColor
 - content - a Control representing custom button content
 - tooltip
+- autofocus
 
 Events:
 
@@ -717,6 +720,7 @@ Properties:
 - iconSize
 - tooltip
 - content - a Control representing custom button content
+- autofocus
 
 Events:
 
@@ -733,6 +737,7 @@ Properties:
 - bgColor
 - content - a Control representing custom button content
 - tooltip
+- autofocus
 
 Events:
 
@@ -759,6 +764,12 @@ Properties:
 - labelPosition
 - value - radio's value
 - tooltip
+- autofocus
+
+Events:
+
+- focus
+- blur
 
 ## Slider
 
@@ -772,10 +783,13 @@ Properties:
 - max
 - divisions
 - tooltip
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## Switch
 
@@ -787,10 +801,13 @@ Properties:
 - labelPosition
 - value
 - tooltip
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## Checkbox
 
@@ -803,10 +820,13 @@ Properties:
 - label
 - labelPosition
 - tooltip
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## Dropdown
 
@@ -828,10 +848,13 @@ Properties:
 
 - value
 - options
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## TextField
 
@@ -850,6 +873,7 @@ Properties:
 - prefix: Control
 - suffix: Control
 - tooltip
+- autofocus
 
 - value
 - keyboardType
@@ -864,6 +888,8 @@ Properties:
 Events:
 
 - change
+- focus
+- blur
 
 ## AlertDialog
 

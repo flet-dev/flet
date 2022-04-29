@@ -30,6 +30,7 @@ class FloatingActionButtonControl extends StatelessWidget {
     Color? bgColor =
         HexColor.fromString(context, control.attrString("bgColor", "")!);
     var contentCtrls = children.where((c) => c.name == "content");
+    bool autofocus = control.attrBool("autofocus", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = disabled
@@ -49,16 +50,19 @@ class FloatingActionButtonControl extends StatelessWidget {
     Widget button;
     if (contentCtrls.isNotEmpty) {
       button = FloatingActionButton(
+          autofocus: autofocus,
           onPressed: onPressed,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else if (icon != null && text == null) {
       button = FloatingActionButton(
+        autofocus: autofocus,
         onPressed: onPressed,
         child: Icon(icon),
         backgroundColor: bgColor,
       );
     } else if (icon != null && text != null) {
       button = FloatingActionButton.extended(
+          autofocus: autofocus,
           onPressed: onPressed,
           label: Text(text),
           icon: Icon(icon),

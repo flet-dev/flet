@@ -30,9 +30,17 @@ class RadioControl extends StatefulWidget {
 }
 
 class _RadioControlState extends State<RadioControl> {
+  final FocusNode _focusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
+    _focusNode.addListener(() {
+      ws.pageEventFromWeb(
+          eventTarget: widget.control.id,
+          eventName: _focusNode.hasFocus ? "focus" : "blur",
+          eventData: "");
+    });
   }
 
   @override
@@ -51,6 +59,7 @@ class _RadioControlState extends State<RadioControl> {
             p.name.toLowerCase() ==
             widget.control.attrString("labelPosition", "")!.toLowerCase(),
         orElse: () => LabelPosition.right);
+    bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     return StoreConnector<AppState, ControlAncestorViewModel>(
@@ -83,6 +92,8 @@ class _RadioControlState extends State<RadioControl> {
           }
 
           var radio = Radio<String>(
+              autofocus: autofocus,
+              focusNode: _focusNode,
               groupValue: groupValue,
               value: value,
               onChanged: !disabled

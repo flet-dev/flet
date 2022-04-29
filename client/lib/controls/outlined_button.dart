@@ -29,6 +29,7 @@ class OutlinedButtonControl extends StatelessWidget {
     Color? iconColor =
         HexColor.fromString(context, control.attrString("iconColor", "")!);
     var contentCtrls = children.where((c) => c.name == "content");
+    bool autofocus = control.attrBool("autofocus", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = disabled
@@ -45,6 +46,7 @@ class OutlinedButtonControl extends StatelessWidget {
 
     if (icon != null) {
       button = OutlinedButton.icon(
+          autofocus: autofocus,
           onPressed: onPressed,
           icon: Icon(
             icon,
@@ -53,6 +55,7 @@ class OutlinedButtonControl extends StatelessWidget {
           label: Text(text));
     } else if (contentCtrls.isNotEmpty) {
       button = OutlinedButton(
+          autofocus: autofocus,
           onPressed: onPressed,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {

@@ -28,10 +28,17 @@ class CheckboxControl extends StatefulWidget {
 
 class _CheckboxControlState extends State<CheckboxControl> {
   bool? _value;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+    _focusNode.addListener(() {
+      ws.pageEventFromWeb(
+          eventTarget: widget.control.id,
+          eventName: _focusNode.hasFocus ? "focus" : "blur",
+          eventData: "");
+    });
   }
 
   @override
@@ -50,6 +57,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
             widget.control.attrString("labelPosition", "")!.toLowerCase(),
         orElse: () => LabelPosition.right);
     bool tristate = widget.control.attrBool("tristate", false)!;
+    bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     return StoreConnector<AppState, Function>(
@@ -66,7 +74,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
 
           onChange(bool? value) {
             var svalue = value != null ? value.toString() : "";
-            debugPrint(svalue);
+            //debugPrint(svalue);
             setState(() {
               _value = value;
             });
@@ -83,6 +91,8 @@ class _CheckboxControlState extends State<CheckboxControl> {
           }
 
           var checkbox = Checkbox(
+              autofocus: autofocus,
+              focusNode: _focusNode,
               value: _value,
               tristate: tristate,
               onChanged: !disabled

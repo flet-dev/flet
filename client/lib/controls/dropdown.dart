@@ -28,6 +28,18 @@ class DropdownControl extends StatefulWidget {
 
 class _DropdownControlState extends State<DropdownControl> {
   String? _value;
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      ws.pageEventFromWeb(
+          eventTarget: widget.control.id,
+          eventName: _focusNode.hasFocus ? "focus" : "blur",
+          eventData: "");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +53,7 @@ class _DropdownControlState extends State<DropdownControl> {
         builder: (context, itemsView) {
           debugPrint("Dropdown StoreConnector build: ${widget.control.id}");
 
+          bool autofocus = widget.control.attrBool("autofocus", false)!;
           bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
           String? value = widget.control.attrString("value");
@@ -54,6 +67,8 @@ class _DropdownControlState extends State<DropdownControl> {
               itemsView.children.where((c) => c.name == "suffix");
 
           var dropDown = DropdownButtonFormField<String>(
+            autofocus: autofocus,
+            focusNode: _focusNode,
             value: _value,
             decoration: buildInputDecoration(
                 widget.control,
