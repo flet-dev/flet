@@ -35,15 +35,20 @@ packages = {
         "wheel_tags": ["py3-none-win32"],
         "file_suffix": "py3-none-win32",
     },
+    "Linux amd64 (Alpine)": {
+        "fletd_asset": "linux_amd64",
+        "fletd_exec": "fletd",
+        "wheel_tags": ["py3-none-musllinux_1_2_x86_64"],
+        "file_suffix": "py3-none-musllinux_1_2_x86_64",
+    },
     "Linux amd64": {
         "fletd_asset": "linux_amd64",
         "fletd_exec": "fletd",
         "wheel_tags": [
-            "py3-none-musllinux_1_2_x86_64",
             "py3-none-manylinux_2_17_x86_64",
             "py3-none-manylinux2014_x86_64",
         ],
-        "file_suffix": "py3-none-musllinux_1_2_x86_64.py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64",
+        "file_suffix": "py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64",
     },
     "Linux arm64": {
         "fletd_asset": "linux_arm64",
