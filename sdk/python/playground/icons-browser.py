@@ -1,8 +1,4 @@
-import logging
 import os
-from datetime import datetime
-from time import sleep
-from turtle import onclick
 
 import flet
 from flet import (
@@ -11,7 +7,6 @@ from flet import (
     GridView,
     Icon,
     IconButton,
-    OutlinedButton,
     Page,
     Row,
     SnackBar,
@@ -19,10 +14,8 @@ from flet import (
     TextButton,
     TextField,
     alignment,
-    border_radius,
     colors,
     icons,
-    padding,
 )
 
 # logging.basicConfig(level=logging.DEBUG)

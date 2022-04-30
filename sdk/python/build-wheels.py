@@ -38,29 +38,20 @@ packages = {
     "Linux amd64": {
         "fletd_asset": "linux_amd64",
         "fletd_exec": "fletd",
-        "wheel_tags": [
-            "py3-none-manylinux_2_17_x86_64",
-            "py3-none-manylinux2014_x86_64",
-        ],
-        "file_suffix": "py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64",
+        "wheel_tags": ["py3-none-linux_x86_64"],
+        "file_suffix": "py3-none-linux_x86_64",
     },
     "Linux arm64": {
         "fletd_asset": "linux_arm64",
         "fletd_exec": "fletd",
-        "wheel_tags": [
-            "py3-none-manylinux_2_17_aarch64",
-            "py3-none-manylinux2014_aarch64",
-        ],
-        "file_suffix": "py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64",
+        "wheel_tags": ["py3-none-linux_aarch64"],
+        "file_suffix": "py3-none-linux_aarch64",
     },
     "Linux arm": {
         "fletd_asset": "linux_arm_7",
         "fletd_exec": "fletd",
-        "wheel_tags": [
-            "py3-none-manylinux_2_17_armv7l",
-            "py3-none-manylinux2014_armv7l",
-        ],
-        "file_suffix": "py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l",
+        "wheel_tags": ["py3-none-linux_armv7l"],
+        "file_suffix": "py3-none-linux_armv7l",
     },
     "macOS amd64": {
         "fletd_asset": "darwin_amd64",
