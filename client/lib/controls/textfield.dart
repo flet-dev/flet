@@ -32,7 +32,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
   String _value = "";
   bool _revealPassword = false;
   late TextEditingController _controller;
-  final FocusNode _focusNode = FocusNode();
+  late final FocusNode _focusNode = FocusNode();
 
   late final _shiftEnterfocusNode = FocusNode(
     onKey: (FocusNode node, RawKeyEvent evt) {
@@ -138,6 +138,12 @@ class _TextFieldControlState extends State<TextFieldControl> {
           var textField = TextFormField(
               autofocus: autofocus,
               enabled: !disabled,
+              onFieldSubmitted: (_) {
+                ws.pageEventFromWeb(
+                    eventTarget: widget.control.id,
+                    eventName: "submit",
+                    eventData: "");
+              },
               decoration: buildInputDecoration(
                   widget.control,
                   prefixControls.isNotEmpty ? prefixControls.first : null,
@@ -154,7 +160,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
                   ? _shiftEnterfocusNode
                   : _focusNode,
               onChanged: (String value) {
-                debugPrint(value);
+                //debugPrint(value);
                 setState(() {
                   _value = value;
                 });

@@ -16,6 +16,7 @@ from flet import (
     Row,
     SnackBar,
     Text,
+    TextButton,
     TextField,
     alignment,
     border_radius,
@@ -43,7 +44,10 @@ def main(page: Page):
     page.theme_mode = "light"
 
     search_txt = TextField(
-        expand=1, hint_text="Enter keyword and press search button", autofocus=True
+        expand=1,
+        hint_text="Enter keyword and press search button",
+        autofocus=True,
+        on_submit=lambda e: display_icons(e.control.value),
     )
     search_results = GridView(
         expand=1,
@@ -51,7 +55,7 @@ def main(page: Page):
         max_extent=150,
         spacing=5,
         run_spacing=5,
-        child_aspect_ratio=2,
+        child_aspect_ratio=1,
     )
     status_bar = Text()
 
@@ -73,20 +77,17 @@ def main(page: Page):
                 icon_name = icons_list[i]
                 icon_key = f"icons.{icon_name.upper()}"
                 search_results.controls.append(
-                    OutlinedButton(
+                    TextButton(
                         content=Container(
                             content=Column(
                                 [
-                                    Icon(
-                                        name=icon_name,
-                                    ),
+                                    Icon(name=icon_name, size=30),
                                     Text(
                                         value=icon_name,
-                                        size=10,
+                                        size=12,
                                         width=100,
-                                        # selectable=True,
+                                        no_wrap=True,
                                         text_align="center",
-                                        overflow="fade",
                                         color=colors.ON_SURFACE_VARIANT,
                                     ),
                                 ],
@@ -95,10 +96,6 @@ def main(page: Page):
                                 horizontal_alignment="center",
                             ),
                             alignment=alignment.center,
-                            padding=padding.only(left=5, right=5),
-                            # border=border.all(1, colors.BLACK26),
-                            # bgcolor="#f0f0f0",
-                            border_radius=border_radius.all(3),
                         ),
                         tooltip=f"{icon_key}\nClick to copy to a clipboard",
                         on_click=copy_to_clipboard,

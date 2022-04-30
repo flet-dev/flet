@@ -599,6 +599,7 @@ TextTheme: https://api.flutter.dev/flutter/material/TextTheme-class.html
 - overflow - (TextOverflow) `clip`, `ellipsis`, `fade`, `visible`
 - selectable
 - tooltip
+- noWrap
 
 ## Icon
 

@@ -54,6 +54,7 @@ class Text(ConstrainedControl):
         style: str = None,
         overflow: TextOverflow = None,
         selectable: bool = None,
+        no_wrap: bool = None,
         color: str = None,
         bgcolor: str = None,
     ):
@@ -76,6 +77,7 @@ class Text(ConstrainedControl):
         self.size = size
         self.weight = weight
         self.italic = italic
+        self.no_wrap = no_wrap
         self.style = style
         self.overflow = overflow
         self.selectable = selectable
@@ -143,6 +145,16 @@ class Text(ConstrainedControl):
     @beartype
     def italic(self, value: Optional[bool]):
         self._set_attr("italic", value)
+
+    # no_wrap
+    @property
+    def no_wrap(self):
+        return self._get_attr("italic", data_type="noWrap", def_value=False)
+
+    @no_wrap.setter
+    @beartype
+    def no_wrap(self, value: Optional[bool]):
+        self._set_attr("noWrap", value)
 
     # selectable
     @property
