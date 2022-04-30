@@ -35,6 +35,12 @@ packages = {
         "wheel_tags": ["py3-none-win32"],
         "file_suffix": "py3-none-win32",
     },
+    "Linux amd64 (Alpine)": {
+        "fletd_asset": "linux_amd64",
+        "fletd_exec": "fletd",
+        "wheel_tags": ["py3-none-musllinux_1_2_x86_64"],
+        "file_suffix": "py3-none-musllinux_1_2_x86_64",
+    },
     "Linux amd64": {
         "fletd_asset": "linux_amd64",
         "fletd_exec": "fletd",

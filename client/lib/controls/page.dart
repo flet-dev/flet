@@ -7,6 +7,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_children_view_model.dart';
 import '../utils/alignment.dart';
+import '../utils/color_theme.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/theme.dart';
@@ -71,14 +72,15 @@ class PageControl extends StatelessWidget {
     // theme
     var theme = parseTheme(control, "theme") ??
         ThemeData(
-            colorSchemeSeed: const Color.fromARGB(255, 0, 152, 218),
+            colorScheme: lightColorScheme,
             brightness: Brightness.light,
             useMaterial3: true,
             visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var darkTheme = parseTheme(control, "darkTheme") ??
         ThemeData(
-            colorSchemeSeed: const Color.fromARGB(255, 104, 192, 233),
+            //colorSchemeSeed: const Color.fromARGB(255, 104, 192, 233),
+            colorScheme: darkColorScheme,
             brightness: Brightness.dark,
             useMaterial3: true,
             visualDensity: VisualDensity.adaptivePlatformDensity);

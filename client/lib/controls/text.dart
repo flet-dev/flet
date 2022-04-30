@@ -17,6 +17,7 @@ class TextControl extends StatelessWidget {
     debugPrint("Text build: ${control.id}");
 
     String text = control.attrString("value", "")!;
+    bool noWrap = control.attrBool("noWrap", false)!;
 
     TextStyle? style;
     var styleName = control.attrString("style", null);
@@ -53,6 +54,7 @@ class TextControl extends StatelessWidget {
               )
             : Text(
                 text,
+                softWrap: !noWrap,
                 style: style,
                 textAlign: textAlign,
                 overflow: overflow,

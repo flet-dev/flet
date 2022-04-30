@@ -1,3 +1,4 @@
+from enum import auto
 from typing import Optional
 
 from beartype import beartype
@@ -16,6 +17,7 @@ class OutlinedButton(ConstrainedControl):
         height: OptionalNumber = None,
         expand: int = None,
         opacity: OptionalNumber = None,
+        tooltip: str = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
@@ -25,6 +27,7 @@ class OutlinedButton(ConstrainedControl):
         icon: str = None,
         icon_color: str = None,
         content: Control = None,
+        autofocus: bool = None,
         on_click=None,
     ):
         ConstrainedControl.__init__(
@@ -34,6 +37,7 @@ class OutlinedButton(ConstrainedControl):
             height=height,
             expand=expand,
             opacity=opacity,
+            tooltip=tooltip,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -43,6 +47,7 @@ class OutlinedButton(ConstrainedControl):
         self.icon = icon
         self.icon_color = icon_color
         self.content = content
+        self.autofocus = autofocus
         self.on_click = on_click
 
     def _get_control_name(self):
@@ -99,3 +104,13 @@ class OutlinedButton(ConstrainedControl):
     @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # autofocus
+    @property
+    def autofocus(self):
+        return self._get_attr("autofocus", data_type="bool", def_value=False)
+
+    @autofocus.setter
+    @beartype
+    def autofocus(self, value: Optional[bool]):
+        self._set_attr("autofocus", value)

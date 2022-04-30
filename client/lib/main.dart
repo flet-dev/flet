@@ -17,7 +17,14 @@ import 'session_store/session_store.dart'
     if (dart.library.js) "session_store/session_store_js.dart";
 import 'web_socket_client.dart';
 
+const bool isProduction = bool.fromEnvironment('dart.vm.product');
+
 void main([List<String>? args]) async {
+  if (isProduction) {
+    // ignore: avoid_returning_null_for_void
+    debugPrint = (String? message, {int? wrapWidth}) => null;
+  }
+
   await setupDesktop();
 
   var pageUri = Uri.base;

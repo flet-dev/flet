@@ -23,7 +23,7 @@ class SnackBar(Control):
         # Specific
         #
         open: bool = False,
-        remove_current_snackbar: bool = False,
+        # remove_current_snackbar: bool = False,
         action: str = None,
         on_action=None,
     ):
@@ -37,7 +37,7 @@ class SnackBar(Control):
         )
 
         self.open = open
-        self.remove_current_snackbar = remove_current_snackbar
+        # self.remove_current_snackbar = remove_current_snackbar
         self.content = content
         self.action = action
         self.on_action = on_action
@@ -62,17 +62,17 @@ class SnackBar(Control):
     def open(self, value: Optional[bool]):
         self._set_attr("open", value)
 
-    # remove_current_snackbar
-    @property
-    def remove_current_snackbar(self):
-        return self._get_attr(
-            "removeCurrentSnackBar", data_type="bool", def_value=False
-        )
+    # # remove_current_snackbar
+    # @property
+    # def remove_current_snackbar(self):
+    #     return self._get_attr(
+    #         "removeCurrentSnackBar", data_type="bool", def_value=False
+    #     )
 
-    @remove_current_snackbar.setter
-    @beartype
-    def remove_current_snackbar(self, value: Optional[bool]):
-        self._set_attr("removeCurrentSnackBar", value)
+    # @remove_current_snackbar.setter
+    # @beartype
+    # def remove_current_snackbar(self, value: Optional[bool]):
+    #     self._set_attr("removeCurrentSnackBar", value)
 
     # content
     @property
