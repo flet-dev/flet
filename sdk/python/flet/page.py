@@ -8,6 +8,7 @@ from beartype.typing import List, Optional
 
 from flet import constants, padding
 from flet.banner import Banner
+from flet.clipboard import Clipboard
 from flet.connection import Connection
 from flet.control import (
     Control,
@@ -320,6 +321,16 @@ class Page(Control):
     def design(self, value: PageDesign):
         self._set_attr("design", value)
 
+    # clipboard
+    @property
+    def clipboard(self):
+        return self.__offstage.clipboard.value
+
+    @clipboard.setter
+    @beartype
+    def clipboard(self, value: Optional[str]):
+        self.__offstage.clipboard.value = value
+
     # splash
     @property
     def splash(self):
@@ -479,6 +490,7 @@ class Offstage(Control):
             data=data,
         )
 
+        self.__clipboard = Clipboard()
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
@@ -489,6 +501,8 @@ class Offstage(Control):
 
     def _get_children(self):
         children = []
+        if self.__clipboard:
+            children.append(self.__clipboard)
         if self.__banner:
             children.append(self.__banner)
         if self.__snack_bar:
@@ -498,6 +512,11 @@ class Offstage(Control):
         if self.__splash:
             children.append(self.__splash)
         return children
+
+    # clipboard
+    @property
+    def clipboard(self):
+        return self.__clipboard
 
     # splash
     @property

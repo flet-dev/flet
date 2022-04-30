@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
@@ -40,20 +41,7 @@ class ListViewControl extends StatelessWidget {
     final spacing = control.attrDouble("spacing", 0)!;
     final padding = parseEdgeInsets(control, "padding");
 
-    List<Widget> controls = [];
-
-    bool firstControl = true;
-    for (var ctrl in children.where((c) => c.isVisible)) {
-      // spacer between displayed controls
-      if (spacing > 0 && !firstControl) {
-        controls.add(
-            horizontal ? SizedBox(width: spacing) : SizedBox(height: spacing));
-      }
-      firstControl = false;
-
-      // displayed control
-      controls.add(createControl(control, ctrl.id, disabled));
-    }
+    List<Control> visibleControls = children.where((c) => c.isVisible).toList();
 
     if (autoScroll) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -62,12 +50,33 @@ class ListViewControl extends StatelessWidget {
     }
 
     return constrainedControl(
-        ListView(
-          controller: _controller,
-          scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
-          padding: padding,
-          children: controls,
-        ),
+        spacing > 0
+            ? ListView.separated(
+                controller: _controller,
+                scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+                padding: padding,
+                itemCount: children.length,
+                itemBuilder: (context, index) {
+                  return createControl(
+                      control, visibleControls[index].id, disabled);
+                },
+                separatorBuilder: (context, index) {
+                  return Divider(height: spacing);
+                },
+              )
+            : ListView.builder(
+                controller: _controller,
+                scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+                padding: padding,
+                itemCount: children.length,
+                itemBuilder: (context, index) {
+                  return createControl(
+                      control, visibleControls[index].id, disabled);
+                },
+                prototypeItem: children.isNotEmpty
+                    ? createControl(control, visibleControls[0].id, disabled)
+                    : null,
+              ),
         parent,
         control);
   }

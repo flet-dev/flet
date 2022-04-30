@@ -1,6 +1,7 @@
 import datetime as dt
 import threading
 from difflib import SequenceMatcher
+from json import tool
 from typing import Union
 
 from beartype import beartype
@@ -60,6 +61,7 @@ class Control:
         ref: Ref = None,
         expand: int = None,
         opacity: OptionalNumber = None,
+        tooltip: str = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
@@ -71,6 +73,7 @@ class Control:
         self.__uid = None
         self.expand = expand
         self.opacity = opacity
+        self.tooltip = tooltip
         self.visible = visible
         self.disabled = disabled
         self.data = data
@@ -184,6 +187,15 @@ class Control:
     @opacity.setter
     def opacity(self, value):
         self._set_attr("opacity", value)
+
+    # tooltip
+    @property
+    def tooltip(self):
+        return self._get_attr("tooltip")
+
+    @tooltip.setter
+    def tooltip(self, value):
+        self._set_attr("tooltip", value)
 
     # visible
     @property

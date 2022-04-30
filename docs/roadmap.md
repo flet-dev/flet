@@ -436,10 +436,10 @@ Properties:
 
 Events:
 
-- onClose
-- onConnect
-- onDisconnect
-- onResize
+- on_close
+- on_connect
+- on_disconnect
+- on_resize
 
 ## Control
 
@@ -488,6 +488,7 @@ Properties:
 - content - child control of any type
 - marging
 - padding
+- tooltip
 
 ## Row
 
@@ -597,7 +598,8 @@ TextTheme: https://api.flutter.dev/flutter/material/TextTheme-class.html
 - bgColor
 - overflow - (TextOverflow) `clip`, `ellipsis`, `fade`, `visible`
 - selectable
-
+- tooltip
+- noWrap
 
 ## Icon
 
@@ -611,6 +613,7 @@ Properties:
 - color ([more](https://api.flutter.dev/flutter/dart-ui/Color-class.html))
 - size
 - semanticLabel (S2) - Text to announce in accessibility modes
+- tooltip
 
 ## Image
 
@@ -626,7 +629,7 @@ Properties:
 - opacity (S2) - override control's opacity
 - semanticLabel (S2)
 - border_radius - to make rounded corners
-
+- tooltip
 
 ## ProgressBar
 
@@ -640,6 +643,7 @@ Properties:
 - value
 - label
 - description
+- tooltip
 
 ## ProgressRing
 
@@ -653,6 +657,7 @@ Properties:
 - value
 - label
 - labelPosition
+- tooltip
 
 ## ElevatedButton
 
@@ -664,6 +669,8 @@ Properties:
 - icon
 - iconColor
 - content - a Control representing custom button content
+- tooltip
+- autofocus
 
 Events:
 
@@ -679,6 +686,8 @@ Properties:
 - icon
 - iconColor
 - content - a Control representing custom button content
+- tooltip
+- autofocus
 
 Events:
 
@@ -694,6 +703,8 @@ Properties:
 - icon
 - iconColor
 - content - a Control representing custom button content
+- tooltip
+- autofocus
 
 Events:
 
@@ -710,6 +721,7 @@ Properties:
 - iconSize
 - tooltip
 - content - a Control representing custom button content
+- autofocus
 
 Events:
 
@@ -725,6 +737,8 @@ Properties:
 - icon
 - bgColor
 - content - a Control representing custom button content
+- tooltip
+- autofocus
 
 Events:
 
@@ -750,6 +764,13 @@ Properties:
 - label
 - labelPosition
 - value - radio's value
+- tooltip
+- autofocus
+
+Events:
+
+- focus
+- blur
 
 ## Slider
 
@@ -762,10 +783,14 @@ Properties:
 - min
 - max
 - divisions
+- tooltip
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## Switch
 
@@ -776,10 +801,14 @@ Properties:
 - label
 - labelPosition
 - value
+- tooltip
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## Checkbox
 
@@ -791,10 +820,14 @@ Properties:
 - tristate
 - label
 - labelPosition
+- tooltip
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## Dropdown
 
@@ -812,13 +845,17 @@ Properties:
 - errorText
 - prefix: Control
 - suffix: Control
+- tooltip
 
 - value
 - options
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## TextField
 
@@ -836,6 +873,8 @@ Properties:
 - errorText
 - prefix: Control
 - suffix: Control
+- tooltip
+- autofocus
 
 - value
 - keyboardType
@@ -850,6 +889,8 @@ Properties:
 Events:
 
 - change
+- focus
+- blur
 
 ## AlertDialog
 
