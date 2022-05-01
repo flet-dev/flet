@@ -75,14 +75,19 @@ class PageControl extends StatelessWidget {
             colorScheme: lightColorScheme,
             brightness: Brightness.light,
             useMaterial3: true,
+            // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
+            //     ? '-apple-system'
+            //     : null,
             visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var darkTheme = parseTheme(control, "darkTheme") ??
         ThemeData(
-            //colorSchemeSeed: const Color.fromARGB(255, 104, 192, 233),
             colorScheme: darkColorScheme,
             brightness: Brightness.dark,
             useMaterial3: true,
+            // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
+            //     ? '-apple-system'
+            //     : null,
             visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var themeMode = ThemeMode.values.firstWhere(

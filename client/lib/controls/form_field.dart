@@ -32,7 +32,7 @@ TextInputType parseTextInputType(String type) {
     case "visiblepassword":
       return TextInputType.visiblePassword;
   }
-  return TextInputType.none;
+  return TextInputType.text;
 }
 
 InputDecoration buildInputDecoration(

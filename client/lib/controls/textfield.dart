@@ -96,12 +96,15 @@ class _TextFieldControlState extends State<TextFieldControl> {
           var prefixControls = widget.children.where((c) => c.name == "prefix");
           var suffixControls = widget.children.where((c) => c.name == "suffix");
 
-          int? minLines = widget.control.attrInt("minLines");
-          int? maxLines = widget.control.attrInt("maxLines");
+          bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
+          bool multiline =
+              widget.control.attrBool("multiline", false)! || shiftEnter;
+          int minLines = widget.control.attrInt("minLines", 1)!;
+          int? maxLines =
+              widget.control.attrInt("maxLines", multiline ? null : 1);
 
           bool readOnly = widget.control.attrBool("readOnly", false)!;
           bool password = widget.control.attrBool("password", false)!;
-          bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
           bool canRevealPassword =
               widget.control.attrBool("canRevealPassword", false)!;
           bool onChange = widget.control.attrBool("onChange", false)!;
@@ -122,9 +125,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
           TextInputType keyboardType = parseTextInputType(
               widget.control.attrString("keyboardType", "")!);
 
-          if (keyboardType == TextInputType.none &&
-              minLines != null &&
-              minLines > 0) {
+          if (multiline) {
             keyboardType = TextInputType.multiline;
           }
 
@@ -138,12 +139,14 @@ class _TextFieldControlState extends State<TextFieldControl> {
           var textField = TextFormField(
               autofocus: autofocus,
               enabled: !disabled,
-              onFieldSubmitted: (_) {
-                ws.pageEventFromWeb(
-                    eventTarget: widget.control.id,
-                    eventName: "submit",
-                    eventData: "");
-              },
+              onFieldSubmitted: !multiline
+                  ? (_) {
+                      ws.pageEventFromWeb(
+                          eventTarget: widget.control.id,
+                          eventName: "submit",
+                          eventData: "");
+                    }
+                  : null,
               decoration: buildInputDecoration(
                   widget.control,
                   prefixControls.isNotEmpty ? prefixControls.first : null,
@@ -152,13 +155,11 @@ class _TextFieldControlState extends State<TextFieldControl> {
               keyboardType: keyboardType,
               textAlign: textAlign,
               minLines: minLines,
-              maxLines: password ? 1 : maxLines,
+              maxLines: maxLines,
               readOnly: readOnly,
               obscureText: password && !_revealPassword,
               controller: _controller,
-              focusNode: keyboardType == TextInputType.multiline && shiftEnter
-                  ? _shiftEnterfocusNode
-                  : _focusNode,
+              focusNode: shiftEnter ? _shiftEnterfocusNode : _focusNode,
               onChanged: (String value) {
                 //debugPrint(value);
                 setState(() {

@@ -62,6 +62,7 @@ class TextField(FormFieldControl):
         #
         value: str = None,
         keyboard_type: TextInputType = None,
+        multiline: bool = None,
         min_lines: int = None,
         max_lines: int = None,
         password: bool = None,
@@ -108,6 +109,7 @@ class TextField(FormFieldControl):
         self.value = value
         self.keyboard_type = keyboard_type
         self.text_align = text_align
+        self.multiline = multiline
         self.min_lines = min_lines
         self.max_lines = max_lines
         self.read_only = read_only
@@ -151,6 +153,16 @@ class TextField(FormFieldControl):
     @beartype
     def text_align(self, value: TextAlign):
         self._set_attr("textAlign", value)
+
+    # multiline
+    @property
+    def multiline(self):
+        return self._get_attr("multiline", data_type="bool", def_value=False)
+
+    @multiline.setter
+    @beartype
+    def multiline(self, value: Optional[bool]):
+        self._set_attr("multiline", value)
 
     # min_lines
     @property

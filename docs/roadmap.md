@@ -878,6 +878,7 @@ Properties:
 
 - value
 - keyboardType
+- multiline
 - minLines
 - maxLines
 - password

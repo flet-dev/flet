@@ -55,9 +55,10 @@ def main(page: Page):
 
     chat_input = TextField(
         hint_text="Say something...",
-        min_lines=1,
         shift_enter=True,
+        min_lines=1,
         on_submit=chat_submit,
+        max_lines=5,
     )
 
     form = Column(
@@ -83,7 +84,7 @@ def main(page: Page):
                 helper_text="Tell something about us",
                 border="underline",
                 filled=True,
-                min_lines=1,
+                multiline=True,
             ),
             Text(
                 "New line - Shift + Enter and submit on Enter",
