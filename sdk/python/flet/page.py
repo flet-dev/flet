@@ -48,6 +48,7 @@ class Page(Control):
         self._last_event = None
         self._event_available = threading.Event()
         self._fetch_page_details()
+        self.lock = threading.Lock()
 
         self.__offstage = Offstage()
         self.__theme = None
