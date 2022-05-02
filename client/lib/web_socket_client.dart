@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-import 'package:redux/redux.dart';
 import 'package:flet_view/protocol/add_page_controls_payload.dart';
 import 'package:flet_view/protocol/app_become_inactive_payload.dart';
 import 'package:flet_view/protocol/append_control_props_request.dart';
@@ -14,14 +12,17 @@ import 'package:flet_view/protocol/session_crashed_payload.dart';
 import 'package:flet_view/protocol/signout_payload.dart';
 import 'package:flet_view/protocol/update_control_props_payload.dart';
 import 'package:flet_view/protocol/update_control_props_request.dart';
+import 'package:flutter/foundation.dart';
+import 'package:redux/redux.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import 'protocol/message.dart';
 import 'actions.dart';
+import 'protocol/message.dart';
 import 'protocol/register_webclient_request.dart';
 import 'protocol/register_webclient_response.dart';
 
 WebSocketClient ws = WebSocketClient();
+int reconnectionTimeoutSeconds = 5;
 
 class WebSocketClient {
   WebSocketChannel? _channel;
@@ -44,14 +45,20 @@ class WebSocketClient {
     debugPrint("Connecting to WebSocket server $serverUrl...");
     try {
       _channel = WebSocketChannel.connect(Uri.parse(_serverUrl));
-      debugPrint("Connected to WebSocket server");
       _connected = true;
       _channel!.stream.listen(_onMessage, onDone: () async {
         debugPrint("WS stream closed");
+        _store!.dispatch(PageReconnectingAction());
+        Future.delayed(Duration(seconds: reconnectionTimeoutSeconds))
+            .then((value) {
+          connect(serverUrl: _serverUrl);
+          _registerWebClient();
+        });
       }, onError: (error) async {
         debugPrint("WS stream error $error");
+        // Future.delayed(Duration(seconds: reconnectionTimeoutSeconds))
+        //     .then((value) => connect(serverUrl: _serverUrl));
       });
-      debugPrint("Started listening for WS messages");
     } catch (e) {
       debugPrint("WebSocket connection error: $e");
     }
