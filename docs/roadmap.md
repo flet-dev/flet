@@ -13,6 +13,8 @@
     * [x] Stack
     * [x] ListView
     * [x] GridView
+  * App structure and navigation
+    * [x] Tabs
   * Basic controls
     * [x] Text
     * [x] Icon
@@ -24,6 +26,7 @@
     * [x] OutlinedButton
     * [x] TextButton
     * [x] IconButton
+    * [x] FloatingActionButton
   * Input and selections
     * [x] TextField
     * [x] Dropdown
@@ -32,9 +35,9 @@
     * [x] Slider
     * [x] Switch
   * Dialogs, alerts and panels
-    * [ ] Banner
+    * [x] Banner
     * [x] SnackBar
-    * [ ] AlertDialog
+    * [x] AlertDialog
 
 * Flet Client
   * [ ] Web
@@ -82,31 +85,31 @@
     </tr>
     <tr><th colspan="4">Layout</th></tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Container</td>
         <td>Stack</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Row</td>
         <td>Stack horizontal=True</td>
         <td>S1 (flex, wrap)</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Column</td>
         <td>Stack horizontal=False</td>
         <td>S1 (flex, wrap)</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Stack</td>
         <td>-</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>ListView</td>
         <td>Stack horizontal=False</td>
         <td>S1</td>
@@ -124,7 +127,7 @@
         <td></td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>GridView</td>
         <td>-</td>
         <td>S1</td>
@@ -143,7 +146,7 @@
     </tr>
     <tr><th colspan="4">Basic controls</th></tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Text</td>
         <td>Text</td>
         <td>S1</td>
@@ -155,13 +158,13 @@
         <td></td>
     </tr>    
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Icon</td>
         <td>Icon</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Image</td>
         <td>Image</td>
         <td>S1</td>
@@ -179,38 +182,38 @@
         <td></td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>ProgressBar</td>
         <td>Progress</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>ProgressRing</td>
         <td>Spinner</td>
         <td>S1</td>
     </tr>
     <tr><th colspan="4">Buttons</th></tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>ElevatedButton</td>
         <td>Button primary=True</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>OutlinedButton</td>
         <td>Button primary=False</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>TextButton</td>
         <td>Button action=True</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>IconButton</td>
         <td>Button icon={icon_name}</td>
         <td>S1</td>
@@ -222,32 +225,32 @@
         <td></td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>FloatingActionButton</td>
         <td>-</td>
-        <td></td>
+        <td>S1</td>
     </tr>
     <tr><th colspan="4">Input and selections</th></tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Checkbox</td>
         <td>Checkbox</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Radio</td>
         <td>ChoiceGroup</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Dropdown</td>
         <td>Dropdown</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>-</td>
         <td>ComboBox</td>
         <td></td>
@@ -271,19 +274,19 @@
         <td></td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Slider</td>
         <td>Slider</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>TextField</td>
         <td>Textbox</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Switch</td>
         <td>Toggle</td>
         <td>S1</td>
@@ -296,19 +299,19 @@
     </tr>
     <tr><th colspan="4">Dialogs, alerts, and panels</th></tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>Banner</td>
         <td>Message</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>SnackBar</td>
         <td>-</td>
         <td>S1</td>
     </tr>
     <tr>
-        <td></td>
+        <td>✓</td>
         <td>AlertDialog</td>
         <td>Dialog</td>
         <td>S1</td>
@@ -355,7 +358,13 @@
         <td>TabBar</td>
         <td></td>
         <td></td>
-    </tr>    
+    </tr>
+    <tr>
+        <td>✓</td>
+        <td>Tabs</td>
+        <td>Tabs</td>
+        <td></td>
+    </tr>
     <tr><th colspan="4">Grids</th></tr>
     <tr>
         <td></td>
@@ -427,10 +436,10 @@ Properties:
 
 Events:
 
-- onClose
-- onConnect
-- onDisconnect
-- onResize
+- on_close
+- on_connect
+- on_disconnect
+- on_resize
 
 ## Control
 
@@ -479,6 +488,7 @@ Properties:
 - content - child control of any type
 - marging
 - padding
+- tooltip
 
 ## Row
 
@@ -530,6 +540,7 @@ Properties:
 - scrollDirection - `vertical` (default), `horizontal`.
 - padding
 - spacing
+- autoScroll - scroll to end on items update
 
 ### ListTile (S2)
 
@@ -587,7 +598,8 @@ TextTheme: https://api.flutter.dev/flutter/material/TextTheme-class.html
 - bgColor
 - overflow - (TextOverflow) `clip`, `ellipsis`, `fade`, `visible`
 - selectable
-
+- tooltip
+- noWrap
 
 ## Icon
 
@@ -601,6 +613,7 @@ Properties:
 - color ([more](https://api.flutter.dev/flutter/dart-ui/Color-class.html))
 - size
 - semanticLabel (S2) - Text to announce in accessibility modes
+- tooltip
 
 ## Image
 
@@ -616,7 +629,7 @@ Properties:
 - opacity (S2) - override control's opacity
 - semanticLabel (S2)
 - border_radius - to make rounded corners
-
+- tooltip
 
 ## ProgressBar
 
@@ -630,6 +643,7 @@ Properties:
 - value
 - label
 - description
+- tooltip
 
 ## ProgressRing
 
@@ -643,12 +657,7 @@ Properties:
 - value
 - label
 - labelPosition
-
-## TextField
-
-Docs: https://api.flutter.dev/flutter/material/TextField-class.html
-
-Example: https://gallery.flutter.dev/#/demo/text-field
+- tooltip
 
 ## ElevatedButton
 
@@ -660,6 +669,8 @@ Properties:
 - icon
 - iconColor
 - content - a Control representing custom button content
+- tooltip
+- autofocus
 
 Events:
 
@@ -675,6 +686,8 @@ Properties:
 - icon
 - iconColor
 - content - a Control representing custom button content
+- tooltip
+- autofocus
 
 Events:
 
@@ -690,6 +703,8 @@ Properties:
 - icon
 - iconColor
 - content - a Control representing custom button content
+- tooltip
+- autofocus
 
 Events:
 
@@ -706,10 +721,28 @@ Properties:
 - iconSize
 - tooltip
 - content - a Control representing custom button content
+- autofocus
 
 Events:
 
 - onPressed
+
+## FloatingActionButton (FAB)
+
+Docs: https://api.flutter.dev/flutter/material/FloatingActionButton-class.html
+
+Properties:
+
+- text
+- icon
+- bgColor
+- content - a Control representing custom button content
+- tooltip
+- autofocus
+
+Events:
+
+- click
 
 ## RadioGroup
 
@@ -731,6 +764,13 @@ Properties:
 - label
 - labelPosition
 - value - radio's value
+- tooltip
+- autofocus
+
+Events:
+
+- focus
+- blur
 
 ## Slider
 
@@ -743,10 +783,14 @@ Properties:
 - min
 - max
 - divisions
+- tooltip
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## Switch
 
@@ -757,10 +801,14 @@ Properties:
 - label
 - labelPosition
 - value
+- tooltip
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## Checkbox
 
@@ -772,10 +820,14 @@ Properties:
 - tristate
 - label
 - labelPosition
+- tooltip
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## Dropdown
 
@@ -793,13 +845,17 @@ Properties:
 - errorText
 - prefix: Control
 - suffix: Control
+- tooltip
 
 - value
 - options
+- autofocus
 
 Events:
 
 - change
+- focus
+- blur
 
 ## TextField
 
@@ -817,19 +873,25 @@ Properties:
 - errorText
 - prefix: Control
 - suffix: Control
+- tooltip
+- autofocus
 
 - value
 - keyboardType
+- multiline
 - minLines
 - maxLines
 - password
 - canRevealPassword - true/false
 - readOnly
+- shiftEnter
 - textAlign
 
 Events:
 
 - change
+- focus
+- blur
 
 ## AlertDialog
 
@@ -846,6 +908,10 @@ Properties:
 - actions (Controls)
 - actionsPadding
 - actionsAlignment (mainAxisAlignment)
+
+Events:
+
+- dismiss - fires when non-modal dialog is dismissed by clicking an area outside it.
 
 ## Banner
 
@@ -882,6 +948,26 @@ Properties:
 Events:
 
 - action - when action button clicked
+
+## Tabs
+
+Properties:
+
+- tabs
+- value
+- animationDuration - in milliseconds
+
+Events:
+
+- change
+
+### Tab
+
+- key
+- text
+- tabContent
+- content
+- icon
 
 ## SplitView
 

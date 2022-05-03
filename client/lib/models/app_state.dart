@@ -13,6 +13,7 @@ class AppState extends Equatable {
   final Uri? pageUri;
   final String sessionId;
   final bool isLoading;
+  final int reconnectingTimeout;
   final String error;
   final Size size;
   final String sizeBreakpoint;
@@ -23,6 +24,7 @@ class AppState extends Equatable {
       {required this.pageUri,
       required this.sessionId,
       required this.isLoading,
+      required this.reconnectingTimeout,
       required this.error,
       required this.size,
       required this.sizeBreakpoint,
@@ -33,6 +35,7 @@ class AppState extends Equatable {
           pageUri: null,
           sessionId: "",
           isLoading: true,
+          reconnectingTimeout: 0,
           error: "",
           size: Size(0, 0),
           sizeBreakpoint: "",
@@ -50,6 +53,7 @@ class AppState extends Equatable {
           {Uri? pageUri,
           String? sessionId,
           bool? isLoading,
+          int? reconnectingTimeout,
           String? error,
           Size? size,
           String? sizeBreakpoint,
@@ -59,6 +63,7 @@ class AppState extends Equatable {
           pageUri: pageUri ?? this.pageUri,
           sessionId: sessionId ?? this.sessionId,
           isLoading: isLoading ?? this.isLoading,
+          reconnectingTimeout: reconnectingTimeout ?? this.reconnectingTimeout,
           error: error ?? this.error,
           size: size ?? this.size,
           sizeBreakpoint: sizeBreakpoint ?? this.sizeBreakpoint,

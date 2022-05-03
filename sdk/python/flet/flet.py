@@ -91,19 +91,21 @@ def app(
     print("Connected to Flet app and handling user sessions...")
 
     fvp = None
-    if view == WEB_BROWSER:
-        open_in_browser(conn.page_url)
+
+    if view == FLET_APP and not is_linux():
+        fvp = _open_flet_view(conn.page_url)
+        try:
+            fvp.wait()
+        except (Exception) as e:
+            pass
+    else:
+        if view == WEB_BROWSER:
+            open_in_browser(conn.page_url)
         try:
             if is_windows():
                 input()
             else:
                 terminate.wait()
-        except (Exception) as e:
-            pass
-    elif view == FLET_APP:
-        fvp = _open_flet_view(conn.page_url)
-        try:
-            fvp.wait()
         except (Exception) as e:
             pass
 

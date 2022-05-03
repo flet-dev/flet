@@ -23,13 +23,14 @@ def main(page):
 
     page.snack_bar = SnackBar(
         content=Text("Hello, world!"),
-        remove_current_snackbar=True,
+        # remove_current_snackbar=True,
         action="Alright!",
         on_action=action_click,
     )
 
     def on_click(e):
-        page.snack_bar.content.value = f"Hello, world: {d.counter}"
+        # page.snack_bar.content.value = f"Hello, world: {d.counter}"
+        page.snack_bar.content = Text(f"Hello, world: {d.counter}")
         page.snack_bar.open = True
         d.counter += 1
         page.update()

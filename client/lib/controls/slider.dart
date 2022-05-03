@@ -29,10 +29,17 @@ class SliderControl extends StatefulWidget {
 class _SliderControlState extends State<SliderControl> {
   double _value = 0;
   Timer? _debounce;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+    _focusNode.addListener(() {
+      ws.pageEventFromWeb(
+          eventTarget: widget.control.id,
+          eventName: _focusNode.hasFocus ? "focus" : "blur",
+          eventData: "");
+    });
   }
 
   @override
@@ -68,6 +75,7 @@ class _SliderControlState extends State<SliderControl> {
     debugPrint("SliderControl build: ${widget.control.id}");
 
     String? label = widget.control.attrString("label");
+    bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     double min = widget.control.attrDouble("min", 0)!;
@@ -87,6 +95,8 @@ class _SliderControlState extends State<SliderControl> {
           }
 
           var slider = Slider(
+              autofocus: autofocus,
+              focusNode: _focusNode,
               value: _value,
               min: min,
               max: max,

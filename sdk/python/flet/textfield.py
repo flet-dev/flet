@@ -35,6 +35,7 @@ class TextField(FormFieldControl):
         height: OptionalNumber = None,
         expand: int = None,
         opacity: OptionalNumber = None,
+        tooltip: str = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
@@ -61,6 +62,7 @@ class TextField(FormFieldControl):
         #
         value: str = None,
         keyboard_type: TextInputType = None,
+        multiline: bool = None,
         min_lines: int = None,
         max_lines: int = None,
         password: bool = None,
@@ -68,8 +70,11 @@ class TextField(FormFieldControl):
         read_only: bool = None,
         shift_enter: bool = None,
         text_align: TextAlign = None,
+        autofocus: bool = None,
         on_change=None,
         on_submit=None,
+        on_focus=None,
+        on_blur=None,
     ):
         FormFieldControl.__init__(
             self,
@@ -78,6 +83,7 @@ class TextField(FormFieldControl):
             height=height,
             expand=expand,
             opacity=opacity,
+            tooltip=tooltip,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -103,14 +109,18 @@ class TextField(FormFieldControl):
         self.value = value
         self.keyboard_type = keyboard_type
         self.text_align = text_align
+        self.multiline = multiline
         self.min_lines = min_lines
         self.max_lines = max_lines
         self.read_only = read_only
         self.shift_enter = shift_enter
         self.password = password
         self.can_reveal_password = can_reveal_password
+        self.autofocus = autofocus
         self.on_change = on_change
         self.on_submit = on_submit
+        self.on_focus = on_focus
+        self.on_blur = on_blur
 
     def _get_control_name(self):
         return "textfield"
@@ -143,6 +153,16 @@ class TextField(FormFieldControl):
     @beartype
     def text_align(self, value: TextAlign):
         self._set_attr("textAlign", value)
+
+    # multiline
+    @property
+    def multiline(self):
+        return self._get_attr("multiline", data_type="bool", def_value=False)
+
+    @multiline.setter
+    @beartype
+    def multiline(self, value: Optional[bool]):
+        self._set_attr("multiline", value)
 
     # min_lines
     @property
@@ -204,6 +224,16 @@ class TextField(FormFieldControl):
     def can_reveal_password(self, value: Optional[bool]):
         self._set_attr("canRevealPassword", value)
 
+    # autofocus
+    @property
+    def autofocus(self):
+        return self._get_attr("autofocus", data_type="bool", def_value=False)
+
+    @autofocus.setter
+    @beartype
+    def autofocus(self, value: Optional[bool]):
+        self._set_attr("autofocus", value)
+
     # on_change
     @property
     def on_change(self):
@@ -225,3 +255,21 @@ class TextField(FormFieldControl):
     @on_submit.setter
     def on_submit(self, handler):
         self._add_event_handler("submit", handler)
+
+    # on_focus
+    @property
+    def on_focus(self):
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self):
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler):
+        self._add_event_handler("blur", handler)

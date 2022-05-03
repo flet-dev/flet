@@ -1,12 +1,19 @@
+import 'package:flet_view/models/control_type.dart';
+import 'package:flet_view/utils/desktop.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
+import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/control_children_view_model.dart';
 import '../utils/alignment.dart';
+import '../utils/color_theme.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/theme.dart';
 import '../widgets/screen_size.dart';
 import 'create_control.dart';
+import 'scrollable_control.dart';
 
 class PageControl extends StatelessWidget {
   final Control? parent;
@@ -21,8 +28,6 @@ class PageControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Page build: ${control.id}");
 
-    debugPrint(Theme.of(context).colorScheme.primary.toString());
-
     bool disabled = control.isDisabled;
 
     final spacing = control.attrDouble("spacing", 10)!;
@@ -31,14 +36,22 @@ class PageControl extends StatelessWidget {
     final crossAlignment = parseCrossAxisAlignment(
         control, "horizontalAlignment", CrossAxisAlignment.start);
 
-    List<Widget> offstage = [];
+    ScrollMode scrollMode = ScrollMode.values.firstWhere(
+        (m) =>
+            m.name.toLowerCase() ==
+            control.attrString("scroll", "")!.toLowerCase(),
+        orElse: () => ScrollMode.none);
+
+    debugPrint("scrollMode: $scrollMode");
+
+    Control? offstage;
     List<Widget> controls = [];
     bool firstControl = true;
 
     for (var ctrl in children.where((c) => c.isVisible)) {
       // offstage control
-      if (ctrl.name == "offstage") {
-        offstage.add(createControl(control, ctrl.id, control.isDisabled));
+      if (ctrl.type == ControlType.offstage) {
+        offstage = ctrl;
         continue;
       }
 
@@ -59,13 +72,23 @@ class PageControl extends StatelessWidget {
     // theme
     var theme = parseTheme(control, "theme") ??
         ThemeData(
-            colorSchemeSeed: const Color.fromARGB(255, 20, 136, 224),
-            brightness: Brightness.light);
+            colorScheme: lightColorScheme,
+            brightness: Brightness.light,
+            useMaterial3: true,
+            // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
+            //     ? '-apple-system'
+            //     : null,
+            visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var darkTheme = parseTheme(control, "darkTheme") ??
         ThemeData(
-            colorSchemeSeed: const Color.fromARGB(255, 104, 192, 233),
-            brightness: Brightness.dark);
+            colorScheme: darkColorScheme,
+            brightness: Brightness.dark,
+            useMaterial3: true,
+            // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
+            //     ? '-apple-system'
+            //     : null,
+            visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var themeMode = ThemeMode.values.firstWhere(
         (t) =>
@@ -75,29 +98,57 @@ class PageControl extends StatelessWidget {
 
     debugPrint("Page theme: $themeMode");
 
-    return MaterialApp(
-      title: control.attrString("title", "")!,
-      theme: theme,
-      darkTheme: darkTheme,
-      themeMode: themeMode,
-      home: Scaffold(
-        body: Stack(children: [
-          SizedBox.expand(
-              child: Container(
-            padding:
-                parseEdgeInsets(control, "padding") ?? const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: HexColor.fromString(
-                    context, control.attrString("bgcolor", "")!)),
-            child: Column(
-                mainAxisAlignment: mainAlignment,
-                crossAxisAlignment: crossAlignment,
-                children: controls),
-          )),
-          ...offstage,
-          const ScreenSize()
-        ]),
-      ),
-    );
+    String title = control.attrString("title", "")!;
+    setWindowTitle(title);
+
+    return StoreConnector<AppState, ControlChildrenViewModel?>(
+        distinct: true,
+        converter: (store) => offstage != null
+            ? ControlChildrenViewModel.fromStore(store, offstage.id,
+                dispatch: store.dispatch)
+            : null,
+        builder: (context, offstageView) {
+          debugPrint("Offstage StoreConnector build");
+
+          // offstage
+          List<Widget> offstageWidgets = offstageView != null
+              ? offstageView.children
+                  .where((c) => c.isVisible)
+                  .map((c) => createControl(offstage, c.id, disabled))
+                  .toList()
+              : [];
+
+          var column = Column(
+              mainAxisAlignment: mainAlignment,
+              crossAxisAlignment: crossAlignment,
+              children: controls);
+
+          return MaterialApp(
+            title: title,
+            theme: theme,
+            darkTheme: darkTheme,
+            themeMode: themeMode,
+            home: Scaffold(
+              body: Stack(children: [
+                SizedBox.expand(
+                    child: Container(
+                        padding: parseEdgeInsets(control, "padding") ??
+                            const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            color: HexColor.fromString(
+                                context, control.attrString("bgcolor", "")!)),
+                        child: scrollMode != ScrollMode.none
+                            ? ScrollableControl(
+                                child: column,
+                                scrollDirection: Axis.vertical,
+                                scrollMode: scrollMode,
+                              )
+                            : column)),
+                ...offstageWidgets,
+                const ScreenSize()
+              ]),
+            ),
+          );
+        });
   }
 }

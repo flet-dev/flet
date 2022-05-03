@@ -33,6 +33,7 @@ class AlertDialog(Control):
         actions: List[Control] = None,
         actions_padding: PaddingValue = None,
         actions_alignment: MainAxisAlignment = None,
+        on_dismiss=None,
     ):
 
         Control.__init__(
@@ -56,9 +57,10 @@ class AlertDialog(Control):
         self.actions = actions
         self.actions_padding = actions_padding
         self.actions_alignment = actions_alignment
+        self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
-        return "snackbar"
+        return "alertdialog"
 
     def _get_children(self):
         children = []
@@ -68,7 +70,9 @@ class AlertDialog(Control):
         if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
-        children.extend(a._set_attr_internal("n", "action") for a in self.__actions)
+        for action in self.__actions:
+            action._set_attr_internal("n", "action")
+            children.append(action)
         return children
 
     # open
@@ -172,3 +176,12 @@ class AlertDialog(Control):
     @beartype
     def actions_alignment(self, value: MainAxisAlignment):
         self._set_attr("actionsAlignment", value)
+
+    # on_dismiss
+    @property
+    def on_dismiss(self):
+        return self._get_event_handler("dismiss")
+
+    @on_dismiss.setter
+    def on_dismiss(self, handler):
+        self._add_event_handler("dismiss", handler)

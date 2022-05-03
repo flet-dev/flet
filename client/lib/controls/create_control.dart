@@ -5,11 +5,15 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_type.dart';
 import '../models/control_view_model.dart';
+import 'alert_dialog.dart';
+import 'banner.dart';
 import 'checkbox.dart';
+import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
+import 'floating_action_button.dart';
 import 'grid_view.dart';
 import 'icon.dart';
 import 'icon_button.dart';
@@ -26,22 +30,38 @@ import 'slider.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
 import 'switch.dart';
+import 'tabs.dart';
 import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
 
+// abstract class ControlWidget extends Widget {
+//   const ControlWidget(
+//       {Key? key,
+//       required Control parent,
+//       required Control control,
+//       required List<Control> children,
+//       required bool parentDisabled})
+//       : super(key: key);
+// }
+
 Widget createControl(Control? parent, String id, bool parentDisabled) {
+  //debugPrint("createControl(): $id");
   return StoreConnector<AppState, ControlViewModel>(
     distinct: true,
     converter: (store) {
       //debugPrint("ControlViewModel $id converter");
       return ControlViewModel.fromStore(store, id);
     },
-    onWillChange: (prev, next) {
-      //debugPrint("${next.type} $id will change");
+    // onWillChange: (prev, next) {
+    //   debugPrint("onWillChange() $id: $prev, $next");
+    // },
+    ignoreChange: (state) {
+      //debugPrint("ignoreChange: $id");
+      return state.controls[id] == null;
     },
     builder: (context, controlView) {
-      //debugPrint("${control.type} ${control.id} builder");
+      //debugPrint("createControl builder(): $id");
       switch (controlView.control.type) {
         case ControlType.page:
           return PageControl(
@@ -50,6 +70,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return TextControl(control: controlView.control);
         case ControlType.icon:
           return IconControl(control: controlView.control);
+        case ControlType.clipboard:
+          return ClipboardControl(control: controlView.control);
         case ControlType.image:
           return ImageControl(parent: parent, control: controlView.control);
         case ControlType.progressRing:
@@ -76,6 +98,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.iconButton:
           return IconButtonControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.floatingActionButton:
+          return FloatingActionButtonControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
@@ -159,6 +187,24 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
+        case ControlType.alertDialog:
+          return AlertDialogControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.banner:
+          return BannerControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.tabs:
+          return TabsControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
         default:
           throw Exception("Unknown control type: ${controlView.control.type}");
       }
@@ -167,12 +213,18 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
 }
 
 Widget baseControl(Widget widget, Control? parent, Control control) {
-  return _expandable(_opacity(widget, parent, control), parent, control);
+  return _expandable(
+      _tooltip(_opacity(widget, parent, control), parent, control),
+      parent,
+      control);
 }
 
 Widget constrainedControl(Widget widget, Control? parent, Control control) {
   return _expandable(
-      _sizedControl(_opacity(widget, parent, control), parent, control),
+      _sizedControl(
+          _tooltip(_opacity(widget, parent, control), parent, control),
+          parent,
+          control),
       parent,
       control);
 }
@@ -183,6 +235,18 @@ Widget _opacity(Widget widget, Control? parent, Control control) {
       ? Opacity(
           opacity: opacity,
           child: widget,
+        )
+      : widget;
+}
+
+Widget _tooltip(Widget widget, Control? parent, Control control) {
+  var tooltip = control.attrString("tooltip");
+  return tooltip != null
+      ? Tooltip(
+          message: tooltip,
+          padding: const EdgeInsets.all(4.0),
+          child: widget,
+          waitDuration: const Duration(milliseconds: 800),
         )
       : widget;
 }

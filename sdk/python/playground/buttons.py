@@ -32,7 +32,11 @@ def main(page: Page):
                 Text("Elevated buttons", style="headlineMedium"),
                 ElevatedButton("Normal button"),
                 ElevatedButton("Disabled button", disabled=True),
-                ElevatedButton("Button with icon", icon="chair_outlined"),
+                ElevatedButton(
+                    "Button with icon and tooltip",
+                    icon="chair_outlined",
+                    tooltip="Hey, click me!",
+                ),
                 ElevatedButton(
                     "Button with colorful icon",
                     icon="park_rounded",

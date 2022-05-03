@@ -25,12 +25,12 @@ class IconButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Button build: ${control.id}");
 
-    String? tooltip = control.attrString("tooltip")!;
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
     Color? iconColor =
         HexColor.fromString(context, control.attrString("iconColor", "")!);
     double? iconSize = control.attrDouble("iconSize");
     var contentCtrls = children.where((c) => c.name == "content");
+    bool autofocus = control.attrBool("autofocus", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = disabled
@@ -47,18 +47,18 @@ class IconButtonControl extends StatelessWidget {
 
     if (icon != null) {
       button = IconButton(
+          autofocus: autofocus,
           icon: Icon(
             icon,
             color: iconColor,
           ),
           iconSize: iconSize,
-          tooltip: tooltip,
           onPressed: onPressed);
     } else if (contentCtrls.isNotEmpty) {
       button = IconButton(
+          autofocus: autofocus,
           onPressed: onPressed,
           iconSize: iconSize,
-          tooltip: tooltip,
           icon: createControl(control, contentCtrls.first.id, disabled));
     } else {
       return const ErrorControl(

@@ -7,6 +7,7 @@ from flet.control import Control
 from flet.dropdown import Dropdown
 from flet.elevated_button import ElevatedButton
 from flet.flet import *
+from flet.floating_action_button import FloatingActionButton
 from flet.grid_view import GridView
 from flet.icon import Icon
 from flet.icon_button import IconButton
@@ -24,6 +25,7 @@ from flet.slider import Slider
 from flet.snack_bar import SnackBar
 from flet.stack import Stack
 from flet.switch import Switch
+from flet.tabs import Tab, Tabs
 from flet.text import Text
 from flet.text_button import TextButton
 from flet.textfield import TextField

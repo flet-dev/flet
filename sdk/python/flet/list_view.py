@@ -28,6 +28,7 @@ class ListView(ConstrainedControl):
         horizontal: bool = None,
         spacing: OptionalNumber = None,
         padding: PaddingValue = None,
+        auto_scroll: bool = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -46,12 +47,17 @@ class ListView(ConstrainedControl):
         self.horizontal = horizontal
         self.spacing = spacing
         self.padding = padding
+        self.auto_scroll = auto_scroll
 
     def _get_control_name(self):
         return "listview"
 
     def _get_children(self):
         return self.__controls
+
+    def clean(self):
+        Control.clean(self)
+        self.__controls.clear()
 
     # horizontal
     @property
@@ -96,3 +102,13 @@ class ListView(ConstrainedControl):
     @controls.setter
     def controls(self, value):
         self.__controls = value or []
+
+    # auto_scroll
+    @property
+    def auto_scroll(self):
+        return self._get_attr("autoScroll")
+
+    @auto_scroll.setter
+    @beartype
+    def auto_scroll(self, value: Optional[bool]):
+        self._set_attr("autoScroll", value)

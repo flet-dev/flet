@@ -22,7 +22,7 @@ class CommandEncoder(json.JSONEncoder):
 
 cmd_3 = Command(0, "get", ["value5"], {"e": 5}, [])
 cmd_1 = Command(0, "set", ["value1", "value2"], {"c": 3, "d": 4}, [cmd_3])
-cmd = Command(0, "add", [], {"a": 1, "b": 2}, [cmd_1])
+cmd = Command(0, "add", [], {"a": 1, "b": 3}, [cmd_1])
 
 j = json.dumps(cmd, cls=CommandEncoder)
 print(j)

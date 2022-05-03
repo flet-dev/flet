@@ -4,6 +4,13 @@ __Flet__ is the next iteration of [Pglet](https://github.com/pglet/pglet) projec
 
 Pglet demonostrated there is a strong interest to write web apps in Python.
 
+Unlike other cross-platform GUI frameworks for Python (Kivy, Beeware) Flet does not re-invent the wheel by making its own widgets, but instead it's based on [Flutter](https://flutter.dev/) by Google, so apps built with Flet look beautiful and professional without any efforts. Out-of-the-box Flutter implements [Material](https://docs.flutter.dev/development/ui/widgets/material) and [Cupertino](https://docs.flutter.dev/development/ui/widgets/cupertino) widgets for building Android and iOS UI respectively. While Material widgets work great for building Web and Desktop apps too there are platform-specific widgets available from 3rd-party developers: [Fluent UI](https://bdlukaa.github.io/fluent_ui/) for Windows, [macOS UI](https://pub.dev/packages/macos_ui#macoswindow) for macOS. We are going to implement them in the future versions of Flet in the form or "adaptive" controls.
+
+Multi-user always-connected apps. Look at apps on your phone...
+With Flet we will try to explore a different model of building and delivering apps.
+
+
+
 ## Why new project?
 
 Pglet is for web apps and is based on Fluent UI React components.

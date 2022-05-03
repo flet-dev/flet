@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import 'create_control.dart';
@@ -53,40 +54,34 @@ class ColumnControl extends StatelessWidget {
       controls.add(createControl(control, ctrl.id, disabled));
     }
 
+    Widget widget = wrap
+        ? Wrap(
+            direction: Axis.vertical,
+            children: controls,
+            spacing: spacing,
+            runSpacing: control.attrDouble("runSpacing", 10)!,
+            alignment:
+                parseWrapAlignment(control, "alignment", WrapAlignment.start),
+            crossAxisAlignment: parseWrapCrossAlignment(
+                control, "horizontalAlignment", WrapCrossAlignment.start),
+          )
+        : Column(
+            mainAxisAlignment: mainAlignment,
+            mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
+            crossAxisAlignment: parseCrossAxisAlignment(
+                control, "horizontalAlignment", CrossAxisAlignment.start),
+            children: controls,
+          );
+
     return constrainedControl(
-        wrapAutoScroll(
-            wrap
-                ? Wrap(
-                    direction: Axis.vertical,
-                    children: controls,
-                    spacing: spacing,
-                    runSpacing: control.attrDouble("runSpacing", 10)!,
-                    alignment: parseWrapAlignment(
-                        control, "alignment", WrapAlignment.start),
-                    crossAxisAlignment: parseWrapCrossAlignment(control,
-                        "horizontalAlignment", WrapCrossAlignment.start),
-                  )
-                : Column(
-                    mainAxisAlignment: mainAlignment,
-                    mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
-                    crossAxisAlignment: parseCrossAxisAlignment(control,
-                        "horizontalAlignment", CrossAxisAlignment.start),
-                    children: controls,
-                  ),
-            wrap: wrap,
-            scrollMode: scrollMode),
+        scrollMode != ScrollMode.none
+            ? ScrollableControl(
+                child: widget,
+                scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
+                scrollMode: scrollMode,
+              )
+            : widget,
         parent,
         control);
-  }
-
-  Widget wrapAutoScroll(Widget child,
-      {required bool wrap, required ScrollMode scrollMode}) {
-    return scrollMode != ScrollMode.none
-        ? ScrollableControl(
-            child: child,
-            scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
-            scrollMode: scrollMode,
-          )
-        : child;
   }
 }

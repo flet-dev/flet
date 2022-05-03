@@ -1,6 +1,4 @@
 // One simple action: Increment
-import 'dart:developer';
-
 import 'package:flet_view/protocol/add_page_controls_payload.dart';
 import 'package:flet_view/protocol/clean_control_payload.dart';
 import 'package:flet_view/protocol/message.dart';
@@ -12,7 +10,6 @@ import 'package:flutter/cupertino.dart';
 import 'actions.dart';
 import 'models/app_state.dart';
 import 'models/control.dart';
-
 import 'session_store/session_store.dart'
     if (dart.library.io) "session_store/session_store_io.dart"
     if (dart.library.js) "session_store/session_store_js.dart";
@@ -67,7 +64,10 @@ AppState appReducer(AppState state, dynamic action) {
     //
     if (action.payload.error != null && action.payload.error!.isNotEmpty) {
       // error
-      return state.copyWith(isLoading: false, error: action.payload.error);
+      return state.copyWith(
+          isLoading: false,
+          reconnectingTimeout: 0,
+          error: action.payload.error);
     } else {
       final sessionId = action.payload.session!.id;
 
@@ -77,9 +77,18 @@ AppState appReducer(AppState state, dynamic action) {
       // connected to the session
       return state.copyWith(
           isLoading: false,
+          reconnectingTimeout: 0,
           sessionId: sessionId,
           controls: action.payload.session!.controls);
     }
+  } else if (action is PageReconnectingAction) {
+    //
+    // reconnecting WebSocket
+    //
+    return state.copyWith(
+        isLoading: true,
+        reconnectingTimeout:
+            state.reconnectingTimeout == 0 ? 1 : state.reconnectingTimeout * 2);
   } else if (action is AppBecomeInactiveAction) {
     //
     // app become inactive

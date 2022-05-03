@@ -28,10 +28,17 @@ class SwitchControl extends StatefulWidget {
 
 class _SwitchControlState extends State<SwitchControl> {
   bool _value = false;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+    _focusNode.addListener(() {
+      ws.pageEventFromWeb(
+          eventTarget: widget.control.id,
+          eventName: _focusNode.hasFocus ? "focus" : "blur",
+          eventData: "");
+    });
   }
 
   @override
@@ -49,6 +56,7 @@ class _SwitchControlState extends State<SwitchControl> {
             p.name.toLowerCase() ==
             widget.control.attrString("labelPosition", "")!.toLowerCase(),
         orElse: () => LabelPosition.right);
+    bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     return StoreConnector<AppState, Function>(
@@ -81,6 +89,8 @@ class _SwitchControlState extends State<SwitchControl> {
           }
 
           var swtch = Switch(
+              autofocus: autofocus,
+              focusNode: _focusNode,
               value: _value,
               onChanged: !disabled
                   ? (bool value) {

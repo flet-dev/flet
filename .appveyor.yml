@@ -1,3 +1,5 @@
+version: 0.0.{build}
+
 skip_branch_with_pr: true
 
 skip_commits:
@@ -7,11 +9,11 @@ skip_commits:
     - "*.md"
 
 environment:
-  GO_VERSION: 1.18
+  GO_VERSION: 1.18.1
   GO_TAGS: --tags release
   python_version: 3.10
   GITHUB_TOKEN:
-    secure: uX7wMPjOz72c6zs4QS2/m3vsOE5Fh7e68YqMNSf0mRmb6hP9Ij8haCefQjxBDlEb
+    secure: doX0dwjWhBmT56aJqR9NCbtMFJpDpdYxPCIB4vQoHfSR+nTa+pLCo6Yv5qWpD/90
   DOCKER_REGISTRY_USER:
     secure: NJVK0u9M6ZhmQKUeR6Gnxg==
   DOCKER_REGISTRY_PASS:
@@ -121,7 +123,7 @@ for:
 
     install:
       - brew install cocoapods
-      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.4-stable.zip -o flutter_macos_stable.zip
+      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.5-stable.zip -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter --version
@@ -190,12 +192,13 @@ for:
       # Flutter Web client
       - cd client
       - flutter test
-      - flutter build web --release --web-renderer auto
+      - flutter build web --release --web-renderer canvaskit
       - rm -rf build/web/canvaskit
       - ls -alR build/web
       - cd ..
 
       # Flet Server in Go
+      - mkdir server/server/content
       - cp -rf client/build/web/* server/server/content
       - cd server
       - sh: |
