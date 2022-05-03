@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet_view/models/app_state.dart';
 import 'package:flet_view/protocol/add_page_controls_payload.dart';
 import 'package:flet_view/protocol/app_become_inactive_payload.dart';
 import 'package:flet_view/protocol/append_control_props_request.dart';
@@ -22,12 +23,11 @@ import 'protocol/register_webclient_request.dart';
 import 'protocol/register_webclient_response.dart';
 
 WebSocketClient ws = WebSocketClient();
-int reconnectionTimeoutSeconds = 5;
 
 class WebSocketClient {
   WebSocketChannel? _channel;
   String _serverUrl = "";
-  Store? _store;
+  Store<AppState>? _store;
   bool _connected = false;
   String _pageName = "";
   String _pageHash = "";
@@ -35,7 +35,7 @@ class WebSocketClient {
   String _winHeight = "";
   String? _sessionId;
 
-  set store(Store store) {
+  set store(Store<AppState> store) {
     _store = store;
   }
 
@@ -49,7 +49,8 @@ class WebSocketClient {
       _channel!.stream.listen(_onMessage, onDone: () async {
         debugPrint("WS stream closed");
         _store!.dispatch(PageReconnectingAction());
-        Future.delayed(Duration(seconds: reconnectionTimeoutSeconds))
+        debugPrint("Reconnect in ${_store!.state.reconnectingTimeout} seconds");
+        Future.delayed(Duration(seconds: _store!.state.reconnectingTimeout))
             .then((value) {
           connect(serverUrl: _serverUrl);
           _registerWebClient();

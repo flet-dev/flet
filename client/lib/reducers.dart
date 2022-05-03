@@ -64,7 +64,10 @@ AppState appReducer(AppState state, dynamic action) {
     //
     if (action.payload.error != null && action.payload.error!.isNotEmpty) {
       // error
-      return state.copyWith(isLoading: false, error: action.payload.error);
+      return state.copyWith(
+          isLoading: false,
+          reconnectingTimeout: 0,
+          error: action.payload.error);
     } else {
       final sessionId = action.payload.session!.id;
 
@@ -74,6 +77,7 @@ AppState appReducer(AppState state, dynamic action) {
       // connected to the session
       return state.copyWith(
           isLoading: false,
+          reconnectingTimeout: 0,
           sessionId: sessionId,
           controls: action.payload.session!.controls);
     }
@@ -81,7 +85,10 @@ AppState appReducer(AppState state, dynamic action) {
     //
     // reconnecting WebSocket
     //
-    return state.copyWith(isLoading: true);
+    return state.copyWith(
+        isLoading: true,
+        reconnectingTimeout:
+            state.reconnectingTimeout == 0 ? 1 : state.reconnectingTimeout * 2);
   } else if (action is AppBecomeInactiveAction) {
     //
     // app become inactive

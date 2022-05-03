@@ -1,8 +1,6 @@
 import logging
-from cmath import exp
 from datetime import datetime
 from time import sleep
-from tkinter import W
 
 import flet
 from flet import (
@@ -14,13 +12,11 @@ from flet import (
     Row,
     Text,
     Theme,
-    border,
     border_radius,
     dropdown,
     icons,
     padding,
 )
-from flet.border_radius import BorderRadius
 from flet.checkbox import Checkbox
 from flet.container import Container
 from flet.icon import Icon
