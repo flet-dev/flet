@@ -107,7 +107,7 @@ def main(page: Page):
                 filled=True,
             ),
         ],
-        scroll="always",
+        scroll="adaptive",
         expand=1,
         width=600,
     )
