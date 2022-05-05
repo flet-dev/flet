@@ -19,6 +19,7 @@
     * [x] Text
     * [x] Icon
     * [x] Image (+custom assets directory for Flet server [see here](https://docs.flutter.dev/development/platform-integration/web-images)).
+    * [x] CircleAvatar
     * [x] ProgressBar
     * [x] ProgressRing
   * Buttons
@@ -40,21 +41,21 @@
     * [x] AlertDialog
 
 * Flet Client
-  * [ ] Web
-  * [ ] Windows ("client" mode - started from Python)
-  * [ ] macOS ("client" mode - started from Python)
+  * [x] Web
+  * [x] Windows ("client" mode - started from Python)
+  * [x] macOS ("client" mode - started from Python)
 
 * Flet Daemon
-  * [ ] "assets" directory with static content
+  * [x] "assets" directory with static content
 
 * Website
   * [ ] Controls S1 reference
-  * [ ] Introduction
+  * [x] Introduction
   * [ ] Blog post
   * [ ] Python Guide
-    * Deployment (+how to change favicon.ico)
-      * Deployment to Replit
-      * Deployment to Fly.io
+    * [ ] Deployment (+how to change favicon.ico)
+      * [x] Deployment to Replit
+      * [x] Deployment to Fly.io
 
 ## Sprint 2
 
@@ -169,6 +170,12 @@
         <td>Image</td>
         <td>S1</td>
     </tr>
+    <tr>
+        <td>✓</td>
+        <td>CircleAvatar</td>
+        <td>Persona</td>
+        <td>S1</td>
+    </tr>    
     <tr>
         <td></td>
         <td>Chip</td>
@@ -629,6 +636,22 @@ Properties:
 - opacity (S2) - override control's opacity
 - semanticLabel (S2)
 - border_radius - to make rounded corners
+- tooltip
+
+## CircleAvatar
+
+Docs: https://api.flutter.dev/flutter/material/CircleAvatar-class.html
+
+Properties:
+
+- foregroundImageUrl
+- backgroundImageUrl
+- color
+- bgColor
+- radius
+- minRadius
+- maxRadius
+- content
 - tooltip
 
 ## ProgressBar

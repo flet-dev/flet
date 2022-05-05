@@ -2,6 +2,7 @@ enum ControlType {
   alertDialog,
   banner,
   checkbox,
+  circleAvatar,
   clipboard,
   column,
   container,

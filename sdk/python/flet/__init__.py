@@ -1,6 +1,7 @@
 from flet.alert_dialog import AlertDialog
 from flet.banner import Banner
 from flet.checkbox import Checkbox
+from flet.circle_avatar import CircleAvatar
 from flet.column import Column
 from flet.container import Container
 from flet.control import Control

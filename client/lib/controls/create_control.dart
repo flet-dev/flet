@@ -8,6 +8,7 @@ import '../models/control_view_model.dart';
 import 'alert_dialog.dart';
 import 'banner.dart';
 import 'checkbox.dart';
+import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
@@ -74,6 +75,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return ClipboardControl(control: controlView.control);
         case ControlType.image:
           return ImageControl(parent: parent, control: controlView.control);
+        case ControlType.circleAvatar:
+          return CircleAvatarControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
         case ControlType.progressRing:
           return ProgressRingControl(control: controlView.control);
         case ControlType.progressBar:
