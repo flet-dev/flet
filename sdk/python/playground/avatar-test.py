@@ -1,5 +1,6 @@
 import flet
-from flet import CircleAvatar, Icon, Text, colors, icons
+from flet import CircleAvatar, Icon, Stack, Text, alignment, colors, icons
+from flet.container import Container
 
 
 def main(page):
@@ -23,7 +24,21 @@ def main(page):
         color=colors.YELLOW_200,
         bgcolor=colors.AMBER_700,
     )
-    page.add(a1, a2, a3, a4)
+    # avatar with online status
+    a5 = Stack(
+        [
+            CircleAvatar(
+                foreground_image_url="https://avatars.githubusercontent.com/u/5041459?s=88&v=4"
+            ),
+            Container(
+                content=CircleAvatar(bgcolor=colors.GREEN, radius=5),
+                alignment=alignment.bottom_left,
+            ),
+        ],
+        width=40,
+        height=40,
+    )
+    page.add(a1, a2, a3, a4, a5)
 
 
 flet.app(target=main)

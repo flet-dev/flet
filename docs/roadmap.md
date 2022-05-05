@@ -741,6 +741,7 @@ Properties:
 
 - icon
 - iconColor
+- bgcolor
 - iconSize
 - tooltip
 - content - a Control representing custom button content

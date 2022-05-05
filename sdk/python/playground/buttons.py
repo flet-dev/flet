@@ -6,6 +6,7 @@ import flet
 from flet import (
     Column,
     ElevatedButton,
+    FloatingActionButton,
     Icon,
     IconButton,
     OutlinedButton,
@@ -13,6 +14,7 @@ from flet import (
     Row,
     Text,
     TextButton,
+    icons,
 )
 
 logging.basicConfig(level=logging.DEBUG)
@@ -104,6 +106,12 @@ def main(page: Page):
                             icon="delete_forever_rounded",
                             icon_color="pink600",
                             tooltip="Delete record",
+                        ),
+                        IconButton(
+                            icon=icons.ANDROID,
+                            icon_color="white",
+                            bgcolor="blue",
+                            tooltip="Beep... Beep... Beep...",
                         ),
                     ]
                 ),

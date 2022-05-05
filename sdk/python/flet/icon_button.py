@@ -25,6 +25,7 @@ class IconButton(ConstrainedControl):
         #
         icon_size: OptionalNumber = None,
         icon_color: str = None,
+        bgcolor: str = None,
         content: Control = None,
         autofocus: bool = None,
         on_click=None,
@@ -45,6 +46,7 @@ class IconButton(ConstrainedControl):
         self.icon = icon
         self.icon_size = icon_size
         self.icon_color = icon_color
+        self.bgcolor = bgcolor
         self.content = content
         self.autofocus = autofocus
         self.on_click = on_click
@@ -84,6 +86,15 @@ class IconButton(ConstrainedControl):
     @icon_color.setter
     def icon_color(self, value):
         self._set_attr("iconColor", value)
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
 
     # on_click
     @property
