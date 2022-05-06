@@ -1,15 +1,27 @@
 import flet
-from flet import Container, ElevatedButton, Page, Row, alignment, colors
+from flet import (
+    Container,
+    ElevatedButton,
+    Page,
+    Row,
+    alignment,
+    border,
+    border_radius,
+    colors,
+    padding,
+)
 
 
 def main(page: Page):
-    page.title = "Containers with different alignments"
+    page.title = "Containers with different borders"
 
     c1 = Container(
         content=ElevatedButton("Center"),
         bgcolor=colors.AMBER,
         padding=15,
         alignment=alignment.center,
+        border=border.all(10, colors.PINK_600),
+        border_radius=border_radius.all(30),
         width=150,
         height=150,
     )
@@ -32,21 +44,11 @@ def main(page: Page):
         height=150,
     )
 
-    r = Row([c1, c2, c3])
+    r = Row([c1])
     page.add(r)
 
 
 flet.app(target=main)
-
-# bottom_center = Alignment(0, 1)
-# bottom_left = Alignment(-1, 1)
-# bottom_right = Alignment(1, 1)
-# center = Alignment(0, 0)
-# center_left = Alignment(-1, 0)
-# center_right = Alignment(1, 0)
-# top_center = Alignment(0, -1)
-# top_left = Alignment(-1, -1)
-# top_right = Alignment(1, -1)
 
 
 # - bgColor (background color - `decoration: BoxDecoration.color`)
