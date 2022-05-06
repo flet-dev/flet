@@ -89,7 +89,7 @@ class Task:
 class TodoApp:
     def __init__(self):
         self.tasks = []
-        self.new_task = TextField(hint_text="Whats needs to be done?", expand=1)
+        self.new_task = TextField(hint_text="Whats needs to be done?", expand=True)
         self.tasks_view = Column()
         self.filter = Tabs(
             value="all",

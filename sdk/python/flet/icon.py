@@ -1,3 +1,5 @@
+from typing import Union
+
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
@@ -7,7 +9,7 @@ class Icon(Control):
         self,
         name: str = None,
         ref: Ref = None,
-        expand: int = None,
+        expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
         tooltip: str = None,
         visible: bool = None,
