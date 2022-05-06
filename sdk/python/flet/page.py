@@ -43,7 +43,7 @@ class Page(Control):
         self._Control__uid = "page"
         self.__conn = conn
         self._session_id = session_id
-        self._content = []  # page controls
+        self._controls = []  # page controls
         self._index = {}  # index with all page controls
         self._index[self._Control__uid] = self
         self._last_event = None
@@ -66,7 +66,7 @@ class Page(Control):
 
     def _get_children(self):
         children = [self.__offstage]
-        children.extend(self._content)
+        children.extend(self._controls)
         return children
 
     def _fetch_page_details(self):
@@ -117,26 +117,26 @@ class Page(Control):
 
     def add(self, *controls):
         with self._lock:
-            self._content.extend(controls)
+            self._controls.extend(controls)
             return self.__update(self)
 
     def insert(self, at, *controls):
         with self._lock:
             n = at
             for control in controls:
-                self._content.insert(n, control)
+                self._controls.insert(n, control)
                 n += 1
             return self.__update(self)
 
     def remove(self, *controls):
         with self._lock:
             for control in controls:
-                self._content.remove(control)
+                self._controls.remove(control)
             return self.__update(self)
 
     def remove_at(self, index):
         with self._lock:
-            self._content.pop(index)
+            self._controls.pop(index)
             return self.__update(self)
 
     def clean(self):
@@ -144,7 +144,7 @@ class Page(Control):
             self._previous_children.clear()
             for child in self._get_children():
                 self._remove_control_recursively(self._index, child)
-            self._content.clear()
+            self._controls.clear()
             return self._send_command("clean", [self.uid])
 
     def error(self, message=""):
@@ -240,15 +240,15 @@ class Page(Control):
     def session_id(self):
         return self._session_id
 
-    # content
+    # controls
     @property
-    def content(self):
-        return self._content
+    def controls(self):
+        return self._controls
 
-    @content.setter
+    @controls.setter
     @beartype
-    def content(self, value: List[Control]):
-        self._content = value or []
+    def controls(self, value: List[Control]):
+        self._controls = value or []
 
     # title
     @property

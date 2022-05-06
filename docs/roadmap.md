@@ -479,36 +479,6 @@ More info:
 - https://api.flutter.dev/flutter/widgets/Expanded-class.html
 - https://api.flutter.dev/flutter/widgets/Flexible-class.html
 
-## Row
-
-Docs: https://api.flutter.dev/flutter/widgets/Row-class.html
-
-Properties:
-
-- alignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
-- verticalAlignment - `start` (default), `center`, `end`, `stretch`, `baseline`
-- tight - [more info](https://api.flutter.dev/flutter/widgets/Flex/mainAxisSize.html)
-- spacing - gap between adjacent items (SizedBox)
-- wrap - switch to "Wrap" control
-- runSpacing - gap between runs
-- controls - child controls of any type
-- scroll - "none", "auto", "adaptive", "always"
-
-## Column
-
-Docs: https://api.flutter.dev/flutter/widgets/Column-class.html
-
-Properties:
-
-- alignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
-- horizontalAlignment - `start` (default), `center`, `end`, `stretch`
-- tight - [more info](https://api.flutter.dev/flutter/widgets/Flex/mainAxisSize.html)
-- spacing - gap between adjacent items (SizedBox)
-- wrap - switch to "Wrap" control
-- runSpacing - gap between runs
-- controls - child controls of any type
-- scroll - "none", "auto", "adaptive", "always"
-
 ## Stack
 
 Docs: https://api.flutter.dev/flutter/widgets/Stack-class.html

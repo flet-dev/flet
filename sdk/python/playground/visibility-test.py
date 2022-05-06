@@ -14,7 +14,7 @@ def main(page: Page):
     sleep(4)
 
     txt2.visible = False
-    # page.content.pop(1)
+    # page.controls.pop(1)
     page.update()
 
 
