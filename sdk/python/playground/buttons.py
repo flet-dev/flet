@@ -15,6 +15,7 @@ from flet import (
     Text,
     TextButton,
     icons,
+    theme,
 )
 
 logging.basicConfig(level=logging.DEBUG)

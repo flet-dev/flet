@@ -439,7 +439,7 @@ class Page(Control):
     def window_width(self):
         w = self._get_attr("winWidth")
         if w != None and w != "":
-            return int(w)
+            return float(w)
         return 0
 
     # window_height
@@ -447,7 +447,7 @@ class Page(Control):
     def window_height(self):
         h = self._get_attr("winHeight")
         if h != None and h != "":
-            return int(h)
+            return float(h)
         return 0
 
     # on_close
