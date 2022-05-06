@@ -24,6 +24,7 @@ def main(page: Page):
     page.title = "Buttons Example"
     page.theme_mode = "light"
     page.padding = 50
+    page.floating_action_button = FloatingActionButton(icon=icons.ADD)
 
     page.add(
         Column(
@@ -112,6 +113,9 @@ def main(page: Page):
                             icon_color="white",
                             bgcolor="blue",
                             tooltip="Beep... Beep... Beep...",
+                        ),
+                        IconButton(
+                            icon=icons.SEND_ROUNDED, icon_color="white", bgcolor="green"
                         ),
                     ]
                 ),

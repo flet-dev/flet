@@ -20,6 +20,7 @@ from flet.control import (
 )
 from flet.control_event import ControlEvent
 from flet.embed_json_encoder import EmbedJsonEncoder
+from flet.floating_action_button import FloatingActionButton
 from flet.protocol import Command
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
@@ -342,6 +343,16 @@ class Page(Control):
     def splash(self, value: Optional[Control]):
         self.__offstage.splash = value
 
+    # floating_action_button
+    @property
+    def floating_action_button(self):
+        return self.__offstage.floating_action_button
+
+    @floating_action_button.setter
+    @beartype
+    def floating_action_button(self, value: Optional[FloatingActionButton]):
+        self.__offstage.floating_action_button = value
+
     # banner
     @property
     def banner(self):
@@ -492,6 +503,7 @@ class Offstage(Control):
         )
 
         self.__clipboard = Clipboard()
+        self.__fab = None
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
@@ -504,6 +516,8 @@ class Offstage(Control):
         children = []
         if self.__clipboard:
             children.append(self.__clipboard)
+        if self.__fab:
+            children.append(self.__fab)
         if self.__banner:
             children.append(self.__banner)
         if self.__snack_bar:
@@ -528,6 +542,16 @@ class Offstage(Control):
     @beartype
     def splash(self, value: Optional[Control]):
         self.__splash = value
+
+    # floating_action_button
+    @property
+    def floating_action_button(self):
+        return self.__fab
+
+    @floating_action_button.setter
+    @beartype
+    def floating_action_button(self, value: Optional[FloatingActionButton]):
+        self.__fab = value
 
     # banner
     @property

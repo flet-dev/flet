@@ -113,8 +113,16 @@ class PageControl extends StatelessWidget {
           // offstage
           List<Widget> offstageWidgets = offstageView != null
               ? offstageView.children
-                  .where((c) => c.isVisible)
+                  .where((c) =>
+                      c.isVisible && c.type != ControlType.floatingActionButton)
                   .map((c) => createControl(offstage, c.id, disabled))
+                  .toList()
+              : [];
+
+          List<Control> fab = offstageView != null
+              ? offstageView.children
+                  .where((c) =>
+                      c.isVisible && c.type == ControlType.floatingActionButton)
                   .toList()
               : [];
 
@@ -147,6 +155,9 @@ class PageControl extends StatelessWidget {
                 ...offstageWidgets,
                 const ScreenSize()
               ]),
+              floatingActionButton: fab.isNotEmpty
+                  ? createControl(offstage, fab.first.id, disabled)
+                  : null,
             ),
           );
         });
