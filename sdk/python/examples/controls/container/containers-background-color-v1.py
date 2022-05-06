@@ -1,20 +1,20 @@
-from typing import Text
-
 import flet
-from flet import Container, ElevatedButton, OutlinedButton, Page, Text, colors
+from flet import Container, ElevatedButton, OutlinedButton, Page, colors
 
 
 def main(page: Page):
-    page.title = "Containers with different background color"
+    page.title = "Containers with background color"
 
     c1 = Container(
-        content=Text("#CC0000"),
-        bgcolor="#CC0000",
+        content=ElevatedButton("Elevated Button in Container"),
+        bgcolor=colors.YELLOW,
         padding=5,
     )
 
     c2 = Container(
-        content=Text("colors.Yellow", opacity=0.5),
+        content=ElevatedButton(
+            "Elevated Button with opacity=0.5 in Container", opacity=0.5
+        ),
         bgcolor=colors.YELLOW,
         padding=5,
     )
