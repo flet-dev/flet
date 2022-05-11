@@ -44,7 +44,7 @@ class ListViewControl extends StatelessWidget {
     List<Control> visibleControls = children.where((c) => c.isVisible).toList();
 
     if (autoScroll) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollDown();
       });
     }

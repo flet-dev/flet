@@ -85,9 +85,6 @@ class PageControl extends StatelessWidget {
             colorScheme: darkColorScheme,
             brightness: Brightness.dark,
             useMaterial3: true,
-            // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
-            //     ? '-apple-system'
-            //     : null,
             visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var themeMode = ThemeMode.values.firstWhere(
