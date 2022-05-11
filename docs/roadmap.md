@@ -424,30 +424,6 @@
 
 [Full list of Material icons](https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/src/material/icons.dart)
 
-## Page
-
-Properties:
-
-- title
-- design (S2) - `material` (default), `cupertino`, `fluent`, `macos`.
-- themeMode - `system` (default), `light`, `dark` ([more info](https://stackoverflow.com/questions/60232070/how-to-implement-dark-mode-in-flutter))
-- lightThemeSeedColor
-- darkThemeSeedColor
-- verticalAlignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
-- horizontalAlignment - `start` (default), `center`, `end`, `stretch`
-- spacing - gap between adjacent items, default
-- padding
-- bgColor - background color
-- windowWidth - current window width
-- windowHeight - current window height
-
-Events:
-
-- on_close
-- on_connect
-- on_disconnect
-- on_resize
-
 ## Control
 
 Base control class.
@@ -478,14 +454,6 @@ More info:
 
 - https://api.flutter.dev/flutter/widgets/Expanded-class.html
 - https://api.flutter.dev/flutter/widgets/Flexible-class.html
-
-## Stack
-
-Docs: https://api.flutter.dev/flutter/widgets/Stack-class.html
-
-Properties:
-
-- controls - child controls of any type
 
 ## ListView
 
@@ -568,11 +536,7 @@ Icons list: https://raw.githubusercontent.com/flutter/flutter/master/packages/fl
 
 Properties:
 
-- name ([The list of icons](https://api.flutter.dev/flutter/material/Icons-class.html))
-- color ([more](https://api.flutter.dev/flutter/dart-ui/Color-class.html))
-- size
 - semanticLabel (S2) - Text to announce in accessibility modes
-- tooltip
 
 ## Image
 
@@ -580,15 +544,8 @@ Docs: https://api.flutter.dev/flutter/widgets/Image-class.html
 
 Properties:
 
-- src
-- width - override control's width
-- height - override control's height
-- repeat: noRepeat, repeat, repeatX, repeatY
-- fit: contain, cover, fill, fitHeight, fitWidth, none, scaleDown
 - opacity (S2) - override control's opacity
 - semanticLabel (S2)
-- border_radius - to make rounded corners
-- tooltip
 
 ## RadioGroup
 

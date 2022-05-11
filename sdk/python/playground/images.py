@@ -1,12 +1,5 @@
-import logging
-from datetime import datetime
-from time import sleep
-
 import flet
-from flet import Column, ElevatedButton, Image, Page, Row, Text, Theme, border_radius
-from flet.stack import Stack
-
-logging.basicConfig(level=logging.DEBUG)
+from flet import Image, Page, Row, border_radius
 
 
 def main(page: Page):
@@ -16,7 +9,7 @@ def main(page: Page):
     page.update()
 
     img = Image(
-        src=f"/icons/Icon-512.png",
+        src=f"/icons/icon-512.png",
         width=100,
         height=100,
         fit="contain",
@@ -39,4 +32,4 @@ def main(page: Page):
     page.update()
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(target=main)
