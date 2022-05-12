@@ -23,6 +23,8 @@ class ElevatedButton(ConstrainedControl):
         #
         # Specific
         #
+        filled: bool = None,
+        filled_tonal: bool = None,
         icon: str = None,
         icon_color: str = None,
         content: Control = None,
@@ -43,6 +45,8 @@ class ElevatedButton(ConstrainedControl):
         )
 
         self.text = text
+        self.filled = filled
+        self.filled_tonal = filled_tonal
         self.icon = icon
         self.icon_color = icon_color
         self.content = content
@@ -66,6 +70,26 @@ class ElevatedButton(ConstrainedControl):
     @text.setter
     def text(self, value):
         self._set_attr("text", value)
+
+    # filled
+    @property
+    def filled(self):
+        return self._get_attr("filled", data_type="bool", def_value=False)
+
+    @filled.setter
+    @beartype
+    def filled(self, value: Optional[bool]):
+        self._set_attr("filled", value)
+
+    # filled_tonal
+    @property
+    def filled_tonal(self):
+        return self._get_attr("filledTonal", data_type="bool", def_value=False)
+
+    @filled_tonal.setter
+    @beartype
+    def filled_tonal(self, value: Optional[bool]):
+        self._set_attr("filledTonal", value)
 
     # icon
     @property

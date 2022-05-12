@@ -7,7 +7,6 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_children_view_model.dart';
 import '../utils/alignment.dart';
-import '../utils/color_theme.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/theme.dart';
@@ -72,7 +71,7 @@ class PageControl extends StatelessWidget {
     // theme
     var theme = parseTheme(control, "theme") ??
         ThemeData(
-            colorScheme: lightColorScheme,
+            colorSchemeSeed: Colors.blue,
             brightness: Brightness.light,
             useMaterial3: true,
             // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
@@ -82,7 +81,7 @@ class PageControl extends StatelessWidget {
 
     var darkTheme = parseTheme(control, "darkTheme") ??
         ThemeData(
-            colorScheme: darkColorScheme,
+            colorSchemeSeed: Colors.blue,
             brightness: Brightness.dark,
             useMaterial3: true,
             visualDensity: VisualDensity.adaptivePlatformDensity);

@@ -32,7 +32,7 @@ def main(page: Page):
             expand=1,
             scroll=True,
             controls=[
-                Text("Elevated buttons", style="headlineMedium"),
+                Text("Elevated button", style="headlineMedium"),
                 ElevatedButton("Normal button"),
                 ElevatedButton("Disabled button", disabled=True),
                 ElevatedButton(
@@ -56,6 +56,69 @@ def main(page: Page):
                         alignment="spaceAround",
                     ),
                 ),
+                #
+                #
+                #
+                Text("Elevated Filled button", style="headlineMedium"),
+                ElevatedButton("Filled button", filled=True),
+                ElevatedButton("Disabled button", filled=True, disabled=True),
+                ElevatedButton(
+                    "Button with icon and tooltip",
+                    filled=True,
+                    icon="chair_outlined",
+                    tooltip="Hey, click me!",
+                ),
+                ElevatedButton(
+                    "Button with colorful icon",
+                    filled=True,
+                    icon="park_rounded",
+                    icon_color="green400",
+                ),
+                ElevatedButton(
+                    width=150,
+                    filled=True,
+                    content=Row(
+                        [
+                            Icon(name="favorite", color="pink"),
+                            Icon(name="audiotrack", color="green"),
+                            Icon(name="beach_access", color="blue"),
+                        ],
+                        alignment="spaceAround",
+                    ),
+                ),
+                #
+                #
+                #
+                Text("Elevated Filled Tonal button", style="headlineMedium"),
+                ElevatedButton("Tonal button", filled_tonal=True),
+                ElevatedButton("Disabled button", filled_tonal=True, disabled=True),
+                ElevatedButton(
+                    "Button with icon and tooltip",
+                    filled_tonal=True,
+                    icon="chair_outlined",
+                    tooltip="Hey, click me!",
+                ),
+                ElevatedButton(
+                    "Button with colorful icon",
+                    filled_tonal=True,
+                    icon="park_rounded",
+                    icon_color="green400",
+                ),
+                ElevatedButton(
+                    width=150,
+                    filled_tonal=True,
+                    content=Row(
+                        [
+                            Icon(name="favorite", color="pink"),
+                            Icon(name="audiotrack", color="green"),
+                            Icon(name="beach_access", color="blue"),
+                        ],
+                        alignment="spaceAround",
+                    ),
+                ),
+                #
+                #
+                #
                 Text("Outlined buttons", style="headlineMedium"),
                 OutlinedButton("Normal button"),
                 OutlinedButton("Disabled button", disabled=True),

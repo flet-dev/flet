@@ -30,6 +30,8 @@ class ElevatedButtonControl extends StatelessWidget {
         HexColor.fromString(context, control.attrString("iconColor", "")!);
     var contentCtrls = children.where((c) => c.name == "content");
     bool autofocus = control.attrBool("autofocus", false)!;
+    bool filled = control.attrBool("filled", false)!;
+    bool filledTonal = control.attrBool("filledTonal", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = disabled
@@ -43,9 +45,27 @@ class ElevatedButtonControl extends StatelessWidget {
           };
 
     ElevatedButton? button;
+    ButtonStyle? style;
+
+    if (filled) {
+      style = ElevatedButton.styleFrom(
+        // Foreground color
+        onPrimary: Theme.of(context).colorScheme.onPrimary,
+        // Background color
+        primary: Theme.of(context).colorScheme.primary,
+      ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0));
+    } else if (filledTonal) {
+      style = ElevatedButton.styleFrom(
+        // Foreground color
+        onPrimary: Theme.of(context).colorScheme.onSecondaryContainer,
+        // Background color
+        primary: Theme.of(context).colorScheme.secondaryContainer,
+      ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0));
+    }
 
     if (icon != null) {
       button = ElevatedButton.icon(
+          style: style,
           autofocus: autofocus,
           onPressed: onPressed,
           icon: Icon(
@@ -55,11 +75,13 @@ class ElevatedButtonControl extends StatelessWidget {
           label: Text(text));
     } else if (contentCtrls.isNotEmpty) {
       button = ElevatedButton(
+          style: style,
           autofocus: autofocus,
           onPressed: onPressed,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {
-      button = ElevatedButton(onPressed: onPressed, child: Text(text));
+      button =
+          ElevatedButton(style: style, onPressed: onPressed, child: Text(text));
     }
 
     return constrainedControl(button, parent, control);
