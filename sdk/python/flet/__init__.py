@@ -5,8 +5,11 @@ from flet.circle_avatar import CircleAvatar
 from flet.column import Column
 from flet.container import Container
 from flet.control import Control
+from flet.divider import Divider
 from flet.dropdown import Dropdown
 from flet.elevated_button import ElevatedButton
+from flet.filled_button import FilledButton
+from flet.filled_tonal_button import FilledTonalButton
 from flet.flet import *
 from flet.floating_action_button import FloatingActionButton
 from flet.grid_view import GridView
@@ -31,3 +34,4 @@ from flet.text import Text
 from flet.text_button import TextButton
 from flet.textfield import TextField
 from flet.theme import Theme
+from flet.vertical_divider import VerticalDivider

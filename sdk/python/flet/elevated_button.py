@@ -23,8 +23,9 @@ class ElevatedButton(ConstrainedControl):
         #
         # Specific
         #
-        filled: bool = None,
-        filled_tonal: bool = None,
+        color: str = None,
+        bgcolor: str = None,
+        elevation: OptionalNumber = None,
         icon: str = None,
         icon_color: str = None,
         content: Control = None,
@@ -45,8 +46,9 @@ class ElevatedButton(ConstrainedControl):
         )
 
         self.text = text
-        self.filled = filled
-        self.filled_tonal = filled_tonal
+        self.color = color
+        self.bgcolor = bgcolor
+        self.elevation = elevation
         self.icon = icon
         self.icon_color = icon_color
         self.content = content
@@ -71,25 +73,33 @@ class ElevatedButton(ConstrainedControl):
     def text(self, value):
         self._set_attr("text", value)
 
-    # filled
+    # color
     @property
-    def filled(self):
-        return self._get_attr("filled", data_type="bool", def_value=False)
+    def color(self):
+        return self._get_attr("color")
 
-    @filled.setter
-    @beartype
-    def filled(self, value: Optional[bool]):
-        self._set_attr("filled", value)
+    @color.setter
+    def color(self, value):
+        self._set_attr("color", value)
 
-    # filled_tonal
+    # bgcolor
     @property
-    def filled_tonal(self):
-        return self._get_attr("filledTonal", data_type="bool", def_value=False)
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
 
-    @filled_tonal.setter
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation")
+
+    @elevation.setter
     @beartype
-    def filled_tonal(self, value: Optional[bool]):
-        self._set_attr("filledTonal", value)
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
 
     # icon
     @property

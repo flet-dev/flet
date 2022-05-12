@@ -6,6 +6,8 @@ import flet
 from flet import (
     Column,
     ElevatedButton,
+    FilledButton,
+    FilledTonalButton,
     FloatingActionButton,
     Icon,
     IconButton,
@@ -14,6 +16,7 @@ from flet import (
     Row,
     Text,
     TextButton,
+    colors,
     icons,
     theme,
 )
@@ -24,6 +27,7 @@ logging.basicConfig(level=logging.DEBUG)
 def main(page: Page):
     page.title = "Buttons Example"
     page.theme_mode = "light"
+    # page.theme = theme.Theme(color_scheme_seed="green", use_material3=True)
     page.padding = 50
     page.floating_action_button = FloatingActionButton(icon=icons.ADD)
 
@@ -56,70 +60,46 @@ def main(page: Page):
                         alignment="spaceAround",
                     ),
                 ),
-                #
-                #
-                #
-                Text("Elevated Filled button", style="headlineMedium"),
-                ElevatedButton("Filled button", filled=True),
-                ElevatedButton("Disabled button", filled=True, disabled=True),
-                ElevatedButton(
-                    "Button with icon and tooltip",
-                    filled=True,
-                    icon="chair_outlined",
-                    tooltip="Hey, click me!",
-                ),
-                ElevatedButton(
-                    "Button with colorful icon",
-                    filled=True,
-                    icon="park_rounded",
-                    icon_color="green400",
-                ),
-                ElevatedButton(
-                    width=150,
-                    filled=True,
-                    content=Row(
-                        [
-                            Icon(name="favorite", color="pink"),
-                            Icon(name="audiotrack", color="green"),
-                            Icon(name="beach_access", color="blue"),
-                        ],
-                        alignment="spaceAround",
-                    ),
+                Row(
+                    [
+                        ElevatedButton(
+                            "Red button",
+                            color=colors.WHITE,
+                            bgcolor=colors.RED,
+                            icon=icons.PALETTE,
+                        ),
+                        ElevatedButton(
+                            "Green button",
+                            color=colors.WHITE,
+                            bgcolor=colors.GREEN,
+                            icon=icons.PALETTE,
+                        ),
+                        ElevatedButton(
+                            "Yellow button",
+                            color=colors.BLACK,
+                            bgcolor=colors.YELLOW,
+                            icon=icons.PALETTE,
+                        ),
+                    ]
                 ),
                 #
                 #
                 #
-                Text("Elevated Filled Tonal button", style="headlineMedium"),
-                ElevatedButton("Tonal button", filled_tonal=True),
-                ElevatedButton("Disabled button", filled_tonal=True, disabled=True),
-                ElevatedButton(
-                    "Button with icon and tooltip",
-                    filled_tonal=True,
-                    icon="chair_outlined",
-                    tooltip="Hey, click me!",
-                ),
-                ElevatedButton(
-                    "Button with colorful icon",
-                    filled_tonal=True,
-                    icon="park_rounded",
-                    icon_color="green400",
-                ),
-                ElevatedButton(
-                    width=150,
-                    filled_tonal=True,
-                    content=Row(
-                        [
-                            Icon(name="favorite", color="pink"),
-                            Icon(name="audiotrack", color="green"),
-                            Icon(name="beach_access", color="blue"),
-                        ],
-                        alignment="spaceAround",
-                    ),
-                ),
+                Text("Filled button", style="headlineMedium"),
+                FilledButton("Filled button"),
+                FilledButton("Disabled button", disabled=True),
+                FilledButton("Filled with icon", icon=icons.ADD),
                 #
                 #
                 #
-                Text("Outlined buttons", style="headlineMedium"),
+                Text("Filled tonal button", style="headlineMedium"),
+                FilledTonalButton("Filled tonal button"),
+                FilledTonalButton("Disabled button", disabled=True),
+                FilledTonalButton("Filled tonal with icon", icon=icons.ADD),
+                #
+                #
+                #
+                Text("Outlined button", style="headlineMedium"),
                 OutlinedButton("Normal button"),
                 OutlinedButton("Disabled button", disabled=True),
                 OutlinedButton("Button with icon", icon="chair_outlined"),
@@ -139,7 +119,7 @@ def main(page: Page):
                         alignment="spaceAround",
                     ),
                 ),
-                Text("Text buttons", style="headlineMedium"),
+                Text("Text button", style="headlineMedium"),
                 TextButton("Normal button"),
                 TextButton("Disabled button", disabled=True),
                 TextButton("Button with icon", icon="chair_outlined"),
@@ -159,7 +139,7 @@ def main(page: Page):
                         alignment="spaceAround",
                     ),
                 ),
-                Text("Icon buttons", style="headlineMedium"),
+                Text("Icon button", style="headlineMedium"),
                 Row(
                     [
                         IconButton(

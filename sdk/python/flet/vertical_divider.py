@@ -1,55 +1,60 @@
 from typing import Union
 
-from beartype import beartype
+import beartype
 
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
 
-class Icon(Control):
+class VerticalDivider(Control):
     def __init__(
         self,
-        name: str = None,
         ref: Ref = None,
-        expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
-        tooltip: str = None,
         visible: bool = None,
-        disabled: bool = None,
         data: any = None,
         #
         # Specific
         #
+        width: OptionalNumber = None,
+        thickness: OptionalNumber = None,
         color: str = None,
-        size: OptionalNumber = None,
     ):
 
         Control.__init__(
             self,
             ref=ref,
-            expand=expand,
             opacity=opacity,
-            tooltip=tooltip,
             visible=visible,
-            disabled=disabled,
             data=data,
         )
 
-        self.name = name
+        self.width = width
+        self.thickness = thickness
         self.color = color
-        self.size = size
 
     def _get_control_name(self):
-        return "icon"
+        return "verticaldivider"
 
-    # name
+    # width
     @property
-    def name(self):
-        return self._get_attr("name")
+    def width(self):
+        return self._get_attr("width")
 
-    @name.setter
-    def name(self, value):
-        self._set_attr("name", value)
+    @width.setter
+    @beartype
+    def width(self, value: OptionalNumber):
+        self._set_attr("width", value)
+
+    # thickness
+    @property
+    def thickness(self):
+        return self._get_attr("thickness")
+
+    @thickness.setter
+    @beartype
+    def thickness(self, value: OptionalNumber):
+        self._set_attr("thickness", value)
 
     # color
     @property
@@ -59,13 +64,3 @@ class Icon(Control):
     @color.setter
     def color(self, value):
         self._set_attr("color", value)
-
-    # size
-    @property
-    def size(self):
-        return self._get_attr("size")
-
-    @size.setter
-    @beartype
-    def size(self, value: OptionalNumber):
-        self._set_attr("size", value)

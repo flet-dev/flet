@@ -13,8 +13,13 @@
     * [x] Stack
     * [x] ListView
     * [x] GridView
+    * [ ] Divider
+    * [ ] VerticalDivider
   * App structure and navigation
     * [x] Tabs
+    * [ ] AppBar
+    * [ ] NavigationRail
+    * [ ] NavigationBar
   * Basic controls
     * [x] Text
     * [x] Icon
@@ -24,10 +29,13 @@
     * [x] ProgressRing
   * Buttons
     * [x] ElevatedButton
+    * [x] FilledButton
+    * [x] FilledTonalButton
     * [x] OutlinedButton
     * [x] TextButton
     * [x] IconButton
     * [x] FloatingActionButton
+    * [ ] PopupMenuButton
   * Input and selections
     * [x] TextField
     * [x] Dropdown
@@ -59,12 +67,14 @@
 
 ## Sprint 2
 
+* Authentication
 * Controls
+  * Navigation
+    * NavigationDrawer  
   * Layout
     * Row (responsive)
     * Column (responsive)
   * Behavior
-    * Complex embeddable values for `padding`, `marging`, etc, e.g. `.padding = { 'left': 10, 'right': 20 }`
     * Visual Density ([more](https://api.flutter.dev/flutter/material/VisualDensity-class.html))
     * Early detection of layout issues (like enabling scrolling in unbounded controls) with [Layout Builder](https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html).
     * Scroll speed on Windows Desktop [The issue](https://github.com/flutter/flutter/issues/67985)
@@ -74,6 +84,17 @@
     * [Loading splash](https://github.com/flutter/flutter/issues/76009#issuecomment-1095663169)
   * [ ] Windows ("host" mode with hot reload)
   * [ ] macOS ("host" mode with hot reload)
+
+## Year 2022
+
+* Grids
+* Charts
+* Navigation controls and Routing
+* Responsive layout
+* Adaptive controls
+* Animations
+* PubSub
+* DB
 
 ## Controls
 

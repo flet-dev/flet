@@ -6,6 +6,7 @@ enum ControlType {
   clipboard,
   column,
   container,
+  divider,
   dropdown,
   dropdownOption,
   elevatedButton,
@@ -32,5 +33,6 @@ enum ControlType {
   tab,
   text,
   textButton,
-  textField
+  textField,
+  verticalDivider
 }

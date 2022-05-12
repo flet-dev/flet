@@ -12,6 +12,7 @@ import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
+import 'divider.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
 import 'floating_action_button.dart';
@@ -35,6 +36,7 @@ import 'tabs.dart';
 import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
+import 'vertical_divider.dart';
 
 // abstract class ControlWidget extends Widget {
 //   const ControlWidget(
@@ -75,6 +77,10 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return ClipboardControl(control: controlView.control);
         case ControlType.image:
           return ImageControl(parent: parent, control: controlView.control);
+        case ControlType.divider:
+          return DividerControl(control: controlView.control);
+        case ControlType.verticalDivider:
+          return VerticalDividerControl(control: controlView.control);
         case ControlType.circleAvatar:
           return CircleAvatarControl(
               parent: parent,
