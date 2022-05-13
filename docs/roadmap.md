@@ -35,7 +35,7 @@
     * [x] TextButton
     * [x] IconButton
     * [x] FloatingActionButton
-    * [ ] PopupMenuButton
+    * [x] PopupMenuButton
   * Input and selections
     * [x] TextField
     * [x] Dropdown

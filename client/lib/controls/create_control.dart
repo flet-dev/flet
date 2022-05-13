@@ -23,6 +23,7 @@ import 'image.dart';
 import 'list_view.dart';
 import 'outlined_button.dart';
 import 'page.dart';
+import 'popup_menu_button.dart';
 import 'progress_bar.dart';
 import 'progress_ring.dart';
 import 'radio.dart';
@@ -117,6 +118,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.floatingActionButton:
           return FloatingActionButtonControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.popupMenuButton:
+          return PopupMenuButtonControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

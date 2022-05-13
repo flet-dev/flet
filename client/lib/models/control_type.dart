@@ -19,6 +19,8 @@ enum ControlType {
   outlinedButton,
   offstage,
   page,
+  popupMenuButton,
+  popupMenuItem,
   progressBar,
   progressRing,
   radioGroup,

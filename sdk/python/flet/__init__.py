@@ -19,6 +19,7 @@ from flet.image import Image
 from flet.list_view import ListView
 from flet.outlined_button import OutlinedButton
 from flet.page import Page
+from flet.popup_menu_button import PopupMenuButton, PopupMenuItem
 from flet.progress_bar import ProgressBar
 from flet.progress_ring import ProgressRing
 from flet.radio import Radio
