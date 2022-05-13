@@ -7,7 +7,6 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_children_view_model.dart';
 import '../utils/alignment.dart';
-import '../utils/color_theme.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/theme.dart';
@@ -72,7 +71,7 @@ class PageControl extends StatelessWidget {
     // theme
     var theme = parseTheme(control, "theme") ??
         ThemeData(
-            colorScheme: lightColorScheme,
+            colorSchemeSeed: Colors.blue,
             brightness: Brightness.light,
             useMaterial3: true,
             // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
@@ -82,12 +81,9 @@ class PageControl extends StatelessWidget {
 
     var darkTheme = parseTheme(control, "darkTheme") ??
         ThemeData(
-            colorScheme: darkColorScheme,
+            colorSchemeSeed: Colors.blue,
             brightness: Brightness.dark,
             useMaterial3: true,
-            // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
-            //     ? '-apple-system'
-            //     : null,
             visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var themeMode = ThemeMode.values.firstWhere(
@@ -113,8 +109,16 @@ class PageControl extends StatelessWidget {
           // offstage
           List<Widget> offstageWidgets = offstageView != null
               ? offstageView.children
-                  .where((c) => c.isVisible)
+                  .where((c) =>
+                      c.isVisible && c.type != ControlType.floatingActionButton)
                   .map((c) => createControl(offstage, c.id, disabled))
+                  .toList()
+              : [];
+
+          List<Control> fab = offstageView != null
+              ? offstageView.children
+                  .where((c) =>
+                      c.isVisible && c.type == ControlType.floatingActionButton)
                   .toList()
               : [];
 
@@ -147,6 +151,9 @@ class PageControl extends StatelessWidget {
                 ...offstageWidgets,
                 const ScreenSize()
               ]),
+              floatingActionButton: fab.isNotEmpty
+                  ? createControl(offstage, fab.first.id, disabled)
+                  : null,
             ),
           );
         });

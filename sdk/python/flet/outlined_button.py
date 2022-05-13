@@ -1,5 +1,5 @@
 from enum import auto
-from typing import Optional
+from typing import Optional, Union
 
 from beartype import beartype
 
@@ -15,7 +15,7 @@ class OutlinedButton(ConstrainedControl):
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
-        expand: int = None,
+        expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
         tooltip: str = None,
         visible: bool = None,

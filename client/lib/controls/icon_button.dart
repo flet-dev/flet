@@ -28,6 +28,8 @@ class IconButtonControl extends StatelessWidget {
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
     Color? iconColor =
         HexColor.fromString(context, control.attrString("iconColor", "")!);
+    Color? bgColor =
+        HexColor.fromString(context, control.attrString("bgColor", "")!);
     double? iconSize = control.attrDouble("iconSize");
     var contentCtrls = children.where((c) => c.name == "content");
     bool autofocus = control.attrBool("autofocus", false)!;
@@ -43,7 +45,7 @@ class IconButtonControl extends StatelessWidget {
                 eventData: control.attrs["data"] ?? "");
           };
 
-    IconButton? button;
+    Widget? button;
 
     if (icon != null) {
       button = IconButton(
@@ -63,6 +65,14 @@ class IconButtonControl extends StatelessWidget {
     } else {
       return const ErrorControl(
           "Icon button does not have an icon neither content specified.");
+    }
+
+    if (bgColor != null) {
+      button = Container(
+        decoration:
+            ShapeDecoration(color: bgColor, shape: const CircleBorder()),
+        child: button,
+      );
     }
 
     return constrainedControl(button, parent, control);

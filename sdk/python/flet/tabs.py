@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
@@ -93,7 +93,7 @@ class Tabs(ConstrainedControl):
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
-        expand: int = None,
+        expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,

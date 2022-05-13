@@ -123,7 +123,7 @@ for:
 
     install:
       - brew install cocoapods
-      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_2.10.5-stable.zip -o flutter_macos_stable.zip
+      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.0-stable.zip -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter --version

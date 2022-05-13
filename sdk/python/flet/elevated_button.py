@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from beartype import beartype
 
@@ -14,7 +14,7 @@ class ElevatedButton(ConstrainedControl):
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
-        expand: int = None,
+        expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
         tooltip: str = None,
         visible: bool = None,
@@ -23,6 +23,9 @@ class ElevatedButton(ConstrainedControl):
         #
         # Specific
         #
+        color: str = None,
+        bgcolor: str = None,
+        elevation: OptionalNumber = None,
         icon: str = None,
         icon_color: str = None,
         content: Control = None,
@@ -43,6 +46,9 @@ class ElevatedButton(ConstrainedControl):
         )
 
         self.text = text
+        self.color = color
+        self.bgcolor = bgcolor
+        self.elevation = elevation
         self.icon = icon
         self.icon_color = icon_color
         self.content = content
@@ -66,6 +72,34 @@ class ElevatedButton(ConstrainedControl):
     @text.setter
     def text(self, value):
         self._set_attr("text", value)
+
+    # color
+    @property
+    def color(self):
+        return self._get_attr("color")
+
+    @color.setter
+    def color(self, value):
+        self._set_attr("color", value)
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation")
+
+    @elevation.setter
+    @beartype
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
 
     # icon
     @property

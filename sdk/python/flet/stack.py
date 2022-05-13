@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
@@ -12,7 +12,7 @@ class Stack(ConstrainedControl):
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
-        expand: int = None,
+        expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,

@@ -28,6 +28,11 @@ class ElevatedButtonControl extends StatelessWidget {
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
     Color? iconColor =
         HexColor.fromString(context, control.attrString("iconColor", "")!);
+    Color? color =
+        HexColor.fromString(context, control.attrString("color", "")!);
+    Color? bgcolor =
+        HexColor.fromString(context, control.attrString("bgcolor", "")!);
+    var elevation = control.attrDouble("elevation");
     var contentCtrls = children.where((c) => c.name == "content");
     bool autofocus = control.attrBool("autofocus", false)!;
     bool disabled = control.isDisabled || parentDisabled;
@@ -43,9 +48,20 @@ class ElevatedButtonControl extends StatelessWidget {
           };
 
     ElevatedButton? button;
+    ButtonStyle? style;
+
+    if (color != null || bgcolor != null || elevation != null) {
+      style = ElevatedButton.styleFrom(
+        // Foreground color
+        onPrimary: color,
+        // Background color
+        primary: bgcolor,
+      ).copyWith(elevation: ButtonStyleButton.allOrNull(elevation));
+    }
 
     if (icon != null) {
       button = ElevatedButton.icon(
+          style: style,
           autofocus: autofocus,
           onPressed: onPressed,
           icon: Icon(
@@ -55,11 +71,13 @@ class ElevatedButtonControl extends StatelessWidget {
           label: Text(text));
     } else if (contentCtrls.isNotEmpty) {
       button = ElevatedButton(
+          style: style,
           autofocus: autofocus,
           onPressed: onPressed,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {
-      button = ElevatedButton(onPressed: onPressed, child: Text(text));
+      button =
+          ElevatedButton(style: style, onPressed: onPressed, child: Text(text));
     }
 
     return constrainedControl(button, parent, control);

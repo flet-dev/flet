@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from beartype import beartype
 
@@ -10,7 +10,7 @@ class ConstrainedControl(Control):
     def __init__(
         self,
         ref: Ref = None,
-        expand: int = None,
+        expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
         tooltip: str = None,
         visible: bool = None,

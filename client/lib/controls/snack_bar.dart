@@ -90,7 +90,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
               return snackBar;
             }
 
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               if (removeCurrentSnackbar) {
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
               }

@@ -13,20 +13,29 @@
     * [x] Stack
     * [x] ListView
     * [x] GridView
+    * [x] Divider
+    * [x] VerticalDivider
   * App structure and navigation
     * [x] Tabs
+    * [ ] AppBar
+    * [ ] NavigationRail
+    * [ ] NavigationBar
   * Basic controls
     * [x] Text
     * [x] Icon
     * [x] Image (+custom assets directory for Flet server [see here](https://docs.flutter.dev/development/platform-integration/web-images)).
+    * [x] CircleAvatar
     * [x] ProgressBar
     * [x] ProgressRing
   * Buttons
     * [x] ElevatedButton
+    * [x] FilledButton
+    * [x] FilledTonalButton
     * [x] OutlinedButton
     * [x] TextButton
     * [x] IconButton
     * [x] FloatingActionButton
+    * [x] PopupMenuButton
   * Input and selections
     * [x] TextField
     * [x] Dropdown
@@ -40,30 +49,32 @@
     * [x] AlertDialog
 
 * Flet Client
-  * [ ] Web
-  * [ ] Windows ("client" mode - started from Python)
-  * [ ] macOS ("client" mode - started from Python)
+  * [x] Web
+  * [x] Windows ("client" mode - started from Python)
+  * [x] macOS ("client" mode - started from Python)
 
 * Flet Daemon
-  * [ ] "assets" directory with static content
+  * [x] "assets" directory with static content
 
 * Website
   * [ ] Controls S1 reference
-  * [ ] Introduction
+  * [x] Introduction
   * [ ] Blog post
   * [ ] Python Guide
-    * Deployment (+how to change favicon.ico)
-      * Deployment to Replit
-      * Deployment to Fly.io
+    * [ ] Deployment (+how to change favicon.ico)
+      * [x] Deployment to Replit
+      * [x] Deployment to Fly.io
 
 ## Sprint 2
 
+* Authentication
 * Controls
+  * Navigation
+    * NavigationDrawer  
   * Layout
     * Row (responsive)
     * Column (responsive)
   * Behavior
-    * Complex embeddable values for `padding`, `marging`, etc, e.g. `.padding = { 'left': 10, 'right': 20 }`
     * Visual Density ([more](https://api.flutter.dev/flutter/material/VisualDensity-class.html))
     * Early detection of layout issues (like enabling scrolling in unbounded controls) with [Layout Builder](https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html).
     * Scroll speed on Windows Desktop [The issue](https://github.com/flutter/flutter/issues/67985)
@@ -73,6 +84,17 @@
     * [Loading splash](https://github.com/flutter/flutter/issues/76009#issuecomment-1095663169)
   * [ ] Windows ("host" mode with hot reload)
   * [ ] macOS ("host" mode with hot reload)
+
+## Year 2022
+
+* Grids
+* Charts
+* Navigation controls and Routing
+* Responsive layout
+* Adaptive controls
+* Animations
+* PubSub
+* DB
 
 ## Controls
 
@@ -169,6 +191,12 @@
         <td>Image</td>
         <td>S1</td>
     </tr>
+    <tr>
+        <td>✓</td>
+        <td>CircleAvatar</td>
+        <td>Persona</td>
+        <td>S1</td>
+    </tr>    
     <tr>
         <td></td>
         <td>Chip</td>
@@ -417,30 +445,6 @@
 
 [Full list of Material icons](https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/src/material/icons.dart)
 
-## Page
-
-Properties:
-
-- title
-- design (S2) - `material` (default), `cupertino`, `fluent`, `macos`.
-- themeMode - `system` (default), `light`, `dark` ([more info](https://stackoverflow.com/questions/60232070/how-to-implement-dark-mode-in-flutter))
-- lightThemeSeedColor
-- darkThemeSeedColor
-- verticalAlignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
-- horizontalAlignment - `start` (default), `center`, `end`, `stretch`
-- spacing - gap between adjacent items, default
-- padding
-- bgColor - background color
-- windowWidth - current window width
-- windowHeight - current window height
-
-Events:
-
-- on_close
-- on_connect
-- on_disconnect
-- on_resize
-
 ## Control
 
 Base control class.
@@ -471,62 +475,6 @@ More info:
 
 - https://api.flutter.dev/flutter/widgets/Expanded-class.html
 - https://api.flutter.dev/flutter/widgets/Flexible-class.html
-
-## Container
-
-Docs: https://api.flutter.dev/flutter/widgets/Container-class.html
-
-Properties:
-
-- bgColor (background color - `decoration: BoxDecoration.color`)
-- alignment - `topLeft`, `topCenter`, `topRight`, `centerLeft`, `center`, `centerRight`, `bottomLeft`, `bottomCenter`, `bottomRight`
-- border - width, color
-- borderRadius
-- verticalScroll (S2)
-- horizontalScroll (S2)
-- autoScroll (S2) - `end`, `start` ([example](https://stackoverflow.com/questions/43485529/programmatically-scrolling-to-the-end-of-a-listview)).
-- content - child control of any type
-- marging
-- padding
-- tooltip
-
-## Row
-
-Docs: https://api.flutter.dev/flutter/widgets/Row-class.html
-
-Properties:
-
-- alignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
-- verticalAlignment - `start` (default), `center`, `end`, `stretch`, `baseline`
-- tight - [more info](https://api.flutter.dev/flutter/widgets/Flex/mainAxisSize.html)
-- spacing - gap between adjacent items (SizedBox)
-- wrap - switch to "Wrap" control
-- runSpacing - gap between runs
-- controls - child controls of any type
-- scroll - "none", "auto", "adaptive", "always"
-
-## Column
-
-Docs: https://api.flutter.dev/flutter/widgets/Column-class.html
-
-Properties:
-
-- alignment - `start`, `end`, `center`, `spaceBetween`, `spaceAround`, `spaceEvenly`.
-- horizontalAlignment - `start` (default), `center`, `end`, `stretch`
-- tight - [more info](https://api.flutter.dev/flutter/widgets/Flex/mainAxisSize.html)
-- spacing - gap between adjacent items (SizedBox)
-- wrap - switch to "Wrap" control
-- runSpacing - gap between runs
-- controls - child controls of any type
-- scroll - "none", "auto", "adaptive", "always"
-
-## Stack
-
-Docs: https://api.flutter.dev/flutter/widgets/Stack-class.html
-
-Properties:
-
-- controls - child controls of any type
 
 ## ListView
 
@@ -609,11 +557,7 @@ Icons list: https://raw.githubusercontent.com/flutter/flutter/master/packages/fl
 
 Properties:
 
-- name ([The list of icons](https://api.flutter.dev/flutter/material/Icons-class.html))
-- color ([more](https://api.flutter.dev/flutter/dart-ui/Color-class.html))
-- size
 - semanticLabel (S2) - Text to announce in accessibility modes
-- tooltip
 
 ## Image
 
@@ -621,128 +565,8 @@ Docs: https://api.flutter.dev/flutter/widgets/Image-class.html
 
 Properties:
 
-- src
-- width - override control's width
-- height - override control's height
-- repeat: noRepeat, repeat, repeatX, repeatY
-- fit: contain, cover, fill, fitHeight, fitWidth, none, scaleDown
 - opacity (S2) - override control's opacity
 - semanticLabel (S2)
-- border_radius - to make rounded corners
-- tooltip
-
-## ProgressBar
-
-Docs: https://api.flutter.dev/flutter/material/LinearProgressIndicator-class.html
-
-Properties:
-
-- color
-- bgColor
-- barHeight
-- value
-- label
-- description
-- tooltip
-
-## ProgressRing
-
-Docs: https://api.flutter.dev/flutter/material/CircularProgressIndicator-class.html
-
-Properties:
-
-- color
-- bgColor
-- strokeWidth
-- value
-- label
-- labelPosition
-- tooltip
-
-## ElevatedButton
-
-Docs: https://api.flutter.dev/flutter/material/ElevatedButton-class.html
-
-Properties:
-
-- text
-- icon
-- iconColor
-- content - a Control representing custom button content
-- tooltip
-- autofocus
-
-Events:
-
-- click
-
-## OutlinedButton
-
-Docs: https://api.flutter.dev/flutter/material/OutlinedButton-class.html
-
-Properties:
-
-- text
-- icon
-- iconColor
-- content - a Control representing custom button content
-- tooltip
-- autofocus
-
-Events:
-
-- click
-
-## TextButton
-
-Docs: https://api.flutter.dev/flutter/material/TextButton-class.html
-
-Properties:
-
-- text
-- icon
-- iconColor
-- content - a Control representing custom button content
-- tooltip
-- autofocus
-
-Events:
-
-- click
-
-## IconButton
-
-Docs: https://api.flutter.dev/flutter/material/IconButton-class.html
-
-Properties:
-
-- icon
-- iconColor
-- iconSize
-- tooltip
-- content - a Control representing custom button content
-- autofocus
-
-Events:
-
-- onPressed
-
-## FloatingActionButton (FAB)
-
-Docs: https://api.flutter.dev/flutter/material/FloatingActionButton-class.html
-
-Properties:
-
-- text
-- icon
-- bgColor
-- content - a Control representing custom button content
-- tooltip
-- autofocus
-
-Events:
-
-- click
 
 ## RadioGroup
 

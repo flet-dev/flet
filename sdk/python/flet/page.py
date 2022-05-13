@@ -20,6 +20,7 @@ from flet.control import (
 )
 from flet.control_event import ControlEvent
 from flet.embed_json_encoder import EmbedJsonEncoder
+from flet.floating_action_button import FloatingActionButton
 from flet.protocol import Command
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
@@ -42,7 +43,7 @@ class Page(Control):
         self._Control__uid = "page"
         self.__conn = conn
         self._session_id = session_id
-        self._content = []  # page controls
+        self._controls = []  # page controls
         self._index = {}  # index with all page controls
         self._index[self._Control__uid] = self
         self._last_event = None
@@ -65,7 +66,7 @@ class Page(Control):
 
     def _get_children(self):
         children = [self.__offstage]
-        children.extend(self._content)
+        children.extend(self._controls)
         return children
 
     def _fetch_page_details(self):
@@ -116,26 +117,26 @@ class Page(Control):
 
     def add(self, *controls):
         with self._lock:
-            self._content.extend(controls)
+            self._controls.extend(controls)
             return self.__update(self)
 
     def insert(self, at, *controls):
         with self._lock:
             n = at
             for control in controls:
-                self._content.insert(n, control)
+                self._controls.insert(n, control)
                 n += 1
             return self.__update(self)
 
     def remove(self, *controls):
         with self._lock:
             for control in controls:
-                self._content.remove(control)
+                self._controls.remove(control)
             return self.__update(self)
 
     def remove_at(self, index):
         with self._lock:
-            self._content.pop(index)
+            self._controls.pop(index)
             return self.__update(self)
 
     def clean(self):
@@ -143,7 +144,7 @@ class Page(Control):
             self._previous_children.clear()
             for child in self._get_children():
                 self._remove_control_recursively(self._index, child)
-            self._content.clear()
+            self._controls.clear()
             return self._send_command("clean", [self.uid])
 
     def error(self, message=""):
@@ -239,15 +240,15 @@ class Page(Control):
     def session_id(self):
         return self._session_id
 
-    # content
+    # controls
     @property
-    def content(self):
-        return self._content
+    def controls(self):
+        return self._controls
 
-    @content.setter
+    @controls.setter
     @beartype
-    def content(self, value: List[Control]):
-        self._content = value or []
+    def controls(self, value: List[Control]):
+        self._controls = value or []
 
     # title
     @property
@@ -342,6 +343,16 @@ class Page(Control):
     def splash(self, value: Optional[Control]):
         self.__offstage.splash = value
 
+    # floating_action_button
+    @property
+    def floating_action_button(self):
+        return self.__offstage.floating_action_button
+
+    @floating_action_button.setter
+    @beartype
+    def floating_action_button(self, value: Optional[FloatingActionButton]):
+        self.__offstage.floating_action_button = value
+
     # banner
     @property
     def banner(self):
@@ -428,7 +439,7 @@ class Page(Control):
     def window_width(self):
         w = self._get_attr("winWidth")
         if w != None and w != "":
-            return int(w)
+            return float(w)
         return 0
 
     # window_height
@@ -436,7 +447,7 @@ class Page(Control):
     def window_height(self):
         h = self._get_attr("winHeight")
         if h != None and h != "":
-            return int(h)
+            return float(h)
         return 0
 
     # on_close
@@ -492,6 +503,7 @@ class Offstage(Control):
         )
 
         self.__clipboard = Clipboard()
+        self.__fab = None
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
@@ -504,6 +516,8 @@ class Offstage(Control):
         children = []
         if self.__clipboard:
             children.append(self.__clipboard)
+        if self.__fab:
+            children.append(self.__fab)
         if self.__banner:
             children.append(self.__banner)
         if self.__snack_bar:
@@ -528,6 +542,16 @@ class Offstage(Control):
     @beartype
     def splash(self, value: Optional[Control]):
         self.__splash = value
+
+    # floating_action_button
+    @property
+    def floating_action_button(self):
+        return self.__fab
+
+    @floating_action_button.setter
+    @beartype
+    def floating_action_button(self, value: Optional[FloatingActionButton]):
+        self.__fab = value
 
     # banner
     @property

@@ -96,7 +96,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
               return dialog;
             }
 
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               // if (removeCurrentSnackbar) {
               //   ScaffoldMessenger.of(context).removeCurrentSnackBar();
               // }

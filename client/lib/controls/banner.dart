@@ -88,14 +88,14 @@ class _BannerControlState extends State<BannerControl> {
               return banner;
             }
 
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
 
               ScaffoldMessenger.of(context)
                   .showMaterialBanner(banner as MaterialBanner);
             });
           } else if (open != _open && _open) {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
             });
           }

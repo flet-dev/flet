@@ -30,7 +30,7 @@ def main(page: Page):
         page.add(Text(f"Line {datetime.now()}"))
 
     def on_click2(e):
-        # page.content.pop()
+        # page.controls.pop()
         page.theme_mode = "light" if page.theme_mode == "dark" else "dark"
         page.update()
 

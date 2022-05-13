@@ -1,7 +1,6 @@
 import datetime as dt
 import threading
 from difflib import SequenceMatcher
-from json import tool
 from typing import Union
 
 from beartype import beartype
@@ -59,7 +58,7 @@ class Control:
     def __init__(
         self,
         ref: Ref = None,
-        expand: int = None,
+        expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
         tooltip: str = None,
         visible: bool = None,
@@ -173,11 +172,15 @@ class Control:
     # expand
     @property
     def expand(self):
-        return self._get_attr("expand")
+        return self.__expand
 
     @expand.setter
-    def expand(self, value):
-        self._set_attr("expand", value)
+    @beartype
+    def expand(self, value: Union[None, bool, int]):
+        self.__expand = value
+        if value and isinstance(value, bool):
+            value = 1
+        self._set_attr("expand", value if value else None)
 
     # opacity
     @property

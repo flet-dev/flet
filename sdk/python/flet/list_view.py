@@ -1,5 +1,5 @@
 import json
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from beartype import beartype
 
@@ -17,7 +17,7 @@ class ListView(ConstrainedControl):
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
-        expand: int = None,
+        expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
         visible: bool = None,
         disabled: bool = None,

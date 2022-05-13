@@ -2,9 +2,11 @@ enum ControlType {
   alertDialog,
   banner,
   checkbox,
+  circleAvatar,
   clipboard,
   column,
   container,
+  divider,
   dropdown,
   dropdownOption,
   elevatedButton,
@@ -17,6 +19,8 @@ enum ControlType {
   outlinedButton,
   offstage,
   page,
+  popupMenuButton,
+  popupMenuItem,
   progressBar,
   progressRing,
   radioGroup,
@@ -31,5 +35,6 @@ enum ControlType {
   tab,
   text,
   textButton,
-  textField
+  textField,
+  verticalDivider
 }

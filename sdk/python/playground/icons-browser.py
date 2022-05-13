@@ -20,7 +20,7 @@ from flet import (
     icons,
 )
 
-# logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 # fetch all icon constants from icons.py module
 icons_list = []
@@ -125,4 +125,5 @@ def main(page: Page):
     )
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.FLET_APP)
+# flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(port=8550, target=main, view=flet.WEB_BROWSER)
