@@ -13,8 +13,8 @@
     * [x] Stack
     * [x] ListView
     * [x] GridView
-    * [ ] Divider
-    * [ ] VerticalDivider
+    * [x] Divider
+    * [x] VerticalDivider
   * App structure and navigation
     * [x] Tabs
     * [ ] AppBar

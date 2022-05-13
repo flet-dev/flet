@@ -66,10 +66,11 @@ class Container(ConstrainedControl):
         return "container"
 
     def _get_children(self):
-        if self.__content == None:
-            raise Exception("Container does not have any content set.")
-        self.__content._set_attr_internal("n", "content")
-        return [self.__content]
+        children = []
+        if self.__content != None:
+            self.__content._set_attr_internal("n", "content")
+            children.append(self.__content)
+        return children
 
     # alignment
     @property

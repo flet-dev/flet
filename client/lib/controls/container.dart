@@ -7,7 +7,6 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
-import 'error.dart';
 
 class ContainerControl extends StatelessWidget {
   final Control? parent;
@@ -32,10 +31,6 @@ class ContainerControl extends StatelessWidget {
     var contentCtrls = children.where((c) => c.name == "content");
     bool disabled = control.isDisabled || parentDisabled;
 
-    if (contentCtrls.isEmpty) {
-      return const ErrorControl("Container does not contain any content.");
-    }
-
     return constrainedControl(
         Container(
             padding: parseEdgeInsets(control, "padding"),
@@ -45,7 +40,9 @@ class ContainerControl extends StatelessWidget {
                 color: bgColor,
                 border: parseBorder(context, control, "border"),
                 borderRadius: parseBorderRadius(control, "borderRadius")),
-            child: createControl(control, contentCtrls.first.id, disabled)),
+            child: contentCtrls.isNotEmpty
+                ? createControl(control, contentCtrls.first.id, disabled)
+                : null),
         parent,
         control);
   }

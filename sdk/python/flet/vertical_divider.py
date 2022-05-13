@@ -1,6 +1,6 @@
 from typing import Union
 
-import beartype
+from beartype import beartype
 
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
