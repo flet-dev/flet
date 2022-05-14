@@ -17,7 +17,8 @@ class VerticalDividerControl extends StatelessWidget {
 
     var width = control.attrDouble("width");
     var thickness = control.attrDouble("thickness");
-    var color = HexColor.fromString(context, control.attrString("color", "")!);
+    var color = HexColor.fromString(
+        Theme.of(context), control.attrString("color", "")!);
 
     return baseControl(
         VerticalDivider(

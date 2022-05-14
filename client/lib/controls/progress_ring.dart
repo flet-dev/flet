@@ -17,9 +17,10 @@ class ProgressRingControl extends StatelessWidget {
 
     var value = control.attrDouble("value", null);
     var strokeWidth = control.attrDouble("strokeWidth", 4)!;
-    var color = HexColor.fromString(context, control.attrString("color", "")!);
-    var bgColor =
-        HexColor.fromString(context, control.attrString("bgColor", "")!);
+    var color = HexColor.fromString(
+        Theme.of(context), control.attrString("color", "")!);
+    var bgColor = HexColor.fromString(
+        Theme.of(context), control.attrString("bgColor", "")!);
 
     return constrainedControl(
         CircularProgressIndicator(

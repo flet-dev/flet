@@ -7,6 +7,7 @@ from beartype import beartype
 from beartype.typing import List, Optional
 
 from flet import constants, padding
+from flet.app_bar import AppBar
 from flet.banner import Banner
 from flet.clipboard import Clipboard
 from flet.connection import Connection
@@ -52,6 +53,7 @@ class Page(Control):
         self.lock = threading.Lock()
 
         self.__offstage = Offstage()
+        self.__appbar = None
         self.__theme = None
         self.__dark_theme = None
 
@@ -66,6 +68,8 @@ class Page(Control):
 
     def _get_children(self):
         children = [self.__offstage]
+        if self.__appbar:
+            children.append(self.__appbar)
         children.extend(self._controls)
         return children
 
@@ -342,6 +346,16 @@ class Page(Control):
     @beartype
     def splash(self, value: Optional[Control]):
         self.__offstage.splash = value
+
+    # appbar
+    @property
+    def appbar(self):
+        return self.__appbar
+
+    @appbar.setter
+    @beartype
+    def appbar(self, value: Optional[AppBar]):
+        self.__appbar = value
 
     # floating_action_button
     @property

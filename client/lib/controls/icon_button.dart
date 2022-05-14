@@ -26,10 +26,10 @@ class IconButtonControl extends StatelessWidget {
     debugPrint("Button build: ${control.id}");
 
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
-    Color? iconColor =
-        HexColor.fromString(context, control.attrString("iconColor", "")!);
-    Color? bgColor =
-        HexColor.fromString(context, control.attrString("bgColor", "")!);
+    Color? iconColor = HexColor.fromString(
+        Theme.of(context), control.attrString("iconColor", "")!);
+    Color? bgColor = HexColor.fromString(
+        Theme.of(context), control.attrString("bgColor", "")!);
     double? iconSize = control.attrDouble("iconSize");
     var contentCtrls = children.where((c) => c.name == "content");
     bool autofocus = control.attrBool("autofocus", false)!;

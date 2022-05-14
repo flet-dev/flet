@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
@@ -18,7 +19,8 @@ class IconControl extends StatelessWidget {
 
     var name = control.attrString("name", "")!;
     var size = control.attrDouble("size", null);
-    var color = HexColor.fromString(context, control.attrString("color", "")!);
+    var color = HexColor.fromString(
+        Theme.of(context), control.attrString("color", "")!);
 
     return baseControl(
         Icon(

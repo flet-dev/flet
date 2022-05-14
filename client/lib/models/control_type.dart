@@ -1,5 +1,6 @@
 enum ControlType {
   alertDialog,
+  appBar,
   banner,
   checkbox,
   circleAvatar,
@@ -16,6 +17,8 @@ enum ControlType {
   iconButton,
   image,
   listView,
+  navigationRail,
+  navigationRailDestination,
   outlinedButton,
   offstage,
   page,

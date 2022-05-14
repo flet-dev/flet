@@ -63,7 +63,7 @@ class _BannerControlState extends State<BannerControl> {
           .toList(),
       forceActionsBelow: widget.control.attrBool("forceActionsBelow", false)!,
       backgroundColor: HexColor.fromString(
-          context, widget.control.attrString("bgcolor", "")!),
+          Theme.of(context), widget.control.attrString("bgcolor", "")!),
     );
   }
 

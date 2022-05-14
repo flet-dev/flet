@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-Color? _getThemeColor(BuildContext context, String colorName) {
-  var scheme = Theme.of(context).colorScheme;
+Color? _getThemeColor(ThemeData theme, String colorName) {
+  var scheme = theme.colorScheme;
   switch (colorName.toLowerCase()) {
     case "primary":
       return scheme.primary;
@@ -124,15 +124,15 @@ Map<String, MaterialAccentColor> _materialAccentColors = {
 
 // https://stackoverflow.com/questions/50081213/how-do-i-use-hexadecimal-color-strings-in-flutter
 extension HexColor on Color {
-  static Color? fromString(BuildContext? context, String colorString) {
+  static Color? fromString(ThemeData? theme, String colorString) {
     if (colorString.startsWith("#")) {
       return HexColor._fromHex(colorString);
     } else {
-      return HexColor._fromNamedColor(context, colorString);
+      return HexColor._fromNamedColor(theme, colorString);
     }
   }
 
-  static Color? _fromNamedColor(BuildContext? context, String colorName) {
+  static Color? _fromNamedColor(ThemeData? theme, String colorName) {
     RegExp namedColor = RegExp(r'^([a-zA-Z]+)([0-9]*)$');
     var matches = namedColor.allMatches(colorName);
     if (matches.isEmpty) {
@@ -142,8 +142,8 @@ extension HexColor on Color {
     var shade = int.tryParse(matches.first.group(2)!) ?? 0;
 
     // scheme color
-    if (context != null) {
-      Color? color = _getThemeColor(context, name);
+    if (theme != null) {
+      Color? color = _getThemeColor(theme, name);
       if (color != null) {
         return color;
       }

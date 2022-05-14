@@ -17,7 +17,8 @@ class DividerControl extends StatelessWidget {
 
     var height = control.attrDouble("height");
     var thickness = control.attrDouble("thickness");
-    var color = HexColor.fromString(context, control.attrString("color", "")!);
+    var color = HexColor.fromString(
+        Theme.of(context), control.attrString("color", "")!);
 
     return baseControl(
         Divider(

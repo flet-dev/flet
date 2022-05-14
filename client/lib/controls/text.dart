@@ -29,9 +29,10 @@ class TextControl extends StatelessWidget {
         fontSize: control.attrDouble("size", null),
         fontWeight: getFontWeight(control.attrString("weight", "")!),
         fontStyle: control.attrBool("italic", false)! ? FontStyle.italic : null,
-        color: HexColor.fromString(context, control.attrString("color", "")!),
-        backgroundColor:
-            HexColor.fromString(context, control.attrString("bgcolor", "")!));
+        color: HexColor.fromString(
+            Theme.of(context), control.attrString("color", "")!),
+        backgroundColor: HexColor.fromString(
+            Theme.of(context), control.attrString("bgcolor", "")!));
 
     TextAlign? textAlign = TextAlign.values.firstWhere(
         (a) =>
