@@ -133,6 +133,7 @@ class PageControl extends StatelessWidget {
             darkTheme: darkTheme,
             themeMode: themeMode,
             home: Scaffold(
+              appBar: null,
               body: Stack(children: [
                 SizedBox.expand(
                     child: Container(

@@ -19,7 +19,6 @@
     * [x] Tabs
     * [ ] AppBar
     * [ ] NavigationRail
-    * [ ] NavigationBar
   * Basic controls
     * [x] Text
     * [x] Icon
@@ -56,12 +55,19 @@
 * Flet Daemon
   * [x] "assets" directory with static content
 
+* Samples apps
+  * [x] Counter
+  * [x] To-Do
+  * [x] Icon browser
+  * [ ] Chat
+
 * Website
   * [ ] Controls S1 reference
   * [x] Introduction
+  * [ ] Home page
   * [ ] Blog post
   * [ ] Python Guide
-    * [ ] Deployment (+how to change favicon.ico)
+    * Deployment (+how to change favicon.ico)
       * [x] Deployment to Replit
       * [x] Deployment to Fly.io
 
@@ -70,7 +76,8 @@
 * Authentication
 * Controls
   * Navigation
-    * NavigationDrawer  
+    * NavigationDrawer
+    * NavigationBar    
   * Layout
     * Row (responsive)
     * Column (responsive)
