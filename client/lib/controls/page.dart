@@ -1,3 +1,4 @@
+import 'package:flet_view/controls/app_bar.dart';
 import 'package:flet_view/models/control_view_model.dart';
 
 import '../models/control_type.dart';
@@ -147,8 +148,16 @@ class PageControl extends StatelessWidget {
             darkTheme: darkTheme,
             themeMode: themeMode,
             home: Scaffold(
-              appBar:
-                  appBarView != null ? createAppBar(theme, appBarView) : null,
+              appBar: appBarView != null
+                  ? AppBarControl(
+                      parent: control,
+                      control: appBarView.control,
+                      children: appBarView.children,
+                      parentDisabled: disabled,
+                      height: appBarView.control
+                          .attrDouble("toolbarHeight", kToolbarHeight)!,
+                    )
+                  : null,
               body: Stack(children: [
                 SizedBox.expand(
                     child: Container(
@@ -173,43 +182,5 @@ class PageControl extends StatelessWidget {
             ),
           );
         });
-  }
-
-  PreferredSizeWidget createAppBar(
-      ThemeData theme, ControlViewModel appBarView) {
-    var leadingCtrls =
-        appBarView.children.where((c) => c.name == "leading" && c.isVisible);
-    var titleCtrls =
-        appBarView.children.where((c) => c.name == "title" && c.isVisible);
-    var actionCtrls =
-        appBarView.children.where((c) => c.name == "action" && c.isVisible);
-
-    var leadingWidth = appBarView.control.attrDouble("leadingWidth");
-    var toolbarHeight = appBarView.control.attrDouble("toolbarHeight");
-    var centerTitle = appBarView.control.attrBool("centerTitle", false)!;
-    var color =
-        HexColor.fromString(theme, appBarView.control.attrString("color", "")!);
-    var bgcolor = HexColor.fromString(
-        theme, appBarView.control.attrString("bgcolor", "")!);
-
-    return AppBar(
-      leading: leadingCtrls.isNotEmpty
-          ? createControl(appBarView.control, leadingCtrls.first.id,
-              appBarView.control.isDisabled)
-          : null,
-      leadingWidth: leadingWidth,
-      title: titleCtrls.isNotEmpty
-          ? createControl(appBarView.control, titleCtrls.first.id,
-              appBarView.control.isDisabled)
-          : null,
-      centerTitle: centerTitle,
-      toolbarHeight: toolbarHeight,
-      foregroundColor: color,
-      backgroundColor: bgcolor,
-      actions: actionCtrls
-          .map((c) => createControl(
-              appBarView.control, c.id, appBarView.control.isDisabled))
-          .toList(),
-    );
   }
 }

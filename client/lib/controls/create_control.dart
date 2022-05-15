@@ -71,12 +71,6 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
         case ControlType.page:
           return PageControl(
               control: controlView.control, children: controlView.children);
-        case ControlType.appBar:
-          return AppBarControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
         case ControlType.text:
           return TextControl(control: controlView.control);
         case ControlType.icon:

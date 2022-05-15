@@ -8,6 +8,9 @@ from flet.icon_button import IconButton
 from flet.popup_menu_button import PopupMenuButton, PopupMenuItem
 from flet.row import Row
 
+LIGHT_SEED_COLOR = colors.DEEP_ORANGE
+DARK_SEED_COLOR = colors.INDIGO
+
 
 def main(page: Page):
     def check_item_clicked(e):
@@ -16,18 +19,51 @@ def main(page: Page):
 
     page.title = "AppBar Example"
     page.theme_mode = "light"
-    page.theme = theme.Theme(color_scheme_seed=colors.DEEP_ORANGE, use_material3=True)
+    page.theme = theme.Theme(color_scheme_seed=LIGHT_SEED_COLOR, use_material3=True)
+    page.dark_theme = theme.Theme(color_scheme_seed=DARK_SEED_COLOR, use_material3=True)
     page.update()
+
+    def toggle_theme_mode(e):
+        page.theme_mode = "dark" if page.theme_mode == "light" else "light"
+        lightMode.icon = (
+            icons.WB_SUNNY_OUTLINED if page.theme_mode == "light" else icons.WB_SUNNY
+        )
+        page.update()
+
+    lightMode = IconButton(
+        icons.WB_SUNNY_OUTLINED if page.theme_mode == "light" else icons.WB_SUNNY,
+        on_click=toggle_theme_mode,
+    )
+
+    def toggle_material(e):
+        use_material3 = not page.theme.use_material3
+        page.theme = theme.Theme(
+            color_scheme_seed=LIGHT_SEED_COLOR, use_material3=use_material3
+        )
+        page.dark_theme = theme.Theme(
+            color_scheme_seed=DARK_SEED_COLOR, use_material3=use_material3
+        )
+        materialMode.icon = (
+            icons.FILTER_3 if page.theme.use_material3 else icons.FILTER_2
+        )
+        page.update()
+
+    materialMode = IconButton(
+        icons.FILTER_3 if page.theme.use_material3 else icons.FILTER_2,
+        on_click=toggle_material,
+    )
 
     page.padding = 50
     page.appbar = AppBar(
-        bgcolor=colors.SECONDARY_CONTAINER,
+        # toolbar_height=100,
+        # bgcolor=colors.SECONDARY_CONTAINER,
         leading=Icon(icons.PALETTE),
         leading_width=40,
-        title=Text("Hello app!"),
+        title=Text("AppBar Example"),
         center_title=False,
         actions=[
-            IconButton(icons.LIGHT),
+            lightMode,
+            materialMode,
             PopupMenuButton(
                 items=[
                     PopupMenuItem(text="Item 1"),

@@ -1,68 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
-import '../utils/alignment.dart';
+import '../utils/colors.dart';
 import 'create_control.dart';
-import 'scrollable_control.dart';
 
 class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final List<Control> children;
+  final double height;
 
-  AppBar? _appBar;
-
-  AppBarControl(
+  const AppBarControl(
       {Key? key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.height})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     debugPrint("AppBar build: ${control.id}");
 
-    // final spacing = control.attrDouble("spacing", 10)!;
-    // final mainAlignment =
-    //     parseMainAxisAlignment(control, "alignment", MainAxisAlignment.start);
-    // bool tight = control.attrBool("tight", false)!;
-    // bool wrap = control.attrBool("wrap", false)!;
-    // ScrollMode scrollMode = ScrollMode.values.firstWhere(
-    //     (m) =>
-    //         m.name.toLowerCase() ==
-    //         control.attrString("scroll", "")!.toLowerCase(),
-    //     orElse: () => ScrollMode.none);
-    // bool disabled = control.isDisabled || parentDisabled;
+    var leadingCtrls =
+        children.where((c) => c.name == "leading" && c.isVisible);
+    var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
+    var actionCtrls = children.where((c) => c.name == "action" && c.isVisible);
 
-    // List<Widget> controls = [];
+    var leadingWidth = control.attrDouble("leadingWidth");
+    var centerTitle = control.attrBool("centerTitle", false)!;
+    var color = HexColor.fromString(
+        Theme.of(context), control.attrString("color", "")!);
+    var bgcolor = HexColor.fromString(
+        Theme.of(context), control.attrString("bgcolor", "")!);
 
-    // bool firstControl = true;
-    // for (var ctrl in children.where((c) => c.isVisible)) {
-    //   // spacer between displayed controls
-    //   if (!wrap &&
-    //       spacing > 0 &&
-    //       !firstControl &&
-    //       mainAlignment != MainAxisAlignment.spaceAround &&
-    //       mainAlignment != MainAxisAlignment.spaceBetween &&
-    //       mainAlignment != MainAxisAlignment.spaceEvenly) {
-    //     controls.add(SizedBox(width: spacing));
-    //   }
-    //   firstControl = false;
-
-    //   // displayed control
-    //   controls.add(createControl(control, ctrl.id, disabled));
-    // }
-
-    _appBar = AppBar(
-      title: Text("Hello!"),
+    return AppBar(
+      leading: leadingCtrls.isNotEmpty
+          ? createControl(control, leadingCtrls.first.id, control.isDisabled)
+          : null,
+      leadingWidth: leadingWidth,
+      title: titleCtrls.isNotEmpty
+          ? createControl(control, titleCtrls.first.id, control.isDisabled)
+          : null,
+      centerTitle: centerTitle,
+      toolbarHeight: preferredSize.height,
+      foregroundColor: color,
+      backgroundColor: bgcolor,
+      actions: actionCtrls
+          .map((c) => createControl(control, c.id, control.isDisabled))
+          .toList(),
     );
-    return _appBar!;
   }
 
   @override
-  Size get preferredSize => _appBar!.preferredSize;
+  Size get preferredSize => Size.fromHeight(height);
 }
