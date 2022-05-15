@@ -27,7 +27,7 @@ class NavigationRailDestination(Control):
         padding: PaddingValue = None,
     ):
         Control.__init__(self, ref=ref)
-        assert key, "key must be specified"
+        assert key or label, "key or label must be specified"
         self.key = key
         self.label = label
         self.icon = icon
@@ -155,6 +155,7 @@ class NavigationRail(ConstrainedControl):
         # NavigationRail-specific
         destinations: List[NavigationRailDestination] = None,
         value: str = None,
+        extended: bool = None,
         label_type: NavigationRailLabelType = None,
         bgcolor: str = None,
         leading: Control = None,
@@ -179,6 +180,7 @@ class NavigationRail(ConstrainedControl):
 
         self.destinations = destinations
         self.value = value
+        self.extended = extended
         self.label_type = label_type
         self.bgcolor = bgcolor
         self.__leading = None
@@ -233,15 +235,7 @@ class NavigationRail(ConstrainedControl):
     @value.setter
     @beartype
     def value(self, value: Optional[str]):
-        if not value:
-            assert (
-                not self.destinations
-            ), "Setting an empty value is only allowed if you have no tabs"
-        else:
-            assert any(
-                value in keys for keys in [(dest.key) for dest in self.destinations]
-            ), f"'{value}' is not a key for any tab"
-        self._set_attr("value", value or "")
+        self._set_attr("value", value)
 
     # label_type
     @property

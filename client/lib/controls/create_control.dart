@@ -1,4 +1,5 @@
-import 'app_bar.dart';
+import 'navigation_rail.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -222,6 +223,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.tabs:
           return TabsControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.navigationRail:
+          return NavigationRailControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
