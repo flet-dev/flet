@@ -36,17 +36,17 @@ def main(page: Page):
     page.theme_mode = "light"
     page.padding = padding.all(20)
 
-    prgb = ProgressBar(visible=False)
+    page.splash = ProgressBar(visible=False)
 
     def chat_submit(e):
         print(f"Submit FieldText: {e.control.value}")
         e.control.value = ""
         form.disabled = True
-        prgb.visible = True
+        page.splash.visible = True
         page.update()
         sleep(2)
         form.disabled = False
-        prgb.visible = False
+        page.splash.visible = False
         page.update()
 
     chat_input = TextField(
@@ -59,7 +59,6 @@ def main(page: Page):
 
     form = Column(
         [
-            prgb,
             Text("Outlined TextField", style="headlineMedium"),
             TextField(),
             Text(

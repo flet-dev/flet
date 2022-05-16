@@ -1,13 +1,9 @@
 import logging
-from ctypes import alignment
-from datetime import datetime
 from time import sleep
-from tkinter import Button
 
 import flet
-from flet import Page, TextButton, alignment, border, border_radius, colors, padding
+from flet import Page, TextButton
 from flet.alert_dialog import AlertDialog
-from flet.container import Container
 from flet.elevated_button import ElevatedButton
 from flet.text import Text
 
