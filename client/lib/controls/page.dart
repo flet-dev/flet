@@ -1,5 +1,9 @@
-import 'package:flet_view/models/control_type.dart';
-import 'package:flet_view/utils/desktop.dart';
+import 'package:flet_view/controls/app_bar.dart';
+import 'package:flet_view/models/control_view_model.dart';
+
+import '../models/control_type.dart';
+import '../models/controls_view_model.dart';
+import '../utils/desktop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -44,6 +48,7 @@ class PageControl extends StatelessWidget {
     debugPrint("scrollMode: $scrollMode");
 
     Control? offstage;
+    Control? appBar;
     List<Widget> controls = [];
     bool firstControl = true;
 
@@ -52,10 +57,12 @@ class PageControl extends StatelessWidget {
       if (ctrl.type == ControlType.offstage) {
         offstage = ctrl;
         continue;
+      } else if (ctrl.type == ControlType.appBar) {
+        appBar = ctrl;
+        continue;
       }
-
       // spacer between displayed controls
-      if (spacing > 0 &&
+      else if (spacing > 0 &&
           !firstControl &&
           mainAlignment != MainAxisAlignment.spaceAround &&
           mainAlignment != MainAxisAlignment.spaceBetween &&
@@ -97,30 +104,38 @@ class PageControl extends StatelessWidget {
     String title = control.attrString("title", "")!;
     setWindowTitle(title);
 
-    return StoreConnector<AppState, ControlChildrenViewModel?>(
+    List<String> childIds = [];
+    if (offstage != null) {
+      childIds.add(offstage.id);
+    }
+    if (appBar != null) {
+      childIds.add(appBar.id);
+    }
+
+    return StoreConnector<AppState, ControlsViewModel>(
         distinct: true,
-        converter: (store) => offstage != null
-            ? ControlChildrenViewModel.fromStore(store, offstage.id,
-                dispatch: store.dispatch)
-            : null,
-        builder: (context, offstageView) {
+        converter: (store) => ControlsViewModel.fromStore(store, childIds),
+        builder: (context, childrenViews) {
           debugPrint("Offstage StoreConnector build");
 
           // offstage
-          List<Widget> offstageWidgets = offstageView != null
-              ? offstageView.children
+          List<Widget> offstageWidgets = offstage != null
+              ? childrenViews.controlViews.first.children
                   .where((c) =>
                       c.isVisible && c.type != ControlType.floatingActionButton)
                   .map((c) => createControl(offstage, c.id, disabled))
                   .toList()
               : [];
 
-          List<Control> fab = offstageView != null
-              ? offstageView.children
+          List<Control> fab = offstage != null
+              ? childrenViews.controlViews.first.children
                   .where((c) =>
                       c.isVisible && c.type == ControlType.floatingActionButton)
                   .toList()
               : [];
+
+          var appBarView =
+              appBar != null ? childrenViews.controlViews.last : null;
 
           var column = Column(
               mainAxisAlignment: mainAlignment,
@@ -133,14 +148,24 @@ class PageControl extends StatelessWidget {
             darkTheme: darkTheme,
             themeMode: themeMode,
             home: Scaffold(
+              appBar: appBarView != null
+                  ? AppBarControl(
+                      parent: control,
+                      control: appBarView.control,
+                      children: appBarView.children,
+                      parentDisabled: disabled,
+                      height: appBarView.control
+                          .attrDouble("toolbarHeight", kToolbarHeight)!,
+                    )
+                  : null,
               body: Stack(children: [
                 SizedBox.expand(
                     child: Container(
                         padding: parseEdgeInsets(control, "padding") ??
                             const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            color: HexColor.fromString(
-                                context, control.attrString("bgcolor", "")!)),
+                            color: HexColor.fromString(Theme.of(context),
+                                control.attrString("bgcolor", "")!)),
                         child: scrollMode != ScrollMode.none
                             ? ScrollableControl(
                                 child: column,

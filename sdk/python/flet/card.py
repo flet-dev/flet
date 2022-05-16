@@ -16,7 +16,7 @@ except:
     from typing_extensions import Literal
 
 
-class Container(ConstrainedControl):
+class Card(ConstrainedControl):
     def __init__(
         self,
         ref: Ref = None,
@@ -32,12 +32,8 @@ class Container(ConstrainedControl):
         # Specific
         #
         content: Control = None,
-        padding: PaddingValue = None,
         margin: MarginValue = None,
-        alignment: Alignment = None,
-        bgcolor: str = None,
-        border: Border = None,
-        border_radius: BorderRadius = None,
+        elevation: OptionalNumber = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -53,15 +49,11 @@ class Container(ConstrainedControl):
         )
 
         self.content = content
-        self.padding = padding
         self.margin = margin
-        self.alignment = alignment
-        self.bgcolor = bgcolor
-        self.border = border
-        self.border_radius = border_radius
+        self.elevation = elevation
 
     def _get_control_name(self):
-        return "container"
+        return "card"
 
     def _get_children(self):
         children = []
@@ -69,30 +61,6 @@ class Container(ConstrainedControl):
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
-
-    # alignment
-    @property
-    def alignment(self):
-        return self.__alignment
-
-    @alignment.setter
-    @beartype
-    def alignment(self, value: Optional[Alignment]):
-        self.__alignment = value
-        self._set_attr_json("alignment", value)
-
-    # padding
-    @property
-    def padding(self):
-        return self.__padding
-
-    @padding.setter
-    @beartype
-    def padding(self, value: PaddingValue):
-        self.__padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("padding", value)
 
     # margin
     @property
@@ -107,38 +75,15 @@ class Container(ConstrainedControl):
             value = margin.all(value)
         self._set_attr_json("margin", value)
 
-    # bgcolor
+    # elevation
     @property
-    def bgcolor(self):
-        return self._get_attr("bgColor")
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation")
 
-    @bgcolor.setter
-    def bgcolor(self, value):
-        self._set_attr("bgColor", value)
-
-    # border
-    @property
-    def border(self):
-        return self.__border
-
-    @border.setter
+    @elevation.setter
     @beartype
-    def border(self, value: Optional[Border]):
-        self.__border = value
-        self._set_attr_json("border", value)
-
-    # border_radius
-    @property
-    def border_radius(self):
-        return self.__border_radius
-
-    @border_radius.setter
-    @beartype
-    def border_radius(self, value: Optional[BorderRadius]):
-        self.__border_radius = value
-        if value and isinstance(value, (int, float)):
-            value = border_radius.all(value)
-        self._set_attr_json("borderRadius", value)
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
 
     # content
     @property

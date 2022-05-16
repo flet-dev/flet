@@ -26,9 +26,10 @@ class ContainerControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Container build: ${control.id}");
 
-    var bgColor =
-        HexColor.fromString(context, control.attrString("bgColor", "")!);
-    var contentCtrls = children.where((c) => c.name == "content");
+    var bgColor = HexColor.fromString(
+        Theme.of(context), control.attrString("bgColor", "")!);
+    var contentCtrls =
+        children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = control.isDisabled || parentDisabled;
 
     return constrainedControl(
@@ -38,7 +39,7 @@ class ContainerControl extends StatelessWidget {
             alignment: parseAlignment(control, "alignment"),
             decoration: BoxDecoration(
                 color: bgColor,
-                border: parseBorder(context, control, "border"),
+                border: parseBorder(Theme.of(context), control, "border"),
                 borderRadius: parseBorderRadius(control, "borderRadius")),
             child: contentCtrls.isNotEmpty
                 ? createControl(control, contentCtrls.first.id, disabled)

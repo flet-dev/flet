@@ -34,10 +34,10 @@ class CircleAvatarControl extends StatelessWidget {
         backgroundImage: backgroundImageUrl != null
             ? NetworkImage(backgroundImageUrl)
             : null,
-        backgroundColor:
-            HexColor.fromString(context, control.attrString("bgColor", "")!),
-        foregroundColor:
-            HexColor.fromString(context, control.attrString("color", "")!),
+        backgroundColor: HexColor.fromString(
+            Theme.of(context), control.attrString("bgColor", "")!),
+        foregroundColor: HexColor.fromString(
+            Theme.of(context), control.attrString("color", "")!),
         radius: control.attrDouble("radius"),
         minRadius: control.attrDouble("minRadius"),
         maxRadius: control.attrDouble("maxRadius"),

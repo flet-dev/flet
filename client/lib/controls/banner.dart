@@ -41,9 +41,12 @@ class _BannerControlState extends State<BannerControl> {
 
   Widget _createBanner() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    var leadingCtrls = widget.children.where((c) => c.name == "leading");
-    var contentCtrls = widget.children.where((c) => c.name == "content");
-    var actionCtrls = widget.children.where((c) => c.name == "action");
+    var leadingCtrls =
+        widget.children.where((c) => c.name == "leading" && c.isVisible);
+    var contentCtrls =
+        widget.children.where((c) => c.name == "content" && c.isVisible);
+    var actionCtrls =
+        widget.children.where((c) => c.name == "action" && c.isVisible);
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl("Banner does not have any content.");
@@ -63,7 +66,7 @@ class _BannerControlState extends State<BannerControl> {
           .toList(),
       forceActionsBelow: widget.control.attrBool("forceActionsBelow", false)!,
       backgroundColor: HexColor.fromString(
-          context, widget.control.attrString("bgcolor", "")!),
+          Theme.of(context), widget.control.attrString("bgcolor", "")!),
     );
   }
 

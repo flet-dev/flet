@@ -16,14 +16,14 @@ BorderRadius? parseBorderRadius(Control control, String propName) {
   return borderRadiusFromJSON(j1);
 }
 
-Border? parseBorder(BuildContext context, Control control, String propName) {
+Border? parseBorder(ThemeData theme, Control control, String propName) {
   var v = control.attrString(propName, null);
   if (v == null) {
     return null;
   }
 
   final j1 = json.decode(v);
-  return borderFromJSON(context, j1);
+  return borderFromJSON(theme, j1);
 }
 
 BorderRadius borderRadiusFromJSON(Map<String, dynamic> json) {
@@ -35,19 +35,18 @@ BorderRadius borderRadiusFromJSON(Map<String, dynamic> json) {
   );
 }
 
-Border borderFromJSON(BuildContext? context, Map<String, dynamic> json) {
+Border borderFromJSON(ThemeData? theme, Map<String, dynamic> json) {
   return Border(
-      top: borderSideFromJSON(context, json['t']),
-      right: borderSideFromJSON(context, json['r']),
-      bottom: borderSideFromJSON(context, json['b']),
-      left: borderSideFromJSON(context, json['l']));
+      top: borderSideFromJSON(theme, json['t']),
+      right: borderSideFromJSON(theme, json['r']),
+      bottom: borderSideFromJSON(theme, json['b']),
+      left: borderSideFromJSON(theme, json['l']));
 }
 
-BorderSide borderSideFromJSON(
-    BuildContext? context, Map<String, dynamic> json) {
+BorderSide borderSideFromJSON(ThemeData? theme, Map<String, dynamic> json) {
   return BorderSide(
       color: json['c'] != null
-          ? HexColor.fromString(context, json['c'] as String) ?? Colors.black
+          ? HexColor.fromString(theme, json['c'] as String) ?? Colors.black
           : Colors.black,
       width: parseDouble(json['w'], 1),
       style: BorderStyle.solid);

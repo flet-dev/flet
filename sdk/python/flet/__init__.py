@@ -1,5 +1,7 @@
 from flet.alert_dialog import AlertDialog
+from flet.app_bar import AppBar
 from flet.banner import Banner
+from flet.card import Card
 from flet.checkbox import Checkbox
 from flet.circle_avatar import CircleAvatar
 from flet.column import Column
@@ -16,7 +18,9 @@ from flet.grid_view import GridView
 from flet.icon import Icon
 from flet.icon_button import IconButton
 from flet.image import Image
+from flet.list_tile import ListTile
 from flet.list_view import ListView
+from flet.navigation_rail import NavigationRail, NavigationRailDestination
 from flet.outlined_button import OutlinedButton
 from flet.page import Page
 from flet.popup_menu_button import PopupMenuButton, PopupMenuItem

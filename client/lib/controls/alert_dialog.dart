@@ -44,9 +44,12 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
 
   Widget _createAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    var titleCtrls = widget.children.where((c) => c.name == "title");
-    var contentCtrls = widget.children.where((c) => c.name == "content");
-    var actionCtrls = widget.children.where((c) => c.name == "action");
+    var titleCtrls =
+        widget.children.where((c) => c.name == "title" && c.isVisible);
+    var contentCtrls =
+        widget.children.where((c) => c.name == "content" && c.isVisible);
+    var actionCtrls =
+        widget.children.where((c) => c.name == "action" && c.isVisible);
     final actionsAlignment = parseMainAxisAlignment(
         widget.control, "actionsAlignment", MainAxisAlignment.start);
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {

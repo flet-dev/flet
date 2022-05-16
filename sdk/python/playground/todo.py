@@ -92,7 +92,7 @@ class TodoApp:
         self.new_task = TextField(hint_text="Whats needs to be done?", expand=True)
         self.tasks_view = Column()
         self.filter = Tabs(
-            value="all",
+            selected_index="all",
             on_change=self.tabs_changed,
             tabs=[Tab(text="all"), Tab(text="active"), Tab(text="completed")],
         )

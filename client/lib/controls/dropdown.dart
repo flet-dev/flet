@@ -61,10 +61,10 @@ class _DropdownControlState extends State<DropdownControl> {
             _value = value;
           }
 
-          var prefixControls =
-              itemsView.children.where((c) => c.name == "prefix");
-          var suffixControls =
-              itemsView.children.where((c) => c.name == "suffix");
+          var prefixControls = itemsView.children
+              .where((c) => c.name == "prefix" && c.isVisible);
+          var suffixControls = itemsView.children
+              .where((c) => c.name == "suffix" && c.isVisible);
 
           var dropDown = DropdownButtonFormField<String>(
             autofocus: autofocus,

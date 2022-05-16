@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.DEBUG)
 def main(page: Page):
     page.title = "Buttons Example"
     page.theme_mode = "light"
-    # page.theme = theme.Theme(color_scheme_seed="green", use_material3=True)
+    page.theme = theme.Theme(color_scheme_seed=colors.DEEP_ORANGE, use_material3=True)
     page.padding = 50
     page.floating_action_button = FloatingActionButton(icon=icons.ADD)
 

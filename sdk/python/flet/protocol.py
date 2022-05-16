@@ -8,13 +8,18 @@ class CommandEncoder(json.JSONEncoder):
         if isinstance(obj, Message):
             return obj.__dict__
         elif isinstance(obj, Command):
-            return {
-                "i": obj.indent,
-                "n": obj.name,
-                "v": obj.values,
-                "a": obj.attrs,
-                "c": obj.commands,
-            }
+            d = {}
+            if obj.indent > 0:
+                d["i"] = obj.indent
+            if obj.name != None:
+                d["n"] = obj.name
+            if obj.values and len(obj.values) > 0:
+                d["v"] = obj.values
+            if obj.attrs and len(obj.attrs) > 0:
+                d["a"] = obj.attrs
+            if obj.commands and len(obj.commands) > 0:
+                d["c"] = obj.commands
+            return d
         elif isinstance(obj, object):
             return obj.__dict__
         return json.JSONEncoder.default(self, obj)

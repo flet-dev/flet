@@ -26,8 +26,8 @@ class OutlinedButtonControl extends StatelessWidget {
 
     String text = control.attrString("text", "")!;
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
-    Color? iconColor =
-        HexColor.fromString(context, control.attrString("iconColor", "")!);
+    Color? iconColor = HexColor.fromString(
+        Theme.of(context), control.attrString("iconColor", "")!);
     var contentCtrls = children.where((c) => c.name == "content");
     bool autofocus = control.attrBool("autofocus", false)!;
     bool disabled = control.isDisabled || parentDisabled;

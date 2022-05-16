@@ -1,4 +1,3 @@
-import json
 from typing import Optional, Union
 
 from beartype import beartype
@@ -6,7 +5,6 @@ from beartype import beartype
 from flet import border_radius
 from flet.border_radius import BorderRadius
 from flet.control import Control, OptionalNumber
-from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
 
 try:
@@ -124,6 +122,4 @@ class Image(Control):
         self.__border_radius = value
         if value and isinstance(value, (int, float)):
             value = border_radius.all(value)
-        self._set_attr(
-            "borderRadius", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("borderRadius", value)

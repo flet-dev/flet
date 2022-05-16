@@ -93,8 +93,10 @@ class _TextFieldControlState extends State<TextFieldControl> {
             _controller.text = value;
           }
 
-          var prefixControls = widget.children.where((c) => c.name == "prefix");
-          var suffixControls = widget.children.where((c) => c.name == "suffix");
+          var prefixControls =
+              widget.children.where((c) => c.name == "prefix" && c.isVisible);
+          var suffixControls =
+              widget.children.where((c) => c.name == "suffix" && c.isVisible);
 
           bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
           bool multiline =

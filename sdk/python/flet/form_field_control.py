@@ -1,4 +1,3 @@
-import json
 from typing import Optional, Union
 
 from beartype import beartype
@@ -6,7 +5,6 @@ from beartype import beartype
 from flet import padding
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, InputBorder, OptionalNumber, PaddingValue
-from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
 
 
@@ -122,9 +120,7 @@ class FormFieldControl(ConstrainedControl):
         self.__content_padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr(
-            "contentPadding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("contentPadding", value)
 
     # filled
     @property

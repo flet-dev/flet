@@ -1,11 +1,9 @@
-import json
 from typing import List, Optional
 
 from beartype import beartype
 
 from flet import padding
-from flet.control import Control, MainAxisAlignment, OptionalNumber, PaddingValue
-from flet.embed_json_encoder import EmbedJsonEncoder
+from flet.control import Control, PaddingValue
 from flet.ref import Ref
 
 try:
@@ -111,9 +109,7 @@ class Banner(Control):
         self.__leading_padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr(
-            "leadingPadding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("leadingPadding", value)
 
     # content
     @property
@@ -135,9 +131,7 @@ class Banner(Control):
         self.__content_padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr(
-            "contentPadding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("contentPadding", value)
 
     # actions
     @property
