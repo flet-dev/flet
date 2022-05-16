@@ -31,16 +31,14 @@ class TabsControl extends StatefulWidget {
 class _TabsControlState extends State<TabsControl>
     with TickerProviderStateMixin {
   List<String> _tabsIndex = [];
-  String? _value;
   TabController? _tabController;
+  int _selectedIndex = 0;
   dynamic _dispatch;
 
   @override
   void initState() {
     super.initState();
-    _tabsIndex = widget.children
-        .map((c) => c.attrString("key") ?? c.attrString("text", "")!)
-        .toList();
+    _tabsIndex = widget.children.map((c) => c.id).toList();
     _tabController = TabController(
         length: _tabsIndex.length,
         animationDuration: Duration(
@@ -53,11 +51,11 @@ class _TabsControlState extends State<TabsControl>
     if (_tabController!.indexIsChanging == true) {
       return;
     }
-    var value = _tabsIndex[_tabController!.index];
-    if (_value != value) {
-      debugPrint("Selected tab: $value");
+    var index = _tabController!.index;
+    if (_selectedIndex != index) {
+      debugPrint("Selected index: $index");
       List<Map<String, String>> props = [
-        {"i": widget.control.id, "value": value}
+        {"i": widget.control.id, "selectedindex": index.toString()}
       ];
       _dispatch(
           UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
@@ -65,22 +63,19 @@ class _TabsControlState extends State<TabsControl>
       ws.pageEventFromWeb(
           eventTarget: widget.control.id,
           eventName: "change",
-          eventData: value);
+          eventData: index.toString());
+      _selectedIndex = index;
     }
-    _value = value;
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("TabsControl build: ${widget.control.id}");
 
-    var tabsIndex = widget.children
-        .map((c) => c.attrString("key") ?? c.attrString("text", "")!)
-        .toList();
+    var tabsIndex = widget.children.map((c) => c.id).toList();
     if (tabsIndex.length != _tabsIndex.length ||
         !tabsIndex.every((item) => _tabsIndex.contains(item))) {
-      _tabsIndex =
-          widget.children.map((c) => c.attrString("key", "")!).toList();
+      _tabsIndex = tabsIndex;
       _tabController = TabController(
           length: _tabsIndex.length,
           animationDuration: Duration(
@@ -91,14 +86,13 @@ class _TabsControlState extends State<TabsControl>
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    String? value = widget.control.attrString("value");
-    if (_value != value) {
-      _value = value;
+    var selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
 
-      int idx = _tabsIndex.indexOf(_value ?? "");
-      if (idx != -1) {
-        _tabController!.index = idx;
-      }
+    if (selectedIndex > -1 &&
+        selectedIndex < tabsIndex.length &&
+        _selectedIndex != selectedIndex) {
+      _selectedIndex = selectedIndex;
+      _tabController!.index = selectedIndex;
     }
 
     var tabs = StoreConnector<AppState, ControlsViewModel>(

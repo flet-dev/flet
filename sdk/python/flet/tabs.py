@@ -15,12 +15,9 @@ class Tab(Control):
         content: Control = None,
         tab_content: Control = None,
         ref: Ref = None,
-        key: str = None,
         icon: str = None,
     ):
         Control.__init__(self, ref=ref)
-        assert key or text, "key or text must be specified"
-        self.key = key
         self.text = text
         self.icon = icon
         self.__content: Control = None
@@ -40,15 +37,6 @@ class Tab(Control):
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
-
-    # key
-    @property
-    def key(self):
-        return self._get_attr("key")
-
-    @key.setter
-    def key(self, value):
-        self._set_attr("key", value)
 
     # text
     @property
@@ -101,7 +89,7 @@ class Tabs(ConstrainedControl):
         #
         # Tabs-specific
         tabs: List[Tab] = None,
-        value: str = None,
+        selected_index: int = None,
         animation_duration: int = None,
         on_change=None,
     ):
@@ -119,7 +107,7 @@ class Tabs(ConstrainedControl):
         )
 
         self.tabs = tabs
-        self.value = value
+        self.selected_index = selected_index
         self.animation_duration = animation_duration
         self.on_change = on_change
 
@@ -139,7 +127,6 @@ class Tabs(ConstrainedControl):
     def tabs(self, value: Optional[List[Tab]]):
         value = value or []
         self.__tabs = value
-        self.value = value and (value[0].key or value[0].text) or ""
 
     # on_change
     @property
@@ -150,23 +137,15 @@ class Tabs(ConstrainedControl):
     def on_change(self, handler):
         self._add_event_handler("change", handler)
 
-    # value
+    # selected_index
     @property
-    def value(self):
-        return self._get_attr("value")
+    def selected_index(self):
+        return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
-    @value.setter
+    @selected_index.setter
     @beartype
-    def value(self, value: Optional[str]):
-        if not value:
-            assert (
-                not self.tabs
-            ), "Setting an empty value is only allowed if you have no tabs"
-        else:
-            assert any(
-                value in keys for keys in [(tab.key, tab.text) for tab in self.tabs]
-            ), f"'{value}' is not a key for any tab"
-        self._set_attr("value", value or "")
+    def selected_index(self, value: Optional[int]):
+        self._set_attr("selectedIndex", value)
 
     # animation_duration
     @property

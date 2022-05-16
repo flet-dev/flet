@@ -58,11 +58,8 @@ class _NavigationRailControlState extends State<NavigationRailControl> {
   Widget build(BuildContext context) {
     debugPrint("NavigationRailControl build: ${widget.control.id}");
 
-    var selectedIndex = widget.control.attrInt("selectedIndex");
-
-    debugPrint(selectedIndex.toString());
-
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    var selectedIndex = widget.control.attrInt("selectedIndex");
 
     if (_selectedIndex != selectedIndex) {
       _selectedIndex = selectedIndex;
