@@ -1,20 +1,17 @@
-import 'package:flet_view/controls/app_bar.dart';
-import 'package:flet_view/models/control_view_model.dart';
-
-import '../models/control_type.dart';
-import '../models/controls_view_model.dart';
-import '../utils/desktop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../models/app_state.dart';
 import '../models/control.dart';
-import '../models/control_children_view_model.dart';
+import '../models/control_type.dart';
+import '../models/controls_view_model.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
+import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
 import '../utils/theme.dart';
 import '../widgets/screen_size.dart';
+import 'app_bar.dart';
 import 'create_control.dart';
 import 'scrollable_control.dart';
 

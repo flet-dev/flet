@@ -22,7 +22,10 @@ class ClipboardControl extends StatelessWidget {
       debugPrint("Clipboard JSON value: $value");
 
       var jv = json.decode(value);
-      Clipboard.setData(ClipboardData(text: jv["d"] as String?));
+      var text = jv["d"] as String?;
+      if (text != null) {
+        Clipboard.setData(ClipboardData(text: text));
+      }
     }
 
     return const SizedBox.shrink();
