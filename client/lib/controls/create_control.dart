@@ -1,3 +1,4 @@
+import 'card.dart';
 import 'navigation_rail.dart';
 
 import 'package:flutter/material.dart';
@@ -150,6 +151,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.container:
           return ContainerControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.card:
+          return CardControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
