@@ -122,8 +122,8 @@ class _TabsControlState extends State<TabsControl>
                 var text = tabView.control.attrString("text");
                 var icon =
                     getMaterialIcon(tabView.control.attrString("icon", "")!);
-                var tabContentCtrls =
-                    tabView.children.where((c) => c.name == "tab_content");
+                var tabContentCtrls = tabView.children
+                    .where((c) => c.name == "tab_content" && c.isVisible);
 
                 Widget tabChild;
                 List<Widget> widgets = [];
@@ -159,8 +159,8 @@ class _TabsControlState extends State<TabsControl>
                   child: TabBarView(
                       controller: _tabController,
                       children: viewModel.controlViews.map((tabView) {
-                        var contentCtrls =
-                            tabView.children.where((c) => c.name == "content");
+                        var contentCtrls = tabView.children
+                            .where((c) => c.name == "content" && c.isVisible);
                         if (contentCtrls.isEmpty) {
                           return const SizedBox.shrink();
                         }

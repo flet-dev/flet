@@ -75,8 +75,10 @@ class _NavigationRailControlState extends State<NavigationRailControl> {
                 widget.control.attrString("labelType", "")!.toLowerCase(),
             orElse: () => NavigationRailLabelType.all);
 
-    var leadingCtrls = widget.children.where((c) => c.name == "leading");
-    var trailingCtrls = widget.children.where((c) => c.name == "trailing");
+    var leadingCtrls =
+        widget.children.where((c) => c.name == "leading" && c.isVisible);
+    var trailingCtrls =
+        widget.children.where((c) => c.name == "trailing" && c.isVisible);
 
     var extended = widget.control.attrBool("extended", false)!;
 

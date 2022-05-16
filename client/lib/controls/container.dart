@@ -28,7 +28,8 @@ class ContainerControl extends StatelessWidget {
 
     var bgColor = HexColor.fromString(
         Theme.of(context), control.attrString("bgColor", "")!);
-    var contentCtrls = children.where((c) => c.name == "content");
+    var contentCtrls =
+        children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = control.isDisabled || parentDisabled;
 
     return constrainedControl(
