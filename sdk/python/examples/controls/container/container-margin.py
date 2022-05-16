@@ -15,7 +15,7 @@ from flet import (
 
 
 def main(page: Page):
-    page.title = "Containers with different padding"
+    page.title = "Containers with different margins"
 
     c1 = Container(
         content=ElevatedButton("container_1"),
