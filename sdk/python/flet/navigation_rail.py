@@ -17,7 +17,6 @@ class NavigationRailDestination(Control):
     def __init__(
         self,
         ref: Ref = None,
-        key: str = None,
         icon: str = None,
         icon_content: Control = None,
         selected_icon: str = None,
@@ -27,8 +26,6 @@ class NavigationRailDestination(Control):
         padding: PaddingValue = None,
     ):
         Control.__init__(self, ref=ref)
-        assert key or label, "key or label must be specified"
-        self.key = key
         self.label = label
         self.icon = icon
         self.__icon_content: Control = None
@@ -57,15 +54,6 @@ class NavigationRailDestination(Control):
             )
             children.append(self.__selected_icon_content)
         return children
-
-    # key
-    @property
-    def key(self):
-        return self._get_attr("key")
-
-    @key.setter
-    def key(self, value):
-        self._set_attr("key", value)
 
     # icon
     @property
@@ -154,7 +142,7 @@ class NavigationRail(ConstrainedControl):
         #
         # NavigationRail-specific
         destinations: List[NavigationRailDestination] = None,
-        value: str = None,
+        selected_index: int = None,
         extended: bool = None,
         label_type: NavigationRailLabelType = None,
         bgcolor: str = None,
@@ -179,7 +167,7 @@ class NavigationRail(ConstrainedControl):
         )
 
         self.destinations = destinations
-        self.value = value
+        self.selected_index = selected_index
         self.extended = extended
         self.label_type = label_type
         self.bgcolor = bgcolor
@@ -216,7 +204,6 @@ class NavigationRail(ConstrainedControl):
     def destinations(self, value: Optional[List[NavigationRailDestination]]):
         value = value or []
         self.__destinations = value
-        self.value = value and value[0].key or ""
 
     # on_change
     @property
@@ -227,15 +214,15 @@ class NavigationRail(ConstrainedControl):
     def on_change(self, handler):
         self._add_event_handler("change", handler)
 
-    # value
+    # selected_index
     @property
-    def value(self):
-        return self._get_attr("value")
+    def selected_index(self):
+        return self._get_attr("selectedIndex", data_type="int")
 
-    @value.setter
+    @selected_index.setter
     @beartype
-    def value(self, value: Optional[str]):
-        self._set_attr("value", value)
+    def selected_index(self, value: Optional[int]):
+        self._set_attr("selectedIndex", value)
 
     # label_type
     @property

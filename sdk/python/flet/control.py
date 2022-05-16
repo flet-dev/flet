@@ -106,6 +106,8 @@ class Control:
             return s_val.lower() == "true"
         elif data_type == "float" and s_val != None and isinstance(s_val, str):
             return float(s_val)
+        elif data_type == "int" and s_val != None and isinstance(s_val, str):
+            return int(s_val)
         else:
             return s_val
 

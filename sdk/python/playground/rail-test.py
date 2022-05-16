@@ -14,23 +14,40 @@ from flet import (
     icons,
 )
 from flet.divider import Divider
+from flet.vertical_divider import VerticalDivider
 
 logging.basicConfig(level=logging.DEBUG)
 
 
 def main(page: Page):
     def fab_click(e):
-        rail.value = "third"
+        rail.selected_index = 2
+        select_page()
         page.update()
 
+    pages = [
+        Text("First", visible=False),
+        Text("Second!", visible=False),
+        Text("Settings", visible=False),
+    ]
+
+    def select_page():
+        print(f"Selected index: {rail.selected_index}")
+        for index, p in enumerate(pages):
+            p.visible = True if index == rail.selected_index else False
+        page.update()
+
+    def dest_change(e):
+        select_page()
+
     rail = NavigationRail(
-        value="Second",
+        selected_index=0,
         label_type="all",
         # extended=True,
         min_width=100,
         min_extended_width=400,
         leading=FloatingActionButton(icon=icons.CREATE, text="Add", on_click=fab_click),
-        trailing=Text("Something"),
+        # trailing=Text("Something"),
         group_alignment=-0.9,
         destinations=[
             NavigationRailDestination(
@@ -42,13 +59,24 @@ def main(page: Page):
                 label="Second",
             ),
             NavigationRailDestination(
-                key="third", icon=icons.STAR_BORDER, label_content=Text("Third")
+                icon=icons.SETTINGS, label_content=Text("Settings")
             ),
         ],
-        on_change=lambda e: print(f"Selected tab: {e.control.value}"),
+        on_change=dest_change,
     )
 
-    page.add(Row([rail], expand=True))
+    select_page()
+
+    page.add(
+        Row(
+            [
+                rail,
+                VerticalDivider(width=1),
+                Column(pages, alignment="start", expand=True),
+            ],
+            expand=True,
+        )
+    )
 
 
 flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)

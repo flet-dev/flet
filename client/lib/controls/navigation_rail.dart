@@ -31,63 +31,41 @@ class NavigationRailControl extends StatefulWidget {
 }
 
 class _NavigationRailControlState extends State<NavigationRailControl> {
-  List<String> _destIndex = [];
-  String? _value;
   int? _selectedIndex;
   dynamic _dispatch;
 
   @override
   void initState() {
     super.initState();
-    _destIndex = widget.children
-        .where((c) => c.isVisible && c.name == null)
-        .map((c) => c.attrString("key") ?? c.attrString("label", "")!)
-        .toList();
   }
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
-    var value = _destIndex[index];
-    if (_value != value) {
-      debugPrint("Selected dest: $value");
-      List<Map<String, String>> props = [
-        {"i": widget.control.id, "value": value}
-      ];
-      _dispatch(
-          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      ws.updateControlProps(props: props);
-      ws.pageEventFromWeb(
-          eventTarget: widget.control.id,
-          eventName: "change",
-          eventData: value);
-    }
-    _value = value;
+    debugPrint("Selected index: $_selectedIndex");
+    List<Map<String, String>> props = [
+      {"i": widget.control.id, "selectedindex": _selectedIndex.toString()}
+    ];
+    _dispatch(
+        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+    ws.updateControlProps(props: props);
+    ws.pageEventFromWeb(
+        eventTarget: widget.control.id,
+        eventName: "change",
+        eventData: _selectedIndex.toString());
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("NavigationRailControl build: ${widget.control.id}");
 
-    var destIndex = widget.children
-        .where((c) => c.isVisible && c.name == null)
-        .map((c) => c.attrString("key") ?? c.attrString("label", "")!)
-        .toList();
-    if (destIndex.length != _destIndex.length ||
-        !destIndex.every((item) => _destIndex.contains(item))) {
-      _destIndex = destIndex;
-    }
+    var selectedIndex = widget.control.attrInt("selectedIndex");
+
+    debugPrint(selectedIndex.toString());
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    String? value = widget.control.attrString("value");
-
-    if (_value != value) {
-      _value = value;
-
-      int idx = _destIndex.indexOf(_value ?? "");
-      if (idx != -1) {
-        _selectedIndex = idx;
-      }
+    if (_selectedIndex != selectedIndex) {
+      _selectedIndex = selectedIndex;
     }
 
     NavigationRailLabelType? labelType = NavigationRailLabelType.values
