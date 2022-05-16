@@ -31,6 +31,7 @@ class ListTile(ConstrainedControl):
         trailing: Control = None,
         is_three_line: bool = None,
         selected: bool = None,
+        dense: bool = None,
         autofocus: bool = None,
         on_click=None,
     ):
@@ -54,6 +55,7 @@ class ListTile(ConstrainedControl):
         self.trailing = trailing
         self.is_three_line = is_three_line
         self.selected = selected
+        self.dense = dense
         self.autofocus = autofocus
         self.on_click = on_click
 
@@ -148,6 +150,16 @@ class ListTile(ConstrainedControl):
     @beartype
     def selected(self, value: Optional[bool]):
         self._set_attr("selected", value)
+
+    # dense
+    @property
+    def dense(self):
+        return self._get_attr("dense", data_type="bool", def_value=False)
+
+    @dense.setter
+    @beartype
+    def dense(self, value: Optional[bool]):
+        self._set_attr("dense", value)
 
     # autofocus
     @property
