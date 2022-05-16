@@ -1,4 +1,5 @@
 import datetime as dt
+import json
 import threading
 from difflib import SequenceMatcher
 from typing import Union
@@ -6,6 +7,7 @@ from typing import Union
 from beartype import beartype
 from beartype.typing import List, Optional
 
+from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.margin import Margin
 from flet.padding import Padding
 from flet.protocol import Command
@@ -137,6 +139,14 @@ class Control:
 
         if orig_val == None or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
+
+    def _set_attr_json(self, name, value):
+        self._set_attr(
+            name,
+            json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))
+            if value
+            else None,
+        )
 
     # event_handlers
     @property

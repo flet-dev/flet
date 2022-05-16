@@ -1,11 +1,9 @@
-import json
 from typing import List, Optional
 
 from beartype import beartype
 
 from flet import padding
-from flet.control import Control, MainAxisAlignment, OptionalNumber, PaddingValue
-from flet.embed_json_encoder import EmbedJsonEncoder
+from flet.control import Control, MainAxisAlignment, PaddingValue
 from flet.ref import Ref
 
 try:
@@ -115,9 +113,7 @@ class AlertDialog(Control):
         self.__title_padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr(
-            "titlePadding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("titlePadding", value)
 
     # content
     @property
@@ -139,9 +135,7 @@ class AlertDialog(Control):
         self.__content_padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr(
-            "contentPadding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("contentPadding", value)
 
     # actions
     @property
@@ -163,9 +157,7 @@ class AlertDialog(Control):
         self.__actions_padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr(
-            "actionsPadding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("actionsPadding", value)
 
     # actions_alignment
     @property

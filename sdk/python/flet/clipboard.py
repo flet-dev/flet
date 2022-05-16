@@ -1,12 +1,10 @@
 import dataclasses
-import json
 import time
 from typing import Optional
 
 from beartype._decor.main import beartype
 
 from flet.control import Control
-from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
 
 
@@ -49,4 +47,4 @@ class Clipboard(Control):
     def value(self, value: Optional[str]):
         self.__value = value
         cd = ClipboardData(str(time.time()), value)
-        self._set_attr("value", json.dumps(cd, cls=EmbedJsonEncoder) if value else None)
+        self._set_attr_json("value", cd)

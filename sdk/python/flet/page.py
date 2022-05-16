@@ -20,7 +20,6 @@ from flet.control import (
     ScrollMode,
 )
 from flet.control_event import ControlEvent
-from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.floating_action_button import FloatingActionButton
 from flet.protocol import Command
 from flet.snack_bar import SnackBar
@@ -304,9 +303,7 @@ class Page(Control):
         self.__padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr(
-            "padding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("padding", value)
 
     # bgcolor
     @property
@@ -418,7 +415,7 @@ class Page(Control):
         self.__theme = value
         if self.__theme:
             self.__theme.brightness = "light"
-        self._set_attr("theme", json.dumps(value, default=vars) if value else None)
+        self._set_attr_json("theme", value)
 
     # dark_theme
     @property
@@ -431,7 +428,7 @@ class Page(Control):
         self.__dark_theme = value
         if self.__dark_theme:
             self.__dark_theme.brightness = "dark"
-        self._set_attr("darkTheme", json.dumps(value, default=vars) if value else None)
+        self._set_attr_json("darkTheme", value)
 
     # scroll
     @property

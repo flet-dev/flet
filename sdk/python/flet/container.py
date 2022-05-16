@@ -1,4 +1,3 @@
-import json
 from typing import Optional, Union
 
 from beartype import beartype
@@ -9,7 +8,6 @@ from flet.border import Border
 from flet.border_radius import BorderRadius
 from flet.constrained_control import ConstrainedControl
 from flet.control import BorderStyle, Control, MarginValue, OptionalNumber, PaddingValue
-from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
 
 try:
@@ -81,7 +79,7 @@ class Container(ConstrainedControl):
     @beartype
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
-        self._set_attr("alignment", json.dumps(value, default=vars) if value else None)
+        self._set_attr_json("alignment", value)
 
     # padding
     @property
@@ -94,9 +92,7 @@ class Container(ConstrainedControl):
         self.__padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr(
-            "padding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("padding", value)
 
     # margin
     @property
@@ -109,9 +105,7 @@ class Container(ConstrainedControl):
         self.__margin = value
         if value and isinstance(value, (int, float)):
             value = margin.all(value)
-        self._set_attr(
-            "margin", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("margin", value)
 
     # bgcolor
     @property
@@ -131,9 +125,7 @@ class Container(ConstrainedControl):
     @beartype
     def border(self, value: Optional[Border]):
         self.__border = value
-        self._set_attr(
-            "border", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("border", value)
 
     # border_radius
     @property
@@ -146,9 +138,7 @@ class Container(ConstrainedControl):
         self.__border_radius = value
         if value and isinstance(value, (int, float)):
             value = border_radius.all(value)
-        self._set_attr(
-            "borderRadius", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("borderRadius", value)
 
     # content
     @property

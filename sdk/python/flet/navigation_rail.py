@@ -1,4 +1,3 @@
-import json
 from typing import Literal, Optional, Union
 
 from beartype import beartype
@@ -7,7 +6,6 @@ from beartype.typing import List
 from flet import padding
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber, PaddingValue
-from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.ref import Ref
 
 NavigationRailLabelType = Literal[None, "none", "all", "selected"]
@@ -123,9 +121,7 @@ class NavigationRailDestination(Control):
         self.__padding = value
         if value and isinstance(value, (int, float)):
             value = padding.all(value)
-        self._set_attr(
-            "padding", json.dumps(value, cls=EmbedJsonEncoder) if value else None
-        )
+        self._set_attr_json("padding", value)
 
 
 class NavigationRail(ConstrainedControl):
