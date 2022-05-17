@@ -114,4 +114,4 @@ def main(page: Page):
     page.add(form)
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(name="test1", port=8550, target=main, view=flet.FLET_APP)
