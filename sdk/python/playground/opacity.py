@@ -1,20 +1,10 @@
-import logging
-from datetime import datetime
 from time import sleep
 
 import flet
-from flet import Column, ElevatedButton, Image, Page, Row, Text, Theme, padding
-from flet.stack import Stack
-
-logging.basicConfig(level=logging.DEBUG)
+from flet import Image, Page, Row, Stack, Text
 
 
 def main(page: Page):
-    page.title = "Images Example"
-    page.theme_mode = "light"
-    page.padding = padding.symmetric(20, 100)
-    page.update()
-
     st = Stack(
         [
             Image(
@@ -30,7 +20,7 @@ def main(page: Page):
                         color="white",
                         size=40,
                         weight="bold",
-                        opacity=0.3,
+                        opacity=0.5,
                     )
                 ],
                 alignment="center",
@@ -43,4 +33,4 @@ def main(page: Page):
     page.add(st)
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(target=main, view=flet.WEB_BROWSER)

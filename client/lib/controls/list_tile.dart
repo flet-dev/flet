@@ -35,9 +35,10 @@ class ListTileControl extends StatelessWidget {
     bool dense = control.attrBool("dense", false)!;
     bool isThreeLine = control.attrBool("isThreeLine", false)!;
     bool autofocus = control.attrBool("autofocus", false)!;
+    bool onclick = control.attrBool("onclick", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
-    Function()? onPressed = disabled
+    Function()? onPressed = disabled || !onclick
         ? null
         : () {
             debugPrint("ListTile ${control.id} clicked!");

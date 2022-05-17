@@ -1,39 +1,20 @@
-import logging
-from datetime import datetime
-from time import sleep
-
 import flet
-from flet import (
-    Column,
-    Container,
-    ElevatedButton,
-    Image,
-    Page,
-    Row,
-    Text,
-    Theme,
-    border_radius,
-)
-from flet.grid_view import GridView
-from flet.stack import Stack
-
-logging.basicConfig(level=logging.DEBUG)
+from flet import GridView, Image, Page, border_radius
 
 
 def main(page: Page):
-    page.title = "Images Example"
-    page.theme_mode = "light"
+    page.title = "GridView Example"
+    page.theme_mode = "dark"
     page.padding = 50
     page.update()
 
-    img = Image(
-        src=f"/icons/Icon-512.png",
-        width=100,
-        height=100,
-        fit="contain",
-    )
     images = GridView(
-        expand=1, horizontal=False, runs_count=2, spacing=5, run_spacing=5
+        expand=1,
+        runs_count=5,
+        max_extent=150,
+        child_aspect_ratio=1.0,
+        spacing=5,
+        run_spacing=5,
     )
 
     page.add(images)
@@ -41,9 +22,7 @@ def main(page: Page):
     for i in range(0, 60):
         images.controls.append(
             Image(
-                src=f"https://picsum.photos/200/200?{i}",
-                width=200,
-                height=200,
+                src=f"https://picsum.photos/150/150?{i}",
                 fit="none",
                 repeat="noRepeat",
                 border_radius=border_radius.all(10),
@@ -52,4 +31,4 @@ def main(page: Page):
     page.update()
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(target=main, view=flet.WEB_BROWSER)
