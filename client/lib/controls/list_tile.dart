@@ -54,6 +54,7 @@ class ListTileControl extends StatelessWidget {
       selected: selected,
       dense: dense,
       onTap: onPressed,
+      enabled: !disabled,
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled)
           : null,

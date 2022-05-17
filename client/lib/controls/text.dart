@@ -18,6 +18,7 @@ class TextControl extends StatelessWidget {
 
     String text = control.attrString("value", "")!;
     bool noWrap = control.attrBool("noWrap", false)!;
+    int? maxLines = control.attrInt("maxLines");
 
     TextStyle? style;
     var styleName = control.attrString("style", null);
@@ -50,11 +51,13 @@ class TextControl extends StatelessWidget {
         control.attrBool("selectable", false)!
             ? SelectableText(
                 text,
+                maxLines: maxLines,
                 style: style,
                 textAlign: textAlign,
               )
             : Text(
                 text,
+                maxLines: maxLines,
                 softWrap: !noWrap,
                 style: style,
                 textAlign: textAlign,
