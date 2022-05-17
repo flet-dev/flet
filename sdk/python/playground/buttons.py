@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.DEBUG)
 def main(page: Page):
     page.title = "Buttons Example"
     page.theme_mode = "light"
-    page.theme = theme.Theme(color_scheme_seed=colors.DEEP_ORANGE, use_material3=True)
+    # page.theme = theme.Theme(color_scheme_seed=colors.DEEP_ORANGE, use_material3=True)
     page.padding = 50
     page.floating_action_button = FloatingActionButton(icon=icons.ADD)
 
@@ -37,7 +37,7 @@ def main(page: Page):
             scroll=True,
             controls=[
                 Text("Elevated button", style="headlineMedium"),
-                ElevatedButton("Normal button"),
+                ElevatedButton("Elevated button"),
                 ElevatedButton("Disabled button", disabled=True),
                 ElevatedButton(
                     "Button with icon and tooltip",
@@ -100,7 +100,7 @@ def main(page: Page):
                 #
                 #
                 Text("Outlined button", style="headlineMedium"),
-                OutlinedButton("Normal button"),
+                OutlinedButton("Outlined button"),
                 OutlinedButton("Disabled button", disabled=True),
                 OutlinedButton("Button with icon", icon="chair_outlined"),
                 OutlinedButton(
@@ -120,7 +120,7 @@ def main(page: Page):
                     ),
                 ),
                 Text("Text button", style="headlineMedium"),
-                TextButton("Normal button"),
+                TextButton("Text button"),
                 TextButton("Disabled button", disabled=True),
                 TextButton("Button with icon", icon="chair_outlined"),
                 TextButton(

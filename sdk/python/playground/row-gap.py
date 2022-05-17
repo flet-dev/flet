@@ -46,4 +46,4 @@ def main(page: Page):
     page.add(Column([Text("Spacing between items"), gap_slider]), row)
 
 
-flet.app(target=main, view=flet.WEB_BROWSER)
+flet.app(target=main)
