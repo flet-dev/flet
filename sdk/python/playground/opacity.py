@@ -1,5 +1,3 @@
-from time import sleep
-
 import flet
 from flet import Image, Page, Row, Stack, Text
 
