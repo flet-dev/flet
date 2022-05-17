@@ -197,7 +197,7 @@ class Control:
     # opacity
     @property
     def opacity(self):
-        return self._get_attr("opacity")
+        return self._get_attr("opacity", data_type="float", def_value=1.0)
 
     @opacity.setter
     def opacity(self, value):

@@ -52,6 +52,7 @@ class Text(ConstrainedControl):
         weight: FontWeight = None,
         italic: bool = None,
         style: str = None,
+        max_lines: int = None,
         overflow: TextOverflow = None,
         selectable: bool = None,
         no_wrap: bool = None,
@@ -79,6 +80,7 @@ class Text(ConstrainedControl):
         self.italic = italic
         self.no_wrap = no_wrap
         self.style = style
+        self.max_lines = max_lines
         self.overflow = overflow
         self.selectable = selectable
         self.color = color
@@ -165,6 +167,16 @@ class Text(ConstrainedControl):
     @beartype
     def selectable(self, value: Optional[bool]):
         self._set_attr("selectable", value)
+
+    # max_lines
+    @property
+    def max_lines(self):
+        return self._get_attr("maxLines")
+
+    @max_lines.setter
+    @beartype
+    def max_lines(self, value: Optional[int]):
+        self._set_attr("maxLines", value)
 
     # overflow
     @property

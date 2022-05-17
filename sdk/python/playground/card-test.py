@@ -1,22 +1,32 @@
 import flet
-from flet import Card, Container, Text
+from flet import Card, Column, Container, Icon, ListTile, Row, Text, TextButton, icons
 
 
 def main(page):
-    page.title = "Card Examples"
-    # page.theme_mode = "dark"
+    page.title = "Card Example"
     page.add(
         Card(
             content=Container(
-                content=Text("A regular card with padded content"), padding=10
-            ),
-            margin=0,
-        ),
-        Card(
-            content=Container(content=Text("A card with custom elevation"), padding=10),
-            elevation=5,
-        ),
+                content=Column(
+                    [
+                        ListTile(
+                            leading=Icon(icons.ALBUM),
+                            title=Text("The Enchanted Nightingale"),
+                            subtitle=Text(
+                                "Music by Julie Gable. Lyrics by Sidney Stein."
+                            ),
+                        ),
+                        Row(
+                            [TextButton("Buy tickets"), TextButton("Listen")],
+                            alignment="end",
+                        ),
+                    ]
+                ),
+                width=400,
+                padding=10,
+            )
+        )
     )
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(target=main, view=flet.WEB_BROWSER)

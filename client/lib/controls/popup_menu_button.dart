@@ -1,10 +1,10 @@
-import 'package:flet_view/utils/icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
+import '../utils/icons.dart';
 import '../web_socket_client.dart';
 import 'create_control.dart';
 
