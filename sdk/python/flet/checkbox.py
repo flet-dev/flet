@@ -66,7 +66,7 @@ class Checkbox(ConstrainedControl):
     # value
     @property
     def value(self):
-        return self._get_attr("value", data_type="bool", def_value=False)
+        return self._get_attr("value", data_type="bool?", def_value=False if not self.tristate else None)
 
     @value.setter
     @beartype

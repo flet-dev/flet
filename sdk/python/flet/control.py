@@ -106,6 +106,13 @@ class Control:
         s_val = self.__attrs[name][0]
         if data_type == "bool" and s_val != None and isinstance(s_val, str):
             return s_val.lower() == "true"
+        elif data_type == "bool?" and isinstance(s_val, str):
+            if s_val.lower() == "true":
+                return True
+            elif s_val.lower() == "false":
+                return False
+            else:
+                return def_value
         elif data_type == "float" and s_val != None and isinstance(s_val, str):
             return float(s_val)
         elif data_type == "int" and s_val != None and isinstance(s_val, str):
