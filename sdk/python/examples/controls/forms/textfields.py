@@ -1,34 +1,9 @@
-import logging
-from datetime import datetime
 from time import sleep
 
 import flet
-from flet import (
-    Column,
-    Dropdown,
-    ElevatedButton,
-    Image,
-    Page,
-    Row,
-    Text,
-    Theme,
-    border_radius,
-    dropdown,
-    icons,
-    padding,
-)
-from flet.checkbox import Checkbox
-from flet.container import Container
-from flet.icon import Icon
-from flet.list_view import ListView
+from flet import Column, Page, ProgressBar, Text, TextField, icons, padding
 from flet.progress_bar import ProgressBar
-from flet.radio import Radio
-from flet.radio_group import RadioGroup
-from flet.stack import Stack
-from flet.switch import Switch
 from flet.textfield import TextField
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 def main(page: Page):
@@ -114,4 +89,4 @@ def main(page: Page):
     page.add(form)
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.FLET_APP)
+flet.app(target=main, view=flet.WEB_BROWSER)

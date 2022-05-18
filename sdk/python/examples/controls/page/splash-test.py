@@ -19,4 +19,4 @@ def main(page):
     page.add(btn)
 
 
-flet.app(target=main)
+flet.app(target=main, view=flet.WEB_BROWSER)

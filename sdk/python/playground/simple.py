@@ -1,13 +1,7 @@
-import json
-import logging
 from datetime import datetime
-from msilib.schema import Icon
 
 import flet
-from flet import Column, ElevatedButton, Icon, Page, Row, Text, Theme
-from flet.stack import Stack
-
-logging.basicConfig(level=logging.DEBUG)
+from flet import Column, ElevatedButton, Icon, Page, Row, Stack, Text, Theme
 
 # theme = Theme(color_scheme_seed="red300", brightness="light")
 # j = json.dumps(theme, default=vars)
@@ -56,4 +50,4 @@ def main(page: Page):
     )
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(target=main, view=flet.WEB_BROWSER)

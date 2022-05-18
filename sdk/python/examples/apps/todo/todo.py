@@ -92,7 +92,7 @@ class TodoApp:
         self.new_task = TextField(hint_text="Whats needs to be done?", expand=True)
         self.tasks_view = Column()
         self.filter = Tabs(
-            selected_index="all",
+            selected_index=0,
             on_change=self.tabs_changed,
             tabs=[Tab(text="all"), Tab(text="active"), Tab(text="completed")],
         )
@@ -129,7 +129,7 @@ class TodoApp:
         )
 
     def update(self):
-        status = self.filter.value
+        status = self.filter.tabs[self.filter.selected_index].text
         count = 0
         for task in self.tasks:
             task.view.visible = (
@@ -177,4 +177,4 @@ def main(page: Page):
     page.add(app.view)
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(target=main, view=flet.WEB_BROWSER)
