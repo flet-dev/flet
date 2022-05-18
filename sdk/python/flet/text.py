@@ -3,7 +3,7 @@ from typing import Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber, TextAlign
+from flet.control import OptionalNumber, TextAlign
 from flet.ref import Ref
 
 try:
@@ -27,8 +27,6 @@ FontWeight = Literal[
 ]
 
 TextOverflow = Literal[None, "clip", "ellipsis", "fade", "visible"]
-
-VerticalAlign = Literal[None, "top", "center", "bottom"]
 
 
 class Text(ConstrainedControl):
