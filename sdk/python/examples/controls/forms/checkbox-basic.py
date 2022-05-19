@@ -1,9 +1,6 @@
-import logging
-
 import flet
 from flet import Checkbox, ElevatedButton, Text
 
-logging.basicConfig(level=logging.INFO)
 
 def main(page):
     def button_clicked(e):
