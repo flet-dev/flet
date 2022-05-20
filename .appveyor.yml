@@ -165,9 +165,10 @@ for:
     build_script:
       # Flutter iOS client
       - cd client
+      - flutter test
+      - cd ios
       - ruby --version
       - bundle install --path vendor/bundle
-      - flutter test
       - bundle exec fastlane build
 
     # artifacts:
