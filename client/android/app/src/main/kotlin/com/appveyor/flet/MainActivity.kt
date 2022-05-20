@@ -1,4 +1,4 @@
-package com.example.flet_view
+package com.appveyor.flet
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flet_view">
+    package="com.appveyor.flet">
    <application
-        android:label="flet_view"
+        android:label="flet"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
