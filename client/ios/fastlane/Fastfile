@@ -28,6 +28,9 @@ platform :ios do
       sh("flutter", "packages", "get")
       sh("flutter", "clean")
       sh("flutter", "build", "ios", "--release", "--no-codesign")
+
+      match(type: "development")
+      gym(export_method: "development")
     end    
   end
 end
