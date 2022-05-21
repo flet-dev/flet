@@ -90,13 +90,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_launcher_icons:
+  flutter_launcher_icons_maker:
     dependency: "direct dev"
     description:
-      name: flutter_launcher_icons
+      name: flutter_launcher_icons_maker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.2"
+    version: "0.10.2"
   flutter_lints:
     dependency: "direct dev"
     description:

@@ -50,7 +50,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
 
-  flutter_launcher_icons: "^0.9.2"
+  flutter_launcher_icons_maker: "^0.10.1"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -92,3 +92,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_icons:
+  #android: true
+  ios: true
+  image_path: "assets/icon/flet-ios-1024.png"
