@@ -23,14 +23,20 @@ platform :ios do
 
   desc "Run build"
   lane :build do
-    puts("Hi there!")
     Dir.chdir "../.." do
       sh("flutter", "packages", "get")
       sh("flutter", "clean")
       sh("flutter", "build", "ios", "--release", "--no-codesign")
     end
 
-    match(type: "development")
-    gym(export_method: "development")
+    match(type: "adhoc")
+    gym(
+      export_method: "ad-hoc",
+      export_options: {
+        provisioningProfiles: { 
+          "com.appveyor.flet" => "match AdHoc com.appveyor.flet"
+        }
+      }
+    )
   end
 end
