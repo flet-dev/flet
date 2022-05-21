@@ -32,6 +32,7 @@ platform :ios do
     match(type: "adhoc")
     gym(
       export_method: "ad-hoc",
+      xcargs: "-allowProvisioningUpdates",
       export_options: {
         provisioningProfiles: { 
           "com.appveyor.flet" => "match AdHoc com.appveyor.flet"
