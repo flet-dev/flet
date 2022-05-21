@@ -173,9 +173,9 @@ for:
       - bundle install --path vendor/bundle
       - bundle exec fastlane build
 
-    # artifacts:
-    #   - path: client/flet.app.tar.gz
-    #     name: flet_macos
+    artifacts:
+      - path: client/ios/flet.ipa
+        name: flet_ios
 
   # ======================================
   #      Linux
