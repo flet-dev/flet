@@ -42,7 +42,7 @@ platform :ios do
   lane :build_adhoc do
     gym(
       export_method: "ad-hoc",
-      output_directory: "build/ad-hoc"
+      output_directory: "build/ad-hoc",
       output_name: "flet.ipa",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
@@ -57,7 +57,7 @@ platform :ios do
   lane :build_appstore do
     gym(
       export_method: "appstore",
-      output_directory: "build/appstore"
+      output_directory: "build/appstore",
       output_name: "flet.ipa",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
