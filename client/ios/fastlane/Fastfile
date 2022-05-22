@@ -27,22 +27,22 @@ platform :ios do
 
   desc "Build Flutter without codesign"
   lane :build_flutter do
+    increment_build_number(
+      build_number: "$APPVEYOR_BUILD_NUMBER"
+    )
+
     Dir.chdir "../.." do
       sh("flutter", "packages", "get")
       sh("flutter", "clean")
       sh("flutter", "build", "ios", "--release", "--no-codesign")
-    end
-
-    increment_build_number(
-      build_number: "$APPVEYOR_BUILD_NUMBER"
-    )      
+    end   
   end
 
   desc "Build for Ad-hoc"
   lane :build_adhoc do
     gym(
       export_method: "ad-hoc",
-      output_directory: "build/ad-hoc",
+      output_directory: "build/adhoc",
       output_name: "flet.ipa",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
@@ -56,7 +56,7 @@ platform :ios do
   desc "Build for App Store"
   lane :build_appstore do
     gym(
-      export_method: "appstore",
+      export_method: "app-store",
       output_directory: "build/appstore",
       output_name: "flet.ipa",
       xcargs: "-allowProvisioningUpdates",
