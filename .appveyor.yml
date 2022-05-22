@@ -174,8 +174,10 @@ for:
       - bundle exec fastlane build
 
     artifacts:
-      - path: client/ios/flet.ipa
-        name: flet_ios
+      - path: client/ios/build/ad-hoc/flet.ipa
+        name: flet_ios_adhoc
+      - path: client/ios/build/appstore/flet.ipa
+        name: flet_ios_appstore
 
   # ======================================
   #      Linux
