@@ -70,6 +70,7 @@ platform :ios do
     app_store_connect_api_key
     deliver(
       skip_screenshots: true,
+      skip_metadata: true,
       submit_for_review: false,
       force: true
     )    
