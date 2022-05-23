@@ -27,8 +27,8 @@ platform :ios do
 
   desc "Build Flutter without codesign"
   lane :build_flutter do
-    increment_build_number(
-      build_number: "$APPVEYOR_BUILD_NUMBER"
+    increment_version_number(
+      version_number: "$FLET_PACKAGE_VERSION"
     )
 
     Dir.chdir "../.." do

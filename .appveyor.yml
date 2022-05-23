@@ -169,11 +169,19 @@ for:
       - ruby --version
       - bundle install --path vendor/bundle
       - sh: |
-          if [ -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]; then
+          if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
             bundle exec fastlane build_flutter      
           elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-            bundle exec fastlane upload_appstore
+            if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then
+                export FLET_PACKAGE_VERSION="${BASH_REMATCH[1]}"
+                echo "FLET_PACKAGE_VERSION: ${FLET_PACKAGE_VERSION}"
+                bundle exec fastlane upload_appstore
+            else
+                echo "Cannot extract version information from a tag."
+                exit 1
+            fi
           else
+            export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
             bundle exec fastlane build_ipa
           fi      
 
