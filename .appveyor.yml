@@ -163,6 +163,7 @@ for:
       - ruby --version
       - bundle install --path vendor/bundle
       - sh: |
+          export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
           if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
             bundle exec fastlane build_flutter      
           elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
@@ -175,7 +176,6 @@ for:
                 exit 1
             fi
           else
-            export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
             bundle exec fastlane build_ipa
           fi      
 
