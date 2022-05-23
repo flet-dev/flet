@@ -38,11 +38,13 @@ platform :ios do
     end   
   end
 
-  desc "Build for Ad-hoc"
-  lane :build_adhoc do
+  desc "Build for internal testing"
+  lane :build_ipa do
+    build_flutter
+
     gym(
       export_method: "ad-hoc",
-      output_directory: "build/adhoc",
+      output_directory: "build",
       output_name: "flet.ipa",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
@@ -53,11 +55,13 @@ platform :ios do
     )
   end
 
-  desc "Build for App Store"
-  lane :build_appstore do
+  desc "Upload to App Store"
+  lane :upload_appstore do
+    build_flutter
+
     gym(
       export_method: "app-store",
-      output_directory: "build/appstore",
+      output_directory: "build",
       output_name: "flet.ipa",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
@@ -75,12 +79,5 @@ platform :ios do
       submit_for_review: false,
       force: true
     )    
-  end
-
-  desc "Run build"
-  lane :build do
-    build_flutter
-#    build_adhoc
-    build_appstore
   end
 end

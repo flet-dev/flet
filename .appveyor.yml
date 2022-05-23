@@ -168,13 +168,18 @@ for:
       - cd ios
       - ruby --version
       - bundle install --path vendor/bundle
-      - bundle exec fastlane build
+      - sh: |
+          if [ -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]; then
+            bundle exec fastlane build_flutter      
+          elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+            bundle exec fastlane upload_appstore
+          else
+            bundle exec fastlane build_ipa
+          fi      
 
     artifacts:
-      - path: client/ios/build/adhoc/flet.ipa
-        name: flet_ios_adhoc
-      - path: client/ios/build/appstore/flet.ipa
-        name: flet_ios_appstore
+      - path: client/ios/build/flet.ipa
+        name: flet_ios
 
   # ======================================
   #      Linux
