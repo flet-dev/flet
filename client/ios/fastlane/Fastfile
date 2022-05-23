@@ -19,10 +19,6 @@ platform :ios do
 
   before_all do
     setup_ci
-
-    match(type: "development")
-    match(type: "adhoc")
-    match(type: "appstore")
   end
 
   desc "Build Flutter without codesign"
@@ -42,6 +38,9 @@ platform :ios do
   lane :build_ipa do
     build_flutter
 
+    match(type: "development")
+    match(type: "adhoc")
+
     gym(
       export_method: "ad-hoc",
       output_directory: "build",
@@ -58,6 +57,9 @@ platform :ios do
   desc "Upload to App Store"
   lane :upload_appstore do
     build_flutter
+
+    match(type: "development")
+    match(type: "appstore")    
 
     gym(
       export_method: "app-store",
