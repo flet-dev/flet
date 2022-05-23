@@ -71,6 +71,7 @@ platform :ios do
     deliver(
       skip_screenshots: true,
       skip_metadata: true,
+      run_precheck_before_submit: false,
       submit_for_review: false,
       force: true
     )    
