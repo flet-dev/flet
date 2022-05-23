@@ -66,12 +66,18 @@ platform :ios do
         }
       }
     )
+
+    app_store_connect_api_key
+    deliver(
+      submit_for_review: false,
+      force: true
+    )    
   end
 
   desc "Run build"
   lane :build do
     build_flutter
-    build_adhoc
+#    build_adhoc
     build_appstore
   end
 end
