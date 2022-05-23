@@ -154,14 +154,11 @@ for:
         - job_name: Build Flet for iOS
 
     install:
-      #- HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
       - export LANG=en_US.UTF-8
-      #- sudo gem install cocoapods
       - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.0-stable.zip -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter --version
-      - flutter config --enable-macos-desktop
       - flutter doctor
 
     build_script:
