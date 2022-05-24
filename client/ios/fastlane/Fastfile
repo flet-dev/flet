@@ -21,22 +21,34 @@ platform :ios do
     setup_ci
   end
 
-  desc "Build Flutter without codesign"
-  lane :build_flutter do
+  desc "Update project version"
+  lane :update_version do
     increment_version_number(
       version_number: "$FLET_PACKAGE_VERSION"
     )
+  end
+
+  desc "Build Flutter without codesign"
+  lane :build_flutter do
+    update_version
 
     Dir.chdir "../.." do
-      sh("flutter", "packages", "get")
-      sh("flutter", "clean")
       sh("flutter", "build", "ios", "--release", "--no-codesign")
-    end   
+    end
+  end
+
+  desc "Configure Flutter project without building it"
+  lane :config_flutter do
+    update_version
+
+    Dir.chdir "../.." do
+      sh("flutter", "build", "ios", "--release", "--no-codesign", "--config-only")
+    end
   end
 
   desc "Build for internal testing"
   lane :build_ipa do
-    build_flutter
+    config_flutter
 
     match(type: "development")
     match(type: "adhoc")
@@ -56,7 +68,7 @@ platform :ios do
 
   desc "Upload to App Store"
   lane :upload_appstore do
-    build_flutter
+    config_flutter
 
     match(type: "development")
     match(type: "appstore")    
