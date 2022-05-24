@@ -28,6 +28,10 @@ environment:
       job_group: build_flet
       APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
+    - job_name: Build Flet for iOS
+      job_group: build_flet
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+
     # - job_name: Linux
     #   job_group: tests
     #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
@@ -35,12 +39,6 @@ environment:
     - job_name: Build Fletd
       job_group: build_flet
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-
-    # - job_name: Test Python 3.7
-    #   job_group: python_tests
-    #   job_depends_on: build_flet
-    #   python_version: 3.7
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.8
       job_group: python_tests
@@ -140,6 +138,50 @@ for:
     artifacts:
       - path: client/flet.app.tar.gz
         name: flet_macos
+
+  # ======================================
+  #      Build Flet View for iOS
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: Build Flet for iOS
+
+    install:
+      - export LANG=en_US.UTF-8
+      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.0-stable.zip -o flutter_macos_stable.zip
+      - unzip -qq flutter_macos_stable.zip
+      - export PATH="$PATH:`pwd`/flutter/bin"
+      - flutter --version
+      - flutter doctor
+
+    build_script:
+      # Flutter iOS client
+      - cd client
+      - flutter test
+      - cd ios
+      - ruby --version
+      - bundle install --path vendor/bundle
+      - sh: |
+          export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
+          if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
+            bundle exec fastlane build_flutter      
+          elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+            if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then
+                export FLET_PACKAGE_VERSION="${BASH_REMATCH[1]}"
+                echo "FLET_PACKAGE_VERSION: ${FLET_PACKAGE_VERSION}"
+                bundle exec fastlane upload_appstore
+            else
+                echo "Cannot extract version information from a tag."
+                exit 1
+            fi
+          else
+            bundle exec fastlane build_ipa
+          fi      
+
+    artifacts:
+      - path: client/ios/build/flet.ipa
+        name: flet_ios
 
   # ======================================
   #      Linux
