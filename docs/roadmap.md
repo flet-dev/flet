@@ -88,7 +88,7 @@
 
 * Flet Client
   * Web
-    * [Loading splash](https://github.com/flutter/flutter/issues/76009#issuecomment-1095663169)
+    * [Loading splash](https://docs.flutter.dev/development/platform-integration/web/initialization)
   * [ ] Windows ("host" mode with hot reload)
   * [ ] macOS ("host" mode with hot reload)
 

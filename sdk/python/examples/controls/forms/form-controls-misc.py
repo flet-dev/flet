@@ -152,4 +152,4 @@ def main(page: Page):
     )
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.FLET_APP)
+flet.app(target=main)

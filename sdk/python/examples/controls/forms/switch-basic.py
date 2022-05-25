@@ -4,9 +4,7 @@ from flet import ElevatedButton, Switch, Text
 
 def main(page):
     def button_clicked(e):
-        t.value = (
-            f"Switch values are:  {c1.value}, {c2.value}, {c3.value}, {c4.value}."
-        )
+        t.value = f"Switch values are:  {c1.value}, {c2.value}, {c3.value}, {c4.value}."
         page.update()
 
     t = Text()
@@ -20,4 +18,4 @@ def main(page):
     page.add(c1, c2, c3, c4, b, t)
 
 
-flet.app(target=main, view=flet.WEB_BROWSER)
+flet.app(target=main)

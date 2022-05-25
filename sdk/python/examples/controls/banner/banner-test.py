@@ -34,4 +34,4 @@ def main(page):
     page.add(ElevatedButton("Show Banner", on_click=show_banner_click))
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.FLET_APP)
+flet.app(target=main)

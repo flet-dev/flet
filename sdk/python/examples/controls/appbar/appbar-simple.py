@@ -41,4 +41,4 @@ def main(page: Page):
     page.add(Text("Body!"))
 
 
-flet.app(target=main, view=flet.WEB_BROWSER)
+flet.app(target=main)

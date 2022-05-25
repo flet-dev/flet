@@ -13,4 +13,4 @@ def main(page):
   page.add(c, t)
 
 
-flet.app(target=main, view=flet.WEB_BROWSER)
+flet.app(target=main)

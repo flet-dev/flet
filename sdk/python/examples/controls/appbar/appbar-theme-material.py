@@ -90,4 +90,4 @@ def main(page: Page):
     page.add(Text("Body!"), ElevatedButton("Click me!"))
 
 
-flet.app(name="test1", port=8550, target=main, view=flet.WEB_BROWSER)
+flet.app(target=main)

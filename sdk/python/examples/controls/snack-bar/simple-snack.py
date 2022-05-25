@@ -32,4 +32,4 @@ def main(page):
     page.add(ElevatedButton("Open SnackBar", on_click=on_click))
 
 
-flet.app(target=main, view=flet.WEB_BROWSER)
+flet.app(target=main)

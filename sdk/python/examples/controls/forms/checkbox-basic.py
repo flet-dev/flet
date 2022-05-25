@@ -4,9 +4,7 @@ from flet import Checkbox, ElevatedButton, Text
 
 def main(page):
     def button_clicked(e):
-        t.value = (
-            f"Checkboxes values are:  {c1.value}, {c2.value}, {c3.value}, {c4.value}, {c5.value}."
-        )
+        t.value = f"Checkboxes values are:  {c1.value}, {c2.value}, {c3.value}, {c4.value}, {c5.value}."
         page.update()
 
     t = Text()
@@ -21,4 +19,4 @@ def main(page):
     page.add(c1, c2, c3, c4, c5, b, t)
 
 
-flet.app(target=main, view=flet.WEB_BROWSER)
+flet.app(target=main)

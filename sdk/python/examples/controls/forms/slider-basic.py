@@ -7,6 +7,8 @@ def main(page):
         Text("Default slider:"),
         Slider(),
         Text("Default disabled slider:"),
-        Slider(disabled=True))
+        Slider(disabled=True),
+    )
 
-flet.app(target=main, view=flet.WEB_BROWSER)
+
+flet.app(target=main)

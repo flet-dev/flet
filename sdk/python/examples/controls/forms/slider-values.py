@@ -7,6 +7,8 @@ def main(page):
         Text("Slider with value:"),
         Slider(value=0.3),
         Text("Slider with a custom range and label:"),
-        Slider(min=0, max=100, divisions=10, label="{value}%"))
+        Slider(min=0, max=100, divisions=10, label="{value}%"),
+    )
 
-flet.app(target=main, view=flet.WEB_BROWSER)
+
+flet.app(target=main)
