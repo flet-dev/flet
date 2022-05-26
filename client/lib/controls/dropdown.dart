@@ -56,9 +56,27 @@ class _DropdownControlState extends State<DropdownControl> {
           bool autofocus = widget.control.attrBool("autofocus", false)!;
           bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
+          var items = itemsView.children
+              .where((c) => c.name == null)
+              .map<DropdownMenuItem<String>>(
+                  (Control itemCtrl) => DropdownMenuItem<String>(
+                        enabled: !(disabled || itemCtrl.isDisabled),
+                        value: itemCtrl.attrs["key"] ??
+                            itemCtrl.attrs["text"] ??
+                            itemCtrl.id,
+                        child: Text(itemCtrl.attrs["text"] ??
+                            itemCtrl.attrs["key"] ??
+                            itemCtrl.id),
+                      ))
+              .toList();
+
           String? value = widget.control.attrString("value");
           if (_value != value) {
             _value = value;
+          }
+
+          if (items.where((item) => item.value == value).isEmpty) {
+            _value = null;
           }
 
           var prefixControls = itemsView.children
@@ -66,47 +84,48 @@ class _DropdownControlState extends State<DropdownControl> {
           var suffixControls = itemsView.children
               .where((c) => c.name == "suffix" && c.isVisible);
 
-          var dropDown = DropdownButtonFormField<String>(
-            autofocus: autofocus,
-            focusNode: _focusNode,
-            value: _value,
-            decoration: buildInputDecoration(
-                widget.control,
-                prefixControls.isNotEmpty ? prefixControls.first : null,
-                suffixControls.isNotEmpty ? suffixControls.first : null,
-                null),
-            onChanged: (String? value) {
-              debugPrint("Dropdown selected value: $value");
-              setState(() {
-                _value = value!;
-              });
-              List<Map<String, String>> props = [
-                {"i": widget.control.id, "value": value!}
-              ];
-              itemsView.dispatch(UpdateControlPropsAction(
-                  UpdateControlPropsPayload(props: props)));
-              ws.updateControlProps(props: props);
-              ws.pageEventFromWeb(
-                  eventTarget: widget.control.id,
-                  eventName: "change",
-                  eventData: value);
-            },
-            items: itemsView.children
-                .where((c) => c.name == null)
-                .map<DropdownMenuItem<String>>((Control itemCtrl) {
-              return DropdownMenuItem<String>(
-                enabled: !(disabled || itemCtrl.isDisabled),
-                value: itemCtrl.attrs["key"] ??
-                    itemCtrl.attrs["text"] ??
-                    itemCtrl.id,
-                child: Text(itemCtrl.attrs["text"] ??
-                    itemCtrl.attrs["key"] ??
-                    itemCtrl.id),
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              Widget dropDown = DropdownButtonFormField<String>(
+                autofocus: autofocus,
+                focusNode: _focusNode,
+                value: _value,
+                decoration: buildInputDecoration(
+                    widget.control,
+                    prefixControls.isNotEmpty ? prefixControls.first : null,
+                    suffixControls.isNotEmpty ? suffixControls.first : null,
+                    null),
+                onChanged: (String? value) {
+                  debugPrint("Dropdown selected value: $value");
+                  setState(() {
+                    _value = value!;
+                  });
+                  List<Map<String, String>> props = [
+                    {"i": widget.control.id, "value": value!}
+                  ];
+                  itemsView.dispatch(UpdateControlPropsAction(
+                      UpdateControlPropsPayload(props: props)));
+                  ws.updateControlProps(props: props);
+                  ws.pageEventFromWeb(
+                      eventTarget: widget.control.id,
+                      eventName: "change",
+                      eventData: value);
+                },
+                items: items,
               );
-            }).toList(),
-          );
 
-          return constrainedControl(dropDown, widget.parent, widget.control);
+              if (constraints.maxWidth == double.infinity &&
+                  widget.control.attrDouble("width") == null) {
+                dropDown = ConstrainedBox(
+                  constraints: const BoxConstraints.tightFor(width: 300),
+                  child: dropDown,
+                );
+              }
+
+              return constrainedControl(
+                  dropDown, widget.parent, widget.control);
+            },
+          );
         });
   }
 }

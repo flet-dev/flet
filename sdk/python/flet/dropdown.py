@@ -42,10 +42,10 @@ class Dropdown(FormFieldControl):
         #
         value: str = None,
         autofocus: bool = None,
+        options=None,
         on_change=None,
         on_focus=None,
         on_blur=None,
-        options=None,
     ):
         FormFieldControl.__init__(
             self,

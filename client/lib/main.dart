@@ -30,7 +30,7 @@ void main([List<String>? args]) async {
   var pageUri = Uri.base;
 
   if (kDebugMode) {
-    pageUri = Uri.parse("http://192.168.0.12:8550");
+    pageUri = Uri.parse("http://localhost:8550");
   }
 
   if (kIsWeb) {

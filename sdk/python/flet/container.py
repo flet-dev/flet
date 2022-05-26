@@ -19,6 +19,7 @@ except:
 class Container(ConstrainedControl):
     def __init__(
         self,
+        content: Control = None,
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -31,7 +32,6 @@ class Container(ConstrainedControl):
         #
         # Specific
         #
-        content: Control = None,
         padding: PaddingValue = None,
         margin: MarginValue = None,
         alignment: Alignment = None,

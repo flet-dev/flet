@@ -138,50 +138,63 @@ class _TextFieldControlState extends State<TextFieldControl> {
             orElse: () => TextAlign.start,
           );
 
-          var textField = TextFormField(
-              autofocus: autofocus,
-              enabled: !disabled,
-              onFieldSubmitted: !multiline
-                  ? (_) {
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              Widget textField = TextFormField(
+                  autofocus: autofocus,
+                  enabled: !disabled,
+                  onFieldSubmitted: !multiline
+                      ? (_) {
+                          ws.pageEventFromWeb(
+                              eventTarget: widget.control.id,
+                              eventName: "submit",
+                              eventData: "");
+                        }
+                      : null,
+                  decoration: buildInputDecoration(
+                      widget.control,
+                      prefixControls.isNotEmpty ? prefixControls.first : null,
+                      suffixControls.isNotEmpty ? suffixControls.first : null,
+                      revealPasswordIcon),
+                  keyboardType: keyboardType,
+                  textAlign: textAlign,
+                  minLines: minLines,
+                  maxLines: maxLines,
+                  readOnly: readOnly,
+                  obscureText: password && !_revealPassword,
+                  controller: _controller,
+                  focusNode: shiftEnter ? _shiftEnterfocusNode : _focusNode,
+                  onChanged: (String value) {
+                    //debugPrint(value);
+                    setState(() {
+                      _value = value;
+                    });
+                    List<Map<String, String>> props = [
+                      {"i": widget.control.id, "value": value}
+                    ];
+                    dispatch(UpdateControlPropsAction(
+                        UpdateControlPropsPayload(props: props)));
+                    ws.updateControlProps(props: props);
+                    if (onChange) {
                       ws.pageEventFromWeb(
                           eventTarget: widget.control.id,
-                          eventName: "submit",
-                          eventData: "");
+                          eventName: "change",
+                          eventData: value);
                     }
-                  : null,
-              decoration: buildInputDecoration(
-                  widget.control,
-                  prefixControls.isNotEmpty ? prefixControls.first : null,
-                  suffixControls.isNotEmpty ? suffixControls.first : null,
-                  revealPasswordIcon),
-              keyboardType: keyboardType,
-              textAlign: textAlign,
-              minLines: minLines,
-              maxLines: maxLines,
-              readOnly: readOnly,
-              obscureText: password && !_revealPassword,
-              controller: _controller,
-              focusNode: shiftEnter ? _shiftEnterfocusNode : _focusNode,
-              onChanged: (String value) {
-                //debugPrint(value);
-                setState(() {
-                  _value = value;
-                });
-                List<Map<String, String>> props = [
-                  {"i": widget.control.id, "value": value}
-                ];
-                dispatch(UpdateControlPropsAction(
-                    UpdateControlPropsPayload(props: props)));
-                ws.updateControlProps(props: props);
-                if (onChange) {
-                  ws.pageEventFromWeb(
-                      eventTarget: widget.control.id,
-                      eventName: "change",
-                      eventData: value);
-                }
-              });
+                  });
 
-          return constrainedControl(textField, widget.parent, widget.control);
+              if (constraints.maxWidth == double.infinity &&
+                  widget.control.attrDouble("width") == null) {
+                textField = ConstrainedBox(
+                  constraints: const BoxConstraints.tightFor(width: 300),
+                  child: textField,
+                );
+              }
+
+              return constrainedControl(
+                  textField, widget.parent, widget.control);
+            },
+          );
         });
   }
 }
