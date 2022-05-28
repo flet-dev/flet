@@ -127,14 +127,16 @@ open Runner.xcodeproj
 
 Select "Runner" in the left project tree, then "Signing and Capabilities" tab.
 
+Uncheck "Automatically mamage signing".
+
 Update "Bundle identifier" and choose "match Development {identifier}" as "Provisioning profile":
 
 [SCREENSHOT]
 
-Ensure you can build an `.ipa` signed by development profile by running:
+Ensure you can build a project without signing with:
 
 ```
-flutter build ipa
+flutter build ios --release --no-codesign
 ```
 
 ### Complying with Encryption Export Regulations
@@ -150,3 +152,10 @@ Open "Runner -> Runner -> Info.plist" in the left tree and make sure "App Uses N
 
 [SCREENSHOT]
 
+## Configuring CI/CD
+
+### Testing Fastlane locally
+
+```
+bundle exec fastlane build_ipa
+```

@@ -23,9 +23,12 @@ platform :ios do
 
   desc "Update project version"
   lane :update_version do
-    increment_version_number(
-      version_number: "$FLET_PACKAGE_VERSION"
-    )
+
+    if !ENV['FLET_PACKAGE_VERSION'].empty?
+      increment_version_number(
+        version_number: "$FLET_PACKAGE_VERSION"
+      )
+    end
   end
 
   desc "Build Flutter without codesign"
