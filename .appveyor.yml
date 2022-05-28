@@ -180,7 +180,7 @@ for:
           fi      
 
     artifacts:
-      - path: client/ios/build/flet.ipa
+      - path: client/build/flet.ipa
         name: flet_ios
 
   # ======================================

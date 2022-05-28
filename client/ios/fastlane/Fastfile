@@ -53,12 +53,12 @@ platform :ios do
   lane :build_ipa do
     config_flutter
 
-    match(type: "development")
-    match(type: "adhoc")
+    match(type: "development", readonly: true)
+    match(type: "adhoc", readonly: true)
 
     gym(
       export_method: "ad-hoc",
-      output_directory: "build",
+      output_directory: "../build",
       output_name: "flet.ipa",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
@@ -73,12 +73,12 @@ platform :ios do
   lane :upload_appstore do
     config_flutter
 
-    match(type: "development")
-    match(type: "appstore")    
+    match(type: "development", readonly: true)
+    match(type: "appstore", readonly: true)
 
     gym(
       export_method: "app-store",
-      output_directory: "build",
+      output_directory: "../build",
       output_name: "flet.ipa",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
