@@ -88,7 +88,8 @@ platform :ios do
       }
     )
 
-    app_store_connect_api_key
+    app_store_connect_api_key(is_key_content_base64: true)
+    
     deliver(
       skip_screenshots: true,
       skip_metadata: true,
