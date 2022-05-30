@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.appveyor.flet">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="flet"
+        android:label="Flet"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
