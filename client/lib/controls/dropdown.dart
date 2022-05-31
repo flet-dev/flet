@@ -84,48 +84,52 @@ class _DropdownControlState extends State<DropdownControl> {
           var suffixControls = itemsView.children
               .where((c) => c.name == "suffix" && c.isVisible);
 
-          return LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              Widget dropDown = DropdownButtonFormField<String>(
-                autofocus: autofocus,
-                focusNode: _focusNode,
-                value: _value,
-                decoration: buildInputDecoration(
-                    widget.control,
-                    prefixControls.isNotEmpty ? prefixControls.first : null,
-                    suffixControls.isNotEmpty ? suffixControls.first : null,
-                    null),
-                onChanged: (String? value) {
-                  debugPrint("Dropdown selected value: $value");
-                  setState(() {
-                    _value = value!;
-                  });
-                  List<Map<String, String>> props = [
-                    {"i": widget.control.id, "value": value!}
-                  ];
-                  itemsView.dispatch(UpdateControlPropsAction(
-                      UpdateControlPropsPayload(props: props)));
-                  ws.updateControlProps(props: props);
-                  ws.pageEventFromWeb(
-                      eventTarget: widget.control.id,
-                      eventName: "change",
-                      eventData: value);
-                },
-                items: items,
-              );
-
-              if (constraints.maxWidth == double.infinity &&
-                  widget.control.attrDouble("width") == null) {
-                dropDown = ConstrainedBox(
-                  constraints: const BoxConstraints.tightFor(width: 300),
-                  child: dropDown,
-                );
-              }
-
-              return constrainedControl(
-                  dropDown, widget.parent, widget.control);
+          Widget dropDown = DropdownButtonFormField<String>(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            value: _value,
+            decoration: buildInputDecoration(
+                widget.control,
+                prefixControls.isNotEmpty ? prefixControls.first : null,
+                suffixControls.isNotEmpty ? suffixControls.first : null,
+                null),
+            onChanged: (String? value) {
+              debugPrint("Dropdown selected value: $value");
+              setState(() {
+                _value = value!;
+              });
+              List<Map<String, String>> props = [
+                {"i": widget.control.id, "value": value!}
+              ];
+              itemsView.dispatch(UpdateControlPropsAction(
+                  UpdateControlPropsPayload(props: props)));
+              ws.updateControlProps(props: props);
+              ws.pageEventFromWeb(
+                  eventTarget: widget.control.id,
+                  eventName: "change",
+                  eventData: value);
             },
+            items: items,
           );
+
+          if (widget.control.attrInt("expand", 0)! > 0) {
+            return constrainedControl(dropDown, widget.parent, widget.control);
+          } else {
+            return LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                if (constraints.maxWidth == double.infinity &&
+                    widget.control.attrDouble("width") == null) {
+                  dropDown = ConstrainedBox(
+                    constraints: const BoxConstraints.tightFor(width: 300),
+                    child: dropDown,
+                  );
+                }
+
+                return constrainedControl(
+                    dropDown, widget.parent, widget.control);
+              },
+            );
+          }
         });
   }
 }
