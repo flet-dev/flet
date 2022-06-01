@@ -5,7 +5,6 @@ import (
 
 	"github.com/flet-dev/flet/server/auth"
 	"github.com/flet-dev/flet/server/model"
-	"github.com/flet-dev/flet/server/page/command"
 )
 
 type Message struct {
@@ -74,9 +73,9 @@ type SessionCreatedPayload struct {
 }
 
 type PageCommandRequestPayload struct {
-	PageName  string           `json:"pageName"`
-	SessionID string           `json:"sessionID"`
-	Command   *command.Command `json:"command"`
+	PageName  string         `json:"pageName"`
+	SessionID string         `json:"sessionID"`
+	Command   *model.Command `json:"command"`
 }
 
 type PageCommandResponsePayload struct {
@@ -85,9 +84,9 @@ type PageCommandResponsePayload struct {
 }
 
 type PageCommandsBatchRequestPayload struct {
-	PageName  string             `json:"pageName"`
-	SessionID string             `json:"sessionID"`
-	Commands  []*command.Command `json:"commands"`
+	PageName  string           `json:"pageName"`
+	SessionID string           `json:"sessionID"`
+	Commands  []*model.Command `json:"commands"`
 }
 
 type PageCommandsBatchResponsePayload struct {

@@ -1,130 +1,42 @@
-from typing import Optional
+from typing import Optional, Union
 
 from beartype import beartype
+from beartype.typing import List
 
-from flet.control import Control
-
-
-class Tabs(Control):
-    def __init__(
-        self,
-        tabs=None,
-        id=None,
-        ref=None,
-        value=None,
-        solid=None,
-        on_change=None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
-    ):
-
-        Control.__init__(
-            self,
-            id=id,
-            ref=ref,
-            width=width,
-            height=height,
-            padding=padding,
-            margin=margin,
-            visible=visible,
-            disabled=disabled,
-        )
-
-        self.solid = solid
-        self.on_change = on_change
-        self.__tabs = []
-        self.tabs = tabs
-        if value:
-            self.value = value
-
-    def _get_control_name(self):
-        return "tabs"
-
-    def clean(self):
-        Control.clean(self)
-        self.__tabs.clear()
-        self.value = None
-
-    # tabs
-    @property
-    def tabs(self):
-        return self.__tabs
-
-    @tabs.setter
-    def tabs(self, value):
-        value = value or []
-        self.__tabs = value
-        self.value = value and (value[0].key or value[0].text) or ""
-
-    # on_change
-    @property
-    def on_change(self):
-        return self._get_event_handler("change")
-
-    @on_change.setter
-    def on_change(self, handler):
-        self._add_event_handler("change", handler)
-
-    # value
-    @property
-    def value(self):
-        return self._get_attr("value")
-
-    @value.setter
-    @beartype
-    def value(self, value: str):
-        if not value:
-            assert (
-                not self.tabs
-            ), "Setting an empty value is only allowed if you have no tabs"
-        else:
-            assert any(
-                value in keys for keys in [(tab.key, tab.text) for tab in self.tabs]
-            ), f"'{value}' is not a key for any tab"
-        self._set_attr("value", value or "")
-
-    # solid
-    @property
-    def solid(self):
-        return self._get_attr("solid", data_type="bool", def_value=False)
-
-    @solid.setter
-    @beartype
-    def solid(self, value: Optional[bool]):
-        self._set_attr("solid", value)
-
-    def _get_children(self):
-        return self.__tabs
+from flet.constrained_control import ConstrainedControl
+from flet.control import Control, OptionalNumber
+from flet.ref import Ref
 
 
 class Tab(Control):
     def __init__(
-        self, text, controls=None, id=None, ref=None, key=None, icon=None, count=None
+        self,
+        text: str = None,
+        content: Control = None,
+        tab_content: Control = None,
+        ref: Ref = None,
+        icon: str = None,
     ):
-        Control.__init__(self, id=id, ref=ref)
-        assert key or text, "key or text must be specified"
-        self.key = key
+        Control.__init__(self, ref=ref)
         self.text = text
         self.icon = icon
-        self.count = count
-        self.__controls = []
-        self.controls = controls
+        self.__content: Control = None
+        self.content = content
+        self.__tab_content: Control = None
+        self.tab_content = tab_content
 
     def _get_control_name(self):
         return "tab"
 
-    # key
-    @property
-    def key(self):
-        return self._get_attr("key")
-
-    @key.setter
-    def key(self, value):
-        self._set_attr("key", value)
+    def _get_children(self):
+        children = []
+        if self.__tab_content:
+            self.__tab_content._set_attr_internal("n", "tab_content")
+            children.append(self.__tab_content)
+        if self.__content:
+            self.__content._set_attr_internal("n", "content")
+            children.append(self.__content)
+        return children
 
     # text
     @property
@@ -144,23 +56,103 @@ class Tab(Control):
     def icon(self, value):
         self._set_attr("icon", value)
 
-    # controls
+    # tab_content
     @property
-    def controls(self):
-        return self.__controls
+    def tab_content(self):
+        return self.__tab_content
 
-    @controls.setter
-    def controls(self, value):
-        self.__controls = value or []
+    @tab_content.setter
+    def tab_content(self, value):
+        self.__tab_content = value
 
-    # count
+    # content
     @property
-    def count(self):
-        return self._get_attr("count")
+    def content(self):
+        return self.__content
 
-    @count.setter
-    def count(self, value):
-        self._set_attr("count", value)
+    @content.setter
+    def content(self, value):
+        self.__content = value
+
+
+class Tabs(ConstrainedControl):
+    def __init__(
+        self,
+        ref: Ref = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        expand: Union[bool, int] = None,
+        opacity: OptionalNumber = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # Tabs-specific
+        tabs: List[Tab] = None,
+        selected_index: int = None,
+        animation_duration: int = None,
+        on_change=None,
+    ):
+
+        ConstrainedControl.__init__(
+            self,
+            ref=ref,
+            width=width,
+            height=height,
+            expand=expand,
+            opacity=opacity,
+            visible=visible,
+            disabled=disabled,
+            data=data,
+        )
+
+        self.tabs = tabs
+        self.selected_index = selected_index
+        self.animation_duration = animation_duration
+        self.on_change = on_change
+
+    def _get_control_name(self):
+        return "tabs"
 
     def _get_children(self):
-        return self.__controls
+        return self.__tabs
+
+    # tabs
+    @property
+    def tabs(self):
+        return self.__tabs
+
+    @tabs.setter
+    @beartype
+    def tabs(self, value: Optional[List[Tab]]):
+        value = value or []
+        self.__tabs = value
+
+    # on_change
+    @property
+    def on_change(self):
+        return self._get_event_handler("change")
+
+    @on_change.setter
+    def on_change(self, handler):
+        self._add_event_handler("change", handler)
+
+    # selected_index
+    @property
+    def selected_index(self):
+        return self._get_attr("selectedIndex", data_type="int", def_value=0)
+
+    @selected_index.setter
+    @beartype
+    def selected_index(self, value: Optional[int]):
+        self._set_attr("selectedIndex", value)
+
+    # animation_duration
+    @property
+    def animation_duration(self):
+        return self._get_attr("animationDuration")
+
+    @animation_duration.setter
+    @beartype
+    def animation_duration(self, value: Optional[int]):
+        self._set_attr("animationDuration", value)

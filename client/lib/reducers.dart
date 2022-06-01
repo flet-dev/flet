@@ -1,25 +1,28 @@
 // One simple action: Increment
-import 'dart:developer';
-
 import 'package:flet_view/protocol/add_page_controls_payload.dart';
 import 'package:flet_view/protocol/clean_control_payload.dart';
 import 'package:flet_view/protocol/message.dart';
 import 'package:flet_view/protocol/remove_control_payload.dart';
 import 'package:flet_view/protocol/update_control_props_payload.dart';
+import 'package:flet_view/web_socket_client.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'actions.dart';
 import 'models/app_state.dart';
 import 'models/control.dart';
-
 import 'session_store/session_store.dart'
     if (dart.library.io) "session_store/session_store_io.dart"
     if (dart.library.js) "session_store/session_store_js.dart";
+import 'utils/uri.dart';
 
 enum Actions { increment, setText, setError }
 
 AppState appReducer(AppState state, dynamic action) {
-  if (action is PageSizeChangeAction) {
+  if (action is PageLoadAction) {
+    ws.connect(serverUrl: getWebSocketEndpoint(action.pageUri));
+    return state.copyWith(
+        pageUri: action.pageUri, sessionId: action.sessionId, isLoading: true);
+  } else if (action is PageSizeChangeAction) {
     //
     // page size changed
     //
@@ -35,6 +38,25 @@ AppState appReducer(AppState state, dynamic action) {
     debugPrint(
         "New page size: ${action.newSize}, new breakpoint: $newBreakpoint");
 
+    var page = state.controls["page"];
+    if (page != null) {
+      var controls = Map.of(state.controls);
+      var pageAttrs = Map.of(page.attrs);
+      pageAttrs["winWidth"] = action.newSize.width.toString();
+      pageAttrs["winHeight"] = action.newSize.height.toString();
+      controls[page.id] = page.copyWith(attrs: pageAttrs);
+
+      List<Map<String, String>> props = [
+        {"i": "page", "winWidth": action.newSize.width.toString()},
+        {"i": "page", "winHeight": action.newSize.height.toString()}
+      ];
+      ws.updateControlProps(props: props);
+      ws.pageEventFromWeb(
+          eventTarget: "page",
+          eventName: "resize",
+          eventData: "${action.newSize.width},${action.newSize.height}");
+    }
+
     return state.copyWith(size: action.newSize, sizeBreakpoint: newBreakpoint);
   } else if (action is RegisterWebClientAction) {
     //
@@ -42,7 +64,10 @@ AppState appReducer(AppState state, dynamic action) {
     //
     if (action.payload.error != null && action.payload.error!.isNotEmpty) {
       // error
-      return state.copyWith(isLoading: false, error: action.payload.error);
+      return state.copyWith(
+          isLoading: false,
+          reconnectingTimeout: 0,
+          error: action.payload.error);
     } else {
       final sessionId = action.payload.session!.id;
 
@@ -52,9 +77,18 @@ AppState appReducer(AppState state, dynamic action) {
       // connected to the session
       return state.copyWith(
           isLoading: false,
+          reconnectingTimeout: 0,
           sessionId: sessionId,
           controls: action.payload.session!.controls);
     }
+  } else if (action is PageReconnectingAction) {
+    //
+    // reconnecting WebSocket
+    //
+    return state.copyWith(
+        isLoading: true,
+        reconnectingTimeout:
+            state.reconnectingTimeout == 0 ? 1 : state.reconnectingTimeout * 2);
   } else if (action is AppBecomeInactiveAction) {
     //
     // app become inactive

@@ -10,7 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func configLogging() {
+func configureLogging() {
 
 	level := log.FatalLevel // default logging level
 

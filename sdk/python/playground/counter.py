@@ -1,21 +1,22 @@
 import logging
 
 import flet
-from flet import Button, Column, Row, Text, Textbox
-from flet.expanded import Expanded
+from flet import Column, Row, Text, TextField
+from flet.elevated_button import ElevatedButton
 
 logging.basicConfig(level=logging.DEBUG)
 
 
 def main(page):
     page.title = "Counter"
+    page.padding = 10
     page.update()
 
     def on_click(e):
         try:
             count = int(txt_number.value)
 
-            txt_number.error_message = ""
+            txt_number.error_text = ""
 
             if e.data == "+":
                 txt_number.value = count + 1
@@ -26,27 +27,39 @@ def main(page):
             result.value = f"Clicked: {e.data}"
 
         except ValueError:
-            txt_number.error_message = "Please enter a number"
+            txt_number.error_text = "Please enter a number"
 
         page.update()
 
-    txt_number = Textbox(value="0", align="right")
+    txt_number = TextField(value="0", text_align="right", expand=1)
     result = Text()
 
     page.add(
-        Expanded(
-            Row(
-                controls=[
-                    Button("-", on_click=on_click, data="-"),
-                    Expanded(txt_number),
-                    Expanded(Textbox(label="Another textbox")),
-                    Button("+", on_click=on_click, data="+"),
-                    Column(controls=[result]),
-                ],
-            )
+        Row(
+            controls=[
+                ElevatedButton("-", on_click=on_click, width=100, data="-"),
+                txt_number,
+                ElevatedButton(
+                    "+",
+                    on_click=on_click,
+                    width=50,
+                    height=float("inf"),
+                    data="+",
+                ),
+                Column(controls=[result]),
+            ],
+            width=400,
+            height=50,
         ),
-        Expanded(Column(controls=[Text("Just some text")])),
+        Column(controls=[Text("Just some text")]),
     )
 
 
-flet.app(name="test1", port=8550, target=main)
+flet.app(
+    name="test2",
+    port=8550,
+    target=main,
+    view=flet.WEB_BROWSER,
+    # assets_dir="assets"
+    # assets_dir="C:\\Projects\\flet-dev\\flet\\client\\build\\web",
+)

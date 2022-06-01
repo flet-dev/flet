@@ -1,8 +1,10 @@
-from typing import Optional
+from typing import Optional, Union
 
 from beartype import beartype
 
-from flet.control import Control
+from flet.constrained_control import ConstrainedControl
+from flet.control import Control, OptionalNumber
+from flet.ref import Ref
 
 try:
     from typing import Literal
@@ -10,78 +12,76 @@ except:
     from typing_extensions import Literal
 
 
-BoxSide = Literal[None, "start", "end"]
+LabelPosition = Literal[None, "right", "left"]
 
 
-class Checkbox(Control):
+class Checkbox(ConstrainedControl):
     def __init__(
         self,
-        label=None,
-        id=None,
-        ref=None,
-        value=None,
-        value_field=None,
-        box_side: BoxSide = None,
-        focused=None,
-        data=None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
+        ref: Ref = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        expand: Union[bool, int] = None,
+        opacity: OptionalNumber = None,
+        tooltip: str = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # Specific
+        #
+        label: str = None,
+        label_position: LabelPosition = None,
+        value: bool = None,
+        tristate: bool = None,
+        autofocus: bool = None,
         on_change=None,
-        visible=None,
-        disabled=None,
+        on_focus=None,
+        on_blur=None,
     ):
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
+            expand=expand,
+            opacity=opacity,
+            tooltip=tooltip,
             visible=visible,
             disabled=disabled,
             data=data,
         )
         self.value = value
-        self.value_field = value_field
+        self.tristate = tristate
         self.label = label
-        self.box_side = box_side
-        self.focused = focused
+        self.label_position = label_position
+        self.autofocus = autofocus
         self.on_change = on_change
+        self.on_focus = on_focus
+        self.on_blur = on_blur
 
     def _get_control_name(self):
         return "checkbox"
 
-    # on_change
-    @property
-    def on_change(self):
-        return self._get_event_handler("change")
-
-    @on_change.setter
-    def on_change(self, handler):
-        self._add_event_handler("change", handler)
-
     # value
     @property
     def value(self):
-        return self._get_attr("value", data_type="bool", def_value=False)
+        return self._get_attr("value", data_type="bool?", def_value=False if not self.tristate else None)
 
     @value.setter
     @beartype
     def value(self, value: Optional[bool]):
         self._set_attr("value", value)
 
-    # value_field
+    # tristate
     @property
-    def value_field(self):
-        return self._get_attr("value")
+    def tristate(self):
+        return self._get_attr("tristate", data_type="bool", def_value=False)
 
-    @value_field.setter
-    def value_field(self, value):
-        if value != None:
-            self._set_attr("value", f"{{{value}}}")
+    @tristate.setter
+    @beartype
+    def tristate(self, value: Optional[bool]):
+        self._set_attr("tristate", value)
 
     # label
     @property
@@ -92,22 +92,49 @@ class Checkbox(Control):
     def label(self, value):
         self._set_attr("label", value)
 
-    # box_side
+    # label_position
     @property
-    def box_side(self):
-        return self._get_attr("boxSide")
+    def label_position(self):
+        return self._get_attr("labelPosition")
 
-    @box_side.setter
+    @label_position.setter
     @beartype
-    def box_side(self, value: BoxSide):
-        self._set_attr("boxSide", value)
+    def label_position(self, value: LabelPosition):
+        self._set_attr("labelPosition", value)
 
-    # focused
+    # autofocus
     @property
-    def focused(self):
-        return self._get_attr("focused", data_type="bool", def_value=False)
+    def autofocus(self):
+        return self._get_attr("autofocus", data_type="bool", def_value=False)
 
-    @focused.setter
+    @autofocus.setter
     @beartype
-    def focused(self, value: Optional[bool]):
-        self._set_attr("focused", value)
+    def autofocus(self, value: Optional[bool]):
+        self._set_attr("autofocus", value)
+
+    # on_change
+    @property
+    def on_change(self):
+        return self._get_event_handler("change")
+
+    @on_change.setter
+    def on_change(self, handler):
+        self._add_event_handler("change", handler)
+
+    # on_focus
+    @property
+    def on_focus(self):
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self):
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler):
+        self._add_event_handler("blur", handler)

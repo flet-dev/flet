@@ -1,6 +1,14 @@
 import flet
-from flet import Text
+from flet import Dropdown, Page, Row, Text, TextField
 
-page = flet.page("hello-world")
-page.title = "Hello, world!"
-page.add(Text("Hello, world!"))
+
+def main(page: Page):
+    page.add(Row(
+        [Dropdown(
+        #expand=True,
+        autofocus=True,
+    )]
+    ))
+
+
+flet.app(target=main, view=flet.WEB_BROWSER)

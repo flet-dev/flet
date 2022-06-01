@@ -6,9 +6,6 @@ from flet.protocol import Command
 def test_image_add():
     i = Image(
         src="https://www.w3schools.com/css/img_5terre.jpg",
-        alt="This is image",
-        title="This is title",
-        maximize_frame=False,
     )
     assert isinstance(i, flet.Control)
     assert isinstance(i, flet.Image)
@@ -18,12 +15,8 @@ def test_image_add():
             name=None,
             values=["image"],
             attrs={
-                "alt": "This is image",
-                "maximizeframe": "false",
                 "src": "https://www.w3schools.com/css/img_5terre.jpg",
-                "title": "This is title",
             },
-            lines=[],
             commands=[],
         )
     ], "Test failed"

@@ -1,9 +1,15 @@
+import os
 import platform
 import subprocess
+import sys
 
 
 def is_windows():
     return platform.system() == "Windows"
+
+
+def is_linux():
+    return platform.system() == "Linux"
 
 
 def is_macos():
@@ -29,7 +35,7 @@ def get_arch():
     elif a == "arm64" or a == "aarch64":
         return "arm64"
     elif a.startswith("arm"):
-        return "arm"
+        return "arm_7"
     else:
         raise Exception(f"Unsupported architecture: {a}")
 
@@ -63,3 +69,8 @@ def which(program):
 
 def is_localhost_url(url):
     return "://localhost/" in url or "://localhost:" in url
+
+
+def get_current_script_dir():
+    pathname = os.path.dirname(sys.argv[0])
+    return os.path.abspath(pathname)

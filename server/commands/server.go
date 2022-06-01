@@ -6,8 +6,10 @@ import (
 	"net"
 	"os"
 	"os/exec"
+	"runtime"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/flet-dev/flet/server/cache"
 	"github.com/flet-dev/flet/server/config"
@@ -17,16 +19,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newServerCommand(cancel context.CancelFunc) *cobra.Command {
+var (
+	version  = "unknown"
+	LogLevel string
+)
+
+func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
 
 	var serverPort int
 	var background bool
 	var attachedProcess bool
 
 	var cmd = &cobra.Command{
-		Use:   "server",
-		Short: "Start server service",
-		Long:  `Server is for ...`,
+		Use:     "fletd",
+		Short:   "Flet Server",
+		Version: version,
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			configureLogging()
+		},
 		Run: func(cmd *cobra.Command, args []string) {
 
 			if serverPort == 0 {
@@ -56,14 +66,39 @@ func newServerCommand(cancel context.CancelFunc) *cobra.Command {
 		},
 	}
 
+	cmd.SetVersionTemplate("{{.Version}}")
+
+	cmd.PersistentFlags().StringVarP(&LogLevel, "log-level", "l", "info", "verbosity level for logs")
+
 	cmd.Flags().IntVarP(&serverPort, "port", "p", config.ServerPort(), "port on which the server will listen")
-	cmd.Flags().BoolVarP(&background, "background", "b", false, "run server in background")
+	//cmd.Flags().BoolVarP(&background, "background", "b", false, "run server in background")
 	cmd.Flags().BoolVarP(&attachedProcess, "attached", "a", false, "attach background server process to the parent one")
 
 	return cmd
 }
 
 func monitorParentProcess(cancel context.CancelFunc) {
+	if runtime.GOOS == "windows" {
+		monitorParentProcessWindows(cancel)
+	} else {
+		monitorParentProcessUnix(cancel)
+	}
+}
+
+func monitorParentProcessUnix(cancel context.CancelFunc) {
+	defer cancel()
+	ppid := os.Getppid()
+	for {
+		//log.Debugln("Parent process ID", ppid, os.Getppid())
+		if ppid != os.Getppid() {
+			log.Debugln("Parent process has been closed. Exiting...")
+			return
+		}
+		time.Sleep(1 * time.Second)
+	}
+}
+
+func monitorParentProcessWindows(cancel context.CancelFunc) {
 
 	ppid := os.Getppid()
 	pp, err := os.FindProcess(ppid)

@@ -1,3 +1,5 @@
+version: 0.0.{build}
+
 skip_branch_with_pr: true
 
 skip_commits:
@@ -7,55 +9,52 @@ skip_commits:
     - "*.md"
 
 environment:
-  GO_VERSION: 1.18
+  GO_VERSION: 1.18.1
   GO_TAGS: --tags release
   python_version: 3.10
   GITHUB_TOKEN:
-    secure: uX7wMPjOz72c6zs4QS2/m3vsOE5Fh7e68YqMNSf0mRmb6hP9Ij8haCefQjxBDlEb
+    secure: doX0dwjWhBmT56aJqR9NCbtMFJpDpdYxPCIB4vQoHfSR+nTa+pLCo6Yv5qWpD/90
   DOCKER_REGISTRY_USER:
     secure: NJVK0u9M6ZhmQKUeR6Gnxg==
   DOCKER_REGISTRY_PASS:
     secure: V9nRzVDlIGS0a+dhkC2/vw==
 
   matrix:
-    # - job_name: Windows
-    #   job_group: tests
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    - job_name: Build Flet for Windows
+      job_group: build_flet
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+
+    - job_name: Build Flet for macOS
+      job_group: build_flet
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+
+    - job_name: Build Flet for iOS
+      job_group: build_flet
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     # - job_name: Linux
     #   job_group: tests
     #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: macOS
-    #   job_group: tests
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macOS
-
-    - job_name: Build Server binaries
-      job_group: build_server
-      job_depends_on: tests
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-
-    - job_name: Test Python 3.7
-      job_group: python_tests
-      job_depends_on: build_server
-      python_version: 3.7
+    - job_name: Build Fletd
+      job_group: build_flet
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.8
       job_group: python_tests
-      job_depends_on: build_server
+      job_depends_on: build_flet
       python_version: 3.8
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.9
       job_group: python_tests
-      job_depends_on: build_server
+      job_depends_on: build_flet
       python_version: 3.9
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.10
       job_group: python_tests
-      job_depends_on: build_server
+      job_depends_on: build_flet
       python_version: 3.10
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
@@ -77,97 +76,146 @@ stack: python $python_version
 
 for:
   # ======================================
-  #      Windows
+  #      Build Flet View for Windows
   # ======================================
 
   - matrix:
       only:
-        - job_name: Windows
+        - job_name: Build Flet for Windows
+
+    environment:
+      VC_REDIST_DIR: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.29.30133\x64\Microsoft.VC142.CRT'
 
     install:
-      - ps: .\install_go.ps1
-      - set GOPATH=%USERPROFILE%\go
-      - set PATH=%GOPATH%\bin;%PATH%
-      - echo %GOPATH%
-      - echo %GOROOT%
-      - go version
+      - ps: .\ci\install_flutter.ps1
+      - set PATH=C:\flutter\bin;%PATH%
+      - flutter --version
 
     build_script:
-      - ps: Install-Product node 12 x64
       - cd client
-      - yarn
-      - yarn build
-      - cd ..
-      - mkdir internal\server\content
-      - xcopy client\build internal\server\content\ /E /Y
-      - .\build.cmd
-      - dir %USERPROFILE%\Go\bin
+      - flutter test
+      - flutter build windows
+      - set RELEASE_DIR=build\windows\runner\Release
+      - copy "%VC_REDIST_DIR%\msvcp140.dll" %RELEASE_DIR%
+      - copy "%VC_REDIST_DIR%\vcruntime140.dll" %RELEASE_DIR%
+      - copy "%VC_REDIST_DIR%\vcruntime140_1.dll" %RELEASE_DIR%
+      - dir %RELEASE_DIR%
+      - ren build\windows\runner\Release flet
+      - cd build\windows\runner
+      - 7z a flet.zip flet
+      - cd %APPVEYOR_BUILD_FOLDER%
 
-    test_script:
-      - run-tests.cmd
+    test: off
+
+    artifacts:
+      - path: client\build\windows\runner\flet.zip
+        name: flet_windows
+
+  # ======================================
+  #      Build Flet View for macOS
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: Build Flet for macOS
+
+    install:
+      - brew install cocoapods
+      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.1-stable.zip -o flutter_macos_stable.zip
+      - unzip -qq flutter_macos_stable.zip
+      - export PATH="$PATH:`pwd`/flutter/bin"
+      - flutter --version
+      - flutter config --enable-macos-desktop
+      - flutter doctor
+
+    build_script:
+      # Flutter macOS client
+      - cd client
+      - flutter test
+      - flutter build macos
+      - tar -czvf flet.app.tar.gz -C build/macos/Build/Products/Release Flet.app
+
+    artifacts:
+      - path: client/flet.app.tar.gz
+        name: flet_macos
+
+  # ======================================
+  #      Build Flet View for iOS
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: Build Flet for iOS
+
+    install:
+      - export LANG=en_US.UTF-8
+      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.1-stable.zip -o flutter_macos_stable.zip
+      - unzip -qq flutter_macos_stable.zip
+      - export PATH="$PATH:`pwd`/flutter/bin"
+      - flutter --version
+      - flutter doctor
+
+    build_script:
+      # Flutter iOS client
+      - cd client
+      - flutter test
+      - cd ios
+      - ruby --version
+      - bundle install --path vendor/bundle
+      - sh: |
+          export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
+          if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
+            bundle exec fastlane build_flutter      
+          elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+            if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then
+                export FLET_PACKAGE_VERSION="${BASH_REMATCH[1]}"
+                echo "FLET_PACKAGE_VERSION: ${FLET_PACKAGE_VERSION}"
+                bundle exec fastlane upload_appstore
+            else
+                echo "Cannot extract version information from a tag."
+                exit 1
+            fi
+          else
+            bundle exec fastlane build_ipa
+          fi
+
+    artifacts:
+      - path: client/build/flet.ipa
+        name: flet_ios
 
   # ======================================
   #      Linux
   # ======================================
 
-  - matrix:
-      only:
-        - job_name: Linux
+  # - matrix:
+  #     only:
+  #       - job_name: Linux
 
-    install:
-      - gvm install go${GO_VERSION} -B
-      - gvm use go${GO_VERSION}
-      - go version
+  #   install:
+  #     - gvm install go${GO_VERSION} -B
+  #     - gvm use go${GO_VERSION}
+  #     - go version
 
-    build_script:
-      - nvm use 12
-      - cd client
-      - yarn
-      - yarn build
-      - cd ..
-      - mkdir server/content
-      - cp -r client/build/* server/content
-      - ./build.sh
-      - ls $GOPATH/bin
+  #   build_script:
+  #     - nvm use 12
+  #     - cd client
+  #     - yarn
+  #     - yarn build
+  #     - cd ..
+  #     - cp -rf client/build/* server/content
+  #     - ./build.sh
+  #     - ls $GOPATH/bin
 
-    test_script:
-      - ./run-tests.sh
-
-  # ======================================
-  #      macOS
-  # ======================================
-
-  - matrix:
-      only:
-        - job_name: macOS
-
-    install:
-      - gvm install go${GO_VERSION} -B
-      - gvm use go${GO_VERSION}
-      - go version
-      - HOMEBREW_NO_AUTO_UPDATE=1 brew install yarn
-
-    build_script:
-      - nvm use 14
-      - cd client
-      - yarn
-      - yarn build
-      - cd ..
-      - mkdir server/content
-      - cp -r client/build/* server/content
-      - ./build.sh
-      - ls $GOPATH/bin
-
-    test_script:
-      - ./run-tests.sh
+  #   test_script:
+  #     - ./run-tests.sh
 
   # ======================================
-  #      Build Server binaries
+  #      Build Fletd
   # ======================================
 
   - matrix:
       only:
-        - job_group: build_server
+        - job_name: Build Fletd
 
     install:
       # Flutter SDK
@@ -186,14 +234,14 @@ for:
       # Flutter Web client
       - cd client
       - flutter test
-      - flutter build web --release --web-renderer auto
+      - flutter build web --release --web-renderer canvaskit
       - rm -rf build/web/canvaskit
       - ls -alR build/web
+      - cd ..
 
       # Flet Server in Go
-      - cd ..
       - mkdir server/server/content
-      - cp -r client/build/web/* server/server/content
+      - cp -rf client/build/web/* server/server/content
       - cd server
       - sh: |
           if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
@@ -203,22 +251,22 @@ for:
           fi
       - cd ..
 
-    test_script:
-      - docker images
-      - docker run --name flet-test -d flet/server
-      - sleep 10
-      - docker logs flet-test
+    # test_script:
+    #   - docker images
+    #   - docker run --name flet-test -d flet/server
+    #   - sleep 10
+    #   - docker logs flet-test
 
-      # publish to docker.io on tagged builds only
-      - sh: |
-          if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-            echo "$DOCKER_REGISTRY_PASS" | docker login --username $DOCKER_REGISTRY_USER --password-stdin
-            docker image push --all-tags flet/server
-          fi
+    #   # publish to docker.io on tagged builds only
+    #   - sh: |
+    #       if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+    #         echo "$DOCKER_REGISTRY_PASS" | docker login --username $DOCKER_REGISTRY_USER --password-stdin
+    #         docker image push --all-tags flet/server
+    #       fi
 
     artifacts:
-      - path: server/dist/flet-*
-      - path: server/dist/flet_*/*
+      - path: server/dist/fletd-*
+      - path: server/dist/fletd_*/*
 
   ######################
   #    Python Tests    #
@@ -282,6 +330,7 @@ for:
           # patch version
           $env:PACKAGE_VERSION = $ver
           (Get-Content pyproject.toml).replace("version = `"0.1.0`"", "version = `"$ver`"") | Set-Content pyproject.toml
+          ("# this file was auto-generated by CI", "version = '$ver'") | Set-Content flet/version.py
 
       # build package
       - pdm build

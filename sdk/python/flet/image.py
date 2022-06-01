@@ -1,11 +1,11 @@
-from typing import Optional
+from typing import Optional, Union
 
 from beartype import beartype
-from flet.control import BorderColor
-from flet.control import BorderRadius
-from flet.control import BorderStyle
-from flet.control import BorderWidth
-from flet.control import Control
+
+from flet import border_radius
+from flet.border_radius import BorderRadius
+from flet.control import Control, OptionalNumber
+from flet.ref import Ref
 
 try:
     from typing import Literal
@@ -13,54 +13,51 @@ except:
     from typing_extensions import Literal
 
 
-Fit = Literal[
-    None, "none", "contain", "cover", "center", "centerContain", "centerCover"
+ImageFit = Literal[
+    None, "none", "contain", "cover", "fill", "fitHeight", "fitWidth", "scaleDown"
 ]
+
+ImageRepeat = Literal[None, "noRepeat", "repeat", "repeatX", "repeatY"]
 
 
 class Image(Control):
     def __init__(
         self,
-        src=None,
-        id=None,
-        ref=None,
-        alt=None,
-        title=None,
-        maximize_frame=None,
-        fit: Fit = None,
-        border_style: BorderStyle = None,
-        border_width: BorderWidth = None,
-        border_color: BorderColor = None,
+        ref: Ref = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        expand: Union[bool, int] = None,
+        opacity: OptionalNumber = None,
+        tooltip: str = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # Specific
+        #
+        src: str = None,
+        repeat: ImageRepeat = None,
+        fit: ImageFit = None,
         border_radius: BorderRadius = None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
     ):
 
         Control.__init__(
             self,
-            id=id,
             ref=ref,
-            width=width,
-            height=height,
-            padding=padding,
-            margin=margin,
+            expand=expand,
+            opacity=opacity,
+            tooltip=tooltip,
             visible=visible,
             disabled=disabled,
+            data=data,
         )
 
+        self.width = width
+        self.height = height
         self.src = src
-        self.alt = alt
-        self.title = title
-        self.border_style = border_style
-        self.border_width = border_width
-        self.border_color = border_color
-        self.border_radius = border_radius
         self.fit = fit
-        self.maximize_frame = maximize_frame
+        self.repeat = repeat
+        self.border_radius = border_radius
 
     def _get_control_name(self):
         return "image"
@@ -74,34 +71,6 @@ class Image(Control):
     def src(self, value):
         self._set_attr("src", value)
 
-    # alt
-    @property
-    def alt(self):
-        return self._get_attr("alt")
-
-    @alt.setter
-    def alt(self, value):
-        self._set_attr("alt", value)
-
-    # title
-    @property
-    def title(self):
-        return self._get_attr("title")
-
-    @title.setter
-    def title(self, value):
-        self._set_attr("title", value)
-
-    # maximize_frame
-    @property
-    def maximize_frame(self):
-        return self._get_attr("maximizeFrame", data_type="bool", def_value=False)
-
-    @maximize_frame.setter
-    @beartype
-    def maximize_frame(self, value: Optional[bool]):
-        self._set_attr("maximizeFrame", value)
-
     # fit
     @property
     def fit(self):
@@ -109,45 +78,48 @@ class Image(Control):
 
     @fit.setter
     @beartype
-    def fit(self, value: Fit):
+    def fit(self, value: ImageFit):
         self._set_attr("fit", value)
 
-    # border_style
+    # repeat
     @property
-    def border_style(self):
-        return self._get_value_or_list_attr("borderStyle", " ")
+    def repeat(self):
+        return self._get_attr("repeat")
 
-    @border_style.setter
+    @repeat.setter
     @beartype
-    def border_style(self, value: BorderStyle):
-        self._set_value_or_list_attr("borderStyle", value, " ")
+    def repeat(self, value: ImageRepeat):
+        self._set_attr("repeat", value)
 
-    # border_width
+    # width
     @property
-    def border_width(self):
-        return self._get_value_or_list_attr("borderWidth", " ")
+    def width(self) -> OptionalNumber:
+        return self._get_attr("width")
 
-    @border_width.setter
+    @width.setter
     @beartype
-    def border_width(self, value: BorderWidth):
-        self._set_value_or_list_attr("borderWidth", value, " ")
+    def width(self, value: OptionalNumber):
+        self._set_attr("width", value)
 
-    # border_color
+    # height
     @property
-    def border_color(self):
-        return self._get_value_or_list_attr("borderColor", " ")
+    def height(self):
+        return self._get_attr("height")
 
-    @border_color.setter
+    @height.setter
     @beartype
-    def border_color(self, value: BorderColor):
-        self._set_value_or_list_attr("borderColor", value, " ")
+    def height(self, value: OptionalNumber):
+        self._set_attr("height", value)
 
     # border_radius
     @property
     def border_radius(self):
-        return self._get_value_or_list_attr("borderRadius", " ")
+        return self.__border_radius
 
     @border_radius.setter
     @beartype
-    def border_radius(self, value: BorderRadius):
-        self._set_value_or_list_attr("borderRadius", value, " ")
+    def border_radius(self, value: Optional[BorderRadius]):
+        self.__border_radius = value
+        if value and isinstance(value, (int, float)):
+            value = border_radius.all(value)
+        self._set_attr_json("borderRadius", value)

@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "flet_view" "\0"
+            VALUE "CompanyName", "Appveyor Systems Inc." "\0"
+            VALUE "FileDescription", "Flet description" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "flet_view" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "flet_view.exe" "\0"
-            VALUE "ProductName", "flet_view" "\0"
+            VALUE "InternalName", "Flet" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 Appveyor Systems Inc. All rights reserved." "\0"
+            VALUE "OriginalFilename", "flet.exe" "\0"
+            VALUE "ProductName", "Flet" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

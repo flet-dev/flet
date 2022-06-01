@@ -1,15 +1,29 @@
 import json
 import logging
 import threading
+from typing import Union
 
 from beartype import beartype
-from beartype.typing import List
-from beartype.typing import Optional
-from flet import constants
+from beartype.typing import List, Optional
+
+from flet import constants, padding
+from flet.app_bar import AppBar
+from flet.banner import Banner
+from flet.clipboard import Clipboard
 from flet.connection import Connection
-from flet.control import Control
+from flet.control import (
+    Control,
+    CrossAxisAlignment,
+    MainAxisAlignment,
+    OptionalNumber,
+    PaddingValue,
+    ScrollMode,
+)
 from flet.control_event import ControlEvent
+from flet.floating_action_button import FloatingActionButton
 from flet.protocol import Command
+from flet.snack_bar import SnackBar
+from flet.theme import Theme
 
 try:
     from typing import Literal
@@ -17,33 +31,30 @@ except:
     from typing_extensions import Literal
 
 
-Align = Literal[
-    None,
-    "start",
-    "end",
-    "center",
-    "space-between",
-    "space-around",
-    "space-evenly",
-    "baseline",
-    "stretch",
-]
-
-THEME = Literal[None, "light", "dark"]
+PageDesign = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
+ThemeMode = Literal[None, "system", "light", "dark"]
 
 
 class Page(Control):
     def __init__(self, conn: Connection, session_id):
-        Control.__init__(self, id="page")
+        Control.__init__(self)
 
-        self._conn = conn
+        self._id = "page"
+        self._Control__uid = "page"
+        self.__conn = conn
         self._session_id = session_id
         self._controls = []  # page controls
         self._index = {}  # index with all page controls
-        self._index[self.id] = self
+        self._index[self._Control__uid] = self
         self._last_event = None
         self._event_available = threading.Event()
         self._fetch_page_details()
+        self.lock = threading.Lock()
+
+        self.__offstage = Offstage()
+        self.__appbar = None
+        self.__theme = None
+        self.__dark_theme = None
 
     def __enter__(self):
         return self
@@ -55,33 +66,23 @@ class Page(Control):
         return self._index.get(id)
 
     def _get_children(self):
-        return self._controls
+        children = [self.__offstage]
+        if self.__appbar:
+            children.append(self.__appbar)
+        children.extend(self._controls)
+        return children
 
     def _fetch_page_details(self):
-        values = self._conn.send_commands(
-            self._conn.page_name,
+        values = self.__conn.send_commands(
+            self.__conn.page_name,
             self._session_id,
             [
-                Command(0, "get", ["page", "hash"], None, None, None),
-                Command(0, "get", ["page", "winwidth"], None, None, None),
-                Command(0, "get", ["page", "winheight"], None, None, None),
-                Command(0, "get", ["page", "userauthprovider"], None, None, None),
-                Command(0, "get", ["page", "userid"], None, None, None),
-                Command(0, "get", ["page", "userlogin"], None, None, None),
-                Command(0, "get", ["page", "username"], None, None, None),
-                Command(0, "get", ["page", "useremail"], None, None, None),
-                Command(0, "get", ["page", "userclientip"], None, None, None),
+                Command(0, "get", ["page", "winWidth"], None, None),
+                Command(0, "get", ["page", "winHeight"], None, None),
             ],
         ).results
-        self._set_attr("hash", values[0], False)
-        self._set_attr("winwidth", values[1], False)
-        self._set_attr("winheight", values[2], False)
-        self._set_attr("userauthprovider", values[3], False)
-        self._set_attr("userid", values[4], False)
-        self._set_attr("userlogin", values[5], False)
-        self._set_attr("username", values[6], False)
-        self._set_attr("useremail", values[7], False)
-        self._set_attr("userclientip", values[8], False)
+        self._set_attr("winWidth", values[0], False)
+        self._set_attr("winHeight", values[1], False)
 
     def update(self, *controls):
         with self._lock:
@@ -102,8 +103,8 @@ class Page(Control):
             return
 
         # execute commands
-        results = self._conn.send_commands(
-            self._conn.page_name, self._session_id, commands
+        results = self.__conn.send_commands(
+            self.__conn.page_name, self._session_id, commands
         ).results
 
         if len(results) > 0:
@@ -208,29 +209,29 @@ class Page(Control):
 
     def close(self):
         if self._session_id == constants.ZERO_SESSION:
-            self._conn.close()
+            self.__conn.close()
 
     def _send_command(self, name: str, values: List[str]):
-        return self._conn.send_command(
-            self._conn.page_name,
+        return self.__conn.send_command(
+            self.__conn.page_name,
             self._session_id,
-            Command(0, name, values, None, None, None),
+            Command(0, name, values, None, None),
         )
 
     # url
     @property
     def url(self):
-        return self._conn.page_url
+        return self.__conn.page_url
 
     # name
     @property
     def name(self):
-        return self._conn.page_name
+        return self.__conn.page_name
 
     # connection
     @property
     def connection(self):
-        return self._conn
+        return self.__conn
 
     # index
     @property
@@ -248,8 +249,9 @@ class Page(Control):
         return self._controls
 
     @controls.setter
-    def controls(self, value):
-        self._controls = value
+    @beartype
+    def controls(self, value: List[Control]):
+        self._controls = value or []
 
     # title
     @property
@@ -260,54 +262,48 @@ class Page(Control):
     def title(self, value):
         self._set_attr("title", value)
 
-    # vertical_fill
+    # horizontal_alignment
     @property
-    def vertical_fill(self):
-        return self._get_attr("verticalFill", data_type="bool", def_value=False)
+    def horizontal_alignment(self):
+        return self._get_attr("horizontalAlignment")
 
-    @vertical_fill.setter
+    @horizontal_alignment.setter
     @beartype
-    def vertical_fill(self, value: Optional[bool]):
-        self._set_attr("verticalFill", value)
+    def horizontal_alignment(self, value: CrossAxisAlignment):
+        self._set_attr("horizontalAlignment", value)
 
-    # horizontal_align
+    # vertical_alignment
     @property
-    def horizontal_align(self):
-        return self._get_attr("horizontalAlign")
+    def vertical_alignment(self):
+        return self._get_attr("verticalAlignment")
 
-    @horizontal_align.setter
+    @vertical_alignment.setter
     @beartype
-    def horizontal_align(self, value: Align):
-        self._set_attr("horizontalAlign", value)
+    def vertical_alignment(self, value: MainAxisAlignment):
+        self._set_attr("verticalAlignment", value)
 
-    # vertical_align
+    # spacing
     @property
-    def vertical_align(self):
-        return self._get_attr("verticalAlign")
+    def spacing(self):
+        return self._get_attr("spacing")
 
-    @vertical_align.setter
+    @spacing.setter
     @beartype
-    def vertical_align(self, value: Align):
-        self._set_attr("verticalAlign", value)
-
-    # gap
-    @property
-    def gap(self):
-        return self._get_attr("gap")
-
-    @gap.setter
-    @beartype
-    def gap(self, value: Optional[int]):
-        self._set_attr("gap", value)
+    def spacing(self, value: OptionalNumber):
+        self._set_attr("spacing", value)
 
     # padding
     @property
     def padding(self):
-        return self._get_attr("padding")
+        return self.__padding
 
     @padding.setter
-    def padding(self, value):
-        self._set_attr("padding", value)
+    @beartype
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr_json("padding", value)
 
     # bgcolor
     @property
@@ -318,153 +314,152 @@ class Page(Control):
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
 
+    # design
+    @property
+    def design(self):
+        return self._get_attr("design")
+
+    @design.setter
+    @beartype
+    def design(self, value: PageDesign):
+        self._set_attr("design", value)
+
+    # clipboard
+    @property
+    def clipboard(self):
+        return self.__offstage.clipboard.value
+
+    @clipboard.setter
+    @beartype
+    def clipboard(self, value: Optional[str]):
+        self.__offstage.clipboard.value = value
+
+    # splash
+    @property
+    def splash(self):
+        return self.__offstage.splash
+
+    @splash.setter
+    @beartype
+    def splash(self, value: Optional[Control]):
+        self.__offstage.splash = value
+
+    # appbar
+    @property
+    def appbar(self):
+        return self.__appbar
+
+    @appbar.setter
+    @beartype
+    def appbar(self, value: Optional[AppBar]):
+        self.__appbar = value
+
+    # floating_action_button
+    @property
+    def floating_action_button(self):
+        return self.__offstage.floating_action_button
+
+    @floating_action_button.setter
+    @beartype
+    def floating_action_button(self, value: Optional[FloatingActionButton]):
+        self.__offstage.floating_action_button = value
+
+    # banner
+    @property
+    def banner(self):
+        return self.__offstage.banner
+
+    @banner.setter
+    @beartype
+    def banner(self, value: Optional[Banner]):
+        self.__offstage.banner = value
+
+    # snack_bar
+    @property
+    def snack_bar(self):
+        return self.__offstage.snack_bar
+
+    @snack_bar.setter
+    @beartype
+    def snack_bar(self, value: Optional[SnackBar]):
+        self.__offstage.snack_bar = value
+
+    # dialog
+    @property
+    def dialog(self):
+        return self.__offstage.dialog
+
+    @dialog.setter
+    @beartype
+    def dialog(self, value: Optional[Control]):
+        self.__offstage.dialog = value
+
+    # theme_mode
+    @property
+    def theme_mode(self):
+        return self._get_attr("themeMode")
+
+    @theme_mode.setter
+    @beartype
+    def theme_mode(self, value: Optional[ThemeMode]):
+        self._set_attr("themeMode", value)
+
     # theme
     @property
     def theme(self):
-        return self._get_attr("theme")
+        return self.__theme
 
     @theme.setter
     @beartype
-    def theme(self, value: THEME):
-        self._set_attr("theme", value)
+    def theme(self, value: Optional[Theme]):
+        self.__theme = value
+        if self.__theme:
+            self.__theme.brightness = "light"
+        self._set_attr_json("theme", value)
 
-    # theme_primary_color
+    # dark_theme
     @property
-    def theme_primary_color(self):
-        return self._get_attr("themePrimaryColor")
+    def dark_theme(self):
+        return self.__dark_theme
 
-    @theme_primary_color.setter
-    def theme_primary_color(self, value):
-        self._set_attr("themePrimaryColor", value)
+    @dark_theme.setter
+    @beartype
+    def dark_theme(self, value: Optional[Theme]):
+        self.__dark_theme = value
+        if self.__dark_theme:
+            self.__dark_theme.brightness = "dark"
+        self._set_attr_json("darkTheme", value)
 
-    # theme_text_color
+    # scroll
     @property
-    def theme_text_color(self):
-        return self._get_attr("themeTextColor")
+    def scroll(self):
+        return self.__scroll
 
-    @theme_text_color.setter
-    def theme_text_color(self, value):
-        self._set_attr("themeTextColor", value)
+    @scroll.setter
+    @beartype
+    def scroll(self, value: ScrollMode):
+        self.__scroll = value
+        if value == True:
+            value = "auto"
+        elif value == False:
+            value = "none"
+        self._set_attr("scroll", value)
 
-    # theme_background_color
+    # window_width
     @property
-    def theme_background_color(self):
-        return self._get_attr("themeBackgroundColor")
-
-    @theme_background_color.setter
-    def theme_background_color(self, value):
-        self._set_attr("themeBackgroundColor", value)
-
-    # hash
-    @property
-    def hash(self):
-        return self._get_attr("hash")
-
-    @hash.setter
-    def hash(self, value):
-        self._set_attr("hash", value)
-
-    # win_width
-    @property
-    def win_width(self):
-        w = self._get_attr("winwidth")
+    def window_width(self):
+        w = self._get_attr("winWidth")
         if w != None and w != "":
-            return int(w)
+            return float(w)
         return 0
 
-    # win_height
+    # window_height
     @property
-    def win_height(self):
-        h = self._get_attr("winheight")
+    def window_height(self):
+        h = self._get_attr("winHeight")
         if h != None and h != "":
-            return int(h)
+            return float(h)
         return 0
-
-    # signin
-    @property
-    def signin(self):
-        return self._get_attr("signin")
-
-    @signin.setter
-    def signin(self, value):
-        self._set_attr("signin", value)
-
-    # signin_allow_dismiss
-    @property
-    def signin_allow_dismiss(self):
-        return self._get_attr("signinAllowDismiss", data_type="bool", def_value=False)
-
-    @signin_allow_dismiss.setter
-    @beartype
-    def signin_allow_dismiss(self, value: Optional[bool]):
-        self._set_attr("signinAllowDismiss", value)
-
-    # signin_groups
-    @property
-    def signin_groups(self):
-        return self._get_attr("signinGroups", data_type="bool", def_value=False)
-
-    @signin_groups.setter
-    @beartype
-    def signin_groups(self, value: Optional[bool]):
-        self._set_attr("signinGroups", value)
-
-    # user_auth_provider
-    @property
-    def user_auth_provider(self):
-        return self._get_attr("userauthprovider")
-
-    # user_id
-    @property
-    def user_id(self):
-        return self._get_attr("userId")
-
-    # user_login
-    @property
-    def user_login(self):
-        return self._get_attr("userLogin")
-
-    # user_name
-    @property
-    def user_name(self):
-        return self._get_attr("userName")
-
-    # user_email
-    @property
-    def user_email(self):
-        return self._get_attr("userEmail")
-
-    # user_client_ip
-    @property
-    def user_client_ip(self):
-        return self._get_attr("userClientIP")
-
-    # on_signin
-    @property
-    def on_signin(self):
-        return self._get_event_handler("signin")
-
-    @on_signin.setter
-    def on_signin(self, handler):
-        self._add_event_handler("signin", handler)
-
-    # on_dismiss_signin
-    @property
-    def on_dismiss_signin(self):
-        return self._get_event_handler("dismissSignin")
-
-    @on_dismiss_signin.setter
-    def on_dismiss_signin(self, handler):
-        self._add_event_handler("dismissSignin", handler)
-
-    # on_signout
-    @property
-    def on_signout(self):
-        return self._get_event_handler("signout")
-
-    @on_signout.setter
-    def on_signout(self, handler):
-        self._add_event_handler("signout", handler)
 
     # on_close
     @property
@@ -474,15 +469,6 @@ class Page(Control):
     @on_close.setter
     def on_close(self, handler):
         self._add_event_handler("close", handler)
-
-    # on_hash_change
-    @property
-    def on_hash_change(self):
-        return self._get_event_handler("hashChange")
-
-    @on_hash_change.setter
-    def on_hash_change(self, handler):
-        self._add_event_handler("hashChange", handler)
 
     # on_resize
     @property
@@ -510,3 +496,100 @@ class Page(Control):
     @on_disconnect.setter
     def on_disconnect(self, handler):
         self._add_event_handler("disconnect", handler)
+
+
+class Offstage(Control):
+    def __init__(
+        self,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+    ):
+
+        Control.__init__(
+            self,
+            visible=visible,
+            disabled=disabled,
+            data=data,
+        )
+
+        self.__clipboard = Clipboard()
+        self.__fab = None
+        self.__banner = None
+        self.__snack_bar = None
+        self.__dialog = None
+        self.__splash = None
+
+    def _get_control_name(self):
+        return "offstage"
+
+    def _get_children(self):
+        children = []
+        if self.__clipboard:
+            children.append(self.__clipboard)
+        if self.__fab:
+            children.append(self.__fab)
+        if self.__banner:
+            children.append(self.__banner)
+        if self.__snack_bar:
+            children.append(self.__snack_bar)
+        if self.__dialog:
+            children.append(self.__dialog)
+        if self.__splash:
+            children.append(self.__splash)
+        return children
+
+    # clipboard
+    @property
+    def clipboard(self):
+        return self.__clipboard
+
+    # splash
+    @property
+    def splash(self):
+        return self.__splash
+
+    @splash.setter
+    @beartype
+    def splash(self, value: Optional[Control]):
+        self.__splash = value
+
+    # floating_action_button
+    @property
+    def floating_action_button(self):
+        return self.__fab
+
+    @floating_action_button.setter
+    @beartype
+    def floating_action_button(self, value: Optional[FloatingActionButton]):
+        self.__fab = value
+
+    # banner
+    @property
+    def banner(self):
+        return self.__banner
+
+    @banner.setter
+    @beartype
+    def banner(self, value: Optional[Banner]):
+        self.__banner = value
+
+    # snack_bar
+    @property
+    def snack_bar(self):
+        return self.__snack_bar
+
+    @snack_bar.setter
+    @beartype
+    def snack_bar(self, value: Optional[SnackBar]):
+        self.__snack_bar = value
+
+    # dialog
+    @property
+    def dialog(self):
+        return self.__dialog
+
+    @dialog.setter
+    @beartype
+    def dialog(self, value: Optional[Control]):
+        self.__dialog = value

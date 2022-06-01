@@ -1,80 +1,88 @@
-from typing import Optional
+from typing import Optional, Union
 
 from beartype import beartype
-from flet.control import BorderColor
-from flet.control import BorderRadius
-from flet.control import BorderStyle
-from flet.control import BorderWidth
-from flet.control import Control
-from flet.control import TextAlign
-from flet.control import TextSize
+
+from flet.constrained_control import ConstrainedControl
+from flet.control import OptionalNumber, TextAlign
+from flet.ref import Ref
 
 try:
     from typing import Literal
 except:
     from typing_extensions import Literal
 
+FontWeight = Literal[
+    None,
+    "normal",
+    "bold",
+    "w100",
+    "w200",
+    "w300",
+    "w400",
+    "w500",
+    "w600",
+    "w700",
+    "w800",
+    "w900",
+]
 
-VerticalAlign = Literal[None, "top", "center", "bottom"]
+TextOverflow = Literal[None, "clip", "ellipsis", "fade", "visible"]
 
 
-class Text(Control):
+class Text(ConstrainedControl):
     def __init__(
         self,
-        value=None,
-        id=None,
-        ref=None,
-        markdown=None,
-        align: TextAlign = None,
-        vertical_align: VerticalAlign = None,
-        size: TextSize = None,
-        bold=None,
-        italic=None,
-        pre=None,
-        nowrap=None,
-        block=None,
-        color=None,
-        bgcolor=None,
-        border_style: BorderStyle = None,
-        border_width: BorderWidth = None,
-        border_color: BorderColor = None,
-        border_radius: BorderRadius = None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
+        value: str = None,
+        ref: Ref = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        expand: Union[bool, int] = None,
+        opacity: OptionalNumber = None,
+        tooltip: str = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # text-specific
+        #
+        text_align: TextAlign = None,
+        size: OptionalNumber = None,
+        weight: FontWeight = None,
+        italic: bool = None,
+        style: str = None,
+        max_lines: int = None,
+        overflow: TextOverflow = None,
+        selectable: bool = None,
+        no_wrap: bool = None,
+        color: str = None,
+        bgcolor: str = None,
     ):
 
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
-            id=id,
             ref=ref,
             width=width,
             height=height,
-            padding=padding,
-            margin=margin,
+            expand=expand,
+            opacity=opacity,
+            tooltip=tooltip,
             visible=visible,
             disabled=disabled,
+            data=data,
         )
 
         self.value = value
-        self.markdown = markdown
-        self.align = align
-        self.vertical_align = vertical_align
+        self.text_align = text_align
         self.size = size
-        self.bold = bold
+        self.weight = weight
         self.italic = italic
-        self.pre = pre
-        self.nowrap = nowrap
-        self.block = block
+        self.no_wrap = no_wrap
+        self.style = style
+        self.max_lines = max_lines
+        self.overflow = overflow
+        self.selectable = selectable
         self.color = color
         self.bgcolor = bgcolor
-        self.border_style = border_style
-        self.border_width = border_width
-        self.border_color = border_color
-        self.border_radius = border_radius
 
     def _get_control_name(self):
         return "text"
@@ -88,35 +96,15 @@ class Text(Control):
     def value(self, value):
         self._set_attr("value", value)
 
-    # markdown
+    # text_align
     @property
-    def markdown(self):
-        return self._get_attr("markdown", data_type="bool", def_value=False)
+    def text_align(self):
+        return self._get_attr("textAlign")
 
-    @markdown.setter
+    @text_align.setter
     @beartype
-    def markdown(self, value: Optional[bool]):
-        self._set_attr("markdown", value)
-
-    # align
-    @property
-    def align(self):
-        return self._get_attr("align")
-
-    @align.setter
-    @beartype
-    def align(self, value: TextAlign):
-        self._set_attr("align", value)
-
-    # vertical_align
-    @property
-    def vertical_align(self):
-        return self._get_attr("verticalAlign")
-
-    @vertical_align.setter
-    @beartype
-    def vertical_align(self, value: VerticalAlign):
-        self._set_attr("verticalAlign", value)
+    def text_align(self, value: TextAlign):
+        self._set_attr("textAlign", value)
 
     # size
     @property
@@ -125,18 +113,28 @@ class Text(Control):
 
     @size.setter
     @beartype
-    def size(self, value: TextSize):
+    def size(self, value: OptionalNumber):
         self._set_attr("size", value)
 
-    # bold
+    # weight
     @property
-    def bold(self):
-        return self._get_attr("bold", data_type="bool", def_value=False)
+    def weight(self):
+        return self._get_attr("weight")
 
-    @bold.setter
+    @weight.setter
     @beartype
-    def bold(self, value: Optional[bool]):
-        self._set_attr("bold", value)
+    def weight(self, value: FontWeight):
+        self._set_attr("weight", value)
+
+    # style
+    @property
+    def style(self):
+        return self._get_attr("style")
+
+    @style.setter
+    @beartype
+    def style(self, value: Optional[str]):
+        self._set_attr("style", value)
 
     # italic
     @property
@@ -148,35 +146,45 @@ class Text(Control):
     def italic(self, value: Optional[bool]):
         self._set_attr("italic", value)
 
-    # pre
+    # no_wrap
     @property
-    def pre(self):
-        return self._get_attr("pre", data_type="bool", def_value=False)
+    def no_wrap(self):
+        return self._get_attr("italic", data_type="noWrap", def_value=False)
 
-    @pre.setter
+    @no_wrap.setter
     @beartype
-    def pre(self, value: Optional[bool]):
-        self._set_attr("pre", value)
+    def no_wrap(self, value: Optional[bool]):
+        self._set_attr("noWrap", value)
 
-    # nowrap
+    # selectable
     @property
-    def nowrap(self):
-        return self._get_attr("nowrap", data_type="bool", def_value=False)
+    def selectable(self):
+        return self._get_attr("selectable", data_type="bool", def_value=False)
 
-    @nowrap.setter
+    @selectable.setter
     @beartype
-    def nowrap(self, value: Optional[bool]):
-        self._set_attr("nowrap", value)
+    def selectable(self, value: Optional[bool]):
+        self._set_attr("selectable", value)
 
-    # block
+    # max_lines
     @property
-    def block(self):
-        return self._get_attr("block", data_type="bool", def_value=False)
+    def max_lines(self):
+        return self._get_attr("maxLines")
 
-    @block.setter
+    @max_lines.setter
     @beartype
-    def block(self, value: Optional[bool]):
-        self._set_attr("block", value)
+    def max_lines(self, value: Optional[int]):
+        self._set_attr("maxLines", value)
+
+    # overflow
+    @property
+    def overflow(self):
+        return self._get_attr("overflow")
+
+    @overflow.setter
+    @beartype
+    def overflow(self, value: TextOverflow):
+        self._set_attr("overflow", value)
 
     # color
     @property
@@ -195,43 +203,3 @@ class Text(Control):
     @bgcolor.setter
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
-
-    # border_style
-    @property
-    def border_style(self):
-        return self._get_value_or_list_attr("borderStyle", " ")
-
-    @border_style.setter
-    @beartype
-    def border_style(self, value: BorderStyle):
-        self._set_value_or_list_attr("borderStyle", value, " ")
-
-    # border_width
-    @property
-    def border_width(self):
-        return self._get_value_or_list_attr("borderWidth", " ")
-
-    @border_width.setter
-    @beartype
-    def border_width(self, value: BorderWidth):
-        self._set_value_or_list_attr("borderWidth", value, " ")
-
-    # border_color
-    @property
-    def border_color(self):
-        return self._get_value_or_list_attr("borderColor", " ")
-
-    @border_color.setter
-    @beartype
-    def border_color(self, value: BorderColor):
-        self._set_value_or_list_attr("borderColor", value, " ")
-
-    # border_radius
-    @property
-    def border_radius(self):
-        return self._get_value_or_list_attr("borderRadius", " ")
-
-    @border_radius.setter
-    @beartype
-    def border_radius(self, value: BorderRadius):
-        self._set_value_or_list_attr("borderRadius", value, " ")

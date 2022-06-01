@@ -1,10 +1,15 @@
 import datetime as dt
+import json
 import threading
 from difflib import SequenceMatcher
-from beartype.typing import List, Optional, Union
+from typing import Union
 
 from beartype import beartype
+from beartype.typing import List, Optional
 
+from flet.embed_json_encoder import EmbedJsonEncoder
+from flet.margin import Margin
+from flet.padding import Padding
 from flet.protocol import Command
 from flet.ref import Ref
 
@@ -13,67 +18,63 @@ try:
 except:
     from typing_extensions import Literal
 
-
-BorderStyles = Literal[
-    "none",
-    "hidden",
-    "dotted",
-    "dashed",
-    "solid",
-    "double",
-    "groove",
-    "ridge",
-    "inset",
-    "outset",
-]
-
-BorderStyle = Union[None, BorderStyles, List[BorderStyles]]
-BorderWidth = Union[None, str, int, float, List[str], List[int], List[float]]
-BorderColor = Union[None, str, List[str]]
-BorderRadius = Union[None, str, int, float, List[str], List[int], List[float]]
-
-TextSize = Literal[
+MainAxisAlignment = Literal[
     None,
-    "tiny",
-    "xSmall",
-    "small",
-    "smallPlus",
-    "medium",
-    "mediumPlus",
-    "large",
-    "xLarge",
-    "xxLarge",
-    "superLarge",
-    "mega",
+    "start",
+    "end",
+    "center",
+    "spaceBetween",
+    "spaceAround",
+    "spaceEvenly",
 ]
 
-TextAlign = Literal[None, "left", "right", "center", "justify"]
+CrossAxisAlignment = Literal[
+    None,
+    "start",
+    "end",
+    "center",
+    "stretch",
+    "baseline",
+]
+
+BorderStyle = Literal[
+    None,
+    "none",
+    "solid",
+]
+
+TextAlign = Literal[None, "left", "right", "center", "justify", "start", "end"]
+
+InputBorder = Literal[None, "outline", "underline", "none"]
+
+OptionalNumber = Union[None, int, float]
+
+PaddingValue = Union[None, int, float, Padding]
+
+MarginValue = Union[None, int, float, Margin]
+
+ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always"]
 
 
 class Control:
     def __init__(
         self,
-        id=None,
         ref: Ref = None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
-        data=None,
+        expand: Union[bool, int] = None,
+        opacity: OptionalNumber = None,
+        tooltip: str = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
     ):
         self.__page = None
         self.__attrs = {}
         self.__previous_children = []
-        self.id = id
+        self._id = None
         self.__uid = None
-        if id == "page":
-            self.__uid = "page"
-        self.width = width
-        self.height = height
-        self.padding = padding
-        self.margin = margin
+        self.expand = expand
+        self.opacity = opacity
+        self.tooltip = tooltip
         self.visible = visible
         self.disabled = disabled
         self.data = data
@@ -105,8 +106,17 @@ class Control:
         s_val = self.__attrs[name][0]
         if data_type == "bool" and s_val != None and isinstance(s_val, str):
             return s_val.lower() == "true"
+        elif data_type == "bool?" and isinstance(s_val, str):
+            if s_val.lower() == "true":
+                return True
+            elif s_val.lower() == "false":
+                return False
+            else:
+                return def_value
         elif data_type == "float" and s_val != None and isinstance(s_val, str):
             return float(s_val)
+        elif data_type == "int" and s_val != None and isinstance(s_val, str):
+            return int(s_val)
         else:
             return s_val
 
@@ -137,6 +147,14 @@ class Control:
         if orig_val == None or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
 
+    def _set_attr_json(self, name, value):
+        self._set_attr(
+            name,
+            json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))
+            if value
+            else None,
+        )
+
     # event_handlers
     @property
     def event_handlers(self):
@@ -147,6 +165,15 @@ class Control:
     def _previous_children(self):
         return self.__previous_children
 
+    # _id
+    @property
+    def _id(self):
+        return self._get_attr("id")
+
+    @_id.setter
+    def _id(self, value):
+        self._set_attr("id", value)
+
     # page
     @property
     def page(self):
@@ -156,55 +183,41 @@ class Control:
     def page(self, page):
         self.__page = page
 
-    # id
-    @property
-    def id(self):
-        return self._get_attr("id")
-
     # uid
     @property
     def uid(self):
         return self.__uid
 
-    @id.setter
-    def id(self, value):
-        self._set_attr("id", value)
-
-    # width
+    # expand
     @property
-    def width(self):
-        return self._get_attr("width")
+    def expand(self):
+        return self.__expand
 
-    @width.setter
-    def width(self, value):
-        self._set_attr("width", value)
+    @expand.setter
+    @beartype
+    def expand(self, value: Union[None, bool, int]):
+        self.__expand = value
+        if value and isinstance(value, bool):
+            value = 1
+        self._set_attr("expand", value if value else None)
 
-    # height
+    # opacity
     @property
-    def height(self):
-        return self._get_attr("height")
+    def opacity(self):
+        return self._get_attr("opacity", data_type="float", def_value=1.0)
 
-    @height.setter
-    def height(self, value):
-        self._set_attr("height", value)
+    @opacity.setter
+    def opacity(self, value):
+        self._set_attr("opacity", value)
 
-    # padding
+    # tooltip
     @property
-    def padding(self):
-        return self._get_attr("padding")
+    def tooltip(self):
+        return self._get_attr("tooltip")
 
-    @padding.setter
-    def padding(self, value):
-        self._set_attr("padding", value)
-
-    # margin
-    @property
-    def margin(self):
-        return self._get_attr("margin")
-
-    @margin.setter
-    def margin(self, value):
-        self._set_attr("margin", value)
+    @tooltip.setter
+    def tooltip(self, value):
+        self._set_attr("tooltip", value)
 
     # visible
     @property
@@ -285,7 +298,7 @@ class Control:
                     ctrl = hashes[h]
                     self._remove_control_recursively(index, ctrl)
                     ids.append(ctrl.__uid)
-                commands.append(Command(0, "remove", ids, None, None, None))
+                commands.append(Command(0, "remove", ids, None, None))
             elif tag == "equal":
                 # unchanged control
                 for h in previous_ints[a1:a2]:
@@ -299,7 +312,7 @@ class Control:
                     ctrl = hashes[h]
                     self._remove_control_recursively(index, ctrl)
                     ids.append(ctrl.__uid)
-                commands.append(Command(0, "remove", ids, None, None, None))
+                commands.append(Command(0, "remove", ids, None, None))
                 for h in current_ints[b1:b2]:
                     # add
                     ctrl = hashes[h]
@@ -312,7 +325,6 @@ class Control:
                             "add",
                             None,
                             {"to": self.__uid, "at": str(n)},
-                            None,
                             innerCmds,
                         )
                     )
@@ -330,7 +342,6 @@ class Control:
                             "add",
                             None,
                             {"to": self.__uid, "at": str(n)},
-                            None,
                             innerCmds,
                         )
                     )
@@ -378,7 +389,7 @@ class Control:
         return commands
 
     def _get_cmd_attrs(self, update=False):
-        command = Command(0, None, [], {}, [], [])
+        command = Command(0, None, [], {}, [])
 
         if update and not self.__uid:
             return command

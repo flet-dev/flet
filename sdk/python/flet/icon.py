@@ -1,32 +1,38 @@
-from flet.control import Control
+from typing import Union
+
+from beartype import beartype
+
+from flet.control import Control, OptionalNumber
+from flet.ref import Ref
 
 
 class Icon(Control):
     def __init__(
         self,
-        name=None,
-        id=None,
-        ref=None,
-        color=None,
-        size=None,
-        width=None,
-        height=None,
-        padding=None,
-        margin=None,
-        visible=None,
-        disabled=None,
+        name: str = None,
+        ref: Ref = None,
+        expand: Union[bool, int] = None,
+        opacity: OptionalNumber = None,
+        tooltip: str = None,
+        visible: bool = None,
+        disabled: bool = None,
+        data: any = None,
+        #
+        # Specific
+        #
+        color: str = None,
+        size: OptionalNumber = None,
     ):
 
         Control.__init__(
             self,
-            id=id,
             ref=ref,
-            width=width,
-            height=height,
-            padding=padding,
-            margin=margin,
+            expand=expand,
+            opacity=opacity,
+            tooltip=tooltip,
             visible=visible,
             disabled=disabled,
+            data=data,
         )
 
         self.name = name
@@ -60,5 +66,6 @@ class Icon(Control):
         return self._get_attr("size")
 
     @size.setter
-    def size(self, value):
+    @beartype
+    def size(self, value: OptionalNumber):
         self._set_attr("size", value)

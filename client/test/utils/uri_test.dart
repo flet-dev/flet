@@ -2,6 +2,15 @@ import 'package:flet_view/utils/uri.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test("Empty URI can be parsed", () {
+    var uri = Uri.parse("");
+    expect(uri.hasAuthority, false);
+  });
+  test("Relative URI can be parsed", () {
+    var uri = Uri.parse("images/test.png");
+    expect(uri.hasAuthority, false);
+  });
+
   test("getWebPageName returns correct name from Uri", () {
     expect(
         getWebPageName(Uri.parse('http://localhost:8550/p/test/')), "p/test");

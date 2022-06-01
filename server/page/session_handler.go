@@ -13,10 +13,8 @@ import (
 	"github.com/flet-dev/flet/server/cache"
 	"github.com/flet-dev/flet/server/config"
 	"github.com/flet-dev/flet/server/model"
-	"github.com/flet-dev/flet/server/page/command"
 	"github.com/flet-dev/flet/server/pubsub"
 	"github.com/flet-dev/flet/server/store"
-	"github.com/flet-dev/flet/server/utils"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -32,7 +30,7 @@ const (
 	sessionCrashedMessage = "There was an error while processing your request. Please refresh the page to start a new session."
 )
 
-type commandHandlerFn = func(*command.Command) (string, error)
+type commandHandlerFn = func(*model.Command) (string, error)
 
 type sessionHandler struct {
 	session *model.Session
@@ -45,7 +43,7 @@ func newSessionHandler(session *model.Session) sessionHandler {
 }
 
 type addCommandBatchItem struct {
-	command *command.Command
+	command *model.Command
 	control *model.Control
 }
 
@@ -80,7 +78,7 @@ func (h *sessionHandler) extendExpiration() {
 }
 
 // ExecuteCommand executes command and returns the result
-func (h *sessionHandler) execute(cmd *command.Command) (result string, err error) {
+func (h *sessionHandler) execute(cmd *model.Command) (result string, err error) {
 	sl := h.lockSession()
 	defer sl.Unlock()
 
@@ -88,22 +86,16 @@ func (h *sessionHandler) execute(cmd *command.Command) (result string, err error
 		h.session.Page.Name, h.session.ID, cmd)
 
 	handlers := map[string]commandHandlerFn{
-		command.Add:       h.add,
-		command.Addf:      h.add,
-		command.Replace:   h.replace,
-		command.Replacef:  h.replace,
-		command.Set:       h.set,
-		command.Setf:      h.set,
-		command.Append:    h.appendHandler,
-		command.Appendf:   h.appendHandler,
-		command.Get:       h.get,
-		command.Clean:     h.clean,
-		command.Cleanf:    h.clean,
-		command.Remove:    h.remove,
-		command.Removef:   h.remove,
-		command.Signout:   h.signout,
-		command.CanAccess: h.canAccess,
-		command.Error:     h.sessionCrashed,
+		model.AddCommand:       h.add,
+		model.ReplaceCommand:   h.replace,
+		model.SetCommand:       h.set,
+		model.AppendCommand:    h.appendHandler,
+		model.GetCommand:       h.get,
+		model.CleanCommand:     h.clean,
+		model.RemoveCommand:    h.remove,
+		model.SignoutCommand:   h.signout,
+		model.CanAccessCommand: h.canAccess,
+		model.ErrorCommand:     h.sessionCrashed,
 	}
 
 	handler := handlers[strings.ToLower(cmd.Name)]
@@ -114,13 +106,13 @@ func (h *sessionHandler) execute(cmd *command.Command) (result string, err error
 	return handler(cmd)
 }
 
-func (h *sessionHandler) executeBatch(commands []*command.Command) (results []string, err error) {
+func (h *sessionHandler) executeBatch(commands []*model.Command) (results []string, err error) {
 	results = make([]string, 0)
 	messages := make([]*Message, 0)
 
 	for _, cmd := range commands {
 		cmdName := strings.ToLower(cmd.Name)
-		if cmdName == command.Add {
+		if cmdName == model.AddCommand {
 			// add
 			ids, trimIDs, controls, err := h.addInternal(cmd)
 			if err != nil {
@@ -131,25 +123,25 @@ func (h *sessionHandler) executeBatch(commands []*command.Command) (results []st
 				Controls: controls,
 				TrimIDs:  trimIDs,
 			}))
-		} else if cmdName == command.Set {
+		} else if cmdName == model.SetCommand {
 			payload, err := h.setInternal(cmd)
 			if err != nil {
 				return nil, err
 			}
 			messages = append(messages, NewMessage("", UpdateControlPropsAction, payload))
-		} else if cmdName == command.Get {
+		} else if cmdName == model.GetCommand {
 			value, err := h.get(cmd)
 			if err != nil {
 				return nil, err
 			}
 			results = append(results, value)
-		} else if cmdName == command.Clean {
+		} else if cmdName == model.CleanCommand {
 			payload, err := h.cleanWithMessage(cmd)
 			if err != nil {
 				return nil, err
 			}
 			messages = append(messages, NewMessage("", CleanControlAction, payload))
-		} else if cmdName == command.Remove {
+		} else if cmdName == model.RemoveCommand {
 			payload, err := h.removeWithMessage(cmd)
 			if err != nil {
 				return nil, err
@@ -166,7 +158,7 @@ func (h *sessionHandler) executeBatch(commands []*command.Command) (results []st
 	return results, nil
 }
 
-func (h *sessionHandler) add(cmd *command.Command) (result string, err error) {
+func (h *sessionHandler) add(cmd *model.Command) (result string, err error) {
 	ids, trimIDs, controls, err := h.addInternal(cmd)
 	if err != nil {
 		return "", err
@@ -180,7 +172,7 @@ func (h *sessionHandler) add(cmd *command.Command) (result string, err error) {
 	return strings.Join(ids, " "), nil
 }
 
-func (h *sessionHandler) addInternal(cmd *command.Command) (ids []string, trimIDs []string, controls []*model.Control, err error) {
+func (h *sessionHandler) addInternal(cmd *model.Command) (ids []string, trimIDs []string, controls []*model.Control, err error) {
 
 	// parent ID
 	topParentID := cmd.Attrs["to"]
@@ -203,35 +195,16 @@ func (h *sessionHandler) addInternal(cmd *command.Command) (ids []string, trimID
 	batch := make([]*addCommandBatchItem, 0)
 
 	// top command
-	indent := 0
 	if len(cmd.Values) > 0 {
 		// single command
 		batch = append(batch, &addCommandBatchItem{
 			command: cmd,
 		})
-		indent = 2
 	}
 
 	// sub-commands
 	for _, childCmd := range cmd.Commands {
 		childCmd.Name = "add"
-		batch = append(batch, &addCommandBatchItem{
-			command: childCmd,
-		})
-	}
-
-	// non-parsed sub-commands
-	for _, line := range cmd.Lines {
-		if utils.WhiteSpaceOnly(line) {
-			continue
-		}
-
-		childCmd, err := command.Parse(line, false)
-		if err != nil {
-			return nil, nil, nil, err
-		}
-		childCmd.Name = "add"
-		childCmd.Indent += indent
 		batch = append(batch, &addCommandBatchItem{
 			command: childCmd,
 		})
@@ -337,7 +310,7 @@ func (h *sessionHandler) addInternal(cmd *command.Command) (ids []string, trimID
 	return
 }
 
-func (h *sessionHandler) replace(cmd *command.Command) (result string, err error) {
+func (h *sessionHandler) replace(cmd *model.Command) (result string, err error) {
 
 	// parent ID
 	parentID := cmd.Attrs["to"]
@@ -378,7 +351,7 @@ func (h *sessionHandler) replace(cmd *command.Command) (result string, err error
 	return strings.Join(ids, " "), nil
 }
 
-func (h *sessionHandler) get(cmd *command.Command) (result string, err error) {
+func (h *sessionHandler) get(cmd *model.Command) (result string, err error) {
 
 	// command format must be:
 	// get <control-id> <property>
@@ -406,7 +379,7 @@ func (h *sessionHandler) get(cmd *command.Command) (result string, err error) {
 	return v.(string), nil
 }
 
-func (h *sessionHandler) set(cmd *command.Command) (result string, err error) {
+func (h *sessionHandler) set(cmd *model.Command) (result string, err error) {
 	payload, err := h.setInternal(cmd)
 	if err != nil {
 		return "", err
@@ -417,9 +390,9 @@ func (h *sessionHandler) set(cmd *command.Command) (result string, err error) {
 	return "", nil
 }
 
-func (h *sessionHandler) setInternal(cmd *command.Command) (result *UpdateControlPropsPayload, err error) {
+func (h *sessionHandler) setInternal(cmd *model.Command) (result *UpdateControlPropsPayload, err error) {
 
-	batch := make([]*command.Command, 0)
+	batch := make([]*model.Command, 0)
 
 	// top command
 	if len(cmd.Values) > 0 {
@@ -429,20 +402,6 @@ func (h *sessionHandler) setInternal(cmd *command.Command) (result *UpdateContro
 
 	// sub-commands
 	for _, childCmd := range cmd.Commands {
-		childCmd.Name = "set"
-		batch = append(batch, childCmd)
-	}
-
-	// non-parsed sub-commands
-	for _, line := range cmd.Lines {
-		if utils.WhiteSpaceOnly(line) {
-			continue
-		}
-
-		childCmd, err := command.Parse(line, false)
-		if err != nil {
-			return nil, err
-		}
 		childCmd.Name = "set"
 		batch = append(batch, childCmd)
 	}
@@ -494,7 +453,7 @@ func (h *sessionHandler) setInternal(cmd *command.Command) (result *UpdateContro
 	return payload, nil
 }
 
-func (h *sessionHandler) appendHandler(cmd *command.Command) (result string, err error) {
+func (h *sessionHandler) appendHandler(cmd *model.Command) (result string, err error) {
 	payload, err := h.appendHandlerInternal(cmd)
 	if err != nil {
 		return "", err
@@ -505,9 +464,9 @@ func (h *sessionHandler) appendHandler(cmd *command.Command) (result string, err
 	return "", nil
 }
 
-func (h *sessionHandler) appendHandlerInternal(cmd *command.Command) (result *AppendControlPropsPayload, err error) {
+func (h *sessionHandler) appendHandlerInternal(cmd *model.Command) (result *AppendControlPropsPayload, err error) {
 
-	batch := make([]*command.Command, 0)
+	batch := make([]*model.Command, 0)
 
 	// top command
 	if len(cmd.Values) > 0 {
@@ -517,20 +476,6 @@ func (h *sessionHandler) appendHandlerInternal(cmd *command.Command) (result *Ap
 
 	// sub-commands
 	for _, childCmd := range cmd.Commands {
-		childCmd.Name = "append"
-		batch = append(batch, childCmd)
-	}
-
-	// non-parsed sub-commands
-	for _, line := range cmd.Lines {
-		if utils.WhiteSpaceOnly(line) {
-			continue
-		}
-
-		childCmd, err := command.Parse(line, false)
-		if err != nil {
-			return nil, err
-		}
 		childCmd.Name = "append"
 		batch = append(batch, childCmd)
 	}
@@ -575,7 +520,7 @@ func (h *sessionHandler) appendHandlerInternal(cmd *command.Command) (result *Ap
 	return payload, nil
 }
 
-func (h *sessionHandler) clean(cmd *command.Command) (result string, err error) {
+func (h *sessionHandler) clean(cmd *model.Command) (result string, err error) {
 
 	payload, err := h.cleanWithMessage(cmd)
 	if err != nil {
@@ -587,7 +532,7 @@ func (h *sessionHandler) clean(cmd *command.Command) (result string, err error) 
 	return "", nil
 }
 
-func (h *sessionHandler) cleanWithMessage(cmd *command.Command) (result *CleanControlPayload, err error) {
+func (h *sessionHandler) cleanWithMessage(cmd *model.Command) (result *CleanControlPayload, err error) {
 
 	// command format:
 	//    clean [id_1] [id_2] ... [at=index]
@@ -648,7 +593,7 @@ func (h *sessionHandler) cleanInternal(ids []string, at int) (allIDs []string, e
 	return allIDs, nil
 }
 
-func (h *sessionHandler) remove(cmd *command.Command) (result string, err error) {
+func (h *sessionHandler) remove(cmd *model.Command) (result string, err error) {
 	payload, err := h.removeWithMessage(cmd)
 	if err != nil {
 		return "", err
@@ -659,7 +604,7 @@ func (h *sessionHandler) remove(cmd *command.Command) (result string, err error)
 	return "", nil
 }
 
-func (h *sessionHandler) removeWithMessage(cmd *command.Command) (result *RemoveControlPayload, err error) {
+func (h *sessionHandler) removeWithMessage(cmd *model.Command) (result *RemoveControlPayload, err error) {
 
 	// command format:
 	//    remove [id_1] [id_2] ... [at=index]
@@ -722,7 +667,7 @@ func (h *sessionHandler) removeInternal(ids []string, at int) (allIDs []string, 
 	return allIDs, nil
 }
 
-func (h *sessionHandler) sessionCrashed(cmd *command.Command) (result string, err error) {
+func (h *sessionHandler) sessionCrashed(cmd *model.Command) (result string, err error) {
 	errorMessage := sessionCrashedMessage
 
 	// custom error message comes as a first value
@@ -737,7 +682,7 @@ func (h *sessionHandler) sessionCrashed(cmd *command.Command) (result string, er
 	return "", nil
 }
 
-func (h *sessionHandler) canAccess(cmd *command.Command) (result string, err error) {
+func (h *sessionHandler) canAccess(cmd *model.Command) (result string, err error) {
 	permissions := ""
 
 	// permissions is the first value
@@ -760,7 +705,7 @@ func (h *sessionHandler) canAccess(cmd *command.Command) (result string, err err
 	return strings.ToLower(strconv.FormatBool(r)), nil
 }
 
-func (h *sessionHandler) signout(cmd *command.Command) (result string, err error) {
+func (h *sessionHandler) signout(cmd *model.Command) (result string, err error) {
 	// broadcast command to all connected web clients
 	h.broadcastCommandToWebClients(NewMessage("", SignoutAction, &SignoutPayload{}))
 	return "", nil
