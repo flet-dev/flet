@@ -12,7 +12,7 @@ An internal tool or a dashboard for your team, weekend project, data entry form,
 
 No more complex architecture with JavaScript frontend, REST API backend, database, cache, etc. With Flet you just write a monolith stateful app in Python only and get multi-user, realtime Single-Page Application (SPA).
 
-### <img src="https://flet.dev/img/pages/home/feature-battery.svg" height="20px" /> Batteries included
+### 🔋Batteries included
 
 To start developing with Flet, you just need your favorite IDE or text editor. No SDKs, no thousands of dependencies, no complex tooling - Flet has built-in web server with assets hosting and desktop clients.
 
