@@ -91,7 +91,7 @@ flet.app(target=main, view=flet.WEB_BROWSER)
 
 run again and now you instantly get a web app:
 
-<img src="https://flet.dev/img/docs/getting-started/flet-counter-safari.png" width="35%" />
+<img src="https://flet.dev/img/docs/getting-started/flet-counter-safari.png" width="40%" />
 
 ## Tutorials
 
