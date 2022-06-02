@@ -100,3 +100,11 @@ run again and now you instantly get a web app:
 Want to learn how to build a real app? Jump to a getting started guide for your language:
 
 * [Python](https://flet.dev/docs/getting-started/python)
+
+## Sample apps
+
+* [Greeter](sdk/python/examples/apps/greeter/greeter.py)
+* [Counter](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/counter/counter-home.py)
+* [To-Do](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/todo/todo.py)
+* [Icons Browser](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/icons-browser/icons-browser.py) ([Online Demo](https://flet-icons-browser.fly.dev/))
+
