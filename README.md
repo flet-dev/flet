@@ -80,24 +80,8 @@ python counter.py
 
 The app will be started in a native OS window - what a nice alternative to Electron!
 
-<table>
-    <tr>
-        <th>macOS</th>
-        <th>Windows</th>
-    </tr>
-    <tr>
-        <td>macOS</td>
-        <td>Windows</td>
-    </tr>    
-</table>
+<img src="https://flet.dev/img/docs/getting-started/flet-counter-macos.png" width="50%" />
 
-### macOS
-
-<img src="https://flet.dev/img/docs/getting-started/flet-counter-macos.png" width="70%" />
-
-### Windows
-
-<img src="https://flet.dev/img/docs/getting-started/flet-counter-windows.png" width="65%" />
 
 Now, if you want to run the app as a web app, just replace the last line with:
 
@@ -107,7 +91,7 @@ flet.app(target=main, view=flet.WEB_BROWSER)
 
 run again and now you instantly get a web app:
 
-<div style="text-align: center"><img src="https://flet.dev/img/docs/getting-started/flet-counter-safari.png" width="50%" /></div>
+<img src="https://flet.dev/img/docs/getting-started/flet-counter-safari.png" width="50%" />
 
 ## Tutorials
 
