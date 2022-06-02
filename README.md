@@ -80,16 +80,13 @@ python counter.py
 
 The app will be started in a native OS window - what a nice alternative to Electron!
 
-<div class="row">
-  <div class="col col--6" style={{textAlign: 'center'}}>
-    <h3>macOS</h3>
-    <div><img src="/img/docs/getting-started/flet-counter-macos.png" width="70%" /></div>
-  </div>
-  <div class="col col--6" style={{textAlign: 'center'}}>
-    <h3>Windows</h3>
-    <div><img src="/img/docs/getting-started/flet-counter-windows.png" width="65%" /></div>
-  </div>  
-</div>
+### macOS
+
+<img src="https://flet.dev/img/docs/getting-started/flet-counter-macos.png" width="70%" />
+
+### Windows
+
+<img src="https://flet.dev/img/docs/getting-started/flet-counter-windows.png" width="65%" />
 
 Now, if you want to run the app as a web app, just replace the last line with:
 
@@ -99,10 +96,10 @@ flet.app(target=main, view=flet.WEB_BROWSER)
 
 run again and now you instantly get a web app:
 
-<div style={{textAlign: 'center'}}><img src="/img/docs/getting-started/flet-counter-safari.png" width="50%" /></div>
+<div style="text-align: center"><img src="https://flet.dev/img/docs/getting-started/flet-counter-safari.png" width="50%" /></div>
 
 ## Tutorials
 
 Want to learn how to build a real app? Jump to a getting started guide for your language:
 
-* [Python](/docs/getting-started/python)
+* [Python](https://flet.dev/docs/getting-started/python)
