@@ -80,6 +80,17 @@ python counter.py
 
 The app will be started in a native OS window - what a nice alternative to Electron!
 
+<table>
+    <tr>
+        <th>macOS</th>
+        <th>Windows</th>
+    </tr>
+    <tr>
+        <td>macOS</td>
+        <td>Windows</td>
+    </tr>    
+</table>
+
 ### macOS
 
 <img src="https://flet.dev/img/docs/getting-started/flet-counter-macos.png" width="70%" />
