@@ -82,7 +82,7 @@ python counter.py
 
 The app will be started in a native OS window - what a nice alternative to Electron!
 
-<img src="https://flet.dev/img/docs/getting-started/flet-counter-macos.png" width="30%" />
+<img src="https://flet.dev/img/docs/getting-started/flet-counter-macos.png" width="50%" />
 
 
 Now, if you want to run the app as a web app, just replace the last line with:
@@ -93,18 +93,22 @@ flet.app(target=main, view=flet.WEB_BROWSER)
 
 run again and now you instantly get a web app:
 
-<img src="https://flet.dev/img/docs/getting-started/flet-counter-safari.png" width="40%" />
+<img src="https://flet.dev/img/docs/getting-started/flet-counter-safari.png" width="60%" />
 
-## Tutorials
+## Getting started
 
-Want to learn how to build a real app? Jump to a getting started guide for your language:
-
-* [Python](https://flet.dev/docs/getting-started/python)
+* [Creating Flet apps in Python](https://flet.dev/docs/getting-started/python)
+* [Controls reference](https://flet.dev/docs/controls)
 
 ## Sample apps
 
 * [Greeter](sdk/python/examples/apps/greeter/greeter.py)
-* [Counter](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/counter/counter-home.py)
-* [To-Do](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/todo/todo.py)
-* [Icons Browser](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/icons-browser/icons-browser.py) ([Online Demo](https://flet-icons-browser.fly.dev/))
+* [Counter](sdk/python/examples/apps/counter/counter-home.py)
+* [To-Do](sdk/python/examples/apps/todo/todo.py)
+* [Icons Browser](sdk/python/examples/apps/icons-browser/icons-browser.py) ([Online Demo](https://flet-icons-browser.fly.dev/))
 
+## Community
+
+* [Discord](https://discord.gg/dhYUcB3R)
+* [Twitter](https://twitter.com/fletdev)
+* [Email](mailto:hello@flet.dev)
