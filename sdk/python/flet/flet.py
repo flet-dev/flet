@@ -336,7 +336,7 @@ def _get_ws_url(server: str):
 
 
 def _download_flet():
-    flet_exe = "flet.exe" if is_windows() else "flet"
+    flet_exe = "fletd.exe" if is_windows() else "fletd"
     flet_bin = Path.home().joinpath(".flet", "bin")
     flet_bin.mkdir(parents=True, exist_ok=True)
 
@@ -358,8 +358,8 @@ def _download_flet():
         print(f"Downloading Flet v{flet_version} to {flet_path}")
 
         ext = "zip" if is_windows() else "tar.gz"
-        file_name = f"flet-{flet_version}-{get_platform()}-{get_arch()}.{ext}"
-        flet_url = f"https://github.com/flet/flet/releases/download/v{flet_version}/{file_name}"
+        file_name = f"fletd-{flet_version}-{get_platform()}-{get_arch()}.{ext}"
+        flet_url = f"https://github.com/flet-dev/flet/releases/download/v{flet_version}/{file_name}"
 
         temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
         try:
