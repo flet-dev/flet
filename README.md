@@ -1,6 +1,4 @@
-# <img src="media/logo/flet-logo.svg" width="50%"/>
-
-# The fastest way to build Flutter apps in Python
+# <img src="media/logo/flet-logo.svg" width="50%"/> <br/> The fastest way to build Flutter apps in Python
 
 [![Build status](https://ci.appveyor.com/api/projects/status/xwablctxslvey576/branch/main?svg=true)](https://ci.appveyor.com/project/flet-dev/flet/branch/main)
 
