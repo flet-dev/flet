@@ -300,16 +300,16 @@ def _open_flet_view(page_url):
                 flet_path = _download_flet_view_windows()
         args = [flet_path, page_url]
     elif is_macos():
-        # check if flet.tar.gz exists
-        tar_file = Path(__file__).parent.joinpath("bin", "flet.tar.gz")
-        if not tar_file.exists():
-            tar_file = _download_flet_view_macos()
-
         # build version-specific path to Flet.app
         temp_flet_dir = Path(tempfile.gettempdir()).joinpath(f"flet-{version.version}")
 
         # check if flet_view.app exists in a temp directory
         if not temp_flet_dir.exists():
+            # check if flet.tar.gz exists
+            tar_file = Path(__file__).parent.joinpath("bin", "flet.tar.gz")
+            if not tar_file.exists():
+                tar_file = _download_flet_view_macos()
+
             logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
             temp_flet_dir.mkdir(parents=True, exist_ok=True)
             with tarfile.open(str(tar_file), "r:gz") as tar_arch:
