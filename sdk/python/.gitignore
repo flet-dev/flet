@@ -134,3 +134,5 @@ __pypackages__/
 
 # bin
 flet/bin/
+
+/playground
