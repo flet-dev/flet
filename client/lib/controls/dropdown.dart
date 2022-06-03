@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -83,6 +85,16 @@ class _DropdownControlState extends State<DropdownControl> {
               .where((c) => c.name == "prefix" && c.isVisible);
           var suffixControls = itemsView.children
               .where((c) => c.name == "suffix" && c.isVisible);
+
+          var focusValue = widget.control.attrString("focus");
+          if (focusValue != null) {
+            debugPrint("Focus JSON value: $focusValue");
+            var jv = json.decode(focusValue);
+            var focus = jv["d"] as bool;
+            if (focus) {
+              _focusNode.requestFocus();
+            }
+          }
 
           Widget dropDown = DropdownButtonFormField<String>(
             autofocus: autofocus,
