@@ -3,6 +3,7 @@ from typing import Optional, Union
 from beartype import beartype
 
 from flet.control import Control, InputBorder, OptionalNumber, PaddingValue
+from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
 
@@ -93,6 +94,10 @@ class Dropdown(FormFieldControl):
         result = FormFieldControl._get_children(self)
         result.extend(self.__options)
         return result
+
+    def focus(self):
+        self._set_attr_json("focus", FocusData())
+        self.update()
 
     # options
     @property

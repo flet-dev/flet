@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -138,6 +140,18 @@ class _TextFieldControlState extends State<TextFieldControl> {
             orElse: () => TextAlign.start,
           );
 
+          FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
+
+          var focusValue = widget.control.attrString("focus");
+          if (focusValue != null) {
+            debugPrint("Focus JSON value: $focusValue");
+            var jv = json.decode(focusValue);
+            var focus = jv["d"] as bool;
+            if (focus) {
+              focusNode.requestFocus();
+            }
+          }
+
           Widget textField = TextFormField(
               autofocus: autofocus,
               enabled: !disabled,
@@ -161,7 +175,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
               readOnly: readOnly,
               obscureText: password && !_revealPassword,
               controller: _controller,
-              focusNode: shiftEnter ? _shiftEnterfocusNode : _focusNode,
+              focusNode: focusNode,
               onChanged: (String value) {
                 //debugPrint(value);
                 setState(() {

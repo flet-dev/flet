@@ -111,6 +111,14 @@ for:
       - path: client\build\windows\runner\flet.zip
         name: flet_windows
 
+    deploy:
+      provider: GitHub
+      auth_token: $(GITHUB_TOKEN)
+      release: $(APPVEYOR_REPO_TAG_NAME)
+      artifact: flet_windows
+      on:
+        APPVEYOR_REPO_TAG: true
+
   # ======================================
   #      Build Flet View for macOS
   # ======================================
@@ -138,6 +146,14 @@ for:
     artifacts:
       - path: client/flet.app.tar.gz
         name: flet_macos
+
+    deploy:
+      provider: GitHub
+      auth_token: $(GITHUB_TOKEN)
+      release: $(APPVEYOR_REPO_TAG_NAME)
+      artifact: flet_macos
+      on:
+        APPVEYOR_REPO_TAG: true
 
   # ======================================
   #      Build Flet View for iOS
