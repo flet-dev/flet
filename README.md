@@ -100,12 +100,12 @@ run again and now you instantly get a web app:
 * [Creating Flet apps in Python](https://flet.dev/docs/getting-started/python)
 * [Controls reference](https://flet.dev/docs/controls)
 
-## Sample apps
+## Sample apps in Python
 
-* [Greeter](sdk/python/examples/apps/greeter/greeter.py)
-* [Counter](sdk/python/examples/apps/counter/counter-home.py)
-* [To-Do](sdk/python/examples/apps/todo/todo.py)
-* [Icons Browser](sdk/python/examples/apps/icons-browser/icons-browser.py) ([Online Demo](https://flet-icons-browser.fly.dev/))
+* [Greeter](https://github.com/flet-dev/examples/blob/main/python/apps/greeter/greeter.py)
+* [Counter](https://github.com/flet-dev/examples/blob/main/python/apps/counter/counter.py)
+* [To-Do](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py)
+* [Icons Browser](https://github.com/flet-dev/examples/blob/main/python/apps/icons-browser/main.py) ([Online Demo](https://flet-icons-browser.fly.dev/))
 
 ## Community
 
