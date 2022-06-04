@@ -42,7 +42,7 @@ class PageControl extends StatelessWidget {
             control.attrString("scroll", "")!.toLowerCase(),
         orElse: () => ScrollMode.none);
 
-    debugPrint("scrollMode: $scrollMode");
+    final autoScroll = control.attrBool("autoScroll", false)!;
 
     Control? offstage;
     Control? appBar;
@@ -168,6 +168,7 @@ class PageControl extends StatelessWidget {
                                 child: column,
                                 scrollDirection: Axis.vertical,
                                 scrollMode: scrollMode,
+                                autoScroll: autoScroll,
                               )
                             : column)),
                 ...offstageWidgets,

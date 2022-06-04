@@ -35,6 +35,7 @@ class Column(ConstrainedControl):
         wrap: bool = None,
         run_spacing: OptionalNumber = None,
         scroll: ScrollMode = None,
+        auto_scroll: bool = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -58,6 +59,7 @@ class Column(ConstrainedControl):
         self.run_spacing = run_spacing
         self.__scroll = False
         self.scroll = scroll
+        self.auto_scroll = auto_scroll
 
     def _get_control_name(self):
         return "column"
@@ -143,6 +145,16 @@ class Column(ConstrainedControl):
         elif value == False:
             value = "none"
         self._set_attr("scroll", value)
+
+    # auto_scroll
+    @property
+    def auto_scroll(self):
+        return self._get_attr("autoScroll")
+
+    @auto_scroll.setter
+    @beartype
+    def auto_scroll(self, value: Optional[bool]):
+        self._set_attr("autoScroll", value)
 
     # controls
     @property

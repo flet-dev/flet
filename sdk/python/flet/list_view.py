@@ -25,6 +25,9 @@ class ListView(ConstrainedControl):
         #
         horizontal: bool = None,
         spacing: OptionalNumber = None,
+        item_extent: OptionalNumber = None,
+        first_item_prototype: bool = None,
+        divider_thickness: OptionalNumber = None,
         padding: PaddingValue = None,
         auto_scroll: bool = None,
     ):
@@ -44,6 +47,9 @@ class ListView(ConstrainedControl):
         self.controls = controls
         self.horizontal = horizontal
         self.spacing = spacing
+        self.divider_thickness = divider_thickness
+        self.item_extent = item_extent
+        self.first_item_prototype = first_item_prototype
         self.padding = padding
         self.auto_scroll = auto_scroll
 
@@ -76,6 +82,36 @@ class ListView(ConstrainedControl):
     @beartype
     def spacing(self, value: OptionalNumber):
         self._set_attr("spacing", value)
+
+    # divider_thickness
+    @property
+    def divider_thickness(self):
+        return self._get_attr("dividerThickness")
+
+    @divider_thickness.setter
+    @beartype
+    def divider_thickness(self, value: OptionalNumber):
+        self._set_attr("dividerThickness", value)
+
+    # item_extent
+    @property
+    def item_extent(self):
+        return self._get_attr("itemExtent")
+
+    @item_extent.setter
+    @beartype
+    def item_extent(self, value: OptionalNumber):
+        self._set_attr("itemExtent", value)
+
+    # first_item_prototype
+    @property
+    def first_item_prototype(self):
+        return self._get_attr("firstItemPrototype")
+
+    @first_item_prototype.setter
+    @beartype
+    def first_item_prototype(self, value: Optional[bool]):
+        self._set_attr("firstItemPrototype", value)
 
     # padding
     @property
