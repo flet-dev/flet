@@ -445,6 +445,16 @@ class Page(Control):
             value = "none"
         self._set_attr("scroll", value)
 
+    # auto_scroll
+    @property
+    def auto_scroll(self):
+        return self._get_attr("autoScroll")
+
+    @auto_scroll.setter
+    @beartype
+    def auto_scroll(self, value: Optional[bool]):
+        self._set_attr("autoScroll", value)
+
     # window_width
     @property
     def window_width(self):

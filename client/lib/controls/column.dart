@@ -33,6 +33,7 @@ class ColumnControl extends StatelessWidget {
             m.name.toLowerCase() ==
             control.attrString("scroll", "")!.toLowerCase(),
         orElse: () => ScrollMode.none);
+    final autoScroll = control.attrBool("autoScroll", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     List<Widget> controls = [];
@@ -79,6 +80,7 @@ class ColumnControl extends StatelessWidget {
                 child: widget,
                 scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
                 scrollMode: scrollMode,
+                autoScroll: autoScroll,
               )
             : widget,
         parent,

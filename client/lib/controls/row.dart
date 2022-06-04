@@ -33,6 +33,7 @@ class RowControl extends StatelessWidget {
             m.name.toLowerCase() ==
             control.attrString("scroll", "")!.toLowerCase(),
         orElse: () => ScrollMode.none);
+    final autoScroll = control.attrBool("autoScroll", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     List<Widget> controls = [];
@@ -75,18 +76,22 @@ class RowControl extends StatelessWidget {
                     children: controls,
                   ),
             wrap: wrap,
-            scrollMode: scrollMode),
+            scrollMode: scrollMode,
+            autoScroll: autoScroll),
         parent,
         control);
   }
 
   Widget wrapAutoScroll(Widget child,
-      {required bool wrap, required ScrollMode scrollMode}) {
+      {required bool wrap,
+      required ScrollMode scrollMode,
+      required bool autoScroll}) {
     return scrollMode != ScrollMode.none
         ? ScrollableControl(
             child: child,
             scrollDirection: wrap ? Axis.vertical : Axis.horizontal,
             scrollMode: scrollMode,
+            autoScroll: autoScroll,
           )
         : child;
   }
