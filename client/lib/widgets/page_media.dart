@@ -1,20 +1,20 @@
 import 'dart:async';
 
-import 'package:flet_view/models/page_size_view_model.dart';
+import 'package:flet_view/models/page_media_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
 import '../models/app_state.dart';
 
-class ScreenSize extends StatefulWidget {
-  const ScreenSize({Key? key}) : super(key: key);
+class PageMedia extends StatefulWidget {
+  const PageMedia({Key? key}) : super(key: key);
 
   @override
-  State<ScreenSize> createState() => _ScreenSizeState();
+  State<PageMedia> createState() => _PageMediaState();
 }
 
-class _ScreenSizeState extends State<ScreenSize> {
+class _PageMediaState extends State<PageMedia> {
   Timer? _debounce;
 
   _onScreenSizeChanged(Size newSize, Function dispatch) {
@@ -25,17 +25,28 @@ class _ScreenSizeState extends State<ScreenSize> {
     });
   }
 
+  _onScreenBrightnessChanged(Brightness brightness, Function dispatch) {
+    debugPrint("Send new brightness to reducer: $brightness");
+    dispatch(PageBrightnessChangeAction(brightness));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, PageSizeViewModel>(
+    return StoreConnector<AppState, PageMediaViewModel>(
         distinct: true,
-        converter: (store) => PageSizeViewModel.fromStore(store),
+        converter: (store) => PageMediaViewModel.fromStore(store),
         builder: (context, viewModel) {
           MediaQueryData media = MediaQuery.of(context);
           if (media.size != viewModel.size) {
             _onScreenSizeChanged(media.size, viewModel.dispatch);
           } else {
             debugPrint("Page size did not change.");
+          }
+          if (media.platformBrightness != viewModel.displayBrightness) {
+            _onScreenBrightnessChanged(
+                media.platformBrightness, viewModel.dispatch);
+          } else {
+            debugPrint("Page brightness did not change.");
           }
           return const SizedBox.shrink();
         });

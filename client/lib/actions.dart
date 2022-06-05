@@ -27,6 +27,11 @@ class PageSizeChangeAction {
   PageSizeChangeAction(this.newSize);
 }
 
+class PageBrightnessChangeAction {
+  final Brightness brightness;
+  PageBrightnessChangeAction(this.brightness);
+}
+
 class RegisterWebClientAction {
   final RegisterWebClientResponse payload;
   RegisterWebClientAction(this.payload);

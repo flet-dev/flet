@@ -2,12 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:redux/redux.dart';
 
 import 'app_state.dart';
-import 'page_size_view_model.dart';
+import 'page_media_view_model.dart';
 
 class PageLoadViewModel extends Equatable {
   final Uri? pageUri;
   final String sessionId;
-  final PageSizeViewModel sizeViewModel;
+  final PageMediaViewModel sizeViewModel;
 
   const PageLoadViewModel(
       {required this.pageUri,
@@ -18,7 +18,7 @@ class PageLoadViewModel extends Equatable {
     return PageLoadViewModel(
         pageUri: store.state.pageUri,
         sessionId: store.state.sessionId,
-        sizeViewModel: PageSizeViewModel.fromStore(store));
+        sizeViewModel: PageMediaViewModel.fromStore(store));
   }
 
   @override
