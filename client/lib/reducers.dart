@@ -58,6 +58,8 @@ AppState appReducer(AppState state, dynamic action) {
     }
 
     return state.copyWith(size: action.newSize, sizeBreakpoint: newBreakpoint);
+  } else if (action is PageBrightnessChangeAction) {
+    return state.copyWith(displayBrightness: action.brightness);
   } else if (action is RegisterWebClientAction) {
     //
     // register web client

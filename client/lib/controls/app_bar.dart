@@ -10,6 +10,7 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
   final bool parentDisabled;
   final List<Control> children;
   final double height;
+  final ThemeData theme;
 
   const AppBarControl(
       {Key? key,
@@ -17,7 +18,8 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.height})
+      required this.height,
+      required this.theme})
       : super(key: key);
 
   @override
@@ -31,10 +33,9 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
 
     var leadingWidth = control.attrDouble("leadingWidth");
     var centerTitle = control.attrBool("centerTitle", false)!;
-    var color = HexColor.fromString(
-        Theme.of(context), control.attrString("color", "")!);
-    var bgcolor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgcolor", "")!);
+    var color = HexColor.fromString(theme, control.attrString("color", "")!);
+    var bgcolor =
+        HexColor.fromString(theme, control.attrString("bgcolor", "")!);
 
     return AppBar(
       leading: leadingCtrls.isNotEmpty

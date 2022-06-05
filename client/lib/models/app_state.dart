@@ -17,6 +17,7 @@ class AppState extends Equatable {
   final String error;
   final Size size;
   final String sizeBreakpoint;
+  final Brightness displayBrightness;
   final Map<String, double> sizeBreakpoints;
   final Map<String, Control> controls;
 
@@ -29,25 +30,27 @@ class AppState extends Equatable {
       required this.size,
       required this.sizeBreakpoint,
       required this.sizeBreakpoints,
+      required this.displayBrightness,
       required this.controls});
 
   factory AppState.initial() => const AppState(
-          pageUri: null,
-          sessionId: "",
-          isLoading: true,
-          reconnectingTimeout: 0,
-          error: "",
-          size: Size(0, 0),
-          sizeBreakpoint: "",
-          sizeBreakpoints: {
-            "xs": 0,
-            "sm": 576,
-            "md": 768,
-            "lg": 992,
-            "xl": 1200,
-            "xxl": 1400
-          },
-          controls: {});
+      pageUri: null,
+      sessionId: "",
+      isLoading: true,
+      reconnectingTimeout: 0,
+      error: "",
+      size: Size(0, 0),
+      sizeBreakpoint: "",
+      sizeBreakpoints: {
+        "xs": 0,
+        "sm": 576,
+        "md": 768,
+        "lg": 992,
+        "xl": 1200,
+        "xxl": 1400
+      },
+      displayBrightness: Brightness.light,
+      controls: {});
 
   AppState copyWith(
           {Uri? pageUri,
@@ -58,6 +61,7 @@ class AppState extends Equatable {
           Size? size,
           String? sizeBreakpoint,
           Map<String, double>? sizeBreakpoints,
+          Brightness? displayBrightness,
           Map<String, Control>? controls}) =>
       AppState(
           pageUri: pageUri ?? this.pageUri,
@@ -68,6 +72,7 @@ class AppState extends Equatable {
           size: size ?? this.size,
           sizeBreakpoint: sizeBreakpoint ?? this.sizeBreakpoint,
           sizeBreakpoints: sizeBreakpoints ?? this.sizeBreakpoints,
+          displayBrightness: displayBrightness ?? this.displayBrightness,
           controls: controls ?? this.controls);
 
   @override
