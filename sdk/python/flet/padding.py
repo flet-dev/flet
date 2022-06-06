@@ -1,10 +1,7 @@
 import dataclasses
 from typing import Union
 
-from beartype._decor.main import beartype
 
-
-@beartype
 @dataclasses.dataclass
 class Padding:
     left: Union[float, int]

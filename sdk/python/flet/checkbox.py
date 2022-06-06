@@ -3,7 +3,7 @@ from typing import Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber
+from flet.control import OptionalNumber
 from flet.ref import Ref
 
 try:
@@ -66,7 +66,9 @@ class Checkbox(ConstrainedControl):
     # value
     @property
     def value(self):
-        return self._get_attr("value", data_type="bool?", def_value=False if not self.tristate else None)
+        return self._get_attr(
+            "value", data_type="bool?", def_value=False if not self.tristate else None
+        )
 
     @value.setter
     @beartype

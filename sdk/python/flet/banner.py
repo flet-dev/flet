@@ -6,11 +6,6 @@ from flet import padding
 from flet.control import Control, PaddingValue
 from flet.ref import Ref
 
-try:
-    from typing import Literal
-except:
-    from typing_extensions import Literal
-
 
 class Banner(Control):
     def __init__(

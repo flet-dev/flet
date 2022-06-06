@@ -6,11 +6,6 @@ from flet import padding
 from flet.control import Control, MainAxisAlignment, PaddingValue
 from flet.ref import Ref
 
-try:
-    from typing import Literal
-except:
-    from typing_extensions import Literal
-
 
 class AlertDialog(Control):
     def __init__(
