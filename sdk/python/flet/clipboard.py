@@ -2,13 +2,12 @@ import dataclasses
 import time
 from typing import Optional
 
-from beartype._decor.main import beartype
+from beartype import beartype
 
 from flet.control import Control
 from flet.ref import Ref
 
 
-@beartype
 @dataclasses.dataclass
 class ClipboardData:
     ts: str

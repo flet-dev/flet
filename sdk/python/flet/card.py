@@ -2,18 +2,10 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from flet import border_radius, margin, padding
-from flet.alignment import Alignment
-from flet.border import Border
-from flet.border_radius import BorderRadius
+from flet import margin
 from flet.constrained_control import ConstrainedControl
-from flet.control import BorderStyle, Control, MarginValue, OptionalNumber, PaddingValue
+from flet.control import Control, MarginValue, OptionalNumber
 from flet.ref import Ref
-
-try:
-    from typing import Literal
-except:
-    from typing_extensions import Literal
 
 
 class Card(ConstrainedControl):

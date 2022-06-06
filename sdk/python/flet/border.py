@@ -1,17 +1,13 @@
 import dataclasses
 from typing import Union
 
-from beartype._decor.main import beartype
 
-
-@beartype
 @dataclasses.dataclass
 class BorderSide:
     width: Union[None, float, int]
     color: str = dataclasses.field(default=None)
 
 
-@beartype
 @dataclasses.dataclass
 class Border:
     top: BorderSide

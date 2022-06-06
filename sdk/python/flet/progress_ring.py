@@ -1,15 +1,10 @@
-from typing import Optional, Union
+from typing import Union
 
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber
+from flet.control import OptionalNumber
 from flet.ref import Ref
-
-try:
-    from typing import Literal
-except:
-    from typing_extensions import Literal
 
 
 class ProgressRing(ConstrainedControl):

@@ -3,7 +3,6 @@ import logging
 import os
 import signal
 import socket
-import sys
 import tarfile
 import tempfile
 import threading

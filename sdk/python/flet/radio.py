@@ -3,7 +3,7 @@ from typing import Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber
+from flet.control import OptionalNumber
 from flet.ref import Ref
 
 try:

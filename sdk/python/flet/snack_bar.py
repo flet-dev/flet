@@ -5,11 +5,6 @@ from beartype import beartype
 from flet.control import Control
 from flet.ref import Ref
 
-try:
-    from typing import Literal
-except:
-    from typing_extensions import Literal
-
 
 class SnackBar(Control):
     def __init__(
