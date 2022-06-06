@@ -54,15 +54,27 @@ pdm install
 
 ## Check the installation
 
-Run "counter" example:
+Create `hello.py` file with a minimal Flet program:
+
+```python
+import flet
+from flet import Page, Text
+
+def main(page: Page):
+    page.add(Text("Hello, world!"))
+
+flet.app(target=main)
+```
+
+and then run it:
 
 ```
-python3 examples/counter.py
+python3 hello.py
 ```
 
-During the first run Flet Server will be downloaded from GitHub releases to `$HOME/.flet/bin` directory and started from there. The version of Flet Server to download is taken from `FLET_VERSION` variable in `appveyor.yml` in the root of repository.
+During the first run Flet Server (`fletd`) and Flet Client (`flet`) executables will be downloaded from [Flet GitHub releases](https://github.com/flet-dev/flet/releases) to a user temp directory and then started from there. The version of release to download from is taken from `flet/version.py` file.
 
-You should see a new browser window opened with "counter" web app running.
+You should see a new native OS window opened with "Hello, world!" in it.
 
 ## Running tests
 
