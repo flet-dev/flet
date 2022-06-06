@@ -59,12 +59,7 @@ builds:
 #       - "--platform=linux/amd64"
 
 archives:
-  - id: fletd-binaries
-    builds:
-      - fletd
-    format: binary
-    name_template: "fletd-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
-  - id: fletd-tars
+  - id: fletd-archives
     builds:
       - fletd
     name_template: "fletd-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
