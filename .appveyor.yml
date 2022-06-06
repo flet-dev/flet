@@ -282,6 +282,7 @@ for:
 
     artifacts:
       - path: server/dist/fletd-*
+      - path: server/dist/fletd_*/*
 
   ######################
   #    Python Tests    #
