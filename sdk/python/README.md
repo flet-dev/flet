@@ -28,6 +28,6 @@ Run the sample above and a new browser window will pop up:
 
 Continue with [Python tutorial](https://flet.dev/docs/tutorials/python) demonstrating how to build a simple To-Do web app and share it on the internet.
 
-Browse for more [Flet examples](https://github.com/flet-dev/flet/tree/main/sdk/python/examples).
+Browse for more [Flet examples](https://github.com/flet-dev/examples/tree/main/python).
 
-Join to a conversation on [Flet Discord server](https://discord.gg/rWjf7xx).
+Join to a conversation on [Flet Discord server](https://discord.gg/dhYUcB3R).
