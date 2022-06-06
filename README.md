@@ -110,6 +110,6 @@ run again and now you instantly get a web app:
 ## Community
 
 * [Discussions](https://github.com/flet-dev/flet/discussions)
-* [Discord](https://discord.gg/dhYUcB3R)
+* [Discord](https://discord.gg/dzWXP8SHG8)
 * [Twitter](https://twitter.com/fletdev)
 * [Email](mailto:hello@flet.dev)

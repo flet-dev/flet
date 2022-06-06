@@ -30,4 +30,4 @@ Continue with [Python tutorial](https://flet.dev/docs/tutorials/python) demonstr
 
 Browse for more [Flet examples](https://github.com/flet-dev/examples/tree/main/python).
 
-Join to a conversation on [Flet Discord server](https://discord.gg/dhYUcB3R).
+Join to a conversation on [Flet Discord server](https://discord.gg/dzWXP8SHG8).
