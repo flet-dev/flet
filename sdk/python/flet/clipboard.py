@@ -2,6 +2,8 @@ import dataclasses
 import time
 from typing import Optional
 
+from beartype import beartype
+
 from flet.control import Control
 from flet.ref import Ref
 

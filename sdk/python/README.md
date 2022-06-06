@@ -4,7 +4,7 @@
 
 ## Requirements
 
-* Python 3.8 or above on Windows, Linux or macOS
+* Python 3.7 or above on Windows, Linux or macOS
 
 ## Installation
 
