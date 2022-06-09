@@ -22,6 +22,7 @@ from flet.control import (
 from flet.control_event import ControlEvent
 from flet.floating_action_button import FloatingActionButton
 from flet.protocol import Command
+from flet.pubsub import PubSubClient
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
 
@@ -55,6 +56,7 @@ class Page(Control):
         self.__appbar = None
         self.__theme = None
         self.__dark_theme = None
+        self.__pubsub = PubSubClient(conn.pubsub, session_id)
 
     def __enter__(self):
         return self
@@ -242,6 +244,11 @@ class Page(Control):
     @property
     def session_id(self):
         return self._session_id
+
+    # pubsub
+    @property
+    def pubsub(self):
+        return self.__pubsub
 
     # controls
     @property
