@@ -4,7 +4,7 @@ import threading
 import uuid
 
 from flet.protocol import *
-from flet.pubsub import PubSub
+from flet.pubsub import PubSubHub
 from flet.reconnecting_websocket import ReconnectingWebSocket
 
 
@@ -19,7 +19,7 @@ class Connection:
         self.page_name = None
         self.page_url = None
         self.sessions = {}
-        self.pubsub = PubSub()
+        self.pubsubhub = PubSubHub()
 
     @property
     def on_event(self):
