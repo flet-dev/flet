@@ -1,6 +1,6 @@
 import logging
 import threading
-from typing import Callable, Dict
+from typing import Callable, Dict, Iterable
 
 
 class PubSubHub:
@@ -18,21 +18,21 @@ class PubSubHub:
         logging.debug(f"pubsub.send_all({message})")
         with self.__lock:
             for handler in self.__subscribers.values():
-                self.__send(handler, message)
+                self.__send(handler, [message])
 
     def send_all_on_topic(self, topic: str, message: any):
         logging.debug(f"pubsub.send_all_on_topic({topic}, {message})")
         with self.__lock:
             if topic in self.__topic_subscribers:
                 for handler in self.__topic_subscribers[topic].values():
-                    self.__send(handler, message)
+                    self.__send(handler, [topic, message])
 
     def send_others(self, except_session_id: str, message: any):
         logging.debug(f"pubsub.send_others({except_session_id}, {message})")
         with self.__lock:
             for session_id, handler in self.__subscribers.items():
                 if except_session_id != session_id:
-                    self.__send(handler, message)
+                    self.__send(handler, [message])
 
     def send_others_on_topic(self, except_session_id: str, topic: str, message: any):
         logging.debug(
@@ -42,7 +42,7 @@ class PubSubHub:
             if topic in self.__topic_subscribers:
                 for session_id, handler in self.__topic_subscribers[topic].values():
                     if except_session_id != session_id:
-                        self.__send(handler, message)
+                        self.__send(handler, [topic, message])
 
     def subscribe(self, session_id: str, handler: Callable):
         logging.debug(f"pubsub.subscribe({session_id})")
@@ -98,10 +98,10 @@ class PubSubHub:
             if len(subscriber_topics) == 0:
                 self.__subscriber_topics.pop(session_id)
 
-    def __send(self, handler: Callable, message: any):
+    def __send(self, handler: Callable, args: Iterable):
         th = threading.Thread(
             target=handler,
-            args=[message],
+            args=args,
             daemon=True,
         )
         th.start()
