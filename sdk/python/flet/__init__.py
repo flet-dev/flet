@@ -26,6 +26,7 @@ from flet.page import Page
 from flet.popup_menu_button import PopupMenuButton, PopupMenuItem
 from flet.progress_bar import ProgressBar
 from flet.progress_ring import ProgressRing
+from flet.pubsub import PubSub
 from flet.radio import Radio
 from flet.radio_group import RadioGroup
 from flet.ref import Ref
