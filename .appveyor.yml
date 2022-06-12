@@ -131,7 +131,7 @@ for:
 
     install:
       - brew install cocoapods
-      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.1-stable.zip -o flutter_macos_stable.zip
+      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.2-stable.zip -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter --version
@@ -167,7 +167,7 @@ for:
 
     install:
       - export LANG=en_US.UTF-8
-      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.1-stable.zip -o flutter_macos_stable.zip
+      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.2-stable.zip -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter --version
