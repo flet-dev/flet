@@ -1,3 +1,4 @@
+import 'package:flet_view/utils/user_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -11,6 +12,7 @@ import '../utils/colors.dart';
 import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
 import '../utils/theme.dart';
+import '../utils/uri.dart';
 import '../widgets/page_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
@@ -110,89 +112,109 @@ class PageControl extends StatelessWidget {
       childIds.add(appBar.id);
     }
 
-    return StoreConnector<AppState, PageMediaViewModel>(
+    return StoreConnector<AppState, Uri?>(
         distinct: true,
-        converter: (store) => PageMediaViewModel.fromStore(store),
-        builder: (context, media) {
-          var theme = themeMode == ThemeMode.light ||
-                  (themeMode == ThemeMode.system &&
-                      media.displayBrightness == Brightness.light)
-              ? lightTheme
-              : darkTheme;
+        converter: (store) => store.state.pageUri,
+        builder: (context, pageUri) {
+          // load custom fonts
+          parseFonts(control, "fonts").forEach((fontFamily, fontUrl) {
+            var fontUri = Uri.parse(fontUrl);
+            if (!fontUri.hasAuthority) {
+              fontUri = getAssetUri(pageUri!, fontUrl);
+            }
+            debugPrint("fontUri: $fontUri");
+            UserFonts.loadFont(fontFamily, fontUri);
+          });
 
-          return StoreConnector<AppState, ControlsViewModel>(
+          return StoreConnector<AppState, PageMediaViewModel>(
               distinct: true,
-              converter: (store) =>
-                  ControlsViewModel.fromStore(store, childIds),
-              builder: (context, childrenViews) {
-                debugPrint("Offstage StoreConnector build");
+              converter: (store) => PageMediaViewModel.fromStore(store),
+              builder: (context, media) {
+                var theme = themeMode == ThemeMode.light ||
+                        (themeMode == ThemeMode.system &&
+                            media.displayBrightness == Brightness.light)
+                    ? lightTheme
+                    : darkTheme;
 
-                // offstage
-                List<Widget> offstageWidgets = offstage != null
-                    ? childrenViews.controlViews.first.children
-                        .where((c) =>
-                            c.isVisible &&
-                            c.type != ControlType.floatingActionButton)
-                        .map((c) => createControl(offstage, c.id, disabled))
-                        .toList()
-                    : [];
+                return StoreConnector<AppState, ControlsViewModel>(
+                    distinct: true,
+                    converter: (store) =>
+                        ControlsViewModel.fromStore(store, childIds),
+                    builder: (context, childrenViews) {
+                      debugPrint("Offstage StoreConnector build");
 
-                List<Control> fab = offstage != null
-                    ? childrenViews.controlViews.first.children
-                        .where((c) =>
-                            c.isVisible &&
-                            c.type == ControlType.floatingActionButton)
-                        .toList()
-                    : [];
+                      // offstage
+                      List<Widget> offstageWidgets = offstage != null
+                          ? childrenViews.controlViews.first.children
+                              .where((c) =>
+                                  c.isVisible &&
+                                  c.type != ControlType.floatingActionButton)
+                              .map((c) =>
+                                  createControl(offstage, c.id, disabled))
+                              .toList()
+                          : [];
 
-                var appBarView =
-                    appBar != null ? childrenViews.controlViews.last : null;
+                      List<Control> fab = offstage != null
+                          ? childrenViews.controlViews.first.children
+                              .where((c) =>
+                                  c.isVisible &&
+                                  c.type == ControlType.floatingActionButton)
+                              .toList()
+                          : [];
 
-                var column = Column(
-                    mainAxisAlignment: mainAlignment,
-                    crossAxisAlignment: crossAlignment,
-                    children: controls);
+                      var appBarView = appBar != null
+                          ? childrenViews.controlViews.last
+                          : null;
 
-                return MaterialApp(
-                  title: title,
-                  theme: lightTheme,
-                  darkTheme: darkTheme,
-                  themeMode: themeMode,
-                  home: Scaffold(
-                    appBar: appBarView != null
-                        ? AppBarControl(
-                            parent: control,
-                            control: appBarView.control,
-                            children: appBarView.children,
-                            parentDisabled: disabled,
-                            height: appBarView.control
-                                .attrDouble("toolbarHeight", kToolbarHeight)!,
-                            theme: theme)
-                        : null,
-                    body: Stack(children: [
-                      SizedBox.expand(
-                          child: Container(
-                              padding: parseEdgeInsets(control, "padding") ??
-                                  const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  color: HexColor.fromString(theme,
-                                      control.attrString("bgcolor", "")!)),
-                              child: scrollMode != ScrollMode.none
-                                  ? ScrollableControl(
-                                      child: column,
-                                      scrollDirection: Axis.vertical,
-                                      scrollMode: scrollMode,
-                                      autoScroll: autoScroll,
-                                    )
-                                  : column)),
-                      ...offstageWidgets,
-                      const PageMedia()
-                    ]),
-                    floatingActionButton: fab.isNotEmpty
-                        ? createControl(offstage, fab.first.id, disabled)
-                        : null,
-                  ),
-                );
+                      var column = Column(
+                          mainAxisAlignment: mainAlignment,
+                          crossAxisAlignment: crossAlignment,
+                          children: controls);
+
+                      return MaterialApp(
+                        title: title,
+                        theme: lightTheme,
+                        darkTheme: darkTheme,
+                        themeMode: themeMode,
+                        home: Scaffold(
+                          appBar: appBarView != null
+                              ? AppBarControl(
+                                  parent: control,
+                                  control: appBarView.control,
+                                  children: appBarView.children,
+                                  parentDisabled: disabled,
+                                  height: appBarView.control.attrDouble(
+                                      "toolbarHeight", kToolbarHeight)!,
+                                  theme: theme)
+                              : null,
+                          body: Stack(children: [
+                            SizedBox.expand(
+                                child: Container(
+                                    padding:
+                                        parseEdgeInsets(control, "padding") ??
+                                            const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        color: HexColor.fromString(
+                                            theme,
+                                            control.attrString(
+                                                "bgcolor", "")!)),
+                                    child: scrollMode != ScrollMode.none
+                                        ? ScrollableControl(
+                                            child: column,
+                                            scrollDirection: Axis.vertical,
+                                            scrollMode: scrollMode,
+                                            autoScroll: autoScroll,
+                                          )
+                                        : column)),
+                            ...offstageWidgets,
+                            const PageMedia()
+                          ]),
+                          floatingActionButton: fab.isNotEmpty
+                              ? createControl(offstage, fab.first.id, disabled)
+                              : null,
+                        ),
+                      );
+                    });
               });
         });
   }

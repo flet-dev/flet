@@ -9,11 +9,10 @@ String getWebSocketEndpoint(Uri uri) {
   return "$wsScheme://${uri.authority}/ws";
 }
 
-String getAssetUrl(Uri pageUri, String assetPath) {
+Uri getAssetUri(Uri pageUri, String assetPath) {
   return Uri(
-          scheme: pageUri.scheme,
-          host: pageUri.host,
-          port: pageUri.port,
-          path: assetPath)
-      .toString();
+      scheme: pageUri.scheme,
+      host: pageUri.host,
+      port: pageUri.port,
+      path: assetPath);
 }

@@ -7,7 +7,13 @@ from flet.alignment import Alignment
 from flet.border import Border
 from flet.border_radius import BorderRadius
 from flet.constrained_control import ConstrainedControl
-from flet.control import BorderStyle, Control, MarginValue, OptionalNumber, PaddingValue
+from flet.control import (
+    BorderRadiusValue,
+    Control,
+    MarginValue,
+    OptionalNumber,
+    PaddingValue,
+)
 from flet.ref import Ref
 
 try:
@@ -37,7 +43,7 @@ class Container(ConstrainedControl):
         alignment: Alignment = None,
         bgcolor: str = None,
         border: Border = None,
-        border_radius: BorderRadius = None,
+        border_radius: BorderRadiusValue = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -134,7 +140,7 @@ class Container(ConstrainedControl):
 
     @border_radius.setter
     @beartype
-    def border_radius(self, value: Optional[BorderRadius]):
+    def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
         if value and isinstance(value, (int, float)):
             value = border_radius.all(value)

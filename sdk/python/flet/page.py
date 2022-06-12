@@ -1,10 +1,9 @@
 import json
 import logging
 import threading
-from typing import Union
 
 from beartype import beartype
-from beartype.typing import List, Optional
+from beartype.typing import Dict, List, Optional
 
 from flet import constants, padding
 from flet.app_bar import AppBar
@@ -51,6 +50,7 @@ class Page(Control):
         self._event_available = threading.Event()
         self._fetch_page_details()
 
+        self.__fonts: Dict[str, str] = None
         self.__offstage = Offstage()
         self.__appbar = None
         self.__theme = None
@@ -329,6 +329,17 @@ class Page(Control):
     @beartype
     def design(self, value: PageDesign):
         self._set_attr("design", value)
+
+    # fonts
+    @property
+    def fonts(self):
+        return self.__fonts
+
+    @fonts.setter
+    @beartype
+    def fonts(self, value: Optional[Dict[str, str]]):
+        self.__fonts = value
+        self._set_attr_json("fonts", value)
 
     # clipboard
     @property
