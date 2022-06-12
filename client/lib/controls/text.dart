@@ -30,6 +30,7 @@ class TextControl extends StatelessWidget {
         fontSize: control.attrDouble("size", null),
         fontWeight: getFontWeight(control.attrString("weight", "")!),
         fontStyle: control.attrBool("italic", false)! ? FontStyle.italic : null,
+        fontFamily: control.attrString("fontFamily"),
         color: HexColor.fromString(
             Theme.of(context), control.attrString("color", "")!),
         backgroundColor: HexColor.fromString(

@@ -46,7 +46,7 @@ class ImageControl extends StatelessWidget {
           builder: (context, pageUri) {
             return baseControl(
                 _clipCorners(
-                    Image.network(getAssetUrl(pageUri!, src),
+                    Image.network(getAssetUri(pageUri!, src).toString(),
                         width: width, height: height, repeat: repeat, fit: fit),
                     control),
                 parent,

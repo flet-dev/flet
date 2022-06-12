@@ -46,6 +46,7 @@ class Text(ConstrainedControl):
         # text-specific
         #
         text_align: TextAlign = None,
+        font_family: str = None,
         size: OptionalNumber = None,
         weight: FontWeight = None,
         italic: bool = None,
@@ -73,6 +74,7 @@ class Text(ConstrainedControl):
 
         self.value = value
         self.text_align = text_align
+        self.font_family = font_family
         self.size = size
         self.weight = weight
         self.italic = italic
@@ -105,6 +107,15 @@ class Text(ConstrainedControl):
     @beartype
     def text_align(self, value: TextAlign):
         self._set_attr("textAlign", value)
+
+    # font_family
+    @property
+    def font_family(self):
+        return self._get_attr("fontFamily")
+
+    @font_family.setter
+    def font_family(self, value):
+        self._set_attr("fontFamily", value)
 
     # size
     @property
