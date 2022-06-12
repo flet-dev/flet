@@ -1,10 +1,9 @@
 import json
 import logging
 import threading
-from typing import Dict, Union
 
 from beartype import beartype
-from beartype.typing import List, Optional
+from beartype.typing import Dict, List, Optional
 
 from flet import constants, padding
 from flet.app_bar import AppBar
