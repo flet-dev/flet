@@ -7,6 +7,7 @@ from typing import Union
 from beartype import beartype
 from beartype.typing import List, Optional
 
+from flet.border_radius import BorderRadius
 from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.margin import Margin
 from flet.padding import Padding
@@ -52,6 +53,8 @@ OptionalNumber = Union[None, int, float]
 PaddingValue = Union[None, int, float, Padding]
 
 MarginValue = Union[None, int, float, Margin]
+
+BorderRadiusValue = Union[None, int, float, BorderRadius]
 
 ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always"]
 

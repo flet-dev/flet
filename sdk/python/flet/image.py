@@ -4,7 +4,7 @@ from beartype import beartype
 
 from flet import border_radius
 from flet.border_radius import BorderRadius
-from flet.control import Control, OptionalNumber
+from flet.control import BorderRadiusValue, Control, OptionalNumber
 from flet.ref import Ref
 
 try:
@@ -38,7 +38,7 @@ class Image(Control):
         src: str = None,
         repeat: ImageRepeat = None,
         fit: ImageFit = None,
-        border_radius: BorderRadius = None,
+        border_radius: BorderRadiusValue = None,
     ):
 
         Control.__init__(
@@ -118,7 +118,7 @@ class Image(Control):
 
     @border_radius.setter
     @beartype
-    def border_radius(self, value: Optional[BorderRadius]):
+    def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
         if value and isinstance(value, (int, float)):
             value = border_radius.all(value)
