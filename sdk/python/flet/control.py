@@ -11,8 +11,10 @@ from flet.border_radius import BorderRadius
 from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.margin import Margin
 from flet.padding import Padding
+from flet.page import Page
 from flet.protocol import Command
 from flet.ref import Ref
+from flet.user_control import UserControl
 
 try:
     from typing import Literal
@@ -179,11 +181,11 @@ class Control:
 
     # page
     @property
-    def page(self):
+    def page(self) -> Page:
         return self.__page
 
     @page.setter
-    def page(self, page):
+    def page(self, page: Page):
         self.__page = page
 
     # uid
@@ -306,7 +308,8 @@ class Control:
                 # unchanged control
                 for h in previous_ints[a1:a2]:
                     ctrl = hashes[h]
-                    ctrl.build_update_commands(index, added_controls, commands)
+                    if not isinstance(ctrl, UserControl):
+                        ctrl.build_update_commands(index, added_controls, commands)
                     n += 1
             elif tag == "replace":
                 ids = []
@@ -358,6 +361,9 @@ class Control:
             self._remove_control_recursively(index, child)
 
         if control.__uid in index:
+            if isinstance(control, UserControl):
+                control.will_unmount()
+
             del index[control.__uid]
 
     # private methods

@@ -40,4 +40,5 @@ from flet.text import Text
 from flet.text_button import TextButton
 from flet.textfield import TextField
 from flet.theme import Theme
+from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
