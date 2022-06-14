@@ -24,7 +24,6 @@ from flet.protocol import Command
 from flet.pubsub import PubSub
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
-from flet.user_control import UserControl
 
 try:
     from typing import Literal
@@ -120,7 +119,7 @@ class Page(Control):
                     self._index[id] = added_controls[n]
 
                     # call UserControl.did_mount
-                    if isinstance(added_controls[n], UserControl):
+                    if added_controls[n]._is_user_control():
                         added_controls[n].did_mount()
 
                     n += 1

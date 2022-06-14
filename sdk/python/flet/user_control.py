@@ -30,6 +30,9 @@ class UserControl(Stack):
     #         data=data,
     #     )
 
+    def _is_user_control(self):
+        return True
+
     def did_mount(self):
         logging.debug(f"UserControl.did_mount(): {self.uid}")
 
