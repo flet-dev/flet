@@ -118,9 +118,8 @@ class Page(Control):
                     # add to index
                     self._index[id] = added_controls[n]
 
-                    # call UserControl.did_mount
-                    if added_controls[n]._is_user_control():
-                        added_controls[n].did_mount()
+                    # call Control.did_mount
+                    added_controls[n].did_mount()
 
                     n += 1
 

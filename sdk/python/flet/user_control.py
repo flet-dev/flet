@@ -1,40 +1,26 @@
-import logging
-from typing import Union
+from typing import List
 
-from flet.control import OptionalNumber
-from flet.ref import Ref
+from flet.control import Control
 from flet.stack import Stack
 
 
 class UserControl(Stack):
-    # def __init__(
-    #     self,
-    #     ref: Ref = None,
-    #     width: OptionalNumber = None,
-    #     height: OptionalNumber = None,
-    #     expand: Union[bool, int] = None,
-    #     opacity: OptionalNumber = None,
-    #     visible: bool = None,
-    #     disabled: bool = None,
-    #     data: any = None,
-    # ):
-    #     Stack.__init__(
-    #         self,
-    #         ref=ref,
-    #         width=width,
-    #         height=height,
-    #         expand=expand,
-    #         opacity=opacity,
-    #         visible=visible,
-    #         disabled=disabled,
-    #         data=data,
-    #     )
+    def __init__(self):
+        super().__init__()
+        content = self.build()
+        if isinstance(content, Control):
+            self.controls = [content]
+        elif isinstance(content, List) and all(
+            isinstance(control, Control) for control in content
+        ):
+            self.controls = content
+        else:
+            raise Exception(
+                f"{self.__class__.__name__}.build() method must be implemented and returning either Control or List[Control]."
+            )
 
-    def _is_user_control(self):
+    def build(self):
+        pass
+
+    def _is_isolated(self):
         return True
-
-    def did_mount(self):
-        logging.debug(f"UserControl.did_mount(): {self.uid}")
-
-    def will_unmount(self):
-        logging.debug(f"UserControl.will_unmount(): {self.uid}")
