@@ -105,10 +105,19 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 			index, _ := assetsFS.Open(siteDefaultDocument)
 			indexData, _ := ioutil.ReadAll(index)
 
-			c.Data(http.StatusOK, "text/html",
-				bytes.Replace(indexData,
-					[]byte("<base href=\"/\">"),
-					[]byte("<base href=\""+urlPath+"\">"), 1))
+			// base path
+			indexData = bytes.Replace(indexData,
+				[]byte("<base href=\"/\">"),
+				[]byte("<base href=\""+urlPath+"\">"), 1)
+
+			// web renderer
+			if config.WebRenderer() != "" {
+				indexData = bytes.Replace(indexData,
+					[]byte("<!-- flutterWebRenderer -->"),
+					[]byte("<script>window.flutterWebRenderer=\""+config.WebRenderer()+"\";</script>"), 1)
+			}
+
+			c.Data(http.StatusOK, "text/html", indexData)
 		} else {
 			// API not found
 			c.JSON(http.StatusNotFound, gin.H{

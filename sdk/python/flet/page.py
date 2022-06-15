@@ -117,6 +117,10 @@ class Page(Control):
 
                     # add to index
                     self._index[id] = added_controls[n]
+
+                    # call Control.did_mount
+                    added_controls[n].did_mount()
+
                     n += 1
 
     def add(self, *controls):
@@ -218,6 +222,16 @@ class Page(Control):
             self._session_id,
             Command(0, name, values, None, None),
         )
+
+    @beartype
+    def set_clipboard(self, value: str):
+        self.__offstage.clipboard.value = value
+        self.__offstage.clipboard.update()
+
+    @beartype
+    def show_snack_bar(self, snack_bar: SnackBar):
+        self.__offstage.snack_bar = snack_bar
+        self.__offstage.update()
 
     # url
     @property
@@ -340,16 +354,6 @@ class Page(Control):
     def fonts(self, value: Optional[Dict[str, str]]):
         self.__fonts = value
         self._set_attr_json("fonts", value)
-
-    # clipboard
-    @property
-    def clipboard(self):
-        return self.__offstage.clipboard.value
-
-    @clipboard.setter
-    @beartype
-    def clipboard(self, value: Optional[str]):
-        self.__offstage.clipboard.value = value
 
     # splash
     @property

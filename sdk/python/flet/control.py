@@ -86,8 +86,14 @@ class Control:
         if ref:
             ref.current = self
 
-    def _assign(self, variable):
-        variable = self
+    def _is_isolated(self):
+        return False
+
+    def did_mount(self):
+        pass
+
+    def will_unmount(self):
+        pass
 
     def _get_children(self):
         return []
@@ -306,7 +312,8 @@ class Control:
                 # unchanged control
                 for h in previous_ints[a1:a2]:
                     ctrl = hashes[h]
-                    ctrl.build_update_commands(index, added_controls, commands)
+                    if not ctrl._is_isolated():
+                        ctrl.build_update_commands(index, added_controls, commands)
                     n += 1
             elif tag == "replace":
                 ids = []
@@ -358,6 +365,7 @@ class Control:
             self._remove_control_recursively(index, child)
 
         if control.__uid in index:
+            control.will_unmount()
             del index[control.__uid]
 
     # private methods

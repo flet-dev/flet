@@ -36,6 +36,9 @@ class Clipboard(Control):
     def _get_control_name(self):
         return "clipboard"
 
+    def _is_isolated(self):
+        return True
+
     # value
     @property
     def value(self):

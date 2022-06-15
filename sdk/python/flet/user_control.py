@@ -1,0 +1,26 @@
+from typing import List
+
+from flet.control import Control
+from flet.stack import Stack
+
+
+class UserControl(Stack):
+    def __init__(self):
+        super().__init__()
+        content = self.build()
+        if isinstance(content, Control):
+            self.controls = [content]
+        elif isinstance(content, List) and all(
+            isinstance(control, Control) for control in content
+        ):
+            self.controls = content
+        else:
+            raise Exception(
+                f"{self.__class__.__name__}.build() method must be implemented and returning either Control or List[Control]."
+            )
+
+    def build(self):
+        pass
+
+    def _is_isolated(self):
+        return True

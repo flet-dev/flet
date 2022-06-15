@@ -9,7 +9,7 @@ skip_commits:
     - "*.md"
 
 environment:
-  GO_VERSION: 1.18.1
+  GO_VERSION: 1.18.3
   GO_TAGS: --tags release
   python_version: 3.10
   GITHUB_TOKEN:

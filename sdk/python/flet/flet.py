@@ -35,9 +35,16 @@ AppViewer = Literal[
     FLET_APP,
 ]
 
+WebRenderer = Literal[None, "auto", "html", "canvaskit"]
+
 
 def page(
-    name="", port=0, permissions=None, view: AppViewer = WEB_BROWSER, assets_dir=None
+    name="",
+    port=0,
+    permissions=None,
+    view: AppViewer = WEB_BROWSER,
+    assets_dir=None,
+    web_renderer=None,
 ):
     conn = _connect_internal(
         page_name=name,
@@ -45,6 +52,7 @@ def page(
         is_app=False,
         permissions=permissions,
         assets_dir=assets_dir,
+        web_renderer=web_renderer,
     )
     print("Page URL:", conn.page_url)
     page = Page(conn, constants.ZERO_SESSION)
@@ -63,6 +71,7 @@ def app(
     permissions=None,
     view: AppViewer = FLET_APP,
     assets_dir=None,
+    web_renderer=None,
 ):
 
     if target == None:
@@ -75,6 +84,7 @@ def app(
         permissions=permissions,
         session_handler=target,
         assets_dir=assets_dir,
+        web_renderer=web_renderer,
     )
     print("App URL:", conn.page_url)
 
@@ -129,6 +139,7 @@ def _connect_internal(
     permissions=None,
     session_handler=None,
     assets_dir=None,
+    web_renderer=None,
 ):
     if share and server == None:
         server = constants.HOSTED_SERVICE_URL
@@ -141,7 +152,7 @@ def _connect_internal(
         # page with a custom port starts detached process
         attached = False if not is_app and port != 0 else True
 
-        port = _start_flet_server(port, attached, assets_dir)
+        port = _start_flet_server(port, attached, assets_dir, web_renderer)
         server = f"http://localhost:{port}"
 
     connected = threading.Event()
@@ -209,7 +220,7 @@ def _connect_internal(
     return conn
 
 
-def _start_flet_server(port, attached, assets_dir):
+def _start_flet_server(port, attached, assets_dir, web_renderer):
 
     if port == 0:
         port = _get_free_tcp_port()
@@ -242,6 +253,10 @@ def _start_flet_server(port, attached, assets_dir):
             )
         logging.info(f"Assets path configured: {assets_dir}")
         fletd_env["FLET_STATIC_ROOT_DIR"] = assets_dir
+
+    if web_renderer not in [None, "", "auto"]:
+        logging.info(f"Web renderer configured: {web_renderer}")
+        fletd_env["FLET_WEB_RENDERER"] = web_renderer
 
     args = [fletd_path, "--port", str(port)]
 
