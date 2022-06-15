@@ -71,6 +71,7 @@ const (
 
 	// development
 	staticRootDir = "STATIC_ROOT_DIR"
+	webRenderer   = "WEB_RENDERER"
 )
 
 func init() {
@@ -277,4 +278,8 @@ func MasterSecretKey() string {
 
 func StaticRootDir() string {
 	return viper.GetString(staticRootDir)
+}
+
+func WebRenderer() string {
+	return viper.GetString(webRenderer)
 }
