@@ -28,6 +28,10 @@ environment:
       job_group: build_flet
       APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
+    - job_name: Build Flet for Linux
+      job_group: build_flet
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+
     - job_name: Build Flet for iOS
       job_group: build_flet
       APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
@@ -158,6 +162,39 @@ for:
         APPVEYOR_REPO_TAG: true
 
   # ======================================
+  #      Build Flet View for Linux
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: Build Flet for Linux
+
+    install:
+      # Flutter SDK
+      - sudo snap install flutter --classic
+      - flutter sdk-path
+      - flutter --version
+
+    build_script:
+      - cd client
+      - flutter test
+      - flutter build linux
+      - mv build/linux/x64/release/bundle build/linux/x64/release/flet
+      - tar -czvf flet.tar.gz -C build/linux/x64/release flet
+
+    artifacts:
+      - path: client/flet.tar.gz
+        name: flet_linux
+
+    deploy:
+      provider: GitHub
+      auth_token: $(GITHUB_TOKEN)
+      release: $(APPVEYOR_REPO_TAG_NAME)
+      artifact: flet_linux
+      on:
+        APPVEYOR_REPO_TAG: true
+
+  # ======================================
   #      Build Flet View for iOS
   # ======================================
 
@@ -200,32 +237,6 @@ for:
     artifacts:
       - path: client/build/flet.ipa
         name: flet_ios
-
-  # ======================================
-  #      Linux
-  # ======================================
-
-  # - matrix:
-  #     only:
-  #       - job_name: Linux
-
-  #   install:
-  #     - gvm install go${GO_VERSION} -B
-  #     - gvm use go${GO_VERSION}
-  #     - go version
-
-  #   build_script:
-  #     - nvm use 12
-  #     - cd client
-  #     - yarn
-  #     - yarn build
-  #     - cd ..
-  #     - cp -rf client/build/* server/content
-  #     - ./build.sh
-  #     - ls $GOPATH/bin
-
-  #   test_script:
-  #     - ./run-tests.sh
 
   # ======================================
   #      Build Fletd

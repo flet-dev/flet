@@ -101,7 +101,7 @@ def app(
 
     fvp = None
 
-    if view == FLET_APP and not is_linux():
+    if view == FLET_APP and not is_linux_server():
         fvp = _open_flet_view(conn.page_url)
         try:
             fvp.wait()
@@ -333,6 +333,26 @@ def _open_flet_view(page_url):
 
         app_path = temp_flet_dir.joinpath("Flet.app")
         args = ["open", str(app_path), "-W", "--args", page_url]
+    elif is_linux():
+        # build version-specific path to flet folder
+        temp_flet_dir = Path(tempfile.gettempdir()).joinpath(f"flet-{version.version}")
+
+        # check if flet_view.app exists in a temp directory
+        if not temp_flet_dir.exists():
+            # check if flet.tar.gz exists
+            tar_file = Path(__file__).parent.joinpath("bin", "flet.tar.gz")
+            if not tar_file.exists():
+                tar_file = _download_flet_view_linux()
+
+            logging.info(f"Extracting Flet from archive to {temp_flet_dir}")
+            temp_flet_dir.mkdir(parents=True, exist_ok=True)
+            with tarfile.open(str(tar_file), "r:gz") as tar_arch:
+                tar_arch.extractall(str(temp_flet_dir))
+        else:
+            logging.info(f"Flet View found in PATH: {temp_flet_dir}")
+
+        app_path = temp_flet_dir.joinpath("flet", "flet")
+        args = [str(app_path), page_url]
 
     # execute process
     return subprocess.Popen(args)
@@ -413,6 +433,18 @@ def _download_flet_view_macos():
     ver = version.version
 
     file_name = "flet.app.tar.gz"
+    temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
+    print(f"Downloading Flet v{ver} to {temp_arch}")
+    flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
+
+    urllib.request.urlretrieve(flet_url, temp_arch)
+    return str(temp_arch)
+
+
+def _download_flet_view_linux():
+    ver = version.version
+
+    file_name = "flet.tar.gz"
     temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
     print(f"Downloading Flet v{ver} to {temp_arch}")
     flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
