@@ -89,6 +89,9 @@ class Control:
     def _is_isolated(self):
         return False
 
+    def _build(self):
+        pass
+
     def did_mount(self):
         pass
 
@@ -270,12 +273,15 @@ class Control:
                 self._remove_control_recursively(self.__page.index, child)
             return self.__page._send_command("clean", [self.uid])
 
-    def build_update_commands(self, index, added_controls, commands):
+    def build_update_commands(self, index, added_controls, commands, isolated=False):
         update_cmd = self._get_cmd_attrs(update=True)
 
         if len(update_cmd.attrs) > 0:
             update_cmd.name = "set"
             commands.append(update_cmd)
+
+        if isolated:
+            return
 
         # go through children
         previous_children = self.__previous_children
@@ -312,8 +318,9 @@ class Control:
                 # unchanged control
                 for h in previous_ints[a1:a2]:
                     ctrl = hashes[h]
-                    if not ctrl._is_isolated():
-                        ctrl.build_update_commands(index, added_controls, commands)
+                    ctrl.build_update_commands(
+                        index, added_controls, commands, isolated=ctrl._is_isolated()
+                    )
                     n += 1
             elif tag == "replace":
                 ids = []
@@ -326,6 +333,7 @@ class Control:
                 for h in current_ints[b1:b2]:
                     # add
                     ctrl = hashes[h]
+                    ctrl._build()
                     innerCmds = ctrl.get_cmd_str(
                         index=index, added_controls=added_controls
                     )
@@ -343,6 +351,7 @@ class Control:
                 # add
                 for h in current_ints[b1:b2]:
                     ctrl = hashes[h]
+                    ctrl._build()
                     innerCmds = ctrl.get_cmd_str(
                         index=index, added_controls=added_controls
                     )

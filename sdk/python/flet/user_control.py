@@ -5,8 +5,10 @@ from flet.stack import Stack
 
 
 class UserControl(Stack):
-    def __init__(self):
-        super().__init__()
+    def build(self):
+        pass
+
+    def _build(self):
         content = self.build()
         if isinstance(content, Control):
             self.controls = [content]
@@ -18,9 +20,6 @@ class UserControl(Stack):
             raise Exception(
                 f"{self.__class__.__name__}.build() method must be implemented and returning either Control or List[Control]."
             )
-
-    def build(self):
-        pass
 
     def _is_isolated(self):
         return True
