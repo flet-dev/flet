@@ -12,6 +12,10 @@ def is_linux():
     return platform.system() == "Linux"
 
 
+def is_linux_server():
+    return platform.system() == "Linux" and os.environ.get("DESKTOP_SESSION") == None
+
+
 def is_macos():
     return platform.system() == "Darwin"
 

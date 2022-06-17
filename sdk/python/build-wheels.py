@@ -44,6 +44,9 @@ packages = {
     "Linux amd64": {
         "fletd_asset": "linux_amd64",
         "fletd_exec": "fletd",
+        "flet_client_job": "Build Flet for Linux",
+        "flet_client_artifact": "flet_linux",
+        "flet_client_filename": "flet.tar.gz",
         "wheel_tags": [
             "py3-none-manylinux_2_17_x86_64",
             "py3-none-manylinux2014_x86_64",
