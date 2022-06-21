@@ -279,6 +279,11 @@ def _start_flet_server(port, attached, assets_dir, web_renderer):
         log_level_name = logging.getLevelName(log_level).lower()
         args.extend(["--log-level", log_level_name])
 
+    startupinfo = None
+    if is_windows():
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
     subprocess.Popen(
         args,
         env=fletd_env,
@@ -286,6 +291,7 @@ def _start_flet_server(port, attached, assets_dir, web_renderer):
         start_new_session=start_new_session,
         stdout=subprocess.DEVNULL if log_level >= logging.WARNING else None,
         stderr=subprocess.DEVNULL if log_level >= logging.WARNING else None,
+        startupinfo=startupinfo,
     )
 
     return port

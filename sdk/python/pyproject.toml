@@ -32,8 +32,10 @@ tests = [
     "pytest>=6.1.2",
 ]
 dev = [
-    "pre-commit>=2.17.0",
-]
+    "pre-commit>=2.17.0"]
+
+[project.entry-points.pyinstaller40]
+hook-dirs = "flet.__pyinstaller:get_hook_dirs"
 
 [build-system]
 requires = ["pdm-pep517"]
