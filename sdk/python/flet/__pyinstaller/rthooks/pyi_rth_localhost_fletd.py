@@ -1,6 +1,6 @@
 import logging
 import os
 
-logging.info("Runnin Flet runtime hook for PyInstaller...")
+logging.info("Running PyInstaller runtime hook for Flet...")
 
 os.environ["FLET_SERVER_IP"] = "localhost"
