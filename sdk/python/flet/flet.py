@@ -248,9 +248,15 @@ def _start_flet_server(port, attached, assets_dir, web_renderer):
 
     if assets_dir:
         if not Path(assets_dir).is_absolute():
-            assets_dir = str(
-                Path(get_current_script_dir()).joinpath(assets_dir).resolve()
-            )
+            if "_MEI" in __file__:
+                # support for "onefile" PyInstaller
+                assets_dir = str(
+                    Path(__file__).parent.parent.joinpath(assets_dir).resolve()
+                )
+            else:
+                assets_dir = str(
+                    Path(get_current_script_dir()).joinpath(assets_dir).resolve()
+                )
         logging.info(f"Assets path configured: {assets_dir}")
         fletd_env["FLET_STATIC_ROOT_DIR"] = assets_dir
 
