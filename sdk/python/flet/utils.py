@@ -74,7 +74,12 @@ def which(program):
 
 
 def is_localhost_url(url):
-    return "://localhost/" in url or "://localhost:" in url
+    return (
+        "://localhost/" in url
+        or "://localhost:" in url
+        or "://127.0.0.1/" in url
+        or "://127.0.0.1:" in url
+    )
 
 
 def get_current_script_dir():

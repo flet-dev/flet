@@ -7,5 +7,4 @@ bin_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, "b
 if os.getenv("PACKAGE_FLETD_ONLY"):
     bin_path = os.path.join(bin_path, "fletd*")
 
-# binaries = [(bin_path, "flet/bin")]
-binaries = [(bin_path, "flet/bin")]
+datas = [(bin_path, "flet/bin")]

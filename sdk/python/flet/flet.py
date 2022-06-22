@@ -153,7 +153,7 @@ def _connect_internal(
         attached = False if not is_app and port != 0 else True
 
         port = _start_flet_server(port, attached, assets_dir, web_renderer)
-        server = f"http://localhost:{port}"
+        server = f"http://127.0.0.1:{port}"
 
     connected = threading.Event()
 
