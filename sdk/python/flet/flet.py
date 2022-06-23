@@ -44,7 +44,7 @@ def page(
     permissions=None,
     view: AppViewer = WEB_BROWSER,
     assets_dir=None,
-    web_renderer='canvaskit',
+    web_renderer="canvaskit",
 ):
     conn = _connect_internal(
         page_name=name,
@@ -71,7 +71,7 @@ def app(
     permissions=None,
     view: AppViewer = FLET_APP,
     assets_dir=None,
-    web_renderer=None,
+    web_renderer="canvaskit",
 ):
 
     if target == None:
@@ -84,7 +84,7 @@ def app(
         permissions=permissions,
         session_handler=target,
         assets_dir=assets_dir,
-        web_renderer='canvaskit',
+        web_renderer=web_renderer,
     )
     print("App URL:", conn.page_url)
 
