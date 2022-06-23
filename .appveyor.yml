@@ -263,7 +263,7 @@ for:
       # Flutter Web client
       - cd client
       - flutter test
-      - flutter build web --release --web-renderer canvaskit
+      - flutter build web --release
       - rm -rf build/web/canvaskit
       - ls -alR build/web
       - cd ..
