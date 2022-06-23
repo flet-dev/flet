@@ -126,11 +126,12 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 		}
 	})
 
-	log.Println("Starting server on port", serverPort)
+	addr := fmt.Sprintf("%s:%d", config.ServerIP(), serverPort)
+	log.Println("Starting server on", addr)
 
 	// Start and run the server
 	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%d", serverPort),
+		Addr:    addr,
 		Handler: router,
 	}
 

@@ -44,7 +44,7 @@ def page(
     permissions=None,
     view: AppViewer = WEB_BROWSER,
     assets_dir=None,
-    web_renderer=None,
+    web_renderer="canvaskit",
 ):
     conn = _connect_internal(
         page_name=name,
@@ -71,7 +71,7 @@ def app(
     permissions=None,
     view: AppViewer = FLET_APP,
     assets_dir=None,
-    web_renderer=None,
+    web_renderer="canvaskit",
 ):
 
     if target == None:
@@ -153,7 +153,7 @@ def _connect_internal(
         attached = False if not is_app and port != 0 else True
 
         port = _start_flet_server(port, attached, assets_dir, web_renderer)
-        server = f"http://localhost:{port}"
+        server = f"http://127.0.0.1:{port}"
 
     connected = threading.Event()
 
@@ -248,9 +248,15 @@ def _start_flet_server(port, attached, assets_dir, web_renderer):
 
     if assets_dir:
         if not Path(assets_dir).is_absolute():
-            assets_dir = str(
-                Path(get_current_script_dir()).joinpath(assets_dir).resolve()
-            )
+            if "_MEI" in __file__:
+                # support for "onefile" PyInstaller
+                assets_dir = str(
+                    Path(__file__).parent.parent.joinpath(assets_dir).resolve()
+                )
+            else:
+                assets_dir = str(
+                    Path(get_current_script_dir()).joinpath(assets_dir).resolve()
+                )
         logging.info(f"Assets path configured: {assets_dir}")
         fletd_env["FLET_STATIC_ROOT_DIR"] = assets_dir
 
@@ -279,6 +285,11 @@ def _start_flet_server(port, attached, assets_dir, web_renderer):
         log_level_name = logging.getLevelName(log_level).lower()
         args.extend(["--log-level", log_level_name])
 
+    startupinfo = None
+    if is_windows():
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
     subprocess.Popen(
         args,
         env=fletd_env,
@@ -286,6 +297,7 @@ def _start_flet_server(port, attached, assets_dir, web_renderer):
         start_new_session=start_new_session,
         stdout=subprocess.DEVNULL if log_level >= logging.WARNING else None,
         stderr=subprocess.DEVNULL if log_level >= logging.WARNING else None,
+        startupinfo=startupinfo,
     )
 
     return port

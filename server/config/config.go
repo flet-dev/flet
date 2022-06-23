@@ -27,6 +27,7 @@ const (
 	defaultAppURL                  = "http://localhost:3000"
 	defaultServerPort              = 8550
 	serverPort                     = "SERVER_PORT"
+	serverIP                       = "SERVER_IP"
 	forceSSL                       = "FORCE_SSL"
 	defaultWebSocketMaxMessageSize = 2097152 // 2 MB
 	wsMaxMessageSize               = "WS_MAX_MESSAGE_SIZE"
@@ -168,6 +169,10 @@ func AppURL() string {
 
 func ServerPort() int {
 	return viper.GetInt(serverPort)
+}
+
+func ServerIP() string {
+	return viper.GetString(serverIP)
 }
 
 func MaxWebSocketMessageSize() int {
