@@ -46,6 +46,8 @@ class PageControl extends StatelessWidget {
         orElse: () => ScrollMode.none);
 
     final autoScroll = control.attrBool("autoScroll", false)!;
+    final textDirection =
+        control.attrBool("rtl", false)! ? TextDirection.rtl : TextDirection.ltr;
 
     Control? offstage;
     Control? appBar;
@@ -176,43 +178,46 @@ class PageControl extends StatelessWidget {
                         theme: lightTheme,
                         darkTheme: darkTheme,
                         themeMode: themeMode,
-                        home: Scaffold(
-                          appBar: appBarView != null
-                              ? AppBarControl(
-                                  parent: control,
-                                  control: appBarView.control,
-                                  children: appBarView.children,
-                                  parentDisabled: disabled,
-                                  height: appBarView.control.attrDouble(
-                                      "toolbarHeight", kToolbarHeight)!,
-                                  theme: theme)
-                              : null,
-                          body: Stack(children: [
-                            SizedBox.expand(
-                                child: Container(
-                                    padding:
-                                        parseEdgeInsets(control, "padding") ??
+                        home: Directionality(
+                            textDirection: textDirection,
+                            child: Scaffold(
+                              appBar: appBarView != null
+                                  ? AppBarControl(
+                                      parent: control,
+                                      control: appBarView.control,
+                                      children: appBarView.children,
+                                      parentDisabled: disabled,
+                                      height: appBarView.control.attrDouble(
+                                          "toolbarHeight", kToolbarHeight)!,
+                                      theme: theme)
+                                  : null,
+                              body: Stack(children: [
+                                SizedBox.expand(
+                                    child: Container(
+                                        padding: parseEdgeInsets(
+                                                control, "padding") ??
                                             const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        color: HexColor.fromString(
-                                            theme,
-                                            control.attrString(
-                                                "bgcolor", "")!)),
-                                    child: scrollMode != ScrollMode.none
-                                        ? ScrollableControl(
-                                            child: column,
-                                            scrollDirection: Axis.vertical,
-                                            scrollMode: scrollMode,
-                                            autoScroll: autoScroll,
-                                          )
-                                        : column)),
-                            ...offstageWidgets,
-                            const PageMedia()
-                          ]),
-                          floatingActionButton: fab.isNotEmpty
-                              ? createControl(offstage, fab.first.id, disabled)
-                              : null,
-                        ),
+                                        decoration: BoxDecoration(
+                                            color: HexColor.fromString(
+                                                theme,
+                                                control.attrString(
+                                                    "bgcolor", "")!)),
+                                        child: scrollMode != ScrollMode.none
+                                            ? ScrollableControl(
+                                                child: column,
+                                                scrollDirection: Axis.vertical,
+                                                scrollMode: scrollMode,
+                                                autoScroll: autoScroll,
+                                              )
+                                            : column)),
+                                ...offstageWidgets,
+                                const PageMedia()
+                              ]),
+                              floatingActionButton: fab.isNotEmpty
+                                  ? createControl(
+                                      offstage, fab.first.id, disabled)
+                                  : null,
+                            )),
                       );
                     });
               });

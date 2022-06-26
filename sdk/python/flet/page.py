@@ -476,6 +476,16 @@ class Page(Control):
     def auto_scroll(self, value: Optional[bool]):
         self._set_attr("autoScroll", value)
 
+    # rtl
+    @property
+    def rtl(self):
+        return self._get_attr("rtl")
+
+    @rtl.setter
+    @beartype
+    def rtl(self, value: Optional[bool]):
+        self._set_attr("rtl", value)
+
     # window_width
     @property
     def window_width(self):
