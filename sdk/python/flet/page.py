@@ -321,7 +321,7 @@ class Page(Control):
     @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
-        if value and isinstance(value, (int, float)):
+        if value != None and isinstance(value, (int, float)):
             value = padding.all(value)
         self._set_attr_json("padding", value)
 
@@ -475,6 +475,16 @@ class Page(Control):
     @beartype
     def auto_scroll(self, value: Optional[bool]):
         self._set_attr("autoScroll", value)
+
+    # rtl
+    @property
+    def rtl(self):
+        return self._get_attr("rtl")
+
+    @rtl.setter
+    @beartype
+    def rtl(self, value: Optional[bool]):
+        self._set_attr("rtl", value)
 
     # window_width
     @property
