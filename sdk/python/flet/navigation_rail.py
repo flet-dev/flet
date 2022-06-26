@@ -124,7 +124,7 @@ class NavigationRailDestination(Control):
     @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
-        if value and isinstance(value, (int, float)):
+        if value != None and isinstance(value, (int, float)):
             value = padding.all(value)
         self._set_attr_json("padding", value)
 
