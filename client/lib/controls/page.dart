@@ -1,4 +1,3 @@
-import 'package:flet_view/utils/user_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -13,7 +12,9 @@ import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
 import '../utils/theme.dart';
 import '../utils/uri.dart';
+import '../utils/user_fonts.dart';
 import '../widgets/page_media.dart';
+import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
 import 'scrollable_control.dart';
@@ -161,6 +162,11 @@ class PageControl extends StatelessWidget {
                               .toList()
                           : [];
 
+                      List<Widget> mediaWidgets = [const PageMedia()];
+                      if (isDesktop()) {
+                        mediaWidgets.add(const WindowMedia());
+                      }
+
                       List<Control> fab = offstage != null
                           ? childrenViews.controlViews.first.children
                               .where((c) =>
@@ -216,7 +222,7 @@ class PageControl extends StatelessWidget {
                                               )
                                             : column)),
                                 ...offstageWidgets,
-                                const PageMedia()
+                                ...mediaWidgets
                               ]),
                               floatingActionButton: fab.isNotEmpty
                                   ? createControl(
