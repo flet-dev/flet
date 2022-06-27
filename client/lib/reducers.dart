@@ -39,20 +39,20 @@ AppState appReducer(AppState state, dynamic action) {
         "New page size: ${action.newPageSize}, new breakpoint: $newBreakpoint");
 
     var page = state.controls["page"];
+    var controls = Map.of(state.controls);
     if (page != null) {
-      var controls = Map.of(state.controls);
       var pageAttrs = Map.of(page.attrs);
       pageAttrs["width"] = action.newPageSize.width.toString();
       pageAttrs["height"] = action.newPageSize.height.toString();
-      pageAttrs["windowWidth"] = action.newWindowSize.width.toString();
-      pageAttrs["windowHeight"] = action.newWindowSize.height.toString();
+      pageAttrs["windowwidth"] = action.newWindowSize.width.toString();
+      pageAttrs["windowheight"] = action.newWindowSize.height.toString();
       controls[page.id] = page.copyWith(attrs: pageAttrs);
 
       List<Map<String, String>> props = [
         {"i": "page", "width": action.newPageSize.width.toString()},
         {"i": "page", "height": action.newPageSize.height.toString()},
-        {"i": "page", "windowWidth": action.newWindowSize.width.toString()},
-        {"i": "page", "windowHeight": action.newWindowSize.height.toString()}
+        {"i": "page", "windowwidth": action.newWindowSize.width.toString()},
+        {"i": "page", "windowheight": action.newWindowSize.height.toString()}
       ];
       ws.updateControlProps(props: props);
       ws.pageEventFromWeb(
@@ -63,7 +63,9 @@ AppState appReducer(AppState state, dynamic action) {
     }
 
     return state.copyWith(
-        size: action.newPageSize, sizeBreakpoint: newBreakpoint);
+        controls: controls,
+        size: action.newPageSize,
+        sizeBreakpoint: newBreakpoint);
   } else if (action is PageBrightnessChangeAction) {
     return state.copyWith(displayBrightness: action.brightness);
   } else if (action is RegisterWebClientAction) {
