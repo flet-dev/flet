@@ -23,11 +23,11 @@ void setWindowSize(double? width, double? height) {
   }
 }
 
-Future<Size> getWindowSize(Size defaultSize) {
+Future<Size> getWindowSize() {
   if (isDesktop()) {
     return windowManager.getSize();
   } else {
-    return Future.value(defaultSize);
+    return Future.value(const Size(0, 0));
   }
 }
 

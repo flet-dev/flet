@@ -22,7 +22,7 @@ class _PageMediaState extends State<PageMedia> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       debugPrint("Send current size to reducer: $newSize");
-      getWindowSize(newSize).then((windowSize) {
+      getWindowSize().then((windowSize) {
         dispatch(PageSizeChangeAction(newSize, windowSize));
       });
     });

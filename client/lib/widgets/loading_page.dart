@@ -24,7 +24,7 @@ class LoadingPage extends StatelessWidget {
               builder: (context, viewModel) {
                 MediaQueryData media = MediaQuery.of(context);
                 if (media.size != viewModel.sizeViewModel.size) {
-                  getWindowSize(media.size).then((windowSize) {
+                  getWindowSize().then((windowSize) {
                     viewModel.sizeViewModel
                         .dispatch(PageSizeChangeAction(media.size, windowSize));
 
