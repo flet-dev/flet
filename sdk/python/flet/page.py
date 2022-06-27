@@ -19,6 +19,7 @@ from flet.control import (
     ScrollMode,
 )
 from flet.control_event import ControlEvent
+from flet.event_handler import EventHandler
 from flet.floating_action_button import FloatingActionButton
 from flet.protocol import Command
 from flet.pubsub import PubSub
@@ -56,6 +57,15 @@ class Page(Control):
         self.__theme = None
         self.__dark_theme = None
         self.__pubsub = PubSub(conn.pubsubhub, session_id)
+
+        self.__on_close = EventHandler()
+        self._add_event_handler("close", self.__on_close.handler)
+        self.__on_resize = EventHandler()
+        self._add_event_handler("resize", self.__on_resize.handler)
+        self.__on_connect = EventHandler()
+        self._add_event_handler("connect", self.__on_connect.handler)
+        self.__on_disconnect = EventHandler()
+        self._add_event_handler("disconnect", self.__on_disconnect.handler)
 
     def __enter__(self):
         return self
@@ -505,38 +515,38 @@ class Page(Control):
     # on_close
     @property
     def on_close(self):
-        return self._get_event_handler("close")
+        return self.__on_close
 
     @on_close.setter
     def on_close(self, handler):
-        self._add_event_handler("close", handler)
+        self.__on_close.subscribe(handler)
 
     # on_resize
     @property
     def on_resize(self):
-        return self._get_event_handler("resize")
+        return self.__on_resize
 
     @on_resize.setter
     def on_resize(self, handler):
-        self._add_event_handler("resize", handler)
+        self.__on_resize.subscribe(handler)
 
     # on_connect
     @property
     def on_connect(self):
-        return self._get_event_handler("connect")
+        return self.__on_connect
 
     @on_connect.setter
     def on_connect(self, handler):
-        self._add_event_handler("connect", handler)
+        self.__on_connect.subscribe(handler)
 
     # on_disconnect
     @property
     def on_disconnect(self):
-        return self._get_event_handler("disconnect")
+        return self.__on_disconnect
 
     @on_disconnect.setter
     def on_disconnect(self, handler):
-        self._add_event_handler("disconnect", handler)
+        self.__on_disconnect.subscribe(handler)
 
 
 class Offstage(Control):
