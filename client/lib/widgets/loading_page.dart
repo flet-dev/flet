@@ -1,5 +1,6 @@
 import 'package:flet_view/actions.dart';
 import 'package:flet_view/models/page_load_view_model.dart';
+import 'package:flet_view/utils/desktop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -23,20 +24,24 @@ class LoadingPage extends StatelessWidget {
               builder: (context, viewModel) {
                 MediaQueryData media = MediaQuery.of(context);
                 if (media.size != viewModel.sizeViewModel.size) {
-                  viewModel.sizeViewModel
-                      .dispatch(PageSizeChangeAction(media.size));
+                  getWindowSize(media.size).then((windowSize) {
+                    viewModel.sizeViewModel
+                        .dispatch(PageSizeChangeAction(media.size, windowSize));
 
-                  if (viewModel.pageUri != null) {
-                    String pageName = getWebPageName(viewModel.pageUri!);
-                    String? sessionId = viewModel.sessionId;
+                    if (viewModel.pageUri != null) {
+                      String pageName = getWebPageName(viewModel.pageUri!);
+                      String? sessionId = viewModel.sessionId;
 
-                    ws.registerWebClient(
-                        pageName: pageName,
-                        pageHash: "",
-                        sessionId: sessionId,
-                        winWidth: media.size.width.toInt().toString(),
-                        winHeight: media.size.height.toInt().toString());
-                  }
+                      ws.registerWebClient(
+                          pageName: pageName,
+                          pageHash: "",
+                          sessionId: sessionId,
+                          pageWidth: media.size.width.toString(),
+                          pageHeight: media.size.height.toString(),
+                          windowWidth: windowSize.width.toString(),
+                          windowHeight: windowSize.height.toString());
+                    }
+                  });
                 } else {
                   debugPrint("Page size did not change on load.");
                 }

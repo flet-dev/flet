@@ -27,7 +27,7 @@ AppState appReducer(AppState state, dynamic action) {
     // page size changed
     //
     // calculate break point
-    final width = action.newSize.width;
+    final width = action.newPageSize.width;
     String newBreakpoint = "";
     state.sizeBreakpoints.forEach((bpName, bpWidth) {
       if (width >= bpWidth) {
@@ -36,28 +36,34 @@ AppState appReducer(AppState state, dynamic action) {
     });
 
     debugPrint(
-        "New page size: ${action.newSize}, new breakpoint: $newBreakpoint");
+        "New page size: ${action.newPageSize}, new breakpoint: $newBreakpoint");
 
     var page = state.controls["page"];
     if (page != null) {
       var controls = Map.of(state.controls);
       var pageAttrs = Map.of(page.attrs);
-      pageAttrs["winWidth"] = action.newSize.width.toString();
-      pageAttrs["winHeight"] = action.newSize.height.toString();
+      pageAttrs["width"] = action.newPageSize.width.toString();
+      pageAttrs["height"] = action.newPageSize.height.toString();
+      pageAttrs["windowWidth"] = action.newWindowSize.width.toString();
+      pageAttrs["windowHeight"] = action.newWindowSize.height.toString();
       controls[page.id] = page.copyWith(attrs: pageAttrs);
 
       List<Map<String, String>> props = [
-        {"i": "page", "winWidth": action.newSize.width.toString()},
-        {"i": "page", "winHeight": action.newSize.height.toString()}
+        {"i": "page", "width": action.newPageSize.width.toString()},
+        {"i": "page", "height": action.newPageSize.height.toString()},
+        {"i": "page", "windowWidth": action.newWindowSize.width.toString()},
+        {"i": "page", "windowHeight": action.newWindowSize.height.toString()}
       ];
       ws.updateControlProps(props: props);
       ws.pageEventFromWeb(
           eventTarget: "page",
           eventName: "resize",
-          eventData: "${action.newSize.width},${action.newSize.height}");
+          eventData:
+              "${action.newPageSize.width},${action.newPageSize.height}");
     }
 
-    return state.copyWith(size: action.newSize, sizeBreakpoint: newBreakpoint);
+    return state.copyWith(
+        size: action.newPageSize, sizeBreakpoint: newBreakpoint);
   } else if (action is PageBrightnessChangeAction) {
     return state.copyWith(displayBrightness: action.brightness);
   } else if (action is RegisterWebClientAction) {

@@ -328,7 +328,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 			}
 
 			session = newSession(page, uuid.New().String(), c.clientIP,
-				request.PageHash, request.WinWidth, request.WinHeight)
+				request.PageHash, request.PageWidth, request.PageHeight, request.WindowWidth, request.WindowHeight)
 			sessionCreated = true
 		} else {
 			log.Debugf("Existing session %s found for %s page\n", session.ID, page.Name)
@@ -482,7 +482,7 @@ func (c *Client) registerHostClient(message *Message) {
 		// retrieve zero session
 		session := store.GetSession(page, ZeroSession)
 		if session == nil {
-			session = newSession(page, ZeroSession, c.clientIP, "", "", "")
+			session = newSession(page, ZeroSession, c.clientIP, "", "", "", "", "")
 		} else if !request.Update {
 			err = cleanPage(session)
 			if err != nil {

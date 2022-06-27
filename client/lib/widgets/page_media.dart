@@ -6,6 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
 import '../models/app_state.dart';
+import '../utils/desktop.dart';
 
 class PageMedia extends StatefulWidget {
   const PageMedia({Key? key}) : super(key: key);
@@ -21,7 +22,9 @@ class _PageMediaState extends State<PageMedia> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       debugPrint("Send current size to reducer: $newSize");
-      dispatch(PageSizeChangeAction(newSize));
+      getWindowSize(newSize).then((windowSize) {
+        dispatch(PageSizeChangeAction(newSize, windowSize));
+      });
     });
   }
 

@@ -106,6 +106,11 @@ class PageControl extends StatelessWidget {
     String title = control.attrString("title", "")!;
     setWindowTitle(title);
 
+    var windowWidth = control.attrDouble("windowWidth");
+    var windowHeight = control.attrDouble("windowHeight");
+    debugPrint("setWindowSize: $windowWidth, $windowHeight");
+    //setWindowSize(width, height);
+
     List<String> childIds = [];
     if (offstage != null) {
       childIds.add(offstage.id);

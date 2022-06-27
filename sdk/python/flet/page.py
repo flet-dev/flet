@@ -88,12 +88,16 @@ class Page(Control):
             self.__conn.page_name,
             self._session_id,
             [
-                Command(0, "get", ["page", "winWidth"], None, None),
-                Command(0, "get", ["page", "winHeight"], None, None),
+                Command(0, "get", ["page", "width"], None, None),
+                Command(0, "get", ["page", "height"], None, None),
+                Command(0, "get", ["page", "windowWidth"], None, None),
+                Command(0, "get", ["page", "windowHeight"], None, None),
             ],
         ).results
-        self._set_attr("winWidth", values[0], False)
-        self._set_attr("winHeight", values[1], False)
+        self._set_attr("width", values[0], False)
+        self._set_attr("height", values[1], False)
+        self._set_attr("windowWidth", values[2], False)
+        self._set_attr("windowHeight", values[3], False)
 
     def update(self, *controls):
         with self._lock:
@@ -496,21 +500,47 @@ class Page(Control):
     def rtl(self, value: Optional[bool]):
         self._set_attr("rtl", value)
 
-    # window_width
+    # width
     @property
-    def window_width(self):
-        w = self._get_attr("winWidth")
+    def width(self):
+        w = self._get_attr("width")
         if w != None and w != "":
             return float(w)
         return 0
 
-    # window_height
+    # height
     @property
-    def window_height(self):
-        h = self._get_attr("winHeight")
+    def height(self):
+        h = self._get_attr("height")
         if h != None and h != "":
             return float(h)
         return 0
+
+    # window_width
+    @property
+    def window_width(self):
+        w = self._get_attr("windowWidth")
+        if w != None and w != "":
+            return float(w)
+        return 0
+
+    @window_width.setter
+    @beartype
+    def window_width(self, value: OptionalNumber):
+        self._set_attr("windowWidth", value)
+
+    # window_height
+    @property
+    def window_height(self):
+        h = self._get_attr("windowHeight")
+        if h != None and h != "":
+            return float(h)
+        return 0
+
+    @window_height.setter
+    @beartype
+    def window_height(self, value: OptionalNumber):
+        self._set_attr("windowHeight", value)
 
     # on_close
     @property

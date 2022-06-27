@@ -23,8 +23,9 @@ class PageReconnectingAction {
 }
 
 class PageSizeChangeAction {
-  final Size newSize;
-  PageSizeChangeAction(this.newSize);
+  final Size newPageSize;
+  final Size newWindowSize;
+  PageSizeChangeAction(this.newPageSize, this.newWindowSize);
 }
 
 class PageBrightnessChangeAction {
