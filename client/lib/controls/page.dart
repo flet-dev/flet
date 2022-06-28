@@ -122,12 +122,76 @@ class _PageControlState extends State<PageControl> {
       setWindowSize(windowWidth, windowHeight);
     }
 
+    // window min size
+    var windowMinWidth = widget.control.attrDouble("windowMinWidth");
+    var windowMinHeight = widget.control.attrDouble("windowMinHeight");
+    if (windowMinWidth != null || windowMinHeight != null) {
+      debugPrint("setWindowMinSize: $windowMinWidth, $windowMinHeight");
+      setWindowMinSize(windowMinWidth, windowMinHeight);
+    }
+
+    // window max size
+    var windowMaxWidth = widget.control.attrDouble("windowMaxWidth");
+    var windowMaxHeight = widget.control.attrDouble("windowMaxHeight");
+    if (windowMaxWidth != null || windowMaxHeight != null) {
+      debugPrint("setWindowMaxSize: $windowMaxWidth, $windowMaxHeight");
+      setWindowMaxSize(windowMaxWidth, windowMaxHeight);
+    }
+
     // window position
     var windowTop = widget.control.attrDouble("windowTop");
     var windowLeft = widget.control.attrDouble("windowLeft");
     if (windowTop != null || windowLeft != null) {
       debugPrint("setWindowPosition: $windowTop, $windowLeft");
       setWindowPosition(windowTop, windowLeft);
+    }
+
+    // window opacity
+    var opacity = widget.control.attrDouble("windowOpacity");
+    if (opacity != null) {
+      setWindowOpacity(opacity);
+    }
+
+    // window minimizable
+    var minimizable = widget.control.attrBool("windowMinimizable");
+    if (minimizable != null) {
+      setWindowMinimizability(minimizable);
+    }
+
+    // window minimize
+    var minimized = widget.control.attrBool("windowMinimized");
+    if (minimized == true) {
+      minimizeWindow();
+    } else if (minimized == false) {
+      restoreWindow();
+    }
+
+    // window maximize
+    var maximized = widget.control.attrBool("windowMaximized");
+    if (maximized == true) {
+      maximizeWindow();
+    } else if (maximized == false) {
+      unmaximizeWindow();
+    }
+
+    // window resizable
+    var resizable = widget.control.attrBool("windowResizable");
+    if (resizable != null) {
+      setWindowResizability(resizable);
+    }
+
+    // window movable
+    var movable = widget.control.attrBool("windowMovable");
+    if (movable != null) {
+      setWindowMovability(movable);
+    }
+
+    // window focus
+    var focused = widget.control.attrBool("windowFocused");
+    if (focused == true) {
+      focusWindow();
+    } else if (focused == false) {
+      blurWindow();
     }
 
     List<String> childIds = [];

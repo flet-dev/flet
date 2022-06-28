@@ -77,13 +77,19 @@ AppState appReducer(AppState state, dynamic action) {
       pageAttrs["windowheight"] = action.wmd.height.toString();
       pageAttrs["windowtop"] = action.wmd.top.toString();
       pageAttrs["windowleft"] = action.wmd.left.toString();
+      pageAttrs["windowminimized"] = action.wmd.isMinimized.toString();
+      pageAttrs["windowmaximized"] = action.wmd.isMaximized.toString();
+      pageAttrs["windowfocused"] = action.wmd.isFocused.toString();
       controls[page.id] = page.copyWith(attrs: pageAttrs);
 
       List<Map<String, String>> props = [
         {"i": "page", "windowwidth": action.wmd.width.toString()},
         {"i": "page", "windowheight": action.wmd.height.toString()},
         {"i": "page", "windowtop": action.wmd.top.toString()},
-        {"i": "page", "windowleft": action.wmd.left.toString()}
+        {"i": "page", "windowleft": action.wmd.left.toString()},
+        {"i": "page", "windowminimized": action.wmd.isMinimized.toString()},
+        {"i": "page", "windowmaximized": action.wmd.isMaximized.toString()},
+        {"i": "page", "windowfocused": action.wmd.isFocused.toString()},
       ];
       ws.updateControlProps(props: props);
       ws.pageEventFromWeb(

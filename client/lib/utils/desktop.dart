@@ -8,37 +8,99 @@ import 'package:window_manager/window_manager.dart';
 const double windowWidth = 480;
 const double windowHeight = 854;
 
-void setWindowTitle(String title) {
+Future setWindowTitle(String title) async {
   if (isDesktop()) {
-    windowManager.setTitle(title);
+    await windowManager.setTitle(title);
   }
 }
 
-void setWindowSize(double? width, double? height) {
+Future setWindowSize(double? width, double? height) async {
   if (isDesktop()) {
-    windowManager.getSize().then((currentSize) {
-      windowManager.setSize(
-          Size(width ?? currentSize.width, height ?? currentSize.height),
-          animate: true);
-    });
+    var currentSize = await windowManager.getSize();
+    await windowManager.setSize(
+        Size(width ?? currentSize.width, height ?? currentSize.height),
+        animate: true);
   }
 }
 
-void setWindowPosition(double? top, double? left) {
+Future setWindowMinSize(double? minWidth, double? minHeight) async {
   if (isDesktop()) {
-    windowManager.getPosition().then((currentPos) {
-      windowManager.setPosition(
-          Offset(left ?? currentPos.dx, top ?? currentPos.dy),
-          animate: true);
-    });
+    await windowManager.setMinimumSize(Size(minWidth ?? 0, minHeight ?? 0));
   }
 }
 
-Future<Size> getWindowSize() {
+Future setWindowMaxSize(double? maxWidth, double? maxHeight) async {
   if (isDesktop()) {
-    return windowManager.getSize();
-  } else {
-    return Future.value(const Size(0, 0));
+    await windowManager.setMaximumSize(Size(maxWidth ?? -1, maxHeight ?? -1));
+  }
+}
+
+Future setWindowPosition(double? top, double? left) async {
+  if (isDesktop()) {
+    var currentPos = await windowManager.getPosition();
+    await windowManager.setPosition(
+        Offset(left ?? currentPos.dx, top ?? currentPos.dy),
+        animate: true);
+  }
+}
+
+Future setWindowOpacity(double opacity) async {
+  if (isDesktop()) {
+    await windowManager.setOpacity(opacity);
+  }
+}
+
+Future setWindowMinimizability(bool minimizable) async {
+  if (isDesktop()) {
+    await windowManager.setMinimizable(minimizable);
+  }
+}
+
+Future setWindowResizability(bool resizable) async {
+  if (isDesktop()) {
+    await windowManager.setResizable(resizable);
+  }
+}
+
+Future setWindowMovability(bool movable) async {
+  if (isDesktop()) {
+    await windowManager.setMovable(movable);
+  }
+}
+
+Future minimizeWindow() async {
+  if (isDesktop() && !await windowManager.isMinimized()) {
+    await windowManager.minimize();
+  }
+}
+
+Future restoreWindow() async {
+  if (isDesktop() && await windowManager.isMinimized()) {
+    await windowManager.restore();
+  }
+}
+
+Future maximizeWindow() async {
+  if (isDesktop() && !await windowManager.isMaximized()) {
+    await windowManager.maximize();
+  }
+}
+
+Future unmaximizeWindow() async {
+  if (isDesktop() && await windowManager.isMaximized()) {
+    await windowManager.unmaximize();
+  }
+}
+
+Future focusWindow() async {
+  if (isDesktop() && !await windowManager.isFocused()) {
+    await windowManager.focus();
+  }
+}
+
+Future blurWindow() async {
+  if (isDesktop() && await windowManager.isFocused()) {
+    await windowManager.blur();
   }
 }
 
