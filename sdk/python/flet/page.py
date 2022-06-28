@@ -62,6 +62,8 @@ class Page(Control):
         self._add_event_handler("close", self.__on_close.handler)
         self.__on_resize = EventHandler()
         self._add_event_handler("resize", self.__on_resize.handler)
+        self.__on_window_event = EventHandler()
+        self._add_event_handler("window_event", self.__on_window_event.handler)
         self.__on_connect = EventHandler()
         self._add_event_handler("connect", self.__on_connect.handler)
         self.__on_disconnect = EventHandler()
@@ -546,6 +548,32 @@ class Page(Control):
     def window_height(self, value: OptionalNumber):
         self._set_attr("windowHeight", value)
 
+    # window_top
+    @property
+    def window_top(self):
+        w = self._get_attr("windowTop")
+        if w != None and w != "":
+            return float(w)
+        return 0
+
+    @window_top.setter
+    @beartype
+    def window_top(self, value: OptionalNumber):
+        self._set_attr("windowTop", value)
+
+    # window_left
+    @property
+    def window_left(self):
+        h = self._get_attr("windowLeft")
+        if h != None and h != "":
+            return float(h)
+        return 0
+
+    @window_left.setter
+    @beartype
+    def window_left(self, value: OptionalNumber):
+        self._set_attr("windowLeft", value)
+
     # on_close
     @property
     def on_close(self):
@@ -563,6 +591,15 @@ class Page(Control):
     @on_resize.setter
     def on_resize(self, handler):
         self.__on_resize.subscribe(handler)
+
+    # on_window_event
+    @property
+    def on_window_event(self):
+        return self.__on_window_event
+
+    @on_window_event.setter
+    def on_window_event(self, handler):
+        self.__on_window_event.subscribe(handler)
 
     # on_connect
     @property

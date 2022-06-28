@@ -50,7 +50,8 @@ type addCommandBatchItem struct {
 // NewSession creates a new instance of Session.
 func newSession(page *model.Page, id string, clientIP string,
 	pageHash string, pageWidth string, pageHeight string,
-	windowWidth string, windowHeight string) *model.Session {
+	windowWidth string, windowHeight string,
+	windowTop string, windowLeft string) *model.Session {
 	s := &model.Session{}
 	s.Page = page
 	s.ID = id
@@ -65,6 +66,8 @@ func newSession(page *model.Page, id string, clientIP string,
 	p.SetAttr("height", pageHeight)
 	p.SetAttr("windowwidth", windowWidth)
 	p.SetAttr("windowheight", windowHeight)
+	p.SetAttr("windowtop", windowTop)
+	p.SetAttr("windowleft", windowLeft)
 	h.addControl(p)
 
 	return s

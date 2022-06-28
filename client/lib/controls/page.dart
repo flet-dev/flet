@@ -110,13 +110,25 @@ class _PageControlState extends State<PageControl> {
 
     debugPrint("Page theme: $themeMode");
 
+    // window title
     String title = widget.control.attrString("title", "")!;
     setWindowTitle(title);
 
+    // window size
     var windowWidth = widget.control.attrDouble("windowWidth");
     var windowHeight = widget.control.attrDouble("windowHeight");
-    debugPrint("setWindowSize: $windowWidth, $windowHeight");
-    setWindowSize(windowWidth, windowHeight);
+    if (windowWidth != null || windowHeight != null) {
+      debugPrint("setWindowSize: $windowWidth, $windowHeight");
+      setWindowSize(windowWidth, windowHeight);
+    }
+
+    // window position
+    var windowTop = widget.control.attrDouble("windowTop");
+    var windowLeft = widget.control.attrDouble("windowLeft");
+    if (windowTop != null || windowLeft != null) {
+      debugPrint("setWindowPosition: $windowTop, $windowLeft");
+      setWindowPosition(windowTop, windowLeft);
+    }
 
     List<String> childIds = [];
     if (offstage != null) {

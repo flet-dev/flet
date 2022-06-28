@@ -24,6 +24,16 @@ void setWindowSize(double? width, double? height) {
   }
 }
 
+void setWindowPosition(double? top, double? left) {
+  if (isDesktop()) {
+    windowManager.getPosition().then((currentPos) {
+      windowManager.setPosition(
+          Offset(left ?? currentPos.dx, top ?? currentPos.dy),
+          animate: true);
+    });
+  }
+}
+
 Future<Size> getWindowSize() {
   if (isDesktop()) {
     return windowManager.getSize();

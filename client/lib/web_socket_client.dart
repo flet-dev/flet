@@ -35,6 +35,8 @@ class WebSocketClient {
   String _pageHeight = "";
   String _windowWidth = "";
   String _windowHeight = "";
+  String _windowTop = "";
+  String _windowLeft = "";
   String? _sessionId;
 
   set store(Store<AppState> store) {
@@ -74,6 +76,8 @@ class WebSocketClient {
       required String pageHeight,
       required String windowWidth,
       required String windowHeight,
+      required String windowTop,
+      required String windowLeft,
       String? sessionId}) {
     bool firstCall = _pageName == "";
     _pageName = pageName;
@@ -82,6 +86,8 @@ class WebSocketClient {
     _pageHeight = pageHeight;
     _windowWidth = windowWidth;
     _windowHeight = windowHeight;
+    _windowTop = windowTop;
+    _windowLeft = windowLeft;
     _sessionId = sessionId;
 
     if (firstCall) {
@@ -100,6 +106,8 @@ class WebSocketClient {
             pageHeight: _pageHeight,
             windowWidth: _windowWidth,
             windowHeight: _windowHeight,
+            windowTop: _windowTop,
+            windowLeft: _windowLeft,
             sessionId: _sessionId)));
   }
 
