@@ -24,9 +24,9 @@ class LoadingPage extends StatelessWidget {
               builder: (context, viewModel) {
                 MediaQueryData media = MediaQuery.of(context);
                 if (media.size != viewModel.sizeViewModel.size) {
-                  getWindowSize().then((windowSize) {
+                  getWindowMediaData().then((wmd) {
                     viewModel.sizeViewModel
-                        .dispatch(PageSizeChangeAction(media.size, windowSize));
+                        .dispatch(PageSizeChangeAction(media.size));
 
                     if (viewModel.pageUri != null) {
                       String pageName = getWebPageName(viewModel.pageUri!);
@@ -38,8 +38,8 @@ class LoadingPage extends StatelessWidget {
                           sessionId: sessionId,
                           pageWidth: media.size.width.toString(),
                           pageHeight: media.size.height.toString(),
-                          windowWidth: windowSize.width.toString(),
-                          windowHeight: windowSize.height.toString());
+                          windowWidth: wmd.width.toString(),
+                          windowHeight: wmd.height.toString());
                     }
                   });
                 } else {

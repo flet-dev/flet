@@ -43,6 +43,7 @@ Future<WindowMediaData> getWindowMediaData() async {
     m.isMovable = await windowManager.isClosable();
     m.isAlwaysOnTop = await windowManager.isAlwaysOnTop();
     m.isFocused = await windowManager.isFocused();
+    m.isPreventClose = await windowManager.isPreventClose();
     m.isTitleBarHidden = false;
     var size = await windowManager.getSize();
     m.width = size.width;

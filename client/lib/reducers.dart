@@ -44,15 +44,11 @@ AppState appReducer(AppState state, dynamic action) {
       var pageAttrs = Map.of(page.attrs);
       pageAttrs["width"] = action.newPageSize.width.toString();
       pageAttrs["height"] = action.newPageSize.height.toString();
-      pageAttrs["windowwidth"] = action.newWindowSize.width.toString();
-      pageAttrs["windowheight"] = action.newWindowSize.height.toString();
       controls[page.id] = page.copyWith(attrs: pageAttrs);
 
       List<Map<String, String>> props = [
         {"i": "page", "width": action.newPageSize.width.toString()},
         {"i": "page", "height": action.newPageSize.height.toString()},
-        {"i": "page", "windowwidth": action.newWindowSize.width.toString()},
-        {"i": "page", "windowheight": action.newWindowSize.height.toString()}
       ];
       ws.updateControlProps(props: props);
       ws.pageEventFromWeb(
@@ -66,6 +62,37 @@ AppState appReducer(AppState state, dynamic action) {
         controls: controls,
         size: action.newPageSize,
         sizeBreakpoint: newBreakpoint);
+  } else if (action is WindowEventAction) {
+    //
+    // window event
+    //
+
+    debugPrint("Window event: ${action.eventName}");
+
+    var page = state.controls["page"];
+    var controls = Map.of(state.controls);
+    if (page != null) {
+      var pageAttrs = Map.of(page.attrs);
+      pageAttrs["windowwidth"] = action.wmd.width.toString();
+      pageAttrs["windowheight"] = action.wmd.height.toString();
+      pageAttrs["windowtop"] = action.wmd.top.toString();
+      pageAttrs["windowleft"] = action.wmd.left.toString();
+      controls[page.id] = page.copyWith(attrs: pageAttrs);
+
+      List<Map<String, String>> props = [
+        {"i": "page", "windowwidth": action.wmd.width.toString()},
+        {"i": "page", "windowheight": action.wmd.height.toString()},
+        {"i": "page", "windowtop": action.wmd.top.toString()},
+        {"i": "page", "windowleft": action.wmd.left.toString()}
+      ];
+      ws.updateControlProps(props: props);
+      ws.pageEventFromWeb(
+          eventTarget: "page",
+          eventName: "window_event",
+          eventData: action.eventName);
+    }
+
+    return state.copyWith(controls: controls);
   } else if (action is PageBrightnessChangeAction) {
     return state.copyWith(displayBrightness: action.brightness);
   } else if (action is RegisterWebClientAction) {

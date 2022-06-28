@@ -19,7 +19,7 @@ import 'app_bar.dart';
 import 'create_control.dart';
 import 'scrollable_control.dart';
 
-class PageControl extends StatelessWidget {
+class PageControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -29,33 +29,39 @@ class PageControl extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<PageControl> createState() => _PageControlState();
+}
+
+class _PageControlState extends State<PageControl> {
+  @override
   Widget build(BuildContext context) {
-    debugPrint("Page build: ${control.id}");
+    debugPrint("Page build: ${widget.control.id}");
 
-    bool disabled = control.isDisabled;
+    bool disabled = widget.control.isDisabled;
 
-    final spacing = control.attrDouble("spacing", 10)!;
+    final spacing = widget.control.attrDouble("spacing", 10)!;
     final mainAlignment = parseMainAxisAlignment(
-        control, "verticalAlignment", MainAxisAlignment.start);
+        widget.control, "verticalAlignment", MainAxisAlignment.start);
     final crossAlignment = parseCrossAxisAlignment(
-        control, "horizontalAlignment", CrossAxisAlignment.start);
+        widget.control, "horizontalAlignment", CrossAxisAlignment.start);
 
     ScrollMode scrollMode = ScrollMode.values.firstWhere(
         (m) =>
             m.name.toLowerCase() ==
-            control.attrString("scroll", "")!.toLowerCase(),
+            widget.control.attrString("scroll", "")!.toLowerCase(),
         orElse: () => ScrollMode.none);
 
-    final autoScroll = control.attrBool("autoScroll", false)!;
-    final textDirection =
-        control.attrBool("rtl", false)! ? TextDirection.rtl : TextDirection.ltr;
+    final autoScroll = widget.control.attrBool("autoScroll", false)!;
+    final textDirection = widget.control.attrBool("rtl", false)!
+        ? TextDirection.rtl
+        : TextDirection.ltr;
 
     Control? offstage;
     Control? appBar;
     List<Widget> controls = [];
     bool firstControl = true;
 
-    for (var ctrl in children.where((c) => c.isVisible)) {
+    for (var ctrl in widget.children.where((c) => c.isVisible)) {
       // offstage control
       if (ctrl.type == ControlType.offstage) {
         offstage = ctrl;
@@ -75,11 +81,11 @@ class PageControl extends StatelessWidget {
       firstControl = false;
 
       // displayed control
-      controls.add(createControl(control, ctrl.id, disabled));
+      controls.add(createControl(widget.control, ctrl.id, disabled));
     }
 
     // theme
-    var lightTheme = parseTheme(control, "theme") ??
+    var lightTheme = parseTheme(widget.control, "theme") ??
         ThemeData(
             colorSchemeSeed: Colors.blue,
             brightness: Brightness.light,
@@ -89,7 +95,7 @@ class PageControl extends StatelessWidget {
             //     : null,
             visualDensity: VisualDensity.adaptivePlatformDensity);
 
-    var darkTheme = parseTheme(control, "darkTheme") ??
+    var darkTheme = parseTheme(widget.control, "darkTheme") ??
         ThemeData(
             colorSchemeSeed: Colors.blue,
             brightness: Brightness.dark,
@@ -99,16 +105,16 @@ class PageControl extends StatelessWidget {
     var themeMode = ThemeMode.values.firstWhere(
         (t) =>
             t.name.toLowerCase() ==
-            control.attrString("themeMode", "")!.toLowerCase(),
+            widget.control.attrString("themeMode", "")!.toLowerCase(),
         orElse: () => ThemeMode.system);
 
     debugPrint("Page theme: $themeMode");
 
-    String title = control.attrString("title", "")!;
+    String title = widget.control.attrString("title", "")!;
     setWindowTitle(title);
 
-    var windowWidth = control.attrDouble("windowWidth");
-    var windowHeight = control.attrDouble("windowHeight");
+    var windowWidth = widget.control.attrDouble("windowWidth");
+    var windowHeight = widget.control.attrDouble("windowHeight");
     debugPrint("setWindowSize: $windowWidth, $windowHeight");
     setWindowSize(windowWidth, windowHeight);
 
@@ -125,7 +131,7 @@ class PageControl extends StatelessWidget {
         converter: (store) => store.state.pageUri,
         builder: (context, pageUri) {
           // load custom fonts
-          parseFonts(control, "fonts").forEach((fontFamily, fontUrl) {
+          parseFonts(widget.control, "fonts").forEach((fontFamily, fontUrl) {
             var fontUri = Uri.parse(fontUrl);
             if (!fontUri.hasAuthority) {
               fontUri = getAssetUri(pageUri!, fontUrl);
@@ -194,7 +200,7 @@ class PageControl extends StatelessWidget {
                             child: Scaffold(
                               appBar: appBarView != null
                                   ? AppBarControl(
-                                      parent: control,
+                                      parent: widget.control,
                                       control: appBarView.control,
                                       children: appBarView.children,
                                       parentDisabled: disabled,
@@ -206,12 +212,12 @@ class PageControl extends StatelessWidget {
                                 SizedBox.expand(
                                     child: Container(
                                         padding: parseEdgeInsets(
-                                                control, "padding") ??
+                                                widget.control, "padding") ??
                                             const EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                             color: HexColor.fromString(
                                                 theme,
-                                                control.attrString(
+                                                widget.control.attrString(
                                                     "bgcolor", "")!)),
                                         child: scrollMode != ScrollMode.none
                                             ? ScrollableControl(

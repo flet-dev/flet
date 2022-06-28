@@ -92,12 +92,16 @@ class Page(Control):
                 Command(0, "get", ["page", "height"], None, None),
                 Command(0, "get", ["page", "windowWidth"], None, None),
                 Command(0, "get", ["page", "windowHeight"], None, None),
+                Command(0, "get", ["page", "windowTop"], None, None),
+                Command(0, "get", ["page", "windowLeft"], None, None),
             ],
         ).results
         self._set_attr("width", values[0], False)
         self._set_attr("height", values[1], False)
         self._set_attr("windowWidth", values[2], False)
         self._set_attr("windowHeight", values[3], False)
+        self._set_attr("windowTop", values[4], False)
+        self._set_attr("windowLeft", values[5], False)
 
     def update(self, *controls):
         with self._lock:

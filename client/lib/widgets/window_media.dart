@@ -1,8 +1,12 @@
 import 'dart:async';
 
-import 'package:flet_view/utils/desktop.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:window_manager/window_manager.dart';
+
+import '../actions.dart';
+import '../models/app_state.dart';
+import '../utils/desktop.dart';
 
 class WindowMedia extends StatefulWidget {
   const WindowMedia({Key? key}) : super(key: key);
@@ -13,6 +17,7 @@ class WindowMedia extends StatefulWidget {
 
 class _WindowMediaState extends State<WindowMedia> with WindowListener {
   Timer? _debounce;
+  Function? _dispatch;
 
   @override
   void initState() {
@@ -28,73 +33,24 @@ class _WindowMediaState extends State<WindowMedia> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox.shrink();
+    return StoreConnector<AppState, Function>(
+        distinct: true,
+        converter: (store) => store.dispatch,
+        builder: (context, dispatch) {
+          _dispatch = dispatch;
+          return const SizedBox.shrink();
+        });
   }
 
   @override
   void onWindowEvent(String eventName) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(const Duration(milliseconds: 300), () {
       debugPrint('[WindowManager] onWindowEvent: $eventName');
       getWindowMediaData().then((wmd) {
         debugPrint("WindowMediaData: $wmd");
-        //dispatch(PageSizeChangeAction(newSize, windowSize));
+        _dispatch!(WindowEventAction(eventName, wmd));
       });
     });
-  }
-
-  @override
-  void onWindowClose() {
-    // do something
-  }
-
-  @override
-  void onWindowFocus() {
-    debugPrint('[WindowManager] onWindowFocus');
-  }
-
-  @override
-  void onWindowBlur() {
-    debugPrint('[WindowManager] onWindowBlur');
-  }
-
-  @override
-  void onWindowMaximize() {
-    // do something
-  }
-
-  @override
-  void onWindowUnmaximize() {
-    // do something
-  }
-
-  @override
-  void onWindowMinimize() {
-    // do something
-  }
-
-  @override
-  void onWindowRestore() {
-    // do something
-  }
-
-  @override
-  void onWindowResize() {
-    // do something
-  }
-
-  @override
-  void onWindowMove() {
-    // do something
-  }
-
-  @override
-  void onWindowEnterFullScreen() {
-    // do something
-  }
-
-  @override
-  void onWindowLeaveFullScreen() {
-    // do something
   }
 }

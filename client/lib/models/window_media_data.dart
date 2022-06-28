@@ -9,6 +9,7 @@ class WindowMediaData {
   bool? isAlwaysOnTop;
   bool? isFocused;
   bool? isTitleBarHidden;
+  bool? isPreventClose;
   double? width;
   double? height;
   double? top;
