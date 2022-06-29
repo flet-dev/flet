@@ -116,10 +116,14 @@ class _PageControlState extends State<PageControl> {
     String title = widget.control.attrString("title", "")!;
     setWindowTitle(title);
 
+    // window params
+    var windowCenter = widget.control.attrString("windowCenter");
+    var fullScreen = widget.control.attrBool("windowFullScreen");
+
     // window size
     var windowWidth = widget.control.attrDouble("windowWidth");
     var windowHeight = widget.control.attrDouble("windowHeight");
-    if (windowWidth != null || windowHeight != null) {
+    if ((windowWidth != null || windowHeight != null) && fullScreen != true) {
       debugPrint("setWindowSize: $windowWidth, $windowHeight");
       setWindowSize(windowWidth, windowHeight);
     }
@@ -143,7 +147,9 @@ class _PageControlState extends State<PageControl> {
     // window position
     var windowTop = widget.control.attrDouble("windowTop");
     var windowLeft = widget.control.attrDouble("windowLeft");
-    if (windowTop != null || windowLeft != null) {
+    if ((windowTop != null || windowLeft != null) &&
+        fullScreen != true &&
+        (windowCenter == null || windowCenter == "")) {
       debugPrint("setWindowPosition: $windowTop, $windowLeft");
       setWindowPosition(windowTop, windowLeft);
     }
@@ -189,7 +195,6 @@ class _PageControlState extends State<PageControl> {
     }
 
     // window fullScreen
-    var fullScreen = widget.control.attrBool("windowFullScreen");
     if (fullScreen != null) {
       setWindowFullScreen(fullScreen);
     }
@@ -215,7 +220,6 @@ class _PageControlState extends State<PageControl> {
     }
 
     // window center
-    var windowCenter = widget.control.attrString("windowCenter");
     if (windowCenter != _windowCenter) {
       centerWindow();
       _windowCenter = windowCenter;
