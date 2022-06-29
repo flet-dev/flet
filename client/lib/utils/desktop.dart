@@ -139,13 +139,7 @@ Future<WindowMediaData> getWindowMediaData() async {
   if (isDesktop()) {
     m.isMaximized = await windowManager.isMaximized();
     m.isMinimized = await windowManager.isMinimized();
-    m.isMinimizable = await windowManager.isMinimizable();
-    m.isFullScreen = await windowManager.isFullScreen();
-    m.isResizable = await windowManager.isResizable();
-    m.isMovable = await windowManager.isClosable();
-    m.isAlwaysOnTop = await windowManager.isAlwaysOnTop();
     m.isFocused = await windowManager.isFocused();
-    m.isPreventClose = await windowManager.isPreventClose();
     m.isTitleBarHidden = false;
     var size = await windowManager.getSize();
     m.width = size.width;
@@ -153,7 +147,6 @@ Future<WindowMediaData> getWindowMediaData() async {
     var pos = await windowManager.getPosition();
     m.left = pos.dx;
     m.top = pos.dy;
-    m.opacity = await windowManager.getOpacity();
     return m;
   } else {
     return Future.value(m);
