@@ -122,6 +122,12 @@ Future blurWindow() async {
   }
 }
 
+Future destroyWindow() async {
+  if (isDesktop()) {
+    await windowManager.destroy();
+  }
+}
+
 Future<WindowMediaData> getWindowMediaData() async {
   var m = WindowMediaData();
   if (isDesktop()) {

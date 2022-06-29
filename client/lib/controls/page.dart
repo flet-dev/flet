@@ -212,6 +212,12 @@ class _PageControlState extends State<PageControl> {
       blurWindow();
     }
 
+    // window destroy
+    var destroy = widget.control.attrBool("windowDestroy");
+    if (destroy == true) {
+      destroyWindow();
+    }
+
     List<String> childIds = [];
     if (offstage != null) {
       childIds.add(offstage.id);

@@ -253,6 +253,10 @@ class Page(Control):
         self.__offstage.snack_bar = snack_bar
         self.__offstage.update()
 
+    def window_destroy(self):
+        self._set_attr("windowDestroy", "true")
+        self.update()
+
     # url
     @property
     def url(self):
