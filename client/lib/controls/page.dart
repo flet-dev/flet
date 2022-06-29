@@ -33,6 +33,8 @@ class PageControl extends StatefulWidget {
 }
 
 class _PageControlState extends State<PageControl> {
+  String? _windowCenter;
+
   @override
   Widget build(BuildContext context) {
     debugPrint("Page build: ${widget.control.id}");
@@ -210,6 +212,13 @@ class _PageControlState extends State<PageControl> {
       focusWindow();
     } else if (focused == false) {
       blurWindow();
+    }
+
+    // window center
+    var windowCenter = widget.control.attrString("windowCenter");
+    if (windowCenter != _windowCenter) {
+      centerWindow();
+      _windowCenter = windowCenter;
     }
 
     // window destroy

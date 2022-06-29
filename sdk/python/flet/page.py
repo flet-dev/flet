@@ -1,6 +1,7 @@
 import json
 import logging
 import threading
+import time
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
@@ -255,6 +256,10 @@ class Page(Control):
 
     def window_destroy(self):
         self._set_attr("windowDestroy", "true")
+        self.update()
+
+    def window_center(self):
+        self._set_attr("windowCenter", str(time.time()))
         self.update()
 
     # url

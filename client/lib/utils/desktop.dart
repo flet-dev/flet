@@ -128,6 +128,12 @@ Future destroyWindow() async {
   }
 }
 
+Future centerWindow() async {
+  if (isDesktop()) {
+    await windowManager.center();
+  }
+}
+
 Future<WindowMediaData> getWindowMediaData() async {
   var m = WindowMediaData();
   if (isDesktop()) {
