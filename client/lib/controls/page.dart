@@ -186,6 +186,24 @@ class _PageControlState extends State<PageControl> {
       setWindowMovability(movable);
     }
 
+    // window fullScreen
+    var fullScreen = widget.control.attrBool("windowFullScreen");
+    if (fullScreen != null) {
+      setWindowFullScreen(fullScreen);
+    }
+
+    // window alwaysOnTop
+    var alwaysOnTop = widget.control.attrBool("windowAlwaysOnTop");
+    if (alwaysOnTop != null) {
+      setWindowAlwaysOnTop(alwaysOnTop);
+    }
+
+    // window preventClose
+    var preventClose = widget.control.attrBool("windowPreventClose");
+    if (preventClose != null) {
+      setWindowPreventClose(preventClose);
+    }
+
     // window focus
     var focused = widget.control.attrBool("windowFocused");
     if (focused == true) {

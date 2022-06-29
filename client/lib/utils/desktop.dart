@@ -68,6 +68,24 @@ Future setWindowMovability(bool movable) async {
   }
 }
 
+Future setWindowFullScreen(bool fullScreen) async {
+  if (isDesktop()) {
+    await windowManager.setFullScreen(fullScreen);
+  }
+}
+
+Future setWindowAlwaysOnTop(bool alwaysOnTop) async {
+  if (isDesktop()) {
+    await windowManager.setAlwaysOnTop(alwaysOnTop);
+  }
+}
+
+Future setWindowPreventClose(bool preventClose) async {
+  if (isDesktop()) {
+    await windowManager.setPreventClose(preventClose);
+  }
+}
+
 Future minimizeWindow() async {
   if (isDesktop() && !await windowManager.isMinimized()) {
     await windowManager.minimize();

@@ -674,6 +674,36 @@ class Page(Control):
     def window_movable(self, value: Optional[bool]):
         self._set_attr("windowMovable", value)
 
+    # window_full_screen
+    @property
+    def window_full_screen(self):
+        return self._get_attr("windowFullScreen", data_type="bool", def_value=False)
+
+    @window_full_screen.setter
+    @beartype
+    def window_full_screen(self, value: Optional[bool]):
+        self._set_attr("windowFullScreen", value)
+
+    # window_always_on_top
+    @property
+    def window_always_on_top(self):
+        return self._get_attr("windowAlwaysOnTop", data_type="bool", def_value=False)
+
+    @window_always_on_top.setter
+    @beartype
+    def window_always_on_top(self, value: Optional[bool]):
+        self._set_attr("windowAlwaysOnTop", value)
+
+    # window_prevent_close
+    @property
+    def window_prevent_close(self):
+        return self._get_attr("windowPreventClose", data_type="bool", def_value=False)
+
+    @window_prevent_close.setter
+    @beartype
+    def window_prevent_close(self, value: Optional[bool]):
+        self._set_attr("windowPreventClose", value)
+
     # window_focused
     @property
     def window_focused(self):
