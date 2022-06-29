@@ -1,9 +1,10 @@
-import 'package:flet_view/actions.dart';
-import 'package:flet_view/models/page_load_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../actions.dart';
 import '../models/app_state.dart';
+import '../models/page_load_view_model.dart';
+import '../utils/desktop.dart';
 import '../utils/uri.dart';
 import '../web_socket_client.dart';
 
@@ -23,20 +24,29 @@ class LoadingPage extends StatelessWidget {
               builder: (context, viewModel) {
                 MediaQueryData media = MediaQuery.of(context);
                 if (media.size != viewModel.sizeViewModel.size) {
-                  viewModel.sizeViewModel
-                      .dispatch(PageSizeChangeAction(media.size));
+                  getWindowMediaData().then((wmd) {
+                    viewModel.sizeViewModel
+                        .dispatch(PageSizeChangeAction(media.size));
 
-                  if (viewModel.pageUri != null) {
-                    String pageName = getWebPageName(viewModel.pageUri!);
-                    String? sessionId = viewModel.sessionId;
+                    if (viewModel.pageUri != null) {
+                      String pageName = getWebPageName(viewModel.pageUri!);
+                      String? sessionId = viewModel.sessionId;
 
-                    ws.registerWebClient(
-                        pageName: pageName,
-                        pageHash: "",
-                        sessionId: sessionId,
-                        winWidth: media.size.width.toInt().toString(),
-                        winHeight: media.size.height.toInt().toString());
-                  }
+                      ws.registerWebClient(
+                          pageName: pageName,
+                          pageHash: "",
+                          sessionId: sessionId,
+                          pageWidth: media.size.width.toString(),
+                          pageHeight: media.size.height.toString(),
+                          windowWidth:
+                              wmd.width != null ? wmd.width.toString() : "",
+                          windowHeight:
+                              wmd.height != null ? wmd.height.toString() : "",
+                          windowTop: wmd.top != null ? wmd.top.toString() : "",
+                          windowLeft:
+                              wmd.left != null ? wmd.left.toString() : "");
+                    }
+                  });
                 } else {
                   debugPrint("Page size did not change on load.");
                 }

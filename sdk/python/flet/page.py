@@ -1,6 +1,7 @@
 import json
 import logging
 import threading
+import time
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
@@ -62,6 +63,8 @@ class Page(Control):
         self._add_event_handler("close", self.__on_close.handler)
         self.__on_resize = EventHandler()
         self._add_event_handler("resize", self.__on_resize.handler)
+        self.__on_window_event = EventHandler()
+        self._add_event_handler("window_event", self.__on_window_event.handler)
         self.__on_connect = EventHandler()
         self._add_event_handler("connect", self.__on_connect.handler)
         self.__on_disconnect = EventHandler()
@@ -88,12 +91,20 @@ class Page(Control):
             self.__conn.page_name,
             self._session_id,
             [
-                Command(0, "get", ["page", "winWidth"], None, None),
-                Command(0, "get", ["page", "winHeight"], None, None),
+                Command(0, "get", ["page", "width"], None, None),
+                Command(0, "get", ["page", "height"], None, None),
+                Command(0, "get", ["page", "windowWidth"], None, None),
+                Command(0, "get", ["page", "windowHeight"], None, None),
+                Command(0, "get", ["page", "windowTop"], None, None),
+                Command(0, "get", ["page", "windowLeft"], None, None),
             ],
         ).results
-        self._set_attr("winWidth", values[0], False)
-        self._set_attr("winHeight", values[1], False)
+        self._set_attr("width", values[0], False)
+        self._set_attr("height", values[1], False)
+        self._set_attr("windowWidth", values[2], False)
+        self._set_attr("windowHeight", values[3], False)
+        self._set_attr("windowTop", values[4], False)
+        self._set_attr("windowLeft", values[5], False)
 
     def update(self, *controls):
         with self._lock:
@@ -242,6 +253,14 @@ class Page(Control):
     def show_snack_bar(self, snack_bar: SnackBar):
         self.__offstage.snack_bar = snack_bar
         self.__offstage.update()
+
+    def window_destroy(self):
+        self._set_attr("windowDestroy", "true")
+        self.update()
+
+    def window_center(self):
+        self._set_attr("windowCenter", str(time.time()))
+        self.update()
 
     # url
     @property
@@ -496,21 +515,213 @@ class Page(Control):
     def rtl(self, value: Optional[bool]):
         self._set_attr("rtl", value)
 
-    # window_width
+    # width
     @property
-    def window_width(self):
-        w = self._get_attr("winWidth")
+    def width(self):
+        w = self._get_attr("width")
         if w != None and w != "":
             return float(w)
         return 0
 
-    # window_height
+    # height
     @property
-    def window_height(self):
-        h = self._get_attr("winHeight")
+    def height(self):
+        h = self._get_attr("height")
         if h != None and h != "":
             return float(h)
         return 0
+
+    # window_width
+    @property
+    def window_width(self):
+        w = self._get_attr("windowWidth")
+        if w != None and w != "":
+            return float(w)
+        return 0
+
+    @window_width.setter
+    @beartype
+    def window_width(self, value: OptionalNumber):
+        self._set_attr("windowWidth", value)
+
+    # window_height
+    @property
+    def window_height(self):
+        h = self._get_attr("windowHeight")
+        if h != None and h != "":
+            return float(h)
+        return 0
+
+    @window_height.setter
+    @beartype
+    def window_height(self, value: OptionalNumber):
+        self._set_attr("windowHeight", value)
+
+    # window_top
+    @property
+    def window_top(self):
+        w = self._get_attr("windowTop")
+        if w != None and w != "":
+            return float(w)
+        return 0
+
+    @window_top.setter
+    @beartype
+    def window_top(self, value: OptionalNumber):
+        self._set_attr("windowTop", value)
+
+    # window_left
+    @property
+    def window_left(self):
+        h = self._get_attr("windowLeft")
+        if h != None and h != "":
+            return float(h)
+        return 0
+
+    @window_left.setter
+    @beartype
+    def window_left(self, value: OptionalNumber):
+        self._set_attr("windowLeft", value)
+
+    # window_max_width
+    @property
+    def window_max_width(self):
+        return self._get_attr("windowMaxWidth")
+
+    @window_max_width.setter
+    @beartype
+    def window_max_width(self, value: OptionalNumber):
+        self._set_attr("windowMaxWidth", value)
+
+    # window_max_height
+    @property
+    def window_max_height(self):
+        return self._get_attr("windowMaxHeight")
+
+    @window_max_height.setter
+    @beartype
+    def window_max_height(self, value: OptionalNumber):
+        self._set_attr("windowMaxHeight", value)
+
+    # window_min_width
+    @property
+    def window_min_width(self):
+        return self._get_attr("windowMinWidth")
+
+    @window_min_width.setter
+    @beartype
+    def window_min_width(self, value: OptionalNumber):
+        self._set_attr("windowMinWidth", value)
+
+    # window_min_height
+    @property
+    def window_min_height(self):
+        return self._get_attr("windowMinHeight")
+
+    @window_min_height.setter
+    @beartype
+    def window_min_height(self, value: OptionalNumber):
+        self._set_attr("windowMinHeight", value)
+
+    # window_opacity
+    @property
+    def window_opacity(self):
+        return self._get_attr("windowOpacity", data_type="float", def_value=1)
+
+    @window_opacity.setter
+    @beartype
+    def window_opacity(self, value: OptionalNumber):
+        self._set_attr("windowOpacity", value)
+
+    # window_maximized
+    @property
+    def window_maximized(self):
+        return self._get_attr("windowMaximized", data_type="bool", def_value=False)
+
+    @window_maximized.setter
+    @beartype
+    def window_maximized(self, value: Optional[bool]):
+        self._set_attr("windowMaximized", value)
+
+    # window_minimized
+    @property
+    def window_minimized(self):
+        return self._get_attr("windowMinimized", data_type="bool", def_value=False)
+
+    @window_minimized.setter
+    @beartype
+    def window_minimized(self, value: Optional[bool]):
+        self._set_attr("windowMinimized", value)
+
+    # window_minimizable
+    @property
+    def window_minimizable(self):
+        return self._get_attr("windowMinimizable", data_type="bool", def_value=True)
+
+    @window_minimizable.setter
+    @beartype
+    def window_minimizable(self, value: Optional[bool]):
+        self._set_attr("windowMinimizable", value)
+
+    # window_resizable
+    @property
+    def window_resizable(self):
+        return self._get_attr("windowResizable", data_type="bool", def_value=True)
+
+    @window_resizable.setter
+    @beartype
+    def window_resizable(self, value: Optional[bool]):
+        self._set_attr("windowResizable", value)
+
+    # window_movable
+    @property
+    def window_movable(self):
+        return self._get_attr("windowMovable", data_type="bool", def_value=True)
+
+    @window_movable.setter
+    @beartype
+    def window_movable(self, value: Optional[bool]):
+        self._set_attr("windowMovable", value)
+
+    # window_full_screen
+    @property
+    def window_full_screen(self):
+        return self._get_attr("windowFullScreen", data_type="bool", def_value=False)
+
+    @window_full_screen.setter
+    @beartype
+    def window_full_screen(self, value: Optional[bool]):
+        self._set_attr("windowFullScreen", value)
+
+    # window_always_on_top
+    @property
+    def window_always_on_top(self):
+        return self._get_attr("windowAlwaysOnTop", data_type="bool", def_value=False)
+
+    @window_always_on_top.setter
+    @beartype
+    def window_always_on_top(self, value: Optional[bool]):
+        self._set_attr("windowAlwaysOnTop", value)
+
+    # window_prevent_close
+    @property
+    def window_prevent_close(self):
+        return self._get_attr("windowPreventClose", data_type="bool", def_value=False)
+
+    @window_prevent_close.setter
+    @beartype
+    def window_prevent_close(self, value: Optional[bool]):
+        self._set_attr("windowPreventClose", value)
+
+    # window_focused
+    @property
+    def window_focused(self):
+        return self._get_attr("windowFocused", data_type="bool", def_value=True)
+
+    @window_focused.setter
+    @beartype
+    def window_focused(self, value: Optional[bool]):
+        self._set_attr("windowFocused", value)
 
     # on_close
     @property
@@ -529,6 +740,15 @@ class Page(Control):
     @on_resize.setter
     def on_resize(self, handler):
         self.__on_resize.subscribe(handler)
+
+    # on_window_event
+    @property
+    def on_window_event(self):
+        return self.__on_window_event
+
+    @on_window_event.setter
+    def on_window_event(self, handler):
+        self.__on_window_event.subscribe(handler)
 
     # on_connect
     @property

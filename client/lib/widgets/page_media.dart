@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:flet_view/models/page_media_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
 import '../models/app_state.dart';
+import '../models/page_media_view_model.dart';
 
 class PageMedia extends StatefulWidget {
   const PageMedia({Key? key}) : super(key: key);

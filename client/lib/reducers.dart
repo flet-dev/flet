@@ -27,7 +27,7 @@ AppState appReducer(AppState state, dynamic action) {
     // page size changed
     //
     // calculate break point
-    final width = action.newSize.width;
+    final width = action.newPageSize.width;
     String newBreakpoint = "";
     state.sizeBreakpoints.forEach((bpName, bpWidth) {
       if (width >= bpWidth) {
@@ -36,28 +36,69 @@ AppState appReducer(AppState state, dynamic action) {
     });
 
     debugPrint(
-        "New page size: ${action.newSize}, new breakpoint: $newBreakpoint");
+        "New page size: ${action.newPageSize}, new breakpoint: $newBreakpoint");
 
     var page = state.controls["page"];
+    var controls = Map.of(state.controls);
     if (page != null) {
-      var controls = Map.of(state.controls);
       var pageAttrs = Map.of(page.attrs);
-      pageAttrs["winWidth"] = action.newSize.width.toString();
-      pageAttrs["winHeight"] = action.newSize.height.toString();
+      pageAttrs["width"] = action.newPageSize.width.toString();
+      pageAttrs["height"] = action.newPageSize.height.toString();
       controls[page.id] = page.copyWith(attrs: pageAttrs);
 
       List<Map<String, String>> props = [
-        {"i": "page", "winWidth": action.newSize.width.toString()},
-        {"i": "page", "winHeight": action.newSize.height.toString()}
+        {"i": "page", "width": action.newPageSize.width.toString()},
+        {"i": "page", "height": action.newPageSize.height.toString()},
       ];
       ws.updateControlProps(props: props);
       ws.pageEventFromWeb(
           eventTarget: "page",
           eventName: "resize",
-          eventData: "${action.newSize.width},${action.newSize.height}");
+          eventData:
+              "${action.newPageSize.width},${action.newPageSize.height}");
     }
 
-    return state.copyWith(size: action.newSize, sizeBreakpoint: newBreakpoint);
+    return state.copyWith(
+        controls: controls,
+        size: action.newPageSize,
+        sizeBreakpoint: newBreakpoint);
+  } else if (action is WindowEventAction) {
+    //
+    // window event
+    //
+
+    debugPrint("Window event: ${action.eventName}");
+
+    var page = state.controls["page"];
+    var controls = Map.of(state.controls);
+    if (page != null) {
+      var pageAttrs = Map.of(page.attrs);
+      pageAttrs["windowwidth"] = action.wmd.width.toString();
+      pageAttrs["windowheight"] = action.wmd.height.toString();
+      pageAttrs["windowtop"] = action.wmd.top.toString();
+      pageAttrs["windowleft"] = action.wmd.left.toString();
+      pageAttrs["windowminimized"] = action.wmd.isMinimized.toString();
+      pageAttrs["windowmaximized"] = action.wmd.isMaximized.toString();
+      pageAttrs["windowfocused"] = action.wmd.isFocused.toString();
+      controls[page.id] = page.copyWith(attrs: pageAttrs);
+
+      List<Map<String, String>> props = [
+        {"i": "page", "windowwidth": action.wmd.width.toString()},
+        {"i": "page", "windowheight": action.wmd.height.toString()},
+        {"i": "page", "windowtop": action.wmd.top.toString()},
+        {"i": "page", "windowleft": action.wmd.left.toString()},
+        {"i": "page", "windowminimized": action.wmd.isMinimized.toString()},
+        {"i": "page", "windowmaximized": action.wmd.isMaximized.toString()},
+        {"i": "page", "windowfocused": action.wmd.isFocused.toString()},
+      ];
+      ws.updateControlProps(props: props);
+      ws.pageEventFromWeb(
+          eventTarget: "page",
+          eventName: "window_event",
+          eventData: action.eventName);
+    }
+
+    return state.copyWith(controls: controls);
   } else if (action is PageBrightnessChangeAction) {
     return state.copyWith(displayBrightness: action.brightness);
   } else if (action is RegisterWebClientAction) {

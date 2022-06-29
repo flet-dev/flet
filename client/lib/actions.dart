@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flet_view/models/window_media_data.dart';
+
 import 'protocol/add_page_controls_payload.dart';
 import 'protocol/app_become_inactive_payload.dart';
 import 'protocol/append_control_props_request.dart';
@@ -23,8 +25,14 @@ class PageReconnectingAction {
 }
 
 class PageSizeChangeAction {
-  final Size newSize;
-  PageSizeChangeAction(this.newSize);
+  final Size newPageSize;
+  PageSizeChangeAction(this.newPageSize);
+}
+
+class WindowEventAction {
+  final String eventName;
+  final WindowMediaData wmd;
+  WindowEventAction(this.eventName, this.wmd);
 }
 
 class PageBrightnessChangeAction {
