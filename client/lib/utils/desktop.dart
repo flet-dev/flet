@@ -111,13 +111,17 @@ Future unmaximizeWindow() async {
 }
 
 Future focusWindow() async {
-  if (isDesktop() && !await windowManager.isFocused()) {
+  if (isDesktop() &&
+      (Platform.isWindows || Platform.isMacOS) &&
+      !await windowManager.isFocused()) {
     await windowManager.focus();
   }
 }
 
 Future blurWindow() async {
-  if (isDesktop() && await windowManager.isFocused()) {
+  if (isDesktop() &&
+      (Platform.isWindows || Platform.isMacOS) &&
+      await windowManager.isFocused()) {
     await windowManager.blur();
   }
 }
@@ -134,12 +138,20 @@ Future centerWindow() async {
   }
 }
 
+Future isFocused() async {
+  if (isDesktop() && (Platform.isWindows || Platform.isMacOS)) {
+    return await windowManager.isFocused();
+  } else {
+    return false;
+  }
+}
+
 Future<WindowMediaData> getWindowMediaData() async {
   var m = WindowMediaData();
   if (isDesktop()) {
     m.isMaximized = await windowManager.isMaximized();
     m.isMinimized = await windowManager.isMinimized();
-    m.isFocused = await windowManager.isFocused();
+    m.isFocused = await isFocused();
     m.isTitleBarHidden = false;
     var size = await windowManager.getSize();
     m.width = size.width;
