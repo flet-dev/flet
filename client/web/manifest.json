@@ -6,7 +6,7 @@
   "background_color": "#ffffff",
   "theme_color": "#0175C2",
   "description": "Flet - the fastest way to build Flutter apps in Python",
-  "orientation": "portrait-primary",
+  "orientation": "natural",
   "prefer_related_applications": false,
   "icons": [
     {
