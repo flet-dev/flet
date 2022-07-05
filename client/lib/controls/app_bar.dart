@@ -32,6 +32,7 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
     var actionCtrls = children.where((c) => c.name == "action" && c.isVisible);
 
     var leadingWidth = control.attrDouble("leadingWidth");
+    var elevation = control.attrDouble("elevation");
     var centerTitle = control.attrBool("centerTitle", false)!;
     var color = HexColor.fromString(theme, control.attrString("color", "")!);
     var bgcolor =
@@ -49,6 +50,7 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: preferredSize.height,
       foregroundColor: color,
       backgroundColor: bgcolor,
+      elevation: elevation,
       actions: actionCtrls
           .map((c) => createControl(control, c.id, control.isDisabled))
           .toList(),
