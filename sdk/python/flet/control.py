@@ -333,7 +333,6 @@ class Control:
                 for h in current_ints[b1:b2]:
                     # add
                     ctrl = hashes[h]
-                    ctrl._build()
                     innerCmds = ctrl.get_cmd_str(
                         index=index, added_controls=added_controls
                     )
@@ -351,7 +350,6 @@ class Control:
                 # add
                 for h in current_ints[b1:b2]:
                     ctrl = hashes[h]
-                    ctrl._build()
                     innerCmds = ctrl.get_cmd_str(
                         index=index, added_controls=added_controls
                     )
@@ -379,6 +377,8 @@ class Control:
 
     # private methods
     def get_cmd_str(self, indent=0, index=None, added_controls=None):
+
+        self._build()
 
         # remove control from index
         if self.__uid and index != None and self.__uid in index:
