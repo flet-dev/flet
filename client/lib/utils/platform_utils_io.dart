@@ -1,0 +1,3 @@
+bool isProgressiveWebApp() {
+  return false;
+}
