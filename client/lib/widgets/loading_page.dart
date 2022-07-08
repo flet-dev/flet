@@ -5,6 +5,9 @@ import '../actions.dart';
 import '../models/app_state.dart';
 import '../models/page_load_view_model.dart';
 import '../utils/desktop.dart';
+import '../utils/platform_utils.dart'
+    if (dart.library.io) "../utils/platform_utils_io.dart"
+    if (dart.library.js) "../utils/platform_utils_js.dart";
 import '../utils/uri.dart';
 import '../web_socket_client.dart';
 
@@ -44,7 +47,8 @@ class LoadingPage extends StatelessWidget {
                               wmd.height != null ? wmd.height.toString() : "",
                           windowTop: wmd.top != null ? wmd.top.toString() : "",
                           windowLeft:
-                              wmd.left != null ? wmd.left.toString() : "");
+                              wmd.left != null ? wmd.left.toString() : "",
+                          isPWA: isProgressiveWebApp().toString());
                     }
                   });
                 } else {

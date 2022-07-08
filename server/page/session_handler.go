@@ -51,7 +51,7 @@ type addCommandBatchItem struct {
 func newSession(page *model.Page, id string, clientIP string,
 	pageHash string, pageWidth string, pageHeight string,
 	windowWidth string, windowHeight string,
-	windowTop string, windowLeft string) *model.Session {
+	windowTop string, windowLeft string, isPwa string) *model.Session {
 	s := &model.Session{}
 	s.Page = page
 	s.ID = id
@@ -68,6 +68,7 @@ func newSession(page *model.Page, id string, clientIP string,
 	p.SetAttr("windowheight", windowHeight)
 	p.SetAttr("windowtop", windowTop)
 	p.SetAttr("windowleft", windowLeft)
+	p.SetAttr("pwa", isPwa)
 	h.addControl(p)
 
 	return s

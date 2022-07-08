@@ -97,6 +97,7 @@ class Page(Control):
                 Command(0, "get", ["page", "windowHeight"], None, None),
                 Command(0, "get", ["page", "windowTop"], None, None),
                 Command(0, "get", ["page", "windowLeft"], None, None),
+                Command(0, "get", ["page", "pwa"], None, None),
             ],
         ).results
         self._set_attr("width", values[0], False)
@@ -105,6 +106,7 @@ class Page(Control):
         self._set_attr("windowHeight", values[3], False)
         self._set_attr("windowTop", values[4], False)
         self._set_attr("windowLeft", values[5], False)
+        self._set_attr("pwa", values[6], False)
 
     def update(self, *controls):
         with self._lock:
@@ -310,6 +312,11 @@ class Page(Control):
     @title.setter
     def title(self, value):
         self._set_attr("title", value)
+
+    # pwa
+    @property
+    def pwa(self):
+        return self._get_attr("pwa", data_type="bool", def_value=False)
 
     # horizontal_alignment
     @property

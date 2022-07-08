@@ -7,6 +7,7 @@ class RegisterWebClientRequest {
   final String? windowHeight;
   final String? windowTop;
   final String? windowLeft;
+  final String? isPWA;
   final String? sessionId;
 
   RegisterWebClientRequest(
@@ -18,6 +19,7 @@ class RegisterWebClientRequest {
       this.windowHeight,
       this.windowTop,
       this.windowLeft,
+      this.isPWA,
       this.sessionId});
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -29,6 +31,7 @@ class RegisterWebClientRequest {
         'windowHeight': windowHeight,
         'windowTop': windowTop,
         'windowLeft': windowLeft,
+        'isPWA': isPWA,
         'sessionId': sessionId
       };
 }
