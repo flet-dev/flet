@@ -252,8 +252,11 @@ Widget baseControl(Widget widget, Control? parent, Control control) {
 
 Widget constrainedControl(Widget widget, Control? parent, Control control) {
   return _expandable(
-      _sizedControl(
-          _tooltip(_opacity(widget, parent, control), parent, control),
+      _positionedControl(
+          _sizedControl(
+              _tooltip(_opacity(widget, parent, control), parent, control),
+              parent,
+              control),
           parent,
           control),
       parent,
@@ -280,6 +283,25 @@ Widget _tooltip(Widget widget, Control? parent, Control control) {
           waitDuration: const Duration(milliseconds: 800),
         )
       : widget;
+}
+
+Widget _positionedControl(Widget widget, Control? parent, Control control) {
+  var left = control.attrDouble("left", null);
+  var top = control.attrDouble("top", null);
+  var right = control.attrDouble("right", null);
+  var bottom = control.attrDouble("bottom", null);
+
+  if (left != null || top != null || right != null || bottom != null) {
+    debugPrint("Positioned");
+    return Positioned(
+      left: left,
+      top: top,
+      right: right,
+      bottom: bottom,
+      child: widget,
+    );
+  }
+  return widget;
 }
 
 Widget _sizedControl(Widget widget, Control? parent, Control control) {
