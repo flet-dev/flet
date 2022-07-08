@@ -44,6 +44,8 @@ class Container(ConstrainedControl):
         bgcolor: str = None,
         border: Border = None,
         border_radius: BorderRadiusValue = None,
+        ink: bool = None,
+        on_click=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -65,6 +67,8 @@ class Container(ConstrainedControl):
         self.bgcolor = bgcolor
         self.border = border
         self.border_radius = border_radius
+        self.ink = ink
+        self.on_click = on_click
 
     def _get_control_name(self):
         return "container"
@@ -155,3 +159,26 @@ class Container(ConstrainedControl):
     @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # ink
+    @property
+    def ink(self):
+        return self._get_attr("ink", data_type="bool", def_value=False)
+
+    @ink.setter
+    @beartype
+    def ink(self, value: Optional[bool]):
+        self._set_attr("ink", value)
+
+    # on_click
+    @property
+    def on_click(self):
+        return self._get_event_handler("on_click")
+
+    @on_click.setter
+    def on_click(self, handler):
+        self._add_event_handler("click", handler)
+        if handler != None:
+            self._set_attr("onclick", True)
+        else:
+            self._set_attr("onclick", None)
