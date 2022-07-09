@@ -37,6 +37,7 @@ class WebSocketClient {
   String _windowHeight = "";
   String _windowTop = "";
   String _windowLeft = "";
+  String _isPWA = "";
   String? _sessionId;
 
   set store(Store<AppState> store) {
@@ -69,16 +70,18 @@ class WebSocketClient {
     }
   }
 
-  registerWebClient(
-      {required String pageName,
-      required String pageHash,
-      required String pageWidth,
-      required String pageHeight,
-      required String windowWidth,
-      required String windowHeight,
-      required String windowTop,
-      required String windowLeft,
-      String? sessionId}) {
+  registerWebClient({
+    required String pageName,
+    required String pageHash,
+    required String pageWidth,
+    required String pageHeight,
+    required String windowWidth,
+    required String windowHeight,
+    required String windowTop,
+    required String windowLeft,
+    required String isPWA,
+    String? sessionId,
+  }) {
     bool firstCall = _pageName == "";
     _pageName = pageName;
     _pageHash = pageHash;
@@ -88,6 +91,7 @@ class WebSocketClient {
     _windowHeight = windowHeight;
     _windowTop = windowTop;
     _windowLeft = windowLeft;
+    _isPWA = isPWA;
     _sessionId = sessionId;
 
     if (firstCall) {
@@ -108,6 +112,7 @@ class WebSocketClient {
             windowHeight: _windowHeight,
             windowTop: _windowTop,
             windowLeft: _windowLeft,
+            isPWA: _isPWA,
             sessionId: _sessionId)));
   }
 

@@ -1,8 +1,8 @@
-from typing import Optional, Union
+from typing import Union
 
 from beartype import beartype
 
-from flet.control import Control, InputBorder, OptionalNumber
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
 
@@ -21,6 +21,10 @@ class ConstrainedControl(Control):
         #
         width: OptionalNumber = None,
         height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
     ):
         Control.__init__(
             self,
@@ -35,6 +39,10 @@ class ConstrainedControl(Control):
 
         self.width = width
         self.height = height
+        self.left = left
+        self.top = top
+        self.right = right
+        self.bottom = bottom
 
     # width
     @property
@@ -55,3 +63,43 @@ class ConstrainedControl(Control):
     @beartype
     def height(self, value: OptionalNumber):
         self._set_attr("height", value)
+
+    # left
+    @property
+    def left(self) -> OptionalNumber:
+        return self._get_attr("left")
+
+    @left.setter
+    @beartype
+    def left(self, value: OptionalNumber):
+        self._set_attr("left", value)
+
+    # top
+    @property
+    def top(self) -> OptionalNumber:
+        return self._get_attr("top")
+
+    @top.setter
+    @beartype
+    def top(self, value: OptionalNumber):
+        self._set_attr("top", value)
+
+    # right
+    @property
+    def right(self) -> OptionalNumber:
+        return self._get_attr("right")
+
+    @right.setter
+    @beartype
+    def right(self, value: OptionalNumber):
+        self._set_attr("right", value)
+
+    # bottom
+    @property
+    def bottom(self) -> OptionalNumber:
+        return self._get_attr("bottom")
+
+    @bottom.setter
+    @beartype
+    def bottom(self, value: OptionalNumber):
+        self._set_attr("bottom", value)

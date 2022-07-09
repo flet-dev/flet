@@ -57,6 +57,7 @@ type RegisterWebClientRequestPayload struct {
 	WindowHeight string `json:"windowHeight"`
 	WindowTop    string `json:"windowTop"`
 	WindowLeft   string `json:"windowLeft"`
+	IsPWA        string `json:"isPWA"`
 	SessionID    string `json:"sessionID"`
 }
 
