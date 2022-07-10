@@ -9,6 +9,8 @@ enum ControlType {
   column,
   container,
   divider,
+  draggable,
+  dragTarget,
   dropdown,
   dropdownOption,
   elevatedButton,

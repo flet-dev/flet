@@ -81,12 +81,13 @@ class ContainerControl extends StatelessWidget {
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             child: container,
-            onTap: () {
+            onTapDown: (details) {
               debugPrint("Container ${control.id} clicked!");
               ws.pageEventFromWeb(
                   eventTarget: control.id,
                   eventName: "click",
-                  eventData: control.attrs["data"] ?? "");
+                  eventData: control.attrString("data", "")! +
+                      "${details.localPosition.dx}:${details.localPosition.dy} ${details.globalPosition.dx}:${details.globalPosition.dy}");
             },
           ),
         );
