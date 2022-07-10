@@ -14,6 +14,8 @@ import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'divider.dart';
+import 'drag_target.dart';
+import 'draggable.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
 import 'floating_action_button.dart';
@@ -141,6 +143,18 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.container:
           return ContainerControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.draggable:
+          return DraggableControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.dragTarget:
+          return DragTargetControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
