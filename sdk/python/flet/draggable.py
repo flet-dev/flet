@@ -47,9 +47,11 @@ class Draggable(Control):
         if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
-        if self.__content_feedback:
-            self.__content_feedback._set_attr_internal("n", "content_when_dragging")
-            children.append(self.__content_feedback)
+        if self.__content_when_dragging:
+            self.__content_when_dragging._set_attr_internal(
+                "n", "content_when_dragging"
+            )
+            children.append(self.__content_when_dragging)
         if self.__content_feedback:
             self.__content_feedback._set_attr_internal("n", "content_feedback")
             children.append(self.__content_feedback)
