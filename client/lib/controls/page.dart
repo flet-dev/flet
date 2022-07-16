@@ -1,12 +1,13 @@
+import 'package:flet_view/models/route_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_type.dart';
-import '../models/control_view_model.dart';
 import '../models/controls_view_model.dart';
 import '../models/page_media_view_model.dart';
+import '../models/route_view_model.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
@@ -265,36 +266,33 @@ class _PageControlState extends State<PageControl> {
                           darkTheme: darkTheme,
                           themeMode: themeMode,
                           onGenerateRoute: (settings) {
+                            //String routeName = settings.name ?? "/";
                             debugPrint("onGenerateRoute: ${settings.name}");
+                            debugPrint("onGenerateRoute Uri.base: ${Uri.base}");
 
                             return MaterialPageRoute(
                                 settings: settings,
                                 builder: ((context) {
-                                  var viewCtrl = views.where((v) =>
-                                      v.attrString("name", "")! ==
-                                      settings.name);
-
-                                  if (viewCtrl.isEmpty) {
-                                    return const SizedBox.shrink();
-                                  }
-
                                   return StoreConnector<AppState,
-                                          ControlViewModel>(
+                                          RouteViewModel?>(
                                       distinct: true,
                                       converter: (store) {
-                                        //debugPrint("ControlViewModel $id converter");
-                                        return ControlViewModel.fromStore(
-                                            store, viewCtrl.first.id);
+                                        return RouteViewModel.fromStore(
+                                            store, settings.name);
                                       },
-                                      builder: (context, controlView) {
+                                      builder: (context, routeView) {
+                                        if (routeView == null) {
+                                          return const SizedBox.shrink();
+                                        }
+
                                         debugPrint(
-                                            "Page view build: ${viewCtrl.first.id}");
+                                            "Page view build: ${routeView.control.id}");
                                         return Directionality(
                                             textDirection: textDirection,
                                             child: _getViewWidget(
                                                 widget.control,
-                                                controlView.control,
-                                                controlView.children,
+                                                routeView.control,
+                                                routeView.children,
                                                 disabled,
                                                 theme, [
                                               ...offstageWidgets,
