@@ -26,6 +26,7 @@ from flet.protocol import Command
 from flet.pubsub import PubSub
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
+from flet.view import View
 
 try:
     from typing import Literal
@@ -37,15 +38,14 @@ PageDesign = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive
 ThemeMode = Literal[None, "system", "light", "dark"]
 
 
-class Page(Control):
+class Page(View):
     def __init__(self, conn: Connection, session_id):
-        Control.__init__(self)
+        View.__init__(self)
 
         self._id = "page"
         self._Control__uid = "page"
         self.__conn = conn
         self._session_id = session_id
-        self._controls = []  # page controls
         self._index = {}  # index with all page controls
         self._index[self._Control__uid] = self
         self._last_event = None
@@ -54,7 +54,6 @@ class Page(Control):
 
         self.__fonts: Dict[str, str] = None
         self.__offstage = Offstage()
-        self.__appbar = None
         self.__theme = None
         self.__dark_theme = None
         self.__pubsub = PubSub(conn.pubsubhub, session_id)
@@ -80,10 +79,8 @@ class Page(Control):
         return self._index.get(id)
 
     def _get_children(self):
-        children = [self.__offstage]
-        if self.__appbar:
-            children.append(self.__appbar)
-        children.extend(self._controls)
+        children = super()._get_children()
+        children.append(self.__offstage)
         return children
 
     def _fetch_page_details(self):
@@ -294,16 +291,6 @@ class Page(Control):
     def pubsub(self):
         return self.__pubsub
 
-    # controls
-    @property
-    def controls(self):
-        return self._controls
-
-    @controls.setter
-    @beartype
-    def controls(self, value: List[Control]):
-        self._controls = value or []
-
     # title
     @property
     def title(self):
@@ -317,58 +304,6 @@ class Page(Control):
     @property
     def pwa(self):
         return self._get_attr("pwa", data_type="bool", def_value=False)
-
-    # horizontal_alignment
-    @property
-    def horizontal_alignment(self):
-        return self._get_attr("horizontalAlignment")
-
-    @horizontal_alignment.setter
-    @beartype
-    def horizontal_alignment(self, value: CrossAxisAlignment):
-        self._set_attr("horizontalAlignment", value)
-
-    # vertical_alignment
-    @property
-    def vertical_alignment(self):
-        return self._get_attr("verticalAlignment")
-
-    @vertical_alignment.setter
-    @beartype
-    def vertical_alignment(self, value: MainAxisAlignment):
-        self._set_attr("verticalAlignment", value)
-
-    # spacing
-    @property
-    def spacing(self):
-        return self._get_attr("spacing")
-
-    @spacing.setter
-    @beartype
-    def spacing(self, value: OptionalNumber):
-        self._set_attr("spacing", value)
-
-    # padding
-    @property
-    def padding(self):
-        return self.__padding
-
-    @padding.setter
-    @beartype
-    def padding(self, value: PaddingValue):
-        self.__padding = value
-        if value != None and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("padding", value)
-
-    # bgcolor
-    @property
-    def bgcolor(self):
-        return self._get_attr("bgcolor")
-
-    @bgcolor.setter
-    def bgcolor(self, value):
-        self._set_attr("bgcolor", value)
 
     # design
     @property
@@ -400,26 +335,6 @@ class Page(Control):
     @beartype
     def splash(self, value: Optional[Control]):
         self.__offstage.splash = value
-
-    # appbar
-    @property
-    def appbar(self):
-        return self.__appbar
-
-    @appbar.setter
-    @beartype
-    def appbar(self, value: Optional[AppBar]):
-        self.__appbar = value
-
-    # floating_action_button
-    @property
-    def floating_action_button(self):
-        return self.__offstage.floating_action_button
-
-    @floating_action_button.setter
-    @beartype
-    def floating_action_button(self, value: Optional[FloatingActionButton]):
-        self.__offstage.floating_action_button = value
 
     # banner
     @property
@@ -486,31 +401,6 @@ class Page(Control):
         if self.__dark_theme:
             self.__dark_theme.brightness = "dark"
         self._set_attr_json("darkTheme", value)
-
-    # scroll
-    @property
-    def scroll(self):
-        return self.__scroll
-
-    @scroll.setter
-    @beartype
-    def scroll(self, value: ScrollMode):
-        self.__scroll = value
-        if value == True:
-            value = "auto"
-        elif value == False:
-            value = "none"
-        self._set_attr("scroll", value)
-
-    # auto_scroll
-    @property
-    def auto_scroll(self):
-        return self._get_attr("autoScroll")
-
-    @auto_scroll.setter
-    @beartype
-    def auto_scroll(self, value: Optional[bool]):
-        self._set_attr("autoScroll", value)
 
     # rtl
     @property
@@ -792,7 +682,6 @@ class Offstage(Control):
         )
 
         self.__clipboard = Clipboard()
-        self.__fab = None
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
@@ -805,8 +694,6 @@ class Offstage(Control):
         children = []
         if self.__clipboard:
             children.append(self.__clipboard)
-        if self.__fab:
-            children.append(self.__fab)
         if self.__banner:
             children.append(self.__banner)
         if self.__snack_bar:
@@ -831,16 +718,6 @@ class Offstage(Control):
     @beartype
     def splash(self, value: Optional[Control]):
         self.__splash = value
-
-    # floating_action_button
-    @property
-    def floating_action_button(self):
-        return self.__fab
-
-    @floating_action_button.setter
-    @beartype
-    def floating_action_button(self, value: Optional[FloatingActionButton]):
-        self.__fab = value
 
     # banner
     @property

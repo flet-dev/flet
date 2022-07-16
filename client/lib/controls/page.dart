@@ -60,6 +60,7 @@ class _PageControlState extends State<PageControl> {
 
     Control? offstage;
     Control? appBar;
+    Control? fab;
     List<Widget> controls = [];
     bool firstControl = true;
 
@@ -70,6 +71,9 @@ class _PageControlState extends State<PageControl> {
         continue;
       } else if (ctrl.type == ControlType.appBar) {
         appBar = ctrl;
+        continue;
+      } else if (ctrl.type == ControlType.floatingActionButton) {
+        fab = ctrl;
         continue;
       }
       // spacer between displayed controls
@@ -273,9 +277,7 @@ class _PageControlState extends State<PageControl> {
                       // offstage
                       List<Widget> offstageWidgets = offstage != null
                           ? childrenViews.controlViews.first.children
-                              .where((c) =>
-                                  c.isVisible &&
-                                  c.type != ControlType.floatingActionButton)
+                              .where((c) => c.isVisible)
                               .map((c) =>
                                   createControl(offstage, c.id, disabled))
                               .toList()
@@ -285,14 +287,6 @@ class _PageControlState extends State<PageControl> {
                       if (isDesktop()) {
                         mediaWidgets.add(const WindowMedia());
                       }
-
-                      List<Control> fab = offstage != null
-                          ? childrenViews.controlViews.first.children
-                              .where((c) =>
-                                  c.isVisible &&
-                                  c.type == ControlType.floatingActionButton)
-                              .toList()
-                          : [];
 
                       var appBarView = appBar != null
                           ? childrenViews.controlViews.last
@@ -343,9 +337,8 @@ class _PageControlState extends State<PageControl> {
                                 ...offstageWidgets,
                                 ...mediaWidgets
                               ]),
-                              floatingActionButton: fab.isNotEmpty
-                                  ? createControl(
-                                      offstage, fab.first.id, disabled)
+                              floatingActionButton: fab != null
+                                  ? createControl(offstage, fab.id, disabled)
                                   : null,
                             )),
                       );
