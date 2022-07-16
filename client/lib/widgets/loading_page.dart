@@ -18,46 +18,38 @@ class LoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: title,
-        home: Builder(builder: (context) {
-          return StoreConnector<AppState, PageLoadViewModel>(
-              distinct: true,
-              converter: (store) => PageLoadViewModel.fromStore(store),
-              builder: (context, viewModel) {
-                MediaQueryData media = MediaQuery.of(context);
-                if (media.size != viewModel.sizeViewModel.size) {
-                  getWindowMediaData().then((wmd) {
-                    viewModel.sizeViewModel
-                        .dispatch(PageSizeChangeAction(media.size));
+    return StoreConnector<AppState, PageLoadViewModel>(
+        distinct: true,
+        converter: (store) => PageLoadViewModel.fromStore(store),
+        builder: (context, viewModel) {
+          MediaQueryData media = MediaQuery.of(context);
+          if (media.size != viewModel.sizeViewModel.size) {
+            getWindowMediaData().then((wmd) {
+              viewModel.sizeViewModel
+                  .dispatch(PageSizeChangeAction(media.size));
 
-                    if (viewModel.pageUri != null) {
-                      String pageName = getWebPageName(viewModel.pageUri!);
-                      String? sessionId = viewModel.sessionId;
+              if (viewModel.pageUri != null) {
+                String pageName = getWebPageName(viewModel.pageUri!);
+                String? sessionId = viewModel.sessionId;
 
-                      ws.registerWebClient(
-                          pageName: pageName,
-                          pageHash: "",
-                          sessionId: sessionId,
-                          pageWidth: media.size.width.toString(),
-                          pageHeight: media.size.height.toString(),
-                          windowWidth:
-                              wmd.width != null ? wmd.width.toString() : "",
-                          windowHeight:
-                              wmd.height != null ? wmd.height.toString() : "",
-                          windowTop: wmd.top != null ? wmd.top.toString() : "",
-                          windowLeft:
-                              wmd.left != null ? wmd.left.toString() : "",
-                          isPWA: isProgressiveWebApp().toString());
-                    }
-                  });
-                } else {
-                  debugPrint("Page size did not change on load.");
-                }
-                return const Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
-                );
-              });
-        }));
+                ws.registerWebClient(
+                    pageName: pageName,
+                    pageHash: "",
+                    sessionId: sessionId,
+                    pageWidth: media.size.width.toString(),
+                    pageHeight: media.size.height.toString(),
+                    windowWidth: wmd.width != null ? wmd.width.toString() : "",
+                    windowHeight:
+                        wmd.height != null ? wmd.height.toString() : "",
+                    windowTop: wmd.top != null ? wmd.top.toString() : "",
+                    windowLeft: wmd.left != null ? wmd.left.toString() : "",
+                    isPWA: isProgressiveWebApp().toString());
+              }
+            });
+          } else {
+            debugPrint("Page size did not change on load.");
+          }
+          return const Center(child: CircularProgressIndicator());
+        });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flet_view/models/route_view_model.dart';
+import 'package:flet_view/widgets/loading_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -274,25 +275,27 @@ class _PageControlState extends State<PageControl> {
                                 settings: settings,
                                 builder: ((context) {
                                   return StoreConnector<AppState,
-                                          RouteViewModel?>(
+                                          RouteViewModel>(
                                       distinct: true,
                                       converter: (store) {
                                         return RouteViewModel.fromStore(
                                             store, settings.name);
                                       },
                                       builder: (context, routeView) {
-                                        if (routeView == null) {
-                                          return const SizedBox.shrink();
+                                        if (routeView.control == null ||
+                                            routeView.isLoading) {
+                                          return const LoadingPage(
+                                              title: "Flet is loading...");
                                         }
 
                                         debugPrint(
-                                            "Page view build: ${routeView.control.id}");
+                                            "Page view build: ${routeView.control!.id}");
                                         return Directionality(
                                             textDirection: textDirection,
                                             child: _getViewWidget(
                                                 widget.control,
-                                                routeView.control,
-                                                routeView.children,
+                                                routeView.control!,
+                                                routeView.children!,
                                                 disabled,
                                                 theme, [
                                               ...offstageWidgets,

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
+import 'package:flet_view/models/control_type.dart';
 
 import 'control.dart';
 
@@ -50,7 +51,15 @@ class AppState extends Equatable {
         "xxl": 1400
       },
       displayBrightness: Brightness.light,
-      controls: {});
+      controls: {
+        "page": Control(
+            id: "page",
+            pid: "",
+            type: ControlType.page,
+            name: "",
+            childIds: [],
+            attrs: {})
+      });
 
   AppState copyWith(
           {Uri? pageUri,

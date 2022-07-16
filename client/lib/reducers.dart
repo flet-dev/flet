@@ -40,7 +40,7 @@ AppState appReducer(AppState state, dynamic action) {
 
     var page = state.controls["page"];
     var controls = Map.of(state.controls);
-    if (page != null) {
+    if (page != null && !state.isLoading) {
       var pageAttrs = Map.of(page.attrs);
       pageAttrs["width"] = action.newPageSize.width.toString();
       pageAttrs["height"] = action.newPageSize.height.toString();
@@ -71,7 +71,7 @@ AppState appReducer(AppState state, dynamic action) {
 
     var page = state.controls["page"];
     var controls = Map.of(state.controls);
-    if (page != null) {
+    if (page != null && !state.isLoading) {
       var pageAttrs = Map.of(page.attrs);
       pageAttrs["windowwidth"] = action.wmd.width.toString();
       pageAttrs["windowheight"] = action.wmd.height.toString();
