@@ -43,5 +43,6 @@ enum ControlType {
   text,
   textButton,
   textField,
-  verticalDivider
+  verticalDivider,
+  view
 }

@@ -17,7 +17,7 @@ class View(Control):
     def __init__(self):
         Control.__init__(self)
 
-        self._controls = []  # page controls
+        self.__controls = []  # page controls
         self.__appbar = None
         self.__fab = None
 
@@ -30,18 +30,28 @@ class View(Control):
             children.append(self.__appbar)
         if self.__fab:
             children.append(self.__fab)
-        children.extend(self._controls)
+        children.extend(self.__controls)
         return children
+
+    # name
+    @property
+    def name(self):
+        return self._get_attr("name")
+
+    @name.setter
+    @beartype
+    def name(self, value: str):
+        self._set_attr("name", value)
 
     # controls
     @property
     def controls(self):
-        return self._controls
+        return self.__controls
 
     @controls.setter
     @beartype
     def controls(self, value: List[Control]):
-        self._controls = value or []
+        self.__controls = value or []
 
     # appbar
     @property

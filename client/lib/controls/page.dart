@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_type.dart';
+import '../models/control_view_model.dart';
 import '../models/controls_view_model.dart';
 import '../models/page_media_view_model.dart';
 import '../utils/alignment.dart';
@@ -41,53 +42,22 @@ class _PageControlState extends State<PageControl> {
 
     bool disabled = widget.control.isDisabled;
 
-    final spacing = widget.control.attrDouble("spacing", 10)!;
-    final mainAlignment = parseMainAxisAlignment(
-        widget.control, "verticalAlignment", MainAxisAlignment.start);
-    final crossAlignment = parseCrossAxisAlignment(
-        widget.control, "horizontalAlignment", CrossAxisAlignment.start);
-
-    ScrollMode scrollMode = ScrollMode.values.firstWhere(
-        (m) =>
-            m.name.toLowerCase() ==
-            widget.control.attrString("scroll", "")!.toLowerCase(),
-        orElse: () => ScrollMode.none);
-
-    final autoScroll = widget.control.attrBool("autoScroll", false)!;
     final textDirection = widget.control.attrBool("rtl", false)!
         ? TextDirection.rtl
         : TextDirection.ltr;
 
     Control? offstage;
-    Control? appBar;
-    Control? fab;
-    List<Widget> controls = [];
-    bool firstControl = true;
+    List<Control> views = [];
 
     for (var ctrl in widget.children.where((c) => c.isVisible)) {
       // offstage control
       if (ctrl.type == ControlType.offstage) {
         offstage = ctrl;
         continue;
-      } else if (ctrl.type == ControlType.appBar) {
-        appBar = ctrl;
-        continue;
-      } else if (ctrl.type == ControlType.floatingActionButton) {
-        fab = ctrl;
-        continue;
       }
-      // spacer between displayed controls
-      else if (spacing > 0 &&
-          !firstControl &&
-          mainAlignment != MainAxisAlignment.spaceAround &&
-          mainAlignment != MainAxisAlignment.spaceBetween &&
-          mainAlignment != MainAxisAlignment.spaceEvenly) {
-        controls.add(SizedBox(height: spacing));
-      }
-      firstControl = false;
 
-      // displayed control
-      controls.add(createControl(widget.control, ctrl.id, disabled));
+      // view
+      views.add(ctrl);
     }
 
     // theme
@@ -239,14 +209,13 @@ class _PageControlState extends State<PageControl> {
     if (offstage != null) {
       childIds.add(offstage.id);
     }
-    if (appBar != null) {
-      childIds.add(appBar.id);
-    }
 
     return StoreConnector<AppState, Uri?>(
         distinct: true,
         converter: (store) => store.state.pageUri,
         builder: (context, pageUri) {
+          debugPrint("Page fonts build: ${widget.control.id}");
+
           // load custom fonts
           parseFonts(widget.control, "fonts").forEach((fontFamily, fontUrl) {
             var fontUri = Uri.parse(fontUrl);
@@ -261,6 +230,8 @@ class _PageControlState extends State<PageControl> {
               distinct: true,
               converter: (store) => PageMediaViewModel.fromStore(store),
               builder: (context, media) {
+                debugPrint("Page media build: ${widget.control.id}");
+
                 var theme = themeMode == ThemeMode.light ||
                         (themeMode == ThemeMode.system &&
                             media.displayBrightness == Brightness.light)
@@ -288,62 +259,149 @@ class _PageControlState extends State<PageControl> {
                         mediaWidgets.add(const WindowMedia());
                       }
 
-                      var appBarView = appBar != null
-                          ? childrenViews.controlViews.last
-                          : null;
-
-                      var column = Column(
-                          mainAxisAlignment: mainAlignment,
-                          crossAxisAlignment: crossAlignment,
-                          children: controls);
-
                       return MaterialApp(
-                        title: title,
-                        theme: lightTheme,
-                        darkTheme: darkTheme,
-                        themeMode: themeMode,
-                        home: Directionality(
-                            textDirection: textDirection,
-                            child: Scaffold(
-                              appBar: appBarView != null
-                                  ? AppBarControl(
-                                      parent: widget.control,
-                                      control: appBarView.control,
-                                      children: appBarView.children,
-                                      parentDisabled: disabled,
-                                      height: appBarView.control.attrDouble(
-                                          "toolbarHeight", kToolbarHeight)!,
-                                      theme: theme)
-                                  : null,
-                              body: Stack(children: [
-                                SizedBox.expand(
-                                    child: Container(
-                                        padding: parseEdgeInsets(
-                                                widget.control, "padding") ??
-                                            const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            color: HexColor.fromString(
-                                                theme,
-                                                widget.control.attrString(
-                                                    "bgcolor", "")!)),
-                                        child: scrollMode != ScrollMode.none
-                                            ? ScrollableControl(
-                                                child: column,
-                                                scrollDirection: Axis.vertical,
-                                                scrollMode: scrollMode,
-                                                autoScroll: autoScroll,
-                                              )
-                                            : column)),
-                                ...offstageWidgets,
-                                ...mediaWidgets
-                              ]),
-                              floatingActionButton: fab != null
-                                  ? createControl(offstage, fab.id, disabled)
-                                  : null,
-                            )),
-                      );
+                          title: title,
+                          theme: lightTheme,
+                          darkTheme: darkTheme,
+                          themeMode: themeMode,
+                          onGenerateRoute: (settings) {
+                            debugPrint("onGenerateRoute: ${settings.name}");
+
+                            return MaterialPageRoute(
+                                settings: settings,
+                                builder: ((context) {
+                                  var viewCtrl = views.where((v) =>
+                                      v.attrString("name", "")! ==
+                                      settings.name);
+
+                                  if (viewCtrl.isEmpty) {
+                                    return const SizedBox.shrink();
+                                  }
+
+                                  return StoreConnector<AppState,
+                                          ControlViewModel>(
+                                      distinct: true,
+                                      converter: (store) {
+                                        //debugPrint("ControlViewModel $id converter");
+                                        return ControlViewModel.fromStore(
+                                            store, viewCtrl.first.id);
+                                      },
+                                      builder: (context, controlView) {
+                                        debugPrint(
+                                            "Page view build: ${viewCtrl.first.id}");
+                                        return Directionality(
+                                            textDirection: textDirection,
+                                            child: _getViewWidget(
+                                                widget.control,
+                                                controlView.control,
+                                                controlView.children,
+                                                disabled,
+                                                theme, [
+                                              ...offstageWidgets,
+                                              ...mediaWidgets
+                                            ]));
+                                      });
+                                }));
+                          });
                     });
               });
+        });
+  }
+
+  Widget _getViewWidget(Control parent, Control control, List<Control> children,
+      bool disabled, ThemeData theme, List<Widget> overlayWidgets) {
+    final spacing = control.attrDouble("spacing", 10)!;
+    final mainAlignment = parseMainAxisAlignment(
+        control, "verticalAlignment", MainAxisAlignment.start);
+    final crossAlignment = parseCrossAxisAlignment(
+        control, "horizontalAlignment", CrossAxisAlignment.start);
+
+    ScrollMode scrollMode = ScrollMode.values.firstWhere(
+        (m) =>
+            m.name.toLowerCase() ==
+            control.attrString("scroll", "")!.toLowerCase(),
+        orElse: () => ScrollMode.none);
+
+    final autoScroll = control.attrBool("autoScroll", false)!;
+
+    Control? appBar;
+    Control? fab;
+    List<Widget> controls = [];
+    bool firstControl = true;
+
+    for (var ctrl in children.where((c) => c.isVisible)) {
+      if (ctrl.type == ControlType.appBar) {
+        appBar = ctrl;
+        continue;
+      } else if (ctrl.type == ControlType.floatingActionButton) {
+        fab = ctrl;
+        continue;
+      }
+      // spacer between displayed controls
+      else if (spacing > 0 &&
+          !firstControl &&
+          mainAlignment != MainAxisAlignment.spaceAround &&
+          mainAlignment != MainAxisAlignment.spaceBetween &&
+          mainAlignment != MainAxisAlignment.spaceEvenly) {
+        controls.add(SizedBox(height: spacing));
+      }
+      firstControl = false;
+
+      // displayed control
+      controls.add(createControl(control, ctrl.id, disabled));
+    }
+
+    List<String> childIds = [];
+    if (appBar != null) {
+      childIds.add(appBar.id);
+    }
+
+    return StoreConnector<AppState, ControlsViewModel>(
+        distinct: true,
+        converter: (store) => ControlsViewModel.fromStore(store, childIds),
+        builder: (context, childrenViews) {
+          debugPrint("Route view StoreConnector build");
+
+          var appBarView =
+              appBar != null ? childrenViews.controlViews.last : null;
+
+          var column = Column(
+              mainAxisAlignment: mainAlignment,
+              crossAxisAlignment: crossAlignment,
+              children: controls);
+
+          return Scaffold(
+            appBar: appBarView != null
+                ? AppBarControl(
+                    parent: widget.control,
+                    control: appBarView.control,
+                    children: appBarView.children,
+                    parentDisabled: disabled,
+                    height: appBarView.control
+                        .attrDouble("toolbarHeight", kToolbarHeight)!,
+                    theme: theme)
+                : null,
+            body: Stack(children: [
+              SizedBox.expand(
+                  child: Container(
+                      padding: parseEdgeInsets(widget.control, "padding") ??
+                          const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: HexColor.fromString(theme,
+                              widget.control.attrString("bgcolor", "")!)),
+                      child: scrollMode != ScrollMode.none
+                          ? ScrollableControl(
+                              child: column,
+                              scrollDirection: Axis.vertical,
+                              scrollMode: scrollMode,
+                              autoScroll: autoScroll,
+                            )
+                          : column)),
+              ...overlayWidgets
+            ]),
+            floatingActionButton:
+                fab != null ? createControl(control, fab.id, disabled) : null,
+          );
         });
   }
 }

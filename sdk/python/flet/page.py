@@ -38,9 +38,9 @@ PageDesign = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive
 ThemeMode = Literal[None, "system", "light", "dark"]
 
 
-class Page(View):
+class Page(Control):
     def __init__(self, conn: Connection, session_id):
-        View.__init__(self)
+        Control.__init__(self)
 
         self._id = "page"
         self._Control__uid = "page"
@@ -51,6 +51,10 @@ class Page(View):
         self._last_event = None
         self._event_available = threading.Event()
         self._fetch_page_details()
+
+        self.__routes = {"/": View()}
+        self.__default_route = self.__routes["/"]
+        self._controls = self.__default_route.controls
 
         self.__fonts: Dict[str, str] = None
         self.__offstage = Offstage()
@@ -79,7 +83,10 @@ class Page(View):
         return self._index.get(id)
 
     def _get_children(self):
-        children = super()._get_children()
+        children = []
+        for name, view in self.__routes.items():
+            view.name = name
+            children.append(view)
         children.append(self.__offstage)
         return children
 
@@ -325,6 +332,110 @@ class Page(View):
     def fonts(self, value: Optional[Dict[str, str]]):
         self.__fonts = value
         self._set_attr_json("fonts", value)
+
+    # routes
+    @property
+    def routes(self):
+        return self.__routes
+
+    # controls
+    @property
+    def controls(self):
+        return self.__default_route.controls
+
+    @controls.setter
+    @beartype
+    def controls(self, value: List[Control]):
+        self.__default_route.controls = value or []
+
+    # appbar
+    @property
+    def appbar(self):
+        return self.__default_route.appbar
+
+    @appbar.setter
+    @beartype
+    def appbar(self, value: Optional[AppBar]):
+        self.__default_route.appbar = value
+
+    # floating_action_button
+    @property
+    def floating_action_button(self):
+        return self.__default_route.floating_action_button
+
+    @floating_action_button.setter
+    @beartype
+    def floating_action_button(self, value: Optional[FloatingActionButton]):
+        self.__default_route.floating_action_button = value
+
+    # horizontal_alignment
+    @property
+    def horizontal_alignment(self):
+        return self.__default_route.horizontal_alignment
+
+    @horizontal_alignment.setter
+    @beartype
+    def horizontal_alignment(self, value: CrossAxisAlignment):
+        self.__default_route.horizontal_alignment = value
+
+    # vertical_alignment
+    @property
+    def vertical_alignment(self):
+        return self.__default_route.vertical_alignment
+
+    @vertical_alignment.setter
+    @beartype
+    def vertical_alignment(self, value: MainAxisAlignment):
+        self.__default_route.vertical_alignment = value
+
+    # spacing
+    @property
+    def spacing(self):
+        return self.__default_route.spacing
+
+    @spacing.setter
+    @beartype
+    def spacing(self, value: OptionalNumber):
+        self.__default_route.spacing = value
+
+    # padding
+    @property
+    def padding(self):
+        return self.__default_route.padding
+
+    @padding.setter
+    @beartype
+    def padding(self, value: PaddingValue):
+        self.__default_route.padding = value
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self.__default_route.bgcolor
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self.__default_route.bgcolor = value
+
+    # scroll
+    @property
+    def scroll(self):
+        return self.__default_route.scroll
+
+    @scroll.setter
+    @beartype
+    def scroll(self, value: ScrollMode):
+        self.__default_route.scroll = value
+
+    # auto_scroll
+    @property
+    def auto_scroll(self):
+        return self.__default_route.auto_scroll
+
+    @auto_scroll.setter
+    @beartype
+    def auto_scroll(self, value: Optional[bool]):
+        self.__default_route.auto_scroll = value
 
     # splash
     @property
