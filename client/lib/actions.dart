@@ -29,6 +29,11 @@ class PageSizeChangeAction {
   PageSizeChangeAction(this.newPageSize);
 }
 
+class SetPageRouteAction {
+  final String route;
+  SetPageRouteAction(this.route);
+}
+
 class WindowEventAction {
   final String eventName;
   final WindowMediaData wmd;

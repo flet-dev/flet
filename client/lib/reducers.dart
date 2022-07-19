@@ -62,6 +62,28 @@ AppState appReducer(AppState state, dynamic action) {
         controls: controls,
         size: action.newPageSize,
         sizeBreakpoint: newBreakpoint);
+  } else if (action is SetPageRouteAction) {
+    //
+    // page route changed
+    //
+    debugPrint("New page route: ${action.route}");
+
+    var page = state.controls["page"];
+    var controls = Map.of(state.controls);
+    if (page != null && !state.isLoading) {
+      var pageAttrs = Map.of(page.attrs);
+      pageAttrs["route"] = action.route;
+      controls[page.id] = page.copyWith(attrs: pageAttrs);
+
+      List<Map<String, String>> props = [
+        {"i": "page", "route": action.route},
+      ];
+      ws.updateControlProps(props: props);
+      ws.pageEventFromWeb(
+          eventTarget: "page", eventName: "route", eventData: action.route);
+    }
+
+    return state.copyWith(controls: controls, route: action.route);
   } else if (action is WindowEventAction) {
     //
     // window event

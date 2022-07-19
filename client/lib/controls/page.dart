@@ -1,5 +1,3 @@
-import 'package:flet_view/models/route_view_model.dart';
-import 'package:flet_view/widgets/loading_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -8,7 +6,9 @@ import '../models/control.dart';
 import '../models/control_type.dart';
 import '../models/controls_view_model.dart';
 import '../models/page_media_view_model.dart';
-import '../models/route_view_model.dart';
+import '../routing/route_parser.dart';
+import '../routing/route_state.dart';
+import '../routing/router_delegate.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
@@ -37,6 +37,31 @@ class PageControl extends StatefulWidget {
 
 class _PageControlState extends State<PageControl> {
   String? _windowCenter;
+  final _navigatorKey = GlobalKey<NavigatorState>();
+  late final RouteState _routeState;
+  late final SimpleRouterDelegate _routerDelegate;
+  late final RouteParser _routeParser;
+  dynamic _dispatch;
+
+  @override
+  void initState() {
+    _routeParser = RouteParser();
+
+    _routeState = RouteState(_routeParser);
+    _routeState.addListener(_routeChanged);
+
+    _routerDelegate = SimpleRouterDelegate(
+      routeState: _routeState,
+      navigatorKey: _navigatorKey,
+      builder: (context) => _buildNavigator(context, _navigatorKey),
+    );
+
+    super.initState();
+  }
+
+  void _routeChanged() {
+    //_dispatch(SetPageRouteAction(_routeState.route));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,14 +96,32 @@ class _PageControlState extends State<PageControl> {
             // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
             //     ? '-apple-system'
             //     : null,
-            visualDensity: VisualDensity.adaptivePlatformDensity);
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            pageTransitionsTheme: const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+                TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+              },
+            ));
 
     var darkTheme = parseTheme(widget.control, "darkTheme") ??
         ThemeData(
             colorSchemeSeed: Colors.blue,
             brightness: Brightness.dark,
             useMaterial3: true,
-            visualDensity: VisualDensity.adaptivePlatformDensity);
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            pageTransitionsTheme: const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+                TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+              },
+            ));
 
     var themeMode = ThemeMode.values.firstWhere(
         (t) =>
@@ -261,51 +304,84 @@ class _PageControlState extends State<PageControl> {
                         mediaWidgets.add(const WindowMedia());
                       }
 
-                      return MaterialApp(
-                          title: title,
-                          theme: lightTheme,
-                          darkTheme: darkTheme,
-                          themeMode: themeMode,
-                          onGenerateRoute: (settings) {
-                            //String routeName = settings.name ?? "/";
-                            debugPrint("onGenerateRoute: ${settings.name}");
-                            debugPrint("onGenerateRoute Uri.base: ${Uri.base}");
+                      return MaterialApp.router(
+                        routerDelegate: _routerDelegate,
+                        routeInformationParser: _routeParser,
+                        title: title,
+                        theme: lightTheme,
+                        darkTheme: darkTheme,
+                        themeMode: themeMode,
+                        // onGenerateRoute: (settings) {
+                        //   //String routeName = settings.name ?? "/";
+                        //   debugPrint("onGenerateRoute: ${settings.name}");
+                        //   debugPrint("onGenerateRoute Uri.base: ${Uri.base}");
 
-                            return MaterialPageRoute(
-                                settings: settings,
-                                builder: ((context) {
-                                  return StoreConnector<AppState,
-                                          RouteViewModel>(
-                                      distinct: true,
-                                      converter: (store) {
-                                        return RouteViewModel.fromStore(
-                                            store, settings.name);
-                                      },
-                                      builder: (context, routeView) {
-                                        if (routeView.control == null ||
-                                            routeView.isLoading) {
-                                          return const LoadingPage(
-                                              title: "Flet is loading...");
-                                        }
+                        //   return MaterialPageRoute(
+                        //       settings: settings,
+                        //       builder: ((context) {
+                        //         return StoreConnector<AppState,
+                        //                 RouteViewModel>(
+                        //             distinct: true,
+                        //             converter: (store) {
+                        //               return RouteViewModel.fromStore(
+                        //                   store, settings.name);
+                        //             },
+                        //             builder: (context, routeView) {
+                        //               if (routeView.control == null ||
+                        //                   routeView.isLoading) {
+                        //                 return const LoadingPage(
+                        //                     title: "Flet is loading...");
+                        //               }
 
-                                        debugPrint(
-                                            "Page view build: ${routeView.control!.id}");
-                                        return Directionality(
-                                            textDirection: textDirection,
-                                            child: _getViewWidget(
-                                                widget.control,
-                                                routeView.control!,
-                                                routeView.children!,
-                                                disabled,
-                                                theme, [
-                                              ...offstageWidgets,
-                                              ...mediaWidgets
-                                            ]));
-                                      });
-                                }));
-                          });
+                        //               debugPrint(
+                        //                   "Page view build: ${routeView.control!.id}");
+                        //               return Directionality(
+                        //                   textDirection: textDirection,
+                        //                   child: _getViewWidget(
+                        //                       widget.control,
+                        //                       routeView.control!,
+                        //                       routeView.children!,
+                        //                       disabled,
+                        //                       theme, [
+                        //                     ...offstageWidgets,
+                        //                     ...mediaWidgets
+                        //                   ]));
+                        //             });
+                        //       }));
+                      );
                     });
               });
+        });
+  }
+
+  Widget _buildNavigator(
+      BuildContext context, GlobalKey<NavigatorState> navigatorKey) {
+    debugPrint("Page navigator build: ${widget.control.id}");
+
+    return Navigator(
+        key: navigatorKey,
+        pages: [
+          MaterialPage<void>(
+            key: const ValueKey(1),
+            child: const Scaffold(
+              body: const Text("Hello, navigator!"),
+            ),
+          )
+        ],
+        onPopPage: (route, dynamic result) {
+          // When a page that is stacked on top of the scaffold is popped, display
+          // the /books or /authors tab in BookstoreScaffold.
+          // if (route.settings is Page &&
+          //     (route.settings as Page).key == _bookDetailsKey) {
+          //   routeState.go('/books/popular');
+          // }
+
+          // if (route.settings is Page &&
+          //     (route.settings as Page).key == _authorDetailsKey) {
+          //   routeState.go('/authors');
+          // }
+
+          return route.didPop(result);
         });
   }
 
@@ -404,5 +480,11 @@ class _PageControlState extends State<PageControl> {
                 fab != null ? createControl(control, fab.id, disabled) : null,
           );
         });
+  }
+
+  @override
+  void dispose() {
+    _routeState.removeListener(_routeChanged);
+    super.dispose();
   }
 }
