@@ -49,7 +49,8 @@ class LoadingPage extends StatelessWidget {
           } else {
             debugPrint("Page size did not change on load.");
           }
-          return const Center(child: CircularProgressIndicator());
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()));
         });
   }
 }

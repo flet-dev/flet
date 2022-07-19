@@ -29,7 +29,10 @@ class SimpleRouterDelegate extends RouterDelegate<String>
   }
 
   @override
-  String get currentConfiguration => routeState.route;
+  String get currentConfiguration {
+    debugPrint("currentConfiguration");
+    return routeState.route;
+  }
 
   @override
   void dispose() {

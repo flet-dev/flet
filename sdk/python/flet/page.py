@@ -307,6 +307,15 @@ class Page(Control):
     def title(self, value):
         self._set_attr("title", value)
 
+    # route
+    @property
+    def route(self):
+        return self._get_attr("route")
+
+    @route.setter
+    def route(self, value):
+        self._set_attr("route", value)
+
     # pwa
     @property
     def pwa(self):

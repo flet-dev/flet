@@ -1,9 +1,12 @@
+import 'package:flet_view/models/routes_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../actions.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_type.dart';
+import '../models/control_view_model.dart';
 import '../models/controls_view_model.dart';
 import '../models/page_media_view_model.dart';
 import '../routing/route_parser.dart';
@@ -16,7 +19,8 @@ import '../utils/edge_insets.dart';
 import '../utils/theme.dart';
 import '../utils/uri.dart';
 import '../utils/user_fonts.dart';
-import '../widgets/page_media.dart';
+import '../web_socket_client.dart';
+import '../widgets/loading_page.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
@@ -26,9 +30,14 @@ class PageControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
+  final dynamic dispatch;
 
   const PageControl(
-      {Key? key, this.parent, required this.control, required this.children})
+      {Key? key,
+      this.parent,
+      required this.control,
+      required this.children,
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -41,7 +50,7 @@ class _PageControlState extends State<PageControl> {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
-  dynamic _dispatch;
+  String? _route;
 
   @override
   void initState() {
@@ -60,31 +69,20 @@ class _PageControlState extends State<PageControl> {
   }
 
   void _routeChanged() {
-    //_dispatch(SetPageRouteAction(_routeState.route));
+    widget.dispatch(SetPageRouteAction(_routeState.route));
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Page build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled;
-
-    final textDirection = widget.control.attrBool("rtl", false)!
-        ? TextDirection.rtl
-        : TextDirection.ltr;
-
-    Control? offstage;
-    List<Control> views = [];
-
-    for (var ctrl in widget.children.where((c) => c.isVisible)) {
-      // offstage control
-      if (ctrl.type == ControlType.offstage) {
-        offstage = ctrl;
-        continue;
-      }
-
-      // view
-      views.add(ctrl);
+    // page route
+    var route = widget.control.attrString("route");
+    debugPrint("Route: $route");
+    if (_route != route && route != null) {
+      // route updated
+      _routeState.route = route;
+      _route = route;
     }
 
     // theme
@@ -250,11 +248,6 @@ class _PageControlState extends State<PageControl> {
       destroyWindow();
     }
 
-    List<String> childIds = [];
-    if (offstage != null) {
-      childIds.add(offstage.id);
-    }
-
     return StoreConnector<AppState, Uri?>(
         distinct: true,
         converter: (store) => store.state.pageUri,
@@ -277,79 +270,14 @@ class _PageControlState extends State<PageControl> {
               builder: (context, media) {
                 debugPrint("Page media build: ${widget.control.id}");
 
-                var theme = themeMode == ThemeMode.light ||
-                        (themeMode == ThemeMode.system &&
-                            media.displayBrightness == Brightness.light)
-                    ? lightTheme
-                    : darkTheme;
-
-                return StoreConnector<AppState, ControlsViewModel>(
-                    distinct: true,
-                    converter: (store) =>
-                        ControlsViewModel.fromStore(store, childIds),
-                    builder: (context, childrenViews) {
-                      debugPrint("Offstage StoreConnector build");
-
-                      // offstage
-                      List<Widget> offstageWidgets = offstage != null
-                          ? childrenViews.controlViews.first.children
-                              .where((c) => c.isVisible)
-                              .map((c) =>
-                                  createControl(offstage, c.id, disabled))
-                              .toList()
-                          : [];
-
-                      List<Widget> mediaWidgets = [const PageMedia()];
-                      if (isDesktop()) {
-                        mediaWidgets.add(const WindowMedia());
-                      }
-
-                      return MaterialApp.router(
-                        routerDelegate: _routerDelegate,
-                        routeInformationParser: _routeParser,
-                        title: title,
-                        theme: lightTheme,
-                        darkTheme: darkTheme,
-                        themeMode: themeMode,
-                        // onGenerateRoute: (settings) {
-                        //   //String routeName = settings.name ?? "/";
-                        //   debugPrint("onGenerateRoute: ${settings.name}");
-                        //   debugPrint("onGenerateRoute Uri.base: ${Uri.base}");
-
-                        //   return MaterialPageRoute(
-                        //       settings: settings,
-                        //       builder: ((context) {
-                        //         return StoreConnector<AppState,
-                        //                 RouteViewModel>(
-                        //             distinct: true,
-                        //             converter: (store) {
-                        //               return RouteViewModel.fromStore(
-                        //                   store, settings.name);
-                        //             },
-                        //             builder: (context, routeView) {
-                        //               if (routeView.control == null ||
-                        //                   routeView.isLoading) {
-                        //                 return const LoadingPage(
-                        //                     title: "Flet is loading...");
-                        //               }
-
-                        //               debugPrint(
-                        //                   "Page view build: ${routeView.control!.id}");
-                        //               return Directionality(
-                        //                   textDirection: textDirection,
-                        //                   child: _getViewWidget(
-                        //                       widget.control,
-                        //                       routeView.control!,
-                        //                       routeView.children!,
-                        //                       disabled,
-                        //                       theme, [
-                        //                     ...offstageWidgets,
-                        //                     ...mediaWidgets
-                        //                   ]));
-                        //             });
-                        //       }));
-                      );
-                    });
+                return MaterialApp.router(
+                  routerDelegate: _routerDelegate,
+                  routeInformationParser: _routeParser,
+                  title: title,
+                  theme: lightTheme,
+                  darkTheme: darkTheme,
+                  themeMode: themeMode,
+                );
               });
         });
   }
@@ -358,35 +286,78 @@ class _PageControlState extends State<PageControl> {
       BuildContext context, GlobalKey<NavigatorState> navigatorKey) {
     debugPrint("Page navigator build: ${widget.control.id}");
 
-    return Navigator(
-        key: navigatorKey,
-        pages: [
-          MaterialPage<void>(
-            key: const ValueKey(1),
-            child: const Scaffold(
-              body: const Text("Hello, navigator!"),
-            ),
-          )
-        ],
-        onPopPage: (route, dynamic result) {
-          // When a page that is stacked on top of the scaffold is popped, display
-          // the /books or /authors tab in BookstoreScaffold.
-          // if (route.settings is Page &&
-          //     (route.settings as Page).key == _bookDetailsKey) {
-          //   routeState.go('/books/popular');
-          // }
+    return StoreConnector<AppState, RoutesViewModel>(
+        distinct: true,
+        converter: (store) => RoutesViewModel.fromStore(store),
+        builder: (context, routesView) {
+          debugPrint("_buildNavigator build");
 
-          // if (route.settings is Page &&
-          //     (route.settings as Page).key == _authorDetailsKey) {
-          //   routeState.go('/authors');
-          // }
+          List<Page<dynamic>> pages = [];
+          if (routesView.isLoading || routesView.viewControls.isEmpty) {
+            pages.add(const MaterialPage(
+                child: LoadingPage(
+                    key: ValueKey("Loading page"),
+                    title: "Flet is loading...")));
+          } else {
+            // offstage
+            _overlayWidgets(ControlViewModel vc) {
+              List<Widget> overlayWidgets = [];
 
-          return route.didPop(result);
+              if (vc == routesView.viewControls.last) {
+                overlayWidgets.addAll(routesView.offstageControls.map((c) =>
+                    createControl(
+                        routesView.page, c.id, routesView.page.isDisabled)));
+              }
+
+              if (vc == routesView.viewControls.first && isDesktop()) {
+                overlayWidgets.add(const WindowMedia());
+              }
+
+              return overlayWidgets;
+            }
+
+            pages = routesView.viewControls
+                .map((vc) => MaterialPage(
+                    key: ValueKey(vc.control.id),
+                    child: _buildViewWidget(
+                        routesView.page,
+                        vc.control,
+                        vc.children,
+                        vc.control.isDisabled,
+                        ThemeData(),
+                        _overlayWidgets(vc))))
+                .toList();
+          }
+
+          return Navigator(
+              key: navigatorKey,
+              pages: pages,
+              onPopPage: (route, dynamic result) {
+                if (!route.didPop(result)) {
+                  return false;
+                }
+                debugPrint("onPopPage");
+
+                if (route.settings is Page) {
+                  ws.pageEventFromWeb(
+                      eventTarget: "page",
+                      eventName: "route_pop",
+                      eventData:
+                          ((route.settings as Page).key as ValueKey).value);
+                }
+
+                return true;
+              });
         });
   }
 
-  Widget _getViewWidget(Control parent, Control control, List<Control> children,
-      bool disabled, ThemeData theme, List<Widget> overlayWidgets) {
+  Widget _buildViewWidget(
+      Control parent,
+      Control control,
+      List<Control> children,
+      bool disabled,
+      ThemeData theme,
+      List<Widget> overlayWidgets) {
     final spacing = control.attrDouble("spacing", 10)!;
     final mainAlignment = parseMainAxisAlignment(
         control, "verticalAlignment", MainAxisAlignment.start);
@@ -433,6 +404,9 @@ class _PageControlState extends State<PageControl> {
       childIds.add(appBar.id);
     }
 
+    final textDirection =
+        parent.attrBool("rtl", false)! ? TextDirection.rtl : TextDirection.ltr;
+
     return StoreConnector<AppState, ControlsViewModel>(
         distinct: true,
         converter: (store) => ControlsViewModel.fromStore(store, childIds),
@@ -447,38 +421,40 @@ class _PageControlState extends State<PageControl> {
               crossAxisAlignment: crossAlignment,
               children: controls);
 
-          return Scaffold(
-            appBar: appBarView != null
-                ? AppBarControl(
-                    parent: widget.control,
-                    control: appBarView.control,
-                    children: appBarView.children,
-                    parentDisabled: disabled,
-                    height: appBarView.control
-                        .attrDouble("toolbarHeight", kToolbarHeight)!,
-                    theme: theme)
-                : null,
-            body: Stack(children: [
-              SizedBox.expand(
-                  child: Container(
-                      padding: parseEdgeInsets(widget.control, "padding") ??
-                          const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: HexColor.fromString(theme,
-                              widget.control.attrString("bgcolor", "")!)),
-                      child: scrollMode != ScrollMode.none
-                          ? ScrollableControl(
-                              child: column,
-                              scrollDirection: Axis.vertical,
-                              scrollMode: scrollMode,
-                              autoScroll: autoScroll,
-                            )
-                          : column)),
-              ...overlayWidgets
-            ]),
-            floatingActionButton:
-                fab != null ? createControl(control, fab.id, disabled) : null,
-          );
+          return Directionality(
+              textDirection: textDirection,
+              child: Scaffold(
+                appBar: appBarView != null
+                    ? AppBarControl(
+                        parent: widget.control,
+                        control: appBarView.control,
+                        children: appBarView.children,
+                        parentDisabled: disabled,
+                        height: appBarView.control
+                            .attrDouble("toolbarHeight", kToolbarHeight)!)
+                    : null,
+                body: Stack(children: [
+                  SizedBox.expand(
+                      child: Container(
+                          padding: parseEdgeInsets(widget.control, "padding") ??
+                              const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              color: HexColor.fromString(theme,
+                                  widget.control.attrString("bgcolor", "")!)),
+                          child: scrollMode != ScrollMode.none
+                              ? ScrollableControl(
+                                  child: column,
+                                  scrollDirection: Axis.vertical,
+                                  scrollMode: scrollMode,
+                                  autoScroll: autoScroll,
+                                )
+                              : column)),
+                  ...overlayWidgets
+                ]),
+                floatingActionButton: fab != null
+                    ? createControl(control, fab.id, disabled)
+                    : null,
+              ));
         });
   }
 

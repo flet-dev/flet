@@ -39,6 +39,7 @@ dependencies:
   web_socket_channel: ^2.1.0
   window_manager: ^0.2.5
   http: ^0.13.3
+  collection: ^1.16.0
 
 dev_dependencies:
   flutter_test:

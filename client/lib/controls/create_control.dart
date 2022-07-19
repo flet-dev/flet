@@ -64,7 +64,9 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
       switch (controlView.control.type) {
         case ControlType.page:
           return PageControl(
-              control: controlView.control, children: controlView.children);
+              control: controlView.control,
+              children: controlView.children,
+              dispatch: controlView.dispatch);
         case ControlType.text:
           return TextControl(control: controlView.control);
         case ControlType.icon:

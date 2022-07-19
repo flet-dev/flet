@@ -80,7 +80,9 @@ AppState appReducer(AppState state, dynamic action) {
       ];
       ws.updateControlProps(props: props);
       ws.pageEventFromWeb(
-          eventTarget: "page", eventName: "route", eventData: action.route);
+          eventTarget: "page",
+          eventName: "route_update",
+          eventData: action.route);
     }
 
     return state.copyWith(controls: controls, route: action.route);
