@@ -1,4 +1,5 @@
 import 'package:flet_view/models/routes_view_model.dart';
+import 'package:flet_view/widgets/page_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -20,6 +21,7 @@ import '../utils/theme.dart';
 import '../utils/uri.dart';
 import '../utils/user_fonts.dart';
 import '../web_socket_client.dart';
+import '../widgets/fade_transition_page.dart';
 import '../widgets/loading_page.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
@@ -93,7 +95,16 @@ class _PageControlState extends State<PageControl> {
             // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
             //     ? '-apple-system'
             //     : null,
-            visualDensity: VisualDensity.adaptivePlatformDensity);
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            pageTransitionsTheme: const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+                TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+              },
+            ));
 
     var darkTheme = parseTheme(widget.control, "darkTheme") ??
         ThemeData(
@@ -287,7 +298,7 @@ class _PageControlState extends State<PageControl> {
 
           List<Page<dynamic>> pages = [];
           if (routesView.isLoading || routesView.viewIds.isEmpty) {
-            pages.add(const MaterialPage(
+            pages.add(const FadeTransitionPage(
                 child: LoadingPage(
                     key: ValueKey("Loading page"),
                     title: "Flet is loading...")));
@@ -300,6 +311,7 @@ class _PageControlState extends State<PageControl> {
                 overlayWidgets.addAll(routesView.offstageControls.map((c) =>
                     createControl(
                         routesView.page, c.id, routesView.page.isDisabled)));
+                overlayWidgets.add(const PageMedia());
               }
 
               if (viewId == routesView.viewIds.first && isDesktop()) {
@@ -443,7 +455,7 @@ class _PageControlState extends State<PageControl> {
                     child: Scaffold(
                       appBar: appBarView != null
                           ? AppBarControl(
-                              parent: widget.control,
+                              parent: control,
                               control: appBarView.control,
                               children: appBarView.children,
                               parentDisabled: control.isDisabled,
@@ -453,14 +465,12 @@ class _PageControlState extends State<PageControl> {
                       body: Stack(children: [
                         SizedBox.expand(
                             child: Container(
-                                padding: parseEdgeInsets(
-                                        widget.control, "padding") ??
+                                padding: parseEdgeInsets(control, "padding") ??
                                     const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                     color: HexColor.fromString(
                                         Theme.of(context),
-                                        widget.control
-                                            .attrString("bgcolor", "")!)),
+                                        control.attrString("bgcolor", "")!)),
                                 child: scrollMode != ScrollMode.none
                                     ? ScrollableControl(
                                         child: column,

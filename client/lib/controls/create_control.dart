@@ -333,10 +333,12 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
 }
 
 Widget _expandable(Widget widget, Control? parent, Control control) {
+  debugPrint("Is it expandable $parent $control");
   if (parent != null &&
-      (parent.type == ControlType.page ||
+      (parent.type == ControlType.view ||
           parent.type == ControlType.column ||
           parent.type == ControlType.row)) {
+    debugPrint("Expandable ${control.id}");
     int? expand = control.attrInt("expand");
     return expand != null ? Expanded(child: widget, flex: expand) : widget;
   }
