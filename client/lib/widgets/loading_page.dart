@@ -13,11 +13,15 @@ import '../web_socket_client.dart';
 
 class LoadingPage extends StatelessWidget {
   final String title;
+  final String route;
 
-  const LoadingPage({Key? key, required this.title}) : super(key: key);
+  const LoadingPage({Key? key, required this.title, required this.route})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Loading route $route");
+
     return StoreConnector<AppState, PageLoadViewModel>(
         distinct: true,
         converter: (store) => PageLoadViewModel.fromStore(store),
@@ -34,7 +38,7 @@ class LoadingPage extends StatelessWidget {
 
                 ws.registerWebClient(
                     pageName: pageName,
-                    pageHash: "",
+                    pageRoute: route,
                     sessionId: sessionId,
                     pageWidth: media.size.width.toString(),
                     pageHeight: media.size.height.toString(),

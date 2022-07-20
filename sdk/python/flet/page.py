@@ -97,22 +97,24 @@ class Page(Control):
             self.__conn.page_name,
             self._session_id,
             [
+                Command(0, "get", ["page", "route"], None, None),
+                Command(0, "get", ["page", "pwa"], None, None),
                 Command(0, "get", ["page", "width"], None, None),
                 Command(0, "get", ["page", "height"], None, None),
                 Command(0, "get", ["page", "windowWidth"], None, None),
                 Command(0, "get", ["page", "windowHeight"], None, None),
                 Command(0, "get", ["page", "windowTop"], None, None),
                 Command(0, "get", ["page", "windowLeft"], None, None),
-                Command(0, "get", ["page", "pwa"], None, None),
             ],
         ).results
-        self._set_attr("width", values[0], False)
-        self._set_attr("height", values[1], False)
-        self._set_attr("windowWidth", values[2], False)
-        self._set_attr("windowHeight", values[3], False)
-        self._set_attr("windowTop", values[4], False)
-        self._set_attr("windowLeft", values[5], False)
-        self._set_attr("pwa", values[6], False)
+        self._set_attr("route", values[0], False)
+        self._set_attr("pwa", values[1], False)
+        self._set_attr("width", values[2], False)
+        self._set_attr("height", values[3], False)
+        self._set_attr("windowWidth", values[4], False)
+        self._set_attr("windowHeight", values[5], False)
+        self._set_attr("windowTop", values[6], False)
+        self._set_attr("windowLeft", values[7], False)
 
     def update(self, *controls):
         with self._lock:

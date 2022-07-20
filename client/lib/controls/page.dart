@@ -61,7 +61,8 @@ class _PageControlState extends State<PageControl> {
     _routerDelegate = SimpleRouterDelegate(
       routeState: _routeState,
       navigatorKey: _navigatorKey,
-      builder: (context) => _buildNavigator(context, _navigatorKey),
+      builder: (context) =>
+          _buildNavigator(context, _navigatorKey, _routeState),
     );
 
     super.initState();
@@ -279,53 +280,49 @@ class _PageControlState extends State<PageControl> {
         });
   }
 
-  Widget _buildNavigator(
-      BuildContext context, GlobalKey<NavigatorState> navigatorKey) {
+  Widget _buildNavigator(BuildContext context,
+      GlobalKey<NavigatorState> navigatorKey, RouteState routeState) {
     debugPrint("Page navigator build: ${widget.control.id}");
 
     return StoreConnector<AppState, RoutesViewModel>(
         distinct: true,
         converter: (store) => RoutesViewModel.fromStore(store),
-        onWillChange: (prev, next) {
-          debugPrint("Page navigator.onWillChange(): $prev, $next");
-        },
+        // onWillChange: (prev, next) {
+        //   debugPrint("Page navigator.onWillChange(): $prev, $next");
+        // },
         builder: (context, routesView) {
           debugPrint("_buildNavigator build");
 
           List<Page<dynamic>> pages = [];
-          if (routesView.isLoading || routesView.viewControls.isEmpty) {
-            pages.add(const MaterialPage(
+          if (routesView.isLoading || routesView.viewIds.isEmpty) {
+            pages.add(MaterialPage(
                 child: LoadingPage(
-                    key: ValueKey("Loading page"),
-                    title: "Flet is loading...")));
+                    key: const ValueKey("Loading page"),
+                    title: "Flet is loading...",
+                    route: routeState.route)));
           } else {
             // offstage
-            _overlayWidgets(ControlViewModel vc) {
+            _overlayWidgets(String viewId) {
               List<Widget> overlayWidgets = [];
 
-              if (vc == routesView.viewControls.last) {
+              if (viewId == routesView.viewIds.last) {
                 overlayWidgets.addAll(routesView.offstageControls.map((c) =>
                     createControl(
                         routesView.page, c.id, routesView.page.isDisabled)));
               }
 
-              if (vc == routesView.viewControls.first && isDesktop()) {
+              if (viewId == routesView.viewIds.first && isDesktop()) {
                 overlayWidgets.add(const WindowMedia());
               }
 
               return overlayWidgets;
             }
 
-            pages = routesView.viewControls
-                .map((vc) => MaterialPage(
-                    key: ValueKey(vc.control.id),
+            pages = routesView.viewIds
+                .map((viewId) => MaterialPage(
+                    key: ValueKey(viewId),
                     child: _buildViewWidget(
-                        routesView.page,
-                        vc.control,
-                        vc.children,
-                        vc.control.isDisabled,
-                        ThemeData(),
-                        _overlayWidgets(vc))))
+                        routesView.page, viewId, _overlayWidgets(viewId))))
                 .toList();
           }
 
@@ -358,118 +355,136 @@ class _PageControlState extends State<PageControl> {
   }
 
   Widget _buildViewWidget(
-      Control parent,
-      Control control,
-      List<Control> children,
-      bool disabled,
-      ThemeData theme,
-      List<Widget> overlayWidgets) {
-    final spacing = control.attrDouble("spacing", 10)!;
-    final mainAlignment = parseMainAxisAlignment(
-        control, "verticalAlignment", MainAxisAlignment.start);
-    final crossAlignment = parseCrossAxisAlignment(
-        control, "horizontalAlignment", CrossAxisAlignment.start);
-
-    ScrollMode scrollMode = ScrollMode.values.firstWhere(
-        (m) =>
-            m.name.toLowerCase() ==
-            control.attrString("scroll", "")!.toLowerCase(),
-        orElse: () => ScrollMode.none);
-
-    final autoScroll = control.attrBool("autoScroll", false)!;
-
-    Control? appBar;
-    Control? fab;
-    List<Widget> controls = [];
-    bool firstControl = true;
-
-    for (var ctrl in children.where((c) => c.isVisible)) {
-      if (ctrl.type == ControlType.appBar) {
-        appBar = ctrl;
-        continue;
-      } else if (ctrl.type == ControlType.floatingActionButton) {
-        fab = ctrl;
-        continue;
-      }
-      // spacer between displayed controls
-      else if (spacing > 0 &&
-          !firstControl &&
-          mainAlignment != MainAxisAlignment.spaceAround &&
-          mainAlignment != MainAxisAlignment.spaceBetween &&
-          mainAlignment != MainAxisAlignment.spaceEvenly) {
-        controls.add(SizedBox(height: spacing));
-      }
-      firstControl = false;
-
-      // displayed control
-      controls.add(createControl(control, ctrl.id, disabled));
-    }
-
-    List<String> childIds = [];
-    if (appBar != null) {
-      childIds.add(appBar.id);
-    }
-
-    final textDirection =
-        parent.attrBool("rtl", false)! ? TextDirection.rtl : TextDirection.ltr;
-
-    return StoreConnector<AppState, ControlsViewModel>(
+      Control parent, String viewId, List<Widget> overlayWidgets) {
+    return StoreConnector<AppState, ControlViewModel>(
         distinct: true,
-        converter: (store) => ControlsViewModel.fromStore(store, childIds),
-        ignoreChange: (state) {
-          //debugPrint("ignoreChange: $id");
-          for (var id in childIds) {
-            if (state.controls[id] == null) {
-              return true;
-            }
-          }
-          return false;
+        converter: (store) {
+          return ControlViewModel.fromStore(store, viewId);
         },
-        builder: (context, childrenViews) {
-          debugPrint("Route view StoreConnector build");
+        ignoreChange: (state) {
+          return state.controls[viewId] == null;
+        },
+        // onWillChange: (prev, next) {
+        //   debugPrint("View StoreConnector.onWillChange(): $prev, $next");
+        // },
+        builder: (context, controlView) {
+          debugPrint("View StoreConnector");
 
-          var appBarView =
-              appBar != null ? childrenViews.controlViews.last : null;
+          var control = controlView.control;
+          var children = controlView.children;
 
-          var column = Column(
-              mainAxisAlignment: mainAlignment,
-              crossAxisAlignment: crossAlignment,
-              children: controls);
+          final spacing = control.attrDouble("spacing", 10)!;
+          final mainAlignment = parseMainAxisAlignment(
+              control, "verticalAlignment", MainAxisAlignment.start);
+          final crossAlignment = parseCrossAxisAlignment(
+              control, "horizontalAlignment", CrossAxisAlignment.start);
 
-          return Directionality(
-              textDirection: textDirection,
-              child: Scaffold(
-                appBar: appBarView != null
-                    ? AppBarControl(
-                        parent: widget.control,
-                        control: appBarView.control,
-                        children: appBarView.children,
-                        parentDisabled: disabled,
-                        height: appBarView.control
-                            .attrDouble("toolbarHeight", kToolbarHeight)!)
-                    : null,
-                body: Stack(children: [
-                  SizedBox.expand(
-                      child: Container(
-                          padding: parseEdgeInsets(widget.control, "padding") ??
-                              const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: HexColor.fromString(theme,
-                                  widget.control.attrString("bgcolor", "")!)),
-                          child: scrollMode != ScrollMode.none
-                              ? ScrollableControl(
-                                  child: column,
-                                  scrollDirection: Axis.vertical,
-                                  scrollMode: scrollMode,
-                                  autoScroll: autoScroll,
-                                )
-                              : column)),
-                  ...overlayWidgets
-                ]),
-                floatingActionButton: fab != null
-                    ? createControl(control, fab.id, disabled)
-                    : null,
-              ));
+          ScrollMode scrollMode = ScrollMode.values.firstWhere(
+              (m) =>
+                  m.name.toLowerCase() ==
+                  control.attrString("scroll", "")!.toLowerCase(),
+              orElse: () => ScrollMode.none);
+
+          final autoScroll = control.attrBool("autoScroll", false)!;
+
+          Control? appBar;
+          Control? fab;
+          List<Widget> controls = [];
+          bool firstControl = true;
+
+          for (var ctrl in children.where((c) => c.isVisible)) {
+            if (ctrl.type == ControlType.appBar) {
+              appBar = ctrl;
+              continue;
+            } else if (ctrl.type == ControlType.floatingActionButton) {
+              fab = ctrl;
+              continue;
+            }
+            // spacer between displayed controls
+            else if (spacing > 0 &&
+                !firstControl &&
+                mainAlignment != MainAxisAlignment.spaceAround &&
+                mainAlignment != MainAxisAlignment.spaceBetween &&
+                mainAlignment != MainAxisAlignment.spaceEvenly) {
+              controls.add(SizedBox(height: spacing));
+            }
+            firstControl = false;
+
+            // displayed control
+            controls.add(createControl(control, ctrl.id, control.isDisabled));
+          }
+
+          List<String> childIds = [];
+          if (appBar != null) {
+            childIds.add(appBar.id);
+          }
+
+          final textDirection = parent.attrBool("rtl", false)!
+              ? TextDirection.rtl
+              : TextDirection.ltr;
+
+          return StoreConnector<AppState, ControlsViewModel>(
+              distinct: true,
+              converter: (store) =>
+                  ControlsViewModel.fromStore(store, childIds),
+              ignoreChange: (state) {
+                //debugPrint("ignoreChange: $id");
+                for (var id in childIds) {
+                  if (state.controls[id] == null) {
+                    return true;
+                  }
+                }
+                return false;
+              },
+              builder: (context, childrenViews) {
+                debugPrint("Route view StoreConnector build");
+
+                var appBarView =
+                    appBar != null ? childrenViews.controlViews.last : null;
+
+                var column = Column(
+                    mainAxisAlignment: mainAlignment,
+                    crossAxisAlignment: crossAlignment,
+                    children: controls);
+
+                return Directionality(
+                    textDirection: textDirection,
+                    child: Scaffold(
+                      appBar: appBarView != null
+                          ? AppBarControl(
+                              parent: widget.control,
+                              control: appBarView.control,
+                              children: appBarView.children,
+                              parentDisabled: control.isDisabled,
+                              height: appBarView.control
+                                  .attrDouble("toolbarHeight", kToolbarHeight)!)
+                          : null,
+                      body: Stack(children: [
+                        SizedBox.expand(
+                            child: Container(
+                                padding: parseEdgeInsets(
+                                        widget.control, "padding") ??
+                                    const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    color: HexColor.fromString(
+                                        Theme.of(context),
+                                        widget.control
+                                            .attrString("bgcolor", "")!)),
+                                child: scrollMode != ScrollMode.none
+                                    ? ScrollableControl(
+                                        child: column,
+                                        scrollDirection: Axis.vertical,
+                                        scrollMode: scrollMode,
+                                        autoScroll: autoScroll,
+                                      )
+                                    : column)),
+                        ...overlayWidgets
+                      ]),
+                      floatingActionButton: fab != null
+                          ? createControl(control, fab.id, control.isDisabled)
+                          : null,
+                    ));
+              });
         });
   }
 

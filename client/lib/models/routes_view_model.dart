@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flet_view/models/control_view_model.dart';
 import 'package:redux/redux.dart';
 
 import 'app_state.dart';
@@ -11,13 +10,13 @@ class RoutesViewModel extends Equatable {
   final Control page;
   final bool isLoading;
   final List<Control> offstageControls;
-  final List<ControlViewModel> viewControls;
+  final List<String> viewIds;
 
   const RoutesViewModel(
       {required this.page,
       required this.isLoading,
       required this.offstageControls,
-      required this.viewControls});
+      required this.viewIds});
 
   static RoutesViewModel fromStore(Store<AppState> store) {
     Control? offstageControl = store.state.controls["page"]!.childIds
@@ -33,13 +32,13 @@ class RoutesViewModel extends Equatable {
                 .where((c) => c.isVisible)
                 .toList()
             : [],
-        viewControls: store.state.controls["page"]!.childIds
+        viewIds: store.state.controls["page"]!.childIds
             .map((childId) => store.state.controls[childId]!)
             .where((c) => c.type != ControlType.offstage && c.isVisible)
-            .map((c) => ControlViewModel.fromStore(store, c.id))
+            .map((c) => c.id)
             .toList());
   }
 
   @override
-  List<Object?> get props => [page, isLoading, offstageControls, viewControls];
+  List<Object?> get props => [page, isLoading, offstageControls, viewIds];
 }

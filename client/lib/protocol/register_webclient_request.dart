@@ -1,6 +1,6 @@
 class RegisterWebClientRequest {
   final String pageName;
-  final String? pageHash;
+  final String? pageRoute;
   final String? pageWidth;
   final String? pageHeight;
   final String? windowWidth;
@@ -12,7 +12,7 @@ class RegisterWebClientRequest {
 
   RegisterWebClientRequest(
       {required this.pageName,
-      this.pageHash,
+      this.pageRoute,
       this.pageWidth,
       this.pageHeight,
       this.windowWidth,
@@ -24,7 +24,7 @@ class RegisterWebClientRequest {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'pageName': pageName,
-        'pageHash': pageHash,
+        'pageRoute': pageRoute,
         'pageWidth': pageWidth,
         'pageHeight': pageHeight,
         'windowWidth': windowWidth,
