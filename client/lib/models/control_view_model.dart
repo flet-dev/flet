@@ -22,5 +22,5 @@ class ControlViewModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [control, children];
+  List<Object?> get props => [control, children, dispatch];
 }

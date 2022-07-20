@@ -52,9 +52,9 @@ class Page(Control):
         self._event_available = threading.Event()
         self._fetch_page_details()
 
-        self.__routes = {"/": View()}
-        self.__default_route = self.__routes["/"]
-        self._controls = self.__default_route.controls
+        self.__views = [View()]
+        self.__default_view = self.__views[0]
+        self._controls = self.__default_view.controls
 
         self.__fonts: Dict[str, str] = None
         self.__offstage = Offstage()
@@ -66,6 +66,10 @@ class Page(Control):
         self._add_event_handler("close", self.__on_close.handler)
         self.__on_resize = EventHandler()
         self._add_event_handler("resize", self.__on_resize.handler)
+        self.__on_route_change = EventHandler()
+        self._add_event_handler("route_change", self.__on_route_change.handler)
+        self.__on_view_pop = EventHandler()
+        self._add_event_handler("view_pop", self.__on_view_pop.handler)
         self.__on_window_event = EventHandler()
         self._add_event_handler("window_event", self.__on_window_event.handler)
         self.__on_connect = EventHandler()
@@ -84,9 +88,7 @@ class Page(Control):
 
     def _get_children(self):
         children = []
-        for name, view in self.__routes.items():
-            view.name = name
-            children.append(view)
+        children.extend(self.__views)
         children.append(self.__offstage)
         return children
 
@@ -342,109 +344,109 @@ class Page(Control):
         self.__fonts = value
         self._set_attr_json("fonts", value)
 
-    # routes
+    # views
     @property
-    def routes(self):
-        return self.__routes
+    def views(self):
+        return self.__views
 
     # controls
     @property
     def controls(self):
-        return self.__default_route.controls
+        return self.__default_view.controls
 
     @controls.setter
     @beartype
     def controls(self, value: List[Control]):
-        self.__default_route.controls = value or []
+        self.__default_view.controls = value or []
 
     # appbar
     @property
     def appbar(self):
-        return self.__default_route.appbar
+        return self.__default_view.appbar
 
     @appbar.setter
     @beartype
     def appbar(self, value: Optional[AppBar]):
-        self.__default_route.appbar = value
+        self.__default_view.appbar = value
 
     # floating_action_button
     @property
     def floating_action_button(self):
-        return self.__default_route.floating_action_button
+        return self.__default_view.floating_action_button
 
     @floating_action_button.setter
     @beartype
     def floating_action_button(self, value: Optional[FloatingActionButton]):
-        self.__default_route.floating_action_button = value
+        self.__default_view.floating_action_button = value
 
     # horizontal_alignment
     @property
     def horizontal_alignment(self):
-        return self.__default_route.horizontal_alignment
+        return self.__default_view.horizontal_alignment
 
     @horizontal_alignment.setter
     @beartype
     def horizontal_alignment(self, value: CrossAxisAlignment):
-        self.__default_route.horizontal_alignment = value
+        self.__default_view.horizontal_alignment = value
 
     # vertical_alignment
     @property
     def vertical_alignment(self):
-        return self.__default_route.vertical_alignment
+        return self.__default_view.vertical_alignment
 
     @vertical_alignment.setter
     @beartype
     def vertical_alignment(self, value: MainAxisAlignment):
-        self.__default_route.vertical_alignment = value
+        self.__default_view.vertical_alignment = value
 
     # spacing
     @property
     def spacing(self):
-        return self.__default_route.spacing
+        return self.__default_view.spacing
 
     @spacing.setter
     @beartype
     def spacing(self, value: OptionalNumber):
-        self.__default_route.spacing = value
+        self.__default_view.spacing = value
 
     # padding
     @property
     def padding(self):
-        return self.__default_route.padding
+        return self.__default_view.padding
 
     @padding.setter
     @beartype
     def padding(self, value: PaddingValue):
-        self.__default_route.padding = value
+        self.__default_view.padding = value
 
     # bgcolor
     @property
     def bgcolor(self):
-        return self.__default_route.bgcolor
+        return self.__default_view.bgcolor
 
     @bgcolor.setter
     def bgcolor(self, value):
-        self.__default_route.bgcolor = value
+        self.__default_view.bgcolor = value
 
     # scroll
     @property
     def scroll(self):
-        return self.__default_route.scroll
+        return self.__default_view.scroll
 
     @scroll.setter
     @beartype
     def scroll(self, value: ScrollMode):
-        self.__default_route.scroll = value
+        self.__default_view.scroll = value
 
     # auto_scroll
     @property
     def auto_scroll(self):
-        return self.__default_route.auto_scroll
+        return self.__default_view.auto_scroll
 
     @auto_scroll.setter
     @beartype
     def auto_scroll(self, value: Optional[bool]):
-        self.__default_route.auto_scroll = value
+        self.__default_view.auto_scroll = value
 
     # splash
     @property
@@ -757,6 +759,24 @@ class Page(Control):
     @on_resize.setter
     def on_resize(self, handler):
         self.__on_resize.subscribe(handler)
+
+    # on_route_change
+    @property
+    def on_route_change(self):
+        return self.__on_route_change
+
+    @on_route_change.setter
+    def on_route_change(self, handler):
+        self.__on_route_change.subscribe(handler)
+
+    # on_view_pop
+    @property
+    def on_view_pop(self):
+        return self.__on_view_pop
+
+    @on_view_pop.setter
+    def on_view_pop(self, handler):
+        self.__on_view_pop.subscribe(handler)
 
     # on_window_event
     @property

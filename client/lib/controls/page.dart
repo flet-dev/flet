@@ -50,7 +50,6 @@ class _PageControlState extends State<PageControl> {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
-  String? _route;
 
   @override
   void initState() {
@@ -78,11 +77,9 @@ class _PageControlState extends State<PageControl> {
 
     // page route
     var route = widget.control.attrString("route");
-    debugPrint("Route: $route");
-    if (_route != route && route != null) {
+    if (_routeState.route != route && route != null) {
       // route updated
       _routeState.route = route;
-      _route = route;
     }
 
     // theme
@@ -289,6 +286,9 @@ class _PageControlState extends State<PageControl> {
     return StoreConnector<AppState, RoutesViewModel>(
         distinct: true,
         converter: (store) => RoutesViewModel.fromStore(store),
+        onWillChange: (prev, next) {
+          debugPrint("Page navigator.onWillChange(): $prev, $next");
+        },
         builder: (context, routesView) {
           debugPrint("_buildNavigator build");
 
@@ -333,20 +333,26 @@ class _PageControlState extends State<PageControl> {
               key: navigatorKey,
               pages: pages,
               onPopPage: (route, dynamic result) {
-                if (!route.didPop(result)) {
-                  return false;
-                }
-                debugPrint("onPopPage");
+                // if (!route.didPop(result)) {
+                //   return false;
+                // }
+                // debugPrint("onPopPage");
 
-                if (route.settings is Page) {
-                  ws.pageEventFromWeb(
-                      eventTarget: "page",
-                      eventName: "route_pop",
-                      eventData:
-                          ((route.settings as Page).key as ValueKey).value);
-                }
+                // if (route.settings is Page) {
+                //   ws.pageEventFromWeb(
+                //       eventTarget: "page",
+                //       eventName: "route_pop",
+                //       eventData:
+                //           ((route.settings as Page).key as ValueKey).value);
+                // }
 
-                return true;
+                // return true;
+                ws.pageEventFromWeb(
+                    eventTarget: "page",
+                    eventName: "view_pop",
+                    eventData:
+                        ((route.settings as Page).key as ValueKey).value);
+                return false;
               });
         });
   }
@@ -410,6 +416,15 @@ class _PageControlState extends State<PageControl> {
     return StoreConnector<AppState, ControlsViewModel>(
         distinct: true,
         converter: (store) => ControlsViewModel.fromStore(store, childIds),
+        ignoreChange: (state) {
+          //debugPrint("ignoreChange: $id");
+          for (var id in childIds) {
+            if (state.controls[id] == null) {
+              return true;
+            }
+          }
+          return false;
+        },
         builder: (context, childrenViews) {
           debugPrint("Route view StoreConnector build");
 

@@ -81,7 +81,7 @@ AppState appReducer(AppState state, dynamic action) {
       ws.updateControlProps(props: props);
       ws.pageEventFromWeb(
           eventTarget: "page",
-          eventName: "route_update",
+          eventName: "route_change",
           eventData: action.route);
     }
 
