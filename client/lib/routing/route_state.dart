@@ -10,7 +10,7 @@ class RouteState extends ChangeNotifier {
   final RouteParser _parser;
   String _route;
 
-  RouteState(this._parser) : _route = "/";
+  RouteState(this._parser) : _route = "";
 
   String get route => _route;
 

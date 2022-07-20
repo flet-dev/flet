@@ -61,8 +61,7 @@ class _PageControlState extends State<PageControl> {
     _routerDelegate = SimpleRouterDelegate(
       routeState: _routeState,
       navigatorKey: _navigatorKey,
-      builder: (context) =>
-          _buildNavigator(context, _navigatorKey, _routeState),
+      builder: (context) => _buildNavigator(context, _navigatorKey),
     );
 
     super.initState();
@@ -75,6 +74,8 @@ class _PageControlState extends State<PageControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("Page build: ${widget.control.id}");
+
+    //debugDumpRenderTree();
 
     // page route
     var route = widget.control.attrString("route");
@@ -92,16 +93,7 @@ class _PageControlState extends State<PageControl> {
             // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
             //     ? '-apple-system'
             //     : null,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            pageTransitionsTheme: const PageTransitionsTheme(
-              builders: {
-                TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
-                TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-                TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
-              },
-            ));
+            visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var darkTheme = parseTheme(widget.control, "darkTheme") ??
         ThemeData(
@@ -280,8 +272,8 @@ class _PageControlState extends State<PageControl> {
         });
   }
 
-  Widget _buildNavigator(BuildContext context,
-      GlobalKey<NavigatorState> navigatorKey, RouteState routeState) {
+  Widget _buildNavigator(
+      BuildContext context, GlobalKey<NavigatorState> navigatorKey) {
     debugPrint("Page navigator build: ${widget.control.id}");
 
     return StoreConnector<AppState, RoutesViewModel>(
@@ -295,11 +287,10 @@ class _PageControlState extends State<PageControl> {
 
           List<Page<dynamic>> pages = [];
           if (routesView.isLoading || routesView.viewIds.isEmpty) {
-            pages.add(MaterialPage(
+            pages.add(const MaterialPage(
                 child: LoadingPage(
-                    key: const ValueKey("Loading page"),
-                    title: "Flet is loading...",
-                    route: routeState.route)));
+                    key: ValueKey("Loading page"),
+                    title: "Flet is loading...")));
           } else {
             // offstage
             _overlayWidgets(String viewId) {

@@ -38,7 +38,7 @@ class AppState extends Equatable {
 
   factory AppState.initial() => const AppState(
       pageUri: null,
-      route: "/",
+      route: "",
       sessionId: "",
       isLoading: true,
       reconnectingTimeout: 0,
