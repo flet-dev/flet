@@ -321,12 +321,14 @@ class _PageControlState extends State<PageControl> {
               return overlayWidgets;
             }
 
-            pages = routesView.viewIds
-                .map((viewId) => MaterialPage(
-                    key: ValueKey(viewId),
-                    child: _buildViewWidget(
-                        routesView.page, viewId, _overlayWidgets(viewId))))
-                .toList();
+            pages = routesView.viewIds.map((viewId) {
+              var key = ValueKey(viewId);
+              var child = _buildViewWidget(
+                  routesView.page, viewId, _overlayWidgets(viewId));
+              return routesView.viewIds.first == viewId
+                  ? FadeTransitionPage(key: key, child: child)
+                  : MaterialPage(key: key, child: child);
+            }).toList();
           }
 
           return Navigator(

@@ -19,7 +19,7 @@ from flet.control import (
     PaddingValue,
     ScrollMode,
 )
-from flet.control_event import ControlEvent
+from flet.event import Event
 from flet.event_handler import EventHandler
 from flet.floating_action_button import FloatingActionButton
 from flet.protocol import Command
@@ -190,7 +190,7 @@ class Page(Control):
         with self._lock:
             self._send_command("error", [message])
 
-    def on_event(self, e):
+    def on_event(self, e: Event):
         logging.info(f"page.on_event: {e.target} {e.name} {e.data}")
 
         with self._lock:
@@ -890,3 +890,11 @@ class Offstage(Control):
     @beartype
     def dialog(self, value: Optional[Control]):
         self.__dialog = value
+
+
+class ControlEvent(Event):
+    def __init__(self, target: str, name: str, data: str, control: Control, page: Page):
+        Event.__init__(self, target=target, name=name, data=data)
+
+        self.control: Control = control
+        self.page: Page = page

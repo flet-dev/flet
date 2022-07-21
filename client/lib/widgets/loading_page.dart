@@ -9,7 +9,7 @@ class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(children: [
+        body: Stack(children: const [
       Center(child: CircularProgressIndicator()),
       PageMedia()
     ]));
