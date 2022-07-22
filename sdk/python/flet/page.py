@@ -69,7 +69,7 @@ class Page(Control):
 
         self.__on_route_change = EventHandler(lambda e: e.data)
         self._add_event_handler("route_change", self.__on_route_change.handler)
-        self.__on_view_pop = EventHandler()
+        self.__on_view_pop = EventHandler(lambda e: self.get_control(e.data))
         self._add_event_handler("view_pop", self.__on_view_pop.handler)
         self.__on_window_event = EventHandler()
         self._add_event_handler("window_event", self.__on_window_event.handler)
@@ -238,6 +238,7 @@ class Page(Control):
 
     def go(self, route):
         self.route = route
+        self.__on_route_change.handler(Event("page", "route_change", self.route))
         self.update()
 
     def signout(self):
