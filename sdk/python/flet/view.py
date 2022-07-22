@@ -14,12 +14,33 @@ from flet.floating_action_button import FloatingActionButton
 
 
 class View(Control):
-    def __init__(self):
+    def __init__(
+        self,
+        route: str = None,
+        controls: List[Control] = None,
+        appbar: Optional[AppBar] = None,
+        floating_action_button: Optional[FloatingActionButton] = None,
+        vertical_alignment: MainAxisAlignment = None,
+        horizontal_alignment: CrossAxisAlignment = None,
+        spacing: OptionalNumber = None,
+        padding: PaddingValue = None,
+        bgcolor: str = None,
+        scroll: ScrollMode = None,
+        auto_scroll: bool = None,
+    ):
         Control.__init__(self)
 
-        self.__controls = []  # page controls
-        self.__appbar = None
-        self.__fab = None
+        self.controls = controls
+        self.route = route
+        self.appbar = appbar
+        self.floating_action_button = floating_action_button
+        self.vertical_alignment = vertical_alignment
+        self.horizontal_alignment = horizontal_alignment
+        self.spacing = spacing
+        self.padding = padding
+        self.bgcolor = bgcolor
+        self.scroll = scroll
+        self.auto_scroll = auto_scroll
 
     def _get_control_name(self):
         return "view"
@@ -33,15 +54,15 @@ class View(Control):
         children.extend(self.__controls)
         return children
 
-    # name
+    # route
     @property
-    def name(self):
-        return self._get_attr("name")
+    def route(self):
+        return self._get_attr("route")
 
-    @name.setter
+    @route.setter
     @beartype
-    def name(self, value: str):
-        self._set_attr("name", value)
+    def route(self, value):
+        self._set_attr("route", value)
 
     # controls
     @property
@@ -50,7 +71,7 @@ class View(Control):
 
     @controls.setter
     @beartype
-    def controls(self, value: List[Control]):
+    def controls(self, value: Optional[List[Control]]):
         self.__controls = value or []
 
     # appbar

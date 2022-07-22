@@ -66,7 +66,8 @@ class Page(Control):
         self._add_event_handler("close", self.__on_close.handler)
         self.__on_resize = EventHandler()
         self._add_event_handler("resize", self.__on_resize.handler)
-        self.__on_route_change = EventHandler()
+
+        self.__on_route_change = EventHandler(lambda e: e.data)
         self._add_event_handler("route_change", self.__on_route_change.handler)
         self.__on_view_pop = EventHandler()
         self._add_event_handler("view_pop", self.__on_view_pop.handler)
@@ -234,6 +235,10 @@ class Page(Control):
                 return True
             elif e.control == self and e.name.lower() == "dismisssignin":
                 return False
+
+    def go(self, route):
+        self.route = route
+        self.update()
 
     def signout(self):
         return self._send_command("signout", None)

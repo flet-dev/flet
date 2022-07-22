@@ -95,32 +95,14 @@ class _PageControlState extends State<PageControl> {
             // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
             //     ? '-apple-system'
             //     : null,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            pageTransitionsTheme: const PageTransitionsTheme(
-              builders: {
-                TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
-                TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-                TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
-              },
-            ));
+            visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var darkTheme = parseTheme(widget.control, "darkTheme") ??
         ThemeData(
             colorSchemeSeed: Colors.blue,
             brightness: Brightness.dark,
             useMaterial3: true,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            pageTransitionsTheme: const PageTransitionsTheme(
-              builders: {
-                TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
-                TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-                TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
-              },
-            ));
+            visualDensity: VisualDensity.adaptivePlatformDensity);
 
     var themeMode = ThemeMode.values.firstWhere(
         (t) =>
