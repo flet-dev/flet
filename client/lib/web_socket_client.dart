@@ -72,7 +72,7 @@ class WebSocketClient {
 
   registerWebClient({
     required String pageName,
-    required String pageHash,
+    required String pageRoute,
     required String pageWidth,
     required String pageHeight,
     required String windowWidth,
@@ -84,7 +84,7 @@ class WebSocketClient {
   }) {
     bool firstCall = _pageName == "";
     _pageName = pageName;
-    _pageHash = pageHash;
+    _pageHash = pageRoute;
     _pageWidth = pageWidth;
     _pageHeight = pageHeight;
     _windowWidth = windowWidth;
@@ -105,7 +105,7 @@ class WebSocketClient {
         action: MessageAction.registerWebClient,
         payload: RegisterWebClientRequest(
             pageName: _pageName,
-            pageHash: _pageHash,
+            pageRoute: _pageHash,
             pageWidth: _pageWidth,
             pageHeight: _pageHeight,
             windowWidth: _windowWidth,

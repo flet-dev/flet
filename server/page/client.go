@@ -328,7 +328,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 			}
 
 			session = newSession(page, uuid.New().String(), c.clientIP,
-				request.PageHash, request.PageWidth, request.PageHeight,
+				request.PageRoute, request.PageWidth, request.PageHeight,
 				request.WindowWidth, request.WindowHeight, request.WindowTop, request.WindowLeft, request.IsPWA)
 			sessionCreated = true
 		} else {

@@ -7,12 +7,16 @@ import 'package:flet_view/protocol/update_control_props_payload.dart';
 import 'package:flet_view/web_socket_client.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../utils/platform_utils.dart'
+    if (dart.library.io) "../utils/platform_utils_io.dart"
+    if (dart.library.js) "../utils/platform_utils_js.dart";
 import 'actions.dart';
 import 'models/app_state.dart';
 import 'models/control.dart';
 import 'session_store/session_store.dart'
     if (dart.library.io) "session_store/session_store_io.dart"
     if (dart.library.js) "session_store/session_store_js.dart";
+import 'utils/desktop.dart';
 import 'utils/uri.dart';
 
 enum Actions { increment, setText, setError }
@@ -40,7 +44,7 @@ AppState appReducer(AppState state, dynamic action) {
 
     var page = state.controls["page"];
     var controls = Map.of(state.controls);
-    if (page != null) {
+    if (page != null && !state.isLoading) {
       var pageAttrs = Map.of(page.attrs);
       pageAttrs["width"] = action.newPageSize.width.toString();
       pageAttrs["height"] = action.newPageSize.height.toString();
@@ -62,6 +66,50 @@ AppState appReducer(AppState state, dynamic action) {
         controls: controls,
         size: action.newPageSize,
         sizeBreakpoint: newBreakpoint);
+  } else if (action is SetPageRouteAction) {
+    //
+    // page route changed
+    //
+    var page = state.controls["page"];
+    var controls = Map.of(state.controls);
+    if (page != null) {
+      var pageAttrs = Map.of(page.attrs);
+      pageAttrs["route"] = action.route;
+      controls[page.id] = page.copyWith(attrs: pageAttrs);
+
+      if (state.route == "" && state.isLoading) {
+        // registering a client
+        debugPrint("Registering web client with route: ${action.route}");
+        String pageName = getWebPageName(state.pageUri!);
+
+        getWindowMediaData().then((wmd) {
+          ws.registerWebClient(
+              pageName: pageName,
+              pageRoute: action.route,
+              sessionId: state.sessionId,
+              pageWidth: state.size.width.toString(),
+              pageHeight: state.size.height.toString(),
+              windowWidth: wmd.width != null ? wmd.width.toString() : "",
+              windowHeight: wmd.height != null ? wmd.height.toString() : "",
+              windowTop: wmd.top != null ? wmd.top.toString() : "",
+              windowLeft: wmd.left != null ? wmd.left.toString() : "",
+              isPWA: isProgressiveWebApp().toString());
+        });
+      } else {
+        // existing route change
+        debugPrint("New page route: ${action.route}");
+        List<Map<String, String>> props = [
+          {"i": "page", "route": action.route},
+        ];
+        ws.updateControlProps(props: props);
+        ws.pageEventFromWeb(
+            eventTarget: "page",
+            eventName: "route_change",
+            eventData: action.route);
+      }
+    }
+
+    return state.copyWith(controls: controls, route: action.route);
   } else if (action is WindowEventAction) {
     //
     // window event
@@ -71,7 +119,7 @@ AppState appReducer(AppState state, dynamic action) {
 
     var page = state.controls["page"];
     var controls = Map.of(state.controls);
-    if (page != null) {
+    if (page != null && !state.isLoading) {
       var pageAttrs = Map.of(page.attrs);
       pageAttrs["windowwidth"] = action.wmd.width.toString();
       pageAttrs["windowheight"] = action.wmd.height.toString();

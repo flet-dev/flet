@@ -64,7 +64,9 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
       switch (controlView.control.type) {
         case ControlType.page:
           return PageControl(
-              control: controlView.control, children: controlView.children);
+              control: controlView.control,
+              children: controlView.children,
+              dispatch: controlView.dispatch);
         case ControlType.text:
           return TextControl(control: controlView.control);
         case ControlType.icon:
@@ -332,9 +334,10 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
 
 Widget _expandable(Widget widget, Control? parent, Control control) {
   if (parent != null &&
-      (parent.type == ControlType.page ||
+      (parent.type == ControlType.view ||
           parent.type == ControlType.column ||
           parent.type == ControlType.row)) {
+    debugPrint("Expandable ${control.id}");
     int? expand = control.attrInt("expand");
     return expand != null ? Expanded(child: widget, flex: expand) : widget;
   }

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flet_view/actions.dart';
 import 'package:flet_view/utils/desktop.dart';
-import 'package:flet_view/widgets/loading_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -28,6 +27,7 @@ void main([List<String>? args]) async {
   await setupDesktop();
 
   var pageUri = Uri.base;
+  //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
     pageUri = Uri.parse("http://localhost:8550");
@@ -79,11 +79,7 @@ class FletApp extends StatelessWidget {
         distinct: true,
         converter: (store) => PageViewModel.fromStore(store),
         builder: (context, viewModel) {
-          if (viewModel.isLoading) {
-            return LoadingPage(
-              title: title,
-            );
-          } else if (viewModel.error != "") {
+          if (viewModel.error != "") {
             return MaterialApp(
                 title: title,
                 home: Scaffold(

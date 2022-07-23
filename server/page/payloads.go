@@ -50,7 +50,7 @@ type RegisterHostClientResponsePayload struct {
 
 type RegisterWebClientRequestPayload struct {
 	PageName     string `json:"pageName"`
-	PageHash     string `json:"pageHash"`
+	PageRoute    string `json:"pageRoute"`
 	PageWidth    string `json:"pageWidth"`
 	PageHeight   string `json:"pageHeight"`
 	WindowWidth  string `json:"windowWidth"`

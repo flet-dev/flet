@@ -44,3 +44,5 @@ from flet.textfield import TextField
 from flet.theme import Theme
 from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
+from flet.view import View
+from flet.template_route import TemplateRoute

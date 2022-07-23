@@ -9,7 +9,6 @@ import threading
 import traceback
 import urllib.request
 import zipfile
-from ensurepip import version
 from pathlib import Path
 from time import sleep
 

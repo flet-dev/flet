@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
+import 'package:flet_view/models/control_type.dart';
 
 import 'control.dart';
 
@@ -11,6 +12,7 @@ class Counter {
 
 class AppState extends Equatable {
   final Uri? pageUri;
+  final String route;
   final String sessionId;
   final bool isLoading;
   final int reconnectingTimeout;
@@ -23,6 +25,7 @@ class AppState extends Equatable {
 
   const AppState(
       {required this.pageUri,
+      required this.route,
       required this.sessionId,
       required this.isLoading,
       required this.reconnectingTimeout,
@@ -35,6 +38,7 @@ class AppState extends Equatable {
 
   factory AppState.initial() => const AppState(
       pageUri: null,
+      route: "",
       sessionId: "",
       isLoading: true,
       reconnectingTimeout: 0,
@@ -50,10 +54,19 @@ class AppState extends Equatable {
         "xxl": 1400
       },
       displayBrightness: Brightness.light,
-      controls: {});
+      controls: {
+        "page": Control(
+            id: "page",
+            pid: "",
+            type: ControlType.page,
+            name: "",
+            childIds: [],
+            attrs: {})
+      });
 
   AppState copyWith(
           {Uri? pageUri,
+          String? route,
           String? sessionId,
           bool? isLoading,
           int? reconnectingTimeout,
@@ -65,6 +78,7 @@ class AppState extends Equatable {
           Map<String, Control>? controls}) =>
       AppState(
           pageUri: pageUri ?? this.pageUri,
+          route: route ?? this.route,
           sessionId: sessionId ?? this.sessionId,
           isLoading: isLoading ?? this.isLoading,
           reconnectingTimeout: reconnectingTimeout ?? this.reconnectingTimeout,
