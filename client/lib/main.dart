@@ -19,15 +19,15 @@ import 'web_socket_client.dart';
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
 void main([List<String>? args]) async {
-  // if (isProduction) {
-  //   // ignore: avoid_returning_null_for_void
-  //   debugPrint = (String? message, {int? wrapWidth}) => null;
-  // }
+  if (isProduction) {
+    // ignore: avoid_returning_null_for_void
+    debugPrint = (String? message, {int? wrapWidth}) => null;
+  }
 
   await setupDesktop();
 
   var pageUri = Uri.base;
-  debugPrint("Uri.base: ${Uri.base}");
+  //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
     pageUri = Uri.parse("http://localhost:8550");
