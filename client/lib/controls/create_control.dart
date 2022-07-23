@@ -333,7 +333,6 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
 }
 
 Widget _expandable(Widget widget, Control? parent, Control control) {
-  debugPrint("Is it expandable $parent $control");
   if (parent != null &&
       (parent.type == ControlType.view ||
           parent.type == ControlType.column ||

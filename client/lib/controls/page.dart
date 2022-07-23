@@ -52,6 +52,7 @@ class _PageControlState extends State<PageControl> {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
+  int _routeChanges = 2;
 
   @override
   void initState() {
@@ -71,6 +72,7 @@ class _PageControlState extends State<PageControl> {
 
   void _routeChanged() {
     widget.dispatch(SetPageRouteAction(_routeState.route));
+    _routeChanges--;
   }
 
   @override
@@ -307,7 +309,7 @@ class _PageControlState extends State<PageControl> {
               var key = ValueKey(viewId);
               var child = _buildViewWidget(
                   routesView.page, viewId, _overlayWidgets(viewId));
-              return routesView.viewIds.first == viewId
+              return _routeChanges > 0
                   ? FadeTransitionPage(key: key, child: child)
                   : MaterialPage(key: key, child: child);
             }).toList();
