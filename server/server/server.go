@@ -102,7 +102,7 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 			baseHref := strings.Trim(c.Request.URL.Path, "/")
 			log.Debugln("Request path:", baseHref)
 
-			if config.RouteUrlStrategy() == "path" && baseHref != "" {
+			if baseHref != "" {
 				hrefParts := strings.Split(baseHref, "/")
 				if len(hrefParts) > 1 {
 					baseHref = strings.Join(hrefParts[:2], "/")
