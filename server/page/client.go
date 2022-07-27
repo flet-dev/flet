@@ -210,8 +210,13 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 	// get page
 	page := store.GetPageByName(pageName.String())
 	if page == nil {
-		response.Error = pageNotFoundMessage
-		return
+		// fallback to index
+		pageName, _ = model.ParsePageName("")
+		page = store.GetPageByName(pageName.String())
+		if page == nil {
+			response.Error = pageNotFoundMessage
+			return
+		}
 	}
 
 	// func: check if "Sign in required" response should be sent

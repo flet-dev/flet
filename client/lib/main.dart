@@ -6,14 +6,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:url_strategy/url_strategy.dart';
 
+import '../utils/platform_utils_non_web.dart'
+    if (dart.library.js) "../utils/platform_utils_web.dart";
+import '../utils/session_store_non_web.dart'
+    if (dart.library.js) "../utils/session_store_web.dart";
 import 'controls/create_control.dart';
 import 'models/app_state.dart';
 import 'models/page_view_model.dart';
 import 'reducers.dart';
-import 'session_store/session_store.dart'
-    if (dart.library.io) "session_store/session_store_io.dart"
-    if (dart.library.js) "session_store/session_store_js.dart";
 import 'web_socket_client.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
@@ -35,6 +37,11 @@ void main([List<String>? args]) async {
 
   if (kIsWeb) {
     debugPrint("Flet View is running in Web mode");
+    var routeUrlStrategy = getRouteUrlStrategy();
+    debugPrint("URL Strategy: $routeUrlStrategy");
+    if (routeUrlStrategy == "path") {
+      setPathUrlStrategy();
+    }
   } else if ((Platform.isWindows || Platform.isMacOS || Platform.isLinux) &&
       !kDebugMode) {
     debugPrint("Flet View is running in Desktop mode");

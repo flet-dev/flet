@@ -7,15 +7,13 @@ import 'package:flet_view/protocol/update_control_props_payload.dart';
 import 'package:flet_view/web_socket_client.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../utils/platform_utils.dart'
-    if (dart.library.io) "../utils/platform_utils_io.dart"
-    if (dart.library.js) "../utils/platform_utils_js.dart";
+import '../utils/platform_utils_non_web.dart'
+    if (dart.library.js) "../utils/platform_utils_web.dart";
+import '../utils/session_store_non_web.dart'
+    if (dart.library.js) "../utils/session_store_web.dart";
 import 'actions.dart';
 import 'models/app_state.dart';
 import 'models/control.dart';
-import 'session_store/session_store.dart'
-    if (dart.library.io) "session_store/session_store_io.dart"
-    if (dart.library.js) "session_store/session_store_js.dart";
 import 'utils/desktop.dart';
 import 'utils/uri.dart';
 

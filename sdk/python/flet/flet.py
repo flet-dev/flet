@@ -44,6 +44,7 @@ def page(
     view: AppViewer = WEB_BROWSER,
     assets_dir=None,
     web_renderer="canvaskit",
+    route_url_strategy="hash",
 ):
     conn = _connect_internal(
         page_name=name,
@@ -52,6 +53,7 @@ def page(
         permissions=permissions,
         assets_dir=assets_dir,
         web_renderer=web_renderer,
+        route_url_strategy=route_url_strategy,
     )
     print("Page URL:", conn.page_url)
     page = Page(conn, constants.ZERO_SESSION)
@@ -71,6 +73,7 @@ def app(
     view: AppViewer = FLET_APP,
     assets_dir=None,
     web_renderer="canvaskit",
+    route_url_strategy="hash",
 ):
 
     if target == None:
@@ -84,6 +87,7 @@ def app(
         session_handler=target,
         assets_dir=assets_dir,
         web_renderer=web_renderer,
+        route_url_strategy=route_url_strategy,
     )
     print("App URL:", conn.page_url)
 
@@ -139,6 +143,7 @@ def _connect_internal(
     session_handler=None,
     assets_dir=None,
     web_renderer=None,
+    route_url_strategy=None,
 ):
     if share and server == None:
         server = constants.HOSTED_SERVICE_URL
@@ -151,7 +156,9 @@ def _connect_internal(
         # page with a custom port starts detached process
         attached = False if not is_app and port != 0 else True
 
-        port = _start_flet_server(port, attached, assets_dir, web_renderer)
+        port = _start_flet_server(
+            port, attached, assets_dir, web_renderer, route_url_strategy
+        )
         server = f"http://127.0.0.1:{port}"
 
     connected = threading.Event()
@@ -219,7 +226,7 @@ def _connect_internal(
     return conn
 
 
-def _start_flet_server(port, attached, assets_dir, web_renderer):
+def _start_flet_server(port, attached, assets_dir, web_renderer, route_url_strategy):
 
     if port == 0:
         port = _get_free_tcp_port()
@@ -262,6 +269,10 @@ def _start_flet_server(port, attached, assets_dir, web_renderer):
     if web_renderer not in [None, "", "auto"]:
         logging.info(f"Web renderer configured: {web_renderer}")
         fletd_env["FLET_WEB_RENDERER"] = web_renderer
+
+    if route_url_strategy != None:
+        logging.info(f"Route URL strategy configured: {route_url_strategy}")
+        fletd_env["FLET_ROUTE_URL_STRATEGY"] = route_url_strategy
 
     args = [fletd_path, "--port", str(port)]
 
