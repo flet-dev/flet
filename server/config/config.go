@@ -74,7 +74,7 @@ const (
 	staticRootDir           = "STATIC_ROOT_DIR"
 	webRenderer             = "WEB_RENDERER"
 	routeUrlStrategy        = "ROUTE_URL_STRATEGY"
-	defaultRouteUrlStrategy = "path"
+	defaultRouteUrlStrategy = "hash"
 )
 
 func init() {
