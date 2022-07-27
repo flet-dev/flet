@@ -1,7 +1,14 @@
 import 'strings.dart';
 
 String getWebPageName(Uri uri) {
-  return trim(uri.path, "/");
+  var urlPath = trim(uri.path, "/");
+  if (urlPath != "") {
+    var pathParts = urlPath.split("/");
+    if (pathParts.length > 1) {
+      urlPath = pathParts.sublist(0, 2).join("/");
+    }
+  }
+  return urlPath;
 }
 
 String getWebSocketEndpoint(Uri uri) {

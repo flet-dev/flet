@@ -99,8 +99,27 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 	router.NoRoute(func(c *gin.Context) {
 
 		if !strings.HasPrefix(c.Request.RequestURI, apiRoutePrefix+"/") {
-			urlPath := strings.TrimRight(c.Request.URL.Path, "/") + "/"
-			log.Debugln("Request path:", urlPath)
+			baseHref := strings.Trim(c.Request.URL.Path, "/")
+			log.Debugln("Request path:", baseHref)
+
+			if baseHref != "" {
+				hrefParts := strings.Split(baseHref, "/")
+				if len(hrefParts) > 1 {
+					baseHref = strings.Join(hrefParts[:2], "/")
+					if store.GetPageByName(baseHref) == nil {
+						// fallback to index page
+						baseHref = ""
+					}
+				} else {
+					baseHref = ""
+				}
+			}
+
+			if baseHref != "" {
+				baseHref = "/" + baseHref + "/"
+			} else {
+				baseHref = "/"
+			}
 
 			index, _ := assetsFS.Open(siteDefaultDocument)
 			indexData, _ := ioutil.ReadAll(index)
@@ -108,7 +127,12 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 			// base path
 			indexData = bytes.Replace(indexData,
 				[]byte("<base href=\"/\">"),
-				[]byte("<base href=\""+urlPath+"\">"), 1)
+				[]byte("<base href=\""+baseHref+"\">"), 1)
+
+			// route URL strategy
+			indexData = bytes.Replace(indexData,
+				[]byte("%FLET_ROUTE_URL_STRATEGY%"),
+				[]byte(config.RouteUrlStrategy()), 1)
 
 			// web renderer
 			if config.WebRenderer() != "" {

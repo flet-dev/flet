@@ -19,6 +19,7 @@ const (
 type PageName struct {
 	Account string
 	Name    string
+	IsIndex bool
 }
 
 func ParsePageName(pageName string) (*PageName, error) {
@@ -27,6 +28,7 @@ func ParsePageName(pageName string) (*PageName, error) {
 		return &PageName{
 			Account: publicAccount,
 			Name:    indexPage,
+			IsIndex: true,
 		}, nil
 	}
 
@@ -60,6 +62,10 @@ func ParsePageName(pageName string) (*PageName, error) {
 	p.Name = slug.Make(p.Name)
 	if len(p.Name) > maxSlugSize {
 		return nil, fmt.Errorf("page name exceeds the maximum allowed size of %d symbols", maxSlugSize)
+	}
+
+	if p.Account == publicAccount && p.Name == indexPage {
+		p.IsIndex = true
 	}
 
 	return p, nil

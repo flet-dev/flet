@@ -15,6 +15,13 @@ void main() {
     expect(
         getWebPageName(Uri.parse('http://localhost:8550/p/test/')), "p/test");
     expect(getWebPageName(Uri.parse('http://localhost:8550/p/test')), "p/test");
+    expect(getWebPageName(Uri.parse('http://localhost:8550/aaa')), "aaa");
+    expect(getWebPageName(Uri.parse('http://localhost:8550/p/test/store')),
+        "p/test");
+    expect(
+        getWebPageName(
+            Uri.parse('http://localhost:8550/p/test/store/products/1')),
+        "p/test");
     expect(getWebPageName(Uri.parse('http://localhost:8550/')), "");
     expect(getWebPageName(Uri.parse('http://localhost:8550/#/')), "");
   });

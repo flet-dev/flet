@@ -71,8 +71,10 @@ const (
 	defaultMasterSecretKey = "master_secret_key"
 
 	// development
-	staticRootDir = "STATIC_ROOT_DIR"
-	webRenderer   = "WEB_RENDERER"
+	staticRootDir           = "STATIC_ROOT_DIR"
+	webRenderer             = "WEB_RENDERER"
+	routeUrlStrategy        = "ROUTE_URL_STRATEGY"
+	defaultRouteUrlStrategy = "hash"
 )
 
 func init() {
@@ -124,6 +126,9 @@ func init() {
 	// security
 	viper.SetDefault(cookieSecret, getSecretManagerValue(cookieSecret, defaultCookieSecret))
 	viper.SetDefault(masterSecretKey, getSecretManagerValue(masterSecretKey, defaultMasterSecretKey))
+
+	// development
+	viper.SetDefault(routeUrlStrategy, defaultRouteUrlStrategy)
 }
 
 func getSecretManagerValue(name string, defaultValue string) string {
@@ -287,4 +292,8 @@ func StaticRootDir() string {
 
 func WebRenderer() string {
 	return viper.GetString(webRenderer)
+}
+
+func RouteUrlStrategy() string {
+	return viper.GetString(routeUrlStrategy)
 }
