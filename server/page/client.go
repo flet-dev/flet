@@ -209,7 +209,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 
 	// get page
 	page := store.GetPageByName(pageName.String())
-	if page == nil {
+	if page == nil && !pageName.IsIndex {
 		// fallback to index
 		pageName, _ = model.ParsePageName("")
 		page = store.GetPageByName(pageName.String())
