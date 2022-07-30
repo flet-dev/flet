@@ -53,12 +53,12 @@ class ReconnectingWebSocket:
         logging.info(f"Successfully connected to {self._url}")
         self.connected.set()
         self.retry = 0
-        if self._on_connect_handler :
+        if self._on_connect_handler:
             th = threading.Thread(target=self._on_connect_handler, args=(), daemon=True)
             th.start()
 
     def _on_message(self, wsapp, data) -> None:
-        if self._on_message_handler :
+        if self._on_message_handler:
             self._on_message_handler(data)
 
     def connect(self) -> None:
@@ -87,7 +87,7 @@ class ReconnectingWebSocket:
             if r != True:
                 return
 
-            if self.retry == 0 and self._on_failed_connect_handler :
+            if self.retry == 0 and self._on_failed_connect_handler:
                 th = threading.Thread(
                     target=self._on_failed_connect_handler, args=(), daemon=True
                 )

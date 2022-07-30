@@ -119,7 +119,9 @@ class Page(Control):
 
     def update(self, *controls):
         with self._lock:
-            return self.__update(self) if len(controls) == 0 else self.__update(*controls)
+            return (
+                self.__update(self) if len(controls) == 0 else self.__update(*controls)
+            )
 
     def __update(self, *controls):
         added_controls = []

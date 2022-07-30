@@ -13,7 +13,9 @@ def is_linux():
 
 
 def is_linux_server():
-    return platform.system() == "Linux" and os.environ.get("XDG_CURRENT_DESKTOP") is None
+    return (
+        platform.system() == "Linux" and os.environ.get("XDG_CURRENT_DESKTOP") is None
+    )
 
 
 def is_macos():

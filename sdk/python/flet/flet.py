@@ -190,7 +190,7 @@ def _connect_internal(
     conn = Connection(ws)
     conn.on_event = on_event
 
-    if session_handler :
+    if session_handler:
         conn.on_session_created = on_session_created
 
     def _on_ws_connect():
@@ -270,7 +270,7 @@ def _start_flet_server(port, attached, assets_dir, web_renderer, route_url_strat
         logging.info(f"Web renderer configured: {web_renderer}")
         fletd_env["FLET_WEB_RENDERER"] = web_renderer
 
-    if route_url_strategy :
+    if route_url_strategy:
         logging.info(f"Route URL strategy configured: {route_url_strategy}")
         fletd_env["FLET_ROUTE_URL_STRATEGY"] = route_url_strategy
 

@@ -88,12 +88,12 @@ class PubSubHub:
     def __unsubscribe_topic(self, session_id: str, topic: str):
         logging.debug(f"pubsub.__unsubscribe_topic({session_id}, {topic})")
         topic_subscribers = self.__topic_subscribers.get(topic)
-        if topic_subscribers :
+        if topic_subscribers:
             topic_subscribers.pop(session_id)
             if len(topic_subscribers) == 0:
                 self.__topic_subscribers.pop(topic)
         subscriber_topics = self.__subscriber_topics.get(session_id)
-        if subscriber_topics :
+        if subscriber_topics:
             subscriber_topics.pop(topic)
             if len(subscriber_topics) == 0:
                 self.__subscriber_topics.pop(session_id)

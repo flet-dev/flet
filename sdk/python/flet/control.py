@@ -112,7 +112,7 @@ class Control:
 
     def _get_attr(self, name, def_value=None, data_type="string"):
         name = name.lower()
-        if name not in self . __attrs:
+        if name not in self.__attrs:
             return def_value
 
         s_val = self.__attrs[name][0]
@@ -389,7 +389,7 @@ class Control:
         command.indent = indent
         command.values.append(self._get_control_name())
         commands = [command]
-        if added_controls :
+        if added_controls:
             added_controls.append(self)
 
         # controls
@@ -432,7 +432,7 @@ class Control:
             self.__attrs[attrName] = (val, False)
 
         id = self.__attrs.get("id")
-        if not update and id :
+        if not update and id:
             command.attrs["id"] = id
         elif update and len(command.attrs) > 0:
             command.values.append(self.__uid)

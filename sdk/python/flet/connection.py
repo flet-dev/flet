@@ -47,7 +47,7 @@ class Connection:
             self._ws_callbacks[msg.id] = (None, msg.payload)
             evt.set()
         elif msg.action == Actions.PAGE_EVENT_TO_HOST:
-            if self._on_event :
+            if self._on_event:
                 th = threading.Thread(
                     target=self._on_event,
                     args=(
@@ -59,7 +59,7 @@ class Connection:
                 th.start()
                 # self._on_event(self, PageEventPayload(**msg.payload))
         elif msg.action == Actions.SESSION_CREATED:
-            if self._on_session_created :
+            if self._on_session_created:
                 th = threading.Thread(
                     target=self._on_session_created,
                     args=(
@@ -121,5 +121,5 @@ class Connection:
 
     def close(self):
         logging.debug("Closing connection...")
-        if self._ws :
+        if self._ws:
             self._ws.close()

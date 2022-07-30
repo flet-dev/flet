@@ -57,7 +57,7 @@ class Card(ConstrainedControl):
 
     def _get_children(self):
         children = []
-        if self.__content :
+        if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
