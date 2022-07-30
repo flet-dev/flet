@@ -108,7 +108,7 @@ class Container(ConstrainedControl):
     @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
-        if value != None and isinstance(value, (int, float)):
+        if value and isinstance(value, (int, float)):
             value = padding.all(value)
         self._set_attr_json("padding", value)
 
@@ -121,7 +121,7 @@ class Container(ConstrainedControl):
     @beartype
     def margin(self, value: MarginValue):
         self.__margin = value
-        if value != None and isinstance(value, (int, float)):
+        if value and isinstance(value, (int, float)):
             value = margin.all(value)
         self._set_attr_json("margin", value)
 

@@ -116,7 +116,7 @@ class Control:
             return def_value
 
         s_val = self.__attrs[name][0]
-        if data_type == "bool" and s_val != None and isinstance(s_val, str):
+        if data_type == "bool" and s_val and isinstance(s_val, str):
             return s_val.lower() == "true"
         elif data_type == "bool?" and isinstance(s_val, str):
             if s_val.lower() == "true":
@@ -125,9 +125,9 @@ class Control:
                 return False
             else:
                 return def_value
-        elif data_type == "float" and s_val != None and isinstance(s_val, str):
+        elif data_type == "float" and s_val and isinstance(s_val, str):
             return float(s_val)
-        elif data_type == "int" and s_val != None and isinstance(s_val, str):
+        elif data_type == "int" and s_val and isinstance(s_val, str):
             return int(s_val)
         else:
             return s_val
@@ -381,7 +381,7 @@ class Control:
         self._build()
 
         # remove control from index
-        if self.__uid and index != None and self.__uid in index:
+        if self.__uid and index and self.__uid in index:
             del index[self.__uid]
 
         # main command

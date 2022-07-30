@@ -123,7 +123,7 @@ def app(
 
     conn.close()
 
-    if fvp != None and not is_windows():
+    if fvp and not is_windows():
         try:
             logging.debug(f"Flet View process {fvp.pid}")
             os.kill(fvp.pid + 1, signal.SIGKILL)
@@ -150,7 +150,7 @@ def _connect_internal(
     elif not server:
         # local mode
         env_port = os.getenv("FLET_SERVER_PORT")
-        if env_port != None and env_port != "":
+        if env_port and env_port != "":
             port = env_port
 
         # page with a custom port starts detached process
