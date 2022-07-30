@@ -61,7 +61,7 @@ class FloatingActionButton(ConstrainedControl):
         return "floatingactionbutton"
 
     def _get_children(self):
-        if self.__content == None:
+        if not self.__content:
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]

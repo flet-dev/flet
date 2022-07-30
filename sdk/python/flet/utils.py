@@ -13,9 +13,7 @@ def is_linux():
 
 
 def is_linux_server():
-    return (
-        platform.system() == "Linux" and os.environ.get("XDG_CURRENT_DESKTOP") == None
-    )
+    return platform.system() == "Linux" and os.environ.get("XDG_CURRENT_DESKTOP") is None
 
 
 def is_macos():
@@ -23,27 +21,27 @@ def is_macos():
 
 
 def get_platform():
-    p = platform.system()
+    system = platform.system()
     if is_windows():
         return "windows"
-    elif p == "Linux":
+    elif system == "Linux":
         return "linux"
-    elif p == "Darwin":
+    elif system == "Darwin":
         return "darwin"
     else:
-        raise Exception(f"Unsupported platform: {p}")
+        raise Exception(f"Unsupported platform: {system}")
 
 
 def get_arch():
-    a = platform.machine().lower()
-    if a == "x86_64" or a == "amd64":
+    machine = platform.machine().lower()
+    if machine in ["x86_64", "amd64"]:
         return "amd64"
-    elif a == "arm64" or a == "aarch64":
+    elif machine in ["arm64", "aarch64"]:
         return "arm64"
-    elif a.startswith("arm"):
+    elif machine.startswith("arm"):
         return "arm_7"
     else:
-        raise Exception(f"Unsupported architecture: {a}")
+        raise Exception(f"Unsupported architecture: {machine}")
 
 
 def open_in_browser(url):

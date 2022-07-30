@@ -112,7 +112,7 @@ class Control:
 
     def _get_attr(self, name, def_value=None, data_type="string"):
         name = name.lower()
-        if not name in self.__attrs:
+        if name not in self . __attrs:
             return def_value
 
         s_val = self.__attrs[name][0]
@@ -150,13 +150,13 @@ class Control:
         name = name.lower()
         orig_val = self.__attrs.get(name)
 
-        if orig_val == None and value == None:
+        if not orig_val and not value:
             return
 
-        if value == None:
+        if not value:
             value = ""
 
-        if orig_val == None or orig_val[0] != value:
+        if not orig_val or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
 
     def _set_attr_json(self, name, value):
@@ -211,7 +211,7 @@ class Control:
         self.__expand = value
         if value and isinstance(value, bool):
             value = 1
-        self._set_attr("expand", value if value else None)
+        self._set_attr("expand", value or None)
 
     # opacity
     @property
@@ -384,15 +384,12 @@ class Control:
         if self.__uid and index != None and self.__uid in index:
             del index[self.__uid]
 
-        commands = []
-
         # main command
         command = self._get_cmd_attrs(False)
         command.indent = indent
         command.values.append(self._get_control_name())
-        commands.append(command)
-
-        if added_controls != None:
+        commands = [command]
+        if added_controls :
             added_controls.append(self)
 
         # controls
@@ -423,11 +420,11 @@ class Control:
 
             val = self.__attrs[attrName][0]
             sval = ""
-            if val == None:
+            if not val:
                 continue
             elif isinstance(val, bool):
                 sval = str(val).lower()
-            elif isinstance(val, dt.datetime) or isinstance(val, dt.date):
+            elif isinstance(val, (dt.datetime, dt.date)):
                 sval = val.isoformat()
             else:
                 sval = str(val)
@@ -435,7 +432,7 @@ class Control:
             self.__attrs[attrName] = (val, False)
 
         id = self.__attrs.get("id")
-        if not update and id != None:
+        if not update and id :
             command.attrs["id"] = id
         elif update and len(command.attrs) > 0:
             command.values.append(self.__uid)

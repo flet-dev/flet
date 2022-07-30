@@ -83,7 +83,7 @@ class Container(ConstrainedControl):
 
     def _get_children(self):
         children = []
-        if self.__content != None:
+        if self.__content :
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
@@ -186,7 +186,7 @@ class Container(ConstrainedControl):
     @on_click.setter
     def on_click(self, handler):
         self._add_event_handler("click", handler)
-        if handler != None:
+        if handler :
             self._set_attr("onclick", True)
         else:
             self._set_attr("onclick", None)

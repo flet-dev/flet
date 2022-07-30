@@ -11,7 +11,7 @@ class CommandEncoder(json.JSONEncoder):
             d = {}
             if obj.indent > 0:
                 d["i"] = obj.indent
-            if obj.name != None:
+            if obj.name :
                 d["n"] = obj.name
             if obj.values and len(obj.values) > 0:
                 d["v"] = obj.values
