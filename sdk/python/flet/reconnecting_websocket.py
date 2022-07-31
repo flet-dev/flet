@@ -53,12 +53,12 @@ class ReconnectingWebSocket:
         logging.info(f"Successfully connected to {self._url}")
         self.connected.set()
         self.retry = 0
-        if self._on_connect_handler != None:
+        if self._on_connect_handler:
             th = threading.Thread(target=self._on_connect_handler, args=(), daemon=True)
             th.start()
 
     def _on_message(self, wsapp, data) -> None:
-        if self._on_message_handler != None:
+        if self._on_message_handler:
             self._on_message_handler(data)
 
     def connect(self) -> None:
@@ -82,20 +82,20 @@ class ReconnectingWebSocket:
         while not self.exit.is_set():
             logging.info(f"Connecting Flet Server at {self._url}...")
             r = self.wsapp.run_forever()
-            logging.debug(f"Exited run_forever()")
+            logging.debug("Exited run_forever()")
             self.connected.clear()
             if r != True:
                 return
 
-            if self.retry == 0 and self._on_failed_connect_handler != None:
+            if self.retry == 0 and self._on_failed_connect_handler:
                 th = threading.Thread(
                     target=self._on_failed_connect_handler, args=(), daemon=True
                 )
                 th.start()
 
-            backoff_in_seconds = 1
             sleep = 0.1
             if not is_localhost_url(self._url):
+                backoff_in_seconds = 1
                 sleep = backoff_in_seconds * 2**self.retry + random.uniform(0, 1)
             logging.info(f"Reconnecting Flet Server in {sleep} seconds")
             self.exit.wait(sleep)

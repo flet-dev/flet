@@ -57,7 +57,7 @@ class Card(ConstrainedControl):
 
     def _get_children(self):
         children = []
-        if self.__content != None:
+        if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
@@ -71,7 +71,7 @@ class Card(ConstrainedControl):
     @beartype
     def margin(self, value: MarginValue):
         self.__margin = value
-        if value != None and isinstance(value, (int, float)):
+        if value and isinstance(value, (int, float)):
             value = margin.all(value)
         self._set_attr_json("margin", value)
 

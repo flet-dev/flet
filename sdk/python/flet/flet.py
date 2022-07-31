@@ -3,6 +3,7 @@ import logging
 import os
 import signal
 import socket
+import subprocess
 import tarfile
 import tempfile
 import threading
@@ -76,7 +77,7 @@ def app(
     route_url_strategy="hash",
 ):
 
-    if target == None:
+    if not target:
         raise Exception("target argument is not specified")
 
     conn = _connect_internal(
@@ -123,7 +124,7 @@ def app(
 
     conn.close()
 
-    if fvp != None and not is_windows():
+    if fvp and not is_windows():
         try:
             logging.debug(f"Flet View process {fvp.pid}")
             os.kill(fvp.pid + 1, signal.SIGKILL)
@@ -145,12 +146,12 @@ def _connect_internal(
     web_renderer=None,
     route_url_strategy=None,
 ):
-    if share and server == None:
+    if share and not server:
         server = constants.HOSTED_SERVICE_URL
-    elif server == None:
+    elif not server:
         # local mode
         env_port = os.getenv("FLET_SERVER_PORT")
-        if env_port != None and env_port != "":
+        if env_port and env_port != "":
             port = env_port
 
         # page with a custom port starts detached process
@@ -190,11 +191,11 @@ def _connect_internal(
     conn = Connection(ws)
     conn.on_event = on_event
 
-    if session_handler != None:
+    if session_handler:
         conn.on_session_created = on_session_created
 
     def _on_ws_connect():
-        if conn.page_name == None:
+        if not conn.page_name:
             conn.page_name = page_name
         result = conn.register_host_client(
             conn.host_client_id, conn.page_name, is_app, update, token, permissions
@@ -248,7 +249,7 @@ def _start_flet_server(port, attached, assets_dir, web_renderer, route_url_strat
             # download flet from GitHub (python module developer mode)
             fletd_path = _download_fletd()
         else:
-            logging.info(f"Flet Server found in PATH")
+            logging.info("Flet Server found in PATH")
 
     fletd_env = {**os.environ}
 
@@ -270,7 +271,7 @@ def _start_flet_server(port, attached, assets_dir, web_renderer, route_url_strat
         logging.info(f"Web renderer configured: {web_renderer}")
         fletd_env["FLET_WEB_RENDERER"] = web_renderer
 
-    if route_url_strategy != None:
+    if route_url_strategy:
         logging.info(f"Route URL strategy configured: {route_url_strategy}")
         fletd_env["FLET_ROUTE_URL_STRATEGY"] = route_url_strategy
 
@@ -281,11 +282,10 @@ def _start_flet_server(port, attached, assets_dir, web_renderer, route_url_strat
 
     if attached:
         args.append("--attached")
+    elif is_windows():
+        creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
     else:
-        if is_windows():
-            creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
-        else:
-            start_new_session = True
+        start_new_session = True
 
     log_level = logging.getLogger().getEffectiveLevel()
     if log_level == logging.CRITICAL:
@@ -315,7 +315,7 @@ def _start_flet_server(port, attached, assets_dir, web_renderer, route_url_strat
 
 def _open_flet_view(page_url):
 
-    logging.info(f"Starting Flet View app...")
+    logging.info("Starting Flet View app...")
 
     args = []
 
@@ -387,8 +387,8 @@ def _get_ws_url(server: str):
     elif server.startswith("http://"):
         url = url.replace("http://", "ws://")
     else:
-        url = "ws://" + url
-    return url + "/ws"
+        url = f"ws://{url}"
+    return f"{url}/ws"
 
 
 def _download_fletd():
@@ -479,15 +479,12 @@ def _download_flet_view_linux():
 def _get_latest_flet_release():
     releases = json.loads(
         urllib.request.urlopen(
-            f"https://api.github.com/repos/flet-dev/flet/releases?per_page=5"
+            "https://api.github.com/repos/flet-dev/flet/releases?per_page=5"
         )
         .read()
         .decode()
     )
-    if len(releases) > 0:
-        return releases[0]["tag_name"].lstrip("v")
-    else:
-        return None
+    return releases[0]["tag_name"].lstrip("v") if len(releases) > 0 else None
 
 
 def _get_free_tcp_port():

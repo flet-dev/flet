@@ -5,7 +5,7 @@ class EventHandler:
 
     def handler(self, e):
         for h in self.__handlers.keys():
-            if self.__result_converter != None:
+            if self.__result_converter:
                 h(self.__result_converter(e))
             else:
                 h(e)

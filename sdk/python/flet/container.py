@@ -83,7 +83,7 @@ class Container(ConstrainedControl):
 
     def _get_children(self):
         children = []
-        if self.__content != None:
+        if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
@@ -108,7 +108,7 @@ class Container(ConstrainedControl):
     @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
-        if value != None and isinstance(value, (int, float)):
+        if value and isinstance(value, (int, float)):
             value = padding.all(value)
         self._set_attr_json("padding", value)
 
@@ -121,7 +121,7 @@ class Container(ConstrainedControl):
     @beartype
     def margin(self, value: MarginValue):
         self.__margin = value
-        if value != None and isinstance(value, (int, float)):
+        if value and isinstance(value, (int, float)):
             value = margin.all(value)
         self._set_attr_json("margin", value)
 
@@ -186,7 +186,7 @@ class Container(ConstrainedControl):
     @on_click.setter
     def on_click(self, handler):
         self._add_event_handler("click", handler)
-        if handler != None:
+        if handler:
             self._set_attr("onclick", True)
         else:
             self._set_attr("onclick", None)

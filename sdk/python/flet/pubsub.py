@@ -53,12 +53,12 @@ class PubSubHub:
         logging.debug(f"pubsub.subscribe_topic({session_id}, {topic})")
         with self.__lock:
             topic_subscribers = self.__topic_subscribers.get(topic)
-            if topic_subscribers == None:
+            if not topic_subscribers:
                 topic_subscribers = {}
                 self.__topic_subscribers[topic] = topic_subscribers
             topic_subscribers[session_id] = handler
             subscriber_topics = self.__subscriber_topics.get(session_id)
-            if subscriber_topics == None:
+            if not subscriber_topics:
                 subscriber_topics = {}
                 self.__subscriber_topics[session_id] = subscriber_topics
             subscriber_topics[topic] = handler
@@ -88,12 +88,12 @@ class PubSubHub:
     def __unsubscribe_topic(self, session_id: str, topic: str):
         logging.debug(f"pubsub.__unsubscribe_topic({session_id}, {topic})")
         topic_subscribers = self.__topic_subscribers.get(topic)
-        if topic_subscribers != None:
+        if topic_subscribers:
             topic_subscribers.pop(session_id)
             if len(topic_subscribers) == 0:
                 self.__topic_subscribers.pop(topic)
         subscriber_topics = self.__subscriber_topics.get(session_id)
-        if subscriber_topics != None:
+        if subscriber_topics:
             subscriber_topics.pop(topic)
             if len(subscriber_topics) == 0:
                 self.__subscriber_topics.pop(session_id)

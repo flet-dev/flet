@@ -119,10 +119,9 @@ class Page(Control):
 
     def update(self, *controls):
         with self._lock:
-            if len(controls) == 0:
-                return self.__update(self)
-            else:
-                return self.__update(*controls)
+            return (
+                self.__update(self) if len(controls) == 0 else self.__update(*controls)
+            )
 
     def __update(self, *controls):
         added_controls = []
@@ -132,7 +131,7 @@ class Page(Control):
         for control in controls:
             control.build_update_commands(self._index, added_controls, commands)
 
-        if len(commands) == 0:
+        if not commands:
             return
 
         # execute commands
@@ -231,10 +230,11 @@ class Page(Control):
 
         while True:
             e = self.wait_event()
-            if e.control == self and e.name.lower() == "signin":
-                return True
-            elif e.control == self and e.name.lower() == "dismisssignin":
-                return False
+            if e.control == self:
+                if e.name.lower() == "signin":
+                    return True
+                elif e.name.lower() == "dismisssignin":
+                    return False
 
     def go(self, route):
         self.route = route
@@ -546,7 +546,7 @@ class Page(Control):
     @property
     def width(self):
         w = self._get_attr("width")
-        if w != None and w != "":
+        if w not in [None, ""]:
             return float(w)
         return 0
 
@@ -554,7 +554,7 @@ class Page(Control):
     @property
     def height(self):
         h = self._get_attr("height")
-        if h != None and h != "":
+        if h not in [None, ""]:
             return float(h)
         return 0
 
@@ -562,7 +562,7 @@ class Page(Control):
     @property
     def window_width(self):
         w = self._get_attr("windowWidth")
-        if w != None and w != "":
+        if w not in [None, ""]:
             return float(w)
         return 0
 
@@ -575,7 +575,7 @@ class Page(Control):
     @property
     def window_height(self):
         h = self._get_attr("windowHeight")
-        if h != None and h != "":
+        if h not in [None, ""]:
             return float(h)
         return 0
 
@@ -588,7 +588,7 @@ class Page(Control):
     @property
     def window_top(self):
         w = self._get_attr("windowTop")
-        if w != None and w != "":
+        if w not in [None, ""]:
             return float(w)
         return 0
 
@@ -601,7 +601,7 @@ class Page(Control):
     @property
     def window_left(self):
         h = self._get_attr("windowLeft")
-        if h != None and h != "":
+        if h not in [None, ""]:
             return float(h)
         return 0
 

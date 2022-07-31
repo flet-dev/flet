@@ -187,7 +187,7 @@ class ListTile(ConstrainedControl):
     @on_click.setter
     def on_click(self, handler):
         self._add_event_handler("click", handler)
-        if handler != None:
+        if handler:
             self._set_attr("onclick", True)
         else:
             self._set_attr("onclick", None)
