@@ -1,7 +1,7 @@
 import os
 import platform
-import subprocess
 import sys
+import webbrowser
 
 
 def is_windows():
@@ -47,10 +47,7 @@ def get_arch():
 
 
 def open_in_browser(url):
-    if is_windows():
-        subprocess.run(["explorer.exe", url])
-    elif is_macos():
-        subprocess.run(["open", url])
+    webbrowser.open(url)
 
 
 # https://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
