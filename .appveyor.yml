@@ -97,7 +97,6 @@ for:
       - set PATH=C:\flutter\bin;%PATH%
       - flutter channel master
       - flutter upgrade
-      - flutter --version
 
     build_script:
       - cd client
@@ -142,7 +141,6 @@ for:
       - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter channel master
       - flutter upgrade
-      - flutter --version
       - flutter config --enable-macos-desktop
       - flutter doctor
 
@@ -179,7 +177,6 @@ for:
       - flutter channel master
       - flutter upgrade
       - flutter sdk-path
-      - flutter --version
 
     build_script:
       - cd client
@@ -215,7 +212,6 @@ for:
       - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter channel master
       - flutter upgrade
-      - flutter --version
       - flutter doctor
 
     build_script:
@@ -260,7 +256,6 @@ for:
       - flutter channel master
       - flutter upgrade
       - flutter sdk-path
-      - flutter --version
 
       # Go and GoReleaser
       - gvm install go${GO_VERSION} -B
