@@ -2,9 +2,15 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from flet import padding
+from flet import border_radius, padding
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, InputBorder, OptionalNumber, PaddingValue
+from flet.control import (
+    BorderRadiusValue,
+    Control,
+    InputBorder,
+    OptionalNumber,
+    PaddingValue,
+)
 from flet.ref import Ref
 
 
@@ -27,9 +33,19 @@ class FormFieldControl(ConstrainedControl):
         #
         # FormField specific
         #
+        text_size: OptionalNumber = None,
         label: str = None,
         icon: str = None,
         border: InputBorder = None,
+        color: str = None,
+        bgcolor: str = None,
+        border_radius: BorderRadiusValue = None,
+        border_width: OptionalNumber = None,
+        border_color: str = None,
+        focused_color: str = None,
+        focused_bgcolor: str = None,
+        focused_border_width: OptionalNumber = None,
+        focused_border_color: str = None,
         content_padding: PaddingValue = None,
         filled: bool = None,
         hint_text: str = None,
@@ -63,9 +79,19 @@ class FormFieldControl(ConstrainedControl):
         self.__prefix: Control = None
         self.__suffix: Control = None
 
+        self.text_size = text_size
         self.label = label
         self.icon = icon
         self.border = border
+        self.color = color
+        self.bgcolor = bgcolor
+        self.border_radius = border_radius
+        self.border_width = border_width
+        self.border_color = border_color
+        self.focused_color = focused_color
+        self.focused_bgcolor = focused_bgcolor
+        self.focused_border_width = focused_border_width
+        self.focused_border_color = focused_border_color
         self.content_padding = content_padding
         self.filled = filled
         self.hint_text = hint_text
@@ -88,6 +114,16 @@ class FormFieldControl(ConstrainedControl):
             self.__suffix._set_attr_internal("n", "suffix")
             children.append(self.__suffix)
         return children
+
+    # text_size
+    @property
+    def text_size(self) -> OptionalNumber:
+        return self._get_attr("textSize")
+
+    @text_size.setter
+    @beartype
+    def text_size(self, value: OptionalNumber):
+        self._set_attr("textSize", value)
 
     # label
     @property
@@ -116,6 +152,93 @@ class FormFieldControl(ConstrainedControl):
     @beartype
     def border(self, value: InputBorder):
         self._set_attr("border", value)
+
+    # color
+    @property
+    def color(self):
+        return self._get_attr("color")
+
+    @color.setter
+    def color(self, value):
+        self._set_attr("color", value)
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
+
+    # border_radius
+    @property
+    def border_radius(self):
+        return self.__border_radius
+
+    @border_radius.setter
+    @beartype
+    def border_radius(self, value: BorderRadiusValue):
+        self.__border_radius = value
+        if value and isinstance(value, (int, float)):
+            value = border_radius.all(value)
+        self._set_attr_json("borderRadius", value)
+
+    # border_width
+    @property
+    def border_width(self) -> OptionalNumber:
+        return self._get_attr("borderWidth")
+
+    @border_width.setter
+    @beartype
+    def border_width(self, value: OptionalNumber):
+        self._set_attr("borderWidth", value)
+
+    # border_color
+    @property
+    def border_color(self):
+        return self._get_attr("borderColor")
+
+    @border_color.setter
+    def border_color(self, value):
+        self._set_attr("borderColor", value)
+
+    # focused_color
+    @property
+    def focused_color(self):
+        return self._get_attr("focusedColor")
+
+    @focused_color.setter
+    def focused_color(self, value):
+        self._set_attr("focusedColor", value)
+
+    # focused_bgcolor
+    @property
+    def focused_bgcolor(self):
+        return self._get_attr("focusedBgcolor")
+
+    @focused_bgcolor.setter
+    def focused_bgcolor(self, value):
+        self._set_attr("focusedBgcolor", value)
+
+    # focused_border_width
+    @property
+    def focused_border_width(self) -> OptionalNumber:
+        return self._get_attr("focusedBorderWidth")
+
+    @focused_border_width.setter
+    @beartype
+    def focused_border_width(self, value: OptionalNumber):
+        self._set_attr("focusedBorderWidth", value)
+
+    # focused_border_color
+    @property
+    def focused_border_color(self):
+        return self._get_attr("focusedBorderColor")
+
+    @focused_border_color.setter
+    def focused_border_color(self, value):
+        self._set_attr("focusedBorderColor", value)
 
     # content_padding
     @property

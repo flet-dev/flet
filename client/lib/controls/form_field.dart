@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
@@ -35,8 +37,8 @@ TextInputType parseTextInputType(String type) {
   return TextInputType.text;
 }
 
-InputDecoration buildInputDecoration(
-    Control control, Control? prefix, Control? suffix, Widget? customSuffix) {
+InputDecoration buildInputDecoration(BuildContext context, Control control,
+    Control? prefix, Control? suffix, Widget? customSuffix, bool focused) {
   String? label = control.attrString("label", "")!;
   FormFieldInputBorder inputBorder = FormFieldInputBorder.values.firstWhere(
     ((b) => b.name == control.attrString("border", "")!.toLowerCase()),
@@ -49,16 +51,68 @@ InputDecoration buildInputDecoration(
   var suffixIcon = getMaterialIcon(control.attrString("suffixIcon", "")!);
   var suffixText = control.attrString("suffixText");
 
+  var bgcolor = HexColor.fromString(
+      Theme.of(context), control.attrString("bgcolor", "")!);
+  var focusedBgcolor = HexColor.fromString(
+      Theme.of(context), control.attrString("focusedBgcolor", "")!);
+
+  var borderRadius = parseBorderRadius(control, "borderRadius");
+  var borderColor = HexColor.fromString(
+      Theme.of(context), control.attrString("borderColor", "")!);
+  var focusedBorderColor = HexColor.fromString(
+      Theme.of(context), control.attrString("focusedBorderColor", "")!);
+  var borderWidth = control.attrDouble("borderWidth");
+  var focusedBorderWidth = control.attrDouble("focusedBorderWidth");
+
+  InputBorder? border;
+  if (inputBorder == FormFieldInputBorder.underline) {
+    border = const UnderlineInputBorder();
+  } else if (inputBorder == FormFieldInputBorder.none) {
+    border = InputBorder.none;
+  } else if (inputBorder == FormFieldInputBorder.outline ||
+      borderRadius != null ||
+      borderColor != null ||
+      borderWidth != null) {
+    border = const OutlineInputBorder();
+    if (borderRadius != null) {
+      border =
+          (border as OutlineInputBorder).copyWith(borderRadius: borderRadius);
+    }
+    if (borderColor != null || borderWidth != null) {
+      border = (border as OutlineInputBorder).copyWith(
+          borderSide: borderWidth == 0
+              ? BorderSide.none
+              : BorderSide(
+                  color: borderColor ??
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
+                  width: borderWidth ?? 1.0));
+    }
+  }
+
+  InputBorder? focusedBorder;
+  if (borderColor != null ||
+      borderWidth != null ||
+      focusedBorderColor != null ||
+      focusedBorderWidth != null) {
+    focusedBorder = border?.copyWith(
+        borderSide: borderWidth == 0
+            ? BorderSide.none
+            : BorderSide(
+                color: focusedBorderColor ??
+                    borderColor ??
+                    Theme.of(context).colorScheme.primary,
+                width: focusedBorderWidth ?? borderWidth ?? 2.0));
+  }
+
   return InputDecoration(
       contentPadding: parseEdgeInsets(control, "contentPadding"),
       label: label != "" ? Text(label) : null,
-      border: inputBorder == FormFieldInputBorder.none
-          ? InputBorder.none
-          : inputBorder == FormFieldInputBorder.outline
-              ? const OutlineInputBorder()
-              : const UnderlineInputBorder(),
+      border: border,
+      enabledBorder: border,
+      focusedBorder: focusedBorder,
       icon: icon != null ? Icon(icon) : null,
       filled: control.attrBool("filled", false)!,
+      fillColor: focused ? focusedBgcolor ?? bgcolor : bgcolor,
       hintText: control.attrString("hintText"),
       helperText: control.attrString("helperText"),
       counterText: control.attrString("counterText"),

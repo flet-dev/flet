@@ -80,6 +80,7 @@ Map<String, Color> _plainColors = {
   "black54": Colors.black54,
   "black87": Colors.black87,
   "black": Colors.black,
+  "transparent": Colors.transparent
 };
 
 Map<String, MaterialColor> _materialColors = {

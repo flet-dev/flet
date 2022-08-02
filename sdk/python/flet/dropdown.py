@@ -2,7 +2,13 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from flet.control import Control, InputBorder, OptionalNumber, PaddingValue
+from flet.control import (
+    BorderRadiusValue,
+    Control,
+    InputBorder,
+    OptionalNumber,
+    PaddingValue,
+)
 from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
@@ -23,9 +29,19 @@ class Dropdown(FormFieldControl):
         #
         # FormField specific
         #
+        text_size: OptionalNumber = None,
         label: str = None,
         icon: str = None,
         border: InputBorder = None,
+        color: str = None,
+        bgcolor: str = None,
+        border_radius: BorderRadiusValue = None,
+        border_width: OptionalNumber = None,
+        border_color: str = None,
+        focused_color: str = None,
+        focused_bgcolor: str = None,
+        focused_border_width: OptionalNumber = None,
+        focused_border_color: str = None,
         content_padding: PaddingValue = None,
         filled: bool = None,
         hint_text: str = None,
@@ -62,9 +78,19 @@ class Dropdown(FormFieldControl):
             #
             # FormField specific
             #
+            text_size=text_size,
             label=label,
             icon=icon,
             border=border,
+            color=color,
+            bgcolor=bgcolor,
+            border_radius=border_radius,
+            border_width=border_width,
+            border_color=border_color,
+            focused_color=focused_color,
+            focused_bgcolor=focused_bgcolor,
+            focused_border_width=focused_border_width,
+            focused_border_color=focused_border_color,
             content_padding=content_padding,
             filled=filled,
             hint_text=hint_text,
