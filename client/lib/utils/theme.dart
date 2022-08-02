@@ -23,5 +23,25 @@ ThemeData themeFromJson(Map<String, dynamic> json) {
       colorSchemeSeed:
           HexColor.fromString(null, json["color_scheme_seed"] ?? ""),
       fontFamily: json["font_family"],
-      useMaterial3: json["use_material3"]);
+      useMaterial3: json["use_material3"],
+      visualDensity: parseVisualDensity(json["visual_density"]));
+}
+
+VisualDensity? parseVisualDensity(String? vd) {
+  if (vd == null) {
+    return null;
+  }
+
+  switch (vd.toLowerCase()) {
+    case "adaptiveplatformdensity":
+      return VisualDensity.adaptivePlatformDensity;
+    case "comfortable":
+      return VisualDensity.comfortable;
+    case "compact":
+      return VisualDensity.compact;
+    case "standard":
+      return VisualDensity.standard;
+    default:
+      return null;
+  }
 }

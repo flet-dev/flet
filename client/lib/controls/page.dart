@@ -97,14 +97,14 @@ class _PageControlState extends State<PageControl> {
             // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
             //     ? '-apple-system'
             //     : null,
-            visualDensity: VisualDensity.adaptivePlatformDensity);
+            visualDensity: VisualDensity.standard);
 
     var darkTheme = parseTheme(widget.control, "darkTheme") ??
         ThemeData(
             colorSchemeSeed: Colors.blue,
             brightness: Brightness.dark,
             useMaterial3: true,
-            visualDensity: VisualDensity.adaptivePlatformDensity);
+            visualDensity: VisualDensity.standard);
 
     var themeMode = ThemeMode.values.firstWhere(
         (t) =>

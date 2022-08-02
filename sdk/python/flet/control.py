@@ -274,7 +274,7 @@ class Control:
             return self.__page._send_command("clean", [self.uid])
 
     def build_update_commands(self, index, added_controls, commands, isolated=False):
-        update_cmd = self._get_cmd_attrs(update=True)
+        update_cmd = self._build_command(update=True)
 
         if len(update_cmd.attrs) > 0:
             update_cmd.name = "set"
@@ -333,7 +333,7 @@ class Control:
                 for h in current_ints[b1:b2]:
                     # add
                     ctrl = hashes[h]
-                    innerCmds = ctrl.get_cmd_str(
+                    innerCmds = ctrl._build_add_commands(
                         index=index, added_controls=added_controls
                     )
                     commands.append(
@@ -350,7 +350,7 @@ class Control:
                 # add
                 for h in current_ints[b1:b2]:
                     ctrl = hashes[h]
-                    innerCmds = ctrl.get_cmd_str(
+                    innerCmds = ctrl._build_add_commands(
                         index=index, added_controls=added_controls
                     )
                     commands.append(
@@ -376,7 +376,7 @@ class Control:
             del index[control.__uid]
 
     # private methods
-    def get_cmd_str(self, indent=0, index=None, added_controls=None):
+    def _build_add_commands(self, indent=0, index=None, added_controls=None):
 
         self._build()
 
@@ -387,7 +387,7 @@ class Control:
         commands = []
 
         # main command
-        command = self._get_cmd_attrs(False)
+        command = self._build_command(False)
         command.indent = indent
         command.values.append(self._get_control_name())
         commands.append(command)
@@ -398,7 +398,7 @@ class Control:
         # controls
         children = self._get_children()
         for control in children:
-            childCmd = control.get_cmd_str(
+            childCmd = control._build_add_commands(
                 indent=indent + 2, index=index, added_controls=added_controls
             )
             commands.extend(childCmd)
@@ -408,7 +408,7 @@ class Control:
 
         return commands
 
-    def _get_cmd_attrs(self, update=False):
+    def _build_command(self, update=False):
         command = Command(0, None, [], {}, [])
 
         if update and not self.__uid:
