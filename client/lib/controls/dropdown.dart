@@ -75,7 +75,8 @@ class _DropdownControlState extends State<DropdownControl> {
           if (textSize != null || color != null || focusedColor != null) {
             textStyle = TextStyle(
                 fontSize: textSize,
-                color: _focused ? focusedColor ?? color : color);
+                color: (_focused ? focusedColor ?? color : color) ??
+                    Theme.of(context).colorScheme.onSurface);
           }
 
           var items = itemsView.children
