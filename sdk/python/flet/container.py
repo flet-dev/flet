@@ -81,6 +81,26 @@ class Container(ConstrainedControl):
     def _get_control_name(self):
         return "container"
 
+    def _before_build_command(self):
+        value = self.__border_radius
+        if value and isinstance(value, (int, float)):
+            value = border_radius.all(value)
+        self._set_attr_json("borderRadius", value)
+
+        self._set_attr_json("border", self.__border)
+
+        value = self.__margin
+        if value != None and isinstance(value, (int, float)):
+            value = margin.all(value)
+        self._set_attr_json("margin", value)
+
+        value = self.__padding
+        if value != None and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr_json("padding", value)
+
+        self._set_attr_json("alignment", self.__alignment)
+
     def _get_children(self):
         children = []
         if self.__content != None:
@@ -97,7 +117,6 @@ class Container(ConstrainedControl):
     @beartype
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
-        self._set_attr_json("alignment", value)
 
     # padding
     @property
@@ -108,9 +127,6 @@ class Container(ConstrainedControl):
     @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
-        if value != None and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("padding", value)
 
     # margin
     @property
@@ -121,9 +137,6 @@ class Container(ConstrainedControl):
     @beartype
     def margin(self, value: MarginValue):
         self.__margin = value
-        if value != None and isinstance(value, (int, float)):
-            value = margin.all(value)
-        self._set_attr_json("margin", value)
 
     # bgcolor
     @property
@@ -143,7 +156,6 @@ class Container(ConstrainedControl):
     @beartype
     def border(self, value: Optional[Border]):
         self.__border = value
-        self._set_attr_json("border", value)
 
     # border_radius
     @property
@@ -154,9 +166,6 @@ class Container(ConstrainedControl):
     @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
-        if value and isinstance(value, (int, float)):
-            value = border_radius.all(value)
-        self._set_attr_json("borderRadius", value)
 
     # content
     @property

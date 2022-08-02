@@ -1,3 +1,4 @@
+from sys import version
 from typing import Optional, Union
 
 from beartype import beartype
@@ -62,6 +63,12 @@ class Image(Control):
     def _get_control_name(self):
         return "image"
 
+    def _before_build_command(self):
+        v = self.__border_radius
+        if v and isinstance(v, (int, float)):
+            v = border_radius.all(v)
+        self._set_attr_json("borderRadius", v)
+
     # src
     @property
     def src(self):
@@ -120,6 +127,3 @@ class Image(Control):
     @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
-        if value and isinstance(value, (int, float)):
-            value = border_radius.all(value)
-        self._set_attr_json("borderRadius", value)

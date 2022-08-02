@@ -55,6 +55,22 @@ class AlertDialog(Control):
     def _get_control_name(self):
         return "alertdialog"
 
+    def _before_build_command(self):
+        value = self.__actions_padding
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr_json("actionsPadding", value)
+
+        value = self.__content_padding
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr_json("contentPadding", value)
+
+        value = self.__title_padding
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr_json("titlePadding", value)
+
     def _get_children(self):
         children = []
         if self.__title:
@@ -106,9 +122,6 @@ class AlertDialog(Control):
     @beartype
     def title_padding(self, value: PaddingValue):
         self.__title_padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("titlePadding", value)
 
     # content
     @property
@@ -128,9 +141,6 @@ class AlertDialog(Control):
     @beartype
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("contentPadding", value)
 
     # actions
     @property
@@ -150,9 +160,6 @@ class AlertDialog(Control):
     @beartype
     def actions_padding(self, value: PaddingValue):
         self.__actions_padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("actionsPadding", value)
 
     # actions_alignment
     @property

@@ -51,6 +51,17 @@ class Banner(Control):
     def _get_control_name(self):
         return "banner"
 
+    def _before_build_command(self):
+        value = self.__content_padding
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr_json("contentPadding", value)
+
+        value = self.__leading_padding
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr_json("leadingPadding", value)
+
     def _get_children(self):
         children = []
         if self.__leading:
@@ -102,9 +113,6 @@ class Banner(Control):
     @beartype
     def leading_padding(self, value: PaddingValue):
         self.__leading_padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("leadingPadding", value)
 
     # content
     @property
@@ -124,9 +132,6 @@ class Banner(Control):
     @beartype
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("contentPadding", value)
 
     # actions
     @property

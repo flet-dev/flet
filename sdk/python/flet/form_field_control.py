@@ -105,6 +105,17 @@ class FormFieldControl(ConstrainedControl):
         self.suffix_icon = suffix_icon
         self.suffix_text = suffix_text
 
+    def _before_build_command(self):
+        value = self.__border_radius
+        if value and isinstance(value, (int, float)):
+            value = border_radius.all(value)
+        self._set_attr_json("borderRadius", value)
+
+        value = self.__content_padding
+        if value and isinstance(value, (int, float)):
+            value = padding.all(value)
+        self._set_attr_json("contentPadding", value)
+
     def _get_children(self):
         children = []
         if self.__prefix:
@@ -180,9 +191,6 @@ class FormFieldControl(ConstrainedControl):
     @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
-        if value and isinstance(value, (int, float)):
-            value = border_radius.all(value)
-        self._set_attr_json("borderRadius", value)
 
     # border_width
     @property
@@ -249,9 +257,6 @@ class FormFieldControl(ConstrainedControl):
     @beartype
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("contentPadding", value)
 
     # filled
     @property

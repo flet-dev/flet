@@ -64,6 +64,12 @@ class ListView(ConstrainedControl):
     def _get_control_name(self):
         return "listview"
 
+    def _before_build_command(self):
+        v = self.__padding
+        if v != None and isinstance(v, (int, float)):
+            v = padding.all(v)
+        self._set_attr_json("padding", v)
+
     def _get_children(self):
         return self.__controls
 
@@ -130,9 +136,6 @@ class ListView(ConstrainedControl):
     @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
-        if value != None and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("padding", value)
 
     # controls
     @property

@@ -1,3 +1,4 @@
+from marshal import version
 from typing import Optional, Union
 
 from beartype import beartype
@@ -70,6 +71,12 @@ class ListTile(ConstrainedControl):
     def _get_control_name(self):
         return "listtile"
 
+    def _before_build_command(self):
+        v = self.__content_padding
+        if v and isinstance(v, (int, float)):
+            v = padding.all(v)
+        self._set_attr_json("contentPadding", v)
+
     def _get_children(self):
         children = []
         if self.__leading:
@@ -95,9 +102,6 @@ class ListTile(ConstrainedControl):
     @beartype
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("contentPadding", value)
 
     # leading
     @property

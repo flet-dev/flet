@@ -92,6 +92,9 @@ class Control:
     def _build(self):
         pass
 
+    def _before_build_command(self):
+        pass
+
     def did_mount(self):
         pass
 
@@ -160,11 +163,16 @@ class Control:
             self.__attrs[name] = (value, dirty)
 
     def _set_attr_json(self, name, value):
-        self._set_attr(
-            name,
+        ov = self._get_attr(name)
+        nv = self._convert_attr_json(value)
+        if ov != nv:
+            self._set_attr(name, nv)
+
+    def _convert_attr_json(self, value):
+        return (
             json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))
             if value
-            else None,
+            else None
         )
 
     # event_handlers
@@ -413,6 +421,8 @@ class Control:
 
         if update and not self.__uid:
             return command
+
+        self._before_build_command()
 
         for attrName in sorted(self.__attrs):
             attrName = attrName.lower()

@@ -43,6 +43,12 @@ class NavigationRailDestination(Control):
     def _get_control_name(self):
         return "navigationraildestination"
 
+    def _before_build_command(self):
+        v = self.__padding
+        if v != None and isinstance(v, (int, float)):
+            v = padding.all(v)
+        self._set_attr_json("padding", v)
+
     def _get_children(self):
         children = []
         if self.__label_content:
@@ -124,9 +130,6 @@ class NavigationRailDestination(Control):
     @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
-        if value != None and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("padding", value)
 
 
 class NavigationRail(ConstrainedControl):

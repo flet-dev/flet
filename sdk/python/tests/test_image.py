@@ -9,7 +9,7 @@ def test_image_add():
     )
     assert isinstance(i, flet.Control)
     assert isinstance(i, flet.Image)
-    assert i._build_add_command() == [
+    assert i._build_add_commands() == [
         Command(
             indent=0,
             name=None,
