@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-enum ScrollMode { none, auto, adaptive, always }
+enum ScrollMode { none, auto, adaptive, always, hidden }
 
 class ScrollableControl extends StatefulWidget {
   final Widget child;
@@ -52,6 +52,8 @@ class _ScrollableControlState extends State<ScrollableControl> {
 
     return Scrollbar(
         thumbVisibility: thumbVisibility,
+        trackVisibility: widget.scrollMode == ScrollMode.hidden ? false : null,
+        thickness: widget.scrollMode == ScrollMode.hidden ? 0 : null,
         controller: _controller,
         child: SingleChildScrollView(
           controller: _controller,

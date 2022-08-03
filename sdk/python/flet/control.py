@@ -56,7 +56,7 @@ MarginValue = Union[None, int, float, Margin]
 
 BorderRadiusValue = Union[None, int, float, BorderRadius]
 
-ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always"]
+ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always", "hidden"]
 
 
 class Control:
