@@ -7,10 +7,10 @@ from flet.control import (
     CrossAxisAlignment,
     MainAxisAlignment,
     OptionalNumber,
-    PaddingValue,
     ScrollMode,
 )
 from flet.floating_action_button import FloatingActionButton
+from flet.types import PaddingValue
 
 
 class View(Control):

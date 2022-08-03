@@ -2,16 +2,11 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from flet.control import (
-    BorderRadiusValue,
-    Control,
-    InputBorder,
-    OptionalNumber,
-    PaddingValue,
-)
+from flet.control import Control, InputBorder, OptionalNumber
 from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
+from flet.types import BorderRadiusValue, PaddingValue
 
 
 class Dropdown(FormFieldControl):

@@ -5,8 +5,9 @@ from beartype.typing import List
 
 from flet import padding
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber, PaddingValue
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
+from flet.types import PaddingValue
 
 try:
     from typing import Literal

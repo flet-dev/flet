@@ -1,3 +1,4 @@
+import 'package:flet_view/utils/buttons.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -66,6 +67,8 @@ class ElevatedButtonControl extends StatelessWidget {
         backgroundColor: bgcolor,
       ).copyWith(elevation: ButtonStyleButton.allOrNull(elevation));
     }
+
+    style ??= parseButtonStyle(Theme.of(context), control, "style");
 
     if (icon != null) {
       button = ElevatedButton.icon(

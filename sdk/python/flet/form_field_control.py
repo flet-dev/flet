@@ -4,14 +4,9 @@ from beartype import beartype
 
 from flet import border_radius, padding
 from flet.constrained_control import ConstrainedControl
-from flet.control import (
-    BorderRadiusValue,
-    Control,
-    InputBorder,
-    OptionalNumber,
-    PaddingValue,
-)
+from flet.control import Control, InputBorder, OptionalNumber
 from flet.ref import Ref
+from flet.types import BorderRadiusValue, PaddingValue
 
 
 class FormFieldControl(ConstrainedControl):

@@ -6,7 +6,7 @@ from typing import Dict, List, Union
 from flet import alignment
 from flet.alignment import Alignment
 from flet.border import BorderSide
-from flet.control import BorderRadiusValue, PaddingValue
+from flet.types import BorderRadiusValue, PaddingValue
 
 try:
     from typing import Literal

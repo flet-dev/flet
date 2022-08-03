@@ -4,8 +4,9 @@ from beartype import beartype
 
 from flet import padding
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber, PaddingValue
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
+from flet.types import PaddingValue
 
 
 class ListView(ConstrainedControl):

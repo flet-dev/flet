@@ -16,7 +16,6 @@ from flet.control import (
     CrossAxisAlignment,
     MainAxisAlignment,
     OptionalNumber,
-    PaddingValue,
     ScrollMode,
 )
 from flet.event import Event
@@ -26,6 +25,7 @@ from flet.protocol import Command
 from flet.pubsub import PubSub
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
+from flet.types import PaddingValue
 from flet.view import View
 
 try:

@@ -5,8 +5,9 @@ from beartype import beartype
 
 from flet import border_radius
 from flet.border_radius import BorderRadius
-from flet.control import BorderRadiusValue, Control, OptionalNumber
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
+from flet.types import BorderRadiusValue
 
 try:
     from typing import Literal

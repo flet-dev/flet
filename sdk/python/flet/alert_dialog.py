@@ -3,8 +3,9 @@ from typing import List, Optional
 from beartype import beartype
 
 from flet import padding
-from flet.control import Control, MainAxisAlignment, PaddingValue
+from flet.control import Control, MainAxisAlignment
 from flet.ref import Ref
+from flet.types import PaddingValue
 
 
 class AlertDialog(Control):

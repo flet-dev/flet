@@ -2,17 +2,11 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from flet.control import (
-    BorderRadiusValue,
-    Control,
-    InputBorder,
-    OptionalNumber,
-    PaddingValue,
-    TextAlign,
-)
+from flet.control import Control, InputBorder, OptionalNumber, TextAlign
 from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
+from flet.types import BorderRadiusValue, PaddingValue
 
 try:
     from typing import Literal

@@ -50,12 +50,6 @@ InputBorder = Literal[None, "outline", "underline", "none"]
 
 OptionalNumber = Union[None, int, float]
 
-PaddingValue = Union[None, int, float, Padding]
-
-MarginValue = Union[None, int, float, Margin]
-
-BorderRadiusValue = Union[None, int, float, BorderRadius]
-
 ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always", "hidden"]
 
 

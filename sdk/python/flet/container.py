@@ -6,15 +6,10 @@ from flet import border_radius, margin, padding
 from flet.alignment import Alignment
 from flet.border import Border
 from flet.constrained_control import ConstrainedControl
-from flet.control import (
-    BorderRadiusValue,
-    Control,
-    MarginValue,
-    OptionalNumber,
-    PaddingValue,
-)
+from flet.control import Control, OptionalNumber
 from flet.gradients import Gradient
 from flet.ref import Ref
+from flet.types import BorderRadiusValue, MarginValue, PaddingValue
 
 try:
     from typing import Literal

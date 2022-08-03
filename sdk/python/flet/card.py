@@ -4,8 +4,9 @@ from beartype import beartype
 
 from flet import margin
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, MarginValue, OptionalNumber
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
+from flet.types import MarginValue
 
 
 class Card(ConstrainedControl):
