@@ -61,7 +61,7 @@ class ContainerControl extends StatelessWidget {
                         : null,
                     onLongPress: onLongPress
                         ? () {
-                            debugPrint("Container ${control.id} clicked!");
+                            debugPrint("Container ${control.id} long pressed!");
                             ws.pageEventFromWeb(
                                 eventTarget: control.id,
                                 eventName: "long_press",

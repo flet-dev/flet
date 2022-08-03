@@ -50,7 +50,7 @@ class ElevatedButtonControl extends StatelessWidget {
     Function()? onLongPress = disabled
         ? null
         : () {
-            debugPrint("Button ${control.id} clicked!");
+            debugPrint("Button ${control.id} long pressed!");
             ws.pageEventFromWeb(
                 eventTarget: control.id,
                 eventName: "long_press",
@@ -83,10 +83,14 @@ class ElevatedButtonControl extends StatelessWidget {
           style: style,
           autofocus: autofocus,
           onPressed: onPressed,
+          onLongPress: onLongPress,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {
-      button =
-          ElevatedButton(style: style, onPressed: onPressed, child: Text(text));
+      button = ElevatedButton(
+          style: style,
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          child: Text(text));
     }
 
     return constrainedControl(button, parent, control);

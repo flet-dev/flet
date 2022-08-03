@@ -45,7 +45,7 @@ class OutlinedButtonControl extends StatelessWidget {
     Function()? onLongPress = disabled
         ? null
         : () {
-            debugPrint("Button ${control.id} clicked!");
+            debugPrint("Button ${control.id} long pressed!");
             ws.pageEventFromWeb(
                 eventTarget: control.id,
                 eventName: "long_press",
@@ -71,7 +71,8 @@ class OutlinedButtonControl extends StatelessWidget {
           onLongPress: onLongPress,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {
-      button = OutlinedButton(onPressed: onPressed, child: Text(text));
+      button = OutlinedButton(
+          onPressed: onPressed, onLongPress: onLongPress, child: Text(text));
     }
 
     return constrainedControl(button, parent, control);
