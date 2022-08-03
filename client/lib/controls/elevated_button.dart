@@ -47,15 +47,23 @@ class ElevatedButtonControl extends StatelessWidget {
                 eventData: control.attrs["data"] ?? "");
           };
 
+    Function()? onLongPress = disabled
+        ? null
+        : () {
+            debugPrint("Button ${control.id} clicked!");
+            ws.pageEventFromWeb(
+                eventTarget: control.id,
+                eventName: "long_press",
+                eventData: control.attrs["data"] ?? "");
+          };
+
     ElevatedButton? button;
     ButtonStyle? style;
 
     if (color != null || bgcolor != null || elevation != null) {
       style = ElevatedButton.styleFrom(
-        // Foreground color
-        onPrimary: color,
-        // Background color
-        primary: bgcolor,
+        foregroundColor: color,
+        backgroundColor: bgcolor,
       ).copyWith(elevation: ButtonStyleButton.allOrNull(elevation));
     }
 
@@ -64,6 +72,7 @@ class ElevatedButtonControl extends StatelessWidget {
           style: style,
           autofocus: autofocus,
           onPressed: onPressed,
+          onLongPress: onLongPress,
           icon: Icon(
             icon,
             color: iconColor,

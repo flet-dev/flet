@@ -48,6 +48,16 @@ class ListTileControl extends StatelessWidget {
                 eventData: control.attrs["data"] ?? "");
           };
 
+    Function()? onLongPress = disabled
+        ? null
+        : () {
+            debugPrint("Button ${control.id} clicked!");
+            ws.pageEventFromWeb(
+                eventTarget: control.id,
+                eventName: "long_press",
+                eventData: control.attrs["data"] ?? "");
+          };
+
     ListTile tile = ListTile(
       autofocus: autofocus,
       contentPadding: parseEdgeInsets(control, "contentPadding"),
@@ -55,6 +65,7 @@ class ListTileControl extends StatelessWidget {
       selected: selected,
       dense: dense,
       onTap: onPressed,
+      onLongPress: onLongPress,
       enabled: !disabled,
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled)

@@ -42,12 +42,23 @@ class OutlinedButtonControl extends StatelessWidget {
                 eventData: control.attrs["data"] ?? "");
           };
 
+    Function()? onLongPress = disabled
+        ? null
+        : () {
+            debugPrint("Button ${control.id} clicked!");
+            ws.pageEventFromWeb(
+                eventTarget: control.id,
+                eventName: "long_press",
+                eventData: control.attrs["data"] ?? "");
+          };
+
     OutlinedButton? button;
 
     if (icon != null) {
       button = OutlinedButton.icon(
           autofocus: autofocus,
           onPressed: onPressed,
+          onLongPress: onLongPress,
           icon: Icon(
             icon,
             color: iconColor,
@@ -57,6 +68,7 @@ class OutlinedButtonControl extends StatelessWidget {
       button = OutlinedButton(
           autofocus: autofocus,
           onPressed: onPressed,
+          onLongPress: onLongPress,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {
       button = OutlinedButton(onPressed: onPressed, child: Text(text));

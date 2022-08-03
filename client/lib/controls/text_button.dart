@@ -42,12 +42,23 @@ class TextButtonControl extends StatelessWidget {
                 eventData: control.attrs["data"] ?? "");
           };
 
+    Function()? onLongPress = disabled
+        ? null
+        : () {
+            debugPrint("Button ${control.id} clicked!");
+            ws.pageEventFromWeb(
+                eventTarget: control.id,
+                eventName: "long_press",
+                eventData: control.attrs["data"] ?? "");
+          };
+
     TextButton? button;
 
     if (icon != null) {
       button = TextButton.icon(
           autofocus: autofocus,
           onPressed: onPressed,
+          onLongPress: onLongPress,
           icon: Icon(
             icon,
             color: iconColor,
@@ -57,6 +68,7 @@ class TextButtonControl extends StatelessWidget {
       button = TextButton(
           autofocus: autofocus,
           onPressed: onPressed,
+          onLongPress: onLongPress,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {
       button = TextButton(onPressed: onPressed, child: Text(text));

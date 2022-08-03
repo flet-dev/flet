@@ -50,6 +50,7 @@ class Container(ConstrainedControl):
         border_radius: BorderRadiusValue = None,
         ink: bool = None,
         on_click=None,
+        on_long_press=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -77,6 +78,7 @@ class Container(ConstrainedControl):
         self.border_radius = border_radius
         self.ink = ink
         self.on_click = on_click
+        self.on_long_press = on_long_press
 
     def _get_control_name(self):
         return "container"
@@ -199,3 +201,16 @@ class Container(ConstrainedControl):
             self._set_attr("onclick", True)
         else:
             self._set_attr("onclick", None)
+
+    # on_long_press
+    @property
+    def on_long_press(self):
+        return self._get_event_handler("long_press")
+
+    @on_long_press.setter
+    def on_long_press(self, handler):
+        self._add_event_handler("long_press", handler)
+        if handler != None:
+            self._set_attr("onLongPress", True)
+        else:
+            self._set_attr("onLongPress", None)

@@ -35,6 +35,7 @@ class ElevatedButton(ConstrainedControl):
         content: Control = None,
         autofocus: bool = None,
         on_click=None,
+        on_long_press=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -62,6 +63,7 @@ class ElevatedButton(ConstrainedControl):
         self.content = content
         self.autofocus = autofocus
         self.on_click = on_click
+        self.on_long_press = on_long_press
 
     def _get_control_name(self):
         return "elevatedbutton"
@@ -135,6 +137,15 @@ class ElevatedButton(ConstrainedControl):
     @on_click.setter
     def on_click(self, handler):
         self._add_event_handler("click", handler)
+
+    # on_long_press
+    @property
+    def on_long_press(self):
+        return self._get_event_handler("long_press")
+
+    @on_long_press.setter
+    def on_long_press(self, handler):
+        self._add_event_handler("long_press", handler)
 
     # content
     @property

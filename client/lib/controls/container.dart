@@ -32,6 +32,7 @@ class ContainerControl extends StatelessWidget {
         children.where((c) => c.name == "content" && c.isVisible);
     bool ink = control.attrBool("ink", false)!;
     bool onClick = control.attrBool("onclick", false)!;
+    bool onLongPress = control.attrBool("onLongPress", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     var boxDecor = BoxDecoration(
@@ -43,19 +44,30 @@ class ContainerControl extends StatelessWidget {
         ? createControl(control, contentCtrls.first.id, disabled)
         : null;
 
-    if (onClick && ink) {
+    if ((onClick || onLongPress) && ink) {
       return constrainedControl(
           Container(
             margin: parseEdgeInsets(control, "margin"),
             child: Ink(
                 child: InkWell(
-                    onTap: () {
-                      debugPrint("Container ${control.id} clicked!");
-                      ws.pageEventFromWeb(
-                          eventTarget: control.id,
-                          eventName: "click",
-                          eventData: control.attrs["data"] ?? "");
-                    },
+                    onTap: onClick
+                        ? () {
+                            debugPrint("Container ${control.id} clicked!");
+                            ws.pageEventFromWeb(
+                                eventTarget: control.id,
+                                eventName: "click",
+                                eventData: control.attrs["data"] ?? "");
+                          }
+                        : null,
+                    onLongPress: onLongPress
+                        ? () {
+                            debugPrint("Container ${control.id} clicked!");
+                            ws.pageEventFromWeb(
+                                eventTarget: control.id,
+                                eventName: "long_press",
+                                eventData: control.attrs["data"] ?? "");
+                          }
+                        : null,
                     child: Container(
                       child: child,
                       padding: parseEdgeInsets(control, "padding"),
@@ -74,19 +86,30 @@ class ContainerControl extends StatelessWidget {
           decoration: boxDecor,
           child: child);
 
-      if (onClick) {
+      if (onClick || onLongPress) {
         container = MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             child: container,
-            onTapDown: (details) {
-              debugPrint("Container ${control.id} clicked!");
-              ws.pageEventFromWeb(
-                  eventTarget: control.id,
-                  eventName: "click",
-                  eventData: control.attrString("data", "")! +
-                      "${details.localPosition.dx}:${details.localPosition.dy} ${details.globalPosition.dx}:${details.globalPosition.dy}");
-            },
+            onTapDown: onClick
+                ? (details) {
+                    debugPrint("Container ${control.id} clicked!");
+                    ws.pageEventFromWeb(
+                        eventTarget: control.id,
+                        eventName: "click",
+                        eventData: control.attrString("data", "")! +
+                            "${details.localPosition.dx}:${details.localPosition.dy} ${details.globalPosition.dx}:${details.globalPosition.dy}");
+                  }
+                : null,
+            onLongPress: onLongPress
+                ? () {
+                    debugPrint("Container ${control.id} clicked!");
+                    ws.pageEventFromWeb(
+                        eventTarget: control.id,
+                        eventName: "long_press",
+                        eventData: control.attrs["data"] ?? "");
+                  }
+                : null,
           ),
         );
       }
