@@ -67,17 +67,15 @@ class ContainerControl extends StatelessWidget {
           parent,
           control);
     } else {
-      var container = constrainedControl(
-          Container(
-              padding: parseEdgeInsets(control, "padding"),
-              margin: parseEdgeInsets(control, "margin"),
-              alignment: parseAlignment(control, "alignment"),
-              decoration: boxDecor,
-              child: child),
-          parent,
-          control);
+      Widget container = Container(
+          padding: parseEdgeInsets(control, "padding"),
+          margin: parseEdgeInsets(control, "margin"),
+          alignment: parseAlignment(control, "alignment"),
+          decoration: boxDecor,
+          child: child);
+
       if (onClick) {
-        return MouseRegion(
+        container = MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             child: container,
@@ -91,9 +89,8 @@ class ContainerControl extends StatelessWidget {
             },
           ),
         );
-      } else {
-        return container;
       }
+      return constrainedControl(container, parent, control);
     }
   }
 }
