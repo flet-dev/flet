@@ -2,6 +2,7 @@ from flet.alert_dialog import AlertDialog
 from flet.alignment import Alignment
 from flet.app_bar import AppBar
 from flet.banner import Banner
+from flet.buttons import ButtonStyle, OutlinedBorder
 from flet.card import Card
 from flet.checkbox import Checkbox
 from flet.circle_avatar import CircleAvatar

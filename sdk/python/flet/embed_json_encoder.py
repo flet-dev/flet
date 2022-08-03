@@ -35,5 +35,5 @@ class EmbedJsonEncoder(json.JSONEncoder):
                 "b": obj.bottom,
             }
         elif isinstance(obj, object):
-            return obj.__dict__
+            return dict(filter(lambda item: item[1] != None, obj.__dict__.items()))
         return json.JSONEncoder.default(self, obj)

@@ -2,6 +2,7 @@ from typing import Optional, Union
 
 from beartype import beartype
 
+from flet.buttons import ButtonStyle
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
@@ -30,6 +31,7 @@ class ElevatedButton(ConstrainedControl):
         color: str = None,
         bgcolor: str = None,
         elevation: OptionalNumber = None,
+        style: ButtonStyle = None,
         icon: str = None,
         icon_color: str = None,
         content: Control = None,
@@ -58,6 +60,7 @@ class ElevatedButton(ConstrainedControl):
         self.color = color
         self.bgcolor = bgcolor
         self.elevation = elevation
+        self.style = style
         self.icon = icon
         self.icon_color = icon_color
         self.content = content
@@ -67,6 +70,10 @@ class ElevatedButton(ConstrainedControl):
 
     def _get_control_name(self):
         return "elevatedbutton"
+
+    def _before_build_command(self):
+        # style
+        self._set_attr_json("style", self.__style)
 
     def _get_children(self):
         if self.__content == None:
@@ -110,6 +117,16 @@ class ElevatedButton(ConstrainedControl):
     @beartype
     def elevation(self, value: OptionalNumber):
         self._set_attr("elevation", value)
+
+    # style
+    @property
+    def style(self):
+        return self.__style
+
+    @style.setter
+    @beartype
+    def style(self, value: Optional[ButtonStyle]):
+        self.__style = value
 
     # icon
     @property
