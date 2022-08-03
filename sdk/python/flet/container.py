@@ -5,7 +5,6 @@ from beartype import beartype
 from flet import border_radius, margin, padding
 from flet.alignment import Alignment
 from flet.border import Border
-from flet.border_radius import BorderRadius
 from flet.constrained_control import ConstrainedControl
 from flet.control import (
     BorderRadiusValue,
@@ -14,6 +13,7 @@ from flet.control import (
     OptionalNumber,
     PaddingValue,
 )
+from flet.gradients import Gradient
 from flet.ref import Ref
 
 try:
@@ -46,6 +46,7 @@ class Container(ConstrainedControl):
         margin: MarginValue = None,
         alignment: Alignment = None,
         bgcolor: str = None,
+        gradient: Gradient = None,
         border: Border = None,
         border_radius: BorderRadiusValue = None,
         ink: bool = None,
@@ -74,6 +75,7 @@ class Container(ConstrainedControl):
         self.margin = margin
         self.alignment = alignment
         self.bgcolor = bgcolor
+        self.gradient = gradient
         self.border = border
         self.border_radius = border_radius
         self.ink = ink
@@ -84,24 +86,32 @@ class Container(ConstrainedControl):
         return "container"
 
     def _before_build_command(self):
+        # border_radius
         value = self.__border_radius
         if value and isinstance(value, (int, float)):
             value = border_radius.all(value)
         self._set_attr_json("borderRadius", value)
 
+        # border
         self._set_attr_json("border", self.__border)
 
+        # margin
         value = self.__margin
         if value != None and isinstance(value, (int, float)):
             value = margin.all(value)
         self._set_attr_json("margin", value)
 
+        # padding
         value = self.__padding
         if value != None and isinstance(value, (int, float)):
             value = padding.all(value)
         self._set_attr_json("padding", value)
 
+        # alignment
         self._set_attr_json("alignment", self.__alignment)
+
+        # gradient
+        self._set_attr_json("gradient", self.__gradient)
 
     def _get_children(self):
         children = []
@@ -148,6 +158,16 @@ class Container(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value):
         self._set_attr("bgColor", value)
+
+    # gradient
+    @property
+    def gradient(self):
+        return self.__gradient
+
+    @gradient.setter
+    @beartype
+    def gradient(self, value: Gradient):
+        self.__gradient = value
 
     # border
     @property

@@ -5,6 +5,7 @@ import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/gradient.dart';
 import '../web_socket_client.dart';
 import 'create_control.dart';
 
@@ -37,6 +38,7 @@ class ContainerControl extends StatelessWidget {
 
     var boxDecor = BoxDecoration(
         color: bgColor,
+        gradient: parseGradient(Theme.of(context), control, "gradient"),
         border: parseBorder(Theme.of(context), control, "border"),
         borderRadius: parseBorderRadius(control, "borderRadius"));
 
