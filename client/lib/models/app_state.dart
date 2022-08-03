@@ -15,6 +15,7 @@ class AppState extends Equatable {
   final String route;
   final String sessionId;
   final bool isLoading;
+  final bool isRegistered;
   final int reconnectingTimeout;
   final String error;
   final Size size;
@@ -28,6 +29,7 @@ class AppState extends Equatable {
       required this.route,
       required this.sessionId,
       required this.isLoading,
+      required this.isRegistered,
       required this.reconnectingTimeout,
       required this.error,
       required this.size,
@@ -41,6 +43,7 @@ class AppState extends Equatable {
       route: "",
       sessionId: "",
       isLoading: true,
+      isRegistered: false,
       reconnectingTimeout: 0,
       error: "",
       size: Size(0, 0),
@@ -69,6 +72,7 @@ class AppState extends Equatable {
           String? route,
           String? sessionId,
           bool? isLoading,
+          bool? isRegistered,
           int? reconnectingTimeout,
           String? error,
           Size? size,
@@ -81,6 +85,7 @@ class AppState extends Equatable {
           route: route ?? this.route,
           sessionId: sessionId ?? this.sessionId,
           isLoading: isLoading ?? this.isLoading,
+          isRegistered: isRegistered ?? this.isRegistered,
           reconnectingTimeout: reconnectingTimeout ?? this.reconnectingTimeout,
           error: error ?? this.error,
           size: size ?? this.size,

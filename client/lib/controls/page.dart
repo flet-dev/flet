@@ -253,7 +253,7 @@ class _PageControlState extends State<PageControl> {
               distinct: true,
               converter: (store) => PageMediaViewModel.fromStore(store),
               builder: (context, media) {
-                debugPrint("Page media build: ${widget.control.id}");
+                debugPrint("MeterialApp.router build: ${widget.control.id}");
 
                 return MaterialApp.router(
                   routerDelegate: _routerDelegate,

@@ -45,7 +45,7 @@ class _WindowMediaState extends State<WindowMedia> with WindowListener {
   @override
   void onWindowEvent(String eventName) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
+    _debounce = Timer(const Duration(milliseconds: 200), () {
       debugPrint('[WindowManager] onWindowEvent: $eventName');
       getWindowMediaData().then((wmd) {
         debugPrint("WindowMediaData: $wmd");

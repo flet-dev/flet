@@ -26,7 +26,8 @@ class PageReconnectingAction {
 
 class PageSizeChangeAction {
   final Size newPageSize;
-  PageSizeChangeAction(this.newPageSize);
+  final WindowMediaData? wmd;
+  PageSizeChangeAction(this.newPageSize, this.wmd);
 }
 
 class SetPageRouteAction {
