@@ -166,7 +166,7 @@ class Container(ConstrainedControl):
 
     @gradient.setter
     @beartype
-    def gradient(self, value: Gradient):
+    def gradient(self, value: Optional[Gradient]):
         self.__gradient = value
 
     # border
