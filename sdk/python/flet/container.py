@@ -181,7 +181,7 @@ class Container(ConstrainedControl):
     # on_click
     @property
     def on_click(self):
-        return self._get_event_handler("on_click")
+        return self._get_event_handler("click")
 
     @on_click.setter
     def on_click(self, handler):
