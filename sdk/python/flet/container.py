@@ -84,11 +84,7 @@ class Container(ConstrainedControl):
         self._set_attr_json("border", self.__border)
         self._set_attr_json("margin", self.__margin)
         self._set_attr_json("padding", self.__padding)
-
-        # alignment
         self._set_attr_json("alignment", self.__alignment)
-
-        # gradient
         self._set_attr_json("gradient", self.__gradient)
 
     def _get_children(self):

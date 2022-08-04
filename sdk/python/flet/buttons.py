@@ -10,15 +10,6 @@ try:
 except:
     from typing_extensions import Literal
 
-OutlinedBorderType = Literal[
-    None,
-    "beveledRectangle",
-    "circle",
-    "countinuosRectangle",
-    "roundedRectangle",
-    "stadium",
-]
-
 MaterialState = Literal[
     "hovered",
     "focused",
