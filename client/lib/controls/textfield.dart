@@ -37,6 +37,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
   bool _focused = false;
   late TextEditingController _controller;
   late final FocusNode _focusNode = FocusNode();
+  String _lastFocusedTimestamp = "";
 
   late final _shiftEnterfocusNode = FocusNode(
     onKey: (FocusNode node, RawKeyEvent evt) {
@@ -185,8 +186,10 @@ class _TextFieldControlState extends State<TextFieldControl> {
             debugPrint("Focus JSON value: $focusValue");
             var jv = json.decode(focusValue);
             var focus = jv["d"] as bool;
-            if (focus) {
+            var ts = jv["ts"] as String;
+            if (focus && ts != _lastFocusedTimestamp) {
               focusNode.requestFocus();
+              _lastFocusedTimestamp = ts;
             }
           }
 
