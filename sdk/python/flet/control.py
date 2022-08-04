@@ -7,10 +7,7 @@ from typing import Union
 from beartype import beartype
 from beartype.typing import List, Optional
 
-from flet.border_radius import BorderRadius
 from flet.embed_json_encoder import EmbedJsonEncoder
-from flet.margin import Margin
-from flet.padding import Padding
 from flet.protocol import Command
 from flet.ref import Ref
 
@@ -50,13 +47,7 @@ InputBorder = Literal[None, "outline", "underline", "none"]
 
 OptionalNumber = Union[None, int, float]
 
-PaddingValue = Union[None, int, float, Padding]
-
-MarginValue = Union[None, int, float, Margin]
-
-BorderRadiusValue = Union[None, int, float, BorderRadius]
-
-ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always"]
+ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always", "hidden"]
 
 
 class Control:
@@ -90,6 +81,9 @@ class Control:
         return False
 
     def _build(self):
+        pass
+
+    def _before_build_command(self):
         pass
 
     def did_mount(self):
@@ -160,11 +154,16 @@ class Control:
             self.__attrs[name] = (value, dirty)
 
     def _set_attr_json(self, name, value):
-        self._set_attr(
-            name,
+        ov = self._get_attr(name)
+        nv = self._convert_attr_json(value)
+        if ov != nv:
+            self._set_attr(name, nv)
+
+    def _convert_attr_json(self, value):
+        return (
             json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))
             if value
-            else None,
+            else None
         )
 
     # event_handlers
@@ -274,7 +273,7 @@ class Control:
             return self.__page._send_command("clean", [self.uid])
 
     def build_update_commands(self, index, added_controls, commands, isolated=False):
-        update_cmd = self._get_cmd_attrs(update=True)
+        update_cmd = self._build_command(update=True)
 
         if len(update_cmd.attrs) > 0:
             update_cmd.name = "set"
@@ -333,7 +332,7 @@ class Control:
                 for h in current_ints[b1:b2]:
                     # add
                     ctrl = hashes[h]
-                    innerCmds = ctrl.get_cmd_str(
+                    innerCmds = ctrl._build_add_commands(
                         index=index, added_controls=added_controls
                     )
                     commands.append(
@@ -350,7 +349,7 @@ class Control:
                 # add
                 for h in current_ints[b1:b2]:
                     ctrl = hashes[h]
-                    innerCmds = ctrl.get_cmd_str(
+                    innerCmds = ctrl._build_add_commands(
                         index=index, added_controls=added_controls
                     )
                     commands.append(
@@ -376,7 +375,7 @@ class Control:
             del index[control.__uid]
 
     # private methods
-    def get_cmd_str(self, indent=0, index=None, added_controls=None):
+    def _build_add_commands(self, indent=0, index=None, added_controls=None):
 
         self._build()
 
@@ -387,7 +386,7 @@ class Control:
         commands = []
 
         # main command
-        command = self._get_cmd_attrs(False)
+        command = self._build_command(False)
         command.indent = indent
         command.values.append(self._get_control_name())
         commands.append(command)
@@ -398,7 +397,7 @@ class Control:
         # controls
         children = self._get_children()
         for control in children:
-            childCmd = control.get_cmd_str(
+            childCmd = control._build_add_commands(
                 indent=indent + 2, index=index, added_controls=added_controls
             )
             commands.extend(childCmd)
@@ -408,11 +407,13 @@ class Control:
 
         return commands
 
-    def _get_cmd_attrs(self, update=False):
+    def _build_command(self, update=False):
         command = Command(0, None, [], {}, [])
 
         if update and not self.__uid:
             return command
+
+        self._before_build_command()
 
         for attrName in sorted(self.__attrs):
             attrName = attrName.lower()

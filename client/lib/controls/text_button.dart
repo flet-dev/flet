@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../web_socket_client.dart';
@@ -42,12 +43,39 @@ class TextButtonControl extends StatelessWidget {
                 eventData: control.attrs["data"] ?? "");
           };
 
+    Function()? onLongPress = disabled
+        ? null
+        : () {
+            debugPrint("Button ${control.id} long pressed!");
+            ws.pageEventFromWeb(
+                eventTarget: control.id,
+                eventName: "long_press",
+                eventData: control.attrs["data"] ?? "");
+          };
+
     TextButton? button;
+
+    var theme = Theme.of(context);
+
+    var style = parseButtonStyle(Theme.of(context), control, "style",
+        defaultForegroundColor: theme.colorScheme.primary,
+        defaultBackgroundColor: Colors.transparent,
+        defaultOverlayColor: Colors.transparent,
+        defaultShadowColor: Colors.transparent,
+        defaultSurfaceTintColor: Colors.transparent,
+        defaultElevation: 0,
+        defaultPadding: const EdgeInsets.all(8),
+        defaultBorderSide: BorderSide.none,
+        defaultShape: theme.useMaterial3
+            ? const StadiumBorder()
+            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
     if (icon != null) {
       button = TextButton.icon(
           autofocus: autofocus,
           onPressed: onPressed,
+          onLongPress: onLongPress,
+          style: style,
           icon: Icon(
             icon,
             color: iconColor,
@@ -57,9 +85,15 @@ class TextButtonControl extends StatelessWidget {
       button = TextButton(
           autofocus: autofocus,
           onPressed: onPressed,
+          onLongPress: onLongPress,
+          style: style,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {
-      button = TextButton(onPressed: onPressed, child: Text(text));
+      button = TextButton(
+          style: style,
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          child: Text(text));
     }
 
     return constrainedControl(button, parent, control);

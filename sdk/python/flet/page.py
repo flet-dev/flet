@@ -6,7 +6,7 @@ import time
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
 
-from flet import constants, padding
+from flet import constants
 from flet.app_bar import AppBar
 from flet.banner import Banner
 from flet.clipboard import Clipboard
@@ -16,7 +16,6 @@ from flet.control import (
     CrossAxisAlignment,
     MainAxisAlignment,
     OptionalNumber,
-    PaddingValue,
     ScrollMode,
 )
 from flet.event import Event
@@ -26,6 +25,7 @@ from flet.protocol import Command
 from flet.pubsub import PubSub
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
+from flet.types import PaddingValue
 from flet.view import View
 
 try:
@@ -86,6 +86,20 @@ class Page(Control):
 
     def get_control(self, id):
         return self._index.get(id)
+
+    def _before_build_command(self):
+        # fonts
+        self._set_attr_json("fonts", self.__fonts)
+
+        # light theme
+        if self.__theme:
+            self.__theme.brightness = "light"
+        self._set_attr_json("theme", self.__theme)
+
+        # dark theme
+        if self.__dark_theme:
+            self.__dark_theme.brightness = "dark"
+        self._set_attr_json("darkTheme", self.__dark_theme)
 
     def _get_children(self):
         children = []
@@ -350,7 +364,6 @@ class Page(Control):
     @beartype
     def fonts(self, value: Optional[Dict[str, str]]):
         self.__fonts = value
-        self._set_attr_json("fonts", value)
 
     # views
     @property
@@ -515,9 +528,6 @@ class Page(Control):
     @beartype
     def theme(self, value: Optional[Theme]):
         self.__theme = value
-        if self.__theme:
-            self.__theme.brightness = "light"
-        self._set_attr_json("theme", value)
 
     # dark_theme
     @property
@@ -528,9 +538,6 @@ class Page(Control):
     @beartype
     def dark_theme(self, value: Optional[Theme]):
         self.__dark_theme = value
-        if self.__dark_theme:
-            self.__dark_theme.brightness = "dark"
-        self._set_attr_json("darkTheme", value)
 
     # rtl
     @property

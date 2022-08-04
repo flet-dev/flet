@@ -1,11 +1,12 @@
+from marshal import version
 from typing import Optional, Union
 
 from beartype import beartype
 
-from flet import padding
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber, PaddingValue
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
+from flet.types import PaddingValue
 
 
 class ListTile(ConstrainedControl):
@@ -38,6 +39,7 @@ class ListTile(ConstrainedControl):
         dense: bool = None,
         autofocus: bool = None,
         on_click=None,
+        on_long_press=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -66,9 +68,13 @@ class ListTile(ConstrainedControl):
         self.dense = dense
         self.autofocus = autofocus
         self.on_click = on_click
+        self.on_long_press = on_long_press
 
     def _get_control_name(self):
         return "listtile"
+
+    def _before_build_command(self):
+        self._set_attr_json("contentPadding", self.__content_padding)
 
     def _get_children(self):
         children = []
@@ -95,9 +101,6 @@ class ListTile(ConstrainedControl):
     @beartype
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("contentPadding", value)
 
     # leading
     @property
@@ -191,3 +194,16 @@ class ListTile(ConstrainedControl):
             self._set_attr("onclick", True)
         else:
             self._set_attr("onclick", None)
+
+    # on_long_press
+    @property
+    def on_long_press(self):
+        return self._get_event_handler("long_press")
+
+    @on_long_press.setter
+    def on_long_press(self, handler):
+        self._add_event_handler("long_press", handler)
+        if handler != None:
+            self._set_attr("onLongPress", True)
+        else:
+            self._set_attr("onLongPress", None)

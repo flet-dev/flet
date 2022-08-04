@@ -40,6 +40,7 @@ WebRenderer = Literal[None, "auto", "html", "canvaskit"]
 
 def page(
     name="",
+    host=None,
     port=0,
     permissions=None,
     view: AppViewer = WEB_BROWSER,
@@ -49,6 +50,7 @@ def page(
 ):
     conn = _connect_internal(
         page_name=name,
+        host=host,
         port=port,
         is_app=False,
         permissions=permissions,
@@ -68,6 +70,7 @@ def page(
 
 def app(
     name="",
+    host=None,
     port=0,
     target=None,
     permissions=None,
@@ -82,6 +85,7 @@ def app(
 
     conn = _connect_internal(
         page_name=name,
+        host=host,
         port=port,
         is_app=True,
         permissions=permissions,
@@ -134,6 +138,7 @@ def app(
 
 def _connect_internal(
     page_name=None,
+    host=None,
     port=0,
     is_app=False,
     update=False,
@@ -157,10 +162,11 @@ def _connect_internal(
         # page with a custom port starts detached process
         attached = False if not is_app and port != 0 else True
 
+        server_ip = host if host not in [None, "", "*"] else "127.0.0.1"
         port = _start_flet_server(
-            port, attached, assets_dir, web_renderer, route_url_strategy
+            host, port, attached, assets_dir, web_renderer, route_url_strategy
         )
-        server = f"http://127.0.0.1:{port}"
+        server = f"http://{server_ip}:{port}"
 
     connected = threading.Event()
 
@@ -227,7 +233,9 @@ def _connect_internal(
     return conn
 
 
-def _start_flet_server(port, attached, assets_dir, web_renderer, route_url_strategy):
+def _start_flet_server(
+    host, port, attached, assets_dir, web_renderer, route_url_strategy
+):
 
     if port == 0:
         port = _get_free_tcp_port()
@@ -266,6 +274,13 @@ def _start_flet_server(port, attached, assets_dir, web_renderer, route_url_strat
                 )
         logging.info(f"Assets path configured: {assets_dir}")
         fletd_env["FLET_STATIC_ROOT_DIR"] = assets_dir
+
+    if host not in [None, "", "*"]:
+        logging.info(f"Host binding configured: {host}")
+        fletd_env["FLET_SERVER_IP"] = host
+
+        if host != "127.0.0.1":
+            fletd_env["FLET_ALLOW_REMOTE_HOST_CLIENTS"] = "true"
 
     if web_renderer not in [None, "", "auto"]:
         logging.info(f"Web renderer configured: {web_renderer}")

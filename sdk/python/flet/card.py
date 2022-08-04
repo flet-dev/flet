@@ -2,10 +2,10 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from flet import margin
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, MarginValue, OptionalNumber
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
+from flet.types import MarginValue
 
 
 class Card(ConstrainedControl):
@@ -55,6 +55,9 @@ class Card(ConstrainedControl):
     def _get_control_name(self):
         return "card"
 
+    def _before_build_command(self):
+        self._set_attr_json("margin", self.__margin)
+
     def _get_children(self):
         children = []
         if self.__content != None:
@@ -71,9 +74,6 @@ class Card(ConstrainedControl):
     @beartype
     def margin(self, value: MarginValue):
         self.__margin = value
-        if value != None and isinstance(value, (int, float)):
-            value = margin.all(value)
-        self._set_attr_json("margin", value)
 
     # elevation
     @property

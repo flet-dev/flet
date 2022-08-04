@@ -8,6 +8,8 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_children_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../web_socket_client.dart';
 import 'create_control.dart';
 import 'form_field.dart';
@@ -30,12 +32,16 @@ class DropdownControl extends StatefulWidget {
 
 class _DropdownControlState extends State<DropdownControl> {
   String? _value;
+  bool _focused = false;
   final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _focusNode.addListener(() {
+      setState(() {
+        _focused = _focusNode.hasFocus;
+      });
       ws.pageEventFromWeb(
           eventTarget: widget.control.id,
           eventName: _focusNode.hasFocus ? "focus" : "blur",
@@ -57,6 +63,21 @@ class _DropdownControlState extends State<DropdownControl> {
 
           bool autofocus = widget.control.attrBool("autofocus", false)!;
           bool disabled = widget.control.isDisabled || widget.parentDisabled;
+
+          var textSize = widget.control.attrDouble("textSize");
+
+          var color = HexColor.fromString(
+              Theme.of(context), widget.control.attrString("color", "")!);
+          var focusedColor = HexColor.fromString(Theme.of(context),
+              widget.control.attrString("focusedColor", "")!);
+
+          TextStyle? textStyle;
+          if (textSize != null || color != null || focusedColor != null) {
+            textStyle = TextStyle(
+                fontSize: textSize,
+                color: (_focused ? focusedColor ?? color : color) ??
+                    Theme.of(context).colorScheme.onSurface);
+          }
 
           var items = itemsView.children
               .where((c) => c.name == null)
@@ -96,15 +117,21 @@ class _DropdownControlState extends State<DropdownControl> {
             }
           }
 
+          var borderRadius = parseBorderRadius(widget.control, "borderRadius");
+
           Widget dropDown = DropdownButtonFormField<String>(
+            style: textStyle,
             autofocus: autofocus,
             focusNode: _focusNode,
             value: _value,
+            borderRadius: borderRadius,
             decoration: buildInputDecoration(
+                context,
                 widget.control,
                 prefixControls.isNotEmpty ? prefixControls.first : null,
                 suffixControls.isNotEmpty ? suffixControls.first : null,
-                null),
+                null,
+                _focused),
             onChanged: (String? value) {
               debugPrint("Dropdown selected value: $value");
               setState(() {

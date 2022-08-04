@@ -2,9 +2,9 @@ from typing import List, Optional
 
 from beartype import beartype
 
-from flet import padding
-from flet.control import Control, MainAxisAlignment, PaddingValue
+from flet.control import Control, MainAxisAlignment
 from flet.ref import Ref
+from flet.types import PaddingValue
 
 
 class AlertDialog(Control):
@@ -54,6 +54,11 @@ class AlertDialog(Control):
 
     def _get_control_name(self):
         return "alertdialog"
+
+    def _before_build_command(self):
+        self._set_attr_json("actionsPadding", self.__actions_padding)
+        self._set_attr_json("contentPadding", self.__content_padding)
+        self._set_attr_json("titlePadding", self.__title_padding)
 
     def _get_children(self):
         children = []
@@ -106,9 +111,6 @@ class AlertDialog(Control):
     @beartype
     def title_padding(self, value: PaddingValue):
         self.__title_padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("titlePadding", value)
 
     # content
     @property
@@ -128,9 +130,6 @@ class AlertDialog(Control):
     @beartype
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("contentPadding", value)
 
     # actions
     @property
@@ -150,9 +149,6 @@ class AlertDialog(Control):
     @beartype
     def actions_padding(self, value: PaddingValue):
         self.__actions_padding = value
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("actionsPadding", value)
 
     # actions_alignment
     @property

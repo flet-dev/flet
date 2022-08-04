@@ -1,4 +1,5 @@
 // One simple action: Increment
+import 'package:flet_view/models/window_media_data.dart';
 import 'package:flet_view/protocol/add_page_controls_payload.dart';
 import 'package:flet_view/protocol/clean_control_payload.dart';
 import 'package:flet_view/protocol/message.dart';
@@ -46,12 +47,16 @@ AppState appReducer(AppState state, dynamic action) {
       var pageAttrs = Map.of(page.attrs);
       pageAttrs["width"] = action.newPageSize.width.toString();
       pageAttrs["height"] = action.newPageSize.height.toString();
-      controls[page.id] = page.copyWith(attrs: pageAttrs);
 
       List<Map<String, String>> props = [
         {"i": "page", "width": action.newPageSize.width.toString()},
         {"i": "page", "height": action.newPageSize.height.toString()},
       ];
+
+      if (action.wmd != null) {
+        addWindowMediaEventProps(action.wmd!, pageAttrs, props);
+      }
+      controls[page.id] = page.copyWith(attrs: pageAttrs);
       ws.updateControlProps(props: props);
       ws.pageEventFromWeb(
           eventTarget: "page",
@@ -61,6 +66,7 @@ AppState appReducer(AppState state, dynamic action) {
     }
 
     return state.copyWith(
+        isRegistered: true,
         controls: controls,
         size: action.newPageSize,
         sizeBreakpoint: newBreakpoint);
@@ -119,24 +125,10 @@ AppState appReducer(AppState state, dynamic action) {
     var controls = Map.of(state.controls);
     if (page != null && !state.isLoading) {
       var pageAttrs = Map.of(page.attrs);
-      pageAttrs["windowwidth"] = action.wmd.width.toString();
-      pageAttrs["windowheight"] = action.wmd.height.toString();
-      pageAttrs["windowtop"] = action.wmd.top.toString();
-      pageAttrs["windowleft"] = action.wmd.left.toString();
-      pageAttrs["windowminimized"] = action.wmd.isMinimized.toString();
-      pageAttrs["windowmaximized"] = action.wmd.isMaximized.toString();
-      pageAttrs["windowfocused"] = action.wmd.isFocused.toString();
-      controls[page.id] = page.copyWith(attrs: pageAttrs);
+      List<Map<String, String>> props = [];
+      addWindowMediaEventProps(action.wmd, pageAttrs, props);
 
-      List<Map<String, String>> props = [
-        {"i": "page", "windowwidth": action.wmd.width.toString()},
-        {"i": "page", "windowheight": action.wmd.height.toString()},
-        {"i": "page", "windowtop": action.wmd.top.toString()},
-        {"i": "page", "windowleft": action.wmd.left.toString()},
-        {"i": "page", "windowminimized": action.wmd.isMinimized.toString()},
-        {"i": "page", "windowmaximized": action.wmd.isMaximized.toString()},
-        {"i": "page", "windowfocused": action.wmd.isFocused.toString()},
-      ];
+      controls[page.id] = page.copyWith(attrs: pageAttrs);
       ws.updateControlProps(props: props);
       ws.pageEventFromWeb(
           eventTarget: "page",
@@ -265,6 +257,27 @@ AppState appReducer(AppState state, dynamic action) {
   }
 
   return state;
+}
+
+addWindowMediaEventProps(WindowMediaData wmd, Map<String, String> pageAttrs,
+    List<Map<String, String>> props) {
+  pageAttrs["windowwidth"] = wmd.width.toString();
+  pageAttrs["windowheight"] = wmd.height.toString();
+  pageAttrs["windowtop"] = wmd.top.toString();
+  pageAttrs["windowleft"] = wmd.left.toString();
+  pageAttrs["windowminimized"] = wmd.isMinimized.toString();
+  pageAttrs["windowmaximized"] = wmd.isMaximized.toString();
+  pageAttrs["windowfocused"] = wmd.isFocused.toString();
+
+  props.addAll([
+    {"i": "page", "windowwidth": wmd.width.toString()},
+    {"i": "page", "windowheight": wmd.height.toString()},
+    {"i": "page", "windowtop": wmd.top.toString()},
+    {"i": "page", "windowleft": wmd.left.toString()},
+    {"i": "page", "windowminimized": wmd.isMinimized.toString()},
+    {"i": "page", "windowmaximized": wmd.isMaximized.toString()},
+    {"i": "page", "windowfocused": wmd.isFocused.toString()},
+  ]);
 }
 
 addControls(Map<String, Control> controls, List<Control> newControls) {

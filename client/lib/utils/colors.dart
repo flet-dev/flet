@@ -80,6 +80,7 @@ Map<String, Color> _plainColors = {
   "black54": Colors.black54,
   "black87": Colors.black87,
   "black": Colors.black,
+  "transparent": Colors.transparent
 };
 
 Map<String, MaterialColor> _materialColors = {
@@ -126,7 +127,9 @@ Map<String, MaterialAccentColor> _materialAccentColors = {
 extension HexColor on Color {
   static Color? fromString(ThemeData? theme, String colorString) {
     if (colorString.startsWith("#")) {
-      return HexColor._fromHex(colorString);
+      return HexColor._fromHex(colorString.substring(1));
+    } else if (colorString.startsWith("0x")) {
+      return HexColor._fromHex(colorString.substring(2));
     } else {
       return HexColor._fromNamedColor(theme, colorString);
     }
@@ -176,8 +179,8 @@ extension HexColor on Color {
   /// String is in the format "aabbcc" or "ffaabbcc" with an optional leading "#".
   static Color _fromHex(String hexString) {
     final buffer = StringBuffer();
-    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
-    buffer.write(hexString.replaceFirst('#', ''));
+    if (hexString.length == 6) buffer.write('ff');
+    buffer.write(hexString);
     return Color(int.parse(buffer.toString(), radix: 16));
   }
 

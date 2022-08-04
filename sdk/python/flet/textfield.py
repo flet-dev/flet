@@ -2,10 +2,11 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from flet.control import Control, InputBorder, OptionalNumber, PaddingValue, TextAlign
+from flet.control import Control, InputBorder, OptionalNumber, TextAlign
 from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
+from flet.types import BorderRadiusValue, PaddingValue
 
 try:
     from typing import Literal
@@ -27,6 +28,8 @@ TextInputType = Literal[
     "none",
 ]
 
+TextCapitalization = Literal[None, "none", "characters", "words", "sentences"]
+
 
 class TextField(FormFieldControl):
     def __init__(
@@ -43,9 +46,19 @@ class TextField(FormFieldControl):
         #
         # FormField specific
         #
+        text_size: OptionalNumber = None,
         label: str = None,
         icon: str = None,
         border: InputBorder = None,
+        color: str = None,
+        bgcolor: str = None,
+        border_radius: BorderRadiusValue = None,
+        border_width: OptionalNumber = None,
+        border_color: str = None,
+        focused_color: str = None,
+        focused_bgcolor: str = None,
+        focused_border_width: OptionalNumber = None,
+        focused_border_color: str = None,
         content_padding: PaddingValue = None,
         filled: bool = None,
         hint_text: str = None,
@@ -66,12 +79,16 @@ class TextField(FormFieldControl):
         multiline: bool = None,
         min_lines: int = None,
         max_lines: int = None,
+        max_length: int = None,
         password: bool = None,
         can_reveal_password: bool = None,
         read_only: bool = None,
         shift_enter: bool = None,
         text_align: TextAlign = None,
         autofocus: bool = None,
+        capitalization: TextCapitalization = None,
+        cursor_color: str = None,
+        selection_color: str = None,
         on_change=None,
         on_submit=None,
         on_focus=None,
@@ -91,9 +108,19 @@ class TextField(FormFieldControl):
             #
             # FormField
             #
+            text_size=text_size,
             label=label,
             icon=icon,
             border=border,
+            color=color,
+            bgcolor=bgcolor,
+            border_radius=border_radius,
+            border_width=border_width,
+            border_color=border_color,
+            focused_color=focused_color,
+            focused_bgcolor=focused_bgcolor,
+            focused_border_width=focused_border_width,
+            focused_border_color=focused_border_color,
             content_padding=content_padding,
             filled=filled,
             hint_text=hint_text,
@@ -113,11 +140,15 @@ class TextField(FormFieldControl):
         self.multiline = multiline
         self.min_lines = min_lines
         self.max_lines = max_lines
+        self.max_length = max_length
         self.read_only = read_only
         self.shift_enter = shift_enter
         self.password = password
         self.can_reveal_password = can_reveal_password
         self.autofocus = autofocus
+        self.capitalization = capitalization
+        self.cursor_color = cursor_color
+        self.selection_color = selection_color
         self.on_change = on_change
         self.on_submit = on_submit
         self.on_focus = on_focus
@@ -189,6 +220,16 @@ class TextField(FormFieldControl):
     def max_lines(self, value: Optional[int]):
         self._set_attr("maxLines", value)
 
+    # max_length
+    @property
+    def max_length(self):
+        return self._get_attr("maxLength")
+
+    @max_length.setter
+    @beartype
+    def max_length(self, value: Optional[int]):
+        self._set_attr("maxLength", value)
+
     # read_only
     @property
     def read_only(self):
@@ -238,6 +279,34 @@ class TextField(FormFieldControl):
     @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # capitalization
+    @property
+    def capitalization(self):
+        return self._get_attr("capitalization")
+
+    @capitalization.setter
+    @beartype
+    def capitalization(self, value: TextCapitalization):
+        self._set_attr("capitalization", value)
+
+    # cursor_color
+    @property
+    def cursor_color(self):
+        return self._get_attr("cursorColor")
+
+    @cursor_color.setter
+    def cursor_color(self, value):
+        self._set_attr("cursorColor", value)
+
+    # selection_color
+    @property
+    def selection_color(self):
+        return self._get_attr("selectionColor")
+
+    @selection_color.setter
+    def selection_color(self, value):
+        self._set_attr("selectionColor", value)
 
     # on_change
     @property

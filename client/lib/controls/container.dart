@@ -5,6 +5,7 @@ import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/gradient.dart';
 import '../web_socket_client.dart';
 import 'create_control.dart';
 
@@ -32,10 +33,12 @@ class ContainerControl extends StatelessWidget {
         children.where((c) => c.name == "content" && c.isVisible);
     bool ink = control.attrBool("ink", false)!;
     bool onClick = control.attrBool("onclick", false)!;
+    bool onLongPress = control.attrBool("onLongPress", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     var boxDecor = BoxDecoration(
         color: bgColor,
+        gradient: parseGradient(Theme.of(context), control, "gradient"),
         border: parseBorder(Theme.of(context), control, "border"),
         borderRadius: parseBorderRadius(control, "borderRadius"));
 
@@ -43,19 +46,30 @@ class ContainerControl extends StatelessWidget {
         ? createControl(control, contentCtrls.first.id, disabled)
         : null;
 
-    if (onClick && ink) {
+    if ((onClick || onLongPress) && ink) {
       return constrainedControl(
           Container(
             margin: parseEdgeInsets(control, "margin"),
             child: Ink(
                 child: InkWell(
-                    onTap: () {
-                      debugPrint("Container ${control.id} clicked!");
-                      ws.pageEventFromWeb(
-                          eventTarget: control.id,
-                          eventName: "click",
-                          eventData: control.attrs["data"] ?? "");
-                    },
+                    onTap: onClick
+                        ? () {
+                            debugPrint("Container ${control.id} clicked!");
+                            ws.pageEventFromWeb(
+                                eventTarget: control.id,
+                                eventName: "click",
+                                eventData: control.attrs["data"] ?? "");
+                          }
+                        : null,
+                    onLongPress: onLongPress
+                        ? () {
+                            debugPrint("Container ${control.id} long pressed!");
+                            ws.pageEventFromWeb(
+                                eventTarget: control.id,
+                                eventName: "long_press",
+                                eventData: control.attrs["data"] ?? "");
+                          }
+                        : null,
                     child: Container(
                       child: child,
                       padding: parseEdgeInsets(control, "padding"),
@@ -67,33 +81,41 @@ class ContainerControl extends StatelessWidget {
           parent,
           control);
     } else {
-      var container = constrainedControl(
-          Container(
-              padding: parseEdgeInsets(control, "padding"),
-              margin: parseEdgeInsets(control, "margin"),
-              alignment: parseAlignment(control, "alignment"),
-              decoration: boxDecor,
-              child: child),
-          parent,
-          control);
-      if (onClick) {
-        return MouseRegion(
+      Widget container = Container(
+          padding: parseEdgeInsets(control, "padding"),
+          margin: parseEdgeInsets(control, "margin"),
+          alignment: parseAlignment(control, "alignment"),
+          decoration: boxDecor,
+          child: child);
+
+      if (onClick || onLongPress) {
+        container = MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             child: container,
-            onTapDown: (details) {
-              debugPrint("Container ${control.id} clicked!");
-              ws.pageEventFromWeb(
-                  eventTarget: control.id,
-                  eventName: "click",
-                  eventData: control.attrString("data", "")! +
-                      "${details.localPosition.dx}:${details.localPosition.dy} ${details.globalPosition.dx}:${details.globalPosition.dy}");
-            },
+            onTapDown: onClick
+                ? (details) {
+                    debugPrint("Container ${control.id} clicked!");
+                    ws.pageEventFromWeb(
+                        eventTarget: control.id,
+                        eventName: "click",
+                        eventData: control.attrString("data", "")! +
+                            "${details.localPosition.dx}:${details.localPosition.dy} ${details.globalPosition.dx}:${details.globalPosition.dy}");
+                  }
+                : null,
+            onLongPress: onLongPress
+                ? () {
+                    debugPrint("Container ${control.id} clicked!");
+                    ws.pageEventFromWeb(
+                        eventTarget: control.id,
+                        eventName: "long_press",
+                        eventData: control.attrs["data"] ?? "");
+                  }
+                : null,
           ),
         );
-      } else {
-        return container;
       }
+      return constrainedControl(container, parent, control);
     }
   }
 }

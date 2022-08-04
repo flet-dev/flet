@@ -97,14 +97,14 @@ class _PageControlState extends State<PageControl> {
             // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
             //     ? '-apple-system'
             //     : null,
-            visualDensity: VisualDensity.adaptivePlatformDensity);
+            visualDensity: VisualDensity.standard);
 
     var darkTheme = parseTheme(widget.control, "darkTheme") ??
         ThemeData(
             colorSchemeSeed: Colors.blue,
             brightness: Brightness.dark,
             useMaterial3: true,
-            visualDensity: VisualDensity.adaptivePlatformDensity);
+            visualDensity: VisualDensity.standard);
 
     var themeMode = ThemeMode.values.firstWhere(
         (t) =>
@@ -253,7 +253,7 @@ class _PageControlState extends State<PageControl> {
               distinct: true,
               converter: (store) => PageMediaViewModel.fromStore(store),
               builder: (context, media) {
-                debugPrint("Page media build: ${widget.control.id}");
+                debugPrint("MeterialApp.router build: ${widget.control.id}");
 
                 return MaterialApp.router(
                   routerDelegate: _routerDelegate,

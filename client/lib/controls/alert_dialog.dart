@@ -69,8 +69,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
       actions: actionCtrls
           .map((c) => createControl(widget.control, c.id, disabled))
           .toList(),
-      actionsPadding:
-          parseEdgeInsets(widget.control, "actionsPadding") ?? EdgeInsets.zero,
+      actionsPadding: parseEdgeInsets(widget.control, "actionsPadding"),
       actionsAlignment: actionsAlignment,
     );
   }

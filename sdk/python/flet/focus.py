@@ -1,9 +1,7 @@
-import dataclasses
 import time
-from typing import Optional
 
 
-@dataclasses.dataclass
 class FocusData:
-    ts: str = dataclasses.field(default=str(time.time()))
-    d: Optional[str] = dataclasses.field(default=True)
+    def __init__(self) -> None:
+        self.ts = str(time.time())
+        self.d = True

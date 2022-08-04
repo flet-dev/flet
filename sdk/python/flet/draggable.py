@@ -1,5 +1,3 @@
-from typing import List, Optional
-
 from beartype import beartype
 
 from flet.control import Control

@@ -15,7 +15,10 @@ EdgeInsets? parseEdgeInsets(Control control, String propName) {
   return edgeInsetsFromJson(j1);
 }
 
-EdgeInsets edgeInsetsFromJson(Map<String, dynamic> json) {
+EdgeInsets edgeInsetsFromJson(dynamic json) {
+  if (json is int || json is double) {
+    return EdgeInsets.all(parseDouble(json));
+  }
   return EdgeInsets.fromLTRB(parseDouble(json['l']), parseDouble(json['t']),
       parseDouble(json['r']), parseDouble(json['b']));
 }

@@ -8,6 +8,7 @@ import '../actions.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/colors.dart';
 import '../web_socket_client.dart';
 import 'create_control.dart';
 import 'form_field.dart';
@@ -33,8 +34,10 @@ class TextFieldControl extends StatefulWidget {
 class _TextFieldControlState extends State<TextFieldControl> {
   String _value = "";
   bool _revealPassword = false;
+  bool _focused = false;
   late TextEditingController _controller;
   late final FocusNode _focusNode = FocusNode();
+  String _lastFocusedTimestamp = "";
 
   late final _shiftEnterfocusNode = FocusNode(
     onKey: (FocusNode node, RawKeyEvent evt) {
@@ -57,12 +60,18 @@ class _TextFieldControlState extends State<TextFieldControl> {
     super.initState();
     _controller = TextEditingController();
     _shiftEnterfocusNode.addListener(() {
+      setState(() {
+        _focused = _shiftEnterfocusNode.hasFocus;
+      });
       ws.pageEventFromWeb(
           eventTarget: widget.control.id,
           eventName: _shiftEnterfocusNode.hasFocus ? "focus" : "blur",
           eventData: "");
     });
     _focusNode.addListener(() {
+      setState(() {
+        _focused = _focusNode.hasFocus;
+      });
       ws.pageEventFromWeb(
           eventTarget: widget.control.id,
           eventName: _focusNode.hasFocus ? "focus" : "blur",
@@ -113,6 +122,36 @@ class _TextFieldControlState extends State<TextFieldControl> {
               widget.control.attrBool("canRevealPassword", false)!;
           bool onChange = widget.control.attrBool("onChange", false)!;
 
+          var cursorColor = HexColor.fromString(
+              Theme.of(context), widget.control.attrString("cursorColor", "")!);
+          var selectionColor = HexColor.fromString(Theme.of(context),
+              widget.control.attrString("selectionColor", "")!);
+
+          int? maxLength = widget.control.attrInt("maxLength");
+
+          var textSize = widget.control.attrDouble("textSize");
+
+          var color = HexColor.fromString(
+              Theme.of(context), widget.control.attrString("color", "")!);
+          var focusedColor = HexColor.fromString(Theme.of(context),
+              widget.control.attrString("focusedColor", "")!);
+
+          TextStyle? textStyle;
+          if (textSize != null || color != null || focusedColor != null) {
+            textStyle = TextStyle(
+                fontSize: textSize,
+                color: _focused ? focusedColor ?? color : color);
+          }
+
+          TextCapitalization? textCapitalization = TextCapitalization.values
+              .firstWhere(
+                  (a) =>
+                      a.name.toLowerCase() ==
+                      widget.control
+                          .attrString("capitalization", "")!
+                          .toLowerCase(),
+                  orElse: () => TextCapitalization.none);
+
           Widget? revealPasswordIcon;
           if (password && canRevealPassword) {
             revealPasswordIcon = GestureDetector(
@@ -147,12 +186,15 @@ class _TextFieldControlState extends State<TextFieldControl> {
             debugPrint("Focus JSON value: $focusValue");
             var jv = json.decode(focusValue);
             var focus = jv["d"] as bool;
-            if (focus) {
+            var ts = jv["ts"] as String;
+            if (focus && ts != _lastFocusedTimestamp) {
               focusNode.requestFocus();
+              _lastFocusedTimestamp = ts;
             }
           }
 
           Widget textField = TextFormField(
+              style: textStyle,
               autofocus: autofocus,
               enabled: !disabled,
               onFieldSubmitted: !multiline
@@ -164,15 +206,23 @@ class _TextFieldControlState extends State<TextFieldControl> {
                     }
                   : null,
               decoration: buildInputDecoration(
+                  context,
                   widget.control,
                   prefixControls.isNotEmpty ? prefixControls.first : null,
                   suffixControls.isNotEmpty ? suffixControls.first : null,
-                  revealPasswordIcon),
+                  revealPasswordIcon,
+                  _focused),
               keyboardType: keyboardType,
               textAlign: textAlign,
               minLines: minLines,
               maxLines: maxLines,
+              maxLength: maxLength,
               readOnly: readOnly,
+              inputFormatters: textCapitalization != TextCapitalization.none
+                  ? [
+                      TextCapitalizationFormatter(textCapitalization),
+                    ]
+                  : null,
               obscureText: password && !_revealPassword,
               controller: _controller,
               focusNode: focusNode,
@@ -195,6 +245,13 @@ class _TextFieldControlState extends State<TextFieldControl> {
                 }
               });
 
+          if (cursorColor != null || selectionColor != null) {
+            textField = TextSelectionTheme(
+                data: TextSelectionTheme.of(context).copyWith(
+                    cursorColor: cursorColor, selectionColor: selectionColor),
+                child: textField);
+          }
+
           if (widget.control.attrInt("expand", 0)! > 0) {
             return constrainedControl(textField, widget.parent, widget.control);
           } else {
@@ -215,4 +272,68 @@ class _TextFieldControlState extends State<TextFieldControl> {
           }
         });
   }
+}
+
+class TextCapitalizationFormatter extends TextInputFormatter {
+  final TextCapitalization capitalization;
+
+  TextCapitalizationFormatter(this.capitalization);
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = '';
+
+    switch (capitalization) {
+      case TextCapitalization.words:
+        text = capitalizeFirstofEach(newValue.text);
+        break;
+      case TextCapitalization.sentences:
+        List<String> sentences = newValue.text.split('.');
+        for (int i = 0; i < sentences.length; i++) {
+          sentences[i] = inCaps(sentences[i]);
+          print(sentences[i]);
+        }
+        text = sentences.join('.');
+        break;
+      case TextCapitalization.characters:
+        text = allInCaps(newValue.text);
+        break;
+      case TextCapitalization.none:
+        text = newValue.text;
+        break;
+    }
+
+    return TextEditingValue(
+      text: text,
+      selection: newValue.selection,
+    );
+  }
+
+  /// 'Hello world'
+  static String inCaps(String text) {
+    if (text.isEmpty) {
+      return text;
+    }
+    String result = '';
+    for (int i = 0; i < text.length; i++) {
+      if (text[i] != ' ') {
+        result += '${text[i].toUpperCase()}${text.substring(i + 1)}';
+        break;
+      } else {
+        result += text[i];
+      }
+    }
+    return result;
+  }
+
+  /// 'HELLO WORLD'
+  static String allInCaps(String text) => text.toUpperCase();
+
+  /// 'Hello World'
+  static String capitalizeFirstofEach(String text) => text
+      .replaceAll(RegExp(' +'), ' ')
+      .split(" ")
+      .map((str) => inCaps(str))
+      .join(" ");
 }

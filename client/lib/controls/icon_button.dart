@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../web_socket_client.dart';
@@ -26,13 +27,18 @@ class IconButtonControl extends StatelessWidget {
     debugPrint("Button build: ${control.id}");
 
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
+    IconData? selectedIcon =
+        getMaterialIcon(control.attrString("selectedIcon", "")!);
     Color? iconColor = HexColor.fromString(
         Theme.of(context), control.attrString("iconColor", "")!);
+    Color? selectedIconColor = HexColor.fromString(
+        Theme.of(context), control.attrString("selectedIconColor", "")!);
     Color? bgColor = HexColor.fromString(
         Theme.of(context), control.attrString("bgColor", "")!);
     double? iconSize = control.attrDouble("iconSize");
     var contentCtrls = children.where((c) => c.name == "content");
     bool autofocus = control.attrBool("autofocus", false)!;
+    bool selected = control.attrBool("selected", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = disabled
@@ -47,6 +53,21 @@ class IconButtonControl extends StatelessWidget {
 
     Widget? button;
 
+    var theme = Theme.of(context);
+
+    var style = parseButtonStyle(Theme.of(context), control, "style",
+        defaultForegroundColor: theme.colorScheme.primary,
+        defaultBackgroundColor: Colors.transparent,
+        defaultOverlayColor: Colors.transparent,
+        defaultShadowColor: Colors.transparent,
+        defaultSurfaceTintColor: Colors.transparent,
+        defaultElevation: 0,
+        defaultPadding: const EdgeInsets.all(8),
+        defaultBorderSide: BorderSide.none,
+        defaultShape: theme.useMaterial3
+            ? const StadiumBorder()
+            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
+
     if (icon != null) {
       button = IconButton(
           autofocus: autofocus,
@@ -55,12 +76,22 @@ class IconButtonControl extends StatelessWidget {
             color: iconColor,
           ),
           iconSize: iconSize,
+          style: style,
+          isSelected: selected,
+          selectedIcon: selectedIcon != null
+              ? Icon(selectedIcon, color: selectedIconColor)
+              : null,
           onPressed: onPressed);
     } else if (contentCtrls.isNotEmpty) {
       button = IconButton(
           autofocus: autofocus,
           onPressed: onPressed,
           iconSize: iconSize,
+          style: style,
+          isSelected: selected,
+          selectedIcon: selectedIcon != null
+              ? Icon(selectedIcon, color: selectedIconColor)
+              : null,
           icon: createControl(control, contentCtrls.first.id, disabled));
     } else {
       return const ErrorControl(

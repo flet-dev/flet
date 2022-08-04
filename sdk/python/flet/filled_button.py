@@ -1,5 +1,6 @@
 from typing import Union
 
+from flet.buttons import ButtonStyle
 from flet.control import Control, OptionalNumber
 from flet.elevated_button import ElevatedButton
 from flet.ref import Ref
@@ -23,6 +24,7 @@ class FilledButton(ElevatedButton):
         #
         icon: str = None,
         icon_color: str = None,
+        style: ButtonStyle = None,
         content: Control = None,
         autofocus: bool = None,
         on_click=None,
@@ -44,6 +46,7 @@ class FilledButton(ElevatedButton):
             color="onPrimary",
             bgcolor="primary",
             elevation=0,
+            style=style,
             text=text,
             icon=icon,
             icon_color=icon_color,

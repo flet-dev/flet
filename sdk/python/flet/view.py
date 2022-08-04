@@ -7,10 +7,10 @@ from flet.control import (
     CrossAxisAlignment,
     MainAxisAlignment,
     OptionalNumber,
-    PaddingValue,
     ScrollMode,
 )
 from flet.floating_action_button import FloatingActionButton
+from flet.types import PaddingValue
 
 
 class View(Control):
@@ -44,6 +44,9 @@ class View(Control):
 
     def _get_control_name(self):
         return "view"
+
+    def _before_build_command(self):
+        self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
         children = []
@@ -133,9 +136,6 @@ class View(Control):
     @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
-        if value != None and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("padding", value)
 
     # bgcolor
     @property

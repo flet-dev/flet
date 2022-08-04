@@ -3,10 +3,10 @@ from typing import Optional, Union
 from beartype import beartype
 from beartype.typing import List
 
-from flet import padding
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber, PaddingValue
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
+from flet.types import PaddingValue
 
 try:
     from typing import Literal
@@ -42,6 +42,9 @@ class NavigationRailDestination(Control):
 
     def _get_control_name(self):
         return "navigationraildestination"
+
+    def _before_build_command(self):
+        self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
         children = []
@@ -124,9 +127,6 @@ class NavigationRailDestination(Control):
     @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
-        if value != None and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("padding", value)
 
 
 class NavigationRail(ConstrainedControl):

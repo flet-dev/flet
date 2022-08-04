@@ -95,7 +95,8 @@ for:
     install:
       - ps: .\ci\install_flutter.ps1
       - set PATH=C:\flutter\bin;%PATH%
-      - flutter --version
+      - flutter channel dev
+      - flutter upgrade
 
     build_script:
       - cd client
@@ -138,7 +139,8 @@ for:
       - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.3-stable.zip -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
-      - flutter --version
+      - flutter channel dev
+      - flutter upgrade
       - flutter config --enable-macos-desktop
       - flutter doctor
 
@@ -172,8 +174,9 @@ for:
     install:
       # Flutter SDK
       - sudo snap install flutter --classic
+      - flutter channel dev
+      - flutter upgrade
       - flutter sdk-path
-      - flutter --version
 
     build_script:
       - cd client
@@ -207,7 +210,8 @@ for:
       - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.3-stable.zip -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
-      - flutter --version
+      - flutter channel dev
+      - flutter upgrade
       - flutter doctor
 
     build_script:
@@ -249,8 +253,9 @@ for:
     install:
       # Flutter SDK
       - sudo snap install flutter --classic
+      - flutter channel dev
+      - flutter upgrade
       - flutter sdk-path
-      - flutter --version
 
       # Go and GoReleaser
       - gvm install go${GO_VERSION} -B

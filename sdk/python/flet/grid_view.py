@@ -2,10 +2,10 @@ from typing import List, Optional, Union
 
 from beartype import beartype
 
-from flet import padding
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber, PaddingValue
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
+from flet.types import PaddingValue
 
 
 class GridView(ConstrainedControl):
@@ -63,6 +63,9 @@ class GridView(ConstrainedControl):
 
     def _get_control_name(self):
         return "gridview"
+
+    def _before_build_command(self):
+        self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
         return self.__controls
@@ -140,9 +143,6 @@ class GridView(ConstrainedControl):
     @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
-        if value != None and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("padding", value)
 
     # controls
     @property

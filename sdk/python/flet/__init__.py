@@ -1,6 +1,8 @@
 from flet.alert_dialog import AlertDialog
+from flet.alignment import Alignment
 from flet.app_bar import AppBar
 from flet.banner import Banner
+from flet.buttons import ButtonStyle, OutlinedBorder
 from flet.card import Card
 from flet.checkbox import Checkbox
 from flet.circle_avatar import CircleAvatar
@@ -16,6 +18,7 @@ from flet.filled_button import FilledButton
 from flet.filled_tonal_button import FilledTonalButton
 from flet.flet import *
 from flet.floating_action_button import FloatingActionButton
+from flet.gradients import LinearGradient, RadialGradient, SweepGradient
 from flet.grid_view import GridView
 from flet.icon import Icon
 from flet.icon_button import IconButton
@@ -38,6 +41,7 @@ from flet.snack_bar import SnackBar
 from flet.stack import Stack
 from flet.switch import Switch
 from flet.tabs import Tab, Tabs
+from flet.template_route import TemplateRoute
 from flet.text import Text
 from flet.text_button import TextButton
 from flet.textfield import TextField
@@ -45,4 +49,3 @@ from flet.theme import Theme
 from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
 from flet.view import View
-from flet.template_route import TemplateRoute

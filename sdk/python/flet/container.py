@@ -2,19 +2,13 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from flet import border_radius, margin, padding
 from flet.alignment import Alignment
 from flet.border import Border
-from flet.border_radius import BorderRadius
 from flet.constrained_control import ConstrainedControl
-from flet.control import (
-    BorderRadiusValue,
-    Control,
-    MarginValue,
-    OptionalNumber,
-    PaddingValue,
-)
+from flet.control import Control, OptionalNumber
+from flet.gradients import Gradient
 from flet.ref import Ref
+from flet.types import BorderRadiusValue, MarginValue, PaddingValue
 
 try:
     from typing import Literal
@@ -46,10 +40,12 @@ class Container(ConstrainedControl):
         margin: MarginValue = None,
         alignment: Alignment = None,
         bgcolor: str = None,
+        gradient: Gradient = None,
         border: Border = None,
         border_radius: BorderRadiusValue = None,
         ink: bool = None,
         on_click=None,
+        on_long_press=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -73,13 +69,23 @@ class Container(ConstrainedControl):
         self.margin = margin
         self.alignment = alignment
         self.bgcolor = bgcolor
+        self.gradient = gradient
         self.border = border
         self.border_radius = border_radius
         self.ink = ink
         self.on_click = on_click
+        self.on_long_press = on_long_press
 
     def _get_control_name(self):
         return "container"
+
+    def _before_build_command(self):
+        self._set_attr_json("borderRadius", self.__border_radius)
+        self._set_attr_json("border", self.__border)
+        self._set_attr_json("margin", self.__margin)
+        self._set_attr_json("padding", self.__padding)
+        self._set_attr_json("alignment", self.__alignment)
+        self._set_attr_json("gradient", self.__gradient)
 
     def _get_children(self):
         children = []
@@ -97,7 +103,6 @@ class Container(ConstrainedControl):
     @beartype
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
-        self._set_attr_json("alignment", value)
 
     # padding
     @property
@@ -108,9 +113,6 @@ class Container(ConstrainedControl):
     @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
-        if value != None and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("padding", value)
 
     # margin
     @property
@@ -121,9 +123,6 @@ class Container(ConstrainedControl):
     @beartype
     def margin(self, value: MarginValue):
         self.__margin = value
-        if value != None and isinstance(value, (int, float)):
-            value = margin.all(value)
-        self._set_attr_json("margin", value)
 
     # bgcolor
     @property
@@ -134,6 +133,16 @@ class Container(ConstrainedControl):
     def bgcolor(self, value):
         self._set_attr("bgColor", value)
 
+    # gradient
+    @property
+    def gradient(self):
+        return self.__gradient
+
+    @gradient.setter
+    @beartype
+    def gradient(self, value: Optional[Gradient]):
+        self.__gradient = value
+
     # border
     @property
     def border(self):
@@ -143,7 +152,6 @@ class Container(ConstrainedControl):
     @beartype
     def border(self, value: Optional[Border]):
         self.__border = value
-        self._set_attr_json("border", value)
 
     # border_radius
     @property
@@ -154,9 +162,6 @@ class Container(ConstrainedControl):
     @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
-        if value and isinstance(value, (int, float)):
-            value = border_radius.all(value)
-        self._set_attr_json("borderRadius", value)
 
     # content
     @property
@@ -190,3 +195,16 @@ class Container(ConstrainedControl):
             self._set_attr("onclick", True)
         else:
             self._set_attr("onclick", None)
+
+    # on_long_press
+    @property
+    def on_long_press(self):
+        return self._get_event_handler("long_press")
+
+    @on_long_press.setter
+    def on_long_press(self, handler):
+        self._add_event_handler("long_press", handler)
+        if handler != None:
+            self._set_attr("onLongPress", True)
+        else:
+            self._set_attr("onLongPress", None)
