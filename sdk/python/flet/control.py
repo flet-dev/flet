@@ -7,10 +7,7 @@ from typing import Union
 from beartype import beartype
 from beartype.typing import List, Optional
 
-from flet.border_radius import BorderRadius
 from flet.embed_json_encoder import EmbedJsonEncoder
-from flet.margin import Margin
-from flet.padding import Padding
 from flet.protocol import Command
 from flet.ref import Ref
 

@@ -2,7 +2,6 @@ from typing import List, Optional
 
 from beartype import beartype
 
-from flet import padding
 from flet.control import Control
 from flet.ref import Ref
 from flet.types import PaddingValue
@@ -53,15 +52,8 @@ class Banner(Control):
         return "banner"
 
     def _before_build_command(self):
-        value = self.__content_padding
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("contentPadding", value)
-
-        value = self.__leading_padding
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("leadingPadding", value)
+        self._set_attr_json("contentPadding", self.__content_padding)
+        self._set_attr_json("leadingPadding", self.__leading_padding)
 
     def _get_children(self):
         children = []

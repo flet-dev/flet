@@ -2,7 +2,6 @@ from typing import List, Optional
 
 from beartype import beartype
 
-from flet import padding
 from flet.control import Control, MainAxisAlignment
 from flet.ref import Ref
 from flet.types import PaddingValue
@@ -57,20 +56,9 @@ class AlertDialog(Control):
         return "alertdialog"
 
     def _before_build_command(self):
-        value = self.__actions_padding
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("actionsPadding", value)
-
-        value = self.__content_padding
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("contentPadding", value)
-
-        value = self.__title_padding
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("titlePadding", value)
+        self._set_attr_json("actionsPadding", self.__actions_padding)
+        self._set_attr_json("contentPadding", self.__content_padding)
+        self._set_attr_json("titlePadding", self.__title_padding)
 
     def _get_children(self):
         children = []

@@ -2,7 +2,6 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from flet import border_radius, padding
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, InputBorder, OptionalNumber
 from flet.ref import Ref
@@ -102,11 +101,7 @@ class FormFieldControl(ConstrainedControl):
 
     def _before_build_command(self):
         self._set_attr_json("borderRadius", self.__border_radius)
-
-        value = self.__content_padding
-        if value and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("contentPadding", value)
+        self._set_attr_json("contentPadding", self.__content_padding)
 
     def _get_children(self):
         children = []

@@ -3,7 +3,6 @@ from typing import Optional, Union
 from beartype import beartype
 from beartype.typing import List
 
-from flet import padding
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
@@ -45,10 +44,7 @@ class NavigationRailDestination(Control):
         return "navigationraildestination"
 
     def _before_build_command(self):
-        v = self.__padding
-        if v != None and isinstance(v, (int, float)):
-            v = padding.all(v)
-        self._set_attr_json("padding", v)
+        self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
         children = []

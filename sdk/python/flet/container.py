@@ -2,7 +2,6 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from flet import border_radius, margin, padding
 from flet.alignment import Alignment
 from flet.border import Border
 from flet.constrained_control import ConstrainedControl
@@ -81,23 +80,10 @@ class Container(ConstrainedControl):
         return "container"
 
     def _before_build_command(self):
-        # border_radius
         self._set_attr_json("borderRadius", self.__border_radius)
-
-        # border
         self._set_attr_json("border", self.__border)
-
-        # margin
-        value = self.__margin
-        if value != None and isinstance(value, (int, float)):
-            value = margin.all(value)
-        self._set_attr_json("margin", value)
-
-        # padding
-        value = self.__padding
-        if value != None and isinstance(value, (int, float)):
-            value = padding.all(value)
-        self._set_attr_json("padding", value)
+        self._set_attr_json("margin", self.__margin)
+        self._set_attr_json("padding", self.__padding)
 
         # alignment
         self._set_attr_json("alignment", self.__alignment)

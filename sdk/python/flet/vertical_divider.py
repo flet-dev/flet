@@ -1,5 +1,3 @@
-from typing import Union
-
 from beartype import beartype
 
 from flet.control import Control, OptionalNumber

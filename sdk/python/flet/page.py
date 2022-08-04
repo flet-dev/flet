@@ -6,7 +6,7 @@ import time
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
 
-from flet import constants, padding
+from flet import constants
 from flet.app_bar import AppBar
 from flet.banner import Banner
 from flet.clipboard import Clipboard

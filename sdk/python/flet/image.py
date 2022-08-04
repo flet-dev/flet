@@ -1,10 +1,8 @@
 from sys import version
-from typing import Optional, Union
+from typing import Union
 
 from beartype import beartype
 
-from flet import border_radius
-from flet.border_radius import BorderRadius
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 from flet.types import BorderRadiusValue

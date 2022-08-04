@@ -3,7 +3,6 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from flet import padding
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
@@ -75,10 +74,7 @@ class ListTile(ConstrainedControl):
         return "listtile"
 
     def _before_build_command(self):
-        v = self.__content_padding
-        if v and isinstance(v, (int, float)):
-            v = padding.all(v)
-        self._set_attr_json("contentPadding", v)
+        self._set_attr_json("contentPadding", self.__content_padding)
 
     def _get_children(self):
         children = []

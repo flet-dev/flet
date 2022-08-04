@@ -1,4 +1,3 @@
-from enum import auto
 from typing import Optional, Union
 
 from beartype import beartype

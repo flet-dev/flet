@@ -46,10 +46,7 @@ class View(Control):
         return "view"
 
     def _before_build_command(self):
-        v = self.__padding
-        if v != None and isinstance(v, (int, float)):
-            v = padding.all(v)
-        self._set_attr_json("padding", v)
+        self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
         children = []
