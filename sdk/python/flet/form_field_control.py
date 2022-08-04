@@ -101,10 +101,7 @@ class FormFieldControl(ConstrainedControl):
         self.suffix_text = suffix_text
 
     def _before_build_command(self):
-        value = self.__border_radius
-        if value and isinstance(value, (int, float)):
-            value = border_radius.all(value)
-        self._set_attr_json("borderRadius", value)
+        self._set_attr_json("borderRadius", self.__border_radius)
 
         value = self.__content_padding
         if value and isinstance(value, (int, float)):

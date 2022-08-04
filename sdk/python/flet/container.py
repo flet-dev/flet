@@ -82,10 +82,7 @@ class Container(ConstrainedControl):
 
     def _before_build_command(self):
         # border_radius
-        value = self.__border_radius
-        if value and isinstance(value, (int, float)):
-            value = border_radius.all(value)
-        self._set_attr_json("borderRadius", value)
+        self._set_attr_json("borderRadius", self.__border_radius)
 
         # border
         self._set_attr_json("border", self.__border)

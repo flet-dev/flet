@@ -65,10 +65,7 @@ class Image(Control):
         return "image"
 
     def _before_build_command(self):
-        v = self.__border_radius
-        if v and isinstance(v, (int, float)):
-            v = border_radius.all(v)
-        self._set_attr_json("borderRadius", v)
+        self._set_attr_json("borderRadius", self.__border_radius)
 
     # src
     @property
