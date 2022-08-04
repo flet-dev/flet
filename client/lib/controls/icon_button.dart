@@ -27,13 +27,18 @@ class IconButtonControl extends StatelessWidget {
     debugPrint("Button build: ${control.id}");
 
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
+    IconData? selectedIcon =
+        getMaterialIcon(control.attrString("selectedIcon", "")!);
     Color? iconColor = HexColor.fromString(
         Theme.of(context), control.attrString("iconColor", "")!);
+    Color? selectedIconColor = HexColor.fromString(
+        Theme.of(context), control.attrString("selectedIconColor", "")!);
     Color? bgColor = HexColor.fromString(
         Theme.of(context), control.attrString("bgColor", "")!);
     double? iconSize = control.attrDouble("iconSize");
     var contentCtrls = children.where((c) => c.name == "content");
     bool autofocus = control.attrBool("autofocus", false)!;
+    bool selected = control.attrBool("selected", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = disabled
@@ -72,6 +77,10 @@ class IconButtonControl extends StatelessWidget {
           ),
           iconSize: iconSize,
           style: style,
+          isSelected: selected,
+          selectedIcon: selectedIcon != null
+              ? Icon(selectedIcon, color: selectedIconColor)
+              : null,
           onPressed: onPressed);
     } else if (contentCtrls.isNotEmpty) {
       button = IconButton(
@@ -79,6 +88,10 @@ class IconButtonControl extends StatelessWidget {
           onPressed: onPressed,
           iconSize: iconSize,
           style: style,
+          isSelected: selected,
+          selectedIcon: selectedIcon != null
+              ? Icon(selectedIcon, color: selectedIconColor)
+              : null,
           icon: createControl(control, contentCtrls.first.id, disabled));
     } else {
       return const ErrorControl(
