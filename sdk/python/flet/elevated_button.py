@@ -56,6 +56,10 @@ class ElevatedButton(ConstrainedControl):
             data=data,
         )
 
+        self.__color = None
+        self.__bgcolor = None
+        self.__elevation = None
+
         self.text = text
         self.color = color
         self.bgcolor = bgcolor
@@ -72,6 +76,15 @@ class ElevatedButton(ConstrainedControl):
         return "elevatedbutton"
 
     def _before_build_command(self):
+        if self.__color != None or self.__bgcolor != None or self.__elevation != None:
+            if self.__style == None:
+                self.__style = ButtonStyle()
+            if self.__style.color == None:
+                self.__style.color = self.__color
+            if self.__style.bgcolor == None:
+                self.__style.bgcolor = self.__bgcolor
+            if self.__style.elevation == None:
+                self.__style.elevation = self.__elevation
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
@@ -92,30 +105,30 @@ class ElevatedButton(ConstrainedControl):
     # color
     @property
     def color(self):
-        return self._get_attr("color")
+        return self.__color
 
     @color.setter
     def color(self, value):
-        self._set_attr("color", value)
+        self.__color = value
 
     # bgcolor
     @property
     def bgcolor(self):
-        return self._get_attr("bgcolor")
+        return self.__bgcolor
 
     @bgcolor.setter
     def bgcolor(self, value):
-        self._set_attr("bgcolor", value)
+        self.__bgcolor = value
 
     # elevation
     @property
     def elevation(self) -> OptionalNumber:
-        return self._get_attr("elevation")
+        return self.__elevation
 
     @elevation.setter
     @beartype
     def elevation(self, value: OptionalNumber):
-        self._set_attr("elevation", value)
+        self.__elevation = value
 
     # style
     @property

@@ -59,18 +59,10 @@ class ElevatedButtonControl extends StatelessWidget {
           };
 
     ElevatedButton? button;
-    ButtonStyle? style;
-
-    if (color != null || bgcolor != null || elevation != null) {
-      style = ElevatedButton.styleFrom(
-        foregroundColor: color,
-        backgroundColor: bgcolor,
-      ).copyWith(elevation: ButtonStyleButton.allOrNull(elevation));
-    }
 
     var theme = Theme.of(context);
 
-    style ??= parseButtonStyle(Theme.of(context), control, "style",
+    var style = parseButtonStyle(Theme.of(context), control, "style",
         defaultForegroundColor: theme.colorScheme.primary,
         defaultBackgroundColor: theme.colorScheme.surface,
         defaultOverlayColor: theme.colorScheme.primary.withOpacity(0.08),
