@@ -8,54 +8,80 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import 'colors.dart';
 
-ButtonStyle? parseButtonStyle(
-    ThemeData theme, Control control, String propName) {
+ButtonStyle? parseButtonStyle(ThemeData theme, Control control, String propName,
+    {required Color defaultForegroundColor,
+    required Color defaultBackgroundColor,
+    required Color defaultOverlayColor,
+    required Color defaultShadowColor,
+    required Color defaultSurfaceTintColor,
+    required double defaultElevation,
+    required EdgeInsets defaultPadding,
+    required BorderSide defaultBorderSide,
+    required OutlinedBorder defaultShape}) {
   var v = control.attrString(propName, null);
   if (v == null) {
     return null;
   }
 
   final j1 = json.decode(v);
-  return buttonStyleFromJSON(theme, j1);
+  return buttonStyleFromJSON(
+      theme,
+      j1,
+      defaultForegroundColor,
+      defaultBackgroundColor,
+      defaultOverlayColor,
+      defaultShadowColor,
+      defaultSurfaceTintColor,
+      defaultElevation,
+      defaultPadding,
+      defaultBorderSide,
+      defaultShape);
 }
 
-ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic> json) {
+ButtonStyle? buttonStyleFromJSON(
+    ThemeData theme,
+    Map<String, dynamic> json,
+    Color defaultForegroundColor,
+    Color defaultBackgroundColor,
+    Color defaultOverlayColor,
+    Color defaultShadowColor,
+    Color defaultSurfaceTintColor,
+    double defaultElevation,
+    EdgeInsets defaultPadding,
+    BorderSide defaultBorderSide,
+    OutlinedBorder defaultShape) {
   return ButtonStyle(
       foregroundColor: getMaterialStateProperty(
           json["color"],
           (jv) => HexColor.fromString(theme, jv as String),
-          theme.colorScheme.primary),
+          defaultForegroundColor),
       backgroundColor: getMaterialStateProperty(
           json["bgcolor"],
           (jv) => HexColor.fromString(theme, jv as String),
-          theme.colorScheme.surface),
+          defaultBackgroundColor),
       overlayColor: getMaterialStateProperty(
           json["overlay_color"],
           (jv) => HexColor.fromString(theme, jv as String),
-          theme.colorScheme.primary.withOpacity(0.08)),
-      shadowColor: getMaterialStateProperty(
-          json["shadow_color"],
-          (jv) => HexColor.fromString(theme, jv as String),
-          theme.colorScheme.shadow),
+          defaultOverlayColor),
+      shadowColor: getMaterialStateProperty(json["shadow_color"],
+          (jv) => HexColor.fromString(theme, jv as String), defaultShadowColor),
       surfaceTintColor: getMaterialStateProperty(
           json["surface_tint_color"],
           (jv) => HexColor.fromString(theme, jv as String),
-          theme.colorScheme.surfaceTint),
+          defaultSurfaceTintColor),
       elevation: getMaterialStateProperty(
-          json["elevation"], (jv) => parseDouble(jv), 1),
+          json["elevation"], (jv) => parseDouble(jv), defaultElevation),
       animationDuration: json["animation_duration"] != null
           ? Duration(milliseconds: parseInt(json["animation_duration"][""]))
           : null,
       padding: getMaterialStateProperty(
-          json["padding"],
-          (jv) => edgeInsetsFromJson(jv),
-          const EdgeInsets.symmetric(horizontal: 8)),
+          json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
       side: getMaterialStateProperty(
           json["side"],
           (jv) => borderSideFromJSON(theme, jv, theme.colorScheme.outline),
-          BorderSide.none),
-      shape: getMaterialStateProperty(json["shape"],
-          (jv) => outlinedBorderFromJSON(jv), const StadiumBorder()));
+          defaultBorderSide),
+      shape: getMaterialStateProperty(
+          json["shape"], (jv) => outlinedBorderFromJSON(jv), defaultShape));
 }
 
 MaterialStateProperty<T>? getMaterialStateProperty<T>(

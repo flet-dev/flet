@@ -72,7 +72,6 @@ class ElevatedButton(ConstrainedControl):
         return "elevatedbutton"
 
     def _before_build_command(self):
-        # style
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):

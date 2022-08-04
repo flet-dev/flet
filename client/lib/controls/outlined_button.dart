@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../web_socket_client.dart';
@@ -54,11 +55,27 @@ class OutlinedButtonControl extends StatelessWidget {
 
     OutlinedButton? button;
 
+    var theme = Theme.of(context);
+
+    var style = parseButtonStyle(Theme.of(context), control, "style",
+        defaultForegroundColor: theme.colorScheme.primary,
+        defaultBackgroundColor: Colors.transparent,
+        defaultOverlayColor: Colors.transparent,
+        defaultShadowColor: Colors.transparent,
+        defaultSurfaceTintColor: Colors.transparent,
+        defaultElevation: 0,
+        defaultPadding: const EdgeInsets.all(8),
+        defaultBorderSide: BorderSide(color: theme.colorScheme.outline),
+        defaultShape: theme.useMaterial3
+            ? const StadiumBorder()
+            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
+
     if (icon != null) {
       button = OutlinedButton.icon(
           autofocus: autofocus,
           onPressed: onPressed,
           onLongPress: onLongPress,
+          style: style,
           icon: Icon(
             icon,
             color: iconColor,
@@ -69,10 +86,14 @@ class OutlinedButtonControl extends StatelessWidget {
           autofocus: autofocus,
           onPressed: onPressed,
           onLongPress: onLongPress,
+          style: style,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {
       button = OutlinedButton(
-          onPressed: onPressed, onLongPress: onLongPress, child: Text(text));
+          style: style,
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          child: Text(text));
     }
 
     return constrainedControl(button, parent, control);

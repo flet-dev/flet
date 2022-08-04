@@ -68,7 +68,20 @@ class ElevatedButtonControl extends StatelessWidget {
       ).copyWith(elevation: ButtonStyleButton.allOrNull(elevation));
     }
 
-    style ??= parseButtonStyle(Theme.of(context), control, "style");
+    var theme = Theme.of(context);
+
+    style ??= parseButtonStyle(Theme.of(context), control, "style",
+        defaultForegroundColor: theme.colorScheme.primary,
+        defaultBackgroundColor: theme.colorScheme.surface,
+        defaultOverlayColor: theme.colorScheme.primary.withOpacity(0.08),
+        defaultShadowColor: theme.colorScheme.shadow,
+        defaultSurfaceTintColor: theme.colorScheme.surfaceTint,
+        defaultElevation: 1,
+        defaultPadding: const EdgeInsets.symmetric(horizontal: 8),
+        defaultBorderSide: BorderSide.none,
+        defaultShape: theme.useMaterial3
+            ? const StadiumBorder()
+            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
     if (icon != null) {
       button = ElevatedButton.icon(
