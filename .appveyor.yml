@@ -95,7 +95,7 @@ for:
     install:
       - ps: .\ci\install_flutter.ps1
       - set PATH=C:\flutter\bin;%PATH%
-      - flutter channel dev
+      - flutter channel beta
       - flutter upgrade
 
     build_script:
@@ -139,7 +139,7 @@ for:
       - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.3-stable.zip -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
-      - flutter channel dev
+      - flutter channel beta
       - flutter upgrade
       - flutter config --enable-macos-desktop
       - flutter doctor
@@ -174,7 +174,7 @@ for:
     install:
       # Flutter SDK
       - sudo snap install flutter --classic
-      - flutter channel dev
+      - flutter channel beta
       - flutter upgrade
       - flutter sdk-path
 
@@ -210,7 +210,7 @@ for:
       - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.3-stable.zip -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
-      - flutter channel dev
+      - flutter channel beta
       - flutter upgrade
       - flutter doctor
 
@@ -253,7 +253,7 @@ for:
     install:
       # Flutter SDK
       - sudo snap install flutter --classic
-      - flutter channel dev
+      - flutter channel beta
       - flutter upgrade
       - flutter sdk-path
 
