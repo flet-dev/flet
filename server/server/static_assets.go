@@ -2,7 +2,6 @@ package server
 
 import (
 	"net/http"
-	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -40,15 +39,4 @@ func (fs AssetsFS) Open(name string) (file http.File, err error) {
 	}
 	file, err = fs.embedAssets.Open(name)
 	return
-}
-
-func findCachedFileName(files map[string]bool, path string) string {
-	pathParts := strings.Split(strings.TrimPrefix(path, "/"), "/")
-	for i := 0; i < len(pathParts); i++ {
-		partialPath := strings.Join(pathParts[i:], "/")
-		if _, exists := files[partialPath]; exists {
-			return partialPath
-		}
-	}
-	return ""
 }

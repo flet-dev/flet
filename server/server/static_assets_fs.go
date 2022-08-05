@@ -1,9 +1,9 @@
 package server
 
 import (
-	"io/fs"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/flet-dev/flet/server/config"
@@ -11,13 +11,11 @@ import (
 )
 
 type FileSystemAssetsSFS struct {
-	files  map[string]bool
-	prefix string
-	httpFS http.FileSystem
+	rootWebDir string
+	httpFS     http.FileSystem
 }
 
 func newFileSystemAssetsSFS() *FileSystemAssetsSFS {
-	files := make(map[string]bool)
 	rootWebDir := config.StaticRootDir()
 
 	if rootWebDir == "" {
@@ -30,31 +28,29 @@ func newFileSystemAssetsSFS() *FileSystemAssetsSFS {
 
 	log.Debugln("Static assets directory configured:", rootWebDir)
 
-	dirFs := os.DirFS(rootWebDir)
-	fs.WalkDir(dirFs, ".", func(path string, d fs.DirEntry, err error) error {
-		if !d.IsDir() {
-			files[strings.TrimPrefix(path, rootWebDir)] = true
-		}
-		return nil
-	})
-
-	for k := range files {
-		log.Debugln("FileSystemAssetsFS item:", k)
-	}
-
 	return &FileSystemAssetsSFS{
-		files:  files,
-		prefix: rootWebDir,
-		httpFS: http.FS(dirFs),
+		rootWebDir: rootWebDir,
+		httpFS:     http.FS(os.DirFS(rootWebDir)),
 	}
 }
 
 func (fs *FileSystemAssetsSFS) Exists(prefix string, path string) bool {
 	//log.Debugln("FileSystemAssetsFS Exists: ", prefix, path)
-	return findCachedFileName(fs.files, path) != ""
+	return fs.findFullPath(path) != ""
 }
 
 func (fs *FileSystemAssetsSFS) Open(name string) (http.File, error) {
 	//log.Debugln("FileSystemAssetsFS Open: ", name)
-	return fs.httpFS.Open(findCachedFileName(fs.files, name))
+	return fs.httpFS.Open(fs.findFullPath(name))
+}
+
+func (fs *FileSystemAssetsSFS) findFullPath(path string) string {
+	pathParts := strings.Split(strings.TrimPrefix(path, "/"), "/")
+	for i := 0; i < len(pathParts); i++ {
+		partialPath := strings.Join(pathParts[i:], "/")
+		if _, err := os.Stat(filepath.Join(fs.rootWebDir, partialPath)); err == nil {
+			return partialPath
+		}
+	}
+	return ""
 }
