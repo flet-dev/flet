@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -12,7 +15,7 @@ class ImageControl extends StatelessWidget {
   final Control? parent;
   final Control control;
 
-  const ImageControl({Key? key, this.parent, required this.control})
+  const ImageControl({Key? key, required this.parent, required this.control})
       : super(key: key);
 
   @override
@@ -20,8 +23,10 @@ class ImageControl extends StatelessWidget {
     debugPrint("Image build: ${control.id}");
 
     var src = control.attrString("src", "")!;
-    if (src == "") {
-      return const ErrorControl("Image must have 'src' specified.");
+    var srcBase64 = control.attrString("srcBase64", "")!;
+    if (src == "" && srcBase64 == "") {
+      return const ErrorControl(
+          "Image must have 'src' or 'src_base64' specified.");
     }
 
     double? width = control.attrDouble("width", null);
@@ -38,29 +43,31 @@ class ImageControl extends StatelessWidget {
         orElse: () => BoxFit.none);
 
     var uri = Uri.parse(src);
-    if (!uri.hasAuthority) {
-      // wrap into StoreConnector
-      return StoreConnector<AppState, Uri?>(
-          distinct: true,
-          converter: (store) => store.state.pageUri,
-          builder: (context, pageUri) {
-            return baseControl(
-                _clipCorners(
-                    Image.network(getAssetUri(pageUri!, src).toString(),
-                        width: width, height: height, repeat: repeat, fit: fit),
-                    control),
-                parent,
-                control);
-          });
-    } else {
-      return baseControl(
-          _clipCorners(
-              Image.network(src,
-                  width: width, height: height, repeat: repeat, fit: fit),
-              control),
-          parent,
-          control);
-    }
+    return StoreConnector<AppState, Uri?>(
+        distinct: true,
+        converter: (store) => store.state.pageUri,
+        builder: (context, pageUri) {
+          Image? image;
+
+          if (srcBase64 != "") {
+            try {
+              Uint8List bytes = base64Decode(srcBase64);
+              image = Image.memory(bytes,
+                  width: width, height: height, repeat: repeat, fit: fit);
+            } catch (ex) {
+              return ErrorControl("Error decoding base64: ${ex.toString()}");
+            }
+          } else {
+            image = Image.network(
+                uri.hasAuthority ? src : getAssetUri(pageUri!, src).toString(),
+                width: width,
+                height: height,
+                repeat: repeat,
+                fit: fit);
+          }
+
+          return baseControl(_clipCorners(image!, control), parent, control);
+        });
   }
 
   Widget _clipCorners(Widget image, Control control) {

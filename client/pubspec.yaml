@@ -41,6 +41,8 @@ dependencies:
   http: ^0.13.3
   collection: ^1.16.0
   url_strategy: ^0.2.0
+  url_launcher: ^6.1.5
+  flutter_markdown: ^0.6.10+3
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +55,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
 
+  # Docs: https://pub.dev/packages/flutter_launcher_icons_maker
   flutter_launcher_icons_maker: "^0.10.1"
 
 # For information on the generic Dart part of this file, see the
@@ -97,6 +100,7 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
 flutter_icons:
-  #android: true
+  android: true
   ios: true
   image_path: "assets/icon/flet-ios-1024.png"
+  image_path_android: "assets/icon/flet-android-192.png"

@@ -44,10 +44,21 @@ func newEmbedAssetsSFS() *EmbedAssetsSFS {
 
 func (fs *EmbedAssetsSFS) Exists(prefix string, path string) bool {
 	//log.Debugln("EmbedAssetsSFS Exists: ", prefix, path)
-	return findCachedFileName(fs.files, path) != ""
+	return fs.findCachedFileName(fs.files, path) != ""
 }
 
 func (fs *EmbedAssetsSFS) Open(name string) (http.File, error) {
 	//log.Debugln("EmbedAssetsFS Open: ", name)
-	return fs.httpFS.Open(fs.prefix + findCachedFileName(fs.files, name))
+	return fs.httpFS.Open(fs.prefix + fs.findCachedFileName(fs.files, name))
+}
+
+func (fs *EmbedAssetsSFS) findCachedFileName(files map[string]bool, path string) string {
+	pathParts := strings.Split(strings.TrimPrefix(path, "/"), "/")
+	for i := 0; i < len(pathParts); i++ {
+		partialPath := strings.Join(pathParts[i:], "/")
+		if _, exists := files[partialPath]; exists {
+			return partialPath
+		}
+	}
+	return ""
 }

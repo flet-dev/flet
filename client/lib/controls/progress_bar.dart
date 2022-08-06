@@ -8,7 +8,8 @@ class ProgressBarControl extends StatelessWidget {
   final Control? parent;
   final Control control;
 
-  const ProgressBarControl({Key? key, this.parent, required this.control})
+  const ProgressBarControl(
+      {Key? key, required this.parent, required this.control})
       : super(key: key);
 
   @override

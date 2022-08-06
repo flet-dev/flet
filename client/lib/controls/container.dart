@@ -34,6 +34,7 @@ class ContainerControl extends StatelessWidget {
     bool ink = control.attrBool("ink", false)!;
     bool onClick = control.attrBool("onclick", false)!;
     bool onLongPress = control.attrBool("onLongPress", false)!;
+    bool onHover = control.attrBool("onHover", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     var boxDecor = BoxDecoration(
@@ -46,13 +47,13 @@ class ContainerControl extends StatelessWidget {
         ? createControl(control, contentCtrls.first.id, disabled)
         : null;
 
-    if ((onClick || onLongPress) && ink) {
+    if ((onClick || onLongPress || onHover) && ink) {
       return constrainedControl(
           Container(
             margin: parseEdgeInsets(control, "margin"),
             child: Ink(
                 child: InkWell(
-                    onTap: onClick
+                    onTap: onClick || onHover
                         ? () {
                             debugPrint("Container ${control.id} clicked!");
                             ws.pageEventFromWeb(
@@ -61,13 +62,22 @@ class ContainerControl extends StatelessWidget {
                                 eventData: control.attrs["data"] ?? "");
                           }
                         : null,
-                    onLongPress: onLongPress
+                    onLongPress: onLongPress || onHover
                         ? () {
                             debugPrint("Container ${control.id} long pressed!");
                             ws.pageEventFromWeb(
                                 eventTarget: control.id,
                                 eventName: "long_press",
                                 eventData: control.attrs["data"] ?? "");
+                          }
+                        : null,
+                    onHover: onHover
+                        ? (value) {
+                            debugPrint("Container ${control.id} hovered!");
+                            ws.pageEventFromWeb(
+                                eventTarget: control.id,
+                                eventName: "hover",
+                                eventData: value.toString());
                           }
                         : null,
                     child: Container(
@@ -88,9 +98,27 @@ class ContainerControl extends StatelessWidget {
           decoration: boxDecor,
           child: child);
 
-      if (onClick || onLongPress) {
+      if (onClick || onLongPress || onHover) {
         container = MouseRegion(
           cursor: SystemMouseCursors.click,
+          onEnter: onHover
+              ? (value) {
+                  debugPrint("Container's mouse region ${control.id} entered!");
+                  ws.pageEventFromWeb(
+                      eventTarget: control.id,
+                      eventName: "hover",
+                      eventData: "true");
+                }
+              : null,
+          onExit: onHover
+              ? (value) {
+                  debugPrint("Container's mouse region ${control.id} exited!");
+                  ws.pageEventFromWeb(
+                      eventTarget: control.id,
+                      eventName: "hover",
+                      eventData: "false");
+                }
+              : null,
           child: GestureDetector(
             child: container,
             onTapDown: onClick

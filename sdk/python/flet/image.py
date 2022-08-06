@@ -36,6 +36,7 @@ class Image(Control):
         # Specific
         #
         src: str = None,
+        src_base64: bool = None,
         repeat: ImageRepeat = None,
         fit: ImageFit = None,
         border_radius: BorderRadiusValue = None,
@@ -55,6 +56,7 @@ class Image(Control):
         self.width = width
         self.height = height
         self.src = src
+        self.src_base64 = src_base64
         self.fit = fit
         self.repeat = repeat
         self.border_radius = border_radius
@@ -73,6 +75,15 @@ class Image(Control):
     @src.setter
     def src(self, value):
         self._set_attr("src", value)
+
+    # src_base64
+    @property
+    def src_base64(self):
+        return self._get_attr("srcBase64")
+
+    @src_base64.setter
+    def src_base64(self, value):
+        self._set_attr("srcBase64", value)
 
     # fit
     @property

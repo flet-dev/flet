@@ -25,6 +25,7 @@ from flet.icon_button import IconButton
 from flet.image import Image
 from flet.list_tile import ListTile
 from flet.list_view import ListView
+from flet.markdown import Markdown
 from flet.navigation_rail import NavigationRail, NavigationRailDestination
 from flet.outlined_button import OutlinedButton
 from flet.page import Page
@@ -36,6 +37,7 @@ from flet.radio import Radio
 from flet.radio_group import RadioGroup
 from flet.ref import Ref
 from flet.row import Row
+from flet.shader_mask import ShaderMask
 from flet.slider import Slider
 from flet.snack_bar import SnackBar
 from flet.stack import Stack

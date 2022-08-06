@@ -46,6 +46,7 @@ class Container(ConstrainedControl):
         ink: bool = None,
         on_click=None,
         on_long_press=None,
+        on_hover=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -75,6 +76,7 @@ class Container(ConstrainedControl):
         self.ink = ink
         self.on_click = on_click
         self.on_long_press = on_long_press
+        self.on_hover = on_hover
 
     def _get_control_name(self):
         return "container"
@@ -208,3 +210,16 @@ class Container(ConstrainedControl):
             self._set_attr("onLongPress", True)
         else:
             self._set_attr("onLongPress", None)
+
+    # on_hover
+    @property
+    def on_hover(self):
+        return self._get_event_handler("hover")
+
+    @on_hover.setter
+    def on_hover(self, handler):
+        self._add_event_handler("hover", handler)
+        if handler != None:
+            self._set_attr("onHover", True)
+        else:
+            self._set_attr("onHover", None)

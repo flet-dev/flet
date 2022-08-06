@@ -14,9 +14,15 @@ def is_linux():
 
 
 def is_linux_server():
-    return (
-        platform.system() == "Linux" and os.environ.get("XDG_CURRENT_DESKTOP") == None
-    )
+    if platform.system() == "Linux":
+        # check if it's WSL
+        p = "/proc/version"
+        if os.path.exists(p):
+            with open(p, "r") as file:
+                if "microsoft" in file.read():
+                    return False  # it's WSL, not a server
+        return os.environ.get("XDG_CURRENT_DESKTOP") == None
+    return False
 
 
 def is_macos():

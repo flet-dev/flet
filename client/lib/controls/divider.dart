@@ -8,7 +8,7 @@ class DividerControl extends StatelessWidget {
   final Control? parent;
   final Control control;
 
-  const DividerControl({Key? key, this.parent, required this.control})
+  const DividerControl({Key? key, required this.parent, required this.control})
       : super(key: key);
 
   @override

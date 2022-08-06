@@ -23,8 +23,10 @@ import 'grid_view.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
+import 'launch_url.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
+import 'markdown.dart';
 import 'navigation_rail.dart';
 import 'outlined_button.dart';
 import 'page.dart';
@@ -34,6 +36,7 @@ import 'progress_ring.dart';
 import 'radio.dart';
 import 'radio_group.dart';
 import 'row.dart';
+import 'shader_mask.dart';
 import 'slider.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
@@ -68,17 +71,22 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               children: controlView.children,
               dispatch: controlView.dispatch);
         case ControlType.text:
-          return TextControl(control: controlView.control);
+          return TextControl(parent: parent, control: controlView.control);
         case ControlType.icon:
-          return IconControl(control: controlView.control);
+          return IconControl(parent: parent, control: controlView.control);
+        case ControlType.markdown:
+          return MarkdownControl(parent: parent, control: controlView.control);
         case ControlType.clipboard:
-          return ClipboardControl(control: controlView.control);
+          return ClipboardControl(parent: parent, control: controlView.control);
+        case ControlType.launchUrl:
+          return LaunchUrlControl(parent: parent, control: controlView.control);
         case ControlType.image:
           return ImageControl(parent: parent, control: controlView.control);
         case ControlType.divider:
-          return DividerControl(control: controlView.control);
+          return DividerControl(parent: parent, control: controlView.control);
         case ControlType.verticalDivider:
-          return VerticalDividerControl(control: controlView.control);
+          return VerticalDividerControl(
+              parent: parent, control: controlView.control);
         case ControlType.circleAvatar:
           return CircleAvatarControl(
               parent: parent,
@@ -86,9 +94,11 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               children: controlView.children,
               parentDisabled: parentDisabled);
         case ControlType.progressRing:
-          return ProgressRingControl(control: controlView.control);
+          return ProgressRingControl(
+              parent: parent, control: controlView.control);
         case ControlType.progressBar:
-          return ProgressBarControl(control: controlView.control);
+          return ProgressBarControl(
+              parent: parent, control: controlView.control);
         case ControlType.elevatedButton:
           return ElevatedButtonControl(
               parent: parent,
@@ -163,6 +173,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.card:
           return CardControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.shaderMask:
+          return ShaderMaskControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

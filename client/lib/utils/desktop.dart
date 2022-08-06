@@ -19,7 +19,7 @@ Future setWindowSize(double? width, double? height) async {
     var currentSize = await windowManager.getSize();
     await windowManager.setSize(
         Size(width ?? currentSize.width, height ?? currentSize.height),
-        animate: true);
+        animate: !Platform.isMacOS);
   }
 }
 

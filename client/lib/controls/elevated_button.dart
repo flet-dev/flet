@@ -29,11 +29,6 @@ class ElevatedButtonControl extends StatelessWidget {
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
     Color? iconColor = HexColor.fromString(
         Theme.of(context), control.attrString("iconColor", "")!);
-    Color? color = HexColor.fromString(
-        Theme.of(context), control.attrString("color", "")!);
-    Color? bgcolor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgcolor", "")!);
-    var elevation = control.attrDouble("elevation");
     var contentCtrls = children.where((c) => c.name == "content");
     bool autofocus = control.attrBool("autofocus", false)!;
     bool disabled = control.isDisabled || parentDisabled;

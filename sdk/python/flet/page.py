@@ -21,6 +21,7 @@ from flet.control import (
 from flet.event import Event
 from flet.event_handler import EventHandler
 from flet.floating_action_button import FloatingActionButton
+from flet.launch_url import LaunchUrl
 from flet.protocol import Command
 from flet.pubsub import PubSub
 from flet.snack_bar import SnackBar
@@ -278,6 +279,11 @@ class Page(Control):
     def set_clipboard(self, value: str):
         self.__offstage.clipboard.value = value
         self.__offstage.clipboard.update()
+
+    @beartype
+    def launch_url(self, url: str):
+        self.__offstage.launch_url.url = url
+        self.__offstage.launch_url.update()
 
     @beartype
     def show_snack_bar(self, snack_bar: SnackBar):
@@ -837,6 +843,7 @@ class Offstage(Control):
         )
 
         self.__clipboard = Clipboard()
+        self.__launch_url = LaunchUrl()
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
@@ -849,6 +856,8 @@ class Offstage(Control):
         children = []
         if self.__clipboard:
             children.append(self.__clipboard)
+        if self.__launch_url:
+            children.append(self.__launch_url)
         if self.__banner:
             children.append(self.__banner)
         if self.__snack_bar:
@@ -863,6 +872,11 @@ class Offstage(Control):
     @property
     def clipboard(self):
         return self.__clipboard
+
+    # launch_url
+    @property
+    def launch_url(self):
+        return self.__launch_url
 
     # splash
     @property
