@@ -26,6 +26,7 @@ import 'image.dart';
 import 'launch_url.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
+import 'markdown.dart';
 import 'navigation_rail.dart';
 import 'outlined_button.dart';
 import 'page.dart';
@@ -72,6 +73,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return TextControl(control: controlView.control);
         case ControlType.icon:
           return IconControl(control: controlView.control);
+        case ControlType.markdown:
+          return MarkdownControl(control: controlView.control);
         case ControlType.clipboard:
           return ClipboardControl(control: controlView.control);
         case ControlType.launchUrl:

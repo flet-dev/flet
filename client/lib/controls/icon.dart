@@ -14,7 +14,7 @@ class IconControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Icon build: ${control.id}");
+    debugPrint("Markdown build: ${control.id}");
 
     var name = control.attrString("name", "")!;
     var size = control.attrDouble("size", null);

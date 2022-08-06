@@ -22,6 +22,7 @@ enum ControlType {
   launchUrl,
   listTile,
   listView,
+  markdown,
   navigationRail,
   navigationRailDestination,
   outlinedButton,

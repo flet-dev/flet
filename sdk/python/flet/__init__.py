@@ -25,6 +25,7 @@ from flet.icon_button import IconButton
 from flet.image import Image
 from flet.list_tile import ListTile
 from flet.list_view import ListView
+from flet.markdown import Markdown
 from flet.navigation_rail import NavigationRail, NavigationRailDestination
 from flet.outlined_button import OutlinedButton
 from flet.page import Page

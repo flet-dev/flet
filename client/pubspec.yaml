@@ -42,6 +42,7 @@ dependencies:
   collection: ^1.16.0
   url_strategy: ^0.2.0
   url_launcher: ^6.1.5
+  flutter_markdown: ^0.6.10+3
 
 dev_dependencies:
   flutter_test:
