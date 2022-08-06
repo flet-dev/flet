@@ -23,6 +23,7 @@ import 'grid_view.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
+import 'launch_url.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
 import 'navigation_rail.dart';
@@ -73,6 +74,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return IconControl(control: controlView.control);
         case ControlType.clipboard:
           return ClipboardControl(control: controlView.control);
+        case ControlType.launchUrl:
+          return LaunchUrlControl(control: controlView.control);
         case ControlType.image:
           return ImageControl(parent: parent, control: controlView.control);
         case ControlType.divider:

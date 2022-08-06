@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
 
-class ClipboardControl extends StatelessWidget {
+class ClipboardControl extends StatefulWidget {
   final Control? parent;
   final Control control;
 
@@ -13,18 +13,27 @@ class ClipboardControl extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    debugPrint("Clipboard build: ${control.id}");
+  State<ClipboardControl> createState() => _ClipboardControlState();
+}
 
-    var value = control.attrString("value");
+class _ClipboardControlState extends State<ClipboardControl> {
+  String _ts = "";
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("Clipboard build: ${widget.control.id}");
+
+    var value = widget.control.attrString("value");
 
     if (value != null) {
       debugPrint("Clipboard JSON value: $value");
 
       var jv = json.decode(value);
+      var ts = jv["ts"] as String;
       var text = jv["d"] as String?;
-      if (text != null) {
+      if (text != null && ts != _ts) {
         Clipboard.setData(ClipboardData(text: text));
+        _ts = ts;
       }
     }
 
