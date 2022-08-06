@@ -36,6 +36,7 @@ import 'progress_ring.dart';
 import 'radio.dart';
 import 'radio_group.dart';
 import 'row.dart';
+import 'shader_mask.dart';
 import 'slider.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
@@ -172,6 +173,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.card:
           return CardControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.shaderMask:
+          return ShaderMaskControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

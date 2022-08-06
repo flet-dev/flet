@@ -35,6 +35,7 @@ enum ControlType {
   radioGroup,
   radio,
   row,
+  shaderMask,
   slider,
   snackBar,
   stack,
