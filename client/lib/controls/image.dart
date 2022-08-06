@@ -15,7 +15,7 @@ class ImageControl extends StatelessWidget {
   final Control? parent;
   final Control control;
 
-  const ImageControl({Key? key, this.parent, required this.control})
+  const ImageControl({Key? key, required this.parent, required this.control})
       : super(key: key);
 
   @override

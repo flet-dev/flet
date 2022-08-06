@@ -9,7 +9,8 @@ class LaunchUrlControl extends StatefulWidget {
   final Control? parent;
   final Control control;
 
-  const LaunchUrlControl({Key? key, this.parent, required this.control})
+  const LaunchUrlControl(
+      {Key? key, required this.parent, required this.control})
       : super(key: key);
 
   @override

@@ -70,21 +70,22 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               children: controlView.children,
               dispatch: controlView.dispatch);
         case ControlType.text:
-          return TextControl(control: controlView.control);
+          return TextControl(parent: parent, control: controlView.control);
         case ControlType.icon:
-          return IconControl(control: controlView.control);
+          return IconControl(parent: parent, control: controlView.control);
         case ControlType.markdown:
-          return MarkdownControl(control: controlView.control);
+          return MarkdownControl(parent: parent, control: controlView.control);
         case ControlType.clipboard:
-          return ClipboardControl(control: controlView.control);
+          return ClipboardControl(parent: parent, control: controlView.control);
         case ControlType.launchUrl:
-          return LaunchUrlControl(control: controlView.control);
+          return LaunchUrlControl(parent: parent, control: controlView.control);
         case ControlType.image:
           return ImageControl(parent: parent, control: controlView.control);
         case ControlType.divider:
-          return DividerControl(control: controlView.control);
+          return DividerControl(parent: parent, control: controlView.control);
         case ControlType.verticalDivider:
-          return VerticalDividerControl(control: controlView.control);
+          return VerticalDividerControl(
+              parent: parent, control: controlView.control);
         case ControlType.circleAvatar:
           return CircleAvatarControl(
               parent: parent,
@@ -92,9 +93,11 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               children: controlView.children,
               parentDisabled: parentDisabled);
         case ControlType.progressRing:
-          return ProgressRingControl(control: controlView.control);
+          return ProgressRingControl(
+              parent: parent, control: controlView.control);
         case ControlType.progressBar:
-          return ProgressBarControl(control: controlView.control);
+          return ProgressBarControl(
+              parent: parent, control: controlView.control);
         case ControlType.elevatedButton:
           return ElevatedButtonControl(
               parent: parent,

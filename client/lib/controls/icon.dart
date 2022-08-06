@@ -9,7 +9,7 @@ class IconControl extends StatelessWidget {
   final Control? parent;
   final Control control;
 
-  const IconControl({Key? key, this.parent, required this.control})
+  const IconControl({Key? key, required this.parent, required this.control})
       : super(key: key);
 
   @override

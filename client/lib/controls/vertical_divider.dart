@@ -8,7 +8,8 @@ class VerticalDividerControl extends StatelessWidget {
   final Control? parent;
   final Control control;
 
-  const VerticalDividerControl({Key? key, this.parent, required this.control})
+  const VerticalDividerControl(
+      {Key? key, required this.parent, required this.control})
       : super(key: key);
 
   @override
