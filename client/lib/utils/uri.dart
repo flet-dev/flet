@@ -23,3 +23,7 @@ Uri getAssetUri(Uri pageUri, String assetPath) {
       port: pageUri.port,
       path: assetPath);
 }
+
+Uri getBaseUri(Uri pageUri) {
+  return Uri(scheme: pageUri.scheme, host: pageUri.host, port: pageUri.port);
+}
