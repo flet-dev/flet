@@ -6,6 +6,7 @@ from flet.buttons import ButtonStyle
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
+from flet.types import AnimationValue, RotateValue, ScaleValue
 
 
 class ElevatedButton(ConstrainedControl):
@@ -21,6 +22,13 @@ class ElevatedButton(ConstrainedControl):
         bottom: OptionalNumber = None,
         expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
         tooltip: str = None,
         visible: bool = None,
         disabled: bool = None,
@@ -50,6 +58,13 @@ class ElevatedButton(ConstrainedControl):
             bottom=bottom,
             expand=expand,
             opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,
@@ -76,6 +91,7 @@ class ElevatedButton(ConstrainedControl):
         return "elevatedbutton"
 
     def _before_build_command(self):
+        super()._before_build_command()
         if self.__color != None or self.__bgcolor != None or self.__elevation != None:
             if self.__style == None:
                 self.__style = ButtonStyle()

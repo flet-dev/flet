@@ -5,7 +5,7 @@ from beartype import beartype
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import PaddingValue
+from flet.types import AnimationValue, PaddingValue, RotateValue, ScaleValue
 
 
 class ListView(ConstrainedControl):
@@ -21,6 +21,13 @@ class ListView(ConstrainedControl):
         bottom: OptionalNumber = None,
         expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
@@ -46,6 +53,13 @@ class ListView(ConstrainedControl):
             bottom=bottom,
             expand=expand,
             opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -65,6 +79,7 @@ class ListView(ConstrainedControl):
         return "listview"
 
     def _before_build_command(self):
+        super()._before_build_command()
         self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
