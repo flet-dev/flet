@@ -4,7 +4,7 @@ from beartype import beartype
 
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, RotateValue, ScaleValue
+from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 
 class ConstrainedControl(Control):
@@ -28,11 +28,13 @@ class ConstrainedControl(Control):
         bottom: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
+        offset: OffsetValue = None,
         animate_opacity: AnimationValue = None,
         animate_size: AnimationValue = None,
         animate_position: AnimationValue = None,
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
     ):
         Control.__init__(
             self,
@@ -53,20 +55,24 @@ class ConstrainedControl(Control):
         self.bottom = bottom
         self.scale = scale
         self.rotate = rotate
+        self.offset = offset
         self.animate_opacity = animate_opacity
         self.animate_size = animate_size
         self.animate_position = animate_position
         self.animate_rotation = animate_rotation
         self.animate_scale = animate_scale
+        self.animate_offset = animate_offset
 
     def _before_build_command(self):
         self._set_attr_json("rotate", self.__rotate)
         self._set_attr_json("scale", self.__scale)
+        self._set_attr_json("offset", self.__offset)
         self._set_attr_json("animateOpacity", self.__animate_opacity)
         self._set_attr_json("animateSize", self.__animate_size)
         self._set_attr_json("animatePosition", self.__animate_position)
         self._set_attr_json("animateRotation", self.__animate_rotation)
         self._set_attr_json("animateScale", self.__animate_scale)
+        self._set_attr_json("animateOffset", self.__animate_offset)
 
     # width
     @property
@@ -148,6 +154,16 @@ class ConstrainedControl(Control):
     def scale(self, value: ScaleValue):
         self.__scale = value
 
+    # offset
+    @property
+    def offset(self) -> OffsetValue:
+        return self.__offset
+
+    @offset.setter
+    @beartype
+    def offset(self, value: OffsetValue):
+        self.__offset = value
+
     # animate_opacity
     @property
     def animate_opacity(self) -> AnimationValue:
@@ -197,3 +213,13 @@ class ConstrainedControl(Control):
     @beartype
     def animate_scale(self, value: AnimationValue):
         self.__animate_scale = value
+
+    # animate_offset
+    @property
+    def animate_offset(self) -> AnimationValue:
+        return self.__animate_offset
+
+    @animate_offset.setter
+    @beartype
+    def animate_offset(self, value: AnimationValue):
+        self.__animate_offset = value

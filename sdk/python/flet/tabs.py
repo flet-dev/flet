@@ -6,7 +6,7 @@ from beartype.typing import List
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, RotateValue, ScaleValue
+from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 
 class Tab(Control):
@@ -90,11 +90,13 @@ class Tabs(ConstrainedControl):
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
+        offset: OffsetValue = None,
         animate_opacity: AnimationValue = None,
         animate_size: AnimationValue = None,
         animate_position: AnimationValue = None,
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
         visible: bool = None,
         disabled: bool = None,
         data: any = None,
@@ -119,11 +121,13 @@ class Tabs(ConstrainedControl):
             opacity=opacity,
             rotate=rotate,
             scale=scale,
+            offset=offset,
             animate_opacity=animate_opacity,
             animate_size=animate_size,
             animate_position=animate_position,
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
+            animate_offset=animate_offset,
             visible=visible,
             disabled=disabled,
             data=data,

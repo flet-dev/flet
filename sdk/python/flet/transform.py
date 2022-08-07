@@ -16,3 +16,9 @@ class Scale:
 class Rotate:
     angle: float
     alignment: Alignment = field(default=None)
+
+
+@dataclasses.dataclass
+class Offset:
+    x: float
+    y: float
