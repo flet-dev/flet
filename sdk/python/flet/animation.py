@@ -52,6 +52,8 @@ Curve = Literal[
     "slowMiddle",
 ]
 
+TransitionValue = Literal["fade", "rotation", "scale"]
+
 
 @dataclasses.dataclass
 class Animation:

@@ -1,5 +1,6 @@
 from flet.alert_dialog import AlertDialog
 from flet.alignment import Alignment
+from flet.animated_switcher import AnimatedSwitcher
 from flet.app_bar import AppBar
 from flet.banner import Banner
 from flet.buttons import ButtonStyle, OutlinedBorder

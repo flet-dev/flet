@@ -8,6 +8,7 @@ import '../models/control.dart';
 import '../models/control_type.dart';
 import '../models/control_view_model.dart';
 import 'alert_dialog.dart';
+import 'animated_switcher.dart';
 import 'banner.dart';
 import 'card.dart';
 import 'checkbox.dart';
@@ -53,6 +54,7 @@ import 'dart:math';
 Widget createControl(Control? parent, String id, bool parentDisabled) {
   //debugPrint("createControl(): $id");
   return StoreConnector<AppState, ControlViewModel>(
+    key: ValueKey<String>(id),
     distinct: true,
     converter: (store) {
       //debugPrint("ControlViewModel $id converter");
@@ -182,6 +184,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.shaderMask:
           return ShaderMaskControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.animatedSwitcher:
+          return AnimatedSwitcherControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
