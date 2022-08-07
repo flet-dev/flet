@@ -28,6 +28,8 @@ class FilledTonalButton(ElevatedButton):
         content: Control = None,
         autofocus: bool = None,
         on_click=None,
+        on_long_press=None,
+        on_hover=None,
     ):
         ElevatedButton.__init__(
             self,
@@ -53,4 +55,6 @@ class FilledTonalButton(ElevatedButton):
             content=content,
             autofocus=autofocus,
             on_click=on_click,
+            on_long_press=on_long_press,
+            on_hover=on_hover,
         )

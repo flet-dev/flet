@@ -48,6 +48,7 @@ class ElevatedButton(ConstrainedControl):
         autofocus: bool = None,
         on_click=None,
         on_long_press=None,
+        on_hover=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -90,6 +91,7 @@ class ElevatedButton(ConstrainedControl):
         self.autofocus = autofocus
         self.on_click = on_click
         self.on_long_press = on_long_press
+        self.on_hover = on_hover
 
     def _get_control_name(self):
         return "elevatedbutton"
@@ -215,3 +217,16 @@ class ElevatedButton(ConstrainedControl):
     @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # on_hover
+    @property
+    def on_hover(self):
+        return self._get_event_handler("hover")
+
+    @on_hover.setter
+    def on_hover(self, handler):
+        self._add_event_handler("hover", handler)
+        if handler != None:
+            self._set_attr("onHover", True)
+        else:
+            self._set_attr("onHover", None)
