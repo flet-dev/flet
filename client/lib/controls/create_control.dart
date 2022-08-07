@@ -1,3 +1,5 @@
+import 'package:flet_view/utils/animations.dart';
+import 'package:flet_view/utils/transforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -46,6 +48,7 @@ import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
 import 'vertical_divider.dart';
+import 'dart:math';
 
 Widget createControl(Control? parent, String id, bool parentDisabled) {
   //debugPrint("createControl(): $id");
@@ -285,8 +288,15 @@ Widget baseControl(Widget widget, Control? parent, Control control) {
 Widget constrainedControl(Widget widget, Control? parent, Control control) {
   return _expandable(
       _positionedControl(
-          _sizedControl(
-              _tooltip(_opacity(widget, parent, control), parent, control),
+          _scaledControl(
+              _rotatedControl(
+                  _sizedControl(
+                      _tooltip(
+                          _opacity(widget, parent, control), parent, control),
+                      parent,
+                      control),
+                  parent,
+                  control),
               parent,
               control),
           parent,
@@ -297,11 +307,19 @@ Widget constrainedControl(Widget widget, Control? parent, Control control) {
 
 Widget _opacity(Widget widget, Control? parent, Control control) {
   var opacity = control.attrDouble("opacity");
+  var animation = parseAnimation(control, "animateOpacity");
   return opacity != null
-      ? Opacity(
-          opacity: opacity,
-          child: widget,
-        )
+      ? animation == null
+          ? Opacity(
+              opacity: opacity,
+              child: widget,
+            )
+          : AnimatedOpacity(
+              duration: animation.duration,
+              curve: animation.curve,
+              opacity: opacity,
+              child: widget,
+            )
       : widget;
 }
 
@@ -317,6 +335,50 @@ Widget _tooltip(Widget widget, Control? parent, Control control) {
       : widget;
 }
 
+Widget _rotatedControl(Widget widget, Control? parent, Control control) {
+  var rotationDetails = parseRotate(control, "rotate");
+  var animation = parseAnimation(control, "animateRotation");
+  if (rotationDetails != null) {
+    if (animation != null) {
+      return AnimatedRotation(
+          turns: rotationDetails.angle / (2 * pi),
+          alignment: rotationDetails.alignment,
+          duration: animation.duration,
+          curve: animation.curve,
+          child: widget);
+    } else {
+      return Transform.rotate(
+          angle: rotationDetails.angle,
+          alignment: rotationDetails.alignment,
+          child: widget);
+    }
+  }
+  return widget;
+}
+
+Widget _scaledControl(Widget widget, Control? parent, Control control) {
+  var scaleDetails = parseScale(control, "scale");
+  var animation = parseAnimation(control, "animateScale");
+  if (scaleDetails != null) {
+    if (animation != null && scaleDetails.scale != null) {
+      return AnimatedScale(
+          scale: scaleDetails.scale!,
+          alignment: scaleDetails.alignment,
+          duration: animation.duration,
+          curve: animation.curve,
+          child: widget);
+    } else {
+      return Transform.scale(
+          scale: scaleDetails.scale,
+          scaleX: scaleDetails.scaleX,
+          scaleY: scaleDetails.scaleY,
+          alignment: scaleDetails.alignment,
+          child: widget);
+    }
+  }
+  return widget;
+}
+
 Widget _positionedControl(Widget widget, Control? parent, Control control) {
   var left = control.attrDouble("left", null);
   var top = control.attrDouble("top", null);
@@ -324,14 +386,27 @@ Widget _positionedControl(Widget widget, Control? parent, Control control) {
   var bottom = control.attrDouble("bottom", null);
 
   if (left != null || top != null || right != null || bottom != null) {
-    debugPrint("Positioned");
-    return Positioned(
-      left: left,
-      top: top,
-      right: right,
-      bottom: bottom,
-      child: widget,
-    );
+    var animation = parseAnimation(control, "animatePosition");
+
+    if (animation == null) {
+      return Positioned(
+        left: left,
+        top: top,
+        right: right,
+        bottom: bottom,
+        child: widget,
+      );
+    } else {
+      return AnimatedPositioned(
+        duration: animation.duration,
+        curve: animation.curve,
+        left: left,
+        top: top,
+        right: right,
+        bottom: bottom,
+        child: widget,
+      );
+    }
   }
   return widget;
 }
@@ -340,10 +415,19 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
   var width = control.attrDouble("width", null);
   var height = control.attrDouble("height", null);
   if (width != null || height != null) {
-    return ConstrainedBox(
-      constraints: BoxConstraints.tightFor(width: width, height: height),
-      child: widget,
-    );
+    if (control.type != ControlType.container &&
+        control.type != ControlType.image) {
+      widget = ConstrainedBox(
+        constraints: BoxConstraints.tightFor(width: width, height: height),
+        child: widget,
+      );
+    }
+
+    var animation = parseAnimation(control, "animateSize");
+    if (animation != null) {
+      return AnimatedSize(
+          duration: animation.duration, curve: animation.curve, child: widget);
+    }
   }
   return widget;
 }

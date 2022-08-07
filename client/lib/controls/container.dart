@@ -1,3 +1,4 @@
+import 'package:flet_view/utils/animations.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -47,56 +48,78 @@ class ContainerControl extends StatelessWidget {
         ? createControl(control, contentCtrls.first.id, disabled)
         : null;
 
+    var animation = parseAnimation(control, "animate");
+
     if ((onClick || onLongPress || onHover) && ink) {
+      var ink = Ink(
+          child: InkWell(
+              onTap: onClick || onHover
+                  ? () {
+                      debugPrint("Container ${control.id} clicked!");
+                      ws.pageEventFromWeb(
+                          eventTarget: control.id,
+                          eventName: "click",
+                          eventData: control.attrs["data"] ?? "");
+                    }
+                  : null,
+              onLongPress: onLongPress || onHover
+                  ? () {
+                      debugPrint("Container ${control.id} long pressed!");
+                      ws.pageEventFromWeb(
+                          eventTarget: control.id,
+                          eventName: "long_press",
+                          eventData: control.attrs["data"] ?? "");
+                    }
+                  : null,
+              onHover: onHover
+                  ? (value) {
+                      debugPrint("Container ${control.id} hovered!");
+                      ws.pageEventFromWeb(
+                          eventTarget: control.id,
+                          eventName: "hover",
+                          eventData: value.toString());
+                    }
+                  : null,
+              child: Container(
+                child: child,
+                padding: parseEdgeInsets(control, "padding"),
+                alignment: parseAlignment(control, "alignment"),
+              ),
+              borderRadius: parseBorderRadius(control, "borderRadius")),
+          decoration: boxDecor);
       return constrainedControl(
-          Container(
-            margin: parseEdgeInsets(control, "margin"),
-            child: Ink(
-                child: InkWell(
-                    onTap: onClick || onHover
-                        ? () {
-                            debugPrint("Container ${control.id} clicked!");
-                            ws.pageEventFromWeb(
-                                eventTarget: control.id,
-                                eventName: "click",
-                                eventData: control.attrs["data"] ?? "");
-                          }
-                        : null,
-                    onLongPress: onLongPress || onHover
-                        ? () {
-                            debugPrint("Container ${control.id} long pressed!");
-                            ws.pageEventFromWeb(
-                                eventTarget: control.id,
-                                eventName: "long_press",
-                                eventData: control.attrs["data"] ?? "");
-                          }
-                        : null,
-                    onHover: onHover
-                        ? (value) {
-                            debugPrint("Container ${control.id} hovered!");
-                            ws.pageEventFromWeb(
-                                eventTarget: control.id,
-                                eventName: "hover",
-                                eventData: value.toString());
-                          }
-                        : null,
-                    child: Container(
-                      child: child,
-                      padding: parseEdgeInsets(control, "padding"),
-                      alignment: parseAlignment(control, "alignment"),
-                    ),
-                    borderRadius: parseBorderRadius(control, "borderRadius")),
-                decoration: boxDecor),
-          ),
+          animation == null
+              ? Container(
+                  margin: parseEdgeInsets(control, "margin"),
+                  child: ink,
+                )
+              : AnimatedContainer(
+                  duration: animation.duration,
+                  curve: animation.curve,
+                  margin: parseEdgeInsets(control, "margin"),
+                  child: ink),
           parent,
           control);
     } else {
-      Widget container = Container(
-          padding: parseEdgeInsets(control, "padding"),
-          margin: parseEdgeInsets(control, "margin"),
-          alignment: parseAlignment(control, "alignment"),
-          decoration: boxDecor,
-          child: child);
+      Widget container = animation == null
+          ? Container(
+              width: control.attrDouble("width"),
+              height: control.attrDouble("height"),
+              padding: parseEdgeInsets(control, "padding"),
+              margin: parseEdgeInsets(control, "margin"),
+              alignment: parseAlignment(control, "alignment"),
+              decoration: boxDecor,
+              child: child)
+          : AnimatedContainer(
+              duration: animation.duration,
+              curve: animation.curve,
+              width: control.attrDouble("width"),
+              height: control.attrDouble("height"),
+              padding: parseEdgeInsets(control, "padding"),
+              margin: parseEdgeInsets(control, "margin"),
+              alignment: parseAlignment(control, "alignment"),
+              decoration: boxDecor,
+              child: child);
 
       if (onClick || onLongPress || onHover) {
         container = MouseRegion(
