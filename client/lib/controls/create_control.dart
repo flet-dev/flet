@@ -288,11 +288,14 @@ Widget baseControl(Widget widget, Control? parent, Control control) {
 Widget constrainedControl(Widget widget, Control? parent, Control control) {
   return _expandable(
       _positionedControl(
-          _scaledControl(
-              _rotatedControl(
-                  _sizedControl(
-                      _tooltip(
-                          _opacity(widget, parent, control), parent, control),
+          _offsetControl(
+              _scaledControl(
+                  _rotatedControl(
+                      _sizedControl(
+                          _tooltip(_opacity(widget, parent, control), parent,
+                              control),
+                          parent,
+                          control),
                       parent,
                       control),
                   parent,
@@ -375,6 +378,20 @@ Widget _scaledControl(Widget widget, Control? parent, Control control) {
           alignment: scaleDetails.alignment,
           child: widget);
     }
+  }
+  return widget;
+}
+
+Widget _offsetControl(Widget widget, Control? parent, Control control) {
+  var offsetDetails = parseOffset(control, "offset");
+  var animation = parseAnimation(control, "animateOffset");
+  debugPrint("Animate offset: $offsetDetails $animation");
+  if (offsetDetails != null && animation != null) {
+    return AnimatedSlide(
+        offset: Offset(offsetDetails.x, offsetDetails.y),
+        duration: animation.duration,
+        curve: animation.curve,
+        child: widget);
   }
   return widget;
 }

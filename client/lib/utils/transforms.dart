@@ -47,6 +47,20 @@ ScaleDetails scaleFromJSON(dynamic json) {
   return ScaleDetails.fromJson(json);
 }
 
+OffsetDetails? parseOffset(Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return offsetFromJSON(j1);
+}
+
+OffsetDetails offsetFromJSON(dynamic json) {
+  return OffsetDetails.fromJson(json);
+}
+
 class RotationDetails {
   final double angle;
   final Alignment alignment;
@@ -82,5 +96,16 @@ class ScaleDetails {
         alignment: json["alignment"] != null
             ? alignmentFromJson(json["alignment"])
             : Alignment.center);
+  }
+}
+
+class OffsetDetails {
+  final double x;
+  final double y;
+
+  OffsetDetails({required this.x, required this.y});
+
+  factory OffsetDetails.fromJson(Map<String, dynamic> json) {
+    return OffsetDetails(x: parseDouble(json["x"]), y: parseDouble(json["y"]));
   }
 }
