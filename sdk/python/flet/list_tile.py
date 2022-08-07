@@ -88,6 +88,7 @@ class ListTile(ConstrainedControl):
         return "listtile"
 
     def _before_build_command(self):
+        super()._before_build_command()
         self._set_attr_json("contentPadding", self.__content_padding)
 
     def _get_children(self):

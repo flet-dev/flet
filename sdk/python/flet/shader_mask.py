@@ -6,7 +6,7 @@ from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.gradients import Gradient
 from flet.ref import Ref
-from flet.types import AnimationValue, RotateValue, ScaleValue
+from flet.types import AnimationValue, BorderRadiusValue, RotateValue, ScaleValue
 
 try:
     from typing import Literal
@@ -76,6 +76,7 @@ class ShaderMask(ConstrainedControl):
         #
         blend_mode: BlendMode = None,
         shader: Gradient = None,
+        border_radius: BorderRadiusValue = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -104,6 +105,7 @@ class ShaderMask(ConstrainedControl):
         self.content = content
         self.blend_mode = blend_mode
         self.shader = shader
+        self.border_radius = border_radius
 
     def _get_control_name(self):
         return "shadermask"
@@ -111,6 +113,7 @@ class ShaderMask(ConstrainedControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("shader", self.__shader)
+        self._set_attr_json("borderRadius", self.__border_radius)
 
     def _get_children(self):
         children = []
@@ -148,3 +151,13 @@ class ShaderMask(ConstrainedControl):
     @beartype
     def shader(self, value: Optional[Gradient]):
         self.__shader = value
+
+    # border_radius
+    @property
+    def border_radius(self):
+        return self.__border_radius
+
+    @border_radius.setter
+    @beartype
+    def border_radius(self, value: BorderRadiusValue):
+        self.__border_radius = value

@@ -55,9 +55,9 @@ Curve = Literal[
 
 @dataclasses.dataclass
 class Animation:
-    duration_ms: int = field(default=1)
+    duration: int = field(default=1)
     curve: Optional[Curve] = field(default=None)
 
 
-def implicit(duration_ms: int, curve: Optional[Curve] = None):
-    return Animation(duration_ms=duration_ms, curve=curve)
+def implicit(duration: int, curve: Optional[Curve] = None):
+    return Animation(duration=duration, curve=curve)

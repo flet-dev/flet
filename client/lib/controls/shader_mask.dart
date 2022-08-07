@@ -3,6 +3,7 @@ import 'package:flet_view/utils/gradient.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/borders.dart';
 import 'create_control.dart';
 
 class ShaderMaskControl extends StatelessWidget {
@@ -38,16 +39,28 @@ class ShaderMaskControl extends StatelessWidget {
     }
 
     return constrainedControl(
-        ShaderMask(
-            shaderCallback: (bounds) {
-              debugPrint("shaderCallback: $bounds, $gradient");
-              return gradient.createShader(bounds);
-            },
-            blendMode: blendMode,
-            child: contentCtrls.isNotEmpty
-                ? createControl(control, contentCtrls.first.id, disabled)
-                : null),
+        _clipCorners(
+            ShaderMask(
+                shaderCallback: (bounds) {
+                  debugPrint("shaderCallback: $bounds, $gradient");
+                  return gradient.createShader(bounds);
+                },
+                blendMode: blendMode,
+                child: contentCtrls.isNotEmpty
+                    ? createControl(control, contentCtrls.first.id, disabled)
+                    : null),
+            control),
         parent,
         control);
+  }
+
+  Widget _clipCorners(Widget widget, Control control) {
+    var borderRadius = parseBorderRadius(control, "borderRadius");
+    return borderRadius != null
+        ? ClipRRect(
+            borderRadius: borderRadius,
+            child: widget,
+          )
+        : widget;
   }
 }

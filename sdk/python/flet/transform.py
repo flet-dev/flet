@@ -14,5 +14,5 @@ class Scale:
 
 @dataclasses.dataclass
 class Rotate:
-    angle: float = field(default=None)
+    angle: float
     alignment: Alignment = field(default=None)

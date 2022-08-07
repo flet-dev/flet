@@ -66,7 +66,7 @@ class ImageControl extends StatelessWidget {
                 fit: fit);
           }
 
-          return baseControl(_clipCorners(image!, control), parent, control);
+          return baseControl(_clipCorners(image, control), parent, control);
         });
   }
 

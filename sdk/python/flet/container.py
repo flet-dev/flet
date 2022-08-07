@@ -58,6 +58,7 @@ class Container(ConstrainedControl):
         border: Border = None,
         border_radius: BorderRadiusValue = None,
         ink: bool = None,
+        animate: AnimationValue = None,
         on_click=None,
         on_long_press=None,
         on_hover=None,
@@ -95,6 +96,7 @@ class Container(ConstrainedControl):
         self.border = border
         self.border_radius = border_radius
         self.ink = ink
+        self.animate = animate
         self.on_click = on_click
         self.on_long_press = on_long_press
         self.on_hover = on_hover
@@ -110,6 +112,7 @@ class Container(ConstrainedControl):
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("alignment", self.__alignment)
         self._set_attr_json("gradient", self.__gradient)
+        self._set_attr_json("animate", self.__animate)
 
     def _get_children(self):
         children = []
@@ -206,6 +209,16 @@ class Container(ConstrainedControl):
     @beartype
     def ink(self, value: Optional[bool]):
         self._set_attr("ink", value)
+
+    # animate
+    @property
+    def animate(self) -> AnimationValue:
+        return self.__animate
+
+    @animate.setter
+    @beartype
+    def animate(self, value: AnimationValue):
+        self.__animate = value
 
     # on_click
     @property
