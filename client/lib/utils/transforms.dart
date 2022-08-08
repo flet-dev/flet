@@ -50,7 +50,7 @@ ScaleDetails scaleFromJSON(dynamic json) {
 OffsetDetails? parseOffset(Control control, String propName) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return OffsetDetails(x: 0, y: 0);
   }
 
   final j1 = json.decode(v);

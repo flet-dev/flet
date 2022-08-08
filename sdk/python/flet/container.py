@@ -7,6 +7,7 @@ from flet.border import Border
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.gradients import Gradient
+from flet.image import ImageFit, ImageRepeat
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
@@ -60,6 +61,11 @@ class Container(ConstrainedControl):
         gradient: Gradient = None,
         border: Border = None,
         border_radius: BorderRadiusValue = None,
+        image_src: str = None,
+        image_src_base64: str = None,
+        image_repeat: ImageRepeat = None,
+        image_fit: ImageFit = None,
+        image_opacity: OptionalNumber = None,
         ink: bool = None,
         animate: AnimationValue = None,
         on_click=None,
@@ -100,6 +106,11 @@ class Container(ConstrainedControl):
         self.gradient = gradient
         self.border = border
         self.border_radius = border_radius
+        self.image_src = image_src
+        self.image_src_base64 = image_src_base64
+        self.image_repeat = image_repeat
+        self.image_fit = image_fit
+        self.image_opacity = image_opacity
         self.ink = ink
         self.animate = animate
         self.on_click = on_click
@@ -194,6 +205,54 @@ class Container(ConstrainedControl):
     @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
+
+    # image_src
+    @property
+    def image_src(self):
+        return self._get_attr("imageSrc")
+
+    @image_src.setter
+    def image_src(self, value):
+        self._set_attr("imageSrc", value)
+
+    # image_src_base64
+    @property
+    def image_src_base64(self):
+        return self._get_attr("imageSrcBase64")
+
+    @image_src_base64.setter
+    def image_src_base64(self, value):
+        self._set_attr("imageSrcBase64", value)
+
+    # image_fit
+    @property
+    def image_fit(self):
+        return self._get_attr("imageFit")
+
+    @image_fit.setter
+    @beartype
+    def image_fit(self, value: ImageFit):
+        self._set_attr("imageFit", value)
+
+    # image_repeat
+    @property
+    def image_repeat(self):
+        return self._get_attr("imageRepeat")
+
+    @image_repeat.setter
+    @beartype
+    def image_repeat(self, value: ImageRepeat):
+        self._set_attr("imageRepeat", value)
+
+    # image_opacity
+    @property
+    def image_opacity(self):
+        return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
+
+    @image_opacity.setter
+    @beartype
+    def image_opacity(self, value: OptionalNumber):
+        self._set_attr("imageOpacity", value)
 
     # content
     @property

@@ -319,19 +319,20 @@ Widget constrainedControl(Widget widget, Control? parent, Control control) {
 Widget _opacity(Widget widget, Control? parent, Control control) {
   var opacity = control.attrDouble("opacity");
   var animation = parseAnimation(control, "animateOpacity");
-  return opacity != null
-      ? animation == null
-          ? Opacity(
-              opacity: opacity,
-              child: widget,
-            )
-          : AnimatedOpacity(
-              duration: animation.duration,
-              curve: animation.curve,
-              opacity: opacity,
-              child: widget,
-            )
-      : widget;
+  if (animation != null) {
+    return AnimatedOpacity(
+      duration: animation.duration,
+      curve: animation.curve,
+      opacity: opacity ?? 1.0,
+      child: widget,
+    );
+  } else if (opacity != null) {
+    return Opacity(
+      opacity: opacity,
+      child: widget,
+    );
+  }
+  return widget;
 }
 
 Widget _tooltip(Widget widget, Control? parent, Control control) {
@@ -349,20 +350,18 @@ Widget _tooltip(Widget widget, Control? parent, Control control) {
 Widget _rotatedControl(Widget widget, Control? parent, Control control) {
   var rotationDetails = parseRotate(control, "rotate");
   var animation = parseAnimation(control, "animateRotation");
-  if (rotationDetails != null) {
-    if (animation != null) {
-      return AnimatedRotation(
-          turns: rotationDetails.angle / (2 * pi),
-          alignment: rotationDetails.alignment,
-          duration: animation.duration,
-          curve: animation.curve,
-          child: widget);
-    } else {
-      return Transform.rotate(
-          angle: rotationDetails.angle,
-          alignment: rotationDetails.alignment,
-          child: widget);
-    }
+  if (animation != null) {
+    return AnimatedRotation(
+        turns: rotationDetails != null ? rotationDetails.angle / (2 * pi) : 0,
+        alignment: rotationDetails?.alignment ?? Alignment.center,
+        duration: animation.duration,
+        curve: animation.curve,
+        child: widget);
+  } else if (rotationDetails != null) {
+    return Transform.rotate(
+        angle: rotationDetails.angle,
+        alignment: rotationDetails.alignment,
+        child: widget);
   }
   return widget;
 }
@@ -370,22 +369,20 @@ Widget _rotatedControl(Widget widget, Control? parent, Control control) {
 Widget _scaledControl(Widget widget, Control? parent, Control control) {
   var scaleDetails = parseScale(control, "scale");
   var animation = parseAnimation(control, "animateScale");
-  if (scaleDetails != null) {
-    if (animation != null && scaleDetails.scale != null) {
-      return AnimatedScale(
-          scale: scaleDetails.scale!,
-          alignment: scaleDetails.alignment,
-          duration: animation.duration,
-          curve: animation.curve,
-          child: widget);
-    } else {
-      return Transform.scale(
-          scale: scaleDetails.scale,
-          scaleX: scaleDetails.scaleX,
-          scaleY: scaleDetails.scaleY,
-          alignment: scaleDetails.alignment,
-          child: widget);
-    }
+  if (animation != null) {
+    return AnimatedScale(
+        scale: scaleDetails?.scale! ?? 1.0,
+        alignment: scaleDetails?.alignment ?? Alignment.center,
+        duration: animation.duration,
+        curve: animation.curve,
+        child: widget);
+  } else if (scaleDetails != null) {
+    return Transform.scale(
+        scale: scaleDetails.scale,
+        scaleX: scaleDetails.scaleX,
+        scaleY: scaleDetails.scaleY,
+        alignment: scaleDetails.alignment,
+        child: widget);
   }
   return widget;
 }
@@ -410,28 +407,30 @@ Widget _positionedControl(Widget widget, Control? parent, Control control) {
   var right = control.attrDouble("right", null);
   var bottom = control.attrDouble("bottom", null);
 
-  if (left != null || top != null || right != null || bottom != null) {
-    var animation = parseAnimation(control, "animatePosition");
-
-    if (animation == null) {
-      return Positioned(
-        left: left,
-        top: top,
-        right: right,
-        bottom: bottom,
-        child: widget,
-      );
-    } else {
-      return AnimatedPositioned(
-        duration: animation.duration,
-        curve: animation.curve,
-        left: left,
-        top: top,
-        right: right,
-        bottom: bottom,
-        child: widget,
-      );
+  var animation = parseAnimation(control, "animatePosition");
+  if (animation != null) {
+    if (left == null && top == null && right == null && bottom == null) {
+      left = 0;
+      top = 0;
     }
+
+    return AnimatedPositioned(
+      duration: animation.duration,
+      curve: animation.curve,
+      left: left,
+      top: top,
+      right: right,
+      bottom: bottom,
+      child: widget,
+    );
+  } else if (left != null || top != null || right != null || bottom != null) {
+    return Positioned(
+      left: left,
+      top: top,
+      right: right,
+      bottom: bottom,
+      child: widget,
+    );
   }
   return widget;
 }
@@ -447,12 +446,11 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
         child: widget,
       );
     }
-
-    var animation = parseAnimation(control, "animateSize");
-    if (animation != null) {
-      return AnimatedSize(
-          duration: animation.duration, curve: animation.curve, child: widget);
-    }
+  }
+  var animation = parseAnimation(control, "animateSize");
+  if (animation != null) {
+    return AnimatedSize(
+        duration: animation.duration, curve: animation.curve, child: widget);
   }
   return widget;
 }

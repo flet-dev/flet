@@ -5,20 +5,8 @@ from beartype import beartype
 from flet.animation import Curve, TransitionValue
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
-from flet.gradients import Gradient
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    BorderRadiusValue,
-    OffsetValue,
-    RotateValue,
-    ScaleValue,
-)
-
-try:
-    from typing import Literal
-except:
-    from typing_extensions import Literal
+from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 
 class AnimatedSwitcher(ConstrainedControl):
