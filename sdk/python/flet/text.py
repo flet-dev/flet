@@ -29,6 +29,24 @@ FontWeight = Literal[
 
 TextOverflow = Literal[None, "clip", "ellipsis", "fade", "visible"]
 
+TextThemeStyle = Literal[
+    "displayLarge",
+    "displayMedium",
+    "displaySmall",
+    "headlineLarge",
+    "headlineMedium",
+    "headlineSmall",
+    "titleLarge",
+    "titleMedium",
+    "titleSmall",
+    "labelLarge",
+    "labelMedium",
+    "labelSmall",
+    "bodyLarge",
+    "bodyMedium",
+    "bodySmall",
+]
+
 
 class Text(ConstrainedControl):
     def __init__(
@@ -64,7 +82,7 @@ class Text(ConstrainedControl):
         size: OptionalNumber = None,
         weight: FontWeight = None,
         italic: bool = None,
-        style: str = None,
+        style: TextThemeStyle = None,
         max_lines: int = None,
         overflow: TextOverflow = None,
         selectable: bool = None,
@@ -171,7 +189,7 @@ class Text(ConstrainedControl):
 
     @style.setter
     @beartype
-    def style(self, value: Optional[str]):
+    def style(self, value: Optional[TextThemeStyle]):
         self._set_attr("style", value)
 
     # italic
