@@ -2,7 +2,7 @@ from typing import Optional
 
 from beartype import beartype
 
-from flet.control import Control
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
 
@@ -20,6 +20,8 @@ class SnackBar(Control):
         open: bool = False,
         # remove_current_snackbar: bool = False,
         action: str = None,
+        bgcolor: str = None,
+        elevation: OptionalNumber = None,
         on_action=None,
     ):
 
@@ -35,6 +37,8 @@ class SnackBar(Control):
         # self.remove_current_snackbar = remove_current_snackbar
         self.content = content
         self.action = action
+        self.bgcolor = bgcolor
+        self.elevation = elevation
         self.on_action = on_action
 
     def _get_control_name(self):
@@ -87,6 +91,25 @@ class SnackBar(Control):
     @action.setter
     def action(self, value):
         self._set_attr("action", value)
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgColor")
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgColor", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation")
+
+    @elevation.setter
+    @beartype
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
 
     # on_action
     @property
