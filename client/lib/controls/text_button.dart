@@ -30,28 +30,39 @@ class TextButtonControl extends StatelessWidget {
     Color? iconColor = HexColor.fromString(
         Theme.of(context), control.attrString("iconColor", "")!);
     var contentCtrls = children.where((c) => c.name == "content");
+    bool onHover = control.attrBool("onHover", false)!;
     bool autofocus = control.attrBool("autofocus", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
-    Function()? onPressed = disabled
-        ? null
-        : () {
+    Function()? onPressed = !disabled
+        ? () {
             debugPrint("Button ${control.id} clicked!");
             ws.pageEventFromWeb(
                 eventTarget: control.id,
                 eventName: "click",
                 eventData: control.attrs["data"] ?? "");
-          };
+          }
+        : null;
 
-    Function()? onLongPress = disabled
-        ? null
-        : () {
+    Function()? onLongPress = !disabled
+        ? () {
             debugPrint("Button ${control.id} long pressed!");
             ws.pageEventFromWeb(
                 eventTarget: control.id,
                 eventName: "long_press",
                 eventData: control.attrs["data"] ?? "");
-          };
+          }
+        : null;
+
+    Function(bool)? onHoverHandler = onHover && !disabled
+        ? (state) {
+            debugPrint("Button ${control.id} hovered!");
+            ws.pageEventFromWeb(
+                eventTarget: control.id,
+                eventName: "hover",
+                eventData: state.toString());
+          }
+        : null;
 
     TextButton? button;
 
@@ -75,6 +86,7 @@ class TextButtonControl extends StatelessWidget {
           autofocus: autofocus,
           onPressed: onPressed,
           onLongPress: onLongPress,
+          onHover: onHoverHandler,
           style: style,
           icon: Icon(
             icon,
@@ -86,6 +98,7 @@ class TextButtonControl extends StatelessWidget {
           autofocus: autofocus,
           onPressed: onPressed,
           onLongPress: onLongPress,
+          onHover: onHoverHandler,
           style: style,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {
@@ -93,6 +106,7 @@ class TextButtonControl extends StatelessWidget {
           style: style,
           onPressed: onPressed,
           onLongPress: onLongPress,
+          onHover: onHoverHandler,
           child: Text(text));
     }
 

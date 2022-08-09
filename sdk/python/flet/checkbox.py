@@ -5,6 +5,7 @@ from beartype import beartype
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
+from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 try:
     from typing import Literal
@@ -27,6 +28,15 @@ class Checkbox(ConstrainedControl):
         bottom: OptionalNumber = None,
         expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
         tooltip: str = None,
         visible: bool = None,
         disabled: bool = None,
@@ -54,6 +64,15 @@ class Checkbox(ConstrainedControl):
             bottom=bottom,
             expand=expand,
             opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,

@@ -49,15 +49,17 @@ Border borderFromJSON(
 }
 
 BorderSide borderSideFromJSON(
-    ThemeData? theme, Map<String, dynamic> json, Color? defaultSideColor) {
-  return BorderSide(
-      color: json['c'] != null
-          ? HexColor.fromString(theme, json['c'] as String) ??
-              defaultSideColor ??
-              Colors.black
-          : Colors.black,
-      width: parseDouble(json['w'], 1),
-      style: BorderStyle.solid);
+    ThemeData? theme, dynamic json, Color? defaultSideColor) {
+  return json != null
+      ? BorderSide(
+          color: json['c'] != null
+              ? HexColor.fromString(theme, json['c'] as String) ??
+                  defaultSideColor ??
+                  Colors.black
+              : Colors.black,
+          width: parseDouble(json['w'], 1),
+          style: BorderStyle.solid)
+      : BorderSide.none;
 }
 
 OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic> json) {

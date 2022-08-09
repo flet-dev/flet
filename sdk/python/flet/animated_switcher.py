@@ -2,15 +2,17 @@ from typing import Optional, Union
 
 from beartype import beartype
 
+from flet.animation import Curve, TransitionValue
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, MarginValue, OffsetValue, RotateValue, ScaleValue
+from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 
-class Card(ConstrainedControl):
+class AnimatedSwitcher(ConstrainedControl):
     def __init__(
         self,
+        content: Control = None,
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -36,9 +38,11 @@ class Card(ConstrainedControl):
         #
         # Specific
         #
-        content: Control = None,
-        margin: MarginValue = None,
-        elevation: OptionalNumber = None,
+        duration: int = None,
+        reverse_duration: int = None,
+        switch_in_curve: Curve = None,
+        switch_out_curve: Curve = None,
+        transition: TransitionValue = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -67,15 +71,17 @@ class Card(ConstrainedControl):
         )
 
         self.content = content
-        self.margin = margin
-        self.elevation = elevation
+        self.duration = duration
+        self.reverse_duration = reverse_duration
+        self.switch_in_curve = switch_in_curve
+        self.switch_out_curve = switch_out_curve
+        self.transition = transition
 
     def _get_control_name(self):
-        return "card"
+        return "animatedswitcher"
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("margin", self.__margin)
 
     def _get_children(self):
         children = []
@@ -83,26 +89,6 @@ class Card(ConstrainedControl):
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
-
-    # margin
-    @property
-    def margin(self):
-        return self.__margin
-
-    @margin.setter
-    @beartype
-    def margin(self, value: MarginValue):
-        self.__margin = value
-
-    # elevation
-    @property
-    def elevation(self) -> OptionalNumber:
-        return self._get_attr("elevation")
-
-    @elevation.setter
-    @beartype
-    def elevation(self, value: OptionalNumber):
-        self._set_attr("elevation", value)
 
     # content
     @property
@@ -113,3 +99,53 @@ class Card(ConstrainedControl):
     @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # duration
+    @property
+    def duration(self):
+        return self._get_attr("duration")
+
+    @duration.setter
+    @beartype
+    def duration(self, value: Optional[int]):
+        self._set_attr("duration", value)
+
+    # reverse_duration
+    @property
+    def reverse_duration(self):
+        return self._get_attr("reverseDuration")
+
+    @reverse_duration.setter
+    @beartype
+    def reverse_duration(self, value: Optional[int]):
+        self._set_attr("reverseDuration", value)
+
+    # switch_in_curve
+    @property
+    def switch_in_curve(self):
+        return self._get_attr("switchInCurve")
+
+    @switch_in_curve.setter
+    @beartype
+    def switch_in_curve(self, value: Optional[Curve]):
+        self._set_attr("switchInCurve", value)
+
+    # switch_out_curve
+    @property
+    def switch_out_curve(self):
+        return self._get_attr("switchOutCurve")
+
+    @switch_out_curve.setter
+    @beartype
+    def switch_out_curve(self, value: Optional[Curve]):
+        self._set_attr("switchOutCurve", value)
+
+    # transition
+    @property
+    def transition(self):
+        return self._get_attr("transition")
+
+    @transition.setter
+    @beartype
+    def transition(self, value: Optional[TransitionValue]):
+        self._set_attr("transition", value)

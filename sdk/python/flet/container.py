@@ -7,8 +7,17 @@ from flet.border import Border
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.gradients import Gradient
+from flet.image import ImageFit, ImageRepeat
 from flet.ref import Ref
-from flet.types import BorderRadiusValue, MarginValue, PaddingValue
+from flet.types import (
+    AnimationValue,
+    BorderRadiusValue,
+    MarginValue,
+    OffsetValue,
+    PaddingValue,
+    RotateValue,
+    ScaleValue,
+)
 
 try:
     from typing import Literal
@@ -29,6 +38,15 @@ class Container(ConstrainedControl):
         bottom: OptionalNumber = None,
         expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
         tooltip: str = None,
         visible: bool = None,
         disabled: bool = None,
@@ -43,7 +61,13 @@ class Container(ConstrainedControl):
         gradient: Gradient = None,
         border: Border = None,
         border_radius: BorderRadiusValue = None,
+        image_src: str = None,
+        image_src_base64: str = None,
+        image_repeat: ImageRepeat = None,
+        image_fit: ImageFit = None,
+        image_opacity: OptionalNumber = None,
         ink: bool = None,
+        animate: AnimationValue = None,
         on_click=None,
         on_long_press=None,
         on_hover=None,
@@ -59,6 +83,15 @@ class Container(ConstrainedControl):
             bottom=bottom,
             expand=expand,
             opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,
@@ -73,7 +106,13 @@ class Container(ConstrainedControl):
         self.gradient = gradient
         self.border = border
         self.border_radius = border_radius
+        self.image_src = image_src
+        self.image_src_base64 = image_src_base64
+        self.image_repeat = image_repeat
+        self.image_fit = image_fit
+        self.image_opacity = image_opacity
         self.ink = ink
+        self.animate = animate
         self.on_click = on_click
         self.on_long_press = on_long_press
         self.on_hover = on_hover
@@ -82,12 +121,14 @@ class Container(ConstrainedControl):
         return "container"
 
     def _before_build_command(self):
+        super()._before_build_command()
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("border", self.__border)
         self._set_attr_json("margin", self.__margin)
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("alignment", self.__alignment)
         self._set_attr_json("gradient", self.__gradient)
+        self._set_attr_json("animate", self.__animate)
 
     def _get_children(self):
         children = []
@@ -165,6 +206,54 @@ class Container(ConstrainedControl):
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
 
+    # image_src
+    @property
+    def image_src(self):
+        return self._get_attr("imageSrc")
+
+    @image_src.setter
+    def image_src(self, value):
+        self._set_attr("imageSrc", value)
+
+    # image_src_base64
+    @property
+    def image_src_base64(self):
+        return self._get_attr("imageSrcBase64")
+
+    @image_src_base64.setter
+    def image_src_base64(self, value):
+        self._set_attr("imageSrcBase64", value)
+
+    # image_fit
+    @property
+    def image_fit(self):
+        return self._get_attr("imageFit")
+
+    @image_fit.setter
+    @beartype
+    def image_fit(self, value: ImageFit):
+        self._set_attr("imageFit", value)
+
+    # image_repeat
+    @property
+    def image_repeat(self):
+        return self._get_attr("imageRepeat")
+
+    @image_repeat.setter
+    @beartype
+    def image_repeat(self, value: ImageRepeat):
+        self._set_attr("imageRepeat", value)
+
+    # image_opacity
+    @property
+    def image_opacity(self):
+        return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
+
+    @image_opacity.setter
+    @beartype
+    def image_opacity(self, value: OptionalNumber):
+        self._set_attr("imageOpacity", value)
+
     # content
     @property
     def content(self):
@@ -184,6 +273,16 @@ class Container(ConstrainedControl):
     @beartype
     def ink(self, value: Optional[bool]):
         self._set_attr("ink", value)
+
+    # animate
+    @property
+    def animate(self) -> AnimationValue:
+        return self.__animate
+
+    @animate.setter
+    @beartype
+    def animate(self, value: AnimationValue):
+        self.__animate = value
 
     # on_click
     @property

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet_view/utils/images.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -28,19 +29,10 @@ class ImageControl extends StatelessWidget {
       return const ErrorControl(
           "Image must have 'src' or 'src_base64' specified.");
     }
-
     double? width = control.attrDouble("width", null);
     double? height = control.attrDouble("height", null);
-    var repeat = ImageRepeat.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("repeat", "")!.toLowerCase(),
-        orElse: () => ImageRepeat.noRepeat);
-    var fit = BoxFit.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("fit", "")!.toLowerCase(),
-        orElse: () => BoxFit.none);
+    var repeat = parseImageRepeat(control, "repeat");
+    var fit = parseBoxFit(control, "fit");
 
     var uri = Uri.parse(src);
     return StoreConnector<AppState, Uri?>(
@@ -66,7 +58,8 @@ class ImageControl extends StatelessWidget {
                 fit: fit);
           }
 
-          return baseControl(_clipCorners(image!, control), parent, control);
+          return constrainedControl(
+              _clipCorners(image, control), parent, control);
         });
   }
 

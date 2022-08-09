@@ -1,5 +1,6 @@
 enum ControlType {
   alertDialog,
+  animatedSwitcher,
   appBar,
   banner,
   card,

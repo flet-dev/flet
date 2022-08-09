@@ -6,6 +6,7 @@ from flet.buttons import ButtonStyle
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
+from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 
 class TextButton(ConstrainedControl):
@@ -21,6 +22,15 @@ class TextButton(ConstrainedControl):
         bottom: OptionalNumber = None,
         expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
         tooltip: str = None,
         visible: bool = None,
         disabled: bool = None,
@@ -35,6 +45,7 @@ class TextButton(ConstrainedControl):
         autofocus: bool = None,
         on_click=None,
         on_long_press=None,
+        on_hover=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -47,6 +58,15 @@ class TextButton(ConstrainedControl):
             bottom=bottom,
             expand=expand,
             opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,
@@ -61,11 +81,13 @@ class TextButton(ConstrainedControl):
         self.autofocus = autofocus
         self.on_click = on_click
         self.on_long_press = on_long_press
+        self.on_hover = on_hover
 
     def _get_control_name(self):
         return "textbutton"
 
     def _before_build_command(self):
+        super()._before_build_command()
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
@@ -148,3 +170,16 @@ class TextButton(ConstrainedControl):
     @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # on_hover
+    @property
+    def on_hover(self):
+        return self._get_event_handler("hover")
+
+    @on_hover.setter
+    def on_hover(self, handler):
+        self._add_event_handler("hover", handler)
+        if handler != None:
+            self._set_attr("onHover", True)
+        else:
+            self._set_attr("onHover", None)

@@ -162,7 +162,7 @@ class Control:
     def _convert_attr_json(self, value):
         return (
             json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))
-            if value
+            if value != None
             else None
         )
 

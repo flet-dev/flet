@@ -5,6 +5,7 @@ import '../actions.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/colors.dart';
 import '../web_socket_client.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -49,7 +50,6 @@ class _SnackBarControlState extends State<SnackBarControl> {
     }
 
     var actionName = widget.control.attrString("action", "")!;
-
     SnackBarAction? action = actionName != ""
         ? SnackBarAction(
             label: actionName,
@@ -64,6 +64,9 @@ class _SnackBarControlState extends State<SnackBarControl> {
 
     return SnackBar(
         content: createControl(widget.control, contentCtrls.first.id, disabled),
+        backgroundColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("bgColor", "")!),
+        elevation: widget.control.attrDouble("elevation"),
         action: action);
   }
 
@@ -79,6 +82,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
 
           var open = widget.control.attrBool("open", false)!;
           var removeCurrentSnackbar = true;
+
           //widget.control.attrBool("removeCurrentSnackBar", false)!;
 
           debugPrint("Current open state: $_open");

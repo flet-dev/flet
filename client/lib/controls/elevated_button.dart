@@ -30,28 +30,39 @@ class ElevatedButtonControl extends StatelessWidget {
     Color? iconColor = HexColor.fromString(
         Theme.of(context), control.attrString("iconColor", "")!);
     var contentCtrls = children.where((c) => c.name == "content");
+    bool onHover = control.attrBool("onHover", false)!;
     bool autofocus = control.attrBool("autofocus", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
-    Function()? onPressed = disabled
-        ? null
-        : () {
+    Function()? onPressed = !disabled
+        ? () {
             debugPrint("Button ${control.id} clicked!");
             ws.pageEventFromWeb(
                 eventTarget: control.id,
                 eventName: "click",
                 eventData: control.attrs["data"] ?? "");
-          };
+          }
+        : null;
 
-    Function()? onLongPress = disabled
-        ? null
-        : () {
+    Function()? onLongPress = !disabled
+        ? () {
             debugPrint("Button ${control.id} long pressed!");
             ws.pageEventFromWeb(
                 eventTarget: control.id,
                 eventName: "long_press",
                 eventData: control.attrs["data"] ?? "");
-          };
+          }
+        : null;
+
+    Function(bool)? onHoverHandler = onHover && !disabled
+        ? (state) {
+            debugPrint("Button ${control.id} hovered!");
+            ws.pageEventFromWeb(
+                eventTarget: control.id,
+                eventName: "hover",
+                eventData: state.toString());
+          }
+        : null;
 
     ElevatedButton? button;
 
@@ -76,6 +87,7 @@ class ElevatedButtonControl extends StatelessWidget {
           autofocus: autofocus,
           onPressed: onPressed,
           onLongPress: onLongPress,
+          onHover: onHoverHandler,
           icon: Icon(
             icon,
             color: iconColor,
@@ -87,12 +99,14 @@ class ElevatedButtonControl extends StatelessWidget {
           autofocus: autofocus,
           onPressed: onPressed,
           onLongPress: onLongPress,
+          onHover: onHoverHandler,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {
       button = ElevatedButton(
           style: style,
           onPressed: onPressed,
           onLongPress: onLongPress,
+          onHover: onHoverHandler,
           child: Text(text));
     }
 

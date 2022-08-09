@@ -1,3 +1,5 @@
+import 'package:flet_view/utils/animations.dart';
+import 'package:flet_view/utils/transforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -6,6 +8,7 @@ import '../models/control.dart';
 import '../models/control_type.dart';
 import '../models/control_view_model.dart';
 import 'alert_dialog.dart';
+import 'animated_switcher.dart';
 import 'banner.dart';
 import 'card.dart';
 import 'checkbox.dart';
@@ -46,10 +49,12 @@ import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
 import 'vertical_divider.dart';
+import 'dart:math';
 
 Widget createControl(Control? parent, String id, bool parentDisabled) {
   //debugPrint("createControl(): $id");
   return StoreConnector<AppState, ControlViewModel>(
+    key: ValueKey<String>(id),
     distinct: true,
     converter: (store) {
       //debugPrint("ControlViewModel $id converter");
@@ -183,6 +188,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
+        case ControlType.animatedSwitcher:
+          return AnimatedSwitcherControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
         case ControlType.listTile:
           return ListTileControl(
               parent: parent,
@@ -285,8 +296,18 @@ Widget baseControl(Widget widget, Control? parent, Control control) {
 Widget constrainedControl(Widget widget, Control? parent, Control control) {
   return _expandable(
       _positionedControl(
-          _sizedControl(
-              _tooltip(_opacity(widget, parent, control), parent, control),
+          _offsetControl(
+              _scaledControl(
+                  _rotatedControl(
+                      _sizedControl(
+                          _tooltip(_opacity(widget, parent, control), parent,
+                              control),
+                          parent,
+                          control),
+                      parent,
+                      control),
+                  parent,
+                  control),
               parent,
               control),
           parent,
@@ -297,12 +318,21 @@ Widget constrainedControl(Widget widget, Control? parent, Control control) {
 
 Widget _opacity(Widget widget, Control? parent, Control control) {
   var opacity = control.attrDouble("opacity");
-  return opacity != null
-      ? Opacity(
-          opacity: opacity,
-          child: widget,
-        )
-      : widget;
+  var animation = parseAnimation(control, "animateOpacity");
+  if (animation != null) {
+    return AnimatedOpacity(
+      duration: animation.duration,
+      curve: animation.curve,
+      opacity: opacity ?? 1.0,
+      child: widget,
+    );
+  } else if (opacity != null) {
+    return Opacity(
+      opacity: opacity,
+      child: widget,
+    );
+  }
+  return widget;
 }
 
 Widget _tooltip(Widget widget, Control? parent, Control control) {
@@ -317,14 +347,83 @@ Widget _tooltip(Widget widget, Control? parent, Control control) {
       : widget;
 }
 
+Widget _rotatedControl(Widget widget, Control? parent, Control control) {
+  var rotationDetails = parseRotate(control, "rotate");
+  var animation = parseAnimation(control, "animateRotation");
+  if (animation != null) {
+    return AnimatedRotation(
+        turns: rotationDetails != null ? rotationDetails.angle / (2 * pi) : 0,
+        alignment: rotationDetails?.alignment ?? Alignment.center,
+        duration: animation.duration,
+        curve: animation.curve,
+        child: widget);
+  } else if (rotationDetails != null) {
+    return Transform.rotate(
+        angle: rotationDetails.angle,
+        alignment: rotationDetails.alignment,
+        child: widget);
+  }
+  return widget;
+}
+
+Widget _scaledControl(Widget widget, Control? parent, Control control) {
+  var scaleDetails = parseScale(control, "scale");
+  var animation = parseAnimation(control, "animateScale");
+  if (animation != null) {
+    return AnimatedScale(
+        scale: scaleDetails?.scale! ?? 1.0,
+        alignment: scaleDetails?.alignment ?? Alignment.center,
+        duration: animation.duration,
+        curve: animation.curve,
+        child: widget);
+  } else if (scaleDetails != null) {
+    return Transform.scale(
+        scale: scaleDetails.scale,
+        scaleX: scaleDetails.scaleX,
+        scaleY: scaleDetails.scaleY,
+        alignment: scaleDetails.alignment,
+        child: widget);
+  }
+  return widget;
+}
+
+Widget _offsetControl(Widget widget, Control? parent, Control control) {
+  var offsetDetails = parseOffset(control, "offset");
+  var animation = parseAnimation(control, "animateOffset");
+  debugPrint("Animate offset: $offsetDetails $animation");
+  if (offsetDetails != null && animation != null) {
+    return AnimatedSlide(
+        offset: Offset(offsetDetails.x, offsetDetails.y),
+        duration: animation.duration,
+        curve: animation.curve,
+        child: widget);
+  }
+  return widget;
+}
+
 Widget _positionedControl(Widget widget, Control? parent, Control control) {
   var left = control.attrDouble("left", null);
   var top = control.attrDouble("top", null);
   var right = control.attrDouble("right", null);
   var bottom = control.attrDouble("bottom", null);
 
-  if (left != null || top != null || right != null || bottom != null) {
-    debugPrint("Positioned");
+  var animation = parseAnimation(control, "animatePosition");
+  if (animation != null) {
+    if (left == null && top == null && right == null && bottom == null) {
+      left = 0;
+      top = 0;
+    }
+
+    return AnimatedPositioned(
+      duration: animation.duration,
+      curve: animation.curve,
+      left: left,
+      top: top,
+      right: right,
+      bottom: bottom,
+      child: widget,
+    );
+  } else if (left != null || top != null || right != null || bottom != null) {
     return Positioned(
       left: left,
       top: top,
@@ -340,10 +439,18 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
   var width = control.attrDouble("width", null);
   var height = control.attrDouble("height", null);
   if (width != null || height != null) {
-    return ConstrainedBox(
-      constraints: BoxConstraints.tightFor(width: width, height: height),
-      child: widget,
-    );
+    if (control.type != ControlType.container &&
+        control.type != ControlType.image) {
+      widget = ConstrainedBox(
+        constraints: BoxConstraints.tightFor(width: width, height: height),
+        child: widget,
+      );
+    }
+  }
+  var animation = parseAnimation(control, "animateSize");
+  if (animation != null) {
+    return AnimatedSize(
+        duration: animation.duration, curve: animation.curve, child: widget);
   }
   return widget;
 }

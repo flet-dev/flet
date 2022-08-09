@@ -3,9 +3,16 @@ from typing import Union
 
 from beartype import beartype
 
+from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import BorderRadiusValue
+from flet.types import (
+    AnimationValue,
+    BorderRadiusValue,
+    OffsetValue,
+    RotateValue,
+    ScaleValue,
+)
 
 try:
     from typing import Literal
@@ -20,14 +27,28 @@ ImageFit = Literal[
 ImageRepeat = Literal[None, "noRepeat", "repeat", "repeatX", "repeatY"]
 
 
-class Image(Control):
+class Image(ConstrainedControl):
     def __init__(
         self,
+        src: str = None,
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
         expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
         tooltip: str = None,
         visible: bool = None,
         disabled: bool = None,
@@ -35,26 +56,38 @@ class Image(Control):
         #
         # Specific
         #
-        src: str = None,
         src_base64: bool = None,
         repeat: ImageRepeat = None,
         fit: ImageFit = None,
         border_radius: BorderRadiusValue = None,
     ):
 
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
             ref=ref,
+            width=width,
+            height=height,
+            left=left,
+            top=top,
+            right=right,
+            bottom=bottom,
             expand=expand,
             opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,
             data=data,
         )
 
-        self.width = width
-        self.height = height
         self.src = src
         self.src_base64 = src_base64
         self.fit = fit
@@ -65,6 +98,7 @@ class Image(Control):
         return "image"
 
     def _before_build_command(self):
+        super()._before_build_command()
         self._set_attr_json("borderRadius", self.__border_radius)
 
     # src
@@ -104,26 +138,6 @@ class Image(Control):
     @beartype
     def repeat(self, value: ImageRepeat):
         self._set_attr("repeat", value)
-
-    # width
-    @property
-    def width(self) -> OptionalNumber:
-        return self._get_attr("width")
-
-    @width.setter
-    @beartype
-    def width(self, value: OptionalNumber):
-        self._set_attr("width", value)
-
-    # height
-    @property
-    def height(self):
-        return self._get_attr("height")
-
-    @height.setter
-    @beartype
-    def height(self, value: OptionalNumber):
-        self._set_attr("height", value)
 
     # border_radius
     @property
