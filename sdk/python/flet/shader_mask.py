@@ -3,7 +3,7 @@ from typing import Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber
+from flet.control import BlendMode, Control, OptionalNumber
 from flet.gradients import Gradient
 from flet.ref import Ref
 from flet.types import (
@@ -13,44 +13,6 @@ from flet.types import (
     RotateValue,
     ScaleValue,
 )
-
-try:
-    from typing import Literal
-except:
-    from typing_extensions import Literal
-
-BlendMode = Literal[
-    "clear",
-    "color",
-    "colorBurn",
-    "colorDodge",
-    "darken",
-    "difference",
-    "dst",
-    "dstATop",
-    "dstIn",
-    "dstOut",
-    "dstOver",
-    "exclusion",
-    "hardLight",
-    "hue",
-    "lighten",
-    "luminosity",
-    "modulate",
-    "multiply",
-    "overlay",
-    "plus",
-    "saturation",
-    "screen",
-    "softLight",
-    "src",
-    "srcATop",
-    "srcIn",
-    "srcOut",
-    "srcOver",
-    "values",
-    "xor",
-]
 
 
 class ShaderMask(ConstrainedControl):

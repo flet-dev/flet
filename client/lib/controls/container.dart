@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:flet_view/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -86,11 +87,17 @@ class ContainerControl extends StatelessWidget {
                 opacity: imageOpacity);
           }
 
+          var gradient = parseGradient(Theme.of(context), control, "gradient");
+          var blendMode = BlendMode.values.firstWhereOrNull((e) =>
+              e.name.toLowerCase() ==
+              control.attrString("blendMode", "")!.toLowerCase());
+
           var boxDecor = BoxDecoration(
               color: bgColor,
-              gradient: parseGradient(Theme.of(context), control, "gradient"),
+              gradient: gradient,
               image: image,
-              backgroundBlendMode: BlendMode.modulate,
+              backgroundBlendMode:
+                  bgColor != null || gradient != null ? blendMode : null,
               border: parseBorder(Theme.of(context), control, "border"),
               borderRadius: parseBorderRadius(control, "borderRadius"));
 

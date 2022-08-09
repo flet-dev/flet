@@ -5,7 +5,7 @@ from beartype import beartype
 from flet.alignment import Alignment
 from flet.border import Border
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber
+from flet.control import BlendMode, Control, OptionalNumber
 from flet.gradients import Gradient
 from flet.image import ImageFit, ImageRepeat
 from flet.ref import Ref
@@ -59,6 +59,7 @@ class Container(ConstrainedControl):
         alignment: Alignment = None,
         bgcolor: str = None,
         gradient: Gradient = None,
+        blend_mode: BlendMode = None,
         border: Border = None,
         border_radius: BorderRadiusValue = None,
         image_src: str = None,
@@ -104,6 +105,7 @@ class Container(ConstrainedControl):
         self.alignment = alignment
         self.bgcolor = bgcolor
         self.gradient = gradient
+        self.blend_mode = blend_mode
         self.border = border
         self.border_radius = border_radius
         self.image_src = image_src
@@ -185,6 +187,16 @@ class Container(ConstrainedControl):
     @beartype
     def gradient(self, value: Optional[Gradient]):
         self.__gradient = value
+
+    # blend_mode
+    @property
+    def blend_mode(self):
+        return self._get_attr("blendMode")
+
+    @blend_mode.setter
+    @beartype
+    def blend_mode(self, value: Optional[BlendMode]):
+        self._set_attr("blendMode", value)
 
     # border
     @property

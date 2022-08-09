@@ -49,6 +49,39 @@ OptionalNumber = Union[None, int, float]
 
 ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always", "hidden"]
 
+BlendMode = Literal[
+    "clear",
+    "color",
+    "colorBurn",
+    "colorDodge",
+    "darken",
+    "difference",
+    "dst",
+    "dstATop",
+    "dstIn",
+    "dstOut",
+    "dstOver",
+    "exclusion",
+    "hardLight",
+    "hue",
+    "lighten",
+    "luminosity",
+    "modulate",
+    "multiply",
+    "overlay",
+    "plus",
+    "saturation",
+    "screen",
+    "softLight",
+    "src",
+    "srcATop",
+    "srcIn",
+    "srcOut",
+    "srcOver",
+    "values",
+    "xor",
+]
+
 
 class Control:
     def __init__(
