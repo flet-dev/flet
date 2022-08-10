@@ -24,14 +24,14 @@ class Gradient:
 
 @dataclasses.dataclass
 class LinearGradient(Gradient):
-    begin: Alignment = field(default=alignment.center_left)
-    end: Alignment = field(default=alignment.center_right)
+    begin: Alignment = field(default_factory=alignment.center_left)
+    end: Alignment = field(default_factory=alignment.center_right)
     type: str = field(default="linear")
 
 
 @dataclasses.dataclass
 class RadialGradient(Gradient):
-    center: Alignment = field(default=alignment.center)
+    center: Alignment = field(default_factory=alignment.center)
     radius: Union[float, int] = field(default=0.5)
     focal: Alignment = field(default=None)
     focal_radius: Union[float, int] = field(default=0.0)
@@ -40,7 +40,7 @@ class RadialGradient(Gradient):
 
 @dataclasses.dataclass
 class SweepGradient(Gradient):
-    center: Alignment = field(default=alignment.center)
+    center: Alignment = field(default_factory=alignment.center)
     start_angle: Union[float, int] = field(default=0.0)
     end_angle: Union[float, int] = field(default=math.pi * 2)
     type: str = field(default="sweep")
