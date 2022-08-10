@@ -101,11 +101,11 @@ class ElevatedButton(ConstrainedControl):
         if self.__color != None or self.__bgcolor != None or self.__elevation != None:
             if self.__style == None:
                 self.__style = ButtonStyle()
-            if self.__style.color == None:
+            if self.__style.color != self.__color:
                 self.__style.color = self.__color
-            if self.__style.bgcolor == None:
+            if self.__style.bgcolor != self.__bgcolor:
                 self.__style.bgcolor = self.__bgcolor
-            if self.__style.elevation == None:
+            if self.__style.elevation != self.__elevation:
                 self.__style.elevation = self.__elevation
         self._set_attr_json("style", self.__style)
 
