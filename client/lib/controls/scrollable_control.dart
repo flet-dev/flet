@@ -24,7 +24,19 @@ class ScrollableControl extends StatefulWidget {
 }
 
 class _ScrollableControlState extends State<ScrollableControl> {
-  final ScrollController _controller = ScrollController();
+  late final ScrollController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   void _scrollDown() {
     _controller.animateTo(

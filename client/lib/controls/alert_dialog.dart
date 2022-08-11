@@ -32,16 +32,6 @@ class AlertDialogControl extends StatefulWidget {
 class _AlertDialogControlState extends State<AlertDialogControl> {
   bool _open = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Widget _createAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var titleCtrls =

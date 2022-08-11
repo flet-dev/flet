@@ -61,6 +61,7 @@ class _PageControlState extends State<PageControl> {
 
   @override
   void initState() {
+    super.initState();
     _routeParser = RouteParser();
 
     _routeState = RouteState(_routeParser);
@@ -71,8 +72,16 @@ class _PageControlState extends State<PageControl> {
       navigatorKey: _navigatorKey,
       builder: (context) => _buildNavigator(context, _navigatorKey),
     );
+  }
 
-    super.initState();
+  @override
+  void dispose() {
+    _routeState.removeListener(_routeChanged);
+    _routeState.dispose();
+    if (_keyboardHandlerSubscribed) {
+      RawKeyboard.instance.removeListener(_handleKeyDown);
+    }
+    super.dispose();
   }
 
   void _routeChanged() {
@@ -518,14 +527,5 @@ class _PageControlState extends State<PageControl> {
                     ));
               });
         });
-  }
-
-  @override
-  void dispose() {
-    _routeState.removeListener(_routeChanged);
-    if (_keyboardHandlerSubscribed) {
-      RawKeyboard.instance.removeListener(_handleKeyDown);
-    }
-    super.dispose();
   }
 }

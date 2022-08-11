@@ -28,21 +28,26 @@ class SwitchControl extends StatefulWidget {
 
 class _SwitchControlState extends State<SwitchControl> {
   bool _value = false;
-  final FocusNode _focusNode = FocusNode();
+  late final FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(() {
-      ws.pageEventFromWeb(
-          eventTarget: widget.control.id,
-          eventName: _focusNode.hasFocus ? "focus" : "blur",
-          eventData: "");
-    });
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    ws.pageEventFromWeb(
+        eventTarget: widget.control.id,
+        eventName: _focusNode.hasFocus ? "focus" : "blur",
+        eventData: "");
   }
 
   @override
   void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
     super.dispose();
   }
 
