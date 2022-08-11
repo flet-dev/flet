@@ -17,7 +17,7 @@ class TextControl extends StatelessWidget {
     debugPrint("Text build: ${control.id}");
 
     String text = control.attrString("value", "")!;
-    String semanticsLabel = control.attrString("semanticsLabel", "")!;
+    String? semanticsLabel = control.attrString("semanticsLabel");
     bool noWrap = control.attrBool("noWrap", false)!;
     int? maxLines = control.attrInt("maxLines");
 
