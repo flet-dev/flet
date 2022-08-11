@@ -109,15 +109,16 @@ class _RadioControlState extends State<RadioControl> {
                     style: TextStyle(color: Theme.of(context).disabledColor))
                 : MouseRegion(
                     cursor: SystemMouseCursors.click, child: Text(label));
-            result = GestureDetector(
-                onTap: !disabled
-                    ? () {
-                        onChange(value);
-                      }
-                    : null,
-                child: labelPosition == LabelPosition.right
-                    ? Row(children: [radio, labelWidget])
-                    : Row(children: [labelWidget, radio]));
+            result = MergeSemantics(
+                child: GestureDetector(
+                    onTap: !disabled
+                        ? () {
+                            onChange(value);
+                          }
+                        : null,
+                    child: labelPosition == LabelPosition.right
+                        ? Row(children: [radio, labelWidget])
+                        : Row(children: [labelWidget, radio])));
           }
 
           return constrainedControl(result, widget.parent, widget.control);

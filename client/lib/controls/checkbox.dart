@@ -108,23 +108,24 @@ class _CheckboxControlState extends State<CheckboxControl> {
                     style: TextStyle(color: Theme.of(context).disabledColor))
                 : MouseRegion(
                     cursor: SystemMouseCursors.click, child: Text(label));
-            result = GestureDetector(
-                onTap: !disabled
-                    ? () {
-                        bool? newValue;
-                        if (!tristate) {
-                          newValue = !_value!;
-                        } else if (tristate && _value == null) {
-                          newValue = false;
-                        } else if (tristate && _value == false) {
-                          newValue = true;
-                        }
-                        onChange(newValue);
-                      }
-                    : null,
-                child: labelPosition == LabelPosition.right
-                    ? Row(children: [checkbox, labelWidget])
-                    : Row(children: [labelWidget, checkbox]));
+            result = MergeSemantics(
+                child: GestureDetector(
+                    onTap: !disabled
+                        ? () {
+                            bool? newValue;
+                            if (!tristate) {
+                              newValue = !_value!;
+                            } else if (tristate && _value == null) {
+                              newValue = false;
+                            } else if (tristate && _value == false) {
+                              newValue = true;
+                            }
+                            onChange(newValue);
+                          }
+                        : null,
+                    child: labelPosition == LabelPosition.right
+                        ? Row(children: [checkbox, labelWidget])
+                        : Row(children: [labelWidget, checkbox])));
           }
 
           return constrainedControl(result, widget.parent, widget.control);

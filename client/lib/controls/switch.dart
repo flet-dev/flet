@@ -105,15 +105,16 @@ class _SwitchControlState extends State<SwitchControl> {
                     style: TextStyle(color: Theme.of(context).disabledColor))
                 : MouseRegion(
                     cursor: SystemMouseCursors.click, child: Text(label));
-            result = GestureDetector(
-                onTap: !disabled
-                    ? () {
-                        onChange(!_value);
-                      }
-                    : null,
-                child: labelPosition == LabelPosition.right
-                    ? Row(children: [swtch, labelWidget])
-                    : Row(children: [labelWidget, swtch]));
+            result = MergeSemantics(
+                child: GestureDetector(
+                    onTap: !disabled
+                        ? () {
+                            onChange(!_value);
+                          }
+                        : null,
+                    child: labelPosition == LabelPosition.right
+                        ? Row(children: [swtch, labelWidget])
+                        : Row(children: [labelWidget, swtch])));
           }
 
           return constrainedControl(result, widget.parent, widget.control);
