@@ -337,7 +337,12 @@ Widget _opacity(Widget widget, Control? parent, Control control) {
 
 Widget _tooltip(Widget widget, Control? parent, Control control) {
   var tooltip = control.attrString("tooltip");
-  return tooltip != null
+  return tooltip != null &&
+          ![
+            ControlType.iconButton,
+            ControlType.floatingActionButton,
+            ControlType.popupMenuButton
+          ].contains(control.type)
       ? Tooltip(
           message: tooltip,
           padding: const EdgeInsets.all(4.0),
