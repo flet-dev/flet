@@ -38,6 +38,7 @@ from flet.radio import Radio
 from flet.radio_group import RadioGroup
 from flet.ref import Ref
 from flet.row import Row
+from flet.semantics import Semantics
 from flet.shader_mask import ShaderMask
 from flet.slider import Slider
 from flet.snack_bar import SnackBar
