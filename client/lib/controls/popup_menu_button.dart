@@ -38,17 +38,24 @@ class _PopupMenuButtonControlState extends State<PopupMenuButtonControl> {
 
     var icon = getMaterialIcon(widget.control.attrString("icon", "")!);
     var tooltip = widget.control.attrString("tooltip");
+    var contentCtrls =
+        widget.children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+
+    Widget? child = contentCtrls.isNotEmpty
+        ? createControl(widget.control, contentCtrls.first.id, disabled)
+        : null;
 
     var popupButton = StoreConnector<AppState, ControlsViewModel>(
         distinct: true,
-        converter: (store) => ControlsViewModel.fromStore(
-            store, widget.children.map((c) => c.id)),
+        converter: (store) => ControlsViewModel.fromStore(store,
+            widget.children.where((c) => c.name != "content").map((c) => c.id)),
         builder: (content, viewModel) {
           return PopupMenuButton<String>(
               enabled: !disabled,
               icon: icon != null ? Icon(icon) : null,
               tooltip: tooltip,
+              child: child,
               shape: Theme.of(context).useMaterial3
                   ? RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))
