@@ -89,6 +89,7 @@ class Text(ConstrainedControl):
         no_wrap: bool = None,
         color: str = None,
         bgcolor: str = None,
+        semantics_label: str = None,
     ):
 
         ConstrainedControl.__init__(
@@ -130,6 +131,7 @@ class Text(ConstrainedControl):
         self.selectable = selectable
         self.color = color
         self.bgcolor = bgcolor
+        self.semantics_label = semantics_label
 
     def _get_control_name(self):
         return "text"
@@ -259,3 +261,12 @@ class Text(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
+
+    # semantics_label
+    @property
+    def semantics_label(self):
+        return self._get_attr("semanticsLabel")
+
+    @semantics_label.setter
+    def semantics_label(self, value):
+        self._set_attr("semanticsLabel", value)
