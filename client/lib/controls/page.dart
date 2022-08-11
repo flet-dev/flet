@@ -299,7 +299,8 @@ class _PageControlState extends State<PageControl> {
                 debugPrint("MeterialApp.router build: ${widget.control.id}");
 
                 return MaterialApp.router(
-                  //showSemanticsDebugger: true,
+                  showSemanticsDebugger:
+                      widget.control.attrBool("showSemanticsDebugger", false)!,
                   routerDelegate: _routerDelegate,
                   routeInformationParser: _routeParser,
                   title: title,

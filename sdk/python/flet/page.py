@@ -568,6 +568,16 @@ class Page(Control):
     def rtl(self, value: Optional[bool]):
         self._set_attr("rtl", value)
 
+    # show_semantics_debugger
+    @property
+    def show_semantics_debugger(self):
+        return self._get_attr("showSemanticsDebugger")
+
+    @show_semantics_debugger.setter
+    @beartype
+    def show_semantics_debugger(self, value: Optional[bool]):
+        self._set_attr("showSemanticsDebugger", value)
+
     # width
     @property
     def width(self):
