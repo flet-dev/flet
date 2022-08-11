@@ -44,8 +44,9 @@ class FloatingActionButtonControl extends StatelessWidget {
                 eventData: control.attrs["data"] ?? "");
           };
 
-    if (text == null && icon == null) {
-      return const ErrorControl("FAB doesn't have a text, nor icon.");
+    if (text == null && icon == null && contentCtrls.isEmpty) {
+      return const ErrorControl(
+          "FAB doesn't have a text, nor icon, nor content.");
     }
 
     Widget button;
