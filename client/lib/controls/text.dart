@@ -17,6 +17,7 @@ class TextControl extends StatelessWidget {
     debugPrint("Text build: ${control.id}");
 
     String text = control.attrString("value", "")!;
+    String? semanticsLabel = control.attrString("semanticsLabel");
     bool noWrap = control.attrBool("noWrap", false)!;
     int? maxLines = control.attrInt("maxLines");
 
@@ -52,12 +53,14 @@ class TextControl extends StatelessWidget {
         control.attrBool("selectable", false)!
             ? SelectableText(
                 text,
+                semanticsLabel: semanticsLabel,
                 maxLines: maxLines,
                 style: style,
                 textAlign: textAlign,
               )
             : Text(
                 text,
+                semanticsLabel: semanticsLabel,
                 maxLines: maxLines,
                 softWrap: !noWrap,
                 style: style,

@@ -31,16 +31,6 @@ class SnackBarControl extends StatefulWidget {
 class _SnackBarControlState extends State<SnackBarControl> {
   bool _open = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Widget _createSnackBar() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var contentCtrls = widget.children.where((c) => c.name == "content");

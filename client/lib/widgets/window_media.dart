@@ -21,13 +21,14 @@ class _WindowMediaState extends State<WindowMedia> with WindowListener {
 
   @override
   void initState() {
-    windowManager.addListener(this);
     super.initState();
+    windowManager.addListener(this);
   }
 
   @override
   void dispose() {
     windowManager.removeListener(this);
+    _debounce?.cancel();
     super.dispose();
   }
 

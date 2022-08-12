@@ -28,21 +28,26 @@ class CheckboxControl extends StatefulWidget {
 
 class _CheckboxControlState extends State<CheckboxControl> {
   bool? _value;
-  final FocusNode _focusNode = FocusNode();
+  late final FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(() {
-      ws.pageEventFromWeb(
-          eventTarget: widget.control.id,
-          eventName: _focusNode.hasFocus ? "focus" : "blur",
-          eventData: "");
-    });
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    ws.pageEventFromWeb(
+        eventTarget: widget.control.id,
+        eventName: _focusNode.hasFocus ? "focus" : "blur",
+        eventData: "");
   }
 
   @override
   void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -108,23 +113,24 @@ class _CheckboxControlState extends State<CheckboxControl> {
                     style: TextStyle(color: Theme.of(context).disabledColor))
                 : MouseRegion(
                     cursor: SystemMouseCursors.click, child: Text(label));
-            result = GestureDetector(
-                onTap: !disabled
-                    ? () {
-                        bool? newValue;
-                        if (!tristate) {
-                          newValue = !_value!;
-                        } else if (tristate && _value == null) {
-                          newValue = false;
-                        } else if (tristate && _value == false) {
-                          newValue = true;
-                        }
-                        onChange(newValue);
-                      }
-                    : null,
-                child: labelPosition == LabelPosition.right
-                    ? Row(children: [checkbox, labelWidget])
-                    : Row(children: [labelWidget, checkbox]));
+            result = MergeSemantics(
+                child: GestureDetector(
+                    onTap: !disabled
+                        ? () {
+                            bool? newValue;
+                            if (!tristate) {
+                              newValue = !_value!;
+                            } else if (tristate && _value == null) {
+                              newValue = false;
+                            } else if (tristate && _value == false) {
+                              newValue = true;
+                            }
+                            onChange(newValue);
+                          }
+                        : null,
+                    child: labelPosition == LabelPosition.right
+                        ? Row(children: [checkbox, labelWidget])
+                        : Row(children: [labelWidget, checkbox])));
           }
 
           return constrainedControl(result, widget.parent, widget.control);

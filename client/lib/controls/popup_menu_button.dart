@@ -8,7 +8,7 @@ import '../utils/icons.dart';
 import '../web_socket_client.dart';
 import 'create_control.dart';
 
-class PopupMenuButtonControl extends StatefulWidget {
+class PopupMenuButtonControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
@@ -23,37 +23,36 @@ class PopupMenuButtonControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<PopupMenuButtonControl> createState() => _PopupMenuButtonControlState();
-}
-
-class _PopupMenuButtonControlState extends State<PopupMenuButtonControl> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    debugPrint("PopupMenuButton build: ${widget.control.id}");
+    debugPrint("PopupMenuButton build: ${control.id}");
 
-    var icon = getMaterialIcon(widget.control.attrString("icon", "")!);
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    var icon = getMaterialIcon(control.attrString("icon", "")!);
+    var tooltip = control.attrString("tooltip");
+    var contentCtrls =
+        children.where((c) => c.name == "content" && c.isVisible);
+    bool disabled = control.isDisabled || parentDisabled;
+
+    Widget? child = contentCtrls.isNotEmpty
+        ? createControl(control, contentCtrls.first.id, disabled)
+        : null;
 
     var popupButton = StoreConnector<AppState, ControlsViewModel>(
         distinct: true,
         converter: (store) => ControlsViewModel.fromStore(
-            store, widget.children.map((c) => c.id)),
+            store, children.where((c) => c.name != "content").map((c) => c.id)),
         builder: (content, viewModel) {
           return PopupMenuButton<String>(
               enabled: !disabled,
               icon: icon != null ? Icon(icon) : null,
+              tooltip: tooltip,
+              child: child,
               shape: Theme.of(context).useMaterial3
                   ? RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))
                   : null,
               onCanceled: () {
                 ws.pageEventFromWeb(
-                    eventTarget: widget.control.id,
+                    eventTarget: control.id,
                     eventName: "cancelled",
                     eventData: "");
               },
@@ -67,15 +66,14 @@ class _PopupMenuButtonControlState extends State<PopupMenuButtonControl> {
                         getMaterialIcon(cv.control.attrString("icon", "")!);
                     var text = cv.control.attrString("text", "")!;
                     var checked = cv.control.attrBool("checked");
-
                     var contentCtrls =
                         cv.children.where((c) => c.name == "content");
 
                     Widget? child;
                     if (contentCtrls.isNotEmpty) {
                       // custom content
-                      child = createControl(cv.control, contentCtrls.first.id,
-                          widget.parentDisabled);
+                      child = createControl(
+                          cv.control, contentCtrls.first.id, parentDisabled);
                     } else if (itemIcon != null && text != "") {
                       // icon and text
                       child = Row(children: [
@@ -102,6 +100,6 @@ class _PopupMenuButtonControlState extends State<PopupMenuButtonControl> {
                   }).toList());
         });
 
-    return constrainedControl(popupButton, widget.parent, widget.control);
+    return constrainedControl(popupButton, parent, control);
   }
 }

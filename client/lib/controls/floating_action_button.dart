@@ -30,6 +30,7 @@ class FloatingActionButtonControl extends StatelessWidget {
     Color? bgColor = HexColor.fromString(
         Theme.of(context), control.attrString("bgColor", "")!);
     var contentCtrls = children.where((c) => c.name == "content");
+    var tooltip = control.attrString("tooltip");
     bool autofocus = control.attrBool("autofocus", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
@@ -43,8 +44,9 @@ class FloatingActionButtonControl extends StatelessWidget {
                 eventData: control.attrs["data"] ?? "");
           };
 
-    if (text == null && icon == null) {
-      return const ErrorControl("FAB doesn't have a text, nor icon.");
+    if (text == null && icon == null && contentCtrls.isEmpty) {
+      return const ErrorControl(
+          "FAB doesn't have a text, nor icon, nor content.");
     }
 
     Widget button;
@@ -52,28 +54,32 @@ class FloatingActionButtonControl extends StatelessWidget {
       button = FloatingActionButton(
           autofocus: autofocus,
           onPressed: onPressed,
+          tooltip: tooltip,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else if (icon != null && text == null) {
       button = FloatingActionButton(
-        autofocus: autofocus,
-        onPressed: onPressed,
-        child: Icon(icon),
-        backgroundColor: bgColor,
-      );
+          autofocus: autofocus,
+          onPressed: onPressed,
+          child: Icon(icon),
+          backgroundColor: bgColor,
+          tooltip: tooltip);
     } else if (icon == null && text != null) {
       button = FloatingActionButton(
         autofocus: autofocus,
         onPressed: onPressed,
         child: Text(text),
         backgroundColor: bgColor,
+        tooltip: tooltip,
       );
     } else if (icon != null && text != null) {
       button = FloatingActionButton.extended(
-          autofocus: autofocus,
-          onPressed: onPressed,
-          label: Text(text),
-          icon: Icon(icon),
-          backgroundColor: bgColor);
+        autofocus: autofocus,
+        onPressed: onPressed,
+        label: Text(text),
+        icon: Icon(icon),
+        backgroundColor: bgColor,
+        tooltip: tooltip,
+      );
     } else {
       return const ErrorControl("FAB doesn't have a text, nor icon.");
     }

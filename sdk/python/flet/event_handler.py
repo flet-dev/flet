@@ -16,3 +16,6 @@ class EventHandler:
     def unsubscribe(self, handler):
         if handler in self.__handlers:
             self.__handlers.pop(handler)
+
+    def count(self):
+        return len(self.__handlers)

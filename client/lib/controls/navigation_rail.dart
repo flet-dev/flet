@@ -34,11 +34,6 @@ class _NavigationRailControlState extends State<NavigationRailControl> {
   int? _selectedIndex;
   dynamic _dispatch;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   void _destinationChanged(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");

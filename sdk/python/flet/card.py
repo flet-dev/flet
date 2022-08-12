@@ -11,6 +11,7 @@ from flet.types import AnimationValue, MarginValue, OffsetValue, RotateValue, Sc
 class Card(ConstrainedControl):
     def __init__(
         self,
+        content: Control = None,
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -36,7 +37,6 @@ class Card(ConstrainedControl):
         #
         # Specific
         #
-        content: Control = None,
         margin: MarginValue = None,
         elevation: OptionalNumber = None,
     ):

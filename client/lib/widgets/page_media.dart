@@ -18,6 +18,12 @@ class PageMedia extends StatefulWidget {
 class _PageMediaState extends State<PageMedia> {
   Timer? _debounce;
 
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
   _onScreenSizeChanged(bool isRegistered, Size newSize, Function dispatch) {
     if (isRegistered) {
       if (_debounce?.isActive ?? false) _debounce!.cancel();
@@ -60,11 +66,5 @@ class _PageMediaState extends State<PageMedia> {
           }
           return const SizedBox.shrink();
         });
-  }
-
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    super.dispose();
   }
 }

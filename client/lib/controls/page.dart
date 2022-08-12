@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flet_view/models/routes_view_model.dart';
+import 'package:flet_view/protocol/keyboard_event_data.dart';
 import 'package:flet_view/widgets/page_media.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
@@ -53,9 +57,11 @@ class _PageControlState extends State<PageControl> {
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
   int _routeChanges = 2;
+  bool _keyboardHandlerSubscribed = false;
 
   @override
   void initState() {
+    super.initState();
     _routeParser = RouteParser();
 
     _routeState = RouteState(_routeParser);
@@ -66,13 +72,52 @@ class _PageControlState extends State<PageControl> {
       navigatorKey: _navigatorKey,
       builder: (context) => _buildNavigator(context, _navigatorKey),
     );
+  }
 
-    super.initState();
+  @override
+  void dispose() {
+    _routeState.removeListener(_routeChanged);
+    _routeState.dispose();
+    if (_keyboardHandlerSubscribed) {
+      RawKeyboard.instance.removeListener(_handleKeyDown);
+    }
+    super.dispose();
   }
 
   void _routeChanged() {
     widget.dispatch(SetPageRouteAction(_routeState.route));
     _routeChanges--;
+  }
+
+  void _handleKeyDown(RawKeyEvent e) {
+    if (e is RawKeyDownEvent) {
+      final k = e.logicalKey;
+      if (![
+        LogicalKeyboardKey.control,
+        LogicalKeyboardKey.controlLeft,
+        LogicalKeyboardKey.controlRight,
+        LogicalKeyboardKey.alt,
+        LogicalKeyboardKey.altLeft,
+        LogicalKeyboardKey.altRight,
+        LogicalKeyboardKey.meta,
+        LogicalKeyboardKey.metaLeft,
+        LogicalKeyboardKey.metaRight,
+        LogicalKeyboardKey.shift,
+        LogicalKeyboardKey.shiftLeft,
+        LogicalKeyboardKey.shiftRight
+      ].contains(k)) {
+        ws.pageEventFromWeb(
+            eventTarget: "page",
+            eventName: "keyboard_event",
+            eventData: json.encode(KeyboardEventData(
+                    key: k.keyLabel,
+                    isAltPressed: e.isAltPressed,
+                    isControlPressed: e.isControlPressed,
+                    isShiftPressed: e.isShiftPressed,
+                    isMetaPressed: e.isMetaPressed)
+                .toJson()));
+      }
+    }
   }
 
   @override
@@ -113,6 +158,13 @@ class _PageControlState extends State<PageControl> {
         orElse: () => ThemeMode.system);
 
     debugPrint("Page theme: $themeMode");
+
+    // keyboard handler
+    var onKeyboardEvent = widget.control.attrBool("onKeyboardEvent", false)!;
+    if (onKeyboardEvent && !_keyboardHandlerSubscribed) {
+      RawKeyboard.instance.addListener(_handleKeyDown);
+      _keyboardHandlerSubscribed = true;
+    }
 
     // window title
     String title = widget.control.attrString("title", "")!;
@@ -256,6 +308,8 @@ class _PageControlState extends State<PageControl> {
                 debugPrint("MeterialApp.router build: ${widget.control.id}");
 
                 return MaterialApp.router(
+                  showSemanticsDebugger:
+                      widget.control.attrBool("showSemanticsDebugger", false)!,
                   routerDelegate: _routerDelegate,
                   routeInformationParser: _routeParser,
                   title: title,
@@ -473,11 +527,5 @@ class _PageControlState extends State<PageControl> {
                     ));
               });
         });
-  }
-
-  @override
-  void dispose() {
-    _routeState.removeListener(_routeChanged);
-    super.dispose();
   }
 }

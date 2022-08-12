@@ -36,53 +36,62 @@ class _TextFieldControlState extends State<TextFieldControl> {
   bool _revealPassword = false;
   bool _focused = false;
   late TextEditingController _controller;
-  late final FocusNode _focusNode = FocusNode();
+  late final FocusNode _focusNode;
+  late final FocusNode _shiftEnterfocusNode;
   String _lastFocusedTimestamp = "";
-
-  late final _shiftEnterfocusNode = FocusNode(
-    onKey: (FocusNode node, RawKeyEvent evt) {
-      if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
-        if (evt is RawKeyDownEvent) {
-          ws.pageEventFromWeb(
-              eventTarget: widget.control.id,
-              eventName: "submit",
-              eventData: "");
-        }
-        return KeyEventResult.handled;
-      } else {
-        return KeyEventResult.ignored;
-      }
-    },
-  );
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
-    _shiftEnterfocusNode.addListener(() {
-      setState(() {
-        _focused = _shiftEnterfocusNode.hasFocus;
-      });
-      ws.pageEventFromWeb(
-          eventTarget: widget.control.id,
-          eventName: _shiftEnterfocusNode.hasFocus ? "focus" : "blur",
-          eventData: "");
-    });
-    _focusNode.addListener(() {
-      setState(() {
-        _focused = _focusNode.hasFocus;
-      });
-      ws.pageEventFromWeb(
-          eventTarget: widget.control.id,
-          eventName: _focusNode.hasFocus ? "focus" : "blur",
-          eventData: "");
-    });
+    _shiftEnterfocusNode = FocusNode(
+      onKey: (FocusNode node, RawKeyEvent evt) {
+        if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
+          if (evt is RawKeyDownEvent) {
+            ws.pageEventFromWeb(
+                eventTarget: widget.control.id,
+                eventName: "submit",
+                eventData: "");
+          }
+          return KeyEventResult.handled;
+        } else {
+          return KeyEventResult.ignored;
+        }
+      },
+    );
+    _shiftEnterfocusNode.addListener(_onShiftEnterFocusChange);
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _shiftEnterfocusNode.removeListener(_onShiftEnterFocusChange);
+    _shiftEnterfocusNode.dispose();
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
     super.dispose();
+  }
+
+  void _onShiftEnterFocusChange() {
+    setState(() {
+      _focused = _shiftEnterfocusNode.hasFocus;
+    });
+    ws.pageEventFromWeb(
+        eventTarget: widget.control.id,
+        eventName: _shiftEnterfocusNode.hasFocus ? "focus" : "blur",
+        eventData: "");
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      _focused = _focusNode.hasFocus;
+    });
+    ws.pageEventFromWeb(
+        eventTarget: widget.control.id,
+        eventName: _focusNode.hasFocus ? "focus" : "blur",
+        eventData: "");
   }
 
   @override

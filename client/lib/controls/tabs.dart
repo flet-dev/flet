@@ -47,6 +47,13 @@ class _TabsControlState extends State<TabsControl>
     _tabController!.addListener(_tabChanged);
   }
 
+  @override
+  void dispose() {
+    _tabController?.removeListener(_tabChanged);
+    _tabController?.dispose();
+    super.dispose();
+  }
+
   void _tabChanged() {
     if (_tabController!.indexIsChanging == true) {
       return;
@@ -76,6 +83,10 @@ class _TabsControlState extends State<TabsControl>
     if (tabsIndex.length != _tabsIndex.length ||
         !tabsIndex.every((item) => _tabsIndex.contains(item))) {
       _tabsIndex = tabsIndex;
+      if (_tabController != null) {
+        _tabController!.removeListener(_tabChanged);
+        _tabController!.dispose();
+      }
       _tabController = TabController(
           length: _tabsIndex.length,
           animationDuration: Duration(

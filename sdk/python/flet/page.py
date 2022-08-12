@@ -2,6 +2,7 @@ import json
 import logging
 import threading
 import time
+from dataclasses import dataclass
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
@@ -71,7 +72,15 @@ class Page(Control):
         self.__on_route_change = EventHandler(lambda e: e.data)
         self._add_event_handler("route_change", self.__on_route_change.handler)
         self.__on_view_pop = EventHandler(lambda e: self.get_control(e.data))
+
+        def convert_keyboard_event_data(e):
+            d = json.loads(e.data)
+            return KeyboardEventData(**d)
+
         self._add_event_handler("view_pop", self.__on_view_pop.handler)
+        self.__on_keyboard_event = EventHandler(convert_keyboard_event_data)
+
+        self._add_event_handler("keyboard_event", self.__on_keyboard_event.handler)
         self.__on_window_event = EventHandler()
         self._add_event_handler("window_event", self.__on_window_event.handler)
         self.__on_connect = EventHandler()
@@ -101,6 +110,10 @@ class Page(Control):
         if self.__dark_theme:
             self.__dark_theme.brightness = "dark"
         self._set_attr_json("darkTheme", self.__dark_theme)
+
+        # keyboard event
+        if self.__on_keyboard_event.count() > 0:
+            self._set_attr("onKeyboardEvent", True)
 
     def _get_children(self):
         children = []
@@ -555,6 +568,16 @@ class Page(Control):
     def rtl(self, value: Optional[bool]):
         self._set_attr("rtl", value)
 
+    # show_semantics_debugger
+    @property
+    def show_semantics_debugger(self):
+        return self._get_attr("showSemanticsDebugger")
+
+    @show_semantics_debugger.setter
+    @beartype
+    def show_semantics_debugger(self, value: Optional[bool]):
+        self._set_attr("showSemanticsDebugger", value)
+
     # width
     @property
     def width(self):
@@ -799,6 +822,15 @@ class Page(Control):
     def on_view_pop(self, handler):
         self.__on_view_pop.subscribe(handler)
 
+    # on_keyboard_event
+    @property
+    def on_keyboard_event(self):
+        return self.__on_keyboard_event
+
+    @on_keyboard_event.setter
+    def on_keyboard_event(self, handler):
+        self.__on_keyboard_event.subscribe(handler)
+
     # on_window_event
     @property
     def on_window_event(self):
@@ -925,3 +957,12 @@ class ControlEvent(Event):
 
         self.control: Control = control
         self.page: Page = page
+
+
+@dataclass
+class KeyboardEventData:
+    key: str
+    shift: bool
+    ctrl: bool
+    alt: bool
+    meta: bool

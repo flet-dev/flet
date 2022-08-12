@@ -88,6 +88,7 @@ class PopupMenuItem(Control):
 class PopupMenuButton(ConstrainedControl):
     def __init__(
         self,
+        content: Control = None,
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -146,12 +147,19 @@ class PopupMenuButton(ConstrainedControl):
         self.items = items
         self.icon = icon
         self.on_cancelled = on_cancelled
+        self.__content: Control = None
+        self.content = content
 
     def _get_control_name(self):
         return "popupmenubutton"
 
     def _get_children(self):
-        return self.__items
+        children = []
+        if self.__content:
+            self.__content._set_attr_internal("n", "content")
+            children.append(self.__content)
+        children.extend(self.__items)
+        return children
 
     # items
     @property
@@ -181,3 +189,13 @@ class PopupMenuButton(ConstrainedControl):
     @icon.setter
     def icon(self, value):
         self._set_attr("icon", value)
+
+    # content
+    @property
+    def content(self):
+        return self.__content
+
+    @content.setter
+    @beartype
+    def content(self, value: Optional[Control]):
+        self.__content = value

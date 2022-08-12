@@ -29,16 +29,6 @@ class BannerControl extends StatefulWidget {
 class _BannerControlState extends State<BannerControl> {
   bool _open = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Widget _createBanner() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var leadingCtrls =

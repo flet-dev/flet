@@ -36,6 +36,7 @@ class IconButtonControl extends StatelessWidget {
     Color? bgColor = HexColor.fromString(
         Theme.of(context), control.attrString("bgColor", "")!);
     double? iconSize = control.attrDouble("iconSize");
+    var tooltip = control.attrString("tooltip");
     var contentCtrls = children.where((c) => c.name == "content");
     bool autofocus = control.attrBool("autofocus", false)!;
     bool selected = control.attrBool("selected", false)!;
@@ -76,6 +77,7 @@ class IconButtonControl extends StatelessWidget {
             color: iconColor,
           ),
           iconSize: iconSize,
+          tooltip: tooltip,
           style: style,
           isSelected: selected,
           selectedIcon: selectedIcon != null
@@ -88,6 +90,7 @@ class IconButtonControl extends StatelessWidget {
           onPressed: onPressed,
           iconSize: iconSize,
           style: style,
+          tooltip: tooltip,
           isSelected: selected,
           selectedIcon: selectedIcon != null
               ? Icon(selectedIcon, color: selectedIconColor)

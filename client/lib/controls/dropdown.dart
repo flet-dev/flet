@@ -33,20 +33,30 @@ class DropdownControl extends StatefulWidget {
 class _DropdownControlState extends State<DropdownControl> {
   String? _value;
   bool _focused = false;
-  final FocusNode _focusNode = FocusNode();
+  late final FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(() {
-      setState(() {
-        _focused = _focusNode.hasFocus;
-      });
-      ws.pageEventFromWeb(
-          eventTarget: widget.control.id,
-          eventName: _focusNode.hasFocus ? "focus" : "blur",
-          eventData: "");
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      _focused = _focusNode.hasFocus;
     });
+    ws.pageEventFromWeb(
+        eventTarget: widget.control.id,
+        eventName: _focusNode.hasFocus ? "focus" : "blur",
+        eventData: "");
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override

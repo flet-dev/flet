@@ -39,6 +39,7 @@ import 'progress_ring.dart';
 import 'radio.dart';
 import 'radio_group.dart';
 import 'row.dart';
+import 'semantics.dart';
 import 'shader_mask.dart';
 import 'slider.dart';
 import 'snack_bar.dart';
@@ -178,6 +179,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.card:
           return CardControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.semantics:
+          return SemanticsControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
@@ -337,7 +344,12 @@ Widget _opacity(Widget widget, Control? parent, Control control) {
 
 Widget _tooltip(Widget widget, Control? parent, Control control) {
   var tooltip = control.attrString("tooltip");
-  return tooltip != null
+  return tooltip != null &&
+          ![
+            ControlType.iconButton,
+            ControlType.floatingActionButton,
+            ControlType.popupMenuButton
+          ].contains(control.type)
       ? Tooltip(
           message: tooltip,
           padding: const EdgeInsets.all(4.0),
