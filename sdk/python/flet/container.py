@@ -1,3 +1,4 @@
+import json
 from typing import Optional, Union
 
 from beartype import beartype
@@ -6,6 +7,7 @@ from flet.alignment import Alignment
 from flet.border import Border
 from flet.constrained_control import ConstrainedControl
 from flet.control import BlendMode, Control, OptionalNumber
+from flet.event_handler import EventHandler
 from flet.gradients import Gradient
 from flet.image import ImageFit, ImageRepeat
 from flet.ref import Ref
@@ -98,6 +100,13 @@ class Container(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+
+        def convert_container_tap_event_data(e):
+            d = json.loads(e.data)
+            return ContainerTapEventData(**d)
+
+        self.__on_click = EventHandler(convert_container_tap_event_data)
+        self._add_event_handler("click", self.__on_click.handler)
 
         self.content = content
         self.padding = padding
@@ -299,11 +308,11 @@ class Container(ConstrainedControl):
     # on_click
     @property
     def on_click(self):
-        return self._get_event_handler("click")
+        return self.__on_click
 
     @on_click.setter
     def on_click(self, handler):
-        self._add_event_handler("click", handler)
+        self.__on_click.subscribe(handler)
         if handler != None:
             self._set_attr("onclick", True)
         else:
@@ -334,3 +343,11 @@ class Container(ConstrainedControl):
             self._set_attr("onHover", True)
         else:
             self._set_attr("onHover", None)
+
+
+class ContainerTapEventData:
+    def __init__(self, lx, ly, gx, gy) -> None:
+        self.local_x: float = lx
+        self.local_y: float = ly
+        self.global_x: float = gx
+        self.global_y: float = gy

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:flet_view/protocol/container_tap_event_data.dart';
 import 'package:flet_view/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -203,8 +204,12 @@ class ContainerControl extends StatelessWidget {
                           ws.pageEventFromWeb(
                               eventTarget: control.id,
                               eventName: "click",
-                              eventData: control.attrString("data", "")! +
-                                  "${details.localPosition.dx}:${details.localPosition.dy} ${details.globalPosition.dx}:${details.globalPosition.dy}");
+                              eventData: json.encode(ContainerTapEventData(
+                                      localX: details.localPosition.dx,
+                                      localY: details.localPosition.dy,
+                                      globalX: details.globalPosition.dx,
+                                      globalY: details.globalPosition.dy)
+                                  .toJson()));
                         }
                       : null,
                   onLongPress: onLongPress

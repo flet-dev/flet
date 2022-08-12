@@ -72,15 +72,15 @@ class Page(Control):
         self.__on_route_change = EventHandler(lambda e: e.data)
         self._add_event_handler("route_change", self.__on_route_change.handler)
         self.__on_view_pop = EventHandler(lambda e: self.get_control(e.data))
+        self._add_event_handler("view_pop", self.__on_view_pop.handler)
 
         def convert_keyboard_event_data(e):
             d = json.loads(e.data)
             return KeyboardEventData(**d)
 
-        self._add_event_handler("view_pop", self.__on_view_pop.handler)
         self.__on_keyboard_event = EventHandler(convert_keyboard_event_data)
-
         self._add_event_handler("keyboard_event", self.__on_keyboard_event.handler)
+
         self.__on_window_event = EventHandler()
         self._add_event_handler("window_event", self.__on_window_event.handler)
         self.__on_connect = EventHandler()
