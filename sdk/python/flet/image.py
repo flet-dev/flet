@@ -56,7 +56,7 @@ class Image(ConstrainedControl):
         #
         # Specific
         #
-        src_base64: bool = None,
+        src_base64: str = None,
         repeat: ImageRepeat = None,
         fit: ImageFit = None,
         border_radius: BorderRadiusValue = None,
