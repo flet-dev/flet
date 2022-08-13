@@ -456,7 +456,6 @@ def _download_flet_client(file_name):
     temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
     print(f"Downloading Flet v{ver} to {temp_arch}")
     flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
-
     urllib.request.urlretrieve(flet_url, temp_arch)
     return str(temp_arch)
 
