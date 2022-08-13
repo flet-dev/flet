@@ -11,7 +11,7 @@ skip_commits:
 environment:
   GO_VERSION: 1.19
   GO_TAGS: --tags release
-  python_version: 3.10
+  python_stack: python 3.10
   GITHUB_TOKEN:
     secure: doX0dwjWhBmT56aJqR9NCbtMFJpDpdYxPCIB4vQoHfSR+nTa+pLCo6Yv5qWpD/90
   DOCKER_REGISTRY_USER:
@@ -32,6 +32,11 @@ environment:
       job_group: build_flet
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
+    - job_name: Build Flet for Linux ARM64
+      job_group: build_flet
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+      python_stack: ""
+
     - job_name: Build Flet for iOS
       job_group: build_flet
       APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
@@ -43,25 +48,25 @@ environment:
     - job_name: Test Python 3.7
       job_group: python_tests
       job_depends_on: build_flet
-      python_version: 3.7
+      python_stack: python 3.7
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.8
       job_group: python_tests
       job_depends_on: build_flet
-      python_version: 3.8
+      python_stack: python 3.8
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.9
       job_group: python_tests
       job_depends_on: build_flet
-      python_version: 3.9
+      python_stack: python 3.9
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.10
       job_group: python_tests
       job_depends_on: build_flet
-      python_version: 3.10
+      python_stack: python 3.10
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Build Python wheels
@@ -78,7 +83,7 @@ environment:
 matrix:
   fast_finish: true
 
-stack: python $python_version
+stack: $python_stack
 
 for:
   # ======================================
@@ -109,13 +114,13 @@ for:
       - dir %RELEASE_DIR%
       - ren build\windows\runner\Release flet
       - cd build\windows\runner
-      - 7z a flet.zip flet
+      - 7z a flet-windows.zip flet
       - cd %APPVEYOR_BUILD_FOLDER%
 
     test: off
 
     artifacts:
-      - path: client\build\windows\runner\flet.zip
+      - path: client\build\windows\runner\flet-windows.zip
         name: flet_windows
 
     deploy:
@@ -149,10 +154,10 @@ for:
       - cd client
       - flutter test
       - flutter build macos
-      - tar -czvf flet.app.tar.gz -C build/macos/Build/Products/Release Flet.app
+      - tar -czvf flet-macos-amd64.tar.gz -C build/macos/Build/Products/Release Flet.app
 
     artifacts:
-      - path: client/flet.app.tar.gz
+      - path: client/flet-macos-amd64.tar.gz
         name: flet_macos
 
     deploy:
@@ -183,17 +188,51 @@ for:
       - flutter test
       - flutter build linux
       - mv build/linux/x64/release/bundle build/linux/x64/release/flet
-      - tar -czvf flet.tar.gz -C build/linux/x64/release flet
+      - tar -czvf flet-linux-amd64.tar.gz -C build/linux/x64/release flet
 
     artifacts:
-      - path: client/flet.tar.gz
-        name: flet_linux
+      - path: client/flet-linux-amd64.tar.gz
+        name: flet_linux_amd64
 
     deploy:
       provider: GitHub
       auth_token: $(GITHUB_TOKEN)
       release: $(APPVEYOR_REPO_TAG_NAME)
-      artifact: flet_linux
+      artifact: flet_linux_amd64
+      on:
+        APPVEYOR_REPO_TAG: true
+
+  # ======================================
+  #    Build Flet View for Linux ARM64
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: Build Flet for Linux ARM64
+
+    install:
+      # Flutter SDK
+      - sudo snap install flutter --classic
+      - flutter channel beta
+      - flutter upgrade
+      - flutter sdk-path
+
+    build_script:
+      - cd client
+      - flutter test
+      - flutter build linux
+      - mv build/linux/arm64/release/bundle build/linux/arm64/release/flet
+      - tar -czvf flet-linux-arm64.tar.gz -C build/linux/arm64/release flet
+
+    artifacts:
+      - path: client/flet-linux-arm64.tar.gz
+        name: flet_linux_arm64
+
+    deploy:
+      provider: GitHub
+      auth_token: $(GITHUB_TOKEN)
+      release: $(APPVEYOR_REPO_TAG_NAME)
+      artifact: flet_linux_arm64
       on:
         APPVEYOR_REPO_TAG: true
 

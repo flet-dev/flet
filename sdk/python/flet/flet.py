@@ -337,6 +337,7 @@ def _open_flet_view(page_url):
 
     if is_windows():
         flet_exe = "flet.exe"
+        temp_flet_dir = Path(tempfile.gettempdir()).joinpath(f"flet-{version.version}")
 
         # check if flet_view.exe exists in "bin" directory (user mode)
         p = Path(__file__).parent.joinpath("bin", "flet", flet_exe)
@@ -349,7 +350,14 @@ def _open_flet_view(page_url):
             if flet_path:
                 logging.info(f"Flet View found in PATH: {flet_path}")
             else:
-                flet_path = _download_flet_view_windows()
+                if not temp_flet_dir.exists():
+                    zip_file = _download_flet_client("flet-windows.zip")
+
+                    logging.info(f"Extracting flet.exe from archive to {temp_flet_dir}")
+                    temp_flet_dir.mkdir(parents=True, exist_ok=True)
+                    with zipfile.ZipFile(zip_file, "r") as zip_arch:
+                        zip_arch.extractall(str(temp_flet_dir))
+                app_path = temp_flet_dir.joinpath("flet", flet_exe)
         args = [flet_path, page_url]
     elif is_macos():
         # build version-specific path to Flet.app
@@ -358,16 +366,17 @@ def _open_flet_view(page_url):
         # check if flet_view.app exists in a temp directory
         if not temp_flet_dir.exists():
             # check if flet.tar.gz exists
-            tar_file = Path(__file__).parent.joinpath("bin", "flet.tar.gz")
+            gz_filename = "flet-macos-amd64.tar.gz"
+            tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
             if not tar_file.exists():
-                tar_file = _download_flet_view_macos()
+                tar_file = _download_flet_client(gz_filename)
 
             logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
             temp_flet_dir.mkdir(parents=True, exist_ok=True)
             with tarfile.open(str(tar_file), "r:gz") as tar_arch:
                 tar_arch.extractall(str(temp_flet_dir))
         else:
-            logging.info(f"Flet View found in PATH: {temp_flet_dir}")
+            logging.info(f"Flet View found in: {temp_flet_dir}")
 
         app_path = temp_flet_dir.joinpath("Flet.app")
         args = ["open", str(app_path), "-W", "--args", page_url]
@@ -378,16 +387,17 @@ def _open_flet_view(page_url):
         # check if flet_view.app exists in a temp directory
         if not temp_flet_dir.exists():
             # check if flet.tar.gz exists
-            tar_file = Path(__file__).parent.joinpath("bin", "flet.tar.gz")
+            gz_filename = f"flet-linux-{get_arch()}.tar.gz"
+            tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
             if not tar_file.exists():
-                tar_file = _download_flet_view_linux()
+                tar_file = _download_flet_client(gz_filename)
 
             logging.info(f"Extracting Flet from archive to {temp_flet_dir}")
             temp_flet_dir.mkdir(parents=True, exist_ok=True)
             with tarfile.open(str(tar_file), "r:gz") as tar_arch:
                 tar_arch.extractall(str(temp_flet_dir))
         else:
-            logging.info(f"Flet View found in PATH: {temp_flet_dir}")
+            logging.info(f"Flet View found in: {temp_flet_dir}")
 
         app_path = temp_flet_dir.joinpath("flet", "flet")
         args = [str(app_path), page_url]
@@ -441,52 +451,11 @@ def _download_fletd():
     return str(temp_fletd_dir.joinpath(flet_exe))
 
 
-def _download_flet_view_windows():
+def _download_flet_client(file_name):
     ver = version.version
-
-    # build version-specific path to Flet
-    temp_flet_dir = Path(tempfile.gettempdir()).joinpath(f"flet-{ver}")
-
-    if not temp_flet_dir.exists():
-        print(f"Downloading Flet v{ver} to {temp_flet_dir}")
-        temp_flet_dir.mkdir(parents=True, exist_ok=True)
-        file_name = "flet.zip"
-        flet_url = (
-            f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
-        )
-
-        temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
-        try:
-            urllib.request.urlretrieve(flet_url, temp_arch)
-            with zipfile.ZipFile(temp_arch, "r") as zip_arch:
-                zip_arch.extractall(str(temp_flet_dir))
-        finally:
-            os.remove(temp_arch)
-    else:
-        logging.info(f"Flet v{version.version} is already installed in {temp_flet_dir}")
-    return str(temp_flet_dir.joinpath("flet", "flet.exe"))
-
-
-def _download_flet_view_macos():
-    ver = version.version
-
-    file_name = "flet.app.tar.gz"
     temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
     print(f"Downloading Flet v{ver} to {temp_arch}")
     flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
-
-    urllib.request.urlretrieve(flet_url, temp_arch)
-    return str(temp_arch)
-
-
-def _download_flet_view_linux():
-    ver = version.version
-
-    file_name = "flet.tar.gz"
-    temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
-    print(f"Downloading Flet v{ver} to {temp_arch}")
-    flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
-
     urllib.request.urlretrieve(flet_url, temp_arch)
     return str(temp_arch)
 
