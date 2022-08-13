@@ -35,6 +35,7 @@ environment:
     - job_name: Build Flet for Linux ARM64
       job_group: build_flet
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+      python_version: ""
 
     # - job_name: Build Flet for iOS
     #   job_group: build_flet
