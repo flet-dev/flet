@@ -376,7 +376,7 @@ def _open_flet_view(page_url):
             with tarfile.open(str(tar_file), "r:gz") as tar_arch:
                 tar_arch.extractall(str(temp_flet_dir))
         else:
-            logging.info(f"Flet View found in PATH: {temp_flet_dir}")
+            logging.info(f"Flet View found in: {temp_flet_dir}")
 
         app_path = temp_flet_dir.joinpath("Flet.app")
         args = ["open", str(app_path), "-W", "--args", page_url]
@@ -397,7 +397,7 @@ def _open_flet_view(page_url):
             with tarfile.open(str(tar_file), "r:gz") as tar_arch:
                 tar_arch.extractall(str(temp_flet_dir))
         else:
-            logging.info(f"Flet View found in PATH: {temp_flet_dir}")
+            logging.info(f"Flet View found in: {temp_flet_dir}")
 
         app_path = temp_flet_dir.joinpath("flet", "flet")
         args = [str(app_path), page_url]

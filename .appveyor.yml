@@ -192,7 +192,7 @@ for:
 
     artifacts:
       - path: client/flet-linux-amd64.tar.gz
-        name: flet_linux
+        name: flet_linux_amd64
 
     deploy:
       provider: GitHub
