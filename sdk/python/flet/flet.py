@@ -378,7 +378,9 @@ def _open_flet_view(page_url):
         # check if flet_view.app exists in a temp directory
         if not temp_flet_dir.exists():
             # check if flet.tar.gz exists
-            tar_file = Path(__file__).parent.joinpath("bin", "flet.tar.gz")
+            tar_file = Path(__file__).parent.joinpath(
+                "bin", f"flet-linux-{get_arch()}.tar.gz"
+            )
             if not tar_file.exists():
                 tar_file = _download_flet_view_linux()
 
@@ -482,7 +484,7 @@ def _download_flet_view_macos():
 def _download_flet_view_linux():
     ver = version.version
 
-    file_name = "flet.tar.gz"
+    file_name = f"flet-linux-{get_arch()}.tar.gz"
     temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
     print(f"Downloading Flet v{ver} to {temp_arch}")
     flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
