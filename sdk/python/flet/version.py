@@ -1,2 +1,2 @@
 # this file will be replaced by CI
-version = "0.1.48"
+version = "0.1.50"
