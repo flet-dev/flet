@@ -357,7 +357,7 @@ def _open_flet_view(page_url):
                     temp_flet_dir.mkdir(parents=True, exist_ok=True)
                     with zipfile.ZipFile(zip_file, "r") as zip_arch:
                         zip_arch.extractall(str(temp_flet_dir))
-                app_path = temp_flet_dir.joinpath("flet", flet_exe)
+                flet_path = str(temp_flet_dir.joinpath("flet", flet_exe))
         args = [flet_path, page_url]
     elif is_macos():
         # build version-specific path to Flet.app
