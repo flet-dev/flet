@@ -54,6 +54,7 @@ class FloatingActionButtonControl extends StatelessWidget {
       button = FloatingActionButton(
           autofocus: autofocus,
           onPressed: onPressed,
+          backgroundColor: bgColor,
           tooltip: tooltip,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else if (icon != null && text == null) {
