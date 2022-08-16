@@ -1,6 +1,3 @@
-from flet.control import Control
-
-
 class Event:
     def __init__(self, target: str, name: str, data: str):
         self.target: str = target

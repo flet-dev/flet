@@ -7,6 +7,7 @@ from flet.alignment import Alignment
 from flet.border import Border
 from flet.constrained_control import ConstrainedControl
 from flet.control import BlendMode, Control, OptionalNumber
+from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
 from flet.gradients import Gradient
 from flet.image import ImageFit, ImageRepeat
@@ -102,8 +103,10 @@ class Container(ConstrainedControl):
         )
 
         def convert_container_tap_event_data(e):
+            if self.ink:
+                return e
             d = json.loads(e.data)
-            return ContainerTapEventData(**d)
+            return ContainerTapEvent(**d)
 
         self.__on_click = EventHandler(convert_container_tap_event_data)
         self._add_event_handler("click", self.__on_click.handler)
@@ -345,7 +348,7 @@ class Container(ConstrainedControl):
             self._set_attr("onHover", None)
 
 
-class ContainerTapEventData:
+class ContainerTapEvent(ControlEvent):
     def __init__(self, lx, ly, gx, gy) -> None:
         self.local_x: float = lx
         self.local_y: float = ly

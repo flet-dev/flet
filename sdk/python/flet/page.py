@@ -19,6 +19,7 @@ from flet.control import (
     OptionalNumber,
     ScrollMode,
 )
+from flet.control_event import ControlEvent
 from flet.event import Event
 from flet.event_handler import EventHandler
 from flet.floating_action_button import FloatingActionButton
@@ -76,7 +77,7 @@ class Page(Control):
 
         def convert_keyboard_event_data(e):
             d = json.loads(e.data)
-            return KeyboardEventData(**d)
+            return KeyboardEvent(**d)
 
         self.__on_keyboard_event = EventHandler(convert_keyboard_event_data)
         self._add_event_handler("keyboard_event", self.__on_keyboard_event.handler)
@@ -951,16 +952,8 @@ class Offstage(Control):
         self.__dialog = value
 
 
-class ControlEvent(Event):
-    def __init__(self, target: str, name: str, data: str, control: Control, page: Page):
-        Event.__init__(self, target=target, name=name, data=data)
-
-        self.control: Control = control
-        self.page: Page = page
-
-
 @dataclass
-class KeyboardEventData:
+class KeyboardEvent(ControlEvent):
     key: str
     shift: bool
     ctrl: bool
