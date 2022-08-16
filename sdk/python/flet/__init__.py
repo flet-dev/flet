@@ -8,7 +8,7 @@ from flet.card import Card
 from flet.checkbox import Checkbox
 from flet.circle_avatar import CircleAvatar
 from flet.column import Column
-from flet.container import Container, ContainerTapEventData
+from flet.container import Container, ContainerTapEvent
 from flet.control import Control
 from flet.divider import Divider
 from flet.drag_target import DragTarget
@@ -29,7 +29,7 @@ from flet.list_view import ListView
 from flet.markdown import Markdown
 from flet.navigation_rail import NavigationRail, NavigationRailDestination
 from flet.outlined_button import OutlinedButton
-from flet.page import KeyboardEventData, Page
+from flet.page import KeyboardEvent, Page
 from flet.popup_menu_button import PopupMenuButton, PopupMenuItem
 from flet.progress_bar import ProgressBar
 from flet.progress_ring import ProgressRing
