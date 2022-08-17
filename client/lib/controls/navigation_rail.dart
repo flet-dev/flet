@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
@@ -9,7 +10,6 @@ import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 
 class NavigationRailControl extends StatefulWidget {
@@ -42,6 +42,7 @@ class _NavigationRailControlState extends State<NavigationRailControl> {
     ];
     _dispatch(
         UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+    final ws = FletAppServices.of(context).ws;
     ws.updateControlProps(props: props);
     ws.pageEventFromWeb(
         eventTarget: widget.control.id,

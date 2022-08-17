@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 
 class ListTileControl extends StatelessWidget {
@@ -22,6 +22,8 @@ class ListTileControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
+
+    final ws = FletAppServices.of(context).ws;
 
     var leadingCtrls =
         children.where((c) => c.name == "leading" && c.isVisible);

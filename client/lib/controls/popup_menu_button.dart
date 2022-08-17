@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
 import '../utils/icons.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 
 class PopupMenuButtonControl extends StatelessWidget {
@@ -25,6 +25,8 @@ class PopupMenuButtonControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("PopupMenuButton build: ${control.id}");
+
+    final ws = FletAppServices.of(context).ws;
 
     var icon = getMaterialIcon(control.attrString("icon", "")!);
     var tooltip = control.attrString("tooltip");

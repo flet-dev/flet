@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flet_view/controls/error.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 
 class DragTargetControl extends StatelessWidget {
@@ -37,6 +37,8 @@ class DragTargetControl extends StatelessWidget {
     if (child == null) {
       return const ErrorControl("DragTarget should have content.");
     }
+
+    final ws = FletAppServices.of(context).ws;
 
     return DragTarget<String>(
       builder: (

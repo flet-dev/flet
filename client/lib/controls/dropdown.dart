@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_children_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 import 'form_field.dart';
 
@@ -46,7 +46,7 @@ class _DropdownControlState extends State<DropdownControl> {
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    ws.pageEventFromWeb(
+    FletAppServices.of(context).ws.pageEventFromWeb(
         eventTarget: widget.control.id,
         eventName: _focusNode.hasFocus ? "focus" : "blur",
         eventData: "");
@@ -62,6 +62,8 @@ class _DropdownControlState extends State<DropdownControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("Dropdown build: ${widget.control.id}");
+
+    final ws = FletAppServices.of(context).ws;
 
     return StoreConnector<AppState, ControlChildrenViewModel>(
         distinct: true,

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flet_view/flet_app_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:window_manager/window_manager.dart';
@@ -50,7 +51,8 @@ class _WindowMediaState extends State<WindowMedia> with WindowListener {
       debugPrint('[WindowManager] onWindowEvent: $eventName');
       getWindowMediaData().then((wmd) {
         debugPrint("WindowMediaData: $wmd");
-        _dispatch!(WindowEventAction(eventName, wmd));
+        _dispatch!(
+            WindowEventAction(eventName, wmd, FletAppServices.of(context).ws));
       });
     });
   }

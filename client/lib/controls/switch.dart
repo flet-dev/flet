@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 
 enum LabelPosition { right, left }
@@ -38,7 +38,7 @@ class _SwitchControlState extends State<SwitchControl> {
   }
 
   void _onFocusChange() {
-    ws.pageEventFromWeb(
+    FletAppServices.of(context).ws.pageEventFromWeb(
         eventTarget: widget.control.id,
         eventName: _focusNode.hasFocus ? "focus" : "blur",
         eventData: "");
@@ -86,6 +86,7 @@ class _SwitchControlState extends State<SwitchControl> {
             ];
             dispatch(UpdateControlPropsAction(
                 UpdateControlPropsPayload(props: props)));
+            final ws = FletAppServices.of(context).ws;
             ws.updateControlProps(props: props);
             ws.pageEventFromWeb(
                 eventTarget: widget.control.id,

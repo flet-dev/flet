@@ -9,7 +9,7 @@ import 'models/app_state.dart';
 class FletAppServices extends InheritedWidget {
   final String pageUrl;
   final String sessionId;
-  //late final WebSocketClient ws;
+  late final WebSocketClient ws;
   late final Store<AppState> store;
 
   FletAppServices(
@@ -18,12 +18,12 @@ class FletAppServices extends InheritedWidget {
       required this.pageUrl,
       required this.sessionId})
       : super(key: key, child: child) {
-    //ws = WebSocketClient();
+    ws = WebSocketClient();
     store = Store<AppState>(appReducer, initialState: AppState.initial());
     ws.store = store;
     // connect to a page
     var pageUri = Uri.parse(pageUrl);
-    store.dispatch(PageLoadAction(pageUri, sessionId));
+    store.dispatch(PageLoadAction(pageUri, sessionId, ws));
   }
 
   @override

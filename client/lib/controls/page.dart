@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet_view/flet_app_services.dart';
 import 'package:flet_view/models/routes_view_model.dart';
 import 'package:flet_view/protocol/keyboard_event_data.dart';
 import 'package:flet_view/widgets/page_media.dart';
@@ -24,7 +25,6 @@ import '../utils/edge_insets.dart';
 import '../utils/theme.dart';
 import '../utils/uri.dart';
 import '../utils/user_fonts.dart';
-import '../web_socket_client.dart';
 import '../widgets/fade_transition_page.dart';
 import '../widgets/loading_page.dart';
 import '../widgets/window_media.dart';
@@ -85,7 +85,8 @@ class _PageControlState extends State<PageControl> {
   }
 
   void _routeChanged() {
-    widget.dispatch(SetPageRouteAction(_routeState.route));
+    widget.dispatch(
+        SetPageRouteAction(_routeState.route, FletAppServices.of(context).ws));
     _routeChanges--;
   }
 
@@ -106,7 +107,7 @@ class _PageControlState extends State<PageControl> {
         LogicalKeyboardKey.shiftLeft,
         LogicalKeyboardKey.shiftRight
       ].contains(k)) {
-        ws.pageEventFromWeb(
+        FletAppServices.of(context).ws.pageEventFromWeb(
             eventTarget: "page",
             eventName: "keyboard_event",
             eventData: json.encode(KeyboardEventData(
@@ -387,7 +388,7 @@ class _PageControlState extends State<PageControl> {
                 // }
 
                 // return true;
-                ws.pageEventFromWeb(
+                FletAppServices.of(context).ws.pageEventFromWeb(
                     eventTarget: "page",
                     eventName: "view_pop",
                     eventData:

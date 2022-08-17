@@ -5,11 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 import 'form_field.dart';
 
@@ -48,7 +48,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
       onKey: (FocusNode node, RawKeyEvent evt) {
         if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
           if (evt is RawKeyDownEvent) {
-            ws.pageEventFromWeb(
+            FletAppServices.of(context).ws.pageEventFromWeb(
                 eventTarget: widget.control.id,
                 eventName: "submit",
                 eventData: "");
@@ -78,7 +78,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    ws.pageEventFromWeb(
+    FletAppServices.of(context).ws.pageEventFromWeb(
         eventTarget: widget.control.id,
         eventName: _shiftEnterfocusNode.hasFocus ? "focus" : "blur",
         eventData: "");
@@ -88,7 +88,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    ws.pageEventFromWeb(
+    FletAppServices.of(context).ws.pageEventFromWeb(
         eventTarget: widget.control.id,
         eventName: _focusNode.hasFocus ? "focus" : "blur",
         eventData: "");
@@ -208,7 +208,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
               enabled: !disabled,
               onFieldSubmitted: !multiline
                   ? (_) {
-                      ws.pageEventFromWeb(
+                      FletAppServices.of(context).ws.pageEventFromWeb(
                           eventTarget: widget.control.id,
                           eventName: "submit",
                           eventData: "");
@@ -245,9 +245,9 @@ class _TextFieldControlState extends State<TextFieldControl> {
                 ];
                 dispatch(UpdateControlPropsAction(
                     UpdateControlPropsPayload(props: props)));
-                ws.updateControlProps(props: props);
+                FletAppServices.of(context).ws.updateControlProps(props: props);
                 if (onChange) {
-                  ws.pageEventFromWeb(
+                  FletAppServices.of(context).ws.pageEventFromWeb(
                       eventTarget: widget.control.id,
                       eventName: "change",
                       eventData: value);

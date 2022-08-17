@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flet_view/flet_app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -30,11 +31,13 @@ class _PageMediaState extends State<PageMedia> {
       _debounce = Timer(const Duration(milliseconds: 200), () {
         debugPrint("Send current size to reducer: $newSize");
         getWindowMediaData().then((wmd) {
-          dispatch(PageSizeChangeAction(newSize, wmd));
+          dispatch(PageSizeChangeAction(
+              newSize, wmd, FletAppServices.of(context).ws));
         });
       });
     } else {
-      dispatch(PageSizeChangeAction(newSize, null));
+      dispatch(
+          PageSizeChangeAction(newSize, null, FletAppServices.of(context).ws));
     }
   }
 

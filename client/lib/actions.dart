@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flet_view/models/window_media_data.dart';
+import 'package:flet_view/web_socket_client.dart';
 
 import 'protocol/add_page_controls_payload.dart';
 import 'protocol/app_become_inactive_payload.dart';
@@ -17,7 +18,8 @@ import 'protocol/update_control_props_payload.dart';
 class PageLoadAction {
   final Uri pageUri;
   final String sessionId;
-  PageLoadAction(this.pageUri, this.sessionId);
+  final WebSocketClient ws;
+  PageLoadAction(this.pageUri, this.sessionId, this.ws);
 }
 
 class PageReconnectingAction {
@@ -27,18 +29,21 @@ class PageReconnectingAction {
 class PageSizeChangeAction {
   final Size newPageSize;
   final WindowMediaData? wmd;
-  PageSizeChangeAction(this.newPageSize, this.wmd);
+  final WebSocketClient ws;
+  PageSizeChangeAction(this.newPageSize, this.wmd, this.ws);
 }
 
 class SetPageRouteAction {
   final String route;
-  SetPageRouteAction(this.route);
+  final WebSocketClient ws;
+  SetPageRouteAction(this.route, this.ws);
 }
 
 class WindowEventAction {
   final String eventName;
   final WindowMediaData wmd;
-  WindowEventAction(this.eventName, this.wmd);
+  final WebSocketClient ws;
+  WindowEventAction(this.eventName, this.wmd, this.ws);
 }
 
 class PageBrightnessChangeAction {

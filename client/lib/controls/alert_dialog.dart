@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/alignment.dart';
 import '../utils/edge_insets.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -107,8 +107,10 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
                   ];
                   dispatch(UpdateControlPropsAction(
                       UpdateControlPropsPayload(props: props)));
-                  ws.updateControlProps(props: props);
-                  ws.pageEventFromWeb(
+                  FletAppServices.of(context)
+                      .ws
+                      .updateControlProps(props: props);
+                  FletAppServices.of(context).ws.pageEventFromWeb(
                       eventTarget: widget.control.id,
                       eventName: "dismiss",
                       eventData: "");

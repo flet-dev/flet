@@ -4,10 +4,10 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:markdown/markdown.dart' as md;
 
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 
 class MarkdownControl extends StatelessWidget {
@@ -20,6 +20,8 @@ class MarkdownControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Markdown build: ${control.id}");
+
+    final ws = FletAppServices.of(context).ws;
 
     var value = control.attrString("value", "")!;
     md.ExtensionSet extensionSet = md.ExtensionSet.none;

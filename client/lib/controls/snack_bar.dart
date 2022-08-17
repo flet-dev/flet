@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -45,7 +45,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
             label: actionName,
             onPressed: () {
               debugPrint("SnackBar ${widget.control.id} clicked!");
-              ws.pageEventFromWeb(
+              FletAppServices.of(context).ws.pageEventFromWeb(
                   eventTarget: widget.control.id,
                   eventName: "action",
                   eventData: widget.control.attrs["data"] ?? "");
@@ -95,7 +95,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
               ];
               dispatch(UpdateControlPropsAction(
                   UpdateControlPropsPayload(props: props)));
-              ws.updateControlProps(props: props);
+              FletAppServices.of(context).ws.updateControlProps(props: props);
             });
           }
 

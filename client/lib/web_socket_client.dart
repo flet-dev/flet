@@ -22,8 +22,6 @@ import 'protocol/message.dart';
 import 'protocol/register_webclient_request.dart';
 import 'protocol/register_webclient_response.dart';
 
-WebSocketClient ws = WebSocketClient();
-
 class WebSocketClient {
   WebSocketChannel? _channel;
   String _serverUrl = "";

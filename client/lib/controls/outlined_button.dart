@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 
 class OutlinedButtonControl extends StatelessWidget {
@@ -24,6 +24,8 @@ class OutlinedButtonControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Button build: ${control.id}");
+
+    final ws = FletAppServices.of(context).ws;
 
     String text = control.attrString("text", "")!;
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);

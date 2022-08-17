@@ -7,6 +7,7 @@ import 'package:flet_view/utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
@@ -16,7 +17,6 @@ import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
 import '../utils/uri.dart';
-import '../web_socket_client.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -59,6 +59,8 @@ class ContainerControl extends StatelessWidget {
         : null;
 
     var animation = parseAnimation(control, "animate");
+
+    final ws = FletAppServices.of(context).ws;
 
     return StoreConnector<AppState, Uri?>(
         distinct: true,

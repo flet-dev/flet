@@ -5,7 +5,6 @@ import 'package:flet_view/protocol/clean_control_payload.dart';
 import 'package:flet_view/protocol/message.dart';
 import 'package:flet_view/protocol/remove_control_payload.dart';
 import 'package:flet_view/protocol/update_control_props_payload.dart';
-import 'package:flet_view/web_socket_client.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../utils/platform_utils_non_web.dart'
@@ -22,7 +21,7 @@ enum Actions { increment, setText, setError }
 
 AppState appReducer(AppState state, dynamic action) {
   if (action is PageLoadAction) {
-    ws.connect(serverUrl: getWebSocketEndpoint(action.pageUri));
+    action.ws.connect(serverUrl: getWebSocketEndpoint(action.pageUri));
     return state.copyWith(
         pageUri: action.pageUri, sessionId: action.sessionId, isLoading: true);
   } else if (action is PageSizeChangeAction) {
@@ -57,8 +56,8 @@ AppState appReducer(AppState state, dynamic action) {
         addWindowMediaEventProps(action.wmd!, pageAttrs, props);
       }
       controls[page.id] = page.copyWith(attrs: pageAttrs);
-      ws.updateControlProps(props: props);
-      ws.pageEventFromWeb(
+      action.ws.updateControlProps(props: props);
+      action.ws.pageEventFromWeb(
           eventTarget: "page",
           eventName: "resize",
           eventData:
@@ -87,7 +86,7 @@ AppState appReducer(AppState state, dynamic action) {
         String pageName = getWebPageName(state.pageUri!);
 
         getWindowMediaData().then((wmd) {
-          ws.registerWebClient(
+          action.ws.registerWebClient(
               pageName: pageName,
               pageRoute: action.route,
               sessionId: state.sessionId,
@@ -105,8 +104,8 @@ AppState appReducer(AppState state, dynamic action) {
         List<Map<String, String>> props = [
           {"i": "page", "route": action.route},
         ];
-        ws.updateControlProps(props: props);
-        ws.pageEventFromWeb(
+        action.ws.updateControlProps(props: props);
+        action.ws.pageEventFromWeb(
             eventTarget: "page",
             eventName: "route_change",
             eventData: action.route);
@@ -129,8 +128,8 @@ AppState appReducer(AppState state, dynamic action) {
       addWindowMediaEventProps(action.wmd, pageAttrs, props);
 
       controls[page.id] = page.copyWith(attrs: pageAttrs);
-      ws.updateControlProps(props: props);
-      ws.pageEventFromWeb(
+      action.ws.updateControlProps(props: props);
+      action.ws.pageEventFromWeb(
           eventTarget: "page",
           eventName: "window_event",
           eventData: action.eventName);
