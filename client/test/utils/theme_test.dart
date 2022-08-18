@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flet_view/utils/theme.dart';
+import 'package:flet/utils/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 

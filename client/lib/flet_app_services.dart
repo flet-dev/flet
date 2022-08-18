@@ -1,5 +1,5 @@
-import 'package:flet_view/reducers.dart';
-import 'package:flet_view/web_socket_client.dart';
+import 'reducers.dart';
+import 'web_socket_client.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 
@@ -28,7 +28,7 @@ class FletAppServices extends InheritedWidget {
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) {
-    return true;
+    return false;
   }
 
   static FletAppServices of(BuildContext context) =>

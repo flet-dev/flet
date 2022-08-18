@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
-import 'package:flet_view/models/control_type.dart';
+import 'control_type.dart';
 
 import 'control.dart';
 

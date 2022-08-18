@@ -1,4 +1,4 @@
-import 'package:flet_view/widgets/page_media.dart';
+import 'page_media.dart';
 import 'package:flutter/material.dart';
 
 class LoadingPage extends StatelessWidget {

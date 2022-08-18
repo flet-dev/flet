@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flet_view/protocol/append_control_props_request.dart';
+import 'package:flet/protocol/append_control_props_request.dart';
 
 void main() {
   test("AppendControlPropsPayload payload deserialized", () {

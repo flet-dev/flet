@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flet_view/utils/alignment.dart';
+import 'alignment.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';

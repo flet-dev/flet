@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:flet_view/models/window_media_data.dart';
-import 'package:flet_view/web_socket_client.dart';
+import 'models/window_media_data.dart';
+import 'web_socket_client.dart';
 
 import 'protocol/add_page_controls_payload.dart';
 import 'protocol/app_become_inactive_payload.dart';

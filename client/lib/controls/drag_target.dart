@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flet_view/controls/error.dart';
+import 'error.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';

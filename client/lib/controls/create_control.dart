@@ -1,5 +1,5 @@
-import 'package:flet_view/utils/animations.dart';
-import 'package:flet_view/utils/transforms.dart';
+import '../utils/animations.dart';
+import '../utils/transforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 

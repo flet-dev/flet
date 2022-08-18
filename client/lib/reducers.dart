@@ -1,10 +1,10 @@
 // One simple action: Increment
-import 'package:flet_view/models/window_media_data.dart';
-import 'package:flet_view/protocol/add_page_controls_payload.dart';
-import 'package:flet_view/protocol/clean_control_payload.dart';
-import 'package:flet_view/protocol/message.dart';
-import 'package:flet_view/protocol/remove_control_payload.dart';
-import 'package:flet_view/protocol/update_control_props_payload.dart';
+import 'models/window_media_data.dart';
+import 'protocol/add_page_controls_payload.dart';
+import 'protocol/clean_control_payload.dart';
+import 'protocol/message.dart';
+import 'protocol/remove_control_payload.dart';
+import 'protocol/update_control_props_payload.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../utils/platform_utils_non_web.dart'

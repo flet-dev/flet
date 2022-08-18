@@ -1,4 +1,4 @@
-import 'package:flet_view/flet_app_services.dart';
+import 'flet_app_services.dart';
 import 'package:flutter/material.dart';
 
 import 'flet_app_main.dart';

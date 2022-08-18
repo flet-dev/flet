@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flet_view/utils/user_fonts.dart';
+import 'package:flet/utils/user_fonts.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

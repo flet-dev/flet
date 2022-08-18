@@ -1,5 +1,5 @@
-import 'package:flet_view/controls/error.dart';
-import 'package:flet_view/utils/gradient.dart';
+import 'error.dart';
+import '../utils/gradient.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';

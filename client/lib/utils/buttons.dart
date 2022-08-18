@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:flet_view/utils/borders.dart';
-import 'package:flet_view/utils/edge_insets.dart';
-import 'package:flet_view/utils/numbers.dart';
+import 'borders.dart';
+import 'edge_insets.dart';
+import 'numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';

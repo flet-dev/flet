@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flet_view/models/window_media_data.dart';
+import '../models/window_media_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';

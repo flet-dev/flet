@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flet_view/protocol/message.dart';
-import 'package:flet_view/protocol/update_control_props_request.dart';
+import 'package:flet/protocol/message.dart';
+import 'package:flet/protocol/update_control_props_request.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

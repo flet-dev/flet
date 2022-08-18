@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:flet_view/flet_app_services.dart';
-import 'package:flet_view/models/routes_view_model.dart';
-import 'package:flet_view/protocol/keyboard_event_data.dart';
-import 'package:flet_view/widgets/page_media.dart';
+import '../flet_app_services.dart';
+import '../models/routes_view_model.dart';
+import '../protocol/keyboard_event_data.dart';
+import '../widgets/page_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';

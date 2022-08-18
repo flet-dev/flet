@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flet_view/protocol/message.dart';
-import 'package:flet_view/protocol/remove_control_payload.dart';
+import 'package:flet/protocol/message.dart';
+import 'package:flet/protocol/remove_control_payload.dart';
 
 void main() {
   test("Message parse from JSON", () {

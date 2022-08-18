@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flet_view/models/control_type.dart';
+import 'control_type.dart';
 import 'package:redux/redux.dart';
 
 import 'app_state.dart';

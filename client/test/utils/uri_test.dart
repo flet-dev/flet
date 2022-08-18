@@ -1,4 +1,4 @@
-import 'package:flet_view/utils/uri.dart';
+import 'package:flet/utils/uri.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

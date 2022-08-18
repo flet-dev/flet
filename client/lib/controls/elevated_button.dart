@@ -1,4 +1,4 @@
-import 'package:flet_view/utils/buttons.dart';
+import '../utils/buttons.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';

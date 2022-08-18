@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flet_view/utils/images.dart';
+import '../utils/images.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';

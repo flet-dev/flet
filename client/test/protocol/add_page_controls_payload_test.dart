@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flet_view/protocol/add_page_controls_payload.dart';
+import 'package:flet/protocol/add_page_controls_payload.dart';
 
 void main() {
   test("AddPageControlsPayload payload deserialized", () {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flet_view/protocol/app_become_inactive_payload.dart';
+import 'package:flet/protocol/app_become_inactive_payload.dart';
 
 void main() {
   test("AppBecomeInactivePayload payload deserialized", () {

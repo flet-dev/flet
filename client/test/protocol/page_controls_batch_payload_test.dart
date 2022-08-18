@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flet_view/protocol/page_controls_batch_payload.dart';
+import 'package:flet/protocol/page_controls_batch_payload.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

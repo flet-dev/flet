@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:flet_view/protocol/container_tap_event_data.dart';
-import 'package:flet_view/utils/animations.dart';
+import '../protocol/container_tap_event_data.dart';
+import '../utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flet_view/utils/desktop.dart';
+import 'utils/desktop.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';

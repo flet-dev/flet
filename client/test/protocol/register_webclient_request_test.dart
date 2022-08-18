@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flet_view/protocol/message.dart';
-import 'package:flet_view/protocol/register_webclient_request.dart';
+import 'package:flet/protocol/message.dart';
+import 'package:flet/protocol/register_webclient_request.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

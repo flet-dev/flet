@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flet_view/protocol/message.dart';
-import 'package:flet_view/protocol/page_event_from_web_request.dart';
+import 'package:flet/protocol/message.dart';
+import 'package:flet/protocol/page_event_from_web_request.dart';
 
 void main() {
   test("PageEventFromWebRequest serialize to message", () {

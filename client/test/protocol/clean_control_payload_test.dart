@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flet_view/protocol/clean_control_payload.dart';
+import 'package:flet/protocol/clean_control_payload.dart';
 
 void main() {
   test("CleanControlPayload payload deserialized", () {

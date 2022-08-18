@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flet_view/protocol/session_crashed_payload.dart';
+import 'package:flet/protocol/session_crashed_payload.dart';
 
 void main() {
   test("SessionCrashedPayload payload deserialized", () {

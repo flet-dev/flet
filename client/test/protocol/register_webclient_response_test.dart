@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flet_view/protocol/register_webclient_response.dart';
+import 'package:flet/protocol/register_webclient_response.dart';
 
 void main() {
   test("RegisterWebClientResponse with session deserialized", () {

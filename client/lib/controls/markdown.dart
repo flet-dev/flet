@@ -1,4 +1,4 @@
-import 'package:flet_view/utils/uri.dart';
+import '../utils/uri.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_redux/flutter_redux.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flet_view/flet_app_services.dart';
+import '../flet_app_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:window_manager/window_manager.dart';

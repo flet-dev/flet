@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:flet_view/models/control_type.dart';
+import 'package:flet/models/control_type.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flet_view/models/control.dart';
+import 'package:flet/models/control.dart';
 
 void main() {
   test("Two controls are equal", () {
