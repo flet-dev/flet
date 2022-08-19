@@ -7,12 +7,13 @@ class EventHandler:
         for h in self.__handlers.keys():
             if self.__result_converter != None:
                 r = self.__result_converter(e)
-                r.target = e.target
-                r.name = e.name
-                r.data = e.data
-                r.control = e.control
-                r.page = e.page
-                h(r)
+                if r != None:
+                    r.target = e.target
+                    r.name = e.name
+                    r.data = e.data
+                    r.control = e.control
+                    r.page = e.page
+                    h(r)
             else:
                 h(e)
 

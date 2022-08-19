@@ -29,7 +29,7 @@ from flet.list_view import ListView
 from flet.markdown import Markdown
 from flet.navigation_rail import NavigationRail, NavigationRailDestination
 from flet.outlined_button import OutlinedButton
-from flet.page import KeyboardEvent, Page
+from flet.page import KeyboardEvent, Page, RouteChangeEvent, ViewPopEvent
 from flet.popup_menu_button import PopupMenuButton, PopupMenuItem
 from flet.progress_bar import ProgressBar
 from flet.progress_ring import ProgressRing

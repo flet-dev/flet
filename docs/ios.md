@@ -159,3 +159,9 @@ Open "Runner -> Runner -> Info.plist" in the left tree and make sure "App Uses N
 ```
 bundle exec fastlane build_ipa
 ```
+
+Encoding GitHub token to clone match repo:
+
+```
+echo -n "<username>:<personal-access-token>" | base64
+```
