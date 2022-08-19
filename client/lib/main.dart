@@ -1,15 +1,9 @@
 import 'dart:io';
 
-import 'utils/desktop.dart';
+import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
-
-import '../utils/platform_utils_non_web.dart'
-    if (dart.library.js) "../utils/platform_utils_web.dart";
-import '../utils/session_store_non_web.dart'
-    if (dart.library.js) "../utils/session_store_web.dart";
-import 'flet_app.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
@@ -30,7 +24,7 @@ void main([List<String>? args]) async {
 
   if (kIsWeb) {
     debugPrint("Flet View is running in Web mode");
-    var routeUrlStrategy = getRouteUrlStrategy();
+    var routeUrlStrategy = "hash"; //getRouteUrlStrategy();
     debugPrint("URL Strategy: $routeUrlStrategy");
     if (routeUrlStrategy == "path") {
       setPathUrlStrategy();
@@ -47,6 +41,6 @@ void main([List<String>? args]) async {
 
   debugPrint("Page URL: $pageUrl");
 
-  String sessionId = SessionStore.get("sessionId") ?? "";
+  String sessionId = ""; // SessionStore.get("sessionId") ?? "";
   runApp(FletApp(title: 'Flet', pageUrl: pageUrl, sessionId: sessionId));
 }
