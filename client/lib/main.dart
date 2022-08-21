@@ -24,7 +24,7 @@ void main([List<String>? args]) async {
 
   if (kIsWeb) {
     debugPrint("Flet View is running in Web mode");
-    var routeUrlStrategy = "hash"; //getRouteUrlStrategy();
+    var routeUrlStrategy = getFletRouteUrlStrategy();
     debugPrint("URL Strategy: $routeUrlStrategy");
     if (routeUrlStrategy == "path") {
       setPathUrlStrategy();
@@ -41,6 +41,5 @@ void main([List<String>? args]) async {
 
   debugPrint("Page URL: $pageUrl");
 
-  String sessionId = ""; // SessionStore.get("sessionId") ?? "";
-  runApp(FletApp(title: 'Flet', pageUrl: pageUrl, sessionId: sessionId));
+  runApp(FletApp(title: 'Flet', pageUrl: pageUrl));
 }

@@ -22,8 +22,9 @@ enum Actions { increment, setText, setError }
 AppState appReducer(AppState state, dynamic action) {
   if (action is PageLoadAction) {
     action.ws.connect(serverUrl: getWebSocketEndpoint(action.pageUri));
+    var sessionId = SessionStore.get("sessionId");
     return state.copyWith(
-        pageUri: action.pageUri, sessionId: action.sessionId, isLoading: true);
+        pageUri: action.pageUri, sessionId: sessionId, isLoading: true);
   } else if (action is PageSizeChangeAction) {
     //
     // page size changed

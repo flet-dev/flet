@@ -2,6 +2,6 @@ bool isProgressiveWebApp() {
   return false;
 }
 
-String getRouteUrlStrategy() {
+String getFletRouteUrlStrategy() {
   return "";
 }

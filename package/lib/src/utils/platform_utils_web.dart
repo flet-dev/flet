@@ -6,7 +6,7 @@ bool isProgressiveWebApp() {
       window.matchMedia('(display-mode: minimal-ui)').matches;
 }
 
-String getRouteUrlStrategy() {
+String getFletRouteUrlStrategy() {
   var meta =
       document.head?.querySelector("meta[name='flet-route-url-strategy']");
   return meta != null ? meta.attributes["content"]! : "";

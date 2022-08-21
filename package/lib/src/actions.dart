@@ -17,9 +17,8 @@ import 'protocol/update_control_props_payload.dart';
 
 class PageLoadAction {
   final Uri pageUri;
-  final String sessionId;
   final WebSocketClient ws;
-  PageLoadAction(this.pageUri, this.sessionId, this.ws);
+  PageLoadAction(this.pageUri, this.ws);
 }
 
 class PageReconnectingAction {
