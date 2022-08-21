@@ -1,4 +1,4 @@
-name: flet_view
+name: flet_client
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -30,19 +30,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  redux: ^5.0.0
-  flutter_redux: ^0.10.0
-  equatable: ^2.0.3
-  web_socket_channel: ^2.1.0
-  window_manager: ^0.2.5
-  http: ^0.13.3
-  collection: ^1.16.0
+  flet:
+    path: ../package/
+
   url_strategy: ^0.2.0
-  url_launcher: ^6.1.5
-  flutter_markdown: ^0.6.10+3
 
 dev_dependencies:
   flutter_test:

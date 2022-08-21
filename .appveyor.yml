@@ -20,29 +20,39 @@ environment:
     secure: V9nRzVDlIGS0a+dhkC2/vw==
 
   matrix:
+    - job_name: Build Flet package for Flutter
+      job_group: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+
     - job_name: Build Flet for Windows
       job_group: build_flet
+      job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
     - job_name: Build Flet for macOS
       job_group: build_flet
+      job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     - job_name: Build Flet for Linux
       job_group: build_flet
+      job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Build Flet for Linux ARM64
       job_group: build_flet
+      job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
       python_stack: ""
 
     - job_name: Build Flet for iOS
       job_group: build_flet
+      job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     - job_name: Build Fletd
       job_group: build_flet
+      job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.7
@@ -87,6 +97,26 @@ stack: $python_stack
 
 for:
   # ======================================
+  #      Build Flet package for Flutter
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: Build Flet package for Flutter
+
+    install:
+      # Flutter SDK
+      - sudo snap install flutter --classic
+      - flutter channel beta
+      - flutter upgrade
+      - flutter sdk-path
+
+    build_script:
+      - cd package
+      - flutter test
+      - echo "TODO"
+
+  # ======================================
   #      Build Flet View for Windows
   # ======================================
 
@@ -105,7 +135,6 @@ for:
 
     build_script:
       - cd client
-      - flutter test
       - flutter build windows
       - set RELEASE_DIR=build\windows\runner\Release
       - copy "%VC_REDIST_DIR%\msvcp140.dll" %RELEASE_DIR%
@@ -152,7 +181,6 @@ for:
     build_script:
       # Flutter macOS client
       - cd client
-      - flutter test
       - flutter build macos
       - tar -czvf flet-macos-amd64.tar.gz -C build/macos/Build/Products/Release Flet.app
 
@@ -185,7 +213,6 @@ for:
 
     build_script:
       - cd client
-      - flutter test
       - flutter build linux
       - mv build/linux/x64/release/bundle build/linux/x64/release/flet
       - tar -czvf flet-linux-amd64.tar.gz -C build/linux/x64/release flet
@@ -219,7 +246,6 @@ for:
 
     build_script:
       - cd client
-      - flutter test
       - flutter build linux
       - mv build/linux/arm64/release/bundle build/linux/arm64/release/flet
       - tar -czvf flet-linux-arm64.tar.gz -C build/linux/arm64/release flet
@@ -256,7 +282,6 @@ for:
     build_script:
       # Flutter iOS client
       - cd client
-      - flutter test
       - cd ios
       - ruby --version
       - bundle install --path vendor/bundle
@@ -306,7 +331,6 @@ for:
     build_script:
       # Flutter Web client
       - cd client
-      - flutter test
       - flutter build web --release
       - rm -rf build/web/canvaskit
       - ls -alR build/web
