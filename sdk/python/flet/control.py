@@ -2,7 +2,7 @@ import datetime as dt
 import json
 import threading
 from difflib import SequenceMatcher
-from typing import Union
+from typing import Any, Union
 
 from beartype import beartype
 from beartype.typing import List, Optional
@@ -87,12 +87,12 @@ class Control:
     def __init__(
         self,
         ref: Optional[Ref] = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         self.__page = None
         self.__attrs = {}
@@ -234,7 +234,7 @@ class Control:
 
     # expand
     @property
-    def expand(self):
+    def expand(self) -> Union[None, bool, int]:
         return self.__expand
 
     @expand.setter
@@ -265,7 +265,7 @@ class Control:
 
     # visible
     @property
-    def visible(self):
+    def visible(self) -> Optional[bool]:
         return self._get_attr("visible", data_type="bool", def_value=True)
 
     @visible.setter
@@ -275,7 +275,7 @@ class Control:
 
     # disabled
     @property
-    def disabled(self):
+    def disabled(self) -> Optional[bool]:
         return self._get_attr("disabled", data_type="bool", def_value=False)
 
     @disabled.setter
