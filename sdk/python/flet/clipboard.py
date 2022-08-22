@@ -1,6 +1,6 @@
 import dataclasses
 import time
-from typing import Optional
+from typing import Any, Optional
 
 from beartype import beartype
 
@@ -17,12 +17,12 @@ class ClipboardData:
 class Clipboard(Control):
     def __init__(
         self,
-        ref: Ref = None,
-        data: any = None,
+        ref: Optional[Ref] = None,
+        data: Any = None,
         #
         # Specific
         #
-        value: str = None,
+        value: Optional[str] = None,
     ):
 
         Control.__init__(
@@ -41,7 +41,7 @@ class Clipboard(Control):
 
     # value
     @property
-    def value(self):
+    def value(self) -> Optional[str]:
         return self.__value
 
     @value.setter
