@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
@@ -17,15 +17,15 @@ from flet.types import (
 class ListView(ConstrainedControl):
     def __init__(
         self,
-        controls: List[Control] = None,
-        ref: Ref = None,
+        controls: Optional[List[Control]] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -36,19 +36,19 @@ class ListView(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        horizontal: bool = None,
+        horizontal: Optional[bool] = None,
         spacing: OptionalNumber = None,
         item_extent: OptionalNumber = None,
-        first_item_prototype: bool = None,
+        first_item_prototype: Optional[bool] = None,
         divider_thickness: OptionalNumber = None,
         padding: PaddingValue = None,
-        auto_scroll: bool = None,
+        auto_scroll: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -101,7 +101,7 @@ class ListView(ConstrainedControl):
 
     # horizontal
     @property
-    def horizontal(self):
+    def horizontal(self) -> Optional[bool]:
         return self._get_attr("horizontal")
 
     @horizontal.setter
@@ -111,7 +111,7 @@ class ListView(ConstrainedControl):
 
     # spacing
     @property
-    def spacing(self):
+    def spacing(self) -> OptionalNumber:
         return self._get_attr("spacing")
 
     @spacing.setter
@@ -121,7 +121,7 @@ class ListView(ConstrainedControl):
 
     # divider_thickness
     @property
-    def divider_thickness(self):
+    def divider_thickness(self) -> OptionalNumber:
         return self._get_attr("dividerThickness")
 
     @divider_thickness.setter
@@ -131,7 +131,7 @@ class ListView(ConstrainedControl):
 
     # item_extent
     @property
-    def item_extent(self):
+    def item_extent(self) -> OptionalNumber:
         return self._get_attr("itemExtent")
 
     @item_extent.setter
@@ -141,7 +141,7 @@ class ListView(ConstrainedControl):
 
     # first_item_prototype
     @property
-    def first_item_prototype(self):
+    def first_item_prototype(self) -> Optional[bool]:
         return self._get_attr("firstItemPrototype")
 
     @first_item_prototype.setter
@@ -151,7 +151,7 @@ class ListView(ConstrainedControl):
 
     # padding
     @property
-    def padding(self):
+    def padding(self) -> PaddingValue:
         return self.__padding
 
     @padding.setter
@@ -170,7 +170,7 @@ class ListView(ConstrainedControl):
 
     # auto_scroll
     @property
-    def auto_scroll(self):
+    def auto_scroll(self) -> Optional[bool]:
         return self._get_attr("autoScroll")
 
     @auto_scroll.setter

@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -20,15 +20,15 @@ MarkdownExtensionSet = Literal[
 class Markdown(ConstrainedControl):
     def __init__(
         self,
-        value: str = None,
-        ref: Ref = None,
+        value: Optional[str] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -39,14 +39,14 @@ class Markdown(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        selectable: bool = None,
+        selectable: Optional[bool] = None,
         extension_set: MarkdownExtensionSet = None,
         on_tap_link=None,
     ):
@@ -95,7 +95,7 @@ class Markdown(ConstrainedControl):
 
     # selectable
     @property
-    def selectable(self):
+    def selectable(self) -> Optional[bool]:
         return self._get_attr("selectable", data_type="bool", def_value=False)
 
     @selectable.setter
@@ -105,7 +105,7 @@ class Markdown(ConstrainedControl):
 
     # extension_set
     @property
-    def extension_set(self):
+    def extension_set(self) -> Optional[MarkdownExtensionSet]:
         return self._get_attr("extensionSet")
 
     @extension_set.setter
