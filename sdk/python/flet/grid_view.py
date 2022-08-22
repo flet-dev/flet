@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
@@ -17,15 +17,15 @@ from flet.types import (
 class GridView(ConstrainedControl):
     def __init__(
         self,
-        controls: List[Control] = None,
-        ref: Ref = None,
+        controls: Optional[List[Control]] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -36,15 +36,15 @@ class GridView(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        horizontal: bool = None,
-        runs_count: int = None,
-        max_extent: int = None,
+        horizontal: Optional[bool] = None,
+        runs_count: Optional[int] = None,
+        max_extent: Optional[int] = None,
         spacing: OptionalNumber = None,
         run_spacing: OptionalNumber = None,
         child_aspect_ratio: OptionalNumber = None,
@@ -101,7 +101,7 @@ class GridView(ConstrainedControl):
 
     # horizontal
     @property
-    def horizontal(self):
+    def horizontal(self) -> Optional[bool]:
         return self._get_attr("horizontal")
 
     @horizontal.setter
@@ -111,7 +111,7 @@ class GridView(ConstrainedControl):
 
     # runs_count
     @property
-    def runs_count(self):
+    def runs_count(self) -> Optional[int]:
         return self._get_attr("runsCount")
 
     @runs_count.setter
@@ -121,7 +121,7 @@ class GridView(ConstrainedControl):
 
     # max_extent
     @property
-    def max_extent(self):
+    def max_extent(self) -> OptionalNumber:
         return self._get_attr("maxExtent")
 
     @max_extent.setter
@@ -131,7 +131,7 @@ class GridView(ConstrainedControl):
 
     # spacing
     @property
-    def spacing(self):
+    def spacing(self) -> OptionalNumber:
         return self._get_attr("spacing")
 
     @spacing.setter
@@ -141,7 +141,7 @@ class GridView(ConstrainedControl):
 
     # run_spacing
     @property
-    def run_spacing(self):
+    def run_spacing(self) -> OptionalNumber:
         return self._get_attr("runSpacing")
 
     @run_spacing.setter
@@ -151,7 +151,7 @@ class GridView(ConstrainedControl):
 
     # child_aspect_ratio
     @property
-    def child_aspect_ratio(self):
+    def child_aspect_ratio(self) -> OptionalNumber:
         return self._get_attr("childAspectRatio")
 
     @child_aspect_ratio.setter
@@ -161,7 +161,7 @@ class GridView(ConstrainedControl):
 
     # padding
     @property
-    def padding(self):
+    def padding(self) -> PaddingValue:
         return self.__padding
 
     @padding.setter

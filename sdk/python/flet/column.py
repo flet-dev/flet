@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
@@ -16,30 +16,30 @@ from flet.ref import Ref
 class Column(ConstrainedControl):
     def __init__(
         self,
-        controls: List[Control] = None,
-        ref: Ref = None,
+        controls: Optional[List[Control]] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Column specific
         #
         alignment: MainAxisAlignment = None,
         horizontal_alignment: CrossAxisAlignment = None,
         spacing: OptionalNumber = None,
-        tight: bool = None,
-        wrap: bool = None,
+        tight: Optional[bool] = None,
+        wrap: Optional[bool] = None,
         run_spacing: OptionalNumber = None,
         scroll: ScrollMode = None,
-        auto_scroll: bool = None,
+        auto_scroll: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -81,7 +81,7 @@ class Column(ConstrainedControl):
 
     # tight
     @property
-    def tight(self):
+    def tight(self) -> Optional[bool]:
         return self._get_attr("tight", data_type="bool", def_value=False)
 
     @tight.setter
@@ -91,7 +91,7 @@ class Column(ConstrainedControl):
 
     # alignment
     @property
-    def alignment(self):
+    def alignment(self) -> MainAxisAlignment:
         return self._get_attr("alignment")
 
     @alignment.setter
@@ -101,7 +101,7 @@ class Column(ConstrainedControl):
 
     # horizontal_alignment
     @property
-    def horizontal_alignment(self):
+    def horizontal_alignment(self) -> CrossAxisAlignment:
         return self._get_attr("horizontalAlignment")
 
     @horizontal_alignment.setter
@@ -111,7 +111,7 @@ class Column(ConstrainedControl):
 
     # spacing
     @property
-    def spacing(self):
+    def spacing(self) -> OptionalNumber:
         return self._get_attr("spacing")
 
     @spacing.setter
@@ -121,7 +121,7 @@ class Column(ConstrainedControl):
 
     # wrap
     @property
-    def wrap(self):
+    def wrap(self) -> Optional[bool]:
         return self._get_attr("wrap", data_type="bool", def_value=False)
 
     @wrap.setter
@@ -131,7 +131,7 @@ class Column(ConstrainedControl):
 
     # run_spacing
     @property
-    def run_spacing(self):
+    def run_spacing(self) -> OptionalNumber:
         return self._get_attr("runSpacing")
 
     @run_spacing.setter
@@ -156,7 +156,7 @@ class Column(ConstrainedControl):
 
     # auto_scroll
     @property
-    def auto_scroll(self):
+    def auto_scroll(self) -> Optional[bool]:
         return self._get_attr("autoScroll")
 
     @auto_scroll.setter
