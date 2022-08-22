@@ -86,7 +86,7 @@ BlendMode = Literal[
 class Control:
     def __init__(
         self,
-        ref: Ref = None,
+        ref: Optional[Ref] = None,
         expand: Union[bool, int] = None,
         opacity: OptionalNumber = None,
         tooltip: str = None,

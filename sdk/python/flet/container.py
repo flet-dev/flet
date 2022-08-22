@@ -1,5 +1,5 @@
 import json
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -29,9 +29,19 @@ except:
 
 
 class Container(ConstrainedControl):
+    """
+    Container allows to decorate a control with background color and border and position it with padding, margin and alignment.
+
+    Args:
+        width (:obj:`int`|:obj:`float`, optional): Container width.
+        height (:obj:`int`|:obj:`float`, optional): Container height.
+
+    Online docs: https://flet.dev/docs/controls/container
+    """
+
     def __init__(
         self,
-        content: Control = None,
+        content: Optional[Control] = None,
         ref: Ref = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -50,10 +60,10 @@ class Container(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
@@ -153,7 +163,12 @@ class Container(ConstrainedControl):
 
     # alignment
     @property
-    def alignment(self):
+    def alignment(self) -> Optional[Alignment]:
+        """:obj:`Alignment`, optional: Align the child control within the container.
+
+        Alignment is an instance of `alignment.Alignment` class object with `x` and `y` properties
+        representing the distance from the center of a rectangle.
+        """
         return self.__alignment
 
     @alignment.setter
@@ -163,7 +178,7 @@ class Container(ConstrainedControl):
 
     # padding
     @property
-    def padding(self):
+    def padding(self) -> PaddingValue:
         return self.__padding
 
     @padding.setter
@@ -173,7 +188,7 @@ class Container(ConstrainedControl):
 
     # margin
     @property
-    def margin(self):
+    def margin(self) -> MarginValue:
         return self.__margin
 
     @margin.setter
