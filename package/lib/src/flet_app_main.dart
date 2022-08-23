@@ -1,8 +1,8 @@
-import 'flet_app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import 'controls/create_control.dart';
+import 'flet_app_services.dart';
 import 'models/app_state.dart';
 import 'models/page_view_model.dart';
 
@@ -22,7 +22,7 @@ class FletAppMain extends StatelessWidget {
         distinct: true,
         converter: (store) => PageViewModel.fromStore(store),
         builder: (context, viewModel) {
-          if (viewModel.error != "") {
+          if (viewModel.error != "" && !viewModel.isLoading) {
             return MaterialApp(
                 title: title,
                 home: Scaffold(

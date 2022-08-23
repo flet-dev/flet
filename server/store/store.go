@@ -15,23 +15,25 @@ import (
 )
 
 const (
-	sessionIDKey              = "%d:%s"
-	pageNextIDKey             = "page_next_id"                    // Inc integer with the next page ID
-	pagesKey                  = "pages"                           // pages hash with pageName:pageID
-	pageKey                   = "page:%d"                         // page data
-	pageHostClientsKey        = "page:%d:host_clients"            // a Set with client IDs
-	pageHostClientSessionsKey = "page:%d:%s:host_client_sessions" // a Set with sessionIDs
-	pageSessionsKey           = "page:%d:sessions"                // a Set with session IDs
-	clientSessionsKey         = "client:%s:sessions"              // a Set with session IDs
-	sessionsExpiredKey        = "sessions_expired"                // set of page:session IDs sorted by Unix timestamp of their expiration date
-	clientsExpiredKey         = "clients_expired"                 // set of client IDs sorted by Unix timestamp of their expiration date
-	sessionNextControlIDField = "nextControlID"                   // Inc integer with the next control ID for a given session
-	sessionPrincipalIDField   = "principalID"
-	sessionKey                = "session:%d:%s"              // session data
-	sessionControlsKey        = "session:%d:%s:controls"     // session controls, value is JSON data
-	sessionHostClientsKey     = "session:%d:%s:host_clients" // a Set with client IDs
-	sessionWebClientsKey      = "session:%d:%s:web_clients"  // a Set with client IDs
-	principalKey              = "principal:%s"               // %s is principalID
+	sessionIDKey                    = "%d:%s"
+	pageNextIDKey                   = "page_next_id"                    // Inc integer with the next page ID
+	pagesKey                        = "pages"                           // pages hash with pageName:pageID
+	pageKey                         = "page:%d"                         // page data
+	pageHostClientsKey              = "page:%d:host_clients"            // a Set with client IDs
+	pageWebClientsKey               = "page:%s:web_clients"             // a Set with client IDs
+	pageNameRegistrationsExpiredKey = "page_name_registrations_expired" // set of pageName sorted by Unix timestamp
+	pageHostClientSessionsKey       = "page:%d:%s:host_client_sessions" // a Set with sessionIDs
+	pageSessionsKey                 = "page:%d:sessions"                // a Set with session IDs
+	clientSessionsKey               = "client:%s:sessions"              // a Set with session IDs
+	sessionsExpiredKey              = "sessions_expired"                // set of page:session IDs sorted by Unix timestamp of their expiration date
+	clientsExpiredKey               = "clients_expired"                 // set of client IDs sorted by Unix timestamp of their expiration date
+	sessionNextControlIDField       = "nextControlID"                   // Inc integer with the next control ID for a given session
+	sessionPrincipalIDField         = "principalID"
+	sessionKey                      = "session:%d:%s"              // session data
+	sessionControlsKey              = "session:%d:%s:controls"     // session controls, value is JSON data
+	sessionHostClientsKey           = "session:%d:%s:host_clients" // a Set with client IDs
+	sessionWebClientsKey            = "session:%d:%s:web_clients"  // a Set with client IDs
+	principalKey                    = "principal:%s"               // %s is principalID
 )
 
 //
@@ -107,6 +109,31 @@ func AddPageHostClient(pageID int, clientID string) {
 
 func RemovePageHostClient(pageID int, clientID string) {
 	cache.SetRemove(fmt.Sprintf(pageHostClientsKey, pageID), clientID)
+}
+
+// Page Name Web Clients - web clients subscribed to a page name
+// =============================================================
+func GetExpiredPageNameRegistrations() []string {
+	return cache.SortedSetPopRange(pageNameRegistrationsExpiredKey, 0, time.Now().Unix())
+}
+
+func RemovePageNameRegistration(pageName string) {
+	cache.Remove(fmt.Sprintf(pageWebClientsKey, pageName))
+}
+
+func GetPageNameWebClients(pageName string) []string {
+	return cache.SetGet(fmt.Sprintf(pageWebClientsKey, pageName))
+}
+
+func AddPageNameWebClient(pageName string, clientID string, expires time.Time) {
+	log.Debugf("Subscribe web client %s to '%s' page name", clientID, pageName)
+	cache.SetAdd(fmt.Sprintf(pageWebClientsKey, pageName), clientID)
+	cache.SortedSetAdd(pageNameRegistrationsExpiredKey, pageName, expires.Unix())
+}
+
+func RemovePageNameWebClient(pageName string, clientID string) {
+	log.Debugf("Unsubscribe web client %s from '%s' page name", clientID, pageName)
+	cache.SetRemove(fmt.Sprintf(pageWebClientsKey, pageName), clientID)
 }
 
 //

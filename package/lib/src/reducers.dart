@@ -1,20 +1,20 @@
 // One simple action: Increment
+import 'package:flutter/cupertino.dart';
+
+import 'actions.dart';
+import 'models/app_state.dart';
+import 'models/control.dart';
 import 'models/window_media_data.dart';
 import 'protocol/add_page_controls_payload.dart';
 import 'protocol/clean_control_payload.dart';
 import 'protocol/message.dart';
 import 'protocol/remove_control_payload.dart';
 import 'protocol/update_control_props_payload.dart';
-import 'package:flutter/cupertino.dart';
-
+import 'utils/desktop.dart';
 import 'utils/platform_utils_non_web.dart'
     if (dart.library.js) "utils/platform_utils_web.dart";
 import 'utils/session_store_non_web.dart'
     if (dart.library.js) "utils/session_store_web.dart";
-import 'actions.dart';
-import 'models/app_state.dart';
-import 'models/control.dart';
-import 'utils/desktop.dart';
 import 'utils/uri.dart';
 
 enum Actions { increment, setText, setError }
@@ -144,9 +144,9 @@ AppState appReducer(AppState state, dynamic action) {
     // register web client
     //
     if (action.payload.error != null && action.payload.error!.isNotEmpty) {
-      // error
+      // error or inactive app
       return state.copyWith(
-          isLoading: false,
+          isLoading: action.payload.appInactive,
           reconnectingTimeout: 0,
           error: action.payload.error);
     } else {

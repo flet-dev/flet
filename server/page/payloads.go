@@ -63,6 +63,7 @@ type RegisterWebClientRequestPayload struct {
 
 type RegisterWebClientResponsePayload struct {
 	Session       *SessionPayload     `json:"session"`
+	AppInactive   bool                `json:"appInactive"`
 	Error         string              `json:"error"`
 	SigninOptions *auth.SigninOptions `json:"signinOptions"`
 }

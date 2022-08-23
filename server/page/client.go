@@ -23,14 +23,15 @@ import (
 type ClientRole string
 
 const (
-	None                         ClientRole = "None"
-	WebClient                    ClientRole = "Web"
-	HostClient                   ClientRole = "Host"
-	pageNotFoundMessage                     = "Page not found or application is not running."
-	inactiveAppMessage                      = "Application is inactive. Please try refreshing this page later."
-	signinRequiredMessage                   = "signin_required"
-	clientRefreshIntervalSeconds            = 5
-	clientExpirationSeconds                 = 20
+	None                            ClientRole = "None"
+	WebClient                       ClientRole = "Web"
+	HostClient                      ClientRole = "Host"
+	pageNotFoundMessage                        = "Page not found or application is not running."
+	inactiveAppMessage                         = "Application is inactive. Please try refreshing this page later."
+	signinRequiredMessage                      = "signin_required"
+	clientRefreshIntervalSeconds               = 5
+	clientExpirationSeconds                    = 20
+	clientPageNameExpirationSeconds            = 60 * 60 * 24
 )
 
 type Client struct {
@@ -42,6 +43,7 @@ type Client struct {
 	subscription         chan []byte
 	sessions             map[string]*model.Session
 	pages                map[string]*model.Page
+	pageNames            map[string]bool
 	exitExtendExpiration chan bool
 }
 
@@ -57,6 +59,7 @@ func NewClient(conn connection.Conn, clientIP string, principal *auth.SecurityPr
 		principal:            principal,
 		sessions:             make(map[string]*model.Session),
 		pages:                make(map[string]*model.Page),
+		pageNames:            make(map[string]bool),
 		exitExtendExpiration: make(chan bool),
 	}
 
@@ -171,6 +174,10 @@ func (c *Client) registerWebClient(message *Message) {
 	responseMsg := NewMessageData(message.ID, RegisterWebClientAction, response)
 	c.send(responseMsg)
 
+	if response.Error == "" || response.AppInactive {
+		c.register(WebClient)
+	}
+
 	if response.Error == "" && !sessionCreated {
 		sendPageEventToSession(session, "connect", "")
 	}
@@ -207,15 +214,29 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 		return
 	}
 
+	// unregister web client from a page name
+	for pageName := range c.pageNames {
+		store.RemovePageNameWebClient(pageName, c.id)
+	}
+	c.pageNames = make(map[string]bool)
+
 	// get page
 	page := store.GetPageByName(pageName.String())
+	c.pageNames[pageName.String()] = true
+	exp := time.Now().Add(time.Duration(clientPageNameExpirationSeconds) * time.Second)
+	store.AddPageNameWebClient(pageName.String(), c.id, exp)
+
 	if page == nil && !pageName.IsIndex {
 		// fallback to index
 		pageName, _ = model.ParsePageName("")
+		c.pageNames[pageName.String()] = true
+		store.AddPageNameWebClient(pageName.String(), c.id, exp)
+
 		page = store.GetPageByName(pageName.String())
 	}
 
 	if page == nil {
+		response.AppInactive = true
 		response.Error = pageNotFoundMessage
 		return
 	}
@@ -308,6 +329,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 	// is it app page?
 	if page.IsApp {
 		if len(store.GetPageHostClients(page.ID)) == 0 {
+			response.AppInactive = true
 			response.Error = inactiveAppMessage
 			return
 		}
@@ -347,7 +369,6 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 			}
 		}
 
-		c.register(WebClient)
 		c.registerSession(session)
 
 		if sessionCreated {
@@ -380,7 +401,6 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 
 		// retrieve zero session
 		session = store.GetSession(page, ZeroSession)
-		c.register(WebClient)
 		c.registerSession(session)
 
 		log.Debugf("Connected to zero session of %s page\n", page.Name)
@@ -836,6 +856,11 @@ func (c *Client) unregister(normalClosure bool) {
 	// unregister from all pages
 	for _, page := range c.pages {
 		c.unregisterPage(page)
+	}
+
+	// unregister web client from a page name
+	for pageName := range c.pageNames {
+		store.RemovePageNameWebClient(pageName, c.id)
 	}
 
 	// expire client immediately

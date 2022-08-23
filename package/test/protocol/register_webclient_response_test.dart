@@ -1,10 +1,12 @@
 import 'dart:convert';
-import 'package:flutter_test/flutter_test.dart';
+
 import 'package:flet/src/protocol/register_webclient_response.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("RegisterWebClientResponse with session deserialized", () {
     const myJsonAsString = '''{
+    "appInactive": false,
     "session": {
       "id": "session-1234",
       "controls": {
@@ -26,6 +28,7 @@ void main() {
   test("RegisterWebClientResponse with error deserialized", () {
     const myJsonAsString = '''{
     "error": "Page does not exist",
+    "appInactive": false,
     "session": null
     }''';
 
