@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -51,15 +51,15 @@ TextThemeStyle = Literal[
 class Text(ConstrainedControl):
     def __init__(
         self,
-        value: str = None,
-        ref: Ref = None,
+        value: Optional[str] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -70,26 +70,26 @@ class Text(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # text-specific
         #
         text_align: TextAlign = None,
-        font_family: str = None,
+        font_family: Optional[str] = None,
         size: OptionalNumber = None,
         weight: FontWeight = None,
-        italic: bool = None,
-        style: TextThemeStyle = None,
-        max_lines: int = None,
+        italic: Optional[bool] = None,
+        style: Optional[TextThemeStyle] = None,
+        max_lines: Optional[int] = None,
         overflow: TextOverflow = None,
-        selectable: bool = None,
-        no_wrap: bool = None,
-        color: str = None,
-        bgcolor: str = None,
-        semantics_label: str = None,
+        selectable: Optional[bool] = None,
+        no_wrap: Optional[bool] = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        semantics_label: Optional[str] = None,
     ):
 
         ConstrainedControl.__init__(
@@ -147,7 +147,7 @@ class Text(ConstrainedControl):
 
     # text_align
     @property
-    def text_align(self):
+    def text_align(self) -> TextAlign:
         return self._get_attr("textAlign")
 
     @text_align.setter
@@ -166,7 +166,7 @@ class Text(ConstrainedControl):
 
     # size
     @property
-    def size(self):
+    def size(self) -> OptionalNumber:
         return self._get_attr("size")
 
     @size.setter
@@ -176,7 +176,7 @@ class Text(ConstrainedControl):
 
     # weight
     @property
-    def weight(self):
+    def weight(self) -> FontWeight:
         return self._get_attr("weight")
 
     @weight.setter
@@ -186,7 +186,7 @@ class Text(ConstrainedControl):
 
     # style
     @property
-    def style(self):
+    def style(self) -> Optional[TextThemeStyle]:
         return self._get_attr("style")
 
     @style.setter
@@ -196,7 +196,7 @@ class Text(ConstrainedControl):
 
     # italic
     @property
-    def italic(self):
+    def italic(self) -> Optional[bool]:
         return self._get_attr("italic", data_type="bool", def_value=False)
 
     @italic.setter
@@ -206,7 +206,7 @@ class Text(ConstrainedControl):
 
     # no_wrap
     @property
-    def no_wrap(self):
+    def no_wrap(self) -> Optional[bool]:
         return self._get_attr("italic", data_type="noWrap", def_value=False)
 
     @no_wrap.setter
@@ -216,7 +216,7 @@ class Text(ConstrainedControl):
 
     # selectable
     @property
-    def selectable(self):
+    def selectable(self) -> Optional[bool]:
         return self._get_attr("selectable", data_type="bool", def_value=False)
 
     @selectable.setter
@@ -226,7 +226,7 @@ class Text(ConstrainedControl):
 
     # max_lines
     @property
-    def max_lines(self):
+    def max_lines(self) -> Optional[int]:
         return self._get_attr("maxLines")
 
     @max_lines.setter
@@ -236,7 +236,7 @@ class Text(ConstrainedControl):
 
     # overflow
     @property
-    def overflow(self):
+    def overflow(self) -> TextOverflow:
         return self._get_attr("overflow")
 
     @overflow.setter

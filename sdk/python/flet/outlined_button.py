@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -12,15 +12,15 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class OutlinedButton(ConstrainedControl):
     def __init__(
         self,
-        text: str = None,
-        ref: Ref = None,
+        text: Optional[str] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -31,18 +31,18 @@ class OutlinedButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        icon: str = None,
-        icon_color: str = None,
-        style: ButtonStyle = None,
-        content: Control = None,
-        autofocus: bool = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        style: Optional[ButtonStyle] = None,
+        content: Optional[Control] = None,
+        autofocus: Optional[bool] = None,
         on_click=None,
         on_long_press=None,
         on_hover=None,
@@ -125,7 +125,7 @@ class OutlinedButton(ConstrainedControl):
 
     # style
     @property
-    def style(self):
+    def style(self) -> Optional[ButtonStyle]:
         return self.__style
 
     @style.setter
@@ -153,7 +153,7 @@ class OutlinedButton(ConstrainedControl):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
@@ -163,7 +163,7 @@ class OutlinedButton(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self):
+    def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter

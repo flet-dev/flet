@@ -1,6 +1,6 @@
 import dataclasses
 from dataclasses import field
-from typing import Dict, Union
+from typing import Dict, Optional, Union
 
 from flet.border import BorderSide
 from flet.types import BorderRadiusValue, PaddingValue
@@ -58,19 +58,19 @@ class CountinuosRectangleBorder:
 
 @dataclasses.dataclass
 class ButtonStyle:
-    color: Union[str, Dict[MaterialState, str]] = field(default=None)
-    bgcolor: Union[str, Dict[MaterialState, str]] = field(default=None)
-    overlay_color: Union[str, Dict[MaterialState, str]] = field(default=None)
-    shadow_color: Union[str, Dict[MaterialState, str]] = field(default=None)
-    surface_tint_color: Union[str, Dict[MaterialState, str]] = field(default=None)
-    elevation: Union[float, int, Dict[MaterialState, Union[float, int]]] = field(
+    color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
+    bgcolor: Union[None, str, Dict[MaterialState, str]] = field(default=None)
+    overlay_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
+    shadow_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
+    surface_tint_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
+    elevation: Union[None, float, int, Dict[MaterialState, Union[float, int]]] = field(
         default=None
     )
-    animation_duration: int = field(default=None)
+    animation_duration: Optional[int] = field(default=None)
     padding: Union[PaddingValue, Dict[MaterialState, PaddingValue]] = field(
         default=None
     )
-    side: Union[BorderSide, Dict[MaterialState, BorderSide]] = field(default=None)
-    shape: Union[OutlinedBorder, Dict[MaterialState, OutlinedBorder]] = field(
+    side: Union[None, BorderSide, Dict[MaterialState, BorderSide]] = field(default=None)
+    shape: Union[None, OutlinedBorder, Dict[MaterialState, OutlinedBorder]] = field(
         default=None
     )

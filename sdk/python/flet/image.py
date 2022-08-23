@@ -1,5 +1,5 @@
 from sys import version
-from typing import Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -30,15 +30,15 @@ ImageRepeat = Literal[None, "noRepeat", "repeat", "repeatX", "repeatY"]
 class Image(ConstrainedControl):
     def __init__(
         self,
-        src: str = None,
-        ref: Ref = None,
+        src: Optional[str] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -49,14 +49,14 @@ class Image(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        src_base64: str = None,
+        src_base64: Optional[str] = None,
         repeat: ImageRepeat = None,
         fit: ImageFit = None,
         border_radius: BorderRadiusValue = None,
@@ -141,7 +141,7 @@ class Image(ConstrainedControl):
 
     # border_radius
     @property
-    def border_radius(self):
+    def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius
 
     @border_radius.setter

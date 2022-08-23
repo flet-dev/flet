@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -18,15 +18,15 @@ from flet.types import (
 class ShaderMask(ConstrainedControl):
     def __init__(
         self,
-        content: Control = None,
-        ref: Ref = None,
+        content: Optional[Control] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -37,15 +37,15 @@ class ShaderMask(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        blend_mode: BlendMode = None,
-        shader: Gradient = None,
+        blend_mode: Optional[BlendMode] = None,
+        shader: Optional[Gradient] = None,
         border_radius: BorderRadiusValue = None,
     ):
         ConstrainedControl.__init__(
@@ -96,7 +96,7 @@ class ShaderMask(ConstrainedControl):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
@@ -106,7 +106,7 @@ class ShaderMask(ConstrainedControl):
 
     # blend_mode
     @property
-    def blend_mode(self):
+    def blend_mode(self) -> Optional[BlendMode]:
         return self._get_attr("blendMode")
 
     @blend_mode.setter
@@ -116,7 +116,7 @@ class ShaderMask(ConstrainedControl):
 
     # shader
     @property
-    def shader(self):
+    def shader(self) -> Optional[Gradient]:
         return self.__shader
 
     @shader.setter
@@ -126,7 +126,7 @@ class ShaderMask(ConstrainedControl):
 
     # border_radius
     @property
-    def border_radius(self):
+    def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius
 
     @border_radius.setter

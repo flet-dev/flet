@@ -1,3 +1,5 @@
+from typing import Any, Optional
+
 from beartype import beartype
 
 from flet.control import Control
@@ -7,15 +9,15 @@ from flet.ref import Ref
 class DragTarget(Control):
     def __init__(
         self,
-        ref: Ref = None,
-        disabled: bool = None,
-        visible: bool = None,
-        data: any = None,
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        group: str = None,
-        content: Control = None,
+        group: Optional[str] = None,
+        content: Optional[Control] = None,
         on_will_accept=None,
         on_accept=None,
         on_leave=None,
@@ -29,7 +31,7 @@ class DragTarget(Control):
             data=data,
         )
 
-        self.__content: Control = None
+        self.__content: Optional[Control] = None
 
         self.group = group
         self.content = content

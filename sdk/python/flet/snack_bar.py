@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from beartype import beartype
 
@@ -9,18 +9,18 @@ from flet.ref import Ref
 class SnackBar(Control):
     def __init__(
         self,
-        content: Control = None,
-        ref: Ref = None,
-        disabled: bool = None,
-        visible: bool = None,
-        data: any = None,
+        content: Optional[Control] = None,
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
         open: bool = False,
         # remove_current_snackbar: bool = False,
-        action: str = None,
-        bgcolor: str = None,
+        action: Optional[str] = None,
+        bgcolor: Optional[str] = None,
         on_action=None,
     ):
 
@@ -51,7 +51,7 @@ class SnackBar(Control):
 
     # open
     @property
-    def open(self):
+    def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -73,7 +73,7 @@ class SnackBar(Control):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Control:
         return self.__content
 
     @content.setter

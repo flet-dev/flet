@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -9,18 +9,18 @@ from flet.ref import Ref
 class Icon(Control):
     def __init__(
         self,
-        name: str = None,
-        ref: Ref = None,
-        expand: Union[bool, int] = None,
+        name: Optional[str] = None,
+        ref: Optional[Ref] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        color: str = None,
+        color: Optional[str] = None,
         size: OptionalNumber = None,
     ):
 
@@ -62,7 +62,7 @@ class Icon(Control):
 
     # size
     @property
-    def size(self):
+    def size(self) -> OptionalNumber:
         return self._get_attr("size")
 
     @size.setter

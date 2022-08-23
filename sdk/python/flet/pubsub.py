@@ -1,6 +1,6 @@
 import logging
 import threading
-from typing import Callable, Dict, Iterable
+from typing import Any, Callable, Dict, Iterable
 
 
 class PubSubHub:
@@ -14,27 +14,27 @@ class PubSubHub:
             str, Dict[str, Callable]
         ] = {}  # key: session_id, value: dict[topic, handler]
 
-    def send_all(self, message: any):
+    def send_all(self, message: Any):
         logging.debug(f"pubsub.send_all({message})")
         with self.__lock:
             for handler in self.__subscribers.values():
                 self.__send(handler, [message])
 
-    def send_all_on_topic(self, topic: str, message: any):
+    def send_all_on_topic(self, topic: str, message: Any):
         logging.debug(f"pubsub.send_all_on_topic({topic}, {message})")
         with self.__lock:
             if topic in self.__topic_subscribers:
                 for handler in self.__topic_subscribers[topic].values():
                     self.__send(handler, [topic, message])
 
-    def send_others(self, except_session_id: str, message: any):
+    def send_others(self, except_session_id: str, message: Any):
         logging.debug(f"pubsub.send_others({except_session_id}, {message})")
         with self.__lock:
             for session_id, handler in self.__subscribers.items():
                 if except_session_id != session_id:
                     self.__send(handler, [message])
 
-    def send_others_on_topic(self, except_session_id: str, topic: str, message: any):
+    def send_others_on_topic(self, except_session_id: str, topic: str, message: Any):
         logging.debug(
             f"pubsub.send_others_on_topic({except_session_id}, {topic}, {message})"
         )
@@ -112,16 +112,16 @@ class PubSub:
         self.__pubsub = pubsub
         self.__session_id = session_id
 
-    def send_all(self, message: any):
+    def send_all(self, message: Any):
         self.__pubsub.send_all(message)
 
-    def send_all_on_topic(self, topic: str, message: any):
+    def send_all_on_topic(self, topic: str, message: Any):
         self.__pubsub.send_all_on_topic(topic, message)
 
-    def send_others(self, message: any):
+    def send_others(self, message: Any):
         self.__pubsub.send_others(self.__session_id, message)
 
-    def send_others_on_topic(self, topic: str, message: any):
+    def send_others_on_topic(self, topic: str, message: Any):
         self.__pubsub.send_others_on_topic(self.__session_id, topic, message)
 
     def subscribe(self, handler: Callable):

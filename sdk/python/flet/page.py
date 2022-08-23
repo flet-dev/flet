@@ -3,6 +3,7 @@ import logging
 import threading
 import time
 from dataclasses import dataclass
+from typing import Any
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
@@ -59,7 +60,7 @@ class Page(Control):
         self.__default_view = self.__views[0]
         self._controls = self.__default_view.controls
 
-        self.__fonts: Dict[str, str] = None
+        self.__fonts: Optional[Dict[str, str]] = None
         self.__offstage = Offstage()
         self.__theme = None
         self.__dark_theme = None
@@ -397,7 +398,7 @@ class Page(Control):
 
     # fonts
     @property
-    def fonts(self):
+    def fonts(self) -> Optional[Dict[str, str]]:
         return self.__fonts
 
     @fonts.setter
@@ -412,17 +413,17 @@ class Page(Control):
 
     # controls
     @property
-    def controls(self):
+    def controls(self) -> Optional[List[Control]]:
         return self.__default_view.controls
 
     @controls.setter
     @beartype
-    def controls(self, value: List[Control]):
+    def controls(self, value: Optional[List[Control]]):
         self.__default_view.controls = value or []
 
     # appbar
     @property
-    def appbar(self):
+    def appbar(self) -> Optional[AppBar]:
         return self.__default_view.appbar
 
     @appbar.setter
@@ -432,7 +433,7 @@ class Page(Control):
 
     # floating_action_button
     @property
-    def floating_action_button(self):
+    def floating_action_button(self) -> Optional[FloatingActionButton]:
         return self.__default_view.floating_action_button
 
     @floating_action_button.setter
@@ -442,7 +443,7 @@ class Page(Control):
 
     # horizontal_alignment
     @property
-    def horizontal_alignment(self):
+    def horizontal_alignment(self) -> CrossAxisAlignment:
         return self.__default_view.horizontal_alignment
 
     @horizontal_alignment.setter
@@ -452,7 +453,7 @@ class Page(Control):
 
     # vertical_alignment
     @property
-    def vertical_alignment(self):
+    def vertical_alignment(self) -> MainAxisAlignment:
         return self.__default_view.vertical_alignment
 
     @vertical_alignment.setter
@@ -462,7 +463,7 @@ class Page(Control):
 
     # spacing
     @property
-    def spacing(self):
+    def spacing(self) -> OptionalNumber:
         return self.__default_view.spacing
 
     @spacing.setter
@@ -472,7 +473,7 @@ class Page(Control):
 
     # padding
     @property
-    def padding(self):
+    def padding(self) -> PaddingValue:
         return self.__default_view.padding
 
     @padding.setter
@@ -491,7 +492,7 @@ class Page(Control):
 
     # scroll
     @property
-    def scroll(self):
+    def scroll(self) -> ScrollMode:
         return self.__default_view.scroll
 
     @scroll.setter
@@ -501,7 +502,7 @@ class Page(Control):
 
     # auto_scroll
     @property
-    def auto_scroll(self):
+    def auto_scroll(self) -> Optional[bool]:
         return self.__default_view.auto_scroll
 
     @auto_scroll.setter
@@ -511,7 +512,7 @@ class Page(Control):
 
     # splash
     @property
-    def splash(self):
+    def splash(self) -> Optional[Control]:
         return self.__offstage.splash
 
     @splash.setter
@@ -521,7 +522,7 @@ class Page(Control):
 
     # banner
     @property
-    def banner(self):
+    def banner(self) -> Optional[Banner]:
         return self.__offstage.banner
 
     @banner.setter
@@ -531,7 +532,7 @@ class Page(Control):
 
     # snack_bar
     @property
-    def snack_bar(self):
+    def snack_bar(self) -> Optional[SnackBar]:
         return self.__offstage.snack_bar
 
     @snack_bar.setter
@@ -541,7 +542,7 @@ class Page(Control):
 
     # dialog
     @property
-    def dialog(self):
+    def dialog(self) -> Optional[Control]:
         return self.__offstage.dialog
 
     @dialog.setter
@@ -551,7 +552,7 @@ class Page(Control):
 
     # theme_mode
     @property
-    def theme_mode(self):
+    def theme_mode(self) -> Optional[ThemeMode]:
         return self._get_attr("themeMode")
 
     @theme_mode.setter
@@ -561,7 +562,7 @@ class Page(Control):
 
     # theme
     @property
-    def theme(self):
+    def theme(self) -> Optional[Theme]:
         return self.__theme
 
     @theme.setter
@@ -571,7 +572,7 @@ class Page(Control):
 
     # dark_theme
     @property
-    def dark_theme(self):
+    def dark_theme(self) -> Optional[Theme]:
         return self.__dark_theme
 
     @dark_theme.setter
@@ -581,7 +582,7 @@ class Page(Control):
 
     # rtl
     @property
-    def rtl(self):
+    def rtl(self) -> Optional[bool]:
         return self._get_attr("rtl")
 
     @rtl.setter
@@ -591,7 +592,7 @@ class Page(Control):
 
     # show_semantics_debugger
     @property
-    def show_semantics_debugger(self):
+    def show_semantics_debugger(self) -> Optional[bool]:
         return self._get_attr("showSemanticsDebugger")
 
     @show_semantics_debugger.setter
@@ -617,7 +618,7 @@ class Page(Control):
 
     # window_width
     @property
-    def window_width(self):
+    def window_width(self) -> OptionalNumber:
         w = self._get_attr("windowWidth")
         if w != None and w != "":
             return float(w)
@@ -630,7 +631,7 @@ class Page(Control):
 
     # window_height
     @property
-    def window_height(self):
+    def window_height(self) -> OptionalNumber:
         h = self._get_attr("windowHeight")
         if h != None and h != "":
             return float(h)
@@ -643,7 +644,7 @@ class Page(Control):
 
     # window_top
     @property
-    def window_top(self):
+    def window_top(self) -> OptionalNumber:
         w = self._get_attr("windowTop")
         if w != None and w != "":
             return float(w)
@@ -656,7 +657,7 @@ class Page(Control):
 
     # window_left
     @property
-    def window_left(self):
+    def window_left(self) -> OptionalNumber:
         h = self._get_attr("windowLeft")
         if h != None and h != "":
             return float(h)
@@ -669,7 +670,7 @@ class Page(Control):
 
     # window_max_width
     @property
-    def window_max_width(self):
+    def window_max_width(self) -> OptionalNumber:
         return self._get_attr("windowMaxWidth")
 
     @window_max_width.setter
@@ -679,7 +680,7 @@ class Page(Control):
 
     # window_max_height
     @property
-    def window_max_height(self):
+    def window_max_height(self) -> OptionalNumber:
         return self._get_attr("windowMaxHeight")
 
     @window_max_height.setter
@@ -689,7 +690,7 @@ class Page(Control):
 
     # window_min_width
     @property
-    def window_min_width(self):
+    def window_min_width(self) -> OptionalNumber:
         return self._get_attr("windowMinWidth")
 
     @window_min_width.setter
@@ -699,7 +700,7 @@ class Page(Control):
 
     # window_min_height
     @property
-    def window_min_height(self):
+    def window_min_height(self) -> OptionalNumber:
         return self._get_attr("windowMinHeight")
 
     @window_min_height.setter
@@ -709,7 +710,7 @@ class Page(Control):
 
     # window_opacity
     @property
-    def window_opacity(self):
+    def window_opacity(self) -> OptionalNumber:
         return self._get_attr("windowOpacity", data_type="float", def_value=1)
 
     @window_opacity.setter
@@ -719,7 +720,7 @@ class Page(Control):
 
     # window_maximized
     @property
-    def window_maximized(self):
+    def window_maximized(self) -> Optional[bool]:
         return self._get_attr("windowMaximized", data_type="bool", def_value=False)
 
     @window_maximized.setter
@@ -729,7 +730,7 @@ class Page(Control):
 
     # window_minimized
     @property
-    def window_minimized(self):
+    def window_minimized(self) -> Optional[bool]:
         return self._get_attr("windowMinimized", data_type="bool", def_value=False)
 
     @window_minimized.setter
@@ -739,7 +740,7 @@ class Page(Control):
 
     # window_minimizable
     @property
-    def window_minimizable(self):
+    def window_minimizable(self) -> Optional[bool]:
         return self._get_attr("windowMinimizable", data_type="bool", def_value=True)
 
     @window_minimizable.setter
@@ -749,7 +750,7 @@ class Page(Control):
 
     # window_resizable
     @property
-    def window_resizable(self):
+    def window_resizable(self) -> Optional[bool]:
         return self._get_attr("windowResizable", data_type="bool", def_value=True)
 
     @window_resizable.setter
@@ -759,7 +760,7 @@ class Page(Control):
 
     # window_movable
     @property
-    def window_movable(self):
+    def window_movable(self) -> Optional[bool]:
         return self._get_attr("windowMovable", data_type="bool", def_value=True)
 
     @window_movable.setter
@@ -769,7 +770,7 @@ class Page(Control):
 
     # window_full_screen
     @property
-    def window_full_screen(self):
+    def window_full_screen(self) -> Optional[bool]:
         return self._get_attr("windowFullScreen", data_type="bool", def_value=False)
 
     @window_full_screen.setter
@@ -779,7 +780,7 @@ class Page(Control):
 
     # window_always_on_top
     @property
-    def window_always_on_top(self):
+    def window_always_on_top(self) -> Optional[bool]:
         return self._get_attr("windowAlwaysOnTop", data_type="bool", def_value=False)
 
     @window_always_on_top.setter
@@ -789,7 +790,7 @@ class Page(Control):
 
     # window_prevent_close
     @property
-    def window_prevent_close(self):
+    def window_prevent_close(self) -> Optional[bool]:
         return self._get_attr("windowPreventClose", data_type="bool", def_value=False)
 
     @window_prevent_close.setter
@@ -799,7 +800,7 @@ class Page(Control):
 
     # window_focused
     @property
-    def window_focused(self):
+    def window_focused(self) -> Optional[bool]:
         return self._get_attr("windowFocused", data_type="bool", def_value=True)
 
     @window_focused.setter
@@ -883,9 +884,9 @@ class Page(Control):
 class Offstage(Control):
     def __init__(
         self,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(
@@ -933,7 +934,7 @@ class Offstage(Control):
 
     # splash
     @property
-    def splash(self):
+    def splash(self) -> Optional[Control]:
         return self.__splash
 
     @splash.setter
@@ -943,7 +944,7 @@ class Offstage(Control):
 
     # banner
     @property
-    def banner(self):
+    def banner(self) -> Optional[Banner]:
         return self.__banner
 
     @banner.setter
@@ -953,7 +954,7 @@ class Offstage(Control):
 
     # snack_bar
     @property
-    def snack_bar(self):
+    def snack_bar(self) -> Optional[SnackBar]:
         return self.__snack_bar
 
     @snack_bar.setter
@@ -963,7 +964,7 @@ class Offstage(Control):
 
     # dialog
     @property
-    def dialog(self):
+    def dialog(self) -> Optional[Control]:
         return self.__dialog
 
     @dialog.setter

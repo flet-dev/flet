@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -11,14 +11,14 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class ProgressBar(ConstrainedControl):
     def __init__(
         self,
-        ref: Ref = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -29,17 +29,17 @@ class ProgressBar(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
         value: OptionalNumber = None,
         bar_height: OptionalNumber = None,
-        color: str = None,
-        bgcolor: str = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -76,7 +76,7 @@ class ProgressBar(ConstrainedControl):
 
     # value
     @property
-    def value(self):
+    def value(self) -> OptionalNumber:
         return self._get_attr("value")
 
     @value.setter
@@ -86,7 +86,7 @@ class ProgressBar(ConstrainedControl):
 
     # bar_height
     @property
-    def bar_height(self):
+    def bar_height(self) -> OptionalNumber:
         return self._get_attr("barheight")
 
     @bar_height.setter

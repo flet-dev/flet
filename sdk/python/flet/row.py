@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
@@ -17,15 +17,15 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class Row(ConstrainedControl):
     def __init__(
         self,
-        controls: List[Control] = None,
-        ref: Ref = None,
+        controls: Optional[List[Control]] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -36,20 +36,20 @@ class Row(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Row specific
         #
         alignment: MainAxisAlignment = None,
         vertical_alignment: CrossAxisAlignment = None,
         spacing: OptionalNumber = None,
-        tight: bool = None,
-        wrap: bool = None,
+        tight: Optional[bool] = None,
+        wrap: Optional[bool] = None,
         run_spacing: OptionalNumber = None,
         scroll: ScrollMode = None,
-        auto_scroll: bool = None,
+        auto_scroll: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -100,7 +100,7 @@ class Row(ConstrainedControl):
 
     # tight
     @property
-    def tight(self):
+    def tight(self) -> Optional[bool]:
         return self._get_attr("tight", data_type="bool", def_value=False)
 
     @tight.setter
@@ -110,7 +110,7 @@ class Row(ConstrainedControl):
 
     # horizontal_alignment
     @property
-    def alignment(self):
+    def alignment(self) -> MainAxisAlignment:
         return self._get_attr("alignment")
 
     @alignment.setter
@@ -120,7 +120,7 @@ class Row(ConstrainedControl):
 
     # vertical_alignment
     @property
-    def vertical_alignment(self):
+    def vertical_alignment(self) -> CrossAxisAlignment:
         return self._get_attr("verticalAlignment")
 
     @vertical_alignment.setter
@@ -130,7 +130,7 @@ class Row(ConstrainedControl):
 
     # spacing
     @property
-    def spacing(self):
+    def spacing(self) -> OptionalNumber:
         return self._get_attr("spacing")
 
     @spacing.setter
@@ -140,7 +140,7 @@ class Row(ConstrainedControl):
 
     # wrap
     @property
-    def wrap(self):
+    def wrap(self) -> Optional[bool]:
         return self._get_attr("wrap", data_type="bool", def_value=False)
 
     @wrap.setter
@@ -150,7 +150,7 @@ class Row(ConstrainedControl):
 
     # run_spacing
     @property
-    def run_spacing(self):
+    def run_spacing(self) -> OptionalNumber:
         return self._get_attr("runSpacing")
 
     @run_spacing.setter
@@ -160,7 +160,7 @@ class Row(ConstrainedControl):
 
     # scroll
     @property
-    def scroll(self):
+    def scroll(self) -> ScrollMode:
         return self.__scroll
 
     @scroll.setter
@@ -175,7 +175,7 @@ class Row(ConstrainedControl):
 
     # auto_scroll
     @property
-    def auto_scroll(self):
+    def auto_scroll(self) -> Optional[bool]:
         return self._get_attr("autoScroll")
 
     @auto_scroll.setter

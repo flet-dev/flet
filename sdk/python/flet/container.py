@@ -42,14 +42,14 @@ class Container(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
-        ref: Ref = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -69,18 +69,18 @@ class Container(ConstrainedControl):
         #
         padding: PaddingValue = None,
         margin: MarginValue = None,
-        alignment: Alignment = None,
-        bgcolor: str = None,
-        gradient: Gradient = None,
-        blend_mode: BlendMode = None,
-        border: Border = None,
+        alignment: Optional[Alignment] = None,
+        bgcolor: Optional[str] = None,
+        gradient: Optional[Gradient] = None,
+        blend_mode: Optional[BlendMode] = None,
+        border: Optional[Border] = None,
         border_radius: BorderRadiusValue = None,
-        image_src: str = None,
-        image_src_base64: str = None,
+        image_src: Optional[str] = None,
+        image_src_base64: Optional[str] = None,
         image_repeat: ImageRepeat = None,
         image_fit: ImageFit = None,
         image_opacity: OptionalNumber = None,
-        ink: bool = None,
+        ink: Optional[bool] = None,
         animate: AnimationValue = None,
         on_click=None,
         on_long_press=None,
@@ -207,7 +207,7 @@ class Container(ConstrainedControl):
 
     # gradient
     @property
-    def gradient(self):
+    def gradient(self) -> Optional[Gradient]:
         return self.__gradient
 
     @gradient.setter
@@ -217,7 +217,7 @@ class Container(ConstrainedControl):
 
     # blend_mode
     @property
-    def blend_mode(self):
+    def blend_mode(self) -> Optional[BlendMode]:
         return self._get_attr("blendMode")
 
     @blend_mode.setter
@@ -227,7 +227,7 @@ class Container(ConstrainedControl):
 
     # border
     @property
-    def border(self):
+    def border(self) -> Optional[Border]:
         return self.__border
 
     @border.setter
@@ -237,7 +237,7 @@ class Container(ConstrainedControl):
 
     # border_radius
     @property
-    def border_radius(self):
+    def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius
 
     @border_radius.setter
@@ -285,7 +285,7 @@ class Container(ConstrainedControl):
 
     # image_opacity
     @property
-    def image_opacity(self):
+    def image_opacity(self) -> OptionalNumber:
         return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
 
     @image_opacity.setter
@@ -295,7 +295,7 @@ class Container(ConstrainedControl):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
@@ -305,7 +305,7 @@ class Container(ConstrainedControl):
 
     # ink
     @property
-    def ink(self):
+    def ink(self) -> Optional[bool]:
         return self._get_attr("ink", data_type="bool", def_value=False)
 
     @ink.setter

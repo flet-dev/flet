@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from beartype import beartype
 
@@ -10,21 +10,21 @@ from flet.types import PaddingValue
 class Banner(Control):
     def __init__(
         self,
-        ref: Ref = None,
-        disabled: bool = None,
-        visible: bool = None,
-        data: any = None,
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
         open: bool = False,
-        leading: Control = None,
-        leading_padding: PaddingValue = None,
-        content: Control = None,
-        content_padding: PaddingValue = None,
-        actions: List[Control] = None,
-        force_actions_below: bool = None,
-        bgcolor: str = None,
+        leading: Optional[Control] = None,
+        leading_padding: Optional[PaddingValue] = None,
+        content: Optional[Control] = None,
+        content_padding: Optional[PaddingValue] = None,
+        actions: Optional[List[Control]] = None,
+        force_actions_below: Optional[bool] = None,
+        bgcolor: Optional[str] = None,
     ):
 
         Control.__init__(
@@ -35,8 +35,8 @@ class Banner(Control):
             data=data,
         )
 
-        self.__leading: Control = None
-        self.__content: Control = None
+        self.__leading: Optional[Control] = None
+        self.__content: Optional[Control] = None
         self.__actions = []
 
         self.open = open
@@ -70,7 +70,7 @@ class Banner(Control):
 
     # open
     @property
-    def open(self):
+    def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -80,7 +80,7 @@ class Banner(Control):
 
     # modal
     @property
-    def modal(self):
+    def modal(self) -> Optional[bool]:
         return self._get_attr("modal", data_type="bool", def_value=False)
 
     @modal.setter
@@ -99,7 +99,7 @@ class Banner(Control):
 
     # leading_padding
     @property
-    def leading_padding(self):
+    def leading_padding(self) -> PaddingValue:
         return self.__leading_padding
 
     @leading_padding.setter
@@ -118,7 +118,7 @@ class Banner(Control):
 
     # content_padding
     @property
-    def content_padding(self):
+    def content_padding(self) -> PaddingValue:
         return self.__content_padding
 
     @content_padding.setter
@@ -137,7 +137,7 @@ class Banner(Control):
 
     # force_actions_below
     @property
-    def force_actions_below(self):
+    def force_actions_below(self) -> Optional[bool]:
         return self._get_attr("forceActionsBelow", data_type="bool", def_value=False)
 
     @force_actions_below.setter

@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Any, List, Optional, Union
 
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
@@ -9,15 +9,15 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class Stack(ConstrainedControl):
     def __init__(
         self,
-        controls: List[Control] = None,
-        ref: Ref = None,
+        controls: Optional[List[Control]] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -28,9 +28,9 @@ class Stack(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         ConstrainedControl.__init__(
             self,

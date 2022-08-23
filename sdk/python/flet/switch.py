@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -19,14 +19,14 @@ LabelPosition = Literal[None, "right", "left"]
 class Switch(ConstrainedControl):
     def __init__(
         self,
-        ref: Ref = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -37,17 +37,17 @@ class Switch(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        label: str = None,
+        label: Optional[str] = None,
         label_position: LabelPosition = None,
-        value: bool = None,
-        autofocus: bool = None,
+        value: Optional[bool] = None,
+        autofocus: Optional[bool] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -90,7 +90,7 @@ class Switch(ConstrainedControl):
 
     # value
     @property
-    def value(self):
+    def value(self) -> Optional[bool]:
         return self._get_attr("value", data_type="bool", def_value=False)
 
     @value.setter
@@ -109,7 +109,7 @@ class Switch(ConstrainedControl):
 
     # label_position
     @property
-    def label_position(self):
+    def label_position(self) -> LabelPosition:
         return self._get_attr("labelPosition")
 
     @label_position.setter
@@ -119,7 +119,7 @@ class Switch(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self):
+    def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter

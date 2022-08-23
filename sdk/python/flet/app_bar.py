@@ -10,21 +10,21 @@ from flet.ref import Ref
 class AppBar(Control):
     def __init__(
         self,
-        ref: Ref = None,
-        leading: Control = None,
+        ref: Optional[Ref] = None,
+        leading: Optional[Control] = None,
         leading_width: OptionalNumber = None,
-        title: Control = None,
-        center_title: bool = None,
+        title: Optional[Control] = None,
+        center_title: Optional[bool] = None,
         toolbar_height: OptionalNumber = None,
-        color: str = None,
-        bgcolor: str = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
         elevation: OptionalNumber = None,
-        actions: List[Control] = None,
+        actions: Optional[List[Control]] = None,
     ):
         Control.__init__(self, ref=ref)
 
-        self.__leading: Control = None
-        self.__title: Control = None
+        self.__leading: Optional[Control] = None
+        self.__title: Optional[Control] = None
         self.__actions: List[Control] = []
 
         self.leading = leading
@@ -55,7 +55,7 @@ class AppBar(Control):
 
     # leading
     @property
-    def leading(self):
+    def leading(self) -> Optional[Control]:
         return self.__leading
 
     @leading.setter
@@ -65,7 +65,7 @@ class AppBar(Control):
 
     # leading_width
     @property
-    def leading_width(self):
+    def leading_width(self) -> OptionalNumber:
         return self._get_attr("leadingWidth")
 
     @leading_width.setter
@@ -75,7 +75,7 @@ class AppBar(Control):
 
     # title
     @property
-    def title(self):
+    def title(self) -> Optional[Control]:
         return self.__title
 
     @title.setter
@@ -85,7 +85,7 @@ class AppBar(Control):
 
     # center_title
     @property
-    def center_title(self):
+    def center_title(self) -> Optional[bool]:
         return self._get_attr("centerTitle", data_type="bool", def_value=False)
 
     @center_title.setter
@@ -95,7 +95,7 @@ class AppBar(Control):
 
     # toolbar_height
     @property
-    def toolbar_height(self):
+    def toolbar_height(self) -> OptionalNumber:
         return self._get_attr("toolbarHeight")
 
     @toolbar_height.setter
