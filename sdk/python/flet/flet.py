@@ -1,3 +1,4 @@
+import argparse
 import json
 import logging
 import os
@@ -7,11 +8,16 @@ import subprocess
 import tarfile
 import tempfile
 import threading
+import time
 import traceback
 import urllib.request
 import zipfile
 from pathlib import Path
 from time import sleep
+from typing import Sequence
+
+from watchdog.events import FileSystemEventHandler, PatternMatchingEventHandler
+from watchdog.observers import Observer
 
 from flet import constants, version
 from flet.connection import Connection
@@ -484,3 +490,104 @@ def _get_free_tcp_port():
 # Fix: https://bugs.python.org/issue35935
 # if _is_windows():
 #    signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+
+class Handler(FileSystemEventHandler):
+    def __init__(self, args) -> None:
+        super().__init__()
+        self.args = args
+        self.start_process()
+        self.last_time = time.time()
+
+    def start_process(self):
+        self.p = subprocess.Popen(self.args)
+
+    def on_any_event(self, event):
+        print(f"hey, {event.src_path} has been {event.event_type}!")
+        current_time = time.time()
+        time_diff = current_time - self.last_time
+        print(
+            time_diff,
+            "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+        )
+        self.last_time = current_time
+        if time_diff < 0.5:
+            return
+        self.p.kill()
+        sleep(1)
+        print(
+            "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        )
+        self.start_process()
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Runs Flet app in Python with hot reload."
+    )
+    parser.add_argument("script", type=str, help="path to a Python script")
+    parser.add_argument(
+        "--recursive",
+        dest="recursive",
+        type=bool,
+        default=False,
+        help="watch script directory and all sub-directories recursively",
+    )
+    parser.add_argument(
+        "--port",
+        dest="port",
+        type=int,
+        default=None,
+        help="custom TCP port to run Flet app on",
+    )
+
+    # logging.basicConfig(level=logging.DEBUG)
+
+    args = parser.parse_args()
+    print("script:", args.script)
+    print("port:", args.port)
+    print("recursive:", args.recursive)
+
+    # FLET_SERVER_PORT
+    print("current directory:", os.getcwd())
+    script_path = args.script
+    if not os.path.isabs(args.script):
+        script_path = str(Path(os.getcwd()).joinpath(args.script).resolve())
+
+    script_dir = os.path.dirname(script_path)
+    print("script_path:", script_path)
+    print("script_dir:", script_dir)
+    print("python exe:", sys.executable)
+
+    # patterns = ["*"]
+    # ignore_patterns = None
+    # ignore_directories = False
+    # case_sensitive = True
+    # my_event_handler = PatternMatchingEventHandler(
+    #     patterns, ignore_patterns, ignore_directories, case_sensitive
+    # )
+
+    # p = subprocess.Popen([sys.executable, script_path])
+    # print("started")
+
+    # def on_any_event(event):
+    #     print(f"hey, {event.src_path} has been {event.event_type}!")
+    #     p.kill()
+    #     p = subprocess.Popen([sys.executable, script_path])
+    #     print("started")
+
+    # my_event_handler.on_any_event = on_any_event
+
+    my_event_handler = Handler([sys.executable, script_path])
+
+    go_recursively = True
+    my_observer = Observer()
+    my_observer.schedule(my_event_handler, script_dir, recursive=go_recursively)
+
+    my_observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        my_observer.stop()
+    my_observer.join()
