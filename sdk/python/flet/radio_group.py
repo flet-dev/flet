@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from beartype import beartype
 
@@ -9,19 +9,19 @@ from flet.ref import Ref
 class RadioGroup(Control):
     def __init__(
         self,
-        content: Control = None,
+        content: Optional[Control] = None,
         #
         # Control
         #
-        ref: Ref = None,
+        ref: Optional[Ref] = None,
         opacity: OptionalNumber = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        value: str = None,
+        value: Optional[str] = None,
         on_change=None,
     ):
 
@@ -58,7 +58,7 @@ class RadioGroup(Control):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
