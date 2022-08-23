@@ -16,17 +16,17 @@ from flet.types import PaddingValue
 class View(Control):
     def __init__(
         self,
-        route: str = None,
-        controls: List[Control] = None,
+        route: Optional[str] = None,
+        controls: Optional[List[Control]] = None,
         appbar: Optional[AppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
         vertical_alignment: MainAxisAlignment = None,
         horizontal_alignment: CrossAxisAlignment = None,
         spacing: OptionalNumber = None,
         padding: PaddingValue = None,
-        bgcolor: str = None,
+        bgcolor: Optional[str] = None,
         scroll: ScrollMode = None,
-        auto_scroll: bool = None,
+        auto_scroll: Optional[bool] = None,
     ):
         Control.__init__(self)
 
@@ -69,7 +69,7 @@ class View(Control):
 
     # controls
     @property
-    def controls(self):
+    def controls(self) -> Optional[List[Control]]:
         return self.__controls
 
     @controls.setter
@@ -79,7 +79,7 @@ class View(Control):
 
     # appbar
     @property
-    def appbar(self):
+    def appbar(self) -> Optional[AppBar]:
         return self.__appbar
 
     @appbar.setter
@@ -89,7 +89,7 @@ class View(Control):
 
     # floating_action_button
     @property
-    def floating_action_button(self):
+    def floating_action_button(self) -> Optional[FloatingActionButton]:
         return self.__fab
 
     @floating_action_button.setter
@@ -99,7 +99,7 @@ class View(Control):
 
     # horizontal_alignment
     @property
-    def horizontal_alignment(self):
+    def horizontal_alignment(self) -> CrossAxisAlignment:
         return self._get_attr("horizontalAlignment")
 
     @horizontal_alignment.setter
@@ -109,7 +109,7 @@ class View(Control):
 
     # vertical_alignment
     @property
-    def vertical_alignment(self):
+    def vertical_alignment(self) -> MainAxisAlignment:
         return self._get_attr("verticalAlignment")
 
     @vertical_alignment.setter
@@ -119,7 +119,7 @@ class View(Control):
 
     # spacing
     @property
-    def spacing(self):
+    def spacing(self) -> OptionalNumber:
         return self._get_attr("spacing")
 
     @spacing.setter
@@ -129,7 +129,7 @@ class View(Control):
 
     # padding
     @property
-    def padding(self):
+    def padding(self) -> PaddingValue:
         return self.__padding
 
     @padding.setter
@@ -148,7 +148,7 @@ class View(Control):
 
     # scroll
     @property
-    def scroll(self):
+    def scroll(self) -> ScrollMode:
         return self.__scroll
 
     @scroll.setter
@@ -163,7 +163,7 @@ class View(Control):
 
     # auto_scroll
     @property
-    def auto_scroll(self):
+    def auto_scroll(self) -> Optional[bool]:
         return self._get_attr("autoScroll")
 
     @auto_scroll.setter
