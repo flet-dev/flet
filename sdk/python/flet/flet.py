@@ -496,28 +496,30 @@ class Handler(FileSystemEventHandler):
     def __init__(self, args) -> None:
         super().__init__()
         self.args = args
-        self.start_process()
         self.last_time = time.time()
+        self.is_running = False
+        self.start_process()
 
     def start_process(self):
         self.p = subprocess.Popen(self.args)
+        self.is_running = True
 
     def on_any_event(self, event):
-        print(f"hey, {event.src_path} has been {event.event_type}!")
-        current_time = time.time()
-        time_diff = current_time - self.last_time
         print(
-            time_diff,
-            "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+            f"AAAAAAAAAAAAAAAAAAAAAAAAA hey, {event.src_path} has been {event.event_type}!"
         )
-        self.last_time = current_time
-        if time_diff < 0.5:
-            return
+        current_time = time.time()
+        if (current_time - self.last_time) > 0.5 and self.is_running:
+            self.last_time = current_time
+            th = threading.Thread(target=self.restart_program, args=(), daemon=True)
+            th.start()
+
+    def restart_program(self):
+        print(f"BBBBBBBBBBBBBBBBBBBBBBB")
+        self.is_running = False
         self.p.kill()
         sleep(1)
-        print(
-            "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        )
+        self.p.wait()
         self.start_process()
 
 
@@ -589,5 +591,8 @@ def main():
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
+        print("Keyboard interrupt!")
         my_observer.stop()
+    print("Before my_observer.join()")
     my_observer.join()
+    print("After my_observer.join()")
