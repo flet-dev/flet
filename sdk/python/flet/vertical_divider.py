@@ -1,3 +1,5 @@
+from typing import Any, Optional
+
 from beartype import beartype
 
 from flet.control import Control, OptionalNumber
@@ -7,16 +9,16 @@ from flet.ref import Ref
 class VerticalDivider(Control):
     def __init__(
         self,
-        ref: Ref = None,
+        ref: Optional[Ref] = None,
         opacity: OptionalNumber = None,
-        visible: bool = None,
-        data: any = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
         width: OptionalNumber = None,
         thickness: OptionalNumber = None,
-        color: str = None,
+        color: Optional[str] = None,
     ):
 
         Control.__init__(
@@ -36,7 +38,7 @@ class VerticalDivider(Control):
 
     # width
     @property
-    def width(self):
+    def width(self) -> OptionalNumber:
         return self._get_attr("width")
 
     @width.setter
@@ -46,7 +48,7 @@ class VerticalDivider(Control):
 
     # thickness
     @property
-    def thickness(self):
+    def thickness(self) -> OptionalNumber:
         return self._get_attr("thickness")
 
     @thickness.setter
