@@ -26,8 +26,8 @@ const (
 	None                            ClientRole = "None"
 	WebClient                       ClientRole = "Web"
 	HostClient                      ClientRole = "Host"
-	pageNotFoundMessage                        = "Page not found or application is not running."
-	inactiveAppMessage                         = "Application is inactive. Please try refreshing this page later."
+	pageNotFoundMessage                        = "Please wait while the application is being started..."
+	inactiveAppMessage                         = "The application went offline. Please wait while the application is being re-started..."
 	signinRequiredMessage                      = "signin_required"
 	clientRefreshIntervalSeconds               = 5
 	clientExpirationSeconds                    = 20
@@ -52,10 +52,16 @@ func autoID() string {
 }
 
 func NewClient(conn connection.Conn, clientIP string, principal *auth.SecurityPrincipal) *Client {
+
+	ip := clientIP
+	if ip == "::1" {
+		ip = "127.0.0.1"
+	}
+
 	c := &Client{
 		id:                   autoID(),
 		conn:                 conn,
-		clientIP:             clientIP,
+		clientIP:             ip,
 		principal:            principal,
 		sessions:             make(map[string]*model.Session),
 		pages:                make(map[string]*model.Page),
@@ -174,7 +180,7 @@ func (c *Client) registerWebClient(message *Message) {
 	responseMsg := NewMessageData(message.ID, RegisterWebClientAction, response)
 	c.send(responseMsg)
 
-	if response.Error == "" || response.AppInactive {
+	if response.AppInactive {
 		c.register(WebClient)
 	}
 
@@ -369,6 +375,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 			}
 		}
 
+		c.register(WebClient)
 		c.registerSession(session)
 
 		if sessionCreated {
@@ -401,6 +408,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 
 		// retrieve zero session
 		session = store.GetSession(page, ZeroSession)
+		c.register(WebClient)
 		c.registerSession(session)
 
 		log.Debugf("Connected to zero session of %s page\n", page.Name)
@@ -535,7 +543,19 @@ response:
 		response.HostClientID = hostClientID
 	}
 
+	go notifyPageNameWaitingWebClients(pageName.String())
+
 	c.send(NewMessageData(message.ID, "", response))
+}
+
+func notifyPageNameWaitingWebClients(pageName string) {
+	webClients := store.GetPageNameWebClients(pageName)
+	for _, clientID := range webClients {
+		log.Debugln("Notify client which app become active:", clientID)
+
+		msg := NewMessageData("", AppBecomeActiveAction, &AppBecomeActivePayload{})
+		pubsub.Send(clientChannelName(clientID), msg)
+	}
 }
 
 func cleanPage(session *model.Session) error {
@@ -584,7 +604,7 @@ func (c *Client) decryptSensitiveData(encrypted string, clientIP string) (string
 	}
 	pair := strings.Split(string(plain), "|")
 	if pair[1] != clientIP {
-		return "", errors.New("IP address does not match")
+		return "", fmt.Errorf("IP address does not match (expected: %s, actual: %s)", pair[1], clientIP)
 	}
 	return pair[0], nil
 }

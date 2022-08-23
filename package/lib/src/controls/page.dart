@@ -1,20 +1,19 @@
 import 'dart:convert';
 
-import '../flet_app_services.dart';
-import '../models/routes_view_model.dart';
-import '../protocol/keyboard_event_data.dart';
-import '../widgets/page_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_type.dart';
 import '../models/control_view_model.dart';
 import '../models/controls_view_model.dart';
 import '../models/page_media_view_model.dart';
+import '../models/routes_view_model.dart';
+import '../protocol/keyboard_event_data.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
@@ -27,6 +26,7 @@ import '../utils/uri.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/fade_transition_page.dart';
 import '../widgets/loading_page.dart';
+import '../widgets/page_media.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
@@ -337,10 +337,12 @@ class _PageControlState extends State<PageControl> {
 
           List<Page<dynamic>> pages = [];
           if (routesView.isLoading || routesView.viewIds.isEmpty) {
-            pages.add(const FadeTransitionPage(
+            pages.add(FadeTransitionPage(
                 child: LoadingPage(
-                    key: ValueKey("Loading page"),
-                    title: "Flet is loading...")));
+              key: const ValueKey("Loading page"),
+              title: "Flet is loading...",
+              message: routesView.error,
+            )));
           } else {
             // offstage
             _overlayWidgets(String viewId) {

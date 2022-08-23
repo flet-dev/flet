@@ -160,6 +160,7 @@ AppState appReducer(AppState state, dynamic action) {
           isLoading: false,
           reconnectingTimeout: 0,
           sessionId: sessionId,
+          error: "",
           controls: action.payload.session!.controls);
     }
   } else if (action is PageReconnectingAction) {
@@ -168,13 +169,22 @@ AppState appReducer(AppState state, dynamic action) {
     //
     return state.copyWith(
         isLoading: true,
+        error: "Please wait while the application is re-connecting...",
         reconnectingTimeout:
-            state.reconnectingTimeout == 0 ? 1 : state.reconnectingTimeout * 2);
+            state.reconnectingTimeout == 0 || isLocalhost(state.pageUri!)
+                ? 1
+                : state.reconnectingTimeout * 2);
+  } else if (action is AppBecomeActiveAction) {
+    //
+    // app become active
+    //
+    action.ws.registerWebClientInternal();
+    return state.copyWith(error: "");
   } else if (action is AppBecomeInactiveAction) {
     //
     // app become inactive
     //
-    return state.copyWith(error: action.payload.message);
+    return state.copyWith(isLoading: true, error: action.payload.message);
   } else if (action is SessionCrashedAction) {
     //
     // session crashed

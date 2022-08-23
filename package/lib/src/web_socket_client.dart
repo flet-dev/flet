@@ -1,26 +1,27 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:redux/redux.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'actions.dart';
 import 'models/app_state.dart';
 import 'protocol/add_page_controls_payload.dart';
+import 'protocol/app_become_active_payload.dart';
 import 'protocol/app_become_inactive_payload.dart';
 import 'protocol/append_control_props_request.dart';
 import 'protocol/clean_control_payload.dart';
+import 'protocol/message.dart';
 import 'protocol/page_controls_batch_payload.dart';
 import 'protocol/page_event_from_web_request.dart';
+import 'protocol/register_webclient_request.dart';
+import 'protocol/register_webclient_response.dart';
 import 'protocol/remove_control_payload.dart';
 import 'protocol/replace_page_controls_payload.dart';
 import 'protocol/session_crashed_payload.dart';
 import 'protocol/signout_payload.dart';
 import 'protocol/update_control_props_payload.dart';
 import 'protocol/update_control_props_request.dart';
-import 'package:flutter/foundation.dart';
-import 'package:redux/redux.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-
-import 'actions.dart';
-import 'protocol/message.dart';
-import 'protocol/register_webclient_request.dart';
-import 'protocol/register_webclient_response.dart';
 
 class WebSocketClient {
   WebSocketChannel? _channel;
@@ -56,7 +57,7 @@ class WebSocketClient {
         Future.delayed(Duration(seconds: _store!.state.reconnectingTimeout))
             .then((value) {
           connect(serverUrl: _serverUrl);
-          _registerWebClient();
+          registerWebClientInternal();
         });
       }, onError: (error) async {
         debugPrint("WS stream error $error");
@@ -93,12 +94,12 @@ class WebSocketClient {
     _sessionId = sessionId;
 
     if (firstCall) {
-      _registerWebClient();
+      registerWebClientInternal();
     }
   }
 
-  _registerWebClient() {
-    debugPrint("_registerWebClient");
+  registerWebClientInternal() {
+    debugPrint("registerWebClientInternal");
     send(Message(
         action: MessageAction.registerWebClient,
         payload: RegisterWebClientRequest(
@@ -139,6 +140,10 @@ class WebSocketClient {
       case MessageAction.registerWebClient:
         _store!.dispatch(RegisterWebClientAction(
             RegisterWebClientResponse.fromJson(msg.payload)));
+        break;
+      case MessageAction.appBecomeActive:
+        _store!.dispatch(AppBecomeActiveAction(
+            this, AppBecomeActivePayload.fromJson(msg.payload)));
         break;
       case MessageAction.appBecomeInactive:
         _store!.dispatch(AppBecomeInactiveAction(

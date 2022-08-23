@@ -139,6 +139,9 @@ type CleanControlPayload struct {
 	IDs []string `json:"ids"`
 }
 
+type AppBecomeActivePayload struct {
+}
+
 type AppBecomeInactivePayload struct {
 	Message string `json:"message"`
 }

@@ -1,9 +1,8 @@
 import 'dart:ui';
 
 import 'models/window_media_data.dart';
-import 'web_socket_client.dart';
-
 import 'protocol/add_page_controls_payload.dart';
+import 'protocol/app_become_active_payload.dart';
 import 'protocol/app_become_inactive_payload.dart';
 import 'protocol/append_control_props_request.dart';
 import 'protocol/clean_control_payload.dart';
@@ -14,6 +13,7 @@ import 'protocol/replace_page_controls_payload.dart';
 import 'protocol/session_crashed_payload.dart';
 import 'protocol/signout_payload.dart';
 import 'protocol/update_control_props_payload.dart';
+import 'web_socket_client.dart';
 
 class PageLoadAction {
   final Uri pageUri;
@@ -53,6 +53,12 @@ class PageBrightnessChangeAction {
 class RegisterWebClientAction {
   final RegisterWebClientResponse payload;
   RegisterWebClientAction(this.payload);
+}
+
+class AppBecomeActiveAction {
+  final WebSocketClient ws;
+  final AppBecomeActivePayload payload;
+  AppBecomeActiveAction(this.ws, this.payload);
 }
 
 class AppBecomeInactiveAction {

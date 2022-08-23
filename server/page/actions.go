@@ -38,6 +38,8 @@ const (
 
 	PageControlsBatchAction = "pageControlsBatch"
 
+	AppBecomeActiveAction = "appBecomeActive"
+
 	AppBecomeInactiveAction = "appBecomeInactive"
 
 	SessionCrashedAction = "sessionCrashed"

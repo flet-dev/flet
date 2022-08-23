@@ -27,3 +27,7 @@ Uri getAssetUri(Uri pageUri, String assetPath) {
 Uri getBaseUri(Uri pageUri) {
   return Uri(scheme: pageUri.scheme, host: pageUri.host, port: pageUri.port);
 }
+
+bool isLocalhost(Uri uri) {
+  return uri.host == "localhost" || uri.host == "127.0.0.1";
+}

@@ -518,8 +518,8 @@ class Handler(FileSystemEventHandler):
         print(f"BBBBBBBBBBBBBBBBBBBBBBB")
         self.is_running = False
         self.p.kill()
-        sleep(1)
         self.p.wait()
+        sleep(0.7)
         self.start_process()
 
 
