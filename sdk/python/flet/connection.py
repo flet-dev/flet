@@ -15,9 +15,9 @@ class Connection:
         self._ws_callbacks = {}
         self._on_event = None
         self._on_session_created = None
-        self.host_client_id = None
-        self.page_name = None
-        self.page_url = None
+        self.host_client_id: Optional[str] = None
+        self.page_name: Optional[str] = None
+        self.page_url: Optional[str] = None
         self.sessions = {}
         self.pubsubhub = PubSubHub()
 
@@ -75,12 +75,12 @@ class Connection:
 
     def register_host_client(
         self,
-        host_client_id: str,
+        host_client_id: Optional[str],
         page_name: str,
         is_app: bool,
         update: bool,
-        auth_token: str,
-        permissions: str,
+        auth_token: Optional[str],
+        permissions: Optional[str],
     ):
         payload = RegisterHostClientRequestPayload(
             host_client_id, page_name, is_app, update, auth_token, permissions
@@ -88,8 +88,9 @@ class Connection:
         response = self._send_message_with_result(Actions.REGISTER_HOST_CLIENT, payload)
         return RegisterHostClientResponsePayload(**response)
 
-    def send_command(self, page_name: str, session_id: str, command: Command):
-        payload = PageCommandRequestPayload(page_name, session_id, command)
+    def send_command(self, session_id: str, command: Command):
+        assert self.page_name is not None
+        payload = PageCommandRequestPayload(self.page_name, session_id, command)
         response = self._send_message_with_result(
             Actions.PAGE_COMMAND_FROM_HOST, payload
         )
@@ -98,8 +99,9 @@ class Connection:
             raise Exception(result.error)
         return result
 
-    def send_commands(self, page_name: str, session_id: str, commands: List[Command]):
-        payload = PageCommandsBatchRequestPayload(page_name, session_id, commands)
+    def send_commands(self, session_id: str, commands: List[Command]):
+        assert self.page_name is not None
+        payload = PageCommandsBatchRequestPayload(self.page_name, session_id, commands)
         response = self._send_message_with_result(
             Actions.PAGE_COMMANDS_BATCH_FROM_HOST, payload
         )

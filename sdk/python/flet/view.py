@@ -30,7 +30,7 @@ class View(Control):
     ):
         Control.__init__(self)
 
-        self.controls = controls
+        self.controls = controls or []
         self.route = route
         self.appbar = appbar
         self.floating_action_button = floating_action_button
@@ -69,13 +69,13 @@ class View(Control):
 
     # controls
     @property
-    def controls(self) -> Optional[List[Control]]:
+    def controls(self) -> List[Control]:
         return self.__controls
 
     @controls.setter
     @beartype
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value or []
+    def controls(self, value: List[Control]):
+        self.__controls = value
 
     # appbar
     @property
@@ -154,7 +154,7 @@ class View(Control):
     @scroll.setter
     @beartype
     def scroll(self, value: ScrollMode):
-        self.__scroll = value
+        self.__scroll: ScrollMode = value
         if value == True:
             value = "auto"
         elif value == False:

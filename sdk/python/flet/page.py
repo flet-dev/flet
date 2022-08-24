@@ -3,7 +3,7 @@ import logging
 import threading
 import time
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
@@ -83,7 +83,7 @@ class Page(Control):
         self._add_event_handler("route_change", self.__on_route_change.handler)
 
         def convert_view_pop_event(e):
-            return ViewPopEvent(view=self.get_control(e.data))
+            return ViewPopEvent(view=cast(View, self.get_control(e.data)))
 
         self.__on_view_pop = EventHandler(convert_view_pop_event)
         self._add_event_handler("view_pop", self.__on_view_pop.handler)
@@ -132,20 +132,24 @@ class Page(Control):
         return children
 
     def _fetch_page_details(self):
+        assert self.__conn.page_name is not None
         values = self.__conn.send_commands(
-            self.__conn.page_name,
             self._session_id,
             [
-                Command(0, "get", ["page", "route"], None, None),
-                Command(0, "get", ["page", "pwa"], None, None),
-                Command(0, "get", ["page", "web"], None, None),
-                Command(0, "get", ["page", "platform"], None, None),
-                Command(0, "get", ["page", "width"], None, None),
-                Command(0, "get", ["page", "height"], None, None),
-                Command(0, "get", ["page", "windowWidth"], None, None),
-                Command(0, "get", ["page", "windowHeight"], None, None),
-                Command(0, "get", ["page", "windowTop"], None, None),
-                Command(0, "get", ["page", "windowLeft"], None, None),
+                Command(0, "get", ["page", "route"]),
+                Command(
+                    0,
+                    "get",
+                    ["page", "pwa"],
+                ),
+                Command(0, "get", ["page", "web"]),
+                Command(0, "get", ["page", "platform"]),
+                Command(0, "get", ["page", "width"]),
+                Command(0, "get", ["page", "height"]),
+                Command(0, "get", ["page", "windowWidth"]),
+                Command(0, "get", ["page", "windowHeight"]),
+                Command(0, "get", ["page", "windowTop"]),
+                Command(0, "get", ["page", "windowLeft"]),
             ],
         ).results
         self._set_attr("route", values[0], False)
@@ -178,9 +182,7 @@ class Page(Control):
             return
 
         # execute commands
-        results = self.__conn.send_commands(
-            self.__conn.page_name, self._session_id, commands
-        ).results
+        results = self.__conn.send_commands(self._session_id, commands).results
 
         if len(results) > 0:
             n = 0
@@ -227,6 +229,7 @@ class Page(Control):
             for child in self._get_children():
                 self._remove_control_recursively(self._index, child)
             self._controls.clear()
+            assert self.uid is not None
             return self._send_command("clean", [self.uid])
 
     def error(self, message=""):
@@ -259,9 +262,10 @@ class Page(Control):
                     t.start()
                 self._event_available.set()
 
-    def wait_event(self):
+    def wait_event(self) -> ControlEvent:
         self._event_available.clear()
         self._event_available.wait()
+        assert self._last_event is not None
         return self._last_event
 
     def show_signin(self, auth_providers="*", auth_groups=False, allow_dismiss=False):
@@ -292,7 +296,7 @@ class Page(Control):
         self.update()
 
     def signout(self):
-        return self._send_command("signout", None)
+        return self._send_command("signout")
 
     def can_access(self, users_and_groups):
         return (
@@ -303,11 +307,10 @@ class Page(Control):
         if self._session_id == constants.ZERO_SESSION:
             self.__conn.close()
 
-    def _send_command(self, name: str, values: List[str]):
+    def _send_command(self, name: str, values: Optional[List[str]] = None):
         return self.__conn.send_command(
-            self.__conn.page_name,
             self._session_id,
-            Command(0, name, values, None, None),
+            Command(indent=0, name=name, values=values or []),
         )
 
     @beartype

@@ -32,13 +32,13 @@ except:
     from typing_extensions import Literal
 
 
-WEB_BROWSER = Literal[1]
-FLET_APP = Literal[2]
+WEB_BROWSER = "web_browser"
+FLET_APP = "flet_app"
 
 AppViewer = Literal[
     None,
-    WEB_BROWSER,
-    FLET_APP,
+    "web_browser",
+    "flet_app",
 ]
 
 WebRenderer = Literal[None, "auto", "html", "canvaskit"]
@@ -194,6 +194,7 @@ def _connect_internal(
         conn.sessions[session_data.sessionID] = page
         print("Session started:", session_data.sessionID)
         try:
+            assert session_handler is not None
             session_handler(page)
         except Exception as e:
             print(
@@ -213,6 +214,7 @@ def _connect_internal(
     def _on_ws_connect():
         if conn.page_name == None:
             conn.page_name = page_name
+        assert conn.page_name is not None
         result = conn.register_host_client(
             conn.host_client_id, conn.page_name, is_app, update, token, permissions
         )
@@ -220,6 +222,7 @@ def _connect_internal(
         conn.page_name = result.pageName
         conn.page_url = server.rstrip("/")
         if conn.page_name != constants.INDEX_PAGE:
+            assert conn.page_url is not None
             conn.page_url += f"/{conn.page_name}"
         connected.set()
 

@@ -40,9 +40,7 @@ class OutlinedButtonControl extends StatelessWidget {
         ? () {
             debugPrint("Button ${control.id} clicked!");
             ws.pageEventFromWeb(
-                eventTarget: control.id,
-                eventName: "click",
-                eventData: control.attrs["data"] ?? "");
+                eventTarget: control.id, eventName: "click", eventData: "");
           }
         : null;
 
@@ -52,7 +50,7 @@ class OutlinedButtonControl extends StatelessWidget {
             ws.pageEventFromWeb(
                 eventTarget: control.id,
                 eventName: "long_press",
-                eventData: control.attrs["data"] ?? "");
+                eventData: "");
           }
         : null;
 

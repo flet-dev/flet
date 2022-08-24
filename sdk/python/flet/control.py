@@ -98,12 +98,13 @@ class Control:
         self.__attrs = {}
         self.__previous_children = []
         self._id = None
-        self.__uid = None
+        self.__uid: Optional[str] = None
         self.expand = expand
         self.opacity = opacity
         self.tooltip = tooltip
         self.visible = visible
         self.disabled = disabled
+        self.__data: Any = None
         self.data = data
         self.__event_handlers = {}
         self._lock = threading.Lock()
@@ -286,11 +287,11 @@ class Control:
     # data
     @property
     def data(self):
-        return self._get_attr("data")
+        return self.__data
 
     @data.setter
     def data(self, value):
-        self._set_attr("data", value)
+        self.__data = value
 
     # public methods
     def update(self):
@@ -345,7 +346,7 @@ class Control:
                     ctrl = hashes[h]
                     self._remove_control_recursively(index, ctrl)
                     ids.append(ctrl.__uid)
-                commands.append(Command(0, "remove", ids, None, None))
+                commands.append(Command(0, "remove", ids))
             elif tag == "equal":
                 # unchanged control
                 for h in previous_ints[a1:a2]:
@@ -361,20 +362,20 @@ class Control:
                     ctrl = hashes[h]
                     self._remove_control_recursively(index, ctrl)
                     ids.append(ctrl.__uid)
-                commands.append(Command(0, "remove", ids, None, None))
+                commands.append(Command(0, "remove", ids))
                 for h in current_ints[b1:b2]:
                     # add
                     ctrl = hashes[h]
                     innerCmds = ctrl._build_add_commands(
                         index=index, added_controls=added_controls
                     )
+                    assert self.__uid is not None
                     commands.append(
                         Command(
-                            0,
-                            "add",
-                            None,
-                            {"to": self.__uid, "at": str(n)},
-                            innerCmds,
+                            indent=0,
+                            name="add",
+                            attrs={"to": self.__uid, "at": str(n)},
+                            commands=innerCmds,
                         )
                     )
                     n += 1
@@ -385,13 +386,13 @@ class Control:
                     innerCmds = ctrl._build_add_commands(
                         index=index, added_controls=added_controls
                     )
+                    assert self.__uid is not None
                     commands.append(
                         Command(
-                            0,
-                            "add",
-                            None,
-                            {"to": self.__uid, "at": str(n)},
-                            innerCmds,
+                            indent=0,
+                            name="add",
+                            attrs={"to": self.__uid, "at": str(n)},
+                            commands=innerCmds,
                         )
                     )
                     n += 1
@@ -472,6 +473,7 @@ class Control:
         if not update and id != None:
             command.attrs["id"] = id
         elif update and len(command.attrs) > 0:
+            assert self.__uid is not None
             command.values.append(self.__uid)
 
         return command

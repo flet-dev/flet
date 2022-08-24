@@ -61,8 +61,7 @@ class DragTargetControl extends StatelessWidget {
         ws.pageEventFromWeb(
             eventTarget: control.id,
             eventName: "will_accept",
-            eventData:
-                control.attrString("data", "")! + groupsEqual.toString());
+            eventData: groupsEqual.toString());
         return groupsEqual;
       },
       onAccept: (data) {
@@ -70,9 +69,7 @@ class DragTargetControl extends StatelessWidget {
         var jd = json.decode(data);
         var srcId = jd["id"] as String;
         ws.pageEventFromWeb(
-            eventTarget: control.id,
-            eventName: "accept",
-            eventData: control.attrString("data", "")! + srcId);
+            eventTarget: control.id, eventName: "accept", eventData: srcId);
       },
       // onAcceptWithDetails: (details) {
       //   debugPrint(
@@ -86,9 +83,7 @@ class DragTargetControl extends StatelessWidget {
           srcId = jd["id"] as String;
         }
         ws.pageEventFromWeb(
-            eventTarget: control.id,
-            eventName: "leave",
-            eventData: control.attrString("data", "")! + srcId);
+            eventTarget: control.id, eventName: "leave", eventData: srcId);
       },
     );
   }

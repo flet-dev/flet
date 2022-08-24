@@ -106,41 +106,42 @@ class ContainerControl extends StatelessWidget {
 
           if ((onClick || onLongPress || onHover) && ink && !disabled) {
             var ink = Ink(
+                decoration: boxDecor,
                 child: InkWell(
-                    onTap: onClick || onHover
-                        ? () {
-                            debugPrint("Container ${control.id} clicked!");
-                            ws.pageEventFromWeb(
-                                eventTarget: control.id,
-                                eventName: "click",
-                                eventData: control.attrs["data"] ?? "");
-                          }
-                        : null,
-                    onLongPress: onLongPress || onHover
-                        ? () {
-                            debugPrint("Container ${control.id} long pressed!");
-                            ws.pageEventFromWeb(
-                                eventTarget: control.id,
-                                eventName: "long_press",
-                                eventData: control.attrs["data"] ?? "");
-                          }
-                        : null,
-                    onHover: onHover
-                        ? (value) {
-                            debugPrint("Container ${control.id} hovered!");
-                            ws.pageEventFromWeb(
-                                eventTarget: control.id,
-                                eventName: "hover",
-                                eventData: value.toString());
-                          }
-                        : null,
-                    child: Container(
-                      child: child,
-                      padding: parseEdgeInsets(control, "padding"),
-                      alignment: parseAlignment(control, "alignment"),
-                    ),
-                    borderRadius: parseBorderRadius(control, "borderRadius")),
-                decoration: boxDecor);
+                  onTap: onClick || onHover
+                      ? () {
+                          debugPrint("Container ${control.id} clicked!");
+                          ws.pageEventFromWeb(
+                              eventTarget: control.id,
+                              eventName: "click",
+                              eventData: "");
+                        }
+                      : null,
+                  onLongPress: onLongPress || onHover
+                      ? () {
+                          debugPrint("Container ${control.id} long pressed!");
+                          ws.pageEventFromWeb(
+                              eventTarget: control.id,
+                              eventName: "long_press",
+                              eventData: "");
+                        }
+                      : null,
+                  onHover: onHover
+                      ? (value) {
+                          debugPrint("Container ${control.id} hovered!");
+                          ws.pageEventFromWeb(
+                              eventTarget: control.id,
+                              eventName: "hover",
+                              eventData: value.toString());
+                        }
+                      : null,
+                  borderRadius: parseBorderRadius(control, "borderRadius"),
+                  child: Container(
+                    padding: parseEdgeInsets(control, "padding"),
+                    alignment: parseAlignment(control, "alignment"),
+                    child: child,
+                  ),
+                ));
             return constrainedControl(
                 animation == null
                     ? Container(
@@ -220,7 +221,7 @@ class ContainerControl extends StatelessWidget {
                           ws.pageEventFromWeb(
                               eventTarget: control.id,
                               eventName: "long_press",
-                              eventData: control.attrs["data"] ?? "");
+                              eventData: "");
                         }
                       : null,
                 ),

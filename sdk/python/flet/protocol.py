@@ -86,12 +86,12 @@ class PageEventPayload:
 
 @dataclass
 class RegisterHostClientRequestPayload:
-    hostClientID: str
+    hostClientID: Optional[str]
     pageName: str
     isApp: bool
     update: bool
-    authToken: str
-    permissions: str
+    authToken: Optional[str]
+    permissions: Optional[str]
 
 
 @dataclass

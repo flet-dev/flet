@@ -49,9 +49,7 @@ class IconButtonControl extends StatelessWidget {
         : () {
             debugPrint("Button ${control.id} clicked!");
             ws.pageEventFromWeb(
-                eventTarget: control.id,
-                eventName: "click",
-                eventData: control.attrs["data"] ?? "");
+                eventTarget: control.id, eventName: "click", eventData: "");
           };
 
     Widget? button;
