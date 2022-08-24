@@ -63,6 +63,7 @@ class TextField(FormFieldControl):
         filled: Optional[bool] = None,
         hint_text: Optional[str] = None,
         helper_text: Optional[str] = None,
+        counter_text: Optional[str] = None,
         error_text: Optional[str] = None,
         prefix: Optional[Control] = None,
         prefix_icon: Optional[str] = None,
