@@ -162,8 +162,15 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 	// Initializing the server in a goroutine so that
 	// it won't block the graceful shutdown handling below
 	go func() {
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
+		for i := 1; i < 10; i++ {
+			if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+				if i == 9 {
+					log.Fatalf("listen: %s\n", err)
+				}
+				time.Sleep(time.Duration(100) * time.Millisecond)
+				continue
+			}
+			break
 		}
 	}()
 
