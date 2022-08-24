@@ -58,21 +58,19 @@ def open_in_browser(url):
 
 
 # https://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
-def which(program):
+def which(program, exclude_exe=None):
     import os
 
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
-    fpath, _ = os.path.split(program)
-    if fpath:
-        if is_exe(program):
-            return program
-    else:
-        for path in os.environ["PATH"].split(os.pathsep):
-            exe_file = os.path.join(path, program)
-            if is_exe(exe_file):
-                return exe_file
+    for path in os.environ["PATH"].split(os.pathsep):
+        exe_file = os.path.join(path, program)
+        if is_exe(exe_file) and (
+            exclude_exe == None
+            or (exclude_exe != None and exclude_exe.lower() != exe_file.lower())
+        ):
+            return exe_file
 
     return None
 
@@ -105,7 +103,11 @@ def slugify(original: str) -> str:
     slugified = " ".join(slugified.split())  # Remove extra spaces between words
     slugified = slugified.lower()
     # Remove unicode punctuation
-    slugified = "".join(character for character in slugified if not unicodedata.category(character).startswith("P"))
+    slugified = "".join(
+        character
+        for character in slugified
+        if not unicodedata.category(character).startswith("P")
+    )
     slugified = slugified.replace(" ", "-")
 
     return slugified

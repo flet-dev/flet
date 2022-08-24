@@ -24,9 +24,9 @@ import 'protocol/update_control_props_payload.dart';
 import 'protocol/update_control_props_request.dart';
 
 class WebSocketClient {
+  final Store<AppState> _store;
   WebSocketChannel? _channel;
   String _serverUrl = "";
-  Store<AppState>? _store;
   bool _connected = false;
   String _pageName = "";
   String _pageHash = "";
@@ -39,9 +39,7 @@ class WebSocketClient {
   String _isPWA = "";
   String? _sessionId;
 
-  set store(Store<AppState> store) {
-    _store = store;
-  }
+  WebSocketClient(this._store);
 
   connect({required String serverUrl}) async {
     _serverUrl = serverUrl;
@@ -52,9 +50,9 @@ class WebSocketClient {
       _connected = true;
       _channel!.stream.listen(_onMessage, onDone: () async {
         debugPrint("WS stream closed");
-        _store!.dispatch(PageReconnectingAction());
-        debugPrint("Reconnect in ${_store!.state.reconnectingTimeout} seconds");
-        Future.delayed(Duration(seconds: _store!.state.reconnectingTimeout))
+        _store.dispatch(PageReconnectingAction());
+        debugPrint("Reconnect in ${_store.state.reconnectingTimeout} seconds");
+        Future.delayed(Duration(seconds: _store.state.reconnectingTimeout))
             .then((value) {
           connect(serverUrl: _serverUrl);
           registerWebClientInternal();
@@ -100,17 +98,18 @@ class WebSocketClient {
 
   registerWebClientInternal() {
     debugPrint("registerWebClientInternal");
+    var page = _store.state.controls["page"];
     send(Message(
         action: MessageAction.registerWebClient,
         payload: RegisterWebClientRequest(
             pageName: _pageName,
             pageRoute: _pageHash,
-            pageWidth: _pageWidth,
-            pageHeight: _pageHeight,
-            windowWidth: _windowWidth,
-            windowHeight: _windowHeight,
-            windowTop: _windowTop,
-            windowLeft: _windowLeft,
+            pageWidth: page?.attrString("pageWidth") ?? _pageWidth,
+            pageHeight: page?.attrString("pageHeight") ?? _pageHeight,
+            windowLeft: page?.attrString("windowLeft") ?? _windowLeft,
+            windowTop: page?.attrString("windowTop") ?? _windowTop,
+            windowWidth: page?.attrString("windowWidth") ?? _windowWidth,
+            windowHeight: page?.attrString("windowHeight") ?? _windowHeight,
             isPWA: _isPWA,
             sessionId: _sessionId)));
   }
@@ -138,50 +137,50 @@ class WebSocketClient {
     final msg = Message.fromJson(json.decode(message));
     switch (msg.action) {
       case MessageAction.registerWebClient:
-        _store!.dispatch(RegisterWebClientAction(
+        _store.dispatch(RegisterWebClientAction(
             RegisterWebClientResponse.fromJson(msg.payload)));
         break;
       case MessageAction.appBecomeActive:
-        _store!.dispatch(AppBecomeActiveAction(
+        _store.dispatch(AppBecomeActiveAction(
             this, AppBecomeActivePayload.fromJson(msg.payload)));
         break;
       case MessageAction.appBecomeInactive:
-        _store!.dispatch(AppBecomeInactiveAction(
+        _store.dispatch(AppBecomeInactiveAction(
             AppBecomeInactivePayload.fromJson(msg.payload)));
         break;
       case MessageAction.sessionCrashed:
-        _store!.dispatch(
+        _store.dispatch(
             SessionCrashedAction(SessionCrashedPayload.fromJson(msg.payload)));
         break;
       case MessageAction.signout:
-        _store!.dispatch(SignoutAction(SignoutPayload.fromJson(msg.payload)));
+        _store.dispatch(SignoutAction(SignoutPayload.fromJson(msg.payload)));
         break;
       case MessageAction.addPageControls:
-        _store!.dispatch(AddPageControlsAction(
+        _store.dispatch(AddPageControlsAction(
             AddPageControlsPayload.fromJson(msg.payload)));
         break;
       case MessageAction.appendControlProps:
-        _store!.dispatch(AppendControlPropsAction(
+        _store.dispatch(AppendControlPropsAction(
             AppendControlPropsPayload.fromJson(msg.payload)));
         break;
       case MessageAction.updateControlProps:
-        _store!.dispatch(UpdateControlPropsAction(
+        _store.dispatch(UpdateControlPropsAction(
             UpdateControlPropsPayload.fromJson(msg.payload)));
         break;
       case MessageAction.replacePageControls:
-        _store!.dispatch(ReplacePageControlsAction(
+        _store.dispatch(ReplacePageControlsAction(
             ReplacePageControlsPayload.fromJson(msg.payload)));
         break;
       case MessageAction.cleanControl:
-        _store!.dispatch(
+        _store.dispatch(
             CleanControlAction(CleanControlPayload.fromJson(msg.payload)));
         break;
       case MessageAction.removeControl:
-        _store!.dispatch(
+        _store.dispatch(
             RemoveControlAction(RemoveControlPayload.fromJson(msg.payload)));
         break;
       case MessageAction.pageControlsBatch:
-        _store!.dispatch(PageControlsBatchAction(
+        _store.dispatch(PageControlsBatchAction(
             PageControlsBatchPayload.fromJson(msg.payload)));
         break;
       default:

@@ -64,7 +64,9 @@ def page(
         web_renderer=web_renderer,
         route_url_strategy=route_url_strategy,
     )
-    print("Page URL:", conn.page_url)
+    url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
+    print("Page URL:" if url_prefix == None else url_prefix, conn.page_url)
+
     page = Page(conn, constants.ZERO_SESSION)
     conn.sessions[constants.ZERO_SESSION] = page
 
@@ -100,7 +102,9 @@ def app(
         web_renderer=web_renderer,
         route_url_strategy=route_url_strategy,
     )
-    print("App URL:", conn.page_url)
+
+    url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
+    print("App URL:" if url_prefix == None else url_prefix, conn.page_url)
 
     terminate = threading.Event()
 
@@ -352,7 +356,7 @@ def _open_flet_view(page_url):
             logging.info(f"Flet View found in: {flet_path}")
         else:
             # check if flet.exe is in PATH (flet developer mode)
-            flet_path = which(flet_exe)
+            flet_path = which(flet_exe, sys.argv[0])
             if flet_path:
                 logging.info(f"Flet View found in PATH: {flet_path}")
             else:
@@ -493,33 +497,71 @@ def _get_free_tcp_port():
 
 
 class Handler(FileSystemEventHandler):
-    def __init__(self, args) -> None:
+    def __init__(self, args, script_path, port, web) -> None:
         super().__init__()
         self.args = args
+        self.script_path = script_path
+        self.port = port
+        self.web = web
         self.last_time = time.time()
         self.is_running = False
+        self.page_url_prefix = f"PAGE_URL_{time.time()}"
+        self.page_url = None
+        self.terminate = threading.Event()
         self.start_process()
 
     def start_process(self):
-        self.p = subprocess.Popen(self.args)
+        p_env = {**os.environ}
+        if self.port != None:
+            p_env["FLET_SERVER_PORT"] = str(self.port)
+        p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
+
+        self.p = subprocess.Popen(self.args, env=p_env, stdout=subprocess.PIPE)
         self.is_running = True
+        th = threading.Thread(target=self.print_output, args=[self.p], daemon=True)
+        th.start()
 
     def on_any_event(self, event):
-        print(
-            f"AAAAAAAAAAAAAAAAAAAAAAAAA hey, {event.src_path} has been {event.event_type}!"
-        )
-        current_time = time.time()
-        if (current_time - self.last_time) > 0.5 and self.is_running:
-            self.last_time = current_time
-            th = threading.Thread(target=self.restart_program, args=(), daemon=True)
-            th.start()
+        if (
+            self.script_path == None or event.src_path == self.script_path
+        ) and not event.is_directory:
+            current_time = time.time()
+            if (current_time - self.last_time) > 0.5 and self.is_running:
+                self.last_time = current_time
+                th = threading.Thread(target=self.restart_program, args=(), daemon=True)
+                th.start()
+
+    def print_output(self, p):
+        while True:
+            line = p.stdout.readline()
+            if not line:
+                break
+            line = line.decode("utf-8").rstrip("\r\n")
+            if line.startswith(self.page_url_prefix):
+                if not self.page_url:
+                    self.page_url = line[len(self.page_url_prefix) + 1 :]
+                    print(self.page_url)
+                    if self.web:
+                        open_in_browser(self.page_url)
+                    else:
+                        th = threading.Thread(
+                            target=self.open_flet_view_and_wait, args=(), daemon=True
+                        )
+                        th.start()
+            else:
+                print(line)
+
+    def open_flet_view_and_wait(self):
+        fvp = _open_flet_view(self.page_url)
+        fvp.wait()
+        self.p.kill()
+        self.terminate.set()
 
     def restart_program(self):
-        print(f"BBBBBBBBBBBBBBBBBBBBBBB")
         self.is_running = False
         self.p.kill()
         self.p.wait()
-        sleep(0.7)
+        sleep(0.5)
         self.start_process()
 
 
@@ -529,70 +571,71 @@ def main():
     )
     parser.add_argument("script", type=str, help="path to a Python script")
     parser.add_argument(
-        "--recursive",
-        dest="recursive",
-        type=bool,
-        default=False,
-        help="watch script directory and all sub-directories recursively",
-    )
-    parser.add_argument(
         "--port",
+        "-p",
         dest="port",
         type=int,
         default=None,
         help="custom TCP port to run Flet app on",
     )
+    parser.add_argument(
+        "--directory",
+        "-d",
+        dest="directory",
+        action="store_true",
+        default=False,
+        help="watch script directory",
+    )
+    parser.add_argument(
+        "--recursive",
+        "-r",
+        dest="recursive",
+        action="store_true",
+        default=False,
+        help="watch script directory and all sub-directories recursively",
+    )
+    parser.add_argument(
+        "--web",
+        "-w",
+        dest="web",
+        action="store_true",
+        default=False,
+        help="open app in a web browser",
+    )
 
     # logging.basicConfig(level=logging.DEBUG)
 
     args = parser.parse_args()
-    print("script:", args.script)
-    print("port:", args.port)
-    print("recursive:", args.recursive)
 
-    # FLET_SERVER_PORT
-    print("current directory:", os.getcwd())
     script_path = args.script
     if not os.path.isabs(args.script):
         script_path = str(Path(os.getcwd()).joinpath(args.script).resolve())
 
     script_dir = os.path.dirname(script_path)
-    print("script_path:", script_path)
-    print("script_dir:", script_dir)
-    print("python exe:", sys.executable)
 
-    # patterns = ["*"]
-    # ignore_patterns = None
-    # ignore_directories = False
-    # case_sensitive = True
-    # my_event_handler = PatternMatchingEventHandler(
-    #     patterns, ignore_patterns, ignore_directories, case_sensitive
-    # )
+    port = args.port
+    if args.port == None:
+        port = _get_free_tcp_port()
+    print("port:", port)
 
-    # p = subprocess.Popen([sys.executable, script_path])
-    # print("started")
+    my_event_handler = Handler(
+        [sys.executable, script_path],
+        None if args.directory or args.recursive else script_path,
+        port,
+        args.web,
+    )
 
-    # def on_any_event(event):
-    #     print(f"hey, {event.src_path} has been {event.event_type}!")
-    #     p.kill()
-    #     p = subprocess.Popen([sys.executable, script_path])
-    #     print("started")
-
-    # my_event_handler.on_any_event = on_any_event
-
-    my_event_handler = Handler([sys.executable, script_path])
-
-    go_recursively = True
     my_observer = Observer()
-    my_observer.schedule(my_event_handler, script_dir, recursive=go_recursively)
-
+    my_observer.schedule(my_event_handler, script_dir, recursive=args.recursive)
     my_observer.start()
+
     try:
         while True:
-            time.sleep(1)
+            if my_event_handler.terminate.wait(1):
+                break
     except KeyboardInterrupt:
         print("Keyboard interrupt!")
-        my_observer.stop()
+    my_observer.stop()
     print("Before my_observer.join()")
     my_observer.join()
     print("After my_observer.join()")

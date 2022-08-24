@@ -1,10 +1,10 @@
-import 'reducers.dart';
-import 'web_socket_client.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 
 import 'actions.dart';
 import 'models/app_state.dart';
+import 'reducers.dart';
+import 'web_socket_client.dart';
 
 class FletAppServices extends InheritedWidget {
   final String pageUrl;
@@ -13,9 +13,8 @@ class FletAppServices extends InheritedWidget {
 
   FletAppServices({Key? key, required Widget child, required this.pageUrl})
       : super(key: key, child: child) {
-    ws = WebSocketClient();
     store = Store<AppState>(appReducer, initialState: AppState.initial());
-    ws.store = store;
+    ws = WebSocketClient(store);
     // connect to a page
     var pageUri = Uri.parse(pageUrl);
     store.dispatch(PageLoadAction(pageUri, ws));
