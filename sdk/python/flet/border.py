@@ -10,10 +10,10 @@ class BorderSide:
 
 @dataclasses.dataclass
 class Border:
-    top: BorderSide
-    right: BorderSide
-    bottom: BorderSide
-    left: BorderSide
+    top: Optional[BorderSide]
+    right: Optional[BorderSide]
+    bottom: Optional[BorderSide]
+    left: Optional[BorderSide]
 
 
 def all(width: Optional[float] = None, color: Optional[str] = None):

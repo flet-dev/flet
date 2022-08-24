@@ -12,6 +12,6 @@ void main() {
 
     final j = json.encode(m);
     expect(j,
-        '{"action":"registerWebClient","payload":{"pageName":"test-page1","pageRoute":null,"pageWidth":null,"pageHeight":null,"windowWidth":null,"windowHeight":null,"windowTop":null,"windowLeft":null,"isPWA":null,"sessionId":null}}');
+        '{"action":"registerWebClient","payload":{"pageName":"test-page1","pageRoute":null,"pageWidth":null,"pageHeight":null,"windowWidth":null,"windowHeight":null,"windowTop":null,"windowLeft":null,"isPWA":null,"isWeb":null,"platform":null,"sessionId":null}}');
   });
 }
