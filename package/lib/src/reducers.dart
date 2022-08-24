@@ -1,5 +1,5 @@
 // One simple action: Increment
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 import 'actions.dart';
 import 'models/app_state.dart';
@@ -97,7 +97,9 @@ AppState appReducer(AppState state, dynamic action) {
               windowHeight: wmd.height != null ? wmd.height.toString() : "",
               windowTop: wmd.top != null ? wmd.top.toString() : "",
               windowLeft: wmd.left != null ? wmd.left.toString() : "",
-              isPWA: isProgressiveWebApp().toString());
+              isPWA: isProgressiveWebApp().toString(),
+              isWeb: kIsWeb.toString(),
+              platform: defaultTargetPlatform.name.toLowerCase());
         });
       } else {
         // existing route change

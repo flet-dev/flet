@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import '../models/window_media_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -19,7 +17,7 @@ Future setWindowSize(double? width, double? height) async {
     var currentSize = await windowManager.getSize();
     await windowManager.setSize(
         Size(width ?? currentSize.width, height ?? currentSize.height),
-        animate: !Platform.isMacOS);
+        animate: defaultTargetPlatform != TargetPlatform.macOS);
   }
 }
 
@@ -112,7 +110,8 @@ Future unmaximizeWindow() async {
 
 Future focusWindow() async {
   if (isDesktop() &&
-      (Platform.isWindows || Platform.isMacOS) &&
+      (defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.macOS) &&
       !await windowManager.isFocused()) {
     await windowManager.focus();
   }
@@ -120,7 +119,8 @@ Future focusWindow() async {
 
 Future blurWindow() async {
   if (isDesktop() &&
-      (Platform.isWindows || Platform.isMacOS) &&
+      (defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.macOS) &&
       await windowManager.isFocused()) {
     await windowManager.blur();
   }
@@ -139,7 +139,9 @@ Future centerWindow() async {
 }
 
 Future isFocused() async {
-  if (isDesktop() && (Platform.isWindows || Platform.isMacOS)) {
+  if (isDesktop() &&
+      (defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.macOS)) {
     return await windowManager.isFocused();
   } else {
     return false;
@@ -167,5 +169,7 @@ Future<WindowMediaData> getWindowMediaData() async {
 
 bool isDesktop() {
   return !kIsWeb &&
-      (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
+      (defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.macOS ||
+          defaultTargetPlatform == TargetPlatform.linux);
 }

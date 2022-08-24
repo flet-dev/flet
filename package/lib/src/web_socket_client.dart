@@ -37,6 +37,8 @@ class WebSocketClient {
   String _windowTop = "";
   String _windowLeft = "";
   String _isPWA = "";
+  String _isWeb = "";
+  String _platform = "";
   String? _sessionId;
 
   WebSocketClient(this._store);
@@ -77,6 +79,8 @@ class WebSocketClient {
     required String windowTop,
     required String windowLeft,
     required String isPWA,
+    required String isWeb,
+    required String platform,
     String? sessionId,
   }) {
     bool firstCall = _pageName == "";
@@ -89,6 +93,8 @@ class WebSocketClient {
     _windowTop = windowTop;
     _windowLeft = windowLeft;
     _isPWA = isPWA;
+    _isWeb = isWeb;
+    _platform = platform;
     _sessionId = sessionId;
 
     if (firstCall) {
@@ -103,7 +109,8 @@ class WebSocketClient {
         action: MessageAction.registerWebClient,
         payload: RegisterWebClientRequest(
             pageName: _pageName,
-            pageRoute: _store.state.route,
+            pageRoute:
+                _store.state.route != "" ? _store.state.route : _pageHash,
             pageWidth: page?.attrString("pageWidth") ?? _pageWidth,
             pageHeight: page?.attrString("pageHeight") ?? _pageHeight,
             windowLeft: page?.attrString("windowLeft") ?? _windowLeft,
@@ -111,6 +118,8 @@ class WebSocketClient {
             windowWidth: page?.attrString("windowWidth") ?? _windowWidth,
             windowHeight: page?.attrString("windowHeight") ?? _windowHeight,
             isPWA: _isPWA,
+            isWeb: _isWeb,
+            platform: _platform,
             sessionId: _sessionId)));
   }
 

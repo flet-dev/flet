@@ -13,7 +13,7 @@ void main() {
       }''';
 
     final j1 = json.decode(t1);
-    var theme = themeFromJson(j1);
+    var theme = themeFromJson(j1, Brightness.light);
 
     expect(theme.brightness, Brightness.light);
     expect(theme.useMaterial3, true);
@@ -27,7 +27,7 @@ void main() {
       }''';
 
     final j1 = json.decode(t1);
-    var theme = themeFromJson(j1);
+    var theme = themeFromJson(j1, Brightness.dark);
 
     expect(theme.brightness, Brightness.dark);
     expect(theme.useMaterial3, false);

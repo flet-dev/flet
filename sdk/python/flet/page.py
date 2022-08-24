@@ -138,6 +138,8 @@ class Page(Control):
             [
                 Command(0, "get", ["page", "route"], None, None),
                 Command(0, "get", ["page", "pwa"], None, None),
+                Command(0, "get", ["page", "web"], None, None),
+                Command(0, "get", ["page", "platform"], None, None),
                 Command(0, "get", ["page", "width"], None, None),
                 Command(0, "get", ["page", "height"], None, None),
                 Command(0, "get", ["page", "windowWidth"], None, None),
@@ -148,12 +150,14 @@ class Page(Control):
         ).results
         self._set_attr("route", values[0], False)
         self._set_attr("pwa", values[1], False)
-        self._set_attr("width", values[2], False)
-        self._set_attr("height", values[3], False)
-        self._set_attr("windowWidth", values[4], False)
-        self._set_attr("windowHeight", values[5], False)
-        self._set_attr("windowTop", values[6], False)
-        self._set_attr("windowLeft", values[7], False)
+        self._set_attr("web", values[2], False)
+        self._set_attr("platform", values[3], False)
+        self._set_attr("width", values[4], False)
+        self._set_attr("height", values[5], False)
+        self._set_attr("windowWidth", values[6], False)
+        self._set_attr("windowHeight", values[7], False)
+        self._set_attr("windowTop", values[8], False)
+        self._set_attr("windowLeft", values[9], False)
 
     def update(self, *controls):
         with self._lock:
@@ -381,6 +385,16 @@ class Page(Control):
     @property
     def pwa(self):
         return self._get_attr("pwa", data_type="bool", def_value=False)
+
+    # web
+    @property
+    def web(self):
+        return self._get_attr("web", data_type="bool", def_value=False)
+
+    # platform
+    @property
+    def platform(self):
+        return self._get_attr("platform")
 
     # design
     @property

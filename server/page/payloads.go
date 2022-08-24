@@ -58,6 +58,8 @@ type RegisterWebClientRequestPayload struct {
 	WindowTop    string `json:"windowTop"`
 	WindowLeft   string `json:"windowLeft"`
 	IsPWA        string `json:"isPWA"`
+	Platform     string `json:"platform"`
+	IsWeb        string `json:"isWeb"`
 	SessionID    string `json:"sessionID"`
 }
 
