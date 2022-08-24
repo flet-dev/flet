@@ -119,14 +119,14 @@ def app(
 
     fvp = None
 
-    if view == FLET_APP and not is_linux_server():
+    if view == FLET_APP and not is_linux_server() and url_prefix == None:
         fvp = _open_flet_view(conn.page_url)
         try:
             fvp.wait()
         except (Exception) as e:
             pass
     else:
-        if view == WEB_BROWSER:
+        if view == WEB_BROWSER and url_prefix == None:
             open_in_browser(conn.page_url)
         try:
             if is_windows():
@@ -505,6 +505,7 @@ class Handler(FileSystemEventHandler):
         self.web = web
         self.last_time = time.time()
         self.is_running = False
+        self.fvp = None
         self.page_url_prefix = f"PAGE_URL_{time.time()}"
         self.page_url = None
         self.terminate = threading.Event()
@@ -538,6 +539,7 @@ class Handler(FileSystemEventHandler):
                 break
             line = line.decode("utf-8").rstrip("\r\n")
             if line.startswith(self.page_url_prefix):
+                # print(line)
                 if not self.page_url:
                     self.page_url = line[len(self.page_url_prefix) + 1 :]
                     print(self.page_url)
@@ -552,8 +554,8 @@ class Handler(FileSystemEventHandler):
                 print(line)
 
     def open_flet_view_and_wait(self):
-        fvp = _open_flet_view(self.page_url)
-        fvp.wait()
+        self.fvp = _open_flet_view(self.page_url)
+        self.fvp.wait()
         self.p.kill()
         self.terminate.set()
 
@@ -616,10 +618,10 @@ def main():
     port = args.port
     if args.port == None:
         port = _get_free_tcp_port()
-    print("port:", port)
+    # print("port:", port)
 
     my_event_handler = Handler(
-        [sys.executable, script_path],
+        [sys.executable, "-u", script_path],
         None if args.directory or args.recursive else script_path,
         port,
         args.web,
@@ -634,8 +636,13 @@ def main():
             if my_event_handler.terminate.wait(1):
                 break
     except KeyboardInterrupt:
-        print("Keyboard interrupt!")
+        pass  # print("Keyboard interrupt!")
+
+    if my_event_handler.fvp != None and not is_windows():
+        try:
+            logging.debug(f"Flet View process {my_event_handler.fvp.pid}")
+            os.kill(my_event_handler.fvp.pid + 1, signal.SIGKILL)
+        except:
+            pass
     my_observer.stop()
-    print("Before my_observer.join()")
     my_observer.join()
-    print("After my_observer.join()")
