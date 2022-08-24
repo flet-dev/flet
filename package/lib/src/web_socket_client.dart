@@ -103,7 +103,7 @@ class WebSocketClient {
         action: MessageAction.registerWebClient,
         payload: RegisterWebClientRequest(
             pageName: _pageName,
-            pageRoute: _pageHash,
+            pageRoute: _store.state.route,
             pageWidth: page?.attrString("pageWidth") ?? _pageWidth,
             pageHeight: page?.attrString("pageHeight") ?? _pageHeight,
             windowLeft: page?.attrString("windowLeft") ?? _windowLeft,
