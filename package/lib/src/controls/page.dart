@@ -135,23 +135,8 @@ class _PageControlState extends State<PageControl> {
     }
 
     // theme
-    var lightTheme = parseTheme(widget.control, "theme") ??
-        ThemeData(
-            colorSchemeSeed: Colors.blue,
-            brightness: Brightness.light,
-            useMaterial3: true,
-            // fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
-            //     ? '-apple-system'
-            //     : null,
-            visualDensity: VisualDensity.standard);
-
-    var darkTheme = parseTheme(widget.control, "darkTheme") ??
-        ThemeData(
-            colorSchemeSeed: Colors.blue,
-            brightness: Brightness.dark,
-            useMaterial3: true,
-            visualDensity: VisualDensity.standard);
-
+    var lightTheme = parseTheme(widget.control, "theme", Brightness.light);
+    var darkTheme = parseTheme(widget.control, "darkTheme", Brightness.dark);
     var themeMode = ThemeMode.values.firstWhere(
         (t) =>
             t.name.toLowerCase() ==

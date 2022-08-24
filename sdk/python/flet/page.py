@@ -116,13 +116,9 @@ class Page(Control):
         self._set_attr_json("fonts", self.__fonts)
 
         # light theme
-        if self.__theme:
-            self.__theme.brightness = "light"
         self._set_attr_json("theme", self.__theme)
 
         # dark theme
-        if self.__dark_theme:
-            self.__dark_theme.brightness = "dark"
         self._set_attr_json("darkTheme", self.__dark_theme)
 
         # keyboard event
