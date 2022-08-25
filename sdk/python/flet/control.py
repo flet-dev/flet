@@ -2,7 +2,7 @@ import datetime as dt
 import json
 import threading
 from difflib import SequenceMatcher
-from typing import Any, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from beartype import beartype
 from beartype.typing import List, Optional
@@ -15,6 +15,10 @@ try:
     from typing import Literal
 except:
     from typing_extensions import Literal
+
+
+if TYPE_CHECKING:
+    from .page import Page
 
 MainAxisAlignment = Literal[
     None,
@@ -94,7 +98,7 @@ class Control:
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
-        self.__page = None
+        self.__page: Optional[Page] = None
         self.__attrs = {}
         self.__previous_children = []
         self._id = None
@@ -302,6 +306,8 @@ class Control:
     def clean(self):
         with self._lock:
             self._previous_children.clear()
+            assert self.__page is not None
+            assert self.uid is not None
             for child in self._get_children():
                 self._remove_control_recursively(self.__page.index, child)
             return self.__page._send_command("clean", [self.uid])
