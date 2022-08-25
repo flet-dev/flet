@@ -46,14 +46,18 @@ class _WindowMediaState extends State<WindowMedia> with WindowListener {
 
   @override
   void onWindowEvent(String eventName) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 200), () {
-      debugPrint('[WindowManager] onWindowEvent: $eventName');
-      getWindowMediaData().then((wmd) {
-        debugPrint("WindowMediaData: $wmd");
-        _dispatch!(
-            WindowEventAction(eventName, wmd, FletAppServices.of(context).ws));
+    //debugPrint('START [WindowManager] onWindowEvent: $eventName');
+
+    if (eventName != "resize" && eventName != "move") {
+      if (_debounce?.isActive ?? false) _debounce!.cancel();
+      _debounce = Timer(const Duration(milliseconds: 200), () {
+        debugPrint('[WindowManager] onWindowEvent: $eventName');
+        getWindowMediaData().then((wmd) {
+          debugPrint("WindowMediaData: $wmd");
+          _dispatch!(WindowEventAction(
+              eventName, wmd, FletAppServices.of(context).ws));
+        });
       });
-    });
+    }
   }
 }

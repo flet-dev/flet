@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -51,6 +52,7 @@ class PageControl extends StatefulWidget {
 }
 
 class _PageControlState extends State<PageControl> {
+  String? _windowTitle;
   String? _windowCenter;
   final _navigatorKey = GlobalKey<NavigatorState>();
   late final RouteState _routeState;
@@ -152,124 +154,140 @@ class _PageControlState extends State<PageControl> {
       _keyboardHandlerSubscribed = true;
     }
 
-    // window title
-    String title = widget.control.attrString("title", "")!;
-    setWindowTitle(title);
-
     // window params
-    var windowCenter = widget.control.attrString("windowCenter");
-    var fullScreen = widget.control.attrBool("windowFullScreen");
-
-    // window size
+    var windowTitle = widget.control.attrString("title", "")!;
     var windowWidth = widget.control.attrDouble("windowWidth");
     var windowHeight = widget.control.attrDouble("windowHeight");
-    if ((windowWidth != null || windowHeight != null) && fullScreen != true) {
-      debugPrint("setWindowSize: $windowWidth, $windowHeight");
-      setWindowSize(windowWidth, windowHeight);
-    }
-
-    // window min size
     var windowMinWidth = widget.control.attrDouble("windowMinWidth");
     var windowMinHeight = widget.control.attrDouble("windowMinHeight");
-    if (windowMinWidth != null || windowMinHeight != null) {
-      debugPrint("setWindowMinSize: $windowMinWidth, $windowMinHeight");
-      setWindowMinSize(windowMinWidth, windowMinHeight);
-    }
-
-    // window max size
     var windowMaxWidth = widget.control.attrDouble("windowMaxWidth");
     var windowMaxHeight = widget.control.attrDouble("windowMaxHeight");
-    if (windowMaxWidth != null || windowMaxHeight != null) {
-      debugPrint("setWindowMaxSize: $windowMaxWidth, $windowMaxHeight");
-      setWindowMaxSize(windowMaxWidth, windowMaxHeight);
-    }
-
-    // window position
     var windowTop = widget.control.attrDouble("windowTop");
     var windowLeft = widget.control.attrDouble("windowLeft");
-    if ((windowTop != null || windowLeft != null) &&
-        fullScreen != true &&
-        (windowCenter == null || windowCenter == "")) {
-      debugPrint("setWindowPosition: $windowTop, $windowLeft");
-      setWindowPosition(windowTop, windowLeft);
-    }
-
-    // window opacity
-    var opacity = widget.control.attrDouble("windowOpacity");
-    if (opacity != null) {
-      setWindowOpacity(opacity);
-    }
-
-    // window minimizable
-    var minimizable = widget.control.attrBool("windowMinimizable");
-    if (minimizable != null) {
-      setWindowMinimizability(minimizable);
-    }
-
-    // window minimize
+    var windowCenter = widget.control.attrString("windowCenter");
+    var fullScreen = widget.control.attrBool("windowFullScreen");
     var minimized = widget.control.attrBool("windowMinimized");
-    if (minimized == true) {
-      minimizeWindow();
-    } else if (minimized == false) {
-      restoreWindow();
-    }
-
-    // window maximize
     var maximized = widget.control.attrBool("windowMaximized");
-    if (maximized == true) {
-      maximizeWindow();
-    } else if (maximized == false) {
-      unmaximizeWindow();
-    }
-
-    // window resizable
-    var resizable = widget.control.attrBool("windowResizable");
-    if (resizable != null) {
-      setWindowResizability(resizable);
-    }
-
-    // window movable
-    var movable = widget.control.attrBool("windowMovable");
-    if (movable != null) {
-      setWindowMovability(movable);
-    }
-
-    // window fullScreen
-    if (fullScreen != null) {
-      setWindowFullScreen(fullScreen);
-    }
-
-    // window alwaysOnTop
+    var opacity = widget.control.attrDouble("windowOpacity");
+    var minimizable = widget.control.attrBool("windowMinimizable");
     var alwaysOnTop = widget.control.attrBool("windowAlwaysOnTop");
-    if (alwaysOnTop != null) {
-      setWindowAlwaysOnTop(alwaysOnTop);
-    }
-
-    // window preventClose
+    var resizable = widget.control.attrBool("windowResizable");
+    var movable = widget.control.attrBool("windowMovable");
     var preventClose = widget.control.attrBool("windowPreventClose");
-    if (preventClose != null) {
-      setWindowPreventClose(preventClose);
-    }
-
-    // window focus
     var focused = widget.control.attrBool("windowFocused");
-    if (focused == true) {
-      focusWindow();
-    } else if (focused == false) {
-      blurWindow();
-    }
-
-    // window center
-    if (windowCenter != _windowCenter) {
-      centerWindow();
-      _windowCenter = windowCenter;
-    }
-
-    // window destroy
     var destroy = widget.control.attrBool("windowDestroy");
-    if (destroy == true) {
-      destroyWindow();
-    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // window title
+      if (_windowTitle != windowTitle) {
+        setWindowTitle(windowTitle);
+        _windowTitle = windowTitle;
+      }
+
+      // window size
+      if ((windowWidth != null || windowHeight != null) &&
+          fullScreen != true &&
+          (defaultTargetPlatform != TargetPlatform.macOS ||
+              (defaultTargetPlatform == TargetPlatform.macOS &&
+                  maximized == false &&
+                  minimized == false))) {
+        debugPrint("setWindowSize: $windowWidth, $windowHeight");
+        await setWindowSize(windowWidth, windowHeight);
+      }
+
+      // window min size
+      if (windowMinWidth != null || windowMinHeight != null) {
+        debugPrint("setWindowMinSize: $windowMinWidth, $windowMinHeight");
+        await setWindowMinSize(windowMinWidth, windowMinHeight);
+      }
+
+      // window max size
+      if (windowMaxWidth != null || windowMaxHeight != null) {
+        debugPrint("setWindowMaxSize: $windowMaxWidth, $windowMaxHeight");
+        await setWindowMaxSize(windowMaxWidth, windowMaxHeight);
+      }
+
+      // window position
+      if ((windowTop != null || windowLeft != null) &&
+          fullScreen != true &&
+          (windowCenter == null || windowCenter == "") &&
+          (defaultTargetPlatform != TargetPlatform.macOS ||
+              (defaultTargetPlatform == TargetPlatform.macOS &&
+                  maximized == false &&
+                  minimized == false))) {
+        debugPrint("setWindowPosition: $windowTop, $windowLeft");
+        await setWindowPosition(windowTop, windowLeft);
+      }
+
+      // window opacity
+      if (opacity != null) {
+        await setWindowOpacity(opacity);
+      }
+
+      // window minimizable
+      if (minimizable != null) {
+        await setWindowMinimizability(minimizable);
+      }
+
+      // window minimize
+      if (minimized == true) {
+        await minimizeWindow();
+      } else if (minimized == false && maximized == false) {
+        await restoreWindow();
+      }
+
+      // window maximize
+      if (maximized == true) {
+        await maximizeWindow();
+      } else if (maximized == false) {
+        await unmaximizeWindow();
+      }
+
+      // window resizable
+      if (resizable != null) {
+        await setWindowResizability(resizable);
+      }
+
+      // window movable
+      if (movable != null) {
+        await setWindowMovability(movable);
+      }
+
+      // window fullScreen
+      if (fullScreen != null) {
+        await setWindowFullScreen(fullScreen);
+      }
+
+      // window alwaysOnTop
+      if (alwaysOnTop != null) {
+        await setWindowAlwaysOnTop(alwaysOnTop);
+      }
+
+      // window preventClose
+      if (preventClose != null) {
+        await setWindowPreventClose(preventClose);
+      }
+
+      // window focus
+      if (focused == true) {
+        await focusWindow();
+      } else if (focused == false) {
+        await blurWindow();
+      }
+
+      // window center
+      if (windowCenter != _windowCenter) {
+        debugPrint(
+            "windowCenter: $windowCenter, _windowCenter: $_windowCenter");
+        await centerWindow();
+        _windowCenter = windowCenter;
+      }
+
+      // window destroy
+      if (destroy == true) {
+        await destroyWindow();
+      }
+    });
 
     return StoreConnector<AppState, Uri?>(
         distinct: true,
@@ -298,7 +316,7 @@ class _PageControlState extends State<PageControl> {
                       widget.control.attrBool("showSemanticsDebugger", false)!,
                   routerDelegate: _routerDelegate,
                   routeInformationParser: _routeParser,
-                  title: title,
+                  title: windowTitle,
                   theme: lightTheme,
                   darkTheme: darkTheme,
                   themeMode: themeMode,
@@ -330,7 +348,7 @@ class _PageControlState extends State<PageControl> {
             )));
           } else {
             // offstage
-            _overlayWidgets(String viewId) {
+            overlayWidgets(String viewId) {
               List<Widget> overlayWidgets = [];
 
               if (viewId == routesView.viewIds.last) {
@@ -350,7 +368,7 @@ class _PageControlState extends State<PageControl> {
             pages = routesView.viewIds.map((viewId) {
               var key = ValueKey(viewId);
               var child = _buildViewWidget(
-                  routesView.page, viewId, _overlayWidgets(viewId));
+                  routesView.page, viewId, overlayWidgets(viewId));
               return _routeChanges > 0
                   ? FadeTransitionPage(key: key, child: child)
                   : MaterialPage(key: key, child: child);
