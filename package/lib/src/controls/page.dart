@@ -165,17 +165,21 @@ class _PageControlState extends State<PageControl> {
     var windowTop = widget.control.attrDouble("windowTop");
     var windowLeft = widget.control.attrDouble("windowLeft");
     var windowCenter = widget.control.attrString("windowCenter");
-    var fullScreen = widget.control.attrBool("windowFullScreen");
-    var minimized = widget.control.attrBool("windowMinimized");
-    var maximized = widget.control.attrBool("windowMaximized");
-    var opacity = widget.control.attrDouble("windowOpacity");
+    var windowFullScreen = widget.control.attrBool("windowFullScreen");
+    var windowMinimized = widget.control.attrBool("windowMinimized");
+    var windowMaximized = widget.control.attrBool("windowMaximized");
+    var windowOpacity = widget.control.attrDouble("windowOpacity");
     var minimizable = widget.control.attrBool("windowMinimizable");
-    var alwaysOnTop = widget.control.attrBool("windowAlwaysOnTop");
-    var resizable = widget.control.attrBool("windowResizable");
-    var movable = widget.control.attrBool("windowMovable");
-    var preventClose = widget.control.attrBool("windowPreventClose");
-    var focused = widget.control.attrBool("windowFocused");
-    var destroy = widget.control.attrBool("windowDestroy");
+    var windowAlwaysOnTop = widget.control.attrBool("windowAlwaysOnTop");
+    var windowResizable = widget.control.attrBool("windowResizable");
+    var windowMovable = widget.control.attrBool("windowMovable");
+    var windowPreventClose = widget.control.attrBool("windowPreventClose");
+    var windowTitleBarHidden = widget.control.attrBool("windowTitleBarHidden");
+    var windowTitleBarButtonsHidden =
+        widget.control.attrBool("windowTitleBarButtonsHidden", false)!;
+    var windowVisible = widget.control.attrBool("windowVisible");
+    var windowFocused = widget.control.attrBool("windowFocused");
+    var windowDestroy = widget.control.attrBool("windowDestroy");
 
     updateWindow() async {
       // window title
@@ -186,11 +190,11 @@ class _PageControlState extends State<PageControl> {
 
       // window size
       if ((windowWidth != null || windowHeight != null) &&
-          fullScreen != true &&
+          windowFullScreen != true &&
           (defaultTargetPlatform != TargetPlatform.macOS ||
               (defaultTargetPlatform == TargetPlatform.macOS &&
-                  maximized == false &&
-                  minimized == false))) {
+                  windowMaximized == false &&
+                  windowMinimized == false))) {
         debugPrint("setWindowSize: $windowWidth, $windowHeight");
         await setWindowSize(windowWidth, windowHeight);
       }
@@ -209,19 +213,19 @@ class _PageControlState extends State<PageControl> {
 
       // window position
       if ((windowTop != null || windowLeft != null) &&
-          fullScreen != true &&
+          windowFullScreen != true &&
           (windowCenter == null || windowCenter == "") &&
           (defaultTargetPlatform != TargetPlatform.macOS ||
               (defaultTargetPlatform == TargetPlatform.macOS &&
-                  maximized == false &&
-                  minimized == false))) {
+                  windowMaximized == false &&
+                  windowMinimized == false))) {
         debugPrint("setWindowPosition: $windowTop, $windowLeft");
         await setWindowPosition(windowTop, windowLeft);
       }
 
       // window opacity
-      if (opacity != null) {
-        await setWindowOpacity(opacity);
+      if (windowOpacity != null) {
+        await setWindowOpacity(windowOpacity);
       }
 
       // window minimizable
@@ -230,59 +234,71 @@ class _PageControlState extends State<PageControl> {
       }
 
       // window minimize
-      if (minimized == true) {
+      if (windowMinimized == true) {
         await minimizeWindow();
-      } else if (minimized == false && maximized == false) {
+      } else if (windowMinimized == false && windowMaximized == false) {
         await restoreWindow();
       }
 
       // window maximize
-      if (maximized == true) {
+      if (windowMaximized == true) {
         await maximizeWindow();
-      } else if (maximized == false) {
+      } else if (windowMaximized == false) {
         await unmaximizeWindow();
       }
 
       // window resizable
-      if (resizable != null) {
-        await setWindowResizability(resizable);
+      if (windowResizable != null) {
+        await setWindowResizability(windowResizable);
       }
 
       // window movable
-      if (movable != null) {
-        await setWindowMovability(movable);
+      if (windowMovable != null) {
+        await setWindowMovability(windowMovable);
       }
 
       // window fullScreen
-      if (fullScreen != null) {
-        await setWindowFullScreen(fullScreen);
+      if (windowFullScreen != null) {
+        await setWindowFullScreen(windowFullScreen);
       }
 
       // window alwaysOnTop
-      if (alwaysOnTop != null) {
-        await setWindowAlwaysOnTop(alwaysOnTop);
+      if (windowAlwaysOnTop != null) {
+        await setWindowAlwaysOnTop(windowAlwaysOnTop);
       }
 
       // window preventClose
-      if (preventClose != null) {
-        await setWindowPreventClose(preventClose);
+      if (windowPreventClose != null) {
+        await setWindowPreventClose(windowPreventClose);
+      }
+
+      if (windowTitleBarHidden != null) {
+        await setWindowTitleBarVisibility(
+            windowTitleBarHidden, windowTitleBarButtonsHidden);
+      }
+
+      // window visible
+      if (windowVisible == true) {
+        await showWindow();
+      } else if (windowVisible == false) {
+        await hideWindow();
       }
 
       // window focus
-      if (focused == true) {
+      if (windowFocused == true) {
         await focusWindow();
-      } else if (focused == false) {
+      } else if (windowFocused == false) {
         await blurWindow();
       }
 
       // window center
-      if (windowCenter != _windowCenter && fullScreen != true) {
+      if (windowCenter != _windowCenter && windowFullScreen != true) {
         await centerWindow();
         _windowCenter = windowCenter;
       }
 
       // window destroy
-      if (destroy == true) {
+      if (windowDestroy == true) {
         await destroyWindow();
       }
     }

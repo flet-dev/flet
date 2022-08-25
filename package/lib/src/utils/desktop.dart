@@ -1,7 +1,8 @@
-import '../models/window_media_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
+
+import '../models/window_media_data.dart';
 
 Future setWindowTitle(String title) async {
   if (isDesktop()) {
@@ -93,6 +94,16 @@ Future setWindowPreventClose(bool preventClose) async {
   }
 }
 
+Future setWindowTitleBarVisibility(
+    bool titleBarHidden, bool titleBarButtonsHidden) async {
+  if (isDesktop()) {
+    debugPrint("setWindowTitleBarVisibility()");
+    await windowManager.setTitleBarStyle(
+        titleBarHidden ? TitleBarStyle.hidden : TitleBarStyle.normal,
+        windowButtonVisibility: !titleBarButtonsHidden);
+  }
+}
+
 Future minimizeWindow() async {
   if (isDesktop() && !await windowManager.isMinimized()) {
     debugPrint("minimizeWindow()");
@@ -121,10 +132,22 @@ Future unmaximizeWindow() async {
   }
 }
 
+Future showWindow() async {
+  if (isDesktop() && !await windowManager.isVisible()) {
+    debugPrint("showWindow()");
+    await windowManager.show();
+  }
+}
+
+Future hideWindow() async {
+  if (isDesktop() && await windowManager.isVisible()) {
+    debugPrint("hideWindow()");
+    await windowManager.hide();
+  }
+}
+
 Future focusWindow() async {
   if (isDesktop() &&
-      (defaultTargetPlatform == TargetPlatform.windows ||
-          defaultTargetPlatform == TargetPlatform.macOS) &&
       !await windowManager.isFocused() &&
       !await windowManager.isMinimized()) {
     debugPrint("focusWindow()");
@@ -173,7 +196,7 @@ Future<WindowMediaData> getWindowMediaData() async {
     m.isMinimized = await windowManager.isMinimized();
     m.isFocused = await isFocused();
     m.isFullScreen = await windowManager.isFullScreen();
-    m.isTitleBarHidden = false;
+    m.isVisible = await windowManager.isVisible();
     var size = await windowManager.getSize();
     m.width = size.width;
     m.height = size.height;

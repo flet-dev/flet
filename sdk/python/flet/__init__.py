@@ -53,3 +53,4 @@ from flet.theme import PageTransitionsTheme, Theme
 from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
 from flet.view import View
+from flet.window_drag_area import WindowDragArea

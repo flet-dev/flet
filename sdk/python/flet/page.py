@@ -811,6 +811,28 @@ class Page(Control):
     def window_prevent_close(self, value: Optional[bool]):
         self._set_attr("windowPreventClose", value)
 
+    # window_title_bar_hidden
+    @property
+    def window_title_bar_hidden(self) -> Optional[bool]:
+        return self._get_attr("windowTitleBarHidden", data_type="bool", def_value=False)
+
+    @window_title_bar_hidden.setter
+    @beartype
+    def window_title_bar_hidden(self, value: Optional[bool]):
+        self._set_attr("windowTitleBarHidden", value)
+
+    # window_title_bar_buttons_hidden
+    @property
+    def window_title_bar_buttons_hidden(self) -> Optional[bool]:
+        return self._get_attr(
+            "windowTitleBarButtonsHidden", data_type="bool", def_value=False
+        )
+
+    @window_title_bar_buttons_hidden.setter
+    @beartype
+    def window_title_bar_buttons_hidden(self, value: Optional[bool]):
+        self._set_attr("windowTitleBarButtonsHidden", value)
+
     # window_focused
     @property
     def window_focused(self) -> Optional[bool]:
@@ -820,6 +842,16 @@ class Page(Control):
     @beartype
     def window_focused(self, value: Optional[bool]):
         self._set_attr("windowFocused", value)
+
+    # window_visible
+    @property
+    def window_visible(self) -> Optional[bool]:
+        return self._get_attr("windowVisible", data_type="bool")
+
+    @window_visible.setter
+    @beartype
+    def window_visible(self, value: Optional[bool]):
+        self._set_attr("windowVisible", value)
 
     # on_close
     @property

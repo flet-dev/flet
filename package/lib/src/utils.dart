@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
@@ -9,23 +11,15 @@ Future setupDesktop() async {
     WidgetsFlutterBinding.ensureInitialized();
     await windowManager.ensureInitialized();
 
-    WindowOptions windowOptions = WindowOptions(
-      size: Size(800, 600),
-      center: true,
-      backgroundColor: Colors.transparent,
-      skipTaskbar: false,
-      titleBarStyle: TitleBarStyle.hidden,
-    );
+    Map<String, String> env = Platform.environment;
+    var hideWindowOnStart = env["FLET_HIDE_WINDOW_ON_START"];
+    debugPrint("hideWindowOnStart: $hideWindowOnStart");
 
     await windowManager.waitUntilReadyToShow(null, () async {
-      //await windowManager.show();
-      //await windowManager.focus();
-      Future.delayed(Duration(seconds: 5)).then((value) async {
-        await windowManager.setTitleBarStyle(TitleBarStyle.hidden,
-            windowButtonVisibility: false);
+      if (hideWindowOnStart == null) {
         await windowManager.show();
         await windowManager.focus();
-      });
+      }
     });
   }
 }

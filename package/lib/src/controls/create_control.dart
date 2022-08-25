@@ -52,6 +52,7 @@ import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
 import 'vertical_divider.dart';
+import 'window_drag_area.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled) {
   //debugPrint("createControl(): $id");
@@ -283,6 +284,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.navigationRail:
           return NavigationRailControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.windowDragArea:
+          return WindowDragAreaControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
