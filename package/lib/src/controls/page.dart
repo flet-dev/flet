@@ -177,7 +177,7 @@ class _PageControlState extends State<PageControl> {
     var focused = widget.control.attrBool("windowFocused");
     var destroy = widget.control.attrBool("windowDestroy");
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    updateWindow() async {
       // window title
       if (_windowTitle != windowTitle) {
         setWindowTitle(windowTitle);
@@ -276,9 +276,7 @@ class _PageControlState extends State<PageControl> {
       }
 
       // window center
-      if (windowCenter != _windowCenter) {
-        debugPrint(
-            "windowCenter: $windowCenter, _windowCenter: $_windowCenter");
+      if (windowCenter != _windowCenter && fullScreen != true) {
         await centerWindow();
         _windowCenter = windowCenter;
       }
@@ -287,7 +285,9 @@ class _PageControlState extends State<PageControl> {
       if (destroy == true) {
         await destroyWindow();
       }
-    });
+    }
+
+    updateWindow();
 
     return StoreConnector<AppState, Uri?>(
         distinct: true,

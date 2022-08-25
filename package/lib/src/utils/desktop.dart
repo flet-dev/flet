@@ -73,14 +73,14 @@ Future setWindowMovability(bool movable) async {
 }
 
 Future setWindowFullScreen(bool fullScreen) async {
-  if (isDesktop()) {
+  if (isDesktop() && await windowManager.isFullScreen() != fullScreen) {
     debugPrint("setWindowFullScreen()");
     await windowManager.setFullScreen(fullScreen);
   }
 }
 
 Future setWindowAlwaysOnTop(bool alwaysOnTop) async {
-  if (isDesktop() && !await windowManager.isAlwaysOnTop()) {
+  if (isDesktop() && await windowManager.isAlwaysOnTop() != alwaysOnTop) {
     debugPrint("setWindowAlwaysOnTop()");
     await windowManager.setAlwaysOnTop(alwaysOnTop);
   }
@@ -101,7 +101,7 @@ Future minimizeWindow() async {
 }
 
 Future restoreWindow() async {
-  if (isDesktop() && !await windowManager.isMinimized()) {
+  if (isDesktop() && await windowManager.isMinimized()) {
     debugPrint("restoreWindow()");
     await windowManager.restore();
   }
@@ -125,7 +125,8 @@ Future focusWindow() async {
   if (isDesktop() &&
       (defaultTargetPlatform == TargetPlatform.windows ||
           defaultTargetPlatform == TargetPlatform.macOS) &&
-      !await windowManager.isFocused()) {
+      !await windowManager.isFocused() &&
+      !await windowManager.isMinimized()) {
     debugPrint("focusWindow()");
     await windowManager.focus();
   }
@@ -171,6 +172,7 @@ Future<WindowMediaData> getWindowMediaData() async {
     m.isMaximized = await windowManager.isMaximized();
     m.isMinimized = await windowManager.isMinimized();
     m.isFocused = await isFocused();
+    m.isFullScreen = await windowManager.isFullScreen();
     m.isTitleBarHidden = false;
     var size = await windowManager.getSize();
     m.width = size.width;

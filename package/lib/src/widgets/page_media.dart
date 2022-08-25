@@ -28,7 +28,7 @@ class _PageMediaState extends State<PageMedia> {
   _onScreenSizeChanged(bool isRegistered, Size newSize, Function dispatch) {
     if (isRegistered) {
       if (_debounce?.isActive ?? false) _debounce!.cancel();
-      _debounce = Timer(const Duration(milliseconds: 200), () {
+      _debounce = Timer(const Duration(milliseconds: 300), () {
         debugPrint("Send current size to reducer: $newSize");
         getWindowMediaData().then((wmd) {
           dispatch(PageSizeChangeAction(

@@ -472,7 +472,7 @@ Widget _expandable(Widget widget, Control? parent, Control control) {
       (parent.type == ControlType.view ||
           parent.type == ControlType.column ||
           parent.type == ControlType.row)) {
-    debugPrint("Expandable ${control.id}");
+    //debugPrint("Expandable ${control.id}");
     int? expand = control.attrInt("expand");
     return expand != null ? Expanded(child: widget, flex: expand) : widget;
   }

@@ -280,6 +280,7 @@ addWindowMediaEventProps(WindowMediaData wmd, Map<String, String> pageAttrs,
   pageAttrs["windowminimized"] = wmd.isMinimized.toString();
   pageAttrs["windowmaximized"] = wmd.isMaximized.toString();
   pageAttrs["windowfocused"] = wmd.isFocused.toString();
+  pageAttrs["windowfullscreen"] = wmd.isFullScreen.toString();
 
   props.addAll([
     {"i": "page", "windowwidth": wmd.width.toString()},
@@ -289,6 +290,7 @@ addWindowMediaEventProps(WindowMediaData wmd, Map<String, String> pageAttrs,
     {"i": "page", "windowminimized": wmd.isMinimized.toString()},
     {"i": "page", "windowmaximized": wmd.isMaximized.toString()},
     {"i": "page", "windowfocused": wmd.isFocused.toString()},
+    {"i": "page", "windowfullscreen": wmd.isFullScreen.toString()},
   ]);
 }
 
