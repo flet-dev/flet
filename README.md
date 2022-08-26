@@ -116,4 +116,4 @@ run again and now you instantly get a web app:
 
 ## Contribute to this wonderful project
 
-* [Contribute in python](https://github.com/flet-dev/flet/blob/main/CONTRIBUTION.md)
+* For Python, use the CONTRIBUTE.md file
