@@ -18,3 +18,4 @@
 # mac specific
 .DS_Store
 *.bkp
+.python-version

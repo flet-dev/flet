@@ -113,3 +113,7 @@ run again and now you instantly get a web app:
 * [Discord](https://discord.gg/dzWXP8SHG8)
 * [Twitter](https://twitter.com/fletdev)
 * [Email](mailto:hello@flet.dev)
+
+## Contribute to this wonderful project
+
+* Read the CONTRIBUTE.md file
