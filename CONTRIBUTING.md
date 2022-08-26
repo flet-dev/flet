@@ -124,6 +124,7 @@ All isort command line options can be found [here](https://pycqa.github.io/isort
 [pre-commit](https://pre-commit.com) is a dev dependency of Flet and is automatically installed by `pdm install`.
 To install the pre-commit hooks run: `pre-commit install`.
 Once installed, everytime you commit, pre-commit will run the configured hooks against changed files.
+
 ---
 # Contributing to Flet for Go
 ---
