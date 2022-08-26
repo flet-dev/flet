@@ -11,6 +11,7 @@ dependencies = [
     "beartype>=0.9.1",
     'typing_extensions; python_version < "3.8"',
     "repath>=0.9.0",
+    "watchdog>=2.1.9",
 ]
 requires-python = ">=3.7"
 license = { text = "MIT" }
@@ -33,9 +34,7 @@ tests = [
     "pytest>=6.1.2",
 ]
 dev = [
-    "pre-commit>=2.17.0",
-    "watchdog>=2.1.9",
-]
+    "pre-commit>=2.17.0"]
 
 [project.scripts]
 flet = "flet.flet:main"
