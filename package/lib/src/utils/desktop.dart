@@ -104,6 +104,27 @@ Future setWindowTitleBarVisibility(
   }
 }
 
+Future setWindowSkipTaskBar(bool skipTaskBar) async {
+  if (isDesktop()) {
+    debugPrint("setWindowSkipTaskBar()");
+    await windowManager.setSkipTaskbar(skipTaskBar);
+  }
+}
+
+Future setWindowFrameless() async {
+  if (isDesktop()) {
+    debugPrint("setWindowFrameless()");
+    await windowManager.setAsFrameless();
+  }
+}
+
+Future setWindowProgressBar(double progress) async {
+  if (isDesktop()) {
+    debugPrint("setWindowProgressBar()");
+    await windowManager.setProgressBar(progress);
+  }
+}
+
 Future minimizeWindow() async {
   if (isDesktop() && !await windowManager.isMinimized()) {
     debugPrint("minimizeWindow()");
@@ -176,6 +197,13 @@ Future centerWindow() async {
   if (isDesktop()) {
     debugPrint("centerWindow()");
     await windowManager.center();
+  }
+}
+
+Future closeWindow() async {
+  if (isDesktop()) {
+    debugPrint("closeWindow()");
+    await windowManager.close();
   }
 }
 

@@ -54,6 +54,11 @@ class PageControl extends StatefulWidget {
 class _PageControlState extends State<PageControl> {
   String? _windowTitle;
   String? _windowCenter;
+  String? _windowClose;
+  bool? _windowFrameless;
+  bool? _windowTitleBarHidden;
+  bool? _windowSkipTaskBar;
+  double? _windowProgressBar;
   final _navigatorKey = GlobalKey<NavigatorState>();
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
@@ -165,6 +170,7 @@ class _PageControlState extends State<PageControl> {
     var windowTop = widget.control.attrDouble("windowTop");
     var windowLeft = widget.control.attrDouble("windowLeft");
     var windowCenter = widget.control.attrString("windowCenter");
+    var windowClose = widget.control.attrString("windowClose");
     var windowFullScreen = widget.control.attrBool("windowFullScreen");
     var windowMinimized = widget.control.attrBool("windowMinimized");
     var windowMaximized = widget.control.attrBool("windowMaximized");
@@ -180,6 +186,9 @@ class _PageControlState extends State<PageControl> {
     var windowVisible = widget.control.attrBool("windowVisible");
     var windowFocused = widget.control.attrBool("windowFocused");
     var windowDestroy = widget.control.attrBool("windowDestroy");
+    var windowSkipTaskBar = widget.control.attrBool("windowSkipTaskBar");
+    var windowFrameless = widget.control.attrBool("windowFrameless");
+    var windowProgressBar = widget.control.attrDouble("windowProgressBar");
 
     updateWindow() async {
       // window title
@@ -272,9 +281,11 @@ class _PageControlState extends State<PageControl> {
         await setWindowPreventClose(windowPreventClose);
       }
 
-      if (windowTitleBarHidden != null) {
+      if (windowTitleBarHidden != null &&
+          windowTitleBarHidden != _windowTitleBarHidden) {
         await setWindowTitleBarVisibility(
             windowTitleBarHidden, windowTitleBarButtonsHidden);
+        _windowTitleBarHidden = windowTitleBarHidden;
       }
 
       // window visible
@@ -295,6 +306,31 @@ class _PageControlState extends State<PageControl> {
       if (windowCenter != _windowCenter && windowFullScreen != true) {
         await centerWindow();
         _windowCenter = windowCenter;
+      }
+
+      // window frameless
+      if (windowFrameless != _windowFrameless && windowFrameless == true) {
+        await setWindowFrameless();
+        _windowFrameless = windowFrameless;
+      }
+
+      // window progress
+      if (windowProgressBar != _windowProgressBar &&
+          windowProgressBar != null) {
+        await setWindowProgressBar(windowProgressBar);
+        _windowProgressBar = windowProgressBar;
+      }
+
+      if (windowSkipTaskBar != null &&
+          windowSkipTaskBar != _windowSkipTaskBar) {
+        await setWindowSkipTaskBar(windowSkipTaskBar);
+        _windowSkipTaskBar = windowSkipTaskBar;
+      }
+
+      // window close
+      if (windowClose != _windowClose) {
+        await closeWindow();
+        _windowClose = windowClose;
       }
 
       // window destroy
