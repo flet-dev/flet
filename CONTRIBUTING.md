@@ -41,7 +41,7 @@ Restart the terminal session to take effect.
 ## Open worker directory
 
 ```
-cd flet/sdk/python
+cd sdk/python
 ```
 
 ## Install dependencies
