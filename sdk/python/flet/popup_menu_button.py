@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
@@ -12,11 +12,11 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class PopupMenuItem(Control):
     def __init__(
         self,
-        ref: Ref = None,
-        checked: bool = None,
-        icon: str = None,
-        text: str = None,
-        content: Control = None,
+        ref: Optional[Ref] = None,
+        checked: Optional[bool] = None,
+        icon: Optional[str] = None,
+        text: Optional[str] = None,
+        content: Optional[Control] = None,
         on_click=None,
     ):
         Control.__init__(self, ref=ref)
@@ -24,7 +24,7 @@ class PopupMenuItem(Control):
         self.checked = checked
         self.icon = icon
         self.text = text
-        self.__content: Control = None
+        self.__content: Optional[Control] = None
         self.content = content
         self.on_click = on_click
 
@@ -40,7 +40,7 @@ class PopupMenuItem(Control):
 
     # checked
     @property
-    def checked(self):
+    def checked(self) -> Optional[bool]:
         return self._get_attr("checked", data_type="bool")
 
     @checked.setter
@@ -88,15 +88,15 @@ class PopupMenuItem(Control):
 class PopupMenuButton(ConstrainedControl):
     def __init__(
         self,
-        content: Control = None,
-        ref: Ref = None,
+        content: Optional[Control] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -107,14 +107,14 @@ class PopupMenuButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # PopupMenuButton-specific
-        items: List[PopupMenuItem] = None,
-        icon: str = None,
+        items: Optional[List[PopupMenuItem]] = None,
+        icon: Optional[str] = None,
         on_cancelled=None,
     ):
 
@@ -147,7 +147,7 @@ class PopupMenuButton(ConstrainedControl):
         self.items = items
         self.icon = icon
         self.on_cancelled = on_cancelled
-        self.__content: Control = None
+        self.__content: Optional[Control] = None
         self.content = content
 
     def _get_control_name(self):
@@ -163,7 +163,7 @@ class PopupMenuButton(ConstrainedControl):
 
     # items
     @property
-    def items(self):
+    def items(self) -> Optional[List[PopupMenuItem]]:
         return self.__items
 
     @items.setter
@@ -192,7 +192,7 @@ class PopupMenuButton(ConstrainedControl):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter

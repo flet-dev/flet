@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from beartype import beartype
 
@@ -10,20 +10,20 @@ from flet.types import PaddingValue
 class AlertDialog(Control):
     def __init__(
         self,
-        ref: Ref = None,
-        disabled: bool = None,
-        visible: bool = None,
-        data: any = None,
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
         open: bool = False,
         modal: bool = False,
-        title: Control = None,
+        title: Optional[Control] = None,
         title_padding: PaddingValue = None,
-        content: Control = None,
+        content: Optional[Control] = None,
         content_padding: PaddingValue = None,
-        actions: List[Control] = None,
+        actions: Optional[List[Control]] = None,
         actions_padding: PaddingValue = None,
         actions_alignment: MainAxisAlignment = None,
         on_dismiss=None,
@@ -37,8 +37,8 @@ class AlertDialog(Control):
             data=data,
         )
 
-        self.__title: Control = None
-        self.__content: Control = None
+        self.__title: Optional[Control] = None
+        self.__content: Optional[Control] = None
         self.__actions: List[Control] = []
 
         self.open = open
@@ -75,7 +75,7 @@ class AlertDialog(Control):
 
     # open
     @property
-    def open(self):
+    def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -85,7 +85,7 @@ class AlertDialog(Control):
 
     # modal
     @property
-    def modal(self):
+    def modal(self) -> Optional[bool]:
         return self._get_attr("modal", data_type="bool", def_value=False)
 
     @modal.setter
@@ -104,7 +104,7 @@ class AlertDialog(Control):
 
     # title_padding
     @property
-    def title_padding(self):
+    def title_padding(self) -> PaddingValue:
         return self.__title_padding
 
     @title_padding.setter
@@ -123,7 +123,7 @@ class AlertDialog(Control):
 
     # content_padding
     @property
-    def content_padding(self):
+    def content_padding(self) -> PaddingValue:
         return self.__content_padding
 
     @content_padding.setter
@@ -142,7 +142,7 @@ class AlertDialog(Control):
 
     # actions_padding
     @property
-    def actions_padding(self):
+    def actions_padding(self) -> PaddingValue:
         return self.__actions_padding
 
     @actions_padding.setter
@@ -152,7 +152,7 @@ class AlertDialog(Control):
 
     # actions_alignment
     @property
-    def actions_alignment(self):
+    def actions_alignment(self) -> MainAxisAlignment:
         return self._get_attr("actionsAlignment")
 
     @actions_alignment.setter

@@ -1,3 +1,4 @@
+import argparse
 import json
 import logging
 import os
@@ -7,11 +8,16 @@ import subprocess
 import tarfile
 import tempfile
 import threading
+import time
 import traceback
 import urllib.request
 import zipfile
 from pathlib import Path
 from time import sleep
+from typing import Sequence
+
+from watchdog.events import FileSystemEventHandler, PatternMatchingEventHandler
+from watchdog.observers import Observer
 
 from flet import constants, version
 from flet.connection import Connection
@@ -26,14 +32,11 @@ except:
     from typing_extensions import Literal
 
 
-WEB_BROWSER = Literal[1]
-FLET_APP = Literal[2]
+WEB_BROWSER = "web_browser"
+FLET_APP = "flet_app"
+FLET_APP_HIDDEN = "flet_app_hidden"
 
-AppViewer = Literal[
-    None,
-    WEB_BROWSER,
-    FLET_APP,
-]
+AppViewer = Literal[None, "web_browser", "flet_app", "flet_app_hidden"]
 
 WebRenderer = Literal[None, "auto", "html", "canvaskit"]
 
@@ -58,7 +61,9 @@ def page(
         web_renderer=web_renderer,
         route_url_strategy=route_url_strategy,
     )
-    print("Page URL:", conn.page_url)
+    url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
+    print("Page URL:" if url_prefix == None else url_prefix, conn.page_url)
+
     page = Page(conn, constants.ZERO_SESSION)
     conn.sessions[constants.ZERO_SESSION] = page
 
@@ -94,7 +99,9 @@ def app(
         web_renderer=web_renderer,
         route_url_strategy=route_url_strategy,
     )
-    print("App URL:", conn.page_url)
+
+    url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
+    print("App URL:" if url_prefix == None else url_prefix, conn.page_url)
 
     terminate = threading.Event()
 
@@ -109,14 +116,18 @@ def app(
 
     fvp = None
 
-    if view == FLET_APP and not is_linux_server():
-        fvp = _open_flet_view(conn.page_url)
+    if (
+        (view == FLET_APP or view == FLET_APP_HIDDEN)
+        and not is_linux_server()
+        and url_prefix == None
+    ):
+        fvp = _open_flet_view(conn.page_url, view == FLET_APP_HIDDEN)
         try:
             fvp.wait()
         except (Exception) as e:
             pass
     else:
-        if view == WEB_BROWSER:
+        if view == WEB_BROWSER and url_prefix == None:
             open_in_browser(conn.page_url)
         try:
             if is_windows():
@@ -184,6 +195,7 @@ def _connect_internal(
         conn.sessions[session_data.sessionID] = page
         print("Session started:", session_data.sessionID)
         try:
+            assert session_handler is not None
             session_handler(page)
         except Exception as e:
             print(
@@ -203,6 +215,7 @@ def _connect_internal(
     def _on_ws_connect():
         if conn.page_name == None:
             conn.page_name = page_name
+        assert conn.page_name is not None
         result = conn.register_host_client(
             conn.host_client_id, conn.page_name, is_app, update, token, permissions
         )
@@ -210,6 +223,7 @@ def _connect_internal(
         conn.page_name = result.pageName
         conn.page_url = server.rstrip("/")
         if conn.page_name != constants.INDEX_PAGE:
+            assert conn.page_url is not None
             conn.page_url += f"/{conn.page_name}"
         connected.set()
 
@@ -329,7 +343,7 @@ def _start_flet_server(
     return port
 
 
-def _open_flet_view(page_url):
+def _open_flet_view(page_url, hidden):
 
     logging.info(f"Starting Flet View app...")
 
@@ -346,7 +360,7 @@ def _open_flet_view(page_url):
             logging.info(f"Flet View found in: {flet_path}")
         else:
             # check if flet.exe is in PATH (flet developer mode)
-            flet_path = which(flet_exe)
+            flet_path = which(flet_exe, sys.argv[0])
             if flet_path:
                 logging.info(f"Flet View found in PATH: {flet_path}")
             else:
@@ -402,8 +416,13 @@ def _open_flet_view(page_url):
         app_path = temp_flet_dir.joinpath("flet", "flet")
         args = [str(app_path), page_url]
 
+    flet_env = {**os.environ}
+
+    if hidden:
+        flet_env["FLET_HIDE_WINDOW_ON_START"] = "true"
+
     # execute process
-    return subprocess.Popen(args)
+    return subprocess.Popen(args, env=flet_env)
 
 
 def _get_ws_url(server: str):
@@ -484,3 +503,165 @@ def _get_free_tcp_port():
 # Fix: https://bugs.python.org/issue35935
 # if _is_windows():
 #    signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+
+class Handler(FileSystemEventHandler):
+    def __init__(self, args, script_path, port, web, hidden) -> None:
+        super().__init__()
+        self.args = args
+        self.script_path = script_path
+        self.port = port
+        self.web = web
+        self.hidden = hidden
+        self.last_time = time.time()
+        self.is_running = False
+        self.fvp = None
+        self.page_url_prefix = f"PAGE_URL_{time.time()}"
+        self.page_url = None
+        self.terminate = threading.Event()
+        self.start_process()
+
+    def start_process(self):
+        p_env = {**os.environ}
+        if self.port != None:
+            p_env["FLET_SERVER_PORT"] = str(self.port)
+        p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
+
+        self.p = subprocess.Popen(self.args, env=p_env, stdout=subprocess.PIPE)
+        self.is_running = True
+        th = threading.Thread(target=self.print_output, args=[self.p], daemon=True)
+        th.start()
+
+    def on_any_event(self, event):
+        if (
+            self.script_path == None or event.src_path == self.script_path
+        ) and not event.is_directory:
+            current_time = time.time()
+            if (current_time - self.last_time) > 0.5 and self.is_running:
+                self.last_time = current_time
+                th = threading.Thread(target=self.restart_program, args=(), daemon=True)
+                th.start()
+
+    def print_output(self, p):
+        while True:
+            line = p.stdout.readline()
+            if not line:
+                break
+            line = line.decode("utf-8").rstrip("\r\n")
+            if line.startswith(self.page_url_prefix):
+                # print(line)
+                if not self.page_url:
+                    self.page_url = line[len(self.page_url_prefix) + 1 :]
+                    print(self.page_url)
+                    if self.web:
+                        open_in_browser(self.page_url)
+                    else:
+                        th = threading.Thread(
+                            target=self.open_flet_view_and_wait, args=(), daemon=True
+                        )
+                        th.start()
+            else:
+                print(line)
+
+    def open_flet_view_and_wait(self):
+        self.fvp = _open_flet_view(self.page_url, self.hidden)
+        self.fvp.wait()
+        self.p.kill()
+        self.terminate.set()
+
+    def restart_program(self):
+        self.is_running = False
+        self.p.kill()
+        self.p.wait()
+        sleep(0.5)
+        self.start_process()
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Runs Flet app in Python with hot reload."
+    )
+    parser.add_argument("script", type=str, help="path to a Python script")
+    parser.add_argument(
+        "--port",
+        "-p",
+        dest="port",
+        type=int,
+        default=None,
+        help="custom TCP port to run Flet app on",
+    )
+    parser.add_argument(
+        "--directory",
+        "-d",
+        dest="directory",
+        action="store_true",
+        default=False,
+        help="watch script directory",
+    )
+    parser.add_argument(
+        "--recursive",
+        "-r",
+        dest="recursive",
+        action="store_true",
+        default=False,
+        help="watch script directory and all sub-directories recursively",
+    )
+    parser.add_argument(
+        "--hidden",
+        "-n",
+        dest="hidden",
+        action="store_true",
+        default=False,
+        help="application window is hidden on startup",
+    )
+    parser.add_argument(
+        "--web",
+        "-w",
+        dest="web",
+        action="store_true",
+        default=False,
+        help="open app in a web browser",
+    )
+
+    # logging.basicConfig(level=logging.DEBUG)
+
+    args = parser.parse_args()
+
+    script_path = args.script
+    if not os.path.isabs(args.script):
+        script_path = str(Path(os.getcwd()).joinpath(args.script).resolve())
+
+    script_dir = os.path.dirname(script_path)
+
+    port = args.port
+    if args.port == None:
+        port = _get_free_tcp_port()
+    # print("port:", port)
+
+    my_event_handler = Handler(
+        [sys.executable, "-u", script_path],
+        None if args.directory or args.recursive else script_path,
+        port,
+        args.web,
+        args.hidden,
+    )
+
+    my_observer = Observer()
+    my_observer.schedule(my_event_handler, script_dir, recursive=args.recursive)
+    my_observer.start()
+
+    try:
+        while True:
+            if my_event_handler.terminate.wait(1):
+                break
+    except KeyboardInterrupt:
+        pass  # print("Keyboard interrupt!")
+
+    if my_event_handler.fvp != None and not is_windows():
+        try:
+            logging.debug(f"Flet View process {my_event_handler.fvp.pid}")
+            os.kill(my_event_handler.fvp.pid + 1, signal.SIGKILL)
+        except:
+            pass
+    my_observer.stop()
+    my_observer.join()

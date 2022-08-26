@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -11,15 +11,15 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class CircleAvatar(ConstrainedControl):
     def __init__(
         self,
-        icon: str = None,
-        ref: Ref = None,
+        icon: Optional[str] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -30,21 +30,21 @@ class CircleAvatar(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        foreground_image_url: str = None,
-        background_image_url: str = None,
+        foreground_image_url: Optional[str] = None,
+        background_image_url: Optional[str] = None,
         radius: OptionalNumber = None,
         min_radius: OptionalNumber = None,
         max_radius: OptionalNumber = None,
-        color: str = None,
-        bgcolor: str = None,
-        content: Control = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        content: Optional[Control] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -164,7 +164,7 @@ class CircleAvatar(ConstrainedControl):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter

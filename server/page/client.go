@@ -23,14 +23,15 @@ import (
 type ClientRole string
 
 const (
-	None                         ClientRole = "None"
-	WebClient                    ClientRole = "Web"
-	HostClient                   ClientRole = "Host"
-	pageNotFoundMessage                     = "Page not found or application is not running."
-	inactiveAppMessage                      = "Application is inactive. Please try refreshing this page later."
-	signinRequiredMessage                   = "signin_required"
-	clientRefreshIntervalSeconds            = 5
-	clientExpirationSeconds                 = 20
+	None                            ClientRole = "None"
+	WebClient                       ClientRole = "Web"
+	HostClient                      ClientRole = "Host"
+	pageNotFoundMessage                        = "Please wait while the application is being started..."
+	inactiveAppMessage                         = "The application went offline. Please wait while the application is being re-started..."
+	signinRequiredMessage                      = "signin_required"
+	clientRefreshIntervalSeconds               = 5
+	clientExpirationSeconds                    = 20
+	clientPageNameExpirationSeconds            = 60 * 60 * 24
 )
 
 type Client struct {
@@ -42,6 +43,7 @@ type Client struct {
 	subscription         chan []byte
 	sessions             map[string]*model.Session
 	pages                map[string]*model.Page
+	pageNames            map[string]bool
 	exitExtendExpiration chan bool
 }
 
@@ -50,13 +52,20 @@ func autoID() string {
 }
 
 func NewClient(conn connection.Conn, clientIP string, principal *auth.SecurityPrincipal) *Client {
+
+	ip := clientIP
+	if ip == "::1" {
+		ip = "127.0.0.1"
+	}
+
 	c := &Client{
 		id:                   autoID(),
 		conn:                 conn,
-		clientIP:             clientIP,
+		clientIP:             ip,
 		principal:            principal,
 		sessions:             make(map[string]*model.Session),
 		pages:                make(map[string]*model.Page),
+		pageNames:            make(map[string]bool),
 		exitExtendExpiration: make(chan bool),
 	}
 
@@ -171,6 +180,10 @@ func (c *Client) registerWebClient(message *Message) {
 	responseMsg := NewMessageData(message.ID, RegisterWebClientAction, response)
 	c.send(responseMsg)
 
+	if response.AppInactive {
+		c.register(WebClient)
+	}
+
 	if response.Error == "" && !sessionCreated {
 		sendPageEventToSession(session, "connect", "")
 	}
@@ -207,16 +220,31 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 		return
 	}
 
+	// unregister web client from a page name
+	for pageName := range c.pageNames {
+		store.RemovePageNameWebClient(pageName, c.id)
+	}
+	c.pageNames = make(map[string]bool)
+
 	// get page
 	page := store.GetPageByName(pageName.String())
+	c.pageNames[pageName.String()] = true
+	exp := time.Now().Add(time.Duration(clientPageNameExpirationSeconds) * time.Second)
+	store.AddPageNameWebClient(pageName.String(), c.id, exp)
+
 	if page == nil && !pageName.IsIndex {
 		// fallback to index
 		pageName, _ = model.ParsePageName("")
+		c.pageNames[pageName.String()] = true
+		store.AddPageNameWebClient(pageName.String(), c.id, exp)
+
 		page = store.GetPageByName(pageName.String())
-		if page == nil {
-			response.Error = pageNotFoundMessage
-			return
-		}
+	}
+
+	if page == nil {
+		response.AppInactive = true
+		response.Error = pageNotFoundMessage
+		return
 	}
 
 	// func: check if "Sign in required" response should be sent
@@ -307,6 +335,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 	// is it app page?
 	if page.IsApp {
 		if len(store.GetPageHostClients(page.ID)) == 0 {
+			response.AppInactive = true
 			response.Error = inactiveAppMessage
 			return
 		}
@@ -334,7 +363,8 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 
 			session = newSession(page, uuid.New().String(), c.clientIP,
 				request.PageRoute, request.PageWidth, request.PageHeight,
-				request.WindowWidth, request.WindowHeight, request.WindowTop, request.WindowLeft, request.IsPWA)
+				request.WindowWidth, request.WindowHeight, request.WindowTop, request.WindowLeft,
+				request.IsPWA, request.IsWeb, request.Platform)
 			sessionCreated = true
 		} else {
 			log.Debugf("Existing session %s found for %s page\n", session.ID, page.Name)
@@ -488,7 +518,7 @@ func (c *Client) registerHostClient(message *Message) {
 		// retrieve zero session
 		session := store.GetSession(page, ZeroSession)
 		if session == nil {
-			session = newSession(page, ZeroSession, c.clientIP, "", "", "", "", "", "", "", "")
+			session = newSession(page, ZeroSession, c.clientIP, "", "", "", "", "", "", "", "", "", "")
 		} else if !request.Update {
 			err = cleanPage(session)
 			if err != nil {
@@ -514,7 +544,19 @@ response:
 		response.HostClientID = hostClientID
 	}
 
+	go notifyPageNameWaitingWebClients(pageName.String())
+
 	c.send(NewMessageData(message.ID, "", response))
+}
+
+func notifyPageNameWaitingWebClients(pageName string) {
+	webClients := store.GetPageNameWebClients(pageName)
+	for _, clientID := range webClients {
+		log.Debugln("Notify client which app become active:", clientID)
+
+		msg := NewMessageData("", AppBecomeActiveAction, &AppBecomeActivePayload{})
+		pubsub.Send(clientChannelName(clientID), msg)
+	}
 }
 
 func cleanPage(session *model.Session) error {
@@ -563,7 +605,7 @@ func (c *Client) decryptSensitiveData(encrypted string, clientIP string) (string
 	}
 	pair := strings.Split(string(plain), "|")
 	if pair[1] != clientIP {
-		return "", errors.New("IP address does not match")
+		return "", fmt.Errorf("IP address does not match (expected: %s, actual: %s)", pair[1], clientIP)
 	}
 	return pair[0], nil
 }
@@ -835,6 +877,11 @@ func (c *Client) unregister(normalClosure bool) {
 	// unregister from all pages
 	for _, page := range c.pages {
 		c.unregisterPage(page)
+	}
+
+	// unregister web client from a page name
+	for pageName := range c.pageNames {
+		store.RemovePageNameWebClient(pageName, c.id)
 	}
 
 	// expire client immediately

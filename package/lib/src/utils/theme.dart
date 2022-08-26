@@ -5,43 +5,67 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import 'colors.dart';
 
-ThemeData? parseTheme(Control control, String propName) {
+ThemeData parseTheme(Control control, String propName, Brightness brightness) {
+  dynamic j;
   var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
+  if (v != null) {
+    j = json.decode(v);
   }
-
-  final j1 = json.decode(v);
-  return themeFromJson(j1);
+  return themeFromJson(j, brightness);
 }
 
-ThemeData themeFromJson(Map<String, dynamic> json) {
+ThemeData themeFromJson(Map<String, dynamic>? json, Brightness brightness) {
   return ThemeData(
-      brightness: Brightness.values.firstWhere(
-          (b) => b.name.toLowerCase() == json["brightness"],
-          orElse: () => Brightness.light),
+      brightness: brightness,
       colorSchemeSeed:
-          HexColor.fromString(null, json["color_scheme_seed"] ?? ""),
-      fontFamily: json["font_family"],
-      useMaterial3: json["use_material3"],
-      visualDensity: parseVisualDensity(json["visual_density"]));
+          HexColor.fromString(null, json?["color_scheme_seed"] ?? "") ??
+              Colors.blue,
+      fontFamily: json?["font_family"],
+      useMaterial3: json?["use_material3"] ?? true,
+      visualDensity: parseVisualDensity(json?["visual_density"]),
+      pageTransitionsTheme: parsePageTransitions(json?["page_transitions"]));
 }
 
 VisualDensity? parseVisualDensity(String? vd) {
-  if (vd == null) {
-    return null;
-  }
-
-  switch (vd.toLowerCase()) {
+  switch (vd?.toLowerCase()) {
     case "adaptiveplatformdensity":
       return VisualDensity.adaptivePlatformDensity;
     case "comfortable":
       return VisualDensity.comfortable;
     case "compact":
       return VisualDensity.compact;
-    case "standard":
-      return VisualDensity.standard;
     default:
-      return null;
+      return VisualDensity.standard;
+  }
+}
+
+PageTransitionsTheme parsePageTransitions(Map<String, dynamic>? json) {
+  return PageTransitionsTheme(builders: {
+    TargetPlatform.android: parseTransitionsBuilder(
+        json?["android"], const FadeUpwardsPageTransitionsBuilder()),
+    TargetPlatform.iOS: parseTransitionsBuilder(
+        json?["ios"], const CupertinoPageTransitionsBuilder()),
+    TargetPlatform.linux: parseTransitionsBuilder(
+        json?["linux"], const ZoomPageTransitionsBuilder()),
+    TargetPlatform.macOS: parseTransitionsBuilder(
+        json?["macos"], const ZoomPageTransitionsBuilder()),
+    TargetPlatform.windows: parseTransitionsBuilder(
+        json?["windows"], const ZoomPageTransitionsBuilder()),
+  });
+}
+
+PageTransitionsBuilder parseTransitionsBuilder(
+    String? tb, PageTransitionsBuilder defaultBuilder) {
+  switch (tb?.toLowerCase()) {
+    case "fadeupwards":
+      return const FadeUpwardsPageTransitionsBuilder();
+    case "openupwards":
+      return const OpenUpwardsPageTransitionsBuilder();
+    case "cupertino":
+      return const CupertinoPageTransitionsBuilder();
+    case "zoom":
+      return const ZoomPageTransitionsBuilder();
+    default:
+      return defaultBuilder;
   }
 }

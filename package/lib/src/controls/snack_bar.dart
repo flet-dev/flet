@@ -48,7 +48,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
               FletAppServices.of(context).ws.pageEventFromWeb(
                   eventTarget: widget.control.id,
                   eventName: "action",
-                  eventData: widget.control.attrs["data"] ?? "");
+                  eventData: "");
             })
         : null;
 

@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
@@ -12,11 +12,11 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class Tab(Control):
     def __init__(
         self,
-        text: str = None,
-        content: Control = None,
-        tab_content: Control = None,
-        ref: Ref = None,
-        icon: str = None,
+        text: Optional[str] = None,
+        content: Optional[Control] = None,
+        tab_content: Optional[Control] = None,
+        ref: Optional[Ref] = None,
+        icon: Optional[str] = None,
     ):
         Control.__init__(self, ref=ref)
         self.text = text
@@ -79,14 +79,14 @@ class Tab(Control):
 class Tabs(ConstrainedControl):
     def __init__(
         self,
-        ref: Ref = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -97,14 +97,14 @@ class Tabs(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Tabs-specific
-        tabs: List[Tab] = None,
-        selected_index: int = None,
-        animation_duration: int = None,
+        tabs: Optional[List[Tab]] = None,
+        selected_index: Optional[int] = None,
+        animation_duration: Optional[int] = None,
         on_change=None,
     ):
 
@@ -146,7 +146,7 @@ class Tabs(ConstrainedControl):
 
     # tabs
     @property
-    def tabs(self):
+    def tabs(self) -> Optional[List[Tab]]:
         return self.__tabs
 
     @tabs.setter
@@ -166,7 +166,7 @@ class Tabs(ConstrainedControl):
 
     # selected_index
     @property
-    def selected_index(self):
+    def selected_index(self) -> Optional[int]:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
@@ -176,7 +176,7 @@ class Tabs(ConstrainedControl):
 
     # animation_duration
     @property
-    def animation_duration(self):
+    def animation_duration(self) -> Optional[int]:
         return self._get_attr("animationDuration")
 
     @animation_duration.setter

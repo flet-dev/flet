@@ -2,6 +2,7 @@ enum MessageAction {
   registerWebClient,
   pageEventFromWeb,
   updateControlProps,
+  appBecomeActive,
   appBecomeInactive,
   sessionCrashed,
   signout,

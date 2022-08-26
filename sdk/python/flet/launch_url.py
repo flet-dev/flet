@@ -1,6 +1,6 @@
 import dataclasses
 import time
-from typing import Optional
+from typing import Any, Optional
 
 from beartype import beartype
 
@@ -17,12 +17,12 @@ class LaunchUrlData:
 class LaunchUrl(Control):
     def __init__(
         self,
-        ref: Ref = None,
-        data: any = None,
+        ref: Optional[Ref] = None,
+        data: Any = None,
         #
         # Specific
         #
-        url: str = None,
+        url: Optional[str] = None,
     ):
 
         Control.__init__(
@@ -41,7 +41,7 @@ class LaunchUrl(Control):
 
     # url
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         return self.__url
 
     @url.setter

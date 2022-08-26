@@ -21,10 +21,17 @@ class StackControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Stack build: ${control.id}");
 
+    var clipBehavior = Clip.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("clipBehavior", "")!.toLowerCase(),
+        orElse: () => Clip.hardEdge);
+
     bool disabled = control.isDisabled || parentDisabled;
 
     return constrainedControl(
         Stack(
+          clipBehavior: clipBehavior,
           children: children
               .where((c) => c.isVisible)
               .map((c) => createControl(control, c.id, disabled))

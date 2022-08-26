@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -10,13 +10,13 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class ConstrainedControl(Control):
     def __init__(
         self,
-        ref: Ref = None,
-        expand: Union[bool, int] = None,
+        ref: Optional[Ref] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # ConstrainedControl specific
         #
@@ -77,6 +77,9 @@ class ConstrainedControl(Control):
     # width
     @property
     def width(self) -> OptionalNumber:
+        """
+        Control width.
+        """
         return self._get_attr("width")
 
     @width.setter

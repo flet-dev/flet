@@ -13,61 +13,68 @@ import (
 
 func RunBackgroundTasks(ctx context.Context) {
 	log.Println("Starting background tasks...")
-	go cleanupPagesAndSessions()
-	go cleanupExpiredClients()
+	go cleanup()
 }
 
-func cleanupPagesAndSessions() {
-	log.Println("Start background task to cleanup old pages and sessions")
-
+func cleanup() {
+	log.Println("Start background task to cleanup expired data")
 	ticker := time.NewTicker(10 * time.Second)
 	for {
 		<-ticker.C
 
-		sessions := store.GetExpiredSessions()
-		if len(sessions) > 0 {
-			log.Debugln("Deleting old sessions:", len(sessions))
-			for _, fullSessionID := range sessions {
-				pageID, sessionID := model.ParseSessionID(fullSessionID)
+		cleanupPagesAndSessions()
+		cleanupExpiredClients()
+		cleanupExpiredPageNameRegistrations()
+	}
+}
 
-				page := store.GetPageByID(pageID)
-				if page == nil {
-					continue
-				}
+func cleanupPagesAndSessions() {
+	log.Debugln("cleanupPagesAndSessions()")
+	sessions := store.GetExpiredSessions()
+	if len(sessions) > 0 {
+		log.Debugln("Deleting old sessions:", len(sessions))
+		for _, fullSessionID := range sessions {
+			pageID, sessionID := model.ParseSessionID(fullSessionID)
 
-				// notify host client about expired session
-				sendPageEventToSession(&model.Session{
-					Page: page,
-					ID:   sessionID,
-				}, "close", "")
+			page := store.GetPageByID(pageID)
+			if page == nil {
+				continue
+			}
 
-				store.DeleteSession(pageID, sessionID)
+			// notify host client about expired session
+			sendPageEventToSession(&model.Session{
+				Page: page,
+				ID:   sessionID,
+			}, "close", "")
 
-				// delete page if no more sessions
-				if !page.IsApp && len(store.GetPageSessions(pageID)) == 0 && len(store.GetPageHostClients(page.ID)) == 0 {
-					store.DeletePage(pageID)
-				}
+			store.DeleteSession(pageID, sessionID)
+
+			// delete page if no more sessions
+			if !page.IsApp && len(store.GetPageSessions(pageID)) == 0 && len(store.GetPageHostClients(page.ID)) == 0 {
+				store.DeletePage(pageID)
 			}
 		}
 	}
 }
 
 func cleanupExpiredClients() {
-	log.Println("Start background task to cleanup expired clients")
+	log.Debugln("cleanupExpiredClients()")
+	clients := store.GetExpiredClients()
+	for _, clientID := range clients {
+		deleteExpiredClient(clientID, false)
+	}
+}
 
-	ticker := time.NewTicker(20 * time.Second)
-	for {
-		<-ticker.C
-
-		clients := store.GetExpiredClients()
-		for _, clientID := range clients {
-			deleteExpiredClient(clientID, false)
-		}
+func cleanupExpiredPageNameRegistrations() {
+	log.Debugln("cleanupExpiredPageNameRegistrations()")
+	pageNameRegs := store.GetExpiredPageNameRegistrations()
+	for _, pageName := range pageNameRegs {
+		store.RemovePageNameRegistration(pageName)
 	}
 }
 
 func deleteExpiredClient(clientID string, removeExpiredClient bool) {
-	log.Debugln("Delete expired client:", clientID)
+	log.Debugln("Delete expired page name:", clientID)
 	webClients := store.DeleteExpiredClient(clientID, removeExpiredClient)
 	go notifyInactiveWebClients(webClients)
 }

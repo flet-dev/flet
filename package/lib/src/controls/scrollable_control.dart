@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -51,8 +49,8 @@ class _ScrollableControlState extends State<ScrollableControl> {
     bool? thumbVisibility = widget.scrollMode == ScrollMode.always ||
             (widget.scrollMode == ScrollMode.adaptive &&
                 !kIsWeb &&
-                !Platform.isIOS &&
-                !Platform.isAndroid)
+                defaultTargetPlatform != TargetPlatform.iOS &&
+                defaultTargetPlatform != TargetPlatform.android)
         ? true
         : null;
 

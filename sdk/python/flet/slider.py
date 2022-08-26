@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -11,14 +11,14 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class Slider(ConstrainedControl):
     def __init__(
         self,
-        ref: Ref = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -29,19 +29,19 @@ class Slider(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
         value: OptionalNumber = None,
-        label: str = None,
+        label: Optional[str] = None,
         min: OptionalNumber = None,
         max: OptionalNumber = None,
-        divisions: int = None,
-        autofocus: bool = None,
+        divisions: Optional[int] = None,
+        autofocus: Optional[bool] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -86,7 +86,7 @@ class Slider(ConstrainedControl):
 
     # value
     @property
-    def value(self):
+    def value(self) -> OptionalNumber:
         return self._get_attr("value", data_type="float")
 
     @value.setter
@@ -105,7 +105,7 @@ class Slider(ConstrainedControl):
 
     # min
     @property
-    def min(self):
+    def min(self) -> OptionalNumber:
         return self._get_attr("min")
 
     @min.setter
@@ -115,7 +115,7 @@ class Slider(ConstrainedControl):
 
     # max
     @property
-    def max(self):
+    def max(self) -> OptionalNumber:
         return self._get_attr("max")
 
     @max.setter
@@ -125,7 +125,7 @@ class Slider(ConstrainedControl):
 
     # step
     @property
-    def divisions(self):
+    def divisions(self) -> Optional[int]:
         return self._get_attr("divisions")
 
     @divisions.setter
@@ -135,7 +135,7 @@ class Slider(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self):
+    def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter

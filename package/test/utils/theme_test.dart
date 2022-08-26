@@ -9,14 +9,14 @@ void main() {
     const t1 = '''{
         "color_scheme_seed": "red",
         "brightness": "light1",
-        "use_material3": true
+        "use_material3": false
       }''';
 
     final j1 = json.decode(t1);
-    var theme = themeFromJson(j1);
+    var theme = themeFromJson(j1, Brightness.light);
 
     expect(theme.brightness, Brightness.light);
-    expect(theme.useMaterial3, true);
+    expect(theme.useMaterial3, false);
     expect(theme.primaryColor, const Color(0xffbb1614));
   });
 
@@ -27,10 +27,10 @@ void main() {
       }''';
 
     final j1 = json.decode(t1);
-    var theme = themeFromJson(j1);
+    var theme = themeFromJson(j1, Brightness.dark);
 
     expect(theme.brightness, Brightness.dark);
-    expect(theme.useMaterial3, false);
+    expect(theme.useMaterial3, true);
     expect(theme.primaryColor, const Color(0xff191c1d));
   });
 }

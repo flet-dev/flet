@@ -1,7 +1,7 @@
 import dataclasses
 import math
 from dataclasses import field
-from typing import List, Union
+from typing import List, Optional, Union
 
 from flet import alignment
 from flet.alignment import Alignment
@@ -18,29 +18,29 @@ TileMode = Literal["clamp", "decal", "mirror", "repeated"]
 class Gradient:
     colors: List[str]
     tile_mode: TileMode = field(default="clamp")
-    rotation: Union[float, int] = field(default=None)
-    stops: List[float] = field(default=None)
+    rotation: Union[None, float, int] = field(default=None)
+    stops: Optional[List[float]] = field(default=None)
 
 
 @dataclasses.dataclass
 class LinearGradient(Gradient):
-    begin: Alignment = field(default_factory=alignment.center_left)
-    end: Alignment = field(default_factory=alignment.center_right)
+    begin: Alignment = field(default_factory=lambda: alignment.center_left)
+    end: Alignment = field(default_factory=lambda: alignment.center_right)
     type: str = field(default="linear")
 
 
 @dataclasses.dataclass
 class RadialGradient(Gradient):
-    center: Alignment = field(default_factory=alignment.center)
+    center: Alignment = field(default_factory=lambda: alignment.center)
     radius: Union[float, int] = field(default=0.5)
-    focal: Alignment = field(default=None)
+    focal: Optional[Alignment] = field(default=None)
     focal_radius: Union[float, int] = field(default=0.0)
     type: str = field(default="radial")
 
 
 @dataclasses.dataclass
 class SweepGradient(Gradient):
-    center: Alignment = field(default_factory=alignment.center)
+    center: Alignment = field(default_factory=lambda: alignment.center)
     start_angle: Union[float, int] = field(default=0.0)
     end_angle: Union[float, int] = field(default=math.pi * 2)
     type: str = field(default="sweep")

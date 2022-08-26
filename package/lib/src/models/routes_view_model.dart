@@ -9,12 +9,14 @@ import 'control_type.dart';
 class RoutesViewModel extends Equatable {
   final Control page;
   final bool isLoading;
+  final String error;
   final List<Control> offstageControls;
   final List<String> viewIds;
 
   const RoutesViewModel(
       {required this.page,
       required this.isLoading,
+      required this.error,
       required this.offstageControls,
       required this.viewIds});
 
@@ -26,6 +28,7 @@ class RoutesViewModel extends Equatable {
     return RoutesViewModel(
         page: store.state.controls["page"]!,
         isLoading: store.state.isLoading,
+        error: store.state.error,
         offstageControls: offstageControl != null
             ? store.state.controls[offstageControl.id]!.childIds
                 .map((childId) => store.state.controls[childId]!)
@@ -40,5 +43,6 @@ class RoutesViewModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [page, isLoading, offstageControls, viewIds];
+  List<Object?> get props =>
+      [page, isLoading, error, offstageControls, viewIds];
 }

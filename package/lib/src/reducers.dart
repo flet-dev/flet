@@ -1,20 +1,20 @@
 // One simple action: Increment
+import 'package:flutter/foundation.dart';
+
+import 'actions.dart';
+import 'models/app_state.dart';
+import 'models/control.dart';
 import 'models/window_media_data.dart';
 import 'protocol/add_page_controls_payload.dart';
 import 'protocol/clean_control_payload.dart';
 import 'protocol/message.dart';
 import 'protocol/remove_control_payload.dart';
 import 'protocol/update_control_props_payload.dart';
-import 'package:flutter/cupertino.dart';
-
+import 'utils/desktop.dart';
 import 'utils/platform_utils_non_web.dart'
     if (dart.library.js) "utils/platform_utils_web.dart";
 import 'utils/session_store_non_web.dart'
     if (dart.library.js) "utils/session_store_web.dart";
-import 'actions.dart';
-import 'models/app_state.dart';
-import 'models/control.dart';
-import 'utils/desktop.dart';
 import 'utils/uri.dart';
 
 enum Actions { increment, setText, setError }
@@ -97,7 +97,9 @@ AppState appReducer(AppState state, dynamic action) {
               windowHeight: wmd.height != null ? wmd.height.toString() : "",
               windowTop: wmd.top != null ? wmd.top.toString() : "",
               windowLeft: wmd.left != null ? wmd.left.toString() : "",
-              isPWA: isProgressiveWebApp().toString());
+              isPWA: isProgressiveWebApp().toString(),
+              isWeb: kIsWeb.toString(),
+              platform: defaultTargetPlatform.name.toLowerCase());
         });
       } else {
         // existing route change
@@ -144,9 +146,9 @@ AppState appReducer(AppState state, dynamic action) {
     // register web client
     //
     if (action.payload.error != null && action.payload.error!.isNotEmpty) {
-      // error
+      // error or inactive app
       return state.copyWith(
-          isLoading: false,
+          isLoading: action.payload.appInactive,
           reconnectingTimeout: 0,
           error: action.payload.error);
     } else {
@@ -160,6 +162,7 @@ AppState appReducer(AppState state, dynamic action) {
           isLoading: false,
           reconnectingTimeout: 0,
           sessionId: sessionId,
+          error: "",
           controls: action.payload.session!.controls);
     }
   } else if (action is PageReconnectingAction) {
@@ -168,13 +171,22 @@ AppState appReducer(AppState state, dynamic action) {
     //
     return state.copyWith(
         isLoading: true,
+        error: "Please wait while the application is re-connecting...",
         reconnectingTimeout:
-            state.reconnectingTimeout == 0 ? 1 : state.reconnectingTimeout * 2);
+            state.reconnectingTimeout == 0 || isLocalhost(state.pageUri!)
+                ? 1
+                : state.reconnectingTimeout * 2);
+  } else if (action is AppBecomeActiveAction) {
+    //
+    // app become active
+    //
+    action.ws.registerWebClientInternal();
+    return state.copyWith(error: "");
   } else if (action is AppBecomeInactiveAction) {
     //
     // app become inactive
     //
-    return state.copyWith(error: action.payload.message);
+    return state.copyWith(isLoading: true, error: action.payload.message);
   } else if (action is SessionCrashedAction) {
     //
     // session crashed
@@ -268,6 +280,7 @@ addWindowMediaEventProps(WindowMediaData wmd, Map<String, String> pageAttrs,
   pageAttrs["windowminimized"] = wmd.isMinimized.toString();
   pageAttrs["windowmaximized"] = wmd.isMaximized.toString();
   pageAttrs["windowfocused"] = wmd.isFocused.toString();
+  pageAttrs["windowfullscreen"] = wmd.isFullScreen.toString();
 
   props.addAll([
     {"i": "page", "windowwidth": wmd.width.toString()},
@@ -277,6 +290,7 @@ addWindowMediaEventProps(WindowMediaData wmd, Map<String, String> pageAttrs,
     {"i": "page", "windowminimized": wmd.isMinimized.toString()},
     {"i": "page", "windowmaximized": wmd.isMaximized.toString()},
     {"i": "page", "windowfocused": wmd.isFocused.toString()},
+    {"i": "page", "windowfullscreen": wmd.isFullScreen.toString()},
   ]);
 }
 

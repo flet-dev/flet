@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 class CommandEncoder(json.JSONEncoder):
@@ -39,14 +39,14 @@ class Command:
     name: Optional[str]
     values: List[str] = field(default_factory=list)
     attrs: Dict[str, str] = field(default_factory=dict)
-    commands: List[any] = field(default_factory=list)
+    commands: List[Any] = field(default_factory=list)
 
 
 @dataclass
 class Message:
     id: str
     action: str
-    payload: any
+    payload: Any
 
 
 @dataclass
@@ -86,12 +86,12 @@ class PageEventPayload:
 
 @dataclass
 class RegisterHostClientRequestPayload:
-    hostClientID: str
+    hostClientID: Optional[str]
     pageName: str
     isApp: bool
     update: bool
-    authToken: str
-    permissions: str
+    authToken: Optional[str]
+    permissions: Optional[str]
 
 
 @dataclass

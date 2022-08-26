@@ -45,9 +45,7 @@ class ListTileControl extends StatelessWidget {
         : () {
             debugPrint("ListTile ${control.id} clicked!");
             ws.pageEventFromWeb(
-                eventTarget: control.id,
-                eventName: "click",
-                eventData: control.attrs["data"] ?? "");
+                eventTarget: control.id, eventName: "click", eventData: "");
           };
 
     Function()? onLongPress = disabled
@@ -57,7 +55,7 @@ class ListTileControl extends StatelessWidget {
             ws.pageEventFromWeb(
                 eventTarget: control.id,
                 eventName: "long_press",
-                eventData: control.attrs["data"] ?? "");
+                eventData: "");
           };
 
     ListTile tile = ListTile(

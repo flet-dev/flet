@@ -5,10 +5,10 @@ from beartype import beartype
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, MarginValue, OffsetValue, RotateValue, ScaleValue
+from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 
-class Card(ConstrainedControl):
+class WindowDragArea(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
@@ -34,12 +34,8 @@ class Card(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        margin: MarginValue = None,
-        elevation: OptionalNumber = None,
     ):
+
         ConstrainedControl.__init__(
             self,
             ref=ref,
@@ -66,50 +62,25 @@ class Card(ConstrainedControl):
             data=data,
         )
 
+        self.__content: Optional[Control] = None
+
         self.content = content
-        self.margin = margin
-        self.elevation = elevation
 
     def _get_control_name(self):
-        return "card"
-
-    def _before_build_command(self):
-        super()._before_build_command()
-        self._set_attr_json("margin", self.__margin)
+        return "windowDragArea"
 
     def _get_children(self):
         children = []
-        if self.__content != None:
+        if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
 
-    # margin
-    @property
-    def margin(self) -> MarginValue:
-        return self.__margin
-
-    @margin.setter
-    @beartype
-    def margin(self, value: MarginValue):
-        self.__margin = value
-
-    # elevation
-    @property
-    def elevation(self) -> OptionalNumber:
-        return self._get_attr("elevation")
-
-    @elevation.setter
-    @beartype
-    def elevation(self, value: OptionalNumber):
-        self._set_attr("elevation", value)
-
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self):
         return self.__content
 
     @content.setter
-    @beartype
-    def content(self, value: Optional[Control]):
+    def content(self, value):
         self.__content = value

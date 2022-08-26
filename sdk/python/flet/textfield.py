@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -34,61 +34,61 @@ TextCapitalization = Literal[None, "none", "characters", "words", "sentences"]
 class TextField(FormFieldControl):
     def __init__(
         self,
-        ref: Ref = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # FormField specific
         #
         text_size: OptionalNumber = None,
-        label: str = None,
-        icon: str = None,
+        label: Optional[str] = None,
+        icon: Optional[str] = None,
         border: InputBorder = None,
-        color: str = None,
-        bgcolor: str = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
         border_radius: BorderRadiusValue = None,
         border_width: OptionalNumber = None,
-        border_color: str = None,
-        focused_color: str = None,
-        focused_bgcolor: str = None,
+        border_color: Optional[str] = None,
+        focused_color: Optional[str] = None,
+        focused_bgcolor: Optional[str] = None,
         focused_border_width: OptionalNumber = None,
-        focused_border_color: str = None,
+        focused_border_color: Optional[str] = None,
         content_padding: PaddingValue = None,
-        filled: bool = None,
-        hint_text: str = None,
-        helper_text: str = None,
-        counter_text: str = None,
-        error_text: str = None,
-        prefix: Control = None,
-        prefix_icon: str = None,
-        prefix_text: str = None,
-        suffix: Control = None,
-        suffix_icon: str = None,
-        suffix_text: str = None,
+        filled: Optional[bool] = None,
+        hint_text: Optional[str] = None,
+        helper_text: Optional[str] = None,
+        counter_text: Optional[str] = None,
+        error_text: Optional[str] = None,
+        prefix: Optional[Control] = None,
+        prefix_icon: Optional[str] = None,
+        prefix_text: Optional[str] = None,
+        suffix: Optional[Control] = None,
+        suffix_icon: Optional[str] = None,
+        suffix_text: Optional[str] = None,
         #
         # TextField Specific
         #
-        value: str = None,
+        value: Optional[str] = None,
         keyboard_type: TextInputType = None,
-        multiline: bool = None,
-        min_lines: int = None,
-        max_lines: int = None,
-        max_length: int = None,
-        password: bool = None,
-        can_reveal_password: bool = None,
-        read_only: bool = None,
-        shift_enter: bool = None,
+        multiline: Optional[bool] = None,
+        min_lines: Optional[int] = None,
+        max_lines: Optional[int] = None,
+        max_length: Optional[int] = None,
+        password: Optional[bool] = None,
+        can_reveal_password: Optional[bool] = None,
+        read_only: Optional[bool] = None,
+        shift_enter: Optional[bool] = None,
         text_align: TextAlign = None,
-        autofocus: bool = None,
+        autofocus: Optional[bool] = None,
         capitalization: TextCapitalization = None,
-        cursor_color: str = None,
-        selection_color: str = None,
+        cursor_color: Optional[str] = None,
+        selection_color: Optional[str] = None,
         on_change=None,
         on_submit=None,
         on_focus=None,
@@ -172,7 +172,7 @@ class TextField(FormFieldControl):
 
     # keyboard_type
     @property
-    def keyboard_type(self):
+    def keyboard_type(self) -> TextInputType:
         return self._get_attr("keyboardType")
 
     @keyboard_type.setter
@@ -182,7 +182,7 @@ class TextField(FormFieldControl):
 
     # text_align
     @property
-    def text_align(self):
+    def text_align(self) -> TextAlign:
         return self._get_attr("textAlign")
 
     @text_align.setter
@@ -192,7 +192,7 @@ class TextField(FormFieldControl):
 
     # multiline
     @property
-    def multiline(self):
+    def multiline(self) -> Optional[bool]:
         return self._get_attr("multiline", data_type="bool", def_value=False)
 
     @multiline.setter
@@ -202,7 +202,7 @@ class TextField(FormFieldControl):
 
     # min_lines
     @property
-    def min_lines(self):
+    def min_lines(self) -> Optional[int]:
         return self._get_attr("minLines")
 
     @min_lines.setter
@@ -212,7 +212,7 @@ class TextField(FormFieldControl):
 
     # max_lines
     @property
-    def max_lines(self):
+    def max_lines(self) -> Optional[int]:
         return self._get_attr("maxLines")
 
     @max_lines.setter
@@ -222,7 +222,7 @@ class TextField(FormFieldControl):
 
     # max_length
     @property
-    def max_length(self):
+    def max_length(self) -> Optional[int]:
         return self._get_attr("maxLength")
 
     @max_length.setter
@@ -232,7 +232,7 @@ class TextField(FormFieldControl):
 
     # read_only
     @property
-    def read_only(self):
+    def read_only(self) -> Optional[bool]:
         return self._get_attr("readOnly", data_type="bool", def_value=False)
 
     @read_only.setter
@@ -242,7 +242,7 @@ class TextField(FormFieldControl):
 
     # shift_enter
     @property
-    def shift_enter(self):
+    def shift_enter(self) -> Optional[bool]:
         return self._get_attr("shiftEnter", data_type="bool", def_value=False)
 
     @shift_enter.setter
@@ -252,7 +252,7 @@ class TextField(FormFieldControl):
 
     # password
     @property
-    def password(self):
+    def password(self) -> Optional[bool]:
         return self._get_attr("password", data_type="bool", def_value=False)
 
     @password.setter
@@ -262,7 +262,7 @@ class TextField(FormFieldControl):
 
     # can_reveal_password
     @property
-    def can_reveal_password(self):
+    def can_reveal_password(self) -> Optional[bool]:
         return self._get_attr("canRevealPassword", data_type="bool", def_value=False)
 
     @can_reveal_password.setter
@@ -272,7 +272,7 @@ class TextField(FormFieldControl):
 
     # autofocus
     @property
-    def autofocus(self):
+    def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -282,7 +282,7 @@ class TextField(FormFieldControl):
 
     # capitalization
     @property
-    def capitalization(self):
+    def capitalization(self) -> TextCapitalization:
         return self._get_attr("capitalization")
 
     @capitalization.setter

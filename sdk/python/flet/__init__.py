@@ -49,7 +49,8 @@ from flet.template_route import TemplateRoute
 from flet.text import Text
 from flet.text_button import TextButton
 from flet.textfield import TextField
-from flet.theme import Theme
+from flet.theme import PageTransitionsTheme, Theme
 from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
 from flet.view import View
+from flet.window_drag_area import WindowDragArea

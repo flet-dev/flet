@@ -1,5 +1,5 @@
 from marshal import version
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -18,15 +18,15 @@ from flet.types import (
 class ListTile(ConstrainedControl):
     def __init__(
         self,
-        text: str = None,
-        ref: Ref = None,
+        text: Optional[str] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -37,22 +37,22 @@ class ListTile(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
         content_padding: PaddingValue = None,
-        leading: Control = None,
-        title: Control = None,
-        subtitle: Control = None,
-        trailing: Control = None,
-        is_three_line: bool = None,
-        selected: bool = None,
-        dense: bool = None,
-        autofocus: bool = None,
+        leading: Optional[Control] = None,
+        title: Optional[Control] = None,
+        subtitle: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        is_three_line: Optional[bool] = None,
+        selected: Optional[bool] = None,
+        dense: Optional[bool] = None,
+        autofocus: Optional[bool] = None,
         on_click=None,
         on_long_press=None,
     ):
@@ -119,7 +119,7 @@ class ListTile(ConstrainedControl):
 
     # content_padding
     @property
-    def content_padding(self):
+    def content_padding(self) -> PaddingValue:
         return self.__content_padding
 
     @content_padding.setter
@@ -129,7 +129,7 @@ class ListTile(ConstrainedControl):
 
     # leading
     @property
-    def leading(self):
+    def leading(self) -> Optional[Control]:
         return self.__leading
 
     @leading.setter
@@ -139,7 +139,7 @@ class ListTile(ConstrainedControl):
 
     # title
     @property
-    def title(self):
+    def title(self) -> Optional[Control]:
         return self.__title
 
     @title.setter
@@ -149,7 +149,7 @@ class ListTile(ConstrainedControl):
 
     # subtitle
     @property
-    def subtitle(self):
+    def subtitle(self) -> Optional[Control]:
         return self.__subtitle
 
     @subtitle.setter
@@ -159,7 +159,7 @@ class ListTile(ConstrainedControl):
 
     # trailing
     @property
-    def trailing(self):
+    def trailing(self) -> Optional[Control]:
         return self.__trailing
 
     @trailing.setter
@@ -169,7 +169,7 @@ class ListTile(ConstrainedControl):
 
     # is_three_line
     @property
-    def is_three_line(self):
+    def is_three_line(self) -> Optional[bool]:
         return self._get_attr("isThreeLine", data_type="bool", def_value=False)
 
     @is_three_line.setter
@@ -179,7 +179,7 @@ class ListTile(ConstrainedControl):
 
     # selected
     @property
-    def selected(self):
+    def selected(self) -> Optional[bool]:
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
@@ -189,7 +189,7 @@ class ListTile(ConstrainedControl):
 
     # dense
     @property
-    def dense(self):
+    def dense(self) -> Optional[bool]:
         return self._get_attr("dense", data_type="bool", def_value=False)
 
     @dense.setter
@@ -199,7 +199,7 @@ class ListTile(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self):
+    def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter

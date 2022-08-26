@@ -58,11 +58,14 @@ type RegisterWebClientRequestPayload struct {
 	WindowTop    string `json:"windowTop"`
 	WindowLeft   string `json:"windowLeft"`
 	IsPWA        string `json:"isPWA"`
+	Platform     string `json:"platform"`
+	IsWeb        string `json:"isWeb"`
 	SessionID    string `json:"sessionID"`
 }
 
 type RegisterWebClientResponsePayload struct {
 	Session       *SessionPayload     `json:"session"`
+	AppInactive   bool                `json:"appInactive"`
 	Error         string              `json:"error"`
 	SigninOptions *auth.SigninOptions `json:"signinOptions"`
 }
@@ -136,6 +139,9 @@ type RemoveControlPayload struct {
 
 type CleanControlPayload struct {
 	IDs []string `json:"ids"`
+}
+
+type AppBecomeActivePayload struct {
 }
 
 type AppBecomeInactivePayload struct {

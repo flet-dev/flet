@@ -41,9 +41,7 @@ class FloatingActionButtonControl extends StatelessWidget {
         : () {
             debugPrint("FloatingActionButtonControl ${control.id} clicked!");
             ws.pageEventFromWeb(
-                eventTarget: control.id,
-                eventName: "click",
-                eventData: control.attrs["data"] ?? "");
+                eventTarget: control.id, eventName: "click", eventData: "");
           };
 
     if (text == null && icon == null && contentCtrls.isEmpty) {

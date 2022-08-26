@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -10,15 +10,15 @@ from flet.types import AnimationValue, MarginValue, OffsetValue, RotateValue, Sc
 class Semantics(Control):
     def __init__(
         self,
-        content: Control = None,
-        ref: Ref = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        content: Optional[Control] = None,
+        ref: Optional[Ref] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        label: str = None,
+        label: Optional[str] = None,
     ):
         Control.__init__(
             self,
@@ -52,7 +52,7 @@ class Semantics(Control):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter

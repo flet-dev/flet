@@ -1,34 +1,36 @@
 import dataclasses
-from typing import Union
+from typing import Optional, Union
 
 
 @dataclasses.dataclass
 class BorderSide:
     width: Union[None, float, int]
-    color: str = dataclasses.field(default=None)
+    color: Optional[str] = dataclasses.field(default=None)
 
 
 @dataclasses.dataclass
 class Border:
-    top: BorderSide
-    right: BorderSide
-    bottom: BorderSide
-    left: BorderSide
+    top: Optional[BorderSide]
+    right: Optional[BorderSide]
+    bottom: Optional[BorderSide]
+    left: Optional[BorderSide]
 
 
-def all(width: float = None, color: str = None):
+def all(width: Optional[float] = None, color: Optional[str] = None):
     bs = BorderSide(width, color)
     return Border(left=bs, top=bs, right=bs, bottom=bs)
 
 
-def symmetric(vertical: BorderSide = None, horizontal: BorderSide = None):
+def symmetric(
+    vertical: Optional[BorderSide] = None, horizontal: Optional[BorderSide] = None
+):
     return Border(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
 
 
 def only(
-    left: BorderSide = None,
-    top: BorderSide = None,
-    right: BorderSide = None,
-    bottom: BorderSide = None,
+    left: Optional[BorderSide] = None,
+    top: Optional[BorderSide] = None,
+    right: Optional[BorderSide] = None,
+    bottom: Optional[BorderSide] = None,
 ):
     return Border(left=left, top=top, right=right, bottom=bottom)

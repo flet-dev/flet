@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -12,15 +12,15 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class AnimatedSwitcher(ConstrainedControl):
     def __init__(
         self,
-        content: Control = None,
-        ref: Ref = None,
+        content: Optional[Control] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -31,18 +31,18 @@ class AnimatedSwitcher(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        duration: int = None,
-        reverse_duration: int = None,
-        switch_in_curve: Curve = None,
-        switch_out_curve: Curve = None,
-        transition: TransitionValue = None,
+        duration: Optional[int] = None,
+        reverse_duration: Optional[int] = None,
+        switch_in_curve: Optional[Curve] = None,
+        switch_out_curve: Optional[Curve] = None,
+        transition: Optional[TransitionValue] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -92,7 +92,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
@@ -102,7 +102,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # duration
     @property
-    def duration(self):
+    def duration(self) -> Optional[int]:
         return self._get_attr("duration")
 
     @duration.setter
@@ -112,7 +112,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # reverse_duration
     @property
-    def reverse_duration(self):
+    def reverse_duration(self) -> Optional[int]:
         return self._get_attr("reverseDuration")
 
     @reverse_duration.setter
@@ -122,7 +122,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # switch_in_curve
     @property
-    def switch_in_curve(self):
+    def switch_in_curve(self) -> Optional[Curve]:
         return self._get_attr("switchInCurve")
 
     @switch_in_curve.setter
@@ -132,7 +132,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # switch_out_curve
     @property
-    def switch_out_curve(self):
+    def switch_out_curve(self) -> Optional[Curve]:
         return self._get_attr("switchOutCurve")
 
     @switch_out_curve.setter
@@ -142,7 +142,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # transition
     @property
-    def transition(self):
+    def transition(self) -> Optional[TransitionValue]:
         return self._get_attr("transition")
 
     @transition.setter

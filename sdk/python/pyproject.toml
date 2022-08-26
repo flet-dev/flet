@@ -33,7 +33,12 @@ tests = [
     "pytest>=6.1.2",
 ]
 dev = [
-    "pre-commit>=2.17.0"]
+    "pre-commit>=2.17.0",
+    "watchdog>=2.1.9",
+]
+
+[project.scripts]
+flet = "flet.flet:main"
 
 [project.entry-points.pyinstaller40]
 hook-dirs = "flet.__pyinstaller:get_hook_dirs"

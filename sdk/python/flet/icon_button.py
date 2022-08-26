@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -12,15 +12,15 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class IconButton(ConstrainedControl):
     def __init__(
         self,
-        icon: str = None,
-        ref: Ref = None,
+        icon: Optional[str] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -31,22 +31,22 @@ class IconButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
         icon_size: OptionalNumber = None,
-        icon_color: str = None,
-        selected_icon: str = None,
-        selected_icon_color: str = None,
-        selected: bool = None,
-        bgcolor: str = None,
-        style: ButtonStyle = None,
-        content: Control = None,
-        autofocus: bool = None,
+        icon_color: Optional[str] = None,
+        selected_icon: Optional[str] = None,
+        selected_icon_color: Optional[str] = None,
+        selected: Optional[bool] = None,
+        bgcolor: Optional[str] = None,
+        style: Optional[ButtonStyle] = None,
+        content: Optional[Control] = None,
+        autofocus: Optional[bool] = None,
         on_click=None,
     ):
         ConstrainedControl.__init__(
@@ -156,7 +156,7 @@ class IconButton(ConstrainedControl):
 
     # selected
     @property
-    def selected(self):
+    def selected(self) -> Optional[bool]:
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
@@ -166,7 +166,7 @@ class IconButton(ConstrainedControl):
 
     # style
     @property
-    def style(self):
+    def style(self) -> Optional[ButtonStyle]:
         return self.__style
 
     @style.setter
@@ -185,7 +185,7 @@ class IconButton(ConstrainedControl):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
@@ -195,7 +195,7 @@ class IconButton(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self):
+    def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter

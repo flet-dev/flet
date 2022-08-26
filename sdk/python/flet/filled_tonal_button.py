@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Any, Optional, Union
 
 from flet.buttons import ButtonStyle
 from flet.control import Control, OptionalNumber
@@ -9,24 +9,24 @@ from flet.ref import Ref
 class FilledTonalButton(ElevatedButton):
     def __init__(
         self,
-        text: str = None,
-        ref: Ref = None,
+        text: Optional[str] = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # Specific
         #
-        icon: str = None,
-        icon_color: str = None,
-        style: ButtonStyle = None,
-        content: Control = None,
-        autofocus: bool = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        style: Optional[ButtonStyle] = None,
+        content: Optional[Control] = None,
+        autofocus: Optional[bool] = None,
         on_click=None,
         on_long_press=None,
         on_hover=None,

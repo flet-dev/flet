@@ -3,6 +3,7 @@ import logging
 import threading
 import time
 from dataclasses import dataclass
+from typing import Any, cast
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
@@ -59,7 +60,7 @@ class Page(Control):
         self.__default_view = self.__views[0]
         self._controls = self.__default_view.controls
 
-        self.__fonts: Dict[str, str] = None
+        self.__fonts: Optional[Dict[str, str]] = None
         self.__offstage = Offstage()
         self.__theme = None
         self.__dark_theme = None
@@ -82,7 +83,7 @@ class Page(Control):
         self._add_event_handler("route_change", self.__on_route_change.handler)
 
         def convert_view_pop_event(e):
-            return ViewPopEvent(view=self.get_control(e.data))
+            return ViewPopEvent(view=cast(View, self.get_control(e.data)))
 
         self.__on_view_pop = EventHandler(convert_view_pop_event)
         self._add_event_handler("view_pop", self.__on_view_pop.handler)
@@ -115,13 +116,9 @@ class Page(Control):
         self._set_attr_json("fonts", self.__fonts)
 
         # light theme
-        if self.__theme:
-            self.__theme.brightness = "light"
         self._set_attr_json("theme", self.__theme)
 
         # dark theme
-        if self.__dark_theme:
-            self.__dark_theme.brightness = "dark"
         self._set_attr_json("darkTheme", self.__dark_theme)
 
         # keyboard event
@@ -135,28 +132,36 @@ class Page(Control):
         return children
 
     def _fetch_page_details(self):
+        assert self.__conn.page_name is not None
         values = self.__conn.send_commands(
-            self.__conn.page_name,
             self._session_id,
             [
-                Command(0, "get", ["page", "route"], None, None),
-                Command(0, "get", ["page", "pwa"], None, None),
-                Command(0, "get", ["page", "width"], None, None),
-                Command(0, "get", ["page", "height"], None, None),
-                Command(0, "get", ["page", "windowWidth"], None, None),
-                Command(0, "get", ["page", "windowHeight"], None, None),
-                Command(0, "get", ["page", "windowTop"], None, None),
-                Command(0, "get", ["page", "windowLeft"], None, None),
+                Command(0, "get", ["page", "route"]),
+                Command(
+                    0,
+                    "get",
+                    ["page", "pwa"],
+                ),
+                Command(0, "get", ["page", "web"]),
+                Command(0, "get", ["page", "platform"]),
+                Command(0, "get", ["page", "width"]),
+                Command(0, "get", ["page", "height"]),
+                Command(0, "get", ["page", "windowWidth"]),
+                Command(0, "get", ["page", "windowHeight"]),
+                Command(0, "get", ["page", "windowTop"]),
+                Command(0, "get", ["page", "windowLeft"]),
             ],
         ).results
         self._set_attr("route", values[0], False)
         self._set_attr("pwa", values[1], False)
-        self._set_attr("width", values[2], False)
-        self._set_attr("height", values[3], False)
-        self._set_attr("windowWidth", values[4], False)
-        self._set_attr("windowHeight", values[5], False)
-        self._set_attr("windowTop", values[6], False)
-        self._set_attr("windowLeft", values[7], False)
+        self._set_attr("web", values[2], False)
+        self._set_attr("platform", values[3], False)
+        self._set_attr("width", values[4], False)
+        self._set_attr("height", values[5], False)
+        self._set_attr("windowWidth", values[6], False)
+        self._set_attr("windowHeight", values[7], False)
+        self._set_attr("windowTop", values[8], False)
+        self._set_attr("windowLeft", values[9], False)
 
     def update(self, *controls):
         with self._lock:
@@ -177,9 +182,7 @@ class Page(Control):
             return
 
         # execute commands
-        results = self.__conn.send_commands(
-            self.__conn.page_name, self._session_id, commands
-        ).results
+        results = self.__conn.send_commands(self._session_id, commands).results
 
         if len(results) > 0:
             n = 0
@@ -226,6 +229,7 @@ class Page(Control):
             for child in self._get_children():
                 self._remove_control_recursively(self._index, child)
             self._controls.clear()
+            assert self.uid is not None
             return self._send_command("clean", [self.uid])
 
     def error(self, message=""):
@@ -258,9 +262,10 @@ class Page(Control):
                     t.start()
                 self._event_available.set()
 
-    def wait_event(self):
+    def wait_event(self) -> ControlEvent:
         self._event_available.clear()
         self._event_available.wait()
+        assert self._last_event is not None
         return self._last_event
 
     def show_signin(self, auth_providers="*", auth_groups=False, allow_dismiss=False):
@@ -291,7 +296,7 @@ class Page(Control):
         self.update()
 
     def signout(self):
-        return self._send_command("signout", None)
+        return self._send_command("signout")
 
     def can_access(self, users_and_groups):
         return (
@@ -302,11 +307,10 @@ class Page(Control):
         if self._session_id == constants.ZERO_SESSION:
             self.__conn.close()
 
-    def _send_command(self, name: str, values: List[str]):
+    def _send_command(self, name: str, values: Optional[List[str]] = None):
         return self.__conn.send_command(
-            self.__conn.page_name,
             self._session_id,
-            Command(0, name, values, None, None),
+            Command(indent=0, name=name, values=values or []),
         )
 
     @beartype
@@ -330,6 +334,10 @@ class Page(Control):
 
     def window_center(self):
         self._set_attr("windowCenter", str(time.time()))
+        self.update()
+
+    def window_close(self):
+        self._set_attr("windowClose", str(time.time()))
         self.update()
 
     # url
@@ -385,6 +393,16 @@ class Page(Control):
     def pwa(self):
         return self._get_attr("pwa", data_type="bool", def_value=False)
 
+    # web
+    @property
+    def web(self):
+        return self._get_attr("web", data_type="bool", def_value=False)
+
+    # platform
+    @property
+    def platform(self):
+        return self._get_attr("platform")
+
     # design
     @property
     def design(self):
@@ -397,7 +415,7 @@ class Page(Control):
 
     # fonts
     @property
-    def fonts(self):
+    def fonts(self) -> Optional[Dict[str, str]]:
         return self.__fonts
 
     @fonts.setter
@@ -412,17 +430,17 @@ class Page(Control):
 
     # controls
     @property
-    def controls(self):
+    def controls(self) -> Optional[List[Control]]:
         return self.__default_view.controls
 
     @controls.setter
     @beartype
-    def controls(self, value: List[Control]):
+    def controls(self, value: Optional[List[Control]]):
         self.__default_view.controls = value or []
 
     # appbar
     @property
-    def appbar(self):
+    def appbar(self) -> Optional[AppBar]:
         return self.__default_view.appbar
 
     @appbar.setter
@@ -432,7 +450,7 @@ class Page(Control):
 
     # floating_action_button
     @property
-    def floating_action_button(self):
+    def floating_action_button(self) -> Optional[FloatingActionButton]:
         return self.__default_view.floating_action_button
 
     @floating_action_button.setter
@@ -442,7 +460,7 @@ class Page(Control):
 
     # horizontal_alignment
     @property
-    def horizontal_alignment(self):
+    def horizontal_alignment(self) -> CrossAxisAlignment:
         return self.__default_view.horizontal_alignment
 
     @horizontal_alignment.setter
@@ -452,7 +470,7 @@ class Page(Control):
 
     # vertical_alignment
     @property
-    def vertical_alignment(self):
+    def vertical_alignment(self) -> MainAxisAlignment:
         return self.__default_view.vertical_alignment
 
     @vertical_alignment.setter
@@ -462,7 +480,7 @@ class Page(Control):
 
     # spacing
     @property
-    def spacing(self):
+    def spacing(self) -> OptionalNumber:
         return self.__default_view.spacing
 
     @spacing.setter
@@ -472,7 +490,7 @@ class Page(Control):
 
     # padding
     @property
-    def padding(self):
+    def padding(self) -> PaddingValue:
         return self.__default_view.padding
 
     @padding.setter
@@ -491,7 +509,7 @@ class Page(Control):
 
     # scroll
     @property
-    def scroll(self):
+    def scroll(self) -> ScrollMode:
         return self.__default_view.scroll
 
     @scroll.setter
@@ -501,7 +519,7 @@ class Page(Control):
 
     # auto_scroll
     @property
-    def auto_scroll(self):
+    def auto_scroll(self) -> Optional[bool]:
         return self.__default_view.auto_scroll
 
     @auto_scroll.setter
@@ -511,7 +529,7 @@ class Page(Control):
 
     # splash
     @property
-    def splash(self):
+    def splash(self) -> Optional[Control]:
         return self.__offstage.splash
 
     @splash.setter
@@ -521,7 +539,7 @@ class Page(Control):
 
     # banner
     @property
-    def banner(self):
+    def banner(self) -> Optional[Banner]:
         return self.__offstage.banner
 
     @banner.setter
@@ -531,7 +549,7 @@ class Page(Control):
 
     # snack_bar
     @property
-    def snack_bar(self):
+    def snack_bar(self) -> Optional[SnackBar]:
         return self.__offstage.snack_bar
 
     @snack_bar.setter
@@ -541,7 +559,7 @@ class Page(Control):
 
     # dialog
     @property
-    def dialog(self):
+    def dialog(self) -> Optional[Control]:
         return self.__offstage.dialog
 
     @dialog.setter
@@ -551,7 +569,7 @@ class Page(Control):
 
     # theme_mode
     @property
-    def theme_mode(self):
+    def theme_mode(self) -> Optional[ThemeMode]:
         return self._get_attr("themeMode")
 
     @theme_mode.setter
@@ -561,7 +579,7 @@ class Page(Control):
 
     # theme
     @property
-    def theme(self):
+    def theme(self) -> Optional[Theme]:
         return self.__theme
 
     @theme.setter
@@ -571,7 +589,7 @@ class Page(Control):
 
     # dark_theme
     @property
-    def dark_theme(self):
+    def dark_theme(self) -> Optional[Theme]:
         return self.__dark_theme
 
     @dark_theme.setter
@@ -581,7 +599,7 @@ class Page(Control):
 
     # rtl
     @property
-    def rtl(self):
+    def rtl(self) -> Optional[bool]:
         return self._get_attr("rtl")
 
     @rtl.setter
@@ -591,7 +609,7 @@ class Page(Control):
 
     # show_semantics_debugger
     @property
-    def show_semantics_debugger(self):
+    def show_semantics_debugger(self) -> Optional[bool]:
         return self._get_attr("showSemanticsDebugger")
 
     @show_semantics_debugger.setter
@@ -617,7 +635,7 @@ class Page(Control):
 
     # window_width
     @property
-    def window_width(self):
+    def window_width(self) -> OptionalNumber:
         w = self._get_attr("windowWidth")
         if w != None and w != "":
             return float(w)
@@ -630,7 +648,7 @@ class Page(Control):
 
     # window_height
     @property
-    def window_height(self):
+    def window_height(self) -> OptionalNumber:
         h = self._get_attr("windowHeight")
         if h != None and h != "":
             return float(h)
@@ -643,7 +661,7 @@ class Page(Control):
 
     # window_top
     @property
-    def window_top(self):
+    def window_top(self) -> OptionalNumber:
         w = self._get_attr("windowTop")
         if w != None and w != "":
             return float(w)
@@ -656,7 +674,7 @@ class Page(Control):
 
     # window_left
     @property
-    def window_left(self):
+    def window_left(self) -> OptionalNumber:
         h = self._get_attr("windowLeft")
         if h != None and h != "":
             return float(h)
@@ -669,7 +687,7 @@ class Page(Control):
 
     # window_max_width
     @property
-    def window_max_width(self):
+    def window_max_width(self) -> OptionalNumber:
         return self._get_attr("windowMaxWidth")
 
     @window_max_width.setter
@@ -679,7 +697,7 @@ class Page(Control):
 
     # window_max_height
     @property
-    def window_max_height(self):
+    def window_max_height(self) -> OptionalNumber:
         return self._get_attr("windowMaxHeight")
 
     @window_max_height.setter
@@ -689,7 +707,7 @@ class Page(Control):
 
     # window_min_width
     @property
-    def window_min_width(self):
+    def window_min_width(self) -> OptionalNumber:
         return self._get_attr("windowMinWidth")
 
     @window_min_width.setter
@@ -699,7 +717,7 @@ class Page(Control):
 
     # window_min_height
     @property
-    def window_min_height(self):
+    def window_min_height(self) -> OptionalNumber:
         return self._get_attr("windowMinHeight")
 
     @window_min_height.setter
@@ -709,7 +727,7 @@ class Page(Control):
 
     # window_opacity
     @property
-    def window_opacity(self):
+    def window_opacity(self) -> OptionalNumber:
         return self._get_attr("windowOpacity", data_type="float", def_value=1)
 
     @window_opacity.setter
@@ -719,7 +737,7 @@ class Page(Control):
 
     # window_maximized
     @property
-    def window_maximized(self):
+    def window_maximized(self) -> Optional[bool]:
         return self._get_attr("windowMaximized", data_type="bool", def_value=False)
 
     @window_maximized.setter
@@ -729,7 +747,7 @@ class Page(Control):
 
     # window_minimized
     @property
-    def window_minimized(self):
+    def window_minimized(self) -> Optional[bool]:
         return self._get_attr("windowMinimized", data_type="bool", def_value=False)
 
     @window_minimized.setter
@@ -739,7 +757,7 @@ class Page(Control):
 
     # window_minimizable
     @property
-    def window_minimizable(self):
+    def window_minimizable(self) -> Optional[bool]:
         return self._get_attr("windowMinimizable", data_type="bool", def_value=True)
 
     @window_minimizable.setter
@@ -749,7 +767,7 @@ class Page(Control):
 
     # window_resizable
     @property
-    def window_resizable(self):
+    def window_resizable(self) -> Optional[bool]:
         return self._get_attr("windowResizable", data_type="bool", def_value=True)
 
     @window_resizable.setter
@@ -759,7 +777,7 @@ class Page(Control):
 
     # window_movable
     @property
-    def window_movable(self):
+    def window_movable(self) -> Optional[bool]:
         return self._get_attr("windowMovable", data_type="bool", def_value=True)
 
     @window_movable.setter
@@ -769,7 +787,7 @@ class Page(Control):
 
     # window_full_screen
     @property
-    def window_full_screen(self):
+    def window_full_screen(self) -> Optional[bool]:
         return self._get_attr("windowFullScreen", data_type="bool", def_value=False)
 
     @window_full_screen.setter
@@ -779,7 +797,7 @@ class Page(Control):
 
     # window_always_on_top
     @property
-    def window_always_on_top(self):
+    def window_always_on_top(self) -> Optional[bool]:
         return self._get_attr("windowAlwaysOnTop", data_type="bool", def_value=False)
 
     @window_always_on_top.setter
@@ -789,7 +807,7 @@ class Page(Control):
 
     # window_prevent_close
     @property
-    def window_prevent_close(self):
+    def window_prevent_close(self) -> Optional[bool]:
         return self._get_attr("windowPreventClose", data_type="bool", def_value=False)
 
     @window_prevent_close.setter
@@ -797,15 +815,77 @@ class Page(Control):
     def window_prevent_close(self, value: Optional[bool]):
         self._set_attr("windowPreventClose", value)
 
+    # window_title_bar_hidden
+    @property
+    def window_title_bar_hidden(self) -> Optional[bool]:
+        return self._get_attr("windowTitleBarHidden", data_type="bool", def_value=False)
+
+    @window_title_bar_hidden.setter
+    @beartype
+    def window_title_bar_hidden(self, value: Optional[bool]):
+        self._set_attr("windowTitleBarHidden", value)
+
+    # window_title_bar_buttons_hidden
+    @property
+    def window_title_bar_buttons_hidden(self) -> Optional[bool]:
+        return self._get_attr(
+            "windowTitleBarButtonsHidden", data_type="bool", def_value=False
+        )
+
+    @window_title_bar_buttons_hidden.setter
+    @beartype
+    def window_title_bar_buttons_hidden(self, value: Optional[bool]):
+        self._set_attr("windowTitleBarButtonsHidden", value)
+
+    # window_skip_task_bar
+    @property
+    def window_skip_task_bar(self) -> Optional[bool]:
+        return self._get_attr("windowSkipTaskBar", data_type="bool", def_value=False)
+
+    @window_skip_task_bar.setter
+    @beartype
+    def window_skip_task_bar(self, value: Optional[bool]):
+        self._set_attr("windowSkipTaskBar", value)
+
+    # window_frameless
+    @property
+    def window_frameless(self) -> Optional[bool]:
+        return self._get_attr("windowFrameless", data_type="bool", def_value=False)
+
+    @window_frameless.setter
+    @beartype
+    def window_frameless(self, value: Optional[bool]):
+        self._set_attr("windowFrameless", value)
+
+    # window_progress_bar
+    @property
+    def window_progress_bar(self) -> OptionalNumber:
+        return self._get_attr("windowProgressBar")
+
+    @window_progress_bar.setter
+    @beartype
+    def window_progress_bar(self, value: OptionalNumber):
+        self._set_attr("windowProgressBar", value)
+
     # window_focused
     @property
-    def window_focused(self):
+    def window_focused(self) -> Optional[bool]:
         return self._get_attr("windowFocused", data_type="bool", def_value=True)
 
     @window_focused.setter
     @beartype
     def window_focused(self, value: Optional[bool]):
         self._set_attr("windowFocused", value)
+
+    # window_visible
+    @property
+    def window_visible(self) -> Optional[bool]:
+        return self._get_attr("windowVisible", data_type="bool")
+
+    @window_visible.setter
+    @beartype
+    def window_visible(self, value: Optional[bool]):
+        self._set_attr("windowVisible", value)
 
     # on_close
     @property
@@ -883,9 +963,9 @@ class Page(Control):
 class Offstage(Control):
     def __init__(
         self,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(
@@ -933,7 +1013,7 @@ class Offstage(Control):
 
     # splash
     @property
-    def splash(self):
+    def splash(self) -> Optional[Control]:
         return self.__splash
 
     @splash.setter
@@ -943,7 +1023,7 @@ class Offstage(Control):
 
     # banner
     @property
-    def banner(self):
+    def banner(self) -> Optional[Banner]:
         return self.__banner
 
     @banner.setter
@@ -953,7 +1033,7 @@ class Offstage(Control):
 
     # snack_bar
     @property
-    def snack_bar(self):
+    def snack_bar(self) -> Optional[SnackBar]:
         return self.__snack_bar
 
     @snack_bar.setter
@@ -963,7 +1043,7 @@ class Offstage(Control):
 
     # dialog
     @property
-    def dialog(self):
+    def dialog(self) -> Optional[Control]:
         return self.__dialog
 
     @dialog.setter

@@ -1,5 +1,5 @@
-import '../utils/animations.dart';
-import '../utils/transforms.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -7,6 +7,8 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_type.dart';
 import '../models/control_view_model.dart';
+import '../utils/animations.dart';
+import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'banner.dart';
@@ -50,7 +52,7 @@ import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
 import 'vertical_divider.dart';
-import 'dart:math';
+import 'window_drag_area.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled) {
   //debugPrint("createControl(): $id");
@@ -286,6 +288,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
+        case ControlType.windowDragArea:
+          return WindowDragAreaControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
         default:
           throw Exception("Unknown control type: ${controlView.control.type}");
       }
@@ -402,7 +410,6 @@ Widget _scaledControl(Widget widget, Control? parent, Control control) {
 Widget _offsetControl(Widget widget, Control? parent, Control control) {
   var offsetDetails = parseOffset(control, "offset");
   var animation = parseAnimation(control, "animateOffset");
-  debugPrint("Animate offset: $offsetDetails $animation");
   if (offsetDetails != null && animation != null) {
     return AnimatedSlide(
         offset: Offset(offsetDetails.x, offsetDetails.y),
@@ -472,7 +479,7 @@ Widget _expandable(Widget widget, Control? parent, Control control) {
       (parent.type == ControlType.view ||
           parent.type == ControlType.column ||
           parent.type == ControlType.row)) {
-    debugPrint("Expandable ${control.id}");
+    //debugPrint("Expandable ${control.id}");
     int? expand = control.attrInt("expand");
     return expand != null ? Expanded(child: widget, flex: expand) : widget;
   }

@@ -1,21 +1,22 @@
 import dataclasses
 from dataclasses import field
+from typing import Optional
 
 from flet.alignment import Alignment
 
 
 @dataclasses.dataclass
 class Scale:
-    scale: float = field(default=None)
-    scale_x: float = field(default=None)
-    scale_y: float = field(default=None)
-    alignment: Alignment = field(default=None)
+    scale: Optional[float] = field(default=None)
+    scale_x: Optional[float] = field(default=None)
+    scale_y: Optional[float] = field(default=None)
+    alignment: Optional[Alignment] = field(default=None)
 
 
 @dataclasses.dataclass
 class Rotate:
     angle: float
-    alignment: Alignment = field(default=None)
+    alignment: Optional[Alignment] = field(default=None)
 
 
 @dataclasses.dataclass

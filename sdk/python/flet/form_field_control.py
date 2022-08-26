@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -18,14 +18,14 @@ from flet.types import (
 class FormFieldControl(ConstrainedControl):
     def __init__(
         self,
-        ref: Ref = None,
+        ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        expand: Union[bool, int] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -36,38 +36,38 @@ class FormFieldControl(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         #
         # FormField specific
         #
         text_size: OptionalNumber = None,
-        label: str = None,
-        icon: str = None,
+        label: Optional[str] = None,
+        icon: Optional[str] = None,
         border: InputBorder = None,
-        color: str = None,
-        bgcolor: str = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
         border_radius: BorderRadiusValue = None,
         border_width: OptionalNumber = None,
-        border_color: str = None,
-        focused_color: str = None,
-        focused_bgcolor: str = None,
+        border_color: Optional[str] = None,
+        focused_color: Optional[str] = None,
+        focused_bgcolor: Optional[str] = None,
         focused_border_width: OptionalNumber = None,
-        focused_border_color: str = None,
+        focused_border_color: Optional[str] = None,
         content_padding: PaddingValue = None,
-        filled: bool = None,
-        hint_text: str = None,
-        helper_text: str = None,
-        counter_text: str = None,
-        error_text: str = None,
-        prefix: Control = None,
-        prefix_icon: str = None,
-        prefix_text: str = None,
-        suffix: Control = None,
-        suffix_icon: str = None,
-        suffix_text: str = None,
+        filled: Optional[bool] = None,
+        hint_text: Optional[str] = None,
+        helper_text: Optional[str] = None,
+        counter_text: Optional[str] = None,
+        error_text: Optional[str] = None,
+        prefix: Optional[Control] = None,
+        prefix_icon: Optional[str] = None,
+        prefix_text: Optional[str] = None,
+        suffix: Optional[Control] = None,
+        suffix_icon: Optional[str] = None,
+        suffix_text: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -95,8 +95,8 @@ class FormFieldControl(ConstrainedControl):
             data=data,
         )
 
-        self.__prefix: Control = None
-        self.__suffix: Control = None
+        self.__prefix: Optional[Control] = None
+        self.__suffix: Optional[Control] = None
 
         self.text_size = text_size
         self.label = label
@@ -169,7 +169,7 @@ class FormFieldControl(ConstrainedControl):
 
     # border
     @property
-    def border(self):
+    def border(self) -> InputBorder:
         return self._get_attr("border")
 
     @border.setter
@@ -197,7 +197,7 @@ class FormFieldControl(ConstrainedControl):
 
     # border_radius
     @property
-    def border_radius(self):
+    def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius
 
     @border_radius.setter
@@ -263,7 +263,7 @@ class FormFieldControl(ConstrainedControl):
 
     # content_padding
     @property
-    def content_padding(self):
+    def content_padding(self) -> PaddingValue:
         return self.__content_padding
 
     @content_padding.setter
@@ -273,7 +273,7 @@ class FormFieldControl(ConstrainedControl):
 
     # filled
     @property
-    def filled(self):
+    def filled(self) -> Optional[bool]:
         return self._get_attr("filled")
 
     @filled.setter

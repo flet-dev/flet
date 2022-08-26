@@ -2,7 +2,7 @@ import datetime as dt
 import json
 import threading
 from difflib import SequenceMatcher
-from typing import Union
+from typing import TYPE_CHECKING, Any, Union
 
 from beartype import beartype
 from beartype.typing import List, Optional
@@ -15,6 +15,10 @@ try:
     from typing import Literal
 except:
     from typing_extensions import Literal
+
+
+if TYPE_CHECKING:
+    from .page import Page
 
 MainAxisAlignment = Literal[
     None,
@@ -86,24 +90,25 @@ BlendMode = Literal[
 class Control:
     def __init__(
         self,
-        ref: Ref = None,
-        expand: Union[bool, int] = None,
+        ref: Optional[Ref] = None,
+        expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
-        tooltip: str = None,
-        visible: bool = None,
-        disabled: bool = None,
-        data: any = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
-        self.__page = None
+        self.__page: Optional[Page] = None
         self.__attrs = {}
         self.__previous_children = []
         self._id = None
-        self.__uid = None
+        self.__uid: Optional[str] = None
         self.expand = expand
         self.opacity = opacity
         self.tooltip = tooltip
         self.visible = visible
         self.disabled = disabled
+        self.__data: Any = None
         self.data = data
         self.__event_handlers = {}
         self._lock = threading.Lock()
@@ -234,7 +239,7 @@ class Control:
 
     # expand
     @property
-    def expand(self):
+    def expand(self) -> Union[None, bool, int]:
         return self.__expand
 
     @expand.setter
@@ -265,7 +270,7 @@ class Control:
 
     # visible
     @property
-    def visible(self):
+    def visible(self) -> Optional[bool]:
         return self._get_attr("visible", data_type="bool", def_value=True)
 
     @visible.setter
@@ -275,7 +280,7 @@ class Control:
 
     # disabled
     @property
-    def disabled(self):
+    def disabled(self) -> Optional[bool]:
         return self._get_attr("disabled", data_type="bool", def_value=False)
 
     @disabled.setter
@@ -286,11 +291,11 @@ class Control:
     # data
     @property
     def data(self):
-        return self._get_attr("data")
+        return self.__data
 
     @data.setter
     def data(self, value):
-        self._set_attr("data", value)
+        self.__data = value
 
     # public methods
     def update(self):
@@ -301,6 +306,8 @@ class Control:
     def clean(self):
         with self._lock:
             self._previous_children.clear()
+            assert self.__page is not None
+            assert self.uid is not None
             for child in self._get_children():
                 self._remove_control_recursively(self.__page.index, child)
             return self.__page._send_command("clean", [self.uid])
@@ -345,7 +352,7 @@ class Control:
                     ctrl = hashes[h]
                     self._remove_control_recursively(index, ctrl)
                     ids.append(ctrl.__uid)
-                commands.append(Command(0, "remove", ids, None, None))
+                commands.append(Command(0, "remove", ids))
             elif tag == "equal":
                 # unchanged control
                 for h in previous_ints[a1:a2]:
@@ -361,20 +368,20 @@ class Control:
                     ctrl = hashes[h]
                     self._remove_control_recursively(index, ctrl)
                     ids.append(ctrl.__uid)
-                commands.append(Command(0, "remove", ids, None, None))
+                commands.append(Command(0, "remove", ids))
                 for h in current_ints[b1:b2]:
                     # add
                     ctrl = hashes[h]
                     innerCmds = ctrl._build_add_commands(
                         index=index, added_controls=added_controls
                     )
+                    assert self.__uid is not None
                     commands.append(
                         Command(
-                            0,
-                            "add",
-                            None,
-                            {"to": self.__uid, "at": str(n)},
-                            innerCmds,
+                            indent=0,
+                            name="add",
+                            attrs={"to": self.__uid, "at": str(n)},
+                            commands=innerCmds,
                         )
                     )
                     n += 1
@@ -385,13 +392,13 @@ class Control:
                     innerCmds = ctrl._build_add_commands(
                         index=index, added_controls=added_controls
                     )
+                    assert self.__uid is not None
                     commands.append(
                         Command(
-                            0,
-                            "add",
-                            None,
-                            {"to": self.__uid, "at": str(n)},
-                            innerCmds,
+                            indent=0,
+                            name="add",
+                            attrs={"to": self.__uid, "at": str(n)},
+                            commands=innerCmds,
                         )
                     )
                     n += 1
@@ -472,6 +479,7 @@ class Control:
         if not update and id != None:
             command.attrs["id"] = id
         elif update and len(command.attrs) > 0:
+            assert self.__uid is not None
             command.values.append(self.__uid)
 
         return command
