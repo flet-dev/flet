@@ -52,6 +52,7 @@ import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
 import 'vertical_divider.dart';
+import 'window_drag_area.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled) {
   //debugPrint("createControl(): $id");
@@ -287,6 +288,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
+        case ControlType.windowDragArea:
+          return WindowDragAreaControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
         default:
           throw Exception("Unknown control type: ${controlView.control.type}");
       }
@@ -472,7 +479,7 @@ Widget _expandable(Widget widget, Control? parent, Control control) {
       (parent.type == ControlType.view ||
           parent.type == ControlType.column ||
           parent.type == ControlType.row)) {
-    debugPrint("Expandable ${control.id}");
+    //debugPrint("Expandable ${control.id}");
     int? expand = control.attrInt("expand");
     return expand != null ? Expanded(child: widget, flex: expand) : widget;
   }

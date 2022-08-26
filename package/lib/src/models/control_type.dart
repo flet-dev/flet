@@ -49,5 +49,6 @@ enum ControlType {
   textButton,
   textField,
   verticalDivider,
-  view
+  view,
+  windowDragArea
 }

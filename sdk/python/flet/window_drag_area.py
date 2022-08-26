@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
@@ -7,18 +7,11 @@ from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
-try:
-    from typing import Literal
-except:
-    from typing_extensions import Literal
 
-ClipBehavior = Literal[None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"]
-
-
-class Stack(ConstrainedControl):
+class WindowDragArea(ConstrainedControl):
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        content: Optional[Control] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -37,14 +30,12 @@ class Stack(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Stack-specific
-        #
-        clip_behavior: ClipBehavior = None,
     ):
+
         ConstrainedControl.__init__(
             self,
             ref=ref,
@@ -65,36 +56,31 @@ class Stack(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            tooltip=tooltip,
             visible=visible,
             disabled=disabled,
             data=data,
         )
 
-        self.__controls: List[Control] = []
-        self.controls = controls
-        self.clip_behavior = clip_behavior
+        self.__content: Optional[Control] = None
+
+        self.content = content
 
     def _get_control_name(self):
-        return "stack"
+        return "windowDragArea"
 
     def _get_children(self):
-        return self.__controls
+        children = []
+        if self.__content:
+            self.__content._set_attr_internal("n", "content")
+            children.append(self.__content)
+        return children
 
-    # controls
+    # content
     @property
-    def controls(self):
-        return self.__controls
+    def content(self):
+        return self.__content
 
-    @controls.setter
-    def controls(self, value):
-        self.__controls = value or []
-
-    # clip_behavior
-    @property
-    def clip_behavior(self) -> Optional[ClipBehavior]:
-        return self._get_attr("clipBehavior")
-
-    @clip_behavior.setter
-    @beartype
-    def clip_behavior(self, value: Optional[ClipBehavior]):
-        self._set_attr("clipBehavior", value)
+    @content.setter
+    def content(self, value):
+        self.__content = value

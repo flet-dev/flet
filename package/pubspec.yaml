@@ -16,7 +16,7 @@ dependencies:
   flutter_redux: ^0.10.0
   equatable: ^2.0.3
   web_socket_channel: ^2.1.0
-  window_manager: ^0.2.5
+  window_manager: ^0.2.6
   http: ^0.13.3
   collection: ^1.16.0
   url_launcher: ^6.1.5

@@ -34,12 +34,9 @@ except:
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
+FLET_APP_HIDDEN = "flet_app_hidden"
 
-AppViewer = Literal[
-    None,
-    "web_browser",
-    "flet_app",
-]
+AppViewer = Literal[None, "web_browser", "flet_app", "flet_app_hidden"]
 
 WebRenderer = Literal[None, "auto", "html", "canvaskit"]
 
@@ -119,8 +116,12 @@ def app(
 
     fvp = None
 
-    if view == FLET_APP and not is_linux_server() and url_prefix == None:
-        fvp = _open_flet_view(conn.page_url)
+    if (
+        (view == FLET_APP or view == FLET_APP_HIDDEN)
+        and not is_linux_server()
+        and url_prefix == None
+    ):
+        fvp = _open_flet_view(conn.page_url, view == FLET_APP_HIDDEN)
         try:
             fvp.wait()
         except (Exception) as e:
@@ -342,7 +343,7 @@ def _start_flet_server(
     return port
 
 
-def _open_flet_view(page_url):
+def _open_flet_view(page_url, hidden):
 
     logging.info(f"Starting Flet View app...")
 
@@ -415,8 +416,13 @@ def _open_flet_view(page_url):
         app_path = temp_flet_dir.joinpath("flet", "flet")
         args = [str(app_path), page_url]
 
+    flet_env = {**os.environ}
+
+    if hidden:
+        flet_env["FLET_HIDE_WINDOW_ON_START"] = "true"
+
     # execute process
-    return subprocess.Popen(args)
+    return subprocess.Popen(args, env=flet_env)
 
 
 def _get_ws_url(server: str):
@@ -500,12 +506,13 @@ def _get_free_tcp_port():
 
 
 class Handler(FileSystemEventHandler):
-    def __init__(self, args, script_path, port, web) -> None:
+    def __init__(self, args, script_path, port, web, hidden) -> None:
         super().__init__()
         self.args = args
         self.script_path = script_path
         self.port = port
         self.web = web
+        self.hidden = hidden
         self.last_time = time.time()
         self.is_running = False
         self.fvp = None
@@ -557,7 +564,7 @@ class Handler(FileSystemEventHandler):
                 print(line)
 
     def open_flet_view_and_wait(self):
-        self.fvp = _open_flet_view(self.page_url)
+        self.fvp = _open_flet_view(self.page_url, self.hidden)
         self.fvp.wait()
         self.p.kill()
         self.terminate.set()
@@ -600,6 +607,14 @@ def main():
         help="watch script directory and all sub-directories recursively",
     )
     parser.add_argument(
+        "--hidden",
+        "-n",
+        dest="hidden",
+        action="store_true",
+        default=False,
+        help="application window is hidden on startup",
+    )
+    parser.add_argument(
         "--web",
         "-w",
         dest="web",
@@ -628,6 +643,7 @@ def main():
         None if args.directory or args.recursive else script_path,
         port,
         args.web,
+        args.hidden,
     )
 
     my_observer = Observer()
