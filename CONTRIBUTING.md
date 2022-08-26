@@ -1,6 +1,6 @@
-# ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) Contributing to Flet for Flutter
-
-# ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) Contributing to Flet for Python
+# Contributing to Flet for Flutter
+---
+# Contributing to Flet for Python
 
 Thank you for your interest in contributing to Flet!
 
@@ -124,9 +124,10 @@ All isort command line options can be found [here](https://pycqa.github.io/isort
 [pre-commit](https://pre-commit.com) is a dev dependency of Flet and is automatically installed by `pdm install`.
 To install the pre-commit hooks run: `pre-commit install`.
 Once installed, everytime you commit, pre-commit will run the configured hooks against changed files.
-
-# ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) Contributing to Flet for Go
-
-# ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) Contributing to Flet for Ruby
-
-# ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) Contributing to Flet for C++
+---
+# Contributing to Flet for Go
+---
+# Contributing to Flet for Ruby
+---
+# Contributing to Flet for C++
+---
