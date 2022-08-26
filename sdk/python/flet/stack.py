@@ -1,9 +1,18 @@
 from typing import Any, List, Optional, Union
 
+from beartype import beartype
+
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+
+try:
+    from typing import Literal
+except:
+    from typing_extensions import Literal
+
+ClipBehavior = Literal[None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"]
 
 
 class Stack(ConstrainedControl):
@@ -31,6 +40,10 @@ class Stack(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        #
+        # Stack-specific
+        #
+        clip_behavior: ClipBehavior = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -59,6 +72,7 @@ class Stack(ConstrainedControl):
 
         self.__controls: List[Control] = []
         self.controls = controls
+        self.clip_behavior = clip_behavior
 
     def _get_control_name(self):
         return "stack"
@@ -74,3 +88,13 @@ class Stack(ConstrainedControl):
     @controls.setter
     def controls(self, value):
         self.__controls = value or []
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self._get_attr("clipBehavior")
+
+    @clip_behavior.setter
+    @beartype
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self._set_attr("clipBehavior", value)
