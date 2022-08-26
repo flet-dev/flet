@@ -31,7 +31,10 @@ class WindowDragAreaControl extends StatelessWidget {
       return const ErrorControl("WindowDragArea should have content.");
     }
 
-    return DragToMoveArea(
-        child: createControl(control, contentCtrls.first.id, disabled));
+    return constrainedControl(
+        DragToMoveArea(
+            child: createControl(control, contentCtrls.first.id, disabled)),
+        parent,
+        control);
   }
 }

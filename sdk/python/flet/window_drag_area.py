@@ -1,26 +1,64 @@
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
-from flet.control import Control
+from flet.constrained_control import ConstrainedControl
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
+from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 
-class WindowDragArea(Control):
+class WindowDragArea(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
         ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
         data: Any = None,
     ):
 
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
             ref=ref,
-            disabled=disabled,
+            width=width,
+            height=height,
+            left=left,
+            top=top,
+            right=right,
+            bottom=bottom,
+            expand=expand,
+            opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
+            tooltip=tooltip,
             visible=visible,
+            disabled=disabled,
             data=data,
         )
 
