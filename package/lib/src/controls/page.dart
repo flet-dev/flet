@@ -53,6 +53,25 @@ class PageControl extends StatefulWidget {
 
 class _PageControlState extends State<PageControl> {
   String? _windowTitle;
+  double? _windowWidth;
+  double? _windowHeight;
+  double? _windowMinWidth;
+  double? _windowMinHeight;
+  double? _windowMaxWidth;
+  double? _windowMaxHeight;
+  double? _windowTop;
+  double? _windowLeft;
+  double? _windowOpacity;
+  bool? _windowMinimizable;
+  bool? _windowFullScreen;
+  bool? _windowMovable;
+  bool? _windowResizable;
+  bool? _windowAlwaysOnTop;
+  bool? _windowPreventClose;
+  bool? _windowMinimized;
+  bool? _windowMaximized;
+  bool? _windowVisible;
+  bool? _windowFocused;
   String? _windowCenter;
   String? _windowClose;
   bool? _windowFrameless;
@@ -175,7 +194,7 @@ class _PageControlState extends State<PageControl> {
     var windowMinimized = widget.control.attrBool("windowMinimized");
     var windowMaximized = widget.control.attrBool("windowMaximized");
     var windowOpacity = widget.control.attrDouble("windowOpacity");
-    var minimizable = widget.control.attrBool("windowMinimizable");
+    var windowMinimizable = widget.control.attrBool("windowMinimizable");
     var windowAlwaysOnTop = widget.control.attrBool("windowAlwaysOnTop");
     var windowResizable = widget.control.attrBool("windowResizable");
     var windowMovable = widget.control.attrBool("windowMovable");
@@ -199,86 +218,116 @@ class _PageControlState extends State<PageControl> {
 
       // window size
       if ((windowWidth != null || windowHeight != null) &&
+          (windowWidth != _windowWidth || windowHeight != _windowHeight) &&
           windowFullScreen != true &&
           (defaultTargetPlatform != TargetPlatform.macOS ||
               (defaultTargetPlatform == TargetPlatform.macOS &&
-                  windowMaximized == false &&
-                  windowMinimized == false))) {
+                  windowMaximized != true &&
+                  windowMinimized != true))) {
         debugPrint("setWindowSize: $windowWidth, $windowHeight");
         await setWindowSize(windowWidth, windowHeight);
+        _windowWidth = windowWidth;
+        _windowHeight = windowHeight;
       }
 
       // window min size
-      if (windowMinWidth != null || windowMinHeight != null) {
+      if ((windowMinWidth != null || windowMinHeight != null) &&
+          (windowMinWidth != _windowMinWidth ||
+              windowMinHeight != _windowMinHeight)) {
         debugPrint("setWindowMinSize: $windowMinWidth, $windowMinHeight");
         await setWindowMinSize(windowMinWidth, windowMinHeight);
+        _windowMinWidth = windowMinWidth;
+        _windowMinHeight = windowMinHeight;
       }
 
       // window max size
-      if (windowMaxWidth != null || windowMaxHeight != null) {
+      if ((windowMaxWidth != null || windowMaxHeight != null) &&
+          (windowMaxWidth != _windowMaxWidth ||
+              windowMaxHeight != _windowMaxHeight)) {
         debugPrint("setWindowMaxSize: $windowMaxWidth, $windowMaxHeight");
         await setWindowMaxSize(windowMaxWidth, windowMaxHeight);
+        _windowMaxWidth = windowMaxWidth;
+        _windowMaxHeight = windowMaxHeight;
       }
 
       // window position
       if ((windowTop != null || windowLeft != null) &&
+          (windowTop != _windowTop || windowLeft != _windowLeft) &&
           windowFullScreen != true &&
           (windowCenter == null || windowCenter == "") &&
           (defaultTargetPlatform != TargetPlatform.macOS ||
               (defaultTargetPlatform == TargetPlatform.macOS &&
-                  windowMaximized == false &&
-                  windowMinimized == false))) {
+                  windowMaximized != true &&
+                  windowMinimized != true))) {
         debugPrint("setWindowPosition: $windowTop, $windowLeft");
         await setWindowPosition(windowTop, windowLeft);
+        _windowTop = windowTop;
+        _windowLeft = windowLeft;
       }
 
       // window opacity
-      if (windowOpacity != null) {
+      if (windowOpacity != null && windowOpacity != _windowOpacity) {
         await setWindowOpacity(windowOpacity);
+        _windowOpacity = windowOpacity;
       }
 
       // window minimizable
-      if (minimizable != null) {
-        await setWindowMinimizability(minimizable);
+      if (windowMinimizable != null &&
+          windowMinimizable != _windowMinimizable) {
+        await setWindowMinimizability(windowMinimizable);
+        _windowMinimizable = windowMinimizable;
       }
 
       // window minimize
-      if (windowMinimized == true) {
-        await minimizeWindow();
-      } else if (windowMinimized == false && windowMaximized == false) {
-        await restoreWindow();
+      if (windowMinimized != _windowMinimized) {
+        if (windowMinimized == true) {
+          await minimizeWindow();
+        } else if (windowMinimized == false && windowMaximized == false) {
+          await restoreWindow();
+        }
+        _windowMinimized = windowMinimized;
       }
 
       // window maximize
-      if (windowMaximized == true) {
-        await maximizeWindow();
-      } else if (windowMaximized == false) {
-        await unmaximizeWindow();
+      if (windowMaximized != _windowMaximized) {
+        if (windowMaximized == true) {
+          await maximizeWindow();
+        } else if (windowMaximized == false) {
+          await unmaximizeWindow();
+        }
+        _windowMaximized = windowMaximized;
       }
 
       // window resizable
-      if (windowResizable != null) {
+      if (windowResizable != null && windowResizable != _windowResizable) {
         await setWindowResizability(windowResizable);
+        _windowResizable = windowResizable;
       }
 
       // window movable
-      if (windowMovable != null) {
+      if (windowMovable != null && windowMovable != _windowMovable) {
         await setWindowMovability(windowMovable);
+        _windowMovable = windowMovable;
       }
 
       // window fullScreen
-      if (windowFullScreen != null) {
+      if (windowFullScreen != null && windowFullScreen != _windowFullScreen) {
         await setWindowFullScreen(windowFullScreen);
+        _windowFullScreen = windowFullScreen;
       }
 
       // window alwaysOnTop
-      if (windowAlwaysOnTop != null) {
+      if (windowAlwaysOnTop != null &&
+          windowAlwaysOnTop != _windowAlwaysOnTop) {
         await setWindowAlwaysOnTop(windowAlwaysOnTop);
+        _windowAlwaysOnTop = windowAlwaysOnTop;
       }
 
       // window preventClose
-      if (windowPreventClose != null) {
+      if (windowPreventClose != null &&
+          windowPreventClose != _windowPreventClose) {
         await setWindowPreventClose(windowPreventClose);
+        _windowPreventClose = windowPreventClose;
       }
 
       if (windowTitleBarHidden != null &&
@@ -289,17 +338,23 @@ class _PageControlState extends State<PageControl> {
       }
 
       // window visible
-      if (windowVisible == true) {
-        await showWindow();
-      } else if (windowVisible == false) {
-        await hideWindow();
+      if (windowVisible != _windowVisible) {
+        if (windowVisible == true) {
+          await showWindow();
+        } else if (windowVisible == false) {
+          await hideWindow();
+        }
+        _windowVisible = windowVisible;
       }
 
       // window focus
-      if (windowFocused == true) {
-        await focusWindow();
-      } else if (windowFocused == false) {
-        await blurWindow();
+      if (windowFocused != _windowFocused) {
+        if (windowFocused == true) {
+          await focusWindow();
+        } else if (windowFocused == false) {
+          await blurWindow();
+        }
+        _windowFocused = windowFocused;
       }
 
       // window center
@@ -315,8 +370,8 @@ class _PageControlState extends State<PageControl> {
       }
 
       // window progress
-      if (windowProgressBar != _windowProgressBar &&
-          windowProgressBar != null) {
+      if (windowProgressBar != null &&
+          windowProgressBar != _windowProgressBar) {
         await setWindowProgressBar(windowProgressBar);
         _windowProgressBar = windowProgressBar;
       }
