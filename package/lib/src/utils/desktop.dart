@@ -41,7 +41,7 @@ Future setWindowPosition(double? top, double? left) async {
     var currentPos = await windowManager.getPosition();
     await windowManager.setPosition(
         Offset(left ?? currentPos.dx, top ?? currentPos.dy),
-        animate: true);
+        animate: defaultTargetPlatform != TargetPlatform.macOS);
   }
 }
 
