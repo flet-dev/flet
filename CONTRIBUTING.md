@@ -1,6 +1,4 @@
-# Contributing to Flet for Flutter
----
-# Contributing to Flet for Python
+# Contributing to Flet
 
 Thank you for your interest in contributing to Flet!
 
@@ -10,9 +8,11 @@ Thank you for your interest in contributing to Flet!
 git clone https://github.com/flet-dev/flet
 ```
 
-## Install PDM
+## Python SDK
 
-### Windows
+### Install PDM
+
+#### Windows
 
 ```powershell
 (Invoke-WebRequest -Uri https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py -UseBasicParsing).Content | python -
@@ -26,7 +26,7 @@ pdm --pep582
 
 Run `refreshenv` after installing PDM on Windows or restart terminal.
 
-### macOS
+#### macOS
 
 ```
 brew install pdm
@@ -40,13 +40,13 @@ pdm --pep582 >> ~/.zprofile
 
 Restart the terminal session to take effect.
 
-## Open worker directory
+### Open worker directory
 
 ```
 cd sdk/python
 ```
 
-## Install dependencies
+### Install dependencies
 
 To install all Flet dependencies and enable the project as editable package run:
 
@@ -54,7 +54,7 @@ To install all Flet dependencies and enable the project as editable package run:
 pdm install
 ```
 
-## Check the installation
+### Check the installation
 
 Create `hello.py` file with a minimal Flet program:
 
@@ -78,7 +78,7 @@ During the first run Flet Server (`fletd`) and Flet Client (`flet`) executables 
 
 You should see a new native OS window opened with "Hello, world!" in it.
 
-## Running tests
+### Running tests
 
 Pytest should be run with `pdm run`:
 
@@ -86,7 +86,7 @@ Pytest should be run with `pdm run`:
 pdm run pytest
 ```
 
-## Code formatting
+### Code formatting
 
 The project uses [Black](https://github.com/psf/black) formatting style. All `.py` files in a PR must be black-formatted.
 
@@ -94,7 +94,13 @@ IDE-specific Black integration guides:
 
 * [VSCode: Using Black to automatically format Python](https://dev.to/adamlombard/how-to-use-the-black-python-code-formatter-in-vscode-3lo0)
 
-### Sort imports on Save
+#### Type cheking
+
+Enable "pylance" type checking in VS Code.
+
+Open user settings, search by "pylance", scroll down to **Python > Analysis: Type checking mode** section. Enable *basic* mode.
+
+#### Sort imports on Save
 
 VS Code includes "isort" by default.
 
@@ -119,16 +125,12 @@ Add the following to user's `settings.json` :
 
 All isort command line options can be found [here](https://pycqa.github.io/isort/docs/configuration/options.html).
 
-## pre-commit
+### pre-commit
 
 [pre-commit](https://pre-commit.com) is a dev dependency of Flet and is automatically installed by `pdm install`.
 To install the pre-commit hooks run: `pre-commit install`.
 Once installed, everytime you commit, pre-commit will run the configured hooks against changed files.
 
----
-# Contributing to Flet for Go
----
-# Contributing to Flet for Ruby
----
-# Contributing to Flet for C++
----
+## Flutter client
+
+TBD
