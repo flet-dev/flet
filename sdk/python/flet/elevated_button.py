@@ -12,7 +12,7 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 class ElevatedButton(ConstrainedControl):
     def __init__(
         self,
-        text: Optional[str],
+        text: Optional[str] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
