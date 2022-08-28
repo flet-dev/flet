@@ -94,7 +94,7 @@ IDE-specific Black integration guides:
 
 * [VSCode: Using Black to automatically format Python](https://dev.to/adamlombard/how-to-use-the-black-python-code-formatter-in-vscode-3lo0)
 
-#### Type cheking
+#### Type checking
 
 Enable "pylance" type checking in VS Code.
 
