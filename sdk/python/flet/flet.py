@@ -186,7 +186,7 @@ def _connect_internal(
             conn.sessions[e.sessionID].on_event(
                 Event(e.eventTarget, e.eventName, e.eventData)
             )
-            if e.eventTarget == "page" and e.eventName == "close":
+            if e.eventTarget == "page" and (e.eventName in {"close", "disconnect"}):
                 print("Session closed:", e.sessionID)
                 del conn.sessions[e.sessionID]
 
