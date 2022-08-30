@@ -11,6 +11,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gorilla/websocket"
 	log "github.com/sirupsen/logrus"
 
@@ -68,6 +69,15 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 		}))
 	}
 
+	// CORS
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowMethods = []string{"GET", "HEAD", "OPTIONS", "POST", "PUT"}
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization", "Cache-Control", "X-Requested-With"}
+	corsConfig.ExposeHeaders = []string{"Content-Length"}
+	corsConfig.AllowCredentials = true
+	router.Use(cors.New(corsConfig))
+
 	mime.AddExtensionType(".js", "application/javascript")
 
 	// Serve frontend static files
@@ -94,6 +104,10 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 	api.GET("/oauth/azure", azureAuthHandler)
 	api.GET("/oauth/google", googleAuthHandler)
 	api.GET("/auth/signout", signoutHandler)
+
+	api.POST("/upload-single", uploadFile)
+	api.POST("/upload", uploadFiles)
+	api.POST("/upload-stream", uploadFilesStream)
 
 	// unknown API routes - 404, all the rest - index.html
 	router.NoRoute(func(c *gin.Context) {
