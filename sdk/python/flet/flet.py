@@ -393,7 +393,7 @@ def _open_flet_view(page_url, hidden):
             logging.info(f"Flet View found in: {temp_flet_dir}")
 
         app_path = temp_flet_dir.joinpath("Flet.app")
-        args = ["open", str(app_path), "-W", "--args", page_url]
+        args = ["open", str(app_path), "-n", "-W", "--args", page_url]
     elif is_linux():
         # build version-specific path to flet folder
         temp_flet_dir = Path(tempfile.gettempdir()).joinpath(f"flet-{version.version}")
