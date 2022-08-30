@@ -15,6 +15,7 @@ from flet.drag_target import DragTarget
 from flet.draggable import Draggable
 from flet.dropdown import Dropdown
 from flet.elevated_button import ElevatedButton
+from flet.file_picker import FilePicker
 from flet.filled_button import FilledButton
 from flet.filled_tonal_button import FilledTonalButton
 from flet.flet import *

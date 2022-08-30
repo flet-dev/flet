@@ -23,6 +23,7 @@ from flet.control import (
 from flet.control_event import ControlEvent
 from flet.event import Event
 from flet.event_handler import EventHandler
+from flet.file_picker import FilePicker
 from flet.floating_action_button import FloatingActionButton
 from flet.launch_url import LaunchUrl
 from flet.protocol import Command
@@ -369,6 +370,11 @@ class Page(Control):
     @property
     def pubsub(self):
         return self.__pubsub
+
+    # offstage
+    @property
+    def offstage(self):
+        return self.__offstage.controls
 
     # title
     @property
@@ -975,6 +981,7 @@ class Offstage(Control):
             data=data,
         )
 
+        self.__controls: List[Control] = []
         self.__clipboard = Clipboard()
         self.__launch_url = LaunchUrl()
         self.__banner = None
@@ -987,6 +994,7 @@ class Offstage(Control):
 
     def _get_children(self):
         children = []
+        children.extend(self.__controls)
         if self.__clipboard:
             children.append(self.__clipboard)
         if self.__launch_url:
@@ -1000,6 +1008,11 @@ class Offstage(Control):
         if self.__splash:
             children.append(self.__splash)
         return children
+
+    # controls
+    @property
+    def controls(self):
+        return self.__controls
 
     # clipboard
     @property

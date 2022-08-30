@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import '../protocol/container_tap_event_data.dart';
+import '../protocol/container_tap_event.dart';
 import '../utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -207,7 +207,7 @@ class ContainerControl extends StatelessWidget {
                           ws.pageEventFromWeb(
                               eventTarget: control.id,
                               eventName: "click",
-                              eventData: json.encode(ContainerTapEventData(
+                              eventData: json.encode(ContainerTapEvent(
                                       localX: details.localPosition.dx,
                                       localY: details.localPosition.dy,
                                       globalX: details.globalPosition.dx,

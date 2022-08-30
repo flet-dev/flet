@@ -23,6 +23,7 @@ import 'drag_target.dart';
 import 'draggable.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
+import 'file_picker.dart';
 import 'floating_action_button.dart';
 import 'grid_view.dart';
 import 'icon.dart';
@@ -82,6 +83,9 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return TextControl(parent: parent, control: controlView.control);
         case ControlType.icon:
           return IconControl(parent: parent, control: controlView.control);
+        case ControlType.filePicker:
+          return FilePickerControl(
+              parent: parent, control: controlView.control);
         case ControlType.markdown:
           return MarkdownControl(parent: parent, control: controlView.control);
         case ControlType.clipboard:
