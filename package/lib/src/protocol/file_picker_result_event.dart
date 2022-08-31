@@ -1,8 +1,8 @@
-class FilePickerCloseEvent {
+class FilePickerResultEvent {
   final String? path;
   final List<FilePickerFile>? files;
 
-  FilePickerCloseEvent({required this.path, required this.files});
+  FilePickerResultEvent({required this.path, required this.files});
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'path': path,

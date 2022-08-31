@@ -1,5 +1,5 @@
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Optional, Union
 
 from beartype import beartype
@@ -20,6 +20,37 @@ FileType = Literal["any", "media", "image", "video", "audio", "custom"]
 FilePickerState = Literal["pickFiles", "saveFile", "getDirectoryPath"]
 
 
+@dataclass
+class FilePickerUploadFile:
+    name: str
+    upload_url: str
+    method: str = field(default="PUT")
+
+
+@dataclass
+class FilePickerFile:
+    name: str
+    path: str
+    size: int
+
+
+class FilePickerResultEvent(ControlEvent):
+    def __init__(self, path, files) -> None:
+        self.path: Optional[str] = path
+        self.files: Optional[List[FilePickerFile]] = None
+        if files != None and isinstance(files, List):
+            self.files = []
+            for fd in files:
+                self.files.append(FilePickerFile(**fd))
+
+
+@dataclass
+class FilePickerUploadEvent(ControlEvent):
+    file_name: str
+    progress: float
+    error: Optional[str]
+
+
 class FilePicker(Control):
     def __init__(
         self,
@@ -36,7 +67,7 @@ class FilePicker(Control):
         file_type: Optional[FileType] = None,
         allowed_extensions: Optional[List[str]] = None,
         allow_multiple: Optional[bool] = None,
-        on_close=None,
+        on_result=None,
         on_upload=None,
     ):
 
@@ -48,13 +79,13 @@ class FilePicker(Control):
             data=data,
         )
 
-        def convert_close_event_data(e):
-            print(e.data)
+        def convert_result_event_data(e):
             d = json.loads(e.data)
-            return FilePickerCloseEvent(**d)
+            self.__result = FilePickerResultEvent(**d)
+            return self.__result
 
-        self.__on_close = EventHandler(convert_close_event_data)
-        self._add_event_handler("close", self.__on_close.handler)
+        self.__on_result = EventHandler(convert_result_event_data)
+        self._add_event_handler("result", self.__on_result.handler)
 
         def convert_upload_event_data(e):
             d = json.loads(e.data)
@@ -63,6 +94,8 @@ class FilePicker(Control):
         self.__on_upload = EventHandler(convert_upload_event_data)
         self._add_event_handler("upload", self.__on_upload.handler)
 
+        self.__result: Optional[FilePickerResultEvent] = None
+        self.__upload: List[FilePickerUploadFile] = []
         self.dialog_title = dialog_title
         self.initial_directory = initial_directory
         self.file_name = file_name
@@ -70,7 +103,7 @@ class FilePicker(Control):
         self.__allowed_extensions: Optional[List[str]] = None
         self.allowed_extensions = allowed_extensions
         self.allow_multiple = allow_multiple
-        self.on_close = on_close
+        self.on_result = on_result
         self.on_upload = on_upload
 
     def _get_control_name(self):
@@ -79,6 +112,7 @@ class FilePicker(Control):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("allowedExtensions", self.__allowed_extensions)
+        self._set_attr_json("upload", self.__upload)
 
     def pick_files(self):
         self.state = "pickFiles"
@@ -92,6 +126,10 @@ class FilePicker(Control):
         self.state = "getDirectoryPath"
         self.update()
 
+    def upload(self, files: List[FilePickerUploadFile]):
+        self.__upload = files
+        self.update()
+
     # state
     @property
     def state(self) -> Optional[FilePickerState]:
@@ -102,15 +140,10 @@ class FilePicker(Control):
     def state(self, value: Optional[FilePickerState]):
         self._set_attr("state", value)
 
-    # upload
+    # result
     @property
-    def upload(self) -> Optional[str]:
-        return self._get_attr("upload")
-
-    @upload.setter
-    @beartype
-    def upload(self, value: Optional[str]):
-        self._set_attr("upload", value)
+    def result(self) -> Optional[FilePickerResultEvent]:
+        return self.__result
 
     # dialog_title
     @property
@@ -171,14 +204,14 @@ class FilePicker(Control):
     def allow_multiple(self, value: Optional[bool]):
         self._set_attr("allowMultiple", value)
 
-    # on_close
+    # on_result
     @property
-    def on_close(self):
-        return self.__on_close
+    def on_result(self):
+        return self.__on_result
 
-    @on_close.setter
-    def on_close(self, handler):
-        self.__on_close.subscribe(handler)
+    @on_result.setter
+    def on_result(self, handler):
+        self.__on_result.subscribe(handler)
 
     # on_upload
     @property
@@ -188,26 +221,3 @@ class FilePicker(Control):
     @on_upload.setter
     def on_upload(self, handler):
         self.__on_upload.subscribe(handler)
-
-
-@dataclass
-class FilePickerFile:
-    name: str
-    path: str
-    size: int
-
-
-class FilePickerCloseEvent(ControlEvent):
-    def __init__(self, path, files) -> None:
-        self.path: Optional[str] = path
-        self.files = None
-        if files != None and isinstance(files, List):
-            self.files = []
-            for fd in files:
-                self.files.append(FilePickerFile(**fd))
-
-
-@dataclass
-class FilePickerUploadEvent:
-    name: str
-    size: int

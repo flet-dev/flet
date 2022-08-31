@@ -28,29 +28,38 @@ func uploadFileAsStream(c *gin.Context) {
 
 	if fileName == "" || expireStr == "" || signature == "" {
 		c.AbortWithError(400, fmt.Errorf("all parameters must be provided: f, e, s"))
+		return
 	}
 
 	// verify signature
 	queryString := page.GetUploadQueryString(fileName, expireStr)
 	if page.GetUploadSignature(queryString) != signature {
 		c.AbortWithError(400, fmt.Errorf("invalid signature"))
+		return
 	}
 
 	// check expiration date
 	expires, err := time.Parse(time.RFC3339, expireStr)
 	if err != nil {
 		c.AbortWithError(400, fmt.Errorf("invalid expiration time"))
+		return
 	}
 	if !time.Now().UTC().Before(expires) {
 		c.AbortWithError(400, fmt.Errorf("upload URL has expired"))
+		return
 	}
 
 	cleanUploadRoot := filepath.Clean(config.UploadRootDir())
 	fileFullPath := filepath.Join(cleanUploadRoot, filepath.Clean(fileName))
 	if err := utils.InTrustedRoot(fileFullPath, cleanUploadRoot); err != nil {
 		c.AbortWithError(409, err)
+		return
 	}
 
+	// create directory if not exists
+	os.MkdirAll(filepath.Dir(fileFullPath), os.ModePerm)
+
+	// file to save request stream
 	f, e := os.Create(fileFullPath)
 	if e != nil {
 		panic(e)
