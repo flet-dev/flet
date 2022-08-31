@@ -4,53 +4,61 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
+	"github.com/flet-dev/flet/server/config"
+	"github.com/flet-dev/flet/server/page"
+	"github.com/flet-dev/flet/server/utils"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
 
-func uploadFile(c *gin.Context) {
+func uploadFileAsStream(c *gin.Context) {
 
-	log.Println(("UploadFile started"))
+	log.Debugln("Upload started")
 
-	// single file
-	file, _ := c.FormFile("file")
-	log.Println(file.Filename)
-
-	// Upload the file to specific dst.
-	c.SaveUploadedFile(file, "C:\\projects\\2\\"+file.Filename)
-
-	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
-}
-
-func uploadFiles(c *gin.Context) {
-	// Multipart form
-	form, _ := c.MultipartForm()
-	files := form.File["upload[]"]
-
-	for _, file := range files {
-		log.Println(file.Filename)
-
-		// Upload the file to specific dst.
-		c.SaveUploadedFile(file, "C:\\projects\\2\\"+file.Filename)
+	if config.UploadRootDir() == "" {
+		c.AbortWithError(500, fmt.Errorf("upload root directory (FLET_UPLOAD_ROOT_DIR) is not configured"))
 	}
-	c.String(http.StatusOK, fmt.Sprintf("%d files uploaded!", len(files)))
-}
 
-func uploadFilesStream(c *gin.Context) {
+	fileName := c.Query("f")
+	expireStr := c.Query("e")
+	signature := c.Query("s")
 
-	log.Println("Upload started")
+	if fileName == "" || expireStr == "" || signature == "" {
+		c.AbortWithError(400, fmt.Errorf("all parameters must be provided: f, e, s"))
+	}
 
-	time.Sleep(8 * time.Second)
-	f, e := os.Create("C:\\projects\\2\\test.txt")
+	// verify signature
+	queryString := page.GetUploadQueryString(fileName, expireStr)
+	if page.GetUploadSignature(queryString) != signature {
+		c.AbortWithError(400, fmt.Errorf("invalid signature"))
+	}
+
+	// check expiration date
+	expires, err := time.Parse(time.RFC3339, expireStr)
+	if err != nil {
+		c.AbortWithError(400, fmt.Errorf("invalid expiration time"))
+	}
+	if !time.Now().UTC().Before(expires) {
+		c.AbortWithError(400, fmt.Errorf("upload URL has expired"))
+	}
+
+	cleanUploadRoot := filepath.Clean(config.UploadRootDir())
+	fileFullPath := filepath.Join(cleanUploadRoot, filepath.Clean(fileName))
+	if err := utils.InTrustedRoot(fileFullPath, cleanUploadRoot); err != nil {
+		c.AbortWithError(409, err)
+	}
+
+	f, e := os.Create(fileFullPath)
 	if e != nil {
 		panic(e)
 	}
 	defer f.Close()
 	f.ReadFrom(c.Request.Body)
 
-	log.Printf("Written %d", c.Request.ContentLength)
+	log.Debugf("Written %d", c.Request.ContentLength)
 
-	c.String(http.StatusOK, "File uploaded!")
+	c.String(http.StatusOK, "OK")
 }

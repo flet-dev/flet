@@ -95,16 +95,17 @@ func (h *sessionHandler) execute(cmd *model.Command) (result string, err error) 
 		h.session.Page.Name, h.session.ID, cmd)
 
 	handlers := map[string]commandHandlerFn{
-		model.AddCommand:       h.add,
-		model.ReplaceCommand:   h.replace,
-		model.SetCommand:       h.set,
-		model.AppendCommand:    h.appendHandler,
-		model.GetCommand:       h.get,
-		model.CleanCommand:     h.clean,
-		model.RemoveCommand:    h.remove,
-		model.SignoutCommand:   h.signout,
-		model.CanAccessCommand: h.canAccess,
-		model.ErrorCommand:     h.sessionCrashed,
+		model.AddCommand:          h.add,
+		model.ReplaceCommand:      h.replace,
+		model.SetCommand:          h.set,
+		model.AppendCommand:       h.appendHandler,
+		model.GetCommand:          h.get,
+		model.CleanCommand:        h.clean,
+		model.RemoveCommand:       h.remove,
+		model.SignoutCommand:      h.signout,
+		model.CanAccessCommand:    h.canAccess,
+		model.GetUploadUrlCommand: h.getUploadUrl,
+		model.ErrorCommand:        h.sessionCrashed,
 	}
 
 	handler := handlers[strings.ToLower(cmd.Name)]
@@ -712,6 +713,19 @@ func (h *sessionHandler) canAccess(cmd *model.Command) (result string, err error
 	}
 
 	return strings.ToLower(strconv.FormatBool(r)), nil
+}
+
+func (h *sessionHandler) getUploadUrl(cmd *model.Command) (result string, err error) {
+
+	fileName := cmd.Attrs["file"]
+	expires := 0
+
+	expStr := cmd.Attrs["expires"]
+	if expires, err = strconv.Atoi(expStr); err != nil {
+		return "", fmt.Errorf("cannot convert expires to a number: %s", expStr)
+	}
+
+	return GetUploadUrl(fileName, expires), nil
 }
 
 func (h *sessionHandler) signout(cmd *model.Command) (result string, err error) {

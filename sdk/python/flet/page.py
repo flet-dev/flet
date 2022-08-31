@@ -296,6 +296,15 @@ class Page(Control):
         )
         self.update()
 
+    def get_upload_url(self, file_name: str, expires: int):
+        r = self._send_command(
+            "getUploadUrl", attrs={"file": file_name, "expires": str(expires)}
+        )
+        if r.error:
+            raise Exception(r.error)
+
+        return r.result
+
     def signout(self):
         return self._send_command("signout")
 
@@ -308,10 +317,15 @@ class Page(Control):
         if self._session_id == constants.ZERO_SESSION:
             self.__conn.close()
 
-    def _send_command(self, name: str, values: Optional[List[str]] = None):
+    def _send_command(
+        self,
+        name: str,
+        values: Optional[List[str]] = None,
+        attrs: Optional[Dict[str, str]] = None,
+    ):
         return self.__conn.send_command(
             self._session_id,
-            Command(indent=0, name=name, values=values or []),
+            Command(indent=0, name=name, values=values or [], attrs=attrs or {}),
         )
 
     @beartype

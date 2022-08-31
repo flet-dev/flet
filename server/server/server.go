@@ -105,9 +105,7 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 	api.GET("/oauth/google", googleAuthHandler)
 	api.GET("/auth/signout", signoutHandler)
 
-	api.POST("/upload-single", uploadFile)
-	api.POST("/upload", uploadFiles)
-	api.POST("/upload-stream", uploadFilesStream)
+	api.PUT("/upload", uploadFileAsStream)
 
 	// unknown API routes - 404, all the rest - index.html
 	router.NoRoute(func(c *gin.Context) {

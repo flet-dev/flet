@@ -72,6 +72,7 @@ const (
 
 	// development
 	staticRootDir           = "STATIC_ROOT_DIR"
+	uploadRootDir           = "UPLOAD_ROOT_DIR"
 	webRenderer             = "WEB_RENDERER"
 	routeUrlStrategy        = "ROUTE_URL_STRATEGY"
 	defaultRouteUrlStrategy = "hash"
@@ -288,6 +289,10 @@ func MasterSecretKey() string {
 
 func StaticRootDir() string {
 	return viper.GetString(staticRootDir)
+}
+
+func UploadRootDir() string {
+	return viper.GetString(uploadRootDir)
 }
 
 func WebRenderer() string {
