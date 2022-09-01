@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -19,7 +18,8 @@ func uploadFileAsStream(c *gin.Context) {
 	log.Debugln("Upload started")
 
 	if config.UploadRootDir() == "" {
-		c.AbortWithError(500, fmt.Errorf("upload root directory (FLET_UPLOAD_ROOT_DIR) is not configured"))
+		c.JSON(500, gin.H{"message": "upload root directory (FLET_UPLOAD_ROOT_DIR) is not configured"})
+		return
 	}
 
 	fileName := c.Query("f")
@@ -27,32 +27,32 @@ func uploadFileAsStream(c *gin.Context) {
 	signature := c.Query("s")
 
 	if fileName == "" || expireStr == "" || signature == "" {
-		c.AbortWithError(400, fmt.Errorf("all parameters must be provided: f, e, s"))
+		c.JSON(400, gin.H{"message": "all parameters must be provided: f, e, s"})
 		return
 	}
 
 	// verify signature
 	queryString := page.GetUploadQueryString(fileName, expireStr)
 	if page.GetUploadSignature(queryString) != signature {
-		c.AbortWithError(400, fmt.Errorf("invalid signature"))
+		c.JSON(400, gin.H{"message": "invalid signature"})
 		return
 	}
 
 	// check expiration date
 	expires, err := time.Parse(time.RFC3339, expireStr)
 	if err != nil {
-		c.AbortWithError(400, fmt.Errorf("invalid expiration time"))
+		c.JSON(400, gin.H{"message": "invalid expiration time"})
 		return
 	}
 	if !time.Now().UTC().Before(expires) {
-		c.AbortWithError(400, fmt.Errorf("upload URL has expired"))
+		c.JSON(400, gin.H{"message": "upload URL has expired"})
 		return
 	}
 
 	cleanUploadRoot := filepath.Clean(config.UploadRootDir())
 	fileFullPath := filepath.Join(cleanUploadRoot, filepath.Clean(fileName))
 	if err := utils.InTrustedRoot(fileFullPath, cleanUploadRoot); err != nil {
-		c.AbortWithError(409, err)
+		c.JSON(409, gin.H{"message": err})
 		return
 	}
 
@@ -65,7 +65,11 @@ func uploadFileAsStream(c *gin.Context) {
 		panic(e)
 	}
 	defer f.Close()
-	f.ReadFrom(c.Request.Body)
+	_, err = f.ReadFrom(c.Request.Body)
+	if err != nil {
+		c.JSON(500, gin.H{"message": err})
+		return
+	}
 
 	log.Debugf("Written %d", c.Request.ContentLength)
 

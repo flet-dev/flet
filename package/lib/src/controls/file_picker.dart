@@ -142,7 +142,6 @@ class _FilePickerControlState extends State<FilePickerControl> {
           }
 
           // upload files
-          debugPrint("Upload: upload: $upload, _upload: $_upload");
           if (_upload != upload && upload != null && _files != null) {
             _upload = upload;
             uploadFiles(upload, FletAppServices.of(context).ws, pageUri!);
@@ -159,9 +158,13 @@ class _FilePickerControlState extends State<FilePickerControl> {
     for (var uf in uploadFiles) {
       var file = _files!.firstWhereOrNull((f) => f.name == uf.name);
       if (file != null) {
-        await uploadFile(
-            file, ws, getFullUploadUrl(pageUri, uf.uploadUrl), uf.method);
-        _files!.remove(file);
+        try {
+          await uploadFile(
+              file, ws, getFullUploadUrl(pageUri, uf.uploadUrl), uf.method);
+          _files!.remove(file);
+        } catch (e) {
+          sendProgress(ws, file.name, null, e.toString());
+        }
       }
     }
   }
@@ -178,6 +181,10 @@ class _FilePickerControlState extends State<FilePickerControl> {
         //'Cache-Control': 'no-cache',
       });
     streamedRequest.contentLength = file.size;
+
+    // send 0%
+    sendProgress(ws, file.name, 0, null);
+
     double lastSent = 0; // send every 10%
     double progress = 0;
     int bytesSent = 0;
@@ -188,35 +195,32 @@ class _FilePickerControlState extends State<FilePickerControl> {
       progress = bytesSent / file.size;
       if (progress >= lastSent) {
         lastSent += 0.1;
-        ws.pageEventFromWeb(
-            eventTarget: widget.control.id,
-            eventName: "upload",
-            eventData: json.encode(FilePickerUploadProgressEvent(
-                name: file.name, progress: progress, error: null)));
+        if (progress != 1.0) {
+          sendProgress(ws, file.name, progress, null);
+        }
       }
     }, onDone: () {
       streamedRequest.sink.close();
     });
-    String? error;
-    try {
-      var response = await streamedRequest.send();
-      if (response.statusCode < 200 && response.statusCode > 204) {
-        error =
-            "Error uploading file ${file.name}: ${response.statusCode} (${response.reasonPhrase})";
-      }
-    } catch (e) {
-      error = "Error uploading file ${file.name}: $e";
-      debugPrint("AAAA $error");
-    }
 
-    if (error != null) {
-      debugPrint("BBB $error");
-      ws.pageEventFromWeb(
-          eventTarget: widget.control.id,
-          eventName: "upload",
-          eventData: json.encode(FilePickerUploadProgressEvent(
-              name: file.name, progress: 0, error: error)));
+    var streamedResponse = await streamedRequest.send();
+    var response = await http.Response.fromStream(streamedResponse);
+    if (response.statusCode < 200 || response.statusCode > 204) {
+      sendProgress(ws, file.name, null,
+          "Upload endpoint returned code ${response.statusCode}: ${response.body}");
+    } else {
+      // send 100%
+      sendProgress(ws, file.name, progress, null);
     }
+  }
+
+  void sendProgress(
+      WebSocketClient ws, String name, double? progress, String? error) {
+    ws.pageEventFromWeb(
+        eventTarget: widget.control.id,
+        eventName: "upload",
+        eventData: json.encode(FilePickerUploadProgressEvent(
+            name: name, progress: progress, error: error)));
   }
 
   String getFullUploadUrl(Uri pageUri, String uploadUrl) {

@@ -1,6 +1,6 @@
 class FilePickerUploadProgressEvent {
   final String name;
-  final double progress;
+  final double? progress;
   final String? error;
 
   FilePickerUploadProgressEvent(

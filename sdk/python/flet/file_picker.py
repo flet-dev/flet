@@ -47,7 +47,7 @@ class FilePickerResultEvent(ControlEvent):
 @dataclass
 class FilePickerUploadEvent(ControlEvent):
     file_name: str
-    progress: float
+    progress: Optional[float]
     error: Optional[str]
 
 
