@@ -23,7 +23,6 @@ from flet.control import (
 from flet.control_event import ControlEvent
 from flet.event import Event
 from flet.event_handler import EventHandler
-from flet.file_picker import FilePicker
 from flet.floating_action_button import FloatingActionButton
 from flet.launch_url import LaunchUrl
 from flet.protocol import Command
@@ -385,9 +384,9 @@ class Page(Control):
     def pubsub(self):
         return self.__pubsub
 
-    # offstage
+    # overlay
     @property
-    def offstage(self):
+    def overlay(self):
         return self.__offstage.controls
 
     # title
