@@ -61,12 +61,6 @@ class FilePicker(Control):
         #
         # Specific
         #
-        dialog_title: Optional[str] = None,
-        initial_directory: Optional[str] = None,
-        file_name: Optional[str] = None,
-        file_type: Optional[FileType] = None,
-        allowed_extensions: Optional[List[str]] = None,
-        allow_multiple: Optional[bool] = None,
         on_result=None,
         on_upload=None,
     ):
@@ -96,13 +90,7 @@ class FilePicker(Control):
 
         self.__result: Optional[FilePickerResultEvent] = None
         self.__upload: List[FilePickerUploadFile] = []
-        self.dialog_title = dialog_title
-        self.initial_directory = initial_directory
-        self.file_name = file_name
-        self.file_type = file_type
         self.__allowed_extensions: Optional[List[str]] = None
-        self.allowed_extensions = allowed_extensions
-        self.allow_multiple = allow_multiple
         self.on_result = on_result
         self.on_upload = on_upload
 
@@ -114,16 +102,46 @@ class FilePicker(Control):
         self._set_attr_json("allowedExtensions", self.__allowed_extensions)
         self._set_attr_json("upload", self.__upload)
 
-    def pick_files(self):
+    def pick_files(
+        self,
+        dialog_title: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+        file_type: Optional[FileType] = "any",
+        allowed_extensions: Optional[List[str]] = None,
+        allow_multiple: Optional[bool] = False,
+    ):
         self.state = "pickFiles"
+        self.dialog_title = dialog_title
+        self.initial_directory = initial_directory
+        self.file_type = file_type
+        self.allowed_extensions = allowed_extensions
+        self.allow_multiple = allow_multiple
         self.update()
 
-    def save_file(self):
+    def save_file(
+        self,
+        dialog_title: Optional[str] = None,
+        file_name: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+        file_type: Optional[FileType] = "any",
+        allowed_extensions: Optional[List[str]] = None,
+    ):
         self.state = "saveFile"
+        self.dialog_title = dialog_title
+        self.file_name = file_name
+        self.initial_directory = initial_directory
+        self.file_type = file_type
+        self.allowed_extensions = allowed_extensions
         self.update()
 
-    def get_directory_path(self):
+    def get_directory_path(
+        self,
+        dialog_title: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+    ):
         self.state = "getDirectoryPath"
+        self.dialog_title = dialog_title
+        self.initial_directory = initial_directory
         self.update()
 
     def upload(self, files: List[FilePickerUploadFile]):
