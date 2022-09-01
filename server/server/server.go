@@ -11,7 +11,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gorilla/websocket"
 	log "github.com/sirupsen/logrus"
 
@@ -68,15 +67,6 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 			ContentSecurityPolicy: "",
 		}))
 	}
-
-	// CORS
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowAllOrigins = true
-	corsConfig.AllowMethods = []string{"GET", "HEAD", "OPTIONS", "POST", "PUT"}
-	corsConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization", "Cache-Control", "X-Requested-With"}
-	corsConfig.ExposeHeaders = []string{"Content-Length"}
-	corsConfig.AllowCredentials = true
-	router.Use(cors.New(corsConfig))
 
 	mime.AddExtensionType(".js", "application/javascript")
 
