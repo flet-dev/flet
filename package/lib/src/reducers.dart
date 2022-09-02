@@ -90,7 +90,6 @@ AppState appReducer(AppState state, dynamic action) {
           action.ws.registerWebClient(
               pageName: pageName,
               pageRoute: action.route,
-              sessionId: state.sessionId,
               pageWidth: state.size.width.toString(),
               pageHeight: state.size.height.toString(),
               windowWidth: wmd.width != null ? wmd.width.toString() : "",

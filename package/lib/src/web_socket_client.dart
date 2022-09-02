@@ -39,7 +39,6 @@ class WebSocketClient {
   String _isPWA = "";
   String _isWeb = "";
   String _platform = "";
-  String? _sessionId;
 
   WebSocketClient(this._store);
 
@@ -81,7 +80,6 @@ class WebSocketClient {
     required String isPWA,
     required String isWeb,
     required String platform,
-    String? sessionId,
   }) {
     bool firstCall = _pageName == "";
     _pageName = pageName;
@@ -95,7 +93,6 @@ class WebSocketClient {
     _isPWA = isPWA;
     _isWeb = isWeb;
     _platform = platform;
-    _sessionId = sessionId;
 
     if (firstCall) {
       registerWebClientInternal();
@@ -120,7 +117,7 @@ class WebSocketClient {
             isPWA: _isPWA,
             isWeb: _isWeb,
             platform: _platform,
-            sessionId: _sessionId)));
+            sessionId: _store.state.sessionId)));
   }
 
   pageEventFromWeb(
