@@ -136,3 +136,6 @@ __pypackages__/
 flet/bin/
 
 /playground
+
+# Testing area
+tests
