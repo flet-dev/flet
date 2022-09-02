@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flet/src/protocol/file_picker_upload_file.dart';
 import 'package:flet/src/protocol/file_picker_upload_progress_event.dart';
+import 'package:flet/src/utils/desktop.dart';
 import 'package:flet/src/web_socket_client.dart';
-import '../protocol/file_picker_result_event.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -15,6 +15,7 @@ import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../protocol/file_picker_result_event.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/strings.dart';
 
@@ -63,7 +64,7 @@ class _FilePickerControlState extends State<FilePickerControl> {
 
           debugPrint("FilePicker _state: $_state, state: $state");
 
-          sendEvent() {
+          resetDialogState() {
             _state = null;
             var fletServices = FletAppServices.of(context);
             List<Map<String, String>> props = [
@@ -72,6 +73,14 @@ class _FilePickerControlState extends State<FilePickerControl> {
             fletServices.store.dispatch(UpdateControlPropsAction(
                 UpdateControlPropsPayload(props: props)));
             fletServices.ws.updateControlProps(props: props);
+          }
+
+          sendEvent() {
+            if (defaultTargetPlatform != TargetPlatform.windows ||
+                !isDesktop()) {
+              resetDialogState();
+            }
+            var fletServices = FletAppServices.of(context);
             fletServices.ws.pageEventFromWeb(
                 eventTarget: widget.control.id,
                 eventName: "result",
@@ -88,6 +97,12 @@ class _FilePickerControlState extends State<FilePickerControl> {
           if (_state != state) {
             _path = null;
             _files = null;
+            _state = state;
+
+            if (isDesktop() &&
+                defaultTargetPlatform == TargetPlatform.windows) {
+              resetDialogState();
+            }
 
             // pickFiles
             if (state?.toLowerCase() == "pickfiles") {
@@ -138,7 +153,6 @@ class _FilePickerControlState extends State<FilePickerControl> {
                 sendEvent();
               });
             }
-            _state = state;
           }
 
           // upload files
