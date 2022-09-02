@@ -48,6 +48,7 @@ def page(
     permissions=None,
     view: AppViewer = WEB_BROWSER,
     assets_dir=None,
+    upload_dir=None,
     web_renderer="canvaskit",
     route_url_strategy="hash",
 ):
@@ -58,6 +59,7 @@ def page(
         is_app=False,
         permissions=permissions,
         assets_dir=assets_dir,
+        upload_dir=upload_dir,
         web_renderer=web_renderer,
         route_url_strategy=route_url_strategy,
     )
@@ -81,6 +83,7 @@ def app(
     permissions=None,
     view: AppViewer = FLET_APP,
     assets_dir=None,
+    upload_dir=None,
     web_renderer="canvaskit",
     route_url_strategy="hash",
 ):
@@ -96,6 +99,7 @@ def app(
         permissions=permissions,
         session_handler=target,
         assets_dir=assets_dir,
+        upload_dir=upload_dir,
         web_renderer=web_renderer,
         route_url_strategy=route_url_strategy,
     )
@@ -159,6 +163,7 @@ def _connect_internal(
     permissions=None,
     session_handler=None,
     assets_dir=None,
+    upload_dir=None,
     web_renderer=None,
     route_url_strategy=None,
 ):
@@ -175,7 +180,13 @@ def _connect_internal(
 
         server_ip = host if host not in [None, "", "*"] else "127.0.0.1"
         port = _start_flet_server(
-            host, port, attached, assets_dir, web_renderer, route_url_strategy
+            host,
+            port,
+            attached,
+            assets_dir,
+            upload_dir,
+            web_renderer,
+            route_url_strategy,
         )
         server = f"http://{server_ip}:{port}"
 
@@ -248,7 +259,7 @@ def _connect_internal(
 
 
 def _start_flet_server(
-    host, port, attached, assets_dir, web_renderer, route_url_strategy
+    host, port, attached, assets_dir, upload_dir, web_renderer, route_url_strategy
 ):
 
     if port == 0:
@@ -288,6 +299,14 @@ def _start_flet_server(
                 )
         logging.info(f"Assets path configured: {assets_dir}")
         fletd_env["FLET_STATIC_ROOT_DIR"] = assets_dir
+
+    if upload_dir:
+        if not Path(upload_dir).is_absolute():
+            upload_dir = str(
+                Path(get_current_script_dir()).joinpath(upload_dir).resolve()
+            )
+        logging.info(f"Upload path configured: {upload_dir}")
+        fletd_env["FLET_UPLOAD_ROOT_DIR"] = upload_dir
 
     if host not in [None, "", "*"]:
         logging.info(f"Host binding configured: {host}")
@@ -393,7 +412,7 @@ def _open_flet_view(page_url, hidden):
             logging.info(f"Flet View found in: {temp_flet_dir}")
 
         app_path = temp_flet_dir.joinpath("Flet.app")
-        args = ["open", str(app_path), "-W", "--args", page_url]
+        args = ["open", str(app_path), "-n", "-W", "--args", page_url]
     elif is_linux():
         # build version-specific path to flet folder
         temp_flet_dir = Path(tempfile.gettempdir()).joinpath(f"flet-{version.version}")

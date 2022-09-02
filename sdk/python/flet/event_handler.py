@@ -18,7 +18,8 @@ class EventHandler:
                 h(e)
 
     def subscribe(self, handler):
-        self.__handlers[handler] = True
+        if handler != None:
+            self.__handlers[handler] = True
 
     def unsubscribe(self, handler):
         if handler in self.__handlers:

@@ -295,6 +295,15 @@ class Page(Control):
         )
         self.update()
 
+    def get_upload_url(self, file_name: str, expires: int):
+        r = self._send_command(
+            "getUploadUrl", attrs={"file": file_name, "expires": str(expires)}
+        )
+        if r.error:
+            raise Exception(r.error)
+
+        return r.result
+
     def signout(self):
         return self._send_command("signout")
 
@@ -307,10 +316,15 @@ class Page(Control):
         if self._session_id == constants.ZERO_SESSION:
             self.__conn.close()
 
-    def _send_command(self, name: str, values: Optional[List[str]] = None):
+    def _send_command(
+        self,
+        name: str,
+        values: Optional[List[str]] = None,
+        attrs: Optional[Dict[str, str]] = None,
+    ):
         return self.__conn.send_command(
             self._session_id,
-            Command(indent=0, name=name, values=values or []),
+            Command(indent=0, name=name, values=values or [], attrs=attrs or {}),
         )
 
     @beartype
@@ -369,6 +383,11 @@ class Page(Control):
     @property
     def pubsub(self):
         return self.__pubsub
+
+    # overlay
+    @property
+    def overlay(self):
+        return self.__offstage.controls
 
     # title
     @property
@@ -975,6 +994,7 @@ class Offstage(Control):
             data=data,
         )
 
+        self.__controls: List[Control] = []
         self.__clipboard = Clipboard()
         self.__launch_url = LaunchUrl()
         self.__banner = None
@@ -987,6 +1007,7 @@ class Offstage(Control):
 
     def _get_children(self):
         children = []
+        children.extend(self.__controls)
         if self.__clipboard:
             children.append(self.__clipboard)
         if self.__launch_url:
@@ -1000,6 +1021,11 @@ class Offstage(Control):
         if self.__splash:
             children.append(self.__splash)
         return children
+
+    # controls
+    @property
+    def controls(self):
+        return self.__controls
 
     # clipboard
     @property

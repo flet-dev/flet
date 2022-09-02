@@ -14,7 +14,7 @@ import '../models/control_view_model.dart';
 import '../models/controls_view_model.dart';
 import '../models/page_media_view_model.dart';
 import '../models/routes_view_model.dart';
-import '../protocol/keyboard_event_data.dart';
+import '../protocol/keyboard_event.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
@@ -136,7 +136,7 @@ class _PageControlState extends State<PageControl> {
         FletAppServices.of(context).ws.pageEventFromWeb(
             eventTarget: "page",
             eventName: "keyboard_event",
-            eventData: json.encode(KeyboardEventData(
+            eventData: json.encode(KeyboardEvent(
                     key: k.keyLabel,
                     isAltPressed: e.isAltPressed,
                     isControlPressed: e.isControlPressed,

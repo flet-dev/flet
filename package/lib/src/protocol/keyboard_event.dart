@@ -1,11 +1,11 @@
-class KeyboardEventData {
+class KeyboardEvent {
   final String key;
   final bool isShiftPressed;
   final bool isControlPressed;
   final bool isAltPressed;
   final bool isMetaPressed;
 
-  KeyboardEventData(
+  KeyboardEvent(
       {required this.key,
       required this.isShiftPressed,
       required this.isControlPressed,

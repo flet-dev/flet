@@ -1,10 +1,10 @@
-class ContainerTapEventData {
+class ContainerTapEvent {
   final double localX;
   final double localY;
   final double globalX;
   final double globalY;
 
-  ContainerTapEventData(
+  ContainerTapEvent(
       {required this.localX,
       required this.localY,
       required this.globalX,
