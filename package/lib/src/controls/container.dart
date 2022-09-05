@@ -145,12 +145,16 @@ class ContainerControl extends StatelessWidget {
             return constrainedControl(
                 animation == null
                     ? Container(
+                        width: control.attrDouble("width"),
+                        height: control.attrDouble("height"),
                         margin: parseEdgeInsets(control, "margin"),
                         child: ink,
                       )
                     : AnimatedContainer(
                         duration: animation.duration,
                         curve: animation.curve,
+                        width: control.attrDouble("width"),
+                        height: control.attrDouble("height"),
                         margin: parseEdgeInsets(control, "margin"),
                         child: ink),
                 parent,
@@ -200,7 +204,6 @@ class ContainerControl extends StatelessWidget {
                       }
                     : null,
                 child: GestureDetector(
-                  child: container,
                   onTapDown: onClick
                       ? (details) {
                           debugPrint("Container ${control.id} clicked!");
@@ -224,6 +227,7 @@ class ContainerControl extends StatelessWidget {
                               eventData: "");
                         }
                       : null,
+                  child: container,
                 ),
               );
             }
