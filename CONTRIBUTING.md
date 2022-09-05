@@ -92,13 +92,13 @@ The project uses [Black](https://github.com/psf/black) formatting style. All `.p
 
 IDE-specific Black integration guides:
 
-* [VSCode: Using Black to automatically format Python](https://dev.to/adamlombard/how-to-use-the-black-python-code-formatter-in-vscode-3lo0)
+- [VSCode: Using Black to automatically format Python](https://dev.to/adamlombard/how-to-use-the-black-python-code-formatter-in-vscode-3lo0)
 
 #### Type checking
 
 Enable "pylance" type checking in VS Code.
 
-Open user settings, search by "pylance", scroll down to **Python > Analysis: Type checking mode** section. Enable *basic* mode.
+Open user settings, search by "pylance", scroll down to **Python > Analysis: Type checking mode** section. Enable _basic_ mode.
 
 #### Sort imports on Save
 
@@ -130,6 +130,15 @@ All isort command line options can be found [here](https://pycqa.github.io/isort
 [pre-commit](https://pre-commit.com) is a dev dependency of Flet and is automatically installed by `pdm install`.
 To install the pre-commit hooks run: `pre-commit install`.
 Once installed, everytime you commit, pre-commit will run the configured hooks against changed files.
+
+## Possible installation error when working with a source package
+
+When you run python3 hello.py, you might encounter an error like this:
+`FileNotFoundError: [Error 2] No such file or directory: '/var/folders/xm/cyv42vbs27gff3s39vy97rx00000gn/T/fletd-0.1.50/fletd'`
+
+To resolve the issue, just delete this folder `../T/fletd-0.1.50/fletd`. The folder is the one with the FileNotFound Error encountered earlier.
+
+It should work now.
 
 ## Flutter client
 
