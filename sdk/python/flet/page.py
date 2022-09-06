@@ -11,6 +11,7 @@ from beartype.typing import Dict, List, Optional
 from flet import constants
 from flet.app_bar import AppBar
 from flet.banner import Banner
+from flet.client_storage import ClientStorage
 from flet.clipboard import Clipboard
 from flet.connection import Connection
 from flet.control import (
@@ -996,6 +997,7 @@ class Offstage(Control):
 
         self.__controls: List[Control] = []
         self.__clipboard = Clipboard()
+        self.__client_storage = ClientStorage()
         self.__launch_url = LaunchUrl()
         self.__banner = None
         self.__snack_bar = None

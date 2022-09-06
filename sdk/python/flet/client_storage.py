@@ -3,6 +3,7 @@ import json
 import threading
 import time
 from multiprocessing import Event
+from optparse import Option
 from typing import Any, Dict, List, Optional
 from unittest.main import main
 
@@ -51,11 +52,9 @@ class ClientStorage(Control):
         return True
 
     def set(self, key: str, value: str):
-        self._call_method("set", [key, value])
+        return self._call_method("set", [key, value])
 
-    def _call_method(
-        self, name: str, params: List[str]
-    ) -> tuple[Optional[str], Optional[str]]:
+    def _call_method(self, name: str, params: List[str]) -> Any:
         m = ClientStorageMethodCall(i=self.__call_counter, m=name, p=params)
         self.__call_counter += 1
         self._set_attr_json("method", m)
@@ -67,7 +66,12 @@ class ClientStorage(Control):
             raise Exception(
                 f"Timeout waiting for ClientStorage.{name}({params}) method call"
             )
-        return self.__results.pop(evt)
+        result, err = self.__results.pop(evt)
+        if err != None:
+            raise Exception(err)
+        if result == None:
+            return None
+        return json.loads(result)
 
     def _on_result(self, e):
         d = json.loads(e.data)
