@@ -37,7 +37,7 @@ try:
 except:
     from typing_extensions import Literal
 
-from flet.querystring import QueryString
+from .querystring import QueryString
 
 PageDesign = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
 ThemeMode = Literal[None, "system", "light", "dark"]
