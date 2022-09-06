@@ -37,6 +37,7 @@ try:
 except:
     from typing_extensions import Literal
 
+from flet.querystring import QueryString
 
 PageDesign = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
 ThemeMode = Literal[None, "system", "light", "dark"]
@@ -101,6 +102,9 @@ class Page(Control):
         self._add_event_handler("connect", self.__on_connect.handler)
         self.__on_disconnect = EventHandler()
         self._add_event_handler("disconnect", self.__on_disconnect.handler)
+
+        # Querystring
+        self.query = QueryString(page=self)
 
     def __enter__(self):
         return self
@@ -282,8 +286,10 @@ class Page(Control):
             elif e.control == self and e.name.lower() == "dismisssignin":
                 return False
 
-    def go(self, route):
-        self.route = route
+    def go(self, route, **kwargs):
+        self.querystring_data = self.query.post(kwargs)
+        self.route = route if kwargs == {} else route + self.querystring_data
+        
         self.__on_route_change.handler(
             ControlEvent(
                 target="page",
@@ -294,6 +300,7 @@ class Page(Control):
             )
         )
         self.update()
+        self.query() # Update query url
 
     def get_upload_url(self, file_name: str, expires: int):
         r = self._send_command(
