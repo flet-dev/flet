@@ -1,9 +1,7 @@
 import dataclasses
 import json
 import threading
-import time
 from multiprocessing import Event
-from optparse import Option
 from typing import Any, Dict, List, Optional
 from unittest.main import main
 
@@ -16,7 +14,7 @@ from flet.ref import Ref
 @dataclasses.dataclass
 class ClientStorageMethodCall:
     i: int
-    m: str
+    n: str
     p: List[str]
 
 
@@ -52,14 +50,17 @@ class ClientStorage(Control):
         return True
 
     def set(self, key: str, value: str):
-        return self._call_method("set", [key, value])
+        self._call_method("set", [key, value])
+
+    def get(self, key: str):
+        return self._call_method("get", [key])
 
     def _call_method(self, name: str, params: List[str]) -> Any:
-        m = ClientStorageMethodCall(i=self.__call_counter, m=name, p=params)
+        m = ClientStorageMethodCall(i=self.__call_counter, n=name, p=params)
         self.__call_counter += 1
         self._set_attr_json("method", m)
         evt = threading.Event()
-        self.__calls[self.__call_counter] = evt
+        self.__calls[m.i] = evt
         self.update()
         if not evt.wait(5):
             del self.__calls[m.i]

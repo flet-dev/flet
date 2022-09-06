@@ -547,6 +547,11 @@ class Page(Control):
     def auto_scroll(self, value: Optional[bool]):
         self.__default_view.auto_scroll = value
 
+    # client_storage
+    @property
+    def client_storage(self):
+        return self.__offstage.client_storage
+
     # splash
     @property
     def splash(self) -> Optional[Control]:
@@ -1012,6 +1017,8 @@ class Offstage(Control):
         children.extend(self.__controls)
         if self.__clipboard:
             children.append(self.__clipboard)
+        if self.__client_storage:
+            children.append(self.__client_storage)
         if self.__launch_url:
             children.append(self.__launch_url)
         if self.__banner:
@@ -1033,6 +1040,11 @@ class Offstage(Control):
     @property
     def clipboard(self):
         return self.__clipboard
+
+    # client_storage
+    @property
+    def client_storage(self):
+        return self.__client_storage
 
     # launch_url
     @property
