@@ -61,7 +61,12 @@ class _ClientStorageControlState extends State<ClientStorageControl> {
             sendResult(prefs.containsKey(params[0]), null);
             break;
           case "getkeys":
-            sendResult(prefs.getKeys().toList(), null);
+            sendResult(
+                prefs
+                    .getKeys()
+                    .where((key) => key.startsWith(params[0]))
+                    .toList(),
+                null);
             break;
           case "remove":
             sendResult(await prefs.remove(params[0]), null);

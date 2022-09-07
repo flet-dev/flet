@@ -58,11 +58,11 @@ class ClientStorage(Control):
     def contains_key(self, key: str) -> bool:
         return self._call_method("containskey", [key])
 
-    def get_keys(self) -> List[str]:
-        return self._call_method("getkeys", [])
-
     def remove(self, key: str) -> bool:
         return self._call_method("remove", [key])
+
+    def get_keys(self, key_prefix: str) -> List[str]:
+        return self._call_method("getkeys", [key_prefix])
 
     def clear(self) -> bool:
         return self._call_method("clear", [])
