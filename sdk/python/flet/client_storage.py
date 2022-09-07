@@ -55,6 +55,18 @@ class ClientStorage(Control):
     def get(self, key: str):
         return self._call_method("get", [key])
 
+    def contains_key(self, key: str) -> bool:
+        return self._call_method("containskey", [key])
+
+    def get_keys(self) -> List[str]:
+        return self._call_method("getkeys", [])
+
+    def remove(self, key: str) -> bool:
+        return self._call_method("remove", [key])
+
+    def clear(self) -> bool:
+        return self._call_method("clear", [])
+
     def _call_method(self, name: str, params: List[str]) -> Any:
         m = ClientStorageMethodCall(i=self.__call_counter, n=name, p=params)
         self.__call_counter += 1

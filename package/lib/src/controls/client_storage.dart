@@ -49,11 +49,26 @@ class _ClientStorageControlState extends State<ClientStorageControl> {
 
       () async {
         var prefs = await SharedPreferences.getInstance();
-        if (name == "set") {
-          var result = await prefs.setString(params[0], params[1]);
-          sendResult(result, null);
-        } else if (name == "get") {
-          sendResult(prefs.getString(params[0]), null);
+        switch (name) {
+          case "set":
+            var result = await prefs.setString(params[0], params[1]);
+            sendResult(result, null);
+            break;
+          case "get":
+            sendResult(prefs.getString(params[0]), null);
+            break;
+          case "containskey":
+            sendResult(prefs.containsKey(params[0]), null);
+            break;
+          case "getkeys":
+            sendResult(prefs.getKeys().toList(), null);
+            break;
+          case "remove":
+            sendResult(await prefs.remove(params[0]), null);
+            break;
+          case "clear":
+            sendResult(await prefs.clear(), null);
+            break;
         }
       }();
     }
