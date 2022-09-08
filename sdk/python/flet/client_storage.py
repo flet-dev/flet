@@ -49,11 +49,16 @@ class ClientStorage(Control):
     def _is_isolated(self):
         return True
 
-    def set(self, key: str, value: str):
-        self._call_method("set", [key, value])
+    def set(self, key: str, value: Any):
+        jv = self._convert_attr_json(value)
+        assert jv is not None
+        self._call_method("set", [key, jv])
 
     def get(self, key: str):
-        return self._call_method("get", [key])
+        jv = self._call_method("get", [key])
+        if jv != None:
+            return json.loads(jv)
+        return None
 
     def contains_key(self, key: str) -> bool:
         return self._call_method("containskey", [key])
