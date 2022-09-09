@@ -10,6 +10,8 @@ from beartype.typing import Dict, List, Optional
 
 from flet import constants
 from flet.app_bar import AppBar
+from flet.auth.authorization import Authorization
+from flet.auth.oauth_provider import OAuthProvider
 from flet.banner import Banner
 from flet.client_storage import ClientStorage
 from flet.clipboard import Clipboard
@@ -66,6 +68,7 @@ class Page(Control):
         self.__theme = None
         self.__dark_theme = None
         self.__pubsub = PubSub(conn.pubsubhub, session_id)
+        self.__authorization: Optional[Authorization] = None
 
         self.__on_close = EventHandler()
         self._add_event_handler("close", self.__on_close.handler)
@@ -305,13 +308,17 @@ class Page(Control):
 
         return r.result
 
-    def signout(self):
-        return self._send_command("signout")
+    def login(self, provider: OAuthProvider, fetch_user=True, fetch_groups=True):
+        self.__authorization = Authorization(self, provider, fetch_user=fetch_user, fetch_groups=fetch_groups)
+        self.__authorization.authorize()
 
-    def can_access(self, users_and_groups):
-        return (
-            self._send_command("canAccess", [users_and_groups]).result.lower() == "true"
-        )
+    # def signout(self):
+    #     return self._send_command("signout")
+
+    # def can_access(self, users_and_groups):
+    #     return (
+    #         self._send_command("canAccess", [users_and_groups]).result.lower() == "true"
+    #     )
 
     def close(self):
         if self._session_id == constants.ZERO_SESSION:
@@ -379,6 +386,11 @@ class Page(Control):
     @property
     def session_id(self):
         return self._session_id
+
+    # auth
+    @property
+    def auth(self):
+        return self.__authorization
 
     # pubsub
     @property
