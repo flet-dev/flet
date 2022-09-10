@@ -64,7 +64,10 @@ def page(
         route_url_strategy=route_url_strategy,
     )
     url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
-    print("Page URL:" if url_prefix == None else url_prefix, conn.page_url)
+    if url_prefix != None:
+        print(url_prefix, conn.page_url)
+    else:
+        logging.info(f"Page URL: {conn.page_url}")
 
     page = Page(conn, constants.ZERO_SESSION)
     conn.sessions[constants.ZERO_SESSION] = page
@@ -105,7 +108,10 @@ def app(
     )
 
     url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
-    print("App URL:" if url_prefix == None else url_prefix, conn.page_url)
+    if url_prefix != None:
+        print(url_prefix, conn.page_url)
+    else:
+        logging.info(f"App URL: {conn.page_url}")
 
     terminate = threading.Event()
 
@@ -116,7 +122,7 @@ def app(
     signal.signal(signal.SIGINT, exit_gracefully)
     signal.signal(signal.SIGTERM, exit_gracefully)
 
-    print("Connected to Flet app and handling user sessions...")
+    logging.info("Connected to Flet app and handling user sessions...")
 
     fvp = None
 
@@ -198,13 +204,13 @@ def _connect_internal(
                 Event(e.eventTarget, e.eventName, e.eventData)
             )
             if e.eventTarget == "page" and e.eventName == "close":
-                print("Session closed:", e.sessionID)
+                logging.info(f"Session closed: {e.sessionID}")
                 del conn.sessions[e.sessionID]
 
     def on_session_created(conn, session_data):
         page = Page(conn, session_data.sessionID)
         conn.sessions[session_data.sessionID] = page
-        print("Session started:", session_data.sessionID)
+        logging.info(f"Session started: {session_data.sessionID}")
         try:
             assert session_handler is not None
             session_handler(page)
@@ -463,7 +469,7 @@ def _download_fletd():
     temp_fletd_dir = Path(tempfile.gettempdir()).joinpath(f"fletd-{ver}")
 
     if not temp_fletd_dir.exists():
-        print(f"Downloading Fletd v{ver} to {temp_fletd_dir}")
+        logging.info(f"Downloading Fletd v{ver} to {temp_fletd_dir}")
         temp_fletd_dir.mkdir(parents=True, exist_ok=True)
         ext = "zip" if is_windows() else "tar.gz"
         file_name = f"fletd-{ver}-{get_platform()}-{get_arch()}.{ext}"
@@ -492,7 +498,7 @@ def _download_fletd():
 def _download_flet_client(file_name):
     ver = version.version
     temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
-    print(f"Downloading Flet v{ver} to {temp_arch}")
+    logging.info(f"Downloading Flet v{ver} to {temp_arch}")
     flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
     urllib.request.urlretrieve(flet_url, temp_arch)
     return str(temp_arch)
@@ -568,7 +574,6 @@ class Handler(FileSystemEventHandler):
                 break
             line = line.decode("utf-8").rstrip("\r\n")
             if line.startswith(self.page_url_prefix):
-                # print(line)
                 if not self.page_url:
                     self.page_url = line[len(self.page_url_prefix) + 1 :]
                     print(self.page_url)
@@ -655,7 +660,6 @@ def main():
     port = args.port
     if args.port == None:
         port = _get_free_tcp_port()
-    # print("port:", port)
 
     my_event_handler = Handler(
         [sys.executable, "-u", script_path],
@@ -674,7 +678,7 @@ def main():
             if my_event_handler.terminate.wait(1):
                 break
     except KeyboardInterrupt:
-        pass  # print("Keyboard interrupt!")
+        pass
 
     if my_event_handler.fvp != None and not is_windows():
         try:
