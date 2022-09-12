@@ -1,5 +1,5 @@
 import secrets
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import requests
 from oauthlib.oauth2 import WebApplicationClient
@@ -34,7 +34,7 @@ class Authorization:
                 if s not in self.scope:
                     self.scope.append(s)
 
-    def authorize(self) -> tuple[str, str]:
+    def authorize(self) -> Tuple[str, str]:
         self.state = secrets.token_urlsafe(16)
         client = WebApplicationClient(self.provider.client_id)
         authorization_url = client.prepare_request_uri(
