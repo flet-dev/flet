@@ -7,7 +7,6 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/flet-dev/flet/server/auth"
 	"github.com/flet-dev/flet/server/cache"
 	"github.com/flet-dev/flet/server/config"
 	"github.com/flet-dev/flet/server/model"
@@ -33,7 +32,7 @@ const (
 	sessionControlsKey              = "session:%d:%s:controls"     // session controls, value is JSON data
 	sessionHostClientsKey           = "session:%d:%s:host_clients" // a Set with client IDs
 	sessionWebClientsKey            = "session:%d:%s:web_clients"  // a Set with client IDs
-	principalKey                    = "principal:%s"               // %s is principalID
+	oauthStateKey                   = "oauth_state:%s"             // %s is state
 )
 
 //
@@ -325,24 +324,24 @@ func RemoveSessionWebClient(pageID int, sessionID string, clientID string) {
 }
 
 //
-// Security principals
+// OAuth
 // ==============================
 
-func GetSecurityPrincipal(principalID string) *auth.SecurityPrincipal {
-	j := cache.GetString(fmt.Sprintf(principalKey, principalID))
+func GetOAuthState(state string) *model.OAuthState {
+	j := cache.GetString(fmt.Sprintf(oauthStateKey, state))
 	if j == "" {
 		return nil
 	}
 
-	p := &auth.SecurityPrincipal{}
+	p := &model.OAuthState{}
 	utils.FromJSON(j, p)
 	return p
 }
 
-func SetSecurityPrincipal(p *auth.SecurityPrincipal, expires time.Duration) {
-	cache.SetString(fmt.Sprintf(principalKey, p.UID), utils.ToJSON(p), expires)
+func SetOAuthState(state string, p *model.OAuthState, expires time.Duration) {
+	cache.SetString(fmt.Sprintf(oauthStateKey, state), utils.ToJSON(p), expires)
 }
 
-func DeleteSecurityPrincipal(principalID string) {
-	cache.Remove(fmt.Sprintf(principalKey, principalID))
+func RemoveOAuthState(state string) {
+	cache.Remove(fmt.Sprintf(oauthStateKey, state))
 }

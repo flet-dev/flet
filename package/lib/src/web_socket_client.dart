@@ -19,7 +19,7 @@ import 'protocol/register_webclient_response.dart';
 import 'protocol/remove_control_payload.dart';
 import 'protocol/replace_page_controls_payload.dart';
 import 'protocol/session_crashed_payload.dart';
-import 'protocol/signout_payload.dart';
+import 'protocol/oauth_authorize_payload.dart';
 import 'protocol/update_control_props_payload.dart';
 import 'protocol/update_control_props_request.dart';
 
@@ -158,8 +158,9 @@ class WebSocketClient {
         _store.dispatch(
             SessionCrashedAction(SessionCrashedPayload.fromJson(msg.payload)));
         break;
-      case MessageAction.signout:
-        _store.dispatch(SignoutAction(SignoutPayload.fromJson(msg.payload)));
+      case MessageAction.oauthAuthorize:
+        _store.dispatch(
+            OAuthAuthorizeAction(OAuthAuthorizePayload.fromJson(msg.payload)));
         break;
       case MessageAction.addPageControls:
         _store.dispatch(AddPageControlsAction(

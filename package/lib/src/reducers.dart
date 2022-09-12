@@ -1,5 +1,6 @@
 // One simple action: Increment
 import 'package:flutter/foundation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'actions.dart';
 import 'models/app_state.dart';
@@ -191,8 +192,15 @@ AppState appReducer(AppState state, dynamic action) {
     // session crashed
     //
     return state.copyWith(error: action.payload.message);
-  } else if (action is SignoutAction) {
-    // TODO
+  } else if (action is OAuthAuthorizeAction) {
+    debugPrint("OAuthAuthorizeAction: ${action.payload.authorizationUrl}");
+    launchUrl(Uri.parse(action.payload.authorizationUrl),
+            webOnlyWindowName: "flet_oauth_auth")
+        .then((value) {
+      Future.delayed(Duration(seconds: 10)).then((value) {
+        closeInAppWebView();
+      });
+    });
     // var redirectUrl = encodeURIComponent(window.location.pathname);
     // window.location.replace("/api/auth/signout?redirect_url=" + redirectUrl);
   } else if (action is AddPageControlsAction) {

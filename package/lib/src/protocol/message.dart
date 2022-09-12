@@ -5,7 +5,7 @@ enum MessageAction {
   appBecomeActive,
   appBecomeInactive,
   sessionCrashed,
-  signout,
+  oauthAuthorize,
   addPageControls,
   replacePageControls,
   pageControlsBatch,

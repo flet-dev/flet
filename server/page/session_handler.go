@@ -9,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/flet-dev/flet/server/auth"
 	"github.com/flet-dev/flet/server/cache"
 	"github.com/flet-dev/flet/server/config"
 	"github.com/flet-dev/flet/server/model"
@@ -95,17 +94,16 @@ func (h *sessionHandler) execute(cmd *model.Command) (result string, err error) 
 		h.session.Page.Name, h.session.ID, cmd)
 
 	handlers := map[string]commandHandlerFn{
-		model.AddCommand:          h.add,
-		model.ReplaceCommand:      h.replace,
-		model.SetCommand:          h.set,
-		model.AppendCommand:       h.appendHandler,
-		model.GetCommand:          h.get,
-		model.CleanCommand:        h.clean,
-		model.RemoveCommand:       h.remove,
-		model.SignoutCommand:      h.signout,
-		model.CanAccessCommand:    h.canAccess,
-		model.GetUploadUrlCommand: h.getUploadUrl,
-		model.ErrorCommand:        h.sessionCrashed,
+		model.AddCommand:            h.add,
+		model.ReplaceCommand:        h.replace,
+		model.SetCommand:            h.set,
+		model.AppendCommand:         h.appendHandler,
+		model.GetCommand:            h.get,
+		model.CleanCommand:          h.clean,
+		model.RemoveCommand:         h.remove,
+		model.OAuthAuthorizeCommand: h.oauthAuthorize,
+		model.GetUploadUrlCommand:   h.getUploadUrl,
+		model.ErrorCommand:          h.sessionCrashed,
 	}
 
 	handler := handlers[strings.ToLower(cmd.Name)]
@@ -692,27 +690,29 @@ func (h *sessionHandler) sessionCrashed(cmd *model.Command) (result string, err 
 	return "", nil
 }
 
-func (h *sessionHandler) canAccess(cmd *model.Command) (result string, err error) {
-	permissions := ""
+func (h *sessionHandler) oauthAuthorize(cmd *model.Command) (result string, err error) {
+	var authorizationUrl string
+	var state string
 
-	// permissions is the first value
-	if len(cmd.Values) > 0 && cmd.Values[0] != "" {
-		permissions = cmd.Values[0]
+	if len(cmd.Values) < 2 {
+		return "", fmt.Errorf("oauthLogin command received wrong number of values")
 	}
 
-	var principal *auth.SecurityPrincipal
-	if h.session.PrincipalID != "" {
-		principal = store.GetSecurityPrincipal(h.session.PrincipalID)
-	}
+	// params
+	authorizationUrl = cmd.Values[0]
+	state = cmd.Values[1]
 
-	r := false
-	if principal != nil {
-		r = principal.HasPermissions(permissions)
-	} else if permissions == "" {
-		r = true
-	}
+	// save page_id, session_id in a store
+	store.SetOAuthState(state, &model.OAuthState{
+		PageID:    h.session.Page.ID,
+		SessionID: h.session.ID,
+	}, time.Duration(5)*time.Minute)
 
-	return strings.ToLower(strconv.FormatBool(r)), nil
+	// broadcast command to all connected web clients
+	h.broadcastCommandToWebClients(NewMessage("", OAuthAuthorizeAction, &OAuthAuthorizePayload{
+		AuthorizationUrl: authorizationUrl,
+	}))
+	return "", nil
 }
 
 func (h *sessionHandler) getUploadUrl(cmd *model.Command) (result string, err error) {
@@ -726,12 +726,6 @@ func (h *sessionHandler) getUploadUrl(cmd *model.Command) (result string, err er
 	}
 
 	return GetUploadUrl(fileName, expires), nil
-}
-
-func (h *sessionHandler) signout(cmd *model.Command) (result string, err error) {
-	// broadcast command to all connected web clients
-	h.broadcastCommandToWebClients(NewMessage("", SignoutAction, &SignoutPayload{}))
-	return "", nil
 }
 
 func (h *sessionHandler) updateControlProps(props []map[string]string) error {
@@ -866,7 +860,7 @@ func (h *sessionHandler) broadcastCommandToWebClients(msg *Message) {
 	serializedMsg, _ := json.Marshal(msg)
 
 	for _, clientID := range store.GetSessionWebClients(h.session.Page.ID, h.session.ID) {
-		pubsub.Send(clientChannelName(clientID), serializedMsg)
+		pubsub.Send(ClientChannelName(clientID), serializedMsg)
 	}
 }
 

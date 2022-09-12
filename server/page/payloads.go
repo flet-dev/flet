@@ -3,7 +3,6 @@ package page
 import (
 	"encoding/json"
 
-	"github.com/flet-dev/flet/server/auth"
 	"github.com/flet-dev/flet/server/model"
 )
 
@@ -64,10 +63,9 @@ type RegisterWebClientRequestPayload struct {
 }
 
 type RegisterWebClientResponsePayload struct {
-	Session       *SessionPayload     `json:"session"`
-	AppInactive   bool                `json:"appInactive"`
-	Error         string              `json:"error"`
-	SigninOptions *auth.SigninOptions `json:"signinOptions"`
+	Session     *SessionPayload `json:"session"`
+	AppInactive bool            `json:"appInactive"`
+	Error       string          `json:"error"`
 }
 
 type SessionPayload struct {
@@ -152,5 +150,6 @@ type SessionCrashedPayload struct {
 	Message string `json:"message"`
 }
 
-type SignoutPayload struct {
+type OAuthAuthorizePayload struct {
+	AuthorizationUrl string `json:"authorizationUrl"`
 }

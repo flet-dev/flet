@@ -86,6 +86,6 @@ func notifyInactiveWebClients(webClients []string) {
 		msg := NewMessageData("", AppBecomeInactiveAction, &AppBecomeInactivePayload{
 			Message: inactiveAppMessage,
 		})
-		pubsub.Send(clientChannelName(clientID), msg)
+		pubsub.Send(ClientChannelName(clientID), msg)
 	}
 }

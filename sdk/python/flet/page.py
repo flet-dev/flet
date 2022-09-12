@@ -77,6 +77,11 @@ class Page(Control):
 
         self.__last_route = None
 
+        # authorize/login
+        self.__on_login = EventHandler()
+        self._add_event_handler("authorize", self.__on_authorize)
+
+        # route_change
         def convert_route_change_event(e):
             if self.__last_route == e.data:
                 return None  # avoid duplicate calls
@@ -308,17 +313,34 @@ class Page(Control):
 
         return r.result
 
-    def login(self, provider: OAuthProvider, fetch_user=True, fetch_groups=True):
-        self.__authorization = Authorization(self, provider, fetch_user=fetch_user, fetch_groups=fetch_groups)
-        self.__authorization.authorize()
+    def login(self, provider: OAuthProvider, fetch_user=True, fetch_groups=False):
+        self.__authorization = Authorization(
+            provider, fetch_user=fetch_user, fetch_groups=fetch_groups
+        )
+        authorization_url, state = self.__authorization.authorize()
+        result = self._send_command("oauthAuthorize", values=[authorization_url, state])
+        if result.error != None:
+            raise Exception(result.error)
+        return result.result
 
-    # def signout(self):
-    #     return self._send_command("signout")
+    def __on_authorize(self, e):
+        assert self.__authorization is not None
+        d = json.loads(e.data)
+        state = d["state"]
+        assert state == self.__authorization.state
 
-    # def can_access(self, users_and_groups):
-    #     return (
-    #         self._send_command("canAccess", [users_and_groups]).result.lower() == "true"
-    #     )
+        login_evt = LoginEvent(
+            error=d["error"], error_description=d["error_description"]
+        )
+        if login_evt.error == "":
+            # perform token request
+            code = d["code"]
+            assert code not in [None, ""]
+            try:
+                self.__authorization.request_token(code)
+            except Exception as ex:
+                login_evt.error = str(ex)
+        self.__on_login.handler(login_evt)
 
     def close(self):
         if self._session_id == constants.ZERO_SESSION:
@@ -996,6 +1018,15 @@ class Page(Control):
     def on_disconnect(self, handler):
         self.__on_disconnect.subscribe(handler)
 
+    # on_login
+    @property
+    def on_login(self):
+        return self.__on_login
+
+    @on_login.setter
+    def on_login(self, handler):
+        self.__on_login.subscribe(handler)
+
 
 class Offstage(Control):
     def __init__(
@@ -1121,3 +1152,9 @@ class KeyboardEvent(ControlEvent):
     ctrl: bool
     alt: bool
     meta: bool
+
+
+@dataclass
+class LoginEvent(ControlEvent):
+    error: str
+    error_description: str

@@ -11,7 +11,7 @@ import 'protocol/register_webclient_response.dart';
 import 'protocol/remove_control_payload.dart';
 import 'protocol/replace_page_controls_payload.dart';
 import 'protocol/session_crashed_payload.dart';
-import 'protocol/signout_payload.dart';
+import 'protocol/oauth_authorize_payload.dart';
 import 'protocol/update_control_props_payload.dart';
 import 'web_socket_client.dart';
 
@@ -71,9 +71,9 @@ class SessionCrashedAction {
   SessionCrashedAction(this.payload);
 }
 
-class SignoutAction {
-  final SignoutPayload payload;
-  SignoutAction(this.payload);
+class OAuthAuthorizeAction {
+  final OAuthAuthorizePayload payload;
+  OAuthAuthorizeAction(this.payload);
 }
 
 class AddPageControlsAction {
