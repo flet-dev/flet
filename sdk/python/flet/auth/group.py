@@ -1,4 +1,4 @@
-class Group:
+class Group(dict):
     def __init__(self, name: str) -> None:
         self.name = name
 

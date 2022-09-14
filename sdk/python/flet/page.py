@@ -318,9 +318,12 @@ class Page(Control):
             provider, fetch_user=fetch_user, fetch_groups=fetch_groups
         )
         authorization_url, state = self.__authorization.authorize()
-        result = self._send_command("oauthAuthorize", values=[authorization_url, state])
-        if result.error != None:
+        result = self._send_command("oauthAuthorize", values=[state])
+        if result.error != "":
             raise Exception(result.error)
+        self.launch_url(
+            authorization_url, "flet_oauth_signin", web_popup_window=self.web
+        )
         return result.result
 
     def __on_authorize(self, e):
@@ -363,9 +366,16 @@ class Page(Control):
         self.__offstage.clipboard.update()
 
     @beartype
-    def launch_url(self, url: str):
-        self.__offstage.launch_url.url = url
-        self.__offstage.launch_url.update()
+    def launch_url(
+        self,
+        url: str,
+        web_window_name: Optional[str] = None,
+        web_popup_window: bool = False,
+    ):
+        self.__offstage.launch_url.launch_url(url, web_window_name, web_popup_window)
+
+    def close_in_app_web_view(self):
+        self.__offstage.launch_url.close_in_app_web_view()
 
     @beartype
     def show_snack_bar(self, snack_bar: SnackBar):
@@ -449,8 +459,8 @@ class Page(Control):
 
     # web
     @property
-    def web(self):
-        return self._get_attr("web", data_type="bool", def_value=False)
+    def web(self) -> bool:
+        return cast(bool, self._get_attr("web", data_type="bool", def_value=False))
 
     # platform
     @property

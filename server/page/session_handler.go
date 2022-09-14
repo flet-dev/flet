@@ -691,16 +691,14 @@ func (h *sessionHandler) sessionCrashed(cmd *model.Command) (result string, err 
 }
 
 func (h *sessionHandler) oauthAuthorize(cmd *model.Command) (result string, err error) {
-	var authorizationUrl string
 	var state string
 
-	if len(cmd.Values) < 2 {
+	if len(cmd.Values) < 1 {
 		return "", fmt.Errorf("oauthLogin command received wrong number of values")
 	}
 
 	// params
-	authorizationUrl = cmd.Values[0]
-	state = cmd.Values[1]
+	state = cmd.Values[0]
 
 	// save page_id, session_id in a store
 	store.SetOAuthState(state, &model.OAuthState{
@@ -708,10 +706,6 @@ func (h *sessionHandler) oauthAuthorize(cmd *model.Command) (result string, err 
 		SessionID: h.session.ID,
 	}, time.Duration(5)*time.Minute)
 
-	// broadcast command to all connected web clients
-	h.broadcastCommandToWebClients(NewMessage("", OAuthAuthorizeAction, &OAuthAuthorizePayload{
-		AuthorizationUrl: authorizationUrl,
-	}))
 	return "", nil
 }
 

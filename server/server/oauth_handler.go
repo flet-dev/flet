@@ -64,10 +64,14 @@ func oauthCallbackHandler(c *gin.Context) {
 
 	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(`<!DOCTYPE html>
 	<html>
+	<head>
+		<title>Signed in successfully</title>
+	</head>
 	<body>
 		<script type="text/javascript">
 			window.close();
 		</script>
+		<p>You've been successfully signed in! You can close this tab or window now.</p>
 	</body>
 	</html>`))
 }

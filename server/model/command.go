@@ -32,7 +32,7 @@ var (
 		RemoveCommand:         {Name: RemoveCommand, ShouldReturn: true},
 		BeginCommand:          {Name: BeginCommand, ShouldReturn: false},
 		EndCommand:            {Name: EndCommand, ShouldReturn: true},
-		OAuthAuthorizeCommand: {Name: OAuthAuthorizeCommand, ShouldReturn: false},
+		OAuthAuthorizeCommand: {Name: OAuthAuthorizeCommand, ShouldReturn: true},
 		GetUploadUrlCommand:   {Name: GetUploadUrlCommand, ShouldReturn: true},
 		CloseCommand:          {Name: CloseCommand, ShouldReturn: false},
 		ErrorCommand:          {Name: ErrorCommand, ShouldReturn: false},

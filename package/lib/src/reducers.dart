@@ -192,17 +192,6 @@ AppState appReducer(AppState state, dynamic action) {
     // session crashed
     //
     return state.copyWith(error: action.payload.message);
-  } else if (action is OAuthAuthorizeAction) {
-    debugPrint("OAuthAuthorizeAction: ${action.payload.authorizationUrl}");
-    launchUrl(Uri.parse(action.payload.authorizationUrl),
-            webOnlyWindowName: "flet_oauth_auth")
-        .then((value) {
-      Future.delayed(Duration(seconds: 10)).then((value) {
-        closeInAppWebView();
-      });
-    });
-    // var redirectUrl = encodeURIComponent(window.location.pathname);
-    // window.location.replace("/api/auth/signout?redirect_url=" + redirectUrl);
   } else if (action is AddPageControlsAction) {
     //
     // add controls
