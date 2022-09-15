@@ -332,6 +332,14 @@ class Page(Control):
         state = d["state"]
         assert state == self.__authorization.state
 
+        if not self.web:
+            if self.platform in ["ios", "android"]:
+                # close web view on mobile
+                self.close_in_app_web_view()
+            else:
+                # activate desktop window
+                self.window_focused = True
+
         login_evt = LoginEvent(
             error=d["error"], error_description=d["error_description"]
         )
@@ -375,7 +383,9 @@ class Page(Control):
         self.__offstage.launch_url.launch_url(url, web_window_name, web_popup_window)
 
     def close_in_app_web_view(self):
-        self.__offstage.launch_url.close_in_app_web_view()
+        result = self._send_command("closeInAppWebView")
+        if result.error != "":
+            raise Exception(result.error)
 
     @beartype
     def show_snack_bar(self, snack_bar: SnackBar):

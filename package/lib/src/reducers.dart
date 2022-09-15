@@ -192,6 +192,9 @@ AppState appReducer(AppState state, dynamic action) {
     // session crashed
     //
     return state.copyWith(error: action.payload.message);
+  } else if (action is CloseInAppWebViewAction) {
+    debugPrint("CloseInAppWebViewAction");
+    closeInAppWebView();
   } else if (action is AddPageControlsAction) {
     //
     // add controls

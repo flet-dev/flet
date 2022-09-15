@@ -1,6 +1,4 @@
 class Group(dict):
-    def __init__(self, name: str) -> None:
+    def __init__(self, kwargs, name: str) -> None:
+        super().__init__(kwargs)
         self.name = name
-
-    def __str__(self):
-        return str(self.__dict__)

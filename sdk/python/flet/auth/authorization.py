@@ -53,7 +53,10 @@ class Authorization:
             client_id=self.provider.client_id,
             client_secret=self.provider.client_secret,
         )
-        response = requests.post(self.provider.token_endpoint, data=data)
+        headers = {"content-type": "application/x-www-form-urlencoded"}
+        response = requests.post(
+            self.provider.token_endpoint, data=data, headers=headers
+        )
         t = client.parse_request_body_response(response.text)
         self.token = OAuthToken(
             access_token=t["access_token"],

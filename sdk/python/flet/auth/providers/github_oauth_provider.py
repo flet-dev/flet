@@ -4,8 +4,7 @@ from typing import Optional
 
 import requests
 
-from flet.auth.github.github_group import GitHubGroup
-from flet.auth.github.github_user import GitHubUser
+from flet.auth.group import Group
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.user import User
 
@@ -31,7 +30,7 @@ class GitHubOAuthProvider(OAuthProvider):
         email = ""
         for e in ej:
             if e["primary"]:
-                email = e["email"]
+                uj["email"] = e["email"]
                 break
         groups = []
         if fetch_groups:
@@ -41,19 +40,13 @@ class GitHubOAuthProvider(OAuthProvider):
             tj = json.loads(teams_resp.text)
             for t in tj:
                 groups.append(
-                    GitHubGroup(
-                        id=t["id"],
+                    Group(
+                        t,
                         name=t["name"],
-                        org_id=t["organization"]["id"],
-                        org_login=t["organization"]["login"],
-                        org_avatar_url=t["organization"]["avatar_url"],
                     )
                 )
-        return GitHubUser(
+        return User(
+            uj,
             id=str(uj["id"]),
-            login=uj["login"],
-            name=uj["name"],
-            email=email,
-            created_at=datetime.strptime(uj["created_at"], "%Y-%m-%dT%H:%M:%SZ"),
             groups=groups,
         )

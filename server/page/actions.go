@@ -44,5 +44,5 @@ const (
 
 	SessionCrashedAction = "sessionCrashed"
 
-	OAuthAuthorizeAction = "oauthAuthorize"
+	CloseInAppWebViewAction = "closeInAppWebView"
 )

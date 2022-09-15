@@ -24,7 +24,6 @@ class LaunchUrlControl extends StatefulWidget {
 
 class _LaunchUrlControlState extends State<LaunchUrlControl> {
   String? _launchUrlJson;
-  String? _closeInAppWebViewJson;
 
   @override
   Widget build(BuildContext context) {
@@ -43,20 +42,6 @@ class _LaunchUrlControlState extends State<LaunchUrlControl> {
         openPopupBrowserWindow(url, webWindowName, 1200, 800);
       } else {
         launchUrl(Uri.parse(url), webOnlyWindowName: webWindowName);
-      }
-    }
-
-    var closeInAppWebViewJson = widget.control.attrString("closeInAppWebView");
-    if (closeInAppWebViewJson != null &&
-        closeInAppWebViewJson != _closeInAppWebViewJson) {
-      debugPrint(
-          "Launch URL Close In app web view JSON value: $closeInAppWebViewJson");
-      _closeInAppWebViewJson = closeInAppWebViewJson;
-
-      if (!kIsWeb &&
-          (defaultTargetPlatform == TargetPlatform.android ||
-              defaultTargetPlatform == TargetPlatform.iOS)) {
-        closeInAppWebView();
       }
     }
 

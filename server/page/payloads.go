@@ -150,6 +150,5 @@ type SessionCrashedPayload struct {
 	Message string `json:"message"`
 }
 
-type OAuthAuthorizePayload struct {
-	AuthorizationUrl string `json:"authorizationUrl"`
+type CloseInAppWebViewPayload struct {
 }

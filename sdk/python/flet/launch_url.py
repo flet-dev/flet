@@ -45,7 +45,3 @@ class LaunchUrl(Control):
         )
         self._set_attr_json("launchUrl", d)
         self.update()
-
-    def close_in_app_web_view(self):
-        self._set_attr_json("closeInAppWebView", str(time.time()))
-        self.update()
