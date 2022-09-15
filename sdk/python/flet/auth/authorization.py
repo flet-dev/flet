@@ -1,3 +1,4 @@
+import json
 import secrets
 from typing import List, Optional, Tuple
 
@@ -66,6 +67,21 @@ class Authorization:
             refresh_token=t.get("refresh_token"),
         )
         if self.fetch_user:
-            self.user = self.provider._get_user(
-                self.token.access_token, self.fetch_groups
-            )
+            self.user = self.provider._fetch_user(self.token.access_token)
+            if self.user == None and self.provider.user_endpoint != None:
+                if self.provider.user_id_fn == None:
+                    raise Exception(
+                        "user_id_fn must be specified too if user_endpoint is not None"
+                    )
+                self.user = self.__get_user()
+            if self.fetch_groups and self.user != None:
+                self.user.groups = self.provider._fetch_groups(self.token.access_token)
+
+    def __get_user(self):
+        assert self.token is not None
+        assert self.provider.user_endpoint is not None
+        assert self.provider.user_id_fn is not None
+        headers = {"Authorization": "Bearer {}".format(self.token.access_token)}
+        user_resp = requests.get(self.provider.user_endpoint, headers=headers)
+        uj = json.loads(user_resp.text)
+        return User(uj, str(self.provider.user_id_fn(uj)))

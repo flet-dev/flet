@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 import requests
 
@@ -21,32 +21,28 @@ class GitHubOAuthProvider(OAuthProvider):
             group_scopes=["read:org"],
         )
 
-    def _get_user(self, access_token: str, fetch_groups: bool) -> Optional[User]:
+    def _fetch_groups(self, access_token: str) -> List[Group]:
+        headers = {"Authorization": "Bearer {}".format(access_token)}
+        groups = []
+        teams_resp = requests.get("https://api.github.com/user/teams", headers=headers)
+        tj = json.loads(teams_resp.text)
+        for t in tj:
+            groups.append(
+                Group(
+                    t,
+                    name=t["name"],
+                )
+            )
+        return groups
+
+    def _fetch_user(self, access_token: str) -> Optional[User]:
         headers = {"Authorization": "Bearer {}".format(access_token)}
         user_resp = requests.get("https://api.github.com/user", headers=headers)
         uj = json.loads(user_resp.text)
         email_resp = requests.get("https://api.github.com/user/emails", headers=headers)
         ej = json.loads(email_resp.text)
-        email = ""
         for e in ej:
             if e["primary"]:
                 uj["email"] = e["email"]
                 break
-        groups = []
-        if fetch_groups:
-            teams_resp = requests.get(
-                "https://api.github.com/user/teams", headers=headers
-            )
-            tj = json.loads(teams_resp.text)
-            for t in tj:
-                groups.append(
-                    Group(
-                        t,
-                        name=t["name"],
-                    )
-                )
-        return User(
-            uj,
-            id=str(uj["id"]),
-            groups=groups,
-        )
+        return User(uj, id=str(uj["id"]))

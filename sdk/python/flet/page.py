@@ -313,9 +313,15 @@ class Page(Control):
 
         return r.result
 
-    def login(self, provider: OAuthProvider, fetch_user=True, fetch_groups=False):
+    def login(
+        self,
+        provider: OAuthProvider,
+        fetch_user=True,
+        fetch_groups=False,
+        scope: Optional[List[str]] = None,
+    ):
         self.__authorization = Authorization(
-            provider, fetch_user=fetch_user, fetch_groups=fetch_groups
+            provider, fetch_user=fetch_user, fetch_groups=fetch_groups, scope=scope
         )
         authorization_url, state = self.__authorization.authorize()
         result = self._send_command("oauthAuthorize", values=[state])

@@ -1,5 +1,6 @@
-from typing import List, Optional
+from typing import Callable, List, Optional
 
+from flet.auth.group import Group
 from flet.auth.user import User
 
 
@@ -12,6 +13,8 @@ class OAuthProvider:
         token_endpoint: str,
         redirect_url: str,
         user_scopes: Optional[List[str]] = None,
+        user_endpoint: Optional[str] = None,
+        user_id_fn: Optional[Callable] = None,
         group_scopes: Optional[List[str]] = None,
     ) -> None:
         self.client_id = client_id
@@ -20,10 +23,15 @@ class OAuthProvider:
         self.token_endpoint = token_endpoint
         self.redirect_url = redirect_url
         self.user_scopes = user_scopes or []
+        self.user_endpoint = user_endpoint
+        self.user_id_fn = user_id_fn
         self.group_scopes = group_scopes or []
 
     def _name(self):
         raise Exception("Not implemented")
 
-    def _get_user(self, access_token: str, fetch_groups: bool) -> Optional[User]:
-        return
+    def _fetch_groups(self, access_token: str) -> List[Group]:
+        return []
+
+    def _fetch_user(self, access_token: str) -> Optional[User]:
+        return None
