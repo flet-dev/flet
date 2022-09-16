@@ -20,6 +20,7 @@ class Authorization:
         fetch_user: bool,
         fetch_groups: bool,
         scope: Optional[List[str]] = None,
+        saved_token: Optional[str] = None,
     ) -> None:
         self.fetch_user = fetch_user
         self.fetch_groups = fetch_groups
@@ -40,19 +41,19 @@ class Authorization:
                 if s not in self.scope:
                     self.scope.append(s)
 
+        if saved_token != None:
+            self.__token = OAuthToken.from_json(saved_token)
+            self.__refresh_token()
+            self.__fetch_user_and_groups()
+
     # token
     @property
     def token(self) -> Optional[OAuthToken]:
         with self._lock:
-            if (
-                self.__token != None
-                and self.__token.expires_at != None
-                and time.time() > self.__token.expires_at
-            ):
-                self.__refresh_token()
+            self.__refresh_token()
             return self.__token
 
-    def authorize(self) -> Tuple[str, str]:
+    def get_authorization_data(self) -> Tuple[str, str]:
         self.state = secrets.token_urlsafe(16)
         client = WebApplicationClient(self.provider.client_id)
         authorization_url = client.prepare_request_uri(
@@ -77,6 +78,10 @@ class Authorization:
         )
         t = client.parse_request_body_response(response.text)
         self.__token = self.__convert_token(t)
+        self.__fetch_user_and_groups()
+
+    def __fetch_user_and_groups(self):
+        assert self.__token is not None
         if self.fetch_user:
             self.user = self.provider._fetch_user(self.__token.access_token)
             if self.user == None and self.provider.user_endpoint != None:
@@ -101,6 +106,13 @@ class Authorization:
         )
 
     def __refresh_token(self):
+        if (
+            self.__token == None
+            or self.__token.expires_at == None
+            or time.time() < self.__token.expires_at
+        ):
+            return
+
         assert self.__token is not None
         client = WebApplicationClient(self.provider.client_id)
         data = client.prepare_refresh_body(

@@ -319,17 +319,23 @@ class Page(Control):
         fetch_user=True,
         fetch_groups=False,
         scope: Optional[List[str]] = None,
+        saved_token: Optional[str] = None,
     ):
         self.__authorization = Authorization(
-            provider, fetch_user=fetch_user, fetch_groups=fetch_groups, scope=scope
+            provider,
+            fetch_user=fetch_user,
+            fetch_groups=fetch_groups,
+            scope=scope,
+            saved_token=saved_token,
         )
-        authorization_url, state = self.__authorization.authorize()
-        result = self._send_command("oauthAuthorize", values=[state])
-        if result.error != "":
-            raise Exception(result.error)
-        self.launch_url(
-            authorization_url, "flet_oauth_signin", web_popup_window=self.web
-        )
+        if saved_token == None:
+            authorization_url, state = self.__authorization.get_authorization_data()
+            result = self._send_command("oauthAuthorize", values=[state])
+            if result.error != "":
+                raise Exception(result.error)
+            self.launch_url(
+                authorization_url, "flet_oauth_signin", web_popup_window=self.web
+            )
         return self.__authorization
 
     def __on_authorize(self, e):

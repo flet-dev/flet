@@ -1,6 +1,7 @@
-import time
-from datetime import datetime, timedelta
+import json
 from typing import List, Optional
+
+from flet.embed_json_encoder import EmbedJsonEncoder
 
 
 class OAuthToken:
@@ -9,14 +10,21 @@ class OAuthToken:
         access_token: str,
         scope: List[str],
         token_type: str,
-        expires_in: Optional[int],
-        expires_at: Optional[float],
-        refresh_token: Optional[str],
+        expires_in: Optional[int] = None,
+        expires_at: Optional[float] = None,
+        refresh_token: Optional[str] = None,
     ) -> None:
         self.access_token = access_token
         self.scope = scope
         self.token_type = token_type
-        self.issued = time.time()
         self.expires_in = expires_in
         self.expires_at = expires_at
         self.refresh_token = refresh_token
+
+    def to_json(self):
+        return json.dumps(self, cls=EmbedJsonEncoder, separators=(",", ":"))
+
+    @staticmethod
+    def from_json(data: str):
+        t = json.loads(data)
+        return OAuthToken(**t)
