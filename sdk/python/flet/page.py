@@ -330,7 +330,7 @@ class Page(Control):
         self.launch_url(
             authorization_url, "flet_oauth_signin", web_popup_window=self.web
         )
-        return result.result
+        return self.__authorization
 
     def __on_authorize(self, e):
         assert self.__authorization is not None

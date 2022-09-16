@@ -1,9 +1,15 @@
+from typing import Optional
+
 from flet.auth.oauth_provider import OAuthProvider
 
 
 class AzureOAuthProvider(OAuthProvider):
     def __init__(
-        self, tenant: str, client_id: str, client_secret: str, redirect_url: str
+        self,
+        client_id: str,
+        client_secret: str,
+        redirect_url: str,
+        tenant: Optional[str] = "common",
     ) -> None:
         super().__init__(
             client_id=client_id,

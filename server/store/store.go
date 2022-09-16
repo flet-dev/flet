@@ -27,12 +27,11 @@ const (
 	sessionsExpiredKey              = "sessions_expired"                // set of page:session IDs sorted by Unix timestamp of their expiration date
 	clientsExpiredKey               = "clients_expired"                 // set of client IDs sorted by Unix timestamp of their expiration date
 	sessionNextControlIDField       = "nextControlID"                   // Inc integer with the next control ID for a given session
-	sessionPrincipalIDField         = "principalID"
-	sessionKey                      = "session:%d:%s"              // session data
-	sessionControlsKey              = "session:%d:%s:controls"     // session controls, value is JSON data
-	sessionHostClientsKey           = "session:%d:%s:host_clients" // a Set with client IDs
-	sessionWebClientsKey            = "session:%d:%s:web_clients"  // a Set with client IDs
-	oauthStateKey                   = "oauth_state:%s"             // %s is state
+	sessionKey                      = "session:%d:%s"                   // session data
+	sessionControlsKey              = "session:%d:%s:controls"          // session controls, value is JSON data
+	sessionHostClientsKey           = "session:%d:%s:host_clients"      // a Set with client IDs
+	sessionWebClientsKey            = "session:%d:%s:web_clients"       // a Set with client IDs
+	oauthStateKey                   = "oauth_state:%s"                  // %s is state
 )
 
 //
@@ -213,11 +212,6 @@ func SetSessionExpiration(session *model.Session, expires time.Time) {
 
 func GetExpiredSessions() []string {
 	return cache.SortedSetPopRange(sessionsExpiredKey, 0, time.Now().Unix())
-}
-
-func SetSessionPrincipalID(session *model.Session, principalID string) {
-	session.PrincipalID = principalID
-	cache.HashSet(fmt.Sprintf(sessionKey, session.Page.ID, session.ID), sessionPrincipalIDField, principalID)
 }
 
 func DeleteSession(pageID int, sessionID string) {

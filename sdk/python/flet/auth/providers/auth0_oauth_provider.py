@@ -11,6 +11,7 @@ class Auth0OAuthProvider(OAuthProvider):
             authorization_endpoint=f"https://{domain}/authorize",
             token_endpoint=f"https://{domain}/oauth/token",
             redirect_url=redirect_url,
+            scopes=["offline_access"],
             user_scopes=["openid", "profile", "email"],
             user_endpoint=f"https://{domain}/userinfo",
             user_id_fn=lambda u: u["sub"],
