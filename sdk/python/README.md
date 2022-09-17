@@ -1,6 +1,6 @@
 # Flet - quickly build interactive apps for web, desktop and mobile in Python
 
-[Flet](https://flet.dev) is a rich User Interface (UI) framework to quickly build interactive web, desktop and mobile apps in Python without prior knowledge of web technologies like HTTP, HTML, CSS or JavaSscript. You build UI with [controls](https://flet.dev/docs/reference/controls) based on [Flutter](https://flutter.dev/) widgets to ensure your programs look cool and professional.
+[Flet](https://flet.dev) is a rich User Interface (UI) framework to quickly build interactive web, desktop and mobile apps in Python without prior knowledge of web technologies like HTTP, HTML, CSS or JavaSscript. You build UI with [controls](https://flet.dev/docs/controls) based on [Flutter](https://flutter.dev/) widgets to ensure your programs look cool and professional.
 
 ## Requirements
 
