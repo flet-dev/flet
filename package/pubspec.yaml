@@ -23,6 +23,7 @@ dependencies:
   flutter_markdown: ^0.6.10+3
   file_picker: ^5.0.1
   shared_preferences: ^2.0.15
+  flutter_svg: ^1.1.5
 
 dev_dependencies:
   flutter_test:
