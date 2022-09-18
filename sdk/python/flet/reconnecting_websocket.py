@@ -24,6 +24,10 @@ class ReconnectingWebSocket:
             if is_localhost_url(url)
             else _REMOTE_CONNECT_TIMEOUT_SEC
         )
+        # disable websocket logging completely
+        # https://github.com/websocket-client/websocket-client/blob/master/websocket/_logging.py#L22-L51
+        ws_logger = logging.getLogger("websocket")
+        ws_logger.setLevel(logging.FATAL)
 
     @property
     def on_connect(self, handler):

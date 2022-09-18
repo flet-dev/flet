@@ -18,7 +18,6 @@ from flet.types import (
 class ListTile(ConstrainedControl):
     def __init__(
         self,
-        text: Optional[str] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
