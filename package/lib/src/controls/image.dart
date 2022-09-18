@@ -44,6 +44,7 @@ class ImageControl extends StatelessWidget {
         control.attrString("colorBlendMode", "")!.toLowerCase());
     var color = HexColor.fromString(
         Theme.of(context), control.attrString("color", "")!);
+    String? semanticsLabel = control.attrString("semanticsLabel");
 
     var uri = Uri.parse(src);
     return StoreConnector<AppState, Uri?>(
@@ -58,24 +59,22 @@ class ImageControl extends StatelessWidget {
               if (arrayIndexOf(
                       bytes, Uint8List.fromList(utf8.encode("<svg"))) !=
                   -1) {
-                image = SvgPicture.memory(
-                  bytes,
-                  width: width,
-                  height: height,
-                  fit: fit ?? BoxFit.contain,
-                  color: color,
-                  colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
-                );
+                image = SvgPicture.memory(bytes,
+                    width: width,
+                    height: height,
+                    fit: fit ?? BoxFit.contain,
+                    color: color,
+                    colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
+                    semanticsLabel: semanticsLabel);
               } else {
-                image = Image.memory(
-                  bytes,
-                  width: width,
-                  height: height,
-                  repeat: repeat,
-                  fit: fit,
-                  color: color,
-                  colorBlendMode: colorBlendMode,
-                );
+                image = Image.memory(bytes,
+                    width: width,
+                    height: height,
+                    repeat: repeat,
+                    fit: fit,
+                    color: color,
+                    colorBlendMode: colorBlendMode,
+                    semanticLabel: semanticsLabel);
               }
             } catch (ex) {
               return ErrorControl("Error decoding base64: ${ex.toString()}");
@@ -84,24 +83,22 @@ class ImageControl extends StatelessWidget {
             var imgSrc =
                 uri.hasAuthority ? src : getAssetUri(pageUri!, src).toString();
             if (imgSrc.endsWith(".svg")) {
-              image = SvgPicture.network(
-                imgSrc,
-                width: width,
-                height: height,
-                fit: fit ?? BoxFit.contain,
-                color: color,
-                colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
-              );
+              image = SvgPicture.network(imgSrc,
+                  width: width,
+                  height: height,
+                  fit: fit ?? BoxFit.contain,
+                  color: color,
+                  colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
+                  semanticsLabel: semanticsLabel);
             } else {
-              image = Image.network(
-                imgSrc,
-                width: width,
-                height: height,
-                repeat: repeat,
-                fit: fit,
-                color: color,
-                colorBlendMode: colorBlendMode,
-              );
+              image = Image.network(imgSrc,
+                  width: width,
+                  height: height,
+                  repeat: repeat,
+                  fit: fit,
+                  color: color,
+                  colorBlendMode: colorBlendMode,
+                  semanticLabel: semanticsLabel);
             }
           }
 
