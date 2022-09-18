@@ -15,6 +15,7 @@ import 'banner.dart';
 import 'card.dart';
 import 'checkbox.dart';
 import 'circle_avatar.dart';
+import 'client_storage.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
@@ -90,6 +91,9 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return MarkdownControl(parent: parent, control: controlView.control);
         case ControlType.clipboard:
           return ClipboardControl(parent: parent, control: controlView.control);
+        case ControlType.clientstorage:
+          return ClientStorageControl(
+              parent: parent, control: controlView.control);
         case ControlType.launchUrl:
           return LaunchUrlControl(parent: parent, control: controlView.control);
         case ControlType.image:

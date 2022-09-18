@@ -140,11 +140,10 @@ def app(
         if view == WEB_BROWSER and url_prefix == None:
             open_in_browser(conn.page_url)
         try:
-            if is_windows():
-                input()
-            else:
-                terminate.wait()
-        except (Exception) as e:
+            while True:
+                if terminate.wait(1):
+                    break
+        except KeyboardInterrupt:
             pass
 
     conn.close()

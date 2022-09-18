@@ -18,6 +18,7 @@ class PopupMenuItem(Control):
         text: Optional[str] = None,
         content: Optional[Control] = None,
         on_click=None,
+        data: Any = None
     ):
         Control.__init__(self, ref=ref)
 
@@ -27,6 +28,7 @@ class PopupMenuItem(Control):
         self.__content: Optional[Control] = None
         self.content = content
         self.on_click = on_click
+        self.data = data
 
     def _get_control_name(self):
         return "popupmenuitem"

@@ -116,4 +116,4 @@ run again and now you instantly get a web app:
 
 ## Contribute to this wonderful project
 
-* Read the CONTRIBUTE.md file
+* Read the CONTRIBUTING.md file
