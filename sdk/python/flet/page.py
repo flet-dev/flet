@@ -51,6 +51,7 @@ class Page(Control):
         self._id = "page"
         self._Control__uid = "page"
         self.__conn = conn
+        self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
         self._index = {}  # index with all page controls
         self._index[self._Control__uid] = self
@@ -79,6 +80,7 @@ class Page(Control):
             if self.__last_route == e.data:
                 return None  # avoid duplicate calls
             self.__last_route = e.data
+            self.query()  # Update query url (required when manually changed from browser)
             return RouteChangeEvent(route=e.data)
 
         self.__on_route_change = EventHandler(convert_route_change_event)
@@ -103,9 +105,6 @@ class Page(Control):
         self._add_event_handler("connect", self.__on_connect.handler)
         self.__on_disconnect = EventHandler()
         self._add_event_handler("disconnect", self.__on_disconnect.handler)
-
-        # Querystring
-        self.__query = QueryString(page=self)
 
     def __enter__(self):
         return self
@@ -300,7 +299,7 @@ class Page(Control):
             )
         )
         self.update()
-        self.query()  # Update query url
+        self.query()  # Update query url (required when using go)
 
     def get_upload_url(self, file_name: str, expires: int):
         r = self._send_command(
