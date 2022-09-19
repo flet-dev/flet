@@ -1,5 +1,4 @@
 import urllib.parse
-
 import re
 
 
@@ -7,6 +6,7 @@ class UrlComponents:
     """
     `UrlComponents` are meant to be used internally for decoding-encoding, it has no external use
     """
+
     def _encode_url_component(self, url: str) -> str:
         """
         Function encodes querystring part of URL\n
@@ -77,17 +77,17 @@ class QueryString(UrlComponents):
         return self._res if "+" not in self._res else self._res.replace("+", " ")
 
     def to_dict(self) -> dict:
-        self._pattern = re.compile(r'\?[\w\D]+')
+        self._pattern = re.compile(r"\?[\w\D]+")
         self._data = urllib.parse.urlparse(self.url).query
         return urllib.parse.parse_qs(self._data)
 
-
     def post(self, kwargs: dict):
         return "?" + urllib.parse.urlencode(kwargs)
-    
+
     # Path
+    @property
     def path(self):
-        self._updated_url = self.url.replace('#/', '') if '#' in self.url else self.url
+        self._updated_url = self.url.replace("#/", "") if "#" in self.url else self.url
         return urllib.parse.urlparse(self._updated_url).path
 
     def __call__(self):
@@ -98,6 +98,9 @@ class QueryString(UrlComponents):
 
         # Checking if self.url is encoded and decoding it accordingly
         if self._is_encoded() is True:
-            self.url = self.page.url + urllib.parse.urlparse(self.url).path + '?' + self._decode_url_component(
-                self._querystring_part(url_string=True)
+            self.url = (
+                self.page.url
+                + urllib.parse.urlparse(self.url).path
+                + "?"
+                + self._decode_url_component(self._querystring_part(url_string=True))
             )

@@ -105,7 +105,7 @@ class Page(Control):
         self._add_event_handler("disconnect", self.__on_disconnect.handler)
 
         # Querystring
-        self.query = QueryString(page=self)
+        self.__query = QueryString(page=self)
 
     def __enter__(self):
         return self
@@ -290,7 +290,7 @@ class Page(Control):
     def go(self, route, **kwargs):
         self.querystring_data = self.query.post(kwargs)
         self.route = route if kwargs == {} else route + self.querystring_data
-        
+
         self.__on_route_change.handler(
             ControlEvent(
                 target="page",
@@ -301,7 +301,7 @@ class Page(Control):
             )
         )
         self.update()
-        self.query() # Update query url
+        self.query()  # Update query url
 
     def get_upload_url(self, file_name: str, expires: int):
         r = self._send_command(
@@ -361,6 +361,11 @@ class Page(Control):
     def window_close(self):
         self._set_attr("windowClose", str(time.time()))
         self.update()
+
+    # QueryString
+    @property
+    def query(self):
+        return self.__query
 
     # url
     @property
