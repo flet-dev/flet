@@ -22,6 +22,7 @@ dependencies:
   url_launcher: ^6.1.5
   flutter_markdown: ^0.6.10+3
   file_picker: ^5.0.1
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:

@@ -11,6 +11,7 @@ from beartype.typing import Dict, List, Optional
 from flet import constants
 from flet.app_bar import AppBar
 from flet.banner import Banner
+from flet.client_storage import ClientStorage
 from flet.clipboard import Clipboard
 from flet.connection import Connection
 from flet.control import (
@@ -553,6 +554,11 @@ class Page(Control):
     def auto_scroll(self, value: Optional[bool]):
         self.__default_view.auto_scroll = value
 
+    # client_storage
+    @property
+    def client_storage(self):
+        return self.__offstage.client_storage
+
     # splash
     @property
     def splash(self) -> Optional[Control]:
@@ -1003,6 +1009,7 @@ class Offstage(Control):
 
         self.__controls: List[Control] = []
         self.__clipboard = Clipboard()
+        self.__client_storage = ClientStorage()
         self.__launch_url = LaunchUrl()
         self.__banner = None
         self.__snack_bar = None
@@ -1017,6 +1024,8 @@ class Offstage(Control):
         children.extend(self.__controls)
         if self.__clipboard:
             children.append(self.__clipboard)
+        if self.__client_storage:
+            children.append(self.__client_storage)
         if self.__launch_url:
             children.append(self.__launch_url)
         if self.__banner:
@@ -1038,6 +1047,11 @@ class Offstage(Control):
     @property
     def clipboard(self):
         return self.__clipboard
+
+    # client_storage
+    @property
+    def client_storage(self):
+        return self.__client_storage
 
     # launch_url
     @property
