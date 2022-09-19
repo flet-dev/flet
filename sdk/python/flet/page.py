@@ -288,8 +288,7 @@ class Page(Control):
                 return False
 
     def go(self, route, **kwargs):
-        self.querystring_data = self.query.post(kwargs)
-        self.route = route if kwargs == {} else route + self.querystring_data
+        self.route = route if kwargs == {} else route + self.query.post(kwargs)
 
         self.__on_route_change.handler(
             ControlEvent(

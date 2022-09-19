@@ -58,8 +58,8 @@ class QueryString(UrlComponents):
     Methods:
             Public:
                 `get()` method takes `key` an an argument and returns value according to key. (Ex: .../?name=Joe -> `get('name')` -> `Joe`)\n
-                `to_dict()` returns all the key-value pairs of querystring as a `dict`\n
-                `path()` returns url path (Ex: .../products?id=1 -> /products)
+                `to_dict` returns all the key-value pairs of querystring as a `dict`\n
+                `path` returns url path (Ex: .../products?id=1 -> /products)
 
             Private(meant to be used only inside of page class):
                 `post()` method takes key-value pair as an argument and returs proceeded querystring ready to be merged with URL
@@ -76,13 +76,14 @@ class QueryString(UrlComponents):
         self._res = self.url[self._res.start() + len(key) + 1 : self._res.end()]
         return self._res if "+" not in self._res else self._res.replace("+", " ")
 
+    def post(self, kwargs: dict):
+        return "?" + urllib.parse.urlencode(kwargs)
+
+    @property
     def to_dict(self) -> dict:
         self._pattern = re.compile(r"\?[\w\D]+")
         self._data = urllib.parse.urlparse(self.url).query
         return urllib.parse.parse_qs(self._data)
-
-    def post(self, kwargs: dict):
-        return "?" + urllib.parse.urlencode(kwargs)
 
     # Path
     @property
