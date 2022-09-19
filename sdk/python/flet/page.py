@@ -2,6 +2,8 @@ import json
 import logging
 import threading
 import time
+import uuid
+from ast import arg
 from dataclasses import dataclass
 from typing import Any, cast
 
@@ -103,6 +105,12 @@ class Page(Control):
 
         self.__on_keyboard_event = EventHandler(convert_keyboard_event)
         self._add_event_handler("keyboard_event", self.__on_keyboard_event.handler)
+
+        self.__method_calls: Dict[str, threading.Event] = {}
+        self.__method_call_results: Dict[
+            threading.Event, tuple[Optional[str], Optional[str]]
+        ] = {}
+        self._add_event_handler("invoke_method_result", self._on_invoke_method_result)
 
         self.__on_window_event = EventHandler()
         self._add_event_handler("window_event", self.__on_window_event.handler)
@@ -395,9 +403,58 @@ class Page(Control):
         self.__offstage.launch_url.launch_url(url, web_window_name, web_popup_window)
 
     def close_in_app_web_view(self):
-        result = self._send_command("closeInAppWebView")
+        self.invoke_method("closeInAppWebView")
+
+    def invoke_method(
+        self,
+        method_name: str,
+        arguments: Optional[dict[str, str]] = None,
+        wait_for_result: bool = False,
+    ) -> Optional[str]:
+        method_id = uuid.uuid4().hex
+
+        # register callback
+        evt: Optional[threading.Event] = None
+        if wait_for_result:
+            evt = threading.Event()
+            self.__method_calls[method_id] = evt
+
+        # call method
+        result = self._send_command(
+            "invokeMethod", values=[method_id, method_name], attrs=arguments
+        )
+
         if result.error != "":
+            if wait_for_result:
+                del self.__method_calls[method_id]
             raise Exception(result.error)
+
+        if not wait_for_result:
+            return
+
+        assert evt is not None
+
+        if not evt.wait(5):
+            del self.__method_calls[method_id]
+            raise Exception(
+                f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
+            )
+
+        result, err = self.__method_call_results.pop(evt)
+        if err != None:
+            raise Exception(err)
+        if result == None:
+            return None
+        return result
+
+    def _on_invoke_method_result(self, e):
+        d = json.loads(e.data)
+        result = InvokeMethodResults(**d)
+        evt = self.__method_calls.pop(result.method_id, None)
+        if evt == None:
+            return
+        self.__method_call_results[evt] = (result.result, result.error)
+        evt.set()
 
     @beartype
     def show_snack_bar(self, snack_bar: SnackBar):
@@ -1190,3 +1247,10 @@ class KeyboardEvent(ControlEvent):
 class LoginEvent(ControlEvent):
     error: str
     error_description: str
+
+
+@dataclass
+class InvokeMethodResults:
+    method_id: str
+    result: Optional[str]
+    error: Optional[str]

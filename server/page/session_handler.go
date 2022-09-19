@@ -103,6 +103,7 @@ func (h *sessionHandler) execute(cmd *model.Command) (result string, err error) 
 		model.RemoveCommand:            h.remove,
 		model.OAuthAuthorizeCommand:    h.oauthAuthorize,
 		model.CloseInAppWebViewCommand: h.closeInAppWebView,
+		model.InvokeMethodCommand:      h.invokeMethod,
 		model.GetUploadUrlCommand:      h.getUploadUrl,
 		model.ErrorCommand:             h.sessionCrashed,
 	}
@@ -714,6 +715,22 @@ func (h *sessionHandler) closeInAppWebView(cmd *model.Command) (result string, e
 
 	// broadcast command to all connected web clients
 	h.broadcastCommandToWebClients(NewMessage("", CloseInAppWebViewAction, &CloseInAppWebViewPayload{}))
+
+	return "", nil
+}
+
+func (h *sessionHandler) invokeMethod(cmd *model.Command) (result string, err error) {
+
+	if len(cmd.Values) < 2 {
+		return "", fmt.Errorf("invokeMethod command received wrong number of arguments")
+	}
+
+	// broadcast command to all connected web clients
+	h.broadcastCommandToWebClients(NewMessage("", InvokeMethodAction, &InvokeMethodPayload{
+		MethodID:   cmd.Values[0],
+		MethodName: cmd.Values[1],
+		Arguments:  cmd.Attrs,
+	}))
 
 	return "", nil
 }

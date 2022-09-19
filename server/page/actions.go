@@ -45,4 +45,6 @@ const (
 	SessionCrashedAction = "sessionCrashed"
 
 	CloseInAppWebViewAction = "closeInAppWebView"
+
+	InvokeMethodAction = "invokeMethod"
 )

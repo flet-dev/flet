@@ -152,3 +152,9 @@ type SessionCrashedPayload struct {
 
 type CloseInAppWebViewPayload struct {
 }
+
+type InvokeMethodPayload struct {
+	MethodID   string            `json:"methodId"`
+	MethodName string            `json:"methodName"`
+	Arguments  map[string]string `json:"arguments"`
+}

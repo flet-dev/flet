@@ -18,6 +18,7 @@ const (
 	GetUploadUrlCommand      string = "getuploadurl"
 	OAuthAuthorizeCommand    string = "oauthauthorize"
 	CloseInAppWebViewCommand string = "closeinappwebview"
+	InvokeMethodCommand      string = "invokemethod"
 	CloseCommand             string = "close"
 	ErrorCommand             string = "error"
 )
@@ -35,6 +36,7 @@ var (
 		EndCommand:               {Name: EndCommand, ShouldReturn: true},
 		OAuthAuthorizeCommand:    {Name: OAuthAuthorizeCommand, ShouldReturn: true},
 		CloseInAppWebViewCommand: {Name: CloseInAppWebViewCommand, ShouldReturn: true},
+		InvokeMethodCommand:      {Name: InvokeMethodCommand, ShouldReturn: true},
 		GetUploadUrlCommand:      {Name: GetUploadUrlCommand, ShouldReturn: true},
 		CloseCommand:             {Name: CloseCommand, ShouldReturn: false},
 		ErrorCommand:             {Name: ErrorCommand, ShouldReturn: false},

@@ -195,6 +195,14 @@ AppState appReducer(AppState state, dynamic action) {
   } else if (action is CloseInAppWebViewAction) {
     debugPrint("CloseInAppWebViewAction");
     closeInAppWebView();
+  } else if (action is InvokeMethodAction) {
+    debugPrint(
+        "InvokeMethodAction: ${action.payload.methodName} (${action.payload.args})");
+    switch (action.payload.methodName) {
+      case "closeInAppWebView":
+        closeInAppWebView();
+        break;
+    }
   } else if (action is AddPageControlsAction) {
     //
     // add controls

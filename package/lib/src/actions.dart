@@ -7,6 +7,7 @@ import 'protocol/app_become_inactive_payload.dart';
 import 'protocol/append_control_props_request.dart';
 import 'protocol/clean_control_payload.dart';
 import 'protocol/close_in_app_web_view_payload.dart';
+import 'protocol/invoke_method_payload.dart';
 import 'protocol/page_controls_batch_payload.dart';
 import 'protocol/register_webclient_response.dart';
 import 'protocol/remove_control_payload.dart';
@@ -74,6 +75,11 @@ class SessionCrashedAction {
 class CloseInAppWebViewAction {
   final CloseInAppWebViewPayload payload;
   CloseInAppWebViewAction(this.payload);
+}
+
+class InvokeMethodAction {
+  final InvokeMethodPayload payload;
+  InvokeMethodAction(this.payload);
 }
 
 class AddPageControlsAction {
