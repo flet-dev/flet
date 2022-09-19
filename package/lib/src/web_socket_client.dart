@@ -164,8 +164,8 @@ class WebSocketClient {
             CloseInAppWebViewPayload.fromJson(msg.payload)));
         break;
       case MessageAction.invokeMethod:
-        _store.dispatch(
-            InvokeMethodAction(InvokeMethodPayload.fromJson(msg.payload)));
+        _store.dispatch(InvokeMethodAction(
+            InvokeMethodPayload.fromJson(msg.payload), this));
         break;
       case MessageAction.addPageControls:
         _store.dispatch(AddPageControlsAction(

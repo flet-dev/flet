@@ -79,7 +79,8 @@ class CloseInAppWebViewAction {
 
 class InvokeMethodAction {
   final InvokeMethodPayload payload;
-  InvokeMethodAction(this.payload);
+  final WebSocketClient ws;
+  InvokeMethodAction(this.payload, this.ws);
 }
 
 class AddPageControlsAction {
