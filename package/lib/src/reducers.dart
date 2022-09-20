@@ -1,4 +1,6 @@
 // One simple action: Increment
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -8,6 +10,7 @@ import 'models/control.dart';
 import 'models/window_media_data.dart';
 import 'protocol/add_page_controls_payload.dart';
 import 'protocol/clean_control_payload.dart';
+import 'protocol/invoke_method_result.dart';
 import 'protocol/message.dart';
 import 'protocol/remove_control_payload.dart';
 import 'protocol/update_control_props_payload.dart';
@@ -201,6 +204,14 @@ AppState appReducer(AppState state, dynamic action) {
     switch (action.payload.methodName) {
       case "closeInAppWebView":
         closeInAppWebView();
+        break;
+      case "methodA":
+        action.ws.pageEventFromWeb(
+            eventTarget: "page",
+            eventName: "invoke_method_result",
+            eventData: json.encode(InvokeMethodResult(
+                methodId: action.payload.methodId,
+                result: action.payload.args["arg1"])));
         break;
     }
   } else if (action is AddPageControlsAction) {

@@ -5,10 +5,10 @@ import time
 import uuid
 from ast import arg
 from dataclasses import dataclass
-from typing import Any, cast
+from typing import Any, Dict, cast
 
 from beartype import beartype
-from beartype.typing import Dict, List, Optional
+from beartype.typing import List, Optional
 
 from flet import constants
 from flet.app_bar import AppBar
@@ -405,10 +405,13 @@ class Page(Control):
     def close_in_app_web_view(self):
         self.invoke_method("closeInAppWebView")
 
+    def method_a(self):
+        return self.invoke_method("methodA", {"arg1": "Hello!"}, wait_for_result=True)
+
     def invoke_method(
         self,
         method_name: str,
-        arguments: Optional[dict[str, str]] = None,
+        arguments: Optional[Dict[str, str]] = None,
         wait_for_result: bool = False,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
