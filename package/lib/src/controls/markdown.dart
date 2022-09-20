@@ -7,7 +7,6 @@ import 'package:markdown/markdown.dart' as md;
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
-import '../utils/edge_insets.dart';
 import 'create_control.dart';
 
 class MarkdownControl extends StatelessWidget {
@@ -41,7 +40,7 @@ class MarkdownControl extends StatelessWidget {
         distinct: true,
         converter: (store) => store.state.pageUri,
         builder: (context, pageUri) {
-          Widget markdown = Markdown(
+          Widget markdown = MarkdownBody(
               data: value,
               selectable: control.attrBool("selectable", false)!,
               imageDirectory: getBaseUri(pageUri!).toString(),
@@ -52,9 +51,7 @@ class MarkdownControl extends StatelessWidget {
                     eventTarget: control.id,
                     eventName: "tap_link",
                     eventData: href?.toString() ?? "");
-              },
-              padding: parseEdgeInsets(control, "padding") ??
-                  const EdgeInsets.all(0));
+              });
 
           return constrainedControl(markdown, parent, control);
         });

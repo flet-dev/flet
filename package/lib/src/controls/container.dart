@@ -42,6 +42,11 @@ class ContainerControl extends StatelessWidget {
         Theme.of(context), control.attrString("bgColor", "")!);
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
+    var clipBehavior = Clip.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("clipBehavior", "")!.toLowerCase(),
+        orElse: () => Clip.none);
     bool ink = control.attrBool("ink", false)!;
     bool onClick = control.attrBool("onclick", false)!;
     bool onLongPress = control.attrBool("onLongPress", false)!;
@@ -139,6 +144,7 @@ class ContainerControl extends StatelessWidget {
                   child: Container(
                     padding: parseEdgeInsets(control, "padding"),
                     alignment: parseAlignment(control, "alignment"),
+                    clipBehavior: clipBehavior,
                     child: child,
                   ),
                 ));
@@ -148,6 +154,7 @@ class ContainerControl extends StatelessWidget {
                         width: control.attrDouble("width"),
                         height: control.attrDouble("height"),
                         margin: parseEdgeInsets(control, "margin"),
+                        clipBehavior: clipBehavior,
                         child: ink,
                       )
                     : AnimatedContainer(
@@ -156,6 +163,7 @@ class ContainerControl extends StatelessWidget {
                         width: control.attrDouble("width"),
                         height: control.attrDouble("height"),
                         margin: parseEdgeInsets(control, "margin"),
+                        clipBehavior: clipBehavior,
                         child: ink),
                 parent,
                 control);
@@ -168,6 +176,7 @@ class ContainerControl extends StatelessWidget {
                     margin: parseEdgeInsets(control, "margin"),
                     alignment: parseAlignment(control, "alignment"),
                     decoration: boxDecor,
+                    clipBehavior: clipBehavior,
                     child: child)
                 : AnimatedContainer(
                     duration: animation.duration,
@@ -178,6 +187,7 @@ class ContainerControl extends StatelessWidget {
                     margin: parseEdgeInsets(control, "margin"),
                     alignment: parseAlignment(control, "alignment"),
                     decoration: boxDecor,
+                    clipBehavior: clipBehavior,
                     child: child);
 
             if ((onClick || onLongPress || onHover) && !disabled) {
