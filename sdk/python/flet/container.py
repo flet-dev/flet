@@ -6,7 +6,7 @@ from beartype import beartype
 from flet.alignment import Alignment
 from flet.border import Border
 from flet.constrained_control import ConstrainedControl
-from flet.control import BlendMode, Control, OptionalNumber
+from flet.control import BlendMode, ClipBehavior, Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
 from flet.gradients import Gradient
@@ -80,6 +80,7 @@ class Container(ConstrainedControl):
         image_repeat: ImageRepeat = None,
         image_fit: ImageFit = None,
         image_opacity: OptionalNumber = None,
+        clip_behavior: ClipBehavior = None,
         ink: Optional[bool] = None,
         animate: AnimationValue = None,
         on_click=None,
@@ -135,6 +136,7 @@ class Container(ConstrainedControl):
         self.image_repeat = image_repeat
         self.image_fit = image_fit
         self.image_opacity = image_opacity
+        self.clip_behavior = clip_behavior
         self.ink = ink
         self.animate = animate
         self.on_click = on_click
@@ -302,6 +304,16 @@ class Container(ConstrainedControl):
     @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self._get_attr("clipBehavior")
+
+    @clip_behavior.setter
+    @beartype
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self._set_attr("clipBehavior", value)
 
     # ink
     @property

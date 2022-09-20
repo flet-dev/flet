@@ -3,7 +3,7 @@ from typing import Any, List, Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber
+from flet.control import ClipBehavior, Control, OptionalNumber
 from flet.ref import Ref
 from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
@@ -11,8 +11,6 @@ try:
     from typing import Literal
 except:
     from typing_extensions import Literal
-
-ClipBehavior = Literal[None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"]
 
 
 class Stack(ConstrainedControl):
