@@ -1,4 +1,3 @@
-import '../utils/uri.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -7,6 +6,7 @@ import 'package:markdown/markdown.dart' as md;
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../utils/uri.dart';
 import 'create_control.dart';
 
 class MarkdownControl extends StatelessWidget {
