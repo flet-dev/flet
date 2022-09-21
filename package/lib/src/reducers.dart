@@ -1,6 +1,7 @@
 // One simple action: Increment
 import 'dart:convert';
 
+import 'package:flet/src/utils/client_storage.dart';
 import 'package:flet/src/utils/clipboard.dart';
 import 'package:flet/src/utils/launch_url.dart';
 import 'package:flutter/foundation.dart';
@@ -225,6 +226,14 @@ AppState appReducer(AppState state, dynamic action) {
             eventData: json.encode(InvokeMethodResult(
                 methodId: action.payload.methodId, result: value))));
         break;
+    }
+    var clientStoragePrefix = "clientStorage:";
+    if (action.payload.methodName.startsWith(clientStoragePrefix)) {
+      invokeClientStorage(
+          action.payload.methodId,
+          action.payload.methodName.substring(clientStoragePrefix.length),
+          action.payload.args,
+          action.ws);
     }
   } else if (action is AddPageControlsAction) {
     //

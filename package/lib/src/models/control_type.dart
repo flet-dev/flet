@@ -6,7 +6,6 @@ enum ControlType {
   card,
   checkbox,
   circleAvatar,
-  clientstorage,
   column,
   container,
   divider,

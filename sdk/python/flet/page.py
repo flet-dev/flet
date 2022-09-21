@@ -5,10 +5,10 @@ import time
 import uuid
 from ast import arg
 from dataclasses import dataclass
-from typing import Any, Dict, cast
+from typing import Any, cast
 
 from beartype import beartype
-from beartype.typing import List, Optional
+from beartype.typing import Dict, List, Optional
 
 from flet import constants
 from flet.app_bar import AppBar
@@ -68,6 +68,7 @@ class Page(Control):
         self.__theme = None
         self.__dark_theme = None
         self.__pubsub = PubSub(conn.pubsubhub, session_id)
+        self.__client_storage = ClientStorage(self)
         self.__authorization: Optional[Authorization] = None
 
         self.__on_close = EventHandler()
@@ -684,7 +685,7 @@ class Page(Control):
     # client_storage
     @property
     def client_storage(self):
-        return self.__offstage.client_storage
+        return self.__client_storage
 
     # splash
     @property
@@ -1144,7 +1145,6 @@ class Offstage(Control):
         )
 
         self.__controls: List[Control] = []
-        self.__client_storage = ClientStorage()
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
@@ -1156,8 +1156,6 @@ class Offstage(Control):
     def _get_children(self):
         children = []
         children.extend(self.__controls)
-        if self.__client_storage:
-            children.append(self.__client_storage)
         if self.__banner:
             children.append(self.__banner)
         if self.__snack_bar:
@@ -1172,11 +1170,6 @@ class Offstage(Control):
     @property
     def controls(self):
         return self.__controls
-
-    # client_storage
-    @property
-    def client_storage(self):
-        return self.__client_storage
 
     # splash
     @property
