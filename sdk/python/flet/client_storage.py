@@ -56,7 +56,7 @@ class ClientStorage(Control):
 
     def get(self, key: str):
         jv = self._call_method("get", [key])
-        if jv != None:
+        if jv:
             return json.loads(jv)
         return None
 
@@ -85,9 +85,9 @@ class ClientStorage(Control):
                 f"Timeout waiting for ClientStorage.{name}({params}) method call"
             )
         result, err = self.__results.pop(evt)
-        if err != None:
+        if err:
             raise Exception(err)
-        if result == None:
+        if result is None:
             return None
         return json.loads(result)
 
@@ -95,7 +95,7 @@ class ClientStorage(Control):
         d = json.loads(e.data)
         result = ClientStorageMethodResults(**d)
         evt = self.__calls.pop(result.i, None)
-        if evt == None:
+        if evt is None:
             return
         self.__results[evt] = (result.r, result.e)
         evt.set()
