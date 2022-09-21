@@ -16,7 +16,6 @@ from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
 from flet.banner import Banner
 from flet.client_storage import ClientStorage
-from flet.clipboard import Clipboard
 from flet.connection import Connection
 from flet.control import (
     Control,
@@ -389,8 +388,10 @@ class Page(Control):
 
     @beartype
     def set_clipboard(self, value: str):
-        self.__offstage.clipboard.value = value
-        self.__offstage.clipboard.update()
+        self.invoke_method("setClipboard", {"value": value})
+
+    def get_clipboard(self):
+        return self.invoke_method("getClipboard", wait_for_result=True)
 
     @beartype
     def launch_url(
@@ -414,9 +415,6 @@ class Page(Control):
 
     def close_in_app_web_view(self):
         self.invoke_method("closeInAppWebView")
-
-    def method_a(self):
-        return self.invoke_method("methodA", {"arg1": "Hello!"}, wait_for_result=True)
 
     def invoke_method(
         self,
@@ -1146,7 +1144,6 @@ class Offstage(Control):
         )
 
         self.__controls: List[Control] = []
-        self.__clipboard = Clipboard()
         self.__client_storage = ClientStorage()
         self.__banner = None
         self.__snack_bar = None
@@ -1159,8 +1156,6 @@ class Offstage(Control):
     def _get_children(self):
         children = []
         children.extend(self.__controls)
-        if self.__clipboard:
-            children.append(self.__clipboard)
         if self.__client_storage:
             children.append(self.__client_storage)
         if self.__banner:
@@ -1177,11 +1172,6 @@ class Offstage(Control):
     @property
     def controls(self):
         return self.__controls
-
-    # clipboard
-    @property
-    def clipboard(self):
-        return self.__clipboard
 
     # client_storage
     @property

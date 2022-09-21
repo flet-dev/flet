@@ -7,7 +7,6 @@ enum ControlType {
   checkbox,
   circleAvatar,
   clientstorage,
-  clipboard,
   column,
   container,
   divider,

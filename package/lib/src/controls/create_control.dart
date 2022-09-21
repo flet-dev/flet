@@ -16,7 +16,6 @@ import 'card.dart';
 import 'checkbox.dart';
 import 'circle_avatar.dart';
 import 'client_storage.dart';
-import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'divider.dart';
@@ -88,8 +87,6 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parent: parent, control: controlView.control);
         case ControlType.markdown:
           return MarkdownControl(parent: parent, control: controlView.control);
-        case ControlType.clipboard:
-          return ClipboardControl(parent: parent, control: controlView.control);
         case ControlType.clientstorage:
           return ClientStorageControl(
               parent: parent, control: controlView.control);

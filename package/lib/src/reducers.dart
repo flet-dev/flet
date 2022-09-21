@@ -1,6 +1,7 @@
 // One simple action: Increment
 import 'dart:convert';
 
+import 'package:flet/src/utils/clipboard.dart';
 import 'package:flet/src/utils/launch_url.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -214,13 +215,15 @@ AppState appReducer(AppState state, dynamic action) {
             int.tryParse(action.payload.args["window_width"] ?? ""),
             int.tryParse(action.payload.args["window_height"] ?? ""));
         break;
-      case "methodA":
-        action.ws.pageEventFromWeb(
+      case "setClipboard":
+        setClipboard(action.payload.args["value"]!);
+        break;
+      case "getClipboard":
+        getClipboard().then((value) => action.ws.pageEventFromWeb(
             eventTarget: "page",
             eventName: "invoke_method_result",
             eventData: json.encode(InvokeMethodResult(
-                methodId: action.payload.methodId,
-                result: action.payload.args["arg1"])));
+                methodId: action.payload.methodId, result: value))));
         break;
     }
   } else if (action is AddPageControlsAction) {
