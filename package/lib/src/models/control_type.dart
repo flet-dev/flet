@@ -22,7 +22,6 @@ enum ControlType {
   icon,
   iconButton,
   image,
-  launchUrl,
   listTile,
   listView,
   markdown,

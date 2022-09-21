@@ -29,7 +29,6 @@ from flet.control_event import ControlEvent
 from flet.event import Event
 from flet.event_handler import EventHandler
 from flet.floating_action_button import FloatingActionButton
-from flet.launch_url import LaunchUrl
 from flet.protocol import Command
 from flet.pubsub import PubSub
 from flet.snack_bar import SnackBar
@@ -399,8 +398,19 @@ class Page(Control):
         url: str,
         web_window_name: Optional[str] = None,
         web_popup_window: bool = False,
+        window_width: Optional[int] = None,
+        window_height: Optional[int] = None,
     ):
-        self.__offstage.launch_url.launch_url(url, web_window_name, web_popup_window)
+        args = {"url": url}
+        if web_window_name != None:
+            args["web_window_name"] = web_window_name
+        if web_popup_window != None:
+            args["web_popup_window"] = str(web_popup_window)
+        if window_width != None:
+            args["window_width"] = str(window_width)
+        if window_height != None:
+            args["window_height"] = str(window_height)
+        self.invoke_method("launchUrl", args)
 
     def close_in_app_web_view(self):
         self.invoke_method("closeInAppWebView")
@@ -1138,7 +1148,6 @@ class Offstage(Control):
         self.__controls: List[Control] = []
         self.__clipboard = Clipboard()
         self.__client_storage = ClientStorage()
-        self.__launch_url = LaunchUrl()
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
@@ -1154,8 +1163,6 @@ class Offstage(Control):
             children.append(self.__clipboard)
         if self.__client_storage:
             children.append(self.__client_storage)
-        if self.__launch_url:
-            children.append(self.__launch_url)
         if self.__banner:
             children.append(self.__banner)
         if self.__snack_bar:
@@ -1180,11 +1187,6 @@ class Offstage(Control):
     @property
     def client_storage(self):
         return self.__client_storage
-
-    # launch_url
-    @property
-    def launch_url(self):
-        return self.__launch_url
 
     # splash
     @property

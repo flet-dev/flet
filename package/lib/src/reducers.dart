@@ -1,6 +1,7 @@
 // One simple action: Increment
 import 'dart:convert';
 
+import 'package:flet/src/utils/launch_url.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -204,6 +205,14 @@ AppState appReducer(AppState state, dynamic action) {
     switch (action.payload.methodName) {
       case "closeInAppWebView":
         closeInAppWebView();
+        break;
+      case "launchUrl":
+        openWebBrowser(
+            action.payload.args["url"]!,
+            action.payload.args["web_window_name"],
+            action.payload.args["web_popup_window"]?.toLowerCase() == "true",
+            int.tryParse(action.payload.args["window_width"] ?? ""),
+            int.tryParse(action.payload.args["window_height"] ?? ""));
         break;
       case "methodA":
         action.ws.pageEventFromWeb(

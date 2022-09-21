@@ -30,7 +30,6 @@ import 'grid_view.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
-import 'launch_url.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
 import 'markdown.dart';
@@ -94,8 +93,6 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
         case ControlType.clientstorage:
           return ClientStorageControl(
               parent: parent, control: controlView.control);
-        case ControlType.launchUrl:
-          return LaunchUrlControl(parent: parent, control: controlView.control);
         case ControlType.image:
           return ImageControl(parent: parent, control: controlView.control);
         case ControlType.divider:
