@@ -40,7 +40,7 @@ class PubSubHub:
         )
         with self.__lock:
             if topic in self.__topic_subscribers:
-                for session_id, handler in self.__topic_subscribers[topic].items() :
+                for session_id, handler in self.__topic_subscribers[topic].items():
                     if except_session_id != session_id:
                         self.__send(handler, [topic, message])
 
