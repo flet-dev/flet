@@ -5,9 +5,9 @@ class EventHandler:
 
     def handler(self, e):
         for h in self.__handlers.keys():
-            if self.__result_converter != None:
+            if self.__result_converter is not None:
                 r = self.__result_converter(e)
-                if r != None:
+                if r is not None:
                     r.target = e.target
                     r.name = e.name
                     r.data = e.data
@@ -18,7 +18,7 @@ class EventHandler:
                 h(e)
 
     def subscribe(self, handler):
-        if handler != None:
+        if handler is not None:
             self.__handlers[handler] = True
 
     def unsubscribe(self, handler):
