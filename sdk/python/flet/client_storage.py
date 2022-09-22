@@ -20,7 +20,7 @@ class ClientStorage:
         jv = self.__page.invoke_method(
             "clientStorage:get", {"key": key}, wait_for_result=True
         )
-        if jv != None:
+        if jv:
             return json.loads(jv)
         return None
 

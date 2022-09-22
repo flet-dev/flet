@@ -158,7 +158,7 @@ class Container(ConstrainedControl):
 
     def _get_children(self):
         children = []
-        if self.__content != None:
+        if self.__content is not None:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
@@ -343,7 +343,7 @@ class Container(ConstrainedControl):
     @on_click.setter
     def on_click(self, handler):
         self.__on_click.subscribe(handler)
-        if handler != None:
+        if handler is not None:
             self._set_attr("onclick", True)
         else:
             self._set_attr("onclick", None)
@@ -356,7 +356,7 @@ class Container(ConstrainedControl):
     @on_long_press.setter
     def on_long_press(self, handler):
         self._add_event_handler("long_press", handler)
-        if handler != None:
+        if handler is not None:
             self._set_attr("onLongPress", True)
         else:
             self._set_attr("onLongPress", None)
@@ -369,7 +369,7 @@ class Container(ConstrainedControl):
     @on_hover.setter
     def on_hover(self, handler):
         self._add_event_handler("hover", handler)
-        if handler != None:
+        if handler is not None:
             self._set_attr("onHover", True)
         else:
             self._set_attr("onHover", None)

@@ -89,7 +89,7 @@ class ShaderMask(ConstrainedControl):
 
     def _get_children(self):
         children = []
-        if self.__content != None:
+        if self.__content is not None:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children

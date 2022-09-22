@@ -179,7 +179,7 @@ class Dropdown(FormFieldControl):
 class Option(Control):
     def __init__(self, key=None, text=None, disabled=None, ref=None):
         Control.__init__(self, ref=ref, disabled=disabled)
-        assert key != None or text != None, "key or text must be specified"
+        assert key is not None or text is not None, "key or text must be specified"
         self.key = key
         self.text = text
         self.disabled = disabled

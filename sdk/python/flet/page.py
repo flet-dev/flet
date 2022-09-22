@@ -37,7 +37,7 @@ from flet.view import View
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 
@@ -53,8 +53,7 @@ class Page(Control):
         self._Control__uid = "page"
         self.__conn = conn
         self._session_id = session_id
-        self._index = {}  # index with all page controls
-        self._index[self._Control__uid] = self
+        self._index = {self._Control__uid: self}  # index with all page controls
         self._last_event = None
         self._event_available = threading.Event()
         self._fetch_page_details()
@@ -781,7 +780,7 @@ class Page(Control):
     @property
     def width(self):
         w = self._get_attr("width")
-        if w != None and w != "":
+        if w:
             return float(w)
         return 0
 
@@ -789,7 +788,7 @@ class Page(Control):
     @property
     def height(self):
         h = self._get_attr("height")
-        if h != None and h != "":
+        if h:
             return float(h)
         return 0
 
@@ -797,7 +796,7 @@ class Page(Control):
     @property
     def window_width(self) -> OptionalNumber:
         w = self._get_attr("windowWidth")
-        if w != None and w != "":
+        if w:
             return float(w)
         return 0
 
@@ -810,7 +809,7 @@ class Page(Control):
     @property
     def window_height(self) -> OptionalNumber:
         h = self._get_attr("windowHeight")
-        if h != None and h != "":
+        if h:
             return float(h)
         return 0
 
@@ -823,7 +822,7 @@ class Page(Control):
     @property
     def window_top(self) -> OptionalNumber:
         w = self._get_attr("windowTop")
-        if w != None and w != "":
+        if w:
             return float(w)
         return 0
 
@@ -836,7 +835,7 @@ class Page(Control):
     @property
     def window_left(self) -> OptionalNumber:
         h = self._get_attr("windowLeft")
-        if h != None and h != "":
+        if h:
             return float(h)
         return 0
 
