@@ -95,7 +95,7 @@ class IconButton(ConstrainedControl):
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
-        if self.__content == None:
+        if self.__content is None:
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]

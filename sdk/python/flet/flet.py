@@ -28,7 +28,7 @@ from flet.utils import *
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 
@@ -64,7 +64,7 @@ def page(
         route_url_strategy=route_url_strategy,
     )
     url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
-    if url_prefix != None:
+    if url_prefix is not None:
         print(url_prefix, conn.page_url)
     else:
         logging.info(f"Page URL: {conn.page_url}")
@@ -90,8 +90,7 @@ def app(
     web_renderer="canvaskit",
     route_url_strategy="hash",
 ):
-
-    if target == None:
+    if target is None:
         raise Exception("target argument is not specified")
 
     conn = _connect_internal(
@@ -108,7 +107,7 @@ def app(
     )
 
     url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
-    if url_prefix != None:
+    if url_prefix is not None:
         print(url_prefix, conn.page_url)
     else:
         logging.info(f"App URL: {conn.page_url}")
@@ -129,7 +128,7 @@ def app(
     if (
         (view == FLET_APP or view == FLET_APP_HIDDEN)
         and not is_linux_server()
-        and url_prefix == None
+        and url_prefix is None
     ):
         fvp = _open_flet_view(conn.page_url, view == FLET_APP_HIDDEN)
         try:
@@ -137,7 +136,7 @@ def app(
         except (Exception) as e:
             pass
     else:
-        if view == WEB_BROWSER and url_prefix == None:
+        if view == WEB_BROWSER and url_prefix is None:
             open_in_browser(conn.page_url)
         try:
             while True:
@@ -148,7 +147,7 @@ def app(
 
     conn.close()
 
-    if fvp != None and not is_windows():
+    if fvp is not None and not is_windows():
         try:
             logging.debug(f"Flet View process {fvp.pid}")
             os.kill(fvp.pid + 1, signal.SIGKILL)
@@ -172,12 +171,12 @@ def _connect_internal(
     web_renderer=None,
     route_url_strategy=None,
 ):
-    if share and server == None:
+    if share and server is None:
         server = constants.HOSTED_SERVICE_URL
-    elif server == None:
+    elif server is None:
         # local mode
         env_port = os.getenv("FLET_SERVER_PORT")
-        if env_port != None and env_port != "":
+        if env_port is not None and env_port:
             port = env_port
 
         # page with a custom port starts detached process
@@ -225,11 +224,11 @@ def _connect_internal(
     conn = Connection(ws)
     conn.on_event = on_event
 
-    if session_handler != None:
+    if session_handler is not None:
         conn.on_session_created = on_session_created
 
     def _on_ws_connect():
-        if conn.page_name == None:
+        if conn.page_name is None:
             conn.page_name = page_name
         assert conn.page_name is not None
         result = conn.register_host_client(
@@ -266,7 +265,6 @@ def _connect_internal(
 def _start_flet_server(
     host, port, attached, assets_dir, upload_dir, web_renderer, route_url_strategy
 ):
-
     if port == 0:
         port = _get_free_tcp_port()
 
@@ -320,11 +318,11 @@ def _start_flet_server(
         if host != "127.0.0.1":
             fletd_env["FLET_ALLOW_REMOTE_HOST_CLIENTS"] = "true"
 
-    if web_renderer not in [None, "", "auto"]:
+    if web_renderer and web_renderer not in ["auto"]:
         logging.info(f"Web renderer configured: {web_renderer}")
         fletd_env["FLET_WEB_RENDERER"] = web_renderer
 
-    if route_url_strategy != None:
+    if route_url_strategy is not None:
         logging.info(f"Route URL strategy configured: {route_url_strategy}")
         fletd_env["FLET_ROUTE_URL_STRATEGY"] = route_url_strategy
 
@@ -368,7 +366,6 @@ def _start_flet_server(
 
 
 def _open_flet_view(page_url, hidden):
-
     logging.info(f"Starting Flet View app...")
 
     args = []
@@ -547,7 +544,7 @@ class Handler(FileSystemEventHandler):
 
     def start_process(self):
         p_env = {**os.environ}
-        if self.port != None:
+        if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
 
@@ -558,7 +555,7 @@ class Handler(FileSystemEventHandler):
 
     def on_any_event(self, event):
         if (
-            self.script_path == None or event.src_path == self.script_path
+            self.script_path is None or event.src_path == self.script_path
         ) and not event.is_directory:
             current_time = time.time()
             if (current_time - self.last_time) > 0.5 and self.is_running:
@@ -657,7 +654,7 @@ def main():
     script_dir = os.path.dirname(script_path)
 
     port = args.port
-    if args.port == None:
+    if args.port is None:
         port = _get_free_tcp_port()
 
     my_event_handler = Handler(
@@ -679,7 +676,7 @@ def main():
     except KeyboardInterrupt:
         pass
 
-    if my_event_handler.fvp != None and not is_windows():
+    if my_event_handler.fvp is not None and not is_windows():
         try:
             logging.debug(f"Flet View process {my_event_handler.fvp.pid}")
             os.kill(my_event_handler.fvp.pid + 1, signal.SIGKILL)

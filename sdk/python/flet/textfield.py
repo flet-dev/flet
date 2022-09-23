@@ -316,7 +316,7 @@ class TextField(FormFieldControl):
     @on_change.setter
     def on_change(self, handler):
         self._add_event_handler("change", handler)
-        if handler != None:
+        if handler is not None:
             self._set_attr("onchange", True)
         else:
             self._set_attr("onchange", None)
