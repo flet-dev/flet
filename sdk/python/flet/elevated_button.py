@@ -98,8 +98,12 @@ class ElevatedButton(ConstrainedControl):
 
     def _before_build_command(self):
         super()._before_build_command()
-        if self.__color != None or self.__bgcolor != None or self.__elevation != None:
-            if self.__style == None:
+        if (
+            self.__color is not None
+            or self.__bgcolor is not None
+            or self.__elevation is not None
+        ):
+            if self.__style is None:
                 self.__style = ButtonStyle()
             if self.__style.color != self.__color:
                 self.__style.color = self.__color
@@ -110,7 +114,7 @@ class ElevatedButton(ConstrainedControl):
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
-        if self.__content == None:
+        if self.__content is None:
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
@@ -226,7 +230,7 @@ class ElevatedButton(ConstrainedControl):
     @on_hover.setter
     def on_hover(self, handler):
         self._add_event_handler("hover", handler)
-        if handler != None:
+        if handler is not None:
             self._set_attr("onHover", True)
         else:
             self._set_attr("onHover", None)
