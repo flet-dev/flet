@@ -81,7 +81,6 @@ class QueryString(UrlComponents):
 
     @property
     def to_dict(self) -> dict:
-        self._pattern = re.compile(r"\?[\w\D]+")
         self._data = urllib.parse.urlparse(self.url).query
         return urllib.parse.parse_qs(self._data)
 
