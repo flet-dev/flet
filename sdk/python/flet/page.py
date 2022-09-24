@@ -357,6 +357,7 @@ class Page(Control):
             else:
                 # activate desktop window
                 self.window_focused = True
+                self.update()
 
         login_evt = LoginEvent(
             error=d["error"], error_description=d["error_description"]
