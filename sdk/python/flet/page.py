@@ -30,6 +30,7 @@ from flet.event_handler import EventHandler
 from flet.floating_action_button import FloatingActionButton
 from flet.protocol import Command
 from flet.pubsub import PubSub
+from flet.session_storage import SessionStorage
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
 from flet.types import PaddingValue
@@ -68,6 +69,7 @@ class Page(Control):
         self.__dark_theme = None
         self.__pubsub = PubSub(conn.pubsubhub, session_id)
         self.__client_storage = ClientStorage(self)
+        self.__session_storage = SessionStorage(self)
         self.__authorization: Optional[Authorization] = None
 
         self.__on_close = EventHandler()
@@ -686,6 +688,11 @@ class Page(Control):
     @property
     def client_storage(self):
         return self.__client_storage
+
+    # session_storage
+    @property
+    def session(self):
+        return self.__session_storage
 
     # splash
     @property
