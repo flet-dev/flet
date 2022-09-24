@@ -1,19 +1,18 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-
-import '../utils/collections.dart';
-import '../utils/colors.dart';
-import '../utils/images.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/collections.dart';
+import '../utils/colors.dart';
+import '../utils/images.dart';
 import '../utils/uri.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -103,7 +102,7 @@ class ImageControl extends StatelessWidget {
           }
 
           return constrainedControl(
-              _clipCorners(image, control), parent, control);
+              context, _clipCorners(image, control), parent, control);
         });
   }
 

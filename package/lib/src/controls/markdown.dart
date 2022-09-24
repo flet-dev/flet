@@ -53,7 +53,7 @@ class MarkdownControl extends StatelessWidget {
                     eventData: href?.toString() ?? "");
               });
 
-          return constrainedControl(markdown, parent, control);
+          return constrainedControl(context, markdown, parent, control);
         });
   }
 }

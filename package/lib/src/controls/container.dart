@@ -2,15 +2,15 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import '../protocol/container_tap_event.dart';
-import '../utils/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../protocol/container_tap_event.dart';
 import '../utils/alignment.dart';
+import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
@@ -149,6 +149,7 @@ class ContainerControl extends StatelessWidget {
                   ),
                 ));
             return constrainedControl(
+                context,
                 animation == null
                     ? Container(
                         width: control.attrDouble("width"),
@@ -164,6 +165,14 @@ class ContainerControl extends StatelessWidget {
                         height: control.attrDouble("height"),
                         margin: parseEdgeInsets(control, "margin"),
                         clipBehavior: clipBehavior,
+                        onEnd: control.attrBool("onAnimationEnd", false)!
+                            ? () {
+                                ws.pageEventFromWeb(
+                                    eventTarget: control.id,
+                                    eventName: "animation_end",
+                                    eventData: "container");
+                              }
+                            : null,
                         child: ink),
                 parent,
                 control);
@@ -188,6 +197,14 @@ class ContainerControl extends StatelessWidget {
                     alignment: parseAlignment(control, "alignment"),
                     decoration: boxDecor,
                     clipBehavior: clipBehavior,
+                    onEnd: control.attrBool("onAnimationEnd", false)!
+                        ? () {
+                            ws.pageEventFromWeb(
+                                eventTarget: control.id,
+                                eventName: "animation_end",
+                                eventData: "container");
+                          }
+                        : null,
                     child: child);
 
             if ((onClick || onLongPress || onHover) && !disabled) {
@@ -241,7 +258,7 @@ class ContainerControl extends StatelessWidget {
                 ),
               );
             }
-            return constrainedControl(container, parent, control);
+            return constrainedControl(context, container, parent, control);
           }
         });
   }

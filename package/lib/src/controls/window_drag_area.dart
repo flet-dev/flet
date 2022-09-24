@@ -32,6 +32,7 @@ class WindowDragAreaControl extends StatelessWidget {
     }
 
     return constrainedControl(
+        context,
         DragToMoveArea(
             child: createControl(control, contentCtrls.first.id, disabled)),
         parent,

@@ -24,6 +24,7 @@ class ProgressBarControl extends StatelessWidget {
         Theme.of(context), control.attrString("bgColor", "")!);
 
     return constrainedControl(
+        context,
         LinearProgressIndicator(
           value: value,
           minHeight: barHeight,

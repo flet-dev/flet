@@ -1,11 +1,9 @@
-import 'error.dart';
-import '../utils/animations.dart';
-import '../utils/gradient.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/borders.dart';
+import '../utils/animations.dart';
 import 'create_control.dart';
+import 'error.dart';
 
 class AnimatedSwitcherControl extends StatelessWidget {
   final Control? parent;
@@ -41,6 +39,7 @@ class AnimatedSwitcherControl extends StatelessWidget {
     var child = createControl(control, contentCtrls.first.id, disabled);
 
     return constrainedControl(
+        context,
         AnimatedSwitcher(
             duration: Duration(milliseconds: duration),
             reverseDuration: Duration(milliseconds: reverseDuration),

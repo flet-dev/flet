@@ -6,7 +6,14 @@ from flet.control import Control, InputBorder, OptionalNumber, TextAlign
 from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
-from flet.types import BorderRadiusValue, PaddingValue
+from flet.types import (
+    AnimationValue,
+    BorderRadiusValue,
+    OffsetValue,
+    PaddingValue,
+    RotateValue,
+    ScaleValue,
+)
 
 try:
     from typing import Literal
@@ -39,6 +46,16 @@ class TextField(FormFieldControl):
         height: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -101,6 +118,16 @@ class TextField(FormFieldControl):
             height=height,
             expand=expand,
             opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,
