@@ -11,6 +11,13 @@ Future setWindowTitle(String title) async {
   }
 }
 
+Future setWindowBackgroundColor(Color bgcolor) async {
+  if (isDesktop()) {
+    debugPrint("setWindowBackgroundColor()");
+    await windowManager.setBackgroundColor(bgcolor);
+  }
+}
+
 Future setWindowSize(double? width, double? height) async {
   if (isDesktop()) {
     debugPrint("setWindowSize()");

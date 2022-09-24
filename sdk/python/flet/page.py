@@ -793,6 +793,16 @@ class Page(Control):
             return float(h)
         return 0
 
+    # window_bgcolor
+    @property
+    def window_bgcolor(self):
+        return self._get_attr("windowBgcolor")
+
+    @window_bgcolor.setter
+    @beartype
+    def window_bgcolor(self, value):
+        self._set_attr("windowBgcolor", value)
+
     # window_width
     @property
     def window_width(self) -> OptionalNumber:
