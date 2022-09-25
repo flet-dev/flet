@@ -79,9 +79,10 @@ class Page(Control):
 
         self.__last_route = None
 
-        # authorize/login
+        # authorize/login/logout
         self.__on_login = EventHandler()
         self._add_event_handler("authorize", self.__on_authorize)
+        self.__on_logout = EventHandler()
 
         # route_change
         def convert_route_change_event(e):
@@ -372,6 +373,12 @@ class Page(Control):
             except Exception as ex:
                 login_evt.error = str(ex)
         self.__on_login.handler(login_evt)
+
+    def logout(self):
+        self.__authorization = None
+        self.__on_logout.handler(
+            ControlEvent(target="page", name="logout", data="", control=self, page=self)
+        )
 
     def close(self):
         if self._session_id == constants.ZERO_SESSION:
@@ -1147,6 +1154,15 @@ class Page(Control):
     @on_login.setter
     def on_login(self, handler):
         self.__on_login.subscribe(handler)
+
+    # on_logout
+    @property
+    def on_logout(self):
+        return self.__on_logout
+
+    @on_logout.setter
+    def on_logout(self, handler):
+        self.__on_logout.subscribe(handler)
 
 
 class Offstage(Control):
