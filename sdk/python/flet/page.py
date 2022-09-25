@@ -3,7 +3,6 @@ import logging
 import threading
 import time
 import uuid
-from ast import arg
 from dataclasses import dataclass
 from typing import Any, cast
 
@@ -285,20 +284,6 @@ class Page(Control):
         assert self._last_event is not None
         return self._last_event
 
-    def show_signin(self, auth_providers="*", auth_groups=False, allow_dismiss=False):
-        with self._lock:
-            self.signin = auth_providers
-            self.signin_groups = auth_groups
-            self.signin_allow_dismiss = allow_dismiss
-            self.__update(self)
-
-        while True:
-            e = self.wait_event()
-            if e.control == self and e.name.lower() == "signin":
-                return True
-            elif e.control == self and e.name.lower() == "dismisssignin":
-                return False
-
     def go(self, route):
         self.route = route
         self.__on_route_change.handler(
@@ -328,6 +313,7 @@ class Page(Control):
         fetch_groups=False,
         scope: Optional[List[str]] = None,
         saved_token: Optional[str] = None,
+        on_open_authorization_url=None,
     ):
         self.__authorization = Authorization(
             provider,
@@ -341,9 +327,12 @@ class Page(Control):
             result = self._send_command("oauthAuthorize", values=[state])
             if result.error != "":
                 raise Exception(result.error)
-            self.launch_url(
-                authorization_url, "flet_oauth_signin", web_popup_window=self.web
-            )
+            if on_open_authorization_url:
+                on_open_authorization_url(authorization_url)
+            else:
+                self.launch_url(
+                    authorization_url, "flet_oauth_signin", web_popup_window=self.web
+                )
         return self.__authorization
 
     def __on_authorize(self, e):
@@ -358,8 +347,7 @@ class Page(Control):
                 self.close_in_app_web_view()
             else:
                 # activate desktop window
-                self.window_focused = True
-                self.update()
+                self.window_to_front()
 
         login_evt = LoginEvent(
             error=d["error"], error_description=d["error_description"]
@@ -418,6 +406,10 @@ class Page(Control):
 
     def close_in_app_web_view(self):
         self.invoke_method("closeInAppWebView")
+
+    @beartype
+    def window_to_front(self):
+        self.invoke_method("windowToFront")
 
     def invoke_method(
         self,

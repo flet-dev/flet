@@ -511,6 +511,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.6"
+  window_to_front:
+    dependency: transitive
+    description:
+      name: window_to_front
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   xdg_directories:
     dependency: transitive
     description:

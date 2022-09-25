@@ -23,6 +23,7 @@ dependencies:
   file_picker: ^5.0.1
   shared_preferences: ^2.0.15
   flutter_svg: ^1.1.5
+  window_to_front: ^0.0.3
 
 dev_dependencies:
   flutter_test:

@@ -226,6 +226,9 @@ AppState appReducer(AppState state, dynamic action) {
             eventData: json.encode(InvokeMethodResult(
                 methodId: action.payload.methodId, result: value))));
         break;
+      case "windowToFront":
+        windowToFront();
+        break;
     }
     var clientStoragePrefix = "clientStorage:";
     if (action.payload.methodName.startsWith(clientStoragePrefix)) {
