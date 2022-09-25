@@ -695,17 +695,19 @@ func (h *sessionHandler) sessionCrashed(cmd *model.Command) (result string, err 
 func (h *sessionHandler) oauthAuthorize(cmd *model.Command) (result string, err error) {
 	var state string
 
-	if len(cmd.Values) < 1 {
-		return "", fmt.Errorf("oauthLogin command received wrong number of values")
+	if len(cmd.Attrs) < 1 {
+		return "", fmt.Errorf("oauthLogin command received wrong number of arguments")
 	}
 
 	// params
-	state = cmd.Values[0]
+	state = cmd.Attrs["state"]
 
 	// save page_id, session_id in a store
 	store.SetOAuthState(state, &model.OAuthState{
-		PageID:    h.session.Page.ID,
-		SessionID: h.session.ID,
+		PageID:           h.session.Page.ID,
+		SessionID:        h.session.ID,
+		CompletePageHtml: cmd.Attrs["completePageHtml"],
+		CompletePageUrl:  cmd.Attrs["completePageUrl"],
 	}, time.Duration(5)*time.Minute)
 
 	return "", nil

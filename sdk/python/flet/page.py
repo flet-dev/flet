@@ -5,6 +5,7 @@ import time
 import uuid
 from dataclasses import dataclass
 from typing import Any, cast
+from urllib.parse import urlparse
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
@@ -314,6 +315,8 @@ class Page(Control):
         scope: Optional[List[str]] = None,
         saved_token: Optional[str] = None,
         on_open_authorization_url=None,
+        complete_page_html: Optional[str] = None,
+        redirect_to_page=False,
     ):
         self.__authorization = Authorization(
             provider,
@@ -324,7 +327,15 @@ class Page(Control):
         )
         if saved_token == None:
             authorization_url, state = self.__authorization.get_authorization_data()
-            result = self._send_command("oauthAuthorize", values=[state])
+            auth_attrs = {"state": state}
+            if complete_page_html:
+                auth_attrs["completePageHtml"] = complete_page_html
+            if redirect_to_page:
+                up = urlparse(provider.redirect_url)
+                auth_attrs["completePageUrl"] = up._replace(
+                    path=self.__conn.page_name
+                ).geturl()
+            result = self._send_command("oauthAuthorize", attrs=auth_attrs)
             if result.error != "":
                 raise Exception(result.error)
             if on_open_authorization_url:
