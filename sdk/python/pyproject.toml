@@ -12,6 +12,8 @@ dependencies = [
     'typing_extensions; python_version < "3.8"',
     "repath>=0.9.0",
     "watchdog>=2.1.9",
+    "pyautogui>=0.9.53",
+    "python-xlib>=0.31",
 ]
 requires-python = ">=3.7"
 license = { text = "MIT" }

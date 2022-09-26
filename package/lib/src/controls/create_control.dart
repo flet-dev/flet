@@ -23,6 +23,7 @@ import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
 import 'dropdown.dart';
+import 'echoText.dart';
 import 'elevated_button.dart';
 import 'file_picker.dart';
 import 'floating_action_button.dart';
@@ -80,6 +81,9 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               dispatch: controlView.dispatch);
+        case ControlType.echoText:
+          return EchoTextControl(
+            parent: parent, control: controlView.control);
         case ControlType.text:
           return TextControl(parent: parent, control: controlView.control);
         case ControlType.icon:

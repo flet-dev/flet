@@ -15,6 +15,7 @@ enum ControlType {
   dragTarget,
   dropdown,
   dropdownOption,
+  echoText,
   elevatedButton,
   filePicker,
   floatingActionButton,
