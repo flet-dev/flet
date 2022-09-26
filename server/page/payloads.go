@@ -150,9 +150,6 @@ type SessionCrashedPayload struct {
 	Message string `json:"message"`
 }
 
-type CloseInAppWebViewPayload struct {
-}
-
 type InvokeMethodPayload struct {
 	MethodID   string            `json:"methodId"`
 	MethodName string            `json:"methodName"`

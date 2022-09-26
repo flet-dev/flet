@@ -198,9 +198,6 @@ AppState appReducer(AppState state, dynamic action) {
     // session crashed
     //
     return state.copyWith(error: action.payload.message);
-  } else if (action is CloseInAppWebViewAction) {
-    debugPrint("CloseInAppWebViewAction");
-    closeInAppWebView();
   } else if (action is InvokeMethodAction) {
     debugPrint(
         "InvokeMethodAction: ${action.payload.methodName} (${action.payload.args})");

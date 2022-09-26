@@ -5,7 +5,6 @@ enum MessageAction {
   appBecomeActive,
   appBecomeInactive,
   sessionCrashed,
-  closeInAppWebView,
   invokeMethod,
   addPageControls,
   replacePageControls,

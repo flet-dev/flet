@@ -11,7 +11,6 @@ import 'protocol/app_become_active_payload.dart';
 import 'protocol/app_become_inactive_payload.dart';
 import 'protocol/append_control_props_request.dart';
 import 'protocol/clean_control_payload.dart';
-import 'protocol/close_in_app_web_view_payload.dart';
 import 'protocol/invoke_method_payload.dart';
 import 'protocol/message.dart';
 import 'protocol/page_controls_batch_payload.dart';
@@ -158,10 +157,6 @@ class WebSocketClient {
       case MessageAction.sessionCrashed:
         _store.dispatch(
             SessionCrashedAction(SessionCrashedPayload.fromJson(msg.payload)));
-        break;
-      case MessageAction.closeInAppWebView:
-        _store.dispatch(CloseInAppWebViewAction(
-            CloseInAppWebViewPayload.fromJson(msg.payload)));
         break;
       case MessageAction.invokeMethod:
         _store.dispatch(InvokeMethodAction(

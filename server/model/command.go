@@ -6,40 +6,38 @@ import (
 )
 
 const (
-	AddCommand               string = "add"
-	ReplaceCommand           string = "replace"
-	SetCommand               string = "set"
-	AppendCommand            string = "append"
-	GetCommand               string = "get"
-	CleanCommand             string = "clean"
-	RemoveCommand            string = "remove"
-	BeginCommand             string = "begin"
-	EndCommand               string = "end"
-	GetUploadUrlCommand      string = "getuploadurl"
-	OAuthAuthorizeCommand    string = "oauthauthorize"
-	CloseInAppWebViewCommand string = "closeinappwebview"
-	InvokeMethodCommand      string = "invokemethod"
-	CloseCommand             string = "close"
-	ErrorCommand             string = "error"
+	AddCommand            string = "add"
+	ReplaceCommand        string = "replace"
+	SetCommand            string = "set"
+	AppendCommand         string = "append"
+	GetCommand            string = "get"
+	CleanCommand          string = "clean"
+	RemoveCommand         string = "remove"
+	BeginCommand          string = "begin"
+	EndCommand            string = "end"
+	GetUploadUrlCommand   string = "getuploadurl"
+	OAuthAuthorizeCommand string = "oauthauthorize"
+	InvokeMethodCommand   string = "invokemethod"
+	CloseCommand          string = "close"
+	ErrorCommand          string = "error"
 )
 
 var (
 	supportedCommands = map[string]*CommandMetadata{
-		AddCommand:               {Name: AddCommand, ShouldReturn: true},
-		ReplaceCommand:           {Name: ReplaceCommand, ShouldReturn: true},
-		SetCommand:               {Name: SetCommand, ShouldReturn: true},
-		AppendCommand:            {Name: SetCommand, ShouldReturn: true},
-		GetCommand:               {Name: GetCommand, ShouldReturn: true},
-		CleanCommand:             {Name: CleanCommand, ShouldReturn: true},
-		RemoveCommand:            {Name: RemoveCommand, ShouldReturn: true},
-		BeginCommand:             {Name: BeginCommand, ShouldReturn: false},
-		EndCommand:               {Name: EndCommand, ShouldReturn: true},
-		OAuthAuthorizeCommand:    {Name: OAuthAuthorizeCommand, ShouldReturn: true},
-		CloseInAppWebViewCommand: {Name: CloseInAppWebViewCommand, ShouldReturn: true},
-		InvokeMethodCommand:      {Name: InvokeMethodCommand, ShouldReturn: true},
-		GetUploadUrlCommand:      {Name: GetUploadUrlCommand, ShouldReturn: true},
-		CloseCommand:             {Name: CloseCommand, ShouldReturn: false},
-		ErrorCommand:             {Name: ErrorCommand, ShouldReturn: false},
+		AddCommand:            {Name: AddCommand, ShouldReturn: true},
+		ReplaceCommand:        {Name: ReplaceCommand, ShouldReturn: true},
+		SetCommand:            {Name: SetCommand, ShouldReturn: true},
+		AppendCommand:         {Name: SetCommand, ShouldReturn: true},
+		GetCommand:            {Name: GetCommand, ShouldReturn: true},
+		CleanCommand:          {Name: CleanCommand, ShouldReturn: true},
+		RemoveCommand:         {Name: RemoveCommand, ShouldReturn: true},
+		BeginCommand:          {Name: BeginCommand, ShouldReturn: false},
+		EndCommand:            {Name: EndCommand, ShouldReturn: true},
+		OAuthAuthorizeCommand: {Name: OAuthAuthorizeCommand, ShouldReturn: true},
+		InvokeMethodCommand:   {Name: InvokeMethodCommand, ShouldReturn: true},
+		GetUploadUrlCommand:   {Name: GetUploadUrlCommand, ShouldReturn: true},
+		CloseCommand:          {Name: CloseCommand, ShouldReturn: false},
+		ErrorCommand:          {Name: ErrorCommand, ShouldReturn: false},
 	}
 )
 

@@ -94,18 +94,17 @@ func (h *sessionHandler) execute(cmd *model.Command) (result string, err error) 
 		h.session.Page.Name, h.session.ID, cmd)
 
 	handlers := map[string]commandHandlerFn{
-		model.AddCommand:               h.add,
-		model.ReplaceCommand:           h.replace,
-		model.SetCommand:               h.set,
-		model.AppendCommand:            h.appendHandler,
-		model.GetCommand:               h.get,
-		model.CleanCommand:             h.clean,
-		model.RemoveCommand:            h.remove,
-		model.OAuthAuthorizeCommand:    h.oauthAuthorize,
-		model.CloseInAppWebViewCommand: h.closeInAppWebView,
-		model.InvokeMethodCommand:      h.invokeMethod,
-		model.GetUploadUrlCommand:      h.getUploadUrl,
-		model.ErrorCommand:             h.sessionCrashed,
+		model.AddCommand:            h.add,
+		model.ReplaceCommand:        h.replace,
+		model.SetCommand:            h.set,
+		model.AppendCommand:         h.appendHandler,
+		model.GetCommand:            h.get,
+		model.CleanCommand:          h.clean,
+		model.RemoveCommand:         h.remove,
+		model.OAuthAuthorizeCommand: h.oauthAuthorize,
+		model.InvokeMethodCommand:   h.invokeMethod,
+		model.GetUploadUrlCommand:   h.getUploadUrl,
+		model.ErrorCommand:          h.sessionCrashed,
 	}
 
 	handler := handlers[strings.ToLower(cmd.Name)]
@@ -709,14 +708,6 @@ func (h *sessionHandler) oauthAuthorize(cmd *model.Command) (result string, err 
 		CompletePageHtml: cmd.Attrs["completePageHtml"],
 		CompletePageUrl:  cmd.Attrs["completePageUrl"],
 	}, time.Duration(5)*time.Minute)
-
-	return "", nil
-}
-
-func (h *sessionHandler) closeInAppWebView(cmd *model.Command) (result string, err error) {
-
-	// broadcast command to all connected web clients
-	h.broadcastCommandToWebClients(NewMessage("", CloseInAppWebViewAction, &CloseInAppWebViewPayload{}))
 
 	return "", nil
 }
