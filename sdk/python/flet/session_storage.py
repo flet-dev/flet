@@ -18,7 +18,7 @@ class SessionStorage:
     def remove(self, key: str):
         self.__store.pop(key)
 
-    def get_keys(self, key_prefix: str) -> List[str]:
+    def get_keys(self) -> List[str]:
         return list(self.__store.keys())
 
     def clear(self):
