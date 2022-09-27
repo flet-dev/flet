@@ -71,10 +71,8 @@ class QueryString(UrlComponents):
         self.url = None
 
     def get(self, key: str) -> str:
-        self._pattern = re.compile(f"{key}=[\w\+?]+")
-        self._res = self._pattern.search(self.url)
-        self._res = self.url[self._res.start() + len(key) + 1 : self._res.end()]
-        return self._res if "+" not in self._res else self._res.replace("+", " ")
+        self._data = self.to_dict
+        return self._data[key]
 
     def post(self, kwargs: dict):
         return "?" + urllib.parse.urlencode(kwargs)
@@ -82,7 +80,7 @@ class QueryString(UrlComponents):
     @property
     def to_dict(self) -> dict:
         self._data = urllib.parse.urlparse(self.url).query
-        return urllib.parse.parse_qs(self._data)
+        return dict(urllib.parse.parse_qsl(self._data))
 
     # Path
     @property
