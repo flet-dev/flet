@@ -80,7 +80,7 @@ class Container(ConstrainedControl):
         image_repeat: ImageRepeat = None,
         image_fit: ImageFit = None,
         image_opacity: OptionalNumber = None,
-        ink: Optional[bool] = None,
+        ink: bool = False,
         animate: AnimationValue = None,
         on_click=None,
         on_long_press=None,
