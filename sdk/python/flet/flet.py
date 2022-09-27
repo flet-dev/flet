@@ -1,7 +1,6 @@
 import argparse
 import json
 import logging
-import os
 import signal
 import socket
 import subprocess
@@ -14,9 +13,8 @@ import urllib.request
 import zipfile
 from pathlib import Path
 from time import sleep
-from typing import Sequence
 
-from watchdog.events import FileSystemEventHandler, PatternMatchingEventHandler
+from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 from flet import constants, version

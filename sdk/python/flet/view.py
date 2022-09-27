@@ -1,7 +1,7 @@
 from beartype import beartype
-from beartype.typing import Dict, List, Optional
+from beartype.typing import List, Optional
 
-from flet import Control, padding
+from flet import Control
 from flet.app_bar import AppBar
 from flet.control import (
     CrossAxisAlignment,

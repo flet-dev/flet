@@ -167,9 +167,9 @@ class Row(ConstrainedControl):
     @beartype
     def scroll(self, value: ScrollMode):
         self.__scroll = value
-        if value == True:
+        if value is True:
             value = "auto"
-        elif value == False:
+        elif value is False:
             value = "none"
         self._set_attr("scroll", value)
 

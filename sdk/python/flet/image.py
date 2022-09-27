@@ -1,10 +1,9 @@
-from sys import version
 from typing import Any, Optional, Union
 
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber
+from flet.control import OptionalNumber
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
@@ -16,7 +15,7 @@ from flet.types import (
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 
