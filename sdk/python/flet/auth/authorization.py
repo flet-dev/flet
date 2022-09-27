@@ -107,8 +107,9 @@ class Authorization:
 
     def __refresh_token(self):
         if (
-            self.__token == None
-            or self.__token.expires_at == None
+            self.__token is None
+            or self.__token.expires_at is None
+            or self.__token.refresh_token is None
             or time.time() < self.__token.expires_at
         ):
             return
