@@ -10,7 +10,7 @@ from flet.types import BorderRadiusValue, PaddingValue
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 TextInputType = Literal[

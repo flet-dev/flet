@@ -1,11 +1,7 @@
 import dataclasses
 import json
 import threading
-from multiprocessing import Event
 from typing import Any, Dict, List, Optional
-from unittest.main import main
-
-from beartype import beartype
 
 from flet.control import Control
 from flet.ref import Ref

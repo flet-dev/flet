@@ -9,7 +9,7 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 ClipBehavior = Literal[None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"]
