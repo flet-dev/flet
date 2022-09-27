@@ -8,8 +8,8 @@ class OAuthToken:
     def __init__(
         self,
         access_token: str,
-        scope: List[str],
-        token_type: str,
+        scope: Optional[List[str]] = None,
+        token_type: Optional[str] = None,
         expires_in: Optional[int] = None,
         expires_at: Optional[float] = None,
         refresh_token: Optional[str] = None,

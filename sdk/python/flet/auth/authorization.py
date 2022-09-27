@@ -98,8 +98,8 @@ class Authorization:
     def __convert_token(self, t: OAuth2Token):
         return OAuthToken(
             access_token=t["access_token"],
-            scope=t["scope"],
-            token_type=t["token_type"],
+            scope=t.get("scope"),
+            token_type=t.get("token_type"),
             expires_in=t.get("expires_in"),
             expires_at=t.get("expires_at"),
             refresh_token=t.get("refresh_token"),
