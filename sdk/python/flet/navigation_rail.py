@@ -16,7 +16,7 @@ from flet.types import (
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 NavigationRailLabelType = Literal[None, "none", "all", "selected"]

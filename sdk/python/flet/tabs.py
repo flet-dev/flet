@@ -21,9 +21,9 @@ class Tab(Control):
         Control.__init__(self, ref=ref)
         self.text = text
         self.icon = icon
-        self.__content: Control = None
+        self.__content: Optional[Control] = None
         self.content = content
-        self.__tab_content: Control = None
+        self.__tab_content: Optional[Control] = None
         self.tab_content = tab_content
 
     def _get_control_name(self):

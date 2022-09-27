@@ -1,4 +1,3 @@
-from marshal import version
 from typing import Any, Optional, Union
 
 from beartype import beartype

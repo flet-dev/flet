@@ -17,7 +17,7 @@ from flet.types import (
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 TextInputType = Literal[
