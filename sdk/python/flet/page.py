@@ -345,6 +345,8 @@ class Page(Control):
                 self.launch_url(
                     authorization_url, "flet_oauth_signin", web_popup_window=self.web
                 )
+        else:
+            self.__on_login.handler(LoginEvent(error="", error_description=""))
         return self.__authorization
 
     def __on_authorize(self, e):
