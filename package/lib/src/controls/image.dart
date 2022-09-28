@@ -21,6 +21,8 @@ class ImageControl extends StatelessWidget {
   final Control? parent;
   final Control control;
 
+  static const String SVG_TAG = "<svg";
+
   const ImageControl({Key? key, required this.parent, required this.control})
       : super(key: key);
 
@@ -44,8 +46,8 @@ class ImageControl extends StatelessWidget {
     var color = HexColor.fromString(
         Theme.of(context), control.attrString("color", "")!);
     String? semanticsLabel = control.attrString("semanticsLabel");
+    var gaplessPlayback = control.attrBool("gaplessPlayback", false)!;
 
-    var uri = Uri.parse(src);
     return StoreConnector<AppState, Uri?>(
         distinct: true,
         converter: (store) => store.state.pageUri,
@@ -56,7 +58,7 @@ class ImageControl extends StatelessWidget {
             try {
               Uint8List bytes = base64Decode(srcBase64);
               if (arrayIndexOf(
-                      bytes, Uint8List.fromList(utf8.encode("<svg"))) !=
+                      bytes, Uint8List.fromList(utf8.encode(SVG_TAG))) !=
                   -1) {
                 image = SvgPicture.memory(bytes,
                     width: width,
@@ -73,12 +75,22 @@ class ImageControl extends StatelessWidget {
                     fit: fit,
                     color: color,
                     colorBlendMode: colorBlendMode,
+                    gaplessPlayback: gaplessPlayback,
                     semanticLabel: semanticsLabel);
               }
             } catch (ex) {
               return ErrorControl("Error decoding base64: ${ex.toString()}");
             }
+          } else if (src.contains(SVG_TAG)) {
+            image = SvgPicture.memory(Uint8List.fromList(utf8.encode(src)),
+                width: width,
+                height: height,
+                fit: fit ?? BoxFit.contain,
+                color: color,
+                colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
+                semanticsLabel: semanticsLabel);
           } else {
+            var uri = Uri.parse(src);
             var imgSrc =
                 uri.hasAuthority ? src : getAssetUri(pageUri!, src).toString();
             if (imgSrc.endsWith(".svg")) {
@@ -96,6 +108,7 @@ class ImageControl extends StatelessWidget {
                   repeat: repeat,
                   fit: fit,
                   color: color,
+                  gaplessPlayback: gaplessPlayback,
                   colorBlendMode: colorBlendMode,
                   semanticLabel: semanticsLabel);
             }

@@ -62,6 +62,7 @@ class Image(ConstrainedControl):
         border_radius: BorderRadiusValue = None,
         color: Optional[str] = None,
         color_blend_mode: Optional[BlendMode] = None,
+        gapless_playback: Optional[bool] = None,
         semantics_label: Optional[str] = None,
     ):
 
@@ -99,6 +100,7 @@ class Image(ConstrainedControl):
         self.border_radius = border_radius
         self.color = color
         self.color_blend_mode = color_blend_mode
+        self.gapless_playback = gapless_playback
         self.semantics_label = semantics_label
 
     def _get_control_name(self):
@@ -174,6 +176,16 @@ class Image(ConstrainedControl):
     @beartype
     def color_blend_mode(self, value: Optional[BlendMode]):
         self._set_attr("colorBlendMode", value)
+
+    # gapless_playback
+    @property
+    def gapless_playback(self) -> Optional[bool]:
+        return self._get_attr("gaplessPlayback", data_type="bool", def_value=False)
+
+    @gapless_playback.setter
+    @beartype
+    def gapless_playback(self, value: Optional[bool]):
+        self._set_attr("gaplessPlayback", value)
 
     # semantics_label
     @property
