@@ -24,6 +24,7 @@ class ProgressRingControl extends StatelessWidget {
         Theme.of(context), control.attrString("bgColor", "")!);
 
     return constrainedControl(
+        context,
         CircularProgressIndicator(
           value: value,
           strokeWidth: strokeWidth,

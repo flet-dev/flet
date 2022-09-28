@@ -81,6 +81,6 @@ class ListTileControl extends StatelessWidget {
           : null,
     );
 
-    return constrainedControl(tile, parent, control);
+    return constrainedControl(context, tile, parent, control);
   }
 }

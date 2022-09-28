@@ -86,6 +86,8 @@ BlendMode = Literal[
     "xor",
 ]
 
+ClipBehavior = Literal[None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"]
+
 
 class Control:
     def __init__(

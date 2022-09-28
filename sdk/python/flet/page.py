@@ -2,17 +2,20 @@ import json
 import logging
 import threading
 import time
+import uuid
 from dataclasses import dataclass
 from typing import Any, cast
+from urllib.parse import urlparse
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
 
 from flet import constants
 from flet.app_bar import AppBar
+from flet.auth.authorization import Authorization
+from flet.auth.oauth_provider import OAuthProvider
 from flet.banner import Banner
 from flet.client_storage import ClientStorage
-from flet.clipboard import Clipboard
 from flet.connection import Connection
 from flet.control import (
     Control,
@@ -25,9 +28,9 @@ from flet.control_event import ControlEvent
 from flet.event import Event
 from flet.event_handler import EventHandler
 from flet.floating_action_button import FloatingActionButton
-from flet.launch_url import LaunchUrl
 from flet.protocol import Command
 from flet.pubsub import PubSub
+from flet.session_storage import SessionStorage
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
 from flet.types import PaddingValue
@@ -65,6 +68,9 @@ class Page(Control):
         self.__theme = None
         self.__dark_theme = None
         self.__pubsub = PubSub(conn.pubsubhub, session_id)
+        self.__client_storage = ClientStorage(self)
+        self.__session_storage = SessionStorage(self)
+        self.__authorization: Optional[Authorization] = None
 
         self.__on_close = EventHandler()
         self._add_event_handler("close", self.__on_close.handler)
@@ -73,6 +79,12 @@ class Page(Control):
 
         self.__last_route = None
 
+        # authorize/login/logout
+        self.__on_login = EventHandler()
+        self._add_event_handler("authorize", self.__on_authorize)
+        self.__on_logout = EventHandler()
+
+        # route_change
         def convert_route_change_event(e):
             if self.__last_route == e.data:
                 return None  # avoid duplicate calls
@@ -94,6 +106,12 @@ class Page(Control):
 
         self.__on_keyboard_event = EventHandler(convert_keyboard_event)
         self._add_event_handler("keyboard_event", self.__on_keyboard_event.handler)
+
+        self.__method_calls: Dict[str, threading.Event] = {}
+        self.__method_call_results: Dict[
+            threading.Event, tuple[Optional[str], Optional[str]]
+        ] = {}
+        self._add_event_handler("invoke_method_result", self._on_invoke_method_result)
 
         self.__on_window_event = EventHandler()
         self._add_event_handler("window_event", self.__on_window_event.handler)
@@ -268,20 +286,6 @@ class Page(Control):
         assert self._last_event is not None
         return self._last_event
 
-    def show_signin(self, auth_providers="*", auth_groups=False, allow_dismiss=False):
-        with self._lock:
-            self.signin = auth_providers
-            self.signin_groups = auth_groups
-            self.signin_allow_dismiss = allow_dismiss
-            self.__update(self)
-
-        while True:
-            e = self.wait_event()
-            if e.control == self and e.name.lower() == "signin":
-                return True
-            elif e.control == self and e.name.lower() == "dismisssignin":
-                return False
-
     def go(self, route):
         self.route = route
         self.__on_route_change.handler(
@@ -304,12 +308,78 @@ class Page(Control):
 
         return r.result
 
-    def signout(self):
-        return self._send_command("signout")
+    def login(
+        self,
+        provider: OAuthProvider,
+        fetch_user=True,
+        fetch_groups=False,
+        scope: Optional[List[str]] = None,
+        saved_token: Optional[str] = None,
+        on_open_authorization_url=None,
+        complete_page_html: Optional[str] = None,
+        redirect_to_page=False,
+    ):
+        self.__authorization = Authorization(
+            provider,
+            fetch_user=fetch_user,
+            fetch_groups=fetch_groups,
+            scope=scope,
+            saved_token=saved_token,
+        )
+        if saved_token == None:
+            authorization_url, state = self.__authorization.get_authorization_data()
+            auth_attrs = {"state": state}
+            if complete_page_html:
+                auth_attrs["completePageHtml"] = complete_page_html
+            if redirect_to_page:
+                up = urlparse(provider.redirect_url)
+                auth_attrs["completePageUrl"] = up._replace(
+                    path=self.__conn.page_name
+                ).geturl()
+            result = self._send_command("oauthAuthorize", attrs=auth_attrs)
+            if result.error != "":
+                raise Exception(result.error)
+            if on_open_authorization_url:
+                on_open_authorization_url(authorization_url)
+            else:
+                self.launch_url(
+                    authorization_url, "flet_oauth_signin", web_popup_window=self.web
+                )
+        else:
+            self.__on_login.handler(LoginEvent(error="", error_description=""))
+        return self.__authorization
 
-    def can_access(self, users_and_groups):
-        return (
-            self._send_command("canAccess", [users_and_groups]).result.lower() == "true"
+    def __on_authorize(self, e):
+        assert self.__authorization is not None
+        d = json.loads(e.data)
+        state = d["state"]
+        assert state == self.__authorization.state
+
+        if not self.web:
+            if self.platform in ["ios", "android"]:
+                # close web view on mobile
+                self.close_in_app_web_view()
+            else:
+                # activate desktop window
+                self.window_to_front()
+
+        login_evt = LoginEvent(
+            error=d["error"], error_description=d["error_description"]
+        )
+        if login_evt.error == "":
+            # perform token request
+            code = d["code"]
+            assert code not in [None, ""]
+            try:
+                self.__authorization.request_token(code)
+            except Exception as ex:
+                login_evt.error = str(ex)
+        self.__on_login.handler(login_evt)
+
+    def logout(self):
+        self.__authorization = None
+        self.__on_logout.handler(
+            ControlEvent(target="page", name="logout", data="", control=self, page=self)
         )
 
     def close(self):
@@ -329,13 +399,88 @@ class Page(Control):
 
     @beartype
     def set_clipboard(self, value: str):
-        self.__offstage.clipboard.value = value
-        self.__offstage.clipboard.update()
+        self.invoke_method("setClipboard", {"value": value})
+
+    def get_clipboard(self):
+        return self.invoke_method("getClipboard", wait_for_result=True)
 
     @beartype
-    def launch_url(self, url: str):
-        self.__offstage.launch_url.url = url
-        self.__offstage.launch_url.update()
+    def launch_url(
+        self,
+        url: str,
+        web_window_name: Optional[str] = None,
+        web_popup_window: bool = False,
+        window_width: Optional[int] = None,
+        window_height: Optional[int] = None,
+    ):
+        args = {"url": url}
+        if web_window_name != None:
+            args["web_window_name"] = web_window_name
+        if web_popup_window != None:
+            args["web_popup_window"] = str(web_popup_window)
+        if window_width != None:
+            args["window_width"] = str(window_width)
+        if window_height != None:
+            args["window_height"] = str(window_height)
+        self.invoke_method("launchUrl", args)
+
+    def close_in_app_web_view(self):
+        self.invoke_method("closeInAppWebView")
+
+    @beartype
+    def window_to_front(self):
+        self.invoke_method("windowToFront")
+
+    def invoke_method(
+        self,
+        method_name: str,
+        arguments: Optional[Dict[str, str]] = None,
+        wait_for_result: bool = False,
+    ) -> Optional[str]:
+        method_id = uuid.uuid4().hex
+
+        # register callback
+        evt: Optional[threading.Event] = None
+        if wait_for_result:
+            evt = threading.Event()
+            self.__method_calls[method_id] = evt
+
+        # call method
+        result = self._send_command(
+            "invokeMethod", values=[method_id, method_name], attrs=arguments
+        )
+
+        if result.error != "":
+            if wait_for_result:
+                del self.__method_calls[method_id]
+            raise Exception(result.error)
+
+        if not wait_for_result:
+            return
+
+        assert evt is not None
+
+        if not evt.wait(5):
+            del self.__method_calls[method_id]
+            raise Exception(
+                f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
+            )
+
+        result, err = self.__method_call_results.pop(evt)
+        if err != None:
+            raise Exception(err)
+        if result == None:
+            return None
+        return result
+
+    def _on_invoke_method_result(self, e):
+        d = json.loads(e.data)
+        result = InvokeMethodResults(**d)
+        evt = self.__method_calls.pop(result.method_id, None)
+        if evt == None:
+            return
+        self.__method_call_results[evt] = (result.result, result.error)
+        evt.set()
 
     @beartype
     def show_snack_bar(self, snack_bar: SnackBar):
@@ -379,6 +524,11 @@ class Page(Control):
     def session_id(self):
         return self._session_id
 
+    # auth
+    @property
+    def auth(self):
+        return self.__authorization
+
     # pubsub
     @property
     def pubsub(self):
@@ -414,8 +564,8 @@ class Page(Control):
 
     # web
     @property
-    def web(self):
-        return self._get_attr("web", data_type="bool", def_value=False)
+    def web(self) -> bool:
+        return cast(bool, self._get_attr("web", data_type="bool", def_value=False))
 
     # platform
     @property
@@ -549,7 +699,12 @@ class Page(Control):
     # client_storage
     @property
     def client_storage(self):
-        return self.__offstage.client_storage
+        return self.__client_storage
+
+    # session_storage
+    @property
+    def session(self):
+        return self.__session_storage
 
     # splash
     @property
@@ -656,6 +811,16 @@ class Page(Control):
         if h:
             return float(h)
         return 0
+
+    # window_bgcolor
+    @property
+    def window_bgcolor(self):
+        return self._get_attr("windowBgcolor")
+
+    @window_bgcolor.setter
+    @beartype
+    def window_bgcolor(self, value):
+        self._set_attr("windowBgcolor", value)
 
     # window_width
     @property
@@ -983,6 +1148,24 @@ class Page(Control):
     def on_disconnect(self, handler):
         self.__on_disconnect.subscribe(handler)
 
+    # on_login
+    @property
+    def on_login(self):
+        return self.__on_login
+
+    @on_login.setter
+    def on_login(self, handler):
+        self.__on_login.subscribe(handler)
+
+    # on_logout
+    @property
+    def on_logout(self):
+        return self.__on_logout
+
+    @on_logout.setter
+    def on_logout(self, handler):
+        self.__on_logout.subscribe(handler)
+
 
 class Offstage(Control):
     def __init__(
@@ -1000,9 +1183,6 @@ class Offstage(Control):
         )
 
         self.__controls: List[Control] = []
-        self.__clipboard = Clipboard()
-        self.__client_storage = ClientStorage()
-        self.__launch_url = LaunchUrl()
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
@@ -1014,12 +1194,6 @@ class Offstage(Control):
     def _get_children(self):
         children = []
         children.extend(self.__controls)
-        if self.__clipboard:
-            children.append(self.__clipboard)
-        if self.__client_storage:
-            children.append(self.__client_storage)
-        if self.__launch_url:
-            children.append(self.__launch_url)
         if self.__banner:
             children.append(self.__banner)
         if self.__snack_bar:
@@ -1034,21 +1208,6 @@ class Offstage(Control):
     @property
     def controls(self):
         return self.__controls
-
-    # clipboard
-    @property
-    def clipboard(self):
-        return self.__clipboard
-
-    # client_storage
-    @property
-    def client_storage(self):
-        return self.__client_storage
-
-    # launch_url
-    @property
-    def launch_url(self):
-        return self.__launch_url
 
     # splash
     @property
@@ -1108,3 +1267,16 @@ class KeyboardEvent(ControlEvent):
     ctrl: bool
     alt: bool
     meta: bool
+
+
+@dataclass
+class LoginEvent(ControlEvent):
+    error: str
+    error_description: str
+
+
+@dataclass
+class InvokeMethodResults:
+    method_id: str
+    result: Optional[str]
+    error: Optional[str]

@@ -109,6 +109,6 @@ class IconButtonControl extends StatelessWidget {
       );
     }
 
-    return constrainedControl(button, parent, control);
+    return constrainedControl(context, button, parent, control);
   }
 }

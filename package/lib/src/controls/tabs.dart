@@ -177,6 +177,6 @@ class _TabsControlState extends State<TabsControl>
           );
         });
 
-    return constrainedControl(tabs, widget.parent, widget.control);
+    return constrainedControl(context, tabs, widget.parent, widget.control);
   }
 }

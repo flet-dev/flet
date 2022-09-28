@@ -114,7 +114,8 @@ class _SliderControlState extends State<SliderControl> {
                     }
                   : null);
 
-          return constrainedControl(slider, widget.parent, widget.control);
+          return constrainedControl(
+              context, slider, widget.parent, widget.control);
         });
   }
 }
