@@ -2,6 +2,7 @@ from flet.alert_dialog import AlertDialog
 from flet.alignment import Alignment
 from flet.animated_switcher import AnimatedSwitcher
 from flet.app_bar import AppBar
+from flet.audio import Audio
 from flet.banner import Banner
 from flet.buttons import ButtonStyle, OutlinedBorder
 from flet.card import Card
@@ -40,6 +41,7 @@ from flet.popup_menu_button import PopupMenuButton, PopupMenuItem
 from flet.progress_bar import ProgressBar
 from flet.progress_ring import ProgressRing
 from flet.pubsub import PubSub
+from flet.querystring import QueryString
 from flet.radio import Radio
 from flet.radio_group import RadioGroup
 from flet.ref import Ref
@@ -60,4 +62,3 @@ from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
 from flet.view import View
 from flet.window_drag_area import WindowDragArea
-from flet.querystring import QueryString
