@@ -12,6 +12,7 @@ environment:
   GO_VERSION: 1.19
   GO_TAGS: --tags release
   python_stack: python 3.10
+  FLUTTER_MACOS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.3.3-stable.zip
   GITHUB_TOKEN:
     secure: doX0dwjWhBmT56aJqR9NCbtMFJpDpdYxPCIB4vQoHfSR+nTa+pLCo6Yv5qWpD/90
   DOCKER_REGISTRY_USER:
@@ -106,6 +107,7 @@ for:
 
     install:
       # Flutter SDK
+      - snap refresh --channel=edge/core20 flutter
       - sudo snap install flutter --classic
       - flutter channel stable
       - flutter upgrade
@@ -170,7 +172,7 @@ for:
 
     install:
       - brew install cocoapods
-      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.3.2-stable.zip -o flutter_macos_stable.zip
+      - curl $FLUTTER_MACOS_URL -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter channel stable
@@ -206,6 +208,7 @@ for:
 
     install:
       # Flutter SDK
+      - snap refresh --channel=edge/core20 flutter
       - sudo snap install flutter --classic
       - flutter channel stable
       - flutter upgrade
@@ -239,6 +242,7 @@ for:
 
     install:
       # Flutter SDK
+      - snap refresh --channel=edge/core20 flutter
       - sudo snap install flutter --classic
       - flutter channel stable
       - flutter upgrade
@@ -316,6 +320,7 @@ for:
 
     install:
       # Flutter SDK
+      - snap refresh --channel=edge/core20 flutter
       - sudo snap install flutter --classic
       - flutter channel stable
       - flutter upgrade
