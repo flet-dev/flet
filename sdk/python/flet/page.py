@@ -290,8 +290,9 @@ class Page(Control):
         assert self._last_event is not None
         return self._last_event
 
-    def go(self, route):
-        self.route = route
+    def go(self, route, **kwargs):
+        self.route = route if kwargs == {} else route + self.query.post(kwargs)
+
         self.__on_route_change.handler(
             ControlEvent(
                 target="page",
@@ -302,6 +303,8 @@ class Page(Control):
             )
         )
         self.update()
+        self.query()  # Update query url (required when using go)
+
 
     def get_upload_url(self, file_name: str, expires: int):
         r = self._send_command(
