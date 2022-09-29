@@ -13,7 +13,7 @@ from flet.ref import Ref
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 
@@ -86,6 +86,8 @@ BlendMode = Literal[
     "xor",
 ]
 
+ClipBehavior = Literal[None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"]
+
 
 class Control:
     def __init__(
@@ -144,7 +146,7 @@ class Control:
 
     def _get_attr(self, name, def_value=None, data_type="string"):
         name = name.lower()
-        if not name in self.__attrs:
+        if name not in self.__attrs:
             return def_value
 
         s_val = self.__attrs[name][0]

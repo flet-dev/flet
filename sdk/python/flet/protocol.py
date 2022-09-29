@@ -1,6 +1,8 @@
 import json
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
+
+from beartype.typing import Dict
 
 
 class CommandEncoder(json.JSONEncoder):

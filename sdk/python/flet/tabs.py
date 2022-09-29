@@ -21,9 +21,9 @@ class Tab(Control):
         Control.__init__(self, ref=ref)
         self.text = text
         self.icon = icon
-        self.__content: Control = None
+        self.__content: Optional[Control] = None
         self.content = content
-        self.__tab_content: Control = None
+        self.__tab_content: Optional[Control] = None
         self.tab_content = tab_content
 
     def _get_control_name(self):
@@ -97,6 +97,7 @@ class Tabs(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -128,6 +129,7 @@ class Tabs(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             visible=visible,
             disabled=disabled,
             data=data,

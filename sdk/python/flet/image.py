@@ -1,10 +1,9 @@
-from sys import version
 from typing import Any, Optional, Union
 
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber
+from flet.control import BlendMode, OptionalNumber
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
@@ -16,7 +15,7 @@ from flet.types import (
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 
@@ -49,6 +48,7 @@ class Image(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -60,6 +60,10 @@ class Image(ConstrainedControl):
         repeat: ImageRepeat = None,
         fit: ImageFit = None,
         border_radius: BorderRadiusValue = None,
+        color: Optional[str] = None,
+        color_blend_mode: Optional[BlendMode] = None,
+        gapless_playback: Optional[bool] = None,
+        semantics_label: Optional[str] = None,
     ):
 
         ConstrainedControl.__init__(
@@ -82,6 +86,7 @@ class Image(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,
@@ -93,6 +98,10 @@ class Image(ConstrainedControl):
         self.fit = fit
         self.repeat = repeat
         self.border_radius = border_radius
+        self.color = color
+        self.color_blend_mode = color_blend_mode
+        self.gapless_playback = gapless_playback
+        self.semantics_label = semantics_label
 
     def _get_control_name(self):
         return "image"
@@ -148,3 +157,41 @@ class Image(ConstrainedControl):
     @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
+
+    # color
+    @property
+    def color(self):
+        return self._get_attr("color")
+
+    @color.setter
+    def color(self, value):
+        self._set_attr("color", value)
+
+    # color_blend_mode
+    @property
+    def color_blend_mode(self) -> Optional[BlendMode]:
+        return self._get_attr("colorBlendMode")
+
+    @color_blend_mode.setter
+    @beartype
+    def color_blend_mode(self, value: Optional[BlendMode]):
+        self._set_attr("colorBlendMode", value)
+
+    # gapless_playback
+    @property
+    def gapless_playback(self) -> Optional[bool]:
+        return self._get_attr("gaplessPlayback", data_type="bool", def_value=False)
+
+    @gapless_playback.setter
+    @beartype
+    def gapless_playback(self, value: Optional[bool]):
+        self._set_attr("gaplessPlayback", value)
+
+    # semantics_label
+    @property
+    def semantics_label(self):
+        return self._get_attr("semanticsLabel")
+
+    @semantics_label.setter
+    def semantics_label(self, value):
+        self._set_attr("semanticsLabel", value)

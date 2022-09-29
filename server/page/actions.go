@@ -44,5 +44,5 @@ const (
 
 	SessionCrashedAction = "sessionCrashed"
 
-	SignoutAction = "signout"
+	InvokeMethodAction = "invokeMethod"
 )

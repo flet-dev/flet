@@ -123,7 +123,8 @@ class _SwitchControlState extends State<SwitchControl> {
                         : Row(children: [labelWidget, swtch])));
           }
 
-          return constrainedControl(result, widget.parent, widget.control);
+          return constrainedControl(
+              context, result, widget.parent, widget.control);
         });
   }
 }

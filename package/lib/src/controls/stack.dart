@@ -30,6 +30,7 @@ class StackControl extends StatelessWidget {
     bool disabled = control.isDisabled || parentDisabled;
 
     return constrainedControl(
+        context,
         Stack(
           clipBehavior: clipBehavior,
           children: children

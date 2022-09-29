@@ -21,6 +21,7 @@ class DividerControl extends StatelessWidget {
         Theme.of(context), control.attrString("color", "")!);
 
     return baseControl(
+        context,
         Divider(
           height: height,
           thickness: thickness,

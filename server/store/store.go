@@ -7,7 +7,6 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/flet-dev/flet/server/auth"
 	"github.com/flet-dev/flet/server/cache"
 	"github.com/flet-dev/flet/server/config"
 	"github.com/flet-dev/flet/server/model"
@@ -28,12 +27,11 @@ const (
 	sessionsExpiredKey              = "sessions_expired"                // set of page:session IDs sorted by Unix timestamp of their expiration date
 	clientsExpiredKey               = "clients_expired"                 // set of client IDs sorted by Unix timestamp of their expiration date
 	sessionNextControlIDField       = "nextControlID"                   // Inc integer with the next control ID for a given session
-	sessionPrincipalIDField         = "principalID"
-	sessionKey                      = "session:%d:%s"              // session data
-	sessionControlsKey              = "session:%d:%s:controls"     // session controls, value is JSON data
-	sessionHostClientsKey           = "session:%d:%s:host_clients" // a Set with client IDs
-	sessionWebClientsKey            = "session:%d:%s:web_clients"  // a Set with client IDs
-	principalKey                    = "principal:%s"               // %s is principalID
+	sessionKey                      = "session:%d:%s"                   // session data
+	sessionControlsKey              = "session:%d:%s:controls"          // session controls, value is JSON data
+	sessionHostClientsKey           = "session:%d:%s:host_clients"      // a Set with client IDs
+	sessionWebClientsKey            = "session:%d:%s:web_clients"       // a Set with client IDs
+	oauthStateKey                   = "oauth_state:%s"                  // %s is state
 )
 
 //
@@ -216,11 +214,6 @@ func GetExpiredSessions() []string {
 	return cache.SortedSetPopRange(sessionsExpiredKey, 0, time.Now().Unix())
 }
 
-func SetSessionPrincipalID(session *model.Session, principalID string) {
-	session.PrincipalID = principalID
-	cache.HashSet(fmt.Sprintf(sessionKey, session.Page.ID, session.ID), sessionPrincipalIDField, principalID)
-}
-
 func DeleteSession(pageID int, sessionID string) {
 	cache.SetRemove(fmt.Sprintf(pageSessionsKey, pageID), sessionID)
 	cache.SortedSetRemove(sessionsExpiredKey, fmt.Sprintf(sessionIDKey, pageID, sessionID))
@@ -325,24 +318,24 @@ func RemoveSessionWebClient(pageID int, sessionID string, clientID string) {
 }
 
 //
-// Security principals
+// OAuth
 // ==============================
 
-func GetSecurityPrincipal(principalID string) *auth.SecurityPrincipal {
-	j := cache.GetString(fmt.Sprintf(principalKey, principalID))
+func GetOAuthState(state string) *model.OAuthState {
+	j := cache.GetString(fmt.Sprintf(oauthStateKey, state))
 	if j == "" {
 		return nil
 	}
 
-	p := &auth.SecurityPrincipal{}
+	p := &model.OAuthState{}
 	utils.FromJSON(j, p)
 	return p
 }
 
-func SetSecurityPrincipal(p *auth.SecurityPrincipal, expires time.Duration) {
-	cache.SetString(fmt.Sprintf(principalKey, p.UID), utils.ToJSON(p), expires)
+func SetOAuthState(state string, p *model.OAuthState, expires time.Duration) {
+	cache.SetString(fmt.Sprintf(oauthStateKey, state), utils.ToJSON(p), expires)
 }
 
-func DeleteSecurityPrincipal(principalID string) {
-	cache.Remove(fmt.Sprintf(principalKey, principalID))
+func RemoveOAuthState(state string) {
+	cache.Remove(fmt.Sprintf(oauthStateKey, state))
 }

@@ -14,13 +14,13 @@ String getFletRouteUrlStrategy() {
 }
 
 void openPopupBrowserWindow(
-    String url, String windowName, int minWidth, int minHeight) {
+    String url, String windowName, int width, int height) {
   int screenWidth = window.screen!.width!;
   int screenHeight = window.screen!.height!;
   final dualScreenLeft = window.screenLeft! < 0 ? -screenWidth : 0;
   var toolbarHeight = window.outerHeight - window.innerHeight!;
-  var width = max(minWidth, screenWidth - 300);
-  var height = max(minHeight, screenHeight - 300);
+  //var width = max(minWidth, screenWidth - 300);
+  //var height = max(minHeight, screenHeight - 300);
   var left = (screenWidth / 2) - (width / 2) + dualScreenLeft;
   var top = (screenHeight / 2) - (height / 2) - toolbarHeight;
   window.open(url, windowName,

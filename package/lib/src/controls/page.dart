@@ -53,6 +53,7 @@ class PageControl extends StatefulWidget {
 
 class _PageControlState extends State<PageControl> {
   String? _windowTitle;
+  Color? _windowBgcolor;
   double? _windowWidth;
   double? _windowHeight;
   double? _windowMinWidth;
@@ -180,6 +181,8 @@ class _PageControlState extends State<PageControl> {
 
     // window params
     var windowTitle = widget.control.attrString("title", "")!;
+    var windowBgcolor = HexColor.fromString(
+        Theme.of(context), widget.control.attrString("windowBgcolor", "")!);
     var windowWidth = widget.control.attrDouble("windowWidth");
     var windowHeight = widget.control.attrDouble("windowHeight");
     var windowMinWidth = widget.control.attrDouble("windowMinWidth");
@@ -214,6 +217,12 @@ class _PageControlState extends State<PageControl> {
       if (_windowTitle != windowTitle) {
         setWindowTitle(windowTitle);
         _windowTitle = windowTitle;
+      }
+
+      // window bgcolor
+      if (_windowBgcolor != windowBgcolor && windowBgcolor != null) {
+        setWindowBackgroundColor(windowBgcolor);
+        _windowBgcolor = windowBgcolor;
       }
 
       // window size
@@ -606,6 +615,8 @@ class _PageControlState extends State<PageControl> {
                 return Directionality(
                     textDirection: textDirection,
                     child: Scaffold(
+                      backgroundColor: HexColor.fromString(Theme.of(context),
+                          control.attrString("bgcolor", "")!),
                       appBar: appBarView != null
                           ? AppBarControl(
                               parent: control,
@@ -620,16 +631,12 @@ class _PageControlState extends State<PageControl> {
                             child: Container(
                                 padding: parseEdgeInsets(control, "padding") ??
                                     const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    color: HexColor.fromString(
-                                        Theme.of(context),
-                                        control.attrString("bgcolor", "")!)),
                                 child: scrollMode != ScrollMode.none
                                     ? ScrollableControl(
-                                        child: column,
                                         scrollDirection: Axis.vertical,
                                         scrollMode: scrollMode,
                                         autoScroll: autoScroll,
+                                        child: column,
                                       )
                                     : column)),
                         ...overlayWidgets
