@@ -55,6 +55,7 @@ class Page(Control):
         self._id = "page"
         self._Control__uid = "page"
         self.__conn = conn
+        self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
         self._index = {self._Control__uid: self}  # index with all page controls
         self._last_event = None
