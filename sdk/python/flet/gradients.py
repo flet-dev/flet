@@ -8,7 +8,7 @@ from flet.alignment import Alignment
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 TileMode = Literal["clamp", "decal", "mirror", "repeated"]

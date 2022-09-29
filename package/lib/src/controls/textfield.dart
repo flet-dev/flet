@@ -262,7 +262,8 @@ class _TextFieldControlState extends State<TextFieldControl> {
           }
 
           if (widget.control.attrInt("expand", 0)! > 0) {
-            return constrainedControl(textField, widget.parent, widget.control);
+            return constrainedControl(
+                context, textField, widget.parent, widget.control);
           } else {
             return LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
@@ -275,7 +276,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
                 }
 
                 return constrainedControl(
-                    textField, widget.parent, widget.control);
+                    context, textField, widget.parent, widget.control);
               },
             );
           }

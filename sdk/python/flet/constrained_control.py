@@ -35,6 +35,7 @@ class ConstrainedControl(Control):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
     ):
         Control.__init__(
             self,
@@ -62,6 +63,7 @@ class ConstrainedControl(Control):
         self.animate_rotation = animate_rotation
         self.animate_scale = animate_scale
         self.animate_offset = animate_offset
+        self.on_animation_end = on_animation_end
 
     def _before_build_command(self):
         self._set_attr_json("rotate", self.__rotate)
@@ -226,3 +228,16 @@ class ConstrainedControl(Control):
     @beartype
     def animate_offset(self, value: AnimationValue):
         self.__animate_offset = value
+
+    # on_animation_end
+    @property
+    def on_animation_end(self):
+        return self._get_event_handler("animation_end")
+
+    @on_animation_end.setter
+    def on_animation_end(self, handler):
+        self._add_event_handler("animation_end", handler)
+        if handler is not None:
+            self._set_attr("onAnimationEnd", True)
+        else:
+            self._set_attr("onAnimationEnd", None)

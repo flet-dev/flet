@@ -13,7 +13,7 @@ from flet.ref import Ref
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 FileType = Literal["any", "media", "image", "video", "audio", "custom"]

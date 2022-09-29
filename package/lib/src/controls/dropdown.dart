@@ -164,7 +164,8 @@ class _DropdownControlState extends State<DropdownControl> {
           );
 
           if (widget.control.attrInt("expand", 0)! > 0) {
-            return constrainedControl(dropDown, widget.parent, widget.control);
+            return constrainedControl(
+                context, dropDown, widget.parent, widget.control);
           } else {
             return LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
@@ -177,7 +178,7 @@ class _DropdownControlState extends State<DropdownControl> {
                 }
 
                 return constrainedControl(
-                    dropDown, widget.parent, widget.control);
+                    context, dropDown, widget.parent, widget.control);
               },
             );
           }

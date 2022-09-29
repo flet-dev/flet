@@ -85,6 +85,6 @@ class FloatingActionButtonControl extends StatelessWidget {
       return const ErrorControl("FAB doesn't have a text, nor icon.");
     }
 
-    return constrainedControl(button, parent, control);
+    return constrainedControl(context, button, parent, control);
   }
 }

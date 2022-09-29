@@ -36,6 +36,7 @@ class Row(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -71,6 +72,7 @@ class Row(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -167,9 +169,9 @@ class Row(ConstrainedControl):
     @beartype
     def scroll(self, value: ScrollMode):
         self.__scroll = value
-        if value == True:
+        if value is True:
             value = "auto"
-        elif value == False:
+        elif value is False:
             value = "none"
         self._set_attr("scroll", value)
 

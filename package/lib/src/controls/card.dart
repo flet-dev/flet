@@ -27,6 +27,7 @@ class CardControl extends StatelessWidget {
     bool disabled = control.isDisabled || parentDisabled;
 
     return constrainedControl(
+        context,
         Card(
             elevation: control.attrDouble("elevation"),
             margin: parseEdgeInsets(control, "margin"),

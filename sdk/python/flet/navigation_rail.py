@@ -16,7 +16,7 @@ from flet.types import (
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 NavigationRailLabelType = Literal[None, "none", "all", "selected"]
@@ -157,6 +157,7 @@ class NavigationRail(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -195,6 +196,7 @@ class NavigationRail(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             visible=visible,
             disabled=disabled,
             data=data,

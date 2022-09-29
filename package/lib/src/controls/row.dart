@@ -56,6 +56,7 @@ class RowControl extends StatelessWidget {
     }
 
     return constrainedControl(
+        context,
         wrapAutoScroll(
             wrap
                 ? Wrap(

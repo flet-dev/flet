@@ -137,6 +137,6 @@ class _NavigationRailControlState extends State<NavigationRailControl> {
               }).toList());
         });
 
-    return constrainedControl(rail, widget.parent, widget.control);
+    return constrainedControl(context, rail, widget.parent, widget.control);
   }
 }

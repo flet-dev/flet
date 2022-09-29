@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:window_to_front/window_to_front.dart';
 
 import '../models/window_media_data.dart';
 
@@ -8,6 +9,13 @@ Future setWindowTitle(String title) async {
   if (isDesktop()) {
     debugPrint("setWindowTitle()");
     await windowManager.setTitle(title);
+  }
+}
+
+Future setWindowBackgroundColor(Color bgcolor) async {
+  if (isDesktop()) {
+    debugPrint("setWindowBackgroundColor()");
+    await windowManager.setBackgroundColor(bgcolor);
   }
 }
 
@@ -173,6 +181,12 @@ Future focusWindow() async {
       !await windowManager.isMinimized()) {
     debugPrint("focusWindow()");
     await windowManager.focus();
+  }
+}
+
+Future windowToFront() async {
+  if (isDesktop()) {
+    await WindowToFront.activate();
   }
 }
 
