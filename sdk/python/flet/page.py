@@ -41,7 +41,7 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-from flet.querystring import QueryString
+from .querystring import QueryString
 
 PageDesign = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
 ThemeMode = Literal[None, "system", "light", "dark"]
@@ -289,23 +289,8 @@ class Page(Control):
         assert self._last_event is not None
         return self._last_event
 
-    def show_signin(self, auth_providers="*", auth_groups=False, allow_dismiss=False):
-        with self._lock:
-            self.signin = auth_providers
-            self.signin_groups = auth_groups
-            self.signin_allow_dismiss = allow_dismiss
-            self.__update(self)
-
-        while True:
-            e = self.wait_event()
-            if e.control == self and e.name.lower() == "signin":
-                return True
-            elif e.control == self and e.name.lower() == "dismisssignin":
-                return False
-
     def go(self, route, **kwargs):
         self.route = route if kwargs == {} else route + self.query.post(kwargs)
-
         self.__on_route_change.handler(
             ControlEvent(
                 target="page",

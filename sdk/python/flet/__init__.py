@@ -60,4 +60,3 @@ from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
 from flet.view import View
 from flet.window_drag_area import WindowDragArea
-from flet.querystring import QueryString
