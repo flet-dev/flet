@@ -9,7 +9,7 @@ from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 FontWeight = Literal[
@@ -70,6 +70,7 @@ class Text(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -112,6 +113,7 @@ class Text(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,

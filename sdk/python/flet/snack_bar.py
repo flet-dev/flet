@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from beartype import beartype
 
-from flet.control import Control, OptionalNumber
+from flet.control import Control
 from flet.ref import Ref
 
 

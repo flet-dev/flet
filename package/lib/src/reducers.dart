@@ -1,5 +1,11 @@
 // One simple action: Increment
+import 'dart:convert';
+
+import 'package:flet/src/utils/client_storage.dart';
+import 'package:flet/src/utils/clipboard.dart';
+import 'package:flet/src/utils/launch_url.dart';
 import 'package:flutter/foundation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'actions.dart';
 import 'models/app_state.dart';
@@ -7,6 +13,7 @@ import 'models/control.dart';
 import 'models/window_media_data.dart';
 import 'protocol/add_page_controls_payload.dart';
 import 'protocol/clean_control_payload.dart';
+import 'protocol/invoke_method_result.dart';
 import 'protocol/message.dart';
 import 'protocol/remove_control_payload.dart';
 import 'protocol/update_control_props_payload.dart';
@@ -191,10 +198,43 @@ AppState appReducer(AppState state, dynamic action) {
     // session crashed
     //
     return state.copyWith(error: action.payload.message);
-  } else if (action is SignoutAction) {
-    // TODO
-    // var redirectUrl = encodeURIComponent(window.location.pathname);
-    // window.location.replace("/api/auth/signout?redirect_url=" + redirectUrl);
+  } else if (action is InvokeMethodAction) {
+    debugPrint(
+        "InvokeMethodAction: ${action.payload.methodName} (${action.payload.args})");
+    switch (action.payload.methodName) {
+      case "closeInAppWebView":
+        closeInAppWebView();
+        break;
+      case "launchUrl":
+        openWebBrowser(
+            action.payload.args["url"]!,
+            action.payload.args["web_window_name"],
+            action.payload.args["web_popup_window"]?.toLowerCase() == "true",
+            int.tryParse(action.payload.args["window_width"] ?? ""),
+            int.tryParse(action.payload.args["window_height"] ?? ""));
+        break;
+      case "setClipboard":
+        setClipboard(action.payload.args["value"]!);
+        break;
+      case "getClipboard":
+        getClipboard().then((value) => action.ws.pageEventFromWeb(
+            eventTarget: "page",
+            eventName: "invoke_method_result",
+            eventData: json.encode(InvokeMethodResult(
+                methodId: action.payload.methodId, result: value))));
+        break;
+      case "windowToFront":
+        windowToFront();
+        break;
+    }
+    var clientStoragePrefix = "clientStorage:";
+    if (action.payload.methodName.startsWith(clientStoragePrefix)) {
+      invokeClientStorage(
+          action.payload.methodId,
+          action.payload.methodName.substring(clientStoragePrefix.length),
+          action.payload.args,
+          action.ws);
+    }
   } else if (action is AddPageControlsAction) {
     //
     // add controls

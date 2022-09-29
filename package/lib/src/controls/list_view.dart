@@ -51,6 +51,7 @@ class ListViewControl extends StatelessWidget {
     }
 
     return constrainedControl(
+        context,
         spacing > 0
             ? ListView.separated(
                 controller: _controller,

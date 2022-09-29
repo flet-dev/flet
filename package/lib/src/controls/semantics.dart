@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/edge_insets.dart';
 import 'create_control.dart';
 
 class SemanticsControl extends StatelessWidget {
@@ -28,6 +27,7 @@ class SemanticsControl extends StatelessWidget {
     bool disabled = control.isDisabled || parentDisabled;
 
     return constrainedControl(
+        context,
         Semantics(
             label: label,
             child: contentCtrls.isNotEmpty

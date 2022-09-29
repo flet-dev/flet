@@ -45,6 +45,6 @@ class CircleAvatarControl extends StatelessWidget {
             ? createControl(control, contentCtrls.first.id, disabled)
             : null);
 
-    return constrainedControl(avatar, parent, control);
+    return constrainedControl(context, avatar, parent, control);
   }
 }

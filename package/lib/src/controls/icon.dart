@@ -22,6 +22,7 @@ class IconControl extends StatelessWidget {
         Theme.of(context), control.attrString("color", "")!);
 
     return constrainedControl(
+        context,
         Icon(
           getMaterialIcon(name),
           size: size,

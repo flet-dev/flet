@@ -1,10 +1,10 @@
-import 'error.dart';
-import '../utils/gradient.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/gradient.dart';
 import 'create_control.dart';
+import 'error.dart';
 
 class ShaderMaskControl extends StatelessWidget {
   final Control? parent;
@@ -39,6 +39,7 @@ class ShaderMaskControl extends StatelessWidget {
     }
 
     return constrainedControl(
+        context,
         _clipCorners(
             ShaderMask(
                 shaderCallback: (bounds) {

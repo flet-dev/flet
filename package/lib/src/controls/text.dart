@@ -50,6 +50,7 @@ class TextControl extends StatelessWidget {
         orElse: () => TextOverflow.fade);
 
     return constrainedControl(
+        context,
         control.attrBool("selectable", false)!
             ? SelectableText(
                 text,

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"mime"
 	"net/http"
 	"strings"
@@ -14,12 +14,10 @@ import (
 	"github.com/gorilla/websocket"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/flet-dev/flet/server/auth"
 	"github.com/flet-dev/flet/server/config"
 	"github.com/flet-dev/flet/server/page"
 	page_connection "github.com/flet-dev/flet/server/page/connection"
 	"github.com/flet-dev/flet/server/store"
-	"github.com/flet-dev/flet/server/utils"
 	"github.com/gin-gonic/contrib/secure"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
@@ -90,11 +88,7 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 		})
 	}
 
-	api.GET("/oauth/github", githubAuthHandler)
-	api.GET("/oauth/azure", azureAuthHandler)
-	api.GET("/oauth/google", googleAuthHandler)
-	api.GET("/auth/signout", signoutHandler)
-
+	api.GET("/oauth/redirect", oauthCallbackHandler)
 	api.PUT("/upload", uploadFileAsStream)
 
 	// unknown API routes - 404, all the rest - index.html
@@ -124,7 +118,7 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 			}
 
 			index, _ := assetsFS.Open(siteDefaultDocument)
-			indexData, _ := ioutil.ReadAll(index)
+			indexData, _ := io.ReadAll(index)
 
 			// base path
 			indexData = bytes.Replace(indexData,
@@ -197,13 +191,6 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 
 func websocketHandler(c *gin.Context) {
 
-	// load current security principal
-	principal, err := getSecurityPrincipal(c)
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
-
 	upgrader.CheckOrigin = func(r *http.Request) bool {
 		return true
 	}
@@ -215,32 +202,5 @@ func websocketHandler(c *gin.Context) {
 	}
 
 	wsc := page_connection.NewWebSocket(conn)
-	page.NewClient(wsc, c.ClientIP(), principal)
-}
-
-func getSecurityPrincipal(c *gin.Context) (*auth.SecurityPrincipal, error) {
-	principalID, err := getPrincipalID(c.Request)
-	if err != nil {
-		return nil, err
-	}
-
-	var principal *auth.SecurityPrincipal
-	if principalID != "" {
-		principal = store.GetSecurityPrincipal(principalID)
-		if principal == nil {
-			return nil, nil
-		} else if principal.ClientIP != c.ClientIP() || principal.UserAgentHash != utils.SHA1(c.Request.UserAgent()) {
-			log.Errorln("Principal not found or its IP address or User Agent do not match")
-			store.DeleteSecurityPrincipal(principalID)
-		} else {
-			err := principal.UpdateDetails()
-			if err != nil {
-				log.Errorln("Error updating principal details:", err)
-				store.DeleteSecurityPrincipal(principalID)
-				return nil, nil
-			}
-			store.SetSecurityPrincipal(principal, time.Duration(principalLifetimeDays*24)*time.Hour)
-		}
-	}
-	return principal, nil
+	page.NewClient(wsc, c.ClientIP())
 }

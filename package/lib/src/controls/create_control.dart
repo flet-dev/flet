@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flet/src/flet_app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -15,8 +16,6 @@ import 'banner.dart';
 import 'card.dart';
 import 'checkbox.dart';
 import 'circle_avatar.dart';
-import 'client_storage.dart';
-import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'divider.dart';
@@ -30,7 +29,6 @@ import 'grid_view.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
-import 'launch_url.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
 import 'markdown.dart';
@@ -89,13 +87,6 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parent: parent, control: controlView.control);
         case ControlType.markdown:
           return MarkdownControl(parent: parent, control: controlView.control);
-        case ControlType.clipboard:
-          return ClipboardControl(parent: parent, control: controlView.control);
-        case ControlType.clientstorage:
-          return ClientStorageControl(
-              parent: parent, control: controlView.control);
-        case ControlType.launchUrl:
-          return LaunchUrlControl(parent: parent, control: controlView.control);
         case ControlType.image:
           return ImageControl(parent: parent, control: controlView.control);
         case ControlType.divider:
@@ -309,22 +300,28 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
   );
 }
 
-Widget baseControl(Widget widget, Control? parent, Control control) {
+Widget baseControl(
+    BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
-      _tooltip(_opacity(widget, parent, control), parent, control),
+      _tooltip(_opacity(context, widget, parent, control), parent, control),
       parent,
       control);
 }
 
-Widget constrainedControl(Widget widget, Control? parent, Control control) {
+Widget constrainedControl(
+    BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
       _positionedControl(
+          context,
           _offsetControl(
+              context,
               _scaledControl(
+                  context,
                   _rotatedControl(
+                      context,
                       _sizedControl(
-                          _tooltip(_opacity(widget, parent, control), parent,
-                              control),
+                          _tooltip(_opacity(context, widget, parent, control),
+                              parent, control),
                           parent,
                           control),
                       parent,
@@ -339,7 +336,8 @@ Widget constrainedControl(Widget widget, Control? parent, Control control) {
       control);
 }
 
-Widget _opacity(Widget widget, Control? parent, Control control) {
+Widget _opacity(
+    BuildContext context, Widget widget, Control? parent, Control control) {
   var opacity = control.attrDouble("opacity");
   var animation = parseAnimation(control, "animateOpacity");
   if (animation != null) {
@@ -347,6 +345,14 @@ Widget _opacity(Widget widget, Control? parent, Control control) {
       duration: animation.duration,
       curve: animation.curve,
       opacity: opacity ?? 1.0,
+      onEnd: control.attrBool("onAnimationEnd", false)!
+          ? () {
+              FletAppServices.of(context).ws.pageEventFromWeb(
+                  eventTarget: control.id,
+                  eventName: "animation_end",
+                  eventData: "opacity");
+            }
+          : null,
       child: widget,
     );
   } else if (opacity != null) {
@@ -369,13 +375,14 @@ Widget _tooltip(Widget widget, Control? parent, Control control) {
       ? Tooltip(
           message: tooltip,
           padding: const EdgeInsets.all(4.0),
-          child: widget,
           waitDuration: const Duration(milliseconds: 800),
+          child: widget,
         )
       : widget;
 }
 
-Widget _rotatedControl(Widget widget, Control? parent, Control control) {
+Widget _rotatedControl(
+    BuildContext context, Widget widget, Control? parent, Control control) {
   var rotationDetails = parseRotate(control, "rotate");
   var animation = parseAnimation(control, "animateRotation");
   if (animation != null) {
@@ -384,6 +391,14 @@ Widget _rotatedControl(Widget widget, Control? parent, Control control) {
         alignment: rotationDetails?.alignment ?? Alignment.center,
         duration: animation.duration,
         curve: animation.curve,
+        onEnd: control.attrBool("onAnimationEnd", false)!
+            ? () {
+                FletAppServices.of(context).ws.pageEventFromWeb(
+                    eventTarget: control.id,
+                    eventName: "animation_end",
+                    eventData: "rotation");
+              }
+            : null,
         child: widget);
   } else if (rotationDetails != null) {
     return Transform.rotate(
@@ -394,7 +409,8 @@ Widget _rotatedControl(Widget widget, Control? parent, Control control) {
   return widget;
 }
 
-Widget _scaledControl(Widget widget, Control? parent, Control control) {
+Widget _scaledControl(
+    BuildContext context, Widget widget, Control? parent, Control control) {
   var scaleDetails = parseScale(control, "scale");
   var animation = parseAnimation(control, "animateScale");
   if (animation != null) {
@@ -403,6 +419,14 @@ Widget _scaledControl(Widget widget, Control? parent, Control control) {
         alignment: scaleDetails?.alignment ?? Alignment.center,
         duration: animation.duration,
         curve: animation.curve,
+        onEnd: control.attrBool("onAnimationEnd", false)!
+            ? () {
+                FletAppServices.of(context).ws.pageEventFromWeb(
+                    eventTarget: control.id,
+                    eventName: "animation_end",
+                    eventData: "scale");
+              }
+            : null,
         child: widget);
   } else if (scaleDetails != null) {
     return Transform.scale(
@@ -415,7 +439,8 @@ Widget _scaledControl(Widget widget, Control? parent, Control control) {
   return widget;
 }
 
-Widget _offsetControl(Widget widget, Control? parent, Control control) {
+Widget _offsetControl(
+    BuildContext context, Widget widget, Control? parent, Control control) {
   var offsetDetails = parseOffset(control, "offset");
   var animation = parseAnimation(control, "animateOffset");
   if (offsetDetails != null && animation != null) {
@@ -423,12 +448,21 @@ Widget _offsetControl(Widget widget, Control? parent, Control control) {
         offset: Offset(offsetDetails.x, offsetDetails.y),
         duration: animation.duration,
         curve: animation.curve,
+        onEnd: control.attrBool("onAnimationEnd", false)!
+            ? () {
+                FletAppServices.of(context).ws.pageEventFromWeb(
+                    eventTarget: control.id,
+                    eventName: "animation_end",
+                    eventData: "offset");
+              }
+            : null,
         child: widget);
   }
   return widget;
 }
 
-Widget _positionedControl(Widget widget, Control? parent, Control control) {
+Widget _positionedControl(
+    BuildContext context, Widget widget, Control? parent, Control control) {
   var left = control.attrDouble("left", null);
   var top = control.attrDouble("top", null);
   var right = control.attrDouble("right", null);
@@ -448,6 +482,14 @@ Widget _positionedControl(Widget widget, Control? parent, Control control) {
       top: top,
       right: right,
       bottom: bottom,
+      onEnd: control.attrBool("onAnimationEnd", false)!
+          ? () {
+              FletAppServices.of(context).ws.pageEventFromWeb(
+                  eventTarget: control.id,
+                  eventName: "animation_end",
+                  eventData: "position");
+            }
+          : null,
       child: widget,
     );
   } else if (left != null || top != null || right != null || bottom != null) {
@@ -489,7 +531,7 @@ Widget _expandable(Widget widget, Control? parent, Control control) {
           parent.type == ControlType.row)) {
     //debugPrint("Expandable ${control.id}");
     int? expand = control.attrInt("expand");
-    return expand != null ? Expanded(child: widget, flex: expand) : widget;
+    return expand != null ? Expanded(flex: expand, child: widget) : widget;
   }
   return widget;
 }
