@@ -506,6 +506,11 @@ class Page(Control):
         self._set_attr("windowClose", str(time.time()))
         self.update()
 
+    # QueryString
+    @property
+    def query(self):
+        return self.__query
+
     # url
     @property
     def url(self):
