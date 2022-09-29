@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:collection/collection.dart';
 import 'package:flet/src/flet_app_services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
@@ -119,17 +120,26 @@ class _AudioControlState extends State<AudioControl> {
         await player.setSourceBytes(base64Decode(srcBase64));
       }
 
+      if (srcChanged) {
+        ws.pageEventFromWeb(
+            eventTarget: widget.control.id, eventName: "loaded", eventData: "");
+      }
+
       if (releaseMode != null && releaseMode != _releaseMode) {
         _releaseMode = releaseMode;
         await player.setReleaseMode(releaseMode);
       }
 
-      if (volume != null && volume != _volume) {
+      if (volume != null && volume != _volume && volume >= 0 && volume <= 1) {
         _volume = volume;
         await player.setVolume(volume);
       }
 
-      if (balance != null && balance != _balance) {
+      if (!kIsWeb &&
+          balance != null &&
+          balance != _balance &&
+          balance >= -1 &&
+          balance <= 1) {
         _balance = balance;
         await player.setBalance(balance);
       }
@@ -161,6 +171,9 @@ class _AudioControlState extends State<AudioControl> {
 
         switch (name) {
           case "play":
+            await player.seek(const Duration(milliseconds: 0));
+            await player.resume();
+            break;
           case "resume":
             await player.resume();
             break;

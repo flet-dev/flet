@@ -42,6 +42,7 @@ class Audio(Control):
         volume: OptionalNumber = None,
         balance: OptionalNumber = None,
         release_mode: Optional[ReleaseMode] = None,
+        on_loaded=None,
         on_duration_changed=None,
         on_state_changed=None,
         on_position_changed=None,
@@ -64,6 +65,7 @@ class Audio(Control):
         self.volume = volume
         self.balance = balance
         self.release_mode = release_mode
+        self.on_loaded = on_loaded
         self.on_duration_changed = on_duration_changed
         self.on_state_changed = on_state_changed
         self.on_position_changed = on_position_changed
@@ -165,7 +167,8 @@ class Audio(Control):
     @volume.setter
     @beartype
     def volume(self, value: OptionalNumber):
-        self._set_attr("volume", value)
+        if value is None or (value >= 0 and value <= 1):
+            self._set_attr("volume", value)
 
     # balance
     @property
@@ -175,7 +178,8 @@ class Audio(Control):
     @balance.setter
     @beartype
     def balance(self, value: OptionalNumber):
-        self._set_attr("balance", value)
+        if value is None or (value >= -1 and value <= 1):
+            self._set_attr("balance", value)
 
     # release_mode
     @property
@@ -186,6 +190,15 @@ class Audio(Control):
     @beartype
     def release_mode(self, value: Optional[ReleaseMode]):
         self._set_attr("releaseMode", value.value if value is not None else None)
+
+    # on_loaded
+    @property
+    def on_loaded(self):
+        return self._get_event_handler("loaded")
+
+    @on_loaded.setter
+    def on_loaded(self, handler):
+        self._add_event_handler("loaded", handler)
 
     # on_duration_changed
     @property
