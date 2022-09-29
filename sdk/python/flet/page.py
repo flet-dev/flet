@@ -409,29 +409,6 @@ class Page(Control):
         return self.invoke_method("getClipboard", wait_for_result=True)
 
     @beartype
-    def launch_url(
-        self,
-        url: str,
-        web_window_name: Optional[str] = None,
-        web_popup_window: bool = False,
-        window_width: Optional[int] = None,
-        window_height: Optional[int] = None,
-    ):
-        args = {"url": url}
-        if web_window_name != None:
-            args["web_window_name"] = web_window_name
-        if web_popup_window != None:
-            args["web_popup_window"] = str(web_popup_window)
-        if window_width != None:
-            args["window_width"] = str(window_width)
-        if window_height != None:
-            args["window_height"] = str(window_height)
-        self.invoke_method("launchUrl", args)
-
-    def close_in_app_web_view(self):
-        self.invoke_method("closeInAppWebView")
-
-    @beartype
     def window_to_front(self):
         self.invoke_method("windowToFront")
 
