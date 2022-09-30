@@ -29,7 +29,7 @@ environment:
     - job_name: Build Flet for Windows
       job_group: build_flet
       job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
     - job_name: Build Flet for macOS
       job_group: build_flet
