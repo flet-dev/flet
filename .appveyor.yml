@@ -285,6 +285,9 @@ for:
       on:
         APPVEYOR_REPO_TAG: true
 
+    on_failure:
+      - find ~/flutter -name "cmake"
+
   # ======================================
   #      Build Flet View for iOS
   # ======================================
