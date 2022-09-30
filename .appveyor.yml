@@ -261,7 +261,9 @@ for:
       #- tar -xf flutter_linux_stable.tar.xz
       #- export PATH="$PATH:`pwd`/flutter/bin"
       - sudo snap install flutter --classic
+      - ls -al /snap/bin
       - which flutter
+      - flutter --version
       - which cmake
       - cmake --version
       - flutter channel beta
