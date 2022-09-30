@@ -107,8 +107,8 @@ for:
 
     install:
       # Flutter SDK
-      - sudo snap refresh --channel=edge/core20 flutter
-      - sudo snap install flutter --classic
+      # - sudo snap refresh --channel=edge/core20 flutter
+      - sudo snap install flutter --channel=edge/core20 flutter
       - flutter channel stable
       - flutter upgrade
       - flutter sdk-path
@@ -208,8 +208,8 @@ for:
 
     install:
       # Flutter SDK
-      - sudo snap refresh --channel=edge/core20 flutter
-      - sudo snap install flutter --classic
+      # - sudo snap refresh --channel=edge/core20 flutter
+      - sudo snap install flutter --channel=edge/core20 flutter
       - flutter channel stable
       - flutter upgrade
       - flutter sdk-path
@@ -242,8 +242,8 @@ for:
 
     install:
       # Flutter SDK
-      - sudo snap refresh --channel=edge/core20 flutter
-      - sudo snap install flutter --classic
+      # - sudo snap refresh --channel=edge/core20 flutter
+      - sudo snap install flutter --channel=edge/core20 flutter
       - flutter channel stable
       - flutter upgrade
       - flutter sdk-path
@@ -320,8 +320,8 @@ for:
 
     install:
       # Flutter SDK
-      - sudo snap refresh --channel=edge/core20 flutter
-      - sudo snap install flutter --classic
+      # - sudo snap refresh --channel=edge/core20 flutter
+      - sudo snap install flutter --channel=edge/core20 flutter
       - flutter channel stable
       - flutter upgrade
       - flutter sdk-path
