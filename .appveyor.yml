@@ -13,6 +13,7 @@ environment:
   GO_TAGS: --tags release
   python_stack: python 3.10
   FLUTTER_MACOS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.3.3-stable.zip
+  FLUTTER_LINUX_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.3.3-stable.tar.xz
   GITHUB_TOKEN:
     secure: doX0dwjWhBmT56aJqR9NCbtMFJpDpdYxPCIB4vQoHfSR+nTa+pLCo6Yv5qWpD/90
   DOCKER_REGISTRY_USER:
@@ -108,7 +109,10 @@ for:
     install:
       # Flutter SDK
       # - sudo snap refresh --channel=edge/core20 flutter
-      - sudo snap install flutter --channel=edge/core20 --classic
+      #- sudo snap install flutter --channel=edge/core20 --classic
+      - curl $FLUTTER_LINUX_URL -o flutter_linux_stable.tar.xz
+      - tar -xf flutter_linux_stable.tar.xz
+      - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter channel stable
       - flutter upgrade
       - flutter sdk-path
@@ -276,7 +280,7 @@ for:
 
     install:
       - export LANG=en_US.UTF-8
-      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.3-stable.zip -o flutter_macos_stable.zip
+      - curl $FLUTTER_MACOS_URL -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter channel stable
