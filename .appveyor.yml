@@ -22,9 +22,9 @@ environment:
     secure: V9nRzVDlIGS0a+dhkC2/vw==
 
   matrix:
-    - job_name: Build Flet package for Flutter
-      job_group: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    #- job_name: Build Flet package for Flutter
+      #job_group: build_flet_package
+      #APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Build Flet for Windows
       job_group: build_flet
@@ -131,9 +131,10 @@ for:
         - job_name: Build Flet for Windows
 
     environment:
-      VC_REDIST_DIR: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.29.30133\x64\Microsoft.VC142.CRT'
+      VC_REDIST_DIR: 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Redist\MSVC\14.29.30133\x64\Microsoft.VC142.CRT'
 
     install:
+      - dir "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Redist\MSVC"
       - ps: .\ci\install_flutter.ps1
       - set PATH=C:\flutter\bin;%PATH%
       - flutter channel stable
