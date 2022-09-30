@@ -107,7 +107,7 @@ for:
 
     install:
       # Flutter SDK
-      - snap refresh --channel=edge/core20 flutter
+      - sudo snap refresh --channel=edge/core20 flutter
       - sudo snap install flutter --classic
       - flutter channel stable
       - flutter upgrade
@@ -208,7 +208,7 @@ for:
 
     install:
       # Flutter SDK
-      - snap refresh --channel=edge/core20 flutter
+      - sudo snap refresh --channel=edge/core20 flutter
       - sudo snap install flutter --classic
       - flutter channel stable
       - flutter upgrade
@@ -242,7 +242,7 @@ for:
 
     install:
       # Flutter SDK
-      - snap refresh --channel=edge/core20 flutter
+      - sudo snap refresh --channel=edge/core20 flutter
       - sudo snap install flutter --classic
       - flutter channel stable
       - flutter upgrade
@@ -320,7 +320,7 @@ for:
 
     install:
       # Flutter SDK
-      - snap refresh --channel=edge/core20 flutter
+      - sudo snap refresh --channel=edge/core20 flutter
       - sudo snap install flutter --classic
       - flutter channel stable
       - flutter upgrade
