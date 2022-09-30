@@ -263,7 +263,7 @@ for:
       - sudo snap install flutter --classic
       - which cmake
       - cmake --version
-      - flutter channel stable
+      - flutter channel beta
       - flutter upgrade
       - flutter doctor
 
