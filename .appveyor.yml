@@ -260,11 +260,11 @@ for:
       #- curl $FLUTTER_LINUX_URL -o flutter_linux_stable.tar.xz
       #- tar -xf flutter_linux_stable.tar.xz
       #- export PATH="$PATH:`pwd`/flutter/bin"
+      - sudo snap info flutter
       - sudo snap install flutter --classic
       - ls -al /snap/bin
       - which flutter
       - flutter --version
-      - /snap/flutter/124/usr/share/llvm-6.0/cmake --version
       - which cmake
       - cmake --version
       - flutter channel stable
@@ -292,7 +292,7 @@ for:
     on_failure:
       #- find /home/appveyor/snap/flutter -name "cmake"
       #- ls -alR /snap/flutter/124/usr/share/cmake-3.10
-      - ls -alR /snap/flutter/124/usr/share
+      #- ls -alR /snap/flutter/124/usr/share
 
   # ======================================
   #      Build Flet View for iOS
