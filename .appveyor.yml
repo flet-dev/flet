@@ -290,7 +290,8 @@ for:
 
     on_failure:
       #- find /home/appveyor/snap/flutter -name "cmake"
-      - ls -alR /snap/flutter/124/usr/share/cmake-3.10
+      #- ls -alR /snap/flutter/124/usr/share/cmake-3.10
+      - ls -alR /snap/flutter/124/usr/share
 
   # ======================================
   #      Build Flet View for iOS
