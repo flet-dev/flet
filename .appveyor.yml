@@ -260,10 +260,12 @@ for:
       #- curl $FLUTTER_LINUX_URL -o flutter_linux_stable.tar.xz
       #- tar -xf flutter_linux_stable.tar.xz
       #- export PATH="$PATH:`pwd`/flutter/bin"
-      - sudo snap info --verbose flutter
-      - sudo snap install flutter --classic
-      - ls -al /snap/bin
-      - which flutter
+      #- sudo snap info --verbose flutter
+      #- sudo snap install flutter --classic
+      #- ls -al /snap/bin
+      #- which flutter
+      - git clone https://github.com/flutter/flutter.git -b master flutter
+      - export PATH="$PATH:`pwd`/flutter/bin"
       - flutter --version
       - which cmake
       - cmake --version
