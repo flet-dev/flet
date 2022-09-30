@@ -264,6 +264,7 @@ for:
       - ls -al /snap/bin
       - which flutter
       - flutter --version
+      - /snap/flutter/124/usr/share/llvm-6.0/cmake --version
       - which cmake
       - cmake --version
       - flutter channel stable
