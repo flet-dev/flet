@@ -255,12 +255,13 @@ for:
       # Flutter SDK
       # - sudo snap refresh --channel=edge/core20 flutter
       #- sudo snap install flutter --channel=edge/core20 --classic
-      - sudo apt update
-      - sudo apt install -y libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+      #- sudo apt update
+      #- sudo apt install -y libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
       #- curl $FLUTTER_LINUX_URL -o flutter_linux_stable.tar.xz
       #- tar -xf flutter_linux_stable.tar.xz
       #- export PATH="$PATH:`pwd`/flutter/bin"
       - sudo snap install flutter --classic
+      - which flutter
       - which cmake
       - cmake --version
       - flutter channel beta
