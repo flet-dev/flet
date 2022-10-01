@@ -12,6 +12,7 @@ environment:
   GO_VERSION: 1.19
   GO_TAGS: --tags release
   python_stack: python 3.10
+  FLUTTER_WINDOWS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_3.3.3-stable.zip
   FLUTTER_MACOS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.3.3-stable.zip
   FLUTTER_LINUX_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.3.3-stable.tar.xz
   GITHUB_TOKEN:
@@ -22,9 +23,9 @@ environment:
     secure: V9nRzVDlIGS0a+dhkC2/vw==
 
   matrix:
-    #- job_name: Build Flet package for Flutter
-      #job_group: build_flet_package
-      #APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Build Flet package for Flutter
+      job_group: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Build Flet for Windows
       job_group: build_flet
@@ -108,8 +109,6 @@ for:
 
     install:
       # Flutter SDK
-      # - sudo snap refresh --channel=edge/core20 flutter
-      #- sudo snap install flutter --channel=edge/core20 --classic
       - curl $FLUTTER_LINUX_URL -o flutter_linux_stable.tar.xz
       - tar -xf flutter_linux_stable.tar.xz
       - export PATH="$PATH:`pwd`/flutter/bin"
@@ -134,7 +133,11 @@ for:
       VC_REDIST_DIR: 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Redist\MSVC\14.29.30133\x64\Microsoft.VC142.CRT'
 
     install:
-      - ps: .\ci\install_flutter.ps1
+      - ps: |
+          Write-Host "Downloading Flutter SDK..."
+          (New-Object Net.WebClient).DownloadFile($env:FLUTTER_WINDOWS_URL, "$env:TEMP\flutter_windows_stable.zip")
+          Write-Host "Unpacking Flutter SDK..."
+          7z x "$env:TEMP\flutter_windows_stable.zip" -o"$env:SystemDrive\" | Out-Null
       - set PATH=C:\flutter\bin;%PATH%
       - flutter channel stable
       - flutter upgrade
