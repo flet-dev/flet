@@ -116,8 +116,6 @@ class Container(ConstrainedControl):
         )
 
         def convert_container_tap_event_data(e):
-            if self.ink:
-                return e
             d = json.loads(e.data)
             return ContainerTapEvent(**d)
 
