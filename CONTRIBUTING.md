@@ -143,3 +143,17 @@ It should work now.
 ## Flutter client
 
 TBD
+
+## Creating bridged controls
+
+Bridged controls are the base controls which communicate directly with a corresponding Flutter widget in the client. A control can be created in several steps:
+- Prequisite: setup a Flutter development environment
+  + See [Flutter site](https://docs.flutter.dev/get-started/install) for instructions
+- Add the control type to [flet/package/lib/src/models/control_type.dart](https://github.com/skeledrew/flet/blob/demo/EchoText/package/lib/src/models/control_type.dart)
+- Implement the Flutter side control in [flet/package/lib/src/controls](https://github.com/skeledrew/flet/tree/demo/EchoText/package/lib/src/controls)
+  + A demo is available as [echo_text.dart](https://github.com/skeledrew/flet/tree/demo/EchoText/package/lib/src/controls/echo_text.dart)
+- Add the control to the type switch in [flet/package/lib/src/controls/create_control.dart](https://github.com/skeledrew/flet/blob/demo/EchoText/package/lib/src/controls/create_control.dart)
+- Implement the Python side control in [flet/sdk/python/flet](https://github.com/skeledrew/flet/tree/demo/EchoText/sdk/python/flet)
+  + A demo is available as [echo_text.py](https://github.com/skeledrew/flet/tree/demo/EchoText/sdk/python/flet/echo_text.py)
+- Write a test for the control (optional but recommended)
+  + See example and a helper Pytest fixture at [test_echo_text.py](https://github.com/skeledrew/flet/tree/demo/EchoText/sdk/python/tests/test_echo_text.py)

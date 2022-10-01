@@ -118,24 +118,6 @@ def app(
     return conn, page, fvp
 
 
-def get_page(target):
-    _page = None
-
-    @beartype
-    def _get(page: flet.Page | bool = False):
-        nonlocal _page
-
-        if page is False:
-            print(f"Setting and using page: {page}")
-            _page = page
-            return target(page)
-
-        else:
-            print(f'Returning _page: {_page}')
-            return _page
-    return _get
-
-
 def open_flet_view(page_url, hidden, viewer_path=None):
     import subprocess as sp
 
