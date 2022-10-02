@@ -75,6 +75,7 @@ class ColumnControl extends StatelessWidget {
           );
 
     return constrainedControl(
+        context,
         scrollMode != ScrollMode.none
             ? ScrollableControl(
                 child: widget,

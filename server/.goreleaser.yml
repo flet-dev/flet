@@ -12,15 +12,15 @@ builds:
       - -s -w -X github.com/flet-dev/flet/server/commands.version={{.Version}}
     goos:
       - linux
-#      - darwin
-#      - windows
+      - darwin
+      - windows
     goarch:
-#      - 386
+      - 386
       - amd64
-#      - arm64
-#      - arm
-#    goarm:
-#      - 7
+      - arm64
+      - arm
+    goarm:
+      - 7
     ignore:
       - goos: windows
         goarch: arm64

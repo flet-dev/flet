@@ -1,10 +1,9 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from beartype import beartype
 
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, MarginValue, OffsetValue, RotateValue, ScaleValue
 
 
 class Semantics(Control):
@@ -36,7 +35,7 @@ class Semantics(Control):
 
     def _get_children(self):
         children = []
-        if self.__content != None:
+        if self.__content is not None:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children

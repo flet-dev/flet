@@ -7,7 +7,7 @@ from flet.types import BorderRadiusValue, PaddingValue
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 MaterialState = Literal[
@@ -29,29 +29,29 @@ class OutlinedBorder:
 
 
 @dataclasses.dataclass
-class StadiumBorder:
+class StadiumBorder(OutlinedBorder):
     type: str = field(default="stadium")
 
 
 @dataclasses.dataclass
-class RoundedRectangleBorder:
+class RoundedRectangleBorder(OutlinedBorder):
     type: str = field(default="roundedRectangle")
     radius: BorderRadiusValue = field(default=None)
 
 
 @dataclasses.dataclass
-class CircleBorder:
+class CircleBorder(OutlinedBorder):
     type: str = field(default="circle")
 
 
 @dataclasses.dataclass
-class BeveledRectangleBorder:
+class BeveledRectangleBorder(OutlinedBorder):
     type: str = field(default="beveledRectangle")
     radius: BorderRadiusValue = field(default=None)
 
 
 @dataclasses.dataclass
-class CountinuosRectangleBorder:
+class CountinuosRectangleBorder(OutlinedBorder):
     type: str = field(default="countinuosRectangle")
     radius: BorderRadiusValue = field(default=None)
 

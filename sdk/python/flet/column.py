@@ -11,6 +11,7 @@ from flet.control import (
     ScrollMode,
 )
 from flet.ref import Ref
+from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 
 class Column(ConstrainedControl):
@@ -26,6 +27,16 @@ class Column(ConstrainedControl):
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -52,6 +63,16 @@ class Column(ConstrainedControl):
             bottom=bottom,
             expand=expand,
             opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -148,9 +169,9 @@ class Column(ConstrainedControl):
     @beartype
     def scroll(self, value: ScrollMode):
         self.__scroll = value
-        if value == True:
+        if value is True:
             value = "auto"
-        elif value == False:
+        elif value is False:
             value = "none"
         self._set_attr("scroll", value)
 

@@ -6,7 +6,7 @@ from beartype import beartype
 from flet.alignment import Alignment
 from flet.border import Border
 from flet.constrained_control import ConstrainedControl
-from flet.control import BlendMode, Control, OptionalNumber
+from flet.control import BlendMode, ClipBehavior, Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
 from flet.gradients import Gradient
@@ -60,6 +60,7 @@ class Container(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -80,6 +81,7 @@ class Container(ConstrainedControl):
         image_repeat: ImageRepeat = None,
         image_fit: ImageFit = None,
         image_opacity: OptionalNumber = None,
+        clip_behavior: ClipBehavior = None,
         ink: Optional[bool] = None,
         animate: AnimationValue = None,
         on_click=None,
@@ -106,6 +108,7 @@ class Container(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,
@@ -135,6 +138,7 @@ class Container(ConstrainedControl):
         self.image_repeat = image_repeat
         self.image_fit = image_fit
         self.image_opacity = image_opacity
+        self.clip_behavior = clip_behavior
         self.ink = ink
         self.animate = animate
         self.on_click = on_click
@@ -156,7 +160,7 @@ class Container(ConstrainedControl):
 
     def _get_children(self):
         children = []
-        if self.__content != None:
+        if self.__content is not None:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
@@ -303,6 +307,16 @@ class Container(ConstrainedControl):
     def content(self, value: Optional[Control]):
         self.__content = value
 
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self._get_attr("clipBehavior")
+
+    @clip_behavior.setter
+    @beartype
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self._set_attr("clipBehavior", value)
+
     # ink
     @property
     def ink(self) -> Optional[bool]:
@@ -331,7 +345,7 @@ class Container(ConstrainedControl):
     @on_click.setter
     def on_click(self, handler):
         self.__on_click.subscribe(handler)
-        if handler != None:
+        if handler is not None:
             self._set_attr("onclick", True)
         else:
             self._set_attr("onclick", None)
@@ -344,7 +358,7 @@ class Container(ConstrainedControl):
     @on_long_press.setter
     def on_long_press(self, handler):
         self._add_event_handler("long_press", handler)
-        if handler != None:
+        if handler is not None:
             self._set_attr("onLongPress", True)
         else:
             self._set_attr("onLongPress", None)
@@ -357,7 +371,7 @@ class Container(ConstrainedControl):
     @on_hover.setter
     def on_hover(self, handler):
         self._add_event_handler("hover", handler)
-        if handler != None:
+        if handler is not None:
             self._set_attr("onHover", True)
         else:
             self._set_attr("onHover", None)

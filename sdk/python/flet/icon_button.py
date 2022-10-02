@@ -31,6 +31,7 @@ class IconButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -69,6 +70,7 @@ class IconButton(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,
@@ -95,7 +97,7 @@ class IconButton(ConstrainedControl):
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
-        if self.__content == None:
+        if self.__content is None:
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]

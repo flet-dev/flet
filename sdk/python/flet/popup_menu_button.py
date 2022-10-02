@@ -18,6 +18,7 @@ class PopupMenuItem(Control):
         text: Optional[str] = None,
         content: Optional[Control] = None,
         on_click=None,
+        data: Any = None,
     ):
         Control.__init__(self, ref=ref)
 
@@ -27,6 +28,7 @@ class PopupMenuItem(Control):
         self.__content: Optional[Control] = None
         self.content = content
         self.on_click = on_click
+        self.data = data
 
     def _get_control_name(self):
         return "popupmenuitem"
@@ -107,6 +109,7 @@ class PopupMenuButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -138,6 +141,7 @@ class PopupMenuButton(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,

@@ -21,7 +21,8 @@ class IconControl extends StatelessWidget {
     var color = HexColor.fromString(
         Theme.of(context), control.attrString("color", "")!);
 
-    return baseControl(
+    return constrainedControl(
+        context,
         Icon(
           getMaterialIcon(name),
           size: size,

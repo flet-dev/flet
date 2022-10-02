@@ -134,7 +134,8 @@ class _CheckboxControlState extends State<CheckboxControl> {
                         : Row(children: [labelWidget, checkbox])));
           }
 
-          return constrainedControl(result, widget.parent, widget.control);
+          return constrainedControl(
+              context, result, widget.parent, widget.control);
         });
   }
 }

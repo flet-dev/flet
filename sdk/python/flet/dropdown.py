@@ -6,7 +6,14 @@ from flet.control import Control, InputBorder, OptionalNumber
 from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
-from flet.types import BorderRadiusValue, PaddingValue
+from flet.types import (
+    AnimationValue,
+    BorderRadiusValue,
+    OffsetValue,
+    PaddingValue,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class Dropdown(FormFieldControl):
@@ -17,6 +24,16 @@ class Dropdown(FormFieldControl):
         height: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
         opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -66,6 +83,16 @@ class Dropdown(FormFieldControl):
             height=height,
             expand=expand,
             opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,
@@ -179,7 +206,7 @@ class Dropdown(FormFieldControl):
 class Option(Control):
     def __init__(self, key=None, text=None, disabled=None, ref=None):
         Control.__init__(self, ref=ref, disabled=disabled)
-        assert key != None or text != None, "key or text must be specified"
+        assert key is not None or text is not None, "key or text must be specified"
         self.key = key
         self.text = text
         self.disabled = disabled

@@ -31,6 +31,7 @@ class OutlinedButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -67,6 +68,7 @@ class OutlinedButton(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,
@@ -91,7 +93,7 @@ class OutlinedButton(ConstrainedControl):
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
-        if self.__content == None:
+        if self.__content is None:
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
@@ -179,7 +181,7 @@ class OutlinedButton(ConstrainedControl):
     @on_hover.setter
     def on_hover(self, handler):
         self._add_event_handler("hover", handler)
-        if handler != None:
+        if handler is not None:
             self._set_attr("onHover", True)
         else:
             self._set_attr("onHover", None)

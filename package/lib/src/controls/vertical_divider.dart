@@ -22,6 +22,7 @@ class VerticalDividerControl extends StatelessWidget {
         Theme.of(context), control.attrString("color", "")!);
 
     return baseControl(
+        context,
         VerticalDivider(
           width: width,
           thickness: thickness,

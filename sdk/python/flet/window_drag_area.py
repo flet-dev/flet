@@ -1,7 +1,5 @@
 from typing import Any, Optional, Union
 
-from beartype import beartype
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
@@ -30,6 +28,7 @@ class WindowDragArea(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -56,6 +55,7 @@ class WindowDragArea(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,

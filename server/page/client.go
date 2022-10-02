@@ -9,7 +9,6 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/flet-dev/flet/server/auth"
 	"github.com/flet-dev/flet/server/cache"
 	"github.com/flet-dev/flet/server/config"
 	"github.com/flet-dev/flet/server/model"
@@ -39,7 +38,6 @@ type Client struct {
 	role                 ClientRole
 	conn                 connection.Conn
 	clientIP             string
-	principal            *auth.SecurityPrincipal
 	subscription         chan []byte
 	sessions             map[string]*model.Session
 	pages                map[string]*model.Page
@@ -51,7 +49,7 @@ func autoID() string {
 	return uuid.New().String()
 }
 
-func NewClient(conn connection.Conn, clientIP string, principal *auth.SecurityPrincipal) *Client {
+func NewClient(conn connection.Conn, clientIP string) *Client {
 
 	ip := clientIP
 	if ip == "::1" {
@@ -62,7 +60,6 @@ func NewClient(conn connection.Conn, clientIP string, principal *auth.SecurityPr
 		id:                   autoID(),
 		conn:                 conn,
 		clientIP:             ip,
-		principal:            principal,
 		sessions:             make(map[string]*model.Session),
 		pages:                make(map[string]*model.Page),
 		pageNames:            make(map[string]bool),
@@ -90,7 +87,7 @@ func (c *Client) register(role ClientRole) {
 	c.role = role
 
 	// subscribe PubSub
-	c.subscription = pubsub.Subscribe(clientChannelName(c.id))
+	c.subscription = pubsub.Subscribe(ClientChannelName(c.id))
 	go func() {
 		for {
 			msg, more := <-c.subscription
@@ -199,7 +196,7 @@ func sendPageEventToSession(session *model.Session, eventName string, eventData 
 	})
 
 	for _, clientID := range store.GetSessionHostClients(session.Page.ID, session.ID) {
-		pubsub.Send(clientChannelName(clientID), msg)
+		pubsub.Send(ClientChannelName(clientID), msg)
 	}
 }
 
@@ -247,91 +244,6 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 		return
 	}
 
-	// func: check if "Sign in required" response should be sent
-	requireSignin := func() bool {
-		if page.Permissions != "" && (c.principal == nil || !c.principal.HasPermissions(page.Permissions)) {
-			log.Debugln("Required page permissions:", page.Permissions)
-			response.Error = signinRequiredMessage
-			response.SigninOptions = auth.GetSigninOptions(page.Permissions)
-			return true
-		}
-		return false
-	}
-
-	// func: update session's principal and notify page of sign in/sign out events
-	updateSessionPrincipal := func() {
-		userProps := map[string]string{
-			"userauthprovider": "",
-			"userid":           "",
-			"userlogin":        "",
-			"username":         "",
-			"useremail":        "",
-			"userclientip":     "",
-		}
-
-		principalID := ""
-		if c.principal != nil {
-			principalID = c.principal.UID
-
-			userProps = map[string]string{
-				"userauthprovider": c.principal.AuthProvider,
-				"userid":           c.principal.ID,
-				"userlogin":        c.principal.Login,
-				"username":         c.principal.Name,
-				"useremail":        c.principal.Email,
-				"userclientip":     c.principal.ClientIP,
-			}
-		}
-
-		if session.PrincipalID != principalID && !(session.PrincipalID == "" && principalID == "") {
-
-			log.Debugf("Updating session principal for %s:%s\n", page.Name, session.ID)
-
-			pctl := store.GetSessionControl(session, "page")
-			for k, v := range userProps {
-				pctl.SetAttr(k, v)
-			}
-			store.SetSessionControl(session, pctl)
-
-			// update session's principal
-			store.SetSessionPrincipalID(session, principalID)
-
-			authEventName := "signout"
-
-			if session.PrincipalID != "" {
-
-				authEventName = "signin"
-
-				// hide signin dialog
-				pctl := store.GetSessionControl(session, "page")
-				pctl.SetAttr("signin", "")
-				store.SetSessionControl(session, pctl)
-			}
-
-			changeEventProps := map[string]interface{}{
-				"i":      "page",
-				"signin": "",
-			}
-
-			// inject user props
-			for k, v := range userProps {
-				changeEventProps[k] = v
-			}
-
-			eventData := []map[string]interface{}{
-				changeEventProps,
-			}
-
-			data, _ := json.Marshal(eventData)
-
-			// update page props
-			sendPageEventToSession(session, "change", string(data))
-
-			// fire "page.signin/signout" event
-			sendPageEventToSession(session, authEventName, "")
-		}
-	}
-
 	// is it app page?
 	if page.IsApp {
 		if len(store.GetPageHostClients(page.ID)) == 0 {
@@ -357,10 +269,6 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 				return
 			}
 
-			if requireSignin() {
-				return
-			}
-
 			session = newSession(page, uuid.New().String(), c.clientIP,
 				request.PageRoute, request.PageWidth, request.PageHeight,
 				request.WindowWidth, request.WindowHeight, request.WindowTop, request.WindowLeft,
@@ -368,12 +276,6 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 			sessionCreated = true
 		} else {
 			log.Debugf("Existing session %s found for %s page\n", session.ID, page.Name)
-
-			updateSessionPrincipal()
-
-			if requireSignin() {
-				return
-			}
 		}
 
 		c.register(WebClient)
@@ -391,22 +293,15 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 			// in the future we will implement load distribution algorithm
 			for _, clientID := range store.GetPageHostClients(page.ID) {
 				store.AddSessionHostClient(session.Page.ID, session.ID, clientID)
-				pubsub.Send(clientChannelName(clientID), msg)
+				pubsub.Send(ClientChannelName(clientID), msg)
 				break
 			}
 
 			log.Debugf("New session %s started for %s page\n", session.ID, page.Name)
-
-			updateSessionPrincipal()
 		}
 
 	} else {
 		// shared page
-
-		if requireSignin() {
-			return
-		}
-
 		// retrieve zero session
 		session = store.GetSession(page, ZeroSession)
 		c.register(WebClient)
@@ -555,7 +450,7 @@ func notifyPageNameWaitingWebClients(pageName string) {
 		log.Debugln("Notify client which app become active:", clientID)
 
 		msg := NewMessageData("", AppBecomeActiveAction, &AppBecomeActivePayload{})
-		pubsub.Send(clientChannelName(clientID), msg)
+		pubsub.Send(ClientChannelName(clientID), msg)
 	}
 }
 
@@ -730,7 +625,7 @@ func (c *Client) processPageEventFromWebClient(message *Message) {
 
 	// re-send events to all connected host clients
 	for _, clientID := range store.GetSessionHostClients(session.Page.ID, session.ID) {
-		pubsub.Send(clientChannelName(clientID), msg)
+		pubsub.Send(ClientChannelName(clientID), msg)
 	}
 }
 
@@ -767,7 +662,7 @@ func (c *Client) updateControlPropsFromWebClient(message *Message) error {
 
 		for _, clientID := range store.GetSessionWebClients(session.Page.ID, session.ID) {
 			if clientID != c.id {
-				pubsub.Send(clientChannelName(clientID), msg)
+				pubsub.Send(ClientChannelName(clientID), msg)
 			}
 		}
 	}()
@@ -912,6 +807,6 @@ func sessionsRateLimitReached(clientIP string) bool {
 	return false
 }
 
-func clientChannelName(clientID string) string {
+func ClientChannelName(clientID string) string {
 	return fmt.Sprintf("client-%s", clientID)
 }

@@ -107,7 +107,7 @@ for:
     install:
       # Flutter SDK
       - sudo snap install flutter --classic
-      - flutter channel beta
+      - flutter channel stable
       - flutter upgrade
       - flutter sdk-path
 
@@ -130,7 +130,7 @@ for:
     install:
       - ps: .\ci\install_flutter.ps1
       - set PATH=C:\flutter\bin;%PATH%
-      - flutter channel beta
+      - flutter channel stable
       - flutter upgrade
 
     build_script:
@@ -170,10 +170,10 @@ for:
 
     install:
       - brew install cocoapods
-      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.3-stable.zip -o flutter_macos_stable.zip
+      - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.3.2-stable.zip -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
-      - flutter channel beta
+      - flutter channel stable
       - flutter upgrade
       - flutter config --enable-macos-desktop
       - flutter doctor
@@ -207,7 +207,7 @@ for:
     install:
       # Flutter SDK
       - sudo snap install flutter --classic
-      - flutter channel beta
+      - flutter channel stable
       - flutter upgrade
       - flutter sdk-path
 
@@ -240,7 +240,7 @@ for:
     install:
       # Flutter SDK
       - sudo snap install flutter --classic
-      - flutter channel beta
+      - flutter channel stable
       - flutter upgrade
       - flutter sdk-path
 
@@ -275,7 +275,7 @@ for:
       - curl https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.0.3-stable.zip -o flutter_macos_stable.zip
       - unzip -qq flutter_macos_stable.zip
       - export PATH="$PATH:`pwd`/flutter/bin"
-      - flutter channel beta
+      - flutter channel stable
       - flutter upgrade
       - flutter doctor
 
@@ -317,7 +317,7 @@ for:
     install:
       # Flutter SDK
       - sudo snap install flutter --classic
-      - flutter channel beta
+      - flutter channel stable
       - flutter upgrade
       - flutter sdk-path
 

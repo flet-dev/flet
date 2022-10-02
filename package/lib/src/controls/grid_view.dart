@@ -47,6 +47,7 @@ class GridViewControl extends StatelessWidget {
             childAspectRatio: childAspectRatio);
 
     return constrainedControl(
+        context,
         GridView.builder(
           scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
           padding: padding,

@@ -1,8 +1,8 @@
-import '../utils/buttons.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
 import '../models/control.dart';
+import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
@@ -110,6 +110,6 @@ class ElevatedButtonControl extends StatelessWidget {
           child: Text(text));
     }
 
-    return constrainedControl(button, parent, control);
+    return constrainedControl(context, button, parent, control);
   }
 }

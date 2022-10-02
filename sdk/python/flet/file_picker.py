@@ -13,7 +13,7 @@ from flet.ref import Ref
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 FileType = Literal["any", "media", "image", "video", "audio", "custom"]
@@ -38,7 +38,7 @@ class FilePickerResultEvent(ControlEvent):
     def __init__(self, path, files) -> None:
         self.path: Optional[str] = path
         self.files: Optional[List[FilePickerFile]] = None
-        if files != None and isinstance(files, List):
+        if files is not None and isinstance(files, List):
             self.files = []
             for fd in files:
                 self.files.append(FilePickerFile(**fd))

@@ -109,6 +109,6 @@ class OutlinedButtonControl extends StatelessWidget {
           child: Text(text));
     }
 
-    return constrainedControl(button, parent, control);
+    return constrainedControl(context, button, parent, control);
   }
 }

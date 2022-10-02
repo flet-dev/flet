@@ -13,7 +13,7 @@ from flet.ref import Ref
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 
@@ -86,6 +86,8 @@ BlendMode = Literal[
     "xor",
 ]
 
+ClipBehavior = Literal[None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"]
+
 
 class Control:
     def __init__(
@@ -144,11 +146,11 @@ class Control:
 
     def _get_attr(self, name, def_value=None, data_type="string"):
         name = name.lower()
-        if not name in self.__attrs:
+        if name not in self.__attrs:
             return def_value
 
         s_val = self.__attrs[name][0]
-        if data_type == "bool" and s_val != None and isinstance(s_val, str):
+        if data_type == "bool" and s_val is not None and isinstance(s_val, str):
             return s_val.lower() == "true"
         elif data_type == "bool?" and isinstance(s_val, str):
             if s_val.lower() == "true":
@@ -157,9 +159,9 @@ class Control:
                 return False
             else:
                 return def_value
-        elif data_type == "float" and s_val != None and isinstance(s_val, str):
+        elif data_type == "float" and s_val is not None and isinstance(s_val, str):
             return float(s_val)
-        elif data_type == "int" and s_val != None and isinstance(s_val, str):
+        elif data_type == "int" and s_val is not None and isinstance(s_val, str):
             return int(s_val)
         else:
             return s_val
@@ -182,13 +184,13 @@ class Control:
         name = name.lower()
         orig_val = self.__attrs.get(name)
 
-        if orig_val == None and value == None:
+        if orig_val is None and value is None:
             return
 
-        if value == None:
+        if value is None:
             value = ""
 
-        if orig_val == None or orig_val[0] != value:
+        if orig_val is None or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
 
     def _set_attr_json(self, name, value):
@@ -200,7 +202,7 @@ class Control:
     def _convert_attr_json(self, value):
         return (
             json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))
-            if value != None
+            if value is not None
             else None
         )
 
@@ -417,7 +419,7 @@ class Control:
         self._build()
 
         # remove control from index
-        if self.__uid and index != None and self.__uid in index:
+        if self.__uid and index is not None and self.__uid in index:
             del index[self.__uid]
 
         commands = []
@@ -428,7 +430,7 @@ class Control:
         command.values.append(self._get_control_name())
         commands.append(command)
 
-        if added_controls != None:
+        if added_controls is not None:
             added_controls.append(self)
 
         # controls
@@ -461,7 +463,7 @@ class Control:
 
             val = self.__attrs[attrName][0]
             sval = ""
-            if val == None:
+            if val is None:
                 continue
             elif isinstance(val, bool):
                 sval = str(val).lower()
@@ -473,7 +475,7 @@ class Control:
             self.__attrs[attrName] = (val, False)
 
         id = self.__attrs.get("id")
-        if not update and id != None:
+        if not update and id is not None:
             command.attrs["id"] = id
         elif update and len(command.attrs) > 0:
             assert self.__uid is not None

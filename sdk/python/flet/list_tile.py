@@ -1,4 +1,3 @@
-from marshal import version
 from typing import Any, Optional, Union
 
 from beartype import beartype
@@ -18,7 +17,6 @@ from flet.types import (
 class ListTile(ConstrainedControl):
     def __init__(
         self,
-        text: Optional[str] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -37,6 +35,7 @@ class ListTile(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -76,6 +75,7 @@ class ListTile(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             tooltip=tooltip,
             visible=visible,
             disabled=disabled,
@@ -215,7 +215,7 @@ class ListTile(ConstrainedControl):
     @on_click.setter
     def on_click(self, handler):
         self._add_event_handler("click", handler)
-        if handler != None:
+        if handler is not None:
             self._set_attr("onclick", True)
         else:
             self._set_attr("onclick", None)
@@ -228,7 +228,7 @@ class ListTile(ConstrainedControl):
     @on_long_press.setter
     def on_long_press(self, handler):
         self._add_event_handler("long_press", handler)
-        if handler != None:
+        if handler is not None:
             self._set_attr("onLongPress", True)
         else:
             self._set_attr("onLongPress", None)

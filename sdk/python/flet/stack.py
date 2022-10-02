@@ -3,16 +3,14 @@ from typing import Any, List, Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber
+from flet.control import ClipBehavior, Control, OptionalNumber
 from flet.ref import Ref
 from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
-
-ClipBehavior = Literal[None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"]
 
 
 class Stack(ConstrainedControl):
@@ -37,6 +35,7 @@ class Stack(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
+        on_animation_end=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -65,6 +64,7 @@ class Stack(ConstrainedControl):
             animate_rotation=animate_rotation,
             animate_scale=animate_scale,
             animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             visible=visible,
             disabled=disabled,
             data=data,

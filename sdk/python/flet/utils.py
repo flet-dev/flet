@@ -22,7 +22,7 @@ def is_linux_server():
             with open(p, "r") as file:
                 if "microsoft" in file.read():
                     return False  # it's WSL, not a server
-        return os.environ.get("XDG_CURRENT_DESKTOP") == None
+        return os.environ.get("XDG_CURRENT_DESKTOP") is None
     return False
 
 
@@ -68,8 +68,8 @@ def which(program, exclude_exe=None):
     for path in os.environ["PATH"].split(os.pathsep):
         exe_file = os.path.join(path, program)
         if is_exe(exe_file) and (
-            exclude_exe == None
-            or (exclude_exe != None and exclude_exe.lower() != exe_file.lower())
+            exclude_exe is None
+            or (exclude_exe is not None and exclude_exe.lower() != exe_file.lower())
         ):
             return exe_file
 
@@ -171,6 +171,7 @@ class Vector(complex):
     >>> v.with_degrees(90)
     Vector(0.0, 2.0)
     """
+
     abs_tol = 1e-10
 
     x = complex.real
@@ -180,12 +181,13 @@ class Vector(complex):
     __mul__ = lambda self, other: type(self)(complex.__mul__(self, other))
     __truediv__ = lambda self, other: type(self)(complex.__truediv__(self, other))
     __len__ = lambda self: 2
-    __round__ = lambda self, ndigits=None: type(self)(round(self.x, ndigits), round(self.y, ndigits))
+    __round__ = lambda self, ndigits=None: type(self)(
+        round(self.x, ndigits), round(self.y, ndigits)
+    )
 
     def __eq__(self, other):
-        return (
-            math.isclose(self.x, other.x, abs_tol=self.abs_tol) and
-            math.isclose(self.y, other.y, abs_tol=self.abs_tol)
+        return math.isclose(self.x, other.x, abs_tol=self.abs_tol) and math.isclose(
+            self.y, other.y, abs_tol=self.abs_tol
         )
 
     def __ne__(self, other):

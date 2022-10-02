@@ -1,4 +1,3 @@
-import json
 import logging
 import threading
 import uuid
@@ -41,13 +40,13 @@ class Connection:
         logging.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
         msg = Message(**msg_dict)
-        if msg.id != "":
+        if msg.id:
             # callback
             evt = self._ws_callbacks[msg.id][0]
             self._ws_callbacks[msg.id] = (None, msg.payload)
             evt.set()
         elif msg.action == Actions.PAGE_EVENT_TO_HOST:
-            if self._on_event != None:
+            if self._on_event is not None:
                 th = threading.Thread(
                     target=self._on_event,
                     args=(
@@ -59,7 +58,7 @@ class Connection:
                 th.start()
                 # self._on_event(self, PageEventPayload(**msg.payload))
         elif msg.action == Actions.SESSION_CREATED:
-            if self._on_session_created != None:
+            if self._on_session_created is not None:
                 th = threading.Thread(
                     target=self._on_session_created,
                     args=(
@@ -95,7 +94,7 @@ class Connection:
             Actions.PAGE_COMMAND_FROM_HOST, payload
         )
         result = PageCommandResponsePayload(**response)
-        if result.error != "":
+        if result.error:
             raise Exception(result.error)
         return result
 
@@ -106,7 +105,7 @@ class Connection:
             Actions.PAGE_COMMANDS_BATCH_FROM_HOST, payload
         )
         result = PageCommandsBatchResponsePayload(**response)
-        if result.error != "":
+        if result.error:
             raise Exception(result.error)
         return result
 
@@ -123,5 +122,5 @@ class Connection:
 
     def close(self):
         logging.debug("Closing connection...")
-        if self._ws != None:
+        if self._ws is not None:
             self._ws.close()
