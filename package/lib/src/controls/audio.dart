@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -29,7 +30,9 @@ class _AudioControlState extends State<AudioControl> {
   String? _method;
   void Function(Duration)? _onDurationChanged;
   void Function(PlayerState)? _onStateChanged;
-  void Function(Duration)? _onPositionChanged;
+  void Function(int)? _onPositionChanged;
+  Duration? _duration;
+  int _position = -1;
   void Function()? _onSeekComplete;
   late final AudioPlayer player;
 
@@ -39,12 +42,21 @@ class _AudioControlState extends State<AudioControl> {
     player = AudioPlayer();
     player.onDurationChanged.listen((duration) {
       _onDurationChanged?.call(duration);
+      _duration = duration;
     });
     player.onPlayerStateChanged.listen((state) {
       _onStateChanged?.call(state);
     });
-    player.onPositionChanged.listen((duration) {
-      _onPositionChanged?.call(duration);
+    player.onPositionChanged.listen((position) {
+      int posMs = (position.inMilliseconds / 1000).round() * 1000;
+      if (posMs != _position) {
+        _position = posMs;
+      } else if (position.inMilliseconds == _duration?.inMilliseconds) {
+        _position = _duration!.inMilliseconds;
+      } else {
+        return;
+      }
+      _onPositionChanged?.call(_position);
     });
     player.onSeekComplete.listen((event) {
       _onSeekComplete?.call();
@@ -97,7 +109,7 @@ class _AudioControlState extends State<AudioControl> {
         ws.pageEventFromWeb(
             eventTarget: widget.control.id,
             eventName: "position_changed",
-            eventData: duration.inMilliseconds.toString());
+            eventData: duration.toString());
       };
     }
 
