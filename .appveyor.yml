@@ -110,7 +110,7 @@ for:
     install:
       # Flutter SDK
       - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
-      - tar -xf "$HOME/flutter_linux_stable.tar.xz"
+      - tar -xf "$HOME/flutter_linux_stable.tar.xz" -C $HOME
       - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
       - flutter upgrade
@@ -180,7 +180,7 @@ for:
     install:
       - brew install cocoapods
       - curl $FLUTTER_MACOS_URL -o "$HOME/flutter_macos_stable.zip"
-      - unzip -qq "$HOME/flutter_macos_stable.zip"
+      - unzip -qq "$HOME/flutter_macos_stable.zip" -d $HOME
       - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
       - flutter upgrade
@@ -218,7 +218,7 @@ for:
       - sudo apt update
       - sudo apt install -y libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
       - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
-      - tar -xf "$HOME/flutter_linux_stable.tar.xz"
+      - tar -xf "$HOME/flutter_linux_stable.tar.xz" -C $HOME
       - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
       - flutter upgrade
@@ -290,7 +290,7 @@ for:
     install:
       - export LANG=en_US.UTF-8
       - curl $FLUTTER_MACOS_URL -o "$HOME/flutter_macos_stable.zip"
-      - unzip -qq "$HOME/flutter_macos_stable.zip"
+      - unzip -qq "$HOME/flutter_macos_stable.zip" -d $HOME
       - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
       - flutter upgrade
@@ -334,7 +334,7 @@ for:
     install:
       # Flutter SDK
       - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
-      - tar -xf "$HOME/flutter_linux_stable.tar.xz"
+      - tar -xf "$HOME/flutter_linux_stable.tar.xz" -C $HOME
       - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
       - flutter upgrade
