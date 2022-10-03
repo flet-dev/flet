@@ -109,9 +109,9 @@ for:
 
     install:
       # Flutter SDK
-      - curl $FLUTTER_LINUX_URL -o flutter_linux_stable.tar.xz
-      - tar -xf flutter_linux_stable.tar.xz
-      - export PATH="$PATH:`pwd`/flutter/bin"
+      - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
+      - tar -xf "$HOME/flutter_linux_stable.tar.xz"
+      - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
       - flutter upgrade
       - flutter doctor
@@ -179,9 +179,9 @@ for:
 
     install:
       - brew install cocoapods
-      - curl $FLUTTER_MACOS_URL -o flutter_macos_stable.zip
-      - unzip -qq flutter_macos_stable.zip
-      - export PATH="$PATH:`pwd`/flutter/bin"
+      - curl $FLUTTER_MACOS_URL -o "$HOME/flutter_macos_stable.zip"
+      - unzip -qq "$HOME/flutter_macos_stable.zip"
+      - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
       - flutter upgrade
       - flutter config --enable-macos-desktop
@@ -217,9 +217,9 @@ for:
       # Flutter SDK
       - sudo apt update
       - sudo apt install -y libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - curl $FLUTTER_LINUX_URL -o flutter_linux_stable.tar.xz
-      - tar -xf flutter_linux_stable.tar.xz
-      - export PATH="$PATH:`pwd`/flutter/bin"
+      - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
+      - tar -xf "$HOME/flutter_linux_stable.tar.xz"
+      - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
       - flutter upgrade
       - flutter doctor
@@ -254,8 +254,8 @@ for:
       # Flutter SDK
       - sudo apt update
       - sudo apt install -y clang libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - git clone https://github.com/flutter/flutter.git -b master flutter
-      - export PATH="$PATH:`pwd`/flutter/bin"
+      - git clone https://github.com/flutter/flutter.git -b master "$HOME/flutter"
+      - export PATH="$PATH:$HOME/flutter/bin"
       - flutter --version
       - flutter channel stable
       - flutter upgrade
@@ -289,9 +289,9 @@ for:
 
     install:
       - export LANG=en_US.UTF-8
-      - curl $FLUTTER_MACOS_URL -o flutter_macos_stable.zip
-      - unzip -qq flutter_macos_stable.zip
-      - export PATH="$PATH:`pwd`/flutter/bin"
+      - curl $FLUTTER_MACOS_URL -o "$HOME/flutter_macos_stable.zip"
+      - unzip -qq "$HOME/flutter_macos_stable.zip"
+      - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
       - flutter upgrade
       - flutter doctor
@@ -333,9 +333,9 @@ for:
 
     install:
       # Flutter SDK
-      - curl $FLUTTER_LINUX_URL -o flutter_linux_stable.tar.xz
-      - tar -xf flutter_linux_stable.tar.xz
-      - export PATH="$PATH:`pwd`/flutter/bin"
+      - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
+      - tar -xf "$HOME/flutter_linux_stable.tar.xz"
+      - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
       - flutter upgrade
       - flutter doctor
