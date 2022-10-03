@@ -12,6 +12,7 @@ import '../utils/animations.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
+import 'audio.dart';
 import 'banner.dart';
 import 'card.dart';
 import 'checkbox.dart';
@@ -89,6 +90,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return MarkdownControl(parent: parent, control: controlView.control);
         case ControlType.image:
           return ImageControl(parent: parent, control: controlView.control);
+        case ControlType.audio:
+          return AudioControl(parent: parent, control: controlView.control);
         case ControlType.divider:
           return DividerControl(parent: parent, control: controlView.control);
         case ControlType.verticalDivider:
