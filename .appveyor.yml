@@ -178,7 +178,7 @@ for:
         - job_name: Build Flet for macOS
 
     install:
-      - brew install cocoapods
+      - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
       - curl $FLUTTER_MACOS_URL -o "$HOME/flutter_macos_stable.zip"
       - unzip -qq "$HOME/flutter_macos_stable.zip" -d $HOME
       - export PATH="$PATH:$HOME/flutter/bin"
