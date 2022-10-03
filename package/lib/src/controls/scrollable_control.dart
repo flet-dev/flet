@@ -67,8 +67,8 @@ class _ScrollableControlState extends State<ScrollableControl> {
         controller: _controller,
         child: SingleChildScrollView(
           controller: _controller,
-          child: widget.child,
           scrollDirection: widget.scrollDirection,
+          child: widget.child,
         ));
   }
 }

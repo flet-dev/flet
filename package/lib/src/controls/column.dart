@@ -58,13 +58,16 @@ class ColumnControl extends StatelessWidget {
     Widget widget = wrap
         ? Wrap(
             direction: Axis.vertical,
-            children: controls,
             spacing: spacing,
             runSpacing: control.attrDouble("runSpacing", 10)!,
             alignment:
                 parseWrapAlignment(control, "alignment", WrapAlignment.start),
             crossAxisAlignment: parseWrapCrossAlignment(
-                control, "horizontalAlignment", WrapCrossAlignment.start),
+              control,
+              "horizontalAlignment",
+              WrapCrossAlignment.start,
+            ),
+            children: controls,
           )
         : Column(
             mainAxisAlignment: mainAlignment,
@@ -78,10 +81,10 @@ class ColumnControl extends StatelessWidget {
         context,
         scrollMode != ScrollMode.none
             ? ScrollableControl(
-                child: widget,
                 scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
                 scrollMode: scrollMode,
                 autoScroll: autoScroll,
+                child: widget,
               )
             : widget,
         parent,

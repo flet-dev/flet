@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  
   redux: ^5.0.0
   flutter_redux: ^0.10.0
   equatable: ^2.0.3
@@ -25,6 +25,9 @@ dependencies:
   flutter_svg: ^1.1.5
   window_to_front: ^0.0.3
   audioplayers: ^1.1.0
+  markdown: 6.0.1
+  universal_html: 2.0.8
+  
 
 dev_dependencies:
   flutter_test:

@@ -61,16 +61,16 @@ class FloatingActionButtonControl extends StatelessWidget {
       button = FloatingActionButton(
           autofocus: autofocus,
           onPressed: onPressed,
-          child: Icon(icon),
           backgroundColor: bgColor,
-          tooltip: tooltip);
+          tooltip: tooltip,
+          child: Icon(icon));
     } else if (icon == null && text != null) {
       button = FloatingActionButton(
         autofocus: autofocus,
         onPressed: onPressed,
-        child: Text(text),
         backgroundColor: bgColor,
         tooltip: tooltip,
+        child: Text(text),
       );
     } else if (icon != null && text != null) {
       button = FloatingActionButton.extended(

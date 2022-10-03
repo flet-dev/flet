@@ -1,5 +1,4 @@
-import 'dart:html';
-import 'dart:math';
+import 'package:universal_html/html.dart';
 
 bool isProgressiveWebApp() {
   return window.matchMedia('(display-mode: standalone)').matches ||

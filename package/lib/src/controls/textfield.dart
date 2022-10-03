@@ -302,7 +302,7 @@ class TextCapitalizationFormatter extends TextInputFormatter {
         List<String> sentences = newValue.text.split('.');
         for (int i = 0; i < sentences.length; i++) {
           sentences[i] = inCaps(sentences[i]);
-          print(sentences[i]);
+          debugPrint(sentences[i]);
         }
         text = sentences.join('.');
         break;

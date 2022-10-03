@@ -13,7 +13,7 @@ class WindowMedia extends StatefulWidget {
   const WindowMedia({Key? key}) : super(key: key);
 
   @override
-  _WindowMediaState createState() => _WindowMediaState();
+  State<WindowMedia> createState() => _WindowMediaState();
 }
 
 class _WindowMediaState extends State<WindowMedia> with WindowListener {
