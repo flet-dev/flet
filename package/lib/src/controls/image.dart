@@ -34,7 +34,7 @@ class ImageControl extends StatelessWidget {
     var srcBase64 = control.attrString("srcBase64", "")!;
     if (src == "" && srcBase64 == "") {
       return const ErrorControl(
-          "Image must have 'src' or 'src_base64' specified.");
+          "Image must have either \"src\" or \"src_base64\" specified.");
     }
     double? width = control.attrDouble("width", null);
     double? height = control.attrDouble("height", null);

@@ -116,4 +116,4 @@ run again and now you instantly get a web app:
 
 ## Contribute to this wonderful project
 
-* Read the CONTRIBUTING.md file
+* Read the <a href="https://github.com/flet-dev/flet/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> file

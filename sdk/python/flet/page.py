@@ -41,6 +41,8 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+from flet.querystring import QueryString
+
 
 PageDesign = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
 ThemeMode = Literal[None, "system", "light", "dark"]
@@ -53,6 +55,7 @@ class Page(Control):
         self._id = "page"
         self._Control__uid = "page"
         self.__conn = conn
+        self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
         self._index = {self._Control__uid: self}  # index with all page controls
         self._last_event = None
@@ -89,6 +92,7 @@ class Page(Control):
             if self.__last_route == e.data:
                 return None  # avoid duplicate calls
             self.__last_route = e.data
+            self.query()  # Update query url (required when manually changed from browser)
             return RouteChangeEvent(route=e.data)
 
         self.__on_route_change = EventHandler(convert_route_change_event)
@@ -286,8 +290,9 @@ class Page(Control):
         assert self._last_event is not None
         return self._last_event
 
-    def go(self, route):
-        self.route = route
+    def go(self, route, **kwargs):
+        self.route = route if kwargs == {} else route + self.query.post(kwargs)
+
         self.__on_route_change.handler(
             ControlEvent(
                 target="page",
@@ -298,6 +303,8 @@ class Page(Control):
             )
         )
         self.update()
+        self.query()  # Update query url (required when using go)
+
 
     def get_upload_url(self, file_name: str, expires: int):
         r = self._send_command(
@@ -498,6 +505,11 @@ class Page(Control):
     def window_close(self):
         self._set_attr("windowClose", str(time.time()))
         self.update()
+
+    # QueryString
+    @property
+    def query(self):
+        return self.__query
 
     # url
     @property
