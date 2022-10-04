@@ -145,7 +145,7 @@ for:
     build_script:
       - cd client
       - ps: if ($env:APPVEYOR_REPO_TAG_NAME -match "[0-9\.]+") { $env:FLET_VER=$Matches.0 } else { $env:FLET_VER=$env:APPVEYOR_BUILD_VERSION }
-      - flutter build windows --build-number=%FLET_VER% --build-name=%FLET_VER%
+      - flutter build windows --build-name=%FLET_VER%
       - set RELEASE_DIR=build\windows\runner\Release
       - copy "%VC_REDIST_DIR%\msvcp140.dll" %RELEASE_DIR%
       - copy "%VC_REDIST_DIR%\vcruntime140.dll" %RELEASE_DIR%
@@ -192,7 +192,7 @@ for:
       # Flutter macOS client
       - cd client
       - if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then export FLET_VER="${BASH_REMATCH[1]}"; else export FLET_VER="$APPVEYOR_BUILD_VERSION"; fi
-      - flutter build macos --build-number=$FLET_VER --build-name=$FLET_VER
+      - flutter build macos --build-name=$FLET_VER
       - tar -czvf flet-macos-amd64.tar.gz -C build/macos/Build/Products/Release Flet.app
 
     artifacts:
@@ -229,7 +229,7 @@ for:
     build_script:
       - cd client
       - if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then export FLET_VER="${BASH_REMATCH[1]}"; else export FLET_VER="$APPVEYOR_BUILD_VERSION"; fi
-      - flutter build linux --build-number=$FLET_VER --build-name=$FLET_VER      
+      - flutter build linux --build-name=$FLET_VER      
       - mv build/linux/x64/release/bundle build/linux/x64/release/flet
       - tar -czvf flet-linux-amd64.tar.gz -C build/linux/x64/release flet
 
@@ -267,7 +267,7 @@ for:
     build_script:
       - cd client
       - if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then export FLET_VER="${BASH_REMATCH[1]}"; else export FLET_VER="$APPVEYOR_BUILD_VERSION"; fi
-      - flutter build linux --build-number=$FLET_VER --build-name=$FLET_VER
+      - flutter build linux --build-name=$FLET_VER
       - mv build/linux/arm64/release/bundle build/linux/arm64/release/flet
       - tar -czvf flet-linux-arm64.tar.gz -C build/linux/arm64/release flet
 
