@@ -16,6 +16,7 @@ from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
 from flet.banner import Banner
 from flet.client_storage import ClientStorage
+from flet.clipboard import Clipboard
 from flet.connection import Connection
 from flet.control import (
     Control,
@@ -30,6 +31,7 @@ from flet.event_handler import EventHandler
 from flet.floating_action_button import FloatingActionButton
 from flet.protocol import Command
 from flet.pubsub import PubSub
+from flet.querystring import QueryString
 from flet.session_storage import SessionStorage
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
@@ -40,8 +42,6 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-from flet.querystring import QueryString
 
 
 PageDesign = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
@@ -305,7 +305,6 @@ class Page(Control):
         self.update()
         self.query()  # Update query url (required when using go)
 
-
     def get_upload_url(self, file_name: str, expires: int):
         r = self._send_command(
             "getUploadUrl", attrs={"file": file_name, "expires": str(expires)}
@@ -406,10 +405,10 @@ class Page(Control):
 
     @beartype
     def set_clipboard(self, value: str):
-        self.invoke_method("setClipboard", {"value": value})
+        self.__offstage.clipboard.set_data(value)
 
     def get_clipboard(self):
-        return self.invoke_method("getClipboard", wait_for_result=True)
+        return self.__offstage.clipboard.get_data()
 
     @beartype
     def launch_url(
@@ -1195,6 +1194,7 @@ class Offstage(Control):
         )
 
         self.__controls: List[Control] = []
+        self.__clipboard = Clipboard()
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
@@ -1206,6 +1206,8 @@ class Offstage(Control):
     def _get_children(self):
         children = []
         children.extend(self.__controls)
+        if self.__clipboard:
+            children.append(self.__clipboard)
         if self.__banner:
             children.append(self.__banner)
         if self.__snack_bar:
@@ -1220,6 +1222,11 @@ class Offstage(Control):
     @property
     def controls(self):
         return self.__controls
+
+    # clipboard
+    @property
+    def clipboard(self):
+        return self.__clipboard
 
     # splash
     @property

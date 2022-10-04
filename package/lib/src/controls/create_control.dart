@@ -17,6 +17,7 @@ import 'banner.dart';
 import 'card.dart';
 import 'checkbox.dart';
 import 'circle_avatar.dart';
+import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'divider.dart';
@@ -94,6 +95,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return AudioControl(parent: parent, control: controlView.control);
         case ControlType.divider:
           return DividerControl(parent: parent, control: controlView.control);
+        case ControlType.clipboard:
+          return ClipboardControl(parent: parent, control: controlView.control);
         case ControlType.verticalDivider:
           return VerticalDividerControl(
               parent: parent, control: controlView.control);
