@@ -12,7 +12,7 @@ from flet.column import Column
 from flet.container import Container, ContainerTapEvent
 from flet.control import Control
 from flet.divider import Divider
-from flet.drag_target import DragTarget
+from flet.drag_target import DragTarget, DragTargetAcceptEvent
 from flet.draggable import Draggable
 from flet.dropdown import Dropdown
 from flet.elevated_button import ElevatedButton

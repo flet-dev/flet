@@ -1,8 +1,11 @@
+import json
 from typing import Any, Optional
 
 from beartype import beartype
 
 from flet.control import Control
+from flet.control_event import ControlEvent
+from flet.event_handler import EventHandler
 from flet.ref import Ref
 
 
@@ -30,6 +33,13 @@ class DragTarget(Control):
             visible=visible,
             data=data,
         )
+
+        def convert_accept_event_data(e):
+            d = json.loads(e.data)
+            return DragTargetAcceptEvent(**d)
+
+        self.__on_accept = EventHandler(convert_accept_event_data)
+        self._add_event_handler("accept", self.__on_accept.handler)
 
         self.__content: Optional[Control] = None
 
@@ -80,11 +90,11 @@ class DragTarget(Control):
     # on_accept
     @property
     def on_accept(self):
-        return self._get_event_handler("accept")
+        return self.__on_accept
 
     @on_accept.setter
     def on_accept(self, handler):
-        self._add_event_handler("accept", handler)
+        self.__on_accept.subscribe(handler)
 
     # on_leave
     @property
@@ -94,3 +104,10 @@ class DragTarget(Control):
     @on_leave.setter
     def on_leave(self, handler):
         self._add_event_handler("leave", handler)
+
+
+class DragTargetAcceptEvent(ControlEvent):
+    def __init__(self, src_id, x, y) -> None:
+        self.src_id: float = src_id
+        self.x: float = x
+        self.y: float = y
