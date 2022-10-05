@@ -13,6 +13,7 @@ class AppBar(Control):
         ref: Optional[Ref] = None,
         leading: Optional[Control] = None,
         leading_width: OptionalNumber = None,
+        automatically_imply_leading: Optional[bool] = None,
         title: Optional[Control] = None,
         center_title: Optional[bool] = None,
         toolbar_height: OptionalNumber = None,
@@ -29,6 +30,7 @@ class AppBar(Control):
 
         self.leading = leading
         self.leading_width = leading_width
+        self.automatically_imply_leading = automatically_imply_leading
         self.title = title
         self.center_title = center_title
         self.toolbar_height = toolbar_height
@@ -72,6 +74,18 @@ class AppBar(Control):
     @beartype
     def leading_width(self, value: OptionalNumber):
         self._set_attr("leadingWidth", value)
+
+    # automatically_imply_leading
+    @property
+    def automatically_imply_leading(self) -> Optional[bool]:
+        return self._get_attr(
+            "automaticallyImplyLeading", data_type="bool", def_value=True
+        )
+
+    @automatically_imply_leading.setter
+    @beartype
+    def automatically_imply_leading(self, value: Optional[bool]):
+        self._set_attr("automaticallyImplyLeading", value)
 
     # title
     @property
