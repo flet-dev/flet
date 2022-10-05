@@ -1,10 +1,16 @@
-from typing import Literal, Union
+from typing import Union
 
 from flet.animation import Animation
 from flet.border_radius import BorderRadius
 from flet.margin import Margin
 from flet.padding import Padding
 from flet.transform import Offset, Rotate, Scale
+
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
+
 
 PaddingValue = Union[None, int, float, Padding]
 
