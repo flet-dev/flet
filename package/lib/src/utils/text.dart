@@ -1,4 +1,10 @@
+import 'dart:convert';
+
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
+
+import '../models/control.dart';
+import 'colors.dart';
 
 TextStyle? getTextStyle(BuildContext context, String styleName) {
   var textTheme = Theme.of(context).textTheme;
@@ -63,4 +69,25 @@ FontWeight? getFontWeight(String weightName) {
       return FontWeight.w900;
   }
   return null;
+}
+
+TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
+  dynamic j;
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+  j = json.decode(v);
+  return textStyleFromJson(theme, j);
+}
+
+TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
+  return TextStyle(
+      fontSize: parseDouble(json["size"]),
+      fontWeight: getFontWeight(json["weight"] ?? ""),
+      fontStyle:
+          (json["italic"] ?? false) ? FontStyle.italic : FontStyle.normal,
+      fontFamily: json["font_family"],
+      color: HexColor.fromString(theme, json["color"] ?? ""),
+      backgroundColor: HexColor.fromString(theme, json["bgcolor"] ?? ""));
 }

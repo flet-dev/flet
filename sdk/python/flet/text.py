@@ -5,27 +5,12 @@ from beartype import beartype
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber, TextAlign
 from flet.ref import Ref
-from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet.types import AnimationValue, FontWeight, OffsetValue, RotateValue, ScaleValue
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-FontWeight = Literal[
-    None,
-    "normal",
-    "bold",
-    "w100",
-    "w200",
-    "w300",
-    "w400",
-    "w500",
-    "w600",
-    "w700",
-    "w800",
-    "w900",
-]
 
 TextOverflow = Literal[None, "clip", "ellipsis", "fade", "visible"]
 

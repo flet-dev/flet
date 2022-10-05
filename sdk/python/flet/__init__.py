@@ -56,6 +56,7 @@ from flet.tabs import Tab, Tabs
 from flet.template_route import TemplateRoute
 from flet.text import Text
 from flet.text_button import TextButton
+from flet.text_style import TextStyle
 from flet.textfield import TextField
 from flet.theme import PageTransitionsTheme, Theme
 from flet.user_control import UserControl

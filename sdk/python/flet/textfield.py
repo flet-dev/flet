@@ -6,6 +6,7 @@ from flet.control import Control, InputBorder, OptionalNumber, TextAlign
 from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
+from flet.text_style import TextStyle
 from flet.types import (
     AnimationValue,
     BorderRadiusValue,
@@ -65,6 +66,7 @@ class TextField(FormFieldControl):
         #
         text_size: OptionalNumber = None,
         label: Optional[str] = None,
+        label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
         border: InputBorder = None,
         color: Optional[str] = None,
@@ -79,15 +81,21 @@ class TextField(FormFieldControl):
         content_padding: PaddingValue = None,
         filled: Optional[bool] = None,
         hint_text: Optional[str] = None,
+        hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
+        helper_style: Optional[TextStyle] = None,
         counter_text: Optional[str] = None,
+        counter_style: Optional[TextStyle] = None,
         error_text: Optional[str] = None,
+        error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
         prefix_icon: Optional[str] = None,
         prefix_text: Optional[str] = None,
+        prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
         suffix_icon: Optional[str] = None,
         suffix_text: Optional[str] = None,
+        suffix_style: Optional[TextStyle] = None,
         #
         # TextField Specific
         #
@@ -137,6 +145,7 @@ class TextField(FormFieldControl):
             #
             text_size=text_size,
             label=label,
+            label_style=label_style,
             icon=icon,
             border=border,
             color=color,
@@ -151,15 +160,21 @@ class TextField(FormFieldControl):
             content_padding=content_padding,
             filled=filled,
             hint_text=hint_text,
+            hint_style=hint_style,
             helper_text=helper_text,
+            helper_style=helper_style,
             counter_text=counter_text,
+            counter_style=counter_style,
             error_text=error_text,
+            error_style=error_style,
             prefix=prefix,
             prefix_icon=prefix_icon,
             prefix_text=prefix_text,
+            prefix_style=prefix_style,
             suffix=suffix,
             suffix_icon=suffix_icon,
             suffix_text=suffix_text,
+            suffix_style=suffix_style,
         )
         self.value = value
         self.keyboard_type = keyboard_type

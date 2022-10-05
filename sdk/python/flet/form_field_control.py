@@ -5,6 +5,7 @@ from beartype import beartype
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, InputBorder, OptionalNumber
 from flet.ref import Ref
+from flet.text_style import TextStyle
 from flet.types import (
     AnimationValue,
     BorderRadiusValue,
@@ -46,6 +47,7 @@ class FormFieldControl(ConstrainedControl):
         #
         text_size: OptionalNumber = None,
         label: Optional[str] = None,
+        label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
         border: InputBorder = None,
         color: Optional[str] = None,
@@ -60,15 +62,21 @@ class FormFieldControl(ConstrainedControl):
         content_padding: PaddingValue = None,
         filled: Optional[bool] = None,
         hint_text: Optional[str] = None,
+        hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
+        helper_style: Optional[TextStyle] = None,
         counter_text: Optional[str] = None,
+        counter_style: Optional[TextStyle] = None,
         error_text: Optional[str] = None,
+        error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
         prefix_icon: Optional[str] = None,
         prefix_text: Optional[str] = None,
+        prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
         suffix_icon: Optional[str] = None,
         suffix_text: Optional[str] = None,
+        suffix_style: Optional[TextStyle] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -99,9 +107,17 @@ class FormFieldControl(ConstrainedControl):
 
         self.__prefix: Optional[Control] = None
         self.__suffix: Optional[Control] = None
+        self.__label_style: Optional[TextStyle] = None
+        self.__hint_style: Optional[TextStyle] = None
+        self.__helper_style: Optional[TextStyle] = None
+        self.__counter_style: Optional[TextStyle] = None
+        self.__error_style: Optional[TextStyle] = None
+        self.__prefix_style: Optional[TextStyle] = None
+        self.__suffix_style: Optional[TextStyle] = None
 
         self.text_size = text_size
         self.label = label
+        self.label_style = label_style
         self.icon = icon
         self.border = border
         self.color = color
@@ -116,20 +132,33 @@ class FormFieldControl(ConstrainedControl):
         self.content_padding = content_padding
         self.filled = filled
         self.hint_text = hint_text
+        self.hint_style = hint_style
         self.helper_text = helper_text
+        self.helper_style = helper_style
         self.counter_text = counter_text
+        self.counter_style = counter_style
         self.error_text = error_text
+        self.error_style = error_style
         self.prefix = prefix
         self.prefix_icon = prefix_icon
         self.prefix_text = prefix_text
+        self.prefix_style = prefix_style
         self.suffix = suffix
         self.suffix_icon = suffix_icon
         self.suffix_text = suffix_text
+        self.suffix_style = suffix_style
 
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("contentPadding", self.__content_padding)
+        self._set_attr_json("labelStyle", self.__label_style)
+        self._set_attr_json("hintStyle", self.__hint_style)
+        self._set_attr_json("helperStyle", self.__helper_style)
+        self._set_attr_json("counterStyle", self.__counter_style)
+        self._set_attr_json("errorStyle", self.__error_style)
+        self._set_attr_json("prefixStyle", self.__prefix_style)
+        self._set_attr_json("suffixStyle", self.__suffix_style)
 
     def _get_children(self):
         children = []
@@ -159,6 +188,16 @@ class FormFieldControl(ConstrainedControl):
     @label.setter
     def label(self, value):
         self._set_attr("label", value)
+
+    # label_style
+    @property
+    def label_style(self):
+        return self.__label_style
+
+    @label_style.setter
+    @beartype
+    def label_style(self, value: Optional[TextStyle]):
+        self.__label_style = value
 
     # icon
     @property
@@ -291,6 +330,16 @@ class FormFieldControl(ConstrainedControl):
     def hint_text(self, value):
         self._set_attr("hintText", value)
 
+    # hint_style
+    @property
+    def hint_style(self):
+        return self.__hint_style
+
+    @hint_style.setter
+    @beartype
+    def hint_style(self, value: Optional[TextStyle]):
+        self.__hint_style = value
+
     # helper_text
     @property
     def helper_text(self):
@@ -299,6 +348,16 @@ class FormFieldControl(ConstrainedControl):
     @helper_text.setter
     def helper_text(self, value):
         self._set_attr("helperText", value)
+
+    # helper_style
+    @property
+    def helper_style(self):
+        return self.__helper_style
+
+    @helper_style.setter
+    @beartype
+    def helper_style(self, value: Optional[TextStyle]):
+        self.__helper_style = value
 
     # counter_text
     @property
@@ -309,6 +368,16 @@ class FormFieldControl(ConstrainedControl):
     def counter_text(self, value):
         self._set_attr("counterText", value)
 
+    # counter_style
+    @property
+    def counter_style(self):
+        return self.__counter_style
+
+    @counter_style.setter
+    @beartype
+    def counter_style(self, value: Optional[TextStyle]):
+        self.__counter_style = value
+
     # error_text
     @property
     def error_text(self):
@@ -317,6 +386,16 @@ class FormFieldControl(ConstrainedControl):
     @error_text.setter
     def error_text(self, value):
         self._set_attr("errorText", value)
+
+    # error_style
+    @property
+    def error_style(self):
+        return self.__error_style
+
+    @error_style.setter
+    @beartype
+    def error_style(self, value: Optional[TextStyle]):
+        self.__error_style = value
 
     # prefix
     @property
@@ -345,6 +424,16 @@ class FormFieldControl(ConstrainedControl):
     def prefix_text(self, value):
         self._set_attr("prefixText", value)
 
+    # prefix_style
+    @property
+    def prefix_style(self):
+        return self.__prefix_style
+
+    @prefix_style.setter
+    @beartype
+    def prefix_style(self, value: Optional[TextStyle]):
+        self.__prefix_style = value
+
     # suffix
     @property
     def suffix(self):
@@ -371,3 +460,13 @@ class FormFieldControl(ConstrainedControl):
     @suffix_text.setter
     def suffix_text(self, value):
         self._set_attr("suffixText", value)
+
+    # suffix_style
+    @property
+    def suffix_style(self):
+        return self.__suffix_style
+
+    @suffix_style.setter
+    @beartype
+    def suffix_style(self, value: Optional[TextStyle]):
+        self.__suffix_style = value
