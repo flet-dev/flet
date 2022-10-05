@@ -123,6 +123,8 @@ class Page(Control):
         self._add_event_handler("connect", self.__on_connect.handler)
         self.__on_disconnect = EventHandler()
         self._add_event_handler("disconnect", self.__on_disconnect.handler)
+        self.__on_error = EventHandler()
+        self._add_event_handler("error", self.__on_error.handler)
 
     def __enter__(self):
         return self
@@ -1176,6 +1178,15 @@ class Page(Control):
     @on_logout.setter
     def on_logout(self, handler):
         self.__on_logout.subscribe(handler)
+
+    # on_error
+    @property
+    def on_error(self):
+        return self.__on_error
+
+    @on_error.setter
+    def on_error(self, handler):
+        self.__on_error.subscribe(handler)
 
 
 class Offstage(Control):
