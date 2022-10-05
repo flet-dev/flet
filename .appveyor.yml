@@ -58,11 +58,11 @@ environment:
       job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Test Python 3.7
-    #   job_group: python_tests
-    #   job_depends_on: build_flet
-    #   python_stack: python 3.7
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.7
+      job_group: python_tests
+      job_depends_on: build_flet
+      python_stack: python 3.7
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.8
       job_group: python_tests
@@ -229,7 +229,7 @@ for:
     build_script:
       - cd client
       - if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then export FLET_VER="${BASH_REMATCH[1]}"; else export FLET_VER="$APPVEYOR_BUILD_VERSION"; fi
-      - flutter build linux --build-name=$FLET_VER      
+      - flutter build linux --build-name=$FLET_VER
       - mv build/linux/x64/release/bundle build/linux/x64/release/flet
       - tar -czvf flet-linux-amd64.tar.gz -C build/linux/x64/release flet
 
