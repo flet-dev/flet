@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet/src/utils/borders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -221,6 +222,9 @@ class _TextFieldControlState extends State<TextFieldControl> {
                   suffixControls.isNotEmpty ? suffixControls.first : null,
                   revealPasswordIcon,
                   _focused),
+              cursorHeight: widget.control.attrDouble("cursorHeight"),
+              cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
+              cursorRadius: parseRadius(widget.control, "cursorRadius"),
               keyboardType: keyboardType,
               textAlign: textAlign,
               minLines: minLines,
@@ -302,7 +306,6 @@ class TextCapitalizationFormatter extends TextInputFormatter {
         List<String> sentences = newValue.text.split('.');
         for (int i = 0; i < sentences.length; i++) {
           sentences[i] = inCaps(sentences[i]);
-          print(sentences[i]);
         }
         text = sentences.join('.');
         break;

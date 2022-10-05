@@ -113,6 +113,9 @@ class TextField(FormFieldControl):
         autofocus: Optional[bool] = None,
         capitalization: TextCapitalization = None,
         cursor_color: Optional[str] = None,
+        cursor_width: OptionalNumber = None,
+        cursor_height: OptionalNumber = None,
+        cursor_radius: OptionalNumber = None,
         selection_color: Optional[str] = None,
         on_change=None,
         on_submit=None,
@@ -190,6 +193,9 @@ class TextField(FormFieldControl):
         self.autofocus = autofocus
         self.capitalization = capitalization
         self.cursor_color = cursor_color
+        self.cursor_height = cursor_height
+        self.cursor_width = cursor_width
+        self.cursor_radius = cursor_radius
         self.selection_color = selection_color
         self.on_change = on_change
         self.on_submit = on_submit
@@ -340,6 +346,36 @@ class TextField(FormFieldControl):
     @cursor_color.setter
     def cursor_color(self, value):
         self._set_attr("cursorColor", value)
+
+    # cursor_height
+    @property
+    def cursor_height(self) -> OptionalNumber:
+        return self._get_attr("cursorHeight")
+
+    @cursor_height.setter
+    @beartype
+    def cursor_height(self, value: OptionalNumber):
+        self._set_attr("cursorHeight", value)
+
+    # cursor_width
+    @property
+    def cursor_width(self) -> OptionalNumber:
+        return self._get_attr("cursorWidth")
+
+    @cursor_width.setter
+    @beartype
+    def cursor_width(self, value: OptionalNumber):
+        self._set_attr("cursorWidth", value)
+
+    # cursor_radius
+    @property
+    def cursor_radius(self) -> OptionalNumber:
+        return self._get_attr("cursorRadius")
+
+    @cursor_radius.setter
+    @beartype
+    def cursor_radius(self, value: OptionalNumber):
+        self._set_attr("cursorRadius", value)
 
     # selection_color
     @property
