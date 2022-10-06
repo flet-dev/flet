@@ -41,6 +41,7 @@ class Audio(Control):
         autoplay: Optional[bool] = None,
         volume: OptionalNumber = None,
         balance: OptionalNumber = None,
+        playback_rate: OptionalNumber = None,
         release_mode: Optional[ReleaseMode] = None,
         on_loaded=None,
         on_duration_changed=None,
@@ -64,6 +65,7 @@ class Audio(Control):
         self.autoplay = autoplay
         self.volume = volume
         self.balance = balance
+        self.playback_rate = playback_rate
         self.release_mode = release_mode
         self.on_loaded = on_loaded
         self.on_duration_changed = on_duration_changed
@@ -182,6 +184,17 @@ class Audio(Control):
     def balance(self, value: OptionalNumber):
         if value is None or (value >= -1 and value <= 1):
             self._set_attr("balance", value)
+
+    # playback_rate
+    @property
+    def playback_rate(self) -> OptionalNumber:
+        return self._get_attr("playbackRate")
+
+    @playback_rate.setter
+    @beartype
+    def playback_rate(self, value: OptionalNumber):
+        if value is None or (value >= 0 and value <= 2):
+            self._set_attr("playbackRate", value)
 
     # release_mode
     @property
