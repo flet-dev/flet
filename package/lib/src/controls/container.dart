@@ -113,16 +113,27 @@ class ContainerControl extends StatelessWidget {
             var ink = Ink(
                 decoration: boxDecor,
                 child: InkWell(
-                  onTap: onClick || onHover
-                      ? () {
+                  // Dummy callback to enable widget
+                  // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
+                  // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
+                  onTap: onHover
+                      ? () {}
+                      : null,
+                  onTapDown: onClick
+                      ? (details) {
                           debugPrint("Container ${control.id} clicked!");
                           ws.pageEventFromWeb(
                               eventTarget: control.id,
                               eventName: "click",
-                              eventData: "");
+                              eventData: json.encode(ContainerTapEvent(
+                                      localX: details.localPosition.dx,
+                                      localY: details.localPosition.dy,
+                                      globalX: details.globalPosition.dx,
+                                      globalY: details.globalPosition.dy)
+                                  .toJson()));
                         }
                       : null,
-                  onLongPress: onLongPress || onHover
+                  onLongPress: onLongPress
                       ? () {
                           debugPrint("Container ${control.id} long pressed!");
                           ws.pageEventFromWeb(
