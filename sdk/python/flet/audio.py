@@ -91,11 +91,13 @@ class Audio(Control):
             "seek", params=[str(position_milliseconds)], wait_for_result=False
         )
 
-    def get_duration(self) -> int:
-        return self._call_method("get_duration", [])
+    def get_duration(self) -> Optional[int]:
+        sr = self._call_method("get_duration", [])
+        return int(sr) if sr else None
 
-    def get_current_position(self) -> int:
-        return self._call_method("get_current_position", [])
+    def get_current_position(self) -> Optional[int]:
+        sr = self._call_method("get_current_position", [])
+        return int(sr) if sr else None
 
     def _call_method(self, name: str, params: List[str], wait_for_result=True) -> Any:
         m = AudioMethodCall(i=self.__call_counter, n=name, p=params)
