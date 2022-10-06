@@ -62,6 +62,106 @@ class GestureDetectorControl extends StatelessWidget {
                     });
                   }
                 : null,
+            onTapUp: control.attrBool("onTapUp", false)!
+                ? (details) {
+                    sendEvent("tap_up", {
+                      "kind": details.kind.name,
+                      "lx": details.localPosition.dx,
+                      "ly": details.localPosition.dy,
+                      "gx": details.globalPosition.dx,
+                      "gy": details.globalPosition.dy,
+                    });
+                  }
+                : null,
+            onSecondaryTap: control.attrBool("onSecondaryTap", false)!
+                ? () {
+                    sendEvent("secondary_tap", "");
+                  }
+                : null,
+            onSecondaryTapDown: control.attrBool("onSecondaryTapDown", false)!
+                ? (details) {
+                    sendEvent("secondary_tap_down", {
+                      "kind": details.kind?.name,
+                      "lx": details.localPosition.dx,
+                      "ly": details.localPosition.dy,
+                      "gx": details.globalPosition.dx,
+                      "gy": details.globalPosition.dy,
+                    });
+                  }
+                : null,
+            onSecondaryTapUp: control.attrBool("onSecondaryTapUp", false)!
+                ? (details) {
+                    sendEvent("secondary_tap_up", {
+                      "kind": details.kind.name,
+                      "lx": details.localPosition.dx,
+                      "ly": details.localPosition.dy,
+                      "gx": details.globalPosition.dx,
+                      "gy": details.globalPosition.dy,
+                    });
+                  }
+                : null,
+            onLongPressStart: control.attrBool("onLongPressStart", false)!
+                ? (details) {
+                    sendEvent("long_press_start", {
+                      "lx": details.localPosition.dx,
+                      "ly": details.localPosition.dy,
+                      "gx": details.globalPosition.dx,
+                      "gy": details.globalPosition.dy,
+                    });
+                  }
+                : null,
+            onLongPressEnd: control.attrBool("onLongPressEnd", false)!
+                ? (details) {
+                    sendEvent("long_press_end", {
+                      "lx": details.localPosition.dx,
+                      "ly": details.localPosition.dy,
+                      "gx": details.globalPosition.dx,
+                      "gy": details.globalPosition.dy,
+                      "vx": details.velocity.pixelsPerSecond.dx,
+                      "vy": details.velocity.pixelsPerSecond.dy
+                    });
+                  }
+                : null,
+            onSecondaryLongPressStart:
+                control.attrBool("onSecondaryLongPressStart", false)!
+                    ? (details) {
+                        sendEvent("secondary_long_press_start", {
+                          "lx": details.localPosition.dx,
+                          "ly": details.localPosition.dy,
+                          "gx": details.globalPosition.dx,
+                          "gy": details.globalPosition.dy,
+                        });
+                      }
+                    : null,
+            onSecondaryLongPressEnd:
+                control.attrBool("onSecondaryLongPressEnd", false)!
+                    ? (details) {
+                        sendEvent("secondary_long_press_end", {
+                          "lx": details.localPosition.dx,
+                          "ly": details.localPosition.dy,
+                          "gx": details.globalPosition.dx,
+                          "gy": details.globalPosition.dy,
+                          "vx": details.velocity.pixelsPerSecond.dx,
+                          "vy": details.velocity.pixelsPerSecond.dy
+                        });
+                      }
+                    : null,
+            onDoubleTap: control.attrBool("onDoubleTap", false)!
+                ? () {
+                    sendEvent("double_tap", "");
+                  }
+                : null,
+            onDoubleTapDown: control.attrBool("onDoubleTapDown", false)!
+                ? (details) {
+                    sendEvent("double_tap_down", {
+                      "kind": details.kind?.name,
+                      "lx": details.localPosition.dx,
+                      "ly": details.localPosition.dy,
+                      "gx": details.globalPosition.dx,
+                      "gy": details.globalPosition.dy,
+                    });
+                  }
+                : null,
             child: contentCtrls.isNotEmpty
                 ? createControl(control, contentCtrls.first.id, disabled)
                 : null),
