@@ -116,9 +116,7 @@ class ContainerControl extends StatelessWidget {
                   // Dummy callback to enable widget
                   // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
                   // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
-                  onTap: onHover
-                      ? () {}
-                      : null,
+                  onTap: onHover ? () {} : null,
                   onTapDown: onClick
                       ? (details) {
                           debugPrint("Container ${control.id} clicked!");
