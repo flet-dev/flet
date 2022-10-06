@@ -19,11 +19,6 @@ class ReconnectingWebSocket:
         self.connected = threading.Event()
         self.exit = threading.Event()
         self.retry = 0
-        websocket.setdefaulttimeout(
-            _LOCAL_CONNECT_TIMEOUT_SEC
-            if is_localhost_url(url)
-            else _REMOTE_CONNECT_TIMEOUT_SEC
-        )
         # disable websocket logging completely
         # https://github.com/websocket-client/websocket-client/blob/master/websocket/_logging.py#L22-L51
         ws_logger = logging.getLogger("websocket")
@@ -55,6 +50,7 @@ class ReconnectingWebSocket:
 
     def _on_open(self, wsapp) -> None:
         logging.info(f"Successfully connected to {self._url}")
+        websocket.setdefaulttimeout(self.default_timeout)
         self.connected.set()
         self.retry = 0
         if self._on_connect_handler is not None:
@@ -80,13 +76,18 @@ class ReconnectingWebSocket:
         self.exit.set()
         self.wsapp.close()
 
-    # TODO: Can't do CTRL+C while it sleeps between re-connects
-    # Change to Event: https://stackoverflow.com/questions/5114292/break-interrupt-a-time-sleep-in-python
     def _connect_loop(self):
         while not self.exit.is_set():
             logging.info(f"Connecting Flet Server at {self._url}...")
+            self.default_timeout = websocket.getdefaulttimeout()
+            websocket.setdefaulttimeout(
+                _LOCAL_CONNECT_TIMEOUT_SEC
+                if is_localhost_url(self._url)
+                else _REMOTE_CONNECT_TIMEOUT_SEC
+            )
             r = self.wsapp.run_forever()
             logging.debug(f"Exited run_forever()")
+            websocket.setdefaulttimeout(self.default_timeout)
             self.connected.clear()
             if r != True:
                 return
