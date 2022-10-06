@@ -27,6 +27,7 @@ import 'dropdown.dart';
 import 'elevated_button.dart';
 import 'file_picker.dart';
 import 'floating_action_button.dart';
+import 'gesture_detector.dart';
 import 'grid_view.dart';
 import 'icon.dart';
 import 'icon_button.dart';
@@ -186,6 +187,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case ControlType.card:
           return CardControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case ControlType.gestureDetector:
+          return GestureDetectorControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

@@ -18,6 +18,7 @@ enum ControlType {
   elevatedButton,
   filePicker,
   floatingActionButton,
+  gestureDetector,
   gridView,
   icon,
   iconButton,
