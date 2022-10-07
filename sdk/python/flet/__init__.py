@@ -26,7 +26,20 @@ from flet.filled_button import FilledButton
 from flet.filled_tonal_button import FilledTonalButton
 from flet.flet import *
 from flet.floating_action_button import FloatingActionButton
-from flet.gesture_detector import GestureDetector, TapEvent
+from flet.gesture_detector import (
+    DragEndEvent,
+    DragStartEvent,
+    DragUpdateEvent,
+    GestureDetector,
+    HoverEvent,
+    LongPressEndEvent,
+    LongPressStartEvent,
+    MouseCursor,
+    ScaleEndEvent,
+    ScaleStartEvent,
+    ScaleUpdateEvent,
+    TapEvent,
+)
 from flet.gradients import LinearGradient, RadialGradient, SweepGradient
 from flet.grid_view import GridView
 from flet.icon import Icon
