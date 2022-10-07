@@ -23,11 +23,11 @@ class OAuthProvider:
         self.authorization_endpoint = authorization_endpoint
         self.token_endpoint = token_endpoint
         self.redirect_url = redirect_url
-        self.scopes = scopes or []
-        self.user_scopes = user_scopes or []
+        self.scopes = scopes if scopes is not None else []
+        self.user_scopes = user_scopes if user_scopes is not None else []
         self.user_endpoint = user_endpoint
         self.user_id_fn = user_id_fn
-        self.group_scopes = group_scopes or []
+        self.group_scopes = group_scopes if group_scopes is not None else []
 
     def _name(self):
         raise Exception("Not implemented")

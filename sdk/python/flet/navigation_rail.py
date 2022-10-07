@@ -238,8 +238,7 @@ class NavigationRail(ConstrainedControl):
     @destinations.setter
     @beartype
     def destinations(self, value: Optional[List[NavigationRailDestination]]):
-        value = value or []
-        self.__destinations = value
+        self.__destinations = value if value is not None else []
 
     # on_change
     @property

@@ -192,4 +192,4 @@ class Column(ConstrainedControl):
 
     @controls.setter
     def controls(self, value):
-        self.__controls = value or []
+        self.__controls = value if value is not None else []
