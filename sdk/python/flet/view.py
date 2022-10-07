@@ -30,7 +30,7 @@ class View(Control):
     ):
         Control.__init__(self)
 
-        self.controls = controls or []
+        self.controls = controls if controls is not None else []
         self.route = route
         self.appbar = appbar
         self.floating_action_button = floating_action_button

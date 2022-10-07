@@ -402,7 +402,7 @@ class Page(Control):
     ):
         return self.__conn.send_command(
             self._session_id,
-            Command(indent=0, name=name, values=values or [], attrs=attrs or {}),
+            Command(indent=0, name=name, values=values if values is not None else [], attrs=attrs or {}),
         )
 
     @beartype
@@ -618,7 +618,7 @@ class Page(Control):
     @controls.setter
     @beartype
     def controls(self, value: Optional[List[Control]]):
-        self.__default_view.controls = value or []
+        self.__default_view.controls = value if value is not None else []
 
     # appbar
     @property
