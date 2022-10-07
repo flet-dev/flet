@@ -154,8 +154,7 @@ class Tabs(ConstrainedControl):
     @tabs.setter
     @beartype
     def tabs(self, value: Optional[List[Tab]]):
-        value = value or []
-        self.__tabs = value
+        self.__tabs = value if value is not None else []
 
     # on_change
     @property

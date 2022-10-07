@@ -24,7 +24,7 @@ class Authorization:
     ) -> None:
         self.fetch_user = fetch_user
         self.fetch_groups = fetch_groups
-        self.scope = scope or []
+        self.scope = scope if scope is not None else []
         self.provider = provider
         self.__token: Optional[OAuthToken] = None
         self.user: Optional[User] = None

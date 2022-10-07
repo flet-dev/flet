@@ -173,8 +173,7 @@ class PopupMenuButton(ConstrainedControl):
     @items.setter
     @beartype
     def items(self, value: Optional[List[PopupMenuItem]]):
-        value = value or []
-        self.__items = value
+        self.__items = value if value is not None else []
 
     # on_cancelled
     @property

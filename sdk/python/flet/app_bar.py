@@ -138,4 +138,4 @@ class AppBar(Control):
 
     @actions.setter
     def actions(self, value):
-        self.__actions = value or []
+        self.__actions = value if value is not None else []

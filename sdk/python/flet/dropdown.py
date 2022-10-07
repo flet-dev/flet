@@ -154,7 +154,7 @@ class Dropdown(FormFieldControl):
 
     @options.setter
     def options(self, value):
-        self.__options = value or []
+        self.__options = value if value is not None else []
 
     # value
     @property
