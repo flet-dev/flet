@@ -1,3 +1,4 @@
+import 'package:flet/src/controls/error.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
@@ -82,6 +83,10 @@ class ElevatedButtonControl extends StatelessWidget {
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
     if (icon != null) {
+      if (text == "") {
+        return const ErrorControl("Error displaying ElevatedButton",
+            description: "\"icon\" must be specified together with \"text\".");
+      }
       button = ElevatedButton.icon(
           style: style,
           autofocus: autofocus,
