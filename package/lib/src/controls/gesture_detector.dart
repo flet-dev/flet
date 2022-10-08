@@ -393,7 +393,10 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                     });
                   }
                 : null,
-            onHorizontalDragStart: handleHorizontalDragStart,
+            onHorizontalDragStart:
+                (onHorizontalDragStart || onHorizontalDragUpdate)
+                    ? handleHorizontalDragStart
+                    : null,
             onHorizontalDragUpdate: onHorizontalDragUpdate
                 ? (details) {
                     handleHorizontalDragUpdate(details);
@@ -408,7 +411,9 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                     });
                   }
                 : null,
-            onVerticalDragStart: handleVerticalDragStart,
+            onVerticalDragStart: (onVerticalDragStart || onVerticalDragUpdate)
+                ? handleVerticalDragStart
+                : null,
             onVerticalDragUpdate: onVerticalDragUpdate
                 ? (details) {
                     handleVerticalDragUpdate(details);
@@ -423,7 +428,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                     });
                   }
                 : null,
-            onPanStart: handlePanStart,
+            onPanStart: (onPanStart || onPanUpdate) ? handlePanStart : null,
             onPanUpdate: onPanUpdate
                 ? (details) {
                     handlePanUpdate(details);
@@ -479,7 +484,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
         : null;
 
     var mouseCursor = widget.control.attrString("mouseCursor");
-    result = ((mouseCursor != null) | onHover | onEnter | onExit)
+    result = ((mouseCursor != null) || onHover || onEnter || onExit)
         ? MouseRegion(
             cursor: parseMouseCursor(mouseCursor),
             onHover: onHover
@@ -487,7 +492,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                     handleHover(details);
                   }
                 : null,
-            onEnter: handleEnter,
+            onEnter: (onEnter || onHover) ? handleEnter : null,
             onExit: onExit
                 ? (details) {
                     sendEvent("exit", {
