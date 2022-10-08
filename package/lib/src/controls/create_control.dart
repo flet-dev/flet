@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flet/src/controls/error.dart';
 import 'package:flet/src/flet_app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -506,6 +507,11 @@ Widget _positionedControl(
       child: widget,
     );
   } else if (left != null || top != null || right != null || bottom != null) {
+    if (parent?.type != ControlType.stack) {
+      return ErrorControl("Error displaying ${control.type.name}",
+          description:
+              "Control can be positioned absolutely with \"left\", \"top\", \"right\" and \"bottom\" properties inside Stack control only.");
+    }
     return Positioned(
       left: left,
       top: top,
