@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:flet/src/controls/error.dart';
-import 'package:flet/src/flet_app_services.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
+import '../flet_app_services.dart';
 import '../models/control.dart';
 import 'create_control.dart';
+import 'error.dart';
 
-class GestureDetectorControl extends StatelessWidget {
+class GestureDetectorControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -23,12 +23,30 @@ class GestureDetectorControl extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<GestureDetectorControl> createState() => _GestureDetectorControlState();
+}
+
+class _GestureDetectorControlState extends State<GestureDetectorControl> {
+  int _panTimestamp = DateTime.now().millisecondsSinceEpoch;
+  double _panX = 0;
+  double _panY = 0;
+  int _hDragTimestamp = DateTime.now().millisecondsSinceEpoch;
+  double _hDragX = 0;
+  double _hDragY = 0;
+  int _vDragTimestamp = DateTime.now().millisecondsSinceEpoch;
+  double _vDragX = 0;
+  double _vDragY = 0;
+  int _hoverTimestamp = DateTime.now().millisecondsSinceEpoch;
+  double _hoverX = 0;
+  double _hoverY = 0;
+
+  @override
   Widget build(BuildContext context) {
-    debugPrint("GestureDetector build: ${control.id}");
+    debugPrint("GestureDetector build: ${widget.control.id}");
 
     var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
+        widget.children.where((c) => c.name == "content" && c.isVisible);
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var ws = FletAppServices.of(context).ws;
 
@@ -40,48 +58,201 @@ class GestureDetectorControl extends StatelessWidget {
         d = json.encode(eventData);
       }
 
-      debugPrint("GestureDetector ${control.id} $eventName");
+      debugPrint("GestureDetector ${widget.control.id} $eventName");
       ws.pageEventFromWeb(
-          eventTarget: control.id, eventName: eventName, eventData: d);
+          eventTarget: widget.control.id, eventName: eventName, eventData: d);
     }
 
-    var onHover = control.attrBool("onHover", false)!;
-    var onEnter = control.attrBool("onEnter", false)!;
-    var onExit = control.attrBool("onExit", false)!;
-    var onTap = control.attrBool("onTap", false)!;
-    var onTapDown = control.attrBool("onTapDown", false)!;
-    var onTapUp = control.attrBool("onTapUp", false)!;
-    var onSecondaryTap = control.attrBool("onSecondaryTap", false)!;
-    var onSecondaryTapDown = control.attrBool("onSecondaryTapDown", false)!;
-    var onSecondaryTapUp = control.attrBool("onSecondaryTapUp", false)!;
-    var onLongPressStart = control.attrBool("onLongPressStart", false)!;
-    var onLongPressEnd = control.attrBool("onLongPressEnd", false)!;
+    var onHover = widget.control.attrBool("onHover", false)!;
+    var onEnter = widget.control.attrBool("onEnter", false)!;
+    var onExit = widget.control.attrBool("onExit", false)!;
+    var onTap = widget.control.attrBool("onTap", false)!;
+    var onTapDown = widget.control.attrBool("onTapDown", false)!;
+    var onTapUp = widget.control.attrBool("onTapUp", false)!;
+    var onSecondaryTap = widget.control.attrBool("onSecondaryTap", false)!;
+    var onSecondaryTapDown =
+        widget.control.attrBool("onSecondaryTapDown", false)!;
+    var onSecondaryTapUp = widget.control.attrBool("onSecondaryTapUp", false)!;
+    var onLongPressStart = widget.control.attrBool("onLongPressStart", false)!;
+    var onLongPressEnd = widget.control.attrBool("onLongPressEnd", false)!;
     var onSecondaryLongPressStart =
-        control.attrBool("onSecondaryLongPressStart", false)!;
+        widget.control.attrBool("onSecondaryLongPressStart", false)!;
     var onSecondaryLongPressEnd =
-        control.attrBool("onSecondaryLongPressEnd", false)!;
-    var onDoubleTap = control.attrBool("onDoubleTap", false)!;
-    var onDoubleTapDown = control.attrBool("onDoubleTapDown", false)!;
+        widget.control.attrBool("onSecondaryLongPressEnd", false)!;
+    var onDoubleTap = widget.control.attrBool("onDoubleTap", false)!;
+    var onDoubleTapDown = widget.control.attrBool("onDoubleTapDown", false)!;
     var onHorizontalDragStart =
-        control.attrBool("onHorizontalDragStart", false)!;
+        widget.control.attrBool("onHorizontalDragStart", false)!;
     var onHorizontalDragUpdate =
-        control.attrBool("onHorizontalDragUpdate", false)!;
-    var onHorizontalDragEnd = control.attrBool("onHorizontalDragEnd", false)!;
-    var onVerticalDragStart = control.attrBool("onVerticalDragStart", false)!;
-    var onVerticalDragUpdate = control.attrBool("onVerticalDragUpdate", false)!;
-    var onVerticalDragEnd = control.attrBool("onVerticalDragEnd", false)!;
-    var onPanStart = control.attrBool("onPanStart", false)!;
-    var onPanUpdate = control.attrBool("onPanUpdate", false)!;
-    var onPanEnd = control.attrBool("onPanEnd", false)!;
-    var onScaleStart = control.attrBool("onScaleStart", false)!;
-    var onScaleUpdate = control.attrBool("onScaleUpdate", false)!;
-    var onScaleEnd = control.attrBool("onScaleEnd", false)!;
+        widget.control.attrBool("onHorizontalDragUpdate", false)!;
+    var onHorizontalDragEnd =
+        widget.control.attrBool("onHorizontalDragEnd", false)!;
+    var onVerticalDragStart =
+        widget.control.attrBool("onVerticalDragStart", false)!;
+    var onVerticalDragUpdate =
+        widget.control.attrBool("onVerticalDragUpdate", false)!;
+    var onVerticalDragEnd =
+        widget.control.attrBool("onVerticalDragEnd", false)!;
+    var onPanStart = widget.control.attrBool("onPanStart", false)!;
+    var onPanUpdate = widget.control.attrBool("onPanUpdate", false)!;
+    var onPanEnd = widget.control.attrBool("onPanEnd", false)!;
+    var onScaleStart = widget.control.attrBool("onScaleStart", false)!;
+    var onScaleUpdate = widget.control.attrBool("onScaleUpdate", false)!;
+    var onScaleEnd = widget.control.attrBool("onScaleEnd", false)!;
 
     var content = contentCtrls.isNotEmpty
-        ? createControl(control, contentCtrls.first.id, disabled)
+        ? createControl(widget.control, contentCtrls.first.id, disabled)
         : null;
 
-    Widget? widget;
+    Widget? result;
+
+    var dragInterval = widget.control.attrInt("dragInterval", 0)!;
+
+    void handlePanStart(DragStartDetails details) {
+      _panX = details.localPosition.dx;
+      _panY = details.localPosition.dy;
+      if (onPanStart) {
+        sendEvent("pan_start", {
+          "kind": details.kind?.name,
+          "lx": details.localPosition.dx,
+          "ly": details.localPosition.dy,
+          "gx": details.globalPosition.dx,
+          "gy": details.globalPosition.dy,
+          "ts": details.sourceTimeStamp?.inMilliseconds
+        });
+      }
+    }
+
+    void handlePanUpdate(DragUpdateDetails details) {
+      var now = DateTime.now().millisecondsSinceEpoch;
+      if (now - _panTimestamp > dragInterval) {
+        _panTimestamp = now;
+        var dx = details.localPosition.dx - _panX;
+        var dy = details.localPosition.dy - _panY;
+        _panX = details.localPosition.dx;
+        _panY = details.localPosition.dy;
+        sendEvent("pan_update", {
+          "dx": dx,
+          "dy": dy,
+          "pd": details.primaryDelta,
+          "lx": details.localPosition.dx,
+          "ly": details.localPosition.dy,
+          "gx": details.globalPosition.dx,
+          "gy": details.globalPosition.dy,
+          "ts": details.sourceTimeStamp?.inMilliseconds
+        });
+      }
+    }
+
+    void handleHorizontalDragStart(DragStartDetails details) {
+      _hDragX = details.localPosition.dx;
+      _hDragY = details.localPosition.dy;
+      if (onHorizontalDragStart) {
+        sendEvent("horizontal_drag_start", {
+          "kind": details.kind?.name,
+          "lx": details.localPosition.dx,
+          "ly": details.localPosition.dy,
+          "gx": details.globalPosition.dx,
+          "gy": details.globalPosition.dy,
+          "ts": details.sourceTimeStamp?.inMilliseconds
+        });
+      }
+    }
+
+    void handleHorizontalDragUpdate(DragUpdateDetails details) {
+      var now = DateTime.now().millisecondsSinceEpoch;
+      if (now - _hDragTimestamp > dragInterval) {
+        _hDragTimestamp = now;
+        var dx = details.localPosition.dx - _hDragX;
+        var dy = details.localPosition.dy - _hDragY;
+        _hDragX = details.localPosition.dx;
+        _hDragY = details.localPosition.dy;
+        sendEvent("horizontal_drag_update", {
+          "dx": dx,
+          "dy": dy,
+          "pd": details.primaryDelta,
+          "lx": details.localPosition.dx,
+          "ly": details.localPosition.dy,
+          "gx": details.globalPosition.dx,
+          "gy": details.globalPosition.dy,
+          "ts": details.sourceTimeStamp?.inMilliseconds
+        });
+      }
+    }
+
+    void handleVerticalDragStart(DragStartDetails details) {
+      _vDragX = details.localPosition.dx;
+      _vDragY = details.localPosition.dy;
+      if (onVerticalDragStart) {
+        sendEvent("vertical_drag_start", {
+          "kind": details.kind?.name,
+          "lx": details.localPosition.dx,
+          "ly": details.localPosition.dy,
+          "gx": details.globalPosition.dx,
+          "gy": details.globalPosition.dy,
+          "ts": details.sourceTimeStamp?.inMilliseconds
+        });
+      }
+    }
+
+    void handleVerticalDragUpdate(DragUpdateDetails details) {
+      var now = DateTime.now().millisecondsSinceEpoch;
+      if (now - _vDragTimestamp > dragInterval) {
+        _vDragTimestamp = now;
+        var dx = details.localPosition.dx - _vDragX;
+        var dy = details.localPosition.dy - _vDragY;
+        _vDragX = details.localPosition.dx;
+        _vDragY = details.localPosition.dy;
+        sendEvent("vertical_drag_update", {
+          "dx": dx,
+          "dy": dy,
+          "pd": details.primaryDelta,
+          "lx": details.localPosition.dx,
+          "ly": details.localPosition.dy,
+          "gx": details.globalPosition.dx,
+          "gy": details.globalPosition.dy,
+          "ts": details.sourceTimeStamp?.inMilliseconds
+        });
+      }
+    }
+
+    var hoverInterval = widget.control.attrInt("hoverInterval", 0)!;
+
+    void handleEnter(PointerEnterEvent details) {
+      _hoverX = details.localPosition.dx;
+      _hoverY = details.localPosition.dy;
+      if (onEnter) {
+        sendEvent("enter", {
+          "ts": details.timeStamp.inMilliseconds,
+          "kind": details.kind.name,
+          "gx": details.position.dx,
+          "gy": details.position.dy,
+          "lx": details.localPosition.dx,
+          "ly": details.localPosition.dy
+        });
+      }
+    }
+
+    void handleHover(PointerHoverEvent details) {
+      var now = DateTime.now().millisecondsSinceEpoch;
+      if (now - _hoverTimestamp > hoverInterval) {
+        _hoverTimestamp = now;
+        var dx = details.localPosition.dx - _hoverX;
+        var dy = details.localPosition.dy - _hoverY;
+        _hoverX = details.localPosition.dx;
+        _hoverY = details.localPosition.dy;
+        sendEvent("hover", {
+          "ts": details.timeStamp.inMilliseconds,
+          "kind": details.kind.name,
+          "gx": details.position.dx,
+          "gy": details.position.dy,
+          "lx": details.localPosition.dx,
+          "ly": details.localPosition.dy,
+          "dx": dx,
+          "dy": dy,
+        });
+      }
+    }
 
     var gd = (onTap |
             onTapDown |
@@ -222,30 +393,10 @@ class GestureDetectorControl extends StatelessWidget {
                     });
                   }
                 : null,
-            onHorizontalDragStart: onHorizontalDragStart
-                ? (details) {
-                    sendEvent("horizontal_drag_start", {
-                      "kind": details.kind?.name,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                      "ts": details.sourceTimeStamp?.inMilliseconds
-                    });
-                  }
-                : null,
+            onHorizontalDragStart: handleHorizontalDragStart,
             onHorizontalDragUpdate: onHorizontalDragUpdate
                 ? (details) {
-                    sendEvent("horizontal_drag_update", {
-                      "dx": details.delta.dx,
-                      "dy": details.delta.dy,
-                      "pd": details.primaryDelta,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                      "ts": details.sourceTimeStamp?.inMilliseconds
-                    });
+                    handleHorizontalDragUpdate(details);
                   }
                 : null,
             onHorizontalDragEnd: onHorizontalDragEnd
@@ -257,30 +408,10 @@ class GestureDetectorControl extends StatelessWidget {
                     });
                   }
                 : null,
-            onVerticalDragStart: onVerticalDragStart
-                ? (details) {
-                    sendEvent("vertical_drag_start", {
-                      "kind": details.kind?.name,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                      "ts": details.sourceTimeStamp?.inMilliseconds
-                    });
-                  }
-                : null,
+            onVerticalDragStart: handleVerticalDragStart,
             onVerticalDragUpdate: onVerticalDragUpdate
                 ? (details) {
-                    sendEvent("vertical_drag_update", {
-                      "dx": details.delta.dx,
-                      "dy": details.delta.dy,
-                      "pd": details.primaryDelta,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                      "ts": details.sourceTimeStamp?.inMilliseconds
-                    });
+                    handleVerticalDragUpdate(details);
                   }
                 : null,
             onVerticalDragEnd: onVerticalDragEnd
@@ -292,30 +423,10 @@ class GestureDetectorControl extends StatelessWidget {
                     });
                   }
                 : null,
-            onPanStart: onPanStart
-                ? (details) {
-                    sendEvent("pan_start", {
-                      "kind": details.kind?.name,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                      "ts": details.sourceTimeStamp?.inMilliseconds
-                    });
-                  }
-                : null,
+            onPanStart: handlePanStart,
             onPanUpdate: onPanUpdate
                 ? (details) {
-                    sendEvent("pan_update", {
-                      "dx": details.delta.dx,
-                      "dy": details.delta.dy,
-                      "pd": details.primaryDelta,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                      "ts": details.sourceTimeStamp?.inMilliseconds
-                    });
+                    handlePanUpdate(details);
                   }
                 : null,
             onPanEnd: onPanEnd
@@ -367,54 +478,25 @@ class GestureDetectorControl extends StatelessWidget {
             child: content)
         : null;
 
-    widget = (onHover | onEnter | onExit)
+    var mouseCursor = widget.control.attrString("mouseCursor");
+    result = ((mouseCursor != null) | onHover | onEnter | onExit)
         ? MouseRegion(
-            cursor: parseMouseCursor(control.attrString("mouseCursor")),
+            cursor: parseMouseCursor(mouseCursor),
             onHover: onHover
                 ? (details) {
-                    sendEvent("hover", {
-                      "ts": details.timeStamp.inMilliseconds,
-                      "kind": details.kind.name,
-                      "gpx": details.position.dx,
-                      "gpy": details.position.dy,
-                      "lpx": details.localPosition.dx,
-                      "lpy": details.localPosition.dy,
-                      "gdx": details.delta.dx,
-                      "gdy": details.delta.dy,
-                      "ldx": details.localDelta.dx,
-                      "ldy": details.localDelta.dy,
-                    });
+                    handleHover(details);
                   }
                 : null,
-            onEnter: onEnter
-                ? (details) {
-                    sendEvent("enter", {
-                      "ts": details.timeStamp.inMilliseconds,
-                      "kind": details.kind.name,
-                      "gpx": details.position.dx,
-                      "gpy": details.position.dy,
-                      "lpx": details.localPosition.dx,
-                      "lpy": details.localPosition.dy,
-                      "gdx": details.delta.dx,
-                      "gdy": details.delta.dy,
-                      "ldx": details.localDelta.dx,
-                      "ldy": details.localDelta.dy,
-                    });
-                  }
-                : null,
+            onEnter: handleEnter,
             onExit: onExit
                 ? (details) {
                     sendEvent("exit", {
                       "ts": details.timeStamp.inMilliseconds,
                       "kind": details.kind.name,
-                      "gpx": details.position.dx,
-                      "gpy": details.position.dy,
-                      "lpx": details.localPosition.dx,
-                      "lpy": details.localPosition.dy,
-                      "gdx": details.delta.dx,
-                      "gdy": details.delta.dy,
-                      "ldx": details.localDelta.dx,
-                      "ldy": details.localDelta.dy,
+                      "gx": details.position.dx,
+                      "gy": details.position.dy,
+                      "lx": details.localPosition.dx,
+                      "ly": details.localPosition.dy
                     });
                   }
                 : null,
@@ -422,12 +504,12 @@ class GestureDetectorControl extends StatelessWidget {
           )
         : gd;
 
-    if (widget == null) {
+    if (result == null) {
       return const ErrorControl(
           "GestureDetector should have at least one event handler defined.");
     }
 
-    return baseControl(context, widget, parent, control);
+    return constrainedControl(context, result, widget.parent, widget.control);
   }
 
   MouseCursor parseMouseCursor(String? cursor) {

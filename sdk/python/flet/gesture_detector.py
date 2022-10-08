@@ -1,13 +1,15 @@
 import json
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from beartype import beartype
 
-from flet.control import Control
+from flet.constrained_control import ConstrainedControl
+from flet.control import Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
 from flet.ref import Ref
+from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 
 class MouseCursor(Enum):
@@ -49,18 +51,38 @@ class MouseCursor(Enum):
     ZOOM_OUT = "zoomOut"
 
 
-class GestureDetector(Control):
+class GestureDetector(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
         ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
         visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
         data: Any = None,
         #
         # Specific
         #
         mouse_cursor: Optional[MouseCursor] = None,
+        drag_interval: Optional[int] = None,
+        hover_interval: Optional[int] = None,
         on_tap=None,
         on_tap_down=None,
         on_tap_up=None,
@@ -90,11 +112,29 @@ class GestureDetector(Control):
         on_exit=None,
     ):
 
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
             ref=ref,
-            disabled=disabled,
+            width=width,
+            height=height,
+            left=left,
+            top=top,
+            right=right,
+            bottom=bottom,
+            expand=expand,
+            opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
             visible=visible,
+            disabled=disabled,
             data=data,
         )
 
@@ -225,6 +265,8 @@ class GestureDetector(Control):
 
         self.content = content
         self.mouse_cursor = mouse_cursor
+        self.drag_interval = drag_interval
+        self.hover_interval = hover_interval
         self.on_tap = on_tap
         self.on_tap_down = on_tap_down
         self.on_tap_up = on_tap_up
@@ -282,6 +324,26 @@ class GestureDetector(Control):
     @beartype
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self._set_attr("mouseCursor", value.value if value is not None else None)
+
+    # drag_interval
+    @property
+    def drag_interval(self) -> Optional[int]:
+        return self._get_attr("dragInterval")
+
+    @drag_interval.setter
+    @beartype
+    def drag_interval(self, value: Optional[int]):
+        self._set_attr("dragInterval", value)
+
+    # hover_interval
+    @property
+    def hover_interval(self) -> Optional[int]:
+        return self._get_attr("hoverInterval")
+
+    @hover_interval.setter
+    @beartype
+    def hover_interval(self, value: Optional[int]):
+        self._set_attr("hoverInterval", value)
 
     # on_tap
     @property
@@ -644,14 +706,12 @@ class ScaleEndEvent(ControlEvent):
 
 
 class HoverEvent(ControlEvent):
-    def __init__(self, ts, kind, gpx, gpy, gdx, gdy, lpx, lpy, ldx, ldy) -> None:
+    def __init__(self, ts, kind, gx, gy, lx, ly, dx=None, dy=None) -> None:
         self.timestamp: float = ts
         self.kind: str = kind
-        self.global_position_x: float = gpx
-        self.global_position_y: float = gpy
-        self.global_delta_x: float = gdx
-        self.global_delta_y: float = gdy
-        self.local_position_x: float = lpx
-        self.local_position_y: float = lpy
-        self.local_delta_x: float = ldx
-        self.local_delta_y: float = ldy
+        self.global_x: float = gx
+        self.global_y: float = gy
+        self.local_x: float = lx
+        self.local_y: float = ly
+        self.delta_x: Optional[float] = dx
+        self.delta_y: Optional[float] = dy
