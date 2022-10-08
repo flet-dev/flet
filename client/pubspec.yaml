@@ -34,6 +34,8 @@ dependencies:
     path: ../package/
 
   url_strategy: ^0.2.0
+  integration_test:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

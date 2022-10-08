@@ -112,7 +112,7 @@ packages:
       name: crypto
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   equatable:
     dependency: transitive
     description:
@@ -140,7 +140,7 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.4"
+    version: "6.1.2"
   file_picker:
     dependency: transitive
     description:
@@ -157,6 +157,11 @@ packages:
     version: "0.0.1"
   flutter:
     dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  flutter_driver:
+    dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -212,6 +217,11 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fuchsia_remote_debug_protocol:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   http:
     dependency: transitive
     description:
@@ -233,6 +243,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.0"
+  integration_test:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   js:
     dependency: transitive
     description:
@@ -476,6 +491,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  sync_http:
+    dependency: transitive
+    description:
+      name: sync_http
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   term_glyph:
     dependency: transitive
     description:
@@ -496,7 +518,7 @@ packages:
       name: typed_data
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.3.1"
   url_launcher:
     dependency: transitive
     description:
@@ -574,6 +596,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
+  vm_service:
+    dependency: transitive
+    description:
+      name: vm_service
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "9.0.0"
   web_socket_channel:
     dependency: transitive
     description:
@@ -581,6 +610,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  webdriver:
+    dependency: transitive
+    description:
+      name: webdriver
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   win32:
     dependency: transitive
     description:
