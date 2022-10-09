@@ -53,14 +53,14 @@ class DraggableControl extends StatelessWidget {
 
     return Draggable<String>(
       data: data,
-      child: MouseRegion(
-        cursor: SystemMouseCursors.grab,
-        child: child,
-      ),
       childWhenDragging: childWhenDragging,
       feedback: MouseRegion(
         cursor: SystemMouseCursors.grabbing,
         child: childFeedback ?? Opacity(opacity: 0.5, child: child),
+      ),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.grab,
+        child: child,
       ),
       // dragAnchorStrategy: (d, context, offset) {
       //   debugPrint("dragAnchorStrategy: ${offset.dx}, ${offset.dy}");

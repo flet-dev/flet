@@ -47,7 +47,6 @@ class PopupMenuButtonControl extends StatelessWidget {
               enabled: !disabled,
               icon: icon != null ? Icon(icon) : null,
               tooltip: tooltip,
-              child: child,
               shape: Theme.of(context).useMaterial3
                   ? RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))
@@ -99,7 +98,8 @@ class PopupMenuButtonControl extends StatelessWidget {
                     return child != null
                         ? item
                         : const PopupMenuDivider() as PopupMenuEntry<String>;
-                  }).toList());
+                  }).toList(),
+              child: child);
         });
 
     return constrainedControl(context, popupButton, parent, control);
