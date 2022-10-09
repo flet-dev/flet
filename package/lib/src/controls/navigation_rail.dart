@@ -1,3 +1,4 @@
+import 'package:flet/src/controls/error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -85,56 +86,72 @@ class _NavigationRailControlState extends State<NavigationRailControl> {
         builder: (content, viewModel) {
           _dispatch = viewModel.dispatch;
 
-          return NavigationRail(
-              labelType: extended ? NavigationRailLabelType.none : labelType,
-              extended: extended,
-              minWidth: widget.control.attrDouble("minWidth"),
-              minExtendedWidth: widget.control.attrDouble("minExtendedWidth"),
-              groupAlignment: widget.control.attrDouble("groupAlignment"),
-              backgroundColor: HexColor.fromString(
-                  Theme.of(context), widget.control.attrString("bgColor", "")!),
-              leading: leadingCtrls.isNotEmpty
-                  ? createControl(
-                      widget.control, leadingCtrls.first.id, disabled)
-                  : null,
-              trailing: trailingCtrls.isNotEmpty
-                  ? createControl(
-                      widget.control, trailingCtrls.first.id, disabled)
-                  : null,
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _destinationChanged,
-              destinations: viewModel.controlViews.map((destView) {
-                var label = destView.control.attrString("label", "")!;
-                var labelContentCtrls =
-                    destView.children.where((c) => c.name == "label_content");
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
+              debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
 
-                var icon =
-                    getMaterialIcon(destView.control.attrString("icon", "")!);
-                var iconContentCtrls =
-                    destView.children.where((c) => c.name == "icon_content");
+              if (constraints.maxHeight == double.infinity &&
+                  widget.control.attrs["height"] == null) {
+                return const ErrorControl("Error displaying NavigationRail",
+                    description:
+                        "Control's height is unbounded. Either set \"expand\" property, set a fixed \"height\" or nest NavigationRail inside another control with a fixed height.");
+              }
 
-                var selectedIcon = getMaterialIcon(
-                    destView.control.attrString("selectedIcon", "")!);
-                var selectedIconContentCtrls = destView.children
-                    .where((c) => c.name == "selected_icon_content");
+              return NavigationRail(
+                  labelType:
+                      extended ? NavigationRailLabelType.none : labelType,
+                  extended: extended,
+                  minWidth: widget.control.attrDouble("minWidth"),
+                  minExtendedWidth:
+                      widget.control.attrDouble("minExtendedWidth"),
+                  groupAlignment: widget.control.attrDouble("groupAlignment"),
+                  backgroundColor: HexColor.fromString(Theme.of(context),
+                      widget.control.attrString("bgColor", "")!),
+                  leading: leadingCtrls.isNotEmpty
+                      ? createControl(
+                          widget.control, leadingCtrls.first.id, disabled)
+                      : null,
+                  trailing: trailingCtrls.isNotEmpty
+                      ? createControl(
+                          widget.control, trailingCtrls.first.id, disabled)
+                      : null,
+                  selectedIndex: _selectedIndex,
+                  onDestinationSelected: _destinationChanged,
+                  destinations: viewModel.controlViews.map((destView) {
+                    var label = destView.control.attrString("label", "")!;
+                    var labelContentCtrls = destView.children
+                        .where((c) => c.name == "label_content");
 
-                return NavigationRailDestination(
-                    padding: parseEdgeInsets(destView.control, "padding"),
-                    icon: iconContentCtrls.isNotEmpty
-                        ? createControl(destView.control,
-                            iconContentCtrls.first.id, disabled)
-                        : Icon(icon),
-                    selectedIcon: selectedIconContentCtrls.isNotEmpty
-                        ? createControl(destView.control,
-                            selectedIconContentCtrls.first.id, disabled)
-                        : selectedIcon != null
-                            ? Icon(selectedIcon)
-                            : null,
-                    label: labelContentCtrls.isNotEmpty
-                        ? createControl(destView.control,
-                            labelContentCtrls.first.id, disabled)
-                        : Text(label));
-              }).toList());
+                    var icon = getMaterialIcon(
+                        destView.control.attrString("icon", "")!);
+                    var iconContentCtrls = destView.children
+                        .where((c) => c.name == "icon_content");
+
+                    var selectedIcon = getMaterialIcon(
+                        destView.control.attrString("selectedIcon", "")!);
+                    var selectedIconContentCtrls = destView.children
+                        .where((c) => c.name == "selected_icon_content");
+
+                    return NavigationRailDestination(
+                        padding: parseEdgeInsets(destView.control, "padding"),
+                        icon: iconContentCtrls.isNotEmpty
+                            ? createControl(destView.control,
+                                iconContentCtrls.first.id, disabled)
+                            : Icon(icon),
+                        selectedIcon: selectedIconContentCtrls.isNotEmpty
+                            ? createControl(destView.control,
+                                selectedIconContentCtrls.first.id, disabled)
+                            : selectedIcon != null
+                                ? Icon(selectedIcon)
+                                : null,
+                        label: labelContentCtrls.isNotEmpty
+                            ? createControl(destView.control,
+                                labelContentCtrls.first.id, disabled)
+                            : Text(label));
+                  }).toList());
+            },
+          );
         });
 
     return constrainedControl(context, rail, widget.parent, widget.control);
