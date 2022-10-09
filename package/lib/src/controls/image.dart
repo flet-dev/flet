@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -21,6 +19,7 @@ class ImageControl extends StatelessWidget {
   final Control? parent;
   final Control control;
 
+  // ignore: constant_identifier_names
   static const String SVG_TAG = "<svg";
 
   const ImageControl({Key? key, required this.parent, required this.control})

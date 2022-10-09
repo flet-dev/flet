@@ -25,6 +25,7 @@ dependencies:
   flutter_svg: ^1.1.5
   window_to_front: ^0.0.3
   audioplayers: ^1.1.0
+  universal_html: ^1.2.1
 
 dev_dependencies:
   flutter_test:
