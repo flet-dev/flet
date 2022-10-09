@@ -9,7 +9,6 @@ import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
-import '../models/control_type.dart';
 import '../models/control_view_model.dart';
 import '../models/controls_view_model.dart';
 import '../models/page_media_view_model.dart';
@@ -558,10 +557,10 @@ class _PageControlState extends State<PageControl> {
           bool firstControl = true;
 
           for (var ctrl in children.where((c) => c.isVisible)) {
-            if (ctrl.type == ControlType.appBar) {
+            if (ctrl.type == "appbar") {
               appBar = ctrl;
               continue;
-            } else if (ctrl.type == ControlType.floatingActionButton) {
+            } else if (ctrl.type == "floatingactionbutton") {
               fab = ctrl;
               continue;
             }

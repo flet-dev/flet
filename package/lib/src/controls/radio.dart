@@ -6,7 +6,6 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_ancestor_view_model.dart';
-import '../models/control_type.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/buttons.dart';
 import 'create_control.dart';
@@ -71,7 +70,7 @@ class _RadioControlState extends State<RadioControl> {
     return StoreConnector<AppState, ControlAncestorViewModel>(
         distinct: true,
         converter: (store) => ControlAncestorViewModel.fromStore(
-            store, widget.control.id, ControlType.radioGroup),
+            store, widget.control.id, "radiogroup"),
         builder: (context, viewModel) {
           debugPrint("Radio StoreConnector build: ${widget.control.id}");
 
