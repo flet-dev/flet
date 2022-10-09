@@ -99,6 +99,11 @@ class ContainerControl extends StatelessWidget {
           var blendMode = BlendMode.values.firstWhereOrNull((e) =>
               e.name.toLowerCase() ==
               control.attrString("blendMode", "")!.toLowerCase());
+          var shape = BoxShape.values.firstWhere(
+              (e) =>
+                  e.name.toLowerCase() ==
+                  control.attrString("shape", "")!.toLowerCase(),
+              orElse: () => BoxShape.rectangle);
 
           var boxDecor = BoxDecoration(
               color: bgColor,
@@ -107,7 +112,8 @@ class ContainerControl extends StatelessWidget {
               backgroundBlendMode:
                   bgColor != null || gradient != null ? blendMode : null,
               border: parseBorder(Theme.of(context), control, "border"),
-              borderRadius: parseBorderRadius(control, "borderRadius"));
+              borderRadius: parseBorderRadius(control, "borderRadius"),
+              shape: shape);
 
           if ((onClick || onLongPress || onHover) && ink && !disabled) {
             var ink = Ink(

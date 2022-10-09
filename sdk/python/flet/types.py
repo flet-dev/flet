@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Union
 
 from flet.animation import Animation
@@ -40,3 +41,8 @@ FontWeight = Literal[
     "w800",
     "w900",
 ]
+
+
+class BoxShape(Enum):
+    RECTANGLE = "rectangle"
+    CIRCLE = "circle"

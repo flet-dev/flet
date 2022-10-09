@@ -15,6 +15,7 @@ from flet.ref import Ref
 from flet.types import (
     AnimationValue,
     BorderRadiusValue,
+    BoxShape,
     MarginValue,
     OffsetValue,
     PaddingValue,
@@ -81,6 +82,7 @@ class Container(ConstrainedControl):
         image_repeat: ImageRepeat = None,
         image_fit: ImageFit = None,
         image_opacity: OptionalNumber = None,
+        shape: Optional[BoxShape] = None,
         clip_behavior: ClipBehavior = None,
         ink: Optional[bool] = None,
         animate: AnimationValue = None,
@@ -136,6 +138,7 @@ class Container(ConstrainedControl):
         self.image_repeat = image_repeat
         self.image_fit = image_fit
         self.image_opacity = image_opacity
+        self.shape = shape
         self.clip_behavior = clip_behavior
         self.ink = ink
         self.animate = animate
@@ -304,6 +307,16 @@ class Container(ConstrainedControl):
     @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # shape
+    @property
+    def shape(self):
+        return self._get_attr("shape")
+
+    @shape.setter
+    @beartype
+    def shape(self, value: Optional[BoxShape]):
+        self._set_attr("shape", value.value if value is not None else None)
 
     # clip_behavior
     @property
