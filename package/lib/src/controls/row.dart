@@ -61,13 +61,13 @@ class RowControl extends StatelessWidget {
             wrap
                 ? Wrap(
                     direction: Axis.horizontal,
-                    children: controls,
                     spacing: spacing,
                     runSpacing: control.attrDouble("runSpacing", 10)!,
                     alignment: parseWrapAlignment(
                         control, "alignment", WrapAlignment.start),
                     crossAxisAlignment: parseWrapCrossAlignment(control,
                         "verticalAlignment", WrapCrossAlignment.center),
+                    children: controls,
                   )
                 : Row(
                     mainAxisAlignment: mainAlignment,
@@ -89,10 +89,10 @@ class RowControl extends StatelessWidget {
       required bool autoScroll}) {
     return scrollMode != ScrollMode.none
         ? ScrollableControl(
-            child: child,
             scrollDirection: wrap ? Axis.vertical : Axis.horizontal,
             scrollMode: scrollMode,
             autoScroll: autoScroll,
+            child: child,
           )
         : child;
   }

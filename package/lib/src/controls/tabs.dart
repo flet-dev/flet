@@ -147,8 +147,8 @@ class _TabsControlState extends State<TabsControl>
                     widgets.add(Text(text));
                   }
                   tabChild = Row(
-                      children: widgets,
-                      mainAxisAlignment: MainAxisAlignment.center);
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: widgets);
                 }
                 return Tab(child: tabChild);
               }).toList());

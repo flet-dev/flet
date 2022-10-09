@@ -13,10 +13,11 @@ class WindowMedia extends StatefulWidget {
   const WindowMedia({Key? key}) : super(key: key);
 
   @override
-  _WindowMediaState createState() => _WindowMediaState();
+  // ignore: library_private_types_in_public_api
+  WindowMediaState createState() => WindowMediaState();
 }
 
-class _WindowMediaState extends State<WindowMedia> with WindowListener {
+class WindowMediaState extends State<WindowMedia> with WindowListener {
   Timer? _debounce;
   Function? _dispatch;
 
