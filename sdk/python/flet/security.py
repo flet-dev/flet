@@ -2,9 +2,12 @@ import base64
 import hashlib
 import os
 
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+try:
+    from cryptography.fernet import Fernet
+    from cryptography.hazmat.primitives import hashes
+    from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+except ImportError:
+    raise Exception('Install "cryptography" Python package to use Flet security utils.')
 
 
 def __generate_fernet_key(secret_key: str) -> bytes:

@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
-import 'control_type.dart';
 
 import 'control.dart';
 
@@ -61,7 +60,7 @@ class AppState extends Equatable {
         "page": Control(
             id: "page",
             pid: "",
-            type: ControlType.page,
+            type: "page",
             name: "",
             childIds: [],
             attrs: {})

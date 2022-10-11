@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,7 @@ class ImageControl extends StatelessWidget {
   final Control? parent;
   final Control control;
 
-  // ignore: constant_identifier_names
-  static const String SVG_TAG = "<svg";
+  static const String svgTag = "<svg";
 
   const ImageControl({Key? key, required this.parent, required this.control})
       : super(key: key);
@@ -57,7 +57,7 @@ class ImageControl extends StatelessWidget {
             try {
               Uint8List bytes = base64Decode(srcBase64);
               if (arrayIndexOf(
-                      bytes, Uint8List.fromList(utf8.encode(SVG_TAG))) !=
+                      bytes, Uint8List.fromList(utf8.encode(svgTag))) !=
                   -1) {
                 image = SvgPicture.memory(bytes,
                     width: width,
@@ -80,7 +80,7 @@ class ImageControl extends StatelessWidget {
             } catch (ex) {
               return ErrorControl("Error decoding base64: ${ex.toString()}");
             }
-          } else if (src.contains(SVG_TAG)) {
+          } else if (src.contains(svgTag)) {
             image = SvgPicture.memory(Uint8List.fromList(utf8.encode(src)),
                 width: width,
                 height: height,

@@ -26,6 +26,7 @@ class _AudioControlState extends State<AudioControl> {
   ReleaseMode? _releaseMode;
   double? _volume;
   double? _balance;
+  double? _playbackRate;
   String? _method;
   void Function(Duration)? _onDurationChanged;
   void Function(PlayerState)? _onStateChanged;
@@ -81,6 +82,7 @@ class _AudioControlState extends State<AudioControl> {
     bool autoplay = widget.control.attrBool("autoplay", false)!;
     double? volume = widget.control.attrDouble("volume", null);
     double? balance = widget.control.attrDouble("balance", null);
+    double? playbackRate = widget.control.attrDouble("playbackRate", null);
     var releaseMode = ReleaseMode.values.firstWhereOrNull((e) =>
         e.name.toLowerCase() ==
         widget.control.attrString("releaseMode", "")!.toLowerCase());
@@ -144,6 +146,14 @@ class _AudioControlState extends State<AudioControl> {
       if (volume != null && volume != _volume && volume >= 0 && volume <= 1) {
         _volume = volume;
         await player.setVolume(volume);
+      }
+
+      if (playbackRate != null &&
+          playbackRate != _playbackRate &&
+          playbackRate >= 0 &&
+          playbackRate <= 2) {
+        _playbackRate = playbackRate;
+        await player.setPlaybackRate(playbackRate);
       }
 
       if (!kIsWeb &&

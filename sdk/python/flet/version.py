@@ -1,13 +1,15 @@
-# this file will be replaced by CI
-
 import subprocess as sp
+
 from pkg_resources import parse_version
 
 from flet.utils import which
 
+# this value will be replaced by CI
+version = ""
+
 
 def update_version():
-    in_repo = which("git") and sp.run(
+    in_repo = sp.run(
         ["git", "status"],
         capture_output=True,
         text=True,
@@ -22,11 +24,8 @@ def update_version():
             text=True,
         ).stdout.splitlines()
         versions = filter(lambda t: t.startswith("v"), tags)
-        version = sorted(versions, key=parse_version)[-1][1:]
-
-    else:
-        version = "0.1.60"  # default to old version
-    return version
+        return sorted(versions, key=parse_version)[-1][1:]
+    return "0.1.60"
 
 
 if not globals().get("version", None):

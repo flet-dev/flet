@@ -41,5 +41,22 @@ void main([List<String>? args]) async {
 
   debugPrint("Page URL: $pageUrl");
 
-  runApp(FletApp(title: 'Flet', pageUrl: pageUrl));
+  FletAppErrorsHandler errorsHandler = FletAppErrorsHandler();
+
+  if (!kDebugMode) {
+    FlutterError.onError = (details) {
+      errorsHandler.onError(details.exceptionAsString());
+    };
+
+    PlatformDispatcher.instance.onError = (error, stack) {
+      errorsHandler.onError(error.toString());
+      return true;
+    };
+  }
+
+  runApp(FletApp(
+    title: 'Flet',
+    pageUrl: pageUrl,
+    errorsHandler: errorsHandler,
+  ));
 }

@@ -34,30 +34,40 @@ class GridViewControl extends StatelessWidget {
 
     List<Control> visibleControls = children.where((c) => c.isVisible).toList();
 
-    var gridDelegate = maxExtent == null
-        ? SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: runsCount,
-            mainAxisSpacing: spacing,
-            crossAxisSpacing: runSpacing,
-            childAspectRatio: childAspectRatio)
-        : SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: maxExtent,
-            mainAxisSpacing: spacing,
-            crossAxisSpacing: runSpacing,
-            childAspectRatio: childAspectRatio);
+    var gridView = LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
+        debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
 
-    return constrainedControl(
-        context,
-        GridView.builder(
+        var shrinkWrap =
+            (!horizontal && constraints.maxHeight == double.infinity) ||
+                (horizontal && constraints.maxWidth == double.infinity);
+
+        var gridDelegate = maxExtent == null
+            ? SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: runsCount,
+                mainAxisSpacing: spacing,
+                crossAxisSpacing: runSpacing,
+                childAspectRatio: childAspectRatio)
+            : SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: maxExtent,
+                mainAxisSpacing: spacing,
+                crossAxisSpacing: runSpacing,
+                childAspectRatio: childAspectRatio);
+
+        return GridView.builder(
           scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+          shrinkWrap: shrinkWrap,
           padding: padding,
           gridDelegate: gridDelegate,
           itemCount: visibleControls.length,
           itemBuilder: (context, index) {
             return createControl(control, visibleControls[index].id, disabled);
           },
-        ),
-        parent,
-        control);
+        );
+      },
+    );
+
+    return constrainedControl(context, gridView, parent, control);
   }
 }

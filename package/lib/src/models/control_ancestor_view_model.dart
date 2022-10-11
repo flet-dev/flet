@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'control_type.dart';
 import 'package:redux/redux.dart';
 
 import 'app_state.dart';
@@ -13,7 +12,7 @@ class ControlAncestorViewModel extends Equatable {
       {required this.ancestor, required this.dispatch});
 
   static ControlAncestorViewModel fromStore(
-      Store<AppState> store, String id, ControlType ancestorType) {
+      Store<AppState> store, String id, String ancestorType) {
     Control? ancestor;
     String controlId = id;
     while (true) {
@@ -22,7 +21,7 @@ class ControlAncestorViewModel extends Equatable {
         break;
       }
       ancestor = store.state.controls[parentId]!;
-      if (ancestor.type == ancestorType) {
+      if (ancestor.type.toLowerCase() == ancestorType.toLowerCase()) {
         break;
       }
       controlId = ancestor.id;

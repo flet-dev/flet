@@ -43,6 +43,8 @@ class _SnackBarControlState extends State<SnackBarControl> {
     SnackBarAction? action = actionName != ""
         ? SnackBarAction(
             label: actionName,
+            textColor: HexColor.fromString(Theme.of(context),
+                widget.control.attrString("actionColor", "")!),
             onPressed: () {
               debugPrint("SnackBar ${widget.control.id} clicked!");
               FletAppServices.of(context).ws.pageEventFromWeb(

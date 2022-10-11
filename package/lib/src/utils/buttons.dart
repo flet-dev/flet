@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'borders.dart';
-import 'edge_insets.dart';
-import 'numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import 'borders.dart';
 import 'colors.dart';
+import 'edge_insets.dart';
+import 'numbers.dart';
 
 ButtonStyle? parseButtonStyle(ThemeData theme, Control control, String propName,
     {required Color defaultForegroundColor,
@@ -36,6 +36,18 @@ ButtonStyle? parseButtonStyle(ThemeData theme, Control control, String propName,
       defaultPadding,
       defaultBorderSide,
       defaultShape);
+}
+
+MaterialStateProperty<Color?>? parseMaterialStateColor(
+    ThemeData theme, Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return getMaterialStateProperty(
+      j1, (jv) => HexColor.fromString(theme, jv as String), null);
 }
 
 ButtonStyle? buttonStyleFromJSON(

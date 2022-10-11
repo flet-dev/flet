@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-import 'error.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
 import '../models/control.dart';
+import '../protocol/drag_target_accept_event.dart';
 import 'create_control.dart';
+import 'error.dart';
 
 class DragTargetControl extends StatelessWidget {
   final Control? parent;
@@ -64,17 +65,18 @@ class DragTargetControl extends StatelessWidget {
             eventData: groupsEqual.toString());
         return groupsEqual;
       },
-      onAccept: (data) {
-        debugPrint("DragTarget.onAccept ${control.id}: $data");
+      onAcceptWithDetails: (details) {
+        var data = details.data;
+        debugPrint("DragTarget.onAcceptWithDetails ${control.id}: $data");
         var jd = json.decode(data);
         var srcId = jd["id"] as String;
         ws.pageEventFromWeb(
-            eventTarget: control.id, eventName: "accept", eventData: srcId);
+            eventTarget: control.id,
+            eventName: "accept",
+            eventData: json.encode(DragTargetAcceptEvent(
+                    srcId: srcId, x: details.offset.dx, y: details.offset.dy)
+                .toJson()));
       },
-      // onAcceptWithDetails: (details) {
-      //   debugPrint(
-      //       "onAcceptWithDetails: ${details.data} ${details.offset}");
-      // },
       onLeave: (data) {
         debugPrint("DragTarget.onLeave ${control.id}: $data");
         String srcId = "";

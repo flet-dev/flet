@@ -254,7 +254,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 
 		// lookup for existing session
 		if request.SessionID != "" {
-			if sessionID, err := c.decryptSensitiveData(request.SessionID, c.clientIP); err == nil {
+			if sessionID, err := c.decryptSensitiveData(request.SessionID, ""); err == nil {
 				session = store.GetSession(page, sessionID)
 			} else {
 				response.Error = fmt.Sprintf("error decrypting request.SessionID %s from %s: %s", request.SessionID, c.clientIP, err)
@@ -310,7 +310,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 		log.Debugf("Connected to zero session of %s page\n", page.Name)
 	}
 
-	sessionID, err := c.encryptSensitiveData(session.ID, c.clientIP)
+	sessionID, err := c.encryptSensitiveData(session.ID, "")
 	if err != nil {
 		response.Error = fmt.Sprintf("error encrypting session.ID: %s", err)
 		return

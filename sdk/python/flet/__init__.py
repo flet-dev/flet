@@ -12,7 +12,7 @@ from flet.column import Column
 from flet.container import Container, ContainerTapEvent
 from flet.control import Control
 from flet.divider import Divider
-from flet.drag_target import DragTarget
+from flet.drag_target import DragTarget, DragTargetAcceptEvent
 from flet.draggable import Draggable
 from flet.dropdown import Dropdown
 from flet.elevated_button import ElevatedButton
@@ -26,6 +26,20 @@ from flet.filled_button import FilledButton
 from flet.filled_tonal_button import FilledTonalButton
 from flet.flet import *
 from flet.floating_action_button import FloatingActionButton
+from flet.gesture_detector import (
+    DragEndEvent,
+    DragStartEvent,
+    DragUpdateEvent,
+    GestureDetector,
+    HoverEvent,
+    LongPressEndEvent,
+    LongPressStartEvent,
+    MouseCursor,
+    ScaleEndEvent,
+    ScaleStartEvent,
+    ScaleUpdateEvent,
+    TapEvent,
+)
 from flet.gradients import LinearGradient, RadialGradient, SweepGradient
 from flet.grid_view import GridView
 from flet.icon import Icon
@@ -56,6 +70,7 @@ from flet.tabs import Tab, Tabs
 from flet.template_route import TemplateRoute
 from flet.text import Text
 from flet.text_button import TextButton
+from flet.text_style import TextStyle
 from flet.textfield import TextField
 from flet.theme import PageTransitionsTheme, Theme
 from flet.user_control import UserControl

@@ -407,7 +407,7 @@ def _open_flet_view(page_url, hidden):
             logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
             temp_flet_dir.mkdir(parents=True, exist_ok=True)
             with tarfile.open(str(tar_file), "r:gz") as tar_arch:
-                tar_arch.extractall(str(temp_flet_dir))
+                safe_tar_extractall(tar_arch, str(temp_flet_dir))
         else:
             logging.info(f"Flet View found in: {temp_flet_dir}")
 
@@ -428,7 +428,7 @@ def _open_flet_view(page_url, hidden):
             logging.info(f"Extracting Flet from archive to {temp_flet_dir}")
             temp_flet_dir.mkdir(parents=True, exist_ok=True)
             with tarfile.open(str(tar_file), "r:gz") as tar_arch:
-                tar_arch.extractall(str(temp_flet_dir))
+                safe_tar_extractall(tar_arch, str(temp_flet_dir))
         else:
             logging.info(f"Flet View found in: {temp_flet_dir}")
 
@@ -479,7 +479,7 @@ def _download_fletd():
                     zip_arch.extractall(str(temp_fletd_dir))
             else:
                 with tarfile.open(temp_arch, "r:gz") as tar_arch:
-                    tar_arch.extractall(str(temp_fletd_dir))
+                    safe_tar_extractall(tar_arch, str(temp_fletd_dir))
         finally:
             os.remove(temp_arch)
     else:

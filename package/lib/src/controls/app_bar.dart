@@ -32,6 +32,8 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
     var leadingWidth = control.attrDouble("leadingWidth");
     var elevation = control.attrDouble("elevation");
     var centerTitle = control.attrBool("centerTitle", false)!;
+    var automaticallyImplyLeading =
+        control.attrBool("automaticallyImplyLeading", true)!;
     var color = HexColor.fromString(
         Theme.of(context), control.attrString("color", "")!);
     var bgcolor = HexColor.fromString(
@@ -42,6 +44,7 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
           ? createControl(control, leadingCtrls.first.id, control.isDisabled)
           : null,
       leadingWidth: leadingWidth,
+      automaticallyImplyLeading: automaticallyImplyLeading,
       title: titleCtrls.isNotEmpty
           ? createControl(control, titleCtrls.first.id, control.isDisabled)
           : null,

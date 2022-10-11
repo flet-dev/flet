@@ -1,7 +1,9 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
+from beartype.typing import Dict
 
+from flet.buttons import MaterialState
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
@@ -50,6 +52,8 @@ class Checkbox(ConstrainedControl):
         value: Optional[bool] = None,
         tristate: Optional[bool] = None,
         autofocus: Optional[bool] = None,
+        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
+        check_color: Optional[str] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -85,12 +89,21 @@ class Checkbox(ConstrainedControl):
         self.label = label
         self.label_position = label_position
         self.autofocus = autofocus
+        self.check_color = check_color
+        self.fill_color = fill_color
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
 
     def _get_control_name(self):
         return "checkbox"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        fc = self.__fill_color
+        if fc is not None and not isinstance(fc, Dict):
+            fc = {"": fc}
+        self._set_attr_json("fillColor", fc)
 
     # value
     @property
@@ -142,6 +155,25 @@ class Checkbox(ConstrainedControl):
     @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # check_color
+    @property
+    def check_color(self):
+        return self._get_attr("checkColor")
+
+    @check_color.setter
+    def check_color(self, value):
+        self._set_attr("checkColor", value)
+
+    # fill_color
+    @property
+    def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__fill_color
+
+    @fill_color.setter
+    @beartype
+    def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__fill_color = value
 
     # on_change
     @property

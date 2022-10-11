@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Union
 
 from flet.animation import Animation
@@ -5,6 +6,12 @@ from flet.border_radius import BorderRadius
 from flet.margin import Margin
 from flet.padding import Padding
 from flet.transform import Offset, Rotate, Scale
+
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
+
 
 PaddingValue = Union[None, int, float, Padding]
 
@@ -19,3 +26,23 @@ ScaleValue = Union[None, int, float, Scale]
 OffsetValue = Union[None, Offset]
 
 AnimationValue = Union[None, bool, int, Animation]
+
+FontWeight = Literal[
+    None,
+    "normal",
+    "bold",
+    "w100",
+    "w200",
+    "w300",
+    "w400",
+    "w500",
+    "w600",
+    "w700",
+    "w800",
+    "w900",
+]
+
+
+class BoxShape(Enum):
+    RECTANGLE = "rectangle"
+    CIRCLE = "circle"

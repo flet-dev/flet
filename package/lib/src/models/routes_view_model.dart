@@ -4,7 +4,6 @@ import 'package:redux/redux.dart';
 
 import 'app_state.dart';
 import 'control.dart';
-import 'control_type.dart';
 
 class RoutesViewModel extends Equatable {
   final Control page;
@@ -23,7 +22,7 @@ class RoutesViewModel extends Equatable {
   static RoutesViewModel fromStore(Store<AppState> store) {
     Control? offstageControl = store.state.controls["page"]!.childIds
         .map((childId) => store.state.controls[childId]!)
-        .firstWhereOrNull((c) => c.type == ControlType.offstage);
+        .firstWhereOrNull((c) => c.type == "offstage");
 
     return RoutesViewModel(
         page: store.state.controls["page"]!,
@@ -37,7 +36,7 @@ class RoutesViewModel extends Equatable {
             : [],
         viewIds: store.state.controls["page"]!.childIds
             .map((childId) => store.state.controls[childId]!)
-            .where((c) => c.type != ControlType.offstage && c.isVisible)
+            .where((c) => c.type != "offstage" && c.isVisible)
             .map((c) => c.id)
             .toList());
   }

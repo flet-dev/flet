@@ -99,6 +99,11 @@ class ContainerControl extends StatelessWidget {
           var blendMode = BlendMode.values.firstWhereOrNull((e) =>
               e.name.toLowerCase() ==
               control.attrString("blendMode", "")!.toLowerCase());
+          var shape = BoxShape.values.firstWhere(
+              (e) =>
+                  e.name.toLowerCase() ==
+                  control.attrString("shape", "")!.toLowerCase(),
+              orElse: () => BoxShape.rectangle);
 
           var boxDecor = BoxDecoration(
               color: bgColor,
@@ -107,7 +112,8 @@ class ContainerControl extends StatelessWidget {
               backgroundBlendMode:
                   bgColor != null || gradient != null ? blendMode : null,
               border: parseBorder(Theme.of(context), control, "border"),
-              borderRadius: parseBorderRadius(control, "borderRadius"));
+              borderRadius: parseBorderRadius(control, "borderRadius"),
+              shape: shape);
 
           if ((onClick || onLongPress || onHover) && ink && !disabled) {
             var ink = Ink(
@@ -116,9 +122,7 @@ class ContainerControl extends StatelessWidget {
                   // Dummy callback to enable widget
                   // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
                   // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
-                  onTap: onHover
-                      ? () {}
-                      : null,
+                  onTap: onHover ? () {} : null,
                   onTapDown: onClick
                       ? (details) {
                           debugPrint("Container ${control.id} clicked!");

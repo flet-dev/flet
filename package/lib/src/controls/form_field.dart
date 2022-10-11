@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/text.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -107,6 +108,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
   return InputDecoration(
       contentPadding: parseEdgeInsets(control, "contentPadding"),
       label: label != "" ? Text(label) : null,
+      labelStyle: parseTextStyle(Theme.of(context), control, "labelStyle"),
       border: border,
       enabledBorder: border,
       focusedBorder: focusedBorder,
@@ -114,11 +116,16 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       filled: control.attrBool("filled", false)!,
       fillColor: focused ? focusedBgcolor ?? bgcolor : bgcolor,
       hintText: control.attrString("hintText"),
+      hintStyle: parseTextStyle(Theme.of(context), control, "hintStyle"),
       helperText: control.attrString("helperText"),
+      helperStyle: parseTextStyle(Theme.of(context), control, "helperStyle"),
       counterText: control.attrString("counterText"),
+      counterStyle: parseTextStyle(Theme.of(context), control, "counterStyle"),
       errorText: control.attrString("errorText"),
+      errorStyle: parseTextStyle(Theme.of(context), control, "errorStyle"),
       prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
       prefixText: prefixText,
+      prefixStyle: parseTextStyle(Theme.of(context), control, "prefixStyle"),
       prefix: prefix != null
           ? createControl(control, prefix.id, control.isDisabled)
           : null,
@@ -126,5 +133,6 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
           ? createControl(control, suffix.id, control.isDisabled)
           : null,
       suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
-      suffixText: suffixText);
+      suffixText: suffixText,
+      suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"));
 }

@@ -50,12 +50,20 @@ class ListViewControl extends StatelessWidget {
       });
     }
 
-    return constrainedControl(
-        context,
-        spacing > 0
+    var listView = LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
+        debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
+
+        var shrinkWrap =
+            (!horizontal && constraints.maxHeight == double.infinity) ||
+                (horizontal && constraints.maxWidth == double.infinity);
+
+        return spacing > 0
             ? ListView.separated(
                 controller: _controller,
                 scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+                shrinkWrap: shrinkWrap,
                 padding: padding,
                 itemCount: children.length,
                 itemBuilder: (context, index) {
@@ -77,6 +85,7 @@ class ListViewControl extends StatelessWidget {
             : ListView.builder(
                 controller: _controller,
                 scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+                shrinkWrap: shrinkWrap,
                 padding: padding,
                 itemCount: children.length,
                 itemExtent: itemExtent,
@@ -87,8 +96,10 @@ class ListViewControl extends StatelessWidget {
                 prototypeItem: firstItemPrototype && children.isNotEmpty
                     ? createControl(control, visibleControls[0].id, disabled)
                     : null,
-              ),
-        parent,
-        control);
+              );
+      },
+    );
+
+    return constrainedControl(context, listView, parent, control);
   }
 }

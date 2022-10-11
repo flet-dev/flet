@@ -1,15 +1,14 @@
 import 'dart:convert';
 
-import 'package:flet/src/models/control_type.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flet/src/models/control.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("Two controls are equal", () {
     Control c1 = const Control(
         id: "i1",
         pid: "p1",
-        type: ControlType.stack,
+        type: "stack",
         name: null,
         childIds: ["txt1", "btn1"],
         attrs: {"text": "Hello!", "width": "200"});
@@ -17,7 +16,7 @@ void main() {
     Control c2 = const Control(
         id: "i1",
         pid: "p1",
-        type: ControlType.stack,
+        type: "stack",
         name: null,
         childIds: ["txt1", "btn1"],
         attrs: {"width": "200", "text": "Hello!"});
@@ -41,7 +40,7 @@ void main() {
 
     expect(c1.id, "s1");
     expect(c1.pid, "");
-    expect(c1.type, ControlType.stack);
+    expect(c1.type, "stack");
     expect(c1.name, "content");
     expect(c1.childIds, ["txt1", "txt2"]);
     expect(c1.attrs.length, 2);

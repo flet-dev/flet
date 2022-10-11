@@ -9,7 +9,7 @@ from flet.ref import Ref
 class SnackBar(Control):
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
@@ -20,6 +20,7 @@ class SnackBar(Control):
         open: bool = False,
         # remove_current_snackbar: bool = False,
         action: Optional[str] = None,
+        action_color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         on_action=None,
     ):
@@ -36,6 +37,7 @@ class SnackBar(Control):
         # self.remove_current_snackbar = remove_current_snackbar
         self.content = content
         self.action = action
+        self.action_color = action_color
         self.bgcolor = bgcolor
         self.on_action = on_action
 
@@ -89,6 +91,15 @@ class SnackBar(Control):
     @action.setter
     def action(self, value):
         self._set_attr("action", value)
+
+    # action_color
+    @property
+    def action_color(self):
+        return self._get_attr("actionColor")
+
+    @action_color.setter
+    def action_color(self, value):
+        self._set_attr("actionColor", value)
 
     # bgcolor
     @property

@@ -1,7 +1,9 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
+from beartype.typing import Dict
 
+from flet.buttons import MaterialState
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
@@ -49,6 +51,7 @@ class Radio(ConstrainedControl):
         label_position: LabelPosition = None,
         value: Optional[str] = None,
         autofocus: Optional[bool] = None,
+        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
         on_focus=None,
         on_blur=None,
     ):
@@ -82,11 +85,19 @@ class Radio(ConstrainedControl):
         self.label = label
         self.label_position = label_position
         self.autofocus = autofocus
+        self.fill_color = fill_color
         self.on_focus = on_focus
         self.on_blur = on_blur
 
     def _get_control_name(self):
         return "radio"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        fc = self.__fill_color
+        if fc is not None and not isinstance(fc, Dict):
+            fc = {"": fc}
+        self._set_attr_json("fillColor", fc)
 
     # value
     @property
@@ -115,6 +126,16 @@ class Radio(ConstrainedControl):
     @beartype
     def label_position(self, value: LabelPosition):
         self._set_attr("labelPosition", value)
+
+    # fill_color
+    @property
+    def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__fill_color
+
+    @fill_color.setter
+    @beartype
+    def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__fill_color = value
 
     # on_focus
     @property

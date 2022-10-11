@@ -1,12 +1,12 @@
 import 'dart:math';
 
+import 'package:flet/src/controls/error.dart';
 import 'package:flet/src/flet_app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../models/app_state.dart';
 import '../models/control.dart';
-import '../models/control_type.dart';
 import '../models/control_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/transforms.dart';
@@ -17,6 +17,7 @@ import 'banner.dart';
 import 'card.dart';
 import 'checkbox.dart';
 import 'circle_avatar.dart';
+import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'divider.dart';
@@ -26,6 +27,7 @@ import 'dropdown.dart';
 import 'elevated_button.dart';
 import 'file_picker.dart';
 import 'floating_action_button.dart';
+import 'gesture_detector.dart';
 import 'grid_view.dart';
 import 'icon.dart';
 import 'icon_button.dart';
@@ -74,223 +76,231 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
     builder: (context, controlView) {
       //debugPrint("createControl builder(): $id");
       switch (controlView.control.type) {
-        case ControlType.page:
+        case "page":
           return PageControl(
               control: controlView.control,
               children: controlView.children,
               dispatch: controlView.dispatch);
-        case ControlType.text:
+        case "text":
           return TextControl(parent: parent, control: controlView.control);
-        case ControlType.icon:
+        case "icon":
           return IconControl(parent: parent, control: controlView.control);
-        case ControlType.filePicker:
+        case "filepicker":
           return FilePickerControl(
               parent: parent, control: controlView.control);
-        case ControlType.markdown:
+        case "markdown":
           return MarkdownControl(parent: parent, control: controlView.control);
-        case ControlType.image:
+        case "image":
           return ImageControl(parent: parent, control: controlView.control);
-        case ControlType.audio:
+        case "audio":
           return AudioControl(parent: parent, control: controlView.control);
-        case ControlType.divider:
+        case "divider":
           return DividerControl(parent: parent, control: controlView.control);
-        case ControlType.verticalDivider:
+        case "clipboard":
+          return ClipboardControl(parent: parent, control: controlView.control);
+        case "verticaldivider":
           return VerticalDividerControl(
               parent: parent, control: controlView.control);
-        case ControlType.circleAvatar:
+        case "circleavatar":
           return CircleAvatarControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.progressRing:
+        case "progressring":
           return ProgressRingControl(
               parent: parent, control: controlView.control);
-        case ControlType.progressBar:
+        case "progressbar":
           return ProgressBarControl(
               parent: parent, control: controlView.control);
-        case ControlType.elevatedButton:
+        case "elevatedbutton":
           return ElevatedButtonControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.outlinedButton:
+        case "outlinedbutton":
           return OutlinedButtonControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.textButton:
+        case "textbutton":
           return TextButtonControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.iconButton:
+        case "iconbutton":
           return IconButtonControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.floatingActionButton:
+        case "floatingactionbutton":
           return FloatingActionButtonControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.popupMenuButton:
+        case "popupmenubutton":
           return PopupMenuButtonControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.column:
+        case "column":
           return ColumnControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.row:
+        case "row":
           return RowControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.stack:
+        case "stack":
           return StackControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.container:
+        case "container":
           return ContainerControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.draggable:
+        case "draggable":
           return DraggableControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.dragTarget:
+        case "dragtarget":
           return DragTargetControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.card:
+        case "card":
           return CardControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.semantics:
+        case "gesturedetector":
+          return GestureDetectorControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "semantics":
           return SemanticsControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.shaderMask:
+        case "shadermask":
           return ShaderMaskControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.animatedSwitcher:
+        case "animatedswitcher":
           return AnimatedSwitcherControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.listTile:
+        case "listtile":
           return ListTileControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.listView:
+        case "listview":
           return ListViewControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.gridView:
+        case "gridview":
           return GridViewControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.textField:
+        case "textfield":
           return TextFieldControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.checkbox:
+        case "checkbox":
           return CheckboxControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);
-        case ControlType.Switch:
+        case "switch":
           return SwitchControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);
-        case ControlType.slider:
+        case "slider":
           return SliderControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);
-        case ControlType.radioGroup:
+        case "radiogroup":
           return RadioGroupControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.radio:
+        case "radio":
           return RadioControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);
-        case ControlType.dropdown:
+        case "dropdown":
           return DropdownControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);
-        case ControlType.snackBar:
+        case "snackbar":
           return SnackBarControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.alertDialog:
+        case "alertdialog":
           return AlertDialogControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.banner:
+        case "banner":
           return BannerControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.tabs:
+        case "tabs":
           return TabsControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.navigationRail:
+        case "navigationrail":
           return NavigationRailControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case ControlType.windowDragArea:
+        case "windowdragarea":
           return WindowDragAreaControl(
               parent: parent,
               control: controlView.control,
@@ -370,11 +380,8 @@ Widget _opacity(
 Widget _tooltip(Widget widget, Control? parent, Control control) {
   var tooltip = control.attrString("tooltip");
   return tooltip != null &&
-          ![
-            ControlType.iconButton,
-            ControlType.floatingActionButton,
-            ControlType.popupMenuButton
-          ].contains(control.type)
+          !["iconbutton", "floatingactionbutton", "popupmenubutton"]
+              .contains(control.type)
       ? Tooltip(
           message: tooltip,
           padding: const EdgeInsets.all(4.0),
@@ -496,6 +503,11 @@ Widget _positionedControl(
       child: widget,
     );
   } else if (left != null || top != null || right != null || bottom != null) {
+    if (parent?.type != "stack" && parent?.type != "page") {
+      return ErrorControl("Error displaying ${control.type}",
+          description:
+              "Control can be positioned absolutely with \"left\", \"top\", \"right\" and \"bottom\" properties inside Stack control only.");
+    }
     return Positioned(
       left: left,
       top: top,
@@ -511,8 +523,7 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
   var width = control.attrDouble("width", null);
   var height = control.attrDouble("height", null);
   if (width != null || height != null) {
-    if (control.type != ControlType.container &&
-        control.type != ControlType.image) {
+    if (control.type != "container" && control.type != "image") {
       widget = ConstrainedBox(
         constraints: BoxConstraints.tightFor(width: width, height: height),
         child: widget,
@@ -529,9 +540,9 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
 
 Widget _expandable(Widget widget, Control? parent, Control control) {
   if (parent != null &&
-      (parent.type == ControlType.view ||
-          parent.type == ControlType.column ||
-          parent.type == ControlType.row)) {
+      (parent.type == "view" ||
+          parent.type == "column" ||
+          parent.type == "row")) {
     //debugPrint("Expandable ${control.id}");
     int? expand = control.attrInt("expand");
     return expand != null ? Expanded(flex: expand, child: widget) : widget;

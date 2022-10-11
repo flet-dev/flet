@@ -16,6 +16,15 @@ BorderRadius? parseBorderRadius(Control control, String propName) {
   return borderRadiusFromJSON(j1);
 }
 
+Radius? parseRadius(Control control, String propName) {
+  var r = control.attrDouble(propName, null);
+  if (r == null) {
+    return null;
+  }
+
+  return Radius.circular(r);
+}
+
 Border? parseBorder(ThemeData theme, Control control, String propName,
     {Color? defaultSideColor}) {
   var v = control.attrString(propName, null);
