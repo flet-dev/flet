@@ -1,11 +1,14 @@
 
 # Flet
 
-Provides an interactive Flutter widget which contents is controlled by a remote Python script running on a web server.
+<img src="https://raw.githubusercontent.com/flet-dev/flet/flet-widget/media/logo/flet-logo.svg" width="50%"/>
 
-Flet provides an easy to learn programming model that enables developers without prior Flutter (or even frontend) experience to participate in development of your larger Flutter app or build their own desktop, mobile and web apps from scratch.
+Flet is a framework for adding server-driven UI (SDUI) experiences to existing Flutter apps or building standalone web, mobile and desktop apps with Flutter UI.
 
-Flet implements Server-Driven UI (SDUI) approach reducing application release cycle.
+Add interactive `FletApp` widget to your Flutter app whose content is controlled by a remote Python script.
+Flet is an ideal solution for building non-core or frequently changing functionality such as product catalog, feedback form, in-app survey or support chat. It enables your team to ship new features faster by reducing the number of App Store validation cycles. Just re-deploy a Python web app and your users will receive an instant update!
+
+On the server side Flet provides an easy to learn programming model that enables Python developers without prior Flutter (or even front-end) experience to participate in development of your larger Flutter app or build their own apps with Flutter UI from scratch.
 
 ## Getting started with Flet
 
@@ -118,3 +121,11 @@ When adding `FletApp` widget to the existing desktop Flutter app make sure `setu
 * [Discord](https://discord.gg/dzWXP8SHG8)
 * [Twitter](https://twitter.com/fletdev)
 * [Email](mailto:hello@flet.dev)
+
+## FAQ
+
+Coming soon.
+
+## Adding custom Flutter widgets
+
+Coming soon.
