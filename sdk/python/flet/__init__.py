@@ -25,6 +25,7 @@ from flet.file_picker import (
 from flet.filled_button import FilledButton
 from flet.filled_tonal_button import FilledTonalButton
 from flet.flet import *
+from flet.flet_app import FletApp
 from flet.floating_action_button import FloatingActionButton
 from flet.gesture_detector import (
     DragEndEvent,

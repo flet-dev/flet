@@ -26,6 +26,7 @@ import 'draggable.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
 import 'file_picker.dart';
+import 'flet_app_control.dart';
 import 'floating_action_button.dart';
 import 'gesture_detector.dart';
 import 'grid_view.dart';
@@ -90,6 +91,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parent: parent, control: controlView.control);
         case "markdown":
           return MarkdownControl(parent: parent, control: controlView.control);
+        case "fletapp":
+          return FletAppControl(parent: parent, control: controlView.control);
         case "image":
           return ImageControl(parent: parent, control: controlView.control);
         case "audio":

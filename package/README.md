@@ -26,7 +26,7 @@ Create a new Python program using Flet which will be driving the content of `Fle
 
 Let's do a simple `counter.py` app similar to a Flutter new project template:
 
-```python title="counter.py"
+```python
 import flet
 from flet import IconButton, Page, Row, TextField, icons
 
