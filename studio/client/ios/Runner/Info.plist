@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Flet</string>
+	<string>Flet Studio</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -62,5 +62,7 @@
 		</array>
 		</dict>
 	</array>	
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>	
 </dict>
 </plist>
