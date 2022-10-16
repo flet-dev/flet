@@ -1,5 +1,13 @@
 # Building and publishing iOS Flutter app on AppVeyor
 
+## XCode
+
+Open `Runner.xcworkspace`, not `Runner.xcodeproj` - otherwise `audioplayers_darwin` won't be found.
+
+[Enable iproxy](https://stackoverflow.com/questions/71359062/iproxy-cannot-be-opened-because-the-developer-cannot-be-verified).
+
+If you get "invalid signature" error while trying to run on a connected iPhone device try re-connecting the cable.
+
 ## Ruby
 
 Ensure you have a proper Ruby installed:

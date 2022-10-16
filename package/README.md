@@ -6,7 +6,7 @@
 Flet is a framework for adding server-driven UI (SDUI) experiences to existing Flutter apps or building standalone web, mobile and desktop apps with Flutter UI.
 
 Add an interactive `FletApp` widget to your Flutter app whose content is controlled by a remote Python script.
-It is an ideal solution for building non-core or frequently changing functionality such as product catalog, feedback form, in-app survey or support chat. Flet enables your team to ship new features faster by reducing the number of App Store validation cycles. Just re-deploy a web app hosting a Python scrypt and your users will get an instant update!
+It is an ideal solution for building non-core or frequently changing functionality such as product catalog, feedback form, in-app survey or support chat. Flet enables your team to ship new features faster by reducing the number of App Store validation cycles. Just re-deploy a web app hosting a Python script and your users will get an instant update!
 
 On the server side Flet provides an easy to learn programming model that enables Python developers without prior Flutter (or even front-end) experience to participate in development of your larger Flutter app or build their own apps with Flutter UI from scratch.
 
@@ -103,6 +103,20 @@ class MyApp extends StatelessWidget {
       home: FletApp(pageUrl: "http://localhost:8550"),
     );
   }
+}
+```
+
+In the app above `FletApp` widget is hosted inside `MaterialApp` widget.
+
+If Flet app must be able to handle page route change events (web browser URL changes, mobile app deep linking) it must be the top most widget as it contains its own `MaterialApp` widget handling route changes:
+
+```dart
+import 'package:flet/flet.dart';
+import 'package:flutter/material.dart';
+
+void main() async {
+  await setupDesktop();
+  runApp(const FletApp(pageUrl: "http://localhost:8550"));
 }
 ```
 
