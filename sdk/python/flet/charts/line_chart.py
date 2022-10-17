@@ -2,7 +2,10 @@ from typing import Any, List, Optional
 
 from beartype import beartype
 from flet.animation import Curve
-from flet.charts.types import GridLines
+from flet.border import Border
+from flet.charts.line_chart_axis import LineChartAxis
+from flet.charts.line_chart_data import LineChartData
+from flet.charts.grid_lines import GridLines
 
 from flet.control import Control, MainAxisAlignment, OptionalNumber
 from flet.ref import Ref
@@ -12,6 +15,7 @@ from flet.types import PaddingValue
 class LineChart(Control):
     def __init__(
         self,
+        data_series: Optional[List[LineChartData]] = None,
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
@@ -22,14 +26,19 @@ class LineChart(Control):
         swap_animation_duration: Optional[int] = None,
         swap_animation_curve: Optional[Curve] = None,
         bgcolor: Optional[str] = None,
+        border: Optional[Border] = None,
+        horizontal_grid_lines: Optional[GridLines] = None,
+        vertical_grid_lines: Optional[GridLines] = None,
+        left_axis: Optional[LineChartAxis] = None,
+        top_axis: Optional[LineChartAxis] = None,
+        right_axis: Optional[LineChartAxis] = None,
+        bottom_axis: Optional[LineChartAxis] = None,
         baseline_x: OptionalNumber = None,
         min_x: OptionalNumber = None,
         max_x: OptionalNumber = None,
         baseline_y: OptionalNumber = None,
         min_y: OptionalNumber = None,
         max_y: OptionalNumber = None,
-        horizontal_lines: Optional[GridLines] = None,
-        vertical_lines: Optional[GridLines] = None,
     ):
 
         Control.__init__(
@@ -56,12 +65,11 @@ class LineChart(Control):
             children.append(action)
         return children
 
-    # open
+    # data_series
     @property
-    def open(self) -> Optional[bool]:
-        return self._get_attr("open", data_type="bool", def_value=False)
+    def data_series(self):
+        return self.__data_series
 
-    @open.setter
-    @beartype
-    def open(self, value: Optional[bool]):
-        self._set_attr("open", value)
+    @data_series.setter
+    def data_series(self, value):
+        self.__data_series = value if value is not None else []
