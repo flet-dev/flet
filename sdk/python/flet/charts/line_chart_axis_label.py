@@ -1,12 +1,9 @@
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from beartype import beartype
-from flet.animation import Curve
-from flet.charts.types import GridLines
 
-from flet.control import Control, MainAxisAlignment, OptionalNumber
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import PaddingValue
 
 
 class LineChartAxisLabel(Control):
@@ -31,9 +28,35 @@ class LineChartAxisLabel(Control):
             data=data,
         )
 
+        self.value = value
+        self.label = label
+
     def _get_control_name(self):
         return "l"
 
     def _get_children(self):
         children = []
+        if self.__label:
+            self.__label._set_attr_internal("n", "label")
+            children.append(self.__label)
         return children
+
+    # value
+    @property
+    def value(self) -> OptionalNumber:
+        return self._get_attr("value", data_type="float", def_value=1.0)
+
+    @value.setter
+    @beartype
+    def value(self, value: OptionalNumber):
+        self._set_attr("value", value)
+
+    # label
+    @property
+    def label(self) -> Optional[Control]:
+        return self.__label
+
+    @label.setter
+    @beartype
+    def label(self, value: Optional[Control]):
+        self.__label = value

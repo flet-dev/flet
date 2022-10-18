@@ -2,11 +2,6 @@ import dataclasses
 from dataclasses import field
 from typing import List, Optional
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 
 @dataclasses.dataclass
 class GridLines:
