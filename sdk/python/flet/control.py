@@ -100,6 +100,7 @@ class Control:
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
+        super().__init__()
         self.__page: Optional[Page] = None
         self.__attrs = {}
         self.__previous_children = []
