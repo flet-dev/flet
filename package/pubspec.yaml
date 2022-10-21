@@ -26,7 +26,7 @@ dependencies:
   flutter_svg:
     git:
       url: https://github.com/flet-dev/flutter_svg.git
-      ref: image-transform-fix
+      ref: flet-fixes
   window_to_front: ^0.0.3
   audioplayers: ^1.1.0
 
