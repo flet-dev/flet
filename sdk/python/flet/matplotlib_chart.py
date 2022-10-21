@@ -42,6 +42,10 @@ class MatplotlibChart(Container):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        #
+        # Specific
+        #
+        isolated: bool = False,
     ):
 
         Container.__init__(
@@ -67,9 +71,10 @@ class MatplotlibChart(Container):
         )
 
         self.figure = figure
+        self.isolated = isolated
 
     def _is_isolated(self):
-        return True
+        return self.__isolated
 
     def _build(self):
         self.alignment = alignment.center
@@ -88,6 +93,15 @@ class MatplotlibChart(Container):
             h = float(re.findall(r"\d+", root.attrib["height"])[0])
             self.__img.aspect_ratio = w / h
             self.__img.src = svg
+
+    # isolated
+    @property
+    def isolated(self):
+        return self.__isolated
+
+    @isolated.setter
+    def isolated(self, value):
+        self.__isolated = value
 
     # figure
     @property
