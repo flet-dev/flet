@@ -46,6 +46,7 @@ class MatplotlibChart(Container):
         # Specific
         #
         isolated: bool = False,
+        original_size: bool = False,
     ):
 
         Container.__init__(
@@ -72,6 +73,7 @@ class MatplotlibChart(Container):
 
         self.figure = figure
         self.isolated = isolated
+        self.original_size = original_size
 
     def _is_isolated(self):
         return self.__isolated
@@ -88,11 +90,21 @@ class MatplotlibChart(Container):
             self.__figure.savefig(s, format="svg")
             svg = s.getvalue()
 
-            root = ET.fromstring(svg)
-            w = float(re.findall(r"\d+", root.attrib["width"])[0])
-            h = float(re.findall(r"\d+", root.attrib["height"])[0])
-            self.__img.aspect_ratio = w / h
+            if not self.__original_size:
+                root = ET.fromstring(svg)
+                w = float(re.findall(r"\d+", root.attrib["width"])[0])
+                h = float(re.findall(r"\d+", root.attrib["height"])[0])
+                self.__img.aspect_ratio = w / h
             self.__img.src = svg
+
+    # original_size
+    @property
+    def original_size(self):
+        return self.__original_size
+
+    @original_size.setter
+    def original_size(self, value):
+        self.__original_size = value
 
     # isolated
     @property
