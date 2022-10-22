@@ -197,8 +197,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: image-transform-fix
-      resolved-ref: "1dd97b0b790ed04d8652e21652d9af6edd9f768f"
+      ref: flet-fixes
+      resolved-ref: "71166dc07d39b686f117319a04479d26e44c2a24"
       url: "https://github.com/flet-dev/flutter_svg.git"
     source: git
     version: "1.1.5"
