@@ -326,15 +326,20 @@ Widget constrainedControl(
   return _expandable(
       _positionedControl(
           context,
-          _offsetControl(
-              context,
-              _scaledControl(
+          _aspectRatio(
+              _offsetControl(
                   context,
-                  _rotatedControl(
+                  _scaledControl(
                       context,
-                      _sizedControl(
-                          _tooltip(_opacity(context, widget, parent, control),
-                              parent, control),
+                      _rotatedControl(
+                          context,
+                          _sizedControl(
+                              _tooltip(
+                                  _opacity(context, widget, parent, control),
+                                  parent,
+                                  control),
+                              parent,
+                              control),
                           parent,
                           control),
                       parent,
@@ -386,6 +391,16 @@ Widget _tooltip(Widget widget, Control? parent, Control control) {
           message: tooltip,
           padding: const EdgeInsets.all(4.0),
           waitDuration: const Duration(milliseconds: 800),
+          child: widget,
+        )
+      : widget;
+}
+
+Widget _aspectRatio(Widget widget, Control? parent, Control control) {
+  var aspectRatio = control.attrDouble("aspectRatio");
+  return aspectRatio != null
+      ? AspectRatio(
+          aspectRatio: aspectRatio,
           child: widget,
         )
       : widget;
