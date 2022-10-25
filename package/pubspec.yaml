@@ -23,10 +23,7 @@ dependencies:
   markdown: ^6.0.1
   file_picker: ^5.0.1
   shared_preferences: ^2.0.15
-  flutter_svg:
-    git:
-      url: https://github.com/flet-dev/flutter_svg.git
-      ref: flet-fixes
+  flutter_svg: ^1.1.6
   window_to_front: ^0.0.3
   audioplayers: ^1.1.0
 
