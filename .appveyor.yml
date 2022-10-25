@@ -314,6 +314,7 @@ for:
             if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then
                 export FLET_PACKAGE_VERSION="${BASH_REMATCH[1]}"
                 echo "FLET_PACKAGE_VERSION: ${FLET_PACKAGE_VERSION}"
+                export ITMSTRANSPORTER_FORCE_ITMS_PACKAGE_UPLOAD=true
                 bundle exec fastlane upload_appstore
             else
                 echo "Cannot extract version information from a tag."

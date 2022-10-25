@@ -29,6 +29,7 @@ class ConstrainedControl(Control):
         rotate: RotateValue = None,
         scale: ScaleValue = None,
         offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
         animate_opacity: AnimationValue = None,
         animate_size: AnimationValue = None,
         animate_position: AnimationValue = None,
@@ -57,6 +58,7 @@ class ConstrainedControl(Control):
         self.scale = scale
         self.rotate = rotate
         self.offset = offset
+        self.aspect_ratio = aspect_ratio
         self.animate_opacity = animate_opacity
         self.animate_size = animate_size
         self.animate_position = animate_position
@@ -168,6 +170,16 @@ class ConstrainedControl(Control):
     @beartype
     def offset(self, value: OffsetValue):
         self.__offset = value
+
+    # aspect_ratio
+    @property
+    def aspect_ratio(self) -> OptionalNumber:
+        return self._get_attr("aspectRatio")
+
+    @aspect_ratio.setter
+    @beartype
+    def aspect_ratio(self, value: OptionalNumber):
+        self._set_attr("aspectRatio", value)
 
     # animate_opacity
     @property
