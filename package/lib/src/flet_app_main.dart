@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter/gestures.dart';
 
 import 'controls/create_control.dart';
 import 'flet_app_services.dart';
@@ -35,7 +36,11 @@ class FletAppMain extends StatelessWidget {
                           style: const TextStyle(color: Colors.red))
                     ],
                   ),
-                ));
+                ),
+                scrollBehavior: const MaterialScrollBehavior().copyWith(
+                  dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch, PointerDeviceKind.stylus, PointerDeviceKind.unknown},
+                ),
+            );
           } else {
             return createControl(null, "page", false);
           }
