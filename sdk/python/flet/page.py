@@ -136,6 +136,7 @@ class Page(Control):
         return self._index.get(id)
 
     def _before_build_command(self):
+        super()._before_build_command()
         # fonts
         self._set_attr_json("fonts", self.__fonts)
 
@@ -402,7 +403,12 @@ class Page(Control):
     ):
         return self.__conn.send_command(
             self._session_id,
-            Command(indent=0, name=name, values=values if values is not None else [], attrs=attrs or {}),
+            Command(
+                indent=0,
+                name=name,
+                values=values if values is not None else [],
+                attrs=attrs or {},
+            ),
         )
 
     @beartype

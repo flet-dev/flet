@@ -4,7 +4,13 @@ from beartype import beartype
 
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet.types import (
+    AnimationValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class ConstrainedControl(Control):
@@ -12,6 +18,7 @@ class ConstrainedControl(Control):
         self,
         ref: Optional[Ref] = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
@@ -42,6 +49,7 @@ class ConstrainedControl(Control):
             self,
             ref=ref,
             expand=expand,
+            col=col,
             opacity=opacity,
             tooltip=tooltip,
             visible=visible,
@@ -68,6 +76,7 @@ class ConstrainedControl(Control):
         self.on_animation_end = on_animation_end
 
     def _before_build_command(self):
+        super()._before_build_command()
         self._set_attr_json("rotate", self.__rotate)
         self._set_attr_json("scale", self.__scale)
         self._set_attr_json("offset", self.__offset)

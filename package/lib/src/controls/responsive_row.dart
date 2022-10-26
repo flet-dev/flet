@@ -27,29 +27,10 @@ class ResponsiveRowControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("ResponsiveRowControl build: ${control.id}");
 
+    final columns = parseResponsiveNumber(control, "columns", 12);
     final spacing = parseResponsiveNumber(control, "spacing", 10);
     final runSpacing = parseResponsiveNumber(control, "runSpacing", 10);
     bool disabled = control.isDisabled || parentDisabled;
-
-    List<Widget> controls = [];
-
-    //bool firstControl = true;
-    for (var ctrl in children.where((c) => c.isVisible)) {
-      // // spacer between displayed controls
-      // if (!firstControl) {
-      //   controls.add(SizedBox(width: spacing));
-      // }
-      // firstControl = false;
-
-      // displayed control
-      controls.add(ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: 100,
-          maxWidth: 100,
-        ),
-        child: createControl(control, ctrl.id, disabled),
-      ));
-    }
 
     return StoreConnector<AppState, PageSizeViewModel>(
         distinct: true,
@@ -60,11 +41,41 @@ class ResponsiveRowControl extends StatelessWidget {
             debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
             debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
 
+            var bpSpacing =
+                getBreakpointNumber(spacing, view.size.width, view.breakpoints);
+
+            var bpColumns =
+                getBreakpointNumber(columns, view.size.width, view.breakpoints);
+
+            List<Widget> controls = [];
+            for (var ctrl in children.where((c) => c.isVisible)) {
+              final col = parseResponsiveNumber(ctrl, "col", 12);
+              var bpCol =
+                  getBreakpointNumber(col, view.size.width, view.breakpoints);
+
+              // calculate child width
+              var colWidth =
+                  (constraints.maxWidth - bpSpacing * (bpColumns - 1)) /
+                      bpColumns;
+              var childWidth = colWidth * bpCol + bpSpacing * (bpCol - 1);
+
+              debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
+              debugPrint("bpSpacing: $bpSpacing");
+              debugPrint("childWidth: $childWidth");
+
+              controls.add(ConstrainedBox(
+                constraints: BoxConstraints(
+                  minWidth: childWidth,
+                  maxWidth: childWidth,
+                ),
+                child: createControl(control, ctrl.id, disabled),
+              ));
+            }
+
             try {
               return Wrap(
                 direction: Axis.horizontal,
-                spacing: getBreakpointNumber(
-                    spacing, view.size.width, view.breakpoints),
+                spacing: bpSpacing - 0.1,
                 runSpacing: getBreakpointNumber(
                     runSpacing, view.size.width, view.breakpoints),
                 alignment: parseWrapAlignment(

@@ -27,6 +27,7 @@ class ResponsiveRow(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -61,6 +62,7 @@ class ResponsiveRow(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
@@ -90,21 +92,9 @@ class ResponsiveRow(ConstrainedControl):
 
     def _before_build_command(self):
         super()._before_build_command()
-        if self.__columns is not None:
-            v = self.__columns
-            if not isinstance(self.__columns, Dict):
-                v = {"": self.__columns}
-            self._set_attr_json("columns", v)
-        if self.__spacing is not None:
-            v = self.__spacing
-            if not isinstance(self.__spacing, Dict):
-                v = {"": self.__spacing}
-            self._set_attr_json("spacing", v)
-        if self.__run_spacing is not None:
-            v = self.__run_spacing
-            if not isinstance(self.__run_spacing, Dict):
-                v = {"": self.__run_spacing}
-            self._set_attr_json("runSpacing", v)
+        self._set_attr_json("columns", self._wrap_attr_dict(self.__columns))
+        self._set_attr_json("spacing", self._wrap_attr_dict(self.__spacing))
+        self._set_attr_json("runSpacing", self._wrap_attr_dict(self.__run_spacing))
 
     def _get_children(self):
         return self.__controls

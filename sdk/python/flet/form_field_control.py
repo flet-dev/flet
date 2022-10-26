@@ -11,6 +11,7 @@ from flet.types import (
     BorderRadiusValue,
     OffsetValue,
     PaddingValue,
+    ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
@@ -27,6 +28,7 @@ class FormFieldControl(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -89,6 +91,7 @@ class FormFieldControl(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,

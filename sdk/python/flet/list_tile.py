@@ -9,6 +9,7 @@ from flet.types import (
     AnimationValue,
     OffsetValue,
     PaddingValue,
+    ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
@@ -25,6 +26,7 @@ class ListTile(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -66,6 +68,7 @@ class ListTile(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,

@@ -12,6 +12,7 @@ from flet.types import (
     BorderRadiusValue,
     OffsetValue,
     PaddingValue,
+    ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
@@ -46,6 +47,7 @@ class TextField(FormFieldControl):
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -129,6 +131,7 @@ class TextField(FormFieldControl):
             width=width,
             height=height,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,

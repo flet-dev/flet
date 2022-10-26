@@ -46,6 +46,7 @@ class View(Control):
         return "view"
 
     def _before_build_command(self):
+        super()._before_build_command()
         self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
