@@ -38,8 +38,8 @@ class ResponsiveRowControl extends StatelessWidget {
         builder: (context, view) {
           var w = LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-            debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
-            debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
+            // debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
+            // debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
 
             var bpSpacing =
                 getBreakpointNumber(spacing, view.size.width, view.breakpoints);
@@ -47,21 +47,19 @@ class ResponsiveRowControl extends StatelessWidget {
             var bpColumns =
                 getBreakpointNumber(columns, view.size.width, view.breakpoints);
 
+            double totalCols = 0;
             List<Widget> controls = [];
             for (var ctrl in children.where((c) => c.isVisible)) {
               final col = parseResponsiveNumber(ctrl, "col", 12);
               var bpCol =
                   getBreakpointNumber(col, view.size.width, view.breakpoints);
+              totalCols += bpCol;
 
               // calculate child width
               var colWidth =
                   (constraints.maxWidth - bpSpacing * (bpColumns - 1)) /
                       bpColumns;
               var childWidth = colWidth * bpCol + bpSpacing * (bpCol - 1);
-
-              debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
-              debugPrint("bpSpacing: $bpSpacing");
-              debugPrint("childWidth: $childWidth");
 
               controls.add(ConstrainedBox(
                 constraints: BoxConstraints(
@@ -72,18 +70,37 @@ class ResponsiveRowControl extends StatelessWidget {
               ));
             }
 
+            var wrap = (totalCols > bpColumns);
+
+            if (!wrap && bpSpacing > 0) {
+              var i = 1;
+              while (i < controls.length) {
+                controls.insert(i, SizedBox(width: bpSpacing));
+                i += 2;
+              }
+            }
+
             try {
-              return Wrap(
-                direction: Axis.horizontal,
-                spacing: bpSpacing - 0.1,
-                runSpacing: getBreakpointNumber(
-                    runSpacing, view.size.width, view.breakpoints),
-                alignment: parseWrapAlignment(
-                    control, "alignment", WrapAlignment.start),
-                crossAxisAlignment: parseWrapCrossAlignment(
-                    control, "verticalAlignment", WrapCrossAlignment.center),
-                children: controls,
-              );
+              return wrap
+                  ? Wrap(
+                      direction: Axis.horizontal,
+                      spacing: bpSpacing - 0.1,
+                      runSpacing: getBreakpointNumber(
+                          runSpacing, view.size.width, view.breakpoints),
+                      alignment: parseWrapAlignment(
+                          control, "alignment", WrapAlignment.start),
+                      crossAxisAlignment: parseWrapCrossAlignment(control,
+                          "verticalAlignment", WrapCrossAlignment.center),
+                      children: controls,
+                    )
+                  : Row(
+                      mainAxisAlignment: parseMainAxisAlignment(
+                          control, "alignment", MainAxisAlignment.start),
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: parseCrossAxisAlignment(control,
+                          "verticalAlignment", CrossAxisAlignment.center),
+                      children: controls,
+                    );
             } catch (e) {
               return ErrorControl(
                 "Error displaying ResponsiveRow",
