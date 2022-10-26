@@ -18,7 +18,6 @@ class AppState extends Equatable {
   final int reconnectingTimeout;
   final String error;
   final Size size;
-  final String sizeBreakpoint;
   final Brightness displayBrightness;
   final Map<String, double> sizeBreakpoints;
   final Map<String, Control> controls;
@@ -32,7 +31,6 @@ class AppState extends Equatable {
       required this.reconnectingTimeout,
       required this.error,
       required this.size,
-      required this.sizeBreakpoint,
       required this.sizeBreakpoints,
       required this.displayBrightness,
       required this.controls});
@@ -46,7 +44,6 @@ class AppState extends Equatable {
       reconnectingTimeout: 0,
       error: "",
       size: Size(0, 0),
-      sizeBreakpoint: "",
       sizeBreakpoints: {
         "xs": 0,
         "sm": 576,
@@ -75,7 +72,6 @@ class AppState extends Equatable {
           int? reconnectingTimeout,
           String? error,
           Size? size,
-          String? sizeBreakpoint,
           Map<String, double>? sizeBreakpoints,
           Brightness? displayBrightness,
           Map<String, Control>? controls}) =>
@@ -88,7 +84,6 @@ class AppState extends Equatable {
           reconnectingTimeout: reconnectingTimeout ?? this.reconnectingTimeout,
           error: error ?? this.error,
           size: size ?? this.size,
-          sizeBreakpoint: sizeBreakpoint ?? this.sizeBreakpoint,
           sizeBreakpoints: sizeBreakpoints ?? this.sizeBreakpoints,
           displayBrightness: displayBrightness ?? this.displayBrightness,
           controls: controls ?? this.controls);

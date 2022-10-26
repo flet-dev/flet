@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import '../flet_app_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../utils/desktop.dart';
 
@@ -64,7 +64,7 @@ class WindowMediaState extends State<WindowMedia> with WindowListener {
 
     if (eventName == "resized" || eventName == "moved") {
       if (_debounce?.isActive ?? false) _debounce!.cancel();
-      _debounce = Timer(const Duration(milliseconds: 300), () {
+      _debounce = Timer(const Duration(milliseconds: 100), () {
         send();
       });
     } else {

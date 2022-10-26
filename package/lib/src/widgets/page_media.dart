@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import '../flet_app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/page_media_view_model.dart';
 import '../utils/desktop.dart';
@@ -28,7 +28,7 @@ class _PageMediaState extends State<PageMedia> {
   _onScreenSizeChanged(bool isRegistered, Size newSize, Function dispatch) {
     if (isRegistered) {
       if (_debounce?.isActive ?? false) _debounce!.cancel();
-      _debounce = Timer(const Duration(milliseconds: 300), () {
+      _debounce = Timer(const Duration(milliseconds: 100), () {
         debugPrint("Send current size to reducer: $newSize");
         getWindowMediaData().then((wmd) {
           dispatch(PageSizeChangeAction(

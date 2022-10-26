@@ -43,6 +43,7 @@ import 'progress_bar.dart';
 import 'progress_ring.dart';
 import 'radio.dart';
 import 'radio_group.dart';
+import 'responsive_row.dart';
 import 'row.dart';
 import 'semantics.dart';
 import 'shader_mask.dart';
@@ -157,6 +158,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "row":
           return RowControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "responsiverow":
+          return ResponsiveRowControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
