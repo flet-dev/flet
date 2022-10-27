@@ -973,6 +973,16 @@ class Page(Control):
     def window_minimizable(self, value: Optional[bool]):
         self._set_attr("windowMinimizable", value)
 
+    # window_maximizable
+    @property
+    def window_maximizable(self) -> Optional[bool]:
+        return self._get_attr("windowMaximizable", data_type="bool", def_value=True)
+
+    @window_maximizable.setter
+    @beartype
+    def window_maximizable(self, value: Optional[bool]):
+        self._set_attr("windowMaximizable", value)
+
     # window_resizable
     @property
     def window_resizable(self) -> Optional[bool]:

@@ -63,6 +63,7 @@ class _PageControlState extends State<PageControl> {
   double? _windowLeft;
   double? _windowOpacity;
   bool? _windowMinimizable;
+  bool? _windowMaximizable;
   bool? _windowFullScreen;
   bool? _windowMovable;
   bool? _windowResizable;
@@ -197,6 +198,7 @@ class _PageControlState extends State<PageControl> {
     var windowMaximized = widget.control.attrBool("windowMaximized");
     var windowOpacity = widget.control.attrDouble("windowOpacity");
     var windowMinimizable = widget.control.attrBool("windowMinimizable");
+    var windowMaximizable = widget.control.attrBool("windowMaximizable");
     var windowAlwaysOnTop = widget.control.attrBool("windowAlwaysOnTop");
     var windowResizable = widget.control.attrBool("windowResizable");
     var windowMovable = widget.control.attrBool("windowMovable");
@@ -294,6 +296,13 @@ class _PageControlState extends State<PageControl> {
           await restoreWindow();
         }
         _windowMinimized = windowMinimized;
+      }
+
+      // window maximizable
+      if (windowMaximizable != null &&
+          windowMaximizable != _windowMaximizable) {
+        await setWindowMaximizability(windowMaximizable);
+        _windowMaximizable = windowMaximizable;
       }
 
       // window maximize
