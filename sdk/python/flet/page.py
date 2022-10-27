@@ -189,13 +189,16 @@ class Page(Control):
         self._set_attr("windowLeft", values[9], False)
 
     def update(self, *controls):
+        added_controls = []
         with self._lock:
             if len(controls) == 0:
-                return self.__update(self)
+                added_controls = self.__update(self)
             else:
-                return self.__update(*controls)
+                added_controls = self.__update(*controls)
+        for ctrl in added_controls:
+            ctrl.did_mount()
 
-    def __update(self, *controls):
+    def __update(self, *controls) -> List[Control]:
         added_controls = []
         commands = []
 
@@ -204,7 +207,7 @@ class Page(Control):
             control.build_update_commands(self._index, added_controls, commands)
 
         if len(commands) == 0:
-            return
+            return added_controls
 
         # execute commands
         results = self.__conn.send_commands(self._session_id, commands).results
@@ -219,34 +222,44 @@ class Page(Control):
                     # add to index
                     self._index[id] = added_controls[n]
 
-                    # call Control.did_mount
-                    added_controls[n].did_mount()
-
                     n += 1
+        return added_controls
 
     def add(self, *controls):
+        added_controls = []
         with self._lock:
             self._controls.extend(controls)
-            return self.__update(self)
+            added_controls = self.__update(self)
+        for ctrl in added_controls:
+            ctrl.did_mount()
 
     def insert(self, at, *controls):
+        added_controls = []
         with self._lock:
             n = at
             for control in controls:
                 self._controls.insert(n, control)
                 n += 1
-            return self.__update(self)
+            added_controls = self.__update(self)
+        for ctrl in added_controls:
+            ctrl.did_mount()
 
     def remove(self, *controls):
+        added_controls = []
         with self._lock:
             for control in controls:
                 self._controls.remove(control)
-            return self.__update(self)
+            added_controls = self.__update(self)
+        for ctrl in added_controls:
+            ctrl.did_mount()
 
     def remove_at(self, index):
+        added_controls = []
         with self._lock:
             self._controls.pop(index)
-            return self.__update(self)
+            added_controls = self.__update(self)
+        for ctrl in added_controls:
+            ctrl.did_mount()
 
     def clean(self):
         with self._lock:
