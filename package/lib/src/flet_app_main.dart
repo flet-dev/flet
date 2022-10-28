@@ -37,9 +37,7 @@ class FletAppMain extends StatelessWidget {
                     ],
                   ),
                 ),
-                scrollBehavior: const MaterialScrollBehavior().copyWith(
-                  dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch, PointerDeviceKind.stylus, PointerDeviceKind.unknown},
-                ),
+                scrollBehavior: DragScrollBehavior(),
             );
           } else {
             return createControl(null, "page", false);
@@ -48,4 +46,14 @@ class FletAppMain extends StatelessWidget {
       ),
     );
   }
+}
+
+class DragScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => { 
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.stylus,
+    PointerDeviceKind.unknown,
+  };
 }
