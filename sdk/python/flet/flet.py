@@ -396,47 +396,43 @@ def _open_flet_view(page_url, hidden):
         # build version-specific path to Flet.app
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
-        # check if Flet.app exists in "bin" directory (user mode)
-        p = Path(__file__).parent.joinpath("bin", "Flet.app")
-        if p.exists():
-            app_path = str(p)
-            logging.info(f"Flet.app found in: {app_path}")
-        else:
-            # check if flet_view.app exists in a temp directory
-            if not temp_flet_dir.exists():
-                # download and unpack flet.tar.gz
-                tar_file = _download_flet_client("flet-macos-amd64.tar.gz")
-                logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
-                temp_flet_dir.mkdir(parents=True, exist_ok=True)
-                with tarfile.open(str(tar_file), "r:gz") as tar_arch:
-                    safe_tar_extractall(tar_arch, str(temp_flet_dir))
-            else:
-                logging.info(f"Flet View found in: {temp_flet_dir}")
+        # check if flet_view.app exists in a temp directory
+        if not temp_flet_dir.exists():
+            # check if flet.tar.gz exists
+            gz_filename = "flet-macos-amd64.tar.gz"
+            tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
+            if not tar_file.exists():
+                tar_file = _download_flet_client(gz_filename)
 
-            app_path = temp_flet_dir.joinpath("Flet.app")
+            logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
+            temp_flet_dir.mkdir(parents=True, exist_ok=True)
+            with tarfile.open(str(tar_file), "r:gz") as tar_arch:
+                safe_tar_extractall(tar_arch, str(temp_flet_dir))
+        else:
+            logging.info(f"Flet View found in: {temp_flet_dir}")
+
+        app_path = temp_flet_dir.joinpath("Flet.app")
         args = ["open", str(app_path), "-n", "-W", "--args", page_url]
     elif is_linux():
         # build version-specific path to flet folder
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
-        # check if "flet" exists in "bin" directory (user mode)
-        p = Path(__file__).parent.joinpath("bin", "flet")
-        if p.exists():
-            app_path = p.joinpath("flet")
-            logging.info(f"Flet View found in: {app_path}")
-        else:
-            # check if flet_view.app exists in a temp directory
-            if not temp_flet_dir.exists():
-                # download and unpack flet.tar.gz
-                tar_file = _download_flet_client(f"flet-linux-{get_arch()}.tar.gz")
-                logging.info(f"Extracting Flet from archive to {temp_flet_dir}")
-                temp_flet_dir.mkdir(parents=True, exist_ok=True)
-                with tarfile.open(str(tar_file), "r:gz") as tar_arch:
-                    safe_tar_extractall(tar_arch, str(temp_flet_dir))
-            else:
-                logging.info(f"Flet View found in: {temp_flet_dir}")
+        # check if flet_view.app exists in a temp directory
+        if not temp_flet_dir.exists():
+            # check if flet.tar.gz exists
+            gz_filename = f"flet-linux-{get_arch()}.tar.gz"
+            tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
+            if not tar_file.exists():
+                tar_file = _download_flet_client(gz_filename)
 
-            app_path = temp_flet_dir.joinpath("flet", "flet")
+            logging.info(f"Extracting Flet from archive to {temp_flet_dir}")
+            temp_flet_dir.mkdir(parents=True, exist_ok=True)
+            with tarfile.open(str(tar_file), "r:gz") as tar_arch:
+                safe_tar_extractall(tar_arch, str(temp_flet_dir))
+        else:
+            logging.info(f"Flet View found in: {temp_flet_dir}")
+
+        app_path = temp_flet_dir.joinpath("flet", "flet")
         args = [str(app_path), page_url]
 
     flet_env = {**os.environ}
