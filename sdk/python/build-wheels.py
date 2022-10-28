@@ -172,6 +172,26 @@ def rehash_record_lines(root_dir):
     return lines
 
 
+def is_within_directory(directory, target):
+
+    abs_directory = os.path.abspath(directory)
+    abs_target = os.path.abspath(target)
+
+    prefix = os.path.commonprefix([abs_directory, abs_target])
+
+    return prefix == abs_directory
+
+
+def safe_tar_extractall(tar, path=".", members=None, *, numeric_owner=False):
+
+    for member in tar.getmembers():
+        member_path = os.path.join(path, member.name)
+        if not is_within_directory(path, member_path):
+            raise Exception("Attempted Path Traversal in Tar File")
+
+    tar.extractall(path, members, numeric_owner=numeric_owner)
+
+
 current_dir = pathlib.Path(os.getcwd())
 print("current_dir", current_dir)
 
@@ -229,11 +249,14 @@ for name, package in packages.items():
             build_jobs[flet_client_job], flet_client_artifact, client_arch_path
         )
 
-        # unpack zip only; tar.gz stays as is and unpacked during runtime
+        # unpack client to "bin"
         if flet_client_filename.endswith(".zip"):
             with zipfile.ZipFile(client_arch_path, "r") as zip_arch:
                 zip_arch.extractall(bin_path)
-            os.remove(client_arch_path)
+        else:
+            with tarfile.open(str(client_arch_path), "r:gz") as tar_arch:
+                safe_tar_extractall(tar_arch, str(bin_path))
+        os.remove(client_arch_path)
 
     # update WHEEL file
     for tag in package["wheel_tags"]:
