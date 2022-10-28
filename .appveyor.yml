@@ -330,7 +330,7 @@ for:
           fi
 
     artifacts:
-      - path: client/build/flet-studio.ipa
+      - path: studio/client/build/flet-studio.ipa
         name: flet_studio_ios
 
   # ======================================
