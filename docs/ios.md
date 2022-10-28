@@ -16,6 +16,15 @@ Ensure you have a proper Ruby installed:
 ruby --version
 ```
 
+## Install latest Ruby
+
+```
+brew install ruby
+echo 'export PATH="/opt/homebrew/opt/ruby/bin:$PATH"' >> ~/.zshrc
+```
+
+Restart terminal.
+
 ## Installing Fastlane
 
 Switch to `<flutter-app-root>/ios` directory:
@@ -33,6 +42,13 @@ gem "cocoapods"
 gem "fastlane"
 ```
 
+Create `.bundle/config` with the following contents:
+
+```
+---
+BUNDLE_PATH: "vendor/bundle"
+```
+
 Append the following line to `.gitignore`:
 
 ```
@@ -43,6 +59,12 @@ Run the following command to install Fastlane and Cocoapods:
 
 ```
 bundle install --path vendor/bundle
+```
+
+Run this in case of JSON native compilation error:
+
+```
+xcode-select --install
 ```
 
 `Gemfile.lock` must be checked into repository - that will ensure you have the same versions in CD environment.
@@ -165,6 +187,7 @@ Open "Runner -> Runner -> Info.plist" in the left tree and make sure "App Uses N
 ### Testing Fastlane locally
 
 ```
+export FLET_PACKAGE_VERSION=0.0.1
 bundle exec fastlane build_ipa
 ```
 
