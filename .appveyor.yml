@@ -309,6 +309,7 @@ for:
     build_script:
       - cd studio/client/ios
       - ruby --version
+      - gem install bundler:2.3.11
       - bundle install
       - sh: |
           export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
