@@ -48,6 +48,7 @@ import 'radio_group.dart';
 import 'row.dart';
 import 'semantics.dart';
 import 'shader_mask.dart';
+import 'shake_detector.dart';
 import 'slider.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
@@ -104,6 +105,9 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return ClipboardControl(parent: parent, control: controlView.control);
         case "hapticfeedback":
           return HapticFeedbackControl(
+              parent: parent, control: controlView.control);
+        case "shakedetector":
+          return ShakeDetectorControl(
               parent: parent, control: controlView.control);
         case "verticaldivider":
           return VerticalDividerControl(

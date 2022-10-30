@@ -65,6 +65,7 @@ from flet.ref import Ref
 from flet.row import Row
 from flet.semantics import Semantics
 from flet.shader_mask import ShaderMask
+from flet.shake_detector import ShakeDetector
 from flet.slider import Slider
 from flet.snack_bar import SnackBar
 from flet.stack import Stack

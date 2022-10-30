@@ -38,6 +38,7 @@ dependencies:
       ref: flet-fixes
   window_to_front: ^0.0.3
   audioplayers: ^1.1.0
+  shake: ^2.1.0
 
 dev_dependencies:
   flutter_test:
