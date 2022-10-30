@@ -57,6 +57,7 @@ import 'tabs.dart';
 import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
+import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
 
@@ -198,6 +199,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "card":
           return CardControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "transparentpointer":
+          return TransparentPointerControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

@@ -202,7 +202,7 @@ class WebSocketClient {
     }
   }
 
-  close() {
+  void close() {
     if (_channel != null && _connected) {
       _channel!.sink.close();
     }

@@ -77,6 +77,7 @@ from flet.text_button import TextButton
 from flet.text_style import TextStyle
 from flet.textfield import TextField
 from flet.theme import PageTransitionsTheme, Theme
+from flet.transparent_pointer import TransparentPointer
 from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
 from flet.view import View
