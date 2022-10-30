@@ -30,6 +30,7 @@ import 'flet_app_control.dart';
 import 'floating_action_button.dart';
 import 'gesture_detector.dart';
 import 'grid_view.dart';
+import 'haptic_feedback.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
@@ -101,6 +102,9 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return DividerControl(parent: parent, control: controlView.control);
         case "clipboard":
           return ClipboardControl(parent: parent, control: controlView.control);
+        case "hapticfeedback":
+          return HapticFeedbackControl(
+              parent: parent, control: controlView.control);
         case "verticaldivider":
           return VerticalDividerControl(
               parent: parent, control: controlView.control);

@@ -36,6 +36,7 @@ from flet.gesture_detector import (
     LongPressEndEvent,
     LongPressStartEvent,
     MouseCursor,
+    MultiTapEvent,
     ScaleEndEvent,
     ScaleStartEvent,
     ScaleUpdateEvent,
@@ -43,6 +44,7 @@ from flet.gesture_detector import (
 )
 from flet.gradients import LinearGradient, RadialGradient, SweepGradient
 from flet.grid_view import GridView
+from flet.haptic_feedback import HapticFeedback
 from flet.icon import Icon
 from flet.icon_button import IconButton
 from flet.image import Image
