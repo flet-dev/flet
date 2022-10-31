@@ -51,13 +51,16 @@ class WebSocketClient {
       _connected = true;
       _channel!.stream.listen(_onMessage, onDone: () async {
         debugPrint("WS stream closed");
-        _store.dispatch(PageReconnectingAction());
-        debugPrint("Reconnect in ${_store.state.reconnectingTimeout} seconds");
-        Future.delayed(Duration(seconds: _store.state.reconnectingTimeout))
-            .then((value) {
-          connect(serverUrl: _serverUrl);
-          registerWebClientInternal();
-        });
+        if (_connected) {
+          _store.dispatch(PageReconnectingAction());
+          debugPrint(
+              "Reconnect in ${_store.state.reconnectingTimeout} seconds");
+          Future.delayed(Duration(seconds: _store.state.reconnectingTimeout))
+              .then((value) {
+            connect(serverUrl: _serverUrl);
+            registerWebClientInternal();
+          });
+        }
       }, onError: (error) async {
         debugPrint("WS stream error $error");
         // Future.delayed(Duration(seconds: reconnectionTimeoutSeconds))
@@ -204,6 +207,7 @@ class WebSocketClient {
 
   void close() {
     if (_channel != null && _connected) {
+      _connected = false;
       _channel!.sink.close();
     }
   }

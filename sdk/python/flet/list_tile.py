@@ -230,7 +230,4 @@ class ListTile(ConstrainedControl):
     @on_long_press.setter
     def on_long_press(self, handler):
         self._add_event_handler("long_press", handler)
-        if handler is not None:
-            self._set_attr("onLongPress", True)
-        else:
-            self._set_attr("onLongPress", None)
+        self._set_attr("onLongPress", True if handler is not None else None)

@@ -14,7 +14,6 @@ class ControlViewModel extends Equatable {
       {required this.control, required this.children, required this.dispatch});
 
   static ControlViewModel fromStore(Store<AppState> store, String id) {
-    debugPrint("ControlViewModel.fromStore: $id");
     return ControlViewModel(
         control: store.state.controls[id]!,
         children: store.state.controls[id]!.childIds

@@ -154,6 +154,7 @@ class OutlinedButton(ConstrainedControl):
     @on_long_press.setter
     def on_long_press(self, handler):
         self._add_event_handler("long_press", handler)
+        self._set_attr("onLongPress", True if handler is not None else None)
 
     # content
     @property
