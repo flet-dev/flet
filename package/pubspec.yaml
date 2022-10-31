@@ -29,6 +29,7 @@ dependencies:
   collection: ^1.16.0
   url_launcher: ^6.1.5
   flutter_markdown: ^0.6.10+3
+  flutter_highlight: ^0.7.0 
   markdown: ^6.0.1
   file_picker: ^5.0.1
   shared_preferences: ^2.0.15

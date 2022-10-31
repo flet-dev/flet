@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:markdown/markdown.dart' as md;
 
 import '../flet_app_services.dart';
@@ -23,6 +25,7 @@ class MarkdownControl extends StatelessWidget {
     final ws = FletAppServices.of(context).ws;
 
     var value = control.attrString("value", "")!;
+    var codeTheme = control.attrString("codeTheme", "github")!;
     md.ExtensionSet extensionSet = md.ExtensionSet.none;
     switch (control.attrString("extensionSet", "")!.toLowerCase()) {
       case "commonmark":
@@ -36,6 +39,12 @@ class MarkdownControl extends StatelessWidget {
         break;
     }
 
+    var mdStyleSheet = MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+        code: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            fontFamily: "monospace",
+            fontSize:
+                Theme.of(context).textTheme.bodyMedium!.fontSize! * 0.85));
+
     return StoreConnector<AppState, Uri?>(
         distinct: true,
         converter: (store) => store.state.pageUri,
@@ -45,6 +54,10 @@ class MarkdownControl extends StatelessWidget {
               selectable: control.attrBool("selectable", false)!,
               imageDirectory: getBaseUri(pageUri!).toString(),
               extensionSet: extensionSet,
+              builders: {
+                'code': CodeElementBuilder(codeTheme, mdStyleSheet),
+              },
+              styleSheet: mdStyleSheet,
               onTapLink: (String text, String? href, String title) {
                 debugPrint("Markdown link tapped ${control.id} clicked: $href");
                 ws.pageEventFromWeb(
@@ -55,5 +68,46 @@ class MarkdownControl extends StatelessWidget {
 
           return constrainedControl(context, markdown, parent, control);
         });
+  }
+}
+
+class CodeElementBuilder extends MarkdownElementBuilder {
+  final String codeTheme;
+  final MarkdownStyleSheet mdStyleSheet;
+
+  CodeElementBuilder(this.codeTheme, this.mdStyleSheet);
+
+  @override
+  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
+    if (!element.textContent.endsWith('\n')) {
+      return null;
+    }
+
+    var language = '';
+    if (element.attributes['class'] != null) {
+      String lg = element.attributes['class'] as String;
+      language = lg.substring(9);
+    }
+    return SizedBox(
+      width: double.infinity,
+      child: HighlightView(
+        // The original code to be highlighted
+        element.textContent.substring(0, element.textContent.length - 1),
+
+        // Specify language
+        // It is recommended to give it a value for performance
+        language: language,
+
+        // Specify highlight theme
+        // All available themes are listed in `themes` folder
+        theme: themeMap[codeTheme] ?? themeMap["github"]!,
+
+        // Specify padding
+        padding: mdStyleSheet.codeblockPadding,
+
+        // Specify text style
+        textStyle: mdStyleSheet.code,
+      ),
+    );
   }
 }
