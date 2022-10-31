@@ -25,6 +25,7 @@ from flet.file_picker import (
 from flet.filled_button import FilledButton
 from flet.filled_tonal_button import FilledTonalButton
 from flet.flet import *
+from flet.flet_app import FletApp
 from flet.floating_action_button import FloatingActionButton
 from flet.gesture_detector import (
     DragEndEvent,
@@ -35,6 +36,7 @@ from flet.gesture_detector import (
     LongPressEndEvent,
     LongPressStartEvent,
     MouseCursor,
+    MultiTapEvent,
     ScaleEndEvent,
     ScaleStartEvent,
     ScaleUpdateEvent,
@@ -42,6 +44,7 @@ from flet.gesture_detector import (
 )
 from flet.gradients import LinearGradient, RadialGradient, SweepGradient
 from flet.grid_view import GridView
+from flet.haptic_feedback import HapticFeedback
 from flet.icon import Icon
 from flet.icon_button import IconButton
 from flet.image import Image
@@ -63,6 +66,7 @@ from flet.responsive_row import ResponsiveRow
 from flet.row import Row
 from flet.semantics import Semantics
 from flet.shader_mask import ShaderMask
+from flet.shake_detector import ShakeDetector
 from flet.slider import Slider
 from flet.snack_bar import SnackBar
 from flet.stack import Stack
@@ -74,6 +78,7 @@ from flet.text_button import TextButton
 from flet.text_style import TextStyle
 from flet.textfield import TextField
 from flet.theme import PageTransitionsTheme, Theme
+from flet.transparent_pointer import TransparentPointer
 from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
 from flet.view import View

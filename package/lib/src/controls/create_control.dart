@@ -26,9 +26,11 @@ import 'draggable.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
 import 'file_picker.dart';
+import 'flet_app_control.dart';
 import 'floating_action_button.dart';
 import 'gesture_detector.dart';
 import 'grid_view.dart';
+import 'haptic_feedback.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
@@ -47,6 +49,7 @@ import 'responsive_row.dart';
 import 'row.dart';
 import 'semantics.dart';
 import 'shader_mask.dart';
+import 'shake_detector.dart';
 import 'slider.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
@@ -55,6 +58,7 @@ import 'tabs.dart';
 import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
+import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
 
@@ -91,6 +95,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parent: parent, control: controlView.control);
         case "markdown":
           return MarkdownControl(parent: parent, control: controlView.control);
+        case "fletapp":
+          return FletAppControl(parent: parent, control: controlView.control);
         case "image":
           return ImageControl(parent: parent, control: controlView.control);
         case "audio":
@@ -99,6 +105,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return DividerControl(parent: parent, control: controlView.control);
         case "clipboard":
           return ClipboardControl(parent: parent, control: controlView.control);
+        case "hapticfeedback":
+          return HapticFeedbackControl(
+              parent: parent, control: controlView.control);
+        case "shakedetector":
+          return ShakeDetectorControl(
+              parent: parent, control: controlView.control);
         case "verticaldivider":
           return VerticalDividerControl(
               parent: parent, control: controlView.control);
@@ -194,6 +206,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "card":
           return CardControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "transparentpointer":
+          return TransparentPointerControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

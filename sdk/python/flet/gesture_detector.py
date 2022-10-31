@@ -94,6 +94,9 @@ class GestureDetector(ConstrainedControl):
         on_tap=None,
         on_tap_down=None,
         on_tap_up=None,
+        on_multi_tap=None,
+        multi_tap_touches=None,
+        on_multi_long_press=None,
         on_secondary_tap=None,
         on_secondary_tap_down=None,
         on_secondary_tap_up=None,
@@ -153,6 +156,11 @@ class GestureDetector(ConstrainedControl):
 
         self.__on_tap_up = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
         self._add_event_handler("tap_up", self.__on_tap_up.handler)
+
+        self.__on_multi_tap = EventHandler(
+            lambda e: MultiTapEvent(e.data.lower() == "true")
+        )
+        self._add_event_handler("multi_tap", self.__on_multi_tap.handler)
 
         self.__on_secondary_tap_down = EventHandler(
             lambda e: TapEvent(**json.loads(e.data))
@@ -280,6 +288,9 @@ class GestureDetector(ConstrainedControl):
         self.on_tap = on_tap
         self.on_tap_down = on_tap_down
         self.on_tap_up = on_tap_up
+        self.on_multi_tap = on_multi_tap
+        self.multi_tap_touches = multi_tap_touches
+        self.on_multi_long_press = on_multi_long_press
         self.on_secondary_tap = on_secondary_tap
         self.on_secondary_tap_down = on_secondary_tap_down
         self.on_secondary_tap_up = on_secondary_tap_up
@@ -384,6 +395,36 @@ class GestureDetector(ConstrainedControl):
     def on_tap_up(self, handler):
         self.__on_tap_up.subscribe(handler)
         self._set_attr("onTapUp", True if handler is not None else None)
+
+    # on_multi_tap
+    @property
+    def on_multi_tap(self):
+        return self.__on_multi_tap
+
+    @on_multi_tap.setter
+    def on_multi_tap(self, handler):
+        self.__on_multi_tap.subscribe(handler)
+        self._set_attr("onMultiTap", True if handler is not None else None)
+
+    # multi_tap_touches
+    @property
+    def multi_tap_touches(self) -> Optional[int]:
+        return self._get_attr("multiTapTouches")
+
+    @multi_tap_touches.setter
+    @beartype
+    def multi_tap_touches(self, value: Optional[int]):
+        self._set_attr("multiTapTouches", value)
+
+    # on_multi_long_press
+    @property
+    def on_multi_long_press(self):
+        return self._get_event_handler("multi_long_press")
+
+    @on_multi_long_press.setter
+    def on_multi_long_press(self, handler):
+        self._add_event_handler("multi_long_press", handler)
+        self._set_attr("onMultiLongPress", True if handler is not None else None)
 
     # on_secondary_tap
     @property
@@ -635,6 +676,11 @@ class TapEvent(ControlEvent):
         self.global_x: float = gx
         self.global_y: float = gy
         self.kind: str = kind
+
+
+class MultiTapEvent(ControlEvent):
+    def __init__(self, correct_touches: bool) -> None:
+        self.correct_touches: bool = correct_touches
 
 
 class LongPressStartEvent(ControlEvent):
