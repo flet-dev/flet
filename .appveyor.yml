@@ -114,11 +114,6 @@ for:
         - job_name: Build Flet package for Flutter
 
     install:
-      # Flutter SDK
-      - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
-      - tar -xf "$HOME/flutter_linux_stable.tar.xz" -C $HOME
-      - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter channel stable
       - flutter upgrade
       - flutter doctor
 
