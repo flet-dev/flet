@@ -14,6 +14,7 @@ import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
 import 'banner.dart';
+import 'bottom_sheet.dart';
 import 'card.dart';
 import 'checkbox.dart';
 import 'circle_avatar.dart';
@@ -307,6 +308,14 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
+        case "bottomsheet":
+          return BottomSheetControl(
+            parent: parent,
+            control: controlView.control,
+            children: controlView.children,
+            parentDisabled: parentDisabled,
+            dispatch: controlView.dispatch,
+          );
         case "banner":
           return BannerControl(
               parent: parent,

@@ -4,6 +4,7 @@ from flet.animated_switcher import AnimatedSwitcher
 from flet.app_bar import AppBar
 from flet.audio import Audio
 from flet.banner import Banner
+from flet.bottom_sheet import BottomSheet
 from flet.buttons import ButtonStyle, OutlinedBorder
 from flet.card import Card
 from flet.checkbox import Checkbox
