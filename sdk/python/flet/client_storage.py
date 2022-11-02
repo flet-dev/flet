@@ -21,7 +21,7 @@ class ClientStorage:
             "clientStorage:get", {"key": key}, wait_for_result=True
         )
         if jv:
-            return json.loads(jv)
+            return json.loads(json.loads(jv))
         return None
 
     def contains_key(self, key: str) -> bool:
