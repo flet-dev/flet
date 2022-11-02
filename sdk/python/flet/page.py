@@ -29,6 +29,7 @@ from flet.control_event import ControlEvent
 from flet.event import Event
 from flet.event_handler import EventHandler
 from flet.floating_action_button import FloatingActionButton
+from flet.navigation_bar import NavigationBar
 from flet.protocol import Command
 from flet.pubsub import PubSub
 from flet.querystring import QueryString
@@ -648,6 +649,16 @@ class Page(Control):
     @beartype
     def appbar(self, value: Optional[AppBar]):
         self.__default_view.appbar = value
+
+    # navigation_bar
+    @property
+    def navigation_bar(self) -> Optional[NavigationBar]:
+        return self.__default_view.navigation_bar
+
+    @navigation_bar.setter
+    @beartype
+    def navigation_bar(self, value: Optional[NavigationBar]):
+        self.__default_view.navigation_bar = value
 
     # floating_action_button
     @property

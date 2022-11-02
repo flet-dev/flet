@@ -52,6 +52,11 @@ from flet.image import Image
 from flet.list_tile import ListTile
 from flet.list_view import ListView
 from flet.markdown import Markdown
+from flet.navigation_bar import (
+    NavigationBar,
+    NavigationBarLabelBehavior,
+    NavigationDestination,
+)
 from flet.navigation_rail import NavigationRail, NavigationRailDestination
 from flet.outlined_button import OutlinedButton
 from flet.page import KeyboardEvent, LoginEvent, Page, RouteChangeEvent, ViewPopEvent
@@ -79,6 +84,7 @@ from flet.text_button import TextButton
 from flet.text_style import TextStyle
 from flet.textfield import TextField
 from flet.theme import PageTransitionsTheme, Theme
+from flet.tooltip import Tooltip
 from flet.transparent_pointer import TransparentPointer
 from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider

@@ -562,6 +562,7 @@ class _PageControlState extends State<PageControl> {
 
           Control? appBar;
           Control? fab;
+          Control? navBar;
           List<Widget> controls = [];
           bool firstControl = true;
 
@@ -569,8 +570,8 @@ class _PageControlState extends State<PageControl> {
             if (ctrl.type == "appbar") {
               appBar = ctrl;
               continue;
-            } else if (ctrl.type == "floatingactionbutton") {
-              fab = ctrl;
+            } else if (ctrl.type == "navigationbar") {
+              navBar = ctrl;
               continue;
             }
             // spacer between displayed controls
@@ -649,6 +650,10 @@ class _PageControlState extends State<PageControl> {
                                     : column)),
                         ...overlayWidgets
                       ]),
+                      bottomNavigationBar: navBar != null
+                          ? createControl(
+                              control, navBar.id, control.isDisabled)
+                          : null,
                       floatingActionButton: fab != null
                           ? createControl(control, fab.id, control.isDisabled)
                           : null,

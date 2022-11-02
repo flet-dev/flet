@@ -38,6 +38,7 @@ import 'image.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
 import 'markdown.dart';
+import 'navigation_bar.dart';
 import 'navigation_rail.dart';
 import 'outlined_button.dart';
 import 'page.dart';
@@ -59,6 +60,7 @@ import 'tabs.dart';
 import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
+import 'tooltip.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
@@ -211,6 +213,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
+        case "tooltip":
+          return TooltipControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
         case "transparentpointer":
           return TransparentPointerControl(
               parent: parent,
@@ -330,6 +338,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "navigationrail":
           return NavigationRailControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "navigationbar":
+          return NavigationBarControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
