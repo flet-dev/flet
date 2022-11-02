@@ -115,7 +115,6 @@ for:
 
     install:
       - flutter upgrade
-      - flutter doctor
 
     build_script:
       - cd package
@@ -217,15 +216,9 @@ for:
         - job_name: Build Flet for Linux
 
     install:
-      # Flutter SDK
       - sudo apt update
       - sudo apt install -y libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
-      - tar -xf "$HOME/flutter_linux_stable.tar.xz" -C $HOME
-      - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter channel stable
       - flutter upgrade
-      - flutter doctor
 
     build_script:
       - cd client
@@ -382,13 +375,7 @@ for:
         - job_name: Build Fletd
 
     install:
-      # Flutter SDK
-      - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
-      - tar -xf "$HOME/flutter_linux_stable.tar.xz" -C $HOME
-      - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter channel stable
       - flutter upgrade
-      - flutter doctor
 
       # Go and GoReleaser
       - gvm install go${GO_VERSION} -B
