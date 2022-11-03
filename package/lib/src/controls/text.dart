@@ -38,7 +38,7 @@ class TextControl extends StatelessWidget {
           .add(FontVariation('wght', parseDouble(fontWeight.substring(1))));
     }
 
-    style ??= TextStyle(
+    style = (style ?? const TextStyle()).copyWith(
         fontSize: control.attrDouble("size", null),
         fontWeight: getFontWeight(fontWeight),
         fontStyle: control.attrBool("italic", false)! ? FontStyle.italic : null,
