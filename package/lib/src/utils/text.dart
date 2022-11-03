@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
@@ -82,12 +83,22 @@ TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
 }
 
 TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
+  var fontWeight = json["weight"] ?? "";
+
+  List<FontVariation> variations = [];
+  if (fontWeight.startsWith("w")) {
+    variations.add(FontVariation('wght', parseDouble(fontWeight.substring(1))));
+  }
+
+  var size = json["size"] ?? theme.textTheme.bodyMedium?.fontSize;
+
   return TextStyle(
-      fontSize: parseDouble(json["size"]),
-      fontWeight: getFontWeight(json["weight"] ?? ""),
+      fontSize: parseDouble(size),
+      fontWeight: getFontWeight(fontWeight),
       fontStyle:
           (json["italic"] ?? false) ? FontStyle.italic : FontStyle.normal,
       fontFamily: json["font_family"],
+      fontVariations: variations,
       color: HexColor.fromString(theme, json["color"] ?? ""),
       backgroundColor: HexColor.fromString(theme, json["bgcolor"] ?? ""));
 }

@@ -49,6 +49,7 @@ class FormFieldControl(ConstrainedControl):
         # FormField specific
         #
         text_size: OptionalNumber = None,
+        text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
@@ -110,17 +111,8 @@ class FormFieldControl(ConstrainedControl):
             data=data,
         )
 
-        self.__prefix: Optional[Control] = None
-        self.__suffix: Optional[Control] = None
-        self.__label_style: Optional[TextStyle] = None
-        self.__hint_style: Optional[TextStyle] = None
-        self.__helper_style: Optional[TextStyle] = None
-        self.__counter_style: Optional[TextStyle] = None
-        self.__error_style: Optional[TextStyle] = None
-        self.__prefix_style: Optional[TextStyle] = None
-        self.__suffix_style: Optional[TextStyle] = None
-
         self.text_size = text_size
+        self.text_style = text_style
         self.label = label
         self.label_style = label_style
         self.icon = icon
@@ -157,6 +149,7 @@ class FormFieldControl(ConstrainedControl):
         super()._before_build_command()
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("contentPadding", self.__content_padding)
+        self._set_attr_json("textStyle", self.__text_style)
         self._set_attr_json("labelStyle", self.__label_style)
         self._set_attr_json("hintStyle", self.__hint_style)
         self._set_attr_json("helperStyle", self.__helper_style)
@@ -184,6 +177,16 @@ class FormFieldControl(ConstrainedControl):
     @beartype
     def text_size(self, value: OptionalNumber):
         self._set_attr("textSize", value)
+
+    # text_style
+    @property
+    def text_style(self):
+        return self.__text_style
+
+    @text_style.setter
+    @beartype
+    def text_style(self, value: Optional[TextStyle]):
+        self.__text_style = value
 
     # label
     @property

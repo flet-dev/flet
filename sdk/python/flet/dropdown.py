@@ -46,6 +46,7 @@ class Dropdown(FormFieldControl):
         # FormField specific
         #
         text_size: OptionalNumber = None,
+        text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
@@ -114,6 +115,7 @@ class Dropdown(FormFieldControl):
             # FormField specific
             #
             text_size=text_size,
+            text_style=text_style,
             label=label,
             label_style=label_style,
             icon=icon,

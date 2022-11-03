@@ -68,6 +68,7 @@ class TextField(FormFieldControl):
         # FormField specific
         #
         text_size: OptionalNumber = None,
+        text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
@@ -152,6 +153,7 @@ class TextField(FormFieldControl):
             # FormField
             #
             text_size=text_size,
+            text_style=text_style,
             label=label,
             label_style=label_style,
             icon=icon,
@@ -185,6 +187,7 @@ class TextField(FormFieldControl):
             suffix_style=suffix_style,
         )
         self.value = value
+        self.text_style = text_style
         self.keyboard_type = keyboard_type
         self.text_align = text_align
         self.multiline = multiline

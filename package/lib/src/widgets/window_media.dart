@@ -64,7 +64,7 @@ class WindowMediaState extends State<WindowMedia> with WindowListener {
 
     if (eventName == "resized" || eventName == "moved") {
       if (_debounce?.isActive ?? false) _debounce!.cancel();
-      _debounce = Timer(const Duration(milliseconds: 100), () {
+      _debounce = Timer(const Duration(milliseconds: 300), () {
         send();
       });
     } else {
