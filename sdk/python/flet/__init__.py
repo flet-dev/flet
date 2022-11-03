@@ -5,7 +5,15 @@ from flet.app_bar import AppBar
 from flet.audio import Audio
 from flet.banner import Banner
 from flet.bottom_sheet import BottomSheet
-from flet.buttons import ButtonStyle, OutlinedBorder
+from flet.buttons import (
+    BeveledRectangleBorder,
+    ButtonStyle,
+    CircleBorder,
+    CountinuosRectangleBorder,
+    OutlinedBorder,
+    RoundedRectangleBorder,
+    StadiumBorder,
+)
 from flet.card import Card
 from flet.checkbox import Checkbox
 from flet.circle_avatar import CircleAvatar

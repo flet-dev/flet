@@ -2,6 +2,7 @@ from typing import Any, List, Optional
 
 from beartype import beartype
 
+from flet.buttons import OutlinedBorder
 from flet.control import Control, MainAxisAlignment
 from flet.ref import Ref
 from flet.types import PaddingValue
@@ -26,6 +27,7 @@ class AlertDialog(Control):
         actions: Optional[List[Control]] = None,
         actions_padding: PaddingValue = None,
         actions_alignment: MainAxisAlignment = None,
+        shape: Optional[OutlinedBorder] = None,
         on_dismiss=None,
     ):
 
@@ -50,6 +52,7 @@ class AlertDialog(Control):
         self.actions = actions
         self.actions_padding = actions_padding
         self.actions_alignment = actions_alignment
+        self.shape = shape
         self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
@@ -60,6 +63,7 @@ class AlertDialog(Control):
         self._set_attr_json("actionsPadding", self.__actions_padding)
         self._set_attr_json("contentPadding", self.__content_padding)
         self._set_attr_json("titlePadding", self.__title_padding)
+        self._set_attr_json("shape", self.__shape)
 
     def _get_children(self):
         children = []
@@ -160,6 +164,16 @@ class AlertDialog(Control):
     @beartype
     def actions_alignment(self, value: MainAxisAlignment):
         self._set_attr("actionsAlignment", value)
+
+    # shape
+    @property
+    def shape(self) -> Optional[OutlinedBorder]:
+        return self.__shape
+
+    @shape.setter
+    @beartype
+    def shape(self, value: Optional[OutlinedBorder]):
+        self.__shape = value
 
     # on_dismiss
     @property
