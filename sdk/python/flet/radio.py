@@ -104,10 +104,7 @@ class Radio(ConstrainedControl):
 
     def _before_build_command(self):
         super()._before_build_command()
-        fc = self.__fill_color
-        if fc is not None and not isinstance(fc, Dict):
-            fc = {"": fc}
-        self._set_attr_json("fillColor", fc)
+        self._set_attr_json("fillColor", self._wrap_attr_dict(self.__fill_color))
 
     # value
     @property
