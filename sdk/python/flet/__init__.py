@@ -44,6 +44,8 @@ from flet.gradients import LinearGradient, RadialGradient, SweepGradient
 from flet.grid_view import GridView
 from flet.icon import Icon
 from flet.icon_button import IconButton
+from flet import icons
+from flet import colors
 from flet.image import Image
 from flet.list_tile import ListTile
 from flet.list_view import ListView
