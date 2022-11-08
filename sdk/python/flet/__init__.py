@@ -49,6 +49,7 @@ from flet.gesture_detector import (
     ScaleEndEvent,
     ScaleStartEvent,
     ScaleUpdateEvent,
+    ScrollEvent,
     TapEvent,
 )
 from flet.gradients import LinearGradient, RadialGradient, SweepGradient

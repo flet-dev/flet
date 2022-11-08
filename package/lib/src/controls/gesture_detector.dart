@@ -532,6 +532,25 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
           )
         : result;
 
+    result = onScroll
+        ? Listener(
+            behavior: HitTestBehavior.translucent,
+            onPointerSignal: (details) {
+              if (details is PointerScrollEvent) {
+                sendEvent("scroll", {
+                  "gx": details.position.dx,
+                  "gy": details.position.dy,
+                  "lx": details.localPosition.dx,
+                  "ly": details.localPosition.dy,
+                  "dx": details.scrollDelta.dx,
+                  "dy": details.scrollDelta.dy,
+                });
+              }
+            },
+            child: result,
+          )
+        : result;
+
     var mouseCursor = widget.control.attrString("mouseCursor");
     result = ((mouseCursor != null) || onHover || onEnter || onExit)
         ? MouseRegion(

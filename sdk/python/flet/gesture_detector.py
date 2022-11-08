@@ -121,6 +121,7 @@ class GestureDetector(ConstrainedControl):
         on_hover=None,
         on_enter=None,
         on_exit=None,
+        on_scroll=None,
     ):
 
         ConstrainedControl.__init__(
@@ -281,6 +282,10 @@ class GestureDetector(ConstrainedControl):
         self.__on_exit = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
         self._add_event_handler("exit", self.__on_exit.handler)
 
+        # on_scroll
+        self.__on_scroll = EventHandler(lambda e: ScrollEvent(**json.loads(e.data)))
+        self._add_event_handler("scroll", self.__on_scroll.handler)
+
         self.content = content
         self.mouse_cursor = mouse_cursor
         self.drag_interval = drag_interval
@@ -315,6 +320,7 @@ class GestureDetector(ConstrainedControl):
         self.on_hover = on_hover
         self.on_enter = on_enter
         self.on_exit = on_exit
+        self.on_scroll = on_scroll
 
     def _get_control_name(self):
         return "gesturedetector"
@@ -668,6 +674,16 @@ class GestureDetector(ConstrainedControl):
         self.__on_exit.subscribe(handler)
         self._set_attr("onExit", True if handler is not None else None)
 
+    # on_scroll
+    @property
+    def on_scroll(self):
+        return self.__on_scroll
+
+    @on_scroll.setter
+    def on_scroll(self, handler):
+        self.__on_scroll.subscribe(handler)
+        self._set_attr("onScroll", True if handler is not None else None)
+
 
 class TapEvent(ControlEvent):
     def __init__(self, lx, ly, gx, gy, kind) -> None:
@@ -771,3 +787,13 @@ class HoverEvent(ControlEvent):
         self.local_y: float = ly
         self.delta_x: Optional[float] = dx
         self.delta_y: Optional[float] = dy
+
+
+class ScrollEvent(ControlEvent):
+    def __init__(self, gx, gy, lx, ly, dx=None, dy=None) -> None:
+        self.global_x: float = gx
+        self.global_y: float = gy
+        self.local_x: float = lx
+        self.local_y: float = ly
+        self.scroll_delta_x: Optional[float] = dx
+        self.scroll_delta_y: Optional[float] = dy
