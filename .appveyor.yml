@@ -12,9 +12,7 @@ environment:
   GO_VERSION: 1.19
   GO_TAGS: --tags release
   python_stack: python 3.10
-  FLUTTER_WINDOWS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_3.3.3-stable.zip
   FLUTTER_MACOS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.3.3-stable.zip
-  FLUTTER_LINUX_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.3.3-stable.tar.xz
   GITHUB_TOKEN:
     secure: doX0dwjWhBmT56aJqR9NCbtMFJpDpdYxPCIB4vQoHfSR+nTa+pLCo6Yv5qWpD/90
   DOCKER_REGISTRY_USER:
@@ -23,7 +21,6 @@ environment:
     secure: V9nRzVDlIGS0a+dhkC2/vw==
 
   matrix:
-
     - job_name: Build Flet package for Flutter
       job_group: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
@@ -64,11 +61,11 @@ environment:
       job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Test Python 3.7
-    #   job_group: python_tests
-    #   job_depends_on: build_flet
-    #   python_stack: python 3.7
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.7
+      job_group: python_tests
+      job_depends_on: build_flet
+      python_stack: python 3.7
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.8
       job_group: python_tests
@@ -133,13 +130,6 @@ for:
       VC_REDIST_DIR: 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Redist\MSVC\14.29.30133\x64\Microsoft.VC142.CRT'
 
     install:
-      - ps: |
-          Write-Host "Downloading Flutter SDK..."
-          (New-Object Net.WebClient).DownloadFile($env:FLUTTER_WINDOWS_URL, "$env:TEMP\flutter_windows_stable.zip")
-          Write-Host "Unpacking Flutter SDK..."
-          7z x "$env:TEMP\flutter_windows_stable.zip" -o"$env:SystemDrive\" | Out-Null
-      - set PATH=C:\flutter\bin;%PATH%
-      - flutter channel stable
       - flutter upgrade
 
     build_script:
