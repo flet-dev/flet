@@ -115,6 +115,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     var onMultiTap = widget.control.attrBool("onMultiTap", false)!;
     var onMultiLongPress = widget.control.attrBool("onMultiLongPress", false)!;
     var multiTapTouches = widget.control.attrInt("multiTapTouches", 0)!;
+    var onScroll = widget.control.attrBool("onScroll", false)!;
 
     var content = contentCtrls.isNotEmpty
         ? createControl(widget.control, contentCtrls.first.id, disabled)
@@ -508,7 +509,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   MultiTouchGestureRecognizer>(
                 () => MultiTouchGestureRecognizer(),
                 (MultiTouchGestureRecognizer instance) {
-                  instance.minNumberOfTouches = 3;
+                  instance.minNumberOfTouches = multiTapTouches;
                   instance.onMultiTap = (correctNumberOfTouches) {
                     if (onMultiTap) {
                       sendEvent("multi_tap", correctNumberOfTouches.toString());
