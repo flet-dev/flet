@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:markdown/markdown.dart' as md;
 
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../utils/text.dart';
 import '../utils/uri.dart';
 import 'create_control.dart';
+import 'highlight_view.dart';
 
 class MarkdownControl extends StatelessWidget {
   final Control? parent;
@@ -39,11 +40,15 @@ class MarkdownControl extends StatelessWidget {
         break;
     }
 
+    TextStyle? codeStyle =
+        parseTextStyle(Theme.of(context), control, "codeStyle");
+
     var mdStyleSheet = MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-        code: Theme.of(context).textTheme.bodyMedium!.copyWith(
-            fontFamily: "monospace",
-            fontSize:
-                Theme.of(context).textTheme.bodyMedium!.fontSize! * 0.85));
+        code: codeStyle ??
+            Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(fontFamily: "monospace"));
 
     return StoreConnector<AppState, Uri?>(
         distinct: true,
@@ -104,6 +109,8 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
         // Specify padding
         padding: mdStyleSheet.codeblockPadding,
+
+        decoration: mdStyleSheet.codeblockDecoration,
 
         // Specify text style
         textStyle: mdStyleSheet.code,
