@@ -17,4 +17,18 @@
 * Change shape of AlertDialog ([#537](https://github.com/flet-dev/flet/issues/537))
 * Fixed: Saving and retreiving a string value from client storage adds quotation marks ([#545](https://github.com/flet-dev/flet/issues/545))
 
+## 0.1.63
+
+* Matplotlib and Plotly Charts ([#509](https://github.com/flet-dev/flet/issues/509))
+* make control a cooperative object ([#490](https://github.com/flet-dev/flet/issues/490))
+
+## 0.1.62
+
+* Update pubspec.lock
+* GestureDetector and fixes (#459)
+* removed all problems except dart:html problem because it needs material html kind of thing (#461)
+* fix: ensure correct version is fetched in dev mode (#443)
+* Fix controls setter for empty list input (#454)
+* make ink=True behavior consistent with ink=False (#427)
+
 ## [0.1.0](https://pypi.org/project/flet/0.1.0) - Mar 30, 2022
