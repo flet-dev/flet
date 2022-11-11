@@ -51,10 +51,10 @@ environment:
       job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
-    - job_name: Build Flet Studio for iOS
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+    # - job_name: Build Flet Studio for iOS
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     - job_name: Build Fletd
       job_group: build_flet
