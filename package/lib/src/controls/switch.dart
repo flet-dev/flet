@@ -6,6 +6,8 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/buttons.dart';
+import '../utils/colors.dart';
 import 'create_control.dart';
 
 enum LabelPosition { right, left }
@@ -97,6 +99,18 @@ class _SwitchControlState extends State<SwitchControl> {
           var swtch = Switch(
               autofocus: autofocus,
               focusNode: _focusNode,
+              activeColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("activeColor", "")!),
+              activeTrackColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("activeTrackColor", "")!),
+              inactiveThumbColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("inactiveThumbColor", "")!),
+              inactiveTrackColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("inactiveTrackColor", "")!),
+              thumbColor: parseMaterialStateColor(
+                  Theme.of(context), widget.control, "thumbColor"),
+              trackColor: parseMaterialStateColor(
+                  Theme.of(context), widget.control, "trackColor"),
               value: _value,
               onChanged: !disabled
                   ? (bool value) {

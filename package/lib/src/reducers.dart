@@ -31,17 +31,7 @@ AppState appReducer(AppState state, dynamic action) {
     //
     // page size changed
     //
-    // calculate break point
-    final width = action.newPageSize.width;
-    String newBreakpoint = "";
-    state.sizeBreakpoints.forEach((bpName, bpWidth) {
-      if (width >= bpWidth) {
-        newBreakpoint = bpName;
-      }
-    });
-
-    debugPrint(
-        "New page size: ${action.newPageSize}, new breakpoint: $newBreakpoint");
+    debugPrint("New page size: ${action.newPageSize}");
 
     var page = state.controls["page"];
     var controls = Map.of(state.controls);
@@ -68,10 +58,7 @@ AppState appReducer(AppState state, dynamic action) {
     }
 
     return state.copyWith(
-        isRegistered: true,
-        controls: controls,
-        size: action.newPageSize,
-        sizeBreakpoint: newBreakpoint);
+        isRegistered: true, controls: controls, size: action.newPageSize);
   } else if (action is SetPageRouteAction) {
     //
     // page route changed

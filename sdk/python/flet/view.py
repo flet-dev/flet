@@ -10,6 +10,7 @@ from flet.control import (
     ScrollMode,
 )
 from flet.floating_action_button import FloatingActionButton
+from flet.navigation_bar import NavigationBar
 from flet.types import PaddingValue
 
 
@@ -20,6 +21,7 @@ class View(Control):
         controls: Optional[List[Control]] = None,
         appbar: Optional[AppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
+        navigation_bar: Optional[NavigationBar] = None,
         vertical_alignment: MainAxisAlignment = None,
         horizontal_alignment: CrossAxisAlignment = None,
         spacing: OptionalNumber = None,
@@ -33,6 +35,7 @@ class View(Control):
         self.controls = controls if controls is not None else []
         self.route = route
         self.appbar = appbar
+        self.navigation_bar = navigation_bar
         self.floating_action_button = floating_action_button
         self.vertical_alignment = vertical_alignment
         self.horizontal_alignment = horizontal_alignment
@@ -46,6 +49,7 @@ class View(Control):
         return "view"
 
     def _before_build_command(self):
+        super()._before_build_command()
         self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
@@ -54,6 +58,8 @@ class View(Control):
             children.append(self.__appbar)
         if self.__fab:
             children.append(self.__fab)
+        if self.__navigation_bar:
+            children.append(self.__navigation_bar)
         children.extend(self.__controls)
         return children
 
@@ -96,6 +102,16 @@ class View(Control):
     @beartype
     def floating_action_button(self, value: Optional[FloatingActionButton]):
         self.__fab = value
+
+    # navigation_bar
+    @property
+    def navigation_bar(self) -> Optional[NavigationBar]:
+        return self.__navigation_bar
+
+    @navigation_bar.setter
+    @beartype
+    def navigation_bar(self, value: Optional[NavigationBar]):
+        self.__navigation_bar = value
 
     # horizontal_alignment
     @property

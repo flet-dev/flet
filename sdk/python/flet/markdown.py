@@ -5,7 +5,14 @@ from beartype import beartype
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet.text_style import TextStyle
+from flet.types import (
+    AnimationValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 try:
     from typing import Literal
@@ -29,6 +36,7 @@ class Markdown(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -50,6 +58,8 @@ class Markdown(ConstrainedControl):
         #
         selectable: Optional[bool] = None,
         extension_set: MarkdownExtensionSet = None,
+        code_theme: Optional[str] = None,
+        code_style: Optional[TextStyle] = None,
         on_tap_link=None,
     ):
         ConstrainedControl.__init__(
@@ -62,6 +72,7 @@ class Markdown(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
@@ -83,10 +94,16 @@ class Markdown(ConstrainedControl):
         self.value = value
         self.selectable = selectable
         self.extension_set = extension_set
+        self.code_theme = code_theme
+        self.code_style = code_style
         self.on_tap_link = on_tap_link
 
     def _get_control_name(self):
         return "markdown"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("codeStyle", self.__code_style)
 
     # value
     @property
@@ -116,6 +133,25 @@ class Markdown(ConstrainedControl):
     @beartype
     def extension_set(self, value: Optional[MarkdownExtensionSet]):
         self._set_attr("extensionSet", value)
+
+    # code_theme
+    @property
+    def code_theme(self):
+        return self._get_attr("codeTheme")
+
+    @code_theme.setter
+    def code_theme(self, value):
+        self._set_attr("codeTheme", value)
+
+    # code_style
+    @property
+    def code_style(self):
+        return self.__code_style
+
+    @code_style.setter
+    @beartype
+    def code_style(self, value: Optional[TextStyle]):
+        self.__code_style = value
 
     # on_tap_link
     @property

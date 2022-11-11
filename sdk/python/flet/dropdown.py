@@ -12,6 +12,7 @@ from flet.types import (
     BorderRadiusValue,
     OffsetValue,
     PaddingValue,
+    ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
@@ -24,6 +25,7 @@ class Dropdown(FormFieldControl):
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -44,6 +46,7 @@ class Dropdown(FormFieldControl):
         # FormField specific
         #
         text_size: OptionalNumber = None,
+        text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
@@ -91,6 +94,7 @@ class Dropdown(FormFieldControl):
             width=width,
             height=height,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
@@ -111,6 +115,7 @@ class Dropdown(FormFieldControl):
             # FormField specific
             #
             text_size=text_size,
+            text_style=text_style,
             label=label,
             label_style=label_style,
             icon=icon,

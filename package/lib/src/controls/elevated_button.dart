@@ -34,6 +34,7 @@ class ElevatedButtonControl extends StatelessWidget {
         Theme.of(context), control.attrString("iconColor", "")!);
     var contentCtrls = children.where((c) => c.name == "content");
     bool onHover = control.attrBool("onHover", false)!;
+    bool onLongPress = control.attrBool("onLongPress", false)!;
     bool autofocus = control.attrBool("autofocus", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
@@ -45,7 +46,7 @@ class ElevatedButtonControl extends StatelessWidget {
           }
         : null;
 
-    Function()? onLongPress = !disabled
+    Function()? onLongPressHandler = onLongPress && !disabled
         ? () {
             debugPrint("Button ${control.id} long pressed!");
             ws.pageEventFromWeb(
@@ -91,7 +92,7 @@ class ElevatedButtonControl extends StatelessWidget {
           style: style,
           autofocus: autofocus,
           onPressed: onPressed,
-          onLongPress: onLongPress,
+          onLongPress: onLongPressHandler,
           onHover: onHoverHandler,
           icon: Icon(
             icon,
@@ -103,14 +104,14 @@ class ElevatedButtonControl extends StatelessWidget {
           style: style,
           autofocus: autofocus,
           onPressed: onPressed,
-          onLongPress: onLongPress,
+          onLongPress: onLongPressHandler,
           onHover: onHoverHandler,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else {
       button = ElevatedButton(
           style: style,
           onPressed: onPressed,
-          onLongPress: onLongPress,
+          onLongPress: onLongPressHandler,
           onHover: onHoverHandler,
           child: Text(text));
     }

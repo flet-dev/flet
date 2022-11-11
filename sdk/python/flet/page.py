@@ -29,6 +29,7 @@ from flet.control_event import ControlEvent
 from flet.event import Event
 from flet.event_handler import EventHandler
 from flet.floating_action_button import FloatingActionButton
+from flet.navigation_bar import NavigationBar
 from flet.protocol import Command
 from flet.pubsub import PubSub
 from flet.querystring import QueryString
@@ -136,6 +137,7 @@ class Page(Control):
         return self._index.get(id)
 
     def _before_build_command(self):
+        super()._before_build_command()
         # fonts
         self._set_attr_json("fonts", self.__fonts)
 
@@ -188,13 +190,16 @@ class Page(Control):
         self._set_attr("windowLeft", values[9], False)
 
     def update(self, *controls):
+        added_controls = []
         with self._lock:
             if len(controls) == 0:
-                return self.__update(self)
+                added_controls = self.__update(self)
             else:
-                return self.__update(*controls)
+                added_controls = self.__update(*controls)
+        for ctrl in added_controls:
+            ctrl.did_mount()
 
-    def __update(self, *controls):
+    def __update(self, *controls) -> List[Control]:
         added_controls = []
         commands = []
 
@@ -203,7 +208,7 @@ class Page(Control):
             control.build_update_commands(self._index, added_controls, commands)
 
         if len(commands) == 0:
-            return
+            return added_controls
 
         # execute commands
         results = self.__conn.send_commands(self._session_id, commands).results
@@ -218,34 +223,44 @@ class Page(Control):
                     # add to index
                     self._index[id] = added_controls[n]
 
-                    # call Control.did_mount
-                    added_controls[n].did_mount()
-
                     n += 1
+        return added_controls
 
     def add(self, *controls):
+        added_controls = []
         with self._lock:
             self._controls.extend(controls)
-            return self.__update(self)
+            added_controls = self.__update(self)
+        for ctrl in added_controls:
+            ctrl.did_mount()
 
     def insert(self, at, *controls):
+        added_controls = []
         with self._lock:
             n = at
             for control in controls:
                 self._controls.insert(n, control)
                 n += 1
-            return self.__update(self)
+            added_controls = self.__update(self)
+        for ctrl in added_controls:
+            ctrl.did_mount()
 
     def remove(self, *controls):
+        added_controls = []
         with self._lock:
             for control in controls:
                 self._controls.remove(control)
-            return self.__update(self)
+            added_controls = self.__update(self)
+        for ctrl in added_controls:
+            ctrl.did_mount()
 
     def remove_at(self, index):
+        added_controls = []
         with self._lock:
             self._controls.pop(index)
-            return self.__update(self)
+            added_controls = self.__update(self)
+        for ctrl in added_controls:
+            ctrl.did_mount()
 
     def clean(self):
         with self._lock:
@@ -402,7 +417,12 @@ class Page(Control):
     ):
         return self.__conn.send_command(
             self._session_id,
-            Command(indent=0, name=name, values=values if values is not None else [], attrs=attrs or {}),
+            Command(
+                indent=0,
+                name=name,
+                values=values if values is not None else [],
+                attrs=attrs or {},
+            ),
         )
 
     @beartype
@@ -629,6 +649,16 @@ class Page(Control):
     @beartype
     def appbar(self, value: Optional[AppBar]):
         self.__default_view.appbar = value
+
+    # navigation_bar
+    @property
+    def navigation_bar(self) -> Optional[NavigationBar]:
+        return self.__default_view.navigation_bar
+
+    @navigation_bar.setter
+    @beartype
+    def navigation_bar(self, value: Optional[NavigationBar]):
+        self.__default_view.navigation_bar = value
 
     # floating_action_button
     @property
@@ -966,6 +996,16 @@ class Page(Control):
     @beartype
     def window_minimizable(self, value: Optional[bool]):
         self._set_attr("windowMinimizable", value)
+
+    # window_maximizable
+    @property
+    def window_maximizable(self) -> Optional[bool]:
+        return self._get_attr("windowMaximizable", data_type="bool", def_value=True)
+
+    @window_maximizable.setter
+    @beartype
+    def window_maximizable(self, value: Optional[bool]):
+        self._set_attr("windowMaximizable", value)
 
     # window_resizable
     @property

@@ -9,7 +9,13 @@ from flet.control import Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
 from flet.ref import Ref
-from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet.types import (
+    AnimationValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class MouseCursor(Enum):
@@ -63,6 +69,7 @@ class GestureDetector(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -87,6 +94,9 @@ class GestureDetector(ConstrainedControl):
         on_tap=None,
         on_tap_down=None,
         on_tap_up=None,
+        on_multi_tap=None,
+        multi_tap_touches=None,
+        on_multi_long_press=None,
         on_secondary_tap=None,
         on_secondary_tap_down=None,
         on_secondary_tap_up=None,
@@ -111,6 +121,7 @@ class GestureDetector(ConstrainedControl):
         on_hover=None,
         on_enter=None,
         on_exit=None,
+        on_scroll=None,
     ):
 
         ConstrainedControl.__init__(
@@ -123,6 +134,7 @@ class GestureDetector(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
@@ -145,6 +157,11 @@ class GestureDetector(ConstrainedControl):
 
         self.__on_tap_up = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
         self._add_event_handler("tap_up", self.__on_tap_up.handler)
+
+        self.__on_multi_tap = EventHandler(
+            lambda e: MultiTapEvent(e.data.lower() == "true")
+        )
+        self._add_event_handler("multi_tap", self.__on_multi_tap.handler)
 
         self.__on_secondary_tap_down = EventHandler(
             lambda e: TapEvent(**json.loads(e.data))
@@ -265,6 +282,10 @@ class GestureDetector(ConstrainedControl):
         self.__on_exit = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
         self._add_event_handler("exit", self.__on_exit.handler)
 
+        # on_scroll
+        self.__on_scroll = EventHandler(lambda e: ScrollEvent(**json.loads(e.data)))
+        self._add_event_handler("scroll", self.__on_scroll.handler)
+
         self.content = content
         self.mouse_cursor = mouse_cursor
         self.drag_interval = drag_interval
@@ -272,6 +293,9 @@ class GestureDetector(ConstrainedControl):
         self.on_tap = on_tap
         self.on_tap_down = on_tap_down
         self.on_tap_up = on_tap_up
+        self.on_multi_tap = on_multi_tap
+        self.multi_tap_touches = multi_tap_touches
+        self.on_multi_long_press = on_multi_long_press
         self.on_secondary_tap = on_secondary_tap
         self.on_secondary_tap_down = on_secondary_tap_down
         self.on_secondary_tap_up = on_secondary_tap_up
@@ -296,6 +320,7 @@ class GestureDetector(ConstrainedControl):
         self.on_hover = on_hover
         self.on_enter = on_enter
         self.on_exit = on_exit
+        self.on_scroll = on_scroll
 
     def _get_control_name(self):
         return "gesturedetector"
@@ -376,6 +401,36 @@ class GestureDetector(ConstrainedControl):
     def on_tap_up(self, handler):
         self.__on_tap_up.subscribe(handler)
         self._set_attr("onTapUp", True if handler is not None else None)
+
+    # on_multi_tap
+    @property
+    def on_multi_tap(self):
+        return self.__on_multi_tap
+
+    @on_multi_tap.setter
+    def on_multi_tap(self, handler):
+        self.__on_multi_tap.subscribe(handler)
+        self._set_attr("onMultiTap", True if handler is not None else None)
+
+    # multi_tap_touches
+    @property
+    def multi_tap_touches(self) -> Optional[int]:
+        return self._get_attr("multiTapTouches")
+
+    @multi_tap_touches.setter
+    @beartype
+    def multi_tap_touches(self, value: Optional[int]):
+        self._set_attr("multiTapTouches", value)
+
+    # on_multi_long_press
+    @property
+    def on_multi_long_press(self):
+        return self._get_event_handler("multi_long_press")
+
+    @on_multi_long_press.setter
+    def on_multi_long_press(self, handler):
+        self._add_event_handler("multi_long_press", handler)
+        self._set_attr("onMultiLongPress", True if handler is not None else None)
 
     # on_secondary_tap
     @property
@@ -619,6 +674,16 @@ class GestureDetector(ConstrainedControl):
         self.__on_exit.subscribe(handler)
         self._set_attr("onExit", True if handler is not None else None)
 
+    # on_scroll
+    @property
+    def on_scroll(self):
+        return self.__on_scroll
+
+    @on_scroll.setter
+    def on_scroll(self, handler):
+        self.__on_scroll.subscribe(handler)
+        self._set_attr("onScroll", True if handler is not None else None)
+
 
 class TapEvent(ControlEvent):
     def __init__(self, lx, ly, gx, gy, kind) -> None:
@@ -627,6 +692,11 @@ class TapEvent(ControlEvent):
         self.global_x: float = gx
         self.global_y: float = gy
         self.kind: str = kind
+
+
+class MultiTapEvent(ControlEvent):
+    def __init__(self, correct_touches: bool) -> None:
+        self.correct_touches: bool = correct_touches
 
 
 class LongPressStartEvent(ControlEvent):
@@ -717,3 +787,13 @@ class HoverEvent(ControlEvent):
         self.local_y: float = ly
         self.delta_x: Optional[float] = dx
         self.delta_y: Optional[float] = dy
+
+
+class ScrollEvent(ControlEvent):
+    def __init__(self, gx, gy, lx, ly, dx=None, dy=None) -> None:
+        self.global_x: float = gx
+        self.global_y: float = gy
+        self.local_x: float = lx
+        self.local_y: float = ly
+        self.scroll_delta_x: Optional[float] = dx
+        self.scroll_delta_y: Optional[float] = dy

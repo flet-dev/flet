@@ -9,6 +9,7 @@ from flet.types import (
     AnimationValue,
     BorderRadiusValue,
     OffsetValue,
+    ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
@@ -38,6 +39,7 @@ class Image(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -77,6 +79,7 @@ class Image(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,

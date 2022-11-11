@@ -12,9 +12,7 @@ environment:
   GO_VERSION: 1.19
   GO_TAGS: --tags release
   python_stack: python 3.10
-  FLUTTER_WINDOWS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_3.3.3-stable.zip
   FLUTTER_MACOS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.3.3-stable.zip
-  FLUTTER_LINUX_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.3.3-stable.tar.xz
   GITHUB_TOKEN:
     secure: doX0dwjWhBmT56aJqR9NCbtMFJpDpdYxPCIB4vQoHfSR+nTa+pLCo6Yv5qWpD/90
   DOCKER_REGISTRY_USER:
@@ -49,6 +47,11 @@ environment:
       python_stack: ""
 
     - job_name: Build Flet for iOS
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+
+    - job_name: Build Flet Studio for iOS
       job_group: build_flet
       job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
@@ -108,13 +111,7 @@ for:
         - job_name: Build Flet package for Flutter
 
     install:
-      # Flutter SDK
-      - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
-      - tar -xf "$HOME/flutter_linux_stable.tar.xz" -C $HOME
-      - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter channel stable
       - flutter upgrade
-      - flutter doctor
 
     build_script:
       - cd package
@@ -133,13 +130,6 @@ for:
       VC_REDIST_DIR: 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Redist\MSVC\14.29.30133\x64\Microsoft.VC142.CRT'
 
     install:
-      - ps: |
-          Write-Host "Downloading Flutter SDK..."
-          (New-Object Net.WebClient).DownloadFile($env:FLUTTER_WINDOWS_URL, "$env:TEMP\flutter_windows_stable.zip")
-          Write-Host "Unpacking Flutter SDK..."
-          7z x "$env:TEMP\flutter_windows_stable.zip" -o"$env:SystemDrive\" | Out-Null
-      - set PATH=C:\flutter\bin;%PATH%
-      - flutter channel stable
       - flutter upgrade
 
     build_script:
@@ -216,15 +206,9 @@ for:
         - job_name: Build Flet for Linux
 
     install:
-      # Flutter SDK
       - sudo apt update
       - sudo apt install -y libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
-      - tar -xf "$HOME/flutter_linux_stable.tar.xz" -C $HOME
-      - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter channel stable
       - flutter upgrade
-      - flutter doctor
 
     build_script:
       - cd client
@@ -284,6 +268,50 @@ for:
         APPVEYOR_REPO_TAG: true
 
   # ======================================
+  #      Build Flet Studio for iOS
+  # ======================================
+
+  - matrix:
+      only:
+        - job_name: Build Flet Studio for iOS
+
+    install:
+      - export LANG=en_US.UTF-8
+      - curl $FLUTTER_MACOS_URL -o "$HOME/flutter_macos_stable.zip"
+      - unzip -qq "$HOME/flutter_macos_stable.zip" -d $HOME
+      - export PATH="$PATH:$HOME/flutter/bin"
+      - flutter channel stable
+      - flutter upgrade
+      - flutter doctor
+
+    build_script:
+      - cd studio/client/ios
+      - ruby --version
+      - gem install bundler:2.3.11
+      - bundle install
+      - sh: |
+          export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
+          if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
+            bundle exec fastlane build_flutter      
+          elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+            if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then
+                export FLET_PACKAGE_VERSION="${BASH_REMATCH[1]}"
+                echo "FLET_PACKAGE_VERSION: ${FLET_PACKAGE_VERSION}"
+                export ITMSTRANSPORTER_FORCE_ITMS_PACKAGE_UPLOAD=true
+                bundle exec fastlane upload_appstore
+            else
+                echo "Cannot extract version information from a tag."
+                exit 1
+            fi
+          else
+            bundle exec fastlane build_ipa
+          fi
+
+    artifacts:
+      - path: studio/client/build/flet-studio.ipa
+        name: flet_studio_ios
+
+  # ======================================
   #      Build Flet View for iOS
   # ======================================
 
@@ -337,13 +365,7 @@ for:
         - job_name: Build Fletd
 
     install:
-      # Flutter SDK
-      - curl $FLUTTER_LINUX_URL -o "$HOME/flutter_linux_stable.tar.xz"
-      - tar -xf "$HOME/flutter_linux_stable.tar.xz" -C $HOME
-      - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter channel stable
       - flutter upgrade
-      - flutter doctor
 
       # Go and GoReleaser
       - gvm install go${GO_VERSION} -B

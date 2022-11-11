@@ -370,7 +370,7 @@ def _open_flet_view(page_url, hidden):
 
     if is_windows():
         flet_exe = "flet.exe"
-        temp_flet_dir = Path(tempfile.gettempdir()).joinpath(f"flet-{version.version}")
+        temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
         # check if flet_view.exe exists in "bin" directory (user mode)
         p = Path(__file__).parent.joinpath("bin", "flet", flet_exe)
@@ -394,7 +394,7 @@ def _open_flet_view(page_url, hidden):
         args = [flet_path, page_url]
     elif is_macos():
         # build version-specific path to Flet.app
-        temp_flet_dir = Path(tempfile.gettempdir()).joinpath(f"flet-{version.version}")
+        temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
         # check if flet_view.app exists in a temp directory
         if not temp_flet_dir.exists():
@@ -415,7 +415,7 @@ def _open_flet_view(page_url, hidden):
         args = ["open", str(app_path), "-n", "-W", "--args", page_url]
     elif is_linux():
         # build version-specific path to flet folder
-        temp_flet_dir = Path(tempfile.gettempdir()).joinpath(f"flet-{version.version}")
+        temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
         # check if flet_view.app exists in a temp directory
         if not temp_flet_dir.exists():
@@ -460,7 +460,7 @@ def _download_fletd():
     flet_exe = "fletd.exe" if is_windows() else "fletd"
 
     # build version-specific path to Fletd
-    temp_fletd_dir = Path(tempfile.gettempdir()).joinpath(f"fletd-{ver}")
+    temp_fletd_dir = Path.home().joinpath(".flet", "bin", f"fletd-{ver}")
 
     if not temp_fletd_dir.exists():
         logging.info(f"Downloading Fletd v{ver} to {temp_fletd_dir}")

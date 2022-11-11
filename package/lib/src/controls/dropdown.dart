@@ -11,6 +11,7 @@ import '../models/control_children_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 import 'form_field.dart';
 
@@ -83,9 +84,10 @@ class _DropdownControlState extends State<DropdownControl> {
           var focusedColor = HexColor.fromString(Theme.of(context),
               widget.control.attrString("focusedColor", "")!);
 
-          TextStyle? textStyle;
+          TextStyle? textStyle =
+              parseTextStyle(Theme.of(context), widget.control, "textStyle");
           if (textSize != null || color != null || focusedColor != null) {
-            textStyle = TextStyle(
+            textStyle = (textStyle ?? const TextStyle()).copyWith(
                 fontSize: textSize,
                 color: (_focused ? focusedColor ?? color : color) ??
                     Theme.of(context).colorScheme.onSurface);

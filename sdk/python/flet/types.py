@@ -1,6 +1,8 @@
 from enum import Enum
 from typing import Union
 
+from beartype.typing import Dict
+
 from flet.animation import Animation
 from flet.border_radius import BorderRadius
 from flet.margin import Margin
@@ -46,3 +48,6 @@ FontWeight = Literal[
 class BoxShape(Enum):
     RECTANGLE = "rectangle"
     CIRCLE = "circle"
+
+
+ResponsiveNumber = Union[Dict[str, Union[int, float]], int, float]

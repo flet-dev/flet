@@ -41,6 +41,10 @@ class FletAppServices extends InheritedWidget {
     return false;
   }
 
+  void close() {
+    ws.close();
+  }
+
   static FletAppServices of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<FletAppServices>()!;
 }

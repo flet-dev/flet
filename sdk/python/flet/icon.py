@@ -5,7 +5,13 @@ from beartype import beartype
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet.types import (
+    AnimationValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class Icon(ConstrainedControl):
@@ -14,6 +20,7 @@ class Icon(ConstrainedControl):
         name: Optional[str] = None,
         ref: Optional[Ref] = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -41,6 +48,7 @@ class Icon(ConstrainedControl):
             self,
             ref=ref,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
