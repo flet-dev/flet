@@ -24,11 +24,10 @@
 
 ## 0.1.62
 
-* Update pubspec.lock
-* GestureDetector and fixes (#459)
-* removed all problems except dart:html problem because it needs material html kind of thing (#461)
-* fix: ensure correct version is fetched in dev mode (#443)
-* Fix controls setter for empty list input (#454)
-* make ink=True behavior consistent with ink=False (#427)
+* GestureDetector and other fixes ([#459](https://github.com/flet-dev/flet/issues/459))
+* removed all problems except dart:html problem because it needs material html kind of thing ([#461](https://github.com/flet-dev/flet/issues/461))
+* fix: ensure correct version is fetched in dev mode ([#443](https://github.com/flet-dev/flet/issues/443))
+* Fix controls setter for empty list input ([#454](https://github.com/flet-dev/flet/issues/454))
+* make ink=True behavior consistent with ink=False ([#427](https://github.com/flet-dev/flet/issues/427))
 
 ## [0.1.0](https://pypi.org/project/flet/0.1.0) - Mar 30, 2022
