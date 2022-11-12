@@ -570,6 +570,9 @@ class _PageControlState extends State<PageControl> {
             if (ctrl.type == "appbar") {
               appBar = ctrl;
               continue;
+            } else if (ctrl.type == "floatingactionbutton") {
+              fab = ctrl;
+              continue;
             } else if (ctrl.type == "navigationbar") {
               navBar = ctrl;
               continue;
