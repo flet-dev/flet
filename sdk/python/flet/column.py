@@ -11,7 +11,13 @@ from flet.control import (
     ScrollMode,
 )
 from flet.ref import Ref
-from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet.types import (
+    AnimationValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class Column(ConstrainedControl):
@@ -26,6 +32,7 @@ class Column(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -63,6 +70,7 @@ class Column(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,

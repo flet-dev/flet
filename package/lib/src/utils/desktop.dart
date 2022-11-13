@@ -67,6 +67,13 @@ Future setWindowMinimizability(bool minimizable) async {
   }
 }
 
+Future setWindowMaximizability(bool maximizable) async {
+  if (isDesktop()) {
+    debugPrint("setWindowMaximizability()");
+    await windowManager.setMaximizable(maximizable);
+  }
+}
+
 Future setWindowResizability(bool resizable) async {
   if (isDesktop()) {
     debugPrint("setWindowResizability()");

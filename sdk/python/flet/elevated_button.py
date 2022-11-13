@@ -6,7 +6,13 @@ from flet.buttons import ButtonStyle
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet.types import (
+    AnimationValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class ElevatedButton(ConstrainedControl):
@@ -21,6 +27,7 @@ class ElevatedButton(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -62,6 +69,7 @@ class ElevatedButton(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
@@ -205,6 +213,7 @@ class ElevatedButton(ConstrainedControl):
     @on_long_press.setter
     def on_long_press(self, handler):
         self._add_event_handler("long_press", handler)
+        self._set_attr("onLongPress", True if handler is not None else None)
 
     # content
     @property
@@ -234,7 +243,4 @@ class ElevatedButton(ConstrainedControl):
     @on_hover.setter
     def on_hover(self, handler):
         self._add_event_handler("hover", handler)
-        if handler is not None:
-            self._set_attr("onHover", True)
-        else:
-            self._set_attr("onHover", None)
+        self._set_attr("onHover", True if handler is not None else None)

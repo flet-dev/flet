@@ -19,6 +19,7 @@ from flet.types import (
     MarginValue,
     OffsetValue,
     PaddingValue,
+    ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
@@ -51,6 +52,7 @@ class Container(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -101,6 +103,7 @@ class Container(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
@@ -371,10 +374,7 @@ class Container(ConstrainedControl):
     @on_long_press.setter
     def on_long_press(self, handler):
         self._add_event_handler("long_press", handler)
-        if handler is not None:
-            self._set_attr("onLongPress", True)
-        else:
-            self._set_attr("onLongPress", None)
+        self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_hover
     @property

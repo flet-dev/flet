@@ -5,11 +5,12 @@ from difflib import SequenceMatcher
 from typing import TYPE_CHECKING, Any, Union
 
 from beartype import beartype
-from beartype.typing import List, Optional
+from beartype.typing import Dict, List, Optional
 
 from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.protocol import Command
 from flet.ref import Ref
+from flet.types import ResponsiveNumber
 
 try:
     from typing import Literal
@@ -94,6 +95,7 @@ class Control:
         self,
         ref: Optional[Ref] = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
@@ -107,6 +109,7 @@ class Control:
         self._id = None
         self.__uid: Optional[str] = None
         self.expand = expand
+        self.col = col
         self.opacity = opacity
         self.tooltip = tooltip
         self.visible = visible
@@ -125,7 +128,7 @@ class Control:
         pass
 
     def _before_build_command(self):
-        pass
+        self._set_attr_json("col", self._wrap_attr_dict(self.__col))
 
     def did_mount(self):
         pass
@@ -207,6 +210,11 @@ class Control:
             else None
         )
 
+    def _wrap_attr_dict(self, value):
+        if value is None or isinstance(value, Dict):
+            return value
+        return {"": value}
+
     # event_handlers
     @property
     def event_handlers(self):
@@ -252,6 +260,16 @@ class Control:
         if value and isinstance(value, bool):
             value = 1
         self._set_attr("expand", value if value else None)
+
+    # col
+    @property
+    def col(self) -> Optional[ResponsiveNumber]:
+        return self.__col
+
+    @col.setter
+    @beartype
+    def col(self, value: Optional[ResponsiveNumber]):
+        self.__col = value
 
     # opacity
     @property

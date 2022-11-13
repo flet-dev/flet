@@ -147,7 +147,7 @@ packages:
       path: "../package"
       relative: true
     source: path
-    version: "0.1.62"
+    version: "0.1.64"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -158,6 +158,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_highlight:
+    dependency: transitive
+    description:
+      name: flutter_highlight
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0"
   flutter_launcher_icons_maker:
     dependency: "direct dev"
     description:
@@ -196,12 +203,10 @@ packages:
   flutter_svg:
     dependency: transitive
     description:
-      path: "."
-      ref: flet-fixes
-      resolved-ref: "71166dc07d39b686f117319a04479d26e44c2a24"
-      url: "https://github.com/flet-dev/flutter_svg.git"
-    source: git
-    version: "1.1.5"
+      name: flutter_svg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.6"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -217,6 +222,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  highlight:
+    dependency: transitive
+    description:
+      name: highlight
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0"
   http:
     dependency: transitive
     description:
@@ -397,6 +409,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
+  sensors_plus:
+    dependency: transitive
+    description:
+      name: sensors_plus
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.1"
+  sensors_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: sensors_plus_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.3"
+  sensors_plus_web:
+    dependency: transitive
+    description:
+      name: sensors_plus_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
+  shake:
+    dependency: transitive
+    description:
+      name: shake
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   shared_preferences:
     dependency: transitive
     description:

@@ -4,6 +4,7 @@ from flet.buttons import ButtonStyle
 from flet.control import Control, OptionalNumber
 from flet.elevated_button import ElevatedButton
 from flet.ref import Ref
+from flet.types import ResponsiveNumber
 
 
 class FilledButton(ElevatedButton):
@@ -14,6 +15,7 @@ class FilledButton(ElevatedButton):
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
@@ -37,6 +39,7 @@ class FilledButton(ElevatedButton):
             width=width,
             height=height,
             expand=expand,
+            col=col,
             opacity=opacity,
             tooltip=tooltip,
             visible=visible,

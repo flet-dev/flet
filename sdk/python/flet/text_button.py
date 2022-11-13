@@ -6,7 +6,13 @@ from flet.buttons import ButtonStyle
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet.types import (
+    AnimationValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class TextButton(ConstrainedControl):
@@ -21,6 +27,7 @@ class TextButton(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -59,6 +66,7 @@ class TextButton(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
@@ -154,6 +162,7 @@ class TextButton(ConstrainedControl):
     @on_long_press.setter
     def on_long_press(self, handler):
         self._add_event_handler("long_press", handler)
+        self._set_attr("onLongPress", True if handler is not None else None)
 
     # content
     @property

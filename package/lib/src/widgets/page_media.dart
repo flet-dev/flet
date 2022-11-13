@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import '../flet_app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/page_media_view_model.dart';
 import '../utils/desktop.dart';

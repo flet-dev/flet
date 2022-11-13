@@ -499,7 +499,7 @@ func (c *Client) decryptSensitiveData(encrypted string, clientIP string) (string
 		return "", err
 	}
 	pair := strings.Split(string(plain), "|")
-	if pair[1] != clientIP {
+	if pair[1] != "" && pair[1] != clientIP {
 		return "", fmt.Errorf("IP address does not match (expected: %s, actual: %s)", pair[1], clientIP)
 	}
 	return pair[0], nil

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
@@ -39,6 +40,18 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
   int _hoverTimestamp = DateTime.now().millisecondsSinceEpoch;
   double _hoverX = 0;
   double _hoverY = 0;
+  Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,12 +112,16 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     var onScaleStart = widget.control.attrBool("onScaleStart", false)!;
     var onScaleUpdate = widget.control.attrBool("onScaleUpdate", false)!;
     var onScaleEnd = widget.control.attrBool("onScaleEnd", false)!;
+    var onMultiTap = widget.control.attrBool("onMultiTap", false)!;
+    var onMultiLongPress = widget.control.attrBool("onMultiLongPress", false)!;
+    var multiTapTouches = widget.control.attrInt("multiTapTouches", 0)!;
+    var onScroll = widget.control.attrBool("onScroll", false)!;
 
     var content = contentCtrls.isNotEmpty
         ? createControl(widget.control, contentCtrls.first.id, disabled)
         : null;
 
-    Widget? result;
+    Widget? result = content;
 
     var dragInterval = widget.control.attrInt("dragInterval", 0)!;
 
@@ -254,7 +271,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       }
     }
 
-    var gd = (onTap |
+    result = (onTap |
             onTapDown |
             onTapUp |
             onSecondaryTap |
@@ -279,6 +296,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
             onScaleUpdate |
             onScaleEnd)
         ? GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: onTap
                 ? () {
                     sendEvent("tap", "");
@@ -480,8 +498,58 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                     });
                   }
                 : null,
-            child: content)
-        : null;
+            child: result)
+        : result;
+
+    result = (onMultiTap || onMultiLongPress)
+        ? RawGestureDetector(
+            behavior: HitTestBehavior.translucent,
+            gestures: {
+              MultiTouchGestureRecognizer: GestureRecognizerFactoryWithHandlers<
+                  MultiTouchGestureRecognizer>(
+                () => MultiTouchGestureRecognizer(),
+                (MultiTouchGestureRecognizer instance) {
+                  instance.minNumberOfTouches = multiTapTouches;
+                  instance.onMultiTap = (correctNumberOfTouches) {
+                    if (onMultiTap) {
+                      sendEvent("multi_tap", correctNumberOfTouches.toString());
+                    }
+                    if (onMultiLongPress) {
+                      if (correctNumberOfTouches) {
+                        _debounce =
+                            Timer(const Duration(milliseconds: 1000), () {
+                          sendEvent("multi_long_press", "");
+                        });
+                      } else if (_debounce?.isActive ?? false) {
+                        _debounce!.cancel();
+                      }
+                    }
+                  };
+                },
+              ),
+            },
+            child: result,
+          )
+        : result;
+
+    result = onScroll
+        ? Listener(
+            behavior: HitTestBehavior.translucent,
+            onPointerSignal: (details) {
+              if (details is PointerScrollEvent) {
+                sendEvent("scroll", {
+                  "gx": details.position.dx,
+                  "gy": details.position.dy,
+                  "lx": details.localPosition.dx,
+                  "ly": details.localPosition.dy,
+                  "dx": details.scrollDelta.dx,
+                  "dy": details.scrollDelta.dy,
+                });
+              }
+            },
+            child: result,
+          )
+        : result;
 
     var mouseCursor = widget.control.attrString("mouseCursor");
     result = ((mouseCursor != null) || onHover || onEnter || onExit)
@@ -505,11 +573,11 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                     });
                   }
                 : null,
-            child: gd ?? content,
+            child: result,
           )
-        : gd;
+        : result;
 
-    if (result == null) {
+    if (result == null || result == content) {
       return const ErrorControl(
           "GestureDetector should have at least one event handler defined.");
     }
@@ -596,3 +664,56 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     }
   }
 }
+
+class MultiTouchGestureRecognizer extends MultiTapGestureRecognizer {
+  late MultiTouchGestureRecognizerCallback onMultiTap;
+  var numberOfTouches = 0;
+  int minNumberOfTouches = 0;
+
+  MultiTouchGestureRecognizer() {
+    super.onTapDown = (pointer, details) => addTouch(pointer, details);
+    super.onTapUp = (pointer, details) => removeTouch(pointer, details);
+    super.onTapCancel = (pointer) => cancelTouch(pointer);
+    super.onTap = (pointer) => captureDefaultTap(pointer);
+  }
+
+  void addTouch(int pointer, TapDownDetails details) {
+    //debugPrint("Add touch: $pointer");
+    numberOfTouches++;
+    if (numberOfTouches == minNumberOfTouches) {
+      onMultiTap(true);
+      numberOfTouches = 0;
+    }
+  }
+
+  void removeTouch(int pointer, TapUpDetails details) {
+    onRemoveTouch(pointer);
+  }
+
+  void cancelTouch(int pointer) {
+    onRemoveTouch(pointer);
+  }
+
+  void onRemoveTouch(int pointer) {
+    //debugPrint("Remove touch: $pointer");
+    onMultiTap(false);
+    numberOfTouches = 0;
+  }
+
+  void captureDefaultTap(int pointer) {}
+
+  @override
+  set onTapDown(onTapDown) {}
+
+  @override
+  set onTapUp(onTapUp) {}
+
+  @override
+  set onTapCancel(onTapCancel) {}
+
+  @override
+  set onTap(onTap) {}
+}
+
+typedef MultiTouchGestureRecognizerCallback = void Function(
+    bool correctNumberOfTouches);

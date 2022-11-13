@@ -1,11 +1,19 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
+from beartype.typing import Dict
 
+from flet.buttons import MaterialState
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet.types import (
+    AnimationValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 try:
     from typing import Literal
@@ -27,6 +35,7 @@ class Switch(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -50,6 +59,12 @@ class Switch(ConstrainedControl):
         label_position: LabelPosition = None,
         value: Optional[bool] = None,
         autofocus: Optional[bool] = None,
+        active_color: Optional[str] = None,
+        active_track_color: Optional[str] = None,
+        inactive_thumb_color: Optional[str] = None,
+        inactive_track_color: Optional[str] = None,
+        thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
+        track_color: Union[None, str, Dict[MaterialState, str]] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -64,6 +79,7 @@ class Switch(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
@@ -85,12 +101,23 @@ class Switch(ConstrainedControl):
         self.label = label
         self.label_position = label_position
         self.autofocus = autofocus
+        self.active_color = active_color
+        self.active_track_color = active_track_color
+        self.inactive_thumb_color = inactive_thumb_color
+        self.inactive_track_color = inactive_track_color
+        self.thumb_color = thumb_color
+        self.track_color = track_color
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
 
     def _get_control_name(self):
         return "switch"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("thumbColor", self._wrap_attr_dict(self.__thumb_color))
+        self._set_attr_json("trackColor", self._wrap_attr_dict(self.__track_color))
 
     # value
     @property
@@ -130,6 +157,62 @@ class Switch(ConstrainedControl):
     @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # active_color
+    @property
+    def active_color(self):
+        return self._get_attr("activeColor")
+
+    @active_color.setter
+    def active_color(self, value):
+        self._set_attr("activeColor", value)
+
+    # active_track_color
+    @property
+    def active_track_color(self):
+        return self._get_attr("activeTrackColor")
+
+    @active_track_color.setter
+    def active_track_color(self, value):
+        self._set_attr("activeTrackColor", value)
+
+    # inactive_thumb_color
+    @property
+    def inactive_thumb_color(self):
+        return self._get_attr("inactiveThumbColor")
+
+    @inactive_thumb_color.setter
+    def inactive_thumb_color(self, value):
+        self._set_attr("inactiveThumbColor", value)
+
+    # inactive_track_color
+    @property
+    def inactive_track_color(self):
+        return self._get_attr("inactiveTrackColor")
+
+    @inactive_track_color.setter
+    def inactive_track_color(self, value):
+        self._set_attr("inactiveTrackColor", value)
+
+    # thumb_color
+    @property
+    def thumb_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__thumb_color
+
+    @thumb_color.setter
+    @beartype
+    def thumb_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__thumb_color = value
+
+    # track_color
+    @property
+    def track_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__track_color
+
+    @track_color.setter
+    @beartype
+    def track_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__track_color = value
 
     # on_change
     @property

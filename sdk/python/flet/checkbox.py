@@ -7,7 +7,13 @@ from flet.buttons import MaterialState
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet.types import (
+    AnimationValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 try:
     from typing import Literal
@@ -29,6 +35,7 @@ class Checkbox(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -69,6 +76,7 @@ class Checkbox(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
@@ -102,10 +110,7 @@ class Checkbox(ConstrainedControl):
 
     def _before_build_command(self):
         super()._before_build_command()
-        fc = self.__fill_color
-        if fc is not None and not isinstance(fc, Dict):
-            fc = {"": fc}
-        self._set_attr_json("fillColor", fc)
+        self._set_attr_json("fillColor", self._wrap_attr_dict(self.__fill_color))
 
     # value
     @property
