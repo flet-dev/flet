@@ -8,6 +8,7 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/colors.dart';
 import 'create_control.dart';
 
 class SliderControl extends StatefulWidget {
@@ -108,6 +109,12 @@ class _SliderControlState extends State<SliderControl> {
               max: max,
               divisions: divisions,
               label: label?.replaceAll("{value}", _value.toString()),
+              activeColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("activeColor", "")!),
+              inactiveColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("inactiveColor", "")!),
+              thumbColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("thumbColor", "")!),
               onChanged: !disabled
                   ? (double value) {
                       onChange(value, dispatch);
