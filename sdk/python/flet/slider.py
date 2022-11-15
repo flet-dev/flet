@@ -51,6 +51,9 @@ class Slider(ConstrainedControl):
         max: OptionalNumber = None,
         divisions: Optional[int] = None,
         autofocus: Optional[bool] = None,
+        active_color: Optional[str] = None,
+        inactive_color: Optional[str] = None,
+        thumb_color: Optional[str] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -89,6 +92,9 @@ class Slider(ConstrainedControl):
         self.max = max
         self.divisions = divisions
         self.autofocus = autofocus
+        self.active_color = active_color
+        self.inactive_color = inactive_color
+        self.thumb_color = thumb_color
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
@@ -154,6 +160,33 @@ class Slider(ConstrainedControl):
     @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # active_color
+    @property
+    def active_color(self):
+        return self._get_attr("activeColor")
+
+    @active_color.setter
+    def active_color(self, value):
+        self._set_attr("activeColor", value)
+
+    # inactive_color
+    @property
+    def inactive_color(self):
+        return self._get_attr("inactiveColor")
+
+    @inactive_color.setter
+    def inactive_color(self, value):
+        self._set_attr("inactiveColor", value)
+
+    # thumb_color
+    @property
+    def thumb_color(self):
+        return self._get_attr("thumbColor")
+
+    @thumb_color.setter
+    def thumb_color(self, value):
+        self._set_attr("thumbColor", value)
 
     # on_change
     @property
