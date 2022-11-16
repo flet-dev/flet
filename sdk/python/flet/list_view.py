@@ -13,6 +13,7 @@ from flet.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.padding import ZERO_PADDING
 
 
 class ListView(ConstrainedControl):
@@ -51,7 +52,7 @@ class ListView(ConstrainedControl):
         item_extent: OptionalNumber = None,
         first_item_prototype: Optional[bool] = None,
         divider_thickness: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: PaddingValue = ZERO_PADDING,
         auto_scroll: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(

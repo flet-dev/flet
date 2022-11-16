@@ -9,6 +9,7 @@ class Padding:
     right: Union[float, int]
     bottom: Union[float, int]
 
+ZERO_PADDING = Padding(0, 0, 0, 0)
 
 def all(value: float):
     return Padding(left=value, top=value, right=value, bottom=value)

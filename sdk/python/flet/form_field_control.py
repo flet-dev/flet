@@ -15,6 +15,7 @@ from flet.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.padding import ZERO_PADDING
 
 
 class FormFieldControl(ConstrainedControl):
@@ -63,7 +64,7 @@ class FormFieldControl(ConstrainedControl):
         focused_bgcolor: Optional[str] = None,
         focused_border_width: OptionalNumber = None,
         focused_border_color: Optional[str] = None,
-        content_padding: PaddingValue = None,
+        content_padding: PaddingValue = ZERO_PADDING,
         filled: Optional[bool] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,

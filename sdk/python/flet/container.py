@@ -24,6 +24,8 @@ from flet.types import (
     ScaleValue,
 )
 
+from flet.padding import ZERO_PADDING
+
 try:
     from typing import Literal
 except:
@@ -72,7 +74,7 @@ class Container(ConstrainedControl):
         #
         # Specific
         #
-        padding: PaddingValue = None,
+        padding: PaddingValue = ZERO_PADDING,
         margin: MarginValue = None,
         alignment: Optional[Alignment] = None,
         bgcolor: Optional[str] = None,

@@ -12,6 +12,7 @@ from flet.control import (
 from flet.floating_action_button import FloatingActionButton
 from flet.navigation_bar import NavigationBar
 from flet.types import PaddingValue
+from flet.padding import ZERO_PADDING
 
 
 class View(Control):
@@ -25,7 +26,7 @@ class View(Control):
         vertical_alignment: MainAxisAlignment = None,
         horizontal_alignment: CrossAxisAlignment = None,
         spacing: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: PaddingValue = ZERO_PADDING,
         bgcolor: Optional[str] = None,
         scroll: ScrollMode = None,
         auto_scroll: Optional[bool] = None,

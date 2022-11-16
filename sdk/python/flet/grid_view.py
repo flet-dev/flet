@@ -13,6 +13,7 @@ from flet.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.padding import ZERO_PADDING
 
 
 class GridView(ConstrainedControl):
@@ -52,7 +53,7 @@ class GridView(ConstrainedControl):
         spacing: OptionalNumber = None,
         run_spacing: OptionalNumber = None,
         child_aspect_ratio: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: PaddingValue = ZERO_PADDING,
     ):
         ConstrainedControl.__init__(
             self,

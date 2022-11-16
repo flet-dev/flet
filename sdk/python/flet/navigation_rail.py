@@ -14,6 +14,7 @@ from flet.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.padding import ZERO_PADDING
 
 try:
     from typing import Literal
@@ -33,7 +34,7 @@ class NavigationRailDestination(Control):
         selected_icon_content: Optional[Control] = None,
         label: Optional[str] = None,
         label_content: Optional[Control] = None,
-        padding: PaddingValue = None,
+        padding: PaddingValue = ZERO_PADDING,
     ):
         Control.__init__(self, ref=ref)
         self.label = label

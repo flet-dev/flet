@@ -6,6 +6,7 @@ from flet.buttons import OutlinedBorder
 from flet.control import Control, MainAxisAlignment
 from flet.ref import Ref
 from flet.types import PaddingValue
+from flet.padding import ZERO_PADDING
 
 
 class AlertDialog(Control):
@@ -21,11 +22,11 @@ class AlertDialog(Control):
         open: bool = False,
         modal: bool = False,
         title: Optional[Control] = None,
-        title_padding: PaddingValue = None,
+        title_padding: PaddingValue = ZERO_PADDING,
         content: Optional[Control] = None,
-        content_padding: PaddingValue = None,
+        content_padding: PaddingValue = ZERO_PADDING,
         actions: Optional[List[Control]] = None,
-        actions_padding: PaddingValue = None,
+        actions_padding: PaddingValue = ZERO_PADDING,
         actions_alignment: MainAxisAlignment = None,
         shape: Optional[OutlinedBorder] = None,
         on_dismiss=None,

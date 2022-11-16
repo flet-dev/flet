@@ -13,6 +13,7 @@ from flet.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.padding import ZERO_PADDING
 
 
 class ListTile(ConstrainedControl):
@@ -46,7 +47,7 @@ class ListTile(ConstrainedControl):
         #
         # Specific
         #
-        content_padding: PaddingValue = None,
+        content_padding: PaddingValue = ZERO_PADDING,
         leading: Optional[Control] = None,
         title: Optional[Control] = None,
         subtitle: Optional[Control] = None,
