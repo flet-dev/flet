@@ -119,9 +119,7 @@ for:
           $v = "$($cv.major).$($cv.minor+1).0.dev$($env:APPVEYOR_BUILD_NUMBER)"
         }
         Update-AppveyorBuild -Version $v
-
-    install:
-      - flutter upgrade
+    - flutter upgrade
 
     build_script:
       - cd package
