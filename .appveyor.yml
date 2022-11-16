@@ -110,7 +110,7 @@ for:
       only:
         - job_name: Build Flet package for Flutter
 
-    init:
+    install:
     - ps: |
         if ($env:APPVEYOR_REPO_TAG_NAME) {
           $v = $env:APPVEYOR_REPO_TAG_NAME.replace("v", "")
