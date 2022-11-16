@@ -110,6 +110,16 @@ for:
       only:
         - job_name: Build Flet package for Flutter
 
+    init:
+    - ps: |
+        if ($env:APPVEYOR_REPO_TAG_NAME) {
+          $v = $env:APPVEYOR_REPO_TAG_NAME.replace("v", "")
+        } else {
+          $cv = [version](git describe --abbrev=0).substring(1)
+          $v = "$($cv.major).$($cv.minor+1).0.dev$($env:APPVEYOR_BUILD_NUMBER)"
+        }
+        Update-AppveyorBuild -Version $v
+
     install:
       - flutter upgrade
 
