@@ -1,4 +1,74 @@
+from typing import Optional
+
+from beartype import beartype
+from beartype.typing import List
+
 from flet.control import Control
+from flet.ref import Ref
+
+
+class DataColumn(Control):
+    def __init__(
+        self,
+        label: Control,
+        ref=None,
+        numeric: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+        on_sort=None,
+    ):
+        Control.__init__(self, ref=ref)
+
+        self.label = label
+        self.numeric = numeric
+        self.tooltip = tooltip
+        self.on_sort = on_sort
+
+    def _get_control_name(self):
+        return "c"
+
+    def _get_children(self):
+        children = []
+        if self.__label:
+            self.__label._set_attr_internal("n", "label")
+            children.append(self.__label)
+        return children
+
+    # label
+    @property
+    def label(self):
+        return self.__label
+
+    @label.setter
+    def label(self, value):
+        self.__label = value
+
+    # numeric
+    @property
+    def numeric(self) -> Optional[bool]:
+        return self._get_attr("numeric", data_type="bool", def_value=False)
+
+    @numeric.setter
+    @beartype
+    def numeric(self, value: Optional[bool]):
+        self._set_attr("numeric", value)
+
+    # tooltip
+    @property
+    def tooltip(self):
+        return self._get_attr("tooltip")
+
+    @tooltip.setter
+    def tooltip(self, value):
+        self._set_attr("tooltip", value)
+
+    # on_sort
+    @property
+    def on_sort(self):
+        return self._get_event_handler("sort")
+
+    @on_sort.setter
+    def on_sort(self, handler):
+        self._add_event_handler("sort", handler)
 
 
 class Item(Control):
