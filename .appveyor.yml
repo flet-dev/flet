@@ -302,15 +302,7 @@ for:
           if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
             bundle exec fastlane build_flutter      
           elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-            if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then
-                export FLET_PACKAGE_VERSION="${BASH_REMATCH[1]}"
-                echo "FLET_PACKAGE_VERSION: ${FLET_PACKAGE_VERSION}"
-                export ITMSTRANSPORTER_FORCE_ITMS_PACKAGE_UPLOAD=true
-                bundle exec fastlane upload_appstore
-            else
-                echo "Cannot extract version information from a tag."
-                exit 1
-            fi
+            bundle exec fastlane upload_appstore
           else
             bundle exec fastlane build_ipa
           fi
@@ -344,21 +336,7 @@ for:
       - bundle install --path vendor/bundle
       - sh: |
           export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
-          if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
-            bundle exec fastlane build_flutter      
-          elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-            if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then
-                export FLET_PACKAGE_VERSION="${BASH_REMATCH[1]}"
-                echo "FLET_PACKAGE_VERSION: ${FLET_PACKAGE_VERSION}"
-                export ITMSTRANSPORTER_FORCE_ITMS_PACKAGE_UPLOAD=true
-                bundle exec fastlane upload_appstore
-            else
-                echo "Cannot extract version information from a tag."
-                exit 1
-            fi
-          else
-            bundle exec fastlane build_ipa
-          fi
+          bundle exec fastlane build_ipa
 
     artifacts:
       - path: client/build/flet.ipa
@@ -442,31 +420,17 @@ for:
     build_script:
       - ps: |
           $ErrorActionPreference = "Stop"
+          $ver = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
 
-          if ($env:APPVEYOR_REPO_TAG -eq 'true') {
-            # release mode
+          # if ($env:APPVEYOR_REPO_TAG -eq 'true') {
+          #   # release mode
+          #   $env:TWINE_PASSWORD = $env:pypi_key
+          # } else {
+          #   # build mode
+          #   $env:TWINE_PASSWORD = $env:test_pypi_key
+          #   $env:TWINE_REPOSITORY = 'testpypi'
+          # }
 
-            # version
-            $ver = $env:APPVEYOR_REPO_TAG_NAME
-            if ($ver.StartsWith('v')) { $ver = $ver.Substring(1) }
-
-            # prerelease moniker
-            $idx = $ver.indexOf('-')
-            if ($idx -ne -1) {
-              $prerelease = $ver.Substring($idx + 1)
-              $ver = $ver.Substring(0, $idx)
-            }
-            $env:TWINE_PASSWORD = $env:pypi_key
-          } else {
-
-            # build mode
-            $ver = $env:APPVEYOR_BUILD_VERSION
-            $env:TWINE_PASSWORD = $env:test_pypi_key
-            $env:TWINE_REPOSITORY = 'testpypi'
-          }
-
-          # patch version
-          $env:PACKAGE_VERSION = $ver
           (Get-Content pyproject.toml).replace("version = `"0.1.0`"", "version = `"$ver`"") | Set-Content pyproject.toml
           (Get-Content flet/version.py).replace("version = `"`"", "version = `"$ver`"") | Set-Content flet/version.py
 
@@ -476,7 +440,7 @@ for:
 
       # publish package
       - sh: |
-          if [[ "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
+          if [[ "$APPVEYOR_REPO_BRANCH" == "main" ]]; then
               twine upload dist/*
           fi
 
