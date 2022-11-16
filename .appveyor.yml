@@ -90,11 +90,9 @@ environment:
       job_depends_on: python_tests
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
       TWINE_USERNAME: __token__
-      TWINE_NON_INTERACTIVE: true
-      pypi_key:
+      TWINE_PASSWORD:
         secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
-      test_pypi_key:
-        secure: cMCzqE9PcLcAiQ7POU0eVmLsXpy/n3WA9USIQNDKKbvUeajtURVITKpQ4MmwUXZAGv8giPPDUppiIf22AwIfx3O43tBVCp/HjvKNCbgY8sTaQBx60mLRbVBfD1F/+VfeuSTm57qtuSxUkZWF1JlWp8UQqIwCMHHDd0/wqDfmPNKj6U617Lp3vIfhsfgaDofspCKSGfG8+Z+6gcpmI+mA1wFHQB+l/BAbsGbgih8HiH6EzcuyIphxQKEA6r2XDPWE
+      TWINE_NON_INTERACTIVE: true
 
 matrix:
   fast_finish: true
@@ -432,8 +430,7 @@ for:
 
       # publish package
       - sh: |
-          if [[ "$APPVEYOR_REPO_BRANCH" == "main" ]]; then
-              $env:TWINE_PASSWORD = $env:pypi_key
+          if [[ "$APPVEYOR_REPO_BRANCH" == "main" && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
               twine upload dist/*
           fi
 
