@@ -116,7 +116,7 @@ for:
           $v = $env:APPVEYOR_REPO_TAG_NAME.replace("v", "")
         } else {
           $cv = [version](git describe --abbrev=0).substring(1)
-          $v = "$($cv.major).$($cv.minor+1).0.dev$($env:APPVEYOR_BUILD_NUMBER)"
+          $v = "$($cv.major).$($cv.minor+1).0+$($env:APPVEYOR_BUILD_NUMBER)"
         }
         Update-AppveyorBuild -Version $v
     - flutter upgrade
@@ -142,7 +142,7 @@ for:
 
     build_script:
       - cd client
-      - ps: if ($env:APPVEYOR_REPO_TAG_NAME -match "[0-9\.]+") { $env:FLET_VER=$Matches.0 } else { $env:FLET_VER=$env:APPVEYOR_BUILD_VERSION }
+      - ps: if ($env:APPVEYOR_REPO_TAG_NAME -match "[0-9\.]+") { $env:FLET_VER=$Matches.0 } else { $env:FLET_VER=$env:APPVEYOR_BUILD_VERSION.replace(".dev", "+") }
       - flutter build windows --build-name=%FLET_VER%
       - set RELEASE_DIR=build\windows\runner\Release
       - copy "%VC_REDIST_DIR%\msvcp140.dll" %RELEASE_DIR%
