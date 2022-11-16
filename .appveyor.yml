@@ -51,10 +51,10 @@ environment:
       job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
-    # - job_name: Build Flet Studio for iOS
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+    - job_name: Build Flet Studio for iOS
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     - job_name: Build Fletd
       job_group: build_flet
@@ -142,8 +142,7 @@ for:
 
     build_script:
       - cd client
-      - ps: if ($env:APPVEYOR_REPO_TAG_NAME -match "[0-9\.]+") { $env:FLET_VER=$Matches.0 } else { $env:FLET_VER=$env:APPVEYOR_BUILD_VERSION.replace(".dev", "+") }
-      - flutter build windows --build-name=%FLET_VER%
+      - flutter build windows --build-name=%APPVEYOR_BUILD_VERSION%
       - set RELEASE_DIR=build\windows\runner\Release
       - copy "%VC_REDIST_DIR%\msvcp140.dll" %RELEASE_DIR%
       - copy "%VC_REDIST_DIR%\vcruntime140.dll" %RELEASE_DIR%
@@ -189,8 +188,7 @@ for:
     build_script:
       # Flutter macOS client
       - cd client
-      - if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then export FLET_VER="${BASH_REMATCH[1]}"; else export FLET_VER="$APPVEYOR_BUILD_VERSION"; fi
-      - flutter build macos --build-name=$FLET_VER
+      - flutter build macos --build-name=$APPVEYOR_BUILD_VERSION
       - tar -czvf flet-macos-amd64.tar.gz -C build/macos/Build/Products/Release Flet.app
 
     artifacts:
@@ -220,8 +218,7 @@ for:
 
     build_script:
       - cd client
-      - if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then export FLET_VER="${BASH_REMATCH[1]}"; else export FLET_VER="$APPVEYOR_BUILD_VERSION"; fi
-      - flutter build linux --build-name=$FLET_VER
+      - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
       - mv build/linux/x64/release/bundle build/linux/x64/release/flet
       - tar -czvf flet-linux-amd64.tar.gz -C build/linux/x64/release flet
 
@@ -258,8 +255,7 @@ for:
 
     build_script:
       - cd client
-      - if [[ "$APPVEYOR_REPO_TAG_NAME" =~ ([0-9\.]+) ]]; then export FLET_VER="${BASH_REMATCH[1]}"; else export FLET_VER="$APPVEYOR_BUILD_VERSION"; fi
-      - flutter build linux --build-name=$FLET_VER
+      - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
       - mv build/linux/arm64/release/bundle build/linux/arm64/release/flet
       - tar -czvf flet-linux-arm64.tar.gz -C build/linux/arm64/release flet
 
@@ -336,7 +332,13 @@ for:
       - bundle install --path vendor/bundle
       - sh: |
           export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
-          bundle exec fastlane build_ipa
+          if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
+            bundle exec fastlane build_flutter      
+          elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
+            bundle exec fastlane upload_appstore
+          else
+            bundle exec fastlane build_ipa
+          fi
 
     artifacts:
       - path: client/build/flet.ipa
@@ -421,16 +423,6 @@ for:
       - ps: |
           $ErrorActionPreference = "Stop"
           $ver = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
-
-          # if ($env:APPVEYOR_REPO_TAG -eq 'true') {
-          #   # release mode
-          #   $env:TWINE_PASSWORD = $env:pypi_key
-          # } else {
-          #   # build mode
-          #   $env:TWINE_PASSWORD = $env:test_pypi_key
-          #   $env:TWINE_REPOSITORY = 'testpypi'
-          # }
-
           (Get-Content pyproject.toml).replace("version = `"0.1.0`"", "version = `"$ver`"") | Set-Content pyproject.toml
           (Get-Content flet/version.py).replace("version = `"`"", "version = `"$ver`"") | Set-Content flet/version.py
 
@@ -441,6 +433,7 @@ for:
       # publish package
       - sh: |
           if [[ "$APPVEYOR_REPO_BRANCH" == "main" ]]; then
+              $env:TWINE_PASSWORD = $env:pypi_key
               twine upload dist/*
           fi
 
