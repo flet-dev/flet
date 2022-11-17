@@ -1,5 +1,8 @@
 project_name: fletd
 
+snapshot:
+  name_template: '{{ .Env.APPVEYOR_BUILD_VERSION }}'
+
 builds:
   - id: fletd
     main: cmd/fletd/main.go
