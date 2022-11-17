@@ -1,3 +1,4 @@
+from flet import colors, icons
 from flet.alert_dialog import AlertDialog
 from flet.alignment import Alignment
 from flet.animated_switcher import AnimatedSwitcher
@@ -20,6 +21,7 @@ from flet.circle_avatar import CircleAvatar
 from flet.column import Column
 from flet.container import Container, ContainerTapEvent
 from flet.control import Control
+from flet.datatable import DataCell, DataColumn, DataRow, DataTable
 from flet.divider import Divider
 from flet.drag_target import DragTarget, DragTargetAcceptEvent
 from flet.draggable import Draggable
@@ -57,8 +59,6 @@ from flet.grid_view import GridView
 from flet.haptic_feedback import HapticFeedback
 from flet.icon import Icon
 from flet.icon_button import IconButton
-from flet import icons
-from flet import colors
 from flet.image import Image
 from flet.list_tile import ListTile
 from flet.list_view import ListView
