@@ -136,4 +136,15 @@ Fix ElevatedButton regression ([9540beb](https://github.com/flet-dev/flet/commit
 
 * Navigation and Routing ([#95](https://github.com/flet-dev/flet/pull/95))
 
+## 0.1.41
+
+* Fix draggable.content_when_dragging
+
+## 0.1.40
+
+* Drag and Drop (https://github.com/flet-dev/flet/issues/62)
+* Any control can be positioned absolutely inside Stack (https://github.com/flet-dev/flet/issues/60)
+* Clickable Container (https://github.com/flet-dev/flet/issues/59)
+* Added `page.pwa` property to detect if an app is running as PWA (https://github.com/flet-dev/flet/issues/58)
+
 ## [0.1.0](https://pypi.org/project/flet/0.1.0) - Mar 30, 2022
