@@ -147,4 +147,193 @@ Fix ElevatedButton regression ([9540beb](https://github.com/flet-dev/flet/commit
 * Clickable Container (https://github.com/flet-dev/flet/issues/59)
 * Added `page.pwa` property to detect if an app is running as PWA (https://github.com/flet-dev/flet/issues/58)
 
-## [0.1.0](https://pypi.org/project/flet/0.1.0) - Mar 30, 2022
+## 0.1.39
+
+* Fix `UserControl._build()` call (https://github.com/flet-dev/flet/issues/52)
+
+## 0.1.38
+
+* Window Manager fix for Linux (https://github.com/flet-dev/flet/issues/44)
+
+## 0.1.37
+
+* Controlling application window (https://github.com/flet-dev/flet/issues/39)
+
+## 0.1.36
+
+* Page events allow multiple subscribers (https://github.com/flet-dev/flet/issues/38)
+* page.rtl to control text directionality (https://github.com/flet-dev/flet/issues/37)
+
+## 0.1.35
+
+* Fix web_renderer arg
+* Default webrenderer is canvaskit
+
+## 0.1.34
+
+* support "assets" dir for "onefile" PyInstaller
+* Try packaging bin as data
+* PyInstaller integration (https://github.com/flet-dev/flet/issues/34)
+
+## 0.1.33
+
+* Update control itself when isolated (https://github.com/flet-dev/flet/issues/31)
+
+## 0.1.32
+
+* Linux runner (https://github.com/flet-dev/flet/issues/29)
+
+## 0.1.31
+
+* User control (https://github.com/flet-dev/flet/issues/26)
+
+## 0.1.30
+
+* Upgraded to Flutter 3.0.2 (https://github.com/flet-dev/flet/issues/23)
+* Custom fonts (https://github.com/flet-dev/flet/issues/22)
+
+## 0.1.29
+
+* PubSub (https://github.com/flet-dev/flet/issues/19)
+
+## 0.1.28
+
+* Support for Python 3.7 (https://github.com/flet-dev/flet/issues/16)
+* Update logo-inkscape.svg
+* Add executables to artifacts again
+* Upload Fletd archives only, without binaries
+* Fix links in Python SDK README (https://github.com/flet-dev/flet/issues/15)
+
+## 0.1.27
+
+* Fixed #10 (https://github.com/flet-dev/flet/issues/14)
+* Row, Column and ListView spacing and scrolling improvements (https://github.com/flet-dev/flet/issues/13)
+* Installing specific versions of Fletd and Flet apps for Python source distro (https://github.com/flet-dev/flet/issues/12)
+* focus() method for TextField and Dropdown controls (https://github.com/flet-dev/flet/issues/11)
+
+## 0.1.26
+
+* Upload Flet client app to GitHub releases
+* .focus() method for TextField and Dropdown
+* Update fletd name to get download working (https://github.com/flet-dev/flet/issues/7)
+
+## 0.1.25
+
+* Sprint 1 (https://github.com/flet-dev/flet/pull/6)
+
+## 0.1.24
+
+* Fix expand for TextField and Dropdown
+
+## 0.1.23
+
+* app_store_connect_api_key with base64 key
+* index.html with loading animation
+* Upgrade Flutter 3.0.1
+* Update AndroidManifest.xml
+* Build to client's "build" folder
+* Update Fastlane
+* Building and publishing iOS Flutter app on AppVeyor
+
+## 0.1.22
+
+* TextField and Dropdown unlim size fix
+* Python samples cleanup
+* Merge pull request #5 from flet-dev/s1-ios
+* Config flutter
+* Fix FLET_PACKAGE_VERSION
+* Fix iOS building for PR builds
+* Restore complete yaml
+
+## 0.1.20
+
+* Row python examples
+* More control examples
+* Text max_lines
+
+## 0.1.19
+
+* Fix setting clipboard
+
+## 0.1.18
+
+* ListTile
+* Card control
+* Slight protocol optimization
+* Control._set_attr_json
+* Tabs selected_index
+* Check collection controls for visibility
+* NavigationRail selected_index
+* NavigationRail control
+* AppBar, NavigationRail - Python
+
+## 0.1.17
+
+* PopupMenuButton control
+* Dividers example
+* Filled buttons, dividers
+* Filled elevated button
+* Upgraded to Flutter 3.0
+* Progress indicator samples
+* Fix page size parsing
+* page.content -> page.controls
+* Expand can be True
+* FAB
+* bgColor for ImageButton
+* CircleAvatar control added
+* PWA icons all good
+* Temp remove icons
+* Large logo on an icon
+* Icons updated
+* Exponential reconnection logic, PWA icons
+* Re-connecting flow
+
+## 0.1.16
+
+* Use canvaskit even on mobile for now
+* Upgrade to Flutter 2.10.5
+* Multiline textboxes done right
+
+## 0.1.14
+
+* Create a separate package for Alpine
+
+## 0.1.13
+
+* Add package for Alpine distro
+
+## 0.1.12
+
+* More general wheel package tags for Linux
+
+## 0.1.11
+
+* Icon browser done
+* autofocus, on_focus, on_blur to Python classes
+* Default Flet color theme
+* autofocus, focus, blur to all form controls
+* Remove tooltip from iconbutton
+* ignoreChange sometimes
+* Update container.dart
+* Clipboard
+* Make tooltip delay longer
+* Tooltip property added to all visible controls
+* Icons browser with outlined buttons
+
+## 0.1.10
+
+* GridView child_aspect_ratio
+* Dynamic lazy building ListView and GridView controls
+* Alignment parsing fixed
+
+## 0.1.7
+
+* App icons changed for web, windows and macos
+
+## 0.1.5
+
+* Open Flet client on Windows and MacOS only
+
+## 0.1.4
+
+* mkdir server/server/content
