@@ -452,6 +452,14 @@ class Page(Control):
             args["window_height"] = str(window_height)
         self.invoke_method("launchUrl", args)
 
+    @beartype
+    def can_launch_url(
+        self,
+        url: str
+    ):
+        args = {"url": url}
+        return self.invoke_method("canLaunchUrl", args, wait_for_result=True) == "true"
+
     def close_in_app_web_view(self):
         self.invoke_method("closeInAppWebView")
 
