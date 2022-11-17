@@ -1,13 +1,21 @@
 import json
-from typing import Optional
+from typing import Optional, Union
 
 from beartype import beartype
-from beartype.typing import List
+from beartype.typing import Dict, List
 
+from flet.buttons import MaterialState
 from flet.control import Control
+from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
 from flet.gesture_detector import TapEvent
 from flet.ref import Ref
+
+
+class DataColumnSortEvent(ControlEvent):
+    def __init__(self, i, a) -> None:
+        self.column_index: int = i
+        self.ascending: bool = a
 
 
 class DataColumn(Control):
@@ -20,6 +28,11 @@ class DataColumn(Control):
         on_sort=None,
     ):
         Control.__init__(self, ref=ref)
+
+        self.__on_sort = EventHandler(
+            lambda e: DataColumnSortEvent(**json.loads(e.data))
+        )
+        self._add_event_handler("sort", self.__on_sort.handler)
 
         self.label = label
         self.numeric = numeric
@@ -67,11 +80,12 @@ class DataColumn(Control):
     # on_sort
     @property
     def on_sort(self):
-        return self._get_event_handler("sort")
+        return self.__on_sort
 
     @on_sort.setter
     def on_sort(self, handler):
-        self._add_event_handler("sort", handler)
+        self.__on_sort.subscribe(handler)
+        self._set_attr("onSort", True if handler is not None else None)
 
 
 class DataCell(Control):
@@ -192,6 +206,7 @@ class DataRow(Control):
         self,
         cells: Optional[List[Control]] = None,
         ref=None,
+        color: Union[None, str, Dict[MaterialState, str]] = None,
         selected: Optional[bool] = None,
         on_long_press=None,
         on_select_changed=None,
@@ -206,6 +221,10 @@ class DataRow(Control):
     def _get_control_name(self):
         return "r"
 
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("color", self._wrap_attr_dict(self.__color))
+
     def _get_children(self):
         return self.__cells
 
@@ -217,6 +236,16 @@ class DataRow(Control):
     @cells.setter
     def cells(self, value):
         self.__cells = value if value is not None else []
+
+    # color
+    @property
+    def color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__color
+
+    @color.setter
+    @beartype
+    def color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__color = value
 
     # selected
     @property
