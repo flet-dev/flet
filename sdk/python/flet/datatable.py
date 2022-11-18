@@ -4,12 +4,16 @@ from typing import Optional, Union
 from beartype import beartype
 from beartype.typing import Dict, List
 
+from flet.border import Border, BorderSide
 from flet.buttons import MaterialState
-from flet.control import Control
+from flet.control import Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
 from flet.gesture_detector import TapEvent
+from flet.gradients import Gradient
 from flet.ref import Ref
+from flet.text_style import TextStyle
+from flet.types import BorderRadiusValue
 
 
 class DataColumnSortEvent(ControlEvent):
@@ -214,6 +218,7 @@ class DataRow(Control):
         Control.__init__(self, ref=ref)
 
         self.cells = cells
+        self.color = color
         self.selected = selected
         self.on_long_press = on_long_press
         self.on_select_changed = on_select_changed
@@ -283,19 +288,71 @@ class DataTable(Control):
         self,
         columns: Optional[List[DataColumn]] = None,
         rows: Optional[List[DataRow]] = None,
-        ref=None,
+        border: Optional[Border] = None,
+        border_radius: BorderRadiusValue = None,
+        horizontal_lines: Optional[BorderSide] = None,
+        vertical_lines: Optional[BorderSide] = None,
+        checkbox_horizontal_margin: OptionalNumber = None,
+        column_spacing: OptionalNumber = None,
+        data_row_color: Union[None, str, Dict[MaterialState, str]] = None,
+        data_row_height: OptionalNumber = None,
+        data_text_style: Optional[TextStyle] = None,
+        bgcolor: Optional[str] = None,
+        gradient: Optional[Gradient] = None,
+        divider_thickness: OptionalNumber = None,
+        heading_row_color: Union[None, str, Dict[MaterialState, str]] = None,
+        heading_row_height: OptionalNumber = None,
+        heading_text_style: Optional[TextStyle] = None,
+        horizontal_margin: OptionalNumber = None,
         show_bottom_border: Optional[bool] = None,
+        show_checkbox_column: Optional[bool] = None,
+        sort_ascending: Optional[bool] = None,
+        sort_column_index: Optional[int] = None,
         on_select_all=None,
+        ref=None,
     ):
         Control.__init__(self, ref=ref)
 
         self.columns = columns
         self.rows = rows
+        self.border = border
+        self.border_radius = border_radius
+        self.horizontal_lines = horizontal_lines
+        self.vertical_lines = vertical_lines
+        self.bgcolor = bgcolor
+        self.gradient = gradient
+        self.divider_thickness = divider_thickness
+        self.checkbox_horizontal_margin = checkbox_horizontal_margin
+        self.column_spacing = column_spacing
+        self.data_row_color = data_row_color
+        self.data_row_height = data_row_height
+        self.data_text_style = data_text_style
+        self.heading_row_color = heading_row_color
+        self.heading_row_height = heading_row_height
+        self.heading_text_style = heading_text_style
+        self.horizontal_margin = horizontal_margin
         self.show_bottom_border = show_bottom_border
+        self.show_checkbox_column = show_checkbox_column
+        self.sort_ascending = sort_ascending
+        self.sort_column_index = sort_column_index
         self.on_select_all = on_select_all
 
     def _get_control_name(self):
         return "datatable"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("border", self.__border)
+        self._set_attr_json("gradient", self.__gradient)
+        self._set_attr_json("borderRadius", self.__border_radius)
+        self._set_attr_json("horizontalLines", self.__horizontal_lines)
+        self._set_attr_json("verticalLines", self.__vertical_lines)
+        self._set_attr_json("dataRowColor", self._wrap_attr_dict(self.__data_row_color))
+        self._set_attr_json(
+            "headingRowColor", self._wrap_attr_dict(self.__heading_row_color)
+        )
+        self._set_attr_json("dataTextStyle", self.__data_text_style)
+        self._set_attr_json("headingTextStyle", self.__heading_text_style)
 
     def _get_children(self):
         children = []
@@ -321,6 +378,165 @@ class DataTable(Control):
     def rows(self, value: Optional[List[DataRow]]):
         self.__rows = value if value is not None else []
 
+    # border
+    @property
+    def border(self) -> Optional[Border]:
+        return self.__border
+
+    @border.setter
+    @beartype
+    def border(self, value: Optional[Border]):
+        self.__border = value
+
+    # border_radius
+    @property
+    def border_radius(self) -> BorderRadiusValue:
+        return self.__border_radius
+
+    @border_radius.setter
+    @beartype
+    def border_radius(self, value: BorderRadiusValue):
+        self.__border_radius = value
+
+    # horizontal_lines
+    @property
+    def horizontal_lines(self) -> Optional[BorderSide]:
+        return self.__horizontal_lines
+
+    @horizontal_lines.setter
+    @beartype
+    def horizontal_lines(self, value: Optional[BorderSide]):
+        self.__horizontal_lines = value
+
+    # vertical_lines
+    @property
+    def vertical_lines(self) -> Optional[BorderSide]:
+        return self.__vertical_lines
+
+    @vertical_lines.setter
+    @beartype
+    def vertical_lines(self, value: Optional[BorderSide]):
+        self.__vertical_lines = value
+
+    # checkbox_horizontal_margin
+    @property
+    def checkbox_horizontal_margin(self) -> OptionalNumber:
+        return self._get_attr("checkboxHorizontalMargin")
+
+    @checkbox_horizontal_margin.setter
+    @beartype
+    def checkbox_horizontal_margin(self, value: OptionalNumber):
+        self._set_attr("checkboxHorizontalMargin", value)
+
+    # column_spacing
+    @property
+    def column_spacing(self) -> OptionalNumber:
+        return self._get_attr("columnSpacing")
+
+    @column_spacing.setter
+    @beartype
+    def column_spacing(self, value: OptionalNumber):
+        self._set_attr("columnSpacing", value)
+
+    # divider_thickness
+    @property
+    def divider_thickness(self) -> OptionalNumber:
+        return self._get_attr("dividerThickness")
+
+    @divider_thickness.setter
+    @beartype
+    def divider_thickness(self, value: OptionalNumber):
+        self._set_attr("dividerThickness", value)
+
+    # horizontal_margin
+    @property
+    def horizontal_margin(self) -> OptionalNumber:
+        return self._get_attr("horizontalMargin")
+
+    @horizontal_margin.setter
+    @beartype
+    def horizontal_margin(self, value: OptionalNumber):
+        self._set_attr("horizontalMargin", value)
+
+    # data_row_color
+    @property
+    def data_row_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__data_row_color
+
+    @data_row_color.setter
+    @beartype
+    def data_row_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__data_row_color = value
+
+    # data_row_height
+    @property
+    def data_row_height(self) -> OptionalNumber:
+        return self._get_attr("dataRowHeight")
+
+    @data_row_height.setter
+    @beartype
+    def data_row_height(self, value: OptionalNumber):
+        self._set_attr("dataRowHeight", value)
+
+    # data_text_style
+    @property
+    def data_text_style(self):
+        return self.__data_text_style
+
+    @data_text_style.setter
+    @beartype
+    def data_text_style(self, value: Optional[TextStyle]):
+        self.__data_text_style = value
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgColor")
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgColor", value)
+
+    # gradient
+    @property
+    def gradient(self) -> Optional[Gradient]:
+        return self.__gradient
+
+    @gradient.setter
+    @beartype
+    def gradient(self, value: Optional[Gradient]):
+        self.__gradient = value
+
+    # heading_row_color
+    @property
+    def heading_row_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__heading_row_color
+
+    @heading_row_color.setter
+    @beartype
+    def heading_row_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__heading_row_color = value
+
+    # heading_row_height
+    @property
+    def heading_row_height(self) -> OptionalNumber:
+        return self._get_attr("headingRowHeight")
+
+    @heading_row_height.setter
+    @beartype
+    def heading_row_height(self, value: OptionalNumber):
+        self._set_attr("headingRowHeight", value)
+
+    # heading_text_style
+    @property
+    def heading_text_style(self):
+        return self.__heading_text_style
+
+    @heading_text_style.setter
+    @beartype
+    def heading_text_style(self, value: Optional[TextStyle]):
+        self.__heading_text_style = value
+
     # show_bottom_border
     @property
     def show_bottom_border(self) -> Optional[bool]:
@@ -330,6 +546,36 @@ class DataTable(Control):
     @beartype
     def show_bottom_border(self, value: Optional[bool]):
         self._set_attr("showBottomBorder", value)
+
+    # show_checkbox_column
+    @property
+    def show_checkbox_column(self) -> Optional[bool]:
+        return self._get_attr("showCheckboxColumn", data_type="bool", def_value=False)
+
+    @show_checkbox_column.setter
+    @beartype
+    def show_checkbox_column(self, value: Optional[bool]):
+        self._set_attr("showCheckboxColumn", value)
+
+    # sort_ascending
+    @property
+    def sort_ascending(self) -> Optional[bool]:
+        return self._get_attr("sortAscending", data_type="bool", def_value=False)
+
+    @sort_ascending.setter
+    @beartype
+    def sort_ascending(self, value: Optional[bool]):
+        self._set_attr("sortAscending", value)
+
+    # sort_column_index
+    @property
+    def sort_column_index(self) -> Optional[int]:
+        return self._get_attr("sortColumnIndex")
+
+    @sort_column_index.setter
+    @beartype
+    def sort_column_index(self, value: Optional[int]):
+        self._set_attr("sortColumnIndex", value)
 
     # on_select_all
     @property

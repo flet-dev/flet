@@ -1,21 +1,17 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flet/src/controls/error.dart';
-import 'package:flet/src/models/control_view_model.dart';
+import 'package:flet/src/utils/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
-import '../protocol/update_control_props_payload.dart';
+import '../utils/borders.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
-import '../utils/icons.dart';
+import '../utils/gradient.dart';
 import 'create_control.dart';
 
 class DataTableControl extends StatefulWidget {
@@ -50,7 +46,71 @@ class _DataTableControlState extends State<DataTableControl> {
         converter: (store) => ControlsViewModel.fromStore(
             store, widget.children.where((c) => c.isVisible).map((c) => c.id)),
         builder: (content, viewModel) {
+          var bgColor = widget.control.attrString("bgColor");
+          var border = parseBorder(Theme.of(context), widget.control, "border");
+          var borderRadius = parseBorderRadius(widget.control, "borderRadius");
+          var gradient =
+              parseGradient(Theme.of(context), widget.control, "gradient");
+          var horizontalLines = parseBorderSide(
+              Theme.of(context), widget.control, "horizontalLines");
+          var verticalLines = parseBorderSide(
+              Theme.of(context), widget.control, "verticalLines");
+          var defaultDecoration = Theme.of(context).dataTableTheme.decoration ??
+              const BoxDecoration();
+
+          BoxDecoration? decoration;
+          if (bgColor != null ||
+              border != null ||
+              borderRadius != null ||
+              gradient != null) {
+            decoration = (defaultDecoration as BoxDecoration).copyWith(
+                color: HexColor.fromString(Theme.of(context), bgColor ?? ""),
+                border: border,
+                borderRadius: borderRadius,
+                gradient: gradient);
+          }
+
+          TableBorder? tableBorder;
+          if (horizontalLines != BorderSide.none ||
+              verticalLines != BorderSide.none) {
+            tableBorder = TableBorder(
+                horizontalInside: horizontalLines,
+                verticalInside: verticalLines);
+          }
+
           return DataTable(
+              decoration: decoration,
+              border: tableBorder,
+              checkboxHorizontalMargin:
+                  widget.control.attrDouble("checkboxHorizontalMargin"),
+              columnSpacing: widget.control.attrDouble("columnSpacing"),
+              dataRowColor: parseMaterialStateColor(
+                  Theme.of(context), widget.control, "dataRowColor"),
+              dataRowHeight: widget.control.attrDouble("dataRowHeight"),
+              dataTextStyle: parseTextStyle(
+                  Theme.of(context), widget.control, "dataTextStyle"),
+              headingRowColor: parseMaterialStateColor(
+                  Theme.of(context), widget.control, "headingRowColor"),
+              headingRowHeight: widget.control.attrDouble("headingRowHeight"),
+              headingTextStyle: parseTextStyle(
+                  Theme.of(context), widget.control, "headingTextStyle"),
+              dividerThickness: widget.control.attrDouble("dividerThickness"),
+              horizontalMargin: widget.control.attrDouble("horizontalMargin"),
+              showBottomBorder:
+                  widget.control.attrBool("showBottomBorder", false)!,
+              showCheckboxColumn:
+                  widget.control.attrBool("showCheckboxColumn", false)!,
+              sortAscending: widget.control.attrBool("sortAscending", false)!,
+              sortColumnIndex: widget.control.attrInt("sortColumnIndex"),
+              onSelectAll: widget.control.attrBool("onSelectAll", false)!
+                  ? (selected) {
+                      ws.pageEventFromWeb(
+                          eventTarget: widget.control.id,
+                          eventName: "select_all",
+                          eventData:
+                              selected != null ? selected.toString() : "");
+                    }
+                  : null,
               columns: viewModel.controlViews
                   .where((c) => c.control.type == "c")
                   .map((column) {
@@ -98,8 +158,59 @@ class _DataTableControlState extends State<DataTableControl> {
                           }
                         : null,
                     cells: row.children
-                        .map((cell) => DataCell(createControl(
-                            row.control, cell.childIds.first, disabled)))
+                        .map((cell) => DataCell(
+                              createControl(
+                                  row.control, cell.childIds.first, disabled),
+                              placeholder: cell.attrBool("placeholder", false)!,
+                              showEditIcon:
+                                  cell.attrBool("showEditIcon", false)!,
+                              onDoubleTap: cell.attrBool("onDoubleTap", false)!
+                                  ? () {
+                                      ws.pageEventFromWeb(
+                                          eventTarget: cell.id,
+                                          eventName: "double_tap",
+                                          eventData: "");
+                                    }
+                                  : null,
+                              onLongPress: cell.attrBool("onLongPress", false)!
+                                  ? () {
+                                      ws.pageEventFromWeb(
+                                          eventTarget: cell.id,
+                                          eventName: "long_press",
+                                          eventData: "");
+                                    }
+                                  : null,
+                              onTap: cell.attrBool("onTap", false)!
+                                  ? () {
+                                      ws.pageEventFromWeb(
+                                          eventTarget: cell.id,
+                                          eventName: "tap",
+                                          eventData: "");
+                                    }
+                                  : null,
+                              onTapCancel: cell.attrBool("onTapCancel", false)!
+                                  ? () {
+                                      ws.pageEventFromWeb(
+                                          eventTarget: cell.id,
+                                          eventName: "tap_cancel",
+                                          eventData: "");
+                                    }
+                                  : null,
+                              onTapDown: cell.attrBool("onTapDown", false)!
+                                  ? (details) {
+                                      ws.pageEventFromWeb(
+                                          eventTarget: cell.id,
+                                          eventName: "tap_down",
+                                          eventData: json.encode({
+                                            "kind": details.kind?.name,
+                                            "lx": details.localPosition.dx,
+                                            "ly": details.localPosition.dy,
+                                            "gx": details.globalPosition.dx,
+                                            "gy": details.globalPosition.dy,
+                                          }));
+                                    }
+                                  : null,
+                            ))
                         .toList());
               }).toList());
         });

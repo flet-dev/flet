@@ -1,4 +1,4 @@
-from flet import colors, icons
+from flet import alignment, border, border_radius, colors, icons
 from flet.alert_dialog import AlertDialog
 from flet.alignment import Alignment
 from flet.animated_switcher import AnimatedSwitcher
