@@ -3,24 +3,12 @@ from dataclasses import field
 from typing import Dict, Optional, Union
 
 from flet.border import BorderSide
-from flet.types import BorderRadiusValue, PaddingValue
+from flet.types import BorderRadiusValue, MaterialState, PaddingValue
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-MaterialState = Literal[
-    "hovered",
-    "focused",
-    "pressed",
-    "dragged",
-    "selected",
-    "scrolledUnder",
-    "disabled",
-    "error",
-    "",
-]
 
 
 @dataclasses.dataclass

@@ -3,12 +3,12 @@ from typing import Any, Optional, Union
 from beartype import beartype
 from beartype.typing import Dict
 
-from flet.buttons import MaterialState
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
+    MaterialState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,

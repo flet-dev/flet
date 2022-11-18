@@ -5,7 +5,6 @@ from beartype import beartype
 from beartype.typing import Dict, List
 
 from flet.border import Border, BorderSide
-from flet.buttons import MaterialState
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.control_event import ControlEvent
@@ -17,6 +16,7 @@ from flet.text_style import TextStyle
 from flet.types import (
     AnimationValue,
     BorderRadiusValue,
+    MaterialState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,

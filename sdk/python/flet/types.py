@@ -51,3 +51,15 @@ class BoxShape(Enum):
 
 
 ResponsiveNumber = Union[Dict[str, Union[int, float]], int, float]
+
+MaterialState = Literal[
+    "hovered",
+    "focused",
+    "pressed",
+    "dragged",
+    "selected",
+    "scrolledUnder",
+    "disabled",
+    "error",
+    "",
+]
