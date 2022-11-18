@@ -1,11 +1,12 @@
 import json
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import Dict, List
 
 from flet.border import Border, BorderSide
 from flet.buttons import MaterialState
+from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
@@ -13,7 +14,14 @@ from flet.gesture_detector import TapEvent
 from flet.gradients import Gradient
 from flet.ref import Ref
 from flet.text_style import TextStyle
-from flet.types import BorderRadiusValue
+from flet.types import (
+    AnimationValue,
+    BorderRadiusValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class DataColumnSortEvent(ControlEvent):
@@ -283,11 +291,39 @@ class DataRow(Control):
         self._set_attr("onSelectChanged", True if handler is not None else None)
 
 
-class DataTable(Control):
+class DataTable(ConstrainedControl):
     def __init__(
         self,
         columns: Optional[List[DataColumn]] = None,
         rows: Optional[List[DataRow]] = None,
+        ref: Optional[Ref] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        #
+        # DataTable-specific
+        #
         border: Optional[Border] = None,
         border_radius: BorderRadiusValue = None,
         horizontal_lines: Optional[BorderSide] = None,
@@ -309,9 +345,35 @@ class DataTable(Control):
         sort_ascending: Optional[bool] = None,
         sort_column_index: Optional[int] = None,
         on_select_all=None,
-        ref=None,
     ):
-        Control.__init__(self, ref=ref)
+        ConstrainedControl.__init__(
+            self,
+            ref=ref,
+            width=width,
+            height=height,
+            left=left,
+            top=top,
+            right=right,
+            bottom=bottom,
+            expand=expand,
+            col=col,
+            opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            aspect_ratio=aspect_ratio,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
+            tooltip=tooltip,
+            visible=visible,
+            disabled=disabled,
+            data=data,
+        )
 
         self.columns = columns
         self.rows = rows
@@ -441,7 +503,7 @@ class DataTable(Control):
     # divider_thickness
     @property
     def divider_thickness(self) -> OptionalNumber:
-        return self._get_attr("dividerThickness")
+        return self._get_attr("dividerThickness", data_type="float", def_value=1.0)
 
     @divider_thickness.setter
     @beartype
