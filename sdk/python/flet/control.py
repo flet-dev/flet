@@ -21,25 +21,6 @@ except ImportError:
 if TYPE_CHECKING:
     from .page import Page
 
-MainAxisAlignment = Literal[
-    None,
-    "start",
-    "end",
-    "center",
-    "spaceBetween",
-    "spaceAround",
-    "spaceEvenly",
-]
-
-CrossAxisAlignment = Literal[
-    None,
-    "start",
-    "end",
-    "center",
-    "stretch",
-    "baseline",
-]
-
 BorderStyle = Literal[
     None,
     "none",

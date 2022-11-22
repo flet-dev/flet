@@ -18,13 +18,7 @@ from flet.banner import Banner
 from flet.client_storage import ClientStorage
 from flet.clipboard import Clipboard
 from flet.connection import Connection
-from flet.control import (
-    Control,
-    CrossAxisAlignment,
-    MainAxisAlignment,
-    OptionalNumber,
-    ScrollMode,
-)
+from flet.control import Control, OptionalNumber, ScrollMode
 from flet.control_event import ControlEvent
 from flet.event import Event
 from flet.event_handler import EventHandler
@@ -36,7 +30,7 @@ from flet.querystring import QueryString
 from flet.session_storage import SessionStorage
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
-from flet.types import PaddingValue
+from flet.types import CrossAxisAlignment, MainAxisAlignment, PaddingValue
 from flet.view import View
 
 try:
@@ -453,10 +447,7 @@ class Page(Control):
         self.invoke_method("launchUrl", args)
 
     @beartype
-    def can_launch_url(
-        self,
-        url: str
-    ):
+    def can_launch_url(self, url: str):
         args = {"url": url}
         return self.invoke_method("canLaunchUrl", args, wait_for_result=True) == "true"
 

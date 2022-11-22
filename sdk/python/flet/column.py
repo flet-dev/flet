@@ -3,16 +3,14 @@ from typing import Any, List, Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import (
-    Control,
-    CrossAxisAlignment,
-    MainAxisAlignment,
-    OptionalNumber,
-    ScrollMode,
-)
+from flet.control import Control, OptionalNumber, ScrollMode
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
+    CrossAxisAlignment,
+    CrossAxisAlignmentString,
+    MainAxisAlignment,
+    MainAxisAlignmentString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -51,8 +49,8 @@ class Column(ConstrainedControl):
         #
         # Column specific
         #
-        alignment: MainAxisAlignment = None,
-        horizontal_alignment: CrossAxisAlignment = None,
+        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
         spacing: OptionalNumber = None,
         tight: Optional[bool] = None,
         wrap: Optional[bool] = None,
@@ -88,7 +86,6 @@ class Column(ConstrainedControl):
             data=data,
         )
 
-        self.__controls = []
         self.controls = controls
         self.horizontal_alignment = horizontal_alignment
         self.alignment = alignment
@@ -96,7 +93,6 @@ class Column(ConstrainedControl):
         self.tight = tight
         self.wrap = wrap
         self.run_spacing = run_spacing
-        self.__scroll = False
         self.scroll = scroll
         self.auto_scroll = auto_scroll
 
@@ -123,21 +119,35 @@ class Column(ConstrainedControl):
     # alignment
     @property
     def alignment(self) -> MainAxisAlignment:
-        return self._get_attr("alignment")
+        return self.__alignment
 
     @alignment.setter
-    @beartype
     def alignment(self, value: MainAxisAlignment):
+        self.__alignment = value
+        if isinstance(value, MainAxisAlignment):
+            self._set_attr("alignment", value.value)
+        else:
+            self.__set_alignment(value)
+
+    @beartype
+    def __set_alignment(self, value: MainAxisAlignmentString):
         self._set_attr("alignment", value)
 
     # horizontal_alignment
     @property
     def horizontal_alignment(self) -> CrossAxisAlignment:
-        return self._get_attr("horizontalAlignment")
+        return self.__horizontal_alignment
 
     @horizontal_alignment.setter
-    @beartype
     def horizontal_alignment(self, value: CrossAxisAlignment):
+        self.__horizontal_alignment = value
+        if isinstance(value, CrossAxisAlignment):
+            self._set_attr("horizontalAlignment", value.value)
+        else:
+            self.__set_horizontal_alignment(value)
+
+    @beartype
+    def __set_horizontal_alignment(self, value: CrossAxisAlignmentString):
         self._set_attr("horizontalAlignment", value)
 
     # spacing
@@ -201,5 +211,6 @@ class Column(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value):
+    @beartype
+    def controls(self, value: Optional[List[Control]]):
         self.__controls = value if value is not None else []
