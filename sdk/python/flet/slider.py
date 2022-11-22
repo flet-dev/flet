@@ -55,6 +55,8 @@ class Slider(ConstrainedControl):
         inactive_color: Optional[str] = None,
         thumb_color: Optional[str] = None,
         on_change=None,
+        on_change_start=None,
+        on_change_end=None,
         on_focus=None,
         on_blur=None,
     ):
@@ -96,6 +98,8 @@ class Slider(ConstrainedControl):
         self.inactive_color = inactive_color
         self.thumb_color = thumb_color
         self.on_change = on_change
+        self.on_change_start = on_change_start
+        self.on_change_end = on_change_end
         self.on_focus = on_focus
         self.on_blur = on_blur
 
@@ -196,6 +200,24 @@ class Slider(ConstrainedControl):
     @on_change.setter
     def on_change(self, handler):
         self._add_event_handler("change", handler)
+
+    # on_change_start
+    @property
+    def on_change_start(self):
+        return self._get_event_handler("change_start")
+
+    @on_change_start.setter
+    def on_change_start(self, handler):
+        self._add_event_handler("change_start", handler)
+
+    # on_change_end
+    @property
+    def on_change_end(self):
+        return self._get_event_handler("change_end")
+
+    @on_change_end.setter
+    def on_change_end(self, handler):
+        self._add_event_handler("change_end", handler)
 
     # on_focus
     @property
