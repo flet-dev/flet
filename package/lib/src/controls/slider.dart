@@ -89,6 +89,8 @@ class _SliderControlState extends State<SliderControl> {
     double max = widget.control.attrDouble("max", 1)!;
     int? divisions = widget.control.attrInt("divisions");
 
+    final ws = FletAppServices.of(context).ws;
+
     return StoreConnector<AppState, Function>(
         distinct: true,
         converter: (store) => store.dispatch,
@@ -118,6 +120,22 @@ class _SliderControlState extends State<SliderControl> {
               onChanged: !disabled
                   ? (double value) {
                       onChange(value, dispatch);
+                    }
+                  : null,
+              onChangeStart: !disabled
+                  ? (double value) {
+                      ws.pageEventFromWeb(
+                          eventTarget: widget.control.id,
+                          eventName: "change_start",
+                          eventData: value.toString());
+                    }
+                  : null,
+              onChangeEnd: !disabled
+                  ? (double value) {
+                      ws.pageEventFromWeb(
+                          eventTarget: widget.control.id,
+                          eventName: "change_end",
+                          eventData: value.toString());
                     }
                   : null);
 
