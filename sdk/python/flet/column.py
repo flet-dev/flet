@@ -1,6 +1,7 @@
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
+from beartype.typing import List
 
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber, ScrollMode

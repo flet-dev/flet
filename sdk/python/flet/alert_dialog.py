@@ -1,6 +1,7 @@
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from beartype import beartype
+from beartype.typing import List
 
 from flet.buttons import OutlinedBorder
 from flet.control import Control
