@@ -107,11 +107,12 @@ class Radio(ConstrainedControl):
 
     # value
     @property
-    def value(self):
+    def value(self) -> Optional[str]:
         return self._get_attr("value", def_value="")
 
     @value.setter
-    def value(self, value):
+    @beartype
+    def value(self, value: Optional[str]):
         self._set_attr("value", value)
 
     # label
