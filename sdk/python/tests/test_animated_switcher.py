@@ -59,3 +59,24 @@ def test_switch_out_curve_enum():
 
     with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
         r = ft.AnimatedSwitcher(switch_out_curve=1)
+
+
+def test_transition_enum():
+    r = ft.AnimatedSwitcher()
+    assert r.transition == None
+    assert r._get_attr("transition") is None
+
+    r = ft.AnimatedSwitcher(transition=ft.AnimatedSwitcherTransition.FADE)
+    assert isinstance(r.transition, ft.AnimatedSwitcherTransition)
+    assert r.transition == ft.AnimatedSwitcherTransition.FADE
+    assert r._get_attr("transition") == "fade"
+
+    r = ft.AnimatedSwitcher(transition="scale")
+    assert isinstance(r.transition, str)
+    assert r._get_attr("transition") == "scale"
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.AnimatedSwitcher(transition="something")
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.AnimatedSwitcher(transition=1)

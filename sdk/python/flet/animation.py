@@ -99,9 +99,6 @@ class AnimationCurve(Enum):
     SLOW_MIDDLE = "slowMiddle"
 
 
-TransitionValue = Literal["fade", "rotation", "scale"]
-
-
 @dataclasses.dataclass
 class Animation:
     duration: int = field(default=1)

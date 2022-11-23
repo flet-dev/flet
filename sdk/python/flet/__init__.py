@@ -13,7 +13,7 @@ from flet import (
 )
 from flet.alert_dialog import AlertDialog
 from flet.alignment import Alignment
-from flet.animated_switcher import AnimatedSwitcher
+from flet.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
 from flet.animation import Animation, AnimationCurve
 from flet.app_bar import AppBar
 from flet.audio import Audio

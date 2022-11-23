@@ -2,7 +2,9 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 
-from flet.animation import AnimationCurveString, TransitionValue, AnimationCurve
+from enum import Enum
+
+from flet.animation import AnimationCurveString, AnimationCurve
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
@@ -13,6 +15,19 @@ from flet.types import (
     RotateValue,
     ScaleValue,
 )
+
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
+
+TransitionValueString = Literal["fade", "rotation", "scale"]
+
+
+class AnimatedSwitcherTransition(Enum):
+    FADE = "fade"
+    ROTATION = "rotation"
+    SCALE = "scale"
 
 
 class AnimatedSwitcher(ConstrainedControl):
@@ -51,7 +66,7 @@ class AnimatedSwitcher(ConstrainedControl):
         reverse_duration: Optional[int] = None,
         switch_in_curve: Optional[AnimationCurve] = None,
         switch_out_curve: Optional[AnimationCurve] = None,
-        transition: Optional[TransitionValue] = None,
+        transition: Optional[AnimatedSwitcherTransition] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -168,10 +183,17 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # transition
     @property
-    def transition(self) -> Optional[TransitionValue]:
-        return self._get_attr("transition")
+    def transition(self) -> Optional[AnimatedSwitcherTransition]:
+        return self.__transition
 
     @transition.setter
+    def transition(self, value: Optional[AnimatedSwitcherTransition]):
+        self.__transition = value
+        if isinstance(value, AnimatedSwitcherTransition):
+            self._set_attr("transition", value.value)
+        else:
+            self.__set_transition(value)
+
     @beartype
-    def transition(self, value: Optional[TransitionValue]):
+    def __set_transition(self, value: Optional[TransitionValueString]):
         self._set_attr("transition", value)
