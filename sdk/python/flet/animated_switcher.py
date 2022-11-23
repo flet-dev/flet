@@ -2,7 +2,7 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 
-from flet.animation import Curve, TransitionValue
+from flet.animation import AnimationCurveString, TransitionValue, AnimationCurve
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
@@ -49,8 +49,8 @@ class AnimatedSwitcher(ConstrainedControl):
         #
         duration: Optional[int] = None,
         reverse_duration: Optional[int] = None,
-        switch_in_curve: Optional[Curve] = None,
-        switch_out_curve: Optional[Curve] = None,
+        switch_in_curve: Optional[AnimationCurve] = None,
+        switch_out_curve: Optional[AnimationCurve] = None,
         transition: Optional[TransitionValue] = None,
     ):
         ConstrainedControl.__init__(
@@ -134,22 +134,36 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # switch_in_curve
     @property
-    def switch_in_curve(self) -> Optional[Curve]:
-        return self._get_attr("switchInCurve")
+    def switch_in_curve(self) -> Optional[AnimationCurve]:
+        return self.__switch_in_curve
 
     @switch_in_curve.setter
+    def switch_in_curve(self, value: Optional[AnimationCurve]):
+        self.__switch_in_curve = value
+        if isinstance(value, AnimationCurve):
+            self._set_attr("switchInCurve", value.value)
+        else:
+            self.__set_switch_in_curve(value)
+
     @beartype
-    def switch_in_curve(self, value: Optional[Curve]):
+    def __set_switch_in_curve(self, value: Optional[AnimationCurveString]):
         self._set_attr("switchInCurve", value)
 
     # switch_out_curve
     @property
-    def switch_out_curve(self) -> Optional[Curve]:
-        return self._get_attr("switchOutCurve")
+    def switch_out_curve(self) -> Optional[AnimationCurve]:
+        return self.__switch_out_curve
 
     @switch_out_curve.setter
+    def switch_out_curve(self, value: Optional[AnimationCurve]):
+        self.__switch_out_curve = value
+        if isinstance(value, AnimationCurve):
+            self._set_attr("switchOutCurve", value.value)
+        else:
+            self.__set_switch_out_curve(value)
+
     @beartype
-    def switch_out_curve(self, value: Optional[Curve]):
+    def __set_switch_out_curve(self, value: Optional[AnimationCurveString]):
         self._set_attr("switchOutCurve", value)
 
     # transition
