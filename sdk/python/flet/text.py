@@ -3,7 +3,7 @@ from typing import Any, Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import OptionalNumber, TextAlign
+from flet.control import OptionalNumber
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
@@ -12,6 +12,8 @@ from flet.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    TextAlign,
+    TextAlignString,
 )
 
 try:
@@ -72,7 +74,7 @@ class Text(ConstrainedControl):
         #
         # text-specific
         #
-        text_align: TextAlign = None,
+        text_align: TextAlign = TextAlign.NONE,
         font_family: Optional[str] = None,
         size: OptionalNumber = None,
         weight: FontWeight = None,
@@ -146,11 +148,18 @@ class Text(ConstrainedControl):
     # text_align
     @property
     def text_align(self) -> TextAlign:
-        return self._get_attr("textAlign")
+        return self.__text_align
 
     @text_align.setter
-    @beartype
     def text_align(self, value: TextAlign):
+        self.__text_align = value
+        if isinstance(value, TextAlign):
+            self._set_attr("textAlign", value.value)
+        else:
+            self.__set_text_align(value)
+
+    @beartype
+    def __set_text_align(self, value: TextAlignString):
         self._set_attr("textAlign", value)
 
     # font_family

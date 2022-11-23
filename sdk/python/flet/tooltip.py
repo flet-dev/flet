@@ -3,11 +3,18 @@ from typing import Any, Optional, Union
 from beartype import beartype
 
 from flet.border import Border
-from flet.control import Control, OptionalNumber, TextAlign
+from flet.control import Control, OptionalNumber
 from flet.gradients import Gradient
 from flet.ref import Ref
 from flet.text_style import TextStyle
-from flet.types import BorderRadiusValue, BoxShape, MarginValue, PaddingValue
+from flet.types import (
+    BorderRadiusValue,
+    BoxShape,
+    MarginValue,
+    PaddingValue,
+    TextAlign,
+    TextAlignString,
+)
 
 
 class Tooltip(Control):
@@ -33,7 +40,7 @@ class Tooltip(Control):
         shape: Optional[BoxShape] = None,
         message: Optional[str] = None,
         text_style: Optional[TextStyle] = None,
-        text_align: Optional[TextAlign] = None,
+        text_align: TextAlign = TextAlign.NONE,
         prefer_below: Optional[bool] = None,
         show_duration: Optional[int] = None,
         wait_duration: Optional[int] = None,
@@ -176,11 +183,18 @@ class Tooltip(Control):
     # text_align
     @property
     def text_align(self) -> TextAlign:
-        return self._get_attr("textAlign")
+        return self.__text_align
 
     @text_align.setter
-    @beartype
     def text_align(self, value: TextAlign):
+        self.__text_align = value
+        if isinstance(value, TextAlign):
+            self._set_attr("textAlign", value.value)
+        else:
+            self.__set_text_align(value)
+
+    @beartype
+    def __set_text_align(self, value: TextAlignString):
         self._set_attr("textAlign", value)
 
     # text_style

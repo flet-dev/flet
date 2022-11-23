@@ -1,8 +1,9 @@
+from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
 
-from flet.control import Control, InputBorder, OptionalNumber, TextAlign
+from flet.control import Control, InputBorder, OptionalNumber
 from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl
 from flet.ref import Ref
@@ -15,6 +16,8 @@ from flet.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    TextAlign,
+    TextAlignString,
 )
 
 try:
@@ -22,7 +25,7 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-TextInputType = Literal[
+KeyboardTypeString = Literal[
     None,
     "text",
     "multiline",
@@ -37,7 +40,29 @@ TextInputType = Literal[
     "none",
 ]
 
-TextCapitalization = Literal[None, "none", "characters", "words", "sentences"]
+
+class KeyboardType(Enum):
+    NONE = "none"
+    TEXT = "text"
+    MULTILINE = "multiline"
+    NUMBER = "number"
+    PHONE = "phone"
+    DATETIME = "datetime"
+    EMAIL = "email"
+    URL = "url"
+    VISIBLE_PASSWORD = "visiblePassword"
+    NAME = "name"
+    STREET_ADDRESS = "streetAddress"
+
+
+TextCapitalizationString = Literal[None, "none", "characters", "words", "sentences"]
+
+
+class TextCapitalization(Enum):
+    NONE = None
+    CHARACTERS = "characters"
+    WORDS = "words"
+    SENTENCES = "sentences"
 
 
 class TextField(FormFieldControl):
@@ -104,7 +129,7 @@ class TextField(FormFieldControl):
         # TextField Specific
         #
         value: Optional[str] = None,
-        keyboard_type: TextInputType = None,
+        keyboard_type: Optional[KeyboardType] = None,
         multiline: Optional[bool] = None,
         min_lines: Optional[int] = None,
         max_lines: Optional[int] = None,
@@ -113,9 +138,9 @@ class TextField(FormFieldControl):
         can_reveal_password: Optional[bool] = None,
         read_only: Optional[bool] = None,
         shift_enter: Optional[bool] = None,
-        text_align: TextAlign = None,
+        text_align: TextAlign = TextAlign.NONE,
         autofocus: Optional[bool] = None,
-        capitalization: TextCapitalization = None,
+        capitalization: TextCapitalization = TextCapitalization.NONE,
         cursor_color: Optional[str] = None,
         cursor_width: OptionalNumber = None,
         cursor_height: OptionalNumber = None,
@@ -228,22 +253,36 @@ class TextField(FormFieldControl):
 
     # keyboard_type
     @property
-    def keyboard_type(self) -> TextInputType:
-        return self._get_attr("keyboardType")
+    def keyboard_type(self) -> Optional[KeyboardType]:
+        return self.__keyboard_type
 
     @keyboard_type.setter
+    def keyboard_type(self, value: Optional[KeyboardType]):
+        self.__keyboard_type = value
+        if isinstance(value, KeyboardType):
+            self._set_attr("keyboardType", value.value)
+        else:
+            self.__set_keyboard_type(value)
+
     @beartype
-    def keyboard_type(self, value: TextInputType):
+    def __set_keyboard_type(self, value: KeyboardTypeString):
         self._set_attr("keyboardType", value)
 
     # text_align
     @property
     def text_align(self) -> TextAlign:
-        return self._get_attr("textAlign")
+        return self.__text_align
 
     @text_align.setter
-    @beartype
     def text_align(self, value: TextAlign):
+        self.__text_align = value
+        if isinstance(value, TextAlign):
+            self._set_attr("textAlign", value.value)
+        else:
+            self.__set_text_align(value)
+
+    @beartype
+    def __set_text_align(self, value: TextAlignString):
         self._set_attr("textAlign", value)
 
     # multiline
@@ -339,11 +378,18 @@ class TextField(FormFieldControl):
     # capitalization
     @property
     def capitalization(self) -> TextCapitalization:
-        return self._get_attr("capitalization")
+        return self.__capitalization
 
     @capitalization.setter
-    @beartype
     def capitalization(self, value: TextCapitalization):
+        self.__capitalization = value
+        if isinstance(value, TextCapitalization):
+            self._set_attr("capitalization", value.value)
+        else:
+            self.__set_capitalization(value)
+
+    @beartype
+    def __set_capitalization(self, value: TextCapitalizationString):
         self._set_attr("capitalization", value)
 
     # cursor_color

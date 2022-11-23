@@ -104,7 +104,7 @@ from flet.template_route import TemplateRoute
 from flet.text import Text
 from flet.text_button import TextButton
 from flet.text_style import TextStyle
-from flet.textfield import TextField
+from flet.textfield import KeyboardType, TextCapitalization, TextField
 from flet.theme import PageTransitionsTheme, Theme
 from flet.tooltip import Tooltip
 from flet.transparent_pointer import TransparentPointer
@@ -114,6 +114,7 @@ from flet.types import (
     CrossAxisAlignment,
     LabelPosition,
     MainAxisAlignment,
+    TextAlign,
 )
 from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider

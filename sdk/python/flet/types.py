@@ -178,3 +178,16 @@ class BlendMode(Enum):
     SRC_OVER = "srcOver"
     VALUES = "values"
     XOR = "xor"
+
+
+TextAlignString = Literal[None, "left", "right", "center", "justify", "start", "end"]
+
+
+class TextAlign(Enum):
+    NONE = None
+    LEFT = "left"
+    RIGHT = "right"
+    CENTER = "center"
+    JUSTIFY = "justify"
+    START = "start"
+    END = "end"

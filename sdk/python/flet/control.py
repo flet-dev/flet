@@ -21,8 +21,6 @@ except ImportError:
 if TYPE_CHECKING:
     from .page import Page
 
-TextAlign = Literal[None, "left", "right", "center", "justify", "start", "end"]
-
 InputBorder = Literal[None, "outline", "underline", "none"]
 
 OptionalNumber = Union[None, int, float]
