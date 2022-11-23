@@ -45,6 +45,7 @@ from flet.file_picker import (
     FilePickerResultEvent,
     FilePickerUploadEvent,
     FilePickerUploadFile,
+    FilePickerFileType,
 )
 from flet.filled_button import FilledButton
 from flet.filled_tonal_button import FilledTonalButton
