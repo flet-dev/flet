@@ -19,6 +19,43 @@ def test_instance_no_attrs_set():
     ], "Test failed"
 
 
+def test_gradient():
+    c = ft.Container(
+        gradient=ft.LinearGradient(
+            colors=[],
+            tile_mode="mirror",
+        )
+    )
+    cmd = c._build_add_commands()
+    assert (
+        cmd[0].attrs["gradient"]
+        == '{"colors":[],"tile_mode":"mirror","begin":{"x":-1,"y":0},"end":{"x":1,"y":0},"type":"linear"}'
+    )
+
+    c = ft.Container(
+        gradient=ft.LinearGradient(
+            colors=[],
+            tile_mode=ft.GradientTileMode.REPEATED,
+        )
+    )
+    cmd = c._build_add_commands()
+    assert (
+        cmd[0].attrs["gradient"]
+        == '{"colors":[],"tile_mode":"repeated","begin":{"x":-1,"y":0},"end":{"x":1,"y":0},"type":"linear"}'
+    )
+
+    c = ft.Container(
+        gradient=ft.LinearGradient(
+            colors=[],
+        )
+    )
+    cmd = c._build_add_commands()
+    assert (
+        cmd[0].attrs["gradient"]
+        == '{"colors":[],"tile_mode":"clamp","begin":{"x":-1,"y":0},"end":{"x":1,"y":0},"type":"linear"}'
+    )
+
+
 def test_blend_mode_enum():
     r = ft.Container(blend_mode=ft.BlendMode.LIGHTEN)
     assert isinstance(r.blend_mode, ft.BlendMode)

@@ -67,7 +67,12 @@ from flet.gesture_detector import (
     ScrollEvent,
     TapEvent,
 )
-from flet.gradients import LinearGradient, RadialGradient, SweepGradient
+from flet.gradients import (
+    GradientTileMode,
+    LinearGradient,
+    RadialGradient,
+    SweepGradient,
+)
 from flet.grid_view import GridView
 from flet.haptic_feedback import HapticFeedback
 from flet.icon import Icon

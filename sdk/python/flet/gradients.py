@@ -1,6 +1,7 @@
 import dataclasses
 import math
 from dataclasses import field
+from enum import Enum
 from typing import List, Optional, Union
 
 from flet import alignment
@@ -11,13 +12,18 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-TileMode = Literal["clamp", "decal", "mirror", "repeated"]
+
+class GradientTileMode(Enum):
+    CLAMP = "clamp"
+    DECAL = "decal"
+    MIRROR = "mirror"
+    REPEATED = "repeated"
 
 
 @dataclasses.dataclass
 class Gradient:
     colors: List[str]
-    tile_mode: TileMode = field(default="clamp")
+    tile_mode: GradientTileMode = field(default=GradientTileMode.CLAMP)
     rotation: Union[None, float, int] = field(default=None)
     stops: Optional[List[float]] = field(default=None)
 

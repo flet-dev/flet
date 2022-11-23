@@ -1,3 +1,4 @@
+import enum
 import json
 from typing import Dict
 
@@ -46,4 +47,12 @@ class EmbedJsonEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
     def _cleanup_dict(self, d):
-        return dict(filter(lambda item: item[1] is not None, d.items()))
+        return dict(
+            map(
+                lambda item: (
+                    item[0],
+                    item[1] if not isinstance(item[1], enum.Enum) else item[1].value,
+                ),
+                filter(lambda item: item[1] is not None, d.items()),
+            )
+        )

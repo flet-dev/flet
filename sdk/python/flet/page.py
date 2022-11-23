@@ -675,7 +675,6 @@ class Page(Control):
         return self.__default_view.horizontal_alignment
 
     @horizontal_alignment.setter
-    @beartype
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__default_view.horizontal_alignment = value
 
@@ -685,7 +684,6 @@ class Page(Control):
         return self.__default_view.vertical_alignment
 
     @vertical_alignment.setter
-    @beartype
     def vertical_alignment(self, value: MainAxisAlignment):
         self.__default_view.vertical_alignment = value
 
