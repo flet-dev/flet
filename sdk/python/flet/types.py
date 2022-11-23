@@ -110,3 +110,71 @@ class LabelPosition(Enum):
     NONE = None
     RIGHT = "right"
     LEFT = "left"
+
+
+BlendModeString = Literal[
+    "clear",
+    "color",
+    "colorBurn",
+    "colorDodge",
+    "darken",
+    "difference",
+    "dst",
+    "dstATop",
+    "dstIn",
+    "dstOut",
+    "dstOver",
+    "exclusion",
+    "hardLight",
+    "hue",
+    "lighten",
+    "luminosity",
+    "modulate",
+    "multiply",
+    "overlay",
+    "plus",
+    "saturation",
+    "screen",
+    "softLight",
+    "src",
+    "srcATop",
+    "srcIn",
+    "srcOut",
+    "srcOver",
+    "values",
+    "xor",
+]
+
+
+class BlendMode(Enum):
+    NONE = None
+    CLEAR = "clear"
+    COLOR = "color"
+    COLOR_BURN = "colorBurn"
+    COLOR_DODGE = "colorDodge"
+    DARKEN = "darken"
+    DIFFERENCE = "difference"
+    DST = "dst"
+    DST_A_TOP = "dstATop"
+    DST_IN = "dstIn"
+    DST_OUT = "dstOut"
+    DST_OVER = "dstOver"
+    EXCLUSION = "exclusion"
+    HARD_LIGHT = "hardLight"
+    HUE = "hue"
+    LIGHTEN = "lighten"
+    LUMINOSITY = "luminosity"
+    MODULATE = "modulate"
+    MULTIPLY = "multiply"
+    OVERLAY = "overlay"
+    PLUS = "plus"
+    SATURATION = "saturation"
+    SCREEN = "screen"
+    SOFT_LIGHT = "softLight"
+    SRC = "src"
+    SRC_A_TOP = "srcATop"
+    SRC_IN = "srcIn"
+    SRC_OUT = "srcOut"
+    SRC_OVER = "srcOver"
+    VALUES = "values"
+    XOR = "xor"

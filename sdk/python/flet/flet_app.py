@@ -3,15 +3,9 @@ from typing import Any, Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import BlendMode, OptionalNumber
+from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    BorderRadiusValue,
-    OffsetValue,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
 try:
     from typing import Literal

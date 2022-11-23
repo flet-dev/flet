@@ -3,10 +3,12 @@ from typing import Any, Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import BlendMode, OptionalNumber
+from flet.control import OptionalNumber
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
+    BlendMode,
+    BlendModeString,
     BorderRadiusValue,
     OffsetValue,
     ResponsiveNumber,
@@ -64,7 +66,7 @@ class Image(ConstrainedControl):
         fit: ImageFit = None,
         border_radius: BorderRadiusValue = None,
         color: Optional[str] = None,
-        color_blend_mode: Optional[BlendMode] = None,
+        color_blend_mode: BlendMode = BlendMode.NONE,
         gapless_playback: Optional[bool] = None,
         semantics_label: Optional[str] = None,
     ):
@@ -174,12 +176,19 @@ class Image(ConstrainedControl):
 
     # color_blend_mode
     @property
-    def color_blend_mode(self) -> Optional[BlendMode]:
-        return self._get_attr("colorBlendMode")
+    def color_blend_mode(self) -> BlendMode:
+        return self.__blend_mode
 
     @color_blend_mode.setter
+    def color_blend_mode(self, value: BlendMode):
+        self.__blend_mode = value
+        if isinstance(value, BlendMode):
+            self._set_attr("colorBlendMode", value.value)
+        else:
+            self.__set_blend_mode(value)
+
     @beartype
-    def color_blend_mode(self, value: Optional[BlendMode]):
+    def __set_blend_mode(self, value: BlendModeString):
         self._set_attr("colorBlendMode", value)
 
     # gapless_playback

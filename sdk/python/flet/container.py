@@ -6,7 +6,7 @@ from beartype import beartype
 from flet.alignment import Alignment
 from flet.border import Border
 from flet.constrained_control import ConstrainedControl
-from flet.control import BlendMode, ClipBehavior, Control, OptionalNumber
+from flet.control import ClipBehavior, Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
 from flet.gradients import Gradient
@@ -14,6 +14,8 @@ from flet.image import ImageFit, ImageRepeat
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
+    BlendMode,
+    BlendModeString,
     BorderRadiusValue,
     BoxShape,
     MarginValue,
@@ -77,7 +79,7 @@ class Container(ConstrainedControl):
         alignment: Optional[Alignment] = None,
         bgcolor: Optional[str] = None,
         gradient: Optional[Gradient] = None,
-        blend_mode: Optional[BlendMode] = None,
+        blend_mode: BlendMode = BlendMode.NONE,
         border: Optional[Border] = None,
         border_radius: BorderRadiusValue = None,
         image_src: Optional[str] = None,
@@ -227,12 +229,19 @@ class Container(ConstrainedControl):
 
     # blend_mode
     @property
-    def blend_mode(self) -> Optional[BlendMode]:
-        return self._get_attr("blendMode")
+    def blend_mode(self) -> BlendMode:
+        return self.__blend_mode
 
     @blend_mode.setter
+    def blend_mode(self, value: BlendMode):
+        self.__blend_mode = value
+        if isinstance(value, BlendMode):
+            self._set_attr("blendMode", value.value)
+        else:
+            self.__set_blend_mode(value)
+
     @beartype
-    def blend_mode(self, value: Optional[BlendMode]):
+    def __set_blend_mode(self, value: BlendModeString):
         self._set_attr("blendMode", value)
 
     # border

@@ -3,11 +3,13 @@ from typing import Any, Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import BlendMode, Control, OptionalNumber
+from flet.control import Control, OptionalNumber
 from flet.gradients import Gradient
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
+    BlendMode,
+    BlendModeString,
     BorderRadiusValue,
     OffsetValue,
     ResponsiveNumber,
@@ -48,7 +50,7 @@ class ShaderMask(ConstrainedControl):
         #
         # Specific
         #
-        blend_mode: Optional[BlendMode] = None,
+        blend_mode: BlendMode = BlendMode.NONE,
         shader: Optional[Gradient] = None,
         border_radius: BorderRadiusValue = None,
     ):
@@ -113,12 +115,19 @@ class ShaderMask(ConstrainedControl):
 
     # blend_mode
     @property
-    def blend_mode(self) -> Optional[BlendMode]:
-        return self._get_attr("blendMode")
+    def blend_mode(self) -> BlendMode:
+        return self.__blend_mode
 
     @blend_mode.setter
+    def blend_mode(self, value: BlendMode):
+        self.__blend_mode = value
+        if isinstance(value, BlendMode):
+            self._set_attr("blendMode", value.value)
+        else:
+            self.__set_blend_mode(value)
+
     @beartype
-    def blend_mode(self, value: Optional[BlendMode]):
+    def __set_blend_mode(self, value: BlendModeString):
         self._set_attr("blendMode", value)
 
     # shader
