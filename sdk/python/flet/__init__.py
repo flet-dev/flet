@@ -106,7 +106,7 @@ from flet.stack import Stack
 from flet.switch import Switch
 from flet.tabs import Tab, Tabs
 from flet.template_route import TemplateRoute
-from flet.text import Text
+from flet.text import Text, TextThemeStyle, TextOverflow
 from flet.text_button import TextButton
 from flet.text_style import TextStyle
 from flet.textfield import KeyboardType, TextCapitalization, TextField

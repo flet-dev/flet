@@ -38,3 +38,45 @@ def test_text_align_enum():
 
     with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
         r = ft.Text(text_align=1)
+
+
+def test_text_style_enum():
+    r = ft.Text()
+    assert r.style == None
+    assert r._get_attr("style") is None
+
+    r = ft.Text(style=ft.TextThemeStyle.DISPLAY_LARGE)
+    assert isinstance(r.style, ft.TextThemeStyle)
+    assert r.style == ft.TextThemeStyle.DISPLAY_LARGE
+    assert r._get_attr("style") == "displayLarge"
+
+    r = ft.Text(style="bodyMedium")
+    assert isinstance(r.style, str)
+    assert r._get_attr("style") == "bodyMedium"
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Text(style="something")
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Text(style=1)
+
+
+def test_text_overflow_enum():
+    r = ft.Text()
+    assert r.overflow == ft.TextOverflow.NONE
+    assert r._get_attr("overflow") is None
+
+    r = ft.Text(overflow=ft.TextOverflow.ELLIPSIS)
+    assert isinstance(r.overflow, ft.TextOverflow)
+    assert r.overflow == ft.TextOverflow.ELLIPSIS
+    assert r._get_attr("overflow") == "ellipsis"
+
+    r = ft.Text(overflow="fade")
+    assert isinstance(r.overflow, str)
+    assert r._get_attr("overflow") == "fade"
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Text(overflow="something")
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Text(overflow=1)
