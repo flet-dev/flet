@@ -108,7 +108,7 @@ from flet.textfield import TextField
 from flet.theme import PageTransitionsTheme, Theme
 from flet.tooltip import Tooltip
 from flet.transparent_pointer import TransparentPointer
-from flet.types import BoxShape, CrossAxisAlignment, MainAxisAlignment
+from flet.types import BoxShape, CrossAxisAlignment, LabelPosition, MainAxisAlignment
 from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
 from flet.view import View

@@ -8,6 +8,8 @@ from flet.control import OptionalNumber
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
+    LabelPosition,
+    LabelPositionString,
     MaterialState,
     OffsetValue,
     ResponsiveNumber,
@@ -19,9 +21,6 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-
-LabelPosition = Literal[None, "right", "left"]
 
 
 class Radio(ConstrainedControl):
@@ -56,7 +55,7 @@ class Radio(ConstrainedControl):
         # Specific
         #
         label: Optional[str] = None,
-        label_position: LabelPosition = None,
+        label_position: LabelPosition = LabelPosition.NONE,
         value: Optional[str] = None,
         autofocus: Optional[bool] = None,
         fill_color: Union[None, str, Dict[MaterialState, str]] = None,
@@ -127,11 +126,18 @@ class Radio(ConstrainedControl):
     # label_position
     @property
     def label_position(self) -> LabelPosition:
-        return self._get_attr("labelPosition")
+        return self.__label_position
 
     @label_position.setter
-    @beartype
     def label_position(self, value: LabelPosition):
+        self.__label_position = value
+        if isinstance(value, LabelPosition):
+            self._set_attr("labelPosition", value.value)
+        else:
+            self.__set_label_position(value)
+
+    @beartype
+    def __set_label_position(self, value: LabelPositionString):
         self._set_attr("labelPosition", value)
 
     # fill_color

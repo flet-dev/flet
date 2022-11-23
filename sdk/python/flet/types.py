@@ -101,3 +101,12 @@ class CrossAxisAlignment(Enum):
     CENTER = "center"
     STRETCH = "stretch"
     BASELINE = "baseline"
+
+
+LabelPositionString = Literal[None, "right", "left"]
+
+
+class LabelPosition(Enum):
+    NONE = None
+    RIGHT = "right"
+    LEFT = "left"
