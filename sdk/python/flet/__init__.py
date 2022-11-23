@@ -110,7 +110,12 @@ from flet.text import Text
 from flet.text_button import TextButton
 from flet.text_style import TextStyle
 from flet.textfield import KeyboardType, TextCapitalization, TextField
-from flet.theme import PageTransitionsTheme, Theme
+from flet.theme import (
+    PageTransitionsTheme,
+    Theme,
+    PageTransitionTheme,
+    ThemeVisualDensity,
+)
 from flet.tooltip import Tooltip
 from flet.transparent_pointer import TransparentPointer
 from flet.types import (
