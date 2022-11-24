@@ -23,8 +23,6 @@ if TYPE_CHECKING:
 
 OptionalNumber = Union[None, int, float]
 
-ClipBehavior = Literal[None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"]
-
 
 class Control:
     def __init__(

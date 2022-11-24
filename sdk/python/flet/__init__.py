@@ -123,6 +123,7 @@ from flet.transparent_pointer import TransparentPointer
 from flet.types import (
     BlendMode,
     BoxShape,
+    ClipBehavior,
     CrossAxisAlignment,
     LabelPosition,
     MainAxisAlignment,

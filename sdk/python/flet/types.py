@@ -203,3 +203,15 @@ class ScrollMode(Enum):
     ADAPTIVE = "adaptive"
     ALWAYS = "always"
     HIDDEN = "hidden"
+
+
+ClipBehaviorString = Literal[
+    None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"
+]
+
+
+class ClipBehavior(Enum):
+    NONE = "none"
+    ANTI_ALIAS = "antiAlias"
+    ANTI_ALIAS_WITH_SAVE_LAYER = "antiAliasWithSaveLayer"
+    HARD_EDGE = "hardEdge"

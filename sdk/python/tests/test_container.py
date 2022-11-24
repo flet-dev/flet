@@ -80,3 +80,24 @@ def test_blend_mode_wrong_str_raises_beartype():
 def test_blend_mode_wrong_type_raises_beartype():
     with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
         r = ft.Container(blend_mode=1)
+
+
+def test_clip_behavior_enum():
+    r = ft.Container()
+    assert r.clip_behavior is None
+    assert r._get_attr("clipBehavior") is None
+
+    r = ft.Container(clip_behavior=ft.ClipBehavior.ANTI_ALIAS)
+    assert isinstance(r.clip_behavior, ft.ClipBehavior)
+    assert r.clip_behavior == ft.ClipBehavior.ANTI_ALIAS
+    assert r._get_attr("clipBehavior") == "antiAlias"
+
+    r = ft.Container(clip_behavior="none")
+    assert isinstance(r.clip_behavior, str)
+    assert r._get_attr("clipBehavior") == "none"
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Container(clip_behavior="something")
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Container(clip_behavior=1)
