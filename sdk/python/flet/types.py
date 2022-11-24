@@ -240,3 +240,23 @@ class ImageRepeat(Enum):
     REPEAT = "repeat"
     REPEAT_X = "repeatX"
     REPEAT_Y = "repeatY"
+
+
+PageDesignString = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
+
+
+class PageDesignLanguage(Enum):
+    MATERIAL = "material"
+    CUPERTINO = "cupertino"
+    FLUENT = "fluent"
+    MACOS = "macos"
+    ADAPTIVE = "adaptive"
+
+
+ThemeModeString = Literal[None, "system", "light", "dark"]
+
+
+class ThemeMode(Enum):
+    SYSTEM = "system"
+    LIGHT = "light"
+    DARK = "dark"

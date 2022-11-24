@@ -129,8 +129,10 @@ from flet.types import (
     ImageRepeat,
     LabelPosition,
     MainAxisAlignment,
+    PageDesignLanguage,
     ScrollMode,
     TextAlign,
+    ThemeMode,
 )
 from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
