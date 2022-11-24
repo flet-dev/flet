@@ -83,9 +83,17 @@ from flet.image import Image
 from flet.list_tile import ListTile
 from flet.list_view import ListView
 from flet.margin import Margin
-from flet.markdown import Markdown
-from flet.navigation_bar import NavigationBar, NavigationDestination
-from flet.navigation_rail import NavigationRail, NavigationRailDestination
+from flet.markdown import Markdown, MarkdownExtensionSet
+from flet.navigation_bar import (
+    NavigationBar,
+    NavigationBarLabelBehavior,
+    NavigationDestination,
+)
+from flet.navigation_rail import (
+    NavigationRail,
+    NavigationRailDestination,
+    NavigationRailLabelType,
+)
 from flet.outlined_button import OutlinedButton
 from flet.padding import Padding
 from flet.page import KeyboardEvent, LoginEvent, Page, RouteChangeEvent, ViewPopEvent

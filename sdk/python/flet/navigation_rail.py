@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
@@ -20,7 +21,13 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-NavigationRailLabelType = Literal[None, "none", "all", "selected"]
+NavigationRailLabelTypeString = Literal[None, "none", "all", "selected"]
+
+
+class NavigationRailLabelType(Enum):
+    NONE = "none"
+    ALL = "all"
+    SELECTED = "selected"
 
 
 class NavigationRailDestination(Control):
@@ -169,7 +176,7 @@ class NavigationRail(ConstrainedControl):
         destinations: Optional[List[NavigationRailDestination]] = None,
         selected_index: Optional[int] = None,
         extended: Optional[bool] = None,
-        label_type: NavigationRailLabelType = None,
+        label_type: Optional[NavigationRailLabelType] = None,
         bgcolor: Optional[str] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -266,12 +273,19 @@ class NavigationRail(ConstrainedControl):
 
     # label_type
     @property
-    def label_type(self) -> NavigationRailLabelType:
-        return self._get_attr("labelType")
+    def label_type(self) -> Optional[NavigationRailLabelType]:
+        return self.__label_type
 
     @label_type.setter
+    def label_type(self, value: Optional[NavigationRailLabelType]):
+        self.__label_type = value
+        if isinstance(value, NavigationRailLabelType):
+            self._set_attr("labelType", value.value)
+        else:
+            self.__set_label_type(value)
+
     @beartype
-    def label_type(self, value: NavigationRailLabelType):
+    def __set_label_type(self, value: NavigationRailLabelTypeString):
         self._set_attr("labelType", value)
 
     # bgcolor

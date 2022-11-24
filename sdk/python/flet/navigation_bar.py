@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
@@ -19,9 +20,15 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-NavigationBarLabelBehavior = Literal[
+NavigationBarLabelBehaviorString = Literal[
     None, "alwaysShow", "alwaysHide", "onlyShowSelected"
 ]
+
+
+class NavigationBarLabelBehavior(Enum):
+    ALWAYS_SHOW = "alwaysShow"
+    ALWAYS_HIDE = "alwaysHide"
+    ONLY_SHOW_SELECTED = "onlyShowSelected"
 
 
 class NavigationDestination(Control):
@@ -138,7 +145,7 @@ class NavigationBar(ConstrainedControl):
         destinations: Optional[List[NavigationDestination]] = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
-        label_behavior: NavigationBarLabelBehavior = None,
+        label_behavior: Optional[NavigationBarLabelBehavior] = None,
         elevation: OptionalNumber = None,
         on_change=None,
     ):
@@ -217,12 +224,19 @@ class NavigationBar(ConstrainedControl):
 
     # label_behavior
     @property
-    def label_behavior(self) -> NavigationBarLabelBehavior:
-        return self._get_attr("labelType")
+    def label_behavior(self) -> Optional[NavigationBarLabelBehavior]:
+        return self.__label_behavior
 
     @label_behavior.setter
+    def label_behavior(self, value: Optional[NavigationBarLabelBehavior]):
+        self.__label_behavior = value
+        if isinstance(value, NavigationBarLabelBehavior):
+            self._set_attr("labelType", value.value)
+        else:
+            self.__set_label_behavior(value)
+
     @beartype
-    def label_behavior(self, value: NavigationBarLabelBehavior):
+    def __set_label_behavior(self, value: NavigationBarLabelBehaviorString):
         self._set_attr("labelType", value)
 
     # bgcolor
