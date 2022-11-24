@@ -50,7 +50,7 @@ class EmbedJsonEncoder(json.JSONEncoder):
         return dict(
             map(
                 lambda item: (
-                    item[0],
+                    item[0] if not isinstance(item[0], enum.Enum) else item[0].value,
                     item[1] if not isinstance(item[1], enum.Enum) else item[1].value,
                 ),
                 filter(lambda item: item[1] is not None, d.items()),
