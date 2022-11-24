@@ -4,7 +4,7 @@ from beartype import beartype
 from beartype.typing import List
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import Control, OptionalNumber, ScrollMode
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
@@ -16,6 +16,8 @@ from flet.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ScrollMode,
+    ScrollModeString,
 )
 
 
@@ -56,7 +58,7 @@ class Row(ConstrainedControl):
         tight: Optional[bool] = None,
         wrap: Optional[bool] = None,
         run_spacing: OptionalNumber = None,
-        scroll: ScrollMode = None,
+        scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -183,17 +185,23 @@ class Row(ConstrainedControl):
 
     # scroll
     @property
-    def scroll(self) -> ScrollMode:
+    def scroll(self) -> Optional[ScrollMode]:
         return self.__scroll
 
     @scroll.setter
-    @beartype
-    def scroll(self, value: ScrollMode):
+    def scroll(self, value: Optional[ScrollMode]):
         self.__scroll = value
-        if value is True:
+        if isinstance(value, ScrollMode):
+            self._set_attr("scroll", value.value)
+        else:
+            self.__set_scroll(value)
+
+    @beartype
+    def __set_scroll(self, value: Optional[ScrollModeString]):
+        if value == True:
             value = "auto"
-        elif value is False:
-            value = "none"
+        elif value == False:
+            value = None
         self._set_attr("scroll", value)
 
     # auto_scroll

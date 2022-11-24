@@ -69,3 +69,32 @@ def test_vertical_alignment_wrong_str_raises_beartype():
 def test_vertical_alignment_wrong_type_raises_beartype():
     with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
         r = ft.View(vertical_alignment=1)
+
+
+def test_scroll_enum():
+    r = ft.View()
+    assert r.scroll is None
+    assert r._get_attr("scroll") is None
+
+    r = ft.View(scroll=ft.ScrollMode.ALWAYS)
+    assert isinstance(r.scroll, ft.ScrollMode)
+    assert r.scroll == ft.ScrollMode.ALWAYS
+    assert r._get_attr("scroll") == "always"
+
+    r = ft.View(scroll="adaptive")
+    assert isinstance(r.scroll, str)
+    assert r._get_attr("scroll") == "adaptive"
+
+    r = ft.View(scroll=True)
+    assert isinstance(r.scroll, bool)
+    assert r._get_attr("scroll") == "auto"
+
+    r = ft.View(scroll=False)
+    assert isinstance(r.scroll, bool)
+    assert r._get_attr("scroll") is None
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.View(scroll="something")
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.View(scroll=1)

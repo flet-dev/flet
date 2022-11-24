@@ -18,7 +18,7 @@ from flet.banner import Banner
 from flet.client_storage import ClientStorage
 from flet.clipboard import Clipboard
 from flet.connection import Connection
-from flet.control import Control, OptionalNumber, ScrollMode
+from flet.control import Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.event import Event
 from flet.event_handler import EventHandler
@@ -30,7 +30,7 @@ from flet.querystring import QueryString
 from flet.session_storage import SessionStorage
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
-from flet.types import CrossAxisAlignment, MainAxisAlignment, PaddingValue
+from flet.types import CrossAxisAlignment, MainAxisAlignment, PaddingValue, ScrollMode
 from flet.view import View
 
 try:
@@ -718,12 +718,12 @@ class Page(Control):
 
     # scroll
     @property
-    def scroll(self) -> ScrollMode:
+    def scroll(self) -> Optional[ScrollMode]:
         return self.__default_view.scroll
 
     @scroll.setter
     @beartype
-    def scroll(self, value: ScrollMode):
+    def scroll(self, value: Optional[ScrollMode]):
         self.__default_view.scroll = value
 
     # auto_scroll

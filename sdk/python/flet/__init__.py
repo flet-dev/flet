@@ -42,16 +42,17 @@ from flet.dropdown import Dropdown
 from flet.elevated_button import ElevatedButton
 from flet.file_picker import (
     FilePicker,
+    FilePickerFileType,
     FilePickerResultEvent,
     FilePickerUploadEvent,
     FilePickerUploadFile,
-    FilePickerFileType,
 )
 from flet.filled_button import FilledButton
 from flet.filled_tonal_button import FilledTonalButton
 from flet.flet import *
 from flet.flet_app import FletApp
 from flet.floating_action_button import FloatingActionButton
+from flet.form_field_control import InputBorder
 from flet.gesture_detector import (
     DragEndEvent,
     DragStartEvent,
@@ -107,14 +108,14 @@ from flet.stack import Stack
 from flet.switch import Switch
 from flet.tabs import Tab, Tabs
 from flet.template_route import TemplateRoute
-from flet.text import Text, TextThemeStyle, TextOverflow
+from flet.text import Text, TextOverflow, TextThemeStyle
 from flet.text_button import TextButton
 from flet.text_style import TextStyle
 from flet.textfield import KeyboardType, TextCapitalization, TextField
 from flet.theme import (
     PageTransitionsTheme,
-    Theme,
     PageTransitionTheme,
+    Theme,
     ThemeVisualDensity,
 )
 from flet.tooltip import Tooltip
@@ -125,6 +126,7 @@ from flet.types import (
     CrossAxisAlignment,
     LabelPosition,
     MainAxisAlignment,
+    ScrollMode,
     TextAlign,
 )
 from flet.user_control import UserControl

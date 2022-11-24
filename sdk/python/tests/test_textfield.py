@@ -85,3 +85,24 @@ def test_capitalization_enum():
 
     with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
         r = ft.TextField(capitalization=1)
+
+
+def test_border_enum():
+    r = ft.TextField()
+    assert r.border is None
+    assert r._get_attr("border") is None
+
+    r = ft.TextField(border=ft.InputBorder.OUTLINE)
+    assert isinstance(r.border, ft.InputBorder)
+    assert r.border == ft.InputBorder.OUTLINE
+    assert r._get_attr("border") == "outline"
+
+    r = ft.TextField(border="none")
+    assert isinstance(r.border, str)
+    assert r._get_attr("border") == "none"
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.TextField(border="something")
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.TextField(border=1)

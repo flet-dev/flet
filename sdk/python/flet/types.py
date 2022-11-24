@@ -191,3 +191,15 @@ class TextAlign(Enum):
     JUSTIFY = "justify"
     START = "start"
     END = "end"
+
+
+ScrollModeString = Literal[
+    None, True, False, "none", "auto", "adaptive", "always", "hidden"
+]
+
+
+class ScrollMode(Enum):
+    AUTO = "auto"
+    ADAPTIVE = "adaptive"
+    ALWAYS = "always"
+    HIDDEN = "hidden"

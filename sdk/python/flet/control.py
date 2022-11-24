@@ -21,12 +21,7 @@ except ImportError:
 if TYPE_CHECKING:
     from .page import Page
 
-InputBorder = Literal[None, "outline", "underline", "none"]
-
 OptionalNumber = Union[None, int, float]
-
-ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always", "hidden"]
-
 
 ClipBehavior = Literal[None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"]
 

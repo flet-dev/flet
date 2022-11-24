@@ -3,9 +3,9 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 
-from flet.control import Control, InputBorder, OptionalNumber
+from flet.control import Control, OptionalNumber
 from flet.focus import FocusData
-from flet.form_field_control import FormFieldControl
+from flet.form_field_control import FormFieldControl, InputBorder
 from flet.ref import Ref
 from flet.text_style import TextStyle
 from flet.types import (
@@ -97,7 +97,7 @@ class TextField(FormFieldControl):
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
-        border: InputBorder = None,
+        border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         border_radius: BorderRadiusValue = None,
