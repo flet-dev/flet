@@ -46,6 +46,11 @@ class EmbedJsonEncoder(json.JSONEncoder):
             return self._cleanup_dict(obj.__dict__)
         return json.JSONEncoder.default(self, obj)
 
+    def encode(self, o):
+        if isinstance(o, Dict):
+            o = self._cleanup_dict(o)
+        return super().encode(o)
+
     def _cleanup_dict(self, d):
         return dict(
             map(

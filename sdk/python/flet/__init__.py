@@ -138,6 +138,7 @@ from flet.types import (
     ImageRepeat,
     LabelPosition,
     MainAxisAlignment,
+    MaterialState,
     PageDesignLanguage,
     ScrollMode,
     TextAlign,
