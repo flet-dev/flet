@@ -1,5 +1,6 @@
-from typing import Any, Optional, Union
 from enum import Enum
+from typing import Any, Optional, Union
+
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
@@ -8,6 +9,7 @@ from flet.ref import Ref
 from flet.types import (
     AnimationValue,
     FontWeight,
+    FontWeightString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -104,7 +106,7 @@ class Text(ConstrainedControl):
         text_align: TextAlign = TextAlign.NONE,
         font_family: Optional[str] = None,
         size: OptionalNumber = None,
-        weight: FontWeight = None,
+        weight: Optional[FontWeight] = None,
         italic: Optional[bool] = None,
         style: Optional[TextThemeStyle] = None,
         max_lines: Optional[int] = None,
@@ -211,12 +213,19 @@ class Text(ConstrainedControl):
 
     # weight
     @property
-    def weight(self) -> FontWeight:
-        return self._get_attr("weight")
+    def weight(self) -> Optional[FontWeight]:
+        return self.__weight
 
     @weight.setter
+    def weight(self, value: Optional[FontWeight]):
+        self.__weight = value
+        if isinstance(value, FontWeight):
+            self._set_attr("weight", value.value)
+        else:
+            self.__set_weight(value)
+
     @beartype
-    def weight(self, value: FontWeight):
+    def __set_weight(self, value: FontWeightString):
         self._set_attr("weight", value)
 
     # style

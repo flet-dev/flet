@@ -125,6 +125,7 @@ from flet.types import (
     BoxShape,
     ClipBehavior,
     CrossAxisAlignment,
+    FontWeight,
     ImageFit,
     ImageRepeat,
     LabelPosition,

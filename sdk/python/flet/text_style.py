@@ -8,7 +8,7 @@ from flet.types import FontWeight
 @dataclasses.dataclass
 class TextStyle:
     size: Union[None, int, float] = field(default=None)
-    weight: FontWeight = field(default=None)
+    weight: Optional[FontWeight] = field(default=None)
     italic: Optional[bool] = field(default=None)
     font_family: Optional[str] = field(default=None)
     color: Optional[str] = field(default=None)

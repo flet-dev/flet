@@ -29,7 +29,7 @@ OffsetValue = Union[None, Offset]
 
 AnimationValue = Union[None, bool, int, Animation]
 
-FontWeight = Literal[
+FontWeightString = Literal[
     None,
     "normal",
     "bold",
@@ -43,6 +43,20 @@ FontWeight = Literal[
     "w800",
     "w900",
 ]
+
+
+class FontWeight(Enum):
+    NORMAL = "normal"
+    BOLD = "bold"
+    W_100 = "w100"
+    W_200 = "w200"
+    W_300 = "w300"
+    W_400 = "w400"
+    W_500 = "w500"
+    W_600 = "w600"
+    W_700 = "w700"
+    W_800 = "w800"
+    W_900 = "w900"
 
 
 class BoxShape(Enum):

@@ -80,3 +80,24 @@ def test_text_overflow_enum():
 
     with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
         r = ft.Text(overflow=1)
+
+
+def test_weight_enum():
+    r = ft.Text()
+    assert r.weight == None
+    assert r._get_attr("weight") is None
+
+    r = ft.Text(weight=ft.FontWeight.BOLD)
+    assert isinstance(r.weight, ft.FontWeight)
+    assert r.weight == ft.FontWeight.BOLD
+    assert r._get_attr("weight") == "bold"
+
+    r = ft.Text(weight="w100")
+    assert isinstance(r.weight, str)
+    assert r._get_attr("weight") == "w100"
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Text(weight="something")
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Text(weight=1)
