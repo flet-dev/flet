@@ -734,7 +734,6 @@ class Page(Control):
         return self.__default_view.scroll
 
     @scroll.setter
-    @beartype
     def scroll(self, value: Optional[ScrollMode]):
         self.__default_view.scroll = value
 
