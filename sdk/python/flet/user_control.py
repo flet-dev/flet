@@ -1,4 +1,4 @@
-from typing import List
+from beartype.typing import List
 
 from flet.control import Control
 from flet.stack import Stack

@@ -13,8 +13,8 @@ from flet import (
 )
 from flet.alert_dialog import AlertDialog
 from flet.alignment import Alignment
-from flet.animated_switcher import AnimatedSwitcher
-from flet.animation import Animation
+from flet.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
+from flet.animation import Animation, AnimationCurve
 from flet.app_bar import AppBar
 from flet.audio import Audio
 from flet.banner import Banner
@@ -42,6 +42,7 @@ from flet.dropdown import Dropdown
 from flet.elevated_button import ElevatedButton
 from flet.file_picker import (
     FilePicker,
+    FilePickerFileType,
     FilePickerResultEvent,
     FilePickerUploadEvent,
     FilePickerUploadFile,
@@ -51,6 +52,7 @@ from flet.filled_tonal_button import FilledTonalButton
 from flet.flet import *
 from flet.flet_app import FletApp
 from flet.floating_action_button import FloatingActionButton
+from flet.form_field_control import InputBorder
 from flet.gesture_detector import (
     DragEndEvent,
     DragStartEvent,
@@ -67,7 +69,12 @@ from flet.gesture_detector import (
     ScrollEvent,
     TapEvent,
 )
-from flet.gradients import LinearGradient, RadialGradient, SweepGradient
+from flet.gradients import (
+    GradientTileMode,
+    LinearGradient,
+    RadialGradient,
+    SweepGradient,
+)
 from flet.grid_view import GridView
 from flet.haptic_feedback import HapticFeedback
 from flet.icon import Icon
@@ -76,9 +83,17 @@ from flet.image import Image
 from flet.list_tile import ListTile
 from flet.list_view import ListView
 from flet.margin import Margin
-from flet.markdown import Markdown
-from flet.navigation_bar import NavigationBar, NavigationDestination
-from flet.navigation_rail import NavigationRail, NavigationRailDestination
+from flet.markdown import Markdown, MarkdownExtensionSet
+from flet.navigation_bar import (
+    NavigationBar,
+    NavigationBarLabelBehavior,
+    NavigationDestination,
+)
+from flet.navigation_rail import (
+    NavigationRail,
+    NavigationRailDestination,
+    NavigationRailLabelType,
+)
 from flet.outlined_button import OutlinedButton
 from flet.padding import Padding
 from flet.page import KeyboardEvent, LoginEvent, Page, RouteChangeEvent, ViewPopEvent
@@ -101,14 +116,34 @@ from flet.stack import Stack
 from flet.switch import Switch
 from flet.tabs import Tab, Tabs
 from flet.template_route import TemplateRoute
-from flet.text import Text
+from flet.text import Text, TextOverflow, TextThemeStyle
 from flet.text_button import TextButton
 from flet.text_style import TextStyle
-from flet.textfield import TextField
-from flet.theme import PageTransitionsTheme, Theme
+from flet.textfield import KeyboardType, TextCapitalization, TextField
+from flet.theme import (
+    PageTransitionsTheme,
+    PageTransitionTheme,
+    Theme,
+    ThemeVisualDensity,
+)
 from flet.tooltip import Tooltip
 from flet.transparent_pointer import TransparentPointer
-from flet.types import BoxShape
+from flet.types import (
+    BlendMode,
+    BoxShape,
+    ClipBehavior,
+    CrossAxisAlignment,
+    FontWeight,
+    ImageFit,
+    ImageRepeat,
+    LabelPosition,
+    MainAxisAlignment,
+    MaterialState,
+    PageDesignLanguage,
+    ScrollMode,
+    TextAlign,
+    ThemeMode,
+)
 from flet.user_control import UserControl
 from flet.vertical_divider import VerticalDivider
 from flet.view import View

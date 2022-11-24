@@ -63,31 +63,32 @@ environment:
 
     - job_name: Test Python 3.7
       job_group: python_tests
-      job_depends_on: build_flet
       python_stack: python 3.7
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.8
       job_group: python_tests
-      job_depends_on: build_flet
       python_stack: python 3.8
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.9
       job_group: python_tests
-      job_depends_on: build_flet
       python_stack: python 3.9
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.10
       job_group: python_tests
-      job_depends_on: build_flet
       python_stack: python 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+
+    - job_name: Test Python 3.11
+      job_group: python_tests
+      python_stack: python 3.11
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Build Python wheels
       job_group: python_build
-      job_depends_on: python_tests
+      job_depends_on: python_tests, build_flet
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
       TWINE_USERNAME: __token__
       TWINE_PASSWORD:
@@ -109,15 +110,15 @@ for:
         - job_name: Build Flet package for Flutter
 
     install:
-    - ps: |
-        if ($env:APPVEYOR_REPO_TAG_NAME) {
-          $v = $env:APPVEYOR_REPO_TAG_NAME.replace("v", "")
-        } else {
-          $cv = [version](git describe --abbrev=0).substring(1)
-          $v = "$($cv.major).$($cv.minor+1).0+$($env:APPVEYOR_BUILD_NUMBER)"
-        }
-        Update-AppveyorBuild -Version $v
-    - flutter upgrade
+      - ps: |
+          if ($env:APPVEYOR_REPO_TAG_NAME) {
+            $v = $env:APPVEYOR_REPO_TAG_NAME.replace("v", "")
+          } else {
+            $cv = [version](git describe --abbrev=0).substring(1)
+            $v = "$($cv.major).$($cv.minor+1).0+$($env:APPVEYOR_BUILD_NUMBER)"
+          }
+          Update-AppveyorBuild -Version $v
+      - flutter upgrade
 
     build_script:
       - cd package

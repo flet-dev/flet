@@ -1,22 +1,23 @@
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 from beartype import beartype
+from beartype.typing import List
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import (
-    Control,
-    CrossAxisAlignment,
-    MainAxisAlignment,
-    OptionalNumber,
-    ScrollMode,
-)
+from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
+    CrossAxisAlignment,
+    CrossAxisAlignmentString,
+    MainAxisAlignment,
+    MainAxisAlignmentString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ScrollMode,
+    ScrollModeString,
 )
 
 
@@ -51,13 +52,13 @@ class Row(ConstrainedControl):
         #
         # Row specific
         #
-        alignment: MainAxisAlignment = None,
-        vertical_alignment: CrossAxisAlignment = None,
+        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
         spacing: OptionalNumber = None,
         tight: Optional[bool] = None,
         wrap: Optional[bool] = None,
         run_spacing: OptionalNumber = None,
-        scroll: ScrollMode = None,
+        scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -88,7 +89,6 @@ class Row(ConstrainedControl):
             data=data,
         )
 
-        self.__controls: List[Control] = []
         self.controls = controls
         self.alignment = alignment
         self.vertical_alignment = vertical_alignment
@@ -96,7 +96,6 @@ class Row(ConstrainedControl):
         self.tight = tight
         self.wrap = wrap
         self.run_spacing = run_spacing
-        self.__scroll = False
         self.scroll = scroll
         self.auto_scroll = auto_scroll
 
@@ -123,21 +122,35 @@ class Row(ConstrainedControl):
     # horizontal_alignment
     @property
     def alignment(self) -> MainAxisAlignment:
-        return self._get_attr("alignment")
+        return self.__alignment
 
     @alignment.setter
-    @beartype
     def alignment(self, value: MainAxisAlignment):
+        self.__alignment = value
+        if isinstance(value, MainAxisAlignment):
+            self._set_attr("alignment", value.value)
+        else:
+            self.__set_alignment(value)
+
+    @beartype
+    def __set_alignment(self, value: MainAxisAlignmentString):
         self._set_attr("alignment", value)
 
     # vertical_alignment
     @property
     def vertical_alignment(self) -> CrossAxisAlignment:
-        return self._get_attr("verticalAlignment")
+        return self.__vertical_alignment
 
     @vertical_alignment.setter
-    @beartype
     def vertical_alignment(self, value: CrossAxisAlignment):
+        self.__vertical_alignment = value
+        if isinstance(value, CrossAxisAlignment):
+            self._set_attr("verticalAlignment", value.value)
+        else:
+            self.__set_vertical_alignment(value)
+
+    @beartype
+    def __set_vertical_alignment(self, value: CrossAxisAlignmentString):
         self._set_attr("verticalAlignment", value)
 
     # spacing
@@ -172,17 +185,23 @@ class Row(ConstrainedControl):
 
     # scroll
     @property
-    def scroll(self) -> ScrollMode:
+    def scroll(self) -> Optional[ScrollMode]:
         return self.__scroll
 
     @scroll.setter
-    @beartype
-    def scroll(self, value: ScrollMode):
+    def scroll(self, value: Optional[ScrollMode]):
         self.__scroll = value
-        if value is True:
+        if isinstance(value, ScrollMode):
+            self._set_attr("scroll", value.value)
+        else:
+            self.__set_scroll(value)
+
+    @beartype
+    def __set_scroll(self, value: Optional[ScrollModeString]):
+        if value == True:
             value = "auto"
-        elif value is False:
-            value = "none"
+        elif value == False:
+            value = None
         self._set_attr("scroll", value)
 
     # auto_scroll
@@ -201,5 +220,6 @@ class Row(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value):
+    @beartype
+    def controls(self, value: Optional[List[Control]]):
         self.__controls = value if value is not None else []

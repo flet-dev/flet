@@ -3,15 +3,18 @@ from beartype.typing import List, Optional
 
 from flet import Control
 from flet.app_bar import AppBar
-from flet.control import (
-    CrossAxisAlignment,
-    MainAxisAlignment,
-    OptionalNumber,
-    ScrollMode,
-)
+from flet.control import OptionalNumber
 from flet.floating_action_button import FloatingActionButton
 from flet.navigation_bar import NavigationBar
-from flet.types import PaddingValue
+from flet.types import (
+    CrossAxisAlignment,
+    CrossAxisAlignmentString,
+    MainAxisAlignment,
+    MainAxisAlignmentString,
+    PaddingValue,
+    ScrollMode,
+    ScrollModeString,
+)
 
 
 class View(Control):
@@ -22,12 +25,12 @@ class View(Control):
         appbar: Optional[AppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
         navigation_bar: Optional[NavigationBar] = None,
-        vertical_alignment: MainAxisAlignment = None,
-        horizontal_alignment: CrossAxisAlignment = None,
+        vertical_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
         spacing: OptionalNumber = None,
         padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
-        scroll: ScrollMode = None,
+        scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
     ):
         Control.__init__(self)
@@ -116,21 +119,35 @@ class View(Control):
     # horizontal_alignment
     @property
     def horizontal_alignment(self) -> CrossAxisAlignment:
-        return self._get_attr("horizontalAlignment")
+        return self.__horizontal_alignment
 
     @horizontal_alignment.setter
-    @beartype
     def horizontal_alignment(self, value: CrossAxisAlignment):
+        self.__horizontal_alignment = value
+        if isinstance(value, CrossAxisAlignment):
+            self._set_attr("horizontalAlignment", value.value)
+        else:
+            self.__set_horizontal_alignment(value)
+
+    @beartype
+    def __set_horizontal_alignment(self, value: CrossAxisAlignmentString):
         self._set_attr("horizontalAlignment", value)
 
     # vertical_alignment
     @property
     def vertical_alignment(self) -> MainAxisAlignment:
-        return self._get_attr("verticalAlignment")
+        return self.__vertical_alignment
 
     @vertical_alignment.setter
-    @beartype
     def vertical_alignment(self, value: MainAxisAlignment):
+        self.__vertical_alignment = value
+        if isinstance(value, MainAxisAlignment):
+            self._set_attr("verticalAlignment", value.value)
+        else:
+            self.__set_vertical_alignment(value)
+
+    @beartype
+    def __set_vertical_alignment(self, value: MainAxisAlignmentString):
         self._set_attr("verticalAlignment", value)
 
     # spacing
@@ -164,17 +181,23 @@ class View(Control):
 
     # scroll
     @property
-    def scroll(self) -> ScrollMode:
+    def scroll(self) -> Optional[ScrollMode]:
         return self.__scroll
 
     @scroll.setter
+    def scroll(self, value: Optional[ScrollMode]):
+        self.__scroll = value
+        if isinstance(value, ScrollMode):
+            self._set_attr("scroll", value.value)
+        else:
+            self.__set_scroll(value)
+
     @beartype
-    def scroll(self, value: ScrollMode):
-        self.__scroll: ScrollMode = value
+    def __set_scroll(self, value: Optional[ScrollModeString]):
         if value == True:
             value = "auto"
         elif value == False:
-            value = "none"
+            value = None
         self._set_attr("scroll", value)
 
     # auto_scroll

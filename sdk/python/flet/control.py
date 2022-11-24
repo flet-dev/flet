@@ -21,73 +21,7 @@ except ImportError:
 if TYPE_CHECKING:
     from .page import Page
 
-MainAxisAlignment = Literal[
-    None,
-    "start",
-    "end",
-    "center",
-    "spaceBetween",
-    "spaceAround",
-    "spaceEvenly",
-]
-
-CrossAxisAlignment = Literal[
-    None,
-    "start",
-    "end",
-    "center",
-    "stretch",
-    "baseline",
-]
-
-BorderStyle = Literal[
-    None,
-    "none",
-    "solid",
-]
-
-TextAlign = Literal[None, "left", "right", "center", "justify", "start", "end"]
-
-InputBorder = Literal[None, "outline", "underline", "none"]
-
 OptionalNumber = Union[None, int, float]
-
-ScrollMode = Literal[None, True, False, "none", "auto", "adaptive", "always", "hidden"]
-
-BlendMode = Literal[
-    "clear",
-    "color",
-    "colorBurn",
-    "colorDodge",
-    "darken",
-    "difference",
-    "dst",
-    "dstATop",
-    "dstIn",
-    "dstOut",
-    "dstOver",
-    "exclusion",
-    "hardLight",
-    "hue",
-    "lighten",
-    "luminosity",
-    "modulate",
-    "multiply",
-    "overlay",
-    "plus",
-    "saturation",
-    "screen",
-    "softLight",
-    "src",
-    "srcATop",
-    "srcIn",
-    "srcOut",
-    "srcOver",
-    "values",
-    "xor",
-]
-
-ClipBehavior = Literal[None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"]
 
 
 class Control:

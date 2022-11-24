@@ -3,11 +3,17 @@ from typing import Any, Optional, Union
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import BlendMode, OptionalNumber
+from flet.control import OptionalNumber
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
+    BlendMode,
+    BlendModeString,
     BorderRadiusValue,
+    ImageFit,
+    ImageFitString,
+    ImageRepeat,
+    ImageRepeatString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -18,13 +24,6 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-
-ImageFit = Literal[
-    None, "none", "contain", "cover", "fill", "fitHeight", "fitWidth", "scaleDown"
-]
-
-ImageRepeat = Literal[None, "noRepeat", "repeat", "repeatX", "repeatY"]
 
 
 class Image(ConstrainedControl):
@@ -60,11 +59,11 @@ class Image(ConstrainedControl):
         # Specific
         #
         src_base64: Optional[str] = None,
-        repeat: ImageRepeat = None,
-        fit: ImageFit = None,
+        repeat: Optional[ImageRepeat] = None,
+        fit: Optional[ImageFit] = None,
         border_radius: BorderRadiusValue = None,
         color: Optional[str] = None,
-        color_blend_mode: Optional[BlendMode] = None,
+        color_blend_mode: BlendMode = BlendMode.NONE,
         gapless_playback: Optional[bool] = None,
         semantics_label: Optional[str] = None,
     ):
@@ -135,22 +134,36 @@ class Image(ConstrainedControl):
 
     # fit
     @property
-    def fit(self):
-        return self._get_attr("fit")
+    def fit(self) -> Optional[ImageFit]:
+        return self.__fit
 
     @fit.setter
+    def fit(self, value: Optional[ImageFit]):
+        self.__fit = value
+        if isinstance(value, ImageFit):
+            self._set_attr("fit", value.value)
+        else:
+            self.__set_fit(value)
+
     @beartype
-    def fit(self, value: ImageFit):
+    def __set_fit(self, value: ImageFitString):
         self._set_attr("fit", value)
 
     # repeat
     @property
-    def repeat(self):
-        return self._get_attr("repeat")
+    def repeat(self) -> Optional[ImageRepeat]:
+        return self.__repeat
 
     @repeat.setter
+    def repeat(self, value: Optional[ImageRepeat]):
+        self.__repeat = value
+        if isinstance(value, ImageRepeat):
+            self._set_attr("repeat", value.value)
+        else:
+            self.__set_repeat(value)
+
     @beartype
-    def repeat(self, value: ImageRepeat):
+    def __set_repeat(self, value: ImageRepeatString):
         self._set_attr("repeat", value)
 
     # border_radius
@@ -174,12 +187,19 @@ class Image(ConstrainedControl):
 
     # color_blend_mode
     @property
-    def color_blend_mode(self) -> Optional[BlendMode]:
-        return self._get_attr("colorBlendMode")
+    def color_blend_mode(self) -> BlendMode:
+        return self.__blend_mode
 
     @color_blend_mode.setter
+    def color_blend_mode(self, value: BlendMode):
+        self.__blend_mode = value
+        if isinstance(value, BlendMode):
+            self._set_attr("colorBlendMode", value.value)
+        else:
+            self.__set_blend_mode(value)
+
     @beartype
-    def color_blend_mode(self, value: Optional[BlendMode]):
+    def __set_blend_mode(self, value: BlendModeString):
         self._set_attr("colorBlendMode", value)
 
     # gapless_playback
