@@ -119,7 +119,6 @@ class Markdown(ConstrainedControl):
         return self._get_attr("value")
 
     @value.setter
-    @beartype
     def value(self, value: Optional[str]):
         self._set_attr("value", value)
 
