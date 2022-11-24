@@ -10,7 +10,6 @@ from flet.control import Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
 from flet.gradients import Gradient
-from flet.image import ImageFit, ImageRepeat
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
@@ -20,6 +19,10 @@ from flet.types import (
     BoxShape,
     ClipBehavior,
     ClipBehaviorString,
+    ImageFit,
+    ImageFitString,
+    ImageRepeat,
+    ImageRepeatString,
     MarginValue,
     OffsetValue,
     PaddingValue,
@@ -86,8 +89,8 @@ class Container(ConstrainedControl):
         border_radius: BorderRadiusValue = None,
         image_src: Optional[str] = None,
         image_src_base64: Optional[str] = None,
-        image_repeat: ImageRepeat = None,
-        image_fit: ImageFit = None,
+        image_repeat: Optional[ImageRepeat] = None,
+        image_fit: Optional[ImageFit] = None,
         image_opacity: OptionalNumber = None,
         shape: Optional[BoxShape] = None,
         clip_behavior: Optional[ClipBehavior] = None,
@@ -286,22 +289,36 @@ class Container(ConstrainedControl):
 
     # image_fit
     @property
-    def image_fit(self):
-        return self._get_attr("imageFit")
+    def image_fit(self) -> Optional[ImageFit]:
+        return self.__image_fit
 
     @image_fit.setter
+    def image_fit(self, value: Optional[ImageFit]):
+        self.__image_fit = value
+        if isinstance(value, ImageFit):
+            self._set_attr("imageFit", value.value)
+        else:
+            self.__set_image_fit(value)
+
     @beartype
-    def image_fit(self, value: ImageFit):
+    def __set_image_fit(self, value: ImageFitString):
         self._set_attr("imageFit", value)
 
     # image_repeat
     @property
-    def image_repeat(self):
-        return self._get_attr("imageRepeat")
+    def image_repeat(self) -> Optional[ImageRepeat]:
+        return self.__image_repeat
 
     @image_repeat.setter
+    def image_repeat(self, value: Optional[ImageRepeat]):
+        self.__image_repeat = value
+        if isinstance(value, ImageRepeat):
+            self._set_attr("imageRepeat", value.value)
+        else:
+            self.__set_image_repeat(value)
+
     @beartype
-    def image_repeat(self, value: ImageRepeat):
+    def __set_image_repeat(self, value: ImageRepeatString):
         self._set_attr("imageRepeat", value)
 
     # image_opacity

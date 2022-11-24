@@ -215,3 +215,28 @@ class ClipBehavior(Enum):
     ANTI_ALIAS = "antiAlias"
     ANTI_ALIAS_WITH_SAVE_LAYER = "antiAliasWithSaveLayer"
     HARD_EDGE = "hardEdge"
+
+
+ImageFitString = Literal[
+    None, "none", "contain", "cover", "fill", "fitHeight", "fitWidth", "scaleDown"
+]
+
+
+class ImageFit(Enum):
+    NONE = "none"
+    CONTAIN = "contain"
+    COVER = "cover"
+    FILL = "fill"
+    FIT_HEIGHT = "fitHeight"
+    FIT_WIDTH = "fitWidth"
+    SCALE_DOWN = "scaleDown"
+
+
+ImageRepeatString = Literal[None, "noRepeat", "repeat", "repeatX", "repeatY"]
+
+
+class ImageRepeat(Enum):
+    NO_REPEAT = "noRepeat"
+    REPEAT = "repeat"
+    REPEAT_X = "repeatX"
+    REPEAT_Y = "repeatY"

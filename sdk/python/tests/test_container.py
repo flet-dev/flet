@@ -101,3 +101,45 @@ def test_clip_behavior_enum():
 
     with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
         r = ft.Container(clip_behavior=1)
+
+
+def test_image_repeat_enum():
+    r = ft.Container()
+    assert r.image_repeat is None
+    assert r._get_attr("imageRepeat") is None
+
+    r = ft.Container(image_repeat=ft.ImageRepeat.REPEAT)
+    assert isinstance(r.image_repeat, ft.ImageRepeat)
+    assert r.image_repeat == ft.ImageRepeat.REPEAT
+    assert r._get_attr("imageRepeat") == "repeat"
+
+    r = ft.Container(image_repeat="repeatX")
+    assert isinstance(r.image_repeat, str)
+    assert r._get_attr("imageRepeat") == "repeatX"
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Container(image_repeat="something")
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Container(image_repeat=1)
+
+
+def test_image_fit_enum():
+    r = ft.Container()
+    assert r.image_fit is None
+    assert r._get_attr("imageFit") is None
+
+    r = ft.Container(image_fit=ft.ImageFit.FILL)
+    assert isinstance(r.image_fit, ft.ImageFit)
+    assert r.image_fit == ft.ImageFit.FILL
+    assert r._get_attr("imageFit") == "fill"
+
+    r = ft.Container(image_fit="none")
+    assert isinstance(r.image_fit, str)
+    assert r._get_attr("imageFit") == "none"
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Container(image_fit="something")
+
+    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
+        r = ft.Container(image_fit=1)
