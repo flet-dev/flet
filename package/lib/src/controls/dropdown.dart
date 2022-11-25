@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet/src/utils/alignment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -93,19 +94,26 @@ class _DropdownControlState extends State<DropdownControl> {
                     Theme.of(context).colorScheme.onSurface);
           }
 
+          var alignment = parseAlignment(widget.control, "alignment");
+
           var items = itemsView.children
               .where((c) => c.name == null)
-              .map<DropdownMenuItem<String>>(
-                  (Control itemCtrl) => DropdownMenuItem<String>(
-                        enabled: !(disabled || itemCtrl.isDisabled),
-                        value: itemCtrl.attrs["key"] ??
-                            itemCtrl.attrs["text"] ??
-                            itemCtrl.id,
-                        child: Text(itemCtrl.attrs["text"] ??
-                            itemCtrl.attrs["key"] ??
-                            itemCtrl.id),
-                      ))
-              .toList();
+              .map<DropdownMenuItem<String>>((Control itemCtrl) {
+            Widget itemChild = Text(
+              itemCtrl.attrs["text"] ?? itemCtrl.attrs["key"] ?? itemCtrl.id,
+            );
+
+            if (alignment != null) {
+              itemChild = Container(alignment: alignment, child: itemChild);
+            }
+            return DropdownMenuItem<String>(
+              enabled: !(disabled || itemCtrl.isDisabled),
+              value: itemCtrl.attrs["key"] ??
+                  itemCtrl.attrs["text"] ??
+                  itemCtrl.id,
+              child: itemChild,
+            );
+          }).toList();
 
           String? value = widget.control.attrString("value");
           if (_value != value) {
@@ -139,6 +147,8 @@ class _DropdownControlState extends State<DropdownControl> {
             focusNode: _focusNode,
             value: _value,
             borderRadius: borderRadius,
+            alignment: alignment ?? AlignmentDirectional.centerStart,
+            isExpanded: alignment != null,
             decoration: buildInputDecoration(
                 context,
                 widget.control,

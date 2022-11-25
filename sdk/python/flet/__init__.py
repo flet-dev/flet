@@ -5,6 +5,7 @@ from flet import (
     border,
     border_radius,
     colors,
+    dropdown,
     icons,
     margin,
     padding,

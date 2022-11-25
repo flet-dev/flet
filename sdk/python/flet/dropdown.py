@@ -2,6 +2,7 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 
+from flet.alignment import Alignment
 from flet.control import Control, OptionalNumber
 from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl, InputBorder
@@ -84,6 +85,7 @@ class Dropdown(FormFieldControl):
         value: Optional[str] = None,
         autofocus: Optional[bool] = None,
         options=None,
+        alignment: Optional[Alignment] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -153,12 +155,17 @@ class Dropdown(FormFieldControl):
         self.value = value
         self.autofocus = autofocus
         self.options = options
+        self.alignment = alignment
         self.on_focus = on_focus
         self.on_blur = on_blur
         self.on_change = on_change
 
     def _get_control_name(self):
         return "dropdown"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("alignment", self.__alignment)
 
     def _get_children(self):
         result = FormFieldControl._get_children(self)
@@ -196,6 +203,16 @@ class Dropdown(FormFieldControl):
     @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # alignment
+    @property
+    def alignment(self) -> Optional[Alignment]:
+        return self.__alignment
+
+    @alignment.setter
+    @beartype
+    def alignment(self, value: Optional[Alignment]):
+        self.__alignment = value
 
     # on_change
     @property
