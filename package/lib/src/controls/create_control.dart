@@ -537,6 +537,9 @@ Widget _offsetControl(
               }
             : null,
         child: widget);
+  } else if (offsetDetails != null) {
+    return FractionalTranslation(
+        translation: Offset(offsetDetails.x, offsetDetails.y), child: widget);
   }
   return widget;
 }
