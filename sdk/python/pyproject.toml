@@ -9,6 +9,7 @@ authors = [
 dependencies = [
     "websocket-client>=1.2.1",
     "beartype>=0.9.1",
+    "setuptools>=56",
     'typing_extensions; python_version < "3.8"',
     "repath>=0.9.0",
     "watchdog>=2.1.9",
