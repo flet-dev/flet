@@ -97,6 +97,9 @@ environment:
 
 matrix:
   fast_finish: true
+  allow_failures:
+    - job_name: Build Flet for iOS
+    - job_name: Build Flet Studio for iOS
 
 stack: $python_stack
 
