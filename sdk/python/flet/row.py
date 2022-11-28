@@ -22,6 +22,41 @@ from flet.types import (
 
 
 class Row(ConstrainedControl):
+    """
+    A control that displays its children in a horizontal array.
+
+    To cause a child control to expand and fill the available horizontal space, set its `expand` property.
+
+    Example:
+
+    ```
+    import flet as ft
+
+    def main(page: ft.Page):
+        page.title = "Row example"
+
+        page.add(
+            ft.Row(
+                controls=[
+                    ft.ElevatedButton(expand=1, text="Button1"),
+                    ft.ElevatedButton(expand=2, text="Button2"),
+                ]
+            ),
+            ft.Row(
+                controls=[
+                    ft.ElevatedButton(expand=True, text="Button3"),
+                ]
+            ),
+        )
+
+    ft.app(target=main)
+    ```
+
+    -----
+
+    Online docs: https://flet.dev/docs/controls/row
+    """
+
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
