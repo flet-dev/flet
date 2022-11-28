@@ -1,6 +1,8 @@
 import argparse
 import sys
 import flet.version
+import flet.cli.commands.run
+import flet.cli.commands.build
 
 # Source https://stackoverflow.com/a/26379693
 def set_default_subparser(self, name, args=None, positional_args=0):
@@ -14,7 +16,7 @@ def set_default_subparser(self, name, args=None, positional_args=0):
     subparser_found = False
     existing_default = False  # check if default parser previously defined
     for arg in sys.argv[1:]:
-        if arg in ["-h", "--help"]:  # global help if no subparser
+        if arg in ["-h", "--help", "--version"]:  # global help if no subparser
             break
     else:
         for x in self._subparsers._actions:
@@ -41,10 +43,11 @@ def set_default_subparser(self, name, args=None, positional_args=0):
             # insert default in last position before global positional
             # arguments, this implies no global options are specified after
             # first positional argument
-            if args is None:
-                sys.argv.insert(len(sys.argv) - positional_args, name)
-            else:
-                args.insert(len(args) - positional_args, name)
+            if args is None and len(sys.argv) > 1:
+                sys.argv.insert(positional_args, name)
+            elif args is not None:
+                args.insert(positional_args, name)
+            print(sys.argv)
 
 
 argparse.ArgumentParser.set_default_subparser = set_default_subparser
@@ -56,65 +59,19 @@ def main():
     sp = parser.add_subparsers(dest="command")
     # sp.default = "run"
 
-    run_parser = sp.add_parser("run")
-    run_parser.add_argument("script", type=str, help="path to a Python script")
-    run_parser.add_argument(
-        "-p",
-        "--port",
-        dest="port",
-        type=int,
-        default=None,
-        help="custom TCP port to run Flet app on",
-    )
-    run_parser.add_argument(
-        "-d",
-        "--directory",
-        dest="directory",
-        action="store_true",
-        default=False,
-        help="watch script directory",
-    )
-    run_parser.add_argument(
-        "-r",
-        "--recursive",
-        dest="recursive",
-        action="store_true",
-        default=False,
-        help="watch script directory and all sub-directories recursively",
-    )
-    run_parser.add_argument(
-        "-n",
-        "--hidden",
-        dest="hidden",
-        action="store_true",
-        default=False,
-        help="application window is hidden on startup",
-    )
-    run_parser.add_argument(
-        "-w",
-        "--web",
-        dest="web",
-        action="store_true",
-        default=False,
-        help="open app in a web browser",
-    )
+    flet.cli.commands.run.Command.register_to(sp, "run")
+    flet.cli.commands.build.Command.register_to(sp, "build")
+    parser.set_default_subparser("run", positional_args=1)
 
-    build_parser = sp.add_parser("build")
-    build_parser.add_argument("script", type=str, help="path to a Python script")
-    build_parser.add_argument(
-        "-F",
-        "--onefile",
-        dest="onefile",
-        action="store_true",
-        default=False,
-        help="create a one-file bundled executable",
-    )
+    # print usage if called without args
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stdout)
+        sys.exit(1)
 
-    parser.set_default_subparser("run")
+    # parse args
     args = parser.parse_args()
-    print(args)
-
-    print(args)
+    # print(args)
+    args.handler(args)
 
     # script_path = args.script
     # port = args.port
