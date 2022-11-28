@@ -1,9 +1,11 @@
 import argparse
 import json
 import logging
+import os
 import signal
 import socket
 import subprocess
+import sys
 import tarfile
 import tempfile
 import threading
@@ -22,7 +24,19 @@ from flet.connection import Connection
 from flet.event import Event
 from flet.page import Page
 from flet.reconnecting_websocket import ReconnectingWebSocket
-from flet.utils import *
+from flet.utils import (
+    get_arch,
+    get_current_script_dir,
+    get_free_tcp_port,
+    get_platform,
+    is_linux,
+    is_linux_server,
+    is_macos,
+    is_windows,
+    open_in_browser,
+    safe_tar_extractall,
+    which,
+)
 
 try:
     from typing import Literal
@@ -264,7 +278,7 @@ def _start_flet_server(
     host, port, attached, assets_dir, upload_dir, web_renderer, route_url_strategy
 ):
     if port == 0:
-        port = _get_free_tcp_port()
+        port = get_free_tcp_port()
 
     logging.info(f"Starting local Flet Server on port {port}...")
     logging.info(f"Attached process: {attached}")
@@ -513,12 +527,6 @@ def _get_latest_flet_release():
         return None
 
 
-def _get_free_tcp_port():
-    sock = socket.socket()
-    sock.bind(("", 0))
-    return sock.getsockname()[1]
-
-
 # Fix: https://bugs.python.org/issue35935
 # if _is_windows():
 #    signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -653,7 +661,7 @@ def main():
 
     port = args.port
     if args.port is None:
-        port = _get_free_tcp_port()
+        port = get_free_tcp_port()
 
     my_event_handler = Handler(
         [sys.executable, "-u", script_path],

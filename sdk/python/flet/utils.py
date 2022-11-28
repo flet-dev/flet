@@ -1,6 +1,7 @@
 import math
 import os
 import platform
+import socket
 import sys
 import unicodedata
 import webbrowser
@@ -103,6 +104,12 @@ def is_localhost_url(url):
         or "://127.0.0.1/" in url
         or "://127.0.0.1:" in url
     )
+
+
+def get_free_tcp_port():
+    sock = socket.socket()
+    sock.bind(("", 0))
+    return sock.getsockname()[1]
 
 
 def get_current_script_dir():
