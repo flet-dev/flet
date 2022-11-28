@@ -32,22 +32,25 @@ class Row(ConstrainedControl):
     ```
     import flet as ft
 
+
     def main(page: ft.Page):
         page.title = "Row example"
 
         page.add(
             ft.Row(
                 controls=[
-                    ft.ElevatedButton(expand=1, text="Button1"),
-                    ft.ElevatedButton(expand=2, text="Button2"),
-                ]
+                    ft.Container(
+                        expand=1,
+                        content=ft.Text("Container 1"),
+                        bgcolor=ft.colors.GREEN_100,
+                    ),
+                    ft.Container(
+                        expand=2, content=ft.Text("Container 2"), bgcolor=ft.colors.RED_100
+                    ),
+                ],
             ),
-            ft.Row(
-                controls=[
-                    ft.ElevatedButton(expand=True, text="Button3"),
-                ]
-            ),
-        )
+        ),
+
 
     ft.app(target=main)
     ```
