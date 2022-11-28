@@ -6,7 +6,7 @@ import subprocess as sp
 from pathlib import Path
 
 import flet
-from flet.utils import which
+from flet.utils import which, is_windows
 
 
 # this value will be replaced by CI
@@ -17,7 +17,7 @@ def update_version():
     """Return the current version or default."""
     working = Path().absolute()
     os.chdir(Path(flet.__file__).absolute().parent)
-    in_repo = which("git") and sp.run(
+    in_repo = which("git.exe" if is_windows() else "git") and sp.run(
         ["git", "status"],
         capture_output=True,
         text=True,
@@ -47,7 +47,7 @@ def update_version():
         version = git_p.stdout.strip()[1:]
 
     else:
-        version = "0.1.60"
+        version = "0.2.0"
     os.chdir(working)
     return version
 
