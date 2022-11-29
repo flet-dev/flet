@@ -7,6 +7,46 @@ from flet.ref import Ref
 
 
 class Divider(Control):
+    """
+    A thin horizontal line, with padding on either side.
+
+    In the material design language, this represents a divider.
+
+    Example:
+    ```
+    import flet as ft
+
+
+    def main(page: ft.Page):
+
+        page.add(
+            ft.Column(
+                [
+                    ft.Container(
+                        bgcolor=ft.colors.AMBER,
+                        alignment=ft.alignment.center,
+                        expand=True,
+                    ),
+                    ft.Divider(),
+                    ft.Container(
+                        bgcolor=ft.colors.PINK, alignment=ft.alignment.center, expand=True
+                    ),
+                ],
+                spacing=0,
+                expand=True,
+            ),
+        )
+
+
+    ft.app(target=main)
+
+    ```
+
+    -----
+
+    Online docs: https://flet.dev/docs/controls/divider
+    """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,
