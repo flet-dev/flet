@@ -18,13 +18,7 @@ from flet.banner import Banner
 from flet.client_storage import ClientStorage
 from flet.clipboard import Clipboard
 from flet.connection import Connection
-from flet.control import (
-    Control,
-    CrossAxisAlignment,
-    MainAxisAlignment,
-    OptionalNumber,
-    ScrollMode,
-)
+from flet.control import Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.event import Event
 from flet.event_handler import EventHandler
@@ -36,17 +30,22 @@ from flet.querystring import QueryString
 from flet.session_storage import SessionStorage
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
-from flet.types import PaddingValue
+from flet.types import (
+    CrossAxisAlignment,
+    MainAxisAlignment,
+    PaddingValue,
+    PageDesignLanguage,
+    PageDesignString,
+    ScrollMode,
+    ThemeMode,
+    ThemeModeString,
+)
 from flet.view import View
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-
-PageDesign = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
-ThemeMode = Literal[None, "system", "light", "dark"]
 
 
 class Page(Control):
@@ -452,6 +451,11 @@ class Page(Control):
             args["window_height"] = str(window_height)
         self.invoke_method("launchUrl", args)
 
+    @beartype
+    def can_launch_url(self, url: str):
+        args = {"url": url}
+        return self.invoke_method("canLaunchUrl", args, wait_for_result=True) == "true"
+
     def close_in_app_web_view(self):
         self.invoke_method("closeInAppWebView")
 
@@ -607,12 +611,19 @@ class Page(Control):
 
     # design
     @property
-    def design(self):
-        return self._get_attr("design")
+    def design(self) -> Optional[PageDesignLanguage]:
+        return self.__design
 
     @design.setter
+    def design(self, value: Optional[PageDesignLanguage]):
+        self.__design = value
+        if isinstance(value, PageDesignLanguage):
+            self._set_attr("design", value.value)
+        else:
+            self.__set_design(value)
+
     @beartype
-    def design(self, value: PageDesign):
+    def __set_design(self, value: PageDesignString):
         self._set_attr("design", value)
 
     # fonts
@@ -676,7 +687,6 @@ class Page(Control):
         return self.__default_view.horizontal_alignment
 
     @horizontal_alignment.setter
-    @beartype
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__default_view.horizontal_alignment = value
 
@@ -686,7 +696,6 @@ class Page(Control):
         return self.__default_view.vertical_alignment
 
     @vertical_alignment.setter
-    @beartype
     def vertical_alignment(self, value: MainAxisAlignment):
         self.__default_view.vertical_alignment = value
 
@@ -721,12 +730,11 @@ class Page(Control):
 
     # scroll
     @property
-    def scroll(self) -> ScrollMode:
+    def scroll(self) -> Optional[ScrollMode]:
         return self.__default_view.scroll
 
     @scroll.setter
-    @beartype
-    def scroll(self, value: ScrollMode):
+    def scroll(self, value: Optional[ScrollMode]):
         self.__default_view.scroll = value
 
     # auto_scroll
@@ -792,11 +800,18 @@ class Page(Control):
     # theme_mode
     @property
     def theme_mode(self) -> Optional[ThemeMode]:
-        return self._get_attr("themeMode")
+        return self.__theme_mode
 
     @theme_mode.setter
-    @beartype
     def theme_mode(self, value: Optional[ThemeMode]):
+        self.__theme_mode = value
+        if isinstance(value, ThemeMode):
+            self._set_attr("themeMode", value.value)
+        else:
+            self.__set_theme_mode(value)
+
+    @beartype
+    def __set_theme_mode(self, value: ThemeModeString):
         self._set_attr("themeMode", value)
 
     # theme

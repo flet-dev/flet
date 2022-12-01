@@ -11,13 +11,24 @@ from flet.dropdown import Option
 from flet.event_handler import EventHandler
 from flet.ref import Ref
 
+from enum import Enum
+
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
 
-FileType = Literal["any", "media", "image", "video", "audio", "custom"]
+FileTypeString = Literal["any", "media", "image", "video", "audio", "custom"]
 FilePickerState = Literal["pickFiles", "saveFile", "getDirectoryPath"]
+
+
+class FilePickerFileType(Enum):
+    ANY = "any"
+    MEDIA = "media"
+    IMAGE = "image"
+    VIDEO = "video"
+    AUDIO = "audio"
+    CUSTOM = "custom"
 
 
 @dataclass
@@ -106,7 +117,7 @@ class FilePicker(Control):
         self,
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
-        file_type: Optional[FileType] = "any",
+        file_type: FilePickerFileType = FilePickerFileType.ANY,
         allowed_extensions: Optional[List[str]] = None,
         allow_multiple: Optional[bool] = False,
     ):
@@ -123,7 +134,7 @@ class FilePicker(Control):
         dialog_title: Optional[str] = None,
         file_name: Optional[str] = None,
         initial_directory: Optional[str] = None,
-        file_type: Optional[FileType] = "any",
+        file_type: FilePickerFileType = FilePickerFileType.ANY,
         allowed_extensions: Optional[List[str]] = None,
     ):
         self.state = "saveFile"
@@ -194,12 +205,19 @@ class FilePicker(Control):
 
     # file_type
     @property
-    def file_type(self):
-        return self._get_attr("fileType")
+    def file_type(self) -> FilePickerFileType:
+        return self.__file_type
 
     @file_type.setter
+    def file_type(self, value: FilePickerFileType):
+        self.__file_type = value
+        if isinstance(value, FilePickerFileType):
+            self._set_attr("fileType", value.value)
+        else:
+            self.__set_file_type(value)
+
     @beartype
-    def file_type(self, value: Optional[FileType]):
+    def __set_file_type(self, value: FileTypeString):
         self._set_attr("fileType", value)
 
     # allowed_extensions

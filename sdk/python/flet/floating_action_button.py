@@ -2,6 +2,7 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 
+from flet.buttons import OutlinedBorder
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
@@ -50,6 +51,8 @@ class FloatingActionButton(ConstrainedControl):
         bgcolor: Optional[str] = None,
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,
+        shape: Optional[OutlinedBorder] = None,
+        mini: Optional[bool] = None,
         on_click=None,
     ):
         ConstrainedControl.__init__(
@@ -86,10 +89,16 @@ class FloatingActionButton(ConstrainedControl):
         self.bgcolor = bgcolor
         self.content = content
         self.autofocus = autofocus
+        self.shape = shape
+        self.mini = mini
         self.on_click = on_click
 
     def _get_control_name(self):
         return "floatingactionbutton"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("shape", self.__shape)
 
     def _get_children(self):
         if self.__content is None:
@@ -152,3 +161,23 @@ class FloatingActionButton(ConstrainedControl):
     @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # shape
+    @property
+    def shape(self) -> Optional[OutlinedBorder]:
+        return self.__shape
+
+    @shape.setter
+    @beartype
+    def shape(self, value: Optional[OutlinedBorder]):
+        self.__shape = value
+
+    # mini
+    @property
+    def mini(self) -> Optional[bool]:
+        return self._get_attr("mini", data_type="bool", def_value=False)
+
+    @mini.setter
+    @beartype
+    def mini(self, value: Optional[bool]):
+        self._set_attr("mini", value)

@@ -3,12 +3,14 @@ from typing import Any, Optional, Union
 from beartype import beartype
 from beartype.typing import Dict
 
-from flet.buttons import MaterialState
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
+    LabelPosition,
+    LabelPositionString,
+    MaterialState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -19,9 +21,6 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-
-LabelPosition = Literal[None, "right", "left"]
 
 
 class Switch(ConstrainedControl):
@@ -56,7 +55,7 @@ class Switch(ConstrainedControl):
         # Specific
         #
         label: Optional[str] = None,
-        label_position: LabelPosition = None,
+        label_position: LabelPosition = LabelPosition.NONE,
         value: Optional[bool] = None,
         autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
@@ -141,11 +140,18 @@ class Switch(ConstrainedControl):
     # label_position
     @property
     def label_position(self) -> LabelPosition:
-        return self._get_attr("labelPosition")
+        return self.__label_position
 
     @label_position.setter
-    @beartype
     def label_position(self, value: LabelPosition):
+        self.__label_position = value
+        if isinstance(value, LabelPosition):
+            self._set_attr("labelPosition", value.value)
+        else:
+            self.__set_label_position(value)
+
+    @beartype
+    def __set_label_position(self, value: LabelPositionString):
         self._set_attr("labelPosition", value)
 
     # autofocus

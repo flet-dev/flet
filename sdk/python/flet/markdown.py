@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
@@ -19,9 +20,16 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-MarkdownExtensionSet = Literal[
+MarkdownExtensionSetString = Literal[
     None, "none", "commonMark", "gitHubWeb", "gitHubFlavored"
 ]
+
+
+class MarkdownExtensionSet(Enum):
+    NONE = "none"
+    COMMON_MARK = "commonMark"
+    GITHUB_WEB = "gitHubWeb"
+    GITHUB_FLAVORED = "gitHubFlavored"
 
 
 class Markdown(ConstrainedControl):
@@ -57,7 +65,7 @@ class Markdown(ConstrainedControl):
         # Specific
         #
         selectable: Optional[bool] = None,
-        extension_set: MarkdownExtensionSet = None,
+        extension_set: Optional[MarkdownExtensionSet] = None,
         code_theme: Optional[str] = None,
         code_style: Optional[TextStyle] = None,
         on_tap_link=None,
@@ -107,11 +115,11 @@ class Markdown(ConstrainedControl):
 
     # value
     @property
-    def value(self):
+    def value(self) -> Optional[str]:
         return self._get_attr("value")
 
     @value.setter
-    def value(self, value):
+    def value(self, value: Optional[str]):
         self._set_attr("value", value)
 
     # selectable
@@ -127,11 +135,18 @@ class Markdown(ConstrainedControl):
     # extension_set
     @property
     def extension_set(self) -> Optional[MarkdownExtensionSet]:
-        return self._get_attr("extensionSet")
+        return self.__extension_set
 
     @extension_set.setter
-    @beartype
     def extension_set(self, value: Optional[MarkdownExtensionSet]):
+        self.__extension_set = value
+        if isinstance(value, MarkdownExtensionSet):
+            self._set_attr("extensionSet", value.value)
+        else:
+            self.__set_extension_set(value)
+
+    @beartype
+    def __set_extension_set(self, value: MarkdownExtensionSetString):
         self._set_attr("extensionSet", value)
 
     # code_theme

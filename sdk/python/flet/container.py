@@ -6,16 +6,23 @@ from beartype import beartype
 from flet.alignment import Alignment
 from flet.border import Border
 from flet.constrained_control import ConstrainedControl
-from flet.control import BlendMode, ClipBehavior, Control, OptionalNumber
+from flet.control import Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
 from flet.gradients import Gradient
-from flet.image import ImageFit, ImageRepeat
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
+    BlendMode,
+    BlendModeString,
     BorderRadiusValue,
     BoxShape,
+    ClipBehavior,
+    ClipBehaviorString,
+    ImageFit,
+    ImageFitString,
+    ImageRepeat,
+    ImageRepeatString,
     MarginValue,
     OffsetValue,
     PaddingValue,
@@ -77,16 +84,16 @@ class Container(ConstrainedControl):
         alignment: Optional[Alignment] = None,
         bgcolor: Optional[str] = None,
         gradient: Optional[Gradient] = None,
-        blend_mode: Optional[BlendMode] = None,
+        blend_mode: BlendMode = BlendMode.NONE,
         border: Optional[Border] = None,
         border_radius: BorderRadiusValue = None,
         image_src: Optional[str] = None,
         image_src_base64: Optional[str] = None,
-        image_repeat: ImageRepeat = None,
-        image_fit: ImageFit = None,
+        image_repeat: Optional[ImageRepeat] = None,
+        image_fit: Optional[ImageFit] = None,
         image_opacity: OptionalNumber = None,
         shape: Optional[BoxShape] = None,
-        clip_behavior: ClipBehavior = None,
+        clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
         animate: AnimationValue = None,
         on_click=None,
@@ -227,12 +234,19 @@ class Container(ConstrainedControl):
 
     # blend_mode
     @property
-    def blend_mode(self) -> Optional[BlendMode]:
-        return self._get_attr("blendMode")
+    def blend_mode(self) -> BlendMode:
+        return self.__blend_mode
 
     @blend_mode.setter
+    def blend_mode(self, value: BlendMode):
+        self.__blend_mode = value
+        if isinstance(value, BlendMode):
+            self._set_attr("blendMode", value.value)
+        else:
+            self.__set_blend_mode(value)
+
     @beartype
-    def blend_mode(self, value: Optional[BlendMode]):
+    def __set_blend_mode(self, value: BlendModeString):
         self._set_attr("blendMode", value)
 
     # border
@@ -275,22 +289,36 @@ class Container(ConstrainedControl):
 
     # image_fit
     @property
-    def image_fit(self):
-        return self._get_attr("imageFit")
+    def image_fit(self) -> Optional[ImageFit]:
+        return self.__image_fit
 
     @image_fit.setter
+    def image_fit(self, value: Optional[ImageFit]):
+        self.__image_fit = value
+        if isinstance(value, ImageFit):
+            self._set_attr("imageFit", value.value)
+        else:
+            self.__set_image_fit(value)
+
     @beartype
-    def image_fit(self, value: ImageFit):
+    def __set_image_fit(self, value: ImageFitString):
         self._set_attr("imageFit", value)
 
     # image_repeat
     @property
-    def image_repeat(self):
-        return self._get_attr("imageRepeat")
+    def image_repeat(self) -> Optional[ImageRepeat]:
+        return self.__image_repeat
 
     @image_repeat.setter
+    def image_repeat(self, value: Optional[ImageRepeat]):
+        self.__image_repeat = value
+        if isinstance(value, ImageRepeat):
+            self._set_attr("imageRepeat", value.value)
+        else:
+            self.__set_image_repeat(value)
+
     @beartype
-    def image_repeat(self, value: ImageRepeat):
+    def __set_image_repeat(self, value: ImageRepeatString):
         self._set_attr("imageRepeat", value)
 
     # image_opacity
@@ -326,11 +354,18 @@ class Container(ConstrainedControl):
     # clip_behavior
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
-        return self._get_attr("clipBehavior")
+        return self.__clip_behavior
 
     @clip_behavior.setter
-    @beartype
     def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        if isinstance(value, ClipBehavior):
+            self._set_attr("clipBehavior", value.value)
+        else:
+            self.__set_clip_behavior(value)
+
+    @beartype
+    def __set_clip_behavior(self, value: Optional[ClipBehaviorString]):
         self._set_attr("clipBehavior", value)
 
     # ink

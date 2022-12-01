@@ -45,7 +45,7 @@ class ImageControl extends StatelessWidget {
     var color = HexColor.fromString(
         Theme.of(context), control.attrString("color", "")!);
     String? semanticsLabel = control.attrString("semanticsLabel");
-    var gaplessPlayback = control.attrBool("gaplessPlayback", false)!;
+    var gaplessPlayback = control.attrBool("gaplessPlayback");
 
     return StoreConnector<AppState, Uri?>(
         distinct: true,
@@ -74,7 +74,7 @@ class ImageControl extends StatelessWidget {
                     fit: fit,
                     color: color,
                     colorBlendMode: colorBlendMode,
-                    gaplessPlayback: gaplessPlayback,
+                    gaplessPlayback: gaplessPlayback ?? true,
                     semanticLabel: semanticsLabel);
               }
             } catch (ex) {
@@ -107,7 +107,7 @@ class ImageControl extends StatelessWidget {
                   repeat: repeat,
                   fit: fit,
                   color: color,
-                  gaplessPlayback: gaplessPlayback,
+                  gaplessPlayback: gaplessPlayback ?? false,
                   colorBlendMode: colorBlendMode,
                   semanticLabel: semanticsLabel);
             }

@@ -1,17 +1,21 @@
+from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
 
 from flet.constrained_control import ConstrainedControl
-from flet.control import OptionalNumber, TextAlign
+from flet.control import OptionalNumber
 from flet.ref import Ref
 from flet.types import (
     AnimationValue,
     FontWeight,
+    FontWeightString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    TextAlign,
+    TextAlignString,
 )
 
 try:
@@ -19,9 +23,18 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-TextOverflow = Literal[None, "clip", "ellipsis", "fade", "visible"]
+TextOverflowString = Literal[None, "clip", "ellipsis", "fade", "visible"]
 
-TextThemeStyle = Literal[
+
+class TextOverflow(Enum):
+    NONE = None
+    CLIP = "clip"
+    ELLIPSIS = "ellipsis"
+    FADE = "fade"
+    VISIBLE = "visible"
+
+
+TextThemeStyleString = Literal[
     "displayLarge",
     "displayMedium",
     "displaySmall",
@@ -38,6 +51,24 @@ TextThemeStyle = Literal[
     "bodyMedium",
     "bodySmall",
 ]
+
+
+class TextThemeStyle(Enum):
+    DISPLAY_LARGE = "displayLarge"
+    DISPLAY_MEDIUM = "displayMedium"
+    DISPLAY_SMALL = "displaySmall"
+    HEADLINE_LARGE = "headlineLarge"
+    HEADLINE_MEDIUM = "headlineMedium"
+    HEADLINE_SMALL = "headlineSmall"
+    TITLE_LARGE = "titleLarge"
+    TITLE_MEDIUM = "titleMedium"
+    TITLE_SMALL = "titleSmall"
+    LABEL_LARGE = "labelLarge"
+    LABEL_MEDIUM = "labelMedium"
+    LABEL_SMALL = "labelSmall"
+    BODY_LARGE = "bodyLarge"
+    BODY_MEDIUM = "bodyMedium"
+    BODY_SMALL = "bodySmall"
 
 
 class Text(ConstrainedControl):
@@ -72,14 +103,14 @@ class Text(ConstrainedControl):
         #
         # text-specific
         #
-        text_align: TextAlign = None,
+        text_align: TextAlign = TextAlign.NONE,
         font_family: Optional[str] = None,
         size: OptionalNumber = None,
-        weight: FontWeight = None,
+        weight: Optional[FontWeight] = None,
         italic: Optional[bool] = None,
         style: Optional[TextThemeStyle] = None,
         max_lines: Optional[int] = None,
-        overflow: TextOverflow = None,
+        overflow: TextOverflow = TextOverflow.NONE,
         selectable: Optional[bool] = None,
         no_wrap: Optional[bool] = None,
         color: Optional[str] = None,
@@ -136,21 +167,28 @@ class Text(ConstrainedControl):
 
     # value
     @property
-    def value(self):
+    def value(self) -> Optional[str]:
         return self._get_attr("value")
 
     @value.setter
-    def value(self, value):
+    def value(self, value: Optional[str]):
         self._set_attr("value", value)
 
     # text_align
     @property
     def text_align(self) -> TextAlign:
-        return self._get_attr("textAlign")
+        return self.__text_align
 
     @text_align.setter
-    @beartype
     def text_align(self, value: TextAlign):
+        self.__text_align = value
+        if isinstance(value, TextAlign):
+            self._set_attr("textAlign", value.value)
+        else:
+            self.__set_text_align(value)
+
+    @beartype
+    def __set_text_align(self, value: TextAlignString):
         self._set_attr("textAlign", value)
 
     # font_family
@@ -174,22 +212,36 @@ class Text(ConstrainedControl):
 
     # weight
     @property
-    def weight(self) -> FontWeight:
-        return self._get_attr("weight")
+    def weight(self) -> Optional[FontWeight]:
+        return self.__weight
 
     @weight.setter
+    def weight(self, value: Optional[FontWeight]):
+        self.__weight = value
+        if isinstance(value, FontWeight):
+            self._set_attr("weight", value.value)
+        else:
+            self.__set_weight(value)
+
     @beartype
-    def weight(self, value: FontWeight):
+    def __set_weight(self, value: FontWeightString):
         self._set_attr("weight", value)
 
     # style
     @property
     def style(self) -> Optional[TextThemeStyle]:
-        return self._get_attr("style")
+        return self.__style
 
     @style.setter
-    @beartype
     def style(self, value: Optional[TextThemeStyle]):
+        self.__style = value
+        if isinstance(value, TextThemeStyle):
+            self._set_attr("style", value.value)
+        else:
+            self.__set_style(value)
+
+    @beartype
+    def __set_style(self, value: Optional[TextThemeStyleString]):
         self._set_attr("style", value)
 
     # italic
@@ -235,11 +287,18 @@ class Text(ConstrainedControl):
     # overflow
     @property
     def overflow(self) -> TextOverflow:
-        return self._get_attr("overflow")
+        return self.__overflow
 
     @overflow.setter
-    @beartype
     def overflow(self, value: TextOverflow):
+        self.__overflow = value
+        if isinstance(value, TextOverflow):
+            self._set_attr("overflow", value.value)
+        else:
+            self.__set_overflow(value)
+
+    @beartype
+    def __set_overflow(self, value: TextOverflowString):
         self._set_attr("overflow", value)
 
     # color

@@ -21,6 +21,7 @@ import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
+import 'datatable.dart';
 import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
@@ -209,6 +210,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "card":
           return CardControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "datatable":
+          return DataTableControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
@@ -530,6 +537,9 @@ Widget _offsetControl(
               }
             : null,
         child: widget);
+  } else if (offsetDetails != null) {
+    return FractionalTranslation(
+        translation: Offset(offsetDetails.x, offsetDetails.y), child: widget);
   }
   return widget;
 }

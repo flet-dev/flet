@@ -1,11 +1,12 @@
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from beartype import beartype
+from beartype.typing import List
 
 from flet.buttons import OutlinedBorder
-from flet.control import Control, MainAxisAlignment
+from flet.control import Control
 from flet.ref import Ref
-from flet.types import PaddingValue
+from flet.types import MainAxisAlignment, MainAxisAlignmentString, PaddingValue
 
 
 class AlertDialog(Control):
@@ -26,7 +27,7 @@ class AlertDialog(Control):
         content_padding: PaddingValue = None,
         actions: Optional[List[Control]] = None,
         actions_padding: PaddingValue = None,
-        actions_alignment: MainAxisAlignment = None,
+        actions_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
         shape: Optional[OutlinedBorder] = None,
         on_dismiss=None,
     ):
@@ -158,11 +159,18 @@ class AlertDialog(Control):
     # actions_alignment
     @property
     def actions_alignment(self) -> MainAxisAlignment:
-        return self._get_attr("actionsAlignment")
+        return self.__actions_alignment
 
     @actions_alignment.setter
-    @beartype
     def actions_alignment(self, value: MainAxisAlignment):
+        self.__actions_alignment = value
+        if isinstance(value, MainAxisAlignment):
+            self._set_attr("actionsAlignment", value.value)
+        else:
+            self.__set_actions_alignment(value)
+
+    @beartype
+    def __set_actions_alignment(self, value: MainAxisAlignmentString):
         self._set_attr("actionsAlignment", value)
 
     # shape
