@@ -276,7 +276,7 @@ class Page(Control):
 
     def on_event(self, e: Event):
         logging.info(f"page.on_event: {e.target} {e.name} {e.data}")
-
+        will_accept_false = e.name == "will_accept" and e.data == "false"
         with self._lock:
             if e.target == "page" and e.name == "change":
                 for props in json.loads(e.data):
@@ -288,7 +288,7 @@ class Page(Control):
                                     name, props[name], dirty=False
                                 )
 
-            elif e.target in self._index:
+            elif e.target in self._index and not will_accept_false:
                 self._last_event = ControlEvent(
                     e.target, e.name, e.data, self._index[e.target], self
                 )
