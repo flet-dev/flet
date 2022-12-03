@@ -35,6 +35,7 @@ from flet.circle_avatar import CircleAvatar
 from flet.column import Column
 from flet.container import Container, ContainerTapEvent
 from flet.control import Control
+from flet.control_event import ControlEvent
 from flet.datatable import DataCell, DataColumn, DataColumnSortEvent, DataRow, DataTable
 from flet.divider import Divider
 from flet.drag_target import DragTarget, DragTargetAcceptEvent
