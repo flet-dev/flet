@@ -26,12 +26,17 @@ NavigationBarLabelBehaviorString = Literal[
 
 
 class NavigationBarLabelBehavior(Enum):
+    """Defines how the destinations' labels will be laid out and when they'll be displayed."""
     ALWAYS_SHOW = "alwaysShow"
     ALWAYS_HIDE = "alwaysHide"
     ONLY_SHOW_SELECTED = "onlyShowSelected"
 
 
 class NavigationDestination(Control):
+    """Defines the appearance of the button items that are arrayed within the navigation bar.
+
+    The value must be a list of two or more NavigationDestination instances."""
+    
     def __init__(
         self,
         ref: Optional[Ref] = None,
@@ -114,6 +119,39 @@ class NavigationDestination(Control):
 
 
 class NavigationBar(ConstrainedControl):
+    """
+    Material 3 Navigation Bar component.
+
+    Navigation bars offer a persistent and convenient way to switch between primary destinations in an app.
+
+    Example:
+
+    ```
+    import flet as ft
+
+    def main(page: ft.Page):
+
+        page.title = "NavigationBar Example"
+        page.navigation_bar = ft.NavigationBar(
+            destinations=[
+                ft.NavigationDestination(icon=ft.icons.EXPLORE, label="Explore"),
+                ft.NavigationDestination(icon=ft.icons.COMMUTE, label="Commute"),
+                ft.NavigationDestination(
+                    icon=ft.icons.BOOKMARK_BORDER,
+                    selected_icon=ft.icons.BOOKMARK,
+                    label="Explore",
+                ),
+            ]
+        )
+        page.add(ft.Text("Body!"))
+
+    ft.app(target=main)
+    ```
+
+    -----
+
+    Online docs: https://flet.dev/docs/controls/navigationbar
+    """
     def __init__(
         self,
         ref: Optional[Ref] = None,
