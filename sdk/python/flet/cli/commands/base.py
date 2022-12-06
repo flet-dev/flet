@@ -52,7 +52,6 @@ class BaseCommand:
 
     def handle(self, options: argparse.Namespace) -> None:
         """The command handler function.
-        :param project: the pdm project instance
         :param options: the parsed Namespace object
         """
         raise NotImplementedError
