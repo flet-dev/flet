@@ -47,7 +47,7 @@ def set_default_subparser(self, name, args=None, positional_args=0):
                 sys.argv.insert(positional_args, name)
             elif args is not None:
                 args.insert(positional_args, name)
-            print(sys.argv)
+            # print(sys.argv)
 
 
 argparse.ArgumentParser.set_default_subparser = set_default_subparser
