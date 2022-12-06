@@ -380,7 +380,10 @@ def _open_flet_view(page_url, hidden):
         else:
             # check if flet.exe is in PATH (flet developer mode)
             flet_path = which(flet_exe, sys.argv[0])
-            if flet_path:
+            if (
+                flet_path
+                and Path(flet_path).parent.joinpath("flutter_windows.dll").exists()
+            ):
                 logging.info(f"Flet View found in PATH: {flet_path}")
             else:
                 if not temp_flet_dir.exists():
