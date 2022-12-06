@@ -19,4 +19,5 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
-        print("BUILD COMMAND", options)
+        # print("BUILD COMMAND", options)
+        raise NotImplementedError("Build command is not yet implemented.")
