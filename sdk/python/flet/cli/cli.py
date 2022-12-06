@@ -70,11 +70,9 @@ def main():
 
     # parse args
     args = parser.parse_args()
-    # print(args)
-    args.handler(args)
 
-    # script_path = args.script
-    # port = args.port
+    # execute command
+    args.handler(args)
 
 
 if __name__ == "__main__":
