@@ -9,6 +9,46 @@ from flet.types import PaddingValue
 
 
 class Banner(Control):
+    """
+    A banner displays an important, succinct message, and provides actions for users to address (or dismiss the banner). A user action is required for it to be dismissed.
+
+    Banners are displayed at the top of the screen, below a top app bar. They are persistent and non-modal, allowing the user to either ignore them or interact with them at any time.
+
+    Example:
+    ```
+    import flet as ft
+
+    def main(page):
+        def close_banner(e):
+            page.banner.open = False
+            page.update()
+
+        page.banner = ft.Banner(
+            bgcolor=ft.colors.AMBER_100,
+            leading=ft.Icon(ft.icons.WARNING_AMBER_ROUNDED, color=ft.colors.AMBER, size=40),
+            content=ft.Text(
+                "Oops, there were some errors while trying to delete the file. What would you like me to do?"
+            ),
+            actions=[
+                ft.TextButton("Retry", on_click=close_banner),
+                ft.TextButton("Ignore", on_click=close_banner),
+                ft.TextButton("Cancel", on_click=close_banner),
+            ],
+        )
+
+        def show_banner_click(e):
+            page.banner.open = True
+            page.update()
+
+        page.add(ft.ElevatedButton("Show Banner", on_click=show_banner_click))
+
+    ft.app(target=main)
+    ```
+
+    -----
+
+    Online docs: https://flet.dev/docs/controls/banner
+    """
     def __init__(
         self,
         ref: Optional[Ref] = None,
