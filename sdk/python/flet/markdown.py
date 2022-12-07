@@ -33,6 +33,13 @@ class MarkdownExtensionSet(Enum):
 
 
 class Markdown(ConstrainedControl):
+    """
+    Control for rendering text in markdown format.
+
+    -----
+
+    Online docs: https://flet.dev/docs/controls/markdown
+    """
     def __init__(
         self,
         value: Optional[str] = None,

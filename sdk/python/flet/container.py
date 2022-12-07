@@ -41,9 +41,25 @@ class Container(ConstrainedControl):
     """
     Container allows to decorate a control with background color and border and position it with padding, margin and alignment.
 
-    Args:
-        width (:obj:`int`|:obj:`float`, optional): Container width.
-        height (:obj:`int`|:obj:`float`, optional): Container height.
+    Example:
+
+    ```
+    import flet as ft
+
+    def main(page: ft.Page):
+        page.title = "Container"
+
+        c1 = ft.Container(
+            content=ft.Text("Container with background"),
+            bgcolor=ft.colors.AMBER_100,
+            padding=5,
+        )
+        page.add(c1)
+
+    ft.app(target=main)
+    ```
+
+    -----
 
     Online docs: https://flet.dev/docs/controls/container
     """
