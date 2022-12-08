@@ -24,6 +24,34 @@ except ImportError:
 
 
 class Radio(ConstrainedControl):
+    """
+    Radio buttons let people select a single option from two or more choices.
+
+    Example:
+    ```
+    import flet as ft
+
+    def main(page):
+    def button_clicked(e):
+        t.value = f"Your favorite color is:  {cg.value}"
+        page.update()
+
+    t = ft.Text()
+    b = ft.ElevatedButton(text='Submit', on_click=button_clicked)
+    cg = ft.RadioGroup(content=ft.Column([
+        ft.Radio(value="red", label="Red"),
+        ft.Radio(value="green", label="Green"),
+        ft.Radio(value="blue", label="Blue")]))
+    
+    page.add(ft.Text("Select your favorite color:"), cg, b, t)
+
+    ft.app(target=main)
+    ```
+
+    -----
+
+    Online docs: https://flet.dev/docs/controls/radio
+    """
     def __init__(
         self,
         ref: Optional[Ref] = None,

@@ -8,6 +8,48 @@ from flet.ref import Ref
 
 
 class AppBar(Control):
+    """
+    A material design app bar.
+
+    Example:
+    ```
+    import flet as ft
+
+    def main(page: ft.Page):
+        def check_item_clicked(e):
+            e.control.checked = not e.control.checked
+            page.update()
+
+        page.appbar = ft.AppBar(
+            leading=ft.Icon(ft.icons.PALETTE),
+            leading_width=40,
+            title=ft.Text("AppBar Example"),
+            center_title=False,
+            bgcolor=ft.colors.SURFACE_VARIANT,
+            actions=[
+                ft.IconButton(ft.icons.WB_SUNNY_OUTLINED),
+                ft.IconButton(ft.icons.FILTER_3),
+                ft.PopupMenuButton(
+                    items=[
+                        ft.PopupMenuItem(text="Item 1"),
+                        ft.PopupMenuItem(),  # divider
+                        ft.PopupMenuItem(
+                            text="Checked item", checked=False, on_click=check_item_clicked
+                        ),
+                    ]
+                ),
+            ],
+        )
+        page.add(ft.Text("Body!"))
+
+    ft.app(target=main)
+
+    ```
+
+    -----
+
+    Online docs: https://flet.dev/docs/controls/appbar
+    """
     def __init__(
         self,
         ref: Optional[Ref] = None,
@@ -63,6 +105,11 @@ class AppBar(Control):
     @leading.setter
     @beartype
     def leading(self, value: Optional[Control]):
+        """
+        A Control to display before the toolbar's title.
+
+        Typically the leading control is an Icon or an IconButton.
+        """
         self.__leading = value
 
     # leading_width
