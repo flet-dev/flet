@@ -46,19 +46,29 @@ class CountinuosRectangleBorder(OutlinedBorder):
 
 @dataclasses.dataclass
 class ButtonStyle:
-    color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
-    bgcolor: Union[None, str, Dict[MaterialState, str]] = field(default=None)
-    overlay_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
-    shadow_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
-    surface_tint_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
-    elevation: Union[None, float, int, Dict[MaterialState, Union[float, int]]] = field(
+    color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(default=None)
+    bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
         default=None
     )
+    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    shadow_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    surface_tint_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    elevation: Union[
+        None, float, int, Dict[Union[str, MaterialState], Union[float, int]]
+    ] = field(default=None)
     animation_duration: Optional[int] = field(default=None)
-    padding: Union[PaddingValue, Dict[MaterialState, PaddingValue]] = field(
+    padding: Union[PaddingValue, Dict[Union[str, MaterialState], PaddingValue]] = field(
         default=None
     )
-    side: Union[None, BorderSide, Dict[MaterialState, BorderSide]] = field(default=None)
-    shape: Union[None, OutlinedBorder, Dict[MaterialState, OutlinedBorder]] = field(
+    side: Union[None, BorderSide, Dict[Union[str, MaterialState], BorderSide]] = field(
         default=None
     )
+    shape: Union[
+        None, OutlinedBorder, Dict[Union[str, MaterialState], OutlinedBorder]
+    ] = field(default=None)
