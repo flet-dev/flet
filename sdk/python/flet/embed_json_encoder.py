@@ -39,8 +39,11 @@ class EmbedJsonEncoder(json.JSONEncoder):
             }
         elif isinstance(obj, ButtonStyle):
             for k, v in obj.__dict__.items():
-                if v is not None and not isinstance(v, Dict):
-                    obj.__dict__[k] = {"": v}
+                if v is not None:
+                    if not isinstance(v, Dict):
+                        obj.__dict__[k] = {"": v}
+                    if k != "animation_duration":
+                        obj.__dict__[k] = self._cleanup_dict(obj.__dict__[k])
             return self._cleanup_dict(obj.__dict__)
         elif isinstance(obj, object):
             return self._cleanup_dict(obj.__dict__)
