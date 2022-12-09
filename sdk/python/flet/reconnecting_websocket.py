@@ -89,7 +89,7 @@ class ReconnectingWebSocket:
             logging.debug(f"Exited run_forever()")
             websocket.setdefaulttimeout(self.default_timeout)
             self.connected.clear()
-            if r != True:
+            if r is not True:
                 return
 
             if self.retry == 0 and self._on_failed_connect_handler is not None:
@@ -101,7 +101,7 @@ class ReconnectingWebSocket:
             backoff_in_seconds = 1
             sleep = 0.1
             if not is_localhost_url(self._url):
-                sleep = backoff_in_seconds * 2**self.retry + random.uniform(0, 1)
+                sleep = backoff_in_seconds * 2 ** self.retry + random.uniform(0, 1)
             logging.info(f"Reconnecting Flet Server in {sleep} seconds")
             self.exit.wait(sleep)
             self.retry += 1

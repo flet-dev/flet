@@ -61,43 +61,43 @@ class Row(ConstrainedControl):
     """
 
     def __init__(
-        self,
-        controls: Optional[List[Control]] = None,
-        ref: Optional[Ref] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        left: OptionalNumber = None,
-        top: OptionalNumber = None,
-        right: OptionalNumber = None,
-        bottom: OptionalNumber = None,
-        expand: Union[None, bool, int] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
-        aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Row specific
-        #
-        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
-        spacing: OptionalNumber = None,
-        tight: Optional[bool] = None,
-        wrap: Optional[bool] = None,
-        run_spacing: OptionalNumber = None,
-        scroll: Optional[ScrollMode] = None,
-        auto_scroll: Optional[bool] = None,
+            self,
+            controls: Optional[List[Control]] = None,
+            ref: Optional[Ref] = None,
+            width: OptionalNumber = None,
+            height: OptionalNumber = None,
+            left: OptionalNumber = None,
+            top: OptionalNumber = None,
+            right: OptionalNumber = None,
+            bottom: OptionalNumber = None,
+            expand: Union[None, bool, int] = None,
+            col: Optional[ResponsiveNumber] = None,
+            opacity: OptionalNumber = None,
+            rotate: RotateValue = None,
+            scale: ScaleValue = None,
+            offset: OffsetValue = None,
+            aspect_ratio: OptionalNumber = None,
+            animate_opacity: AnimationValue = None,
+            animate_size: AnimationValue = None,
+            animate_position: AnimationValue = None,
+            animate_rotation: AnimationValue = None,
+            animate_scale: AnimationValue = None,
+            animate_offset: AnimationValue = None,
+            on_animation_end=None,
+            visible: Optional[bool] = None,
+            disabled: Optional[bool] = None,
+            data: Any = None,
+            #
+            # Row specific
+            #
+            alignment: Union[MainAxisAlignment, MainAxisAlignmentString] = None,
+            vertical_alignment: Union[CrossAxisAlignment, CrossAxisAlignmentString] = None,
+            spacing: OptionalNumber = None,
+            tight: Optional[bool] = None,
+            wrap: Optional[bool] = None,
+            run_spacing: OptionalNumber = None,
+            scroll: Union[ScrollMode, ScrollModeString] = None,
+            auto_scroll: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -159,11 +159,11 @@ class Row(ConstrainedControl):
 
     # horizontal_alignment
     @property
-    def alignment(self) -> MainAxisAlignment:
+    def alignment(self) -> Union[MainAxisAlignment, MainAxisAlignmentString]:
         return self.__alignment
 
     @alignment.setter
-    def alignment(self, value: MainAxisAlignment):
+    def alignment(self, value: Union[MainAxisAlignment, MainAxisAlignmentString]):
         self.__alignment = value
         if isinstance(value, MainAxisAlignment):
             self._set_attr("alignment", value.value)
@@ -176,11 +176,11 @@ class Row(ConstrainedControl):
 
     # vertical_alignment
     @property
-    def vertical_alignment(self) -> CrossAxisAlignment:
+    def vertical_alignment(self) -> Union[CrossAxisAlignment, CrossAxisAlignmentString]:
         return self.__vertical_alignment
 
     @vertical_alignment.setter
-    def vertical_alignment(self, value: CrossAxisAlignment):
+    def vertical_alignment(self, value: Union[CrossAxisAlignment, CrossAxisAlignmentString]):
         self.__vertical_alignment = value
         if isinstance(value, CrossAxisAlignment):
             self._set_attr("verticalAlignment", value.value)
@@ -223,11 +223,11 @@ class Row(ConstrainedControl):
 
     # scroll
     @property
-    def scroll(self) -> Optional[ScrollMode]:
+    def scroll(self) -> Union[ScrollMode, ScrollModeString]:
         return self.__scroll
 
     @scroll.setter
-    def scroll(self, value: Optional[ScrollMode]):
+    def scroll(self, value: Union[ScrollMode, ScrollModeString]):
         self.__scroll = value
         if isinstance(value, ScrollMode):
             self._set_attr("scroll", value.value)
@@ -235,10 +235,10 @@ class Row(ConstrainedControl):
             self.__set_scroll(value)
 
     @beartype
-    def __set_scroll(self, value: Optional[ScrollModeString]):
-        if value == True:
+    def __set_scroll(self, value: Union[ScrollMode, ScrollModeString]):
+        if value is True:
             value = "auto"
-        elif value == False:
+        elif value is False:
             value = None
         self._set_attr("scroll", value)
 

@@ -1,3 +1,5 @@
+from typing import Union
+
 from beartype import beartype
 from beartype.typing import List, Optional
 
@@ -35,12 +37,12 @@ class View(Control):
         appbar: Optional[AppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
         navigation_bar: Optional[NavigationBar] = None,
-        vertical_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        vertical_alignment: Union[MainAxisAlignment, MainAxisAlignmentString] = None,
+        horizontal_alignment: Union[CrossAxisAlignment, CrossAxisAlignmentString] = None,
         spacing: OptionalNumber = None,
         padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
-        scroll: Optional[ScrollMode] = None,
+        scroll: Union[ScrollMode, ScrollModeString] = None,
         auto_scroll: Optional[bool] = None,
     ):
         Control.__init__(self)
@@ -128,11 +130,11 @@ class View(Control):
 
     # horizontal_alignment
     @property
-    def horizontal_alignment(self) -> CrossAxisAlignment:
+    def horizontal_alignment(self) -> Union[CrossAxisAlignment, CrossAxisAlignmentString]:
         return self.__horizontal_alignment
 
     @horizontal_alignment.setter
-    def horizontal_alignment(self, value: CrossAxisAlignment):
+    def horizontal_alignment(self, value: Union[CrossAxisAlignment, CrossAxisAlignmentString]):
         self.__horizontal_alignment = value
         if isinstance(value, CrossAxisAlignment):
             self._set_attr("horizontalAlignment", value.value)
@@ -145,11 +147,11 @@ class View(Control):
 
     # vertical_alignment
     @property
-    def vertical_alignment(self) -> MainAxisAlignment:
+    def vertical_alignment(self) -> Union[MainAxisAlignment, MainAxisAlignmentString]:
         return self.__vertical_alignment
 
     @vertical_alignment.setter
-    def vertical_alignment(self, value: MainAxisAlignment):
+    def vertical_alignment(self, value: Union[MainAxisAlignment, MainAxisAlignmentString]):
         self.__vertical_alignment = value
         if isinstance(value, MainAxisAlignment):
             self._set_attr("verticalAlignment", value.value)
@@ -191,11 +193,11 @@ class View(Control):
 
     # scroll
     @property
-    def scroll(self) -> Optional[ScrollMode]:
+    def scroll(self) -> Union[ScrollMode, ScrollModeString]:
         return self.__scroll
 
     @scroll.setter
-    def scroll(self, value: Optional[ScrollMode]):
+    def scroll(self, value: Union[ScrollMode, ScrollModeString]):
         self.__scroll = value
         if isinstance(value, ScrollMode):
             self._set_attr("scroll", value.value)
@@ -203,10 +205,10 @@ class View(Control):
             self.__set_scroll(value)
 
     @beartype
-    def __set_scroll(self, value: Optional[ScrollModeString]):
-        if value == True:
+    def __set_scroll(self, value: ScrollModeString):
+        if value is True:
             value = "auto"
-        elif value == False:
+        elif value is False:
             value = None
         self._set_attr("scroll", value)
 

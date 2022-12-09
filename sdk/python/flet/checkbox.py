@@ -180,7 +180,7 @@ class Checkbox(ConstrainedControl):
         return self.__label_position
 
     @label_position.setter
-    def label_position(self, value: LabelPosition):
+    def label_position(self, value: Union[LabelPosition, LabelPositionString]):
         self.__label_position = value
         if isinstance(value, LabelPosition):
             self._set_attr("labelPosition", value.value)

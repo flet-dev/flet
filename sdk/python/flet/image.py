@@ -86,10 +86,10 @@ class Image(ConstrainedControl):
         #
         src_base64: Optional[str] = None,
         repeat: Optional[ImageRepeat] = None,
-        fit: Optional[ImageFit] = None,
+        fit: Union[ImageFit, ImageFitString] = None,
         border_radius: BorderRadiusValue = None,
         color: Optional[str] = None,
-        color_blend_mode: BlendMode = BlendMode.NONE,
+        color_blend_mode: Union[BlendMode, BlendModeString] = None,
         gapless_playback: Optional[bool] = None,
         semantics_label: Optional[str] = None,
     ):
@@ -160,11 +160,11 @@ class Image(ConstrainedControl):
 
     # fit
     @property
-    def fit(self) -> Optional[ImageFit]:
+    def fit(self) -> Union[ImageFit, ImageFitString]:
         return self.__fit
 
     @fit.setter
-    def fit(self, value: Optional[ImageFit]):
+    def fit(self, value: Union[ImageFit, ImageFitString]):
         self.__fit = value
         if isinstance(value, ImageFit):
             self._set_attr("fit", value.value)
@@ -177,11 +177,11 @@ class Image(ConstrainedControl):
 
     # repeat
     @property
-    def repeat(self) -> Optional[ImageRepeat]:
+    def repeat(self) -> Union[ImageRepeat, ImageRepeatString]:
         return self.__repeat
 
     @repeat.setter
-    def repeat(self, value: Optional[ImageRepeat]):
+    def repeat(self, value: Union[ImageRepeat, ImageRepeatString]):
         self.__repeat = value
         if isinstance(value, ImageRepeat):
             self._set_attr("repeat", value.value)
@@ -213,11 +213,11 @@ class Image(ConstrainedControl):
 
     # color_blend_mode
     @property
-    def color_blend_mode(self) -> BlendMode:
+    def color_blend_mode(self) -> Union[BlendMode, BlendModeString]:
         return self.__blend_mode
 
     @color_blend_mode.setter
-    def color_blend_mode(self, value: BlendMode):
+    def color_blend_mode(self, value: Union[BlendMode, BlendModeString]):
         self.__blend_mode = value
         if isinstance(value, BlendMode):
             self._set_attr("colorBlendMode", value.value)

@@ -17,6 +17,7 @@ from flet.types import (
     BlendModeString,
     BorderRadiusValue,
     BoxShape,
+    BoxShapeString,
     ClipBehavior,
     ClipBehaviorString,
     ImageFit,
@@ -33,7 +34,7 @@ from flet.types import (
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 
@@ -100,16 +101,16 @@ class Container(ConstrainedControl):
         alignment: Optional[Alignment] = None,
         bgcolor: Optional[str] = None,
         gradient: Optional[Gradient] = None,
-        blend_mode: BlendMode = BlendMode.NONE,
+        blend_mode: Union[BlendMode, BlendModeString] = None,
         border: Optional[Border] = None,
         border_radius: BorderRadiusValue = None,
         image_src: Optional[str] = None,
         image_src_base64: Optional[str] = None,
-        image_repeat: Optional[ImageRepeat] = None,
-        image_fit: Optional[ImageFit] = None,
+        image_repeat: Union[ImageRepeat, ImageRepeatString] = None,
+        image_fit: Union[ImageFit, ImageFitString] = None,
         image_opacity: OptionalNumber = None,
-        shape: Optional[BoxShape] = None,
-        clip_behavior: Optional[ClipBehavior] = None,
+        shape: Union[BoxShape, BoxShapeString] = None,
+        clip_behavior: Union[ClipBehavior, ClipBehaviorString] = None,
         ink: Optional[bool] = None,
         animate: AnimationValue = None,
         on_click=None,
@@ -250,11 +251,11 @@ class Container(ConstrainedControl):
 
     # blend_mode
     @property
-    def blend_mode(self) -> BlendMode:
+    def blend_mode(self) -> Union[BlendMode, BlendModeString]:
         return self.__blend_mode
 
     @blend_mode.setter
-    def blend_mode(self, value: BlendMode):
+    def blend_mode(self, value: Union[BlendMode, BlendModeString]):
         self.__blend_mode = value
         if isinstance(value, BlendMode):
             self._set_attr("blendMode", value.value)
@@ -305,11 +306,11 @@ class Container(ConstrainedControl):
 
     # image_fit
     @property
-    def image_fit(self) -> Optional[ImageFit]:
+    def image_fit(self) -> Union[ImageFit, ImageFitString]:
         return self.__image_fit
 
     @image_fit.setter
-    def image_fit(self, value: Optional[ImageFit]):
+    def image_fit(self, value: Union[ImageFit, ImageFitString]):
         self.__image_fit = value
         if isinstance(value, ImageFit):
             self._set_attr("imageFit", value.value)
@@ -322,11 +323,11 @@ class Container(ConstrainedControl):
 
     # image_repeat
     @property
-    def image_repeat(self) -> Optional[ImageRepeat]:
+    def image_repeat(self) -> Union[ImageRepeat, ImageRepeatString]:
         return self.__image_repeat
 
     @image_repeat.setter
-    def image_repeat(self, value: Optional[ImageRepeat]):
+    def image_repeat(self, value: Union[ImageRepeat, ImageRepeatString]):
         self.__image_repeat = value
         if isinstance(value, ImageRepeat):
             self._set_attr("imageRepeat", value.value)
@@ -359,21 +360,28 @@ class Container(ConstrainedControl):
 
     # shape
     @property
-    def shape(self):
-        return self._get_attr("shape")
+    def shape(self) -> Union[BoxShape, BoxShapeString]:
+        return self.__shape
 
     @shape.setter
+    def shape(self, value: Union[BoxShape, BoxShapeString]):
+        self.__shape = value
+        if isinstance(value, BoxShape):
+            self._set_attr("shape", value.value)
+        else:
+            self.__set_shape(value)
+
     @beartype
-    def shape(self, value: Optional[BoxShape]):
-        self._set_attr("shape", value.value if value is not None else None)
+    def __set_shape(self, value: BoxShapeString):
+        self._set_attr("shape", value)
 
     # clip_behavior
     @property
-    def clip_behavior(self) -> Optional[ClipBehavior]:
+    def clip_behavior(self) -> Union[ClipBehavior, ClipBehaviorString]:
         return self.__clip_behavior
 
     @clip_behavior.setter
-    def clip_behavior(self, value: Optional[ClipBehavior]):
+    def clip_behavior(self, value: Union[ClipBehavior, ClipBehaviorString]):
         self.__clip_behavior = value
         if isinstance(value, ClipBehavior):
             self._set_attr("clipBehavior", value.value)
@@ -381,7 +389,7 @@ class Container(ConstrainedControl):
             self.__set_clip_behavior(value)
 
     @beartype
-    def __set_clip_behavior(self, value: Optional[ClipBehaviorString]):
+    def __set_clip_behavior(self, value: ClipBehaviorString):
         self._set_attr("clipBehavior", value)
 
     # ink

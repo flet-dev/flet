@@ -355,15 +355,15 @@ class Page(Control):
         return r.result
 
     def login(
-        self,
-        provider: OAuthProvider,
-        fetch_user=True,
-        fetch_groups=False,
-        scope: Optional[List[str]] = None,
-        saved_token: Optional[str] = None,
-        on_open_authorization_url=None,
-        complete_page_html: Optional[str] = None,
-        redirect_to_page=False,
+            self,
+            provider: OAuthProvider,
+            fetch_user=True,
+            fetch_groups=False,
+            scope: Optional[List[str]] = None,
+            saved_token: Optional[str] = None,
+            on_open_authorization_url=None,
+            complete_page_html: Optional[str] = None,
+            redirect_to_page=False,
     ):
         self.__authorization = Authorization(
             provider,
@@ -372,7 +372,7 @@ class Page(Control):
             scope=scope,
             saved_token=saved_token,
         )
-        if saved_token == None:
+        if saved_token is None:
             authorization_url, state = self.__authorization.get_authorization_data()
             auth_attrs = {"state": state}
             if complete_page_html:
@@ -433,10 +433,10 @@ class Page(Control):
             self.__conn.close()
 
     def _send_command(
-        self,
-        name: str,
-        values: Optional[List[str]] = None,
-        attrs: Optional[Dict[str, str]] = None,
+            self,
+            name: str,
+            values: Optional[List[str]] = None,
+            attrs: Optional[Dict[str, str]] = None,
     ):
         return self.__conn.send_command(
             self._session_id,
@@ -457,21 +457,21 @@ class Page(Control):
 
     @beartype
     def launch_url(
-        self,
-        url: str,
-        web_window_name: Optional[str] = None,
-        web_popup_window: bool = False,
-        window_width: Optional[int] = None,
-        window_height: Optional[int] = None,
+            self,
+            url: str,
+            web_window_name: Optional[str] = None,
+            web_popup_window: bool = False,
+            window_width: Optional[int] = None,
+            window_height: Optional[int] = None,
     ):
         args = {"url": url}
-        if web_window_name != None:
+        if web_window_name is not None:
             args["web_window_name"] = web_window_name
-        if web_popup_window != None:
+        if web_popup_window is not None:
             args["web_popup_window"] = str(web_popup_window)
-        if window_width != None:
+        if window_width is not None:
             args["window_width"] = str(window_width)
-        if window_height != None:
+        if window_height is not None:
             args["window_height"] = str(window_height)
         self.invoke_method("launchUrl", args)
 
@@ -488,10 +488,10 @@ class Page(Control):
         self.invoke_method("windowToFront")
 
     def invoke_method(
-        self,
-        method_name: str,
-        arguments: Optional[Dict[str, str]] = None,
-        wait_for_result: bool = False,
+            self,
+            method_name: str,
+            arguments: Optional[Dict[str, str]] = None,
+            wait_for_result: bool = False,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
 
@@ -523,9 +523,9 @@ class Page(Control):
             )
 
         result, err = self.__method_call_results.pop(evt)
-        if err != None:
+        if err is not None:
             raise Exception(err)
-        if result == None:
+        if result is None:
             return None
         return result
 
@@ -533,7 +533,7 @@ class Page(Control):
         d = json.loads(e.data)
         result = InvokeMethodResults(**d)
         evt = self.__method_calls.pop(result.method_id, None)
-        if evt == None:
+        if evt is None:
             return
         self.__method_call_results[evt] = (result.result, result.error)
         evt.set()
@@ -1270,10 +1270,10 @@ class Page(Control):
 
 class Offstage(Control):
     def __init__(
-        self,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
+            self,
+            visible: Optional[bool] = None,
+            disabled: Optional[bool] = None,
+            data: Any = None,
     ):
 
         Control.__init__(

@@ -59,12 +59,18 @@ class FontWeight(Enum):
     W_900 = "w900"
 
 
+BoxShapeString = Literal["rectangle", "circle"]
+
+
 class BoxShape(Enum):
     RECTANGLE = "rectangle"
     CIRCLE = "circle"
 
 
 ResponsiveNumber = Union[Dict[str, Union[int, float]], int, float]
+
+MaterialStateString = Literal[
+    "hovered", "focused", "pressed", "dragged", "selected", "scrolledUnder", "disabled", "error", ""]
 
 
 class MaterialState(Enum):
@@ -128,6 +134,7 @@ class LabelPosition(Enum):
 
 
 BlendModeString = Literal[
+    None,
     "clear",
     "color",
     "colorBurn",

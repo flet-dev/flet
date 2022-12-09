@@ -101,7 +101,7 @@ class Stack(ConstrainedControl):
         #
         # Stack-specific
         #
-        clip_behavior: Optional[ClipBehavior] = None,
+        clip_behavior: Union[ClipBehavior, ClipBehaviorString] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -152,11 +152,11 @@ class Stack(ConstrainedControl):
 
     # clip_behavior
     @property
-    def clip_behavior(self) -> Optional[ClipBehavior]:
+    def clip_behavior(self) -> Union[ClipBehavior, ClipBehaviorString]:
         return self.__clip_behavior
 
     @clip_behavior.setter
-    def clip_behavior(self, value: Optional[ClipBehavior]):
+    def clip_behavior(self, value: Union[ClipBehavior, ClipBehaviorString]):
         self.__clip_behavior = value
         if isinstance(value, ClipBehavior):
             self._set_attr("clipBehavior", value.value)
@@ -164,5 +164,5 @@ class Stack(ConstrainedControl):
             self.__set_clip_behavior(value)
 
     @beartype
-    def __set_clip_behavior(self, value: Optional[ClipBehaviorString]):
+    def __set_clip_behavior(self, value: ClipBehaviorString):
         self._set_attr("clipBehavior", value)

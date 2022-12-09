@@ -82,8 +82,8 @@ class ResponsiveRow(ConstrainedControl):
         # Row specific
         #
         columns: Optional[ResponsiveNumber] = None,
-        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        alignment: Union[MainAxisAlignment, MainAxisAlignmentString] = None,
+        vertical_alignment: Union[CrossAxisAlignment, CrossAxisAlignmentString] = None,
         spacing: Optional[ResponsiveNumber] = None,
         run_spacing: Optional[ResponsiveNumber] = None,
     ):
@@ -140,11 +140,11 @@ class ResponsiveRow(ConstrainedControl):
 
     # horizontal_alignment
     @property
-    def alignment(self) -> MainAxisAlignment:
+    def alignment(self) -> Union[MainAxisAlignment, MainAxisAlignmentString]:
         return self.__alignment
 
     @alignment.setter
-    def alignment(self, value: MainAxisAlignment):
+    def alignment(self, value: Union[MainAxisAlignment, MainAxisAlignmentString]):
         self.__alignment = value
         if isinstance(value, MainAxisAlignment):
             self._set_attr("alignment", value.value)
@@ -157,11 +157,11 @@ class ResponsiveRow(ConstrainedControl):
 
     # vertical_alignment
     @property
-    def vertical_alignment(self) -> CrossAxisAlignment:
+    def vertical_alignment(self) -> Union[CrossAxisAlignment, CrossAxisAlignmentString]:
         return self.__vertical_alignment
 
     @vertical_alignment.setter
-    def vertical_alignment(self, value: CrossAxisAlignment):
+    def vertical_alignment(self, value: Union[CrossAxisAlignment, CrossAxisAlignmentString]):
         self.__vertical_alignment = value
         if isinstance(value, CrossAxisAlignment):
             self._set_attr("verticalAlignment", value.value)

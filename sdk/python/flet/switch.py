@@ -11,6 +11,7 @@ from flet.types import (
     LabelPosition,
     LabelPositionString,
     MaterialState,
+    MaterialStateString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -87,15 +88,15 @@ class Switch(ConstrainedControl):
         # Specific
         #
         label: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
+        label_position: Union[LabelPosition, LabelPositionString] = None,
         value: Optional[bool] = None,
         autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
         active_track_color: Optional[str] = None,
         inactive_thumb_color: Optional[str] = None,
         inactive_track_color: Optional[str] = None,
-        thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
-        track_color: Union[None, str, Dict[MaterialState, str]] = None,
+        thumb_color: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]] = None,
+        track_color: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -171,11 +172,11 @@ class Switch(ConstrainedControl):
 
     # label_position
     @property
-    def label_position(self) -> LabelPosition:
+    def label_position(self) -> Union[LabelPosition, LabelPositionString]:
         return self.__label_position
 
     @label_position.setter
-    def label_position(self, value: LabelPosition):
+    def label_position(self, value: Union[LabelPosition, LabelPositionString]):
         self.__label_position = value
         if isinstance(value, LabelPosition):
             self._set_attr("labelPosition", value.value)
@@ -234,22 +235,22 @@ class Switch(ConstrainedControl):
 
     # thumb_color
     @property
-    def thumb_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def thumb_color(self) -> Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]:
         return self.__thumb_color
 
     @thumb_color.setter
     @beartype
-    def thumb_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def thumb_color(self, value: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]):
         self.__thumb_color = value
 
     # track_color
     @property
-    def track_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def track_color(self) -> Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]:
         return self.__track_color
 
     @track_color.setter
     @beartype
-    def track_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def track_color(self, value: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]):
         self.__track_color = value
 
     # on_change

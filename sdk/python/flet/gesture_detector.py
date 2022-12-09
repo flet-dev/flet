@@ -1,6 +1,6 @@
 import json
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Literal
 
 from beartype import beartype
 
@@ -16,6 +16,13 @@ from flet.types import (
     RotateValue,
     ScaleValue,
 )
+
+MouseCursorString = Literal["alias", "allScroll", "basic", "cell", "click", "contextMenu", "copy", "disappearing",
+                            "forbidden", "grab", "grabbing", "help", "move", "noDrop", "none", "precise", "progress",
+                            "resizeColumn", "resizeDown", "resizeDownLeft", "resizeDownRight", "resizeLeft",
+                            "resizeLeftRight", "resizeRight", "resizeRow", "resizeUp", "resizeUpDown", "resizeUpLeft",
+                            "resizeUpLeftDownRight", "resizeUpRight", "resizeUpRightDownLeft", "text", "verticalText",
+                            "wait", "zoomIn", "zoomOut"]
 
 
 class MouseCursor(Enum):
@@ -106,70 +113,71 @@ class GestureDetector(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/gesturedetector
     """
+
     def __init__(
-        self,
-        content: Optional[Control] = None,
-        ref: Optional[Ref] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        left: OptionalNumber = None,
-        top: OptionalNumber = None,
-        right: OptionalNumber = None,
-        bottom: OptionalNumber = None,
-        expand: Union[None, bool, int] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
-        aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
-        mouse_cursor: Optional[MouseCursor] = None,
-        drag_interval: Optional[int] = None,
-        hover_interval: Optional[int] = None,
-        on_tap=None,
-        on_tap_down=None,
-        on_tap_up=None,
-        on_multi_tap=None,
-        multi_tap_touches=None,
-        on_multi_long_press=None,
-        on_secondary_tap=None,
-        on_secondary_tap_down=None,
-        on_secondary_tap_up=None,
-        on_long_press_start=None,
-        on_long_press_end=None,
-        on_secondary_long_press_start=None,
-        on_secondary_long_press_end=None,
-        on_double_tap=None,
-        on_double_tap_down=None,
-        on_horizontal_drag_start=None,
-        on_horizontal_drag_update=None,
-        on_horizontal_drag_end=None,
-        on_vertical_drag_start=None,
-        on_vertical_drag_update=None,
-        on_vertical_drag_end=None,
-        on_pan_start=None,
-        on_pan_update=None,
-        on_pan_end=None,
-        on_scale_start=None,
-        on_scale_update=None,
-        on_scale_end=None,
-        on_hover=None,
-        on_enter=None,
-        on_exit=None,
-        on_scroll=None,
+            self,
+            content: Optional[Control] = None,
+            ref: Optional[Ref] = None,
+            width: OptionalNumber = None,
+            height: OptionalNumber = None,
+            left: OptionalNumber = None,
+            top: OptionalNumber = None,
+            right: OptionalNumber = None,
+            bottom: OptionalNumber = None,
+            expand: Union[None, bool, int] = None,
+            col: Optional[ResponsiveNumber] = None,
+            opacity: OptionalNumber = None,
+            rotate: RotateValue = None,
+            scale: ScaleValue = None,
+            offset: OffsetValue = None,
+            aspect_ratio: OptionalNumber = None,
+            animate_opacity: AnimationValue = None,
+            animate_size: AnimationValue = None,
+            animate_position: AnimationValue = None,
+            animate_rotation: AnimationValue = None,
+            animate_scale: AnimationValue = None,
+            animate_offset: AnimationValue = None,
+            on_animation_end=None,
+            visible: Optional[bool] = None,
+            disabled: Optional[bool] = None,
+            data: Any = None,
+            #
+            # Specific
+            #
+            mouse_cursor: Union[MouseCursor, MouseCursorString, None] = None,
+            drag_interval: Optional[int] = None,
+            hover_interval: Optional[int] = None,
+            on_tap=None,
+            on_tap_down=None,
+            on_tap_up=None,
+            on_multi_tap=None,
+            multi_tap_touches=None,
+            on_multi_long_press=None,
+            on_secondary_tap=None,
+            on_secondary_tap_down=None,
+            on_secondary_tap_up=None,
+            on_long_press_start=None,
+            on_long_press_end=None,
+            on_secondary_long_press_start=None,
+            on_secondary_long_press_end=None,
+            on_double_tap=None,
+            on_double_tap_down=None,
+            on_horizontal_drag_start=None,
+            on_horizontal_drag_update=None,
+            on_horizontal_drag_end=None,
+            on_vertical_drag_start=None,
+            on_vertical_drag_update=None,
+            on_vertical_drag_end=None,
+            on_pan_start=None,
+            on_pan_update=None,
+            on_pan_end=None,
+            on_scale_start=None,
+            on_scale_update=None,
+            on_scale_end=None,
+            on_hover=None,
+            on_enter=None,
+            on_exit=None,
+            on_scroll=None,
     ):
 
         ConstrainedControl.__init__(
@@ -392,13 +400,20 @@ class GestureDetector(ConstrainedControl):
 
     # mouse_cursor
     @property
-    def mouse_cursor(self):
-        return self._get_attr("mouseCursor")
+    def mouse_cursor(self) -> Union[MouseCursor, MouseCursorString, None]:
+        return self.__mouse_cursor
 
     @mouse_cursor.setter
+    def mouse_cursor(self, value: Union[MouseCursor, MouseCursorString, None]):
+        self.__mouse_cursor = value
+        if isinstance(value, MouseCursor):
+            self._set_attr("mouseCursor", value.value)
+        else:
+            self.__set_mouse_cursor(value)
+
     @beartype
-    def mouse_cursor(self, value: Optional[MouseCursor]):
-        self._set_attr("mouseCursor", value.value if value is not None else None)
+    def __set_mouse_cursor(self, value: Optional[MouseCursorString]):
+        self._set_attr("mouseCursor", value)
 
     # drag_interval
     @property

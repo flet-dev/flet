@@ -3,7 +3,8 @@ from dataclasses import field
 from typing import Dict, Optional, Union
 
 from flet.border import BorderSide
-from flet.types import BorderRadiusValue, MaterialState, PaddingValue
+from flet.types import BorderRadiusValue, MaterialState, MaterialStateString, PaddingValue
+
 
 try:
     from typing import Literal
@@ -46,29 +47,19 @@ class CountinuosRectangleBorder(OutlinedBorder):
 
 @dataclasses.dataclass
 class ButtonStyle:
-    color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(default=None)
-    bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    color: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]] = field(default=None)
+    bgcolor: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]] = field(default=None)
+    overlay_color: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]] = field(default=None)
+    shadow_color: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]] = field(default=None)
+    surface_tint_color: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]] = field(default=None)
+    elevation: Union[None, float, int, Dict[Union[MaterialState, MaterialStateString], Union[float, int]]] = field(
         default=None
     )
-    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
-    )
-    shadow_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
-    )
-    surface_tint_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
-    )
-    elevation: Union[
-        None, float, int, Dict[Union[str, MaterialState], Union[float, int]]
-    ] = field(default=None)
     animation_duration: Optional[int] = field(default=None)
-    padding: Union[PaddingValue, Dict[Union[str, MaterialState], PaddingValue]] = field(
+    padding: Union[PaddingValue, Dict[Union[MaterialState, MaterialStateString], PaddingValue]] = field(
         default=None
     )
-    side: Union[None, BorderSide, Dict[Union[str, MaterialState], BorderSide]] = field(
+    side: Union[None, BorderSide, Dict[Union[MaterialState, MaterialStateString], BorderSide]] = field(default=None)
+    shape: Union[None, OutlinedBorder, Dict[Union[MaterialState, MaterialStateString], OutlinedBorder]] = field(
         default=None
     )
-    shape: Union[
-        None, OutlinedBorder, Dict[Union[str, MaterialState], OutlinedBorder]
-    ] = field(default=None)

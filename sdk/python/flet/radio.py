@@ -11,6 +11,7 @@ from flet.types import (
     LabelPosition,
     LabelPositionString,
     MaterialState,
+    MaterialStateString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -83,10 +84,10 @@ class Radio(ConstrainedControl):
         # Specific
         #
         label: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
+        label_position: Union[LabelPosition, LabelPositionString] = LabelPosition.NONE,
         value: Optional[str] = None,
         autofocus: Optional[bool] = None,
-        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
+        fill_color: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]] = None,
         on_focus=None,
         on_blur=None,
     ):
@@ -153,11 +154,11 @@ class Radio(ConstrainedControl):
 
     # label_position
     @property
-    def label_position(self) -> LabelPosition:
+    def label_position(self) -> Union[LabelPosition, LabelPositionString]:
         return self.__label_position
 
     @label_position.setter
-    def label_position(self, value: LabelPosition):
+    def label_position(self, value: Union[LabelPosition, LabelPositionString]):
         self.__label_position = value
         if isinstance(value, LabelPosition):
             self._set_attr("labelPosition", value.value)
@@ -170,12 +171,12 @@ class Radio(ConstrainedControl):
 
     # fill_color
     @property
-    def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def fill_color(self) -> Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]:
         return self.__fill_color
 
     @fill_color.setter
     @beartype
-    def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def fill_color(self, value: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]):
         self.__fill_color = value
 
     # on_focus

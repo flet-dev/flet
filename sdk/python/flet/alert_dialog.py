@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
@@ -61,26 +61,27 @@ class AlertDialog(Control):
 
     Online docs: https://flet.dev/docs/controls/alertdialog
     """
+
     def __init__(
-        self,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
-        open: bool = False,
-        modal: bool = False,
-        title: Optional[Control] = None,
-        title_padding: PaddingValue = None,
-        content: Optional[Control] = None,
-        content_padding: PaddingValue = None,
-        actions: Optional[List[Control]] = None,
-        actions_padding: PaddingValue = None,
-        actions_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        shape: Optional[OutlinedBorder] = None,
-        on_dismiss=None,
+            self,
+            ref: Optional[Ref] = None,
+            disabled: Optional[bool] = None,
+            visible: Optional[bool] = None,
+            data: Any = None,
+            #
+            # Specific
+            #
+            open: bool = False,
+            modal: bool = False,
+            title: Optional[Control] = None,
+            title_padding: PaddingValue = None,
+            content: Optional[Control] = None,
+            content_padding: PaddingValue = None,
+            actions: Optional[List[Control]] = None,
+            actions_padding: PaddingValue = None,
+            actions_alignment: Union[MainAxisAlignment, MainAxisAlignmentString] = None,
+            shape: Optional[OutlinedBorder] = None,
+            on_dismiss=None,
     ):
 
         Control.__init__(
@@ -209,11 +210,11 @@ class AlertDialog(Control):
 
     # actions_alignment
     @property
-    def actions_alignment(self) -> MainAxisAlignment:
+    def actions_alignment(self) -> Union[MainAxisAlignment, MainAxisAlignmentString]:
         return self.__actions_alignment
 
     @actions_alignment.setter
-    def actions_alignment(self, value: MainAxisAlignment):
+    def actions_alignment(self, value: Union[MainAxisAlignment, MainAxisAlignmentString]):
         self.__actions_alignment = value
         if isinstance(value, MainAxisAlignment):
             self._set_attr("actionsAlignment", value.value)

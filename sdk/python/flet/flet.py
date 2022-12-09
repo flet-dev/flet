@@ -139,7 +139,7 @@ def app(
         fvp = open_flet_view(conn.page_url, view == FLET_APP_HIDDEN)
         try:
             fvp.wait()
-        except (Exception) as e:
+        except Exception as e:
             pass
     else:
         if view == WEB_BROWSER and url_prefix is None:

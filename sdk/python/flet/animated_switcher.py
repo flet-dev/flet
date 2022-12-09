@@ -21,10 +21,11 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-TransitionValueString = Literal["fade", "rotation", "scale"]
+TransitionValueString = Literal["fade", "rotation", "scale", None]
 
 
 class AnimatedSwitcherTransition(Enum):
+    NONE = None
     FADE = "fade"
     ROTATION = "rotation"
     SCALE = "scale"
@@ -112,9 +113,9 @@ class AnimatedSwitcher(ConstrainedControl):
         #
         duration: Optional[int] = None,
         reverse_duration: Optional[int] = None,
-        switch_in_curve: Optional[AnimationCurve] = None,
-        switch_out_curve: Optional[AnimationCurve] = None,
-        transition: Optional[AnimatedSwitcherTransition] = None,
+        switch_in_curve: Union[AnimationCurve, AnimationCurveString] = None,
+        switch_out_curve: Union[AnimationCurve, AnimationCurveString] = None,
+        transition: Union[AnimatedSwitcherTransition, TransitionValueString] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -197,11 +198,11 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # switch_in_curve
     @property
-    def switch_in_curve(self) -> Optional[AnimationCurve]:
+    def switch_in_curve(self) -> Union[AnimationCurve, AnimationCurveString]:
         return self.__switch_in_curve
 
     @switch_in_curve.setter
-    def switch_in_curve(self, value: Optional[AnimationCurve]):
+    def switch_in_curve(self, value: Union[AnimationCurve, AnimationCurveString]):
         self.__switch_in_curve = value
         if isinstance(value, AnimationCurve):
             self._set_attr("switchInCurve", value.value)
@@ -214,11 +215,11 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # switch_out_curve
     @property
-    def switch_out_curve(self) -> Optional[AnimationCurve]:
+    def switch_out_curve(self) -> Union[AnimationCurve, AnimationCurveString]:
         return self.__switch_out_curve
 
     @switch_out_curve.setter
-    def switch_out_curve(self, value: Optional[AnimationCurve]):
+    def switch_out_curve(self, value: Union[AnimationCurve, AnimationCurveString]):
         self.__switch_out_curve = value
         if isinstance(value, AnimationCurve):
             self._set_attr("switchOutCurve", value.value)
@@ -231,11 +232,11 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # transition
     @property
-    def transition(self) -> Optional[AnimatedSwitcherTransition]:
+    def transition(self) -> Union[AnimatedSwitcherTransition, TransitionValueString]:
         return self.__transition
 
     @transition.setter
-    def transition(self, value: Optional[AnimatedSwitcherTransition]):
+    def transition(self, value: Union[AnimatedSwitcherTransition, TransitionValueString]):
         self.__transition = value
         if isinstance(value, AnimatedSwitcherTransition):
             self._set_attr("transition", value.value)

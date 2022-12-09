@@ -12,6 +12,8 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+GradientTileModeString = Literal["clamp", "decal", "mirror", "repeated"]
+
 
 class GradientTileMode(Enum):
     CLAMP = "clamp"
@@ -23,7 +25,7 @@ class GradientTileMode(Enum):
 @dataclasses.dataclass
 class Gradient:
     colors: List[str]
-    tile_mode: GradientTileMode = field(default=GradientTileMode.CLAMP)
+    tile_mode: Union[GradientTileMode, GradientTileModeString] = field(default=GradientTileMode.CLAMP)
     rotation: Union[None, float, int] = field(default=None)
     stops: Optional[List[float]] = field(default=None)
 

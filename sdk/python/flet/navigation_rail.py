@@ -230,7 +230,7 @@ class NavigationRail(ConstrainedControl):
         destinations: Optional[List[NavigationRailDestination]] = None,
         selected_index: Optional[int] = None,
         extended: Optional[bool] = None,
-        label_type: Optional[NavigationRailLabelType] = None,
+        label_type: Union[NavigationRailLabelType, NavigationRailLabelTypeString] = None,
         bgcolor: Optional[str] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -327,11 +327,11 @@ class NavigationRail(ConstrainedControl):
 
     # label_type
     @property
-    def label_type(self) -> Optional[NavigationRailLabelType]:
+    def label_type(self) -> Union[NavigationRailLabelType, NavigationRailLabelTypeString]:
         return self.__label_type
 
     @label_type.setter
-    def label_type(self, value: Optional[NavigationRailLabelType]):
+    def label_type(self, value: Union[NavigationRailLabelType, NavigationRailLabelTypeString]):
         self.__label_type = value
         if isinstance(value, NavigationRailLabelType):
             self._set_attr("labelType", value.value)

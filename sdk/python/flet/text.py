@@ -130,14 +130,14 @@ class Text(ConstrainedControl):
         #
         # text-specific
         #
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: Union[TextAlign, TextAlignString] = None,
         font_family: Optional[str] = None,
         size: OptionalNumber = None,
-        weight: Optional[FontWeight] = None,
+        weight: Union[FontWeight, FontWeightString] = None,
         italic: Optional[bool] = None,
-        style: Optional[TextThemeStyle] = None,
+        style: Union[TextThemeStyle, TextThemeStyleString] = None,
         max_lines: Optional[int] = None,
-        overflow: TextOverflow = TextOverflow.NONE,
+        overflow: Union[TextOverflow, TextOverflowString] = None,
         selectable: Optional[bool] = None,
         no_wrap: Optional[bool] = None,
         color: Optional[str] = None,
@@ -203,11 +203,11 @@ class Text(ConstrainedControl):
 
     # text_align
     @property
-    def text_align(self) -> TextAlign:
+    def text_align(self) -> Union[TextAlign, TextAlignString]:
         return self.__text_align
 
     @text_align.setter
-    def text_align(self, value: TextAlign):
+    def text_align(self, value: Union[TextAlign, TextAlignString]):
         self.__text_align = value
         if isinstance(value, TextAlign):
             self._set_attr("textAlign", value.value)
@@ -239,11 +239,11 @@ class Text(ConstrainedControl):
 
     # weight
     @property
-    def weight(self) -> Optional[FontWeight]:
+    def weight(self) -> Union[FontWeight, FontWeightString]:
         return self.__weight
 
     @weight.setter
-    def weight(self, value: Optional[FontWeight]):
+    def weight(self, value: Union[FontWeight, FontWeightString]):
         self.__weight = value
         if isinstance(value, FontWeight):
             self._set_attr("weight", value.value)
@@ -256,11 +256,11 @@ class Text(ConstrainedControl):
 
     # style
     @property
-    def style(self) -> Optional[TextThemeStyle]:
+    def style(self) -> Union[TextThemeStyle, TextThemeStyleString]:
         return self.__style
 
     @style.setter
-    def style(self, value: Optional[TextThemeStyle]):
+    def style(self, value: Union[TextThemeStyle, TextThemeStyleString]):
         self.__style = value
         if isinstance(value, TextThemeStyle):
             self._set_attr("style", value.value)
@@ -313,11 +313,11 @@ class Text(ConstrainedControl):
 
     # overflow
     @property
-    def overflow(self) -> TextOverflow:
+    def overflow(self) -> Union[TextOverflow, TextOverflowString]:
         return self.__overflow
 
     @overflow.setter
-    def overflow(self, value: TextOverflow):
+    def overflow(self, value: Union[TextOverflow, TextOverflowString]):
         self.__overflow = value
         if isinstance(value, TextOverflow):
             self._set_attr("overflow", value.value)

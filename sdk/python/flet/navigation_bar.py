@@ -183,7 +183,7 @@ class NavigationBar(ConstrainedControl):
         destinations: Optional[List[NavigationDestination]] = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
-        label_behavior: Optional[NavigationBarLabelBehavior] = None,
+        label_behavior: Union[NavigationBarLabelBehavior, NavigationBarLabelBehaviorString] = None,
         elevation: OptionalNumber = None,
         on_change=None,
     ):
@@ -262,11 +262,11 @@ class NavigationBar(ConstrainedControl):
 
     # label_behavior
     @property
-    def label_behavior(self) -> Optional[NavigationBarLabelBehavior]:
+    def label_behavior(self) -> Union[NavigationBarLabelBehavior, NavigationBarLabelBehaviorString]:
         return self.__label_behavior
 
     @label_behavior.setter
-    def label_behavior(self, value: Optional[NavigationBarLabelBehavior]):
+    def label_behavior(self, value: Union[NavigationBarLabelBehavior, NavigationBarLabelBehaviorString]):
         self.__label_behavior = value
         if isinstance(value, NavigationBarLabelBehavior):
             self._set_attr("labelType", value.value)

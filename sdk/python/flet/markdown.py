@@ -72,7 +72,7 @@ class Markdown(ConstrainedControl):
         # Specific
         #
         selectable: Optional[bool] = None,
-        extension_set: Optional[MarkdownExtensionSet] = None,
+        extension_set: Union[MarkdownExtensionSet, MarkdownExtensionSetString] = None,
         code_theme: Optional[str] = None,
         code_style: Optional[TextStyle] = None,
         on_tap_link=None,
@@ -141,11 +141,11 @@ class Markdown(ConstrainedControl):
 
     # extension_set
     @property
-    def extension_set(self) -> Optional[MarkdownExtensionSet]:
+    def extension_set(self) -> Union[MarkdownExtensionSet, MarkdownExtensionSetString]:
         return self.__extension_set
 
     @extension_set.setter
-    def extension_set(self, value: Optional[MarkdownExtensionSet]):
+    def extension_set(self, value: Union[MarkdownExtensionSet, MarkdownExtensionSetString]):
         self.__extension_set = value
         if isinstance(value, MarkdownExtensionSet):
             self._set_attr("extensionSet", value.value)

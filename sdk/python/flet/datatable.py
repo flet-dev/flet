@@ -17,6 +17,7 @@ from flet.types import (
     AnimationValue,
     BorderRadiusValue,
     MaterialState,
+    MaterialStateString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -252,12 +253,12 @@ class DataRow(Control):
 
     # color
     @property
-    def color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def color(self) -> Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]:
         return self.__color
 
     @color.setter
     @beartype
-    def color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def color(self, value: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]):
         self.__color = value
 
     # selected
@@ -330,13 +331,13 @@ class DataTable(ConstrainedControl):
         vertical_lines: Optional[BorderSide] = None,
         checkbox_horizontal_margin: OptionalNumber = None,
         column_spacing: OptionalNumber = None,
-        data_row_color: Union[None, str, Dict[MaterialState, str]] = None,
+        data_row_color: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]] = None,
         data_row_height: OptionalNumber = None,
         data_text_style: Optional[TextStyle] = None,
         bgcolor: Optional[str] = None,
         gradient: Optional[Gradient] = None,
         divider_thickness: OptionalNumber = None,
-        heading_row_color: Union[None, str, Dict[MaterialState, str]] = None,
+        heading_row_color: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]] = None,
         heading_row_height: OptionalNumber = None,
         heading_text_style: Optional[TextStyle] = None,
         horizontal_margin: OptionalNumber = None,
@@ -522,13 +523,20 @@ class DataTable(ConstrainedControl):
 
     # data_row_color
     @property
-    def data_row_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def data_row_color(self) -> Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]:
         return self.__data_row_color
 
     @data_row_color.setter
-    @beartype
-    def data_row_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def data_row_color(self, value: Dict[Union[MaterialState, MaterialStateString]]):
         self.__data_row_color = value
+        if isinstance(value, MaterialState):
+            self._set_attr("dataRowColor", value.value)
+        else:
+            self.__set_data_row_color(value)
+
+    @beartype
+    def __set_data_row_color(self, value: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]):
+        self._set_attr("dataRowColor", value)
 
     # data_row_height
     @property
@@ -571,13 +579,20 @@ class DataTable(ConstrainedControl):
 
     # heading_row_color
     @property
-    def heading_row_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def heading_row_color(self) -> Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]:
         return self.__heading_row_color
 
     @heading_row_color.setter
-    @beartype
-    def heading_row_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def heading_row_color(self, value: Dict[Union[MaterialState, MaterialStateString]]):
         self.__heading_row_color = value
+        if isinstance(value, MaterialState):
+            self._set_attr("headingRowColor", value.value)
+        else:
+            self.__set_data_row_color(value)
+
+    @beartype
+    def __set_heading_row_color(self, value: Union[None, str, Dict[Union[MaterialState, MaterialStateString], str]]):
+        self._set_attr("headingRowColor", value)
 
     # heading_row_height
     @property

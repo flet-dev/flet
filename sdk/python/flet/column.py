@@ -87,8 +87,8 @@ class Column(ConstrainedControl):
         #
         # Column specific
         #
-        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        alignment: Union[MainAxisAlignment, MainAxisAlignmentString] = None,
+        horizontal_alignment: Union[CrossAxisAlignment, CrossAxisAlignmentString] = None,
         spacing: OptionalNumber = None,
         tight: Optional[bool] = None,
         wrap: Optional[bool] = None,
@@ -156,11 +156,11 @@ class Column(ConstrainedControl):
 
     # alignment
     @property
-    def alignment(self) -> MainAxisAlignment:
+    def alignment(self) -> Union[MainAxisAlignment, MainAxisAlignmentString]:
         return self.__alignment
 
     @alignment.setter
-    def alignment(self, value: MainAxisAlignment):
+    def alignment(self, value: Union[MainAxisAlignment, MainAxisAlignmentString]):
         self.__alignment = value
         if isinstance(value, MainAxisAlignment):
             self._set_attr("alignment", value.value)
@@ -173,11 +173,11 @@ class Column(ConstrainedControl):
 
     # horizontal_alignment
     @property
-    def horizontal_alignment(self) -> CrossAxisAlignment:
+    def horizontal_alignment(self) -> Union[CrossAxisAlignment, CrossAxisAlignmentString]:
         return self.__horizontal_alignment
 
     @horizontal_alignment.setter
-    def horizontal_alignment(self, value: CrossAxisAlignment):
+    def horizontal_alignment(self, value: Union[CrossAxisAlignment, CrossAxisAlignmentString]):
         self.__horizontal_alignment = value
         if isinstance(value, CrossAxisAlignment):
             self._set_attr("horizontalAlignment", value.value)
@@ -233,9 +233,9 @@ class Column(ConstrainedControl):
 
     @beartype
     def __set_scroll(self, value: Optional[ScrollModeString]):
-        if value == True:
+        if value is True:
             value = "auto"
-        elif value == False:
+        elif value is False:
             value = None
         self._set_attr("scroll", value)
 

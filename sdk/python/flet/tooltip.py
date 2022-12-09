@@ -10,6 +10,7 @@ from flet.text_style import TextStyle
 from flet.types import (
     BorderRadiusValue,
     BoxShape,
+    BoxShapeString,
     MarginValue,
     PaddingValue,
     TextAlign,
@@ -84,10 +85,10 @@ class Tooltip(Control):
         gradient: Optional[Gradient] = None,
         border: Optional[Border] = None,
         border_radius: BorderRadiusValue = None,
-        shape: Optional[BoxShape] = None,
+        shape: Union[BoxShape, BoxShapeString] = None,
         message: Optional[str] = None,
         text_style: Optional[TextStyle] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: Union[TextAlign, TextAlignString] = None,
         prefer_below: Optional[bool] = None,
         show_duration: Optional[int] = None,
         wait_duration: Optional[int] = None,
@@ -209,13 +210,20 @@ class Tooltip(Control):
 
     # shape
     @property
-    def shape(self):
-        return self._get_attr("shape")
+    def shape(self) -> Union[BoxShape, BoxShapeString]:
+        return self.__shape
 
     @shape.setter
+    def shape(self, value: Union[BoxShape, BoxShapeString]):
+        self.__shape = value
+        if isinstance(value, BoxShape):
+            self._set_attr("shape", value.value)
+        else:
+            self.__set_shape(value)
+
     @beartype
-    def shape(self, value: Optional[BoxShape]):
-        self._set_attr("shape", value.value if value is not None else None)
+    def __set_shape(self, value: Optional[BoxShapeString]):
+        self._set_attr("shape", value)
 
     # message
     @property
@@ -229,11 +237,11 @@ class Tooltip(Control):
 
     # text_align
     @property
-    def text_align(self) -> TextAlign:
+    def text_align(self) -> Union[TextAlign, TextAlignString]:
         return self.__text_align
 
     @text_align.setter
-    def text_align(self, value: TextAlign):
+    def text_align(self, value: Union[TextAlign, TextAlignString]):
         self.__text_align = value
         if isinstance(value, TextAlign):
             self._set_attr("textAlign", value.value)

@@ -157,7 +157,7 @@ class TextField(FormFieldControl):
         # TextField Specific
         #
         value: Optional[str] = None,
-        keyboard_type: Optional[KeyboardType] = None,
+        keyboard_type: Union[KeyboardType, KeyboardTypeString] = None,
         multiline: Optional[bool] = None,
         min_lines: Optional[int] = None,
         max_lines: Optional[int] = None,
@@ -166,9 +166,9 @@ class TextField(FormFieldControl):
         can_reveal_password: Optional[bool] = None,
         read_only: Optional[bool] = None,
         shift_enter: Optional[bool] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: Union[TextAlign, TextAlignString] = None,
         autofocus: Optional[bool] = None,
-        capitalization: TextCapitalization = TextCapitalization.NONE,
+        capitalization: Union[TextCapitalization, TextCapitalizationString] = None,
         cursor_color: Optional[str] = None,
         cursor_width: OptionalNumber = None,
         cursor_height: OptionalNumber = None,
@@ -281,11 +281,11 @@ class TextField(FormFieldControl):
 
     # keyboard_type
     @property
-    def keyboard_type(self) -> Optional[KeyboardType]:
+    def keyboard_type(self) -> Union[KeyboardType, KeyboardTypeString]:
         return self.__keyboard_type
 
     @keyboard_type.setter
-    def keyboard_type(self, value: Optional[KeyboardType]):
+    def keyboard_type(self, value: Union[KeyboardType, KeyboardTypeString]):
         self.__keyboard_type = value
         if isinstance(value, KeyboardType):
             self._set_attr("keyboardType", value.value)
@@ -298,11 +298,11 @@ class TextField(FormFieldControl):
 
     # text_align
     @property
-    def text_align(self) -> TextAlign:
+    def text_align(self) -> Union[TextAlign, TextAlignString]:
         return self.__text_align
 
     @text_align.setter
-    def text_align(self, value: TextAlign):
+    def text_align(self, value: Union[TextAlign, TextAlignString]):
         self.__text_align = value
         if isinstance(value, TextAlign):
             self._set_attr("textAlign", value.value)
@@ -405,11 +405,11 @@ class TextField(FormFieldControl):
 
     # capitalization
     @property
-    def capitalization(self) -> TextCapitalization:
+    def capitalization(self) -> Union[TextCapitalization, TextCapitalizationString]:
         return self.__capitalization
 
     @capitalization.setter
-    def capitalization(self, value: TextCapitalization):
+    def capitalization(self, value: Union[TextCapitalization, TextCapitalizationString]):
         self.__capitalization = value
         if isinstance(value, TextCapitalization):
             self._set_attr("capitalization", value.value)

@@ -5,7 +5,7 @@ from beartype import beartype
 from flet.alignment import Alignment
 from flet.control import Control, OptionalNumber
 from flet.focus import FocusData
-from flet.form_field_control import FormFieldControl, InputBorder
+from flet.form_field_control import FormFieldControl, InputBorder, InputBorderString
 from flet.ref import Ref
 from flet.text_style import TextStyle
 from flet.types import (
@@ -82,7 +82,7 @@ class Dropdown(FormFieldControl):
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
-        border: Optional[InputBorder] = None,
+        border: Union[InputBorder, InputBorderString] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         border_radius: BorderRadiusValue = None,

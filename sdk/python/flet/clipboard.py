@@ -1,8 +1,5 @@
 import dataclasses
-import time
 from typing import Any, Optional
-
-from beartype import beartype
 
 from flet.callable_control import CallableControl
 from flet.ref import Ref

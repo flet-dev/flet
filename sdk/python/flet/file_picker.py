@@ -158,7 +158,7 @@ class FilePicker(Control):
         self,
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        file_type: Union[FilePickerFileType, FileTypeString] = FilePickerFileType.ANY,
         allowed_extensions: Optional[List[str]] = None,
         allow_multiple: Optional[bool] = False,
     ):
@@ -175,7 +175,7 @@ class FilePicker(Control):
         dialog_title: Optional[str] = None,
         file_name: Optional[str] = None,
         initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        file_type: Union[FilePickerFileType, FileTypeString] = FilePickerFileType.ANY,
         allowed_extensions: Optional[List[str]] = None,
     ):
         self.state = "saveFile"
@@ -246,11 +246,11 @@ class FilePicker(Control):
 
     # file_type
     @property
-    def file_type(self) -> FilePickerFileType:
+    def file_type(self) -> Union[FilePickerFileType, FileTypeString]:
         return self.__file_type
 
     @file_type.setter
-    def file_type(self, value: FilePickerFileType):
+    def file_type(self, value: Union[FilePickerFileType, FileTypeString]):
         self.__file_type = value
         if isinstance(value, FilePickerFileType):
             self._set_attr("fileType", value.value)

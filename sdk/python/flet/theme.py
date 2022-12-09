@@ -1,6 +1,6 @@
 import dataclasses
 from dataclasses import field
-from typing import Optional
+from typing import Optional, Union
 from enum import Enum
 
 try:
@@ -18,7 +18,7 @@ class ThemeVisualDensity(Enum):
     STANDARD = "standard"
     COMPACT = "compact"
     COMFORTABLE = "comfortable"
-    ADAPTIVEPLATFORMDENSITY = "adaptivePlatformDensity"
+    ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
 
 
 PageTransitionString = Literal["fadeUpwards", "openUpwards", "zoom", "cupertino"]
@@ -33,11 +33,11 @@ class PageTransitionTheme(Enum):
 
 @dataclasses.dataclass
 class PageTransitionsTheme:
-    android: Optional[PageTransitionTheme] = field(default=None)
-    ios: Optional[PageTransitionTheme] = field(default=None)
-    linux: Optional[PageTransitionTheme] = field(default=None)
-    macos: Optional[PageTransitionTheme] = field(default=None)
-    windows: Optional[PageTransitionTheme] = field(default=None)
+    android: Union[PageTransitionTheme, PageTransitionString, None] = field(default=None)
+    ios: Union[PageTransitionTheme, PageTransitionString, None] = field(default=None)
+    linux: Union[PageTransitionTheme, PageTransitionString, None] = field(default=None)
+    macos: Union[PageTransitionTheme, PageTransitionString, None] = field(default=None)
+    windows: Union[PageTransitionTheme, PageTransitionString, None] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -45,5 +45,5 @@ class Theme:
     color_scheme_seed: Optional[str] = field(default=None)
     font_family: Optional[str] = field(default=None)
     use_material3: bool = field(default=True)
-    visual_density: ThemeVisualDensity = field(default=ThemeVisualDensity.STANDARD)
-    page_transitions: PageTransitionsTheme = field(default_factory=PageTransitionsTheme)
+    visual_density: Union[ThemeVisualDensity, VisualDensityString] = field(default=ThemeVisualDensity.STANDARD)
+    page_transitions: Union[PageTransitionsTheme, PageTransitionString] = field(default_factory=PageTransitionsTheme)
