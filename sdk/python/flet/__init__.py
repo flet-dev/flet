@@ -19,6 +19,7 @@ from flet.animation import Animation, AnimationCurve
 from flet.app_bar import AppBar
 from flet.audio import Audio
 from flet.banner import Banner
+from flet.border_radius import BorderRadius
 from flet.bottom_sheet import BottomSheet
 from flet.buttons import (
     BeveledRectangleBorder,
