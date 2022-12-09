@@ -583,7 +583,7 @@ class DataTable(ConstrainedControl):
         return self.__heading_row_color
 
     @heading_row_color.setter
-    def heading_row_color(self, value: Dict[Union[MaterialState, MaterialStateString]]):
+    def heading_row_color(self, value: Dict[Union[MaterialState, MaterialStateString], str]):
         self.__heading_row_color = value
         if isinstance(value, MaterialState):
             self._set_attr("headingRowColor", value.value)
