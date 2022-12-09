@@ -269,21 +269,15 @@ class Page(Control):
             ctrl.did_mount()
 
     def remove(self, *controls):
-        added_controls = []
         with self._lock:
             for control in controls:
                 self._controls.remove(control)
-            added_controls = self.__update(self)
-        for ctrl in added_controls:
-            ctrl.did_mount()
+            self.__update(self)
 
     def remove_at(self, index):
-        added_controls = []
         with self._lock:
             self._controls.pop(index)
-            added_controls = self.__update(self)
-        for ctrl in added_controls:
-            ctrl.did_mount()
+            self.__update(self)
 
     def clean(self):
         with self._lock:
