@@ -527,7 +527,7 @@ class DataTable(ConstrainedControl):
         return self.__data_row_color
 
     @data_row_color.setter
-    def data_row_color(self, value: Dict[Union[MaterialState, MaterialStateString]]):
+    def data_row_color(self, value: Dict[Union[MaterialState, MaterialStateString], str]):
         self.__data_row_color = value
         if isinstance(value, MaterialState):
             self._set_attr("dataRowColor", value.value)
