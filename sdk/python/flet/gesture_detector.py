@@ -1,6 +1,11 @@
 import json
 from enum import Enum
-from typing import Any, Optional, Union, Literal
+from typing import Any, Optional, Union
+
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
 
 from beartype import beartype
 
