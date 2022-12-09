@@ -130,14 +130,14 @@ class Text(ConstrainedControl):
         #
         # text-specific
         #
-        text_align: Union[TextAlign, TextAlignString] = None,
+        text_align: Union[TextAlign, TextAlignString] = TextAlign.NONE,
         font_family: Optional[str] = None,
         size: OptionalNumber = None,
         weight: Union[FontWeight, FontWeightString] = None,
         italic: Optional[bool] = None,
         style: Union[TextThemeStyle, TextThemeStyleString] = None,
         max_lines: Optional[int] = None,
-        overflow: Union[TextOverflow, TextOverflowString] = None,
+        overflow: Union[TextOverflow, TextOverflowString] = TextOverflow.NONE,
         selectable: Optional[bool] = None,
         no_wrap: Optional[bool] = None,
         color: Optional[str] = None,

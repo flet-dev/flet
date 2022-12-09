@@ -372,7 +372,7 @@ class Container(ConstrainedControl):
             self.__set_shape(value)
 
     @beartype
-    def __set_shape(self, value: BoxShapeString):
+    def __set_shape(self, value: Optional[BoxShapeString]):
         self._set_attr("shape", value)
 
     # clip_behavior

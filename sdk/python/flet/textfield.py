@@ -168,7 +168,7 @@ class TextField(FormFieldControl):
         shift_enter: Optional[bool] = None,
         text_align: Union[TextAlign, TextAlignString] = None,
         autofocus: Optional[bool] = None,
-        capitalization: Union[TextCapitalization, TextCapitalizationString] = None,
+        capitalization: Union[TextCapitalization, TextCapitalizationString] = TextCapitalization.NONE,
         cursor_color: Optional[str] = None,
         cursor_width: OptionalNumber = None,
         cursor_height: OptionalNumber = None,

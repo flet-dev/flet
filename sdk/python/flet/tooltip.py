@@ -88,7 +88,7 @@ class Tooltip(Control):
         shape: Union[BoxShape, BoxShapeString] = None,
         message: Optional[str] = None,
         text_style: Optional[TextStyle] = None,
-        text_align: Union[TextAlign, TextAlignString] = None,
+        text_align: Union[TextAlign, TextAlignString] = TextAlign.NONE,
         prefer_below: Optional[bool] = None,
         show_duration: Optional[int] = None,
         wait_duration: Optional[int] = None,
