@@ -68,7 +68,7 @@ class TextCapitalization(Enum):
 class TextField(FormFieldControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an onscreen keyboard.
-    
+
     Example:
     ```
     import flet as ft
@@ -94,6 +94,7 @@ class TextField(FormFieldControl):
 
     Online docs: https://flet.dev/docs/controls/textfield
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,
@@ -136,6 +137,7 @@ class TextField(FormFieldControl):
         focused_border_width: OptionalNumber = None,
         focused_border_color: Optional[str] = None,
         content_padding: PaddingValue = None,
+        dense: Optional[bool] = None,
         filled: Optional[bool] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
@@ -221,6 +223,7 @@ class TextField(FormFieldControl):
             focused_border_width=focused_border_width,
             focused_border_color=focused_border_color,
             content_padding=content_padding,
+            dense=dense,
             filled=filled,
             hint_text=hint_text,
             hint_style=hint_style,

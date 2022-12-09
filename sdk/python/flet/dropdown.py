@@ -22,7 +22,7 @@ from flet.types import (
 class Dropdown(FormFieldControl):
     """
     A dropdown lets the user select from a number of items. The dropdown shows the currently selected item as well as an arrow that opens a menu for selecting another item.
-    
+
     Example:
     ```
     import flet as ft
@@ -51,6 +51,7 @@ class Dropdown(FormFieldControl):
 
     Online docs: https://flet.dev/docs/controls/dropdown
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,
@@ -93,6 +94,7 @@ class Dropdown(FormFieldControl):
         focused_border_width: OptionalNumber = None,
         focused_border_color: Optional[str] = None,
         content_padding: PaddingValue = None,
+        dense: Optional[bool] = None,
         filled: Optional[bool] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
@@ -163,6 +165,7 @@ class Dropdown(FormFieldControl):
             focused_border_width=focused_border_width,
             focused_border_color=focused_border_color,
             content_padding=content_padding,
+            dense=dense,
             filled=filled,
             hint_text=hint_text,
             hint_style=hint_style,

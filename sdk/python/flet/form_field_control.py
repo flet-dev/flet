@@ -78,6 +78,7 @@ class FormFieldControl(ConstrainedControl):
         focused_border_width: OptionalNumber = None,
         focused_border_color: Optional[str] = None,
         content_padding: PaddingValue = None,
+        dense: Optional[bool] = None,
         filled: Optional[bool] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
@@ -142,6 +143,7 @@ class FormFieldControl(ConstrainedControl):
         self.focused_border_color = focused_border_color
         self.content_padding = content_padding
         self.filled = filled
+        self.dense = dense
         self.hint_text = hint_text
         self.hint_style = hint_style
         self.helper_text = helper_text
@@ -340,6 +342,15 @@ class FormFieldControl(ConstrainedControl):
     @beartype
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
+
+    # dense
+    @property
+    def dense(self) -> Optional[bool]:
+        return self._get_attr("dense")
+
+    @dense.setter
+    def dense(self, value: Optional[bool]):
+        self._set_attr("dense", value)
 
     # filled
     @property
