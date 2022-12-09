@@ -63,25 +63,25 @@ class AlertDialog(Control):
     """
 
     def __init__(
-            self,
-            ref: Optional[Ref] = None,
-            disabled: Optional[bool] = None,
-            visible: Optional[bool] = None,
-            data: Any = None,
-            #
-            # Specific
-            #
-            open: bool = False,
-            modal: bool = False,
-            title: Optional[Control] = None,
-            title_padding: PaddingValue = None,
-            content: Optional[Control] = None,
-            content_padding: PaddingValue = None,
-            actions: Optional[List[Control]] = None,
-            actions_padding: PaddingValue = None,
-            actions_alignment: Union[MainAxisAlignment, MainAxisAlignmentString] = None,
-            shape: Optional[OutlinedBorder] = None,
-            on_dismiss=None,
+        self,
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
+        #
+        # Specific
+        #
+        open: bool = False,
+        modal: bool = False,
+        title: Optional[Control] = None,
+        title_padding: PaddingValue = None,
+        content: Optional[Control] = None,
+        content_padding: PaddingValue = None,
+        actions: Optional[List[Control]] = None,
+        actions_padding: PaddingValue = None,
+        actions_alignment: Union[MainAxisAlignment, MainAxisAlignmentString] = None,
+        shape: Optional[OutlinedBorder] = None,
+        on_dismiss=None,
     ):
 
         Control.__init__(

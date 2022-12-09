@@ -355,15 +355,15 @@ class Page(Control):
         return r.result
 
     def login(
-            self,
-            provider: OAuthProvider,
-            fetch_user=True,
-            fetch_groups=False,
-            scope: Optional[List[str]] = None,
-            saved_token: Optional[str] = None,
-            on_open_authorization_url=None,
-            complete_page_html: Optional[str] = None,
-            redirect_to_page=False,
+        self,
+        provider: OAuthProvider,
+        fetch_user=True,
+        fetch_groups=False,
+        scope: Optional[List[str]] = None,
+        saved_token: Optional[str] = None,
+        on_open_authorization_url=None,
+        complete_page_html: Optional[str] = None,
+        redirect_to_page=False,
     ):
         self.__authorization = Authorization(
             provider,
@@ -433,10 +433,10 @@ class Page(Control):
             self.__conn.close()
 
     def _send_command(
-            self,
-            name: str,
-            values: Optional[List[str]] = None,
-            attrs: Optional[Dict[str, str]] = None,
+        self,
+        name: str,
+        values: Optional[List[str]] = None,
+        attrs: Optional[Dict[str, str]] = None,
     ):
         return self.__conn.send_command(
             self._session_id,
@@ -457,12 +457,12 @@ class Page(Control):
 
     @beartype
     def launch_url(
-            self,
-            url: str,
-            web_window_name: Optional[str] = None,
-            web_popup_window: bool = False,
-            window_width: Optional[int] = None,
-            window_height: Optional[int] = None,
+        self,
+        url: str,
+        web_window_name: Optional[str] = None,
+        web_popup_window: bool = False,
+        window_width: Optional[int] = None,
+        window_height: Optional[int] = None,
     ):
         args = {"url": url}
         if web_window_name is not None:
@@ -488,10 +488,10 @@ class Page(Control):
         self.invoke_method("windowToFront")
 
     def invoke_method(
-            self,
-            method_name: str,
-            arguments: Optional[Dict[str, str]] = None,
-            wait_for_result: bool = False,
+        self,
+        method_name: str,
+        arguments: Optional[Dict[str, str]] = None,
+        wait_for_result: bool = False,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
 
@@ -1270,10 +1270,10 @@ class Page(Control):
 
 class Offstage(Control):
     def __init__(
-            self,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
+        self,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(
