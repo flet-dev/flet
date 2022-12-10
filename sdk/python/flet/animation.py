@@ -1,6 +1,6 @@
 import dataclasses
 from dataclasses import field
-from typing import Optional
+from typing import Union
 from enum import Enum
 
 try:
@@ -102,8 +102,8 @@ class AnimationCurve(Enum):
 @dataclasses.dataclass
 class Animation:
     duration: int = field(default=1)
-    curve: Optional[AnimationCurve] = field(default=None)
+    curve: Union[AnimationCurve, AnimationCurveString, None] = field(default=None)
 
 
-def implicit(duration: int, curve: Optional[AnimationCurve] = None):
+def implicit(duration: int, curve: Union[AnimationCurve, AnimationCurveString, None] = None):
     return Animation(duration=duration, curve=curve)

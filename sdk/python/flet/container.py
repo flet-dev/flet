@@ -109,7 +109,7 @@ class Container(ConstrainedControl):
         image_repeat: Union[ImageRepeat, ImageRepeatString] = None,
         image_fit: Union[ImageFit, ImageFitString] = None,
         image_opacity: OptionalNumber = None,
-        shape: Union[BoxShape, BoxShapeString] = None,
+        shape: Union[BoxShape, BoxShapeString, None] = None,
         clip_behavior: Union[ClipBehavior, ClipBehaviorString] = None,
         ink: Optional[bool] = None,
         animate: AnimationValue = None,
@@ -360,11 +360,11 @@ class Container(ConstrainedControl):
 
     # shape
     @property
-    def shape(self) -> Union[BoxShape, BoxShapeString]:
+    def shape(self) -> Union[BoxShape, BoxShapeString, None]:
         return self.__shape
 
     @shape.setter
-    def shape(self, value: Union[BoxShape, BoxShapeString]):
+    def shape(self, value: Union[BoxShape, BoxShapeString, None]):
         self.__shape = value
         if isinstance(value, BoxShape):
             self._set_attr("shape", value.value)

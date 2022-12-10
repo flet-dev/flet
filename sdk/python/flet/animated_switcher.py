@@ -113,8 +113,8 @@ class AnimatedSwitcher(ConstrainedControl):
         #
         duration: Optional[int] = None,
         reverse_duration: Optional[int] = None,
-        switch_in_curve: Union[AnimationCurve, AnimationCurveString] = None,
-        switch_out_curve: Union[AnimationCurve, AnimationCurveString] = None,
+        switch_in_curve: Union[AnimationCurve, AnimationCurveString, None] = None,
+        switch_out_curve: Union[AnimationCurve, AnimationCurveString, None] = None,
         transition: Union[AnimatedSwitcherTransition, TransitionValueString] = None,
     ):
         ConstrainedControl.__init__(
@@ -198,11 +198,11 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # switch_in_curve
     @property
-    def switch_in_curve(self) -> Union[AnimationCurve, AnimationCurveString]:
+    def switch_in_curve(self) -> Union[AnimationCurve, AnimationCurveString, None]:
         return self.__switch_in_curve
 
     @switch_in_curve.setter
-    def switch_in_curve(self, value: Union[AnimationCurve, AnimationCurveString]):
+    def switch_in_curve(self, value: Union[AnimationCurve, AnimationCurveString, None]):
         self.__switch_in_curve = value
         if isinstance(value, AnimationCurve):
             self._set_attr("switchInCurve", value.value)
@@ -215,11 +215,11 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # switch_out_curve
     @property
-    def switch_out_curve(self) -> Union[AnimationCurve, AnimationCurveString]:
+    def switch_out_curve(self) -> Union[AnimationCurve, AnimationCurveString, None]:
         return self.__switch_out_curve
 
     @switch_out_curve.setter
-    def switch_out_curve(self, value: Union[AnimationCurve, AnimationCurveString]):
+    def switch_out_curve(self, value: Union[AnimationCurve, AnimationCurveString, None]):
         self.__switch_out_curve = value
         if isinstance(value, AnimationCurve):
             self._set_attr("switchOutCurve", value.value)
