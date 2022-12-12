@@ -14,7 +14,7 @@ from pathlib import Path
 from time import sleep
 
 from flet import constants, version
-from flet.connection import Connection
+from flet.sync_connection import SyncConnection
 from flet.event import Event
 from flet.page import Page
 from flet.reconnecting_websocket import ReconnectingWebSocket
@@ -227,7 +227,7 @@ def _connect_internal(
 
     ws_url = _get_ws_url(server)
     ws = ReconnectingWebSocket(ws_url)
-    conn = Connection(ws)
+    conn = SyncConnection(ws)
     conn.on_event = on_event
 
     if session_handler is not None:
@@ -248,13 +248,7 @@ def _connect_internal(
             conn.page_url += f"/{conn.page_name}"
         connected.set()
 
-    def _on_ws_failed_connect():
-        logging.info(f"Failed to connect: {ws_url}")
-        # if is_localhost_url(ws_url):
-        #     _start_flet_server()
-
     ws.on_connect = _on_ws_connect
-    ws.on_failed_connect = _on_ws_failed_connect
     ws.connect()
     for n in range(0, constants.CONNECT_TIMEOUT_SECONDS):
         if not connected.is_set():
