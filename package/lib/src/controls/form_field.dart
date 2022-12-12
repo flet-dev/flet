@@ -107,6 +107,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
 
   return InputDecoration(
       contentPadding: parseEdgeInsets(control, "contentPadding"),
+      isDense: control.attrBool("dense"),
       label: label != "" ? Text(label) : null,
       labelStyle: parseTextStyle(Theme.of(context), control, "labelStyle"),
       border: border,
