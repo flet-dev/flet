@@ -11,11 +11,13 @@ _LOCAL_CONNECT_TIMEOUT_SEC = 0.2
 
 
 class ReconnectingWebSocket:
-    def __init__(self, url) -> None:
+    def __init__(
+        self, url, on_connect=None, on_failed_connect=None, on_message=None
+    ) -> None:
         self._url = url
-        self._on_connect_handler = None
-        self._on_failed_connect_handler = None
-        self._on_message_handler = None
+        self._on_connect_handler = on_connect
+        self._on_failed_connect_handler = on_failed_connect
+        self._on_message_handler = on_message
         self.connected = threading.Event()
         self.exit = threading.Event()
         self.retry = 0
@@ -23,30 +25,6 @@ class ReconnectingWebSocket:
         # https://github.com/websocket-client/websocket-client/blob/master/websocket/_logging.py#L22-L51
         ws_logger = logging.getLogger("websocket")
         ws_logger.setLevel(logging.FATAL)
-
-    @property
-    def on_connect(self, handler):
-        return self._on_connect_handler
-
-    @on_connect.setter
-    def on_connect(self, handler):
-        self._on_connect_handler = handler
-
-    @property
-    def on_failed_connect(self, handler):
-        return self._on_failed_connect_handler
-
-    @on_failed_connect.setter
-    def on_failed_connect(self, handler):
-        self._on_failed_connect_handler = handler
-
-    @property
-    def on_message(self, handler):
-        return self._on_message_handler
-
-    @on_message.setter
-    def on_message(self, handler):
-        self._on_message_handler = handler
 
     def _on_open(self, wsapp) -> None:
         logging.info(f"Successfully connected to {self._url}")

@@ -16,7 +16,6 @@ class SyncConnection(Connection):
         self,
         server_address: str,
         page_name: str,
-        is_app: bool,
         token: Optional[str],
         on_event=None,
         on_session_created=None,
@@ -24,12 +23,13 @@ class SyncConnection(Connection):
         super().__init__()
         self.page_name = page_name
         self.__host_client_id: Optional[str] = None
-        self.__is_app = is_app
         self.__token = token
         self.__server_address = server_address
-        self.__ws = ReconnectingWebSocket(self._get_ws_url(server_address))
-        self.__ws.on_connect = self.__on_ws_connect
-        self.__ws.on_message = self.__on_ws_message
+        self.__ws = ReconnectingWebSocket(
+            self._get_ws_url(server_address),
+            on_connect=self.__on_ws_connect,
+            on_message=self.__on_ws_message,
+        )
         self.__ws_callbacks = {}
         self.__on_event = on_event
         self.__on_session_created = on_session_created
@@ -48,9 +48,9 @@ class SyncConnection(Connection):
 
     def __on_ws_connect(self):
         payload = RegisterHostClientRequestPayload(
-            self.__host_client_id,
-            self.page_name,
-            self.__is_app,
+            hostClientID=self.__host_client_id,
+            pageName=self.page_name,
+            isApp=True,
             update=False,
             authToken=self.__token,
             permissions=None,

@@ -47,43 +47,6 @@ AppViewer = Literal[None, "web_browser", "flet_app", "flet_app_hidden"]
 WebRenderer = Literal[None, "auto", "html", "canvaskit"]
 
 
-def page(
-    name="",
-    host=None,
-    port=0,
-    view: AppViewer = WEB_BROWSER,
-    assets_dir=None,
-    upload_dir=None,
-    web_renderer="canvaskit",
-    route_url_strategy="hash",
-    token=None,
-):
-    conn = _connect_internal(
-        page_name=name,
-        host=host,
-        port=port,
-        is_app=False,
-        assets_dir=assets_dir,
-        upload_dir=upload_dir,
-        web_renderer=web_renderer,
-        route_url_strategy=route_url_strategy,
-        token=token,
-    )
-    url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
-    if url_prefix is not None:
-        print(url_prefix, conn.page_url)
-    else:
-        logging.info(f"Page URL: {conn.page_url}")
-
-    page = Page(conn, constants.ZERO_SESSION)
-    conn.sessions[constants.ZERO_SESSION] = page
-
-    if view == WEB_BROWSER:
-        open_in_browser(conn.page_url)
-
-    return page
-
-
 def app(
     name="",
     host=None,
@@ -103,7 +66,6 @@ def app(
         page_name=name,
         host=host,
         port=port,
-        is_app=True,
         token=token,
         session_handler=target,
         assets_dir=assets_dir,
@@ -165,7 +127,6 @@ def _connect_internal(
     page_name,
     host=None,
     port=0,
-    is_app=False,
     share=False,
     server=None,
     token=None,
@@ -183,14 +144,10 @@ def _connect_internal(
         if env_port is not None and env_port:
             port = env_port
 
-        # page with a custom port starts detached process
-        attached = False if not is_app and port != 0 else True
-
         server_ip = host if host not in [None, "", "*"] else "127.0.0.1"
         port = _start_flet_server(
             host,
             port,
-            attached,
             assets_dir,
             upload_dir,
             web_renderer,
@@ -224,7 +181,6 @@ def _connect_internal(
     conn = SyncConnection(
         server_address=server,
         page_name=page_name,
-        is_app=is_app,
         token=token,
         on_event=on_event,
         on_session_created=on_session_created,
@@ -234,13 +190,12 @@ def _connect_internal(
 
 
 def _start_flet_server(
-    host, port, attached, assets_dir, upload_dir, web_renderer, route_url_strategy
+    host, port, assets_dir, upload_dir, web_renderer, route_url_strategy
 ):
     if port == 0:
         port = get_free_tcp_port()
 
     logging.info(f"Starting local Flet Server on port {port}...")
-    logging.info(f"Attached process: {attached}")
 
     fletd_exe = "fletd.exe" if is_windows() else "fletd"
 
@@ -302,13 +257,7 @@ def _start_flet_server(
     creationflags = 0
     start_new_session = False
 
-    if attached:
-        args.append("--attached")
-    else:
-        if is_windows():
-            creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
-        else:
-            start_new_session = True
+    args.append("--attached")
 
     log_level = logging.getLogger().getEffectiveLevel()
     if log_level == logging.CRITICAL:
