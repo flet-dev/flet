@@ -5,8 +5,7 @@ from flet.pubsub import PubSubHub
 
 class Connection:
     def __init__(self):
-        self.host_client_id: Optional[str] = None
-        self.page_name: Optional[str] = None
+        self.page_name: str = ""
         self.page_url: Optional[str] = None
         self.sessions = {}
         self.pubsubhub = PubSubHub()
@@ -14,8 +13,24 @@ class Connection:
     def send_command(self, session_id: str, command: Command):
         raise NotImplementedError()
 
+    async def send_command_async(self, session_id: str, command: Command):
+        raise NotImplementedError()
+
     def send_commands(self, session_id: str, commands: List[Command]):
+        raise NotImplementedError()
+
+    async def send_commands_async(self, session_id: str, commands: List[Command]):
         raise NotImplementedError()
 
     def close(self):
         raise NotImplementedError()
+
+    def _get_ws_url(self, server: str):
+        url = server.rstrip("/")
+        if server.startswith("https://"):
+            url = url.replace("https://", "wss://")
+        elif server.startswith("http://"):
+            url = url.replace("http://", "ws://")
+        else:
+            url = "ws://" + url
+        return url + "/ws"

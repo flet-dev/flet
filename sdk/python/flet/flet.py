@@ -51,23 +51,23 @@ def page(
     name="",
     host=None,
     port=0,
-    permissions=None,
     view: AppViewer = WEB_BROWSER,
     assets_dir=None,
     upload_dir=None,
     web_renderer="canvaskit",
     route_url_strategy="hash",
+    token=None,
 ):
     conn = _connect_internal(
         page_name=name,
         host=host,
         port=port,
         is_app=False,
-        permissions=permissions,
         assets_dir=assets_dir,
         upload_dir=upload_dir,
         web_renderer=web_renderer,
         route_url_strategy=route_url_strategy,
+        token=token,
     )
     url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
     if url_prefix is not None:
@@ -89,12 +89,12 @@ def app(
     host=None,
     port=0,
     target=None,
-    permissions=None,
     view: AppViewer = FLET_APP,
     assets_dir=None,
     upload_dir=None,
     web_renderer="canvaskit",
     route_url_strategy="hash",
+    token=None,
 ):
     if target is None:
         raise Exception("target argument is not specified")
@@ -104,7 +104,7 @@ def app(
         host=host,
         port=port,
         is_app=True,
-        permissions=permissions,
+        token=token,
         session_handler=target,
         assets_dir=assets_dir,
         upload_dir=upload_dir,
@@ -162,15 +162,13 @@ def app(
 
 
 def _connect_internal(
-    page_name=None,
+    page_name,
     host=None,
     port=0,
     is_app=False,
-    update=False,
     share=False,
     server=None,
     token=None,
-    permissions=None,
     session_handler=None,
     assets_dir=None,
     upload_dir=None,
@@ -200,8 +198,6 @@ def _connect_internal(
         )
         server = f"http://{server_ip}:{port}"
 
-    connected = threading.Event()
-
     def on_event(conn, e):
         if e.sessionID in conn.sessions:
             conn.sessions[e.sessionID].on_event(
@@ -225,40 +221,15 @@ def _connect_internal(
             )
             page.error(f"There was an error while processing your request: {e}")
 
-    ws_url = _get_ws_url(server)
-    ws = ReconnectingWebSocket(ws_url)
-    conn = SyncConnection(ws)
-    conn.on_event = on_event
-
-    if session_handler is not None:
-        conn.on_session_created = on_session_created
-
-    def _on_ws_connect():
-        if conn.page_name is None:
-            conn.page_name = page_name
-        assert conn.page_name is not None
-        result = conn.register_host_client(
-            conn.host_client_id, conn.page_name, is_app, update, token, permissions
-        )
-        conn.host_client_id = result.hostClientID
-        conn.page_name = result.pageName
-        conn.page_url = server.rstrip("/")
-        if conn.page_name != constants.INDEX_PAGE:
-            assert conn.page_url is not None
-            conn.page_url += f"/{conn.page_name}"
-        connected.set()
-
-    ws.on_connect = _on_ws_connect
-    ws.connect()
-    for n in range(0, constants.CONNECT_TIMEOUT_SECONDS):
-        if not connected.is_set():
-            sleep(1)
-    if not connected.is_set():
-        ws.close()
-        raise Exception(
-            f"Could not connected to Flet server in {constants.CONNECT_TIMEOUT_SECONDS} seconds."
-        )
-
+    conn = SyncConnection(
+        server_address=server,
+        page_name=page_name,
+        is_app=is_app,
+        token=token,
+        on_event=on_event,
+        on_session_created=on_session_created,
+    )
+    conn.connect()
     return conn
 
 
@@ -449,17 +420,6 @@ def open_flet_view(page_url, hidden):
     return subprocess.Popen(args, env=flet_env)
 
 
-def _get_ws_url(server: str):
-    url = server.rstrip("/")
-    if server.startswith("https://"):
-        url = url.replace("https://", "wss://")
-    elif server.startswith("http://"):
-        url = url.replace("http://", "ws://")
-    else:
-        url = "ws://" + url
-    return url + "/ws"
-
-
 def _download_fletd():
     ver = version.version
     flet_exe = "fletd.exe" if is_windows() else "fletd"
@@ -501,21 +461,6 @@ def _download_flet_client(file_name):
     flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
     urllib.request.urlretrieve(flet_url, temp_arch)
     return str(temp_arch)
-
-
-# not currently used, but maybe useful in the future
-def _get_latest_flet_release():
-    releases = json.loads(
-        urllib.request.urlopen(
-            f"https://api.github.com/repos/flet-dev/flet/releases?per_page=5"
-        )
-        .read()
-        .decode()
-    )
-    if len(releases) > 0:
-        return releases[0]["tag_name"].lstrip("v")
-    else:
-        return None
 
 
 # Fix: https://bugs.python.org/issue35935

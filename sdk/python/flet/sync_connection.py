@@ -1,57 +1,82 @@
 import json
 import logging
 import threading
+from time import sleep
 from typing import List, Optional
 import uuid
+from flet import constants
 from flet.connection import Connection
 
 from flet.protocol import *
-from flet.pubsub import PubSubHub
 from flet.reconnecting_websocket import ReconnectingWebSocket
 
 
 class SyncConnection(Connection):
-    def __init__(self, ws: ReconnectingWebSocket):
-        self._ws = ws
-        self._ws.on_message = self._on_message
-        self._ws_callbacks = {}
-        self._on_event = None
-        self._on_session_created = None
-        self.host_client_id: Optional[str] = None
-        self.page_name: Optional[str] = None
-        self.page_url: Optional[str] = None
-        self.sessions = {}
-        self.pubsubhub = PubSubHub()
+    def __init__(
+        self,
+        server_address: str,
+        page_name: str,
+        is_app: bool,
+        token: Optional[str],
+        on_event=None,
+        on_session_created=None,
+    ):
+        super().__init__()
+        self.page_name = page_name
+        self.__host_client_id: Optional[str] = None
+        self.__is_app = is_app
+        self.__token = token
+        self.__server_address = server_address
+        self.__ws = ReconnectingWebSocket(self._get_ws_url(server_address))
+        self.__ws.on_connect = self.__on_ws_connect
+        self.__ws.on_message = self.__on_ws_message
+        self.__ws_callbacks = {}
+        self.__on_event = on_event
+        self.__on_session_created = on_session_created
 
-    @property
-    def on_event(self):
-        return self._on_event
+    def connect(self):
+        self.__connected = threading.Event()
+        self.__ws.connect()
+        for n in range(0, constants.CONNECT_TIMEOUT_SECONDS):
+            if not self.__connected.is_set():
+                sleep(1)
+        if not self.__connected.is_set():
+            self.__ws.close()
+            raise Exception(
+                f"Could not connected to Flet server in {constants.CONNECT_TIMEOUT_SECONDS} seconds."
+            )
 
-    @on_event.setter
-    def on_event(self, handler):
-        self._on_event = handler
+    def __on_ws_connect(self):
+        payload = RegisterHostClientRequestPayload(
+            self.__host_client_id,
+            self.page_name,
+            self.__is_app,
+            update=False,
+            authToken=self.__token,
+            permissions=None,
+        )
+        response = self._send_message_with_result(Actions.REGISTER_HOST_CLIENT, payload)
+        register_result = RegisterHostClientResponsePayload(**response)
+        self.__host_client_id = register_result.hostClientID
+        self.page_name = register_result.pageName
+        self.page_url = self.__server_address.rstrip("/")
+        if self.page_name != constants.INDEX_PAGE:
+            self.page_url += f"/{self.page_name}"
+        self.__connected.set()
 
-    @property
-    def on_session_created(self):
-        return self._on_session_created
-
-    @on_session_created.setter
-    def on_session_created(self, handler):
-        self._on_session_created = handler
-
-    def _on_message(self, data):
+    def __on_ws_message(self, data):
         logging.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
         msg = Message(**msg_dict)
         if msg.id:
             # callback
-            evt = self._ws_callbacks[msg.id][0]
-            self._ws_callbacks[msg.id] = (None, msg.payload)
+            evt = self.__ws_callbacks[msg.id][0]
+            self.__ws_callbacks[msg.id] = (None, msg.payload)
             evt.set()
         elif msg.action == Actions.PAGE_EVENT_TO_HOST:
-            if self._on_event is not None:
+            if self.__on_event is not None:
                 th = threading.Thread(
-                    target=self._on_event,
+                    target=self.__on_event,
                     args=(
                         self,
                         PageEventPayload(**msg.payload),
@@ -61,9 +86,9 @@ class SyncConnection(Connection):
                 th.start()
                 # self._on_event(self, PageEventPayload(**msg.payload))
         elif msg.action == Actions.SESSION_CREATED:
-            if self._on_session_created is not None:
+            if self.__on_session_created is not None:
                 th = threading.Thread(
-                    target=self._on_session_created,
+                    target=self.__on_session_created,
                     args=(
                         self,
                         PageSessionCreatedPayload(**msg.payload),
@@ -74,21 +99,6 @@ class SyncConnection(Connection):
         else:
             # it's something else
             print(msg.payload)
-
-    def register_host_client(
-        self,
-        host_client_id: Optional[str],
-        page_name: str,
-        is_app: bool,
-        update: bool,
-        auth_token: Optional[str],
-        permissions: Optional[str],
-    ):
-        payload = RegisterHostClientRequestPayload(
-            host_client_id, page_name, is_app, update, auth_token, permissions
-        )
-        response = self._send_message_with_result(Actions.REGISTER_HOST_CLIENT, payload)
-        return RegisterHostClientResponsePayload(**response)
 
     def send_command(self, session_id: str, command: Command):
         assert self.page_name is not None
@@ -118,12 +128,12 @@ class SyncConnection(Connection):
         j = json.dumps(msg, cls=CommandEncoder, separators=(",", ":"))
         logging.debug(f"_send_message_with_result: {j}")
         evt = threading.Event()
-        self._ws_callbacks[msg_id] = (evt, None)
-        self._ws.send(j)
+        self.__ws_callbacks[msg_id] = (evt, None)
+        self.__ws.send(j)
         evt.wait()
-        return self._ws_callbacks.pop(msg_id)[1]
+        return self.__ws_callbacks.pop(msg_id)[1]
 
     def close(self):
         logging.debug("Closing connection...")
-        if self._ws is not None:
-            self._ws.close()
+        if self.__ws is not None:
+            self.__ws.close()
