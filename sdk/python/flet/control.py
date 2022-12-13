@@ -302,9 +302,25 @@ class Control:
                 ids = []
                 for h in previous_ints[a1:a2]:
                     ctrl = hashes[h]
+                    # check if re-added control is being deleted
+                    # which means it's a replace
+                    i = 0
+                    replaced = False
+                    while i < len(commands):
+                        cmd = commands[i]
+                        if cmd.name == "add" and any(
+                            c for c in cmd.commands if c.attrs["id"] == ctrl.__uid
+                        ):
+                            # insert delete command before add
+                            commands.insert(i, Command(0, "remove", [ctrl.__uid]))
+                            replaced = True
+                            break
+                        i += 1
                     self._remove_control_recursively(index, ctrl)
-                    ids.append(ctrl.__uid)
-                commands.append(Command(0, "remove", ids))
+                    if not replaced:
+                        ids.append(ctrl.__uid)
+                if len(ids) > 0:
+                    commands.append(Command(0, "remove", ids))
             elif tag == "equal":
                 # unchanged control
                 for h in previous_ints[a1:a2]:
@@ -428,7 +444,9 @@ class Control:
             self.__attrs[attrName] = (val, False)
 
         id = self.__attrs.get("id")
-        if not update and id is not None:
+        if not update and self.__uid is not None:
+            command.attrs["id"] = self.__uid
+        elif not update and id is not None:
             command.attrs["id"] = id
         elif update and len(command.attrs) > 0:
             assert self.__uid is not None
