@@ -1,7 +1,9 @@
 import math
 import os
 import platform
+import random
 import socket
+import string
 import sys
 import unicodedata
 import webbrowser
@@ -57,6 +59,10 @@ def get_arch():
 
 def open_in_browser(url):
     webbrowser.open(url)
+
+
+def random_string(length):
+    return "".join(random.choice(string.ascii_letters) for i in range(length))
 
 
 # https://stackoverflow.com/questions/377017/test-if-executable-exists-in-python

@@ -28,6 +28,7 @@ from flet.utils import (
     is_macos,
     is_windows,
     open_in_browser,
+    random_string,
     safe_tar_extractall,
     which,
 )
@@ -92,13 +93,14 @@ def app(
     logging.info("Connected to Flet app and handling user sessions...")
 
     fvp = None
+    pid_file = None
 
     if (
         (view == FLET_APP or view == FLET_APP_HIDDEN)
         and not is_linux_server()
         and url_prefix is None
     ):
-        fvp = open_flet_view(conn.page_url, view == FLET_APP_HIDDEN)
+        fvp, pid_file = open_flet_view(conn.page_url, view == FLET_APP_HIDDEN)
         try:
             fvp.wait()
         except (Exception) as e:
@@ -115,12 +117,17 @@ def app(
 
     conn.close()
 
-    if fvp is not None and not is_windows():
+    # close Flet.app started with "open"
+    if fvp is not None and pid_file is not None and os.path.exists(pid_file):
         try:
-            logging.debug(f"Flet View process {fvp.pid}")
-            os.kill(fvp.pid + 1, signal.SIGKILL)
+            with open(pid_file) as f:
+                fvp_pid = int(f.read())
+            logging.debug(f"Flet View process {fvp_pid}")
+            os.kill(fvp_pid, signal.SIGKILL)
         except:
             pass
+        finally:
+            os.remove(pid_file)
 
 
 def _connect_internal(
@@ -289,6 +296,7 @@ def open_flet_view(page_url, hidden):
     logging.info(f"Starting Flet View app...")
 
     args = []
+    pid_file = None
 
     if is_windows():
         flet_exe = "flet.exe"
@@ -321,23 +329,31 @@ def open_flet_view(page_url, hidden):
         # build version-specific path to Flet.app
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
-        # check if flet_view.app exists in a temp directory
-        if not temp_flet_dir.exists():
-            # check if flet.tar.gz exists
-            gz_filename = "flet-macos-amd64.tar.gz"
-            tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
-            if not tar_file.exists():
-                tar_file = _download_flet_client(gz_filename)
-
-            logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
-            temp_flet_dir.mkdir(parents=True, exist_ok=True)
-            with tarfile.open(str(tar_file), "r:gz") as tar_arch:
-                safe_tar_extractall(tar_arch, str(temp_flet_dir))
+        # check if flet.exe is in PATH (flet developer mode)
+        flet_path = which("flet", sys.argv[0])
+        if flet_path and "/Contents/MacOS/" in flet_path:
+            logging.info(f"Flet.app found in PATH: {flet_path}")
+            app_path = str(Path(flet_path).parent.parent.parent)
         else:
-            logging.info(f"Flet View found in: {temp_flet_dir}")
+            # check if flet_view.app exists in a temp directory
+            if not temp_flet_dir.exists():
+                # check if flet.tar.gz exists
+                gz_filename = "flet-macos-amd64.tar.gz"
+                tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
+                if not tar_file.exists():
+                    tar_file = _download_flet_client(gz_filename)
 
-        app_path = temp_flet_dir.joinpath("Flet.app")
-        args = ["open", str(app_path), "-n", "-W", "--args", page_url]
+                logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
+                temp_flet_dir.mkdir(parents=True, exist_ok=True)
+                with tarfile.open(str(tar_file), "r:gz") as tar_arch:
+                    safe_tar_extractall(tar_arch, str(temp_flet_dir))
+            else:
+                logging.info(f"Flet View found in: {temp_flet_dir}")
+            app_path = temp_flet_dir.joinpath("Flet.app")
+
+        # pid file - Flet client writes its process ID to this file
+        pid_file = str(Path(tempfile.gettempdir()).joinpath(random_string(20)))
+        args = ["open", str(app_path), "-n", "-W", "--args", page_url, pid_file]
     elif is_linux():
         # build version-specific path to flet folder
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
@@ -366,7 +382,7 @@ def open_flet_view(page_url, hidden):
         flet_env["FLET_HIDE_WINDOW_ON_START"] = "true"
 
     # execute process
-    return subprocess.Popen(args, env=flet_env)
+    return subprocess.Popen(args, env=flet_env), pid_file
 
 
 def _download_fletd():
