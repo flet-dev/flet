@@ -1,3 +1,4 @@
+import inspect
 import math
 import os
 import platform
@@ -63,6 +64,20 @@ def open_in_browser(url):
 
 def random_string(length):
     return "".join(random.choice(string.ascii_letters) for i in range(length))
+
+
+def is_sync_method(obj, method_name) -> bool:
+    method = getattr(obj, method_name, None)
+    if method is None:
+        return False
+    return callable(method) and not inspect.iscoroutinefunction(method)
+
+
+def is_async_method(obj, method_name) -> bool:
+    method = getattr(obj, method_name, None)
+    if method is None:
+        return False
+    return callable(method) and inspect.iscoroutinefunction(method)
 
 
 # https://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
