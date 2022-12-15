@@ -1,5 +1,9 @@
 import os
 
+import flet.__pyinstaller.config as hook_config
+
+# raise Exception(f"icon_file: {hook_config.icon_file}")
+
 # package entire "bin" folder
 bin_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, "bin"))
 
