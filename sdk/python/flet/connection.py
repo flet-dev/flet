@@ -22,9 +22,6 @@ class Connection:
     async def send_commands_async(self, session_id: str, commands: List[Command]):
         raise NotImplementedError()
 
-    def close(self):
-        raise NotImplementedError()
-
     def _get_ws_url(self, server: str):
         url = server.rstrip("/")
         if server.startswith("https://"):

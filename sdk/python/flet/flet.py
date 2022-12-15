@@ -224,7 +224,7 @@ async def app_async(
         except KeyboardInterrupt:
             pass
 
-    conn.close()
+    await conn.close()
     close_flet_view(pid_file)
 
 
@@ -319,18 +319,18 @@ async def __connect_internal_async(
             route_url_strategy,
         )
 
-    async def on_event(conn, e):
-        # TODO
+    async def on_event(e):
+        print("ON EVENT:", e)
         pass
 
-    async def on_session_created(conn, session_data):
-        # TODO
+    async def on_session_created(session_data):
+        print("ON SESSION CREATED:", session_data)
         pass
 
     conn = AsyncConnection(
         server_address=server,
         page_name=page_name,
-        token=auth_token,
+        auth_token=auth_token,
         on_event=on_event,
         on_session_created=on_session_created,
     )
