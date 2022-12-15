@@ -141,10 +141,6 @@ class ListView(ConstrainedControl):
     def _get_children(self):
         return self.__controls
 
-    def clean(self):
-        Control.clean(self)
-        self.__controls.clear()
-
     # horizontal
     @property
     def horizontal(self) -> Optional[bool]:
