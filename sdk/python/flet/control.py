@@ -1,6 +1,7 @@
 import datetime as dt
 import json
 import threading
+import asyncio
 from difflib import SequenceMatcher
 from typing import TYPE_CHECKING, Any, Union
 
@@ -52,6 +53,7 @@ class Control:
         self.data = data
         self.__event_handlers = {}
         self._lock = threading.Lock()
+        self._async_lock = asyncio.Lock()
         if ref:
             ref.current = self
 
@@ -67,7 +69,13 @@ class Control:
     def did_mount(self):
         pass
 
+    async def did_mount_async(self):
+        pass
+
     def will_unmount(self):
+        pass
+
+    async def will_unmount_async(self):
         pass
 
     def _get_children(self):
