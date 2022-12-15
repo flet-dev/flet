@@ -12,20 +12,17 @@ import traceback
 import urllib.request
 import zipfile
 from pathlib import Path
-from time import sleep
 
-from flet import constants, version
+from flet import version
 from flet.async_connection import AsyncConnection
 from flet.sync_connection import SyncConnection
 from flet.event import Event
 from flet.page import Page
-from flet.reconnecting_websocket import ReconnectingWebSocket
 from flet.utils import (
     get_arch,
     get_current_script_dir,
     get_free_tcp_port,
     get_platform,
-    is_async_method,
     is_linux,
     is_linux_server,
     is_macos,
@@ -106,7 +103,7 @@ def __app_sync(
     route_url_strategy="hash",
     auth_token=None,
 ):
-    conn = __connect_internal(
+    conn = __connect_internal_sync(
         page_name=name,
         host=host,
         port=port,
@@ -159,18 +156,7 @@ def __app_sync(
             pass
 
     conn.close()
-
-    # close Flet.app started with "open" on macOS
-    if fvp is not None and pid_file is not None and os.path.exists(pid_file):
-        try:
-            with open(pid_file) as f:
-                fvp_pid = int(f.read())
-            logging.debug(f"Flet View process {fvp_pid}")
-            os.kill(fvp_pid, signal.SIGKILL)
-        except:
-            pass
-        finally:
-            os.remove(pid_file)
+    close_flet_view(pid_file)
 
 
 async def app_async(
@@ -239,9 +225,11 @@ async def app_async(
             pass
 
     conn.close()
+    close_flet_view(pid_file)
 
-    # close Flet.app started with "open" on macOS
-    if fvp is not None and pid_file is not None and os.path.exists(pid_file):
+
+def close_flet_view(pid_file):
+    if pid_file is not None and os.path.exists(pid_file):
         try:
             with open(pid_file) as f:
                 fvp_pid = int(f.read())
@@ -253,7 +241,7 @@ async def app_async(
             os.remove(pid_file)
 
 
-def __connect_internal(
+def __connect_internal_sync(
     page_name,
     host=None,
     port=0,
@@ -470,7 +458,9 @@ def __locate_and_unpack_flet_view(page_url, hidden):
     logging.info(f"Starting Flet View app...")
 
     args = []
-    pid_file = None
+
+    # pid file - Flet client writes its process ID to this file
+    pid_file = str(Path(tempfile.gettempdir()).joinpath(random_string(20)))
 
     if is_windows():
         flet_exe = "flet.exe"
@@ -498,7 +488,7 @@ def __locate_and_unpack_flet_view(page_url, hidden):
                     with zipfile.ZipFile(zip_file, "r") as zip_arch:
                         zip_arch.extractall(str(temp_flet_dir))
                 flet_path = str(temp_flet_dir.joinpath("flet", flet_exe))
-        args = [flet_path, page_url]
+        args = [flet_path, page_url, pid_file]
     elif is_macos():
         # build version-specific path to Flet.app
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
@@ -525,8 +515,6 @@ def __locate_and_unpack_flet_view(page_url, hidden):
                 logging.info(f"Flet View found in: {temp_flet_dir}")
             app_path = temp_flet_dir.joinpath("Flet.app")
 
-        # pid file - Flet client writes its process ID to this file
-        pid_file = str(Path(tempfile.gettempdir()).joinpath(random_string(20)))
         args = ["open", str(app_path), "-n", "-W", "--args", page_url, pid_file]
     elif is_linux():
         # build version-specific path to flet folder
@@ -548,7 +536,7 @@ def __locate_and_unpack_flet_view(page_url, hidden):
             logging.info(f"Flet View found in: {temp_flet_dir}")
 
         app_path = temp_flet_dir.joinpath("flet", "flet")
-        args = [str(app_path), page_url]
+        args = [str(app_path), page_url, pid_file]
 
     flet_env = {**os.environ}
 
