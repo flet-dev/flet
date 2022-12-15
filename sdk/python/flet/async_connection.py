@@ -1,4 +1,3 @@
-from asyncio import sleep
 import asyncio
 import json
 import logging
@@ -13,6 +12,9 @@ from asyncio.queues import Queue
 
 
 class AsyncConnection(Connection):
+    __CONNECT_TIMEOUT = 0.2
+    __CONNECT_ATTEMPTS = 50
+
     def __init__(
         self,
         server_address: str,
@@ -25,6 +27,7 @@ class AsyncConnection(Connection):
         self.__send_queue = Queue(1)
         self.page_name = page_name
         self.__server_address = server_address
+        self.__is_reconnecting = False
         self.__host_client_id: Optional[str] = None
         self.__auth_token = auth_token
         self.__ws_callbacks = {}
@@ -33,21 +36,23 @@ class AsyncConnection(Connection):
 
     async def connect(self):
         ws_url = self._get_ws_url(self.__server_address)
-        print(f"Connecting async to {ws_url}...")
+        logging.debug(f"Connecting via WebSockets to {ws_url}...")
 
-        attempts = 50
-        for n in range(0, attempts):
+        attempt = self.__CONNECT_ATTEMPTS
+        while True:
             try:
                 self.__ws: WebSocketClientProtocol = await ws_client.connect(ws_url)
                 break
             except Exception as e:
                 logging.debug(f"Error connecting to Flet server: {e}")
-                if n == attempts - 1:
+                if attempt == 0 and not self.__is_reconnecting:
                     raise Exception(
-                        f"Failed to connect Flet server in {attempts} attempts."
+                        f"Failed to connect Flet server in {self.__CONNECT_ATTEMPTS} attempts."
                     )
-                await asyncio.sleep(0.2)
-        logging.info(f"Connected to Flet server {self.__server_address}")
+                attempt -= 1
+                await asyncio.sleep(self.__CONNECT_TIMEOUT)
+        logging.debug(f"Connected to Flet server {self.__server_address}")
+        self.__is_reconnecting = True
 
         # start send/receive loops
         asyncio.get_event_loop().create_task(self.__start_loops())
@@ -93,7 +98,7 @@ class AsyncConnection(Connection):
         # re-connect if one of tasks failed
         if failed:
             logging.debug(f"Re-connecting to Flet server in 1 second")
-            await asyncio.sleep(1)
+            await asyncio.sleep(self.__CONNECT_TIMEOUT)
             await self.connect()
 
     async def __on_ws_message(self, data):
@@ -132,10 +137,26 @@ class AsyncConnection(Connection):
                 raise
 
     async def send_command_async(self, session_id: str, command: Command):
-        pass
+        assert self.page_name is not None
+        payload = PageCommandRequestPayload(self.page_name, session_id, command)
+        response = await self._send_message_with_result(
+            Actions.PAGE_COMMAND_FROM_HOST, payload
+        )
+        result = PageCommandResponsePayload(**response)
+        if result.error:
+            raise Exception(result.error)
+        return result
 
     async def send_commands_async(self, session_id: str, commands: List[Command]):
-        pass
+        assert self.page_name is not None
+        payload = PageCommandsBatchRequestPayload(self.page_name, session_id, commands)
+        response = await self._send_message_with_result(
+            Actions.PAGE_COMMANDS_BATCH_FROM_HOST, payload
+        )
+        result = PageCommandsBatchResponsePayload(**response)
+        if result.error:
+            raise Exception(result.error)
+        return result
 
     async def _send_message_with_result(self, action_name, payload):
         msg_id = uuid.uuid4().hex
