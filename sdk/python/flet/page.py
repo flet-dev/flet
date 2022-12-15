@@ -4,7 +4,7 @@ import threading
 import time
 import uuid
 from dataclasses import dataclass
-from typing import Any, cast
+from typing import Any, Tuple, cast
 from urllib.parse import urlparse
 
 from beartype import beartype
@@ -82,8 +82,6 @@ class Page(Control):
         self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
         self._index = {self._Control__uid: self}  # index with all page controls
-        self._last_event = None
-        self._event_available = threading.Event()
 
         self.__views = [View()]
         self.__default_view = self.__views[0]
@@ -149,24 +147,13 @@ class Page(Control):
         self.__on_error = EventHandler()
         self._add_event_handler("error", self.__on_error.handler)
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self.close()
-
     def get_control(self, id):
         return self._index.get(id)
 
     def _before_build_command(self):
         super()._before_build_command()
-        # fonts
         self._set_attr_json("fonts", self.__fonts)
-
-        # light theme
         self._set_attr_json("theme", self.__theme)
-
-        # dark theme
         self._set_attr_json("darkTheme", self.__dark_theme)
 
         # keyboard event
@@ -189,10 +176,12 @@ class Page(Control):
 
     async def fetch_page_details_async(self):
         assert self.__conn.page_name is not None
-        values = (await self.__conn.send_commands_async(
-            self._session_id,
-            self.__get_page_detail_commands(),
-        )).results
+        values = (
+            await self.__conn.send_commands_async(
+                self._session_id,
+                self.__get_page_detail_commands(),
+            )
+        ).results
         self.__set_page_details(values)
 
     def __get_page_detail_commands(self):
@@ -212,7 +201,7 @@ class Page(Control):
             Command(0, "get", ["page", "windowTop"]),
             Command(0, "get", ["page", "windowLeft"]),
         ]
-    
+
     def __set_page_details(self, values):
         self._set_attr("route", values[0], False)
         self._set_attr("pwa", values[1], False)
@@ -226,25 +215,60 @@ class Page(Control):
         self._set_attr("windowLeft", values[9], False)
 
     def update(self, *controls):
-        added_controls = []
         with self._lock:
             if len(controls) == 0:
-                added_controls = self.__update(self)
+                r = self.__update(self)
             else:
-                added_controls = self.__update(*controls)
-        for ctrl in added_controls:
-            ctrl.did_mount()
+                r = self.__update(*controls)
+        self.__handle_mount_unmount(*r)
 
-    def __update(self, *controls) -> List[Control]:
+    def add(self, *controls):
+        with self._lock:
+            self._controls.extend(controls)
+            r = self.__update(self)
+        self.__handle_mount_unmount(*r)
+
+    def insert(self, at, *controls):
+        with self._lock:
+            n = at
+            for control in controls:
+                self._controls.insert(n, control)
+                n += 1
+            r = self.__update(self)
+        self.__handle_mount_unmount(*r)
+
+    def remove(self, *controls):
+        with self._lock:
+            for control in controls:
+                self._controls.remove(control)
+            r = self.__update(self)
+        self.__handle_mount_unmount(*r)
+
+    def remove_at(self, index):
+        with self._lock:
+            self._controls.pop(index)
+            r = self.__update(self)
+        self.__handle_mount_unmount(*r)
+
+    def clean(self):
+        with self._lock:
+            self._controls.clear()
+            r = self.__update(self)
+        self.__handle_mount_unmount(*r)
+
+    def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         added_controls = []
+        removed_controls = []
         commands = []
 
         # build commands
         for control in controls:
-            control.build_update_commands(self._index, added_controls, commands)
+            control.build_update_commands(
+                self._index, commands, added_controls, removed_controls
+            )
 
         if len(commands) == 0:
-            return added_controls
+            return added_controls, removed_controls
 
         # execute commands
         results = self.__conn.send_commands(self._session_id, commands).results
@@ -260,46 +284,13 @@ class Page(Control):
                     self._index[id] = added_controls[n]
 
                     n += 1
-        return added_controls
+        return added_controls, removed_controls
 
-    def add(self, *controls):
-        added_controls = []
-        with self._lock:
-            self._controls.extend(controls)
-            added_controls = self.__update(self)
+    def __handle_mount_unmount(self, added_controls, removed_controls):
+        for ctrl in removed_controls:
+            ctrl.will_unmount()
         for ctrl in added_controls:
             ctrl.did_mount()
-
-    def insert(self, at, *controls):
-        added_controls = []
-        with self._lock:
-            n = at
-            for control in controls:
-                self._controls.insert(n, control)
-                n += 1
-            added_controls = self.__update(self)
-        for ctrl in added_controls:
-            ctrl.did_mount()
-
-    def remove(self, *controls):
-        with self._lock:
-            for control in controls:
-                self._controls.remove(control)
-            self.__update(self)
-
-    def remove_at(self, index):
-        with self._lock:
-            self._controls.pop(index)
-            self.__update(self)
-
-    def clean(self):
-        with self._lock:
-            self._previous_children.clear()
-            for child in self._get_children():
-                self._remove_control_recursively(self._index, child)
-            self._controls.clear()
-            assert self.uid is not None
-            return self._send_command("clean", [self.uid])
 
     def error(self, message=""):
         with self._lock:
@@ -320,22 +311,11 @@ class Page(Control):
                                 )
 
             elif e.target in self._index:
-                self._last_event = ControlEvent(
-                    e.target, e.name, e.data, self._index[e.target], self
-                )
+                ce = ControlEvent(e.target, e.name, e.data, self._index[e.target], self)
                 handler = self._index[e.target].event_handlers.get(e.name)
                 if handler:
-                    t = threading.Thread(
-                        target=handler, args=(self._last_event,), daemon=True
-                    )
+                    t = threading.Thread(target=handler, args=(ce,), daemon=True)
                     t.start()
-                self._event_available.set()
-
-    def wait_event(self) -> ControlEvent:
-        self._event_available.clear()
-        self._event_available.wait()
-        assert self._last_event is not None
-        return self._last_event
 
     def go(self, route, **kwargs):
         self.route = route if kwargs == {} else route + self.query.post(kwargs)
@@ -435,10 +415,6 @@ class Page(Control):
             ControlEvent(target="page", name="logout", data="", control=self, page=self)
         )
 
-    def close(self):
-        if self._session_id == constants.ZERO_SESSION:
-            self.__conn.close()
-
     def _send_command(
         self,
         name: str,
@@ -446,6 +422,22 @@ class Page(Control):
         attrs: Optional[Dict[str, str]] = None,
     ):
         return self.__conn.send_command(
+            self._session_id,
+            Command(
+                indent=0,
+                name=name,
+                values=values if values is not None else [],
+                attrs=attrs or {},
+            ),
+        )
+
+    async def _send_command_async(
+        self,
+        name: str,
+        values: Optional[List[str]] = None,
+        attrs: Optional[Dict[str, str]] = None,
+    ):
+        return await self.__conn.send_command_async(
             self._session_id,
             Command(
                 indent=0,

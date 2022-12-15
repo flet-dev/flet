@@ -266,16 +266,14 @@ class Control:
             raise Exception("Control must be added to the page first.")
         self.__page.update(self)
 
-    def clean(self):
-        with self._lock:
-            self._previous_children.clear()
-            assert self.__page is not None
-            assert self.uid is not None
-            for child in self._get_children():
-                self._remove_control_recursively(self.__page.index, child)
-            return self.__page._send_command("clean", [self.uid])
+    # async def update_async(self):
+    #     if not self.__page:
+    #         raise Exception("Control must be added to the page first.")
+    #     await self.__page.update_async(self)
 
-    def build_update_commands(self, index, added_controls, commands, isolated=False):
+    def build_update_commands(
+        self, index, commands, added_controls, removed_controls, isolated=False
+    ):
         update_cmd = self._build_command(update=True)
 
         if len(update_cmd.attrs) > 0:
@@ -324,7 +322,9 @@ class Control:
                             replaced = True
                             break
                         i += 1
-                    self._remove_control_recursively(index, ctrl)
+                    removed_controls.extend(
+                        self._remove_control_recursively(index, ctrl)
+                    )
                     if not replaced:
                         ids.append(ctrl.__uid)
                 if len(ids) > 0:
@@ -351,7 +351,11 @@ class Control:
                 for h in previous_ints[a1:a2]:
                     ctrl = hashes[h]
                     ctrl.build_update_commands(
-                        index, added_controls, commands, isolated=ctrl._is_isolated()
+                        index,
+                        commands,
+                        added_controls,
+                        removed_controls,
+                        isolated=ctrl._is_isolated(),
                     )
                     n += 1
             elif tag == "insert":
@@ -376,12 +380,14 @@ class Control:
         self.__previous_children.extend(current_children)
 
     def _remove_control_recursively(self, index, control):
+        removed_controls = [control]
         for child in control._get_children():
-            self._remove_control_recursively(index, child)
+            removed_controls.extend(self._remove_control_recursively(index, child))
 
         if control.__uid in index:
-            control.will_unmount()
             del index[control.__uid]
+
+        return removed_controls
 
     # private methods
     def _build_add_commands(self, indent=0, index=None, added_controls=None):
