@@ -274,6 +274,7 @@ def __connect_internal_sync(
 
     def on_session_created(conn, session_data):
         page = Page(conn, session_data.sessionID)
+        page.fetch_page_details()
         conn.sessions[session_data.sessionID] = page
         logging.info(f"Session started: {session_data.sessionID}")
         try:
@@ -324,8 +325,19 @@ async def __connect_internal_async(
         pass
 
     async def on_session_created(session_data):
-        print("ON SESSION CREATED:", session_data)
-        pass
+        page = Page(conn, session_data.sessionID)
+        await page.fetch_page_details_async()
+        conn.sessions[session_data.sessionID] = page
+        logging.info(f"Session started: {session_data.sessionID}")
+        try:
+            assert session_handler is not None
+            await session_handler(page)
+        except Exception as e:
+            print(
+                f"Unhandled error processing page session {page.session_id}:",
+                traceback.format_exc(),
+            )
+            page.error(f"There was an error while processing your request: {e}")
 
     conn = AsyncConnection(
         server_address=server,

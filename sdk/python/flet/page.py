@@ -84,7 +84,6 @@ class Page(Control):
         self._index = {self._Control__uid: self}  # index with all page controls
         self._last_event = None
         self._event_available = threading.Event()
-        self._fetch_page_details()
 
         self.__views = [View()]
         self.__default_view = self.__views[0]
@@ -180,27 +179,41 @@ class Page(Control):
         children.append(self.__offstage)
         return children
 
-    def _fetch_page_details(self):
+    def fetch_page_details(self):
         assert self.__conn.page_name is not None
         values = self.__conn.send_commands(
             self._session_id,
-            [
-                Command(0, "get", ["page", "route"]),
-                Command(
-                    0,
-                    "get",
-                    ["page", "pwa"],
-                ),
-                Command(0, "get", ["page", "web"]),
-                Command(0, "get", ["page", "platform"]),
-                Command(0, "get", ["page", "width"]),
-                Command(0, "get", ["page", "height"]),
-                Command(0, "get", ["page", "windowWidth"]),
-                Command(0, "get", ["page", "windowHeight"]),
-                Command(0, "get", ["page", "windowTop"]),
-                Command(0, "get", ["page", "windowLeft"]),
-            ],
+            self.__get_page_detail_commands(),
         ).results
+        self.__set_page_details(values)
+
+    async def fetch_page_details_async(self):
+        assert self.__conn.page_name is not None
+        values = (await self.__conn.send_commands_async(
+            self._session_id,
+            self.__get_page_detail_commands(),
+        )).results
+        self.__set_page_details(values)
+
+    def __get_page_detail_commands(self):
+        return [
+            Command(0, "get", ["page", "route"]),
+            Command(
+                0,
+                "get",
+                ["page", "pwa"],
+            ),
+            Command(0, "get", ["page", "web"]),
+            Command(0, "get", ["page", "platform"]),
+            Command(0, "get", ["page", "width"]),
+            Command(0, "get", ["page", "height"]),
+            Command(0, "get", ["page", "windowWidth"]),
+            Command(0, "get", ["page", "windowHeight"]),
+            Command(0, "get", ["page", "windowTop"]),
+            Command(0, "get", ["page", "windowLeft"]),
+        ]
+    
+    def __set_page_details(self, values):
         self._set_attr("route", values[0], False)
         self._set_attr("pwa", values[1], False)
         self._set_attr("web", values[2], False)

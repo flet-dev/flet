@@ -176,4 +176,7 @@ class AsyncConnection(Connection):
         if self.__send_loop_task:
             self.__send_loop_task.cancel()
         if self.__ws:
-            await self.__ws.close()
+            try:
+                await self.__ws.close()
+            except:
+                pass  # do nothing
