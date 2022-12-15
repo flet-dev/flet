@@ -337,7 +337,9 @@ async def __connect_internal_async(
                 f"Unhandled error processing page session {page.session_id}:",
                 traceback.format_exc(),
             )
-            page.error(f"There was an error while processing your request: {e}")
+            await page.error_async(
+                f"There was an error while processing your request: {e}"
+            )
 
     conn = AsyncConnection(
         server_address=server,

@@ -222,11 +222,25 @@ class Page(Control):
                 r = self.__update(*controls)
         self.__handle_mount_unmount(*r)
 
+    async def update_async(self, *controls):
+        async with self._async_lock:
+            if len(controls) == 0:
+                r = await self.__update_async(self)
+            else:
+                r = await self.__update_async(*controls)
+        await self.__handle_mount_unmount_async(*r)
+
     def add(self, *controls):
         with self._lock:
             self._controls.extend(controls)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
+
+    async def add_async(self, *controls):
+        async with self._async_lock:
+            self._controls.extend(controls)
+            r = await self.__update_async(self)
+        await self.__handle_mount_unmount_async(*r)
 
     def insert(self, at, *controls):
         with self._lock:
@@ -237,6 +251,15 @@ class Page(Control):
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
+    async def insert_async(self, at, *controls):
+        async with self._async_lock:
+            n = at
+            for control in controls:
+                self._controls.insert(n, control)
+                n += 1
+            r = await self.__update_async(self)
+        await self.__handle_mount_unmount_async(*r)
+
     def remove(self, *controls):
         with self._lock:
             for control in controls:
@@ -244,11 +267,24 @@ class Page(Control):
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
+    async def remove_async(self, *controls):
+        async with self._async_lock:
+            for control in controls:
+                self._controls.remove(control)
+            r = await self.__update_async(self)
+        await self.__handle_mount_unmount_async(*r)
+
     def remove_at(self, index):
         with self._lock:
             self._controls.pop(index)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
+
+    async def remove_at_async(self, index):
+        async with self._async_lock:
+            self._controls.pop(index)
+            r = await self.__update_async(self)
+        await self.__handle_mount_unmount_async(*r)
 
     def clean(self):
         with self._lock:
@@ -256,7 +292,27 @@ class Page(Control):
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
+    async def clean_async(self):
+        async with self._async_lock:
+            self._controls.clear()
+            r = await self.__update_async(self)
+        await self.__handle_mount_unmount_async(*r)
+
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
+        commands, added_controls, removed_controls = self.__prepare_update(*controls)
+        results = self.__conn.send_commands(self._session_id, commands).results
+        self.__update_control_ids(added_controls, results)
+        return added_controls, removed_controls
+
+    async def __update_async(self, *controls) -> Tuple[List[Control], List[Control]]:
+        commands, added_controls, removed_controls = self.__prepare_update(*controls)
+        results = (
+            await self.__conn.send_commands_async(self._session_id, commands)
+        ).results
+        self.__update_control_ids(added_controls, results)
+        return added_controls, removed_controls
+
+    def __prepare_update(self, *controls):
         added_controls = []
         removed_controls = []
         commands = []
@@ -268,11 +324,11 @@ class Page(Control):
             )
 
         if len(commands) == 0:
-            return added_controls, removed_controls
+            return commands, added_controls, removed_controls
 
-        # execute commands
-        results = self.__conn.send_commands(self._session_id, commands).results
+        return commands, added_controls, removed_controls
 
+    def __update_control_ids(self, added_controls, results):
         if len(results) > 0:
             n = 0
             for line in results:
@@ -284,7 +340,6 @@ class Page(Control):
                     self._index[id] = added_controls[n]
 
                     n += 1
-        return added_controls, removed_controls
 
     def __handle_mount_unmount(self, added_controls, removed_controls):
         for ctrl in removed_controls:
@@ -292,9 +347,19 @@ class Page(Control):
         for ctrl in added_controls:
             ctrl.did_mount()
 
+    async def __handle_mount_unmount_async(self, added_controls, removed_controls):
+        for ctrl in removed_controls:
+            await ctrl.will_unmount_async()
+        for ctrl in added_controls:
+            await ctrl.did_mount_async()
+
     def error(self, message=""):
         with self._lock:
             self._send_command("error", [message])
+
+    async def error_async(self, message=""):
+        async with self._async_lock:
+            await self._send_command_async("error", [message])
 
     def on_event(self, e: Event):
         logging.info(f"page.on_event: {e.target} {e.name} {e.data}")
