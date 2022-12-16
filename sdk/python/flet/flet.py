@@ -321,8 +321,13 @@ async def __connect_internal_async(
         )
 
     async def on_event(e):
-        print("ON EVENT:", e)
-        pass
+        if e.sessionID in conn.sessions:
+            await conn.sessions[e.sessionID].on_event_async(
+                Event(e.eventTarget, e.eventName, e.eventData)
+            )
+            if e.eventTarget == "page" and e.eventName == "close":
+                logging.info(f"Session closed: {e.sessionID}")
+                del conn.sessions[e.sessionID]
 
     async def on_session_created(session_data):
         page = Page(conn, session_data.sessionID)

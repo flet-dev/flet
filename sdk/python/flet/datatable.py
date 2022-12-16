@@ -44,7 +44,7 @@ class DataColumn(Control):
         self.__on_sort = EventHandler(
             lambda e: DataColumnSortEvent(**json.loads(e.data))
         )
-        self._add_event_handler("sort", self.__on_sort.handler)
+        self._add_event_handler("sort", self.__on_sort.get_handler())
 
         self.label = label
         self.numeric = numeric
@@ -116,7 +116,7 @@ class DataCell(Control):
         Control.__init__(self, ref=ref)
 
         self.__on_tap_down = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
-        self._add_event_handler("tap_down", self.__on_tap_down.handler)
+        self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
 
         self.content = content
         self.on_double_tap = on_double_tap

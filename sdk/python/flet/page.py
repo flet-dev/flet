@@ -97,9 +97,9 @@ class Page(Control):
         self.__authorization: Optional[Authorization] = None
 
         self.__on_close = EventHandler()
-        self._add_event_handler("close", self.__on_close.handler)
+        self._add_event_handler("close", self.__on_close.get_handler())
         self.__on_resize = EventHandler()
-        self._add_event_handler("resize", self.__on_resize.handler)
+        self._add_event_handler("resize", self.__on_resize.get_handler())
 
         self.__last_route = None
 
@@ -117,20 +117,22 @@ class Page(Control):
             return RouteChangeEvent(route=e.data)
 
         self.__on_route_change = EventHandler(convert_route_change_event)
-        self._add_event_handler("route_change", self.__on_route_change.handler)
+        self._add_event_handler("route_change", self.__on_route_change.get_handler())
 
         def convert_view_pop_event(e):
             return ViewPopEvent(view=cast(View, self.get_control(e.data)))
 
         self.__on_view_pop = EventHandler(convert_view_pop_event)
-        self._add_event_handler("view_pop", self.__on_view_pop.handler)
+        self._add_event_handler("view_pop", self.__on_view_pop.get_handler())
 
         def convert_keyboard_event(e):
             d = json.loads(e.data)
             return KeyboardEvent(**d)
 
         self.__on_keyboard_event = EventHandler(convert_keyboard_event)
-        self._add_event_handler("keyboard_event", self.__on_keyboard_event.handler)
+        self._add_event_handler(
+            "keyboard_event", self.__on_keyboard_event.get_handler()
+        )
 
         self.__method_calls: Dict[str, threading.Event] = {}
         self.__method_call_results: Dict[
@@ -139,13 +141,13 @@ class Page(Control):
         self._add_event_handler("invoke_method_result", self._on_invoke_method_result)
 
         self.__on_window_event = EventHandler()
-        self._add_event_handler("window_event", self.__on_window_event.handler)
+        self._add_event_handler("window_event", self.__on_window_event.get_handler())
         self.__on_connect = EventHandler()
-        self._add_event_handler("connect", self.__on_connect.handler)
+        self._add_event_handler("connect", self.__on_connect.get_handler())
         self.__on_disconnect = EventHandler()
-        self._add_event_handler("disconnect", self.__on_disconnect.handler)
+        self._add_event_handler("disconnect", self.__on_disconnect.get_handler())
         self.__on_error = EventHandler()
-        self._add_event_handler("error", self.__on_error.handler)
+        self._add_event_handler("error", self.__on_error.get_handler())
 
     def get_control(self, id):
         return self._index.get(id)
@@ -366,14 +368,7 @@ class Page(Control):
 
         with self._lock:
             if e.target == "page" and e.name == "change":
-                for props in json.loads(e.data):
-                    id = props["i"]
-                    if id in self._index:
-                        for name in props:
-                            if name != "i":
-                                self._index[id]._set_attr(
-                                    name, props[name], dirty=False
-                                )
+                self.__on_page_change_event(e.data)
 
             elif e.target in self._index:
                 ce = ControlEvent(e.target, e.name, e.data, self._index[e.target], self)
@@ -382,10 +377,31 @@ class Page(Control):
                     t = threading.Thread(target=handler, args=(ce,), daemon=True)
                     t.start()
 
+    async def on_event_async(self, e: Event):
+        logging.info(f"page.on_event_async: {e.target} {e.name} {e.data}")
+
+        if e.target == "page" and e.name == "change":
+            async with self._async_lock:
+                self.__on_page_change_event(e.data)
+
+        elif e.target in self._index:
+            ce = ControlEvent(e.target, e.name, e.data, self._index[e.target], self)
+            handler = self._index[e.target].event_handlers.get(e.name)
+            if handler:
+                await handler(ce)
+
+    def __on_page_change_event(self, data):
+        for props in json.loads(data):
+            id = props["i"]
+            if id in self._index:
+                for name in props:
+                    if name != "i":
+                        self._index[id]._set_attr(name, props[name], dirty=False)
+
     def go(self, route, **kwargs):
         self.route = route if kwargs == {} else route + self.query.post(kwargs)
 
-        self.__on_route_change.handler(
+        self.__on_route_change.get_handler()(
             ControlEvent(
                 target="page",
                 name="route_change",
@@ -444,7 +460,7 @@ class Page(Control):
                     authorization_url, "flet_oauth_signin", web_popup_window=self.web
                 )
         else:
-            self.__on_login.handler(LoginEvent(error="", error_description=""))
+            self.__on_login.get_handler()(LoginEvent(error="", error_description=""))
         return self.__authorization
 
     def __on_authorize(self, e):
@@ -472,11 +488,11 @@ class Page(Control):
                 self.__authorization.request_token(code)
             except Exception as ex:
                 login_evt.error = str(ex)
-        self.__on_login.handler(login_evt)
+        self.__on_login.get_handler()(login_evt)
 
     def logout(self):
         self.__authorization = None
-        self.__on_logout.handler(
+        self.__on_logout.get_handler()(
             ControlEvent(target="page", name="logout", data="", control=self, page=self)
         )
 

@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 import math
 import os
@@ -66,18 +67,11 @@ def random_string(length):
     return "".join(random.choice(string.ascii_letters) for i in range(length))
 
 
-def is_sync_method(obj, method_name) -> bool:
-    method = getattr(obj, method_name, None)
-    if method is None:
+def is_asyncio():
+    try:
+        return asyncio.current_task() is not None
+    except RuntimeError:
         return False
-    return callable(method) and not inspect.iscoroutinefunction(method)
-
-
-def is_async_method(obj, method_name) -> bool:
-    method = getattr(obj, method_name, None)
-    if method is None:
-        return False
-    return callable(method) and inspect.iscoroutinefunction(method)
 
 
 # https://stackoverflow.com/questions/377017/test-if-executable-exists-in-python

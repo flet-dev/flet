@@ -65,7 +65,7 @@ class FilePickerUploadEvent(ControlEvent):
 class FilePicker(Control):
     """
     A control that allows you to use the native file explorer to pick single or multiple files, with extensions filtering support and upload.
-    
+
     Example:
     ```
     import flet as ft
@@ -104,6 +104,7 @@ class FilePicker(Control):
 
     Online docs: https://flet.dev/docs/controls/filepicker
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,
@@ -131,14 +132,14 @@ class FilePicker(Control):
             return self.__result
 
         self.__on_result = EventHandler(convert_result_event_data)
-        self._add_event_handler("result", self.__on_result.handler)
+        self._add_event_handler("result", self.__on_result.get_handler())
 
         def convert_upload_event_data(e):
             d = json.loads(e.data)
             return FilePickerUploadEvent(**d)
 
         self.__on_upload = EventHandler(convert_upload_event_data)
-        self._add_event_handler("upload", self.__on_upload.handler)
+        self._add_event_handler("upload", self.__on_upload.get_handler())
 
         self.__result: Optional[FilePickerResultEvent] = None
         self.__upload: List[FilePickerUploadFile] = []
