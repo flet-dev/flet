@@ -70,19 +70,7 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
 
         try:
-            import pefile
             import PyInstaller.__main__
-            from PyInstaller.compat import win32api
-            from PyInstaller.utils.win32.versioninfo import (
-                FixedFileInfo,
-                StringFileInfo,
-                StringStruct,
-                StringTable,
-                VarFileInfo,
-                VarStruct,
-                VSVersionInfo,
-                decode,
-            )
 
             pyi_args = [options.script, "--noconsole", "--noconfirm"]
             if options.icon:
@@ -93,6 +81,7 @@ class Command(BaseCommand):
             if options.add_data:
                 pyi_args.extend(["--add-data", options.add_data])
             PyInstaller.__main__.run(pyi_args)
+            print(hook_config.temp_bin_dir)
         except ImportError:
             print("Please install PyInstaller module to use flet package command.")
             exit(1)
