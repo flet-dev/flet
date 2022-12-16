@@ -266,10 +266,10 @@ class Control:
             raise Exception("Control must be added to the page first.")
         self.__page.update(self)
 
-    # async def update_async(self):
-    #     if not self.__page:
-    #         raise Exception("Control must be added to the page first.")
-    #     await self.__page.update_async(self)
+    async def update_async(self):
+        if not self.__page:
+            raise Exception("Control must be added to the page first.")
+        await self.__page.update_async(self)
 
     def build_update_commands(
         self, index, commands, added_controls, removed_controls, isolated=False

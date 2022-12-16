@@ -413,13 +413,35 @@ class Page(Control):
         self.update()
         self.query()  # Update query url (required when using go)
 
+    async def go_async(self, route, **kwargs):
+        self.route = route if kwargs == {} else route + self.query.post(kwargs)
+
+        await self.__on_route_change.get_handler()(
+            ControlEvent(
+                target="page",
+                name="route_change",
+                data=self.route,
+                page=self,
+                control=self,
+            )
+        )
+        await self.update_async()
+        self.query()
+
     def get_upload_url(self, file_name: str, expires: int):
         r = self._send_command(
             "getUploadUrl", attrs={"file": file_name, "expires": str(expires)}
         )
         if r.error:
             raise Exception(r.error)
+        return r.result
 
+    async def get_upload_url_async(self, file_name: str, expires: int):
+        r = await self._send_command_async(
+            "getUploadUrl", attrs={"file": file_name, "expires": str(expires)}
+        )
+        if r.error:
+            raise Exception(r.error)
         return r.result
 
     def login(

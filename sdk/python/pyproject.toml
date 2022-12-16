@@ -15,6 +15,7 @@ dependencies = [
     "requests>=2.28.1",
     "oauthlib>=3.2.0",
     "websockets>=10.4",
+    "httpx>=0.23.1",
 ]
 requires-python = ">=3.7"
 license = { text = "MIT" }
