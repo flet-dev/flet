@@ -398,7 +398,7 @@ for:
     install:
       - python --version
       - cd sdk/python
-      - pip install certifi==2022.9.24
+      - pip install certifi==2022.12.7
       - pip install pdm
       - pdm install
 
