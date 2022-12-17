@@ -36,7 +36,6 @@ tests = [
 ]
 dev = [
     "pre-commit>=2.17.0",
-    "pyinstaller>=4.5.1",
 ]
 
 [project.scripts]

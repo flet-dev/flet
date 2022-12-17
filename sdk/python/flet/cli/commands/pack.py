@@ -1,7 +1,16 @@
 import argparse
+import os
+import shutil
+from pathlib import Path
 
 import flet.__pyinstaller.config as hook_config
+from flet.__pyinstaller.utils import (
+    copy_flet_bin,
+    update_flet_view_icon,
+    update_flet_view_version_info,
+)
 from flet.cli.commands.base import BaseCommand
+from flet.utils import is_windows
 
 
 class Command(BaseCommand):
@@ -69,19 +78,66 @@ class Command(BaseCommand):
 
     def handle(self, options: argparse.Namespace) -> None:
 
+        # delete "build" directory
+        build_dir = Path(os.getcwd()).joinpath("build")
+        if build_dir.exists():
+            shutil.rmtree(str(build_dir), ignore_errors=True)
+
+        # delete "dist" directory
+        dist_dir = Path(os.getcwd()).joinpath("dist")
+        if dist_dir.exists():
+            shutil.rmtree(str(dist_dir), ignore_errors=True)
+
         try:
             import PyInstaller.__main__
 
             pyi_args = [options.script, "--noconsole", "--noconfirm"]
+            if options.onefile:
+                pyi_args.extend(["--onefile"])
             if options.icon:
                 pyi_args.extend(["--icon", options.icon])
-                hook_config.icon_file = options.icon
             if options.name:
                 pyi_args.extend(["--name", options.name])
             if options.add_data:
                 pyi_args.extend(["--add-data", options.add_data])
+
+            # copy "bin"
+            hook_config.temp_bin_dir = copy_flet_bin()
+
+            if hook_config.temp_bin_dir is not None:
+                if is_windows():
+                    exe_path = Path(hook_config.temp_bin_dir).joinpath(
+                        "flet", "flet.exe"
+                    )
+                    if os.path.exists(exe_path):
+                        # icon
+                        if options.icon:
+                            icon_path = options.icon
+                            if not Path(icon_path).is_absolute():
+                                icon_path = Path(os.getcwd()).joinpath(icon_path)
+                            update_flet_view_icon(str(exe_path), icon_path)
+
+                        # version info
+                        if options.company_name or options.file_description:
+                            update_flet_view_version_info(
+                                exe_path=exe_path,
+                                product_name=options.product_name,
+                                file_description=options.file_description,
+                                product_version=options.product_version,
+                                file_version=options.file_version,
+                                company_name=options.company_name,
+                                copyright=options.copyright,
+                            )
+
+            # run PyInstaller!
             PyInstaller.__main__.run(pyi_args)
-            print(hook_config.temp_bin_dir)
+
+            # cleanup
+            if hook_config.temp_bin_dir is not None and os.path.exists(
+                hook_config.temp_bin_dir
+            ):
+                print("Deleting temp directory:", hook_config.temp_bin_dir)
+                shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
         except ImportError:
             print("Please install PyInstaller module to use flet package command.")
             exit(1)
