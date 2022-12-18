@@ -108,7 +108,9 @@ def update_flet_view_version_info(
         if k.name == "LegalCopyright":
             k.val = copyright if copyright else ""
 
-    print(vs)
+    version_info_path = str(Path(tempfile.gettempdir()).joinpath(str(uuid.uuid4())))
+    with open(version_info_path, "w") as f:
+        f.write(str(vs))
 
     # Remember overlay
     pe = pefile.PE(exe_path, fast_load=True)
@@ -131,3 +133,5 @@ def update_flet_view_version_info(
         if not overlay_after:
             with open(exe_path, "ab") as exef:
                 exef.write(overlay_before)
+
+    return version_info_path

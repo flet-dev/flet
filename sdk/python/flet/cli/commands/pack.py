@@ -118,16 +118,17 @@ class Command(BaseCommand):
                             update_flet_view_icon(str(exe_path), icon_path)
 
                         # version info
-                        if options.company_name or options.file_description:
-                            update_flet_view_version_info(
-                                exe_path=exe_path,
-                                product_name=options.product_name,
-                                file_description=options.file_description,
-                                product_version=options.product_version,
-                                file_version=options.file_version,
-                                company_name=options.company_name,
-                                copyright=options.copyright,
-                            )
+                        version_info_path = update_flet_view_version_info(
+                            exe_path=exe_path,
+                            product_name=options.product_name,
+                            file_description=options.file_description,
+                            product_version=options.product_version,
+                            file_version=options.file_version,
+                            company_name=options.company_name,
+                            copyright=options.copyright,
+                        )
+
+                        pyi_args.extend(["--version-file", version_info_path])
 
             # run PyInstaller!
             PyInstaller.__main__.run(pyi_args)
