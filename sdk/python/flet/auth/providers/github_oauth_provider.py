@@ -1,7 +1,7 @@
 import json
 from typing import List, Optional
 
-import requests
+import httpx
 
 from flet.auth.group import Group
 from flet.auth.oauth_provider import OAuthProvider
@@ -21,9 +21,24 @@ class GitHubOAuthProvider(OAuthProvider):
         )
 
     def _fetch_groups(self, access_token: str) -> List[Group]:
-        headers = {"Authorization": "Bearer {}".format(access_token)}
+        with httpx.Client() as client:
+            teams_resp = client.send(self.__get_user_teams_request(access_token))
+            return self.__complete_fetch_groups(teams_resp)
+
+    async def _fetch_groups_sync(self, access_token: str) -> List[Group]:
+        async with httpx.AsyncClient() as client:
+            teams_resp = await client.send(self.__get_user_teams_request(access_token))
+            return self.__complete_fetch_groups(teams_resp)
+
+    def __get_user_teams_request(self, access_token):
+        return httpx.Request(
+            "GET",
+            "https://api.github.com/user/teams",
+            headers={"Authorization": "Bearer {}".format(access_token)},
+        )
+
+    def __complete_fetch_groups(self, teams_resp):
         groups = []
-        teams_resp = requests.get("https://api.github.com/user/teams", headers=headers)
         tj = json.loads(teams_resp.text)
         for t in tj:
             groups.append(
@@ -35,13 +50,22 @@ class GitHubOAuthProvider(OAuthProvider):
         return groups
 
     def _fetch_user(self, access_token: str) -> Optional[User]:
-        headers = {"Authorization": "Bearer {}".format(access_token)}
-        user_resp = requests.get("https://api.github.com/user", headers=headers)
+        user_req, emails_req = self.__get_user_details_requests(access_token)
+        with httpx.Client() as client:
+            user_resp = client.send(user_req)
+            emails_resp = client.send(emails_req)
+
         uj = json.loads(user_resp.text)
-        email_resp = requests.get("https://api.github.com/user/emails", headers=headers)
-        ej = json.loads(email_resp.text)
+        ej = json.loads(emails_resp.text)
         for e in ej:
             if e["primary"]:
                 uj["email"] = e["email"]
                 break
         return User(uj, id=str(uj["id"]))
+
+    def __get_user_details_requests(self, access_token):
+        headers = {"Authorization": "Bearer {}".format(access_token)}
+        return (
+            httpx.Request("GET", "https://api.github.com/user", headers=headers),
+            httpx.Request("GET", "https://api.github.com/user/emails", headers=headers),
+        )
