@@ -74,8 +74,6 @@ class HighlightView extends StatelessWidget {
   }
 
   static const _rootKey = 'root';
-  static const _defaultFontColor = Color(0xff000000);
-  static const _defaultBackgroundColor = Color(0xffffffff);
 
   // TODO: dart:io is not available at web platform currently
   // See: https://github.com/flutter/flutter/issues/39998
@@ -86,14 +84,16 @@ class HighlightView extends StatelessWidget {
   Widget build(BuildContext context) {
     var style = TextStyle(
       fontFamily: _defaultFontFamily,
-      color: theme[_rootKey]?.color ?? _defaultFontColor,
+      color: theme[_rootKey]?.color ??
+          Theme.of(context).colorScheme.onSurfaceVariant,
     );
     if (textStyle != null) {
       style = style.merge(textStyle);
     }
 
     var d = BoxDecoration(
-        color: theme[_rootKey]?.backgroundColor ?? _defaultBackgroundColor);
+        color: theme[_rootKey]?.backgroundColor ??
+            Theme.of(context).colorScheme.surfaceVariant);
 
     if (decoration != null) {
       d = d.copyWith(borderRadius: (decoration as BoxDecoration).borderRadius);
