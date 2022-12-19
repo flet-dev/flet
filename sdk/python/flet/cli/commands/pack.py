@@ -4,11 +4,6 @@ import shutil
 from pathlib import Path
 
 import flet.__pyinstaller.config as hook_config
-from flet.__pyinstaller.utils import (
-    copy_flet_bin,
-    update_flet_view_icon,
-    update_flet_view_version_info,
-)
 from flet.cli.commands.base import BaseCommand
 from flet.utils import is_windows
 
@@ -91,6 +86,8 @@ class Command(BaseCommand):
         try:
             import PyInstaller.__main__
 
+            from flet.__pyinstaller.utils import copy_flet_bin
+
             pyi_args = [options.script, "--noconsole", "--noconfirm"]
             if options.onefile:
                 pyi_args.extend(["--onefile"])
@@ -106,6 +103,12 @@ class Command(BaseCommand):
 
             if hook_config.temp_bin_dir is not None:
                 if is_windows():
+
+                    from flet.__pyinstaller.win_utils import (
+                        update_flet_view_icon,
+                        update_flet_view_version_info,
+                    )
+
                     exe_path = Path(hook_config.temp_bin_dir).joinpath(
                         "flet", "flet.exe"
                     )
