@@ -1,8 +1,8 @@
 import beartype.roar
 import pytest
+from flet.protocol import Command
 
 import flet as ft
-from flet.protocol import Command
 
 
 @pytest.mark.skip(reason="no way of currently testing this")

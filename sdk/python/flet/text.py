@@ -2,21 +2,12 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    FontWeight,
-    FontWeightString,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-    TextAlign,
-    TextAlignString,
-)
+from flet.types import (AnimationValue, FontWeight, FontWeightString,
+                        OffsetValue, ResponsiveNumber, RotateValue, ScaleValue,
+                        TextAlign, TextAlignString)
 
 try:
     from typing import Literal
@@ -99,6 +90,7 @@ class Text(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/text
     """
+
     def __init__(
         self,
         value: Optional[str] = None,

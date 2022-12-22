@@ -4,7 +4,6 @@ import threading
 from typing import Any, Dict, List, Optional
 
 from beartype import beartype
-
 from flet.control import Control
 from flet.ref import Ref
 
@@ -59,12 +58,12 @@ class CallableControl(Control):
         if not evt.wait(5):
             del self.__calls[m.i]
             raise Exception(
-                f"Timeout waiting for {self.__class__.__name__}.{name}({params}) method call"
+                f"Timeout waiting for {self.__class__.__name__}.{name}({params}) method call",
             )
         result, err = self.__results.pop(evt)
-        if err != None:
+        if err is not None:
             raise Exception(err)
-        if result == None:
+        if result is None:
             return None
         return json.loads(result)
 
@@ -72,7 +71,7 @@ class CallableControl(Control):
         d = json.loads(e.data)
         result = ControlMethodResults(**d)
         evt = self.__calls.pop(result.i, None)
-        if evt == None:
+        if evt is None:
             return
         self.__results[evt] = (result.r, result.e)
         evt.set()

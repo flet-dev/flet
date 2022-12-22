@@ -1,17 +1,11 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 
 class CircleAvatar(ConstrainedControl):
@@ -69,6 +63,7 @@ class CircleAvatar(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/circleavatar
     """
+
     def __init__(
         self,
         icon: Optional[str] = None,

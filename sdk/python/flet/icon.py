@@ -1,17 +1,11 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 
 class Icon(ConstrainedControl):
@@ -44,6 +38,7 @@ class Icon(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/icon
     """
+
     def __init__(
         self,
         name: Optional[str] = None,

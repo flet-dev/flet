@@ -1,17 +1,11 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 
 class ProgressRing(ConstrainedControl):
@@ -19,7 +13,7 @@ class ProgressRing(ConstrainedControl):
     A material design circular progress indicator, which spins to indicate that the application is busy.
 
     A control that shows progress along a circle.
-    
+
     Example:
 
     ```
@@ -51,6 +45,7 @@ class ProgressRing(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/progressring
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,

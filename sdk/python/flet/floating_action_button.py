@@ -1,24 +1,18 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.buttons import OutlinedBorder
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 
 class FloatingActionButton(ConstrainedControl):
     """
     A floating action button is a circular icon button that hovers over content to promote a primary action in the application. Floating action button is usually set to `page.floating_action_button`, but can also be added as a regular control at any place on a page.
-    
+
     Example:
     ```
     import flet as ft
@@ -63,6 +57,7 @@ class FloatingActionButton(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/floatingactionbutton
     """
+
     def __init__(
         self,
         text: Optional[str] = None,

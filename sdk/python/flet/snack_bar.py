@@ -1,7 +1,6 @@
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet.control import Control
 from flet.ref import Ref
 
@@ -9,7 +8,7 @@ from flet.ref import Ref
 class SnackBar(Control):
     """
     A lightweight message with an optional action which briefly displays at the bottom of the screen.
-    
+
     Example:
     ```
     import flet as ft
@@ -43,6 +42,7 @@ class SnackBar(Control):
 
     Online docs: https://flet.dev/docs/controls/snackbar
     """
+
     def __init__(
         self,
         content: Control,

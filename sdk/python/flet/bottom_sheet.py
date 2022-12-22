@@ -2,7 +2,6 @@ from typing import Any, Optional
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet.control import Control
 from flet.ref import Ref
 
@@ -10,7 +9,7 @@ from flet.ref import Ref
 class BottomSheet(Control):
     """
     A modal bottom sheet is an alternative to a menu or a dialog and prevents the user from interacting with the rest of the app.
-    
+
     Example:
     ```
     import flet as ft
@@ -51,6 +50,7 @@ class BottomSheet(Control):
 
     Online docs: https://flet.dev/docs/controls/bottomsheet
     """
+
     def __init__(
         self,
         content: Optional[Control] = None,

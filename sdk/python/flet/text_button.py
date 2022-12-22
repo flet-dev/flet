@@ -1,18 +1,12 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.buttons import ButtonStyle
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 
 class TextButton(ConstrainedControl):
@@ -37,6 +31,7 @@ class TextButton(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/textbutton
     """
+
     def __init__(
         self,
         text: Optional[str] = None,

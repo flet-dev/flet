@@ -2,20 +2,12 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import Dict
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    LabelPosition,
-    LabelPositionString,
-    MaterialState,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, LabelPosition, LabelPositionString,
+                        MaterialState, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 try:
     from typing import Literal
@@ -26,7 +18,7 @@ except ImportError:
 class Checkbox(ConstrainedControl):
     """
     Checkbox allows to select one or more items from a group, or switch between two mutually exclusive options (checked or unchecked, on or off).
-    
+
     Example:
     ```
     import flet as ft
@@ -56,6 +48,7 @@ class Checkbox(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/checkbox
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,
@@ -147,7 +140,7 @@ class Checkbox(ConstrainedControl):
     @property
     def value(self) -> Optional[bool]:
         return self._get_attr(
-            "value", data_type="bool?", def_value=False if not self.tristate else None
+            "value", data_type="bool?", def_value=False if not self.tristate else None,
         )
 
     @value.setter

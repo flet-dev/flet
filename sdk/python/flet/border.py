@@ -22,7 +22,7 @@ def all(width: Optional[float] = None, color: Optional[str] = None):
 
 
 def symmetric(
-    vertical: Optional[BorderSide] = None, horizontal: Optional[BorderSide] = None
+    vertical: Optional[BorderSide] = None, horizontal: Optional[BorderSide] = None,
 ):
     return Border(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
 

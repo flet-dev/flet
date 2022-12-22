@@ -13,24 +13,16 @@ import zipfile
 from pathlib import Path
 from time import sleep
 
-from flet import constants, version
 from flet.connection import Connection
 from flet.event import Event
 from flet.page import Page
 from flet.reconnecting_websocket import ReconnectingWebSocket
-from flet.utils import (
-    get_arch,
-    get_current_script_dir,
-    get_free_tcp_port,
-    get_platform,
-    is_linux,
-    is_linux_server,
-    is_macos,
-    is_windows,
-    open_in_browser,
-    safe_tar_extractall,
-    which,
-)
+from flet.utils import (get_arch, get_current_script_dir, get_free_tcp_port,
+                        get_platform, is_linux, is_linux_server, is_macos,
+                        is_windows, open_in_browser, safe_tar_extractall,
+                        which)
+
+from flet import constants, version
 
 try:
     from typing import Literal
@@ -157,7 +149,7 @@ def app(
         try:
             logging.debug(f"Flet View process {fvp.pid}")
             os.kill(fvp.pid + 1, signal.SIGKILL)
-        except:
+        except Exception:
             pass
 
 
@@ -205,7 +197,7 @@ def _connect_internal(
     def on_event(conn, e):
         if e.sessionID in conn.sessions:
             conn.sessions[e.sessionID].on_event(
-                Event(e.eventTarget, e.eventName, e.eventData)
+                Event(e.eventTarget, e.eventName, e.eventData),
             )
             if e.eventTarget == "page" and e.eventName == "close":
                 logging.info(f"Session closed: {e.sessionID}")
@@ -238,7 +230,7 @@ def _connect_internal(
             conn.page_name = page_name
         assert conn.page_name is not None
         result = conn.register_host_client(
-            conn.host_client_id, conn.page_name, is_app, update, token, permissions
+            conn.host_client_id, conn.page_name, is_app, update, token, permissions,
         )
         conn.host_client_id = result.hostClientID
         conn.page_name = result.pageName
@@ -262,14 +254,14 @@ def _connect_internal(
     if not connected.is_set():
         ws.close()
         raise Exception(
-            f"Could not connected to Flet server in {constants.CONNECT_TIMEOUT_SECONDS} seconds."
+            f"Could not connected to Flet server in {constants.CONNECT_TIMEOUT_SECONDS} seconds.",
         )
 
     return conn
 
 
 def _start_flet_server(
-    host, port, attached, assets_dir, upload_dir, web_renderer, route_url_strategy
+    host, port, attached, assets_dir, upload_dir, web_renderer, route_url_strategy,
 ):
     if port == 0:
         port = get_free_tcp_port()
@@ -300,11 +292,11 @@ def _start_flet_server(
             if "_MEI" in __file__:
                 # support for "onefile" PyInstaller
                 assets_dir = str(
-                    Path(__file__).parent.parent.joinpath(assets_dir).resolve()
+                    Path(__file__).parent.parent.joinpath(assets_dir).resolve(),
                 )
             else:
                 assets_dir = str(
-                    Path(get_current_script_dir()).joinpath(assets_dir).resolve()
+                    Path(get_current_script_dir()).joinpath(assets_dir).resolve(),
                 )
         logging.info(f"Assets path configured: {assets_dir}")
         fletd_env["FLET_STATIC_ROOT_DIR"] = assets_dir
@@ -312,7 +304,7 @@ def _start_flet_server(
     if upload_dir:
         if not Path(upload_dir).is_absolute():
             upload_dir = str(
-                Path(get_current_script_dir()).joinpath(upload_dir).resolve()
+                Path(get_current_script_dir()).joinpath(upload_dir).resolve(),
             )
         logging.info(f"Upload path configured: {upload_dir}")
         fletd_env["FLET_UPLOAD_ROOT_DIR"] = upload_dir
@@ -495,7 +487,7 @@ def _download_fletd():
             os.remove(temp_arch)
     else:
         logging.info(
-            f"Fletd v{version.version} is already installed in {temp_fletd_dir}"
+            f"Fletd v{version.version} is already installed in {temp_fletd_dir}",
         )
     return str(temp_fletd_dir.joinpath(flet_exe))
 
@@ -513,15 +505,14 @@ def _download_flet_client(file_name):
 def _get_latest_flet_release():
     releases = json.loads(
         urllib.request.urlopen(
-            f"https://api.github.com/repos/flet-dev/flet/releases?per_page=5"
+            f"https://api.github.com/repos/flet-dev/flet/releases?per_page=5",
         )
         .read()
-        .decode()
+        .decode(),
     )
     if len(releases) > 0:
         return releases[0]["tag_name"].lstrip("v")
-    else:
-        return None
+    return None
 
 
 # Fix: https://bugs.python.org/issue35935

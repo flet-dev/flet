@@ -3,13 +3,8 @@ from typing import Any, Optional, Union
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 
 class WindowDragArea(ConstrainedControl):
@@ -42,6 +37,7 @@ class WindowDragArea(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/windowdragarea
     """
+
     def __init__(
         self,
         content: Optional[Control] = None,

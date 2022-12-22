@@ -1,7 +1,7 @@
 import dataclasses
 from dataclasses import field
-from typing import Optional
 from enum import Enum
+from typing import Optional
 
 try:
     from typing import Literal

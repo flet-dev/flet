@@ -2,7 +2,6 @@ from typing import Any, Optional
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet.control import Control
 from flet.ref import Ref
 from flet.types import PaddingValue
@@ -49,6 +48,7 @@ class Banner(Control):
 
     Online docs: https://flet.dev/docs/controls/banner
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,

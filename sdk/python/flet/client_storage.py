@@ -11,14 +11,14 @@ class ClientStorage:
         assert jv is not None
         return (
             self.__page.invoke_method(
-                "clientStorage:set", {"key": key, "value": jv}, wait_for_result=True
+                "clientStorage:set", {"key": key, "value": jv}, wait_for_result=True,
             )
             == "true"
         )
 
     def get(self, key: str):
         jv = self.__page.invoke_method(
-            "clientStorage:get", {"key": key}, wait_for_result=True
+            "clientStorage:get", {"key": key}, wait_for_result=True,
         )
         if jv:
             return json.loads(json.loads(jv))
@@ -27,7 +27,7 @@ class ClientStorage:
     def contains_key(self, key: str) -> bool:
         return (
             self.__page.invoke_method(
-                "clientStorage:containskey", {"key": key}, wait_for_result=True
+                "clientStorage:containskey", {"key": key}, wait_for_result=True,
             )
             == "true"
         )
@@ -35,14 +35,14 @@ class ClientStorage:
     def remove(self, key: str) -> bool:
         return (
             self.__page.invoke_method(
-                "clientStorage:remove", {"key": key}, wait_for_result=True
+                "clientStorage:remove", {"key": key}, wait_for_result=True,
             )
             == "true"
         )
 
     def get_keys(self, key_prefix: str) -> List[str]:
         jr = self.__page.invoke_method(
-            "clientStorage:getkeys", {"key_prefix": key_prefix}, wait_for_result=True
+            "clientStorage:getkeys", {"key_prefix": key_prefix}, wait_for_result=True,
         )
         assert jr is not None
         return json.loads(jr)

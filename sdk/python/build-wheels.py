@@ -164,7 +164,7 @@ def rehash_record_lines(root_dir):
     for root, dirs, files in os.walk(root_dir, topdown=True):
         for name in sorted(files):
             abs_filename = os.path.join(root, name)
-            rel_filename = abs_filename[len(root_dir) + 1 :]
+            rel_filename = abs_filename[len(root_dir) + 1:]
             h, l = rehash(abs_filename)
             if rel_filename.endswith("/RECORD"):
                 h = l = ""
@@ -198,13 +198,13 @@ for name, package in packages.items():
 
     # read original WHEEL file omitting tags
     wheel_path = str(
-        unpacked_whl.joinpath(f"flet-{package_version}.dist-info", "WHEEL")
+        unpacked_whl.joinpath(f"flet-{package_version}.dist-info", "WHEEL"),
     )
     wheel_lines = []
 
     with open(wheel_path, "r") as f:
         for line in f.readlines():
-            if not "Tag: " in line:
+            if "Tag: " not in line:
                 wheel_lines.append(line)
 
     # print(wheel_lines)
@@ -226,7 +226,7 @@ for name, package in packages.items():
     if flet_client_job:
         client_arch_path = str(bin_path.joinpath(flet_client_filename))
         download_artifact_by_name(
-            build_jobs[flet_client_job], flet_client_artifact, client_arch_path
+            build_jobs[flet_client_job], flet_client_artifact, client_arch_path,
         )
 
         # unpack zip only; tar.gz stays as is and unpacked during runtime
@@ -246,7 +246,7 @@ for name, package in packages.items():
     # update and save RECORD
     record_lines = rehash_record_lines(str(unpacked_whl))
     record_path = str(
-        unpacked_whl.joinpath(f"flet-{package_version}.dist-info", "RECORD")
+        unpacked_whl.joinpath(f"flet-{package_version}.dist-info", "RECORD"),
     )
     with open(record_path, "w") as f:
         f.writelines(record_lines)

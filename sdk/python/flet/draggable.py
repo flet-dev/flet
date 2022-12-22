@@ -1,7 +1,6 @@
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet.control import Control
 from flet.ref import Ref
 
@@ -11,7 +10,7 @@ class Draggable(Control):
     A control that can be dragged from to a `DragTarget`.
 
     When a draggable control recognizes the start of a drag gesture, it displays a `content_feedback` control that tracks the user's finger across the screen. If the user lifts their finger while on top of a `DragTarget`, that target is given the opportunity to complete drag-and-drop flow.
-  
+
     Example:
     ```
     import flet
@@ -112,6 +111,7 @@ class Draggable(Control):
 
     Online docs: https://flet.dev/docs/controls/draggable
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,
@@ -154,7 +154,7 @@ class Draggable(Control):
             children.append(self.__content)
         if self.__content_when_dragging:
             self.__content_when_dragging._set_attr_internal(
-                "n", "content_when_dragging"
+                "n", "content_when_dragging",
             )
             children.append(self.__content_when_dragging)
         if self.__content_feedback:

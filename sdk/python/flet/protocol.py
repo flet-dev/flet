@@ -9,7 +9,7 @@ class CommandEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Message):
             return obj.__dict__
-        elif isinstance(obj, Command):
+        if isinstance(obj, Command):
             d = {}
             if obj.indent > 0:
                 d["i"] = obj.indent
@@ -22,7 +22,7 @@ class CommandEncoder(json.JSONEncoder):
             if obj.commands and len(obj.commands) > 0:
                 d["c"] = obj.commands
             return d
-        elif isinstance(obj, object):
+        if isinstance(obj, object):
             return obj.__dict__
         return json.JSONEncoder.default(self, obj)
 

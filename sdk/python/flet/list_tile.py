@@ -1,18 +1,11 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    PaddingValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, PaddingValue,
+                        ResponsiveNumber, RotateValue, ScaleValue)
 
 
 class ListTile(ConstrainedControl):

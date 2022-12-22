@@ -3,7 +3,6 @@ import random
 import threading
 
 import websocket
-
 from flet.utils import is_localhost_url
 
 _REMOTE_CONNECT_TIMEOUT_SEC = 5
@@ -63,7 +62,7 @@ class ReconnectingWebSocket:
 
     def connect(self) -> None:
         self.wsapp = websocket.WebSocketApp(
-            self._url, on_message=self._on_message, on_open=self._on_open
+            self._url, on_message=self._on_message, on_open=self._on_open,
         )
         th = threading.Thread(target=self._connect_loop, args=(), daemon=True)
         th.start()
@@ -83,18 +82,18 @@ class ReconnectingWebSocket:
             websocket.setdefaulttimeout(
                 _LOCAL_CONNECT_TIMEOUT_SEC
                 if is_localhost_url(self._url)
-                else _REMOTE_CONNECT_TIMEOUT_SEC
+                else _REMOTE_CONNECT_TIMEOUT_SEC,
             )
             r = self.wsapp.run_forever()
             logging.debug(f"Exited run_forever()")
             websocket.setdefaulttimeout(self.default_timeout)
             self.connected.clear()
-            if r != True:
+            if r is False:
                 return
 
             if self.retry == 0 and self._on_failed_connect_handler is not None:
                 th = threading.Thread(
-                    target=self._on_failed_connect_handler, args=(), daemon=True
+                    target=self._on_failed_connect_handler, args=(), daemon=True,
                 )
                 th.start()
 

@@ -16,28 +16,28 @@ class EmbedJsonEncoder(json.JSONEncoder):
                 "w": obj.width,
                 "c": obj.color,
             }
-        elif isinstance(obj, Border):
+        if isinstance(obj, Border):
             return {
                 "l": obj.left,
                 "t": obj.top,
                 "r": obj.right,
                 "b": obj.bottom,
             }
-        elif isinstance(obj, BorderRadius):
+        if isinstance(obj, BorderRadius):
             return {
                 "bl": obj.bottomLeft,
                 "br": obj.bottomRight,
                 "tl": obj.topLeft,
                 "tr": obj.topRight,
             }
-        elif isinstance(obj, (Margin, Padding)):
+        if isinstance(obj, (Margin, Padding)):
             return {
                 "l": obj.left,
                 "t": obj.top,
                 "r": obj.right,
                 "b": obj.bottom,
             }
-        elif isinstance(obj, ButtonStyle):
+        if isinstance(obj, ButtonStyle):
             for k, v in obj.__dict__.items():
                 if v is not None:
                     if not isinstance(v, Dict):
@@ -45,7 +45,7 @@ class EmbedJsonEncoder(json.JSONEncoder):
                     if k != "animation_duration":
                         obj.__dict__[k] = self._cleanup_dict(obj.__dict__[k])
             return self._cleanup_dict(obj.__dict__)
-        elif isinstance(obj, object):
+        if isinstance(obj, object):
             return self._cleanup_dict(obj.__dict__)
         return json.JSONEncoder.default(self, obj)
 
@@ -62,5 +62,5 @@ class EmbedJsonEncoder(json.JSONEncoder):
                     item[1] if not isinstance(item[1], enum.Enum) else item[1].value,
                 ),
                 filter(lambda item: item[1] is not None, d.items()),
-            )
+            ),
         )

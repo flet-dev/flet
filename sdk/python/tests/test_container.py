@@ -1,8 +1,8 @@
 import beartype.roar
 import pytest
+from flet.protocol import Command
 
 import flet as ft
-from flet.protocol import Command
 
 
 def test_instance_no_attrs_set():
@@ -15,7 +15,7 @@ def test_instance_no_attrs_set():
             values=["container"],
             attrs={},
             commands=[],
-        )
+        ),
     ], "Test failed"
 
 
@@ -24,7 +24,7 @@ def test_gradient():
         gradient=ft.LinearGradient(
             colors=[],
             tile_mode="mirror",
-        )
+        ),
     )
     cmd = c._build_add_commands()
     assert (
@@ -36,7 +36,7 @@ def test_gradient():
         gradient=ft.LinearGradient(
             colors=[],
             tile_mode=ft.GradientTileMode.REPEATED,
-        )
+        ),
     )
     cmd = c._build_add_commands()
     assert (
@@ -47,7 +47,7 @@ def test_gradient():
     c = ft.Container(
         gradient=ft.LinearGradient(
             colors=[],
-        )
+        ),
     )
     cmd = c._build_add_commands()
     assert (

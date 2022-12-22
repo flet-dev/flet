@@ -2,7 +2,14 @@ import logging
 import threading
 import uuid
 
-from flet.protocol import *
+from flet.protocol import (Actions, Command, CommandEncoder, List, Message,
+                           Optional, PageCommandRequestPayload,
+                           PageCommandResponsePayload,
+                           PageCommandsBatchRequestPayload,
+                           PageCommandsBatchResponsePayload, PageEventPayload,
+                           PageSessionCreatedPayload,
+                           RegisterHostClientRequestPayload,
+                           RegisterHostClientResponsePayload, json)
 from flet.pubsub import PubSubHub
 from flet.reconnecting_websocket import ReconnectingWebSocket
 
@@ -82,7 +89,7 @@ class Connection:
         permissions: Optional[str],
     ):
         payload = RegisterHostClientRequestPayload(
-            host_client_id, page_name, is_app, update, auth_token, permissions
+            host_client_id, page_name, is_app, update, auth_token, permissions,
         )
         response = self._send_message_with_result(Actions.REGISTER_HOST_CLIENT, payload)
         return RegisterHostClientResponsePayload(**response)
@@ -91,7 +98,7 @@ class Connection:
         assert self.page_name is not None
         payload = PageCommandRequestPayload(self.page_name, session_id, command)
         response = self._send_message_with_result(
-            Actions.PAGE_COMMAND_FROM_HOST, payload
+            Actions.PAGE_COMMAND_FROM_HOST, payload,
         )
         result = PageCommandResponsePayload(**response)
         if result.error:
@@ -102,7 +109,7 @@ class Connection:
         assert self.page_name is not None
         payload = PageCommandsBatchRequestPayload(self.page_name, session_id, commands)
         response = self._send_message_with_result(
-            Actions.PAGE_COMMANDS_BATCH_FROM_HOST, payload
+            Actions.PAGE_COMMANDS_BATCH_FROM_HOST, payload,
         )
         result = PageCommandsBatchResponsePayload(**response)
         if result.error:

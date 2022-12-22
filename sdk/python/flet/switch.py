@@ -2,20 +2,12 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import Dict
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    LabelPosition,
-    LabelPositionString,
-    MaterialState,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, LabelPosition, LabelPositionString,
+                        MaterialState, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 try:
     from typing import Literal
@@ -56,6 +48,7 @@ class Switch(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/switch
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,

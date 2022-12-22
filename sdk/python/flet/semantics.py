@@ -1,7 +1,6 @@
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
@@ -16,6 +15,7 @@ class Semantics(Control):
 
     Online docs: https://flet.dev/docs/controls/semantics
     """
+
     def __init__(
         self,
         content: Optional[Control] = None,

@@ -48,27 +48,27 @@ class CountinuosRectangleBorder(OutlinedBorder):
 class ButtonStyle:
     color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(default=None)
     bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
+        default=None,
     )
     overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
+        default=None,
     )
     shadow_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
+        default=None,
     )
     surface_tint_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
+        default=None,
     )
     elevation: Union[
-        None, float, int, Dict[Union[str, MaterialState], Union[float, int]]
+        None, float, int, Dict[Union[str, MaterialState], Union[float, int]],
     ] = field(default=None)
     animation_duration: Optional[int] = field(default=None)
     padding: Union[PaddingValue, Dict[Union[str, MaterialState], PaddingValue]] = field(
-        default=None
+        default=None,
     )
     side: Union[None, BorderSide, Dict[Union[str, MaterialState], BorderSide]] = field(
-        default=None
+        default=None,
     )
     shape: Union[
-        None, OutlinedBorder, Dict[Union[str, MaterialState], OutlinedBorder]
+        None, OutlinedBorder, Dict[Union[str, MaterialState], OutlinedBorder],
     ] = field(default=None)

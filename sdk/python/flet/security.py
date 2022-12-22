@@ -25,7 +25,7 @@ def encrypt(plain_text: str, secret_key: str) -> str:
     key = __generate_fernet_key_kdf(secret_key, salt)
     f = Fernet(key)
     return base64.urlsafe_b64encode(
-        salt + f.encrypt(plain_text.encode("utf-8"))
+        salt + f.encrypt(plain_text.encode("utf-8")),
     ).decode()
 
 

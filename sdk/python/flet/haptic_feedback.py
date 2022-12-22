@@ -11,7 +11,7 @@ class HapticFeedback(CallableControl):
     Allows access to the haptic feedback interface on the device.
 
     It is non-visual and should be added to `page.overlay` list.
-    
+
     Example:
     ```
     import flet as ft
@@ -34,6 +34,7 @@ class HapticFeedback(CallableControl):
 
     Online docs: https://flet.dev/docs/controls/hapticfeedback
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,

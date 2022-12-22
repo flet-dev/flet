@@ -5,9 +5,9 @@ import os
 import subprocess as sp
 from pathlib import Path
 
-import flet
-from flet.utils import which, is_windows
+from flet.utils import is_windows, which
 
+import flet
 
 # this value will be replaced by CI
 version = ""

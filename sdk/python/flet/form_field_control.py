@@ -2,20 +2,13 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 from flet.text_style import TextStyle
-from flet.types import (
-    AnimationValue,
-    BorderRadiusValue,
-    OffsetValue,
-    PaddingValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, BorderRadiusValue, OffsetValue,
+                        PaddingValue, ResponsiveNumber, RotateValue,
+                        ScaleValue)
 
 try:
     from typing import Literal

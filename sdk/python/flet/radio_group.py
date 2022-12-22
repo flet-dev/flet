@@ -1,7 +1,6 @@
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
@@ -25,7 +24,7 @@ class RadioGroup(Control):
         ft.Radio(value="red", label="Red"),
         ft.Radio(value="green", label="Green"),
         ft.Radio(value="blue", label="Blue")]))
-    
+
     page.add(ft.Text("Select your favorite color:"), cg, b, t)
 
     ft.app(target=main)
@@ -35,6 +34,7 @@ class RadioGroup(Control):
 
     Online docs: https://flet.dev/docs/controls/radio
     """
+
     def __init__(
         self,
         content: Optional[Control] = None,

@@ -1,4 +1,5 @@
 import argparse
+
 from flet.cli.commands.base import BaseCommand
 
 

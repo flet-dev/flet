@@ -2,7 +2,6 @@ from typing import Optional
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
@@ -50,6 +49,7 @@ class AppBar(Control):
 
     Online docs: https://flet.dev/docs/controls/appbar
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,
@@ -126,7 +126,7 @@ class AppBar(Control):
     @property
     def automatically_imply_leading(self) -> Optional[bool]:
         return self._get_attr(
-            "automaticallyImplyLeading", data_type="bool", def_value=True
+            "automaticallyImplyLeading", data_type="bool", def_value=True,
         )
 
     @automatically_imply_leading.setter

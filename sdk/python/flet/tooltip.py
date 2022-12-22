@@ -1,20 +1,13 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.border import Border
 from flet.control import Control, OptionalNumber
 from flet.gradients import Gradient
 from flet.ref import Ref
 from flet.text_style import TextStyle
-from flet.types import (
-    BorderRadiusValue,
-    BoxShape,
-    MarginValue,
-    PaddingValue,
-    TextAlign,
-    TextAlignString,
-)
+from flet.types import (BorderRadiusValue, BoxShape, MarginValue, PaddingValue,
+                        TextAlign, TextAlignString)
 
 
 class Tooltip(Control):

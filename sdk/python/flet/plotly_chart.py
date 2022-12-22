@@ -4,19 +4,14 @@ import xml.etree.ElementTree as ET
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
-from flet import alignment
 from flet.container import Container
 from flet.control import OptionalNumber
 from flet.image import Image
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
+
+from flet import alignment
 
 try:
     from plotly.graph_objects import Figure
@@ -49,6 +44,7 @@ class PlotlyChart(Container):
 
     Online docs: https://flet.dev/docs/controls/plotlychart
     """
+
     def __init__(
         self,
         figure: Optional[Figure] = None,

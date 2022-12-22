@@ -2,23 +2,13 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    CrossAxisAlignment,
-    CrossAxisAlignmentString,
-    MainAxisAlignment,
-    MainAxisAlignmentString,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-    ScrollMode,
-    ScrollModeString,
-)
+from flet.types import (AnimationValue, CrossAxisAlignment,
+                        CrossAxisAlignmentString, MainAxisAlignment,
+                        MainAxisAlignmentString, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue, ScrollMode, ScrollModeString)
 
 
 class Column(ConstrainedControl):
@@ -233,9 +223,9 @@ class Column(ConstrainedControl):
 
     @beartype
     def __set_scroll(self, value: Optional[ScrollModeString]):
-        if value == True:
+        if value is True:
             value = "auto"
-        elif value == False:
+        elif value is False:
             value = None
         self._set_attr("scroll", value)
 

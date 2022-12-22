@@ -3,7 +3,7 @@ from flet.auth.oauth_provider import OAuthProvider
 
 class Auth0OAuthProvider(OAuthProvider):
     def __init__(
-        self, domain: str, client_id: str, client_secret: str, redirect_url: str
+        self, domain: str, client_id: str, client_secret: str, redirect_url: str,
     ) -> None:
         super().__init__(
             client_id=client_id,

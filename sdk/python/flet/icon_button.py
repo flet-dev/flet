@@ -1,18 +1,12 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.buttons import ButtonStyle
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 
 class IconButton(ConstrainedControl):
@@ -20,7 +14,7 @@ class IconButton(ConstrainedControl):
     An icon button is a round button with an icon in the middle that reacts to touches by filling with color (ink).
 
     Icon buttons are commonly used in the toolbars, but they can be used in many other places as well.
-    
+
     Example:
     ```
     import flet as ft
@@ -53,6 +47,7 @@ class IconButton(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/iconbutton
     """
+
     def __init__(
         self,
         icon: Optional[str] = None,

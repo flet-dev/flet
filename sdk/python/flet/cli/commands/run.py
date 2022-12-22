@@ -1,17 +1,19 @@
 import argparse
 import logging
 import os
-from pathlib import Path
 import signal
 import subprocess
 import sys
 import threading
 import time
+from pathlib import Path
+
 from flet.cli.commands.base import BaseCommand
-from flet.flet import open_flet_view
 from flet.utils import get_free_tcp_port, is_windows, open_in_browser
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
+
+from flet.flet import open_flet_view
 
 
 class Command(BaseCommand):
@@ -70,7 +72,7 @@ class Command(BaseCommand):
 
         if not Path(script_path).exists():
             print(f"File not found: {script_path}")
-            exit(1)
+            sys.exit(1)
 
         script_dir = os.path.dirname(script_path)
 
@@ -101,7 +103,7 @@ class Command(BaseCommand):
             try:
                 logging.debug(f"Flet View process {my_event_handler.fvp.pid}")
                 os.kill(my_event_handler.fvp.pid + 1, signal.SIGKILL)
-            except:
+            except Exception:
                 pass
         my_observer.stop()
         my_observer.join()
@@ -152,13 +154,13 @@ class Handler(FileSystemEventHandler):
             line = line.decode("utf-8").rstrip("\r\n")
             if line.startswith(self.page_url_prefix):
                 if not self.page_url:
-                    self.page_url = line[len(self.page_url_prefix) + 1 :]
+                    self.page_url = line[len(self.page_url_prefix) + 1:]
                     print(self.page_url)
                     if self.web:
                         open_in_browser(self.page_url)
                     else:
                         th = threading.Thread(
-                            target=self.open_flet_view_and_wait, args=(), daemon=True
+                            target=self.open_flet_view_and_wait, args=(), daemon=True,
                         )
                         th.start()
             else:

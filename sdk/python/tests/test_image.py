@@ -1,8 +1,8 @@
 import beartype.roar
 import pytest
+from flet.protocol import Command
 
 import flet as ft
-from flet.protocol import Command
 
 
 def test_image_add():
@@ -20,7 +20,7 @@ def test_image_add():
                 "src": "https://www.w3schools.com/css/img_5terre.jpg",
             },
             commands=[],
-        )
+        ),
     ], "Test failed"
 
 

@@ -2,7 +2,6 @@ from typing import Any, Optional
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet.buttons import OutlinedBorder
 from flet.control import Control
 from flet.ref import Ref
@@ -12,7 +11,7 @@ from flet.types import MainAxisAlignment, MainAxisAlignmentString, PaddingValue
 class AlertDialog(Control):
     """
     An alert dialog informs the user about situations that require acknowledgement. An alert dialog has an optional title and an optional list of actions. The title is displayed above the content and the actions are displayed below the content.
-    
+
     Example:
     ```
     import flet as ft
@@ -61,6 +60,7 @@ class AlertDialog(Control):
 
     Online docs: https://flet.dev/docs/controls/alertdialog
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,

@@ -9,8 +9,6 @@ from urllib.parse import urlparse
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
-
-from flet import constants
 from flet.app_bar import AppBar
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
@@ -30,17 +28,12 @@ from flet.querystring import QueryString
 from flet.session_storage import SessionStorage
 from flet.snack_bar import SnackBar
 from flet.theme import Theme
-from flet.types import (
-    CrossAxisAlignment,
-    MainAxisAlignment,
-    PaddingValue,
-    PageDesignLanguage,
-    PageDesignString,
-    ScrollMode,
-    ThemeMode,
-    ThemeModeString,
-)
+from flet.types import (CrossAxisAlignment, MainAxisAlignment, PaddingValue,
+                        PageDesignLanguage, PageDesignString, ScrollMode,
+                        ThemeMode, ThemeModeString)
 from flet.view import View
+
+from flet import constants
 
 try:
     from typing import Literal
@@ -137,7 +130,7 @@ class Page(Control):
 
         self.__method_calls: Dict[str, threading.Event] = {}
         self.__method_call_results: Dict[
-            threading.Event, tuple[Optional[str], Optional[str]]
+            threading.Event, tuple[Optional[str], Optional[str]],
         ] = {}
         self._add_event_handler("invoke_method_result", self._on_invoke_method_result)
 
@@ -309,17 +302,17 @@ class Page(Control):
                         for name in props:
                             if name != "i":
                                 self._index[id]._set_attr(
-                                    name, props[name], dirty=False
+                                    name, props[name], dirty=False,
                                 )
 
             elif e.target in self._index:
                 self._last_event = ControlEvent(
-                    e.target, e.name, e.data, self._index[e.target], self
+                    e.target, e.name, e.data, self._index[e.target], self,
                 )
                 handler = self._index[e.target].event_handlers.get(e.name)
                 if handler:
                     t = threading.Thread(
-                        target=handler, args=(self._last_event,), daemon=True
+                        target=handler, args=(self._last_event,), daemon=True,
                     )
                     t.start()
                 self._event_available.set()
@@ -331,7 +324,7 @@ class Page(Control):
         return self._last_event
 
     def go(self, route, **kwargs):
-        self.route = route if kwargs == {} else route + self.query.post(kwargs)
+        self.route = route if not kwargs else route + self.query.post(kwargs)
 
         self.__on_route_change.handler(
             ControlEvent(
@@ -340,14 +333,14 @@ class Page(Control):
                 data=self.route,
                 page=self,
                 control=self,
-            )
+            ),
         )
         self.update()
         self.query()  # Update query url (required when using go)
 
     def get_upload_url(self, file_name: str, expires: int):
         r = self._send_command(
-            "getUploadUrl", attrs={"file": file_name, "expires": str(expires)}
+            "getUploadUrl", attrs={"file": file_name, "expires": str(expires)},
         )
         if r.error:
             raise Exception(r.error)
@@ -372,7 +365,7 @@ class Page(Control):
             scope=scope,
             saved_token=saved_token,
         )
-        if saved_token == None:
+        if saved_token is None:
             authorization_url, state = self.__authorization.get_authorization_data()
             auth_attrs = {"state": state}
             if complete_page_html:
@@ -380,7 +373,7 @@ class Page(Control):
             if redirect_to_page:
                 up = urlparse(provider.redirect_url)
                 auth_attrs["completePageUrl"] = up._replace(
-                    path=self.__conn.page_name
+                    path=self.__conn.page_name,
                 ).geturl()
             result = self._send_command("oauthAuthorize", attrs=auth_attrs)
             if result.error != "":
@@ -389,7 +382,7 @@ class Page(Control):
                 on_open_authorization_url(authorization_url)
             else:
                 self.launch_url(
-                    authorization_url, "flet_oauth_signin", web_popup_window=self.web
+                    authorization_url, "flet_oauth_signin", web_popup_window=self.web,
                 )
         else:
             self.__on_login.handler(LoginEvent(error="", error_description=""))
@@ -410,7 +403,7 @@ class Page(Control):
                 self.window_to_front()
 
         login_evt = LoginEvent(
-            error=d["error"], error_description=d["error_description"]
+            error=d["error"], error_description=d["error_description"],
         )
         if login_evt.error == "":
             # perform token request
@@ -425,7 +418,7 @@ class Page(Control):
     def logout(self):
         self.__authorization = None
         self.__on_logout.handler(
-            ControlEvent(target="page", name="logout", data="", control=self, page=self)
+            ControlEvent(target="page", name="logout", data="", control=self, page=self),
         )
 
     def close(self):
@@ -465,13 +458,13 @@ class Page(Control):
         window_height: Optional[int] = None,
     ):
         args = {"url": url}
-        if web_window_name != None:
+        if web_window_name is not None:
             args["web_window_name"] = web_window_name
-        if web_popup_window != None:
+        if web_popup_window is not None:
             args["web_popup_window"] = str(web_popup_window)
-        if window_width != None:
+        if window_width is not None:
             args["window_width"] = str(window_width)
-        if window_height != None:
+        if window_height is not None:
             args["window_height"] = str(window_height)
         self.invoke_method("launchUrl", args)
 
@@ -503,7 +496,7 @@ class Page(Control):
 
         # call method
         result = self._send_command(
-            "invokeMethod", values=[method_id, method_name], attrs=arguments
+            "invokeMethod", values=[method_id, method_name], attrs=arguments,
         )
 
         if result.error != "":
@@ -519,13 +512,13 @@ class Page(Control):
         if not evt.wait(5):
             del self.__method_calls[method_id]
             raise Exception(
-                f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
+                f"Timeout waiting for invokeMethod {method_name}({arguments}) call",
             )
 
         result, err = self.__method_call_results.pop(evt)
-        if err != None:
+        if err is not None:
             raise Exception(err)
-        if result == None:
+        if result is None:
             return None
         return result
 
@@ -533,7 +526,7 @@ class Page(Control):
         d = json.loads(e.data)
         result = InvokeMethodResults(**d)
         evt = self.__method_calls.pop(result.method_id, None)
-        if evt == None:
+        if evt is None:
             return
         self.__method_call_results[evt] = (result.result, result.error)
         evt.set()
@@ -1110,7 +1103,7 @@ class Page(Control):
     @property
     def window_title_bar_buttons_hidden(self) -> Optional[bool]:
         return self._get_attr(
-            "windowTitleBarButtonsHidden", data_type="bool", def_value=False
+            "windowTitleBarButtonsHidden", data_type="bool", def_value=False,
         )
 
     @window_title_bar_buttons_hidden.setter

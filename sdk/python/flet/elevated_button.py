@@ -1,24 +1,18 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.buttons import ButtonStyle
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 
 class ElevatedButton(ConstrainedControl):
     """
     Elevated buttons are essentially filled tonal buttons with a shadow. To prevent shadow creep, only use them when absolutely necessary, such as when the button requires visual separation from a patterned background.
-    
+
     Example:
     ```
     import flet as ft
@@ -37,6 +31,7 @@ class ElevatedButton(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/elevatedbutton
     """
+
     def __init__(
         self,
         text: Optional[str] = None,

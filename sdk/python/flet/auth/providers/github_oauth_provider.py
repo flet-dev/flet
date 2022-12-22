@@ -2,7 +2,6 @@ import json
 from typing import List, Optional
 
 import requests
-
 from flet.auth.group import Group
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.user import User
@@ -21,7 +20,7 @@ class GitHubOAuthProvider(OAuthProvider):
         )
 
     def _fetch_groups(self, access_token: str) -> List[Group]:
-        headers = {"Authorization": "Bearer {}".format(access_token)}
+        headers = {"Authorization": f"Bearer {access_token}"}
         groups = []
         teams_resp = requests.get("https://api.github.com/user/teams", headers=headers)
         tj = json.loads(teams_resp.text)
@@ -30,12 +29,12 @@ class GitHubOAuthProvider(OAuthProvider):
                 Group(
                     t,
                     name=t["name"],
-                )
+                ),
             )
         return groups
 
     def _fetch_user(self, access_token: str) -> Optional[User]:
-        headers = {"Authorization": "Bearer {}".format(access_token)}
+        headers = {"Authorization": f"Bearer {access_token}"}
         user_resp = requests.get("https://api.github.com/user", headers=headers)
         uj = json.loads(user_resp.text)
         email_resp = requests.get("https://api.github.com/user/emails", headers=headers)

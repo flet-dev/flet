@@ -1,7 +1,6 @@
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
@@ -11,9 +10,9 @@ class VerticalDivider(Control):
     A thin vertical line, with padding on either side.
 
     In the material design language, this represents a divider.
-    
+
     Example:
-    
+
     ```
     import flet as ft
 
@@ -46,6 +45,7 @@ class VerticalDivider(Control):
 
     Online docs: https://flet.dev/docs/controls/verticaldivider
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,

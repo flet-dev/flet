@@ -4,8 +4,9 @@ from dataclasses import field
 from enum import Enum
 from typing import List, Optional, Union
 
-from flet import alignment
 from flet.alignment import Alignment
+
+from flet import alignment
 
 try:
     from typing import Literal

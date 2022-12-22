@@ -1,22 +1,15 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.alignment import Alignment
 from flet.control import Control, OptionalNumber
 from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl, InputBorder
 from flet.ref import Ref
 from flet.text_style import TextStyle
-from flet.types import (
-    AnimationValue,
-    BorderRadiusValue,
-    OffsetValue,
-    PaddingValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, BorderRadiusValue, OffsetValue,
+                        PaddingValue, ResponsiveNumber, RotateValue,
+                        ScaleValue)
 
 
 class Dropdown(FormFieldControl):

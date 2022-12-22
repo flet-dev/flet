@@ -1,20 +1,14 @@
 from beartype import beartype
 from beartype.typing import List, Optional
-
-from flet import Control
 from flet.app_bar import AppBar
 from flet.control import OptionalNumber
 from flet.floating_action_button import FloatingActionButton
 from flet.navigation_bar import NavigationBar
-from flet.types import (
-    CrossAxisAlignment,
-    CrossAxisAlignmentString,
-    MainAxisAlignment,
-    MainAxisAlignmentString,
-    PaddingValue,
-    ScrollMode,
-    ScrollModeString,
-)
+from flet.types import (CrossAxisAlignment, CrossAxisAlignmentString,
+                        MainAxisAlignment, MainAxisAlignmentString,
+                        PaddingValue, ScrollMode, ScrollModeString)
+
+from flet import Control
 
 
 class View(Control):
@@ -204,9 +198,9 @@ class View(Control):
 
     @beartype
     def __set_scroll(self, value: Optional[ScrollModeString]):
-        if value == True:
+        if value is True:
             value = "auto"
-        elif value == False:
+        elif value is False:
             value = None
         self._set_attr("scroll", value)
 

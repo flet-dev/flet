@@ -3,7 +3,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import Dict, List
-
 from flet.border import Border, BorderSide
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
@@ -13,15 +12,8 @@ from flet.gesture_detector import TapEvent
 from flet.gradients import Gradient
 from flet.ref import Ref
 from flet.text_style import TextStyle
-from flet.types import (
-    AnimationValue,
-    BorderRadiusValue,
-    MaterialState,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, BorderRadiusValue, MaterialState,
+                        OffsetValue, ResponsiveNumber, RotateValue, ScaleValue)
 
 
 class DataColumnSortEvent(ControlEvent):
@@ -42,7 +34,7 @@ class DataColumn(Control):
         Control.__init__(self, ref=ref)
 
         self.__on_sort = EventHandler(
-            lambda e: DataColumnSortEvent(**json.loads(e.data))
+            lambda e: DataColumnSortEvent(**json.loads(e.data)),
         )
         self._add_event_handler("sort", self.__on_sort.handler)
 
@@ -411,7 +403,7 @@ class DataTable(ConstrainedControl):
         self._set_attr_json("verticalLines", self.__vertical_lines)
         self._set_attr_json("dataRowColor", self._wrap_attr_dict(self.__data_row_color))
         self._set_attr_json(
-            "headingRowColor", self._wrap_attr_dict(self.__heading_row_color)
+            "headingRowColor", self._wrap_attr_dict(self.__heading_row_color),
         )
         self._set_attr_json("dataTextStyle", self.__data_text_style)
         self._set_attr_json("headingTextStyle", self.__heading_text_style)

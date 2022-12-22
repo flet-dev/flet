@@ -1,7 +1,7 @@
 import dataclasses
 from dataclasses import field
-from typing import Optional
 from enum import Enum
+from typing import Optional
 
 try:
     from typing import Literal
@@ -9,7 +9,7 @@ except ImportError:
     from typing_extensions import Literal
 
 VisualDensityString = Literal[
-    None, "standard", "compact", "comfortable", "adaptivePlatformDensity"
+    None, "standard", "compact", "comfortable", "adaptivePlatformDensity",
 ]
 
 

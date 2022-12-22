@@ -2,23 +2,14 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.control import Control, OptionalNumber
 from flet.focus import FocusData
 from flet.form_field_control import FormFieldControl, InputBorder
 from flet.ref import Ref
 from flet.text_style import TextStyle
-from flet.types import (
-    AnimationValue,
-    BorderRadiusValue,
-    OffsetValue,
-    PaddingValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-    TextAlign,
-    TextAlignString,
-)
+from flet.types import (AnimationValue, BorderRadiusValue, OffsetValue,
+                        PaddingValue, ResponsiveNumber, RotateValue,
+                        ScaleValue, TextAlign, TextAlignString)
 
 try:
     from typing import Literal

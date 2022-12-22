@@ -1,17 +1,15 @@
 import json
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet.control import Control, OptionalNumber
 from flet.control_event import ControlEvent
 from flet.dropdown import Option
 from flet.event_handler import EventHandler
 from flet.ref import Ref
-
-from enum import Enum
 
 try:
     from typing import Literal
@@ -65,7 +63,7 @@ class FilePickerUploadEvent(ControlEvent):
 class FilePicker(Control):
     """
     A control that allows you to use the native file explorer to pick single or multiple files, with extensions filtering support and upload.
-    
+
     Example:
     ```
     import flet as ft
@@ -104,6 +102,7 @@ class FilePicker(Control):
 
     Online docs: https://flet.dev/docs/controls/filepicker
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,

@@ -8,10 +8,10 @@ class PubSubHub:
         self.__lock = threading.Lock()
         self.__subscribers: Dict[str, Callable] = {}  # key: session_id, value: handler
         self.__topic_subscribers: Dict[
-            str, Dict[str, Callable]
+            str, Dict[str, Callable],
         ] = {}  # key: topic, value: dict[session_id, handler]
         self.__subscriber_topics: Dict[
-            str, Dict[str, Callable]
+            str, Dict[str, Callable],
         ] = {}  # key: session_id, value: dict[topic, handler]
 
     def send_all(self, message: Any):
@@ -36,7 +36,7 @@ class PubSubHub:
 
     def send_others_on_topic(self, except_session_id: str, topic: str, message: Any):
         logging.debug(
-            f"pubsub.send_others_on_topic({except_session_id}, {topic}, {message})"
+            f"pubsub.send_others_on_topic({except_session_id}, {topic}, {message})",
         )
         with self.__lock:
             if topic in self.__topic_subscribers:

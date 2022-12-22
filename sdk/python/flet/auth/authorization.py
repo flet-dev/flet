@@ -5,12 +5,11 @@ import time
 from typing import List, Optional, Tuple
 
 import requests
-from oauthlib.oauth2 import WebApplicationClient
-from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
-
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.oauth_token import OAuthToken
 from flet.auth.user import User
+from oauthlib.oauth2 import WebApplicationClient
+from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
 
 
 class Authorization:
@@ -41,7 +40,7 @@ class Authorization:
                 if s not in self.scope:
                     self.scope.append(s)
 
-        if saved_token != None:
+        if saved_token is not None:
             self.__token = OAuthToken.from_json(saved_token)
             self.__refresh_token()
             self.__fetch_user_and_groups()
@@ -74,7 +73,7 @@ class Authorization:
         )
         headers = {"content-type": "application/x-www-form-urlencoded"}
         response = requests.post(
-            self.provider.token_endpoint, data=data, headers=headers
+            self.provider.token_endpoint, data=data, headers=headers,
         )
         t = client.parse_request_body_response(response.text)
         self.__token = self.__convert_token(t)
@@ -84,15 +83,15 @@ class Authorization:
         assert self.__token is not None
         if self.fetch_user:
             self.user = self.provider._fetch_user(self.__token.access_token)
-            if self.user == None and self.provider.user_endpoint != None:
-                if self.provider.user_id_fn == None:
+            if self.user is None and self.provider.user_endpoint is not None:
+                if self.provider.user_id_fn is None:
                     raise Exception(
-                        "user_id_fn must be specified too if user_endpoint is not None"
+                        "user_id_fn must be specified too if user_endpoint is not None",
                     )
                 self.user = self.__get_user()
-            if self.fetch_groups and self.user != None:
+            if self.fetch_groups and self.user is not None:
                 self.user.groups = self.provider._fetch_groups(
-                    self.__token.access_token
+                    self.__token.access_token,
                 )
 
     def __convert_token(self, t: OAuth2Token):
@@ -124,10 +123,10 @@ class Authorization:
         )
         headers = {"content-type": "application/x-www-form-urlencoded"}
         response = requests.post(
-            self.provider.token_endpoint, data=data, headers=headers
+            self.provider.token_endpoint, data=data, headers=headers,
         )
         t = client.parse_request_body_response(response.text)
-        if t.get("refresh_token") == None:
+        if t.get("refresh_token") is None:
             t["refresh_token"] = self.__token.refresh_token
         self.__token = self.__convert_token(t)
 
@@ -135,7 +134,7 @@ class Authorization:
         assert self.token is not None
         assert self.provider.user_endpoint is not None
         assert self.provider.user_id_fn is not None
-        headers = {"Authorization": "Bearer {}".format(self.token.access_token)}
+        headers = {"Authorization": f"Bearer {self.token.access_token}"}
         user_resp = requests.get(self.provider.user_endpoint, headers=headers)
         uj = json.loads(user_resp.text)
         return User(uj, str(self.provider.user_id_fn(uj)))

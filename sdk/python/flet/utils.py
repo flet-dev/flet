@@ -35,24 +35,22 @@ def get_platform():
     p = platform.system()
     if is_windows():
         return "windows"
-    elif p == "Linux":
+    if p == "Linux":
         return "linux"
-    elif p == "Darwin":
+    if p == "Darwin":
         return "darwin"
-    else:
-        raise Exception(f"Unsupported platform: {p}")
+    raise Exception(f"Unsupported platform: {p}")
 
 
 def get_arch():
     a = platform.machine().lower()
     if a == "x86_64" or a == "amd64":
         return "amd64"
-    elif a == "arm64" or a == "aarch64":
+    if a == "arm64" or a == "aarch64":
         return "arm64"
-    elif a.startswith("arm"):
+    if a.startswith("arm"):
         return "arm_7"
-    else:
-        raise Exception(f"Unsupported architecture: {a}")
+    raise Exception(f"Unsupported architecture: {a}")
 
 
 def open_in_browser(url):
@@ -209,12 +207,12 @@ class Vector(complex):
     __truediv__ = lambda self, other: type(self)(complex.__truediv__(self, other))
     __len__ = lambda self: 2
     __round__ = lambda self, ndigits=None: type(self)(
-        round(self.x, ndigits), round(self.y, ndigits)
+        round(self.x, ndigits), round(self.y, ndigits),
     )
 
     def __eq__(self, other):
         return math.isclose(self.x, other.x, abs_tol=self.abs_tol) and math.isclose(
-            self.y, other.y, abs_tol=self.abs_tol
+            self.y, other.y, abs_tol=self.abs_tol,
         )
 
     def __ne__(self, other):

@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Any, Union
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
-
 from flet.embed_json_encoder import EmbedJsonEncoder
 from flet.protocol import Command
 from flet.ref import Ref
@@ -90,19 +89,17 @@ class Control:
         s_val = self.__attrs[name][0]
         if data_type == "bool" and s_val is not None and isinstance(s_val, str):
             return s_val.lower() == "true"
-        elif data_type == "bool?" and isinstance(s_val, str):
+        if data_type == "bool?" and isinstance(s_val, str):
             if s_val.lower() == "true":
                 return True
-            elif s_val.lower() == "false":
+            if s_val.lower() == "false":
                 return False
-            else:
-                return def_value
-        elif data_type == "float" and s_val is not None and isinstance(s_val, str):
+            return def_value
+        if data_type == "float" and s_val is not None and isinstance(s_val, str):
             return float(s_val)
-        elif data_type == "int" and s_val is not None and isinstance(s_val, str):
+        if data_type == "int" and s_val is not None and isinstance(s_val, str):
             return int(s_val)
-        else:
-            return s_val
+        return s_val
 
     def _set_attr(self, name, value, dirty=True):
         self._set_attr_internal(name, value, dirty)
@@ -326,7 +323,7 @@ class Control:
                     for h in current_ints[b1:b2]:
                         ctrl = hashes[h]
                         innerCmds = ctrl._build_add_commands(
-                            index=index, added_controls=added_controls
+                            index=index, added_controls=added_controls,
                         )
                         assert self.__uid is not None
                         commands.append(
@@ -335,7 +332,7 @@ class Control:
                                 name="add",
                                 attrs={"to": self.__uid, "at": str(n)},
                                 commands=innerCmds,
-                            )
+                            ),
                         )
                         n += 1
             elif tag == "equal":
@@ -343,7 +340,7 @@ class Control:
                 for h in previous_ints[a1:a2]:
                     ctrl = hashes[h]
                     ctrl.build_update_commands(
-                        index, added_controls, commands, isolated=ctrl._is_isolated()
+                        index, added_controls, commands, isolated=ctrl._is_isolated(),
                     )
                     n += 1
             elif tag == "insert":
@@ -351,7 +348,7 @@ class Control:
                 for h in current_ints[b1:b2]:
                     ctrl = hashes[h]
                     innerCmds = ctrl._build_add_commands(
-                        index=index, added_controls=added_controls
+                        index=index, added_controls=added_controls,
                     )
                     assert self.__uid is not None
                     commands.append(
@@ -360,7 +357,7 @@ class Control:
                             name="add",
                             attrs={"to": self.__uid, "at": str(n)},
                             commands=innerCmds,
-                        )
+                        ),
                     )
                     n += 1
 
@@ -399,7 +396,7 @@ class Control:
         children = self._get_children()
         for control in children:
             childCmd = control._build_add_commands(
-                indent=indent + 2, index=index, added_controls=added_controls
+                indent=indent + 2, index=index, added_controls=added_controls,
             )
             commands.extend(childCmd)
 
@@ -427,7 +424,7 @@ class Control:
             sval = ""
             if val is None:
                 continue
-            elif isinstance(val, bool):
+            if isinstance(val, bool):
                 sval = str(val).lower()
             elif isinstance(val, dt.datetime) or isinstance(val, dt.date):
                 sval = val.isoformat()

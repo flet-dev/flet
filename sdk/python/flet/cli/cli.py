@@ -1,8 +1,10 @@
 import argparse
 import sys
-import flet.version
-import flet.cli.commands.run
+
 import flet.cli.commands.build
+import flet.cli.commands.run
+import flet.version
+
 
 # Source https://stackoverflow.com/a/26379693
 def set_default_subparser(self, name, args=None, positional_args=0):

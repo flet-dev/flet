@@ -1,20 +1,13 @@
+from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
-from enum import Enum
-
-from flet.animation import AnimationCurveString, AnimationCurve
+from flet.animation import AnimationCurve, AnimationCurveString
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 try:
     from typing import Literal
@@ -79,6 +72,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/animatedswitcher
     """
+
     def __init__(
         self,
         content: Optional[Control] = None,

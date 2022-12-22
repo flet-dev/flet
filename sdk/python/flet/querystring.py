@@ -1,5 +1,5 @@
-import urllib.parse
 import re
+import urllib.parse
 
 
 class UrlComponents:
@@ -8,21 +8,21 @@ class UrlComponents:
     """
 
     def _encode_url_component(self, url: str) -> str:
-        """
+        r"""
         Function encodes querystring part of URL\n
         Ex. q=dom & dogs -> q=dom+%26+dogs
         """
         return urllib.parse.quote(url)
 
     def _decode_url_component(self, url: str) -> str:
-        """
+        r"""
         Function decodes querystring part of URL\n
         Ex. q=dom+%26+dogs -> q=dom & dogs
         """
         return urllib.parse.unquote(url)
 
     def _is_encoded(self) -> bool:
-        """
+        r"""
         Function returns True if URL is already encoded
         """
         if "?" in self.url:
@@ -30,24 +30,24 @@ class UrlComponents:
             return (
                 True
                 if self._decode_url_component(
-                    self.url[q_result.start() + 1 : q_result.end()]
+                    self.url[q_result.start() + 1: q_result.end()],
                 )
-                != self.url[q_result.start() + 1 : q_result.end()]
+                != self.url[q_result.start() + 1: q_result.end()]
                 else False
             )
 
     def _querystring_part(self, url_string: bool = False):
-        """
+        r"""
         Function sliced url part and returns querystring part.\n
         Use case: checking querystring part for encode, assiging decoded value
         """
         pattern = re.compile(r"\?[\w\D]+")
         data = pattern.search(self.url)
-        return data if url_string is False else self.url[data.start() + 1 : data.end()]
+        return data if url_string is False else self.url[data.start() + 1: data.end()]
 
 
 class QueryString(UrlComponents):
-    """
+    r"""
     Note:
         `QueryString` class is meant to be for internal use inside of page. Hence, methods such as `get()` or `to_dict()` must be\n
         called from `page` object\n

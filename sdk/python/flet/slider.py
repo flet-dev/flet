@@ -1,17 +1,11 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 
 class Slider(ConstrainedControl):
@@ -19,7 +13,7 @@ class Slider(ConstrainedControl):
     A slider provides a visual indication of adjustable content, as well as the current setting in the total range of content.
 
     Use a slider when you want people to set defined values (such as volume or brightness), or when people would benefit from instant feedback on the effect of setting changes.
-    
+
     Example:
     ```
     import flet as ft
@@ -38,6 +32,7 @@ class Slider(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/slider
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,

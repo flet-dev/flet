@@ -1,7 +1,6 @@
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
@@ -11,7 +10,7 @@ class ShakeDetector(Control):
     Detects phone shakes.
 
     It is non-visual and should be added to `page.overlay` list.
-    
+
     Example:
     ```
     import flet as ft
@@ -34,6 +33,7 @@ class ShakeDetector(Control):
 
     Online docs: https://flet.dev/docs/controls/shakedetector
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,

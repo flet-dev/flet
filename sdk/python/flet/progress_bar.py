@@ -1,17 +1,11 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 
 class ProgressBar(ConstrainedControl):
@@ -19,7 +13,7 @@ class ProgressBar(ConstrainedControl):
     A material design linear progress indicator, also known as a progress bar.
 
     A control that shows progress along a line.
-    
+
     Example:
 
     ```
@@ -49,6 +43,7 @@ class ProgressBar(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/progressbar
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,

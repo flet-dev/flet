@@ -3,18 +3,11 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    PaddingValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, PaddingValue,
+                        ResponsiveNumber, RotateValue, ScaleValue)
 
 try:
     from typing import Literal
@@ -71,7 +64,7 @@ class NavigationRailDestination(Control):
             children.append(self.__icon_content)
         if self.__selected_icon_content:
             self.__selected_icon_content._set_attr_internal(
-                "n", "selected_icon_content"
+                "n", "selected_icon_content",
             )
             children.append(self.__selected_icon_content)
         return children
@@ -199,6 +192,7 @@ class NavigationRail(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/navigationrail
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,

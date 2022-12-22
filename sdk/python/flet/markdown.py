@@ -2,18 +2,12 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
 from flet.text_style import TextStyle
-from flet.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, OffsetValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 try:
     from typing import Literal
@@ -21,7 +15,7 @@ except ImportError:
     from typing_extensions import Literal
 
 MarkdownExtensionSetString = Literal[
-    None, "none", "commonMark", "gitHubWeb", "gitHubFlavored"
+    None, "none", "commonMark", "gitHubWeb", "gitHubFlavored",
 ]
 
 
@@ -40,6 +34,7 @@ class Markdown(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/markdown
     """
+
     def __init__(
         self,
         value: Optional[str] = None,

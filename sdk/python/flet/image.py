@@ -1,24 +1,13 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.constrained_control import ConstrainedControl
 from flet.control import OptionalNumber
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    BlendMode,
-    BlendModeString,
-    BorderRadiusValue,
-    ImageFit,
-    ImageFitString,
-    ImageRepeat,
-    ImageRepeatString,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, BlendMode, BlendModeString,
+                        BorderRadiusValue, ImageFit, ImageFitString,
+                        ImageRepeat, ImageRepeatString, OffsetValue,
+                        ResponsiveNumber, RotateValue, ScaleValue)
 
 try:
     from typing import Literal
@@ -53,6 +42,7 @@ class Image(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/image
     """
+
     def __init__(
         self,
         src: Optional[str] = None,

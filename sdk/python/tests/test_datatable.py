@@ -1,8 +1,8 @@
 import beartype.roar
 import pytest
+from flet.protocol import Command
 
 import flet as ft
-from flet.protocol import Command
 
 
 def test_datatable_instance_no_attrs_set():
@@ -15,7 +15,7 @@ def test_datatable_instance_no_attrs_set():
             values=["datatable"],
             attrs={},
             commands=[],
-        )
+        ),
     ], "Test failed"
 
 
@@ -29,7 +29,7 @@ def test_datarow_instance_no_attrs_set():
             values=["r"],
             attrs={},
             commands=[],
-        )
+        ),
     ], "Test failed"
 
 
@@ -43,7 +43,7 @@ def test_datarow_color_literal_material_state_as_string():
             values=["r"],
             attrs={"color": '{"":"yellow"}'},
             commands=[],
-        )
+        ),
     ], "Test failed"
 
 
@@ -57,7 +57,7 @@ def test_datarow_color_multiple_material_states_as_strings():
             values=["r"],
             attrs={"color": '{"selected":"red","hovered":"blue","":"yellow"}'},
             commands=[],
-        )
+        ),
     ], "Test failed"
 
 
@@ -67,7 +67,7 @@ def test_datarow_color_multiple_material_states():
             ft.MaterialState.SELECTED: "red",
             ft.MaterialState.HOVERED: "blue",
             ft.MaterialState.DEFAULT: "yellow",
-        }
+        },
     )
     assert isinstance(r, ft.Control)
     assert r._build_add_commands() == [
@@ -77,5 +77,5 @@ def test_datarow_color_multiple_material_states():
             values=["r"],
             attrs={"color": '{"selected":"red","hovered":"blue","":"yellow"}'},
             commands=[],
-        )
+        ),
     ], "Test failed"

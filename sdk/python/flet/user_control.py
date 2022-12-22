@@ -1,5 +1,4 @@
 from beartype.typing import List
-
 from flet.control import Control
 from flet.stack import Stack
 
@@ -18,7 +17,7 @@ class UserControl(Stack):
             self.controls = content
         else:
             raise Exception(
-                f"{self.__class__.__name__}.build() method must be implemented and returning either Control or List[Control]."
+                f"{self.__class__.__name__}.build() method must be implemented and returning either Control or List[Control].",
             )
 
     def _is_isolated(self):

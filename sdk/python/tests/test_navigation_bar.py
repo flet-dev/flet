@@ -1,8 +1,8 @@
 import beartype.roar
 import pytest
+from flet.protocol import Command
 
 import flet as ft
-from flet.protocol import Command
 
 
 def test_instance_no_attrs_set():
@@ -15,7 +15,7 @@ def test_instance_no_attrs_set():
             values=["navigationbar"],
             attrs={},
             commands=[],
-        )
+        ),
     ], "Test failed"
 
 

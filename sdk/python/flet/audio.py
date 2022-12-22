@@ -5,7 +5,6 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from beartype import beartype
-
 from flet.control import Control, OptionalNumber
 from flet.ref import Ref
 
@@ -57,6 +56,7 @@ class Audio(Control):
 
     Online docs: https://flet.dev/docs/controls/audio
     """
+
     def __init__(
         self,
         src: Optional[str] = None,
@@ -116,7 +116,7 @@ class Audio(Control):
 
     def seek(self, position_milliseconds: int):
         self._call_method(
-            "seek", params=[str(position_milliseconds)], wait_for_result=False
+            "seek", params=[str(position_milliseconds)], wait_for_result=False,
         )
 
     def get_duration(self) -> Optional[int]:
@@ -146,9 +146,9 @@ class Audio(Control):
             del self.__calls[m.i]
             raise Exception(f"Timeout waiting for Audio.{name}({params}) method call")
         result, err = self.__results.pop(evt)
-        if err != None:
+        if err is not None:
             raise Exception(err)
-        if result == None:
+        if result is None:
             return None
         return json.loads(result)
 
@@ -156,7 +156,7 @@ class Audio(Control):
         d = json.loads(e.data)
         result = AudioMethodResults(**d)
         evt = self.__calls.pop(result.i, None)
-        if evt == None:
+        if evt is None:
             return
         self.__results[evt] = (result.r, result.e)
         evt.set()

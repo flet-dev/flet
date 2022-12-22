@@ -25,7 +25,7 @@ class BaseCommand:
         cls,
         subparsers: argparse._SubParsersAction,
         name: Optional[str] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Register a subcommand to the subparsers,
         with an optional name of the subcommand.

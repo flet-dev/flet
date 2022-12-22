@@ -2,7 +2,6 @@ import json
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet.alignment import Alignment
 from flet.border import Border
 from flet.constrained_control import ConstrainedControl
@@ -11,29 +10,16 @@ from flet.control_event import ControlEvent
 from flet.event_handler import EventHandler
 from flet.gradients import Gradient
 from flet.ref import Ref
-from flet.types import (
-    AnimationValue,
-    BlendMode,
-    BlendModeString,
-    BorderRadiusValue,
-    BoxShape,
-    ClipBehavior,
-    ClipBehaviorString,
-    ImageFit,
-    ImageFitString,
-    ImageRepeat,
-    ImageRepeatString,
-    MarginValue,
-    OffsetValue,
-    PaddingValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.types import (AnimationValue, BlendMode, BlendModeString,
+                        BorderRadiusValue, BoxShape, ClipBehavior,
+                        ClipBehaviorString, ImageFit, ImageFitString,
+                        ImageRepeat, ImageRepeatString, MarginValue,
+                        OffsetValue, PaddingValue, ResponsiveNumber,
+                        RotateValue, ScaleValue)
 
 try:
     from typing import Literal
-except:
+except Exception:
     from typing_extensions import Literal
 
 

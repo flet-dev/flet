@@ -2,7 +2,6 @@ from enum import Enum
 from typing import Union
 
 from beartype.typing import Dict
-
 from flet.animation import Animation
 from flet.border_radius import BorderRadius
 from flet.margin import Margin
@@ -209,7 +208,7 @@ class TextAlign(Enum):
 
 
 ScrollModeString = Literal[
-    None, True, False, "none", "auto", "adaptive", "always", "hidden"
+    None, True, False, "none", "auto", "adaptive", "always", "hidden",
 ]
 
 
@@ -221,7 +220,7 @@ class ScrollMode(Enum):
 
 
 ClipBehaviorString = Literal[
-    None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"
+    None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge",
 ]
 
 
@@ -233,7 +232,7 @@ class ClipBehavior(Enum):
 
 
 ImageFitString = Literal[
-    None, "none", "contain", "cover", "fill", "fitHeight", "fitWidth", "scaleDown"
+    None, "none", "contain", "cover", "fill", "fitHeight", "fitWidth", "scaleDown",
 ]
 
 
