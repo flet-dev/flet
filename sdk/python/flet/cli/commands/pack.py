@@ -5,7 +5,7 @@ from pathlib import Path
 
 import flet.__pyinstaller.config as hook_config
 from flet.cli.commands.base import BaseCommand
-from flet.utils import is_windows
+from flet.utils import is_macos, is_windows
 
 
 class Command(BaseCommand):
@@ -132,6 +132,20 @@ class Command(BaseCommand):
                         )
 
                         pyi_args.extend(["--version-file", version_info_path])
+
+                elif is_macos():
+                    from flet.__pyinstaller.macos_utils import update_flet_view_icon
+
+                    tar_path = Path(hook_config.temp_bin_dir).joinpath(
+                        "flet-macos-amd64.tar.gz"
+                    )
+                    if tar_path.exists():
+                        # icon
+                        if options.icon:
+                            icon_path = options.icon
+                            if not Path(icon_path).is_absolute():
+                                icon_path = Path(os.getcwd()).joinpath(icon_path)
+                            update_flet_view_icon(str(tar_path), icon_path)
 
             # run PyInstaller!
             PyInstaller.__main__.run(pyi_args)
