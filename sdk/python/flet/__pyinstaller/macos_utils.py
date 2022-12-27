@@ -57,12 +57,19 @@ def update_flet_view_version_info(
     if product_name:
         pl["CFBundleName"] = product_name
         pl["CFBundleDisplayName"] = product_name
+
+        # rename app bundle
+        new_app_path = os.path.join(Path(app_path).parent, f"{product_name}.app")
+        os.rename(app_path, new_app_path)
+        app_path = new_app_path
     if product_version:
         pl["CFBundleShortVersionString"] = product_version
     if copyright:
         pl["NSHumanReadableCopyright"] = copyright
 
     __save_info_plist(app_path, pl)
+
+    return app_path
 
 
 def assemble_app_bundle(app_path, tar_path):

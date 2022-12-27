@@ -157,7 +157,7 @@ class Command(BaseCommand):
                             update_flet_view_icon(app_path, icon_path)
 
                         # version info
-                        version_info_path = update_flet_view_version_info(
+                        app_path = update_flet_view_version_info(
                             app_path=app_path,
                             product_name=options.product_name,
                             product_version=options.product_version,
