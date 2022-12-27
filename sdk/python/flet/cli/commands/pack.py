@@ -134,18 +134,38 @@ class Command(BaseCommand):
                         pyi_args.extend(["--version-file", version_info_path])
 
                 elif is_macos():
-                    from flet.__pyinstaller.macos_utils import update_flet_view_icon
+                    from flet.__pyinstaller.macos_utils import (
+                        assemble_app_bundle,
+                        unpack_app_bundle,
+                        update_flet_view_icon,
+                        update_flet_view_version_info,
+                    )
 
                     tar_path = Path(hook_config.temp_bin_dir).joinpath(
                         "flet-macos-amd64.tar.gz"
                     )
                     if tar_path.exists():
+
+                        # unpack
+                        app_path = unpack_app_bundle(tar_path)
+
                         # icon
                         if options.icon:
                             icon_path = options.icon
                             if not Path(icon_path).is_absolute():
                                 icon_path = Path(os.getcwd()).joinpath(icon_path)
-                            update_flet_view_icon(str(tar_path), icon_path)
+                            update_flet_view_icon(app_path, icon_path)
+
+                        # version info
+                        version_info_path = update_flet_view_version_info(
+                            app_path=app_path,
+                            product_name=options.product_name,
+                            product_version=options.product_version,
+                            copyright=options.copyright,
+                        )
+
+                        # assemble
+                        assemble_app_bundle(app_path, tar_path)
 
             # run PyInstaller!
             PyInstaller.__main__.run(pyi_args)
@@ -155,7 +175,7 @@ class Command(BaseCommand):
                 hook_config.temp_bin_dir
             ):
                 print("Deleting temp directory:", hook_config.temp_bin_dir)
-                shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
+                # shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
         except ImportError:
             print("Please install PyInstaller module to use flet package command.")
             exit(1)
