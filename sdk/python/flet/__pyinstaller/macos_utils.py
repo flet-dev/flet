@@ -31,7 +31,7 @@ def update_flet_view_icon(app_path, icon_path):
     )
 
     # patch icon
-    print("Copying icons from %s", normalized_icon_path)
+    print("Copying icons from", normalized_icon_path)
     shutil.copy(
         normalized_icon_path,
         os.path.join(app_path, "Contents", "Resources", icon_file),
@@ -46,6 +46,7 @@ def update_flet_view_icon(app_path, icon_path):
 
 def update_flet_view_version_info(
     app_path,
+    bundle_id,
     product_name,
     product_version,
     copyright,
@@ -54,6 +55,8 @@ def update_flet_view_version_info(
 
     pl = __load_info_plist(app_path)
 
+    if bundle_id:
+        pl["CFBundleIdentifier"] = bundle_id
     if product_name:
         pl["CFBundleName"] = product_name
         pl["CFBundleDisplayName"] = product_name

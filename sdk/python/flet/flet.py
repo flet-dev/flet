@@ -422,7 +422,12 @@ def open_flet_view(page_url, hidden):
         else:
             logging.info(f"Flet View found in: {temp_flet_dir}")
 
-        app_path = temp_flet_dir.joinpath("Flet.app")
+        app_name = None
+        for f in os.listdir(temp_flet_dir):
+            if f.endswith(".app"):
+                app_name = f
+        assert app_name is not None, f"Application bundle not found in {temp_flet_dir}"
+        app_path = temp_flet_dir.joinpath(app_name)
         args = ["open", str(app_path), "-n", "-W", "--args", page_url]
     elif is_linux():
         # build version-specific path to flet folder

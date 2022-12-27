@@ -43,32 +43,37 @@ class Command(BaseCommand):
         parser.add_argument(
             "--product-name",
             dest="product_name",
-            help="executable product name",
+            help="executable product name (Windows, macOS)",
         )
         parser.add_argument(
             "--file-description",
             dest="file_description",
-            help="executable file description",
+            help="executable file description (Windows)",
         )
         parser.add_argument(
             "--product-version",
             dest="product_version",
-            help="executable product version (any string)",
+            help="executable product version, any string (Windows, macOS)",
         )
         parser.add_argument(
             "--file-version",
             dest="file_version",
-            help="executable file version (n.n.n.n)",
+            help="executable file version, n.n.n.n (Windows)",
         )
         parser.add_argument(
             "--company-name",
             dest="company_name",
-            help="executable companyname",
+            help="executable companyname (Windows)",
         )
         parser.add_argument(
             "--copyright",
             dest="copyright",
-            help="executable copyright",
+            help="executable copyright (Windows, macOS)",
+        )
+        parser.add_argument(
+            "--bundle-id",
+            dest="bundle_id",
+            help="bundle identifier (macOS)",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -159,6 +164,7 @@ class Command(BaseCommand):
                         # version info
                         app_path = update_flet_view_version_info(
                             app_path=app_path,
+                            bundle_id=options.bundle_id,
                             product_name=options.product_name,
                             product_version=options.product_version,
                             copyright=options.copyright,
@@ -175,7 +181,7 @@ class Command(BaseCommand):
                 hook_config.temp_bin_dir
             ):
                 print("Deleting temp directory:", hook_config.temp_bin_dir)
-                # shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
+                shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
         except ImportError:
             print("Please install PyInstaller module to use flet package command.")
             exit(1)
