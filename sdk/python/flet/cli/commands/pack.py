@@ -16,14 +16,6 @@ class Command(BaseCommand):
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument("script", type=str, help="path to a Python script")
         parser.add_argument(
-            "-F",
-            "--onefile",
-            dest="onefile",
-            action="store_true",
-            default=False,
-            help="create a one-file bundled executable",
-        )
-        parser.add_argument(
             "-i",
             "--icon",
             dest="icon",
@@ -43,7 +35,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--product-name",
             dest="product_name",
-            help="executable product name (Windows, macOS)",
+            help="executable product name (Windows) or bundle name (macOS)",
         )
         parser.add_argument(
             "--file-description",
@@ -53,7 +45,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--product-version",
             dest="product_version",
-            help="executable product version, any string (Windows, macOS)",
+            help="executable product version (Windows) or bundle version (macOS)",
         )
         parser.add_argument(
             "--file-version",
@@ -63,12 +55,12 @@ class Command(BaseCommand):
         parser.add_argument(
             "--company-name",
             dest="company_name",
-            help="executable companyname (Windows)",
+            help="executable company name (Windows)",
         )
         parser.add_argument(
             "--copyright",
             dest="copyright",
-            help="executable copyright (Windows, macOS)",
+            help="executable (Windows) or bundle (macOS) copyright",
         )
         parser.add_argument(
             "--bundle-id",
@@ -93,9 +85,7 @@ class Command(BaseCommand):
 
             from flet.__pyinstaller.utils import copy_flet_bin
 
-            pyi_args = [options.script, "--noconsole", "--noconfirm"]
-            if options.onefile:
-                pyi_args.extend(["--onefile"])
+            pyi_args = [options.script, "--noconsole", "--noconfirm", "--onefile"]
             if options.icon:
                 pyi_args.extend(["--icon", options.icon])
             if options.name:
