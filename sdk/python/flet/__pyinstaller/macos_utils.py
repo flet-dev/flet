@@ -40,6 +40,7 @@ def update_flet_view_icon(app_path, icon_path):
     # update icon file name
     pl = __load_info_plist(app_path)
     pl["CFBundleIconFile"] = icon_file
+    del pl["CFBundleIconName"]
     __save_info_plist(app_path, pl)
 
 
