@@ -25,7 +25,7 @@ class Command(BaseCommand):
             "-n",
             "--name",
             dest="name",
-            help="name for the generated executable",
+            help="name for the generated executable (Windows) or app bundle (macOS)",
         )
         parser.add_argument(
             "--add-data",
