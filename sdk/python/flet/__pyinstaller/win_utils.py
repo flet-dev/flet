@@ -21,7 +21,7 @@ def update_flet_view_icon(exe_path, icon_path):
         icon_path, ("exe", "ico"), "ico", os.getcwd()
     )
     icon = IconFile(normalized_icon_path)
-    print("Copying icons from %s", normalized_icon_path)
+    print("Copying icons from", normalized_icon_path)
 
     hdst = win32api.BeginUpdateResource(exe_path, 0)
 
