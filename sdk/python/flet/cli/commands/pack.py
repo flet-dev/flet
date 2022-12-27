@@ -92,6 +92,8 @@ class Command(BaseCommand):
                 pyi_args.extend(["--name", options.name])
             if options.add_data:
                 pyi_args.extend(["--add-data", options.add_data])
+            if options.bundle_id:
+                pyi_args.extend(["--osx-bundle-identifier", options.bundle_id])
 
             # copy "bin"
             hook_config.temp_bin_dir = copy_flet_bin()
