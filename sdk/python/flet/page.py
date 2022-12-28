@@ -364,8 +364,9 @@ class Page(Control):
         on_open_authorization_url=None,
         complete_page_html: Optional[str] = None,
         redirect_to_page=False,
+        authorization=Authorization
     ):
-        self.__authorization = Authorization(
+        self.__authorization = authorization(
             provider,
             fetch_user=fetch_user,
             fetch_groups=fetch_groups,
