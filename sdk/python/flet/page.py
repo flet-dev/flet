@@ -8,8 +8,9 @@ from typing import Any, cast
 from urllib.parse import urlparse
 
 from beartype import beartype
-from beartype.typing import Dict, List, Optional
+from beartype.typing import Dict, List, Optional, Type
 
+from flet.metaconfig import BaseConfig
 from flet import constants
 from flet.app_bar import AppBar
 from flet.auth.authorization import Authorization
@@ -158,6 +159,9 @@ class Page(Control):
 
     def get_control(self, id):
         return self._index.get(id)
+    
+    def from_config(self, config: Type[BaseConfig]):
+        config._set_page_attrs(self, config.__name__)
 
     def _before_build_command(self):
         super()._before_build_command()
