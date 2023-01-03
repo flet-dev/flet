@@ -114,7 +114,7 @@ class Command(BaseCommand):
                         if options.icon:
                             icon_path = options.icon
                             if not Path(icon_path).is_absolute():
-                                icon_path = Path(os.getcwd()).joinpath(icon_path)
+                                icon_path = str(Path(os.getcwd()).joinpath(icon_path))
                             update_flet_view_icon(str(exe_path), icon_path)
 
                         # version info
@@ -150,7 +150,7 @@ class Command(BaseCommand):
                         if options.icon:
                             icon_path = options.icon
                             if not Path(icon_path).is_absolute():
-                                icon_path = Path(os.getcwd()).joinpath(icon_path)
+                                icon_path = str(Path(os.getcwd()).joinpath(icon_path))
                             update_flet_view_icon(app_path, icon_path)
 
                         # version info
@@ -174,6 +174,6 @@ class Command(BaseCommand):
             ):
                 print("Deleting temp directory:", hook_config.temp_bin_dir)
                 shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
-        except ImportError:
-            print("Please install PyInstaller module to use flet package command.")
+        except ImportError as e:
+            print("Please install PyInstaller module to use flet pack command:", e)
             exit(1)
