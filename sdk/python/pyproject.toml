@@ -35,7 +35,8 @@ tests = [
     "pytest>=6.1.2",
 ]
 dev = [
-    "pre-commit>=2.17.0"]
+    "pre-commit>=2.17.0",
+]
 
 [project.scripts]
 flet = "flet.cli.cli:main"
