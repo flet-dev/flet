@@ -106,8 +106,8 @@ class Command(BaseCommand):
                         update_flet_view_version_info,
                     )
 
-                    exe_path = Path(hook_config.temp_bin_dir).joinpath(
-                        "flet", "flet.exe"
+                    exe_path = str(
+                        Path(hook_config.temp_bin_dir).joinpath("flet", "flet.exe")
                     )
                     if os.path.exists(exe_path):
                         # icon
@@ -115,7 +115,7 @@ class Command(BaseCommand):
                             icon_path = options.icon
                             if not Path(icon_path).is_absolute():
                                 icon_path = str(Path(os.getcwd()).joinpath(icon_path))
-                            update_flet_view_icon(str(exe_path), icon_path)
+                            update_flet_view_icon(exe_path, icon_path)
 
                         # version info
                         version_info_path = update_flet_view_version_info(
