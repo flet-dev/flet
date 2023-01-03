@@ -300,8 +300,8 @@ for:
 
     build_script:
       - cd studio/client/ios
+      - rvm use 3.0
       - ruby --version
-      - gem install bundler:2.3.11
       - bundle install
       - sh: |
           export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
@@ -338,8 +338,9 @@ for:
       # Flutter iOS client
       - cd client
       - cd ios
+      - rvm use 3.0
       - ruby --version
-      - bundle install --path vendor/bundle
+      - bundle install
       - sh: |
           export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
           if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
