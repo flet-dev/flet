@@ -174,6 +174,6 @@ class Command(BaseCommand):
             ):
                 print("Deleting temp directory:", hook_config.temp_bin_dir)
                 shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
-        except ImportError:
-            print("Please install PyInstaller module to use flet package command.")
+        except ImportError as e:
+            print("Please install PyInstaller module to use flet pack command:", e)
             exit(1)
