@@ -114,7 +114,7 @@ class Command(BaseCommand):
                         if options.icon:
                             icon_path = options.icon
                             if not Path(icon_path).is_absolute():
-                                icon_path = Path(os.getcwd()).joinpath(icon_path)
+                                icon_path = str(Path(os.getcwd()).joinpath(icon_path))
                             update_flet_view_icon(str(exe_path), icon_path)
 
                         # version info
@@ -150,7 +150,7 @@ class Command(BaseCommand):
                         if options.icon:
                             icon_path = options.icon
                             if not Path(icon_path).is_absolute():
-                                icon_path = Path(os.getcwd()).joinpath(icon_path)
+                                icon_path = str(Path(os.getcwd()).joinpath(icon_path))
                             update_flet_view_icon(app_path, icon_path)
 
                         # version info
