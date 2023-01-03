@@ -128,6 +128,15 @@ for:
       - flutter test
       - echo "TODO"
 
+    deploy_script:
+      # publish package
+      - sh: |
+          #if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
+              mkdir -p $HOME/.config/dart
+              echo $PUB_DEV_TOKEN | base64 --decode > $HOME/.config/dart/pub-credentials.json
+              dart pub publish   
+          #fi
+
   # ======================================
   #      Build Flet View for Windows
   # ======================================
