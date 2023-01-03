@@ -1,3 +1,7 @@
+## 0.3.2
+
+* Fix `flet pack` command on Windows and macOS ([#795](https://github.com/flet-dev/flet/issues/795))
+
 ## 0.3.1
 
 * Fixed Flutter package CHANGELOG and README.
