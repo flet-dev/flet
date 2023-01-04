@@ -25,7 +25,7 @@ class GitHubOAuthProvider(OAuthProvider):
             teams_resp = client.send(self.__get_user_teams_request(access_token))
             return self.__complete_fetch_groups(teams_resp)
 
-    async def _fetch_groups_sync(self, access_token: str) -> List[Group]:
+    async def _fetch_groups_async(self, access_token: str) -> List[Group]:
         async with httpx.AsyncClient() as client:
             teams_resp = await client.send(self.__get_user_teams_request(access_token))
             return self.__complete_fetch_groups(teams_resp)
@@ -54,14 +54,14 @@ class GitHubOAuthProvider(OAuthProvider):
         with httpx.Client() as client:
             user_resp = client.send(user_req)
             emails_resp = client.send(emails_req)
+            return self.__complete_fetch_user_details(user_resp, emails_resp)
 
-        uj = json.loads(user_resp.text)
-        ej = json.loads(emails_resp.text)
-        for e in ej:
-            if e["primary"]:
-                uj["email"] = e["email"]
-                break
-        return User(uj, id=str(uj["id"]))
+    async def _fetch_user_async(self, access_token: str) -> Optional[User]:
+        user_req, emails_req = self.__get_user_details_requests(access_token)
+        async with httpx.AsyncClient() as client:
+            user_resp = await client.send(user_req)
+            emails_resp = await client.send(emails_req)
+            return self.__complete_fetch_user_details(user_resp, emails_resp)
 
     def __get_user_details_requests(self, access_token):
         headers = {"Authorization": "Bearer {}".format(access_token)}
@@ -69,3 +69,12 @@ class GitHubOAuthProvider(OAuthProvider):
             httpx.Request("GET", "https://api.github.com/user", headers=headers),
             httpx.Request("GET", "https://api.github.com/user/emails", headers=headers),
         )
+
+    def __complete_fetch_user_details(self, user_resp, emails_resp):
+        uj = json.loads(user_resp.text)
+        ej = json.loads(emails_resp.text)
+        for e in ej:
+            if e["primary"]:
+                uj["email"] = e["email"]
+                break
+        return User(uj, id=str(uj["id"]))
