@@ -516,7 +516,7 @@ def __locate_and_unpack_flet_view(page_url, hidden):
         flet_path = which("flet", sys.argv[0])
         if flet_path and "/Contents/MacOS/" in flet_path:
             logging.info(f"Flet.app found in PATH: {flet_path}")
-            app_path = str(Path(flet_path).parent.parent.parent)
+            temp_flet_dir = Path(flet_path).parent.parent.parent
         else:
             # check if flet_view.app exists in a temp directory
             if not temp_flet_dir.exists():
@@ -526,12 +526,12 @@ def __locate_and_unpack_flet_view(page_url, hidden):
                 if not tar_file.exists():
                     tar_file = __download_flet_client(gz_filename)
 
-            logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
-            temp_flet_dir.mkdir(parents=True, exist_ok=True)
-            with tarfile.open(str(tar_file), "r:gz") as tar_arch:
-                safe_tar_extractall(tar_arch, str(temp_flet_dir))
-        else:
-            logging.info(f"Flet View found in: {temp_flet_dir}")
+                logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
+                temp_flet_dir.mkdir(parents=True, exist_ok=True)
+                with tarfile.open(str(tar_file), "r:gz") as tar_arch:
+                    safe_tar_extractall(tar_arch, str(temp_flet_dir))
+            else:
+                logging.info(f"Flet View found in: {temp_flet_dir}")
 
         app_name = None
         for f in os.listdir(temp_flet_dir):
