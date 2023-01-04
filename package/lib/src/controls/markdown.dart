@@ -26,7 +26,7 @@ class MarkdownControl extends StatelessWidget {
     final ws = FletAppServices.of(context).ws;
 
     var value = control.attrString("value", "")!;
-    var codeTheme = control.attrString("codeTheme", "github")!;
+    var codeTheme = control.attrString("codeTheme", "")!;
     md.ExtensionSet extensionSet = md.ExtensionSet.none;
     switch (control.attrString("extensionSet", "")!.toLowerCase()) {
       case "commonmark":
@@ -60,7 +60,8 @@ class MarkdownControl extends StatelessWidget {
               imageDirectory: getBaseUri(pageUri!).toString(),
               extensionSet: extensionSet,
               builders: {
-                'code': CodeElementBuilder(codeTheme, mdStyleSheet),
+                'code':
+                    CodeElementBuilder(codeTheme.toLowerCase(), mdStyleSheet),
               },
               styleSheet: mdStyleSheet,
               onTapLink: (String text, String? href, String title) {
@@ -105,7 +106,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
         // Specify highlight theme
         // All available themes are listed in `themes` folder
-        theme: themeMap[codeTheme] ?? themeMap["github"]!,
+        theme: themeMap[codeTheme] ?? {},
 
         // Specify padding
         padding: mdStyleSheet.codeblockPadding,
