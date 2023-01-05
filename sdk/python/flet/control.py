@@ -1,7 +1,5 @@
 import datetime as dt
 import json
-import threading
-import asyncio
 from difflib import SequenceMatcher
 from typing import TYPE_CHECKING, Any, Union
 
@@ -52,8 +50,6 @@ class Control:
         self.__data: Any = None
         self.data = data
         self.__event_handlers = {}
-        self._lock = threading.Lock()
-        self._async_lock = asyncio.Lock()
         if ref:
             ref.current = self
 

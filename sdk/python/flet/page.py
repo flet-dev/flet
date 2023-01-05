@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import threading
@@ -40,6 +41,7 @@ from flet.types import (
     ThemeMode,
     ThemeModeString,
 )
+from flet.utils import is_asyncio
 from flet.view import View
 
 try:
@@ -82,6 +84,9 @@ class Page(Control):
         self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
         self._index = {self._Control__uid: self}  # index with all page controls
+
+        self.__lock = threading.Lock() if not is_asyncio() else None
+        self.__async_lock = asyncio.Lock() if is_asyncio() else None
 
         self.__views = [View()]
         self.__default_view = self.__views[0]
@@ -217,7 +222,7 @@ class Page(Control):
         self._set_attr("windowLeft", values[9], False)
 
     def update(self, *controls):
-        with self._lock:
+        with self.__lock:
             if len(controls) == 0:
                 r = self.__update(self)
             else:
@@ -225,7 +230,7 @@ class Page(Control):
         self.__handle_mount_unmount(*r)
 
     async def update_async(self, *controls):
-        async with self._async_lock:
+        async with self.__async_lock:
             if len(controls) == 0:
                 r = await self.__update_async(self)
             else:
@@ -233,19 +238,19 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def add(self, *controls):
-        with self._lock:
+        with self.__lock:
             self._controls.extend(controls)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     async def add_async(self, *controls):
-        async with self._async_lock:
+        async with self.__async_lock:
             self._controls.extend(controls)
             r = await self.__update_async(self)
         await self.__handle_mount_unmount_async(*r)
 
     def insert(self, at, *controls):
-        with self._lock:
+        with self.__lock:
             n = at
             for control in controls:
                 self._controls.insert(n, control)
@@ -254,7 +259,7 @@ class Page(Control):
         self.__handle_mount_unmount(*r)
 
     async def insert_async(self, at, *controls):
-        async with self._async_lock:
+        async with self.__async_lock:
             n = at
             for control in controls:
                 self._controls.insert(n, control)
@@ -263,39 +268,39 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def remove(self, *controls):
-        with self._lock:
+        with self.__lock:
             for control in controls:
                 self._controls.remove(control)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     async def remove_async(self, *controls):
-        async with self._async_lock:
+        async with self.__async_lock:
             for control in controls:
                 self._controls.remove(control)
             r = await self.__update_async(self)
         await self.__handle_mount_unmount_async(*r)
 
     def remove_at(self, index):
-        with self._lock:
+        with self.__lock:
             self._controls.pop(index)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     async def remove_at_async(self, index):
-        async with self._async_lock:
+        async with self.__async_lock:
             self._controls.pop(index)
             r = await self.__update_async(self)
         await self.__handle_mount_unmount_async(*r)
 
     def clean(self):
-        with self._lock:
+        with self.__lock:
             self._controls.clear()
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     async def clean_async(self):
-        async with self._async_lock:
+        async with self.__async_lock:
             self._controls.clear()
             r = await self.__update_async(self)
         await self.__handle_mount_unmount_async(*r)
@@ -356,17 +361,17 @@ class Page(Control):
             await ctrl.did_mount_async()
 
     def error(self, message=""):
-        with self._lock:
+        with self.__lock:
             self._send_command("error", [message])
 
     async def error_async(self, message=""):
-        async with self._async_lock:
+        async with self.__async_lock:
             await self._send_command_async("error", [message])
 
     def on_event(self, e: Event):
         logging.info(f"page.on_event: {e.target} {e.name} {e.data}")
 
-        with self._lock:
+        with self.__lock:
             if e.target == "page" and e.name == "change":
                 self.__on_page_change_event(e.data)
 
@@ -381,7 +386,7 @@ class Page(Control):
         logging.info(f"page.on_event_async: {e.target} {e.name} {e.data}")
 
         if e.target == "page" and e.name == "change":
-            async with self._async_lock:
+            async with self.__async_lock:
                 self.__on_page_change_event(e.data)
 
         elif e.target in self._index:
@@ -454,14 +459,13 @@ class Page(Control):
         on_open_authorization_url=None,
         complete_page_html: Optional[str] = None,
         redirect_to_page=False,
-        authorization=Authorization
+        authorization=Authorization,
     ):
         self.__authorization = authorization(
             provider,
             fetch_user=fetch_user,
             fetch_groups=fetch_groups,
             scope=scope,
-            saved_token=saved_token,
         )
         if saved_token == None:
             authorization_url, state = self.__authorization.get_authorization_data()
@@ -483,6 +487,7 @@ class Page(Control):
                     authorization_url, "flet_oauth_signin", web_popup_window=self.web
                 )
         else:
+            self.__authorization.dehydrate_token(saved_token)
             self.__on_login.get_handler()(LoginEvent(error="", error_description=""))
         return self.__authorization
 
