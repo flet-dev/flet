@@ -25,6 +25,7 @@ PageTransitionString = Literal["fadeUpwards", "openUpwards", "zoom", "cupertino"
 
 
 class PageTransitionTheme(Enum):
+    NONE = "none"
     FADE_UPWARDS = "fadeUpwards"
     OPEN_UPWARDS = "openUpwards"
     ZOOM = "zoom"
