@@ -74,6 +74,10 @@ def is_asyncio():
         return False
 
 
+def is_coroutine(method):
+    return inspect.iscoroutinefunction(method)
+
+
 # https://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
 def which(program, exclude_exe=None):
     import os

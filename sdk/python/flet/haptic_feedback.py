@@ -11,7 +11,7 @@ class HapticFeedback(CallableControl):
     Allows access to the haptic feedback interface on the device.
 
     It is non-visual and should be added to `page.overlay` list.
-    
+
     Example:
     ```
     import flet as ft
@@ -34,6 +34,7 @@ class HapticFeedback(CallableControl):
 
     Online docs: https://flet.dev/docs/controls/hapticfeedback
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,
@@ -55,11 +56,23 @@ class HapticFeedback(CallableControl):
     def heavy_impact(self):
         self._call_method("heavy_impact", [], wait_for_result=False)
 
+    async def heavy_impact_async(self):
+        await self._call_method_async("heavy_impact", [], wait_for_result=False)
+
     def light_impact(self):
         self._call_method("light_impact", [], wait_for_result=False)
+
+    async def light_impact_async(self):
+        await self._call_method_async("light_impact", [], wait_for_result=False)
 
     def medium_impact(self):
         self._call_method("medium_impact", [], wait_for_result=False)
 
+    async def medium_impact_async(self):
+        await self._call_method_async("medium_impact", [], wait_for_result=False)
+
     def vibrate(self):
         self._call_method("vibrate", [], wait_for_result=False)
+
+    async def vibrate_async(self):
+        await self._call_method_async("vibrate", [], wait_for_result=False)

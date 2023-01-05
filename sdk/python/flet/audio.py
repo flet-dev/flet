@@ -1,12 +1,10 @@
-import dataclasses
-import json
-import threading
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from beartype import beartype
+from flet.callable_control import CallableControl
 
-from flet.control import Control, OptionalNumber
+from flet.control import OptionalNumber
 from flet.ref import Ref
 
 
@@ -16,21 +14,7 @@ class ReleaseMode(Enum):
     STOP = "stop"
 
 
-@dataclasses.dataclass
-class AudioMethodCall:
-    i: int
-    n: str
-    p: List[str]
-
-
-@dataclasses.dataclass
-class AudioMethodResults:
-    i: int
-    r: Optional[str]
-    e: Optional[str]
-
-
-class Audio(Control):
+class Audio(CallableControl):
     """
     A control to simultaneously play multiple audio files. Works on macOS, Linux, Windows, iOS, Android and web. Based on audioplayers Flutter widget (https://pub.dev/packages/audioplayers).
 
@@ -57,6 +41,7 @@ class Audio(Control):
 
     Online docs: https://flet.dev/docs/controls/audio
     """
+
     def __init__(
         self,
         src: Optional[str] = None,
@@ -76,16 +61,12 @@ class Audio(Control):
         on_seek_complete=None,
     ):
 
-        Control.__init__(
+        CallableControl.__init__(
             self,
             ref=ref,
             data=data,
         )
 
-        self.__call_counter = 0
-        self.__calls: Dict[int, threading.Event] = {}
-        self.__results: Dict[threading.Event, tuple[Optional[str], Optional[str]]] = {}
-        self._add_event_handler("result", self._on_result)
         self.src = src
         self.src_base64 = src_base64
         self.autoplay = autoplay
@@ -105,17 +86,34 @@ class Audio(Control):
     def play(self):
         self._call_method("play", params=[], wait_for_result=False)
 
+    async def play_async(self):
+        await self._call_method_async("play", params=[], wait_for_result=False)
+
     def pause(self):
         self._call_method("pause", params=[], wait_for_result=False)
+
+    async def pause_async(self):
+        await self._call_method_async("pause", params=[], wait_for_result=False)
 
     def resume(self):
         self._call_method("resume", params=[], wait_for_result=False)
 
+    async def resume_async(self):
+        await self._call_method_async("resume", params=[], wait_for_result=False)
+
     def release(self):
         self._call_method("release", params=[], wait_for_result=False)
 
+    async def release_async(self):
+        await self._call_method_async("release", params=[], wait_for_result=False)
+
     def seek(self, position_milliseconds: int):
         self._call_method(
+            "seek", params=[str(position_milliseconds)], wait_for_result=False
+        )
+
+    async def seek_async(self, position_milliseconds: int):
+        await self._call_method_async(
             "seek", params=[str(position_milliseconds)], wait_for_result=False
         )
 
@@ -123,43 +121,17 @@ class Audio(Control):
         sr = self._call_method("get_duration", [])
         return int(sr) if sr else None
 
+    async def get_duration_async(self) -> Optional[int]:
+        sr = await self._call_method_async("get_duration", [])
+        return int(sr) if sr else None
+
     def get_current_position(self) -> Optional[int]:
         sr = self._call_method("get_current_position", [])
         return int(sr) if sr else None
 
-    def _call_method(self, name: str, params: List[str], wait_for_result=True) -> Any:
-        m = AudioMethodCall(i=self.__call_counter, n=name, p=params)
-        self.__call_counter += 1
-        self._set_attr_json("method", m)
-
-        evt: Optional[threading.Event] = None
-        if wait_for_result:
-            evt = threading.Event()
-            self.__calls[m.i] = evt
-        self.update()
-
-        if not wait_for_result:
-            return
-
-        assert evt is not None
-        if not evt.wait(5):
-            del self.__calls[m.i]
-            raise Exception(f"Timeout waiting for Audio.{name}({params}) method call")
-        result, err = self.__results.pop(evt)
-        if err != None:
-            raise Exception(err)
-        if result == None:
-            return None
-        return json.loads(result)
-
-    def _on_result(self, e):
-        d = json.loads(e.data)
-        result = AudioMethodResults(**d)
-        evt = self.__calls.pop(result.i, None)
-        if evt == None:
-            return
-        self.__results[evt] = (result.r, result.e)
-        evt.set()
+    async def get_current_position_async(self) -> Optional[int]:
+        sr = await self._call_method_async("get_current_position", [])
+        return int(sr) if sr else None
 
     # src
     @property

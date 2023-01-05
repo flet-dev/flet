@@ -40,7 +40,7 @@ from flet.types import (
     ThemeMode,
     ThemeModeString,
 )
-from flet.utils import is_asyncio
+from flet.utils import is_asyncio, is_coroutine
 from flet.view import View
 
 try:
@@ -145,12 +145,7 @@ class Page(Control):
         self.__method_call_results: Dict[
             Union[threading.Event, asyncio.Event], tuple[Optional[str], Optional[str]]
         ] = {}
-        self._add_event_handler(
-            "invoke_method_result",
-            self.__on_invoke_method_result
-            if not is_asyncio()
-            else self.__on_invoke_method_result_async,
-        )
+        self._add_event_handler("invoke_method_result", self.__on_invoke_method_result)
 
         self.__on_window_event = EventHandler()
         self._add_event_handler("window_event", self.__on_window_event.get_handler())
@@ -400,7 +395,10 @@ class Page(Control):
             ce = ControlEvent(e.target, e.name, e.data, self._index[e.target], self)
             handler = self._index[e.target].event_handlers.get(e.name)
             if handler:
-                await handler(ce)
+                if is_coroutine(handler):
+                    await handler(ce)
+                else:
+                    handler(ce)
 
     def __on_page_change_event(self, data):
         for props in json.loads(data):
@@ -644,8 +642,15 @@ class Page(Control):
     def set_clipboard(self, value: str):
         self.__offstage.clipboard.set_data(value)
 
+    @beartype
+    async def set_clipboard_async(self, value: str):
+        await self.__offstage.clipboard.set_data_async(value)
+
     def get_clipboard(self):
         return self.__offstage.clipboard.get_data()
+
+    async def get_clipboard_async(self):
+        return await self.__offstage.clipboard.get_data_async()
 
     @beartype
     def launch_url(
@@ -828,31 +833,39 @@ class Page(Control):
         self.__method_call_results[evt] = (result.result, result.error)
         evt.set()
 
-    async def __on_invoke_method_result_async(self, e):
-        d = json.loads(e.data)
-        result = InvokeMethodResults(**d)
-        evt = self.__method_calls.pop(result.method_id, None)
-        if evt == None:
-            return
-        self.__method_call_results[evt] = (result.result, result.error)
-        evt.set()
-
     @beartype
     def show_snack_bar(self, snack_bar: SnackBar):
         self.__offstage.snack_bar = snack_bar
         self.__offstage.update()
 
+    @beartype
+    async def show_snack_bar_async(self, snack_bar: SnackBar):
+        self.__offstage.snack_bar = snack_bar
+        await self.__offstage.update_async()
+
     def window_destroy(self):
         self._set_attr("windowDestroy", "true")
         self.update()
+
+    async def window_destroy_async(self):
+        self._set_attr("windowDestroy", "true")
+        await self.update_async()
 
     def window_center(self):
         self._set_attr("windowCenter", str(time.time()))
         self.update()
 
+    async def window_center_async(self):
+        self._set_attr("windowCenter", str(time.time()))
+        await self.update_async()
+
     def window_close(self):
         self._set_attr("windowClose", str(time.time()))
         self.update()
+
+    async def window_close_async(self):
+        self._set_attr("windowClose", str(time.time()))
+        await self.update_async()
 
     # QueryString
     @property
