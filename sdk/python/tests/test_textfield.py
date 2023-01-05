@@ -106,3 +106,17 @@ def test_border_enum():
 
     with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
         r = ft.TextField(border=1)
+
+
+def test_bgcolor_sets_filled():
+    r = ft.TextField(bgcolor=ft.colors.BLUE)
+    assert r.filled is not None and r.filled
+    assert r._get_attr("filled") is not None and r._get_attr("filled")
+
+    r = ft.TextField(bgcolor=ft.colors.BLUE, filled=True)
+    assert r.filled is not None and r.filled
+    assert r._get_attr("filled") is not None and r._get_attr("filled")
+
+    r = ft.TextField(bgcolor=ft.colors.BLUE, filled=False)
+    assert r.filled is not None and not r.filled
+    assert r._get_attr("filled") is not None and not r._get_attr("filled")
