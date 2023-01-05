@@ -34,12 +34,6 @@ requires_python = ">=3.6.1"
 summary = "Validate configuration and produce human readable error messages."
 
 [[package]]
-name = "charset-normalizer"
-version = "2.1.1"
-requires_python = ">=3.6.0"
-summary = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
-
-[[package]]
 name = "colorama"
 version = "0.4.6"
 requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
@@ -204,18 +198,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "requests"
-version = "2.28.1"
-requires_python = ">=3.7, <4"
-summary = "Python HTTP for Humans."
-dependencies = [
-    "certifi>=2017.4.17",
-    "charset-normalizer<3,>=2",
-    "idna<4,>=2.5",
-    "urllib3<1.27,>=1.21.1",
-]
-
-[[package]]
 name = "rfc3986"
 version = "1.5.0"
 summary = "Validating URI References per RFC 3986"
@@ -267,12 +249,6 @@ requires_python = ">=3.7"
 summary = "Backported and Experimental Type Hints for Python 3.7+"
 
 [[package]]
-name = "urllib3"
-version = "1.26.13"
-requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
-summary = "HTTP library with thread-safe connection pooling, file post, and more."
-
-[[package]]
 name = "virtualenv"
 version = "20.17.1"
 requires_python = ">=3.6"
@@ -310,7 +286,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "4.0"
-content_hash = "sha256:08e34ff1aedd581c2a61fe21543a497e828f3fd2b58ad1513120b79ca96906be"
+content_hash = "sha256:56985dab38f0f277a90f27e9e63677cb8632a75f4499101ecab6e6757a1d43ac"
 
 [metadata.files]
 "anyio 3.6.2" = [
@@ -332,10 +308,6 @@ content_hash = "sha256:08e34ff1aedd581c2a61fe21543a497e828f3fd2b58ad1513120b79ca
 "cfgv 3.3.1" = [
     {url = "https://files.pythonhosted.org/packages/6d/82/0a0ebd35bae9981dea55c06f8e6aaf44a49171ad798795c72c6f64cba4c2/cfgv-3.3.1-py2.py3-none-any.whl", hash = "sha256:c6a0883f3917a037485059700b9e75da2464e6c27051014ad85ba6aaa5884426"},
     {url = "https://files.pythonhosted.org/packages/c4/bf/d0d622b660d414a47dc7f0d303791a627663f554345b21250e39e7acb48b/cfgv-3.3.1.tar.gz", hash = "sha256:f5a830efb9ce7a445376bb66ec94c638a9787422f96264c98edc6bdeed8ab736"},
-]
-"charset-normalizer 2.1.1" = [
-    {url = "https://files.pythonhosted.org/packages/a1/34/44964211e5410b051e4b8d2869c470ae8a68ae274953b1c7de6d98bbcf94/charset-normalizer-2.1.1.tar.gz", hash = "sha256:5a3d016c7c547f69d6f81fb0db9449ce888b418b5b9952cc5e6e66843e9dd845"},
-    {url = "https://files.pythonhosted.org/packages/db/51/a507c856293ab05cdc1db77ff4bc1268ddd39f29e7dc4919aa497f0adbec/charset_normalizer-2.1.1-py3-none-any.whl", hash = "sha256:83e9a75d1911279afd89352c68b45348559d1fc0506b054b346651b5e7fee29f"},
 ]
 "colorama 0.4.6" = [
     {url = "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
@@ -455,10 +427,6 @@ content_hash = "sha256:08e34ff1aedd581c2a61fe21543a497e828f3fd2b58ad1513120b79ca
     {url = "https://files.pythonhosted.org/packages/65/e1/824989291d0f01886074fdf9504ba54598f5665bc4dd373b589b87e76608/repath-0.9.0.tar.gz", hash = "sha256:8292139bac6a0e43fd9d70605d4e8daeb25d46672e484ed31a24c7ce0aef0fb7"},
     {url = "https://files.pythonhosted.org/packages/87/ed/92e9b8a3ffc562f21df14ef2538f54e911df29730e1f0d79130a4edc86e7/repath-0.9.0-py3-none-any.whl", hash = "sha256:ee079d6c91faeb843274d22d8f786094ee01316ecfe293a1eb6546312bb6a318"},
 ]
-"requests 2.28.1" = [
-    {url = "https://files.pythonhosted.org/packages/a5/61/a867851fd5ab77277495a8709ddda0861b28163c4613b011bc00228cc724/requests-2.28.1.tar.gz", hash = "sha256:7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"},
-    {url = "https://files.pythonhosted.org/packages/ca/91/6d9b8ccacd0412c08820f72cebaa4f0c0441b5cda699c90f618b6f8a1b42/requests-2.28.1-py3-none-any.whl", hash = "sha256:8fefa2a1a1365bf5520aac41836fbee479da67864514bdb821f31ce07ce65349"},
-]
 "rfc3986 1.5.0" = [
     {url = "https://files.pythonhosted.org/packages/79/30/5b1b6c28c105629cc12b33bdcbb0b11b5bb1880c6cfbd955f9e792921aa8/rfc3986-1.5.0.tar.gz", hash = "sha256:270aaf10d87d0d4e095063c65bf3ddbc6ee3d0b226328ce21e036f946e421835"},
     {url = "https://files.pythonhosted.org/packages/c4/e5/63ca2c4edf4e00657584608bee1001302bbf8c5f569340b78304f2f446cb/rfc3986-1.5.0-py2.py3-none-any.whl", hash = "sha256:a86d6e1f5b1dc238b218b012df0aa79409667bb209e58da56d0b94704e712a97"},
@@ -486,10 +454,6 @@ content_hash = "sha256:08e34ff1aedd581c2a61fe21543a497e828f3fd2b58ad1513120b79ca
 "typing-extensions 4.4.0" = [
     {url = "https://files.pythonhosted.org/packages/0b/8e/f1a0a5a76cfef77e1eb6004cb49e5f8d72634da638420b9ea492ce8305e8/typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},
     {url = "https://files.pythonhosted.org/packages/e3/a7/8f4e456ef0adac43f452efc2d0e4b242ab831297f1bac60ac815d37eb9cf/typing_extensions-4.4.0.tar.gz", hash = "sha256:1511434bb92bf8dd198c12b1cc812e800d4181cfcb867674e0f8279cc93087aa"},
-]
-"urllib3 1.26.13" = [
-    {url = "https://files.pythonhosted.org/packages/65/0c/cc6644eaa594585e5875f46f3c83ee8762b647b51fc5b0fb253a242df2dc/urllib3-1.26.13-py2.py3-none-any.whl", hash = "sha256:47cc05d99aaa09c9e72ed5809b60e7ba354e64b59c9c173ac3018642d8bb41fc"},
-    {url = "https://files.pythonhosted.org/packages/c2/51/32da03cf19d17d46cce5c731967bf58de9bd71db3a379932f53b094deda4/urllib3-1.26.13.tar.gz", hash = "sha256:c083dd0dce68dbfbe1129d5271cb90f9447dea7d52097c6e0126120c521ddea8"},
 ]
 "virtualenv 20.17.1" = [
     {url = "https://files.pythonhosted.org/packages/18/a2/7931d40ecb02b5236a34ac53770f2f6931e3082b7a7dafe915d892d749d6/virtualenv-20.17.1-py3-none-any.whl", hash = "sha256:ce3b1684d6e1a20a3e5ed36795a97dfc6af29bc3970ca8dab93e11ac6094b3c4"},

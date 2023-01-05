@@ -7,7 +7,6 @@ from typing import List, Optional, Tuple
 from flet.utils import is_asyncio
 import httpx
 
-import requests
 from oauthlib.oauth2 import WebApplicationClient
 from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
 
