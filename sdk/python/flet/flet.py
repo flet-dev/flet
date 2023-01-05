@@ -516,7 +516,7 @@ def __locate_and_unpack_flet_view(page_url, hidden):
         flet_path = which("flet", sys.argv[0])
         if flet_path and "/Contents/MacOS/" in flet_path:
             logging.info(f"Flet.app found in PATH: {flet_path}")
-            temp_flet_dir = Path(flet_path).parent.parent.parent
+            temp_flet_dir = Path(flet_path).parent.parent.parent.parent
         else:
             # check if flet_view.app exists in a temp directory
             if not temp_flet_dir.exists():
@@ -539,7 +539,7 @@ def __locate_and_unpack_flet_view(page_url, hidden):
                 app_name = f
         assert app_name is not None, f"Application bundle not found in {temp_flet_dir}"
         app_path = temp_flet_dir.joinpath(app_name)
-        args = ["open", str(app_path), "-n", "-W", "--args", page_url]
+        args = ["open", str(app_path), "-n", "-W", "--args", page_url, pid_file]
     elif is_linux():
         # build version-specific path to flet folder
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")

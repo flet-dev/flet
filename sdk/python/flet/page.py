@@ -5,13 +5,12 @@ import threading
 import time
 import uuid
 from dataclasses import dataclass
-from typing import Any, Tuple, cast
+from typing import Any, Tuple, Union, cast
 from urllib.parse import urlparse
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
 
-from flet import constants
 from flet.app_bar import AppBar
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
@@ -110,7 +109,10 @@ class Page(Control):
 
         # authorize/login/logout
         self.__on_login = EventHandler()
-        self._add_event_handler("authorize", self.__on_authorize)
+        self._add_event_handler(
+            "authorize",
+            self.__on_authorize if not is_asyncio() else self.__on_authorize_async,
+        )
         self.__on_logout = EventHandler()
 
         # route_change
@@ -139,11 +141,16 @@ class Page(Control):
             "keyboard_event", self.__on_keyboard_event.get_handler()
         )
 
-        self.__method_calls: Dict[str, threading.Event] = {}
+        self.__method_calls: Dict[str, Union[threading.Event, asyncio.Event]] = {}
         self.__method_call_results: Dict[
-            threading.Event, tuple[Optional[str], Optional[str]]
+            Union[threading.Event, asyncio.Event], tuple[Optional[str], Optional[str]]
         ] = {}
-        self._add_event_handler("invoke_method_result", self._on_invoke_method_result)
+        self._add_event_handler(
+            "invoke_method_result",
+            self.__on_invoke_method_result
+            if not is_asyncio()
+            else self.__on_invoke_method_result_async,
+        )
 
         self.__on_window_event = EventHandler()
         self._add_event_handler("window_event", self.__on_window_event.get_handler())
@@ -467,7 +474,7 @@ class Page(Control):
             fetch_groups=fetch_groups,
             scope=scope,
         )
-        if saved_token == None:
+        if saved_token is None:
             authorization_url, state = self.__authorization.get_authorization_data()
             auth_attrs = {"state": state}
             if complete_page_html:
@@ -489,6 +496,50 @@ class Page(Control):
         else:
             self.__authorization.dehydrate_token(saved_token)
             self.__on_login.get_handler()(LoginEvent(error="", error_description=""))
+        return self.__authorization
+
+    async def login_async(
+        self,
+        provider: OAuthProvider,
+        fetch_user=True,
+        fetch_groups=False,
+        scope: Optional[List[str]] = None,
+        saved_token: Optional[str] = None,
+        on_open_authorization_url=None,
+        complete_page_html: Optional[str] = None,
+        redirect_to_page=False,
+        authorization=Authorization,
+    ):
+        self.__authorization = authorization(
+            provider,
+            fetch_user=fetch_user,
+            fetch_groups=fetch_groups,
+            scope=scope,
+        )
+        if saved_token is None:
+            authorization_url, state = self.__authorization.get_authorization_data()
+            auth_attrs = {"state": state}
+            if complete_page_html:
+                auth_attrs["completePageHtml"] = complete_page_html
+            if redirect_to_page:
+                up = urlparse(provider.redirect_url)
+                auth_attrs["completePageUrl"] = up._replace(
+                    path=self.__conn.page_name
+                ).geturl()
+            result = await self._send_command_async("oauthAuthorize", attrs=auth_attrs)
+            if result.error != "":
+                raise Exception(result.error)
+            if on_open_authorization_url:
+                await on_open_authorization_url(authorization_url)
+            else:
+                await self.launch_url_async(
+                    authorization_url, "flet_oauth_signin", web_popup_window=self.web
+                )
+        else:
+            await self.__authorization.dehydrate_token_async(saved_token)
+            await self.__on_login.get_handler()(
+                LoginEvent(error="", error_description="")
+            )
         return self.__authorization
 
     def __on_authorize(self, e):
@@ -518,9 +569,42 @@ class Page(Control):
                 login_evt.error = str(ex)
         self.__on_login.get_handler()(login_evt)
 
+    async def __on_authorize_async(self, e):
+        assert self.__authorization is not None
+        d = json.loads(e.data)
+        state = d["state"]
+        assert state == self.__authorization.state
+
+        if not self.web:
+            if self.platform in ["ios", "android"]:
+                # close web view on mobile
+                await self.close_in_app_web_view_async()
+            else:
+                # activate desktop window
+                await self.window_to_front_async()
+
+        login_evt = LoginEvent(
+            error=d["error"], error_description=d["error_description"]
+        )
+        if login_evt.error == "":
+            # perform token request
+            code = d["code"]
+            assert code not in [None, ""]
+            try:
+                await self.__authorization.request_token_async(code)
+            except Exception as ex:
+                login_evt.error = str(ex)
+        await self.__on_login.get_handler()(login_evt)
+
     def logout(self):
         self.__authorization = None
         self.__on_logout.get_handler()(
+            ControlEvent(target="page", name="logout", data="", control=self, page=self)
+        )
+
+    async def logout_async(self):
+        self.__authorization = None
+        await self.__on_logout.get_handler()(
             ControlEvent(target="page", name="logout", data="", control=self, page=self)
         )
 
@@ -572,6 +656,45 @@ class Page(Control):
         window_width: Optional[int] = None,
         window_height: Optional[int] = None,
     ):
+        self.invoke_method(
+            "launchUrl",
+            self.__get_launch_url_args(
+                url=url,
+                web_window_name=web_window_name,
+                web_popup_window=web_popup_window,
+                window_width=window_width,
+                window_height=window_height,
+            ),
+        )
+
+    @beartype
+    async def launch_url_async(
+        self,
+        url: str,
+        web_window_name: Optional[str] = None,
+        web_popup_window: bool = False,
+        window_width: Optional[int] = None,
+        window_height: Optional[int] = None,
+    ):
+        await self.invoke_method_async(
+            "launchUrl",
+            self.__get_launch_url_args(
+                url=url,
+                web_window_name=web_window_name,
+                web_popup_window=web_popup_window,
+                window_width=window_width,
+                window_height=window_height,
+            ),
+        )
+
+    def __get_launch_url_args(
+        self,
+        url: str,
+        web_window_name: Optional[str] = None,
+        web_popup_window: bool = False,
+        window_width: Optional[int] = None,
+        window_height: Optional[int] = None,
+    ):
         args = {"url": url}
         if web_window_name != None:
             args["web_window_name"] = web_window_name
@@ -581,19 +704,34 @@ class Page(Control):
             args["window_width"] = str(window_width)
         if window_height != None:
             args["window_height"] = str(window_height)
-        self.invoke_method("launchUrl", args)
+        return args
 
     @beartype
     def can_launch_url(self, url: str):
         args = {"url": url}
         return self.invoke_method("canLaunchUrl", args, wait_for_result=True) == "true"
 
+    @beartype
+    async def can_launch_url_async(self, url: str):
+        args = {"url": url}
+        return (
+            await self.invoke_method_async("canLaunchUrl", args, wait_for_result=True)
+            == "true"
+        )
+
     def close_in_app_web_view(self):
         self.invoke_method("closeInAppWebView")
+
+    async def close_in_app_web_view_async(self):
+        await self.invoke_method_async("closeInAppWebView")
 
     @beartype
     def window_to_front(self):
         self.invoke_method("windowToFront")
+
+    @beartype
+    async def window_to_front_async(self):
+        await self.invoke_method_async("windowToFront")
 
     def invoke_method(
         self,
@@ -637,7 +775,60 @@ class Page(Control):
             return None
         return result
 
-    def _on_invoke_method_result(self, e):
+    async def invoke_method_async(
+        self,
+        method_name: str,
+        arguments: Optional[Dict[str, str]] = None,
+        wait_for_result: bool = False,
+    ) -> Optional[str]:
+        method_id = uuid.uuid4().hex
+
+        # register callback
+        evt: Optional[asyncio.Event] = None
+        if wait_for_result:
+            evt = asyncio.Event()
+            self.__method_calls[method_id] = evt
+
+        # call method
+        result = await self._send_command_async(
+            "invokeMethod", values=[method_id, method_name], attrs=arguments
+        )
+
+        if result.error != "":
+            if wait_for_result:
+                del self.__method_calls[method_id]
+            raise Exception(result.error)
+
+        if not wait_for_result:
+            return
+
+        assert evt is not None
+
+        try:
+            await asyncio.wait_for(evt.wait(), timeout=5)
+        except TimeoutError:
+            del self.__method_calls[method_id]
+            raise Exception(
+                f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
+            )
+
+        result, err = self.__method_call_results.pop(evt)
+        if err != None:
+            raise Exception(err)
+        if result == None:
+            return None
+        return result
+
+    def __on_invoke_method_result(self, e):
+        d = json.loads(e.data)
+        result = InvokeMethodResults(**d)
+        evt = self.__method_calls.pop(result.method_id, None)
+        if evt == None:
+            return
+        self.__method_call_results[evt] = (result.result, result.error)
+        evt.set()
+
+    async def __on_invoke_method_result_async(self, e):
         d = json.loads(e.data)
         result = InvokeMethodResults(**d)
         evt = self.__method_calls.pop(result.method_id, None)
