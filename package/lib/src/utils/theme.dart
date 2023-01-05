@@ -65,7 +65,25 @@ PageTransitionsBuilder parseTransitionsBuilder(
       return const CupertinoPageTransitionsBuilder();
     case "zoom":
       return const ZoomPageTransitionsBuilder();
+    case "none":
+      return const NoPageTransitionsBuilder();
     default:
       return defaultBuilder;
+  }
+}
+
+class NoPageTransitionsBuilder extends PageTransitionsBuilder {
+  const NoPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T>? route,
+    BuildContext? context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget? child,
+  ) {
+    // only return the child without warping it with animations
+    return child!;
   }
 }
