@@ -39,6 +39,7 @@ tests = [
 ]
 dev = [
     "pre-commit>=2.17.0",
+    "cryptography>=39.0.0",
 ]
 
 [project.scripts]
