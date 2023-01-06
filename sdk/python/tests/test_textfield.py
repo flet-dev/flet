@@ -109,14 +109,23 @@ def test_border_enum():
 
 
 def test_bgcolor_sets_filled():
+    r = ft.TextField()
+    r.bgcolor = ft.colors.BLUE
+    cmd = r._build_add_commands()
+    assert r.filled is not None and r.filled
+    assert r._get_attr("filled") is not None and r._get_attr("filled")
+
     r = ft.TextField(bgcolor=ft.colors.BLUE)
+    cmd = r._build_add_commands()
     assert r.filled is not None and r.filled
     assert r._get_attr("filled") is not None and r._get_attr("filled")
 
     r = ft.TextField(bgcolor=ft.colors.BLUE, filled=True)
+    cmd = r._build_add_commands()
     assert r.filled is not None and r.filled
     assert r._get_attr("filled") is not None and r._get_attr("filled")
 
     r = ft.TextField(bgcolor=ft.colors.BLUE, filled=False)
+    cmd = r._build_add_commands()
     assert r.filled is not None and not r.filled
     assert r._get_attr("filled") is not None and not r._get_attr("filled")
