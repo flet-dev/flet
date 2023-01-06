@@ -171,6 +171,22 @@ class FilePicker(Control):
         self.allow_multiple = allow_multiple
         self.update()
 
+    async def pick_files_async(
+        self,
+        dialog_title: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        allowed_extensions: Optional[List[str]] = None,
+        allow_multiple: Optional[bool] = False,
+    ):
+        self.state = "pickFiles"
+        self.dialog_title = dialog_title
+        self.initial_directory = initial_directory
+        self.file_type = file_type
+        self.allowed_extensions = allowed_extensions
+        self.allow_multiple = allow_multiple
+        await self.update_async()
+
     def save_file(
         self,
         dialog_title: Optional[str] = None,
@@ -187,6 +203,22 @@ class FilePicker(Control):
         self.allowed_extensions = allowed_extensions
         self.update()
 
+    async def save_file_async(
+        self,
+        dialog_title: Optional[str] = None,
+        file_name: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        allowed_extensions: Optional[List[str]] = None,
+    ):
+        self.state = "saveFile"
+        self.dialog_title = dialog_title
+        self.file_name = file_name
+        self.initial_directory = initial_directory
+        self.file_type = file_type
+        self.allowed_extensions = allowed_extensions
+        await self.update_async()
+
     def get_directory_path(
         self,
         dialog_title: Optional[str] = None,
@@ -197,9 +229,23 @@ class FilePicker(Control):
         self.initial_directory = initial_directory
         self.update()
 
+    async def get_directory_path_async(
+        self,
+        dialog_title: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+    ):
+        self.state = "getDirectoryPath"
+        self.dialog_title = dialog_title
+        self.initial_directory = initial_directory
+        await self.update_async()
+
     def upload(self, files: List[FilePickerUploadFile]):
         self.__upload = files
         self.update()
+
+    async def upload_async(self, files: List[FilePickerUploadFile]):
+        self.__upload = files
+        await self.update_async()
 
     # state
     @property
