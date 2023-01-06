@@ -149,6 +149,14 @@ class GridView(ConstrainedControl):
     def _get_children(self):
         return self.__controls
 
+    def clean(self):
+        super().clean()
+        self.__controls.clear()
+
+    async def clean_async(self):
+        await super().clean_async()
+        self.__controls.clear()
+
     # horizontal
     @property
     def horizontal(self) -> Optional[bool]:

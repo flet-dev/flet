@@ -143,6 +143,14 @@ class Row(ConstrainedControl):
     def _get_children(self):
         return self.__controls
 
+    def clean(self):
+        super().clean()
+        self.__controls.clear()
+
+    async def clean_async(self):
+        await super().clean_async()
+        self.__controls.clear()
+
     # tight
     @property
     def tight(self) -> Optional[bool]:

@@ -316,20 +316,42 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def clean(self):
-        assert self.__lock, "Sync method calls are not supported in async app."
-        with self.__lock:
-            self._controls.clear()
-            r = self.__update(self)
-        self.__handle_mount_unmount(*r)
+        self._clean(self)
+        self._controls.clear()
 
     async def clean_async(self):
+        await self._clean_async(self)
+        self._controls.clear()
+
+    def _clean(self, control: Control):
+        assert self.__lock, "Sync method calls are not supported in async app."
+        with self.__lock:
+            control._previous_children.clear()
+            assert control.uid is not None
+            removed_controls = []
+            for child in control._get_children():
+                removed_controls.extend(
+                    self._remove_control_recursively(self.index, child)
+                )
+            self._send_command("clean", [control.uid])
+            for c in removed_controls:
+                c.will_unmount()
+
+    async def _clean_async(self, control: Control):
         assert (
             self.__async_lock
         ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
-            self._controls.clear()
-            r = await self.__update_async(self)
-        await self.__handle_mount_unmount_async(*r)
+            control._previous_children.clear()
+            assert control.uid is not None
+            removed_controls = []
+            for child in control._get_children():
+                removed_controls.extend(
+                    self._remove_control_recursively(self.index, child)
+                )
+            await self._send_command_async("clean", [control.uid])
+            for c in removed_controls:
+                await c.will_unmount_async()
 
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
