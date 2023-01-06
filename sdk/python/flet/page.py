@@ -392,7 +392,9 @@ class Page(Control):
             self._send_command("error", [message])
 
     async def error_async(self, message=""):
-        assert self.__async_lock, "Async method calls are not supported in a regular app."
+        assert (
+            self.__async_lock
+        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             await self._send_command_async("error", [message])
 
