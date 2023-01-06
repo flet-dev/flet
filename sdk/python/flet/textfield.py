@@ -269,6 +269,11 @@ class TextField(FormFieldControl):
     def _get_control_name(self):
         return "textfield"
 
+    def _before_build_command(self):
+        super()._before_build_command()
+        if self.bgcolor is not None and self.filled is None:
+            self.filled = True  # Flutter requires filled = True to display a bgcolor
+
     def focus(self):
         self._set_attr_json("focus", FocusData())
         self.update()
