@@ -10,7 +10,7 @@ import 'flet_server.dart';
 class FletAppServices extends InheritedWidget {
   final String pageUrl;
   final FletAppErrorsHandler? errorsHandler;
-  late final FletServer ws;
+  late final FletServer server;
   late final Store<AppState> store;
 
   FletAppServices(
@@ -20,11 +20,11 @@ class FletAppServices extends InheritedWidget {
       this.errorsHandler})
       : super(key: key, child: child) {
     store = Store<AppState>(appReducer, initialState: AppState.initial());
-    ws = FletServer(store);
+    server = FletServer(store);
     if (errorsHandler != null) {
       errorsHandler!.addListener(() {
         if (store.state.isRegistered) {
-          ws.pageEventFromWeb(
+          server.sendPageEvent(
               eventTarget: "page",
               eventName: "error",
               eventData: errorsHandler!.error!);
@@ -33,7 +33,7 @@ class FletAppServices extends InheritedWidget {
     }
     // connect to a page
     var pageUri = Uri.parse(pageUrl);
-    store.dispatch(PageLoadAction(pageUri, ws));
+    store.dispatch(PageLoadAction(pageUri, server));
   }
 
   @override
@@ -42,7 +42,7 @@ class FletAppServices extends InheritedWidget {
   }
 
   void close() {
-    ws.disconnect();
+    server.disconnect();
   }
 
   static FletAppServices of(BuildContext context) =>

@@ -48,7 +48,7 @@ class _SliderControlState extends State<SliderControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).ws.pageEventFromWeb(
+    FletAppServices.of(context).server.sendPageEvent(
         eventTarget: widget.control.id,
         eventName: _focusNode.hasFocus ? "focus" : "blur",
         eventData: "");
@@ -68,9 +68,9 @@ class _SliderControlState extends State<SliderControl> {
     dispatch(UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
 
     _debounce = Timer(const Duration(milliseconds: 100), () {
-      final ws = FletAppServices.of(context).ws;
-      ws.updateControlProps(props: props);
-      ws.pageEventFromWeb(
+      final server = FletAppServices.of(context).server;
+      server.updateControlProps(props: props);
+      server.sendPageEvent(
           eventTarget: widget.control.id,
           eventName: "change",
           eventData: svalue);
@@ -89,7 +89,7 @@ class _SliderControlState extends State<SliderControl> {
     double max = widget.control.attrDouble("max", 1)!;
     int? divisions = widget.control.attrInt("divisions");
 
-    final ws = FletAppServices.of(context).ws;
+    final server = FletAppServices.of(context).server;
 
     return StoreConnector<AppState, Function>(
         distinct: true,
@@ -124,7 +124,7 @@ class _SliderControlState extends State<SliderControl> {
                   : null,
               onChangeStart: !disabled
                   ? (double value) {
-                      ws.pageEventFromWeb(
+                      server.sendPageEvent(
                           eventTarget: widget.control.id,
                           eventName: "change_start",
                           eventData: value.toString());
@@ -132,7 +132,7 @@ class _SliderControlState extends State<SliderControl> {
                   : null,
               onChangeEnd: !disabled
                   ? (double value) {
-                      ws.pageEventFromWeb(
+                      server.sendPageEvent(
                           eventTarget: widget.control.id,
                           eventName: "change_end",
                           eventData: value.toString());

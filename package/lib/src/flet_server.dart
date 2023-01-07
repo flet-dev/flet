@@ -123,7 +123,7 @@ class FletServer {
             sessionId: _store.state.sessionId)));
   }
 
-  pageEventFromWeb(
+  sendPageEvent(
       {required String eventTarget,
       required String eventName,
       required String eventData}) {

@@ -89,17 +89,17 @@ class _AudioControlState extends State<AudioControl> {
     bool onPositionChanged =
         widget.control.attrBool("onPositionChanged", false)!;
 
-    var ws = FletAppServices.of(context).ws;
+    var server = FletAppServices.of(context).server;
 
     _onDurationChanged = (duration) {
-      ws.pageEventFromWeb(
+      server.sendPageEvent(
           eventTarget: widget.control.id,
           eventName: "duration_changed",
           eventData: duration.inMilliseconds.toString());
     };
 
     _onStateChanged = (state) {
-      ws.pageEventFromWeb(
+      server.sendPageEvent(
           eventTarget: widget.control.id,
           eventName: "state_changed",
           eventData: state.name.toString());
@@ -107,7 +107,7 @@ class _AudioControlState extends State<AudioControl> {
 
     if (onPositionChanged) {
       _onPositionChanged = (duration) {
-        ws.pageEventFromWeb(
+        server.sendPageEvent(
             eventTarget: widget.control.id,
             eventName: "position_changed",
             eventData: duration.toString());
@@ -115,7 +115,7 @@ class _AudioControlState extends State<AudioControl> {
     }
 
     _onSeekComplete = () {
-      ws.pageEventFromWeb(
+      server.sendPageEvent(
           eventTarget: widget.control.id,
           eventName: "seek_complete",
           eventData: "");
@@ -134,7 +134,7 @@ class _AudioControlState extends State<AudioControl> {
       }
 
       if (srcChanged) {
-        ws.pageEventFromWeb(
+        server.sendPageEvent(
             eventTarget: widget.control.id, eventName: "loaded", eventData: "");
       }
 
@@ -180,7 +180,7 @@ class _AudioControlState extends State<AudioControl> {
         var params = List<String>.from(mj["p"] as List);
 
         sendResult(Object? result, String? error) {
-          ws.pageEventFromWeb(
+          server.sendPageEvent(
               eventTarget: widget.control.id,
               eventName: "method_result",
               eventData: json.encode({

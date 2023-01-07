@@ -420,7 +420,7 @@ Widget _opacity(
       opacity: opacity ?? 1.0,
       onEnd: control.attrBool("onAnimationEnd", false)!
           ? () {
-              FletAppServices.of(context).ws.pageEventFromWeb(
+              FletAppServices.of(context).server.sendPageEvent(
                   eventTarget: control.id,
                   eventName: "animation_end",
                   eventData: "opacity");
@@ -473,7 +473,7 @@ Widget _rotatedControl(
         curve: animation.curve,
         onEnd: control.attrBool("onAnimationEnd", false)!
             ? () {
-                FletAppServices.of(context).ws.pageEventFromWeb(
+                FletAppServices.of(context).server.sendPageEvent(
                     eventTarget: control.id,
                     eventName: "animation_end",
                     eventData: "rotation");
@@ -501,7 +501,7 @@ Widget _scaledControl(
         curve: animation.curve,
         onEnd: control.attrBool("onAnimationEnd", false)!
             ? () {
-                FletAppServices.of(context).ws.pageEventFromWeb(
+                FletAppServices.of(context).server.sendPageEvent(
                     eventTarget: control.id,
                     eventName: "animation_end",
                     eventData: "scale");
@@ -530,7 +530,7 @@ Widget _offsetControl(
         curve: animation.curve,
         onEnd: control.attrBool("onAnimationEnd", false)!
             ? () {
-                FletAppServices.of(context).ws.pageEventFromWeb(
+                FletAppServices.of(context).server.sendPageEvent(
                     eventTarget: control.id,
                     eventName: "animation_end",
                     eventData: "offset");
@@ -567,7 +567,7 @@ Widget _positionedControl(
       bottom: bottom,
       onEnd: control.attrBool("onAnimationEnd", false)!
           ? () {
-              FletAppServices.of(context).ws.pageEventFromWeb(
+              FletAppServices.of(context).server.sendPageEvent(
                   eventTarget: control.id,
                   eventName: "animation_end",
                   eventData: "position");

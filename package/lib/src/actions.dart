@@ -17,8 +17,8 @@ import 'flet_server.dart';
 
 class PageLoadAction {
   final Uri pageUri;
-  final FletServer ws;
-  PageLoadAction(this.pageUri, this.ws);
+  final FletServer server;
+  PageLoadAction(this.pageUri, this.server);
 }
 
 class PageReconnectingAction {
@@ -28,21 +28,21 @@ class PageReconnectingAction {
 class PageSizeChangeAction {
   final Size newPageSize;
   final WindowMediaData? wmd;
-  final FletServer ws;
-  PageSizeChangeAction(this.newPageSize, this.wmd, this.ws);
+  final FletServer server;
+  PageSizeChangeAction(this.newPageSize, this.wmd, this.server);
 }
 
 class SetPageRouteAction {
   final String route;
-  final FletServer ws;
-  SetPageRouteAction(this.route, this.ws);
+  final FletServer server;
+  SetPageRouteAction(this.route, this.server);
 }
 
 class WindowEventAction {
   final String eventName;
   final WindowMediaData wmd;
-  final FletServer ws;
-  WindowEventAction(this.eventName, this.wmd, this.ws);
+  final FletServer server;
+  WindowEventAction(this.eventName, this.wmd, this.server);
 }
 
 class PageBrightnessChangeAction {
@@ -56,9 +56,9 @@ class RegisterWebClientAction {
 }
 
 class AppBecomeActiveAction {
-  final FletServer ws;
+  final FletServer server;
   final AppBecomeActivePayload payload;
-  AppBecomeActiveAction(this.ws, this.payload);
+  AppBecomeActiveAction(this.server, this.payload);
 }
 
 class AppBecomeInactiveAction {
@@ -73,8 +73,8 @@ class SessionCrashedAction {
 
 class InvokeMethodAction {
   final InvokeMethodPayload payload;
-  final FletServer ws;
-  InvokeMethodAction(this.payload, this.ws);
+  final FletServer server;
+  InvokeMethodAction(this.payload, this.server);
 }
 
 class AddPageControlsAction {

@@ -38,7 +38,7 @@ class _HapticFeedbackControlState extends State<HapticFeedbackControl> {
         ];
         FletAppServices.of(context).store.dispatch(
             UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-        FletAppServices.of(context).ws.updateControlProps(props: props);
+        FletAppServices.of(context).server.updateControlProps(props: props);
 
         var mj = json.decode(method);
         var name = mj["n"] as String;

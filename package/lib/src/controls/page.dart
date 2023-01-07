@@ -112,8 +112,8 @@ class _PageControlState extends State<PageControl> {
   }
 
   void _routeChanged() {
-    widget.dispatch(
-        SetPageRouteAction(_routeState.route, FletAppServices.of(context).ws));
+    widget.dispatch(SetPageRouteAction(
+        _routeState.route, FletAppServices.of(context).server));
     _routeChanges--;
   }
 
@@ -134,7 +134,7 @@ class _PageControlState extends State<PageControl> {
         LogicalKeyboardKey.shiftLeft,
         LogicalKeyboardKey.shiftRight
       ].contains(k)) {
-        FletAppServices.of(context).ws.pageEventFromWeb(
+        FletAppServices.of(context).server.sendPageEvent(
             eventTarget: "page",
             eventName: "keyboard_event",
             eventData: json.encode(KeyboardEvent(
@@ -503,21 +503,7 @@ class _PageControlState extends State<PageControl> {
               key: navigatorKey,
               pages: pages,
               onPopPage: (route, dynamic result) {
-                // if (!route.didPop(result)) {
-                //   return false;
-                // }
-                // debugPrint("onPopPage");
-
-                // if (route.settings is Page) {
-                //   ws.pageEventFromWeb(
-                //       eventTarget: "page",
-                //       eventName: "route_pop",
-                //       eventData:
-                //           ((route.settings as Page).key as ValueKey).value);
-                // }
-
-                // return true;
-                FletAppServices.of(context).ws.pageEventFromWeb(
+                FletAppServices.of(context).server.sendPageEvent(
                     eventTarget: "page",
                     eventName: "view_pop",
                     eventData:

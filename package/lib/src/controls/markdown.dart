@@ -23,8 +23,6 @@ class MarkdownControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Markdown build: ${control.id}");
 
-    final ws = FletAppServices.of(context).ws;
-
     var value = control.attrString("value", "")!;
     var codeTheme = control.attrString("codeTheme", "")!;
     md.ExtensionSet extensionSet = md.ExtensionSet.none;
@@ -66,7 +64,7 @@ class MarkdownControl extends StatelessWidget {
               styleSheet: mdStyleSheet,
               onTapLink: (String text, String? href, String title) {
                 debugPrint("Markdown link tapped ${control.id} clicked: $href");
-                ws.pageEventFromWeb(
+                FletAppServices.of(context).server.sendPageEvent(
                     eventTarget: control.id,
                     eventName: "tap_link",
                     eventData: href?.toString() ?? "");

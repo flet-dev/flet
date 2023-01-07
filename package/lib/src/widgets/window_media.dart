@@ -57,8 +57,8 @@ class WindowMediaState extends State<WindowMedia> with WindowListener {
       debugPrint('[WindowManager] onWindowEvent: $eventName');
       getWindowMediaData().then((wmd) {
         debugPrint("WindowMediaData: $wmd");
-        _dispatch!(
-            WindowEventAction(eventName, wmd, FletAppServices.of(context).ws));
+        _dispatch!(WindowEventAction(
+            eventName, wmd, FletAppServices.of(context).server));
       });
     }
 

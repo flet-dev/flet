@@ -26,7 +26,7 @@ class ElevatedButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Button build: ${control.id}");
 
-    final ws = FletAppServices.of(context).ws;
+    final server = FletAppServices.of(context).server;
 
     String text = control.attrString("text", "")!;
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
@@ -41,7 +41,7 @@ class ElevatedButtonControl extends StatelessWidget {
     Function()? onPressed = !disabled
         ? () {
             debugPrint("Button ${control.id} clicked!");
-            ws.pageEventFromWeb(
+            server.sendPageEvent(
                 eventTarget: control.id, eventName: "click", eventData: "");
           }
         : null;
@@ -49,7 +49,7 @@ class ElevatedButtonControl extends StatelessWidget {
     Function()? onLongPressHandler = onLongPress && !disabled
         ? () {
             debugPrint("Button ${control.id} long pressed!");
-            ws.pageEventFromWeb(
+            server.sendPageEvent(
                 eventTarget: control.id,
                 eventName: "long_press",
                 eventData: "");
@@ -59,7 +59,7 @@ class ElevatedButtonControl extends StatelessWidget {
     Function(bool)? onHoverHandler = onHover && !disabled
         ? (state) {
             debugPrint("Button ${control.id} hovered!");
-            ws.pageEventFromWeb(
+            server.sendPageEvent(
                 eventTarget: control.id,
                 eventName: "hover",
                 eventData: state.toString());

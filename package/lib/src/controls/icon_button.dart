@@ -26,8 +26,6 @@ class IconButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Button build: ${control.id}");
 
-    final ws = FletAppServices.of(context).ws;
-
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
     IconData? selectedIcon =
         getMaterialIcon(control.attrString("selectedIcon", "")!);
@@ -48,7 +46,7 @@ class IconButtonControl extends StatelessWidget {
         ? null
         : () {
             debugPrint("Button ${control.id} clicked!");
-            ws.pageEventFromWeb(
+            FletAppServices.of(context).server.sendPageEvent(
                 eventTarget: control.id, eventName: "click", eventData: "");
           };
 
