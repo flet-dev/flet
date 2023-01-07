@@ -1,8 +1,9 @@
 import 'dart:convert';
 
+import 'package:flet/src/flet_server_protocol.dart';
+import 'package:flet/src/flet_server_protocol_web_socket.dart';
 import 'package:flutter/foundation.dart';
 import 'package:redux/redux.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'actions.dart';
 import 'models/app_state.dart';
@@ -23,9 +24,9 @@ import 'protocol/session_crashed_payload.dart';
 import 'protocol/update_control_props_payload.dart';
 import 'protocol/update_control_props_request.dart';
 
-class WebSocketClient {
+class FletServer {
   final Store<AppState> _store;
-  WebSocketChannel? _channel;
+  late FletServerProtocol _clientProtocol;
   String _serverUrl = "";
   bool _connected = false;
   String _pageName = "";
@@ -40,34 +41,33 @@ class WebSocketClient {
   String _isWeb = "";
   String _platform = "";
 
-  WebSocketClient(this._store);
+  FletServer(this._store);
 
   connect({required String serverUrl}) async {
     _serverUrl = serverUrl;
 
-    debugPrint("Connecting to WebSocket server $serverUrl...");
+    debugPrint("Connecting to Flet server $serverUrl...");
     try {
-      _channel = WebSocketChannel.connect(Uri.parse(_serverUrl));
+      _clientProtocol = FletWebSocketServerProtocol(
+          address: _serverUrl,
+          onDisconnect: _onDisconnect,
+          onMessage: _onMessage);
+      await _clientProtocol.connect();
       _connected = true;
-      _channel!.stream.listen(_onMessage, onDone: () async {
-        debugPrint("WS stream closed");
-        if (_connected) {
-          _store.dispatch(PageReconnectingAction());
-          debugPrint(
-              "Reconnect in ${_store.state.reconnectingTimeout} seconds");
-          Future.delayed(Duration(seconds: _store.state.reconnectingTimeout))
-              .then((value) {
-            connect(serverUrl: _serverUrl);
-            registerWebClientInternal();
-          });
-        }
-      }, onError: (error) async {
-        debugPrint("WS stream error $error");
-        // Future.delayed(Duration(seconds: reconnectionTimeoutSeconds))
-        //     .then((value) => connect(serverUrl: _serverUrl));
-      });
     } catch (e) {
-      debugPrint("WebSocket connection error: $e");
+      debugPrint("Error connecting to Flet server: $e");
+    }
+  }
+
+  _onDisconnect() {
+    if (_connected) {
+      _store.dispatch(PageReconnectingAction());
+      debugPrint("Reconnect in ${_store.state.reconnectingTimeout} seconds");
+      Future.delayed(Duration(seconds: _store.state.reconnectingTimeout))
+          .then((value) {
+        connect(serverUrl: _serverUrl);
+        registerWebClientInternal();
+      });
     }
   }
 
@@ -198,17 +198,11 @@ class WebSocketClient {
   }
 
   send(Message message) {
-    if (_channel != null) {
-      final m = json.encode(message.toJson());
-      debugPrint("Send: $m");
-      _channel!.sink.add(m);
-    }
+    final m = json.encode(message.toJson());
+    _clientProtocol.send(m);
   }
 
   void close() {
-    if (_channel != null && _connected) {
-      _connected = false;
-      _channel!.sink.close();
-    }
+    _clientProtocol.close();
   }
 }

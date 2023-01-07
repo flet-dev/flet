@@ -5,12 +5,12 @@ import 'package:redux/redux.dart';
 import 'actions.dart';
 import 'models/app_state.dart';
 import 'reducers.dart';
-import 'web_socket_client.dart';
+import 'flet_server.dart';
 
 class FletAppServices extends InheritedWidget {
   final String pageUrl;
   final FletAppErrorsHandler? errorsHandler;
-  late final WebSocketClient ws;
+  late final FletServer ws;
   late final Store<AppState> store;
 
   FletAppServices(
@@ -20,7 +20,7 @@ class FletAppServices extends InheritedWidget {
       this.errorsHandler})
       : super(key: key, child: child) {
     store = Store<AppState>(appReducer, initialState: AppState.initial());
-    ws = WebSocketClient(store);
+    ws = FletServer(store);
     if (errorsHandler != null) {
       errorsHandler!.addListener(() {
         if (store.state.isRegistered) {

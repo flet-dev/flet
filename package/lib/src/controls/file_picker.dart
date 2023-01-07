@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flet/src/protocol/file_picker_upload_file.dart';
 import 'package:flet/src/protocol/file_picker_upload_progress_event.dart';
 import 'package:flet/src/utils/desktop.dart';
-import 'package:flet/src/web_socket_client.dart';
+import 'package:flet/src/flet_server.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -165,7 +165,7 @@ class _FilePickerControlState extends State<FilePickerControl> {
         });
   }
 
-  Future uploadFiles(String filesJson, WebSocketClient ws, Uri pageUri) async {
+  Future uploadFiles(String filesJson, FletServer ws, Uri pageUri) async {
     var uj = json.decode(filesJson);
     var uploadFiles = (uj as List).map((u) => FilePickerUploadFile(
         name: u["name"], uploadUrl: u["upload_url"], method: u["method"]));
@@ -183,8 +183,8 @@ class _FilePickerControlState extends State<FilePickerControl> {
     }
   }
 
-  Future uploadFile(PlatformFile file, WebSocketClient ws, String uploadUrl,
-      String method) async {
+  Future uploadFile(
+      PlatformFile file, FletServer ws, String uploadUrl, String method) async {
     final fileReadStream = file.readStream;
     if (fileReadStream == null) {
       throw Exception('Cannot read file from null stream');
@@ -229,7 +229,7 @@ class _FilePickerControlState extends State<FilePickerControl> {
   }
 
   void sendProgress(
-      WebSocketClient ws, String name, double? progress, String? error) {
+      FletServer ws, String name, double? progress, String? error) {
     ws.pageEventFromWeb(
         eventTarget: widget.control.id,
         eventName: "upload",

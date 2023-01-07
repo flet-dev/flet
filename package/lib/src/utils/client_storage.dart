@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../protocol/invoke_method_result.dart';
-import '../web_socket_client.dart';
+import '../flet_server.dart';
 
 void invokeClientStorage(String methodId, String methodName,
-    Map<String, String> args, WebSocketClient ws) async {
+    Map<String, String> args, FletServer ws) async {
   sendResult(Object? result, String? error) {
     ws.pageEventFromWeb(
         eventTarget: "page",

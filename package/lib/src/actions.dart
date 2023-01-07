@@ -13,11 +13,11 @@ import 'protocol/remove_control_payload.dart';
 import 'protocol/replace_page_controls_payload.dart';
 import 'protocol/session_crashed_payload.dart';
 import 'protocol/update_control_props_payload.dart';
-import 'web_socket_client.dart';
+import 'flet_server.dart';
 
 class PageLoadAction {
   final Uri pageUri;
-  final WebSocketClient ws;
+  final FletServer ws;
   PageLoadAction(this.pageUri, this.ws);
 }
 
@@ -28,20 +28,20 @@ class PageReconnectingAction {
 class PageSizeChangeAction {
   final Size newPageSize;
   final WindowMediaData? wmd;
-  final WebSocketClient ws;
+  final FletServer ws;
   PageSizeChangeAction(this.newPageSize, this.wmd, this.ws);
 }
 
 class SetPageRouteAction {
   final String route;
-  final WebSocketClient ws;
+  final FletServer ws;
   SetPageRouteAction(this.route, this.ws);
 }
 
 class WindowEventAction {
   final String eventName;
   final WindowMediaData wmd;
-  final WebSocketClient ws;
+  final FletServer ws;
   WindowEventAction(this.eventName, this.wmd, this.ws);
 }
 
@@ -56,7 +56,7 @@ class RegisterWebClientAction {
 }
 
 class AppBecomeActiveAction {
-  final WebSocketClient ws;
+  final FletServer ws;
   final AppBecomeActivePayload payload;
   AppBecomeActiveAction(this.ws, this.payload);
 }
@@ -73,7 +73,7 @@ class SessionCrashedAction {
 
 class InvokeMethodAction {
   final InvokeMethodPayload payload;
-  final WebSocketClient ws;
+  final FletServer ws;
   InvokeMethodAction(this.payload, this.ws);
 }
 
