@@ -15,9 +15,10 @@ from pathlib import Path
 
 from flet import version
 from flet.async_connection import AsyncConnection
-from flet.sync_connection import SyncConnection
 from flet.event import Event
 from flet.page import Page
+from flet.socket_connection import SocketConnection
+from flet.sync_connection import SyncConnection
 from flet.utils import (
     get_arch,
     get_current_script_dir,
@@ -105,6 +106,7 @@ def __app_sync(
 ):
     conn = __connect_internal_sync(
         page_name=name,
+        view=view,
         host=host,
         port=port,
         auth_token=auth_token,
@@ -174,6 +176,7 @@ async def app_async(
 
     conn = await __connect_internal_async(
         page_name=name,
+        view=view,
         host=host,
         port=port,
         auth_token=auth_token,
@@ -243,6 +246,7 @@ def close_flet_view(pid_file):
 
 def __connect_internal_sync(
     page_name,
+    view: AppViewer = None,
     host=None,
     port=0,
     server=None,
@@ -253,7 +257,8 @@ def __connect_internal_sync(
     web_renderer=None,
     route_url_strategy=None,
 ):
-    if server is None:
+    is_desktop = view == FLET_APP or view == FLET_APP_HIDDEN
+    if server is None and not is_desktop:
         server = __start_flet_server(
             host,
             port,
@@ -287,19 +292,27 @@ def __connect_internal_sync(
             )
             page.error(f"There was an error while processing your request: {e}")
 
-    conn = SyncConnection(
-        server_address=server,
-        page_name=page_name,
-        token=auth_token,
-        on_event=on_event,
-        on_session_created=on_session_created,
-    )
+    if is_desktop:
+        conn = SocketConnection(
+            on_event=on_event,
+            on_session_created=on_session_created,
+        )
+    else:
+        assert server
+        conn = SyncConnection(
+            server_address=server,
+            page_name=page_name,
+            token=auth_token,
+            on_event=on_event,
+            on_session_created=on_session_created,
+        )
     conn.connect()
     return conn
 
 
 async def __connect_internal_async(
     page_name,
+    view: AppViewer = None,
     host=None,
     port=0,
     server=None,
@@ -310,6 +323,7 @@ async def __connect_internal_async(
     web_renderer=None,
     route_url_strategy=None,
 ):
+    is_desktop = view == FLET_APP or view == FLET_APP_HIDDEN
     if server is None:
         server = __start_flet_server(
             host,
