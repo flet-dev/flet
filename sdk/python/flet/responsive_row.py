@@ -135,7 +135,11 @@ class ResponsiveRow(ConstrainedControl):
         return self.__controls
 
     def clean(self):
-        Control.clean(self)
+        super().clean()
+        self.__controls.clear()
+
+    async def clean_async(self):
+        await super().clean_async()
         self.__controls.clear()
 
     # horizontal_alignment

@@ -1,4 +1,5 @@
-import json
+import asyncio
+import inspect
 import logging
 import os
 import signal
@@ -11,13 +12,12 @@ import traceback
 import urllib.request
 import zipfile
 from pathlib import Path
-from time import sleep
 
-from flet import constants, version
-from flet.connection import Connection
+from flet import version
+from flet.async_connection import AsyncConnection
+from flet.sync_connection import SyncConnection
 from flet.event import Event
 from flet.page import Page
-from flet.reconnecting_websocket import ReconnectingWebSocket
 from flet.utils import (
     get_arch,
     get_current_script_dir,
@@ -28,6 +28,7 @@ from flet.utils import (
     is_macos,
     is_windows,
     open_in_browser,
+    random_string,
     safe_tar_extractall,
     which,
 )
@@ -47,64 +48,66 @@ AppViewer = Literal[None, "web_browser", "flet_app", "flet_app_hidden"]
 WebRenderer = Literal[None, "auto", "html", "canvaskit"]
 
 
-def page(
-    name="",
-    host=None,
-    port=0,
-    permissions=None,
-    view: AppViewer = WEB_BROWSER,
-    assets_dir=None,
-    upload_dir=None,
-    web_renderer="canvaskit",
-    route_url_strategy="hash",
-):
-    conn = _connect_internal(
-        page_name=name,
-        host=host,
-        port=port,
-        is_app=False,
-        permissions=permissions,
-        assets_dir=assets_dir,
-        upload_dir=upload_dir,
-        web_renderer=web_renderer,
-        route_url_strategy=route_url_strategy,
-    )
-    url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
-    if url_prefix is not None:
-        print(url_prefix, conn.page_url)
-    else:
-        logging.info(f"Page URL: {conn.page_url}")
-
-    page = Page(conn, constants.ZERO_SESSION)
-    conn.sessions[constants.ZERO_SESSION] = page
-
-    if view == WEB_BROWSER:
-        open_in_browser(conn.page_url)
-
-    return page
-
-
 def app(
+    target,
     name="",
     host=None,
     port=0,
-    target=None,
-    permissions=None,
     view: AppViewer = FLET_APP,
     assets_dir=None,
     upload_dir=None,
     web_renderer="canvaskit",
     route_url_strategy="hash",
+    auth_token=None,
 ):
-    if target is None:
-        raise Exception("target argument is not specified")
 
-    conn = _connect_internal(
+    if inspect.iscoroutinefunction(target):
+        asyncio.run(
+            app_async(
+                target=target,
+                name=name,
+                host=host,
+                port=port,
+                view=view,
+                assets_dir=assets_dir,
+                upload_dir=upload_dir,
+                web_renderer=web_renderer,
+                route_url_strategy=route_url_strategy,
+                auth_token=auth_token,
+            )
+        )
+    else:
+        __app_sync(
+            target=target,
+            name=name,
+            host=host,
+            port=port,
+            view=view,
+            assets_dir=assets_dir,
+            upload_dir=upload_dir,
+            web_renderer=web_renderer,
+            route_url_strategy=route_url_strategy,
+            auth_token=auth_token,
+        )
+
+
+def __app_sync(
+    target,
+    name="",
+    host=None,
+    port=0,
+    view: AppViewer = FLET_APP,
+    assets_dir=None,
+    upload_dir=None,
+    web_renderer="canvaskit",
+    route_url_strategy="hash",
+    auth_token=None,
+):
+    conn = __connect_internal_sync(
         page_name=name,
         host=host,
         port=port,
-        is_app=True,
-        permissions=permissions,
+        auth_token=auth_token,
         session_handler=target,
         assets_dir=assets_dir,
         upload_dir=upload_dir,
@@ -130,13 +133,14 @@ def app(
     logging.info("Connected to Flet app and handling user sessions...")
 
     fvp = None
+    pid_file = None
 
     if (
         (view == FLET_APP or view == FLET_APP_HIDDEN)
         and not is_linux_server()
         and url_prefix is None
     ):
-        fvp = open_flet_view(conn.page_url, view == FLET_APP_HIDDEN)
+        fvp, pid_file = open_flet_view(conn.page_url, view == FLET_APP_HIDDEN)
         try:
             fvp.wait()
         except (Exception) as e:
@@ -152,55 +156,112 @@ def app(
             pass
 
     conn.close()
-
-    if fvp is not None and not is_windows():
-        try:
-            logging.debug(f"Flet View process {fvp.pid}")
-            os.kill(fvp.pid + 1, signal.SIGKILL)
-        except:
-            pass
+    close_flet_view(pid_file)
 
 
-def _connect_internal(
-    page_name=None,
+async def app_async(
+    target,
+    name="",
     host=None,
     port=0,
-    is_app=False,
-    update=False,
-    share=False,
+    view: AppViewer = FLET_APP,
+    assets_dir=None,
+    upload_dir=None,
+    web_renderer="canvaskit",
+    route_url_strategy="hash",
+    auth_token=None,
+):
+
+    conn = await __connect_internal_async(
+        page_name=name,
+        host=host,
+        port=port,
+        auth_token=auth_token,
+        session_handler=target,
+        assets_dir=assets_dir,
+        upload_dir=upload_dir,
+        web_renderer=web_renderer,
+        route_url_strategy=route_url_strategy,
+    )
+
+    url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
+    if url_prefix is not None:
+        print(url_prefix, conn.page_url)
+    else:
+        logging.info(f"App URL: {conn.page_url}")
+
+    terminate = asyncio.Event()
+
+    def exit_gracefully(signum, frame):
+        logging.debug("Gracefully terminating Flet app...")
+        terminate.set()
+
+    signal.signal(signal.SIGINT, exit_gracefully)
+    signal.signal(signal.SIGTERM, exit_gracefully)
+
+    logging.info("Connected to Flet app and handling user sessions...")
+
+    fvp = None
+    pid_file = None
+
+    if (
+        (view == FLET_APP or view == FLET_APP_HIDDEN)
+        and not is_linux_server()
+        and url_prefix is None
+    ):
+        fvp, pid_file = await open_flet_view_async(
+            conn.page_url, view == FLET_APP_HIDDEN
+        )
+        try:
+            await fvp.wait()
+        except (Exception) as e:
+            pass
+    else:
+        if view == WEB_BROWSER and url_prefix is None:
+            open_in_browser(conn.page_url)
+        try:
+            await terminate.wait()
+        except KeyboardInterrupt:
+            pass
+
+    await conn.close()
+    close_flet_view(pid_file)
+
+
+def close_flet_view(pid_file):
+    if pid_file is not None and os.path.exists(pid_file):
+        try:
+            with open(pid_file) as f:
+                fvp_pid = int(f.read())
+            logging.debug(f"Flet View process {fvp_pid}")
+            os.kill(fvp_pid, signal.SIGKILL)
+        except:
+            pass
+        finally:
+            os.remove(pid_file)
+
+
+def __connect_internal_sync(
+    page_name,
+    host=None,
+    port=0,
     server=None,
-    token=None,
-    permissions=None,
+    auth_token=None,
     session_handler=None,
     assets_dir=None,
     upload_dir=None,
     web_renderer=None,
     route_url_strategy=None,
 ):
-    if share and server is None:
-        server = constants.HOSTED_SERVICE_URL
-    elif server is None:
-        # local mode
-        env_port = os.getenv("FLET_SERVER_PORT")
-        if env_port is not None and env_port:
-            port = env_port
-
-        # page with a custom port starts detached process
-        attached = False if not is_app and port != 0 else True
-
-        server_ip = host if host not in [None, "", "*"] else "127.0.0.1"
-        port = _start_flet_server(
+    if server is None:
+        server = __start_flet_server(
             host,
             port,
-            attached,
             assets_dir,
             upload_dir,
             web_renderer,
             route_url_strategy,
         )
-        server = f"http://{server_ip}:{port}"
-
-    connected = threading.Event()
 
     def on_event(conn, e):
         if e.sessionID in conn.sessions:
@@ -213,6 +274,7 @@ def _connect_internal(
 
     def on_session_created(conn, session_data):
         page = Page(conn, session_data.sessionID)
+        page.fetch_page_details()
         conn.sessions[session_data.sessionID] = page
         logging.info(f"Session started: {session_data.sessionID}")
         try:
@@ -225,57 +287,90 @@ def _connect_internal(
             )
             page.error(f"There was an error while processing your request: {e}")
 
-    ws_url = _get_ws_url(server)
-    ws = ReconnectingWebSocket(ws_url)
-    conn = Connection(ws)
-    conn.on_event = on_event
-
-    if session_handler is not None:
-        conn.on_session_created = on_session_created
-
-    def _on_ws_connect():
-        if conn.page_name is None:
-            conn.page_name = page_name
-        assert conn.page_name is not None
-        result = conn.register_host_client(
-            conn.host_client_id, conn.page_name, is_app, update, token, permissions
-        )
-        conn.host_client_id = result.hostClientID
-        conn.page_name = result.pageName
-        conn.page_url = server.rstrip("/")
-        if conn.page_name != constants.INDEX_PAGE:
-            assert conn.page_url is not None
-            conn.page_url += f"/{conn.page_name}"
-        connected.set()
-
-    def _on_ws_failed_connect():
-        logging.info(f"Failed to connect: {ws_url}")
-        # if is_localhost_url(ws_url):
-        #     _start_flet_server()
-
-    ws.on_connect = _on_ws_connect
-    ws.on_failed_connect = _on_ws_failed_connect
-    ws.connect()
-    for n in range(0, constants.CONNECT_TIMEOUT_SECONDS):
-        if not connected.is_set():
-            sleep(1)
-    if not connected.is_set():
-        ws.close()
-        raise Exception(
-            f"Could not connected to Flet server in {constants.CONNECT_TIMEOUT_SECONDS} seconds."
-        )
-
+    conn = SyncConnection(
+        server_address=server,
+        page_name=page_name,
+        token=auth_token,
+        on_event=on_event,
+        on_session_created=on_session_created,
+    )
+    conn.connect()
     return conn
 
 
-def _start_flet_server(
-    host, port, attached, assets_dir, upload_dir, web_renderer, route_url_strategy
+async def __connect_internal_async(
+    page_name,
+    host=None,
+    port=0,
+    server=None,
+    auth_token=None,
+    session_handler=None,
+    assets_dir=None,
+    upload_dir=None,
+    web_renderer=None,
+    route_url_strategy=None,
 ):
+    if server is None:
+        server = __start_flet_server(
+            host,
+            port,
+            assets_dir,
+            upload_dir,
+            web_renderer,
+            route_url_strategy,
+        )
+
+    async def on_event(e):
+        if e.sessionID in conn.sessions:
+            await conn.sessions[e.sessionID].on_event_async(
+                Event(e.eventTarget, e.eventName, e.eventData)
+            )
+            if e.eventTarget == "page" and e.eventName == "close":
+                logging.info(f"Session closed: {e.sessionID}")
+                del conn.sessions[e.sessionID]
+
+    async def on_session_created(session_data):
+        page = Page(conn, session_data.sessionID)
+        await page.fetch_page_details_async()
+        conn.sessions[session_data.sessionID] = page
+        logging.info(f"Session started: {session_data.sessionID}")
+        try:
+            assert session_handler is not None
+            await session_handler(page)
+        except Exception as e:
+            print(
+                f"Unhandled error processing page session {page.session_id}:",
+                traceback.format_exc(),
+            )
+            await page.error_async(
+                f"There was an error while processing your request: {e}"
+            )
+
+    conn = AsyncConnection(
+        server_address=server,
+        page_name=page_name,
+        auth_token=auth_token,
+        on_event=on_event,
+        on_session_created=on_session_created,
+    )
+    await conn.connect()
+    return conn
+
+
+def __start_flet_server(
+    host, port, assets_dir, upload_dir, web_renderer, route_url_strategy
+):
+    # local mode
+    env_port = os.getenv("FLET_SERVER_PORT")
+    if env_port is not None and env_port:
+        port = env_port
+
+    server_ip = host if host not in [None, "", "*"] else "127.0.0.1"
+
     if port == 0:
         port = get_free_tcp_port()
 
     logging.info(f"Starting local Flet Server on port {port}...")
-    logging.info(f"Attached process: {attached}")
 
     fletd_exe = "fletd.exe" if is_windows() else "fletd"
 
@@ -289,7 +384,7 @@ def _start_flet_server(
         fletd_path = which(fletd_exe)
         if not fletd_path:
             # download flet from GitHub (python module developer mode)
-            fletd_path = _download_fletd()
+            fletd_path = __download_fletd()
         else:
             logging.info(f"Flet Server found in PATH")
 
@@ -337,13 +432,7 @@ def _start_flet_server(
     creationflags = 0
     start_new_session = False
 
-    if attached:
-        args.append("--attached")
-    else:
-        if is_windows():
-            creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
-        else:
-            start_new_session = True
+    args.append("--attached")
 
     log_level = logging.getLogger().getEffectiveLevel()
     if log_level == logging.CRITICAL:
@@ -368,13 +457,29 @@ def _start_flet_server(
         startupinfo=startupinfo,
     )
 
-    return port
+    return f"http://{server_ip}:{port}"
 
 
 def open_flet_view(page_url, hidden):
+    args, flet_env, pid_file = __locate_and_unpack_flet_view(page_url, hidden)
+    return subprocess.Popen(args, env=flet_env), pid_file
+
+
+async def open_flet_view_async(page_url, hidden):
+    args, flet_env, pid_file = __locate_and_unpack_flet_view(page_url, hidden)
+    return (
+        await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env),
+        pid_file,
+    )
+
+
+def __locate_and_unpack_flet_view(page_url, hidden):
     logging.info(f"Starting Flet View app...")
 
     args = []
+
+    # pid file - Flet client writes its process ID to this file
+    pid_file = str(Path(tempfile.gettempdir()).joinpath(random_string(20)))
 
     if is_windows():
         flet_exe = "flet.exe"
@@ -395,32 +500,38 @@ def open_flet_view(page_url, hidden):
                 logging.info(f"Flet View found in PATH: {flet_path}")
             else:
                 if not temp_flet_dir.exists():
-                    zip_file = _download_flet_client("flet-windows.zip")
+                    zip_file = __download_flet_client("flet-windows.zip")
 
                     logging.info(f"Extracting flet.exe from archive to {temp_flet_dir}")
                     temp_flet_dir.mkdir(parents=True, exist_ok=True)
                     with zipfile.ZipFile(zip_file, "r") as zip_arch:
                         zip_arch.extractall(str(temp_flet_dir))
                 flet_path = str(temp_flet_dir.joinpath("flet", flet_exe))
-        args = [flet_path, page_url]
+        args = [flet_path, page_url, pid_file]
     elif is_macos():
         # build version-specific path to Flet.app
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
-        # check if flet_view.app exists in a temp directory
-        if not temp_flet_dir.exists():
-            # check if flet.tar.gz exists
-            gz_filename = "flet-macos-amd64.tar.gz"
-            tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
-            if not tar_file.exists():
-                tar_file = _download_flet_client(gz_filename)
-
-            logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
-            temp_flet_dir.mkdir(parents=True, exist_ok=True)
-            with tarfile.open(str(tar_file), "r:gz") as tar_arch:
-                safe_tar_extractall(tar_arch, str(temp_flet_dir))
+        # check if flet.exe is in PATH (flet developer mode)
+        flet_path = which("flet", sys.argv[0])
+        if flet_path and "/Contents/MacOS/" in flet_path:
+            logging.info(f"Flet.app found in PATH: {flet_path}")
+            temp_flet_dir = Path(flet_path).parent.parent.parent.parent
         else:
-            logging.info(f"Flet View found in: {temp_flet_dir}")
+            # check if flet_view.app exists in a temp directory
+            if not temp_flet_dir.exists():
+                # check if flet.tar.gz exists
+                gz_filename = "flet-macos-amd64.tar.gz"
+                tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
+                if not tar_file.exists():
+                    tar_file = __download_flet_client(gz_filename)
+
+                logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
+                temp_flet_dir.mkdir(parents=True, exist_ok=True)
+                with tarfile.open(str(tar_file), "r:gz") as tar_arch:
+                    safe_tar_extractall(tar_arch, str(temp_flet_dir))
+            else:
+                logging.info(f"Flet View found in: {temp_flet_dir}")
 
         app_name = None
         for f in os.listdir(temp_flet_dir):
@@ -428,7 +539,7 @@ def open_flet_view(page_url, hidden):
                 app_name = f
         assert app_name is not None, f"Application bundle not found in {temp_flet_dir}"
         app_path = temp_flet_dir.joinpath(app_name)
-        args = ["open", str(app_path), "-n", "-W", "--args", page_url]
+        args = ["open", str(app_path), "-n", "-W", "--args", page_url, pid_file]
     elif is_linux():
         # build version-specific path to flet folder
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
@@ -439,7 +550,7 @@ def open_flet_view(page_url, hidden):
             gz_filename = f"flet-linux-{get_arch()}.tar.gz"
             tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
             if not tar_file.exists():
-                tar_file = _download_flet_client(gz_filename)
+                tar_file = __download_flet_client(gz_filename)
 
             logging.info(f"Extracting Flet from archive to {temp_flet_dir}")
             temp_flet_dir.mkdir(parents=True, exist_ok=True)
@@ -449,29 +560,17 @@ def open_flet_view(page_url, hidden):
             logging.info(f"Flet View found in: {temp_flet_dir}")
 
         app_path = temp_flet_dir.joinpath("flet", "flet")
-        args = [str(app_path), page_url]
+        args = [str(app_path), page_url, pid_file]
 
     flet_env = {**os.environ}
 
     if hidden:
         flet_env["FLET_HIDE_WINDOW_ON_START"] = "true"
 
-    # execute process
-    return subprocess.Popen(args, env=flet_env)
+    return args, flet_env, pid_file
 
 
-def _get_ws_url(server: str):
-    url = server.rstrip("/")
-    if server.startswith("https://"):
-        url = url.replace("https://", "wss://")
-    elif server.startswith("http://"):
-        url = url.replace("http://", "ws://")
-    else:
-        url = "ws://" + url
-    return url + "/ws"
-
-
-def _download_fletd():
+def __download_fletd():
     ver = version.version
     flet_exe = "fletd.exe" if is_windows() else "fletd"
 
@@ -505,28 +604,13 @@ def _download_fletd():
     return str(temp_fletd_dir.joinpath(flet_exe))
 
 
-def _download_flet_client(file_name):
+def __download_flet_client(file_name):
     ver = version.version
     temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
     logging.info(f"Downloading Flet v{ver} to {temp_arch}")
     flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
     urllib.request.urlretrieve(flet_url, temp_arch)
     return str(temp_arch)
-
-
-# not currently used, but maybe useful in the future
-def _get_latest_flet_release():
-    releases = json.loads(
-        urllib.request.urlopen(
-            f"https://api.github.com/repos/flet-dev/flet/releases?per_page=5"
-        )
-        .read()
-        .decode()
-    )
-    if len(releases) > 0:
-        return releases[0]["tag_name"].lstrip("v")
-    else:
-        return None
 
 
 # Fix: https://bugs.python.org/issue35935

@@ -12,8 +12,9 @@ def test_moving_children():
 
     index = []
     added_controls = []
+    removed_controls = []
     commands = []
-    c.build_update_commands(index, added_controls, commands, False)
+    c.build_update_commands(index, commands, added_controls, removed_controls, False)
 
     def replace_controls(c):
         random.shuffle(c.controls)
@@ -24,7 +25,9 @@ def test_moving_children():
         for ctrl in c.controls:
             # print(ctrl._Control__uid)
             r.add(ctrl._Control__uid)
-        c.build_update_commands(index, added_controls, commands, False)
+        c.build_update_commands(
+            index, commands, added_controls, removed_controls, False
+        )
         for cmd in commands:
             if cmd.name == "add":
                 for sub_cmd in cmd.commands:

@@ -150,7 +150,7 @@ class Container(ConstrainedControl):
             return ContainerTapEvent(**d)
 
         self.__on_click = EventHandler(convert_container_tap_event_data)
-        self._add_event_handler("click", self.__on_click.handler)
+        self._add_event_handler("click", self.__on_click.get_handler())
 
         self.content = content
         self.padding = padding

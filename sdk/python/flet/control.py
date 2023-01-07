@@ -1,6 +1,5 @@
 import datetime as dt
 import json
-import threading
 from difflib import SequenceMatcher
 from typing import TYPE_CHECKING, Any, Union
 
@@ -51,7 +50,6 @@ class Control:
         self.__data: Any = None
         self.data = data
         self.__event_handlers = {}
-        self._lock = threading.Lock()
         if ref:
             ref.current = self
 
@@ -67,7 +65,13 @@ class Control:
     def did_mount(self):
         pass
 
+    async def did_mount_async(self):
+        pass
+
     def will_unmount(self):
+        pass
+
+    async def will_unmount_async(self):
         pass
 
     def _get_children(self):
@@ -254,20 +258,24 @@ class Control:
 
     # public methods
     def update(self):
-        if not self.__page:
-            raise Exception("Control must be added to the page first.")
+        assert self.__page, "Control must be added to the page first."
         self.__page.update(self)
 
-    def clean(self):
-        with self._lock:
-            self._previous_children.clear()
-            assert self.__page is not None
-            assert self.uid is not None
-            for child in self._get_children():
-                self._remove_control_recursively(self.__page.index, child)
-            return self.__page._send_command("clean", [self.uid])
+    async def update_async(self):
+        assert self.__page, "Control must be added to the page first."
+        await self.__page.update_async(self)
 
-    def build_update_commands(self, index, added_controls, commands, isolated=False):
+    def clean(self):
+        assert self.__page, "Control must be added to the page first."
+        self.__page._clean(self)
+
+    async def clean_async(self):
+        assert self.__page, "Control must be added to the page first."
+        await self.__page._clean_async(self)
+
+    def build_update_commands(
+        self, index, commands, added_controls, removed_controls, isolated=False
+    ):
         update_cmd = self._build_command(update=True)
 
         if len(update_cmd.attrs) > 0:
@@ -316,7 +324,9 @@ class Control:
                             replaced = True
                             break
                         i += 1
-                    self._remove_control_recursively(index, ctrl)
+                    removed_controls.extend(
+                        self._remove_control_recursively(index, ctrl)
+                    )
                     if not replaced:
                         ids.append(ctrl.__uid)
                 if len(ids) > 0:
@@ -343,7 +353,11 @@ class Control:
                 for h in previous_ints[a1:a2]:
                     ctrl = hashes[h]
                     ctrl.build_update_commands(
-                        index, added_controls, commands, isolated=ctrl._is_isolated()
+                        index,
+                        commands,
+                        added_controls,
+                        removed_controls,
+                        isolated=ctrl._is_isolated(),
                     )
                     n += 1
             elif tag == "insert":
@@ -368,12 +382,14 @@ class Control:
         self.__previous_children.extend(current_children)
 
     def _remove_control_recursively(self, index, control):
+        removed_controls = [control]
         for child in control._get_children():
-            self._remove_control_recursively(index, child)
+            removed_controls.extend(self._remove_control_recursively(index, child))
 
         if control.__uid in index:
-            control.will_unmount()
             del index[control.__uid]
+
+        return removed_controls
 
     # private methods
     def _build_add_commands(self, indent=0, index=None, added_controls=None):

@@ -65,7 +65,7 @@ class FilePickerUploadEvent(ControlEvent):
 class FilePicker(Control):
     """
     A control that allows you to use the native file explorer to pick single or multiple files, with extensions filtering support and upload.
-    
+
     Example:
     ```
     import flet as ft
@@ -104,6 +104,7 @@ class FilePicker(Control):
 
     Online docs: https://flet.dev/docs/controls/filepicker
     """
+
     def __init__(
         self,
         ref: Optional[Ref] = None,
@@ -131,14 +132,14 @@ class FilePicker(Control):
             return self.__result
 
         self.__on_result = EventHandler(convert_result_event_data)
-        self._add_event_handler("result", self.__on_result.handler)
+        self._add_event_handler("result", self.__on_result.get_handler())
 
         def convert_upload_event_data(e):
             d = json.loads(e.data)
             return FilePickerUploadEvent(**d)
 
         self.__on_upload = EventHandler(convert_upload_event_data)
-        self._add_event_handler("upload", self.__on_upload.handler)
+        self._add_event_handler("upload", self.__on_upload.get_handler())
 
         self.__result: Optional[FilePickerResultEvent] = None
         self.__upload: List[FilePickerUploadFile] = []
@@ -170,6 +171,22 @@ class FilePicker(Control):
         self.allow_multiple = allow_multiple
         self.update()
 
+    async def pick_files_async(
+        self,
+        dialog_title: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        allowed_extensions: Optional[List[str]] = None,
+        allow_multiple: Optional[bool] = False,
+    ):
+        self.state = "pickFiles"
+        self.dialog_title = dialog_title
+        self.initial_directory = initial_directory
+        self.file_type = file_type
+        self.allowed_extensions = allowed_extensions
+        self.allow_multiple = allow_multiple
+        await self.update_async()
+
     def save_file(
         self,
         dialog_title: Optional[str] = None,
@@ -186,6 +203,22 @@ class FilePicker(Control):
         self.allowed_extensions = allowed_extensions
         self.update()
 
+    async def save_file_async(
+        self,
+        dialog_title: Optional[str] = None,
+        file_name: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        allowed_extensions: Optional[List[str]] = None,
+    ):
+        self.state = "saveFile"
+        self.dialog_title = dialog_title
+        self.file_name = file_name
+        self.initial_directory = initial_directory
+        self.file_type = file_type
+        self.allowed_extensions = allowed_extensions
+        await self.update_async()
+
     def get_directory_path(
         self,
         dialog_title: Optional[str] = None,
@@ -196,9 +229,23 @@ class FilePicker(Control):
         self.initial_directory = initial_directory
         self.update()
 
+    async def get_directory_path_async(
+        self,
+        dialog_title: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+    ):
+        self.state = "getDirectoryPath"
+        self.dialog_title = dialog_title
+        self.initial_directory = initial_directory
+        await self.update_async()
+
     def upload(self, files: List[FilePickerUploadFile]):
         self.__upload = files
         self.update()
+
+    async def upload_async(self, files: List[FilePickerUploadFile]):
+        self.__upload = files
+        await self.update_async()
 
     # state
     @property

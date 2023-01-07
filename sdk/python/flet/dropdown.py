@@ -210,6 +210,10 @@ class Dropdown(FormFieldControl):
         self._set_attr_json("focus", FocusData())
         self.update()
 
+    async def focus_async(self):
+        self._set_attr_json("focus", FocusData())
+        await self.update_async()
+
     # options
     @property
     def options(self):
