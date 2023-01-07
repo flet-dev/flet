@@ -52,6 +52,12 @@ class Message:
 
 
 @dataclass
+class SimpleMessage:
+    action: str
+    payload: Any
+
+
+@dataclass
 class PageCommandRequestPayload:
     pageName: str
     sessionID: str

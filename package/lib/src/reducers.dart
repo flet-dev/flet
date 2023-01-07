@@ -26,7 +26,7 @@ enum Actions { increment, setText, setError }
 
 AppState appReducer(AppState state, dynamic action) {
   if (action is PageLoadAction) {
-    action.server.connect(serverUrl: getWebSocketEndpoint(action.pageUri));
+    action.server.connect(address: action.pageUri.toString());
     var sessionId = SessionStore.get("sessionId");
     return state.copyWith(
         pageUri: action.pageUri, sessionId: sessionId, isLoading: true);

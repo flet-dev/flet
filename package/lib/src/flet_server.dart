@@ -27,7 +27,7 @@ import 'protocol/update_control_props_request.dart';
 class FletServer {
   final Store<AppState> _store;
   late FletServerProtocol _clientProtocol;
-  String _serverUrl = "";
+  String _address = "";
   bool _connected = false;
   String _pageName = "";
   String _pageHash = "";
@@ -43,13 +43,13 @@ class FletServer {
 
   FletServer(this._store);
 
-  connect({required String serverUrl}) async {
-    _serverUrl = serverUrl;
+  connect({required String address}) async {
+    _address = address;
 
-    debugPrint("Connecting to Flet server $serverUrl...");
+    debugPrint("Connecting to Flet server $address...");
     try {
-      _clientProtocol = FletWebSocketServerProtocol(
-          address: _serverUrl,
+      _clientProtocol = FletServerProtocol(
+          address: _address,
           onDisconnect: _onDisconnect,
           onMessage: _onMessage);
       await _clientProtocol.connect();
@@ -65,7 +65,7 @@ class FletServer {
       debugPrint("Reconnect in ${_store.state.reconnectingTimeout} seconds");
       Future.delayed(Duration(seconds: _store.state.reconnectingTimeout))
           .then((value) {
-        connect(serverUrl: _serverUrl);
+        connect(address: _address);
         registerWebClientInternal();
       });
     }

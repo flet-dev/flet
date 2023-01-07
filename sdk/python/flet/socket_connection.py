@@ -53,7 +53,7 @@ class SocketConnection(Connection):
     def __on_ws_message(self, data):
         logging.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
-        msg = Message(**msg_dict)
+        msg = SimpleMessage(**msg_dict)
         if msg.action == Actions.PAGE_EVENT_TO_HOST:
             if self.__on_event is not None:
                 th = threading.Thread(
@@ -107,7 +107,7 @@ class SocketConnection(Connection):
                 # receive loop
                 while True:
                     message = self.__recv_msg(self.__connection)
-                    self.__on_ws_message(message)
+                    self.__on_ws_message(message.decode("utf-8"))
 
             finally:
                 logging.debug("Cloding connection")
