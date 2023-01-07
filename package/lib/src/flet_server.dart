@@ -202,7 +202,7 @@ class FletServer {
     _clientProtocol.send(m);
   }
 
-  void close() {
-    _clientProtocol.close();
+  void disconnect() {
+    _clientProtocol.disconnect();
   }
 }

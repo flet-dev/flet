@@ -42,7 +42,7 @@ class FletAppServices extends InheritedWidget {
   }
 
   void close() {
-    ws.close();
+    ws.disconnect();
   }
 
   static FletAppServices of(BuildContext context) =>

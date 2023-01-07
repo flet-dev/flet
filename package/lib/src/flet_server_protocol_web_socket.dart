@@ -35,7 +35,7 @@ class FletWebSocketServerProtocol implements FletServerProtocol {
   }
 
   @override
-  void close() {
+  void disconnect() {
     _channel?.sink.close();
   }
 }
