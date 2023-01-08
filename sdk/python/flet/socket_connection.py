@@ -122,9 +122,28 @@ class SocketConnection(Connection):
                     daemon=True,
                 )
                 th.start()
+        elif msg.action == ClientActions.UPDATE_CONTROL_PROPS:
+            if self.__on_event is not None:
+                th = threading.Thread(
+                    target=self.__on_event,
+                    args=(
+                        self,
+                        PageEventPayload(
+                            pageName=self.__client_details.pageName,
+                            sessionID=self.__client_details.sessionId,
+                            eventTarget="page",
+                            eventName="change",
+                            eventData=json.dumps(
+                                msg.payload["props"], separators=(",", ":")
+                            ),
+                        ),
+                    ),
+                    daemon=True,
+                )
+                th.start()
         else:
             # it's something else
-            print(msg.payload)
+            print("Unknown message:", msg.action, msg.payload)
 
     def send_command(self, session_id: str, command: Command):
         result, message = self.__process_command(command)
@@ -137,7 +156,8 @@ class SocketConnection(Connection):
         messages = []
         for command in commands:
             result, message = self.__process_command(command)
-            results.append(result)
+            if command.name in ["add", "get"]:
+                results.append(result)
             if message:
                 messages.append(message)
         if len(messages) > 0:
@@ -150,6 +170,12 @@ class SocketConnection(Connection):
             return self.__process_get_command(command.values)
         elif command.name == "add":
             return self.__process_add_command(command)
+        elif command.name == "set":
+            return self.__process_set_command(command.values, command.attrs)
+        elif command.name == "remove":
+            return self.__process_remove_command(command.values)
+        elif command.name == "clean":
+            return self.__process_clean_command(command.values)
         elif command.name == "invokeMethod":
             return self.__process_invoke_method_command(command.values, command.attrs)
         elif command.name == "error":
@@ -226,6 +252,28 @@ class SocketConnection(Connection):
 
         return " ".join(ids), ClientMessage(
             ClientActions.ADD_PAGE_CONTROLS, AddPageControlsPayload(controls=controls)
+        )
+
+    def __process_set_command(self, values, attrs):
+        assert len(values) == 1, '"set" command has wrong number of values'
+        props = {"i": values[0]}
+        for k, v in attrs.items():
+            props[k] = v
+
+        return "", ClientMessage(
+            ClientActions.UPDATE_CONTROL_PROPS, UpdateControlPropsPayload(props=[props])
+        )
+
+    def __process_remove_command(self, values):
+        assert len(values) > 0, '"remove" command has wrong number of values'
+        return "", ClientMessage(
+            ClientActions.REMOVE_CONTROL, RemoveControlPayload(ids=values)
+        )
+
+    def __process_clean_command(self, values):
+        assert len(values) > 0, '"clean" command has wrong number of values'
+        return "", ClientMessage(
+            ClientActions.CLEAN_CONTROL, CleanControlPayload(ids=values)
         )
 
     def __process_error_command(self, values):
