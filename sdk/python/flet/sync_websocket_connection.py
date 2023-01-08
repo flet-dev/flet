@@ -1,17 +1,17 @@
 import json
 import logging
 import threading
+import uuid
 from time import sleep
 from typing import List, Optional
-import uuid
+
 from flet import constants
 from flet.connection import Connection
-
 from flet.protocol import *
 from flet.reconnecting_websocket import ReconnectingWebSocket
 
 
-class SyncConnection(Connection):
+class SyncWebSocketConnection(Connection):
     def __init__(
         self,
         server_address: str,

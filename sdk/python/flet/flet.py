@@ -14,11 +14,11 @@ import zipfile
 from pathlib import Path
 
 from flet import version
-from flet.async_connection import AsyncConnection
+from flet.async_websocket_connection import AsyncWebSocketConnection
 from flet.event import Event
 from flet.page import Page
-from flet.socket_connection import SocketConnection
-from flet.sync_connection import SyncConnection
+from flet.sync_local_socket_connection import SyncLocalSocketConnection
+from flet.sync_websocket_connection import SyncWebSocketConnection
 from flet.utils import (
     get_arch,
     get_current_script_dir,
@@ -293,13 +293,13 @@ def __connect_internal_sync(
             page.error(f"There was an error while processing your request: {e}")
 
     if is_desktop:
-        conn = SocketConnection(
+        conn = SyncLocalSocketConnection(
             on_event=on_event,
             on_session_created=on_session_created,
         )
     else:
         assert server
-        conn = SyncConnection(
+        conn = SyncWebSocketConnection(
             server_address=server,
             page_name=page_name,
             token=auth_token,
@@ -360,7 +360,7 @@ async def __connect_internal_async(
                 f"There was an error while processing your request: {e}"
             )
 
-    conn = AsyncConnection(
+    conn = AsyncWebSocketConnection(
         server_address=server,
         page_name=page_name,
         auth_token=auth_token,

@@ -1,17 +1,19 @@
 import asyncio
 import json
 import logging
-from typing import List, Optional
 import uuid
-from flet import constants
-from flet.connection import Connection
+from asyncio.queues import Queue
+from typing import List, Optional
+
 import websockets.client as ws_client
 from websockets.client import WebSocketClientProtocol
+
+from flet import constants
+from flet.connection import Connection
 from flet.protocol import *
-from asyncio.queues import Queue
 
 
-class AsyncConnection(Connection):
+class AsyncWebSocketConnection(Connection):
     __CONNECT_TIMEOUT = 0.2
     __CONNECT_ATTEMPTS = 50
 
