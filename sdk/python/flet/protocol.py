@@ -9,6 +9,8 @@ class CommandEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Message):
             return obj.__dict__
+        elif isinstance(obj, ClientMessage):
+            return obj.__dict__
         elif isinstance(obj, Command):
             d = {}
             if obj.indent > 0:
@@ -47,12 +49,6 @@ class Command:
 @dataclass
 class Message:
     id: str
-    action: str
-    payload: Any
-
-
-@dataclass
-class SimpleMessage:
     action: str
     payload: Any
 
@@ -114,3 +110,82 @@ class RegisterHostClientResponsePayload:
 class PageSessionCreatedPayload:
     pageName: str
     sessionID: str
+
+
+#
+# Local client protocol for desktop apps
+#
+
+
+class ClientActions:
+    REGISTER_WEB_CLIENT = "registerWebClient"
+    PAGE_EVENT_FROM_WEB = "pageEventFromWeb"
+    SESSION_CRASHED = "sessionCrashed"
+    INVOKE_METHOD = "invokeMethod"
+    PAGE_CONTROLS_BATCH = "pageControlsBatch"
+    ADD_PAGE_CONTROLS = "addPageControls"
+    UPDATE_CONTROL_PROPS = "updateControlProps"
+    CLEAN_CONTROL = "cleanControl"
+    REMOVE_CONTROL = "removeControl"
+
+
+@dataclass
+class ClientMessage:
+    action: str
+    payload: Any
+
+
+@dataclass
+class RegisterWebClientPayload:
+    pageName: str
+    pageRoute: str
+    pageWidth: str
+    pageHeight: str
+    windowWidth: str
+    windowHeight: str
+    windowTop: str
+    windowLeft: str
+    isPWA: str
+    isWeb: str
+    platform: str
+    sessionId: str
+
+
+@dataclass
+class PageEventFromWebPayload:
+    eventTarget: str
+    eventName: str
+    eventData: str
+
+
+@dataclass
+class SessionCrashedPayload:
+    message: str
+
+
+@dataclass
+class InvokeMethodPayload:
+    methodId: str
+    methodName: str
+    arguments: Dict[str, str]
+
+
+@dataclass
+class AddPageControlsPayload:
+    controls: List[Dict[str, Any]]
+    trimIDs: List[str] = field(default_factory=lambda: [])
+
+
+@dataclass
+class UpdateControlPropsPayload:
+    props: List[Dict[str, str]]
+
+
+@dataclass
+class CleanControlPayload:
+    ids: List[str]
+
+
+@dataclass
+class RemoveControlPayload:
+    ids: List[str]

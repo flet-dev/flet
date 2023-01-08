@@ -138,7 +138,8 @@ def __app_sync(
     pid_file = None
 
     if (
-        (view == FLET_APP or view == FLET_APP_HIDDEN)
+        False
+        and (view == FLET_APP or view == FLET_APP_HIDDEN)
         and not is_linux_server()
         and url_prefix is None
     ):
@@ -257,7 +258,7 @@ def __connect_internal_sync(
     web_renderer=None,
     route_url_strategy=None,
 ):
-    is_desktop = view == FLET_APP or view == FLET_APP_HIDDEN
+    is_desktop = False  # view == FLET_APP or view == FLET_APP_HIDDEN
     if server is None and not is_desktop:
         server = __start_flet_server(
             host,

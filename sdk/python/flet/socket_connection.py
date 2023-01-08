@@ -23,6 +23,7 @@ class SocketConnection(Connection):
         super().__init__()
         self.__on_event = on_event
         self.__on_session_created = on_session_created
+        self.__control_id = 1
 
     def connect(self):
         if is_windows():
@@ -50,29 +51,39 @@ class SocketConnection(Connection):
         th = threading.Thread(target=self.__connection_loop, args=(), daemon=True)
         th.start()
 
-    def __on_ws_message(self, data):
+    def __on_message(self, data):
         logging.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
-        msg = SimpleMessage(**msg_dict)
-        if msg.action == Actions.PAGE_EVENT_TO_HOST:
-            if self.__on_event is not None:
-                th = threading.Thread(
-                    target=self.__on_event,
-                    args=(
-                        self,
-                        PageEventPayload(**msg.payload),
-                    ),
-                    daemon=True,
-                )
-                th.start()
-                # self._on_event(self, PageEventPayload(**msg.payload))
-        elif msg.action == Actions.SESSION_CREATED:
+        msg = ClientMessage(**msg_dict)
+        if msg.action == ClientActions.REGISTER_WEB_CLIENT:
+            self.__client_details = RegisterWebClientPayload(**msg.payload)
             if self.__on_session_created is not None:
                 th = threading.Thread(
                     target=self.__on_session_created,
                     args=(
                         self,
-                        PageSessionCreatedPayload(**msg.payload),
+                        PageSessionCreatedPayload(
+                            pageName=self.__client_details.pageName,
+                            sessionID=self.__client_details.sessionId,
+                        ),
+                    ),
+                    daemon=True,
+                )
+                th.start()
+        elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
+            if self.__on_event is not None:
+                web_event = PageEventFromWebPayload(**msg.payload)
+                th = threading.Thread(
+                    target=self.__on_event,
+                    args=(
+                        self,
+                        PageEventPayload(
+                            pageName=self.__client_details.pageName,
+                            sessionID=self.__client_details.sessionId,
+                            eventTarget=web_event.eventTarget,
+                            eventName=web_event.eventName,
+                            eventData=web_event.eventData,
+                        ),
                     ),
                     daemon=True,
                 )
@@ -82,10 +93,141 @@ class SocketConnection(Connection):
             print(msg.payload)
 
     def send_command(self, session_id: str, command: Command):
-        return PageCommandResponsePayload(result="", error="")
+        result, message = self.__process_command(command)
+        if message:
+            self.__send(message)
+        return PageCommandResponsePayload(result=result, error="")
 
     def send_commands(self, session_id: str, commands: List[Command]):
-        return PageCommandsBatchResponsePayload(results=[], error="")
+        results = []
+        messages = []
+        for command in commands:
+            result, message = self.__process_command(command)
+            results.append(result)
+            if message:
+                messages.append(message)
+        if len(messages) > 0:
+            self.__send(ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages))
+        return PageCommandsBatchResponsePayload(results=results, error="")
+
+    def __process_command(self, command: Command):
+        logging.debug("__process_command: {}".format(command))
+        if command.name == "get":
+            return self.__process_get_command(command.values)
+        elif command.name == "add":
+            return self.__process_add_command(command)
+        elif command.name == "invokeMethod":
+            return self.__process_invoke_method_command(command.values, command.attrs)
+        elif command.name == "error":
+            return self.__process_error_command(command.values)
+        raise Exception("Unsupported command: {}".format(command.name))
+
+    def __process_add_command(self, command: Command):
+
+        top_parent_id = command.attrs.get("to", "page")
+        top_parent_at = int(command.attrs.get("at", "-1"))
+
+        batch: List[Command] = []
+        if len(command.values) > 0:
+            batch.append(command)
+
+        for sub_cmd in command.commands:
+            sub_cmd.name = "add"
+            batch.append(sub_cmd)
+
+        ids = []
+        controls = []
+
+        i = 0
+        for cmd in batch:
+            assert len(cmd.values) > 0, "control type is not specified"
+            control_type = cmd.values[0].lower()
+
+            parent_id = ""
+            parent_at = -1
+
+            # find nearest parentID
+            pi = i - 1
+            while pi >= 0:
+                if batch[pi].indent < cmd.indent:
+                    parent_id = batch[pi].attrs.get("id", "")
+                    break
+                pi -= 1
+
+            # parent wasn't found - use the topmost one
+            if parent_id == "":
+                parent_id = top_parent_id
+                parent_at = top_parent_at
+
+            id = cmd.attrs.get("id", "")
+            if not id:
+                id = "_{}".format(self.__control_id)
+                self.__control_id += 1
+                cmd.attrs["id"] = id
+
+            ids.append(id)
+
+            control = {"t": control_type, "i": id, "p": parent_id, "c": []}
+            controls.append(control)
+
+            if parent_at != -1:
+                control["at"] = str(parent_at)
+                top_parent_at += 1
+
+            system_attrs = ["id", "to", "from", "at", "t", "p", "i", "c"]
+            for k, v in cmd.attrs.items():
+                if k not in system_attrs and v:
+                    control[k] = v
+
+            i += 1
+
+        return " ".join(ids), ClientMessage(
+            ClientActions.ADD_PAGE_CONTROLS, AddPageControlsPayload(controls=controls)
+        )
+
+    def __process_error_command(self, values):
+        assert len(values) == 1, '"error" command has wrong number of values'
+        return "", ClientMessage(
+            ClientActions.SESSION_CRASHED, SessionCrashedPayload(message=values[0])
+        )
+
+    def __process_invoke_method_command(self, values, attrs):
+        # "invokeMethod", values=[method_id, method_name], attrs=arguments
+        assert len(values) == 2, '"invokeMethod" command has wrong number of values'
+        return "", ClientMessage(
+            ClientActions.INVOKE_METHOD,
+            InvokeMethodPayload(
+                methodId=values[0], methodName=values[1], arguments=attrs
+            ),
+        )
+
+    def __process_get_command(self, values: List[str]):
+        assert len(values) == 2, '"get" command has wrong number of values'
+        ctrl_id = values[0]
+        prop_name = values[1]
+        r = ""
+        if ctrl_id == "page":
+            if prop_name == "route":
+                r = self.__client_details.pageRoute
+            elif prop_name == "pwa":
+                r = self.__client_details.isPWA
+            elif prop_name == "web":
+                r = self.__client_details.isWeb
+            elif prop_name == "platform":
+                r = self.__client_details.platform
+            elif prop_name == "width":
+                r = self.__client_details.pageWidth
+            elif prop_name == "height":
+                r = self.__client_details.pageHeight
+            elif prop_name == "windowWidth":
+                r = self.__client_details.windowWidth
+            elif prop_name == "windowHeight":
+                r = self.__client_details.windowHeight
+            elif prop_name == "windowTop":
+                r = self.__client_details.windowTop
+            elif prop_name == "windowLeft":
+                r = self.__client_details.windowLeft
+        return r, None
 
     def close(self):
         logging.debug("Closing connection...")
@@ -107,11 +249,17 @@ class SocketConnection(Connection):
                 # receive loop
                 while True:
                     message = self.__recv_msg(self.__connection)
-                    self.__on_ws_message(message.decode("utf-8"))
+                    if message:
+                        self.__on_message(message.decode("utf-8"))
 
             finally:
                 logging.debug("Cloding connection")
                 self.__connection.close()
+
+    def __send(self, message: ClientMessage):
+        j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
+        logging.debug(f"__send: {j}")
+        self.__send_msg(self.__connection, j.encode("utf-8"))
 
     def __send_msg(self, sock, msg):
         # Prefix each message with a 4-byte length (network byte order)
