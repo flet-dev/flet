@@ -56,7 +56,41 @@ class SocketConnection(Connection):
         msg_dict = json.loads(data)
         msg = ClientMessage(**msg_dict)
         if msg.action == ClientActions.REGISTER_WEB_CLIENT:
-            self.__client_details = RegisterWebClientPayload(**msg.payload)
+            self.__client_details = RegisterWebClientRequestPayload(**msg.payload)
+
+            # register response
+            self.__send(
+                ClientMessage(
+                    ClientActions.REGISTER_WEB_CLIENT,
+                    RegisterWebClientResponsePayload(
+                        session=SessionPayload(
+                            id=self.__client_details.sessionId,
+                            controls={
+                                "page": {
+                                    "i": "page",
+                                    "t": "page",
+                                    "p": "",
+                                    "c": [],
+                                    "route": self.__client_details.pageRoute,
+                                    "width": self.__client_details.pageWidth,
+                                    "height": self.__client_details.pageHeight,
+                                    "windowwidth": self.__client_details.windowWidth,
+                                    "windowheight": self.__client_details.windowHeight,
+                                    "windowtop": self.__client_details.windowTop,
+                                    "windowleft": self.__client_details.windowLeft,
+                                    "pwa": self.__client_details.isPWA,
+                                    "web": self.__client_details.isWeb,
+                                    "platform": self.__client_details.platform,
+                                }
+                            },
+                        ),
+                        appInactive=False,
+                        error="",
+                    ),
+                )
+            )
+
+            # start session
             if self.__on_session_created is not None:
                 th = threading.Thread(
                     target=self.__on_session_created,
@@ -137,6 +171,7 @@ class SocketConnection(Connection):
 
         ids = []
         controls = []
+        controls_idx = {}
 
         i = 0
         for cmd in batch:
@@ -169,10 +204,18 @@ class SocketConnection(Connection):
 
             control = {"t": control_type, "i": id, "p": parent_id, "c": []}
             controls.append(control)
+            controls_idx[id] = control
 
             if parent_at != -1:
                 control["at"] = str(parent_at)
                 top_parent_at += 1
+
+            parent_control = controls_idx.get(parent_id)
+            if parent_control:
+                if parent_at != -1:
+                    parent_control["c"].insert(parent_at, id)
+                else:
+                    parent_control["c"].append(id)
 
             system_attrs = ["id", "to", "from", "at", "t", "p", "i", "c"]
             for k, v in cmd.attrs.items():

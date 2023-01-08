@@ -136,7 +136,7 @@ class ClientMessage:
 
 
 @dataclass
-class RegisterWebClientPayload:
+class RegisterWebClientRequestPayload:
     pageName: str
     pageRoute: str
     pageWidth: str
@@ -149,6 +149,19 @@ class RegisterWebClientPayload:
     isWeb: str
     platform: str
     sessionId: str
+
+
+@dataclass
+class SessionPayload:
+    id: str
+    controls: Dict[str, Dict[str, Any]]
+
+
+@dataclass
+class RegisterWebClientResponsePayload:
+    session: SessionPayload
+    error: str
+    appInactive: bool
 
 
 @dataclass
