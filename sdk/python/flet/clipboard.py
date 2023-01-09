@@ -36,5 +36,11 @@ class Clipboard(CallableControl):
     def set_data(self, data: str):
         self._call_method("set_data", [data], wait_for_result=False)
 
+    async def set_data_async(self, data: str):
+        await self._call_method_async("set_data", [data], wait_for_result=False)
+
     def get_data(self) -> str:
         return self._call_method("get_data", [])
+
+    async def get_data_async(self) -> str:
+        return await self._call_method_async("get_data", [])

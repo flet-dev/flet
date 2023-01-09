@@ -37,6 +37,10 @@ void main([List<String>? args]) async {
       throw Exception('Page URL must be provided as a first argument.');
     }
     pageUrl = args[0];
+    if (args.length > 1) {
+      var pidFile = await File(args[1]).create();
+      await pidFile.writeAsString("$pid");
+    }
   }
 
   debugPrint("Page URL: $pageUrl");

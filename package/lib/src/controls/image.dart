@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io' as io;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -13,8 +14,11 @@ import '../utils/collections.dart';
 import '../utils/colors.dart';
 import '../utils/images.dart';
 import '../utils/uri.dart';
+import '../utils/desktop.dart';
 import 'create_control.dart';
 import 'error.dart';
+
+import 'image_io.dart' if (dart.library.js) "image_web.dart";
 
 class ImageControl extends StatelessWidget {
   final Control? parent;
@@ -88,6 +92,28 @@ class ImageControl extends StatelessWidget {
                 color: color,
                 colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
                 semanticsLabel: semanticsLabel);
+          } else if (isDesktop() && io.File(src).existsSync()) {
+            // from File
+            if (src.endsWith(".svg")) {
+              image = getSvgPictureFromFile(
+                  src: src,
+                  width: width,
+                  height: height,
+                  fit: fit ?? BoxFit.contain,
+                  color: color,
+                  blendMode: colorBlendMode ?? BlendMode.srcIn,
+                  semanticsLabel: semanticsLabel);
+            } else {
+              image = Image.file(io.File(src),
+                  width: width,
+                  height: height,
+                  repeat: repeat,
+                  fit: fit,
+                  color: color,
+                  gaplessPlayback: gaplessPlayback ?? false,
+                  colorBlendMode: colorBlendMode,
+                  semanticLabel: semanticsLabel);
+            }
           } else {
             var uri = Uri.parse(src);
             var imgSrc =

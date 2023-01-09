@@ -1,7 +1,11 @@
+import asyncio
+import inspect
 import math
 import os
 import platform
+import random
 import socket
+import string
 import sys
 import unicodedata
 import webbrowser
@@ -57,6 +61,21 @@ def get_arch():
 
 def open_in_browser(url):
     webbrowser.open(url)
+
+
+def random_string(length):
+    return "".join(random.choice(string.ascii_letters) for i in range(length))
+
+
+def is_asyncio():
+    try:
+        return asyncio.current_task() is not None
+    except RuntimeError:
+        return False
+
+
+def is_coroutine(method):
+    return inspect.iscoroutinefunction(method)
 
 
 # https://stackoverflow.com/questions/377017/test-if-executable-exists-in-python

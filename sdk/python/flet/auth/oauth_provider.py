@@ -35,5 +35,11 @@ class OAuthProvider:
     def _fetch_groups(self, access_token: str) -> List[Group]:
         return []
 
+    async def _fetch_groups_async(self, access_token: str) -> List[Group]:
+        return []
+
     def _fetch_user(self, access_token: str) -> Optional[User]:
+        return None
+
+    async def _fetch_user_async(self, access_token: str) -> Optional[User]:
         return None

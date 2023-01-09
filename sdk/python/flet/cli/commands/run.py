@@ -8,7 +8,7 @@ import sys
 import threading
 import time
 from flet.cli.commands.base import BaseCommand
-from flet.flet import open_flet_view
+from flet.flet import close_flet_view, open_flet_view
 from flet.utils import get_free_tcp_port, is_windows, open_in_browser
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
@@ -97,12 +97,7 @@ class Command(BaseCommand):
         except KeyboardInterrupt:
             pass
 
-        if my_event_handler.fvp is not None and not is_windows():
-            try:
-                logging.debug(f"Flet View process {my_event_handler.fvp.pid}")
-                os.kill(my_event_handler.fvp.pid + 1, signal.SIGKILL)
-            except:
-                pass
+        close_flet_view(my_event_handler.pid_file)
         my_observer.stop()
         my_observer.join()
 
@@ -118,6 +113,7 @@ class Handler(FileSystemEventHandler):
         self.last_time = time.time()
         self.is_running = False
         self.fvp = None
+        self.pid_file = None
         self.page_url_prefix = f"PAGE_URL_{time.time()}"
         self.page_url = None
         self.terminate = threading.Event()
@@ -165,7 +161,7 @@ class Handler(FileSystemEventHandler):
                 print(line)
 
     def open_flet_view_and_wait(self):
-        self.fvp = open_flet_view(self.page_url, self.hidden)
+        self.fvp, self.pid_file = open_flet_view(self.page_url, self.hidden)
         self.fvp.wait()
         self.p.kill()
         self.terminate.set()

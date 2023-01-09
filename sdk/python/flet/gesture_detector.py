@@ -64,7 +64,7 @@ class GestureDetector(ConstrainedControl):
     Attempts to recognize gestures that correspond to its non-null callbacks.
 
     If this control has a content, it defers to that child control for its sizing behavior. If it does not have a content, it grows to fit the parent instead.
-    
+
     Example:
     ```
     import flet as ft
@@ -106,6 +106,7 @@ class GestureDetector(ConstrainedControl):
 
     Online docs: https://flet.dev/docs/controls/gesturedetector
     """
+
     def __init__(
         self,
         content: Optional[Control] = None,
@@ -201,55 +202,65 @@ class GestureDetector(ConstrainedControl):
         )
 
         self.__on_tap_down = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
-        self._add_event_handler("tap_down", self.__on_tap_down.handler)
+        self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
 
         self.__on_tap_up = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
-        self._add_event_handler("tap_up", self.__on_tap_up.handler)
+        self._add_event_handler("tap_up", self.__on_tap_up.get_handler())
 
         self.__on_multi_tap = EventHandler(
             lambda e: MultiTapEvent(e.data.lower() == "true")
         )
-        self._add_event_handler("multi_tap", self.__on_multi_tap.handler)
+        self._add_event_handler("multi_tap", self.__on_multi_tap.get_handler())
 
         self.__on_secondary_tap_down = EventHandler(
             lambda e: TapEvent(**json.loads(e.data))
         )
         self._add_event_handler(
-            "secondary_tap_down", self.__on_secondary_tap_down.handler
+            "secondary_tap_down", self.__on_secondary_tap_down.get_handler()
         )
 
         self.__on_secondary_tap_up = EventHandler(
             lambda e: TapEvent(**json.loads(e.data))
         )
-        self._add_event_handler("secondary_tap_up", self.__on_secondary_tap_up.handler)
+        self._add_event_handler(
+            "secondary_tap_up", self.__on_secondary_tap_up.get_handler()
+        )
 
         self.__on_long_press_start = EventHandler(
             lambda e: LongPressStartEvent(**json.loads(e.data))
         )
-        self._add_event_handler("long_press_start", self.__on_long_press_start.handler)
+        self._add_event_handler(
+            "long_press_start", self.__on_long_press_start.get_handler()
+        )
 
         self.__on_long_press_end = EventHandler(
             lambda e: LongPressEndEvent(**json.loads(e.data))
         )
-        self._add_event_handler("long_press_end", self.__on_long_press_end.handler)
+        self._add_event_handler(
+            "long_press_end", self.__on_long_press_end.get_handler()
+        )
 
         self.__on_secondary_long_press_start = EventHandler(
             lambda e: LongPressStartEvent(**json.loads(e.data))
         )
         self._add_event_handler(
-            "secondary_long_press_start", self.__on_secondary_long_press_start.handler
+            "secondary_long_press_start",
+            self.__on_secondary_long_press_start.get_handler(),
         )
 
         self.__on_secondary_long_press_end = EventHandler(
             lambda e: LongPressEndEvent(**json.loads(e.data))
         )
         self._add_event_handler(
-            "secondary_long_press_end", self.__on_secondary_long_press_end.handler
+            "secondary_long_press_end",
+            self.__on_secondary_long_press_end.get_handler(),
         )
         self.__on_double_tap_down = EventHandler(
             lambda e: TapEvent(**json.loads(e.data))
         )
-        self._add_event_handler("double_tap_down", self.__on_double_tap_down.handler)
+        self._add_event_handler(
+            "double_tap_down", self.__on_double_tap_down.get_handler()
+        )
 
         # on_horizontal_drag
 
@@ -257,19 +268,19 @@ class GestureDetector(ConstrainedControl):
             lambda e: DragStartEvent(**json.loads(e.data))
         )
         self._add_event_handler(
-            "horizontal_drag_start", self.__on_horizontal_drag_start.handler
+            "horizontal_drag_start", self.__on_horizontal_drag_start.get_handler()
         )
         self.__on_horizontal_drag_update = EventHandler(
             lambda e: DragUpdateEvent(**json.loads(e.data))
         )
         self._add_event_handler(
-            "horizontal_drag_update", self.__on_horizontal_drag_update.handler
+            "horizontal_drag_update", self.__on_horizontal_drag_update.get_handler()
         )
         self.__on_horizontal_drag_end = EventHandler(
             lambda e: DragEndEvent(**json.loads(e.data))
         )
         self._add_event_handler(
-            "horizontal_drag_end", self.__on_horizontal_drag_end.handler
+            "horizontal_drag_end", self.__on_horizontal_drag_end.get_handler()
         )
 
         # on_vertical_drag
@@ -278,19 +289,19 @@ class GestureDetector(ConstrainedControl):
             lambda e: DragStartEvent(**json.loads(e.data))
         )
         self._add_event_handler(
-            "vertical_drag_start", self.__on_vertical_drag_start.handler
+            "vertical_drag_start", self.__on_vertical_drag_start.get_handler()
         )
         self.__on_vertical_drag_update = EventHandler(
             lambda e: DragUpdateEvent(**json.loads(e.data))
         )
         self._add_event_handler(
-            "vertical_drag_update", self.__on_vertical_drag_update.handler
+            "vertical_drag_update", self.__on_vertical_drag_update.get_handler()
         )
         self.__on_vertical_drag_end = EventHandler(
             lambda e: DragEndEvent(**json.loads(e.data))
         )
         self._add_event_handler(
-            "vertical_drag_end", self.__on_vertical_drag_end.handler
+            "vertical_drag_end", self.__on_vertical_drag_end.get_handler()
         )
 
         # on_pan
@@ -298,41 +309,41 @@ class GestureDetector(ConstrainedControl):
         self.__on_pan_start = EventHandler(
             lambda e: DragStartEvent(**json.loads(e.data))
         )
-        self._add_event_handler("pan_start", self.__on_pan_start.handler)
+        self._add_event_handler("pan_start", self.__on_pan_start.get_handler())
         self.__on_pan_update = EventHandler(
             lambda e: DragUpdateEvent(**json.loads(e.data))
         )
-        self._add_event_handler("pan_update", self.__on_pan_update.handler)
+        self._add_event_handler("pan_update", self.__on_pan_update.get_handler())
         self.__on_pan_end = EventHandler(lambda e: DragEndEvent(**json.loads(e.data)))
-        self._add_event_handler("pan_end", self.__on_pan_end.handler)
+        self._add_event_handler("pan_end", self.__on_pan_end.get_handler())
 
         # on_scale
 
         self.__on_scale_start = EventHandler(
             lambda e: ScaleStartEvent(**json.loads(e.data))
         )
-        self._add_event_handler("scale_start", self.__on_scale_start.handler)
+        self._add_event_handler("scale_start", self.__on_scale_start.get_handler())
         self.__on_scale_update = EventHandler(
             lambda e: ScaleUpdateEvent(**json.loads(e.data))
         )
-        self._add_event_handler("scale_update", self.__on_scale_update.handler)
+        self._add_event_handler("scale_update", self.__on_scale_update.get_handler())
         self.__on_scale_end = EventHandler(
             lambda e: ScaleEndEvent(**json.loads(e.data))
         )
-        self._add_event_handler("scale_end", self.__on_scale_end.handler)
+        self._add_event_handler("scale_end", self.__on_scale_end.get_handler())
 
         # on_hover
 
         self.__on_hover = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
-        self._add_event_handler("hover", self.__on_hover.handler)
+        self._add_event_handler("hover", self.__on_hover.get_handler())
         self.__on_enter = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
-        self._add_event_handler("enter", self.__on_enter.handler)
+        self._add_event_handler("enter", self.__on_enter.get_handler())
         self.__on_exit = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
-        self._add_event_handler("exit", self.__on_exit.handler)
+        self._add_event_handler("exit", self.__on_exit.get_handler())
 
         # on_scroll
         self.__on_scroll = EventHandler(lambda e: ScrollEvent(**json.loads(e.data)))
-        self._add_event_handler("scroll", self.__on_scroll.handler)
+        self._add_event_handler("scroll", self.__on_scroll.get_handler())
 
         self.content = content
         self.mouse_cursor = mouse_cursor

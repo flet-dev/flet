@@ -182,7 +182,7 @@ class _AudioControlState extends State<AudioControl> {
         sendResult(Object? result, String? error) {
           ws.pageEventFromWeb(
               eventTarget: widget.control.id,
-              eventName: "result",
+              eventName: "method_result",
               eventData: json.encode({
                 "i": i,
                 "r": result != null ? json.encode(result) : null,
