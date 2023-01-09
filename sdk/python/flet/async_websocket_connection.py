@@ -81,7 +81,7 @@ class AsyncWebSocketConnection(Connection):
             self.page_url += f"/{self.page_name}"
 
     async def __start_loops(self):
-        self.__receive_loop_task = asyncio.create_task(self.__receive_looop())
+        self.__receive_loop_task = asyncio.create_task(self.__receive_loop())
         self.__send_loop_task = asyncio.create_task(self.__send_loop())
         done, pending = await asyncio.wait(
             [self.__receive_loop_task, self.__send_loop_task],
@@ -124,7 +124,7 @@ class AsyncWebSocketConnection(Connection):
             # it's something else
             print(msg.payload)
 
-    async def __receive_looop(self):
+    async def __receive_loop(self):
         async for message in self.__ws:
             await self.__on_ws_message(message)
 
