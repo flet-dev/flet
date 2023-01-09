@@ -11,6 +11,65 @@ class LocalConnection(Connection):
         self._control_id = 1
         self._client_details = None
 
+    def _create_register_web_client_response(self):
+        assert self._client_details
+        return ClientMessage(
+            ClientActions.REGISTER_WEB_CLIENT,
+            RegisterWebClientResponsePayload(
+                session=SessionPayload(
+                    id=self._client_details.sessionId,
+                    controls={
+                        "page": {
+                            "i": "page",
+                            "t": "page",
+                            "p": "",
+                            "c": [],
+                            "route": self._client_details.pageRoute,
+                            "width": self._client_details.pageWidth,
+                            "height": self._client_details.pageHeight,
+                            "windowwidth": self._client_details.windowWidth,
+                            "windowheight": self._client_details.windowHeight,
+                            "windowtop": self._client_details.windowTop,
+                            "windowleft": self._client_details.windowLeft,
+                            "pwa": self._client_details.isPWA,
+                            "web": self._client_details.isWeb,
+                            "platform": self._client_details.platform,
+                        }
+                    },
+                ),
+                appInactive=False,
+                error="",
+            ),
+        )
+
+    def _create_session_handler_arg(self):
+        assert self._client_details
+        return PageSessionCreatedPayload(
+            pageName=self._client_details.pageName,
+            sessionID=self._client_details.sessionId,
+        )
+
+    def _create_page_event_handler_arg(self, msg: ClientMessage):
+        assert self._client_details
+        web_event = PageEventFromWebPayload(**msg.payload)
+        return PageEventPayload(
+            pageName=self._client_details.pageName,
+            sessionID=self._client_details.sessionId,
+            eventTarget=web_event.eventTarget,
+            eventName=web_event.eventName,
+            eventData=web_event.eventData,
+        )
+
+    def _create_update_control_props_handler_arg(self, msg: ClientMessage):
+        assert self._client_details
+        return PageEventPayload(
+            pageName=self._client_details.pageName,
+            sessionID=self._client_details.sessionId,
+            eventTarget="page",
+            eventName="change",
+            eventData=json.dumps(msg.payload["props"], separators=(",", ":")),
+        )
+
     def _process_command(self, command: Command):
         logging.debug("_process_command: {}".format(command))
         if command.name == "get":

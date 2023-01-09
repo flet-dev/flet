@@ -58,36 +58,7 @@ class SyncLocalSocketConnection(LocalConnection):
             self._client_details = RegisterWebClientRequestPayload(**msg.payload)
 
             # register response
-            self.__send(
-                ClientMessage(
-                    ClientActions.REGISTER_WEB_CLIENT,
-                    RegisterWebClientResponsePayload(
-                        session=SessionPayload(
-                            id=self._client_details.sessionId,
-                            controls={
-                                "page": {
-                                    "i": "page",
-                                    "t": "page",
-                                    "p": "",
-                                    "c": [],
-                                    "route": self._client_details.pageRoute,
-                                    "width": self._client_details.pageWidth,
-                                    "height": self._client_details.pageHeight,
-                                    "windowwidth": self._client_details.windowWidth,
-                                    "windowheight": self._client_details.windowHeight,
-                                    "windowtop": self._client_details.windowTop,
-                                    "windowleft": self._client_details.windowLeft,
-                                    "pwa": self._client_details.isPWA,
-                                    "web": self._client_details.isWeb,
-                                    "platform": self._client_details.platform,
-                                }
-                            },
-                        ),
-                        appInactive=False,
-                        error="",
-                    ),
-                )
-            )
+            self.__send(self._create_register_web_client_response())
 
             # start session
             if self.__on_session_created is not None:
@@ -95,29 +66,16 @@ class SyncLocalSocketConnection(LocalConnection):
                     target=self.__on_session_created,
                     args=(
                         self,
-                        PageSessionCreatedPayload(
-                            pageName=self._client_details.pageName,
-                            sessionID=self._client_details.sessionId,
-                        ),
+                        self._create_session_handler_arg(),
                     ),
                     daemon=True,
                 )
                 th.start()
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
             if self.__on_event is not None:
-                web_event = PageEventFromWebPayload(**msg.payload)
                 th = threading.Thread(
                     target=self.__on_event,
-                    args=(
-                        self,
-                        PageEventPayload(
-                            pageName=self._client_details.pageName,
-                            sessionID=self._client_details.sessionId,
-                            eventTarget=web_event.eventTarget,
-                            eventName=web_event.eventName,
-                            eventData=web_event.eventData,
-                        ),
-                    ),
+                    args=(self, self._create_page_event_handler_arg(msg)),
                     daemon=True,
                 )
                 th.start()
@@ -125,24 +83,13 @@ class SyncLocalSocketConnection(LocalConnection):
             if self.__on_event is not None:
                 th = threading.Thread(
                     target=self.__on_event,
-                    args=(
-                        self,
-                        PageEventPayload(
-                            pageName=self._client_details.pageName,
-                            sessionID=self._client_details.sessionId,
-                            eventTarget="page",
-                            eventName="change",
-                            eventData=json.dumps(
-                                msg.payload["props"], separators=(",", ":")
-                            ),
-                        ),
-                    ),
+                    args=(self, self._create_update_control_props_handler_arg(msg)),
                     daemon=True,
                 )
                 th.start()
         else:
             # it's something else
-            print("Unknown message:", msg.action, msg.payload)
+            raise Exception('Unknown message "{}": {}'.format(msg.action, msg.payload))
 
     def send_command(self, session_id: str, command: Command):
         result, message = self._process_command(command)
