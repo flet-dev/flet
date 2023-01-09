@@ -14,6 +14,7 @@ import zipfile
 from pathlib import Path
 
 from flet import version
+from flet.async_local_socket_connection import AsyncLocalSocketConnection
 from flet.async_websocket_connection import AsyncWebSocketConnection
 from flet.event import Event
 from flet.page import Page
@@ -324,7 +325,7 @@ async def __connect_internal_async(
     route_url_strategy=None,
 ):
     is_desktop = view == FLET_APP or view == FLET_APP_HIDDEN
-    if server is None:
+    if server is None and not is_desktop:
         server = __start_flet_server(
             host,
             port,
@@ -360,13 +361,20 @@ async def __connect_internal_async(
                 f"There was an error while processing your request: {e}"
             )
 
-    conn = AsyncWebSocketConnection(
-        server_address=server,
-        page_name=page_name,
-        auth_token=auth_token,
-        on_event=on_event,
-        on_session_created=on_session_created,
-    )
+    if is_desktop:
+        conn = AsyncLocalSocketConnection(
+            on_event=on_event,
+            on_session_created=on_session_created,
+        )
+    else:
+        assert server
+        conn = AsyncWebSocketConnection(
+            server_address=server,
+            page_name=page_name,
+            auth_token=auth_token,
+            on_event=on_event,
+            on_session_created=on_session_created,
+        )
     await conn.connect()
     return conn
 

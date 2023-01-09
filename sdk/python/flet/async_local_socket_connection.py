@@ -21,6 +21,7 @@ class AsyncLocalSocketConnection(LocalConnection):
         on_session_created=None,
     ):
         super().__init__()
+        self.__send_queue = asyncio.Queue(1)
         self.__on_event = on_event
         self.__on_session_created = on_session_created
         self._control_id = 1
@@ -49,7 +50,35 @@ class AsyncLocalSocketConnection(LocalConnection):
     async def handle_connection(
         self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ):
-        pass
+        asyncio.create_task(self.__receive_loop(reader))
+        asyncio.create_task(self.__send_loop(writer))
+
+    async def __receive_loop(self, reader: asyncio.StreamReader):
+        while True:
+            try:
+                raw_msglen = await reader.readexactly(4)
+            except asyncio.IncompleteReadError:
+                return None
+
+            if not raw_msglen:
+                return None
+            msglen = struct.unpack(">I", raw_msglen)[0]
+
+            data = await reader.readexactly(msglen)
+            await self.__on_message(data.decode("utf-8"))
+
+    async def __send_loop(self, writer: asyncio.StreamWriter):
+        while True:
+            message = await self.__send_queue.get()
+            try:
+                data = message.encode("utf-8")
+                msg = struct.pack(">I", len(data)) + data
+                writer.write(msg)
+                await writer.drain()
+            except:
+                # re-enqueue the message to repeat it when re-connected
+                self.__send_queue.put_nowait(message)
+                raise
 
     async def __on_message(self, data: str):
         logging.debug(f"_on_message: {data}")
@@ -103,7 +132,12 @@ class AsyncLocalSocketConnection(LocalConnection):
             )
         return PageCommandsBatchResponsePayload(results=results, error="")
 
-    async def close_async(self):
+    async def __send(self, message: ClientMessage):
+        j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
+        logging.debug(f"__send: {j}")
+        await self.__send_queue.put(j)
+
+    async def close(self):
         logging.debug("Closing connection...")
         # close socket
         if self.__server:
@@ -112,25 +146,3 @@ class AsyncLocalSocketConnection(LocalConnection):
         # remove UDS path
         if self.__uds_path and os.path.exists(self.__uds_path):
             os.unlink(self.__uds_path)
-
-    def __connection_loop(self):
-        while True:
-            logging.debug("Waiting for a client connection")
-            self.__connection, client_address = self.__sock.accept()
-            try:
-                logging.debug(f"Connection from {client_address}")
-
-                # receive loop
-                while True:
-                    message = self.__recv_msg(self.__connection)
-                    if message:
-                        self.__on_message(message.decode("utf-8"))
-
-            finally:
-                logging.debug("Cloding connection")
-                self.__connection.close()
-
-    async def __send(self, message: ClientMessage):
-        j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
-        logging.debug(f"__send: {j}")
-        self.__send_msg(self.__connection, j.encode("utf-8"))
