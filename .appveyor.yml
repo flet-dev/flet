@@ -426,7 +426,7 @@ for:
       - python --version
       - cd sdk/python
       - pip install --upgrade setuptools wheel twine poetry
-      - pdm install
+      - poetry install
 
     test: off
 
