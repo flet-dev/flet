@@ -50,9 +50,7 @@ class Control:
         self.__data: Any = None
         self.data = data
         self.__event_handlers = {}
-        self.__ref = ref
-        if self.__ref:
-            self.__ref.current = self
+        self.ref = ref
 
     def _is_isolated(self):
         return False
