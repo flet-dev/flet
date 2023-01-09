@@ -1,24 +1,10 @@
-[project]
+[tool.poetry]
 name = "flet"
 version = "0.1.0"
 description = "Flet for Python - easily build interactive multi-platform apps in Python"
+authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
+license = "MIT"
 readme = "README.md"
-authors = [
-    { name = "Appveyor Systems Inc.", email = "hello@flet.dev" },
-]
-dependencies = [
-    "websocket-client>=1.2.1",
-    "beartype>=0.9.1",
-    'typing_extensions; python_version < "3.8"',
-    "repath>=0.9.0",
-    "watchdog>=2.1.9",
-    "oauthlib>=3.2.0",
-    "websockets>=10.4",
-    "httpx>=0.23.1",
-    "packaging>=22.0",
-]
-requires-python = ">=3.7"
-license = { text = "MIT" }
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.7",
@@ -27,31 +13,32 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-[project.urls]
+[tool.poetry.urls]
+homepage = "https://flet.dev"
 repository = "https://github.com/flet-dev/flet"
-documentation = "https://flet.dev/docs/"
+documentation = "https://flet.dev/docs"
 
-[project.optional-dependencies]
+[tool.poetry.dependencies]
+python = "^3.7"
+beartype = "^0.11.0"
+typing-extensions = { version = "^4.4.0", python = "<3.8" }
+repath = "^0.9.0"
+websocket-client = "^1.4.2"
+watchdog = "^2.2.1"
+oauthlib = "^3.2.2"
+websockets = "^10.4"
+httpx = "^0.23.3"
+packaging = "^23.0"
 
-[tool.pdm.dev-dependencies]
-tests = [
-    "pytest>=6.1.2",
-]
-dev = [
-    "pre-commit>=2.17.0",
-    "cryptography>=39.0.0",
-]
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
 
-[project.scripts]
+[tool.poetry.scripts]
 flet = "flet.cli.cli:main"
 
 [project.entry-points.pyinstaller40]
 hook-dirs = "flet.__pyinstaller:get_hook_dirs"
 
 [build-system]
-requires = ["pdm-pep517"]
-build-backend = "pdm.pep517.api"
-
-[tool.isort]
-profile = "black"
-float_to_top = true
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
