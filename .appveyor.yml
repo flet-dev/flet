@@ -86,14 +86,14 @@ environment:
     #   python_stack: python 3.11
     #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Build Python wheels
-    #   job_group: python_build
-    #   job_depends_on: python_tests, build_flet
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-    #   TWINE_USERNAME: __token__
-    #   TWINE_PASSWORD:
-    #     secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
-    #   TWINE_NON_INTERACTIVE: true
+    - job_name: Build Python wheels
+      job_group: python_build
+      job_depends_on: python_tests, build_flet
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      TWINE_USERNAME: __token__
+      TWINE_PASSWORD:
+        secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
+      TWINE_NON_INTERACTIVE: true
 
 matrix:
   fast_finish: true
@@ -425,7 +425,7 @@ for:
     install:
       - python --version
       - cd sdk/python
-      - pip install --upgrade setuptools wheel twine pdm
+      - pip install --upgrade setuptools wheel twine poetry
       - pdm install
 
     test: off
@@ -438,7 +438,7 @@ for:
           (Get-Content flet/version.py).replace("version = `"`"", "version = `"$ver`"") | Set-Content flet/version.py
 
       # build package
-      - pdm build
+      - poetry build
       - python3 build-wheels.py
 
       # publish package

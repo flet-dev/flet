@@ -5,13 +5,6 @@ description = "Flet for Python - easily build interactive multi-platform apps in
 authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
 license = "MIT"
 readme = "README.md"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
 
 [tool.poetry.urls]
 homepage = "https://flet.dev"
