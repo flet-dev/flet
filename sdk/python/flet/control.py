@@ -50,8 +50,9 @@ class Control:
         self.__data: Any = None
         self.data = data
         self.__event_handlers = {}
-        if ref:
-            ref.current = self
+        self.__ref = ref
+        if self.__ref:
+            self.__ref.current = self
 
     def _is_isolated(self):
         return False
@@ -171,6 +172,17 @@ class Control:
     @_id.setter
     def _id(self, value):
         self._set_attr("id", value)
+
+    # ref
+    @property
+    def ref(self):
+        return self.__ref
+
+    @ref.setter
+    def ref(self, ref: Optional[Ref]):
+        if ref:
+            ref.current = self
+        self.__ref = ref
 
     # page
     @property
