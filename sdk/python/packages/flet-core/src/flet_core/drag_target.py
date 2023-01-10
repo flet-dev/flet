@@ -1,7 +1,6 @@
 import json
 from typing import Any, Optional
 
-from beartype import beartype
 from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler

@@ -1,7 +1,5 @@
-from typing import Any, Optional, Union
+from typing import Any, List, Optional, Union
 
-from beartype import beartype
-from beartype.typing import List
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref

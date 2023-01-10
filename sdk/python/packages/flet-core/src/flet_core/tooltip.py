@@ -1,6 +1,5 @@
 from typing import Any, Optional, Union
 
-from beartype import beartype
 from flet_core.border import Border
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient

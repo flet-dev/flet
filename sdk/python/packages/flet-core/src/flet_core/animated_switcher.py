@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
-from beartype import beartype
 from flet_core.animation import AnimationCurve, AnimationCurveString
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber

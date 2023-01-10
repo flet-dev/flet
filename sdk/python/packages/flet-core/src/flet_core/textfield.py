@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
-from beartype import beartype
 from flet_core.control import Control, OptionalNumber
 from flet_core.focus import FocusData
 from flet_core.form_field_control import FormFieldControl, InputBorder

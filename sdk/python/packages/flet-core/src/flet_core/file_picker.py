@@ -1,10 +1,8 @@
 import json
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, List, Optional, Union
 
-from beartype import beartype
-from beartype.typing import List
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.dropdown import Option

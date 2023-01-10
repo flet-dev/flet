@@ -1,6 +1,5 @@
 from typing import Any, Optional
 
-from beartype import beartype
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 

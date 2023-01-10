@@ -1,6 +1,5 @@
 from typing import Any, Optional, Union
 
-from beartype import beartype
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber

@@ -1,7 +1,6 @@
 import json
 from typing import Any, Optional, Union
 
-from beartype import beartype
 from flet_core.alignment import Alignment
 from flet_core.border import Border
 from flet_core.constrained_control import ConstrainedControl

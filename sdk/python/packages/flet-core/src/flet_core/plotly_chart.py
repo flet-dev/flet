@@ -3,7 +3,6 @@ import re
 import xml.etree.ElementTree as ET
 from typing import Any, Optional, Union
 
-from beartype import beartype
 from flet_core import alignment
 from flet_core.container import Container
 from flet_core.control import OptionalNumber

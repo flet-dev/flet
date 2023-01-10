@@ -1,8 +1,6 @@
 import json
-from typing import Any, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
-from beartype import beartype
-from beartype.typing import Dict, List
 from flet_core.border import Border, BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber

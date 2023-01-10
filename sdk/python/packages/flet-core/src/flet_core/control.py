@@ -1,10 +1,8 @@
 import datetime as dt
 import json
 from difflib import SequenceMatcher
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
-from beartype import beartype
-from beartype.typing import Dict, List, Optional
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
 from flet_core.ref import Ref

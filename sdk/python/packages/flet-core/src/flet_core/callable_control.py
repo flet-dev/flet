@@ -4,8 +4,6 @@ import json
 import threading
 from typing import Any, Dict, List, Optional, Union
 
-from beartype import beartype
-
 from flet_core.control import Control
 from flet_core.ref import Ref
 

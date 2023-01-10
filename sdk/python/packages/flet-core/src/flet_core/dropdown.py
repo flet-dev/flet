@@ -1,6 +1,5 @@
 from typing import Any, Optional, Union
 
-from beartype import beartype
 from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
 from flet_core.focus import FocusData

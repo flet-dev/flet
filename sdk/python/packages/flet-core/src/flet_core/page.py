@@ -5,11 +5,9 @@ import threading
 import time
 import uuid
 from dataclasses import dataclass
-from typing import Any, Tuple, Union, cast
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
-from beartype import beartype
-from beartype.typing import Dict, List, Optional
 from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
 from flet_core.client_storage import ClientStorage

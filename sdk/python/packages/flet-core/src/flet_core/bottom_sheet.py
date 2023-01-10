@@ -1,7 +1,5 @@
-from typing import Any, Optional
+from typing import Any, List, Optional
 
-from beartype import beartype
-from beartype.typing import List
 from flet_core.control import Control
 from flet_core.ref import Ref
 

@@ -1,7 +1,5 @@
 from enum import Enum
-from typing import Union
-
-from beartype.typing import Dict
+from typing import Dict, Union
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius

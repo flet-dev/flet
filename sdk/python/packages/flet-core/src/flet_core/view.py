@@ -1,5 +1,5 @@
-from beartype import beartype
-from beartype.typing import List, Optional
+from typing import List, Optional
+
 from flet_core import Control
 from flet_core.app_bar import AppBar
 from flet_core.control import OptionalNumber
