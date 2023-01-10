@@ -2,7 +2,6 @@ from typing import Any, Optional
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control
 from flet_core.ref import Ref
