@@ -2,7 +2,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -52,7 +51,6 @@ class PopupMenuItem(Control):
         return self._get_attr("checked", data_type="bool")
 
     @checked.setter
-    @beartype
     def checked(self, value: Optional[bool]):
         self._set_attr("checked", value)
 
@@ -222,7 +220,6 @@ class PopupMenuButton(ConstrainedControl):
         return self.__items
 
     @items.setter
-    @beartype
     def items(self, value: Optional[List[PopupMenuItem]]):
         self.__items = value if value is not None else []
 
@@ -250,6 +247,5 @@ class PopupMenuButton(ConstrainedControl):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Optional[Control]):
         self.__content = value

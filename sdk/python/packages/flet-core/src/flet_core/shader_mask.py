@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
@@ -145,7 +144,6 @@ class ShaderMask(ConstrainedControl):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
 
@@ -162,7 +160,6 @@ class ShaderMask(ConstrainedControl):
         else:
             self.__set_blend_mode(value)
 
-    @beartype
     def __set_blend_mode(self, value: BlendModeString):
         self._set_attr("blendMode", value)
 
@@ -172,7 +169,6 @@ class ShaderMask(ConstrainedControl):
         return self.__shader
 
     @shader.setter
-    @beartype
     def shader(self, value: Optional[Gradient]):
         self.__shader = value
 
@@ -182,6 +178,5 @@ class ShaderMask(ConstrainedControl):
         return self.__border_radius
 
     @border_radius.setter
-    @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value

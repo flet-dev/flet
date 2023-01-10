@@ -2,7 +2,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -163,7 +162,6 @@ class GridView(ConstrainedControl):
         return self._get_attr("horizontal")
 
     @horizontal.setter
-    @beartype
     def horizontal(self, value: Optional[bool]):
         self._set_attr("horizontal", value)
 
@@ -173,7 +171,6 @@ class GridView(ConstrainedControl):
         return self._get_attr("runsCount")
 
     @runs_count.setter
-    @beartype
     def runs_count(self, value: Optional[int]):
         self._set_attr("runsCount", value)
 
@@ -183,7 +180,6 @@ class GridView(ConstrainedControl):
         return self._get_attr("maxExtent")
 
     @max_extent.setter
-    @beartype
     def max_extent(self, value: OptionalNumber):
         self._set_attr("maxExtent", value)
 
@@ -193,7 +189,6 @@ class GridView(ConstrainedControl):
         return self._get_attr("spacing")
 
     @spacing.setter
-    @beartype
     def spacing(self, value: OptionalNumber):
         self._set_attr("spacing", value)
 
@@ -203,7 +198,6 @@ class GridView(ConstrainedControl):
         return self._get_attr("runSpacing")
 
     @run_spacing.setter
-    @beartype
     def run_spacing(self, value: OptionalNumber):
         self._set_attr("runSpacing", value)
 
@@ -213,7 +207,6 @@ class GridView(ConstrainedControl):
         return self._get_attr("childAspectRatio")
 
     @child_aspect_ratio.setter
-    @beartype
     def child_aspect_ratio(self, value: OptionalNumber):
         self._set_attr("childAspectRatio", value)
 
@@ -223,7 +216,6 @@ class GridView(ConstrainedControl):
         return self.__padding
 
     @padding.setter
-    @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
 

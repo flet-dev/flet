@@ -2,7 +2,6 @@ from typing import Optional
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
@@ -104,7 +103,6 @@ class AppBar(Control):
         return self.__leading
 
     @leading.setter
-    @beartype
     def leading(self, value: Optional[Control]):
         """
         A Control to display before the toolbar's title.
@@ -119,7 +117,6 @@ class AppBar(Control):
         return self._get_attr("leadingWidth")
 
     @leading_width.setter
-    @beartype
     def leading_width(self, value: OptionalNumber):
         self._set_attr("leadingWidth", value)
 
@@ -131,7 +128,6 @@ class AppBar(Control):
         )
 
     @automatically_imply_leading.setter
-    @beartype
     def automatically_imply_leading(self, value: Optional[bool]):
         self._set_attr("automaticallyImplyLeading", value)
 
@@ -141,7 +137,6 @@ class AppBar(Control):
         return self.__title
 
     @title.setter
-    @beartype
     def title(self, value: Optional[Control]):
         self.__title = value
 
@@ -151,7 +146,6 @@ class AppBar(Control):
         return self._get_attr("centerTitle", data_type="bool", def_value=False)
 
     @center_title.setter
-    @beartype
     def center_title(self, value: Optional[bool]):
         self._set_attr("centerTitle", value)
 
@@ -161,7 +155,6 @@ class AppBar(Control):
         return self._get_attr("toolbarHeight")
 
     @toolbar_height.setter
-    @beartype
     def toolbar_height(self, value: OptionalNumber):
         self._set_attr("toolbarHeight", value)
 
@@ -189,7 +182,6 @@ class AppBar(Control):
         return self._get_attr("elevation")
 
     @elevation.setter
-    @beartype
     def elevation(self, value: OptionalNumber):
         self._set_attr("elevation", value)
 

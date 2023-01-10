@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -34,16 +33,6 @@ def test_horizontal_alignment_str():
     assert cmd[0].attrs["horizontalalignment"] == "center"
 
 
-def test_horizontal_alignment_wrong_str_raises_beartype():
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.View(horizontal_alignment="center1")
-
-
-def test_horizontal_alignment_wrong_type_raises_beartype():
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.View(horizontal_alignment=1)
-
-
 def test_vertical_alignment_enum():
     r = ft.View(vertical_alignment=ft.MainAxisAlignment.CENTER)
     assert isinstance(r.vertical_alignment, ft.MainAxisAlignment)
@@ -58,16 +47,6 @@ def test_vertical_alignment_str():
     assert isinstance(r._get_attr("verticalAlignment"), str)
     cmd = r._build_add_commands()
     assert cmd[0].attrs["verticalalignment"] == "center"
-
-
-def test_vertical_alignment_wrong_str_raises_beartype():
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.View(vertical_alignment="center1")
-
-
-def test_vertical_alignment_wrong_type_raises_beartype():
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.View(vertical_alignment=1)
 
 
 def test_scroll_enum():
@@ -91,9 +70,3 @@ def test_scroll_enum():
     r = ft.View(scroll=False)
     assert isinstance(r.scroll, bool)
     assert r._get_attr("scroll") is None
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.View(scroll="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.View(scroll=1)

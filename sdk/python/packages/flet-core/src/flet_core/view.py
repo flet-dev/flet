@@ -81,7 +81,6 @@ class View(Control):
         return self._get_attr("route")
 
     @route.setter
-    @beartype
     def route(self, value):
         self._set_attr("route", value)
 
@@ -91,7 +90,6 @@ class View(Control):
         return self.__controls
 
     @controls.setter
-    @beartype
     def controls(self, value: List[Control]):
         self.__controls = value
 
@@ -101,7 +99,6 @@ class View(Control):
         return self.__appbar
 
     @appbar.setter
-    @beartype
     def appbar(self, value: Optional[AppBar]):
         self.__appbar = value
 
@@ -111,7 +108,6 @@ class View(Control):
         return self.__fab
 
     @floating_action_button.setter
-    @beartype
     def floating_action_button(self, value: Optional[FloatingActionButton]):
         self.__fab = value
 
@@ -121,7 +117,6 @@ class View(Control):
         return self.__navigation_bar
 
     @navigation_bar.setter
-    @beartype
     def navigation_bar(self, value: Optional[NavigationBar]):
         self.__navigation_bar = value
 
@@ -138,7 +133,6 @@ class View(Control):
         else:
             self.__set_horizontal_alignment(value)
 
-    @beartype
     def __set_horizontal_alignment(self, value: CrossAxisAlignmentString):
         self._set_attr("horizontalAlignment", value)
 
@@ -155,7 +149,6 @@ class View(Control):
         else:
             self.__set_vertical_alignment(value)
 
-    @beartype
     def __set_vertical_alignment(self, value: MainAxisAlignmentString):
         self._set_attr("verticalAlignment", value)
 
@@ -165,7 +158,6 @@ class View(Control):
         return self._get_attr("spacing")
 
     @spacing.setter
-    @beartype
     def spacing(self, value: OptionalNumber):
         self._set_attr("spacing", value)
 
@@ -175,7 +167,6 @@ class View(Control):
         return self.__padding
 
     @padding.setter
-    @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
 
@@ -201,7 +192,6 @@ class View(Control):
         else:
             self.__set_scroll(value)
 
-    @beartype
     def __set_scroll(self, value: Optional[ScrollModeString]):
         if value == True:
             value = "auto"
@@ -215,6 +205,5 @@ class View(Control):
         return self._get_attr("autoScroll")
 
     @auto_scroll.setter
-    @beartype
     def auto_scroll(self, value: Optional[bool]):
         self._set_attr("autoScroll", value)

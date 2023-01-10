@@ -2,7 +2,6 @@ from typing import Any, Optional
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import PaddingValue
@@ -117,7 +116,6 @@ class Banner(Control):
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
-    @beartype
     def open(self, value: Optional[bool]):
         self._set_attr("open", value)
 
@@ -127,7 +125,6 @@ class Banner(Control):
         return self._get_attr("modal", data_type="bool", def_value=False)
 
     @modal.setter
-    @beartype
     def modal(self, value: Optional[bool]):
         self._set_attr("modal", value)
 
@@ -146,7 +143,6 @@ class Banner(Control):
         return self.__leading_padding
 
     @leading_padding.setter
-    @beartype
     def leading_padding(self, value: PaddingValue):
         self.__leading_padding = value
 
@@ -165,7 +161,6 @@ class Banner(Control):
         return self.__content_padding
 
     @content_padding.setter
-    @beartype
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
 
@@ -184,7 +179,6 @@ class Banner(Control):
         return self._get_attr("forceActionsBelow", data_type="bool", def_value=False)
 
     @force_actions_below.setter
-    @beartype
     def force_actions_below(self, value: Optional[bool]):
         self._set_attr("forceActionsBelow", value)
 
@@ -194,6 +188,5 @@ class Banner(Control):
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    @beartype
     def bgcolor(self, value):
         self._set_attr("bgColor", value)

@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
@@ -96,7 +95,6 @@ class ConstrainedControl(Control):
         return self._get_attr("width")
 
     @width.setter
-    @beartype
     def width(self, value: OptionalNumber):
         self._set_attr("width", value)
 
@@ -106,7 +104,6 @@ class ConstrainedControl(Control):
         return self._get_attr("height")
 
     @height.setter
-    @beartype
     def height(self, value: OptionalNumber):
         self._set_attr("height", value)
 
@@ -116,7 +113,6 @@ class ConstrainedControl(Control):
         return self._get_attr("left")
 
     @left.setter
-    @beartype
     def left(self, value: OptionalNumber):
         self._set_attr("left", value)
 
@@ -126,7 +122,6 @@ class ConstrainedControl(Control):
         return self._get_attr("top")
 
     @top.setter
-    @beartype
     def top(self, value: OptionalNumber):
         self._set_attr("top", value)
 
@@ -136,7 +131,6 @@ class ConstrainedControl(Control):
         return self._get_attr("right")
 
     @right.setter
-    @beartype
     def right(self, value: OptionalNumber):
         self._set_attr("right", value)
 
@@ -146,7 +140,6 @@ class ConstrainedControl(Control):
         return self._get_attr("bottom")
 
     @bottom.setter
-    @beartype
     def bottom(self, value: OptionalNumber):
         self._set_attr("bottom", value)
 
@@ -156,7 +149,6 @@ class ConstrainedControl(Control):
         return self.__rotate
 
     @rotate.setter
-    @beartype
     def rotate(self, value: RotateValue):
         self.__rotate = value
 
@@ -166,7 +158,6 @@ class ConstrainedControl(Control):
         return self.__scale
 
     @scale.setter
-    @beartype
     def scale(self, value: ScaleValue):
         self.__scale = value
 
@@ -176,7 +167,6 @@ class ConstrainedControl(Control):
         return self.__offset
 
     @offset.setter
-    @beartype
     def offset(self, value: OffsetValue):
         self.__offset = value
 
@@ -186,7 +176,6 @@ class ConstrainedControl(Control):
         return self._get_attr("aspectRatio")
 
     @aspect_ratio.setter
-    @beartype
     def aspect_ratio(self, value: OptionalNumber):
         self._set_attr("aspectRatio", value)
 
@@ -196,7 +185,6 @@ class ConstrainedControl(Control):
         return self.__animate_opacity
 
     @animate_opacity.setter
-    @beartype
     def animate_opacity(self, value: AnimationValue):
         self.__animate_opacity = value
 
@@ -206,7 +194,6 @@ class ConstrainedControl(Control):
         return self.__animate_size
 
     @animate_size.setter
-    @beartype
     def animate_size(self, value: AnimationValue):
         self.__animate_size = value
 
@@ -216,7 +203,6 @@ class ConstrainedControl(Control):
         return self.__animate_position
 
     @animate_position.setter
-    @beartype
     def animate_position(self, value: AnimationValue):
         self.__animate_position = value
 
@@ -226,7 +212,6 @@ class ConstrainedControl(Control):
         return self.__animate_rotation
 
     @animate_rotation.setter
-    @beartype
     def animate_rotation(self, value: AnimationValue):
         self.__animate_rotation = value
 
@@ -236,7 +221,6 @@ class ConstrainedControl(Control):
         return self.__animate_scale
 
     @animate_scale.setter
-    @beartype
     def animate_scale(self, value: AnimationValue):
         self.__animate_scale = value
 
@@ -246,7 +230,6 @@ class ConstrainedControl(Control):
         return self.__animate_offset
 
     @animate_offset.setter
-    @beartype
     def animate_offset(self, value: AnimationValue):
         self.__animate_offset = value
 

@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -168,7 +167,6 @@ class ListTile(ConstrainedControl):
         return self.__content_padding
 
     @content_padding.setter
-    @beartype
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
 
@@ -178,7 +176,6 @@ class ListTile(ConstrainedControl):
         return self.__leading
 
     @leading.setter
-    @beartype
     def leading(self, value: Optional[Control]):
         self.__leading = value
 
@@ -188,7 +185,6 @@ class ListTile(ConstrainedControl):
         return self.__title
 
     @title.setter
-    @beartype
     def title(self, value: Optional[Control]):
         self.__title = value
 
@@ -198,7 +194,6 @@ class ListTile(ConstrainedControl):
         return self.__subtitle
 
     @subtitle.setter
-    @beartype
     def subtitle(self, value: Optional[Control]):
         self.__subtitle = value
 
@@ -208,7 +203,6 @@ class ListTile(ConstrainedControl):
         return self.__trailing
 
     @trailing.setter
-    @beartype
     def trailing(self, value: Optional[Control]):
         self.__trailing = value
 
@@ -218,7 +212,6 @@ class ListTile(ConstrainedControl):
         return self._get_attr("isThreeLine", data_type="bool", def_value=False)
 
     @is_three_line.setter
-    @beartype
     def is_three_line(self, value: Optional[bool]):
         self._set_attr("isThreeLine", value)
 
@@ -228,7 +221,6 @@ class ListTile(ConstrainedControl):
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
-    @beartype
     def selected(self, value: Optional[bool]):
         self._set_attr("selected", value)
 
@@ -238,7 +230,6 @@ class ListTile(ConstrainedControl):
         return self._get_attr("dense", data_type="bool", def_value=False)
 
     @dense.setter
-    @beartype
     def dense(self, value: Optional[bool]):
         self._set_attr("dense", value)
 
@@ -248,7 +239,6 @@ class ListTile(ConstrainedControl):
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
-    @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
 

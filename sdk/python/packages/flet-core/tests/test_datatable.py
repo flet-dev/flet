@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command

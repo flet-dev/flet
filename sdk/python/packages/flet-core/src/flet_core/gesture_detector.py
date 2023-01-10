@@ -3,7 +3,6 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
@@ -397,7 +396,6 @@ class GestureDetector(ConstrainedControl):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
 
@@ -407,7 +405,6 @@ class GestureDetector(ConstrainedControl):
         return self._get_attr("mouseCursor")
 
     @mouse_cursor.setter
-    @beartype
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self._set_attr("mouseCursor", value.value if value is not None else None)
 
@@ -417,7 +414,6 @@ class GestureDetector(ConstrainedControl):
         return self._get_attr("dragInterval")
 
     @drag_interval.setter
-    @beartype
     def drag_interval(self, value: Optional[int]):
         self._set_attr("dragInterval", value)
 
@@ -427,7 +423,6 @@ class GestureDetector(ConstrainedControl):
         return self._get_attr("hoverInterval")
 
     @hover_interval.setter
-    @beartype
     def hover_interval(self, value: Optional[int]):
         self._set_attr("hoverInterval", value)
 
@@ -477,7 +472,6 @@ class GestureDetector(ConstrainedControl):
         return self._get_attr("multiTapTouches")
 
     @multi_tap_touches.setter
-    @beartype
     def multi_tap_touches(self, value: Optional[int]):
         self._set_attr("multiTapTouches", value)
 

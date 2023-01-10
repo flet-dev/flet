@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -129,7 +128,6 @@ class ProgressRing(ConstrainedControl):
         return self._get_attr("value")
 
     @value.setter
-    @beartype
     def value(self, value: OptionalNumber):
         self._set_attr("value", value)
 
@@ -139,7 +137,6 @@ class ProgressRing(ConstrainedControl):
         return self._get_attr("strokeWidth")
 
     @stroke_width.setter
-    @beartype
     def stroke_width(self, value: OptionalNumber):
         self._set_attr("strokeWidth", value)
 

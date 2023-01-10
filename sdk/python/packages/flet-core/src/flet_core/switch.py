@@ -2,7 +2,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import Dict
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -157,7 +156,6 @@ class Switch(ConstrainedControl):
         return self._get_attr("value", data_type="bool", def_value=False)
 
     @value.setter
-    @beartype
     def value(self, value: Optional[bool]):
         self._set_attr("value", value)
 
@@ -183,7 +181,6 @@ class Switch(ConstrainedControl):
         else:
             self.__set_label_position(value)
 
-    @beartype
     def __set_label_position(self, value: LabelPositionString):
         self._set_attr("labelPosition", value)
 
@@ -193,7 +190,6 @@ class Switch(ConstrainedControl):
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
-    @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
 
@@ -239,7 +235,6 @@ class Switch(ConstrainedControl):
         return self.__thumb_color
 
     @thumb_color.setter
-    @beartype
     def thumb_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__thumb_color = value
 
@@ -249,7 +244,6 @@ class Switch(ConstrainedControl):
         return self.__track_color
 
     @track_color.setter
-    @beartype
     def track_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__track_color = value
 

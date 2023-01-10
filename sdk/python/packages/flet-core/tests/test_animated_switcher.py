@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -32,12 +31,6 @@ def test_switch_in_curve_enum():
     assert isinstance(r.switch_in_curve, str)
     assert r._get_attr("switchInCurve") == "easeIn"
 
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.AnimatedSwitcher(switch_in_curve="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.AnimatedSwitcher(switch_in_curve=1)
-
 
 def test_switch_out_curve_enum():
     r = ft.AnimatedSwitcher()
@@ -53,12 +46,6 @@ def test_switch_out_curve_enum():
     assert isinstance(r.switch_out_curve, str)
     assert r._get_attr("switchOutCurve") == "easeIn"
 
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.AnimatedSwitcher(switch_out_curve="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.AnimatedSwitcher(switch_out_curve=1)
-
 
 def test_transition_enum():
     r = ft.AnimatedSwitcher()
@@ -73,9 +60,3 @@ def test_transition_enum():
     r = ft.AnimatedSwitcher(transition="scale")
     assert isinstance(r.transition, str)
     assert r._get_attr("transition") == "scale"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.AnimatedSwitcher(transition="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.AnimatedSwitcher(transition=1)

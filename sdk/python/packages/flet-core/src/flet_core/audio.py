@@ -2,7 +2,6 @@ from enum import Enum
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet_core.callable_control import CallableControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -157,7 +156,6 @@ class Audio(CallableControl):
         return self._get_attr("autoplay", data_type="bool", def_value=False)
 
     @autoplay.setter
-    @beartype
     def autoplay(self, value: Optional[bool]):
         self._set_attr("autoplay", value)
 
@@ -167,7 +165,6 @@ class Audio(CallableControl):
         return self._get_attr("volume")
 
     @volume.setter
-    @beartype
     def volume(self, value: OptionalNumber):
         if value is None or (value >= 0 and value <= 1):
             self._set_attr("volume", value)
@@ -178,7 +175,6 @@ class Audio(CallableControl):
         return self._get_attr("balance")
 
     @balance.setter
-    @beartype
     def balance(self, value: OptionalNumber):
         if value is None or (value >= -1 and value <= 1):
             self._set_attr("balance", value)
@@ -189,7 +185,6 @@ class Audio(CallableControl):
         return self._get_attr("playbackRate")
 
     @playback_rate.setter
-    @beartype
     def playback_rate(self, value: OptionalNumber):
         if value is None or (value >= 0 and value <= 2):
             self._set_attr("playbackRate", value)
@@ -200,7 +195,6 @@ class Audio(CallableControl):
         return self._get_attr("releaseMode")
 
     @release_mode.setter
-    @beartype
     def release_mode(self, value: Optional[ReleaseMode]):
         self._set_attr("releaseMode", value.value if value is not None else None)
 

@@ -2,7 +2,6 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -215,7 +214,6 @@ class Text(ConstrainedControl):
         else:
             self.__set_text_align(value)
 
-    @beartype
     def __set_text_align(self, value: TextAlignString):
         self._set_attr("textAlign", value)
 
@@ -234,7 +232,6 @@ class Text(ConstrainedControl):
         return self._get_attr("size")
 
     @size.setter
-    @beartype
     def size(self, value: OptionalNumber):
         self._set_attr("size", value)
 
@@ -251,7 +248,6 @@ class Text(ConstrainedControl):
         else:
             self.__set_weight(value)
 
-    @beartype
     def __set_weight(self, value: FontWeightString):
         self._set_attr("weight", value)
 
@@ -268,7 +264,6 @@ class Text(ConstrainedControl):
         else:
             self.__set_style(value)
 
-    @beartype
     def __set_style(self, value: Optional[TextThemeStyleString]):
         self._set_attr("style", value)
 
@@ -278,7 +273,6 @@ class Text(ConstrainedControl):
         return self._get_attr("italic", data_type="bool", def_value=False)
 
     @italic.setter
-    @beartype
     def italic(self, value: Optional[bool]):
         self._set_attr("italic", value)
 
@@ -288,7 +282,6 @@ class Text(ConstrainedControl):
         return self._get_attr("italic", data_type="noWrap", def_value=False)
 
     @no_wrap.setter
-    @beartype
     def no_wrap(self, value: Optional[bool]):
         self._set_attr("noWrap", value)
 
@@ -298,7 +291,6 @@ class Text(ConstrainedControl):
         return self._get_attr("selectable", data_type="bool", def_value=False)
 
     @selectable.setter
-    @beartype
     def selectable(self, value: Optional[bool]):
         self._set_attr("selectable", value)
 
@@ -308,7 +300,6 @@ class Text(ConstrainedControl):
         return self._get_attr("maxLines")
 
     @max_lines.setter
-    @beartype
     def max_lines(self, value: Optional[int]):
         self._set_attr("maxLines", value)
 
@@ -325,7 +316,6 @@ class Text(ConstrainedControl):
         else:
             self.__set_overflow(value)
 
-    @beartype
     def __set_overflow(self, value: TextOverflowString):
         self._set_attr("overflow", value)
 

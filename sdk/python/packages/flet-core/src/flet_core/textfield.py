@@ -2,7 +2,6 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.control import Control, OptionalNumber
 from flet_core.focus import FocusData
 from flet_core.form_field_control import FormFieldControl, InputBorder
@@ -304,7 +303,6 @@ class TextField(FormFieldControl):
         else:
             self.__set_keyboard_type(value)
 
-    @beartype
     def __set_keyboard_type(self, value: KeyboardTypeString):
         self._set_attr("keyboardType", value)
 
@@ -321,7 +319,6 @@ class TextField(FormFieldControl):
         else:
             self.__set_text_align(value)
 
-    @beartype
     def __set_text_align(self, value: TextAlignString):
         self._set_attr("textAlign", value)
 
@@ -331,7 +328,6 @@ class TextField(FormFieldControl):
         return self._get_attr("multiline", data_type="bool", def_value=False)
 
     @multiline.setter
-    @beartype
     def multiline(self, value: Optional[bool]):
         self._set_attr("multiline", value)
 
@@ -341,7 +337,6 @@ class TextField(FormFieldControl):
         return self._get_attr("minLines")
 
     @min_lines.setter
-    @beartype
     def min_lines(self, value: Optional[int]):
         self._set_attr("minLines", value)
 
@@ -351,7 +346,6 @@ class TextField(FormFieldControl):
         return self._get_attr("maxLines")
 
     @max_lines.setter
-    @beartype
     def max_lines(self, value: Optional[int]):
         self._set_attr("maxLines", value)
 
@@ -361,7 +355,6 @@ class TextField(FormFieldControl):
         return self._get_attr("maxLength")
 
     @max_length.setter
-    @beartype
     def max_length(self, value: Optional[int]):
         self._set_attr("maxLength", value)
 
@@ -371,7 +364,6 @@ class TextField(FormFieldControl):
         return self._get_attr("readOnly", data_type="bool", def_value=False)
 
     @read_only.setter
-    @beartype
     def read_only(self, value: Optional[bool]):
         self._set_attr("readOnly", value)
 
@@ -381,7 +373,6 @@ class TextField(FormFieldControl):
         return self._get_attr("shiftEnter", data_type="bool", def_value=False)
 
     @shift_enter.setter
-    @beartype
     def shift_enter(self, value: Optional[bool]):
         self._set_attr("shiftEnter", value)
 
@@ -391,7 +382,6 @@ class TextField(FormFieldControl):
         return self._get_attr("password", data_type="bool", def_value=False)
 
     @password.setter
-    @beartype
     def password(self, value: Optional[bool]):
         self._set_attr("password", value)
 
@@ -401,7 +391,6 @@ class TextField(FormFieldControl):
         return self._get_attr("canRevealPassword", data_type="bool", def_value=False)
 
     @can_reveal_password.setter
-    @beartype
     def can_reveal_password(self, value: Optional[bool]):
         self._set_attr("canRevealPassword", value)
 
@@ -411,7 +400,6 @@ class TextField(FormFieldControl):
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
-    @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
 
@@ -428,7 +416,6 @@ class TextField(FormFieldControl):
         else:
             self.__set_capitalization(value)
 
-    @beartype
     def __set_capitalization(self, value: TextCapitalizationString):
         self._set_attr("capitalization", value)
 
@@ -447,7 +434,6 @@ class TextField(FormFieldControl):
         return self._get_attr("cursorHeight")
 
     @cursor_height.setter
-    @beartype
     def cursor_height(self, value: OptionalNumber):
         self._set_attr("cursorHeight", value)
 
@@ -457,7 +443,6 @@ class TextField(FormFieldControl):
         return self._get_attr("cursorWidth")
 
     @cursor_width.setter
-    @beartype
     def cursor_width(self, value: OptionalNumber):
         self._set_attr("cursorWidth", value)
 
@@ -467,7 +452,6 @@ class TextField(FormFieldControl):
         return self._get_attr("cursorRadius")
 
     @cursor_radius.setter
-    @beartype
     def cursor_radius(self, value: OptionalNumber):
         self._set_attr("cursorRadius", value)
 

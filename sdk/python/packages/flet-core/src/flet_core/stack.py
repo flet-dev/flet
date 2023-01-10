@@ -2,7 +2,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -163,6 +162,5 @@ class Stack(ConstrainedControl):
         else:
             self.__set_clip_behavior(value)
 
-    @beartype
     def __set_clip_behavior(self, value: Optional[ClipBehaviorString]):
         self._set_attr("clipBehavior", value)

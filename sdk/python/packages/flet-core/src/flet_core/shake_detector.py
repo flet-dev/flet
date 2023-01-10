@@ -1,7 +1,6 @@
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
@@ -68,7 +67,6 @@ class ShakeDetector(Control):
         return self._get_attr("minimumShakeCount")
 
     @minimum_shake_count.setter
-    @beartype
     def minimum_shake_count(self, value: Optional[int]):
         self._set_attr("minimumShakeCount", value)
 
@@ -78,7 +76,6 @@ class ShakeDetector(Control):
         return self._get_attr("shakeSlopTimeMS")
 
     @shake_slop_time_ms.setter
-    @beartype
     def shake_slop_time_ms(self, value: Optional[int]):
         self._set_attr("shakeSlopTimeMS", value)
 
@@ -88,7 +85,6 @@ class ShakeDetector(Control):
         return self._get_attr("shakeCountResetTimeMs")
 
     @shake_count_reset_time_ms.setter
-    @beartype
     def shake_count_reset_time_ms(self, value: Optional[int]):
         self._set_attr("shakeCountResetTimeMs", value)
 
@@ -98,7 +94,6 @@ class ShakeDetector(Control):
         return self._get_attr("shakeThresholdGravity")
 
     @shake_threshold_gravity.setter
-    @beartype
     def shake_threshold_gravity(self, value: OptionalNumber):
         self._set_attr("shakeThresholdGravity", value)
 

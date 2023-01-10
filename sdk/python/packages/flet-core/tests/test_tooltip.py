@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -31,9 +30,3 @@ def test_text_align_enum():
     r = ft.Tooltip(text_align="left")
     assert isinstance(r.text_align, str)
     assert r._get_attr("textAlign") == "left"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Tooltip(text_align="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Tooltip(text_align=1)

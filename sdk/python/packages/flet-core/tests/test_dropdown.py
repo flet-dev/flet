@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -31,9 +30,3 @@ def test_border_enum():
     r = ft.Dropdown(border="none")
     assert isinstance(r.border, str)
     assert r._get_attr("border") == "none"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Dropdown(border="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Dropdown(border=1)

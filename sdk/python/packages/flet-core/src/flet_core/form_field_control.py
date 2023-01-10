@@ -2,7 +2,6 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -190,7 +189,6 @@ class FormFieldControl(ConstrainedControl):
         return self._get_attr("textSize")
 
     @text_size.setter
-    @beartype
     def text_size(self, value: OptionalNumber):
         self._set_attr("textSize", value)
 
@@ -200,7 +198,6 @@ class FormFieldControl(ConstrainedControl):
         return self.__text_style
 
     @text_style.setter
-    @beartype
     def text_style(self, value: Optional[TextStyle]):
         self.__text_style = value
 
@@ -219,7 +216,6 @@ class FormFieldControl(ConstrainedControl):
         return self.__label_style
 
     @label_style.setter
-    @beartype
     def label_style(self, value: Optional[TextStyle]):
         self.__label_style = value
 
@@ -245,7 +241,6 @@ class FormFieldControl(ConstrainedControl):
         else:
             self.__set_border(value)
 
-    @beartype
     def __set_border(self, value: Optional[InputBorderString]):
         self._set_attr("border", value)
 
@@ -273,7 +268,6 @@ class FormFieldControl(ConstrainedControl):
         return self.__border_radius
 
     @border_radius.setter
-    @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
 
@@ -283,7 +277,6 @@ class FormFieldControl(ConstrainedControl):
         return self._get_attr("borderWidth")
 
     @border_width.setter
-    @beartype
     def border_width(self, value: OptionalNumber):
         self._set_attr("borderWidth", value)
 
@@ -320,7 +313,6 @@ class FormFieldControl(ConstrainedControl):
         return self._get_attr("focusedBorderWidth")
 
     @focused_border_width.setter
-    @beartype
     def focused_border_width(self, value: OptionalNumber):
         self._set_attr("focusedBorderWidth", value)
 
@@ -339,7 +331,6 @@ class FormFieldControl(ConstrainedControl):
         return self.__content_padding
 
     @content_padding.setter
-    @beartype
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
 
@@ -376,7 +367,6 @@ class FormFieldControl(ConstrainedControl):
         return self.__hint_style
 
     @hint_style.setter
-    @beartype
     def hint_style(self, value: Optional[TextStyle]):
         self.__hint_style = value
 
@@ -395,7 +385,6 @@ class FormFieldControl(ConstrainedControl):
         return self.__helper_style
 
     @helper_style.setter
-    @beartype
     def helper_style(self, value: Optional[TextStyle]):
         self.__helper_style = value
 
@@ -414,7 +403,6 @@ class FormFieldControl(ConstrainedControl):
         return self.__counter_style
 
     @counter_style.setter
-    @beartype
     def counter_style(self, value: Optional[TextStyle]):
         self.__counter_style = value
 
@@ -433,7 +421,6 @@ class FormFieldControl(ConstrainedControl):
         return self.__error_style
 
     @error_style.setter
-    @beartype
     def error_style(self, value: Optional[TextStyle]):
         self.__error_style = value
 
@@ -470,7 +457,6 @@ class FormFieldControl(ConstrainedControl):
         return self.__prefix_style
 
     @prefix_style.setter
-    @beartype
     def prefix_style(self, value: Optional[TextStyle]):
         self.__prefix_style = value
 
@@ -507,6 +493,5 @@ class FormFieldControl(ConstrainedControl):
         return self.__suffix_style
 
     @suffix_style.setter
-    @beartype
     def suffix_style(self, value: Optional[TextStyle]):
         self.__suffix_style = value

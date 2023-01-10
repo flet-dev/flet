@@ -136,7 +136,6 @@ class AlertDialog(Control):
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
-    @beartype
     def open(self, value: Optional[bool]):
         self._set_attr("open", value)
 
@@ -146,7 +145,6 @@ class AlertDialog(Control):
         return self._get_attr("modal", data_type="bool", def_value=False)
 
     @modal.setter
-    @beartype
     def modal(self, value: Optional[bool]):
         self._set_attr("modal", value)
 
@@ -165,7 +163,6 @@ class AlertDialog(Control):
         return self.__title_padding
 
     @title_padding.setter
-    @beartype
     def title_padding(self, value: PaddingValue):
         self.__title_padding = value
 
@@ -184,7 +181,6 @@ class AlertDialog(Control):
         return self.__content_padding
 
     @content_padding.setter
-    @beartype
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
 
@@ -203,7 +199,6 @@ class AlertDialog(Control):
         return self.__actions_padding
 
     @actions_padding.setter
-    @beartype
     def actions_padding(self, value: PaddingValue):
         self.__actions_padding = value
 
@@ -220,7 +215,6 @@ class AlertDialog(Control):
         else:
             self.__set_actions_alignment(value)
 
-    @beartype
     def __set_actions_alignment(self, value: MainAxisAlignmentString):
         self._set_attr("actionsAlignment", value)
 
@@ -230,7 +224,6 @@ class AlertDialog(Control):
         return self.__shape
 
     @shape.setter
-    @beartype
     def shape(self, value: Optional[OutlinedBorder]):
         self.__shape = value
 

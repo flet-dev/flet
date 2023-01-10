@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -145,7 +144,6 @@ class Card(ConstrainedControl):
         return self.__margin
 
     @margin.setter
-    @beartype
     def margin(self, value: MarginValue):
         self.__margin = value
 
@@ -155,7 +153,6 @@ class Card(ConstrainedControl):
         return self._get_attr("elevation")
 
     @elevation.setter
-    @beartype
     def elevation(self, value: OptionalNumber):
         self._set_attr("elevation", value)
 
@@ -165,6 +162,5 @@ class Card(ConstrainedControl):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Optional[Control]):
         self.__content = value

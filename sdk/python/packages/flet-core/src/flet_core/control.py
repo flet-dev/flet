@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING, Any, Union
 
 from beartype import beartype
 from beartype.typing import Dict, List, Optional
-
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
 from flet_core.ref import Ref
@@ -192,7 +191,6 @@ class Control:
         return self.__expand
 
     @expand.setter
-    @beartype
     def expand(self, value: Union[None, bool, int]):
         self.__expand = value
         if value and isinstance(value, bool):
@@ -205,7 +203,6 @@ class Control:
         return self.__col
 
     @col.setter
-    @beartype
     def col(self, value: Optional[ResponsiveNumber]):
         self.__col = value
 
@@ -233,7 +230,6 @@ class Control:
         return self._get_attr("visible", data_type="bool", def_value=True)
 
     @visible.setter
-    @beartype
     def visible(self, value: Optional[bool]):
         self._set_attr("visible", value)
 
@@ -243,7 +239,6 @@ class Control:
         return self._get_attr("disabled", data_type="bool", def_value=False)
 
     @disabled.setter
-    @beartype
     def disabled(self, value: Optional[bool]):
         self._set_attr("disabled", value)
 

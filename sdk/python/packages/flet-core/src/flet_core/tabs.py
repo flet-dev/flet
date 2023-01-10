@@ -2,7 +2,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -207,7 +206,6 @@ class Tabs(ConstrainedControl):
         return self.__tabs
 
     @tabs.setter
-    @beartype
     def tabs(self, value: Optional[List[Tab]]):
         self.__tabs = value if value is not None else []
 
@@ -226,7 +224,6 @@ class Tabs(ConstrainedControl):
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
-    @beartype
     def selected_index(self, value: Optional[int]):
         self._set_attr("selectedIndex", value)
 
@@ -236,6 +233,5 @@ class Tabs(ConstrainedControl):
         return self._get_attr("animationDuration")
 
     @animation_duration.setter
-    @beartype
     def animation_duration(self, value: Optional[int]):
         self._set_attr("animationDuration", value)

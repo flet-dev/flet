@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -210,7 +209,6 @@ class IconButton(ConstrainedControl):
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
-    @beartype
     def selected(self, value: Optional[bool]):
         self._set_attr("selected", value)
 
@@ -220,7 +218,6 @@ class IconButton(ConstrainedControl):
         return self.__style
 
     @style.setter
-    @beartype
     def style(self, value: Optional[ButtonStyle]):
         self.__style = value
 
@@ -239,7 +236,6 @@ class IconButton(ConstrainedControl):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
 
@@ -249,6 +245,5 @@ class IconButton(ConstrainedControl):
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
-    @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)

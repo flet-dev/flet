@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -31,9 +30,3 @@ def test_clip_behavior_enum():
     r = ft.Stack(clip_behavior="none")
     assert isinstance(r.clip_behavior, str)
     assert r._get_attr("clipBehavior") == "none"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Stack(clip_behavior="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Stack(clip_behavior=1)

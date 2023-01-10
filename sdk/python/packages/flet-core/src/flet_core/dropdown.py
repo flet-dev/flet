@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
 from flet_core.focus import FocusData
@@ -238,7 +237,6 @@ class Dropdown(FormFieldControl):
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
-    @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
 
@@ -248,7 +246,6 @@ class Dropdown(FormFieldControl):
         return self.__alignment
 
     @alignment.setter
-    @beartype
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
 

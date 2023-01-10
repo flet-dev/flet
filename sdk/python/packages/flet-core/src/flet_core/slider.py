@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -136,7 +135,6 @@ class Slider(ConstrainedControl):
         return self._get_attr("value", data_type="float")
 
     @value.setter
-    @beartype
     def value(self, value: OptionalNumber):
         self._set_attr("value", value)
 
@@ -155,7 +153,6 @@ class Slider(ConstrainedControl):
         return self._get_attr("min")
 
     @min.setter
-    @beartype
     def min(self, value: OptionalNumber):
         self._set_attr("min", value)
 
@@ -165,7 +162,6 @@ class Slider(ConstrainedControl):
         return self._get_attr("max")
 
     @max.setter
-    @beartype
     def max(self, value: OptionalNumber):
         self._set_attr("max", value)
 
@@ -175,7 +171,6 @@ class Slider(ConstrainedControl):
         return self._get_attr("divisions")
 
     @divisions.setter
-    @beartype
     def divisions(self, value: Optional[int]):
         self._set_attr("divisions", value)
 
@@ -185,7 +180,6 @@ class Slider(ConstrainedControl):
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
-    @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
 

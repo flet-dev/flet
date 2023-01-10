@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.border import Border
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
@@ -144,7 +143,6 @@ class Tooltip(Control):
         return self._get_attr("enableFeedback", data_type="bool", def_value=False)
 
     @enable_feedback.setter
-    @beartype
     def enable_feedback(self, value: Optional[bool]):
         self._set_attr("enableFeedback", value)
 
@@ -154,7 +152,6 @@ class Tooltip(Control):
         return self.__margin
 
     @margin.setter
-    @beartype
     def margin(self, value: MarginValue):
         self.__margin = value
 
@@ -164,7 +161,6 @@ class Tooltip(Control):
         return self.__padding
 
     @padding.setter
-    @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
 
@@ -183,7 +179,6 @@ class Tooltip(Control):
         return self.__gradient
 
     @gradient.setter
-    @beartype
     def gradient(self, value: Optional[Gradient]):
         self.__gradient = value
 
@@ -193,7 +188,6 @@ class Tooltip(Control):
         return self.__border
 
     @border.setter
-    @beartype
     def border(self, value: Optional[Border]):
         self.__border = value
 
@@ -203,7 +197,6 @@ class Tooltip(Control):
         return self.__border_radius
 
     @border_radius.setter
-    @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
 
@@ -213,7 +206,6 @@ class Tooltip(Control):
         return self._get_attr("shape")
 
     @shape.setter
-    @beartype
     def shape(self, value: Optional[BoxShape]):
         self._set_attr("shape", value.value if value is not None else None)
 
@@ -223,7 +215,6 @@ class Tooltip(Control):
         return self._get_attr("message")
 
     @message.setter
-    @beartype
     def message(self, value: Optional[str]):
         self._set_attr("message", value)
 
@@ -240,7 +231,6 @@ class Tooltip(Control):
         else:
             self.__set_text_align(value)
 
-    @beartype
     def __set_text_align(self, value: TextAlignString):
         self._set_attr("textAlign", value)
 
@@ -250,7 +240,6 @@ class Tooltip(Control):
         return self.__text_style
 
     @text_style.setter
-    @beartype
     def text_style(self, value: Optional[TextStyle]):
         self.__text_style = value
 
@@ -260,7 +249,6 @@ class Tooltip(Control):
         return self._get_attr("prefereBelow", data_type="bool", def_value=False)
 
     @prefere_below.setter
-    @beartype
     def prefere_below(self, value: Optional[bool]):
         self._set_attr("prefereBelow", value)
 
@@ -270,7 +258,6 @@ class Tooltip(Control):
         return self._get_attr("height")
 
     @height.setter
-    @beartype
     def height(self, value: OptionalNumber):
         self._set_attr("height", value)
 
@@ -280,7 +267,6 @@ class Tooltip(Control):
         return self._get_attr("verticalOffset")
 
     @vertical_offset.setter
-    @beartype
     def vertical_offset(self, value: OptionalNumber):
         self._set_attr("verticalOffset", value)
 
@@ -290,7 +276,6 @@ class Tooltip(Control):
         return self._get_attr("showDuration")
 
     @show_duration.setter
-    @beartype
     def show_duration(self, value: Optional[int]):
         self._set_attr("showDuration", value)
 
@@ -300,7 +285,6 @@ class Tooltip(Control):
         return self._get_attr("waitDuration")
 
     @wait_duration.setter
-    @beartype
     def wait_duration(self, value: Optional[int]):
         self._set_attr("waitDuration", value)
 
@@ -310,6 +294,5 @@ class Tooltip(Control):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Optional[Control]):
         self.__content = value

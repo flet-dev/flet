@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -31,9 +30,3 @@ def test_extension_set_enum():
     r = ft.NavigationRail(label_type="none")
     assert isinstance(r.label_type, str)
     assert r._get_attr("labelType") == "none"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.NavigationRail(label_type="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.NavigationRail(label_type=1)

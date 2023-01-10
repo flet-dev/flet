@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -32,13 +31,3 @@ def test_label_position_str():
     assert isinstance(r._get_attr("labelPosition"), str)
     cmd = r._build_add_commands()
     assert cmd[0].attrs["labelposition"] == "left"
-
-
-def test_label_position_wrong_str_raises_beartype():
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Switch(label_position="center1")
-
-
-def test_label_position_wrong_type_raises_beartype():
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Switch(label_position=1)

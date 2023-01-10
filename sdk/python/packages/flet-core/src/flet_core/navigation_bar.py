@@ -3,7 +3,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -86,7 +85,6 @@ class NavigationDestination(Control):
         return self.__icon_content
 
     @icon_content.setter
-    @beartype
     def icon_content(self, value: Optional[Control]):
         self.__icon_content = value
 
@@ -105,7 +103,6 @@ class NavigationDestination(Control):
         return self.__selected_icon_content
 
     @selected_icon_content.setter
-    @beartype
     def selected_icon_content(self, value: Optional[Control]):
         self.__selected_icon_content = value
 
@@ -239,7 +236,6 @@ class NavigationBar(ConstrainedControl):
         return self.__destinations
 
     @destinations.setter
-    @beartype
     def destinations(self, value: Optional[List[NavigationDestination]]):
         self.__destinations = value if value is not None else []
 
@@ -258,7 +254,6 @@ class NavigationBar(ConstrainedControl):
         return self._get_attr("selectedIndex", data_type="int")
 
     @selected_index.setter
-    @beartype
     def selected_index(self, value: Optional[int]):
         self._set_attr("selectedIndex", value)
 
@@ -275,7 +270,6 @@ class NavigationBar(ConstrainedControl):
         else:
             self.__set_label_behavior(value)
 
-    @beartype
     def __set_label_behavior(self, value: NavigationBarLabelBehaviorString):
         self._set_attr("labelType", value)
 

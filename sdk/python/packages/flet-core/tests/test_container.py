@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -71,16 +70,6 @@ def test_blend_mode_str():
     assert cmd[0].attrs["blendmode"] == "darken"
 
 
-def test_blend_mode_wrong_str_raises_beartype():
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Container(blend_mode="center1")
-
-
-def test_blend_mode_wrong_type_raises_beartype():
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Container(blend_mode=1)
-
-
 def test_clip_behavior_enum():
     r = ft.Container()
     assert r.clip_behavior is None
@@ -94,12 +83,6 @@ def test_clip_behavior_enum():
     r = ft.Container(clip_behavior="none")
     assert isinstance(r.clip_behavior, str)
     assert r._get_attr("clipBehavior") == "none"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Container(clip_behavior="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Container(clip_behavior=1)
 
 
 def test_image_repeat_enum():
@@ -116,12 +99,6 @@ def test_image_repeat_enum():
     assert isinstance(r.image_repeat, str)
     assert r._get_attr("imageRepeat") == "repeatX"
 
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Container(image_repeat="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Container(image_repeat=1)
-
 
 def test_image_fit_enum():
     r = ft.Container()
@@ -136,9 +113,3 @@ def test_image_fit_enum():
     r = ft.Container(image_fit="none")
     assert isinstance(r.image_fit, str)
     assert r._get_attr("imageFit") == "none"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Container(image_fit="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Container(image_fit=1)

@@ -177,6 +177,5 @@ class MatplotlibChart(Container):
         return self.__maintain_aspect_ratio
 
     @maintain_aspect_ratio.setter
-    @beartype
     def maintain_aspect_ratio(self, value: bool):
         self.__maintain_aspect_ratio = value

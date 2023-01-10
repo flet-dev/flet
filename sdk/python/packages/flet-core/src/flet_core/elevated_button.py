@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -186,7 +185,6 @@ class ElevatedButton(ConstrainedControl):
         return self.__elevation
 
     @elevation.setter
-    @beartype
     def elevation(self, value: OptionalNumber):
         self.__elevation = value
 
@@ -196,7 +194,6 @@ class ElevatedButton(ConstrainedControl):
         return self.__style
 
     @style.setter
-    @beartype
     def style(self, value: Optional[ButtonStyle]):
         self.__style = value
 
@@ -243,7 +240,6 @@ class ElevatedButton(ConstrainedControl):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
 
@@ -253,7 +249,6 @@ class ElevatedButton(ConstrainedControl):
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
-    @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
 

@@ -2,7 +2,6 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.animation import AnimationCurve, AnimationCurveString
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -171,7 +170,6 @@ class AnimatedSwitcher(ConstrainedControl):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
 
@@ -181,7 +179,6 @@ class AnimatedSwitcher(ConstrainedControl):
         return self._get_attr("duration")
 
     @duration.setter
-    @beartype
     def duration(self, value: Optional[int]):
         self._set_attr("duration", value)
 
@@ -191,7 +188,6 @@ class AnimatedSwitcher(ConstrainedControl):
         return self._get_attr("reverseDuration")
 
     @reverse_duration.setter
-    @beartype
     def reverse_duration(self, value: Optional[int]):
         self._set_attr("reverseDuration", value)
 
@@ -208,7 +204,6 @@ class AnimatedSwitcher(ConstrainedControl):
         else:
             self.__set_switch_in_curve(value)
 
-    @beartype
     def __set_switch_in_curve(self, value: Optional[AnimationCurveString]):
         self._set_attr("switchInCurve", value)
 
@@ -225,7 +220,6 @@ class AnimatedSwitcher(ConstrainedControl):
         else:
             self.__set_switch_out_curve(value)
 
-    @beartype
     def __set_switch_out_curve(self, value: Optional[AnimationCurveString]):
         self._set_attr("switchOutCurve", value)
 
@@ -242,6 +236,5 @@ class AnimatedSwitcher(ConstrainedControl):
         else:
             self.__set_transition(value)
 
-    @beartype
     def __set_transition(self, value: Optional[TransitionValueString]):
         self._set_attr("transition", value)

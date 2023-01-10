@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -34,16 +33,6 @@ def test_text_align_str():
     assert cmd[0].attrs["textalign"] == "left"
 
 
-def test_text_align_wrong_str_raises_beartype():
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.TextField(text_align="center1")
-
-
-def test_text_align_wrong_type_raises_beartype():
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.TextField(text_align=1)
-
-
 def test_keyboard_type_enum():
     r = ft.TextField()
     assert r.keyboard_type is None
@@ -57,12 +46,6 @@ def test_keyboard_type_enum():
     r = ft.TextField(keyboard_type="phone")
     assert isinstance(r.keyboard_type, str)
     assert r._get_attr("keyboardType") == "phone"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.TextField(keyboard_type="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.TextField(keyboard_type=1)
 
 
 def test_capitalization_enum():
@@ -79,12 +62,6 @@ def test_capitalization_enum():
     assert isinstance(r.capitalization, str)
     assert r._get_attr("capitalization") == "sentences"
 
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.TextField(capitalization="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.TextField(capitalization=1)
-
 
 def test_border_enum():
     r = ft.TextField()
@@ -99,12 +76,6 @@ def test_border_enum():
     r = ft.TextField(border="none")
     assert isinstance(r.border, str)
     assert r._get_attr("border") == "none"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.TextField(border="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.TextField(border=1)
 
 
 def test_bgcolor_sets_filled():

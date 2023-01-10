@@ -1,7 +1,6 @@
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet_core.control import Control
 from flet_core.ref import Ref
 
@@ -94,7 +93,6 @@ class SnackBar(Control):
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
-    @beartype
     def open(self, value: Optional[bool]):
         self._set_attr("open", value)
 
@@ -106,7 +104,7 @@ class SnackBar(Control):
     #     )
 
     # @remove_current_snackbar.setter
-    # @beartype
+    #
     # def remove_current_snackbar(self, value: Optional[bool]):
     #     self._set_attr("removeCurrentSnackBar", value)
 
@@ -116,7 +114,6 @@ class SnackBar(Control):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Control):
         self.__content = value
 

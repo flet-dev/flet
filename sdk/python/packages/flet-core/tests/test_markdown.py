@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -31,9 +30,3 @@ def test_extension_set_enum():
     r = ft.Markdown(extension_set="none")
     assert isinstance(r.extension_set, str)
     assert r._get_attr("extensionSet") == "none"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Markdown(extension_set="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Markdown(extension_set=1)

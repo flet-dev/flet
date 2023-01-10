@@ -1,7 +1,6 @@
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet_core.control import Control
 from flet_core.ref import Ref
 
@@ -169,7 +168,6 @@ class Draggable(Control):
         return self._get_attr("group")
 
     @group.setter
-    @beartype
     def group(self, value):
         self._set_attr("group", value)
 

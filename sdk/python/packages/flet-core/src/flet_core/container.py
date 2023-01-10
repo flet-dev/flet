@@ -2,7 +2,6 @@ import json
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.alignment import Alignment
 from flet_core.border import Border
 from flet_core.constrained_control import ConstrainedControl
@@ -205,7 +204,6 @@ class Container(ConstrainedControl):
         return self.__alignment
 
     @alignment.setter
-    @beartype
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
 
@@ -215,7 +213,6 @@ class Container(ConstrainedControl):
         return self.__padding
 
     @padding.setter
-    @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
 
@@ -225,7 +222,6 @@ class Container(ConstrainedControl):
         return self.__margin
 
     @margin.setter
-    @beartype
     def margin(self, value: MarginValue):
         self.__margin = value
 
@@ -244,7 +240,6 @@ class Container(ConstrainedControl):
         return self.__gradient
 
     @gradient.setter
-    @beartype
     def gradient(self, value: Optional[Gradient]):
         self.__gradient = value
 
@@ -261,7 +256,6 @@ class Container(ConstrainedControl):
         else:
             self.__set_blend_mode(value)
 
-    @beartype
     def __set_blend_mode(self, value: BlendModeString):
         self._set_attr("blendMode", value)
 
@@ -271,7 +265,6 @@ class Container(ConstrainedControl):
         return self.__border
 
     @border.setter
-    @beartype
     def border(self, value: Optional[Border]):
         self.__border = value
 
@@ -281,7 +274,6 @@ class Container(ConstrainedControl):
         return self.__border_radius
 
     @border_radius.setter
-    @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
 
@@ -316,7 +308,6 @@ class Container(ConstrainedControl):
         else:
             self.__set_image_fit(value)
 
-    @beartype
     def __set_image_fit(self, value: ImageFitString):
         self._set_attr("imageFit", value)
 
@@ -333,7 +324,6 @@ class Container(ConstrainedControl):
         else:
             self.__set_image_repeat(value)
 
-    @beartype
     def __set_image_repeat(self, value: ImageRepeatString):
         self._set_attr("imageRepeat", value)
 
@@ -343,7 +333,6 @@ class Container(ConstrainedControl):
         return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
 
     @image_opacity.setter
-    @beartype
     def image_opacity(self, value: OptionalNumber):
         self._set_attr("imageOpacity", value)
 
@@ -353,7 +342,6 @@ class Container(ConstrainedControl):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
 
@@ -363,7 +351,6 @@ class Container(ConstrainedControl):
         return self._get_attr("shape")
 
     @shape.setter
-    @beartype
     def shape(self, value: Optional[BoxShape]):
         self._set_attr("shape", value.value if value is not None else None)
 
@@ -380,7 +367,6 @@ class Container(ConstrainedControl):
         else:
             self.__set_clip_behavior(value)
 
-    @beartype
     def __set_clip_behavior(self, value: Optional[ClipBehaviorString]):
         self._set_attr("clipBehavior", value)
 
@@ -390,7 +376,6 @@ class Container(ConstrainedControl):
         return self._get_attr("ink", data_type="bool", def_value=False)
 
     @ink.setter
-    @beartype
     def ink(self, value: Optional[bool]):
         self._set_attr("ink", value)
 
@@ -400,7 +385,6 @@ class Container(ConstrainedControl):
         return self.__animate
 
     @animate.setter
-    @beartype
     def animate(self, value: AnimationValue):
         self.__animate = value
 

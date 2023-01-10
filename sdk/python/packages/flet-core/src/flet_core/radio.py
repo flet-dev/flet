@@ -2,7 +2,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import Dict
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -165,7 +164,6 @@ class Radio(ConstrainedControl):
         else:
             self.__set_label_position(value)
 
-    @beartype
     def __set_label_position(self, value: LabelPositionString):
         self._set_attr("labelPosition", value)
 
@@ -175,7 +173,6 @@ class Radio(ConstrainedControl):
         return self.__fill_color
 
     @fill_color.setter
-    @beartype
     def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__fill_color = value
 
@@ -203,6 +200,5 @@ class Radio(ConstrainedControl):
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
-    @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)

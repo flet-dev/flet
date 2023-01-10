@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -196,7 +195,6 @@ class FloatingActionButton(ConstrainedControl):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
 
@@ -206,7 +204,6 @@ class FloatingActionButton(ConstrainedControl):
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
-    @beartype
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
 
@@ -216,7 +213,6 @@ class FloatingActionButton(ConstrainedControl):
         return self.__shape
 
     @shape.setter
-    @beartype
     def shape(self, value: Optional[OutlinedBorder]):
         self.__shape = value
 
@@ -226,6 +222,5 @@ class FloatingActionButton(ConstrainedControl):
         return self._get_attr("mini", data_type="bool", def_value=False)
 
     @mini.setter
-    @beartype
     def mini(self, value: Optional[bool]):
         self._set_attr("mini", value)

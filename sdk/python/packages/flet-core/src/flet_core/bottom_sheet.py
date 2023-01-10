@@ -2,7 +2,6 @@ from typing import Any, Optional
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.control import Control
 from flet_core.ref import Ref
 
@@ -98,7 +97,6 @@ class BottomSheet(Control):
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
-    @beartype
     def open(self, value: Optional[bool]):
         self._set_attr("open", value)
 

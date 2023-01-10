@@ -1,7 +1,6 @@
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
@@ -82,7 +81,6 @@ class VerticalDivider(Control):
         return self._get_attr("width")
 
     @width.setter
-    @beartype
     def width(self, value: OptionalNumber):
         self._set_attr("width", value)
 
@@ -92,7 +90,6 @@ class VerticalDivider(Control):
         return self._get_attr("thickness")
 
     @thickness.setter
-    @beartype
     def thickness(self, value: OptionalNumber):
         self._set_attr("thickness", value)
 

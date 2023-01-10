@@ -2,7 +2,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -155,7 +154,6 @@ class ResponsiveRow(ConstrainedControl):
         else:
             self.__set_alignment(value)
 
-    @beartype
     def __set_alignment(self, value: MainAxisAlignmentString):
         self._set_attr("alignment", value)
 
@@ -172,7 +170,6 @@ class ResponsiveRow(ConstrainedControl):
         else:
             self.__set_vertical_alignment(value)
 
-    @beartype
     def __set_vertical_alignment(self, value: CrossAxisAlignmentString):
         self._set_attr("verticalAlignment", value)
 
@@ -182,7 +179,6 @@ class ResponsiveRow(ConstrainedControl):
         return self.__columns
 
     @columns.setter
-    @beartype
     def columns(self, value: Optional[ResponsiveNumber]):
         self.__columns = value
 
@@ -192,7 +188,6 @@ class ResponsiveRow(ConstrainedControl):
         return self.__spacing
 
     @spacing.setter
-    @beartype
     def spacing(self, value: Optional[ResponsiveNumber]):
         self.__spacing = value
 
@@ -202,7 +197,6 @@ class ResponsiveRow(ConstrainedControl):
         return self.__run_spacing
 
     @run_spacing.setter
-    @beartype
     def run_spacing(self, value: Optional[ResponsiveNumber]):
         self.__run_spacing = value
 

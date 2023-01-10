@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -172,7 +171,6 @@ class Image(ConstrainedControl):
         else:
             self.__set_fit(value)
 
-    @beartype
     def __set_fit(self, value: ImageFitString):
         self._set_attr("fit", value)
 
@@ -189,7 +187,6 @@ class Image(ConstrainedControl):
         else:
             self.__set_repeat(value)
 
-    @beartype
     def __set_repeat(self, value: ImageRepeatString):
         self._set_attr("repeat", value)
 
@@ -199,7 +196,6 @@ class Image(ConstrainedControl):
         return self.__border_radius
 
     @border_radius.setter
-    @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
 
@@ -225,7 +221,6 @@ class Image(ConstrainedControl):
         else:
             self.__set_blend_mode(value)
 
-    @beartype
     def __set_blend_mode(self, value: BlendModeString):
         self._set_attr("colorBlendMode", value)
 
@@ -235,7 +230,6 @@ class Image(ConstrainedControl):
         return self._get_attr("gaplessPlayback", data_type="bool", def_value=False)
 
     @gapless_playback.setter
-    @beartype
     def gapless_playback(self, value: Optional[bool]):
         self._set_attr("gaplessPlayback", value)
 

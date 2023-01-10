@@ -2,7 +2,6 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -136,7 +135,6 @@ class Markdown(ConstrainedControl):
         return self._get_attr("selectable", data_type="bool", def_value=False)
 
     @selectable.setter
-    @beartype
     def selectable(self, value: Optional[bool]):
         self._set_attr("selectable", value)
 
@@ -153,7 +151,6 @@ class Markdown(ConstrainedControl):
         else:
             self.__set_extension_set(value)
 
-    @beartype
     def __set_extension_set(self, value: MarkdownExtensionSetString):
         self._set_attr("extensionSet", value)
 
@@ -172,7 +169,6 @@ class Markdown(ConstrainedControl):
         return self.__code_style
 
     @code_style.setter
-    @beartype
     def code_style(self, value: Optional[TextStyle]):
         self.__code_style = value
 

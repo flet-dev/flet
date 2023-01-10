@@ -3,7 +3,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -91,7 +90,6 @@ class NavigationRailDestination(Control):
         return self.__icon_content
 
     @icon_content.setter
-    @beartype
     def icon_content(self, value: Optional[Control]):
         self.__icon_content = value
 
@@ -110,7 +108,6 @@ class NavigationRailDestination(Control):
         return self.__selected_icon_content
 
     @selected_icon_content.setter
-    @beartype
     def selected_icon_content(self, value: Optional[Control]):
         self.__selected_icon_content = value
 
@@ -129,7 +126,6 @@ class NavigationRailDestination(Control):
         return self.__label_content
 
     @label_content.setter
-    @beartype
     def label_content(self, value: Optional[Control]):
         self.__label_content = value
 
@@ -139,7 +135,6 @@ class NavigationRailDestination(Control):
         return self.__padding
 
     @padding.setter
-    @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
 
@@ -303,7 +298,6 @@ class NavigationRail(ConstrainedControl):
         return self.__destinations
 
     @destinations.setter
-    @beartype
     def destinations(self, value: Optional[List[NavigationRailDestination]]):
         self.__destinations = value if value is not None else []
 
@@ -322,7 +316,6 @@ class NavigationRail(ConstrainedControl):
         return self._get_attr("selectedIndex", data_type="int")
 
     @selected_index.setter
-    @beartype
     def selected_index(self, value: Optional[int]):
         self._set_attr("selectedIndex", value)
 
@@ -339,7 +332,6 @@ class NavigationRail(ConstrainedControl):
         else:
             self.__set_label_type(value)
 
-    @beartype
     def __set_label_type(self, value: NavigationRailLabelTypeString):
         self._set_attr("labelType", value)
 
@@ -358,7 +350,6 @@ class NavigationRail(ConstrainedControl):
         return self._get_attr("extended", data_type="bool", def_value=False)
 
     @extended.setter
-    @beartype
     def extended(self, value: Optional[bool]):
         self._set_attr("extended", value)
 
@@ -368,7 +359,6 @@ class NavigationRail(ConstrainedControl):
         return self.__leading
 
     @leading.setter
-    @beartype
     def leading(self, value: Optional[Control]):
         self.__leading = value
 
@@ -378,7 +368,6 @@ class NavigationRail(ConstrainedControl):
         return self.__trailing
 
     @trailing.setter
-    @beartype
     def trailing(self, value: Optional[Control]):
         self.__trailing = value
 
@@ -388,7 +377,6 @@ class NavigationRail(ConstrainedControl):
         return self._get_attr("minWidth")
 
     @min_width.setter
-    @beartype
     def min_width(self, value: OptionalNumber):
         self._set_attr("minWidth", value)
 
@@ -398,7 +386,6 @@ class NavigationRail(ConstrainedControl):
         return self._get_attr("minExtendedWidth")
 
     @min_extended_width.setter
-    @beartype
     def min_extended_width(self, value: OptionalNumber):
         self._set_attr("minExtendedWidth", value)
 
@@ -408,6 +395,5 @@ class NavigationRail(ConstrainedControl):
         return self._get_attr("groupAlignment")
 
     @group_alignment.setter
-    @beartype
     def group_alignment(self, value: OptionalNumber):
         self._set_attr("groupAlignment", value)

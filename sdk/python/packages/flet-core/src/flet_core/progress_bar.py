@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -127,7 +126,6 @@ class ProgressBar(ConstrainedControl):
         return self._get_attr("value")
 
     @value.setter
-    @beartype
     def value(self, value: OptionalNumber):
         self._set_attr("value", value)
 
@@ -137,7 +135,6 @@ class ProgressBar(ConstrainedControl):
         return self._get_attr("barheight")
 
     @bar_height.setter
-    @beartype
     def bar_height(self, value: OptionalNumber):
         self._set_attr("barheight", value)
 

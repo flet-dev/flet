@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -29,11 +28,3 @@ def test_file_type_enum():
     r.file_type = "any"
     assert isinstance(r.file_type, str)
     assert r._get_attr("fileType") == "any"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.FilePicker()
-        r.file_type = "something"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.FilePicker()
-        r.file_type = 1

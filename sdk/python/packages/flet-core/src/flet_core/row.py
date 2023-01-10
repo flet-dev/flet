@@ -2,7 +2,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -157,7 +156,6 @@ class Row(ConstrainedControl):
         return self._get_attr("tight", data_type="bool", def_value=False)
 
     @tight.setter
-    @beartype
     def tight(self, value: Optional[bool]):
         self._set_attr("tight", value)
 
@@ -174,7 +172,6 @@ class Row(ConstrainedControl):
         else:
             self.__set_alignment(value)
 
-    @beartype
     def __set_alignment(self, value: MainAxisAlignmentString):
         self._set_attr("alignment", value)
 
@@ -191,7 +188,6 @@ class Row(ConstrainedControl):
         else:
             self.__set_vertical_alignment(value)
 
-    @beartype
     def __set_vertical_alignment(self, value: CrossAxisAlignmentString):
         self._set_attr("verticalAlignment", value)
 
@@ -201,7 +197,6 @@ class Row(ConstrainedControl):
         return self._get_attr("spacing")
 
     @spacing.setter
-    @beartype
     def spacing(self, value: OptionalNumber):
         self._set_attr("spacing", value)
 
@@ -211,7 +206,6 @@ class Row(ConstrainedControl):
         return self._get_attr("wrap", data_type="bool", def_value=False)
 
     @wrap.setter
-    @beartype
     def wrap(self, value: Optional[bool]):
         self._set_attr("wrap", value)
 
@@ -221,7 +215,6 @@ class Row(ConstrainedControl):
         return self._get_attr("runSpacing")
 
     @run_spacing.setter
-    @beartype
     def run_spacing(self, value: OptionalNumber):
         self._set_attr("runSpacing", value)
 
@@ -238,7 +231,6 @@ class Row(ConstrainedControl):
         else:
             self.__set_scroll(value)
 
-    @beartype
     def __set_scroll(self, value: Optional[ScrollModeString]):
         if value == True:
             value = "auto"
@@ -252,7 +244,6 @@ class Row(ConstrainedControl):
         return self._get_attr("autoScroll")
 
     @auto_scroll.setter
-    @beartype
     def auto_scroll(self, value: Optional[bool]):
         self._set_attr("autoScroll", value)
 
@@ -262,6 +253,5 @@ class Row(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    @beartype
     def controls(self, value: Optional[List[Control]]):
         self.__controls = value if value is not None else []

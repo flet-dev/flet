@@ -3,7 +3,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import Dict, List
-
 from flet_core.border import Border, BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -76,7 +75,6 @@ class DataColumn(Control):
         return self._get_attr("numeric", data_type="bool", def_value=False)
 
     @numeric.setter
-    @beartype
     def numeric(self, value: Optional[bool]):
         self._set_attr("numeric", value)
 
@@ -148,7 +146,6 @@ class DataCell(Control):
         return self._get_attr("placeholder", data_type="bool", def_value=False)
 
     @placeholder.setter
-    @beartype
     def placeholder(self, value: Optional[bool]):
         self._set_attr("placeholder", value)
 
@@ -158,7 +155,6 @@ class DataCell(Control):
         return self._get_attr("showEditIcon", data_type="bool", def_value=False)
 
     @show_edit_icon.setter
-    @beartype
     def show_edit_icon(self, value: Optional[bool]):
         self._set_attr("showEditIcon", value)
 
@@ -256,7 +252,6 @@ class DataRow(Control):
         return self.__color
 
     @color.setter
-    @beartype
     def color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__color = value
 
@@ -266,7 +261,6 @@ class DataRow(Control):
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
-    @beartype
     def selected(self, value: Optional[bool]):
         self._set_attr("selected", value)
 
@@ -446,7 +440,6 @@ class DataTable(ConstrainedControl):
         return self.__border
 
     @border.setter
-    @beartype
     def border(self, value: Optional[Border]):
         self.__border = value
 
@@ -456,7 +449,6 @@ class DataTable(ConstrainedControl):
         return self.__border_radius
 
     @border_radius.setter
-    @beartype
     def border_radius(self, value: BorderRadiusValue):
         self.__border_radius = value
 
@@ -466,7 +458,6 @@ class DataTable(ConstrainedControl):
         return self.__horizontal_lines
 
     @horizontal_lines.setter
-    @beartype
     def horizontal_lines(self, value: Optional[BorderSide]):
         self.__horizontal_lines = value
 
@@ -476,7 +467,6 @@ class DataTable(ConstrainedControl):
         return self.__vertical_lines
 
     @vertical_lines.setter
-    @beartype
     def vertical_lines(self, value: Optional[BorderSide]):
         self.__vertical_lines = value
 
@@ -486,7 +476,6 @@ class DataTable(ConstrainedControl):
         return self._get_attr("checkboxHorizontalMargin")
 
     @checkbox_horizontal_margin.setter
-    @beartype
     def checkbox_horizontal_margin(self, value: OptionalNumber):
         self._set_attr("checkboxHorizontalMargin", value)
 
@@ -496,7 +485,6 @@ class DataTable(ConstrainedControl):
         return self._get_attr("columnSpacing")
 
     @column_spacing.setter
-    @beartype
     def column_spacing(self, value: OptionalNumber):
         self._set_attr("columnSpacing", value)
 
@@ -506,7 +494,6 @@ class DataTable(ConstrainedControl):
         return self._get_attr("dividerThickness", data_type="float", def_value=1.0)
 
     @divider_thickness.setter
-    @beartype
     def divider_thickness(self, value: OptionalNumber):
         self._set_attr("dividerThickness", value)
 
@@ -516,7 +503,6 @@ class DataTable(ConstrainedControl):
         return self._get_attr("horizontalMargin")
 
     @horizontal_margin.setter
-    @beartype
     def horizontal_margin(self, value: OptionalNumber):
         self._set_attr("horizontalMargin", value)
 
@@ -526,7 +512,6 @@ class DataTable(ConstrainedControl):
         return self.__data_row_color
 
     @data_row_color.setter
-    @beartype
     def data_row_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__data_row_color = value
 
@@ -536,7 +521,6 @@ class DataTable(ConstrainedControl):
         return self._get_attr("dataRowHeight")
 
     @data_row_height.setter
-    @beartype
     def data_row_height(self, value: OptionalNumber):
         self._set_attr("dataRowHeight", value)
 
@@ -546,7 +530,6 @@ class DataTable(ConstrainedControl):
         return self.__data_text_style
 
     @data_text_style.setter
-    @beartype
     def data_text_style(self, value: Optional[TextStyle]):
         self.__data_text_style = value
 
@@ -565,7 +548,6 @@ class DataTable(ConstrainedControl):
         return self.__gradient
 
     @gradient.setter
-    @beartype
     def gradient(self, value: Optional[Gradient]):
         self.__gradient = value
 
@@ -575,7 +557,6 @@ class DataTable(ConstrainedControl):
         return self.__heading_row_color
 
     @heading_row_color.setter
-    @beartype
     def heading_row_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__heading_row_color = value
 
@@ -585,7 +566,6 @@ class DataTable(ConstrainedControl):
         return self._get_attr("headingRowHeight")
 
     @heading_row_height.setter
-    @beartype
     def heading_row_height(self, value: OptionalNumber):
         self._set_attr("headingRowHeight", value)
 
@@ -595,7 +575,6 @@ class DataTable(ConstrainedControl):
         return self.__heading_text_style
 
     @heading_text_style.setter
-    @beartype
     def heading_text_style(self, value: Optional[TextStyle]):
         self.__heading_text_style = value
 
@@ -605,7 +584,6 @@ class DataTable(ConstrainedControl):
         return self._get_attr("showBottomBorder", data_type="bool", def_value=False)
 
     @show_bottom_border.setter
-    @beartype
     def show_bottom_border(self, value: Optional[bool]):
         self._set_attr("showBottomBorder", value)
 
@@ -615,7 +593,6 @@ class DataTable(ConstrainedControl):
         return self._get_attr("showCheckboxColumn", data_type="bool", def_value=False)
 
     @show_checkbox_column.setter
-    @beartype
     def show_checkbox_column(self, value: Optional[bool]):
         self._set_attr("showCheckboxColumn", value)
 
@@ -625,7 +602,6 @@ class DataTable(ConstrainedControl):
         return self._get_attr("sortAscending", data_type="bool", def_value=False)
 
     @sort_ascending.setter
-    @beartype
     def sort_ascending(self, value: Optional[bool]):
         self._set_attr("sortAscending", value)
 
@@ -635,7 +611,6 @@ class DataTable(ConstrainedControl):
         return self._get_attr("sortColumnIndex")
 
     @sort_column_index.setter
-    @beartype
     def sort_column_index(self, value: Optional[int]):
         self._set_attr("sortColumnIndex", value)
 

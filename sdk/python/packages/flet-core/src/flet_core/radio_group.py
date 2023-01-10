@@ -1,7 +1,6 @@
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
@@ -91,7 +90,6 @@ class RadioGroup(Control):
         return self.__content
 
     @content.setter
-    @beartype
     def content(self, value: Optional[Control]):
         self.__content = value
 

@@ -2,7 +2,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -155,7 +154,6 @@ class ListView(ConstrainedControl):
         return self._get_attr("horizontal")
 
     @horizontal.setter
-    @beartype
     def horizontal(self, value: Optional[bool]):
         self._set_attr("horizontal", value)
 
@@ -165,7 +163,6 @@ class ListView(ConstrainedControl):
         return self._get_attr("spacing")
 
     @spacing.setter
-    @beartype
     def spacing(self, value: OptionalNumber):
         self._set_attr("spacing", value)
 
@@ -175,7 +172,6 @@ class ListView(ConstrainedControl):
         return self._get_attr("dividerThickness")
 
     @divider_thickness.setter
-    @beartype
     def divider_thickness(self, value: OptionalNumber):
         self._set_attr("dividerThickness", value)
 
@@ -185,7 +181,6 @@ class ListView(ConstrainedControl):
         return self._get_attr("itemExtent")
 
     @item_extent.setter
-    @beartype
     def item_extent(self, value: OptionalNumber):
         self._set_attr("itemExtent", value)
 
@@ -195,7 +190,6 @@ class ListView(ConstrainedControl):
         return self._get_attr("firstItemPrototype")
 
     @first_item_prototype.setter
-    @beartype
     def first_item_prototype(self, value: Optional[bool]):
         self._set_attr("firstItemPrototype", value)
 
@@ -205,7 +199,6 @@ class ListView(ConstrainedControl):
         return self.__padding
 
     @padding.setter
-    @beartype
     def padding(self, value: PaddingValue):
         self.__padding = value
 
@@ -224,6 +217,5 @@ class ListView(ConstrainedControl):
         return self._get_attr("autoScroll")
 
     @auto_scroll.setter
-    @beartype
     def auto_scroll(self, value: Optional[bool]):
         self._set_attr("autoScroll", value)

@@ -2,7 +2,6 @@ import json
 from typing import Any, Optional
 
 from beartype import beartype
-
 from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
@@ -158,7 +157,6 @@ class DragTarget(Control):
         return self._get_attr("group")
 
     @group.setter
-    @beartype
     def group(self, value):
         self._set_attr("group", value)
 

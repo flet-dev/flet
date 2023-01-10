@@ -1,4 +1,3 @@
-import beartype.roar
 import flet_core as ft
 import pytest
 from flet_core.protocol import Command
@@ -32,12 +31,6 @@ def test_text_align_enum():
     assert isinstance(r.text_align, str)
     assert r._get_attr("textAlign") == "left"
 
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Text(text_align="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Text(text_align=1)
-
 
 def test_text_style_enum():
     r = ft.Text()
@@ -52,12 +45,6 @@ def test_text_style_enum():
     r = ft.Text(style="bodyMedium")
     assert isinstance(r.style, str)
     assert r._get_attr("style") == "bodyMedium"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Text(style="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Text(style=1)
 
 
 def test_text_overflow_enum():
@@ -74,12 +61,6 @@ def test_text_overflow_enum():
     assert isinstance(r.overflow, str)
     assert r._get_attr("overflow") == "fade"
 
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Text(overflow="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Text(overflow=1)
-
 
 def test_weight_enum():
     r = ft.Text()
@@ -94,9 +75,3 @@ def test_weight_enum():
     r = ft.Text(weight="w100")
     assert isinstance(r.weight, str)
     assert r._get_attr("weight") == "w100"
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Text(weight="something")
-
-    with pytest.raises(beartype.roar.BeartypeCallHintParamViolation):
-        r = ft.Text(weight=1)

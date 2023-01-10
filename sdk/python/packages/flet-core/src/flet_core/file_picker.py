@@ -5,7 +5,6 @@ from typing import Any, Optional, Union
 
 from beartype import beartype
 from beartype.typing import List
-
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.dropdown import Option
@@ -252,7 +251,6 @@ class FilePicker(Control):
         return self._get_attr("state")
 
     @state.setter
-    @beartype
     def state(self, value: Optional[FilePickerState]):
         self._set_attr("state", value)
 
@@ -276,7 +274,6 @@ class FilePicker(Control):
         return self._get_attr("fileName")
 
     @file_name.setter
-    @beartype
     def file_name(self, value: Optional[str]):
         self._set_attr("fileName", value)
 
@@ -286,7 +283,6 @@ class FilePicker(Control):
         return self._get_attr("initialDirectory")
 
     @initial_directory.setter
-    @beartype
     def initial_directory(self, value: Optional[str]):
         self._set_attr("initialDirectory", value)
 
@@ -303,7 +299,6 @@ class FilePicker(Control):
         else:
             self.__set_file_type(value)
 
-    @beartype
     def __set_file_type(self, value: FileTypeString):
         self._set_attr("fileType", value)
 
@@ -313,7 +308,6 @@ class FilePicker(Control):
         return self.__allowed_extensions
 
     @allowed_extensions.setter
-    @beartype
     def allowed_extensions(self, value: Optional[List[str]]):
         self.__allowed_extensions = value
 
@@ -323,7 +317,6 @@ class FilePicker(Control):
         return self._get_attr("allowMultiple", data_type="bool", def_value=False)
 
     @allow_multiple.setter
-    @beartype
     def allow_multiple(self, value: Optional[bool]):
         self._set_attr("allowMultiple", value)
 
