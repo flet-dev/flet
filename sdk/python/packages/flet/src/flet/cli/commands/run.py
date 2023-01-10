@@ -1,15 +1,14 @@
 import argparse
-import logging
 import os
-from pathlib import Path
-import signal
 import subprocess
 import sys
 import threading
 import time
+from pathlib import Path
+
 from flet.cli.commands.base import BaseCommand
 from flet.flet import close_flet_view, open_flet_view
-from flet.utils import get_free_tcp_port, is_windows, open_in_browser
+from flet.utils import get_free_tcp_port, open_in_browser
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 

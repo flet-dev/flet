@@ -1,7 +1,7 @@
 import json
 from typing import List, Optional
 
-from flet.embed_json_encoder import EmbedJsonEncoder
+from flet_core.embed_json_encoder import EmbedJsonEncoder
 
 
 class OAuthToken:

@@ -1,9 +1,9 @@
 import asyncio
 import logging
 import threading
-from typing import Any, Callable, Coroutine, Dict, Iterable
+from typing import Any, Callable, Dict, Iterable
 
-from flet.utils import is_asyncio
+from flet_core.utils import is_asyncio
 
 
 class PubSubHub:

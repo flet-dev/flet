@@ -6,11 +6,23 @@ from asyncio.queues import Queue
 from typing import List, Optional
 
 import websockets.client as ws_client
-from websockets.client import WebSocketClientProtocol
-
 from flet import constants
-from flet.connection import Connection
-from flet.protocol import *
+from flet_core.connection import Connection
+from flet_core.protocol import (
+    Actions,
+    Command,
+    CommandEncoder,
+    Message,
+    PageCommandRequestPayload,
+    PageCommandResponsePayload,
+    PageCommandsBatchRequestPayload,
+    PageCommandsBatchResponsePayload,
+    PageEventPayload,
+    PageSessionCreatedPayload,
+    RegisterHostClientRequestPayload,
+    RegisterHostClientResponsePayload,
+)
+from websockets.client import WebSocketClientProtocol
 
 
 class AsyncWebSocketConnection(Connection):

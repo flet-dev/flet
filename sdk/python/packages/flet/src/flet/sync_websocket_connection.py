@@ -6,9 +6,22 @@ from time import sleep
 from typing import List, Optional
 
 from flet import constants
-from flet.connection import Connection
-from flet.protocol import *
 from flet.reconnecting_websocket import ReconnectingWebSocket
+from flet_core.connection import Connection
+from flet_core.protocol import (
+    Actions,
+    Command,
+    CommandEncoder,
+    Message,
+    PageCommandRequestPayload,
+    PageCommandResponsePayload,
+    PageCommandsBatchRequestPayload,
+    PageCommandsBatchResponsePayload,
+    PageEventPayload,
+    PageSessionCreatedPayload,
+    RegisterHostClientRequestPayload,
+    RegisterHostClientResponsePayload,
+)
 
 
 class SyncWebSocketConnection(Connection):

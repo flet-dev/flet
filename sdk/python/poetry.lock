@@ -168,7 +168,6 @@ flet-core = "0.1.0"
 httpx = "^0.23.3"
 oauthlib = "^3.2.2"
 packaging = "^23.0"
-repath = "^0.9.0"
 typing-extensions = {version = "^4.4.0", markers = "python_version < \"3.8\""}
 watchdog = "^2.2.1"
 websocket-client = "^1.4.2"
@@ -190,7 +189,6 @@ develop = true
 
 [package.dependencies]
 beartype = "^0.11.0"
-oauthlib = "^3.2.2"
 repath = "^0.9.0"
 typing-extensions = {version = "^4.4.0", markers = "python_version < \"3.8\""}
 

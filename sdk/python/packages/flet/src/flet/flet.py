@@ -16,8 +16,6 @@ from pathlib import Path
 from flet import version
 from flet.async_local_socket_connection import AsyncLocalSocketConnection
 from flet.async_websocket_connection import AsyncWebSocketConnection
-from flet.event import Event
-from flet.page import Page
 from flet.sync_local_socket_connection import SyncLocalSocketConnection
 from flet.sync_websocket_connection import SyncWebSocketConnection
 from flet.utils import (
@@ -30,11 +28,12 @@ from flet.utils import (
     is_macos,
     is_windows,
     open_in_browser,
-    random_string,
     safe_tar_extractall,
     which,
 )
-from flet_core import Hello
+from flet_core.event import Event
+from flet_core.page import Page
+from flet_core.utils import random_string
 
 try:
     from typing import Literal
@@ -63,9 +62,6 @@ def app(
     route_url_strategy="hash",
     auth_token=None,
 ):
-
-    Hello().say_hi()
-
     if inspect.iscoroutinefunction(target):
         asyncio.run(
             app_async(

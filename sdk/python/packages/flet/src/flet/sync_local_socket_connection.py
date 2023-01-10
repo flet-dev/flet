@@ -8,9 +8,18 @@ import threading
 from pathlib import Path
 from typing import List
 
-from flet.local_connection import LocalConnection
-from flet.protocol import *
-from flet.utils import get_free_tcp_port, is_windows, random_string
+from flet.utils import get_free_tcp_port, is_windows
+from flet_core.local_connection import LocalConnection
+from flet_core.protocol import (
+    ClientActions,
+    ClientMessage,
+    Command,
+    CommandEncoder,
+    PageCommandResponsePayload,
+    PageCommandsBatchResponsePayload,
+    RegisterWebClientRequestPayload,
+)
+from flet_core.utils import random_string
 
 
 class SyncLocalSocketConnection(LocalConnection):
