@@ -34,6 +34,7 @@ from flet.utils import (
     safe_tar_extractall,
     which,
 )
+from flet_core import Hello
 
 try:
     from typing import Literal
@@ -62,6 +63,8 @@ def app(
     route_url_strategy="hash",
     auth_token=None,
 ):
+
+    Hello().say_hi()
 
     if inspect.iscoroutinefunction(target):
         asyncio.run(
@@ -535,10 +538,10 @@ def __locate_and_unpack_flet_view(page_url, hidden):
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
         # check if flet.exe is in PATH (flet developer mode)
-        flet_path = which("flet", sys.argv[0])
-        if flet_path and "/Contents/MacOS/" in flet_path:
-            logging.info(f"Flet.app found in PATH: {flet_path}")
-            temp_flet_dir = Path(flet_path).parent.parent.parent.parent
+        flet_path = os.environ.get("FLET_VIEW_PATH")
+        if flet_path:
+            logging.info(f"Flet.app is set via FLET_VIEW_PATH: {flet_path}")
+            temp_flet_dir = Path(flet_path)
         else:
             # check if flet_view.app exists in a temp directory
             if not temp_flet_dir.exists():
