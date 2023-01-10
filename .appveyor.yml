@@ -413,7 +413,7 @@ for:
     build: off
 
     test_script:
-      - poetry run pytest tests
+      - poetry run pytest
 
   ######################
   #    Python Build    #
@@ -438,8 +438,12 @@ for:
           (Get-Content flet/version.py).replace("version = `"`"", "version = `"$ver`"") | Set-Content flet/version.py
 
       # build package
+      - cd packages/flet-core
       - poetry build
-      - python3 build-wheels.py
+      - cd ../../packages/flet
+      - poetry build
+      - cd ../..
+      #- python3 build-wheels.py
 
       # publish package
       - sh: |
