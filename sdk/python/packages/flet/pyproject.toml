@@ -29,6 +29,7 @@ packaging = "^23.0"
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.6"
 pytest = "^7.2.0"
+cryptography = "^39.0.0"
 
 [tool.poetry.scripts]
 flet = "flet.cli.cli:main"
