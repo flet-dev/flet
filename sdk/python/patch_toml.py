@@ -8,12 +8,10 @@ if len(sys.argv) < 3:
     print("Specify toml file and version to patch")
     sys.exit(1)
 
-print(sys.argv)
-
 current_dir = pathlib.Path(os.getcwd())
 toml_path = current_dir.joinpath(current_dir, sys.argv[1])
 ver = sys.argv[2]
-print("Patching TOML file {} to {}".format(current_dir, ver))
+print("Patching TOML file {} to {}".format(toml_path, ver))
 
 # read
 with open(toml_path, "r") as f:
@@ -24,7 +22,7 @@ t["tool"]["poetry"]["version"] = ver
 
 # patch dependencies
 deps = t["tool"]["poetry"]["dependencies"]
-if deps["flet-core"]:
+if deps.get("flet-core"):
     deps["flet-core"] = ver
 
 # save
