@@ -8,6 +8,8 @@ if len(sys.argv) < 3:
     print("Specify toml file and version to patch")
     sys.exit(1)
 
+print(sys.argv)
+
 current_dir = pathlib.Path(os.getcwd())
 toml_path = current_dir.joinpath(current_dir, sys.argv[1])
 ver = sys.argv[2]
