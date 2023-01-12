@@ -174,7 +174,7 @@ class PubSubHub:
         th.start()
 
     async def __send_async(self, handler, args):
-        asyncio.create_task(handler(**args))
+        asyncio.create_task(handler(*args))
 
 
 class PubSub:
