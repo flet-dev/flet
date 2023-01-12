@@ -29,7 +29,10 @@ AppState appReducer(AppState state, dynamic action) {
     action.server.connect(address: action.pageUri.toString());
     var sessionId = SessionStore.get("sessionId");
     return state.copyWith(
-        pageUri: action.pageUri, sessionId: sessionId, isLoading: true);
+        pageUri: action.pageUri,
+        assetsDir: action.assetsDir,
+        sessionId: sessionId,
+        isLoading: true);
   } else if (action is PageSizeChangeAction) {
     //
     // page size changed

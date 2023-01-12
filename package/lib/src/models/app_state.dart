@@ -11,6 +11,7 @@ class Counter {
 
 class AppState extends Equatable {
   final Uri? pageUri;
+  final String assetsDir;
   final String route;
   final String sessionId;
   final bool isLoading;
@@ -24,6 +25,7 @@ class AppState extends Equatable {
 
   const AppState(
       {required this.pageUri,
+      required this.assetsDir,
       required this.route,
       required this.sessionId,
       required this.isLoading,
@@ -37,6 +39,7 @@ class AppState extends Equatable {
 
   factory AppState.initial() => const AppState(
       pageUri: null,
+      assetsDir: "",
       route: "",
       sessionId: "",
       isLoading: true,
@@ -65,6 +68,7 @@ class AppState extends Equatable {
 
   AppState copyWith(
           {Uri? pageUri,
+          String? assetsDir,
           String? route,
           String? sessionId,
           bool? isLoading,
@@ -77,6 +81,7 @@ class AppState extends Equatable {
           Map<String, Control>? controls}) =>
       AppState(
           pageUri: pageUri ?? this.pageUri,
+          assetsDir: assetsDir ?? this.assetsDir,
           route: route ?? this.route,
           sessionId: sessionId ?? this.sessionId,
           isLoading: isLoading ?? this.isLoading,

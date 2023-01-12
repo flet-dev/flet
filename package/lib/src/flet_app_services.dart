@@ -9,6 +9,7 @@ import 'flet_server.dart';
 
 class FletAppServices extends InheritedWidget {
   final String pageUrl;
+  final String assetsDir;
   final FletAppErrorsHandler? errorsHandler;
   late final FletServer server;
   late final Store<AppState> store;
@@ -17,6 +18,7 @@ class FletAppServices extends InheritedWidget {
       {Key? key,
       required Widget child,
       required this.pageUrl,
+      required this.assetsDir,
       this.errorsHandler})
       : super(key: key, child: child) {
     store = Store<AppState>(appReducer, initialState: AppState.initial());
@@ -33,7 +35,7 @@ class FletAppServices extends InheritedWidget {
     }
     // connect to a page
     var pageUri = Uri.parse(pageUrl);
-    store.dispatch(PageLoadAction(pageUri, server));
+    store.dispatch(PageLoadAction(pageUri, assetsDir, server));
   }
 
   @override
