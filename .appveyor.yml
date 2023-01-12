@@ -66,25 +66,25 @@ environment:
       python_stack: python 3.7
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Test Python 3.8
-    #   job_group: python_tests
-    #   python_stack: python 3.8
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.8
+      job_group: python_tests
+      python_stack: python 3.8
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Test Python 3.9
-    #   job_group: python_tests
-    #   python_stack: python 3.9
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.9
+      job_group: python_tests
+      python_stack: python 3.9
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Test Python 3.10
-    #   job_group: python_tests
-    #   python_stack: python 3.10
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.10
+      job_group: python_tests
+      python_stack: python 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Test Python 3.11
-    #   job_group: python_tests
-    #   python_stack: python 3.11
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.11
+      job_group: python_tests
+      python_stack: python 3.11
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Build Python wheels
       job_group: python_build
@@ -431,25 +431,27 @@ for:
     test: off
 
     build_script:
-      - ps: |
-          $ErrorActionPreference = "Stop"
-          $ver = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
-          (Get-Content pyproject.toml).replace("version = `"0.1.0`"", "version = `"$ver`"") | Set-Content pyproject.toml
-          (Get-Content flet/version.py).replace("version = `"`"", "version = `"$ver`"") | Set-Content flet/version.py
+      # - ps: |
+      #     $ErrorActionPreference = "Stop"
+      #     $ver = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
+      #     (Get-Content pyproject.toml).replace("version = `"0.1.0`"", "version = `"$ver`"") | Set-Content pyproject.toml
+      #     (Get-Content flet/version.py).replace("version = `"`"", "version = `"$ver`"") | Set-Content flet/version.py
 
       # build package
       - cd packages/flet-core
       - poetry build
       - cd ../../packages/flet
       - poetry build
-      - cd ../..
       #- python3 build-wheels.py
+      - cd ../..
 
       # publish package
       - sh: |
-          if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-              twine upload dist/*
-          fi
+          # if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
+          #     twine upload dist/*
+          # fi
+          twine upload packages/flet-core/dist/* packages/flet/dist/*
 
     artifacts:
-      path: sdk/python/dist/*
+      - path: sdk/python/packages/flet-core/dist/*
+      - path: sdk/python/packages/flet/dist/*
