@@ -1,10 +1,9 @@
 import 'dart:math';
 
-import 'package:flet/src/controls/error.dart';
-import 'package:flet/src/flet_app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
@@ -27,6 +26,7 @@ import 'drag_target.dart';
 import 'draggable.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
+import 'error.dart';
 import 'file_picker.dart';
 import 'flet_app_control.dart';
 import 'floating_action_button.dart';

@@ -2,10 +2,6 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flet/src/protocol/file_picker_upload_file.dart';
-import 'package:flet/src/protocol/file_picker_upload_progress_event.dart';
-import 'package:flet/src/utils/desktop.dart';
-import 'package:flet/src/flet_server.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -13,10 +9,14 @@ import 'package:http/http.dart' as http;
 
 import '../actions.dart';
 import '../flet_app_services.dart';
+import '../flet_server.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/file_picker_result_event.dart';
+import '../protocol/file_picker_upload_file.dart';
+import '../protocol/file_picker_upload_progress_event.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/desktop.dart';
 import '../utils/strings.dart';
 
 class FilePickerControl extends StatefulWidget {

@@ -452,10 +452,10 @@ for:
 
       # publish package
       - sh: |
-          # if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-          #     twine upload dist/*
-          # fi
-          twine upload packages/flet-core/dist/* packages/flet/dist/*
+          if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
+              twine upload packages/flet-core/dist/* packages/flet/dist/*
+          fi
+          
 
     artifacts:
       - path: sdk/python/packages/flet-core/dist/*

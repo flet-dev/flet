@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/client_storage.dart';
-import 'package:flet/src/utils/launch_url.dart';
+import 'utils/client_storage.dart';
+import 'utils/launch_url.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 

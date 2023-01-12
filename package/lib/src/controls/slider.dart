@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flet/src/utils/desktop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -10,6 +9,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
+import '../utils/desktop.dart';
 import 'create_control.dart';
 
 class SliderControl extends StatefulWidget {

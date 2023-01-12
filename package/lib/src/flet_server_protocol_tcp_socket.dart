@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flet/src/flet_server_protocol.dart';
+import 'flet_server_protocol.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:typed_data';
 

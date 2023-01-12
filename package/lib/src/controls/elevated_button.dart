@@ -1,4 +1,3 @@
-import 'package:flet/src/controls/error.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
@@ -7,6 +6,7 @@ import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
+import 'error.dart';
 
 class ElevatedButtonControl extends StatelessWidget {
   final Control? parent;

@@ -1,4 +1,4 @@
-import 'package:flet/src/flet_app_errors_handler.dart';
+import 'flet_app_errors_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 

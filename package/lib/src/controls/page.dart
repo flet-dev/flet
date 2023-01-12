@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flet/src/models/page_args_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +11,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
 import '../models/controls_view_model.dart';
+import '../models/page_args_model.dart';
 import '../models/page_media_view_model.dart';
 import '../models/routes_view_model.dart';
 import '../protocol/keyboard_event.dart';
@@ -24,7 +24,6 @@ import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
 import '../utils/images.dart';
 import '../utils/theme.dart';
-import '../utils/uri.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/fade_transition_page.dart';
 import '../widgets/loading_page.dart';
