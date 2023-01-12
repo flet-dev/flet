@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet/src/models/page_args_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +22,7 @@ import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
+import '../utils/images.dart';
 import '../utils/theme.dart';
 import '../utils/uri.dart';
 import '../utils/user_fonts.dart';
@@ -413,20 +415,22 @@ class _PageControlState extends State<PageControl> {
 
     updateWindow();
 
-    return StoreConnector<AppState, Uri?>(
+    return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
-        converter: (store) => store.state.pageUri,
-        builder: (context, pageUri) {
+        converter: (store) => PageArgsModel.fromStore(store),
+        builder: (context, pageArgs) {
           debugPrint("Page fonts build: ${widget.control.id}");
 
           // load custom fonts
           parseFonts(widget.control, "fonts").forEach((fontFamily, fontUrl) {
-            var fontUri = Uri.parse(fontUrl);
-            if (!fontUri.hasAuthority) {
-              fontUri = getAssetUri(pageUri!, fontUrl);
+            var assetSrc =
+                getAssetSrc(fontUrl, pageArgs.pageUri!, pageArgs.assetsDir);
+
+            if (assetSrc.isFile) {
+              UserFonts.loadFontFromFile(fontFamily, assetSrc.path);
+            } else {
+              UserFonts.loadFontFromUrl(fontFamily, assetSrc.path);
             }
-            debugPrint("fontUri: $fontUri");
-            UserFonts.loadFont(fontFamily, fontUri);
           });
 
           return StoreConnector<AppState, PageMediaViewModel>(

@@ -8,6 +8,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/page_args_model.dart';
 import '../protocol/container_tap_event.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
@@ -67,10 +68,10 @@ class ContainerControl extends StatelessWidget {
 
     final server = FletAppServices.of(context).server;
 
-    return StoreConnector<AppState, Uri?>(
+    return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
-        converter: (store) => store.state.pageUri,
-        builder: (context, pageUri) {
+        converter: (store) => PageArgsModel.fromStore(store),
+        builder: (context, pageArgs) {
           DecorationImage? image;
 
           if (imageSrcBase64 != "") {
@@ -85,11 +86,13 @@ class ContainerControl extends StatelessWidget {
               return ErrorControl("Error decoding base64: ${ex.toString()}");
             }
           } else if (imageSrc != "") {
-            var uri = Uri.parse(imageSrc);
+            var assetSrc =
+                getAssetSrc(imageSrc, pageArgs.pageUri!, pageArgs.assetsDir);
+
             image = DecorationImage(
-                image: NetworkImage(uri.hasAuthority
-                    ? imageSrc
-                    : getAssetUri(pageUri!, imageSrc).toString()),
+                image: assetSrc.isFile
+                    ? getFileImageProvider(assetSrc.path)
+                    : NetworkImage(assetSrc.path),
                 repeat: imageRepeat,
                 fit: imageFit,
                 opacity: imageOpacity);

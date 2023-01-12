@@ -3,10 +3,15 @@ import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:collection/collection.dart';
 import 'package:flet/src/flet_app_services.dart';
+import 'package:flet/src/utils/desktop.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
+import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/page_args_model.dart';
+import '../utils/images.dart';
 import 'error.dart';
 
 class AudioControl extends StatefulWidget {
@@ -91,136 +96,157 @@ class _AudioControlState extends State<AudioControl> {
 
     var server = FletAppServices.of(context).server;
 
-    _onDurationChanged = (duration) {
-      server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: "duration_changed",
-          eventData: duration.inMilliseconds.toString());
-    };
+    return StoreConnector<AppState, PageArgsModel>(
+        distinct: true,
+        converter: (store) => PageArgsModel.fromStore(store),
+        builder: (context, pageArgs) {
+          _onDurationChanged = (duration) {
+            server.sendPageEvent(
+                eventTarget: widget.control.id,
+                eventName: "duration_changed",
+                eventData: duration.inMilliseconds.toString());
+          };
 
-    _onStateChanged = (state) {
-      server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: "state_changed",
-          eventData: state.name.toString());
-    };
+          _onStateChanged = (state) {
+            server.sendPageEvent(
+                eventTarget: widget.control.id,
+                eventName: "state_changed",
+                eventData: state.name.toString());
+          };
 
-    if (onPositionChanged) {
-      _onPositionChanged = (duration) {
-        server.sendPageEvent(
-            eventTarget: widget.control.id,
-            eventName: "position_changed",
-            eventData: duration.toString());
-      };
-    }
+          if (onPositionChanged) {
+            _onPositionChanged = (duration) {
+              server.sendPageEvent(
+                  eventTarget: widget.control.id,
+                  eventName: "position_changed",
+                  eventData: duration.toString());
+            };
+          }
 
-    _onSeekComplete = () {
-      server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: "seek_complete",
-          eventData: "");
-    };
+          _onSeekComplete = () {
+            server.sendPageEvent(
+                eventTarget: widget.control.id,
+                eventName: "seek_complete",
+                eventData: "");
+          };
 
-    () async {
-      bool srcChanged = false;
-      if (src != "" && src != _src) {
-        _src = src;
-        srcChanged = true;
-        await player.setSourceUrl(src);
-      } else if (srcBase64 != "" && srcBase64 != _srcBase64) {
-        _srcBase64 = srcBase64;
-        srcChanged = true;
-        await player.setSourceBytes(base64Decode(srcBase64));
-      }
+          () async {
+            bool srcChanged = false;
+            if (src != "" && src != _src) {
+              _src = src;
+              srcChanged = true;
 
-      if (srcChanged) {
-        server.sendPageEvent(
-            eventTarget: widget.control.id, eventName: "loaded", eventData: "");
-      }
+              // URL or file?
+              var assetSrc =
+                  getAssetSrc(src, pageArgs.pageUri!, pageArgs.assetsDir);
+              if (assetSrc.isFile) {
+                await player.setSourceDeviceFile(assetSrc.path);
+              } else {
+                await player.setSourceUrl(assetSrc.path);
+              }
+            } else if (srcBase64 != "" && srcBase64 != _srcBase64) {
+              _srcBase64 = srcBase64;
+              srcChanged = true;
+              await player.setSourceBytes(base64Decode(srcBase64));
+            }
 
-      if (releaseMode != null && releaseMode != _releaseMode) {
-        _releaseMode = releaseMode;
-        await player.setReleaseMode(releaseMode);
-      }
+            if (srcChanged) {
+              server.sendPageEvent(
+                  eventTarget: widget.control.id,
+                  eventName: "loaded",
+                  eventData: "");
+            }
 
-      if (volume != null && volume != _volume && volume >= 0 && volume <= 1) {
-        _volume = volume;
-        await player.setVolume(volume);
-      }
+            if (releaseMode != null && releaseMode != _releaseMode) {
+              _releaseMode = releaseMode;
+              await player.setReleaseMode(releaseMode);
+            }
 
-      if (playbackRate != null &&
-          playbackRate != _playbackRate &&
-          playbackRate >= 0 &&
-          playbackRate <= 2) {
-        _playbackRate = playbackRate;
-        await player.setPlaybackRate(playbackRate);
-      }
+            if (volume != null &&
+                volume != _volume &&
+                volume >= 0 &&
+                volume <= 1) {
+              _volume = volume;
+              await player.setVolume(volume);
+            }
 
-      if (!kIsWeb &&
-          balance != null &&
-          balance != _balance &&
-          balance >= -1 &&
-          balance <= 1) {
-        _balance = balance;
-        await player.setBalance(balance);
-      }
+            if (playbackRate != null &&
+                playbackRate != _playbackRate &&
+                playbackRate >= 0 &&
+                playbackRate <= 2) {
+              _playbackRate = playbackRate;
+              await player.setPlaybackRate(playbackRate);
+            }
 
-      if (srcChanged && autoplay) {
-        await player.resume();
-      }
+            if (!kIsWeb &&
+                balance != null &&
+                balance != _balance &&
+                balance >= -1 &&
+                balance <= 1) {
+              _balance = balance;
+              await player.setBalance(balance);
+            }
 
-      var method = widget.control.attrString("method");
-      if (method != null && method != _method) {
-        _method = method;
-        debugPrint("Audio JSON value: $_method");
+            if (srcChanged && autoplay) {
+              await player.resume();
+            }
 
-        var mj = json.decode(method);
-        var i = mj["i"] as int;
-        var name = mj["n"] as String;
-        var params = List<String>.from(mj["p"] as List);
+            var method = widget.control.attrString("method");
+            if (method != null && method != _method) {
+              _method = method;
+              debugPrint("Audio JSON value: $_method");
 
-        sendResult(Object? result, String? error) {
-          server.sendPageEvent(
-              eventTarget: widget.control.id,
-              eventName: "method_result",
-              eventData: json.encode({
-                "i": i,
-                "r": result != null ? json.encode(result) : null,
-                "e": error
-              }));
-        }
+              var mj = json.decode(method);
+              var i = mj["i"] as int;
+              var name = mj["n"] as String;
+              var params = List<String>.from(mj["p"] as List);
 
-        switch (name) {
-          case "play":
-            await player.seek(const Duration(milliseconds: 0));
-            await player.resume();
-            break;
-          case "resume":
-            await player.resume();
-            break;
-          case "pause":
-            await player.pause();
-            break;
-          case "release":
-            await player.release();
-            break;
-          case "seek":
-            await player
-                .seek(Duration(milliseconds: int.tryParse(params[0]) ?? 0));
-            break;
-          case "get_duration":
-            sendResult(
-                (await player.getDuration())?.inMilliseconds.toString(), null);
-            break;
-          case "get_current_position":
-            sendResult(
-                (await player.getCurrentPosition())?.inMilliseconds.toString(),
-                null);
-            break;
-        }
-      }
-    }();
+              sendResult(Object? result, String? error) {
+                server.sendPageEvent(
+                    eventTarget: widget.control.id,
+                    eventName: "method_result",
+                    eventData: json.encode({
+                      "i": i,
+                      "r": result != null ? json.encode(result) : null,
+                      "e": error
+                    }));
+              }
 
-    return const SizedBox.shrink();
+              switch (name) {
+                case "play":
+                  await player.seek(const Duration(milliseconds: 0));
+                  await player.resume();
+                  break;
+                case "resume":
+                  await player.resume();
+                  break;
+                case "pause":
+                  await player.pause();
+                  break;
+                case "release":
+                  await player.release();
+                  break;
+                case "seek":
+                  await player.seek(
+                      Duration(milliseconds: int.tryParse(params[0]) ?? 0));
+                  break;
+                case "get_duration":
+                  sendResult(
+                      (await player.getDuration())?.inMilliseconds.toString(),
+                      null);
+                  break;
+                case "get_current_position":
+                  sendResult(
+                      (await player.getCurrentPosition())
+                          ?.inMilliseconds
+                          .toString(),
+                      null);
+                  break;
+              }
+            }
+          }();
+
+          return const SizedBox.shrink();
+        });
   }
 }

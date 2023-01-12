@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flet/src/utils/desktop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -67,7 +68,7 @@ class _SliderControlState extends State<SliderControl> {
     ];
     dispatch(UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
 
-    _debounce = Timer(const Duration(milliseconds: 100), () {
+    _debounce = Timer(Duration(milliseconds: isDesktop() ? 10 : 100), () {
       final server = FletAppServices.of(context).server;
       server.updateControlProps(props: props);
       server.sendPageEvent(

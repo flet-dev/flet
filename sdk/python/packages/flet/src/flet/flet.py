@@ -12,6 +12,7 @@ import traceback
 import urllib.request
 import zipfile
 from pathlib import Path
+from typing import Optional
 
 from flet import version
 from flet.async_local_socket_connection import AsyncLocalSocketConnection
@@ -104,6 +105,8 @@ def __app_sync(
     route_url_strategy="hash",
     auth_token=None,
 ):
+    assets_dir = __get_assets_dir_path(assets_dir)
+
     conn = __connect_internal_sync(
         page_name=name,
         view=view,
@@ -142,7 +145,9 @@ def __app_sync(
         and not is_linux_server()
         and url_prefix is None
     ):
-        fvp, pid_file = open_flet_view(conn.page_url, view == FLET_APP_HIDDEN)
+        fvp, pid_file = open_flet_view(
+            conn.page_url, assets_dir, view == FLET_APP_HIDDEN
+        )
         try:
             fvp.wait()
         except (Exception) as e:
@@ -173,6 +178,7 @@ async def app_async(
     route_url_strategy="hash",
     auth_token=None,
 ):
+    assets_dir = __get_assets_dir_path(assets_dir)
 
     conn = await __connect_internal_async(
         page_name=name,
@@ -213,7 +219,7 @@ async def app_async(
         and url_prefix is None
     ):
         fvp, pid_file = await open_flet_view_async(
-            conn.page_url, view == FLET_APP_HIDDEN
+            conn.page_url, assets_dir, view == FLET_APP_HIDDEN
         )
         try:
             await fvp.wait()
@@ -412,17 +418,6 @@ def __start_flet_server(
     fletd_env = {**os.environ}
 
     if assets_dir:
-        if not Path(assets_dir).is_absolute():
-            if "_MEI" in __file__:
-                # support for "onefile" PyInstaller
-                assets_dir = str(
-                    Path(__file__).parent.parent.joinpath(assets_dir).resolve()
-                )
-            else:
-                assets_dir = str(
-                    Path(get_current_script_dir()).joinpath(assets_dir).resolve()
-                )
-        logging.info(f"Assets path configured: {assets_dir}")
         fletd_env["FLET_STATIC_ROOT_DIR"] = assets_dir
 
     if upload_dir:
@@ -481,20 +476,40 @@ def __start_flet_server(
     return f"http://{server_ip}:{port}"
 
 
-def open_flet_view(page_url, hidden):
-    args, flet_env, pid_file = __locate_and_unpack_flet_view(page_url, hidden)
+def open_flet_view(page_url, assets_dir, hidden):
+    args, flet_env, pid_file = __locate_and_unpack_flet_view(
+        page_url, assets_dir, hidden
+    )
     return subprocess.Popen(args, env=flet_env), pid_file
 
 
-async def open_flet_view_async(page_url, hidden):
-    args, flet_env, pid_file = __locate_and_unpack_flet_view(page_url, hidden)
+async def open_flet_view_async(page_url, assets_dir, hidden):
+    args, flet_env, pid_file = __locate_and_unpack_flet_view(
+        page_url, assets_dir, hidden
+    )
     return (
         await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env),
         pid_file,
     )
 
 
-def __locate_and_unpack_flet_view(page_url, hidden):
+def __get_assets_dir_path(assets_dir: Optional[str]):
+    if assets_dir:
+        if not Path(assets_dir).is_absolute():
+            if "_MEI" in __file__:
+                # support for "onefile" PyInstaller
+                assets_dir = str(
+                    Path(__file__).parent.parent.joinpath(assets_dir).resolve()
+                )
+            else:
+                assets_dir = str(
+                    Path(get_current_script_dir()).joinpath(assets_dir).resolve()
+                )
+        logging.info(f"Assets path configured: {assets_dir}")
+    return assets_dir
+
+
+def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
     logging.info(f"Starting Flet View app...")
 
     args = []
@@ -584,6 +599,9 @@ def __locate_and_unpack_flet_view(page_url, hidden):
         args = [str(app_path), page_url, pid_file]
 
     flet_env = {**os.environ}
+
+    if assets_dir:
+        args.append(assets_dir)
 
     if hidden:
         flet_env["FLET_HIDE_WINDOW_ON_START"] = "true"
