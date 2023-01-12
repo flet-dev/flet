@@ -425,19 +425,21 @@ for:
     install:
       - python --version
       - cd sdk/python
-      - pip install --upgrade setuptools wheel twine poetry
+      - pip install --upgrade setuptools wheel twine poetry tomlkit
       - poetry install
 
     test: off
 
     build_script:
-      # - ps: |
-      #     $ErrorActionPreference = "Stop"
-      #     $ver = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
-      #     (Get-Content pyproject.toml).replace("version = `"0.1.0`"", "version = `"$ver`"") | Set-Content pyproject.toml
-      #     (Get-Content flet/version.py).replace("version = `"`"", "version = `"$ver`"") | Set-Content flet/version.py
+      # patch version
+      - ps: |
+          $ErrorActionPreference = "Stop"
+          $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
+          $vp = "packages/flet/src/flet/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
+      - python3 patch_toml.py packages/flet/pyproject.toml $PYPI_VER
+      - python3 patch_toml.py packages/flet-core/pyproject.toml $PYPI_VER
 
-      # build package
+      # build packages
       - cd packages/flet-core
       - poetry build
       - cd ../../packages/flet
