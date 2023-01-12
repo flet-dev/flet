@@ -19,6 +19,7 @@ from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
 from flet_core.banner import Banner
+from flet_core.border import Border, BorderSide
 from flet_core.border_radius import BorderRadius
 from flet_core.bottom_sheet import BottomSheet
 from flet_core.buttons import (
@@ -140,6 +141,7 @@ from flet_core.theme import (
     ThemeVisualDensity,
 )
 from flet_core.tooltip import Tooltip
+from flet_core.transform import Offset, Rotate, Scale
 from flet_core.transparent_pointer import TransparentPointer
 from flet_core.types import (
     BlendMode,
