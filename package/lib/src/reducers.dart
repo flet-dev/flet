@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/client_storage.dart';
-import 'package:flet/src/utils/launch_url.dart';
+import 'utils/client_storage.dart';
+import 'utils/launch_url.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,7 +29,10 @@ AppState appReducer(AppState state, dynamic action) {
     action.server.connect(address: action.pageUri.toString());
     var sessionId = SessionStore.get("sessionId");
     return state.copyWith(
-        pageUri: action.pageUri, sessionId: sessionId, isLoading: true);
+        pageUri: action.pageUri,
+        assetsDir: action.assetsDir,
+        sessionId: sessionId,
+        isLoading: true);
   } else if (action is PageSizeChangeAction) {
     //
     // page size changed

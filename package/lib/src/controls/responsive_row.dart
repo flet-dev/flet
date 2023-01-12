@@ -1,5 +1,3 @@
-import 'package:flet/src/controls/error.dart';
-import 'package:flet/src/utils/responsive.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -7,7 +5,9 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/page_size_view_model.dart';
 import '../utils/alignment.dart';
+import '../utils/responsive.dart';
 import 'create_control.dart';
+import 'error.dart';
 
 class ResponsiveRowControl extends StatelessWidget {
   final Control? parent;

@@ -17,8 +17,9 @@ import 'flet_server.dart';
 
 class PageLoadAction {
   final Uri pageUri;
+  final String assetsDir;
   final FletServer server;
-  PageLoadAction(this.pageUri, this.server);
+  PageLoadAction(this.pageUri, this.assetsDir, this.server);
 }
 
 class PageReconnectingAction {

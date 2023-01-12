@@ -1,4 +1,3 @@
-import 'package:flet/src/controls/error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -12,6 +11,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
+import 'error.dart';
 
 class NavigationRailControl extends StatefulWidget {
   final Control? parent;

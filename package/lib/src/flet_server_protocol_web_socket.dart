@@ -1,4 +1,4 @@
-import 'package:flet/src/flet_server_protocol.dart';
+import 'flet_server_protocol.dart';
 import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 

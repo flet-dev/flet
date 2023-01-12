@@ -11,6 +11,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
 import '../models/controls_view_model.dart';
+import '../models/page_args_model.dart';
 import '../models/page_media_view_model.dart';
 import '../models/routes_view_model.dart';
 import '../protocol/keyboard_event.dart';
@@ -21,8 +22,8 @@ import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
+import '../utils/images.dart';
 import '../utils/theme.dart';
-import '../utils/uri.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/fade_transition_page.dart';
 import '../widgets/loading_page.dart';
@@ -413,20 +414,22 @@ class _PageControlState extends State<PageControl> {
 
     updateWindow();
 
-    return StoreConnector<AppState, Uri?>(
+    return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
-        converter: (store) => store.state.pageUri,
-        builder: (context, pageUri) {
+        converter: (store) => PageArgsModel.fromStore(store),
+        builder: (context, pageArgs) {
           debugPrint("Page fonts build: ${widget.control.id}");
 
           // load custom fonts
           parseFonts(widget.control, "fonts").forEach((fontFamily, fontUrl) {
-            var fontUri = Uri.parse(fontUrl);
-            if (!fontUri.hasAuthority) {
-              fontUri = getAssetUri(pageUri!, fontUrl);
+            var assetSrc =
+                getAssetSrc(fontUrl, pageArgs.pageUri!, pageArgs.assetsDir);
+
+            if (assetSrc.isFile) {
+              UserFonts.loadFontFromFile(fontFamily, assetSrc.path);
+            } else {
+              UserFonts.loadFontFromUrl(fontFamily, assetSrc.path);
             }
-            debugPrint("fontUri: $fontUri");
-            UserFonts.loadFont(fontFamily, fontUri);
           });
 
           return StoreConnector<AppState, PageMediaViewModel>(

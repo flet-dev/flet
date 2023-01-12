@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/borders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -10,6 +9,7 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';

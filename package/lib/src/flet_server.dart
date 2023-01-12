@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:flet/src/flet_server_protocol.dart';
-import 'package:flet/src/flet_server_protocol_web_socket.dart';
+import 'flet_server_protocol.dart';
 import 'package:flutter/foundation.dart';
 import 'package:redux/redux.dart';
 

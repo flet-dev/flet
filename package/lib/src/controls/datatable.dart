@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -12,6 +11,7 @@ import '../utils/borders.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 
 class DataTableControl extends StatefulWidget {
