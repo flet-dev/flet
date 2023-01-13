@@ -34,6 +34,7 @@ class SyncLocalSocketConnection(LocalConnection):
         self._control_id = 1
 
     def connect(self):
+        self.__uds_path = None
         if is_windows():
             # TCP
             port = get_free_tcp_port()
