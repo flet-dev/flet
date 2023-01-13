@@ -14,6 +14,7 @@ flet = {path = "packages/flet", develop = true}
 pytest = "^7.2.0"
 black = "^22.12.0"
 tomlkit = "^0.11.6"
+cryptography = "^39.0.0"
 
 [build-system]
 requires = ["poetry-core"]
