@@ -310,7 +310,7 @@ class Control:
                     while i < len(commands):
                         cmd = commands[i]
                         if cmd.name == "add" and any(
-                            c for c in cmd.commands if c.attrs["id"] == ctrl.__uid
+                            c for c in cmd.commands if c.attrs.get("id") == ctrl.__uid
                         ):
                             # insert delete command before add
                             commands.insert(i, Command(0, "remove", [ctrl.__uid]))
