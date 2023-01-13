@@ -105,11 +105,12 @@ def __app_sync(
     route_url_strategy="hash",
     auth_token=None,
 ):
+    force_web_view = os.environ.get("FLET_FORCE_WEB_VIEW")
     assets_dir = __get_assets_dir_path(assets_dir)
 
     conn = __connect_internal_sync(
         page_name=name,
-        view=view,
+        view=view if not force_web_view else WEB_BROWSER,
         host=host,
         port=port,
         auth_token=auth_token,
@@ -178,11 +179,12 @@ async def app_async(
     route_url_strategy="hash",
     auth_token=None,
 ):
+    force_web_view = os.environ.get("FLET_FORCE_WEB_VIEW")
     assets_dir = __get_assets_dir_path(assets_dir)
 
     conn = await __connect_internal_async(
         page_name=name,
-        view=view,
+        view=view if not force_web_view else WEB_BROWSER,
         host=host,
         port=port,
         auth_token=auth_token,

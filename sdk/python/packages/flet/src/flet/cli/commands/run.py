@@ -60,6 +60,14 @@ class Command(BaseCommand):
             default=False,
             help="open app in a web browser",
         )
+        parser.add_argument(
+            "-a",
+            "--assets",
+            dest="assets_dir",
+            type=str,
+            default=None,
+            help="path to an assets directory",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
         # print("RUN COMMAND", options)
@@ -77,12 +85,19 @@ class Command(BaseCommand):
         if options.port is None:
             port = get_free_tcp_port()
 
+        assets_dir = options.assets_dir
+        if assets_dir and not Path(assets_dir).is_absolute():
+            assets_dir = str(
+                Path(os.path.dirname(script_path)).joinpath(assets_dir).resolve()
+            )
+
         my_event_handler = Handler(
             [sys.executable, "-u", script_path],
             None if options.directory or options.recursive else script_path,
             port,
             options.web,
             options.hidden,
+            assets_dir,
         )
 
         my_observer = Observer()
@@ -102,13 +117,14 @@ class Command(BaseCommand):
 
 
 class Handler(FileSystemEventHandler):
-    def __init__(self, args, script_path, port, web, hidden) -> None:
+    def __init__(self, args, script_path, port, web, hidden, assets_dir) -> None:
         super().__init__()
         self.args = args
         self.script_path = script_path
         self.port = port
         self.web = web
         self.hidden = hidden
+        self.assets_dir = assets_dir
         self.last_time = time.time()
         self.is_running = False
         self.fvp = None
@@ -120,6 +136,8 @@ class Handler(FileSystemEventHandler):
 
     def start_process(self):
         p_env = {**os.environ}
+        if self.web:
+            p_env["FLET_FORCE_WEB_VIEW"] = "true"
         if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
@@ -148,7 +166,8 @@ class Handler(FileSystemEventHandler):
             if line.startswith(self.page_url_prefix):
                 if not self.page_url:
                     self.page_url = line[len(self.page_url_prefix) + 1 :]
-                    print(self.page_url)
+                    if self.page_url.startswith("http"):
+                        print(self.page_url)
                     if self.web:
                         open_in_browser(self.page_url)
                     else:
@@ -160,7 +179,9 @@ class Handler(FileSystemEventHandler):
                 print(line)
 
     def open_flet_view_and_wait(self):
-        self.fvp, self.pid_file = open_flet_view(self.page_url, self.hidden)
+        self.fvp, self.pid_file = open_flet_view(
+            self.page_url, self.assets_dir, self.hidden
+        )
         self.fvp.wait()
         self.p.kill()
         self.terminate.set()
