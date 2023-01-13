@@ -70,7 +70,7 @@ class SyncLocalSocketConnection(LocalConnection):
             # register response
             self.__send(self._create_register_web_client_response())
 
-            # start session
+            # start a new session
             if self.__on_session_created is not None:
                 th = threading.Thread(
                     target=self.__on_session_created,
