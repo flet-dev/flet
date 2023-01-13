@@ -7,6 +7,7 @@ import 'package:markdown/markdown.dart' as md;
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/page_args_model.dart';
 import '../utils/text.dart';
 import '../utils/uri.dart';
 import 'create_control.dart';
@@ -48,14 +49,16 @@ class MarkdownControl extends StatelessWidget {
                 .bodyMedium!
                 .copyWith(fontFamily: "monospace"));
 
-    return StoreConnector<AppState, Uri?>(
+    return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
-        converter: (store) => store.state.pageUri,
-        builder: (context, pageUri) {
+        converter: (store) => PageArgsModel.fromStore(store),
+        builder: (context, pageArgs) {
           Widget markdown = MarkdownBody(
               data: value,
               selectable: control.attrBool("selectable", false)!,
-              imageDirectory: getBaseUri(pageUri!).toString(),
+              imageDirectory: pageArgs.assetsDir != ""
+                  ? pageArgs.assetsDir
+                  : getBaseUri(pageArgs.pageUri!).toString(),
               extensionSet: extensionSet,
               builders: {
                 'code':
