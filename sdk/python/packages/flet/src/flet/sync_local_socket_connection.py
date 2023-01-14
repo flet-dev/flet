@@ -25,19 +25,21 @@ from flet_core.utils import random_string
 class SyncLocalSocketConnection(LocalConnection):
     def __init__(
         self,
+        port: int = 0,
         on_event=None,
         on_session_created=None,
     ):
         super().__init__()
+        self.__port = port
         self.__on_event = on_event
         self.__on_session_created = on_session_created
         self._control_id = 1
 
     def connect(self):
         self.__uds_path = None
-        if is_windows():
+        if is_windows() or self.__port > 0:
             # TCP
-            port = get_free_tcp_port()
+            port = self.__port if self.__port > 0 else get_free_tcp_port()
             self.page_url = f"tcp://localhost:{port}"
             server_address = ("localhost", port)
             self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

@@ -26,20 +26,22 @@ from flet_core.utils import random_string
 class AsyncLocalSocketConnection(LocalConnection):
     def __init__(
         self,
+        port: int = 0,
         on_event=None,
         on_session_created=None,
     ):
         super().__init__()
         self.__send_queue = asyncio.Queue(1)
+        self.__port = port
         self.__on_event = on_event
         self.__on_session_created = on_session_created
         self._control_id = 1
 
     async def connect(self):
-        if is_windows():
+        if is_windows() or self.__port > 0:
             # TCP
             host = "localhost"
-            port = get_free_tcp_port()
+            port = self.__port if self.__port > 0 else get_free_tcp_port()
             self.page_url = f"tcp://{host}:{port}"
             logging.info(f"Starting up TCP server on {host}:{port}")
             server = await asyncio.start_server(self.handle_connection, host, port)

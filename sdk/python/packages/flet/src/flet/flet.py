@@ -302,6 +302,7 @@ def __connect_internal_sync(
 
     if is_desktop:
         conn = SyncLocalSocketConnection(
+            port,
             on_event=on_event,
             on_session_created=on_session_created,
         )
@@ -370,6 +371,7 @@ async def __connect_internal_async(
 
     if is_desktop:
         conn = AsyncLocalSocketConnection(
+            port,
             on_event=on_event,
             on_session_created=on_session_created,
         )
