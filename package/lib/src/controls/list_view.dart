@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
+import '../widgets/adjustable_scroll_controller.dart';
 import 'create_control.dart';
 
 class ListViewControl extends StatelessWidget {
@@ -18,7 +20,8 @@ class ListViewControl extends StatelessWidget {
       required this.parentDisabled})
       : super(key: key);
 
-  final ScrollController _controller = ScrollController();
+  final ScrollController _controller =
+      isWindowsDesktop() ? AdjustableScrollController() : ScrollController();
 
   void _scrollDown() {
     _controller.animateTo(

@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/desktop.dart';
+import '../widgets/adjustable_scroll_controller.dart';
+
 enum ScrollMode { none, auto, adaptive, always, hidden }
 
 class ScrollableControl extends StatefulWidget {
@@ -27,7 +30,8 @@ class _ScrollableControlState extends State<ScrollableControl> {
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController();
+    _controller =
+        isWindowsDesktop() ? AdjustableScrollController() : ScrollController();
   }
 
   @override
