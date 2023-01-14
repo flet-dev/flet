@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'utils/client_storage.dart';
-import 'utils/launch_url.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,7 +13,9 @@ import 'protocol/invoke_method_result.dart';
 import 'protocol/message.dart';
 import 'protocol/remove_control_payload.dart';
 import 'protocol/update_control_props_payload.dart';
+import 'utils/client_storage.dart';
 import 'utils/desktop.dart';
+import 'utils/launch_url.dart';
 import 'utils/platform_utils_non_web.dart'
     if (dart.library.js) "utils/platform_utils_web.dart";
 import 'utils/session_store_non_web.dart'
@@ -26,7 +26,6 @@ enum Actions { increment, setText, setError }
 
 AppState appReducer(AppState state, dynamic action) {
   if (action is PageLoadAction) {
-    action.server.connect(address: action.pageUri.toString());
     var sessionId = SessionStore.get("sessionId");
     return state.copyWith(
         pageUri: action.pageUri,
@@ -82,18 +81,20 @@ AppState appReducer(AppState state, dynamic action) {
         String pageName = getWebPageName(state.pageUri!);
 
         getWindowMediaData().then((wmd) {
-          action.server.registerWebClient(
-              pageName: pageName,
-              pageRoute: action.route,
-              pageWidth: state.size.width.toString(),
-              pageHeight: state.size.height.toString(),
-              windowWidth: wmd.width != null ? wmd.width.toString() : "",
-              windowHeight: wmd.height != null ? wmd.height.toString() : "",
-              windowTop: wmd.top != null ? wmd.top.toString() : "",
-              windowLeft: wmd.left != null ? wmd.left.toString() : "",
-              isPWA: isProgressiveWebApp().toString(),
-              isWeb: kIsWeb.toString(),
-              platform: defaultTargetPlatform.name.toLowerCase());
+          action.server.connect(address: state.pageUri!.toString()).then((s) {
+            action.server.registerWebClient(
+                pageName: pageName,
+                pageRoute: action.route,
+                pageWidth: state.size.width.toString(),
+                pageHeight: state.size.height.toString(),
+                windowWidth: wmd.width != null ? wmd.width.toString() : "",
+                windowHeight: wmd.height != null ? wmd.height.toString() : "",
+                windowTop: wmd.top != null ? wmd.top.toString() : "",
+                windowLeft: wmd.left != null ? wmd.left.toString() : "",
+                isPWA: isProgressiveWebApp().toString(),
+                isWeb: kIsWeb.toString(),
+                platform: defaultTargetPlatform.name.toLowerCase());
+          });
         });
       } else {
         // existing route change

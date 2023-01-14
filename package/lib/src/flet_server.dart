@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'flet_server_protocol.dart';
 import 'package:flutter/foundation.dart';
 import 'package:redux/redux.dart';
 
 import 'actions.dart';
+import 'flet_server_protocol.dart';
 import 'models/app_state.dart';
 import 'protocol/add_page_controls_payload.dart';
 import 'protocol/app_become_active_payload.dart';
@@ -42,7 +42,7 @@ class FletServer {
 
   FletServer(this._store);
 
-  connect({required String address}) async {
+  Future connect({required String address}) async {
     _address = address;
 
     debugPrint("Connecting to Flet server $address...");

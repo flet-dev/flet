@@ -408,7 +408,7 @@ packages:
       name: screen_retriever
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.2"
+    version: "0.1.5"
   sensors_plus:
     dependency: transitive
     description:
@@ -665,7 +665,7 @@ packages:
       name: window_manager
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.6"
+    version: "0.3.0"
   window_to_front:
     dependency: transitive
     description:
