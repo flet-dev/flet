@@ -529,13 +529,11 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
             flet_path = str(p)
             logging.info(f"Flet View found in: {flet_path}")
         else:
-            # check if flet.exe is in PATH (flet developer mode)
-            flet_path = which(flet_exe, sys.argv[0])
-            if (
-                flet_path
-                and Path(flet_path).parent.joinpath("flutter_windows.dll").exists()
-            ):
+            # check if flet.exe is in FLET_VIEW_PATH (flet developer mode)
+            flet_path = os.environ.get("FLET_VIEW_PATH")
+            if flet_path and os.path.exists(flet_path):
                 logging.info(f"Flet View found in PATH: {flet_path}")
+                flet_path = os.path.join(flet_path, flet_exe)
             else:
                 if not temp_flet_dir.exists():
                     zip_file = __download_flet_client("flet-windows.zip")
@@ -550,7 +548,7 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         # build version-specific path to Flet.app
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
-        # check if flet.exe is in PATH (flet developer mode)
+        # check if flet.exe is in FLET_VIEW_PATH (flet developer mode)
         flet_path = os.environ.get("FLET_VIEW_PATH")
         if flet_path:
             logging.info(f"Flet.app is set via FLET_VIEW_PATH: {flet_path}")
