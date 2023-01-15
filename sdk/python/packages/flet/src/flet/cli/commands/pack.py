@@ -28,8 +28,18 @@ class Command(BaseCommand):
             help="name for the generated executable (Windows) or app bundle (macOS)",
         )
         parser.add_argument(
+            "-D",
+            "--onedir",
+            dest="onedir",
+            action="store_true",
+            default=False,
+            help="Create a one-folder bundle containing an executable (Windows)",
+        )
+        parser.add_argument(
             "--add-data",
             dest="add_data",
+            action="append",
+            nargs="*",
             help="additional non-binary files or folders to be added to the executable",
         )
         parser.add_argument(
@@ -82,17 +92,27 @@ class Command(BaseCommand):
 
         try:
             import PyInstaller.__main__
+
             from flet.__pyinstaller.utils import copy_flet_bin
 
-            pyi_args = [options.script, "--noconsole", "--noconfirm", "--onefile"]
+            pyi_args = [options.script, "--noconsole", "--noconfirm"]
             if options.icon:
                 pyi_args.extend(["--icon", options.icon])
             if options.name:
                 pyi_args.extend(["--name", options.name])
             if options.add_data:
-                pyi_args.extend(["--add-data", options.add_data])
+                for add_data_arr in options.add_data:
+                    for add_data_item in add_data_arr:
+                        pyi_args.extend(["--add-data", add_data_item])
             if options.bundle_id:
                 pyi_args.extend(["--osx-bundle-identifier", options.bundle_id])
+            if options.onedir:
+                if is_macos():
+                    print("--onedir options is not supported on macOS.")
+                    exit(1)
+                pyi_args.append("--onedir")
+            else:
+                pyi_args.append("--onefile")
 
             # copy "bin"
             hook_config.temp_bin_dir = copy_flet_bin()
@@ -173,6 +193,7 @@ class Command(BaseCommand):
                         assemble_app_bundle(app_path, tar_path)
 
             # run PyInstaller!
+            print("Running PyInstaller:", pyi_args)
             PyInstaller.__main__.run(pyi_args)
 
             # cleanup
