@@ -71,18 +71,17 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
 
         # delete "build" directory
-        build_dir = Path(os.getcwd()).joinpath("build")
-        if build_dir.exists():
-            shutil.rmtree(str(build_dir), ignore_errors=True)
+        build_dir = os.path.join(os.getcwd(), "build")
+        if os.path.exists(build_dir):
+            shutil.rmtree(build_dir, ignore_errors=True)
 
         # delete "dist" directory
-        dist_dir = Path(os.getcwd()).joinpath("dist")
-        if dist_dir.exists():
-            shutil.rmtree(str(dist_dir), ignore_errors=True)
+        dist_dir = os.path.join(os.getcwd(), "dist")
+        if os.path.exists(dist_dir):
+            shutil.rmtree(dist_dir, ignore_errors=True)
 
         try:
             import PyInstaller.__main__
-
             from flet.__pyinstaller.utils import copy_flet_bin
 
             pyi_args = [options.script, "--noconsole", "--noconfirm", "--onefile"]
@@ -99,6 +98,14 @@ class Command(BaseCommand):
             hook_config.temp_bin_dir = copy_flet_bin()
 
             if hook_config.temp_bin_dir is not None:
+
+                # delete fletd/fletd.exe
+                fletd_path = os.path.join(
+                    hook_config.temp_bin_dir, "fletd.exe" if is_windows() else "fletd"
+                )
+                if os.path.exists(fletd_path):
+                    os.remove(fletd_path)
+
                 if is_windows():
 
                     from flet.__pyinstaller.win_utils import (
@@ -106,8 +113,8 @@ class Command(BaseCommand):
                         update_flet_view_version_info,
                     )
 
-                    exe_path = str(
-                        Path(hook_config.temp_bin_dir).joinpath("flet", "flet.exe")
+                    exe_path = os.path.join(
+                        hook_config.temp_bin_dir, "flet", "flet.exe"
                     )
                     if os.path.exists(exe_path):
                         # icon
@@ -138,10 +145,10 @@ class Command(BaseCommand):
                         update_flet_view_version_info,
                     )
 
-                    tar_path = Path(hook_config.temp_bin_dir).joinpath(
-                        "flet-macos-amd64.tar.gz"
+                    tar_path = os.path.join(
+                        hook_config.temp_bin_dir, "flet-macos-amd64.tar.gz"
                     )
-                    if tar_path.exists():
+                    if os.path.exists(tar_path):
 
                         # unpack
                         app_path = unpack_app_bundle(tar_path)

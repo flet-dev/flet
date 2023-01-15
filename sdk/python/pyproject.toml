@@ -6,7 +6,7 @@ authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "<3.12,>=3.7"
 
 [tool.poetry.group.dev.dependencies]
 flet-core = {path = "packages/flet-core", develop = true}
@@ -15,6 +15,8 @@ pytest = "^7.2.0"
 black = "^22.12.0"
 tomlkit = "^0.11.6"
 cryptography = "^39.0.0"
+pyinstaller = "^5.7.0"
+pillow = "^9.4.0"
 
 [build-system]
 requires = ["poetry-core"]
