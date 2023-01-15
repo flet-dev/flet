@@ -34,7 +34,7 @@ cryptography = "^39.0.0"
 [tool.poetry.scripts]
 flet = "flet.cli.cli:main"
 
-[project.entry-points.pyinstaller40]
+[tool.poetry.plugins."pyinstaller40"]
 hook-dirs = "flet.__pyinstaller:get_hook_dirs"
 
 [build-system]
