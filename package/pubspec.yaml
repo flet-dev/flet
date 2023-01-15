@@ -36,7 +36,7 @@ dependencies:
   shared_preferences: ^2.0.15
   flutter_svg: ^1.1.6
   window_to_front: ^0.0.3
-  audioplayers: ^1.1.0
+  audioplayers: ^2.0.0
   shake: ^2.1.0
   path: ^1.8.2
 
