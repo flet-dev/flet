@@ -17,6 +17,7 @@ tomlkit = "^0.11.6"
 cryptography = "^39.0.0"
 pyinstaller = "^5.7.0"
 pillow = "^9.4.0"
+pre-commit = "^2.21.0"
 
 [build-system]
 requires = ["poetry-core"]
