@@ -92,6 +92,7 @@ class MatplotlibChart(Container):
         #
         isolated: bool = False,
         original_size: bool = False,
+        transparency: bool = False,
     ):
 
         Container.__init__(
@@ -120,6 +121,7 @@ class MatplotlibChart(Container):
         self.figure = figure
         self.isolated = isolated
         self.original_size = original_size
+        self.transparency = transparency
 
     def _is_isolated(self):
         return self.__isolated
@@ -133,7 +135,12 @@ class MatplotlibChart(Container):
         super()._before_build_command()
         if self.__figure is not None:
             s = io.StringIO()
-            self.__figure.savefig(s, format="svg")
+
+            if self.__transparency:
+                self.__figure.savefig(s, format="svg", transparent=True)
+            else:
+                self.__figure.savefig(s, format="svg")
+
             svg = s.getvalue()
 
             if not self.__original_size:
@@ -178,3 +185,12 @@ class MatplotlibChart(Container):
     @maintain_aspect_ratio.setter
     def maintain_aspect_ratio(self, value: bool):
         self.__maintain_aspect_ratio = value
+
+    # transparency
+    @property
+    def transparency(self) -> bool:
+        return self.__transparency
+
+    @transparency.setter
+    def transparency(self, value: bool):
+        self.__transparency = value
