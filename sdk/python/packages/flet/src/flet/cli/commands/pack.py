@@ -33,7 +33,7 @@ class Command(BaseCommand):
             dest="onedir",
             action="store_true",
             default=False,
-            help="Create a one-folder bundle containing an executable (Windows)",
+            help="create a one-folder bundle containing an executable (Windows)",
         )
         parser.add_argument(
             "--add-data",
@@ -41,6 +41,13 @@ class Command(BaseCommand):
             action="append",
             nargs="*",
             help="additional non-binary files or folders to be added to the executable",
+        )
+        parser.add_argument(
+            "--hidden-import",
+            dest="hidden_import",
+            action="append",
+            nargs="*",
+            help="add an import not visible in the code of the script(s)",
         )
         parser.add_argument(
             "--product-name",
@@ -104,6 +111,10 @@ class Command(BaseCommand):
                 for add_data_arr in options.add_data:
                     for add_data_item in add_data_arr:
                         pyi_args.extend(["--add-data", add_data_item])
+            if options.hidden_import:
+                for hidden_import_arr in options.hidden_import:
+                    for hidden_import_item in hidden_import_arr:
+                        pyi_args.extend(["--hidden-import", hidden_import_item])
             if options.bundle_id:
                 pyi_args.extend(["--osx-bundle-identifier", options.bundle_id])
             if options.onedir:
