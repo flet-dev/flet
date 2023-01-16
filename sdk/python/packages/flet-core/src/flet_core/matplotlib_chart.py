@@ -135,12 +135,7 @@ class MatplotlibChart(Container):
         super()._before_build_command()
         if self.__figure is not None:
             s = io.StringIO()
-
-            if self.__transparent:
-                self.__figure.savefig(s, format="svg", transparent=True)
-            else:
-                self.__figure.savefig(s, format="svg")
-
+            self.__figure.savefig(s, format="svg", transparent=self.__transparent)
             svg = s.getvalue()
 
             if not self.__original_size:
