@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <base href="$FLUTTER_BASE_HREF">
 
@@ -14,10 +15,11 @@
   <link rel="apple-touch-icon" href="icons/apple-touch-icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <!-- Flet specific -->
   <meta name="flet-route-url-strategy" content="%FLET_ROUTE_URL_STRATEGY%">
+  <meta name="flet-web-pyodide" content="true"> <!-- %FLET_WEB_PYODIDE% -->
 
   <title>Flet</title>
   <link rel="manifest" href="manifest.json">
@@ -30,15 +32,20 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.js"></script>
 </head>
+
 <body>
   <div id="loading">
     <style>
       body {
-        inset: 0; overflow: hidden;
-        margin: 0; padding: 0;
+        inset: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
         position: fixed;
       }
+
       #loading {
         align-items: center;
         display: flex;
@@ -46,44 +53,104 @@
         justify-content: center;
         width: 100%;
       }
+
       #loading img {
         animation: 1s ease-in-out 0s infinite alternate breathe;
         opacity: .66;
         transition: opacity .4s;
       }
+
       #loading.main_done img {
         opacity: 1;
       }
+
       #loading.init_done img {
         animation: .33s ease-in-out 0s 1 forwards zooooom;
         opacity: .05;
       }
-      @keyframes breathe { from { transform: scale(1) } to { transform: scale(0.95)}}
-      @keyframes zooooom { from { transform: scale(1) } to { transform: scale(10)}}
-      </style>
+
+      @keyframes breathe {
+        from {
+          transform: scale(1)
+        }
+
+        to {
+          transform: scale(0.95)
+        }
+      }
+
+      @keyframes zooooom {
+        from {
+          transform: scale(1)
+        }
+
+        to {
+          transform: scale(10)
+        }
+      }
+    </style>
     <img src="icons/loading-animation.png" alt="Loading indicator..." />
   </div>
   <script>
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
       var loading = document.querySelector('#loading');
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         }
-      }).then(function(engineInitializer) {
+      }).then(function (engineInitializer) {
         loading.classList.add('main_done');
         return engineInitializer.initializeEngine();
-      }).then(function(appRunner) {
+      }).then(function (appRunner) {
         loading.classList.add('init_done');
         return appRunner.runApp();
-      }).then(function(app) {
+      }).then(function (app) {
         // Wait a few milliseconds so users can see the "zoooom" animation
         // before getting rid of the "loading" div.
-        window.setTimeout(function() {
+        window.setTimeout(function () {
           loading.remove();
         }, 200);
       });
     });
   </script>
+  <script type="text/javascript">
+    async function pyodideMain() {
+      let pyodide = await loadPyodide();
+      pyodide.runPython(await (await fetch("/python/main.py")).text());
+      //console.log(pyodide.runPython("1 + 2"));
+      return pyodide;
+    }
+    var pyodidePromise = pyodideMain();
+
+    function sleep(ms) {
+      return new Promise(resolve => { console.log('sleep:', ms); setTimeout(() => { resolve(42); }, ms); });
+    }
+
+    async function jsConnect() {
+      let pyodide = await pyodidePromise;
+      let start_connection = pyodide.globals.get('start_connection');
+      await start_connection();
+    }
+
+    async function jsSend(data) {
+      let pyodide = await pyodidePromise;
+      pyodide.globals.get('send')(data)
+    }
+
+    async function jsReceive() {
+      let pyodide = await pyodidePromise;
+      let receive_async = pyodide.globals.get('receive_async');
+      return await receive_async();
+    }
+
+    // async function testSend(data) {
+    //   let pyodide = await pyodidePromise;
+    //   pyodide.globals.get('send')(data);
+    //   let receive_async = pyodide.globals.get('receive_async');
+    //   let result = await receive_async();
+    //   console.log("Async received:", result);
+    // }
+  </script>
 </body>
+
 </html>
