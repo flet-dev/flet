@@ -6,11 +6,16 @@ import 'flet_app_services.dart';
 
 class FletApp extends StatefulWidget {
   final String pageUrl;
+  final String assetsDir;
   final String? title;
   final FletAppErrorsHandler? errorsHandler;
 
   const FletApp(
-      {Key? key, required this.pageUrl, this.title, this.errorsHandler})
+      {Key? key,
+      required this.pageUrl,
+      required this.assetsDir,
+      this.title,
+      this.errorsHandler})
       : super(key: key);
 
   @override
@@ -33,6 +38,7 @@ class _FletAppState extends State<FletApp> {
       _pageUrl = widget.pageUrl;
       _appServices = FletAppServices(
           pageUrl: widget.pageUrl,
+          assetsDir: widget.assetsDir,
           errorsHandler: widget.errorsHandler,
           child: FletAppMain(title: widget.title ?? "Flet"));
     }

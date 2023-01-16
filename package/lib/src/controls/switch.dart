@@ -40,7 +40,7 @@ class _SwitchControlState extends State<SwitchControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).ws.pageEventFromWeb(
+    FletAppServices.of(context).server.sendPageEvent(
         eventTarget: widget.control.id,
         eventName: _focusNode.hasFocus ? "focus" : "blur",
         eventData: "");
@@ -88,9 +88,9 @@ class _SwitchControlState extends State<SwitchControl> {
             ];
             dispatch(UpdateControlPropsAction(
                 UpdateControlPropsPayload(props: props)));
-            final ws = FletAppServices.of(context).ws;
-            ws.updateControlProps(props: props);
-            ws.pageEventFromWeb(
+            final server = FletAppServices.of(context).server;
+            server.updateControlProps(props: props);
+            server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "change",
                 eventData: svalue);

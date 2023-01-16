@@ -1,4 +1,3 @@
-import 'package:flet/src/utils/text.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -6,6 +5,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 
 enum FormFieldInputBorder { outline, underline, none }

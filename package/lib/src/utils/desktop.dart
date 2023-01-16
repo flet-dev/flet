@@ -264,3 +264,7 @@ bool isDesktop() {
           defaultTargetPlatform == TargetPlatform.macOS ||
           defaultTargetPlatform == TargetPlatform.linux);
 }
+
+bool isWindowsDesktop() {
+  return !kIsWeb && (defaultTargetPlatform == TargetPlatform.windows);
+}

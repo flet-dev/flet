@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/numbers.dart';
 import 'colors.dart';
 
 TextStyle? getTextStyle(BuildContext context, String styleName) {

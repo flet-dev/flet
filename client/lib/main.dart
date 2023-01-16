@@ -16,6 +16,7 @@ void main([List<String>? args]) async {
   await setupDesktop();
 
   var pageUrl = Uri.base.toString();
+  var assetsDir = "";
   //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
@@ -38,8 +39,14 @@ void main([List<String>? args]) async {
     }
     pageUrl = args[0];
     if (args.length > 1) {
-      var pidFile = await File(args[1]).create();
+      var pidFilePath = args[1];
+      debugPrint("Args contain a path to PID file: $pidFilePath}");
+      var pidFile = await File(pidFilePath).create();
       await pidFile.writeAsString("$pid");
+    }
+    if (args.length > 2) {
+      assetsDir = args[2];
+      debugPrint("Args contain a path assets directory: $assetsDir}");
     }
   }
 
@@ -61,6 +68,7 @@ void main([List<String>? args]) async {
   runApp(FletApp(
     title: 'Flet',
     pageUrl: pageUrl,
+    assetsDir: assetsDir,
     errorsHandler: errorsHandler,
   ));
 }

@@ -26,8 +26,6 @@ class FloatingActionButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("FloatingActionButtonControl build: ${control.id}");
 
-    final ws = FletAppServices.of(context).ws;
-
     String? text = control.attrString("text");
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
     Color? bgColor = HexColor.fromString(
@@ -43,7 +41,7 @@ class FloatingActionButtonControl extends StatelessWidget {
         ? null
         : () {
             debugPrint("FloatingActionButtonControl ${control.id} clicked!");
-            ws.pageEventFromWeb(
+            FletAppServices.of(context).server.sendPageEvent(
                 eventTarget: control.id, eventName: "click", eventData: "");
           };
 

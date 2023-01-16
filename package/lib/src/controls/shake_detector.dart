@@ -52,7 +52,7 @@ class _ShakeDetectorControlState extends State<ShakeDetectorControl> {
       _shakeDetector?.stopListening();
       _shakeDetector = ShakeDetector.autoStart(
         onPhoneShake: () {
-          FletAppServices.of(context).ws.pageEventFromWeb(
+          FletAppServices.of(context).server.sendPageEvent(
               eventTarget: widget.control.id,
               eventName: "shake",
               eventData: "");
