@@ -1,4 +1,5 @@
-import 'flet_server_protocol_javascript.dart';
+import 'flet_server_protocol_javascript_io.dart'
+    if (dart.library.js) "flet_server_protocol_javascript_web.dart";
 import 'flet_server_protocol_tcp_socket.dart';
 import 'flet_server_protocol_web_socket.dart';
 import 'utils/platform_utils_non_web.dart'
