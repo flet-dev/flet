@@ -35,7 +35,6 @@ class AsyncLocalSocketConnection(LocalConnection):
         self.__port = port
         self.__on_event = on_event
         self.__on_session_created = on_session_created
-        self._control_id = 1
 
     async def connect(self):
         if is_windows() or self.__port > 0:

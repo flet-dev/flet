@@ -50,7 +50,8 @@ except ImportError:
         pass
 
     class PubSub:
-        pass
+        def __init__(self, pubsubhub, session_id) -> None:
+            pass
 
 
 try:
