@@ -116,6 +116,12 @@
   <script type="text/javascript">
     async function pyodideMain() {
       let pyodide = await loadPyodide();
+      await pyodide.loadPackage("micropip");
+      await pyodide.runPythonAsync(`
+        import micropip
+        await micropip.install('flet-core', pre=True)
+        print("Imported flet-core")
+      `);
       pyodide.runPython(await (await fetch("/python/main.py")).text());
       //console.log(pyodide.runPython("1 + 2"));
       return pyodide;
