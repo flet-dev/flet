@@ -119,11 +119,14 @@
       await pyodide.loadPackage("micropip");
       await pyodide.runPythonAsync(`
         import micropip
-        await micropip.install('flet-core', pre=True)
+        await micropip.install('/python/flet_core-0.1.0-py3-none-any.whl', pre=True)
         print("Imported flet-core")
       `);
-      pyodide.runPython(await (await fetch("/python/main.py")).text());
-      //console.log(pyodide.runPython("1 + 2"));
+      console.log("Before fetching main script");
+      let main_script = await (await fetch("/python/main.py")).text();
+      console.log("After fetching main script");
+      await pyodide.runPythonAsync(main_script);
+      console.log("Loaded main program")
       return pyodide;
     }
     var pyodidePromise = pyodideMain();
@@ -134,18 +137,18 @@
 
     async function jsConnect() {
       let pyodide = await pyodidePromise;
-      let start_connection = pyodide.globals.get('start_connection');
+      let start_connection = pyodide.globals.get('js_start_connection');
       await start_connection();
     }
 
     async function jsSend(data) {
       let pyodide = await pyodidePromise;
-      pyodide.globals.get('send')(data)
+      pyodide.globals.get('js_send')(data)
     }
 
     async function jsReceive() {
       let pyodide = await pyodidePromise;
-      let receive_async = pyodide.globals.get('receive_async');
+      let receive_async = pyodide.globals.get('js_receive_async');
       return await receive_async();
     }
 
