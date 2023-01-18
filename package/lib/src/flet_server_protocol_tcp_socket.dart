@@ -1,8 +1,10 @@
+import 'dart:convert' show utf8;
 import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
 
 import 'flet_server_protocol.dart';
-import 'package:flutter/foundation.dart';
-import 'dart:typed_data';
 
 class FletTcpSocketServerProtocol implements FletServerProtocol {
   String address;
@@ -109,14 +111,12 @@ class FletTcpSocketServerProtocol implements FletServerProtocol {
   Uint8List int32BigEndianBytes(int value) =>
       Uint8List(4)..buffer.asByteData().setInt32(0, value, Endian.big);
 
-  int sentTotal = 0;
-
   @override
   void send(String message) {
-    _socket!.add(int32BigEndianBytes(message.length));
-    debugPrint('Sending: ${message.length}');
+    var buffer = utf8.encode(message);
+    _socket!.add(int32BigEndianBytes(buffer.length));
+    debugPrint('Sending: ${buffer.length}');
     _socket!.write(message);
-    sentTotal += message.length;
   }
 
   @override
