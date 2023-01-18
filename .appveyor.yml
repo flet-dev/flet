@@ -394,7 +394,7 @@ for:
       - cd ..
 
       # package web build
-      - tar -czvf flet-web.tar.gz -C client/build/web *
+      - tar -czvf flet-web.tar.gz -C client/build/web .
 
     artifacts:
       - path: server/dist/fletd-*
