@@ -1,6 +1,7 @@
+import 'dart:io' as io;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'dart:io' as io;
 import 'package:path/path.dart' as p;
 
 import '../models/asset_src.dart';
@@ -29,9 +30,12 @@ AssetSrc getAssetSrc(String src, Uri pageUri, String assetsDir) {
   } else if (io.File(src).existsSync()) {
     return AssetSrc(path: src, isFile: true);
   } else if (assetsDir != "") {
+    var filePath = normalizePath(src);
+    if (filePath.startsWith(p.separator)) {
+      filePath = filePath.substring(1);
+    }
     return AssetSrc(
-        path: p.join(normalizePath(assetsDir), normalizePath(src)),
-        isFile: true);
+        path: p.join(normalizePath(assetsDir), filePath), isFile: true);
   } else {
     var uri = Uri.parse(src);
     return AssetSrc(
