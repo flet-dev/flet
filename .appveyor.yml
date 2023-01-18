@@ -393,9 +393,13 @@ for:
           fi
       - cd ..
 
+      # package web build
+      - tar -czvf flet-web.tar.gz -C client/build/web *
+
     artifacts:
       - path: server/dist/fletd-*
       - path: server/dist/fletd_*/*
+      - path: flet-web.tar.gz
 
   ######################
   #    Python Tests    #
@@ -450,13 +454,19 @@ for:
       - python3 build-wheels.py
       - popd
 
+      # build "flet-pyodide" package
+      - pushd packages/flet-pyodide
+      - poetry build
+      - popd
+
       # publish package
       - sh: |
           if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-              twine upload packages/flet-core/dist/* packages/flet/dist/*
+              twine upload packages/flet-core/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
           fi
           
 
     artifacts:
       - path: sdk/python/packages/flet-core/dist/*
       - path: sdk/python/packages/flet/dist/*
+      - path: sdk/python/packages/flet-pyodide/dist/*
