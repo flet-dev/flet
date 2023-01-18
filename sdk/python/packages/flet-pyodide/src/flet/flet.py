@@ -3,9 +3,9 @@ import logging
 import traceback
 
 import flet_js
+from flet.pyodide_connection import PyodideConnection
 from flet_core.event import Event
 from flet_core.page import Page
-from flet_pyodide.pyodide_connection import PyodideConnection
 
 try:
     from typing import Literal

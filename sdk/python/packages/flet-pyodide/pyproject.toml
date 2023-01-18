@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 
 packages = [
-    { include = "flet_pyodide", from = "src" },
+    { include = "flet", from = "src" },
 ]
 
 [tool.poetry.urls]
