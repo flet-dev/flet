@@ -400,6 +400,15 @@ for:
       - path: server/dist/fletd-*
       - path: server/dist/fletd_*/*
       - path: flet-web.tar.gz
+        name: flet_web
+
+    deploy:
+      provider: GitHub
+      auth_token: $(GITHUB_TOKEN)
+      release: $(APPVEYOR_REPO_TAG_NAME)
+      artifact: flet_web
+      on:
+        APPVEYOR_REPO_TAG: true
 
   ######################
   #    Python Tests    #
@@ -442,6 +451,7 @@ for:
           $vp = "packages/flet/src/flet/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
       - python3 patch_toml.py packages/flet/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-core/pyproject.toml $PYPI_VER
+      - python3 patch_toml.py packages/flet-pyodide/pyproject.toml $PYPI_VER
 
       # build "flet-core" package
       - pushd packages/flet-core
