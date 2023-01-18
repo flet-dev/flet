@@ -121,9 +121,9 @@
       await pyodide.loadPackage("micropip");
       await pyodide.runPythonAsync(`
         import micropip
-        await micropip.install('/python/flet_core-0.1.0-py3-none-any.whl', pre=True)
+        await micropip.install('/python/flet_core-0.4.0.dev1069-py3-none-any.whl', pre=True)
         print("Imported flet-core")
-        await micropip.install('/python/flet_pyodide-0.1.0-py3-none-any.whl', pre=True)
+        await micropip.install('/python/flet_pyodide-0.4.0.dev1069-py3-none-any.whl', pre=True)
         print("Imported flet-pyodide")
       `);
       pyodide.registerJsModule("flet_js", flet_js);

@@ -449,6 +449,7 @@ for:
           $ErrorActionPreference = "Stop"
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
           $vp = "packages/flet/src/flet/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
+          $vp = "packages/flet-pyodide/src/flet/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
       - python3 patch_toml.py packages/flet/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-core/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-pyodide/pyproject.toml $PYPI_VER
