@@ -145,7 +145,7 @@ class SyncLocalSocketConnection(LocalConnection):
                         self.__on_message(message.decode("utf-8"))
 
             finally:
-                logging.debug("Cloding connection")
+                logging.debug("Closing connection")
                 self.__connection.close()
 
     def __send(self, message: ClientMessage):
