@@ -26,13 +26,15 @@
 
   <!-- flutterWebRenderer -->
 
+  <!-- Pyodide code -->
+  <script src="python.js"></script>
+
   <script>
     // The value below is injected by flutter build, do not touch.
     var serviceWorkerVersion = null;
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.js"></script>
 </head>
 
 <body>
@@ -112,48 +114,6 @@
         }, 200);
       });
     });
-  </script>
-  <script type="text/javascript">
-    let flet_js = {};
-
-    async function pyodideMain() {
-      let pyodide = await loadPyodide();
-      await pyodide.loadPackage("micropip");
-      await pyodide.runPythonAsync(`
-        import micropip
-        await micropip.install('/python/flet_core-0.4.0.dev1069-py3-none-any.whl', pre=True)
-        print("Imported flet-core")
-        await micropip.install('/python/flet_pyodide-0.4.0.dev1069-py3-none-any.whl', pre=True)
-        print("Imported flet-pyodide")
-      `);
-      pyodide.registerJsModule("flet_js", flet_js);
-      console.log("Before fetching main script");
-      let main_script = await (await fetch("/python/main.py")).text();
-      console.log("After fetching main script");
-      await pyodide.runPythonAsync(main_script);
-      console.log("Loaded main program")
-      return pyodide;
-    }
-
-    var pyodidePromise = pyodideMain();
-
-    function sleep(ms) {
-      return new Promise(resolve => { console.log('sleep:', ms); setTimeout(() => { resolve(42); }, ms); });
-    }
-
-    async function jsConnect() {
-      let pyodide = await pyodidePromise;
-      //let start_connection = pyodide.globals.get('js_start_connection');
-      await flet_js.start_connection();
-    }
-
-    async function jsSend(data) {
-      flet_js.send(data)
-    }
-
-    async function jsReceive() {
-      return await flet_js.receive_async();
-    }
   </script>
 </body>
 
