@@ -133,7 +133,7 @@ for:
           if [[ "$APPVEYOR_REPO_TAG_NAME" != "" ]]; then
               mkdir -p $HOME/.config/dart
               echo $PUB_DEV_TOKEN | base64 --decode > $HOME/.config/dart/pub-credentials.json
-              dart pub publish -f 
+              dart pub publish -f
           fi
 
   # ======================================
@@ -306,7 +306,7 @@ for:
       - sh: |
           export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
           if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
-            bundle exec fastlane build_flutter      
+            bundle exec fastlane build_flutter
           elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
             bundle exec fastlane upload_appstore
           else
@@ -344,7 +344,7 @@ for:
       - sh: |
           export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
           if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
-            bundle exec fastlane build_flutter      
+            bundle exec fastlane build_flutter
           elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
             bundle exec fastlane upload_appstore
           else
@@ -455,7 +455,7 @@ for:
           if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
               twine upload packages/flet-core/dist/* packages/flet/dist/*
           fi
-          
+
 
     artifacts:
       - path: sdk/python/packages/flet-core/dist/*

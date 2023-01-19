@@ -13,6 +13,7 @@ from flet_core.types import (
     AnimationValue,
     BlendMode,
     BlendModeString,
+    BorderValue,
     BorderRadiusValue,
     BoxShape,
     ClipBehavior,
@@ -99,7 +100,7 @@ class Container(ConstrainedControl):
         bgcolor: Optional[str] = None,
         gradient: Optional[Gradient] = None,
         blend_mode: BlendMode = BlendMode.NONE,
-        border: Optional[Border] = None,
+        border: BorderValue = None,
         border_radius: BorderRadiusValue = None,
         image_src: Optional[str] = None,
         image_src_base64: Optional[str] = None,
@@ -260,11 +261,11 @@ class Container(ConstrainedControl):
 
     # border
     @property
-    def border(self) -> Optional[Border]:
+    def border(self) -> BorderValue:
         return self.__border
 
     @border.setter
-    def border(self, value: Optional[Border]):
+    def border(self, value: BorderValue):
         self.__border = value
 
     # border_radius

@@ -77,7 +77,7 @@
 * Controls
   * Navigation
     * NavigationDrawer
-    * NavigationBar    
+    * NavigationBar
   * Layout
     * Row (responsive)
     * Column (responsive)
@@ -185,7 +185,7 @@
         <td>Markdown</td>
         <td>Text markdown=True</td>
         <td></td>
-    </tr>    
+    </tr>
     <tr>
         <td>✓</td>
         <td>Icon</td>
@@ -203,7 +203,7 @@
         <td>CircleAvatar</td>
         <td>Persona</td>
         <td>S1</td>
-    </tr>    
+    </tr>
     <tr>
         <td></td>
         <td>Chip</td>

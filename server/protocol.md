@@ -79,7 +79,7 @@ Request from a host client:
         "lines": ["line1", ...],
         "commands": [
             // sub-commands
-        ]        
+        ]
     }
 }
 ```
@@ -160,6 +160,6 @@ One-way message from Flet server to a host:
     "sessionID": "",
     "eventTarget": "",
     "eventName": "",
-    "eventData": ""    
+    "eventData": ""
 }
 ```

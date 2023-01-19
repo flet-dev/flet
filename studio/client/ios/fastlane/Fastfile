@@ -62,7 +62,7 @@ platform :ios do
       output_name: "flet-studio.ipa",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
-        provisioningProfiles: { 
+        provisioningProfiles: {
           "com.appveyor.fletstudio" => "match AdHoc com.appveyor.fletstudio"
         }
       }
@@ -82,20 +82,20 @@ platform :ios do
       output_name: "flet-studio.ipa",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
-        provisioningProfiles: { 
+        provisioningProfiles: {
           "com.appveyor.fletstudio" => "match AppStore com.appveyor.fletstudio"
         }
       }
     )
 
     app_store_connect_api_key(is_key_content_base64: true)
-    
+
     deliver(
       skip_screenshots: true,
       skip_metadata: true,
       run_precheck_before_submit: false,
       submit_for_review: false,
       force: true
-    )    
+    )
   end
 end

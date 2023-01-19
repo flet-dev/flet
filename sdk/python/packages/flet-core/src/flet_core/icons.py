@@ -6930,14 +6930,30 @@ SIGNAL_CELLULAR_ALT_2_BAR = "signal_cellular_alt_2_bar"
 SIGNAL_CELLULAR_ALT_2_BAR_SHARP = "signal_cellular_alt_2_bar_sharp"
 SIGNAL_CELLULAR_ALT_2_BAR_ROUNDED = "signal_cellular_alt_2_bar_rounded"
 SIGNAL_CELLULAR_ALT_2_BAR_OUTLINED = "signal_cellular_alt_2_bar_outlined"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR = "signal_cellular_connected_no_internet_0_bar"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR_SHARP = "signal_cellular_connected_no_internet_0_bar_sharp"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR_ROUNDED = "signal_cellular_connected_no_internet_0_bar_rounded"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR_OUTLINED = "signal_cellular_connected_no_internet_0_bar_outlined"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR = "signal_cellular_connected_no_internet_4_bar"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR_SHARP = "signal_cellular_connected_no_internet_4_bar_sharp"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR_ROUNDED = "signal_cellular_connected_no_internet_4_bar_rounded"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR_OUTLINED = "signal_cellular_connected_no_internet_4_bar_outlined"
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR = (
+    "signal_cellular_connected_no_internet_0_bar"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR_SHARP = (
+    "signal_cellular_connected_no_internet_0_bar_sharp"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR_ROUNDED = (
+    "signal_cellular_connected_no_internet_0_bar_rounded"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR_OUTLINED = (
+    "signal_cellular_connected_no_internet_0_bar_outlined"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR = (
+    "signal_cellular_connected_no_internet_4_bar"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR_SHARP = (
+    "signal_cellular_connected_no_internet_4_bar_sharp"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR_ROUNDED = (
+    "signal_cellular_connected_no_internet_4_bar_rounded"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR_OUTLINED = (
+    "signal_cellular_connected_no_internet_4_bar_outlined"
+)
 SIGNAL_CELLULAR_NO_SIM = "signal_cellular_no_sim"
 SIGNAL_CELLULAR_NO_SIM_SHARP = "signal_cellular_no_sim_sharp"
 SIGNAL_CELLULAR_NO_SIM_ROUNDED = "signal_cellular_no_sim_rounded"
@@ -6972,8 +6988,12 @@ SIGNAL_WIFI_BAD_ROUNDED = "signal_wifi_bad_rounded"
 SIGNAL_WIFI_BAD_OUTLINED = "signal_wifi_bad_outlined"
 SIGNAL_WIFI_CONNECTED_NO_INTERNET_4 = "signal_wifi_connected_no_internet_4"
 SIGNAL_WIFI_CONNECTED_NO_INTERNET_4_SHARP = "signal_wifi_connected_no_internet_4_sharp"
-SIGNAL_WIFI_CONNECTED_NO_INTERNET_4_ROUNDED = "signal_wifi_connected_no_internet_4_rounded"
-SIGNAL_WIFI_CONNECTED_NO_INTERNET_4_OUTLINED = "signal_wifi_connected_no_internet_4_outlined"
+SIGNAL_WIFI_CONNECTED_NO_INTERNET_4_ROUNDED = (
+    "signal_wifi_connected_no_internet_4_rounded"
+)
+SIGNAL_WIFI_CONNECTED_NO_INTERNET_4_OUTLINED = (
+    "signal_wifi_connected_no_internet_4_outlined"
+)
 SIGNAL_WIFI_OFF = "signal_wifi_off"
 SIGNAL_WIFI_OFF_SHARP = "signal_wifi_off_sharp"
 SIGNAL_WIFI_OFF_ROUNDED = "signal_wifi_off_rounded"
@@ -6982,10 +7002,18 @@ SIGNAL_WIFI_STATUSBAR_4_BAR = "signal_wifi_statusbar_4_bar"
 SIGNAL_WIFI_STATUSBAR_4_BAR_SHARP = "signal_wifi_statusbar_4_bar_sharp"
 SIGNAL_WIFI_STATUSBAR_4_BAR_ROUNDED = "signal_wifi_statusbar_4_bar_rounded"
 SIGNAL_WIFI_STATUSBAR_4_BAR_OUTLINED = "signal_wifi_statusbar_4_bar_outlined"
-SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_4 = "signal_wifi_statusbar_connected_no_internet_4"
-SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_4_SHARP = "signal_wifi_statusbar_connected_no_internet_4_sharp"
-SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_4_ROUNDED = "signal_wifi_statusbar_connected_no_internet_4_rounded"
-SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_4_OUTLINED = "signal_wifi_statusbar_connected_no_internet_4_outlined"
+SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_4 = (
+    "signal_wifi_statusbar_connected_no_internet_4"
+)
+SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_4_SHARP = (
+    "signal_wifi_statusbar_connected_no_internet_4_sharp"
+)
+SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_4_ROUNDED = (
+    "signal_wifi_statusbar_connected_no_internet_4_rounded"
+)
+SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_4_OUTLINED = (
+    "signal_wifi_statusbar_connected_no_internet_4_outlined"
+)
 SIGNAL_WIFI_STATUSBAR_NULL = "signal_wifi_statusbar_null"
 SIGNAL_WIFI_STATUSBAR_NULL_SHARP = "signal_wifi_statusbar_null_sharp"
 SIGNAL_WIFI_STATUSBAR_NULL_ROUNDED = "signal_wifi_statusbar_null_rounded"

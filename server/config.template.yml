@@ -14,7 +14,7 @@ master_secret_key: your_master_secret!
 cookie_secret: your_secret!
 
 # GitHub OAuth integration
-github_client_id: 
+github_client_id:
 github_client_secret:
 
 # Azure OAuth integration
@@ -23,7 +23,7 @@ azure_client_secret:
 azure_tenant: common
 
 # Google OAuth integration
-google_client_id: 
+google_client_id:
 google_client_secret:
 
 # shared page lifetime since the last time it was updated
