@@ -21,5 +21,5 @@ class Rotate:
 
 @dataclasses.dataclass
 class Offset:
-    x: float
-    y: float
+    x: float = dataclasses.field(default=0)
+    y: float = dataclasses.field(default=0)

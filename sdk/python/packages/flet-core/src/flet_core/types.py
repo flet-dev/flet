@@ -3,6 +3,7 @@ from typing import Dict, Union
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
+from flet_core.border import Border
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
@@ -18,6 +19,8 @@ PaddingValue = Union[None, int, float, Padding]
 MarginValue = Union[None, int, float, Margin]
 
 BorderRadiusValue = Union[None, int, float, BorderRadius]
+
+BorderValue = Union[None, int, float, Border]
 
 RotateValue = Union[None, int, float, Rotate]
 

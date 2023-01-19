@@ -4,10 +4,10 @@ from typing import Union
 
 @dataclasses.dataclass
 class Margin:
-    left: Union[float, int]
-    top: Union[float, int]
-    right: Union[float, int]
-    bottom: Union[float, int]
+    left: Union[float, int] = dataclasses.field(default=None)
+    top: Union[float, int] = dataclasses.field(default=None)
+    right: Union[float, int] = dataclasses.field(default=None)
+    bottom: Union[float, int] = dataclasses.field(default=None)
 
 
 def all(value: float):

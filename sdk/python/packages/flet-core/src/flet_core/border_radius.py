@@ -4,10 +4,10 @@ from typing import Union
 
 @dataclasses.dataclass
 class BorderRadius:
-    topLeft: Union[float, int]
-    topRight: Union[float, int]
-    bottomLeft: Union[float, int]
-    bottomRight: Union[float, int]
+    topLeft: Union[float, int] = dataclasses.field(default=0)
+    topRight: Union[float, int] = dataclasses.field(default=0)
+    bottomLeft: Union[float, int] = dataclasses.field(default=0)
+    bottomRight: Union[float, int] = dataclasses.field(default=0)
 
 
 def all(value: float):
