@@ -22,6 +22,7 @@ let pyodideReady = new Promise((resolve) => {
         let pyodide = await loadPyodide();
         pyodide.registerJsModule("flet_js", flet_js);
         await pyodide.loadPackage("micropip");
+        let pre = micropipIncludePre ? "True" : "False";
         await pyodide.runPythonAsync(`
         import micropip
         import os
@@ -33,7 +34,7 @@ let pyodideReady = new Promise((resolve) => {
             with open("requirements.txt", "r") as f:
                 deps = [line.rstrip() for line in f]
                 print("Loading requirements.txt:", deps)
-                await micropip.install(deps)
+                await micropip.install(deps, pre=${pre})
       `);
         pyodide.pyimport(pythonModuleName);
         resolve(pyodide);

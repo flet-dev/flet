@@ -22,6 +22,13 @@ class Command(BaseCommand):
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument("script", type=str, help="path to a Python script")
         parser.add_argument(
+            "--pre",
+            dest="pre",
+            action="store_true",
+            default=False,
+            help="allow micropip to install pre-release Python packages",
+        )
+        parser.add_argument(
             "-a",
             "--assets",
             dest="assets_dir",
@@ -103,7 +110,7 @@ class Command(BaseCommand):
                 pyodide_dep_found = True
                 break
         if not pyodide_dep_found:
-            deps.append(f"flet-pyodide>={flet.version.version}")
+            deps.append(f"flet-pyodide")
             with open(reqs_path, "w") as f:
                 f.writelines(deps)
 
@@ -133,7 +140,30 @@ class Command(BaseCommand):
         # - %FLET_ROUTE_URL_STRATEGY%
         # - %FLET_WEB_PYODIDE%
 
-        print(flet.version.version)
+        print("Patching index.html")
+        index_path = os.path.join(dist_dir, "index.html")
+        with open(index_path, "r") as f:
+            index = f.read()
+
+        pre = "true" if options.pre else "false"
+        module_name = Path(script_path).stem
+        pyodideCode = f"""
+        <script>
+            var micropipIncludePre = {pre};
+            var pythonModuleName = "{module_name}";
+        </script>
+        <script src="python.js"></script>
+        """
+        index = index.replace("%FLET_WEB_PYODIDE%", "true")
+        index = index.replace("<!-- pyodideCode -->", pyodideCode)
+        index = index.replace(
+            "<!-- flutterWebRenderer -->",
+            f'<script>window.flutterWebRenderer="{options.web_renderer}";</script>',
+        )
+        index = index.replace("%FLET_ROUTE_URL_STRATEGY%", options.route_url_strategy)
+
+        with open(index_path, "w") as f:
+            f.write(index)
 
     def __download_flet_web(self, file_name):
         ver = flet.version.version
