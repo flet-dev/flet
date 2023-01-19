@@ -19,15 +19,18 @@
 
   <!-- Flet specific -->
   <meta name="flet-route-url-strategy" content="%FLET_ROUTE_URL_STRATEGY%">
-  <meta name="flet-web-pyodide" content="true"> <!-- %FLET_WEB_PYODIDE% -->
+  <meta name="flet-web-pyodide" content="%FLET_WEB_PYODIDE%">
 
   <title>Flet</title>
   <link rel="manifest" href="manifest.json">
 
   <!-- flutterWebRenderer -->
 
-  <!-- Pyodide code -->
-  <script src="python.js"></script>
+  <!-- pyodideCode -->
+  <!-- <script>
+    var pythonModuleName = "main";
+  </script>
+  <script src="python.js"></script> -->
 
   <script>
     // The value below is injected by flutter build, do not touch.

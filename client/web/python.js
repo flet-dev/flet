@@ -20,20 +20,22 @@ function loadScript(url, callback) {
 let pyodideReady = new Promise((resolve) => {
     loadScript(pyodideUrl, async () => {
         let pyodide = await loadPyodide();
+        pyodide.registerJsModule("flet_js", flet_js);
         await pyodide.loadPackage("micropip");
         await pyodide.runPythonAsync(`
         import micropip
-        await micropip.install('/python/flet_core-0.4.0.dev1069-py3-none-any.whl', pre=True)
-        print("Imported flet-core")
-        await micropip.install('/python/flet_pyodide-0.4.0.dev1069-py3-none-any.whl', pre=True)
-        print("Imported flet-pyodide")
+        import os
+
+        from pyodide.http import pyfetch
+        response = await pyfetch("/app.tar.gz")
+        await response.unpack_archive()
+        if os.path.exists("requirements.txt"):
+            with open("requirements.txt", "r") as f:
+                deps = [line.rstrip() for line in f]
+                print("Loading requirements.txt:", deps)
+                await micropip.install(deps)
       `);
-        pyodide.registerJsModule("flet_js", flet_js);
-        console.log("Before fetching main script");
-        let main_script = await (await fetch("/python/main.py")).text();
-        console.log("After fetching main script");
-        await pyodide.runPythonAsync(main_script);
-        console.log("Loaded main program")
+        pyodide.pyimport(pythonModuleName);
         resolve(pyodide);
     });
 });
