@@ -14,8 +14,8 @@ from flet import (
     Text,
     TransparentPointer,
     colors,
+    View,
 )
-from flet.view import View
 
 # logging.basicConfig(level=logging.DEBUG)
 
