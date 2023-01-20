@@ -113,7 +113,7 @@ class Tooltip(Control):
         self.message = message
         self.text_style = text_style
         self.text_align = text_align
-        self.prefere_below = prefer_below
+        self.prefer_below = prefer_below
         self.show_duration = show_duration
         self.wait_duration = wait_duration
 
@@ -242,14 +242,14 @@ class Tooltip(Control):
     def text_style(self, value: Optional[TextStyle]):
         self.__text_style = value
 
-    # prefere_below
+    # prefer_below
     @property
-    def prefere_below(self) -> Optional[bool]:
-        return self._get_attr("prefereBelow", data_type="bool", def_value=False)
+    def prefer_below(self) -> Optional[bool]:
+        return self._get_attr("preferBelow", data_type="bool", def_value=False)
 
-    @prefere_below.setter
-    def prefere_below(self, value: Optional[bool]):
-        self._set_attr("prefereBelow", value)
+    @prefer_below.setter
+    def prefer_below(self, value: Optional[bool]):
+        self._set_attr("preferBelow", value)
 
     # height
     @property
