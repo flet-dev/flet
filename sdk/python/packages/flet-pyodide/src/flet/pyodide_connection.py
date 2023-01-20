@@ -30,7 +30,7 @@ class PyodideConnection(LocalConnection):
         flet_js.start_connection = self.connect
 
     async def connect(self):
-        print("Starting Pyodide connection...")
+        logging.info("Starting Pyodide connection...")
         asyncio.create_task(self.receive_loop())
         flet_js.send = self.send_from_js
         flet_js.receive_async = self.receive_from_js_async
@@ -41,7 +41,7 @@ class PyodideConnection(LocalConnection):
             await self.__on_message(message)
 
     def send_from_js(self, message: str):
-        print("Sending data from JavaScript to Python:", message)
+        logging.debug(f"Sending data from JavaScript to Python: {message}")
         self.__receive_queue.put_nowait(message)
 
     async def receive_from_js_async(self):

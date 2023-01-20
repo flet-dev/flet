@@ -13,6 +13,7 @@ import zipfile
 from base64 import urlsafe_b64encode
 
 fletd_job_name = "Build Fletd"
+flet_web_job_name = "Build Fletd"
 
 build_jobs = {}
 
@@ -106,6 +107,14 @@ def download_flet_server(jobId, asset, exec_filename, dest_file):
     urllib.request.urlretrieve(fletd_url, dest_file)
     st = os.stat(dest_file)
     os.chmod(dest_file, st.st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
+
+
+def download_flet_web(jobId, dest_file):
+    flet_web_url = (
+        f"https://ci.appveyor.com/api/buildjobs/{jobId}/artifacts/flet-web.tar.gz"
+    )
+    print(f"Downloading {flet_web_url}...")
+    urllib.request.urlretrieve(flet_web_url, dest_file)
 
 
 def download_artifact_by_name(jobId, artifact_name, dest_file):
@@ -234,6 +243,15 @@ for name, package in packages.items():
             with zipfile.ZipFile(client_arch_path, "r") as zip_arch:
                 zip_arch.extractall(bin_path)
             os.remove(client_arch_path)
+
+    # create "web" directory
+    web_path = unpacked_whl.joinpath("flet", "web")
+    web_path.mkdir(exist_ok=True)
+    web_tar_path = unpacked_whl.joinpath("flet-web.tar.gz")
+    download_flet_web(build_jobs[flet_web_job_name], web_tar_path)
+    with tarfile.open(web_tar_path, "r:gz") as tar:
+        tar.extractall(str(web_path))
+    os.remove(web_tar_path)
 
     # update WHEEL file
     for tag in package["wheel_tags"]:

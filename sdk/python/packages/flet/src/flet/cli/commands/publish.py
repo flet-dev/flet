@@ -1,17 +1,11 @@
 import argparse
-import logging
 import os
 import shutil
 import tarfile
-import tempfile
-import urllib.request
 from pathlib import Path
 
-import flet.__pyinstaller.config as hook_config
-import flet.version
 from flet.cli.commands.base import BaseCommand
-from flet.utils import is_macos, is_windows, is_within_directory, safe_tar_extractall
-from flet_core.utils import random_string
+from flet.utils import is_within_directory
 
 
 class Command(BaseCommand):
@@ -77,13 +71,12 @@ class Command(BaseCommand):
             shutil.rmtree(dist_dir, ignore_errors=True)
         Path(dist_dir).mkdir(parents=True, exist_ok=True)
 
-        # download flet-web.tar.gz
-        print(f"Downloading Flet Web to {dist_dir}")
-        temp_arch = self.__download_flet_web(flet_web_filename)
-
-        # unpack to dist
-        with tarfile.open(temp_arch, "r:gz") as tar_arch:
-            safe_tar_extractall(tar_arch, dist_dir)
+        # copy "web"
+        web_path = Path(__file__).parent.parent.parent.joinpath("web")
+        if not web_path.exists():
+            print("Flet module does not contain 'web' directory.")
+            exit(1)
+        shutil.copytree(str(web_path), dist_dir, dirs_exist_ok=True)
 
         # copy assets
         assets_dir = options.assets_dir
@@ -92,6 +85,9 @@ class Command(BaseCommand):
                 Path(os.path.dirname(script_path)).joinpath(assets_dir).resolve()
             )
         if assets_dir:
+            if not os.path.exists(assets_dir):
+                print("Assets dir not found:", assets_dir)
+                exit(1)
             shutil.copytree(assets_dir, dist_dir, dirs_exist_ok=True)
 
         # create "./dist/requirements.txt" if not exist
@@ -164,14 +160,3 @@ class Command(BaseCommand):
 
         with open(index_path, "w") as f:
             f.write(index)
-
-    def __download_flet_web(self, file_name):
-        ver = flet.version.version
-        temp_arch = str(Path(tempfile.gettempdir()).joinpath(f"{ver}-{file_name}"))
-        logging.info(f"Downloading Flet Web v{ver} to {temp_arch}")
-        flet_url = (
-            # f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
-            "https://ci.appveyor.com/api/buildjobs/5k01xli75kelopba/artifacts/flet-web.tar.gz"
-        )
-        urllib.request.urlretrieve(flet_url, temp_arch)
-        return temp_arch
