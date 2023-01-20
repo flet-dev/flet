@@ -1,0 +1,101 @@
+import flet_core as ft
+import pytest
+from flet_core.protocol import Command
+
+
+def test_instance_no_attrs_set():
+    r = ft.DatePicker()
+    assert isinstance(r, ft.Control)
+    assert r._build_add_commands() == [
+        Command(
+            indent=0,
+            name=None,
+            values=["datepicker"],
+            attrs={},
+            commands=[],
+        )
+    ], "Test failed"
+
+
+def test_text_align_enum():
+    r = ft.DatePicker(text_align=ft.TextAlign.LEFT)
+    assert isinstance(r.text_align, ft.TextAlign)
+    assert isinstance(r._get_attr("textAlign"), str)
+    cmd = r._build_add_commands()
+    assert cmd[0].attrs["textalign"] == "left"
+
+
+def test_text_align_str():
+    r = ft.DatePicker(text_align="left")
+    assert isinstance(r.text_align, str)
+    assert isinstance(r._get_attr("textAlign"), str)
+    cmd = r._build_add_commands()
+    assert cmd[0].attrs["textalign"] == "left"
+
+
+# def test_keyboard_type_enum():
+#     r = ft.DatePicker()
+#     assert r.keyboard_type is None
+#     assert r._get_attr("keyboardType") is None
+#
+#     r = ft.DatePicker(keyboard_type=ft.KeyboardType.NONE)
+#     assert isinstance(r.keyboard_type, ft.KeyboardType)
+#     assert r.keyboard_type == ft.KeyboardType.NONE
+#     assert r._get_attr("keyboardType") == "none"
+#
+#     r = ft.DatePicker(keyboard_type="phone")
+#     assert isinstance(r.keyboard_type, str)
+#     assert r._get_attr("keyboardType") == "phone"
+
+
+# def test_capitalization_enum():
+#     r = ft.DatePicker()
+#     assert r.capitalization == ft.TextCapitalization.NONE
+#     assert r._get_attr("capitalization") is None
+#
+#     r = ft.DatePicker(capitalization=ft.TextCapitalization.WORDS)
+#     assert isinstance(r.capitalization, ft.TextCapitalization)
+#     assert r.capitalization == ft.TextCapitalization.WORDS
+#     assert r._get_attr("capitalization") == "words"
+#
+#     r = ft.DatePicker(capitalization="sentences")
+#     assert isinstance(r.capitalization, str)
+#     assert r._get_attr("capitalization") == "sentences"
+
+
+def test_border_enum():
+    r = ft.DatePicker()
+    assert r.border is None
+    assert r._get_attr("border") is None
+
+    r = ft.DatePicker(border=ft.InputBorder.OUTLINE)
+    assert isinstance(r.border, ft.InputBorder)
+    assert r.border == ft.InputBorder.OUTLINE
+    assert r._get_attr("border") == "outline"
+
+    r = ft.DatePicker(border="none")
+    assert isinstance(r.border, str)
+    assert r._get_attr("border") == "none"
+
+
+def test_bgcolor_sets_filled():
+    r = ft.DatePicker()
+    r.bgcolor = ft.colors.BLUE
+    cmd = r._build_add_commands()
+    assert r.filled is not None and r.filled
+    assert r._get_attr("filled") is not None and r._get_attr("filled")
+
+    r = ft.DatePicker(bgcolor=ft.colors.BLUE)
+    cmd = r._build_add_commands()
+    assert r.filled is not None and r.filled
+    assert r._get_attr("filled") is not None and r._get_attr("filled")
+
+    r = ft.DatePicker(bgcolor=ft.colors.BLUE, filled=True)
+    cmd = r._build_add_commands()
+    assert r.filled is not None and r.filled
+    assert r._get_attr("filled") is not None and r._get_attr("filled")
+
+    r = ft.DatePicker(bgcolor=ft.colors.BLUE, filled=False)
+    cmd = r._build_add_commands()
+    assert r.filled is not None and not r.filled
+    assert r._get_attr("filled") is not None and not r._get_attr("filled")

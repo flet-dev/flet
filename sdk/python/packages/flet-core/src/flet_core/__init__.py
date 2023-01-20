@@ -45,6 +45,7 @@ from flet_core.datatable import (
     DataRow,
     DataTable,
 )
+from flet_core.datepicker import DatePicker
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
