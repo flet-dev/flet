@@ -39,6 +39,7 @@ dependencies:
   audioplayers: ^2.0.0
   shake: ^2.1.0
   path: ^1.8.2
+  flutter_datetime_picker:
 
 dev_dependencies:
   flutter_test:

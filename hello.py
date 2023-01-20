@@ -8,9 +8,14 @@ def main(page: ft.Page):
         page.update()
 
     new_task = ft.TextField(hint_text="Say hello?")
+    test = ft.DatePicker()
+    column = ft.Column(controls=[
+        new_task,
+        test
+    ])
 
-    page.add(new_task, ft.FloatingActionButton(icon=ft.icons.ADD, on_click=add_clicked))
+    page.add(column, ft.FloatingActionButton(icon=ft.icons.ADD, on_click=add_clicked))
 
 
-ft.app(target=main, view=ft.FLET_APP, port=8085)
+ft.app(target=main, view=ft.FLET_APP_HIDDEN, port=8550)
 # ft.app(target=main, view=ft.FLET_APP_HIDDEN)
