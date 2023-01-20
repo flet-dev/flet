@@ -108,7 +108,7 @@ class Command(BaseCommand):
         if not pyodide_dep_found:
             deps.append(f"flet-pyodide")
             with open(reqs_path, "w") as f:
-                f.writelines(deps)
+                f.writelines(dep + "\n" for dep in deps)
 
         # pack all files in script's directory to dist/app.tar.gz
         app_tar_gz_path = os.path.join(dist_dir, app_tar_gz_filename)
