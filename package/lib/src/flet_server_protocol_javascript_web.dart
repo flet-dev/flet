@@ -9,16 +9,10 @@ import 'package:js/js.dart';
 import 'flet_server_protocol.dart';
 
 @JS()
-external dynamic sleep(int ms);
-
-@JS()
-external dynamic jsConnect();
+external dynamic jsConnect(FletServerProtocolOnMessageCallback onMessage);
 
 @JS()
 external dynamic jsSend(String data);
-
-@JS()
-external dynamic jsReceive();
 
 class FletJavaScriptServerProtocol implements FletServerProtocol {
   final String address;
@@ -33,16 +27,7 @@ class FletJavaScriptServerProtocol implements FletServerProtocol {
   @override
   connect() async {
     debugPrint("Connecting to JavaScript server $address...");
-    await promiseToFuture(jsConnect());
-    receiveLoop();
-  }
-
-  Future receiveLoop() async {
-    debugPrint("Starting receive loop...");
-    while (true) {
-      var message = await promiseToFuture(jsReceive());
-      onMessage(message);
-    }
+    await promiseToFuture(jsConnect(allowInterop(onMessage)));
   }
 
   @override
