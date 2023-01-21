@@ -1,4 +1,3 @@
-import inspect
 import logging
 import traceback
 
@@ -6,6 +5,7 @@ import flet_js
 from flet.pyodide_connection import PyodideConnection
 from flet_core.event import Event
 from flet_core.page import Page
+from flet_core.utils import is_coroutine
 
 try:
     from typing import Literal
@@ -29,9 +29,6 @@ def app(
     route_url_strategy=None,
     auth_token=None,
 ):
-    if not inspect.iscoroutinefunction(target):
-        raise Exception("Sync apps are not supported in Pyodide.")
-
     app_async(
         target=target,
         name=name,
@@ -74,7 +71,10 @@ def app_async(
         logging.info(f"Session started: {session_data.sessionID}")
         try:
             assert target is not None
-            await target(page)
+            if is_coroutine(target):
+                await target(page)
+            else:
+                target(page)
         except Exception as e:
             print(
                 f"Unhandled error processing page session {page.session_id}:",

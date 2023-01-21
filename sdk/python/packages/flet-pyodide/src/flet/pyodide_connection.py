@@ -51,7 +51,7 @@ class PyodideConnection(LocalConnection):
             self._client_details = RegisterWebClientRequestPayload(**msg.payload)
 
             # register response
-            await self.__send(self._create_register_web_client_response())
+            self.__send(self._create_register_web_client_response())
 
             # start session
             if self.__on_session_created is not None:
@@ -75,12 +75,18 @@ class PyodideConnection(LocalConnection):
             raise Exception('Unknown message "{}": {}'.format(msg.action, msg.payload))
 
     async def send_command_async(self, session_id: str, command: Command):
+        return self.send_command(session_id, command)
+
+    def send_command(self, session_id: str, command: Command):
         result, message = self._process_command(command)
         if message:
-            await self.__send(message)
+            self.__send(message)
         return PageCommandResponsePayload(result=result, error="")
 
     async def send_commands_async(self, session_id: str, commands: List[Command]):
+        return self.send_commands(session_id, commands)
+
+    def send_commands(self, session_id: str, commands: List[Command]):
         results = []
         messages = []
         for command in commands:
@@ -90,12 +96,10 @@ class PyodideConnection(LocalConnection):
             if message:
                 messages.append(message)
         if len(messages) > 0:
-            await self.__send(
-                ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages)
-            )
+            self.__send(ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages))
         return PageCommandsBatchResponsePayload(results=results, error="")
 
-    async def __send(self, message: ClientMessage):
+    def __send(self, message: ClientMessage):
         j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logging.debug(f"__send: {j}")
         self.send_callback(j)

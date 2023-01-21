@@ -60,6 +60,22 @@ except ImportError:
     from typing_extensions import Literal
 
 
+class NopeLock(object):
+    def __enter__(self):
+        pass
+
+    def __exit__(self, *args):
+        pass
+
+
+class AsyncNopeLock(object):
+    async def __aenter__(self):
+        pass
+
+    async def __aexit__(self, *args):
+        pass
+
+
 class Page(Control):
     """
     Page is a container for `View` (https://flet.dev/docs/controls/view) controls.
@@ -95,8 +111,8 @@ class Page(Control):
         self._session_id = session_id
         self._index = {self._Control__uid: self}  # index with all page controls
 
-        self.__lock = threading.Lock() if not is_asyncio() else None
-        self.__async_lock = asyncio.Lock() if is_asyncio() else None
+        self.__lock = threading.Lock() if not is_asyncio() else NopeLock()
+        self.__async_lock = asyncio.Lock() if is_asyncio() else AsyncNopeLock()
 
         self.__views = [View()]
         self.__default_view = self.__views[0]
@@ -235,7 +251,6 @@ class Page(Control):
         self._set_attr("windowLeft", values[9], False)
 
     def update(self, *controls):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             if len(controls) == 0:
                 r = self.__update(self)
@@ -244,9 +259,6 @@ class Page(Control):
         self.__handle_mount_unmount(*r)
 
     async def update_async(self, *controls):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             if len(controls) == 0:
                 r = await self.__update_async(self)
@@ -255,23 +267,18 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def add(self, *controls):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             self._controls.extend(controls)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     async def add_async(self, *controls):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             self._controls.extend(controls)
             r = await self.__update_async(self)
         await self.__handle_mount_unmount_async(*r)
 
     def insert(self, at, *controls):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             n = at
             for control in controls:
@@ -281,9 +288,6 @@ class Page(Control):
         self.__handle_mount_unmount(*r)
 
     async def insert_async(self, at, *controls):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             n = at
             for control in controls:
@@ -293,7 +297,6 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def remove(self, *controls):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             for control in controls:
                 self._controls.remove(control)
@@ -301,9 +304,6 @@ class Page(Control):
         self.__handle_mount_unmount(*r)
 
     async def remove_async(self, *controls):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             for control in controls:
                 self._controls.remove(control)
@@ -311,16 +311,12 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def remove_at(self, index):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             self._controls.pop(index)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     async def remove_at_async(self, index):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             self._controls.pop(index)
             r = await self.__update_async(self)
@@ -335,7 +331,6 @@ class Page(Control):
         self._controls.clear()
 
     def _clean(self, control: Control):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             control._previous_children.clear()
             assert control.uid is not None
@@ -349,9 +344,6 @@ class Page(Control):
                 c.will_unmount()
 
     async def _clean_async(self, control: Control):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             control._previous_children.clear()
             assert control.uid is not None
@@ -420,20 +412,15 @@ class Page(Control):
             await ctrl.did_mount_async()
 
     def error(self, message=""):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             self._send_command("error", [message])
 
     async def error_async(self, message=""):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             await self._send_command_async("error", [message])
 
     def on_event(self, e: Event):
         logging.info(f"page.on_event: {e.target} {e.name} {e.data}")
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             if e.target == "page" and e.name == "change":
                 self.__on_page_change_event(e.data)
