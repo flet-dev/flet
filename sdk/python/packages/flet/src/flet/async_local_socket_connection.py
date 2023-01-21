@@ -37,6 +37,8 @@ class AsyncLocalSocketConnection(LocalConnection):
         self.__on_session_created = on_session_created
 
     async def connect(self):
+        self.__connected = False
+        self.__uds_path = None
         if is_windows() or self.__port > 0:
             # TCP
             host = "localhost"
@@ -60,8 +62,11 @@ class AsyncLocalSocketConnection(LocalConnection):
     async def handle_connection(
         self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ):
-        asyncio.create_task(self.__receive_loop(reader))
-        asyncio.create_task(self.__send_loop(writer))
+        if not self.__connected:
+            self.__connected = True
+            logging.debug("Connected new TCP client")
+            asyncio.create_task(self.__receive_loop(reader))
+            asyncio.create_task(self.__send_loop(writer))
 
     async def __receive_loop(self, reader: asyncio.StreamReader):
         while True:
@@ -84,7 +89,8 @@ class AsyncLocalSocketConnection(LocalConnection):
                 data = message.encode("utf-8")
                 msg = struct.pack(">I", len(data)) + data
                 writer.write(msg)
-                await writer.drain()
+                # await writer.drain()
+                logging.debug("sent to TCP: {}".format(len(msg)))
             except:
                 # re-enqueue the message to repeat it when re-connected
                 self.__send_queue.put_nowait(message)
