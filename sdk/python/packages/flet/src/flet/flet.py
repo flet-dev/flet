@@ -1,10 +1,8 @@
 import asyncio
-import inspect
 import logging
 import os
 import signal
 import subprocess
-import sys
 import tarfile
 import tempfile
 import threading
@@ -34,7 +32,7 @@ from flet.utils import (
 )
 from flet_core.event import Event
 from flet_core.page import Page
-from flet_core.utils import random_string
+from flet_core.utils import is_coroutine, random_string
 
 try:
     from typing import Literal
@@ -63,8 +61,8 @@ def app(
     route_url_strategy="path",
     auth_token=None,
 ):
-    if inspect.iscoroutinefunction(target):
-        asyncio.run(
+    if is_coroutine(target):
+        asyncio.get_event_loop().run_until_complete(
             app_async(
                 target=target,
                 name=name,

@@ -72,7 +72,7 @@ class AsyncLocalSocketConnection(LocalConnection):
         while True:
             try:
                 raw_msglen = await reader.readexactly(4)
-            except asyncio.IncompleteReadError:
+            except:
                 return None
 
             if not raw_msglen:
