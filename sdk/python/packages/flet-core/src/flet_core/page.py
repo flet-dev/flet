@@ -459,7 +459,7 @@ class Page(Control):
     def go(self, route, **kwargs):
         self.route = route if kwargs == {} else route + self.query.post(kwargs)
 
-        self.__on_route_change.get_handler()(
+        self.__on_route_change.get_sync_handler()(
             ControlEvent(
                 target="page",
                 name="route_change",
@@ -541,7 +541,9 @@ class Page(Control):
                 )
         else:
             self.__authorization.dehydrate_token(saved_token)
-            self.__on_login.get_handler()(LoginEvent(error="", error_description=""))
+            self.__on_login.get_sync_handler()(
+                LoginEvent(error="", error_description="")
+            )
         return self.__authorization
 
     async def login_async(
@@ -613,7 +615,7 @@ class Page(Control):
                 self.__authorization.request_token(code)
             except Exception as ex:
                 login_evt.error = str(ex)
-        self.__on_login.get_handler()(login_evt)
+        self.__on_login.get_sync_handler()(login_evt)
 
     async def __on_authorize_async(self, e):
         assert self.__authorization is not None
@@ -644,7 +646,7 @@ class Page(Control):
 
     def logout(self):
         self.__authorization = None
-        self.__on_logout.get_handler()(
+        self.__on_logout.get_sync_handler()(
             ControlEvent(target="page", name="logout", data="", control=self, page=self)
         )
 

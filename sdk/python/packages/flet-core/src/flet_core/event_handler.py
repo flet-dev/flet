@@ -6,6 +6,9 @@ class EventHandler:
         self.__handlers = {}
         self.__result_converter = result_converter
 
+    def get_sync_handler(self):
+        return self.__sync_handler
+
     def get_handler(self):
         if is_asyncio():
             return self.__async_handler

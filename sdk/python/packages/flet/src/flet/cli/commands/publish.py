@@ -115,7 +115,7 @@ class Command(BaseCommand):
 
         def filter_tar(tarinfo: tarfile.TarInfo):
             full_path = os.path.join(script_dir, tarinfo.name)
-            if tarinfo.name.startswith("."):
+            if tarinfo.name.startswith(".") or tarinfo.name.startswith("__pycache__"):
                 return None
             elif assets_dir and is_within_directory(assets_dir, full_path):
                 return None

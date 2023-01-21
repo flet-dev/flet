@@ -4,6 +4,7 @@ import logging
 from typing import List
 
 import flet_js
+import js
 from flet_core.local_connection import LocalConnection
 from flet_core.protocol import (
     ClientActions,
@@ -30,6 +31,7 @@ class PyodideConnection(LocalConnection):
 
     async def connect(self, send_callback):
         logging.info("Starting Pyodide connection...")
+        self.page_url = flet_js.documentUrl
         self.send_callback = send_callback
         asyncio.create_task(self.receive_loop())
         flet_js.send = self.send_from_js
