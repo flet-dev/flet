@@ -8,6 +8,7 @@ self.flet_js = {}; // namespace for Python global functions
 self.initPyodide = async function () {
     self.pyodide = await loadPyodide();
     self.pyodide.registerJsModule("flet_js", flet_js);
+    flet_js.documentUrl = documentUrl;
     await self.pyodide.loadPackage("micropip");
     let pre = self.micropipIncludePre ? "True" : "False";
     await self.pyodide.runPythonAsync(`
@@ -35,6 +36,7 @@ self.onmessage = async (event) => {
     // run only once
     if (!self.initialized) {
         self.initialized = true;
+        self.documentUrl = event.data.documentUrl;
         self.micropipIncludePre = event.data.micropipIncludePre;
         self.pythonModuleName = event.data.pythonModuleName;
         await self.initPyodide();
