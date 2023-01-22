@@ -1,11 +1,14 @@
 import argparse
 import os
+import re
 import shutil
 import tarfile
+import tempfile
 from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
 from flet.utils import is_within_directory
+from flet_core.utils import random_string
 
 
 class Command(BaseCommand):
@@ -107,22 +110,32 @@ class Command(BaseCommand):
             with open(reqs_path, "r") as f:
                 deps = [line.rstrip() for line in f]
 
+        deps = list(
+            filter(lambda dep: not re.search("(^flet$)|(^flet[^a-z0-9-]+)", dep), deps)
+        )
+
         pyodide_dep_found = False
         for dep in deps:
-            if dep.startswith("flet-pyodide"):
+            if re.search("(^flet-pyodide$)|(^flet-pyodide[^a-z0-9-]+)", dep):
                 pyodide_dep_found = True
                 break
         if not pyodide_dep_found:
             deps.append(f"flet-pyodide")
-            with open(reqs_path, "w") as f:
-                f.writelines(dep + "\n" for dep in deps)
+
+        temp_reqs_txt = Path(tempfile.gettempdir()).joinpath(random_string(10))
+        with open(temp_reqs_txt, "w") as f:
+            f.writelines(dep + "\n" for dep in deps)
 
         # pack all files in script's directory to dist/app.tar.gz
         app_tar_gz_path = os.path.join(dist_dir, app_tar_gz_filename)
 
         def filter_tar(tarinfo: tarfile.TarInfo):
             full_path = os.path.join(script_dir, tarinfo.name)
-            if tarinfo.name.startswith(".") or tarinfo.name.startswith("__pycache__"):
+            if (
+                tarinfo.name.startswith(".")
+                or tarinfo.name.startswith("__pycache__")
+                or tarinfo.name == "requirements.txt"
+            ):
                 return None
             elif assets_dir and is_within_directory(assets_dir, full_path):
                 return None
@@ -134,8 +147,12 @@ class Command(BaseCommand):
             return tarinfo
 
         print(f"Packaging application to {app_tar_gz_filename}")
-        with tarfile.open(app_tar_gz_path, "w:gz") as tar:
+        with tarfile.open(app_tar_gz_path, "w:gz", format=tarfile.GNU_FORMAT) as tar:
             tar.add(script_dir, arcname="/", filter=filter_tar)
+            print("Adding requirements.txt")
+            tar.add(temp_reqs_txt, arcname="requirements.txt")
+
+        os.remove(temp_reqs_txt)
 
         # patch ./dist/index.html
         # - <!-- pyodideCode -->
