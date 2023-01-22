@@ -399,6 +399,12 @@ class Control:
         command = self._build_command(False)
         command.indent = indent
         command.values.append(self._get_control_name())
+
+        if self.page:
+            raise Exception(
+                "Control has already been added to a page: {}".format(command)
+            )
+
         commands.append(command)
 
         if added_controls is not None:

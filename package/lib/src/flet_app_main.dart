@@ -26,15 +26,21 @@ class FletAppMain extends StatelessWidget {
             return MaterialApp(
                 title: title,
                 home: Scaffold(
-                  body: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.error_outline,
-                          color: Colors.red, size: 25),
-                      Text(viewModel.error,
-                          style: const TextStyle(color: Colors.red))
-                    ],
-                  ),
+                  body: Container(
+                      padding: const EdgeInsets.all(30),
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.error,
+                              color: Colors.redAccent, size: 30),
+                          const SizedBox(height: 8),
+                          Flexible(
+                              child: Text(viewModel.error,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(color: Colors.red)))
+                        ],
+                      )),
                 ));
           } else {
             return createControl(null, "page", false);
