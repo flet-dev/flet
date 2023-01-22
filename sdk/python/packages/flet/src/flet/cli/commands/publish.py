@@ -31,6 +31,13 @@ class Command(BaseCommand):
             help="path to an assets directory",
         )
         parser.add_argument(
+            "--base-url",
+            dest="base_url",
+            type=str,
+            default=None,
+            help="base URL for the app",
+        )
+        parser.add_argument(
             "--web-renderer",
             dest="web_renderer",
             choices=["canvaskit", "html"],
@@ -157,6 +164,15 @@ class Command(BaseCommand):
             f'<script>window.flutterWebRenderer="{options.web_renderer}";</script>',
         )
         index = index.replace("%FLET_ROUTE_URL_STRATEGY%", options.route_url_strategy)
+
+        if options.base_url:
+            base_url = options.base_url.strip("/").strip()
+            index = index.replace(
+                '<base href="/">',
+                '<base href="{}">'.format(
+                    "/" if base_url == "" else "/{}/".format(base_url)
+                ),
+            )
 
         with open(index_path, "w") as f:
             f.write(index)
