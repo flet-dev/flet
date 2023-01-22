@@ -34,6 +34,20 @@ class Command(BaseCommand):
             help="path to an assets directory",
         )
         parser.add_argument(
+            "--app-title",
+            dest="app_title",
+            type=str,
+            default=None,
+            help="application title",
+        )
+        parser.add_argument(
+            "--app-description",
+            dest="app_description",
+            type=str,
+            default=None,
+            help="application description",
+        )
+        parser.add_argument(
             "--base-url",
             dest="base_url",
             type=str,
@@ -143,13 +157,14 @@ class Command(BaseCommand):
                 return None
             # tarinfo.uid = tarinfo.gid = 0
             # tarinfo.uname = tarinfo.gname = "root"
-            print("Adding", tarinfo.name)
+            if tarinfo.name != "":
+                print("    Adding", tarinfo.name)
             return tarinfo
 
         print(f"Packaging application to {app_tar_gz_filename}")
         with tarfile.open(app_tar_gz_path, "w:gz", format=tarfile.GNU_FORMAT) as tar:
             tar.add(script_dir, arcname="/", filter=filter_tar)
-            print("Adding requirements.txt")
+            print("    Adding requirements.txt")
             tar.add(temp_reqs_txt, arcname="requirements.txt")
 
         os.remove(temp_reqs_txt)
@@ -189,6 +204,15 @@ class Command(BaseCommand):
                 '<base href="{}">'.format(
                     "/" if base_url == "" else "/{}/".format(base_url)
                 ),
+            )
+        if options.app_title:
+            index = index.replace(
+                'content="Flet"', 'content="{}"'.format(options.app_title)
+            )
+        if options.app_description:
+            index = index.replace(
+                'content="Flet application."',
+                'content="{}"'.format(options.app_description),
             )
 
         with open(index_path, "w") as f:
