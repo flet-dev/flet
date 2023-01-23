@@ -24,9 +24,9 @@
 .python-version
 vendor/
 
+# poetry and flutter lock files
+*.lock
+
 # pyCharm and ItelliJ
 .idea
 .run
-
-# ignore testing and examples applications
-__testing_*.py
