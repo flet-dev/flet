@@ -45,7 +45,7 @@ from flet_core.datatable import (
     DataRow,
     DataTable,
 )
-from flet_core.date_picker import DatePicker, DatePickerMode, DatePickerEntryMode
+from flet_core.datefield import DateField
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
@@ -155,7 +155,6 @@ from flet_core.types import (
     LabelPosition,
     MainAxisAlignment,
     MaterialState,
-    PaddingValue,
     PageDesignLanguage,
     ScrollMode,
     TextAlign,

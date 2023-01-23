@@ -1,315 +1,328 @@
-from datetime import datetime, date
+import json
+from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, List, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
+from flet_core.control_event import ControlEvent
+from flet_core.dropdown import Option
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
-from flet_core.text_style import TextStyle
-from flet_core.types import (
-    ResponsiveNumber,
-)
-from flet_core.textfield import KeyboardType, KeyboardTypeString
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
 
-
-DatePickerModeString = Literal[
-    "day",
-    "year"
-]
+FileTypeString = Literal["any", "media", "image", "video", "audio", "custom"]
+FilePickerState = Literal["pickFiles", "saveFile", "getDirectoryPath"]
 
 
-class DatePickerMode(Enum):
-    DAY = "day"
-    YEAR = "year"
+class FilePickerFileType(Enum):
+    ANY = "any"
+    MEDIA = "media"
+    IMAGE = "image"
+    VIDEO = "video"
+    AUDIO = "audio"
+    CUSTOM = "custom"
 
 
-DatePickerEntryModeString = Literal[
-    "calendar",
-    "input",
-    "calendarOnly",
-    "inputOnly"
-]
+@dataclass
+class FilePickerUploadFile:
+    name: str
+    upload_url: str
+    method: str = field(default="PUT")
 
 
-class DatePickerEntryMode(Enum):
-    CALENDAR = "calendar"
-    INPUT = "input"
-    CALENDAR_ONLY = "calendarOnly"
-    INPUT_ONLY = "inputOnly"
+@dataclass
+class FilePickerFile:
+    name: str
+    path: str
+    size: int
 
 
-DatePickerState = Literal["pickDate", "initState"]
+class FilePickerResultEvent(ControlEvent):
+    def __init__(self, path, files) -> None:
+        self.path: Optional[str] = path
+        self.files: Optional[List[FilePickerFile]] = None
+        if files is not None and isinstance(files, List):
+            self.files = []
+            for fd in files:
+                self.files.append(FilePickerFile(**fd))
 
 
-class DatePicker(Control):
+@dataclass
+class FilePickerUploadEvent(ControlEvent):
+    file_name: str
+    progress: Optional[float]
+    error: Optional[str]
+
+
+class FilePicker(Control):
     """
-    A button lets the user select date on datepicker dialog.
+    A control that allows you to use the native file explorer to pick single or multiple files, with extensions filtering support and upload.
 
     Example:
     ```
     import flet as ft
-    from flet_core.date_picker import DatePickerMode, DatePickerEntryMode
-
 
     def main(page: ft.Page):
-        def change_date(e):
-            page.add(ft.Checkbox(label=f"Current date {date_picker.value}"))
-            date_button.text = f"{date_picker.value}"
-            page.update()
+        def pick_files_result(e: ft.FilePickerResultEvent):
+            selected_files.value = (
+                ", ".join(map(lambda f: f.name, e.files)) if e.files else "Cancelled!"
+            )
+            selected_files.update()
 
-        date_picker = ft.DatePicker(
-            on_change=change_date,
-            date_picker_mode=DatePickerMode.YEAR,
-            date_picker_entry_mode=DatePickerEntryMode.INPUT,
-            hint_text="Say hello?",
+        pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
+        selected_files = ft.Text()
+
+        page.overlay.append(pick_files_dialog)
+
+        page.add(
+            ft.Row(
+                [
+                    ft.ElevatedButton(
+                        "Pick files",
+                        icon=ft.icons.UPLOAD_FILE,
+                        on_click=lambda _: pick_files_dialog.pick_files(
+                            allow_multiple=True
+                        ),
+                    ),
+                    selected_files,
+                ]
+            )
         )
-
-        page.overlay.append(date_picker)
-
-        date_button = ft.ElevatedButton(
-            "Pick date",
-            icon=ft.icons.CALENDAR_MONTH,
-            on_click=lambda _: date_picker.pick_date(),
-        )
-
-        page.add(date_button)
-
 
     ft.app(target=main)
     ```
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/date_picker
+    Online docs: https://flet.dev/docs/controls/filepicker
     """
 
     def __init__(
-            self,
-            ref: Optional[Ref] = None,
-            expand: Optional[Union[bool, int]] = None,
-            col: Optional[ResponsiveNumber] = None,
-            opacity: OptionalNumber = None,
-            tooltip: Optional[str] = None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-
-            value: Optional[datetime] = None,
-            text_style: Optional[TextStyle] = None,
-            first_date: Optional[datetime] = None,
-            last_date: Optional[datetime] = None,
-            keyboard_type: Optional[KeyboardType] = None,
-            date_picker_mode: Optional[DatePickerMode] = None,
-            date_picker_entry_mode: Optional[DatePickerEntryMode] = None,
-            locale: Optional[str] = None,
-            help_text: Optional[str] = None,
-            cancel_text: Optional[str] = None,
-            confirm_text: Optional[str] = None,
-            hint_text: Optional[str] = None,
-            on_change=None,
-            on_submit=None,
+        self,
+        ref: Optional[Ref] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        #
+        # Specific
+        #
+        on_result=None,
+        on_upload=None,
     ):
+
         Control.__init__(
             self,
             ref=ref,
-            expand=expand,
-            col=col,
-            opacity=opacity,
-            tooltip=tooltip,
             visible=visible,
             disabled=disabled,
             data=data,
         )
-        self.value = value
-        self.first_date = first_date
-        self.last_date = last_date
-        self.keyboard_type = keyboard_type
-        self.locale = locale
-        self.help_text = help_text
-        self.cancel_text = cancel_text
-        self.confirm_text = confirm_text
-        self.date_picker_mode = date_picker_mode
-        self.date_picker_entry_mode = date_picker_entry_mode
-        self.text_style = text_style
-        self.hint_text = hint_text
-        self.on_change = on_change
-        self.on_submit = on_submit
-        self.state = "initState"
+
+        def convert_result_event_data(e):
+            d = json.loads(e.data)
+            self.__result = FilePickerResultEvent(**d)
+            return self.__result
+
+        self.__on_result = EventHandler(convert_result_event_data)
+        self._add_event_handler("result", self.__on_result.get_handler())
+
+        def convert_upload_event_data(e):
+            d = json.loads(e.data)
+            return FilePickerUploadEvent(**d)
+
+        self.__on_upload = EventHandler(convert_upload_event_data)
+        self._add_event_handler("upload", self.__on_upload.get_handler())
+
+        self.__result: Optional[FilePickerResultEvent] = None
+        self.__upload: List[FilePickerUploadFile] = []
+        self.__allowed_extensions: Optional[List[str]] = None
+        self.on_result = on_result
+        self.on_upload = on_upload
 
     def _get_control_name(self):
-        return "date_picker"
+        return "filepicker"
 
     def _before_build_command(self):
         super()._before_build_command()
+        self._set_attr_json("allowedExtensions", self.__allowed_extensions)
+        self._set_attr_json("upload", self.__upload)
 
-    def pick_date(self):
-        self.state = "pickDate"
+    def pick_files(
+        self,
+        dialog_title: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        allowed_extensions: Optional[List[str]] = None,
+        allow_multiple: Optional[bool] = False,
+    ):
+        self.state = "pickFiles"
+        self.dialog_title = dialog_title
+        self.initial_directory = initial_directory
+        self.file_type = file_type
+        self.allowed_extensions = allowed_extensions
+        self.allow_multiple = allow_multiple
         self.update()
 
-    async def pick_date_async(self):
-        self.state = "pickDate"
+    async def pick_files_async(
+        self,
+        dialog_title: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        allowed_extensions: Optional[List[str]] = None,
+        allow_multiple: Optional[bool] = False,
+    ):
+        self.state = "pickFiles"
+        self.dialog_title = dialog_title
+        self.initial_directory = initial_directory
+        self.file_type = file_type
+        self.allowed_extensions = allowed_extensions
+        self.allow_multiple = allow_multiple
+        await self.update_async()
+
+    def save_file(
+        self,
+        dialog_title: Optional[str] = None,
+        file_name: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        allowed_extensions: Optional[List[str]] = None,
+    ):
+        self.state = "saveFile"
+        self.dialog_title = dialog_title
+        self.file_name = file_name
+        self.initial_directory = initial_directory
+        self.file_type = file_type
+        self.allowed_extensions = allowed_extensions
+        self.update()
+
+    async def save_file_async(
+        self,
+        dialog_title: Optional[str] = None,
+        file_name: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        allowed_extensions: Optional[List[str]] = None,
+    ):
+        self.state = "saveFile"
+        self.dialog_title = dialog_title
+        self.file_name = file_name
+        self.initial_directory = initial_directory
+        self.file_type = file_type
+        self.allowed_extensions = allowed_extensions
+        await self.update_async()
+
+    def get_directory_path(
+        self,
+        dialog_title: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+    ):
+        self.state = "getDirectoryPath"
+        self.dialog_title = dialog_title
+        self.initial_directory = initial_directory
+        self.update()
+
+    async def get_directory_path_async(
+        self,
+        dialog_title: Optional[str] = None,
+        initial_directory: Optional[str] = None,
+    ):
+        self.state = "getDirectoryPath"
+        self.dialog_title = dialog_title
+        self.initial_directory = initial_directory
+        await self.update_async()
+
+    def upload(self, files: List[FilePickerUploadFile]):
+        self.__upload = files
+        self.update()
+
+    async def upload_async(self, files: List[FilePickerUploadFile]):
+        self.__upload = files
         await self.update_async()
 
     # state
     @property
-    def state(self) -> Optional[DatePickerState]:
+    def state(self) -> Optional[FilePickerState]:
         return self._get_attr("state")
 
     @state.setter
-    def state(self, value: Optional[DatePickerState]):
+    def state(self, value: Optional[FilePickerState]):
         self._set_attr("state", value)
 
-    # value
+    # result
     @property
-    def value(self) -> Optional[datetime]:
-        value_string = self._get_attr("value", def_value=None)
-        if value_string is None or value_string == 'null':
-            return None
+    def result(self) -> Optional[FilePickerResultEvent]:
+        return self.__result
+
+    # dialog_title
+    @property
+    def dialog_title(self):
+        return self._get_attr("dialogTitle")
+
+    @dialog_title.setter
+    def dialog_title(self, value):
+        self._set_attr("dialogTitle", value)
+
+    # file_name
+    @property
+    def file_name(self):
+        return self._get_attr("fileName")
+
+    @file_name.setter
+    def file_name(self, value: Optional[str]):
+        self._set_attr("fileName", value)
+
+    # initial_directory
+    @property
+    def initial_directory(self):
+        return self._get_attr("initialDirectory")
+
+    @initial_directory.setter
+    def initial_directory(self, value: Optional[str]):
+        self._set_attr("initialDirectory", value)
+
+    # file_type
+    @property
+    def file_type(self) -> FilePickerFileType:
+        return self.__file_type
+
+    @file_type.setter
+    def file_type(self, value: FilePickerFileType):
+        self.__file_type = value
+        if isinstance(value, FilePickerFileType):
+            self._set_attr("fileType", value.value)
         else:
-            return datetime.fromisoformat(value_string)
+            self.__set_file_type(value)
 
-    @value.setter
-    def value(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("value", value)
+    def __set_file_type(self, value: FileTypeString):
+        self._set_attr("fileType", value)
 
-    # first_date
+    # allowed_extensions
     @property
-    def first_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("firstDate", def_value=None)
-        if value_string is None:
-            return None
-        else:
-            return datetime.fromisoformat(value_string)
+    def allowed_extensions(self) -> Optional[List[str]]:
+        return self.__allowed_extensions
 
-    @first_date.setter
-    def first_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("firstDate", value)
+    @allowed_extensions.setter
+    def allowed_extensions(self, value: Optional[List[str]]):
+        self.__allowed_extensions = value
 
-    # last_date
+    # allow_multiple
     @property
-    def last_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("lastDate", def_value=None)
-        if value_string is None:
-            return None
-        else:
-            return datetime.fromisoformat(value_string)
+    def allow_multiple(self) -> Optional[bool]:
+        return self._get_attr("allowMultiple", data_type="bool", def_value=False)
 
-    @last_date.setter
-    def last_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("lastDate", value)
+    @allow_multiple.setter
+    def allow_multiple(self, value: Optional[bool]):
+        self._set_attr("allowMultiple", value)
 
-    # locale
+    # on_result
     @property
-    def locale(self) -> Optional[str]:
-        return self._get_attr("locale", def_value=None)
+    def on_result(self):
+        return self.__on_result
 
-    @locale.setter
-    def locale(self, value: Optional[str]):
-        self._set_attr("locale", value)
-
-    # help_text
-    @property
-    def help_text(self) -> Optional[str]:
-        return self._get_attr("helpText", def_value=None)
-
-    @help_text.setter
-    def help_text(self, value: Optional[str]):
-        self._set_attr("helpText", value)
-
-    # cancel_text
-    @property
-    def cancel_text(self) -> Optional[str]:
-        return self._get_attr("cancelText", def_value=None)
-
-    @cancel_text.setter
-    def cancel_text(self, value: Optional[str]):
-        self._set_attr("cancelText", value)
-
-    # confirm_text
-    @property
-    def confirm_text(self) -> Optional[str]:
-        return self._get_attr("confirmText", def_value=None)
-
-    @confirm_text.setter
-    def confirm_text(self, value: Optional[str]):
-        self._set_attr("confirmText", value)
-
-    # keyboard_type
-    @property
-    def keyboard_type(self) -> Optional[KeyboardType]:
-        return self.__keyboard_type
-
-    @keyboard_type.setter
-    def keyboard_type(self, value: Optional[KeyboardType]):
-        self.__keyboard_type = value
-        if isinstance(value, KeyboardType):
-            self._set_attr("keyboardType", value.value)
-        else:
-            self.__set_keyboard_type(value)
-
-    def __set_keyboard_type(self, value: KeyboardTypeString):
-        self._set_attr("keyboardType", value)
-
-    # date_picker_mode
-    @property
-    def date_picker_mode(self) -> DatePickerMode:
-        return self.__date_picker_mode
-
-    @date_picker_mode.setter
-    def date_picker_mode(self, value: DatePickerMode):
-        self.__date_picker_mode = value
-        if isinstance(value, DatePickerMode):
-            self._set_attr("datePickerMode", value.value)
-        else:
-            self.__set_date_picker_mode(value)
-
-    def __set_date_picker_mode(self, value: DatePickerMode):
-        self._set_attr("datePickerMode", value)
-
-    # date_picker_entry_mode
-    @property
-    def date_picker_entry_mode(self) -> DatePickerEntryMode:
-        return self.__date_picker_entry_mode
-
-    @date_picker_entry_mode.setter
-    def date_picker_entry_mode(self, value: DatePickerEntryMode):
-        self.__date_picker_entry_mode = value
-        if isinstance(value, DatePickerEntryMode):
-            self._set_attr("datePickerEntryMode", value.value)
-        else:
-            self.__set_date_picker_entry_mode(value)
-
-    def __set_date_picker_entry_mode(self, value: DatePickerEntryMode):
-        self._set_attr("datePickerEntryMode", value)
-
-    # on_change
-    @property
-    def on_change(self):
-        return self._get_event_handler("change")
-
-    @on_change.setter
-    def on_change(self, handler):
-        self._add_event_handler("change", handler)
-        if handler is not None:
-            self._set_attr("onchange", True)
-        else:
-            self._set_attr("onchange", None)
-
-    # on_submit
-    @property
-    def on_submit(self):
-        return self._get_event_handler("submit")
-
-    @on_submit.setter
-    def on_submit(self, handler):
-        self._add_event_handler("submit", handler)
+    @on_result.setter
+    def on_result(self, handler):
+        self.__on_result.subscribe(handler)
