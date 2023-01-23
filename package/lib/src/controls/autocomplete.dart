@@ -15,13 +15,13 @@ import '../utils/text.dart';
 import 'create_control.dart';
 import 'form_field.dart';
 
-class DatePickerControl extends StatefulWidget {
+class AutocompleteControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
 
-  const DatePickerControl(
+  const AutocompleteControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -30,10 +30,10 @@ class DatePickerControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<DatePickerControl> createState() => _DatePickerControlState();
+  State<AutocompleteControl> createState() => _AutocompleteControlState();
 }
 
-class _DatePickerControlState extends State<DatePickerControl> {
+class _AutocompleteControlState extends State<AutocompleteControl> {
   String _value = "";
   bool _revealPassword = false;
   bool _focused = false;
@@ -98,7 +98,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("DatePicker build: ${widget.control.id}");
+    debugPrint("Autocomplete build: ${widget.control.id}");
 
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
@@ -107,7 +107,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
         distinct: true,
         converter: (store) => store.dispatch,
         builder: (context, dispatch) {
-          debugPrint("DatePicker StoreConnector build: ${widget.control.id}");
+          debugPrint("Autocomplete StoreConnector build: ${widget.control.id}");
 
           String value = widget.control.attrs["value"] ?? "";
           if (_value != value) {
@@ -205,7 +205,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
             }
           }
 
-          Widget datePicker = TextFormField(
+          Widget autocomplete = TextFormField(
               style: textStyle,
               autofocus: autofocus,
               enabled: !disabled,
@@ -263,28 +263,28 @@ class _DatePickerControlState extends State<DatePickerControl> {
               });
 
           if (cursorColor != null || selectionColor != null) {
-            datePicker = TextSelectionTheme(
+            autocomplete = TextSelectionTheme(
                 data: TextSelectionTheme.of(context).copyWith(
                     cursorColor: cursorColor, selectionColor: selectionColor),
-                child: datePicker);
+                child: autocomplete);
           }
 
           if (widget.control.attrInt("expand", 0)! > 0) {
             return constrainedControl(
-                context, datePicker, widget.parent, widget.control);
+                context, autocomplete, widget.parent, widget.control);
           } else {
             return LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 if (constraints.maxWidth == double.infinity &&
                     widget.control.attrDouble("width") == null) {
-                  datePicker = ConstrainedBox(
+                  autocomplete = ConstrainedBox(
                     constraints: const BoxConstraints.tightFor(width: 300),
-                    child: datePicker,
+                    child: autocomplete,
                   );
                 }
 
                 return constrainedControl(
-                    context, datePicker, widget.parent, widget.control);
+                    context, autocomplete, widget.parent, widget.control);
               },
             );
           }
