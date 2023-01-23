@@ -29,3 +29,4 @@ vendor/
 
 # pyCharm and ItelliJ
 .idea
+.run
