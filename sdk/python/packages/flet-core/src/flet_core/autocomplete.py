@@ -63,7 +63,7 @@ class TextCapitalization(Enum):
     SENTENCES = "sentences"
 
 
-class DatePicker(FormFieldControl):
+class Autocomplete(FormFieldControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an onscreen keyboard.
 
@@ -77,11 +77,11 @@ class DatePicker(FormFieldControl):
             page.update()
 
         t = ft.Text()
-        tb1 = ft.DatePicker(label="Standard")
-        tb2 = ft.DatePicker(label="Disabled", disabled=True, value="First name")
-        tb3 = ft.DatePicker(label="Read-only", read_only=True, value="Last name")
-        tb4 = ft.DatePicker(label="With placeholder", hint_text="Please enter text here")
-        tb5 = ft.DatePicker(label="With an icon", icon=ft.icons.EMOJI_EMOTIONS)
+        tb1 = ft.Autocomplete(label="Standard")
+        tb2 = ft.Autocomplete(label="Disabled", disabled=True, value="First name")
+        tb3 = ft.Autocomplete(label="Read-only", read_only=True, value="Last name")
+        tb4 = ft.Autocomplete(label="With placeholder", hint_text="Please enter text here")
+        tb5 = ft.Autocomplete(label="With an icon", icon=ft.icons.EMOJI_EMOTIONS)
         b = ft.ElevatedButton(text="Submit", on_click=button_clicked)
         page.add(tb1, tb2, tb3, tb4, tb5, b, t)
 
@@ -90,7 +90,7 @@ class DatePicker(FormFieldControl):
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/datepicker
+    Online docs: https://flet.dev/docs/controls/autocomplete
     """
 
     def __init__(
@@ -154,7 +154,7 @@ class DatePicker(FormFieldControl):
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         #
-        # DatePicker Specific
+        # Autocomplete Specific
         #
         value: Optional[str] = None,
         keyboard_type: Optional[KeyboardType] = None,
@@ -265,7 +265,7 @@ class DatePicker(FormFieldControl):
         self.on_blur = on_blur
 
     def _get_control_name(self):
-        return "datepicker"
+        return "autocomplete"
 
     def _before_build_command(self):
         super()._before_build_command()
