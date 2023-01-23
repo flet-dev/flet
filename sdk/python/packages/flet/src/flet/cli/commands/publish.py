@@ -7,7 +7,7 @@ import tempfile
 from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
-from flet.utils import is_within_directory
+from flet.utils import get_package_web_dir, is_within_directory
 from flet_core.utils import random_string
 
 
@@ -96,11 +96,11 @@ class Command(BaseCommand):
         Path(dist_dir).mkdir(parents=True, exist_ok=True)
 
         # copy "web"
-        web_path = Path(__file__).parent.parent.parent.joinpath("web")
-        if not web_path.exists():
+        web_path = get_package_web_dir()
+        if not os.path.exists(web_path):
             print("Flet module does not contain 'web' directory.")
             exit(1)
-        shutil.copytree(str(web_path), dist_dir, dirs_exist_ok=True)
+        shutil.copytree(web_path, dist_dir, dirs_exist_ok=True)
 
         # copy assets
         assets_dir = options.assets_dir

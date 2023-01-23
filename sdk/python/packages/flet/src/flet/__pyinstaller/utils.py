@@ -4,11 +4,11 @@ import tempfile
 import uuid
 from pathlib import Path
 
+from flet.utils import get_package_bin_dir
+
 
 def get_flet_bin_path():
-    bin_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), os.pardir, "bin")
-    )
+    bin_path = get_package_bin_dir()
     if not os.path.exists(bin_path):
         return None
     return bin_path

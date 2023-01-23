@@ -5,6 +5,7 @@ import socket
 import sys
 import unicodedata
 import webbrowser
+from pathlib import Path
 
 
 def is_windows():
@@ -104,6 +105,18 @@ def is_localhost_url(url):
         or "://127.0.0.1/" in url
         or "://127.0.0.1:" in url
     )
+
+
+def get_package_root_dir():
+    return str(Path(__file__).parent)
+
+
+def get_package_bin_dir():
+    return os.path.join(get_package_root_dir(), "bin")
+
+
+def get_package_web_dir():
+    return os.path.join(get_package_root_dir(), "web")
 
 
 def get_free_tcp_port():

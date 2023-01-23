@@ -21,6 +21,7 @@ from flet.utils import (
     get_arch,
     get_current_script_dir,
     get_free_tcp_port,
+    get_package_bin_dir,
     get_platform,
     is_linux,
     is_linux_server,
@@ -404,9 +405,8 @@ def __start_flet_server(
     fletd_exe = "fletd.exe" if is_windows() else "fletd"
 
     # check if flet.exe exists in "bin" directory (user mode)
-    p = Path(__file__).parent.joinpath("bin", fletd_exe)
-    if p.exists():
-        fletd_path = str(p)
+    fletd_path = os.path.join(get_package_bin_dir(), fletd_exe)
+    if os.path.exists(fletd_path):
         logging.info(f"Flet Server found in: {fletd_path}")
     else:
         # check if flet.exe is in PATH (flet developer mode)
@@ -524,9 +524,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
         # check if flet_view.exe exists in "bin" directory (user mode)
-        p = Path(__file__).parent.joinpath("bin", "flet", flet_exe)
-        if p.exists():
-            flet_path = str(p)
+        flet_path = os.path.join(get_package_bin_dir(), "flet", flet_exe)
+        if os.path.exists(flet_path):
             logging.info(f"Flet View found in: {flet_path}")
         else:
             # check if flet.exe is in FLET_VIEW_PATH (flet developer mode)
@@ -558,8 +557,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
             if not temp_flet_dir.exists():
                 # check if flet.tar.gz exists
                 gz_filename = "flet-macos-amd64.tar.gz"
-                tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
-                if not tar_file.exists():
+                tar_file = os.path.join(get_package_bin_dir(), gz_filename)
+                if not os.path.exists(tar_file):
                     tar_file = __download_flet_client(gz_filename)
 
                 logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
@@ -584,8 +583,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         if not temp_flet_dir.exists():
             # check if flet.tar.gz exists
             gz_filename = f"flet-linux-{get_arch()}.tar.gz"
-            tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
-            if not tar_file.exists():
+            tar_file = os.path.join(get_package_bin_dir(), gz_filename)
+            if not os.path.exists(tar_file):
                 tar_file = __download_flet_client(gz_filename)
 
             logging.info(f"Extracting Flet from archive to {temp_flet_dir}")
