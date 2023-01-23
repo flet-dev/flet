@@ -150,6 +150,12 @@ class Control:
             return value
         return {"": value}
 
+    def __str__(self):
+        attrs = {}
+        for k, v in self.__attrs.items():
+            attrs[k] = v[0]
+        return "{} {}".format(self._get_control_name(), attrs)
+
     # event_handlers
     @property
     def event_handlers(self):
@@ -399,12 +405,6 @@ class Control:
         command = self._build_command(False)
         command.indent = indent
         command.values.append(self._get_control_name())
-
-        if self.page:
-            raise Exception(
-                "Control has already been added to a page: {}".format(command)
-            )
-
         commands.append(command)
 
         if added_controls is not None:

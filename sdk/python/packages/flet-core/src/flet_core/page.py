@@ -358,12 +358,14 @@ class Page(Control):
 
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
+        self.__validate_controls_page(added_controls)
         results = self.__conn.send_commands(self._session_id, commands).results
         self.__update_control_ids(added_controls, results)
         return added_controls, removed_controls
 
     async def __update_async(self, *controls) -> Tuple[List[Control], List[Control]]:
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
+        self.__validate_controls_page(added_controls)
         results = (
             await self.__conn.send_commands_async(self._session_id, commands)
         ).results
@@ -385,6 +387,13 @@ class Page(Control):
             return commands, added_controls, removed_controls
 
         return commands, added_controls, removed_controls
+
+    def __validate_controls_page(self, added_controls):
+        for ctrl in added_controls:
+            if ctrl.page and ctrl.page != self:
+                raise Exception(
+                    "Control has already been added to another page: {}".format(ctrl)
+                )
 
     def __update_control_ids(self, added_controls, results):
         if len(results) > 0:

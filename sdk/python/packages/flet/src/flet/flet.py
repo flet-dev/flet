@@ -22,6 +22,7 @@ from flet.utils import (
     get_current_script_dir,
     get_free_tcp_port,
     get_package_bin_dir,
+    get_package_web_dir,
     get_platform,
     is_linux,
     is_linux_server,
@@ -419,9 +420,6 @@ def __start_flet_server(
 
     fletd_env = {**os.environ}
 
-    if assets_dir:
-        fletd_env["FLET_STATIC_ROOT_DIR"] = assets_dir
-
     if upload_dir:
         if not Path(upload_dir).is_absolute():
             upload_dir = str(
@@ -445,7 +443,17 @@ def __start_flet_server(
         logging.info(f"Route URL strategy configured: {route_url_strategy}")
         fletd_env["FLET_ROUTE_URL_STRATEGY"] = route_url_strategy
 
-    args = [fletd_path, "--port", str(port)]
+    web_root_dir = os.environ.get("FLET_WEB_PATH")
+    if not web_root_dir:
+        web_root_dir = get_package_web_dir()
+
+    if not os.path.exists(web_root_dir):
+        raise Exception("Web root path not found: {}".format(web_root_dir))
+
+    args = [fletd_path, "--content-dir", web_root_dir, "--port", str(port)]
+
+    if assets_dir:
+        args.extend(["--assets-dir", assets_dir])
 
     creationflags = 0
     start_new_session = False

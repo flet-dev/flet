@@ -377,13 +377,12 @@ for:
       # Flutter Web client
       - cd client
       - flutter build web --release
-      - rm -rf build/web/canvaskit
+      - rm -rf build/web/canvaskit/profiling
       - ls -alR build/web
       - cd ..
+      - tar -czvf flet-web.tar.gz -C client/build/web .
 
       # Flet Server in Go
-      - mkdir server/server/content
-      - cp -rf client/build/web/* server/server/content
       - cd server
       - sh: |
           if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
@@ -392,9 +391,6 @@ for:
             goreleaser --snapshot --skip-publish
           fi
       - cd ..
-
-      # package web build
-      - tar -czvf flet-web.tar.gz -C client/build/web .
 
     artifacts:
       - path: server/dist/fletd-*
@@ -461,6 +457,7 @@ for:
 
       # build "flet" package
       - pushd packages/flet
+      - python3 download-web.py
       - poetry build
       - python3 build-wheels.py
       - popd
