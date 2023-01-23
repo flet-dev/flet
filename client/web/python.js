@@ -1,4 +1,4 @@
-const pythonWorker = new Worker("/python-worker.js");
+const pythonWorker = new Worker("python-worker.js");
 
 let _onPythonInitialized = null;
 let pythonInitialized = new Promise((onSuccess) => _onPythonInitialized = onSuccess);
