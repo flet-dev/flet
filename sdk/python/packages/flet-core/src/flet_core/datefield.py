@@ -24,7 +24,7 @@ except ImportError:
 
 class DateField(FormFieldControl):
     """
-    A text field lets the user enter text, either with hardware keyboard or with an onscreen keyboard.
+    A button lets the user select date on datepicker dialog.
 
     Example:
     ```
