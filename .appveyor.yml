@@ -25,75 +25,75 @@ environment:
       job_group: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Build Flet for Windows
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    - job_name: Build Flet for Windows
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
-    # - job_name: Build Flet for macOS
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+    - job_name: Build Flet for macOS
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
-    # - job_name: Build Flet for Linux
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Build Flet for Linux
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Build Flet for Linux ARM64
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
-    #   python_stack: ""
+    - job_name: Build Flet for Linux ARM64
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+      python_stack: ""
 
-    # - job_name: Build Flet for iOS
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+    - job_name: Build Flet for iOS
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
-    # - job_name: Build Flet Studio for iOS
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+    - job_name: Build Flet Studio for iOS
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
-    # - job_name: Build Fletd
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Build Fletd
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Test Python 3.7
-    #   job_group: python_tests
-    #   python_stack: python 3.7
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.7
+      job_group: python_tests
+      python_stack: python 3.7
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Test Python 3.8
-    #   job_group: python_tests
-    #   python_stack: python 3.8
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.8
+      job_group: python_tests
+      python_stack: python 3.8
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Test Python 3.9
-    #   job_group: python_tests
-    #   python_stack: python 3.9
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.9
+      job_group: python_tests
+      python_stack: python 3.9
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Test Python 3.10
-    #   job_group: python_tests
-    #   python_stack: python 3.10
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.10
+      job_group: python_tests
+      python_stack: python 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Test Python 3.11
-    #   job_group: python_tests
-    #   python_stack: python 3.11
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.11
+      job_group: python_tests
+      python_stack: python 3.11
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Build Python wheels
-    #   job_group: python_build
-    #   job_depends_on: python_tests, build_flet
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-    #   TWINE_USERNAME: __token__
-    #   TWINE_PASSWORD:
-    #     secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
-    #   TWINE_NON_INTERACTIVE: true
+    - job_name: Build Python wheels
+      job_group: python_build
+      job_depends_on: python_tests, build_flet
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      TWINE_USERNAME: __token__
+      TWINE_PASSWORD:
+        secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
+      TWINE_NON_INTERACTIVE: true
 
 matrix:
   fast_finish: true
@@ -121,11 +121,7 @@ for:
             $v = "$($cv.major).$($cv.minor+1).0+$($env:APPVEYOR_BUILD_NUMBER)"
           }
           Update-AppveyorBuild -Version $v
-      - which flutter
-      - pushd ~/flutter
-      - git checkout 3.3.10
-      - popd
-      - flutter doctor
+      - flutter upgrade
 
     build_script:
       - cd package
@@ -152,7 +148,7 @@ for:
       VC_REDIST_DIR: 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Redist\MSVC\14.29.30133\x64\Microsoft.VC142.CRT'
 
     install:
-      - flutter doctor
+      - flutter upgrade
 
     build_script:
       - cd client
@@ -195,14 +191,14 @@ for:
       - unzip -qq "$HOME/flutter_macos_stable.zip" -d $HOME
       - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
-      - flutter doctor
+      - flutter upgrade
       - flutter config --enable-macos-desktop
       - flutter doctor
 
     build_script:
       # Flutter macOS client
       - cd client
-      - flutter build macos --build-name=$APPVEYOR_BUILD_VERSION
+      - flutter build macos --no-tree-shake-icons --build-name=$APPVEYOR_BUILD_VERSION
       - tar -czvf flet-macos-amd64.tar.gz -C build/macos/Build/Products/Release Flet.app
 
     artifacts:
@@ -228,7 +224,7 @@ for:
     install:
       - sudo apt update
       - sudo apt install -y libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - flutter doctor
+      - flutter upgrade
 
     build_script:
       - cd client
@@ -264,7 +260,7 @@ for:
       - export PATH="$PATH:$HOME/flutter/bin"
       - flutter --version
       - flutter channel stable
-      - flutter doctor
+      - flutter upgrade
       - flutter doctor
 
     build_script:
@@ -299,7 +295,7 @@ for:
       - unzip -qq "$HOME/flutter_macos_stable.zip" -d $HOME
       - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
-      - flutter doctor
+      - flutter upgrade
       - flutter doctor
 
     build_script:
@@ -335,7 +331,7 @@ for:
       - unzip -qq "$HOME/flutter_macos_stable.zip" -d $HOME
       - export PATH="$PATH:$HOME/flutter/bin"
       - flutter channel stable
-      - flutter doctor
+      - flutter upgrade
       - flutter doctor
 
     build_script:
@@ -368,7 +364,7 @@ for:
         - job_name: Build Fletd
 
     install:
-      - flutter doctor
+      - flutter upgrade
 
       # Go and GoReleaser
       - gvm install go${GO_VERSION} -B
