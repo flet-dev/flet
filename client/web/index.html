@@ -72,11 +72,13 @@
 
       @keyframes breathe {
         from {
-          transform: scale(1)
+          transform: scale(1);
+          opacity: 1.0;
         }
 
         to {
-          transform: scale(0.95)
+          transform: scale(0.95);
+          opacity: .7;
         }
       }
 
@@ -90,7 +92,7 @@
         }
       }
     </style>
-    <img src="icons/loading-animation.png" alt="Loading indicator..." />
+    <img src="icons/loading-animation.svg" alt="Loading indicator..." />
   </div>
   <script>
     window.addEventListener('load', function () {
