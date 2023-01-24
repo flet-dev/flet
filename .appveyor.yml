@@ -377,7 +377,7 @@ for:
       # Flutter Web client
       - cd client
       - flutter build web --release
-      - rm -rf build/web/canvaskit/profiling
+      - rm -rf build/web/canvaskit
       - ls -alR build/web
       - cd ..
       - tar -czvf flet-web.tar.gz -C client/build/web .
