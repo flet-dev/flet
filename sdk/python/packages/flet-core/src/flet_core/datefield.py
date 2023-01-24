@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from enum import Enum
 from typing import Any, Optional, Union
 from flet_core.text_style import TextStyle
 from flet_core.buttons import ButtonStyle
@@ -20,6 +21,61 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
+
+KeyboardTypeString = Literal[
+    None,
+    "text",
+    "multiline",
+    "number",
+    "phone",
+    "datetime",
+    "email",
+    "url",
+    "visiblePassword",
+    "name",
+    "streetAddress",
+    "none",
+]
+
+
+class KeyboardType(Enum):
+    NONE = "none"
+    TEXT = "text"
+    MULTILINE = "multiline"
+    NUMBER = "number"
+    PHONE = "phone"
+    DATETIME = "datetime"
+    EMAIL = "email"
+    URL = "url"
+    VISIBLE_PASSWORD = "visiblePassword"
+    NAME = "name"
+    STREET_ADDRESS = "streetAddress"
+
+
+DatePickerModeString = Literal[
+    "day",
+    "year"
+]
+
+
+class DatePickerMode(Enum):
+    DAY = "day"
+    YEAR = "year"
+
+
+DatePickerEntryModeString = Literal[
+    "calendar",
+    "input",
+    "calendarOnly",
+    "inputOnly"
+]
+
+
+class DatePickerEntryMode(Enum):
+    CALENDAR = "calendar"
+    INPUT = "input"
+    CALENDAR_ONLY = "calendarOnly"
+    INPUT_ONLY = "inputOnly"
 
 
 class DateField(FormFieldControl):
@@ -112,9 +168,18 @@ class DateField(FormFieldControl):
             # DateField Specific
             #
             value: Optional[datetime] = None,
+            first_date: Optional[datetime] = None,
+            last_date: Optional[datetime] = None,
+            keyboard_type: Optional[KeyboardType] = None,
+            date_picker_mode: Optional[DatePickerMode] = DatePickerMode.DAY,
+            date_picker_entry_mode: Optional[DatePickerEntryMode] = DatePickerEntryMode.CALENDAR,
             read_only: Optional[bool] = None,
             autofocus: Optional[bool] = None,
             button_style: Optional[ButtonStyle] = None,
+            locale: Optional[str] = None,
+            help_text: Optional[str] = None,
+            cancel_text: Optional[str] = None,
+            confirm_text: Optional[str] = None,
             on_change=None,
             on_submit=None,
             on_focus=None,
@@ -183,6 +248,15 @@ class DateField(FormFieldControl):
         )
         self.button_style = button_style
         self.value = value
+        self.first_date = first_date
+        self.last_date = last_date
+        self.keyboard_type = keyboard_type
+        self.locale = locale
+        self.help_text = help_text
+        self.cancel_text = cancel_text
+        self.confirm_text = confirm_text
+        self.date_picker_mode = date_picker_mode
+        self.date_picker_entry_mode = date_picker_entry_mode
         self.text_style = text_style
         self.read_only = read_only
         self.autofocus = autofocus
@@ -222,6 +296,120 @@ class DateField(FormFieldControl):
         if isinstance(value, (date, datetime)):
             value = value.isoformat()
         self._set_attr("value", value)
+
+    # first_date
+    @property
+    def first_date(self) -> Optional[datetime]:
+        value_string = self._get_attr("firstDate", def_value=None)
+        if value_string is None:
+            return None
+        else:
+            return datetime.fromisoformat(value_string)
+
+    @first_date.setter
+    def first_date(self, value: Optional[Union[datetime, str]]):
+        if isinstance(value, (date, datetime)):
+            value = value.isoformat()
+        self._set_attr("firstDate", value)
+
+    # first_date
+    @property
+    def last_date(self) -> Optional[datetime]:
+        value_string = self._get_attr("lastDate", def_value=None)
+        if value_string is None:
+            return None
+        else:
+            return datetime.fromisoformat(value_string)
+
+    @last_date.setter
+    def last_date(self, value: Optional[Union[datetime, str]]):
+        if isinstance(value, (date, datetime)):
+            value = value.isoformat()
+        self._set_attr("lastDate", value)
+
+    # locale
+    @property
+    def locale(self) -> Optional[str]:
+        return self._get_attr("locale", def_value=None)
+
+    @locale.setter
+    def locale(self, value: Optional[str]):
+        self._set_attr("locale", value)
+
+    # help_text
+    @property
+    def help_text(self) -> Optional[str]:
+        return self._get_attr("helpText", def_value=None)
+
+    @help_text.setter
+    def help_text(self, value: Optional[str]):
+        self._set_attr("helpText", value)
+
+    # cancel_text
+    @property
+    def cancel_text(self) -> Optional[str]:
+        return self._get_attr("cancelText", def_value=None)
+
+    @cancel_text.setter
+    def cancel_text(self, value: Optional[str]):
+        self._set_attr("cancelText", value)
+
+    # confirm_text
+    @property
+    def confirm_text(self) -> Optional[str]:
+        return self._get_attr("confirmText", def_value=None)
+
+    @confirm_text.setter
+    def confirm_text(self, value: Optional[str]):
+        self._set_attr("confirmText", value)
+
+    # keyboard_type
+    @property
+    def keyboard_type(self) -> Optional[KeyboardType]:
+        return self.__keyboard_type
+
+    @keyboard_type.setter
+    def keyboard_type(self, value: Optional[KeyboardType]):
+        self.__keyboard_type = value
+        if isinstance(value, KeyboardType):
+            self._set_attr("keyboardType", value.value)
+        else:
+            self.__set_keyboard_type(value)
+
+    def __set_keyboard_type(self, value: KeyboardTypeString):
+        self._set_attr("keyboardType", value)
+
+    # date_picker_mode
+    @property
+    def date_picker_mode(self) -> DatePickerMode:
+        return self.__date_picker_mode
+
+    @date_picker_mode.setter
+    def date_picker_mode(self, value: DatePickerMode):
+        self.__date_picker_mode = value
+        if isinstance(value, DatePickerMode):
+            self._set_attr("datePickerMode", value.value)
+        else:
+            self.__set_date_picker_mode(value)
+
+    def __set_date_picker_mode(self, value: DatePickerMode):
+        self._set_attr("datePickerMode", value)
+
+    # date_picker_entry_mode
+    @property
+    def date_picker_entry_mode(self) -> DatePickerEntryMode:
+        return self.__date_picker_entry_mode
+
+    @date_picker_entry_mode.setter
+    def date_picker_entry_mode(self, value: DatePickerEntryMode):
+        self.__date_picker_entry_mode = value
+        if isinstance(value, DatePickerEntryMode):
+            self._set_attr("datePickerMode", value.value)
+        else:
+            self.__set_date_picker_entry_mode(value)
+
+    def __set_date_picker_entry_mode(self, value: DatePickerEntryMode):
+        self._set_attr("datePickerMode", value)
 
     # read_only
     @property

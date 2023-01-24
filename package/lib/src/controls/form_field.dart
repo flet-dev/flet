@@ -38,6 +38,30 @@ TextInputType parseTextInputType(String type) {
   return TextInputType.text;
 }
 
+DatePickerMode parseDatePickerMode(String mode) {
+  switch (mode.toLowerCase()) {
+    case "day":
+      return DatePickerMode.day;
+    case "year":
+      return DatePickerMode.year;
+  }
+  return DatePickerMode.day;
+}
+
+DatePickerEntryMode parseDatePickerEntryMode(String mode) {
+  switch (mode.toLowerCase()) {
+    case "calendar":
+      return DatePickerEntryMode.calendar;
+    case "input":
+      return DatePickerEntryMode.input;
+    case "calendarOnly":
+      return DatePickerEntryMode.calendarOnly;
+    case "inputOnly":
+      return DatePickerEntryMode.inputOnly;
+  }
+  return DatePickerEntryMode.calendar;
+}
+
 InputDecoration buildInputDecoration(BuildContext context, Control control,
     Control? prefix, Control? suffix, Widget? customSuffix, bool focused) {
   String? label = control.attrString("label", "")!;
