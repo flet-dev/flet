@@ -122,6 +122,9 @@ for:
           }
           Update-AppveyorBuild -Version $v
       - which flutter
+      - pushd ~/flutter
+      - git checkout v3.3.10
+      - popd
       - flutter doctor
 
     build_script:
