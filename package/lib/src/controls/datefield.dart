@@ -8,6 +8,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import 'create_control.dart';
+import 'form_field.dart';
 
 class DateFieldControl extends StatefulWidget {
   final Control? parent;
@@ -49,6 +50,17 @@ class _DateFieldControlState extends State<DateFieldControl> {
     DateTime? firstDate = widget.control.attrDateTime("firstDate");
     DateTime? lastDate = widget.control.attrDateTime("firstDate");
     bool onChange = widget.control.attrBool("onChange", false)!;
+    String? localeString = widget.control.attrString("locale");
+    String? helpText = widget.control.attrString("helpText");
+    String? cancelText = widget.control.attrString("cancelText");
+    String? confirmText = widget.control.attrString("confirmText");
+    TextInputType keyboardType =
+        parseTextInputType(widget.control.attrString("keyboardType", "")!);
+    DatePickerMode datePickerMode =
+        parseDatePickerMode(widget.control.attrString("datePickerMode", "")!);
+    DatePickerEntryMode datePickerEntryMode = parseDatePickerEntryMode(
+        widget.control.attrString("datePickerEntryMode", "")!);
+    String? hintText = widget.control.attrString("hintText");
 
     // TODO: later
     // ButtonStyle? buttonStyle = parseButtonStyle(Theme.of(context), widget.control, "buttonStyle");
@@ -58,6 +70,13 @@ class _DateFieldControlState extends State<DateFieldControl> {
         converter: (store) => store.dispatch,
         builder: (context, dispatch) {
           debugPrint("DateField StoreConnector build: ${widget.control.id}");
+
+          Locale locale;
+          if (localeString == null) {
+            locale = Localizations.localeOf(context);
+          } else {
+            locale = Locale(localeString);
+          }
 
           void onChanged(DateTime? dateValue) {
             DateTime? value = dateValue;
@@ -91,10 +110,19 @@ class _DateFieldControlState extends State<DateFieldControl> {
 
           Future<void> selectDateDialog() async {
             final DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: _value ?? DateTime.now(),
-                firstDate: firstDate ?? DateTime(1900),
-                lastDate: lastDate ?? DateTime(2050));
+              context: context,
+              initialDate: _value ?? DateTime.now(),
+              firstDate: firstDate ?? DateTime(1900),
+              lastDate: lastDate ?? DateTime(2050),
+              locale: locale,
+              helpText: helpText,
+              cancelText: cancelText,
+              confirmText: confirmText,
+              keyboardType: keyboardType,
+              initialDatePickerMode: datePickerMode,
+              initialEntryMode: datePickerEntryMode,
+              fieldHintText: hintText,
+            );
             if (!disabled && pickedDate != null && pickedDate != value) {
               onChanged(pickedDate);
             }
@@ -103,15 +131,16 @@ class _DateFieldControlState extends State<DateFieldControl> {
           String buttonText;
 
           if (value == null) {
-            buttonText = "";
+            buttonText = hintText ?? "";
           } else {
-            buttonText = DateFormat.yMMMd().format(value);
+            buttonText = DateFormat.yMMMd(locale.toString()).format(value);
           }
 
-          Widget button = ElevatedButton(
+          Widget button = ElevatedButton.icon(
             onPressed: selectDateDialog,
             autofocus: autofocus,
-            child: Text(buttonText),
+            icon: const Icon(Icons.calendar_month),
+            label: Text(buttonText),
           );
 
           if (widget.control.attrInt("expand", 0)! > 0) {
