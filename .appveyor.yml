@@ -262,8 +262,9 @@ for:
       - export PATH="$PATH:$HOME/flutter/bin"
       #- flutter --version
       #- flutter channel master
-      #- flutter upgrade
+      - flutter upgrade
       - flutter doctor
+      - flutter config --enable-linux-desktop
       - find ~/flutter -name "shader_lib*"
       - flutter create my_app
       - cd my_app
