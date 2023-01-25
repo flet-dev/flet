@@ -259,8 +259,8 @@ for:
       - git clone https://github.com/flutter/flutter.git -b master "$HOME/flutter"
       - export PATH="$PATH:$HOME/flutter/bin"
       - flutter --version
-      #- flutter channel stable
-      #- flutter upgrade
+      - flutter channel master
+      - flutter upgrade
       - flutter doctor
 
     build_script:
