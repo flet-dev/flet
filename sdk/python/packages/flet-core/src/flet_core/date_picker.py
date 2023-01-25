@@ -8,7 +8,7 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     ResponsiveNumber,
 )
-from textfield import KeyboardType, KeyboardTypeString
+from .textfield import KeyboardType, KeyboardTypeString
 
 try:
     from typing import Literal
