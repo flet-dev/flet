@@ -21,7 +21,7 @@ import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'datatable.dart';
-import 'datefield.dart';
+import 'date_picker.dart';
 import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
@@ -221,8 +221,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case "datefield":
-          return DateFieldControl(
+        case "date_picker":
+          return DatePickerControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
