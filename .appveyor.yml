@@ -198,7 +198,7 @@ for:
     build_script:
       # Flutter macOS client
       - cd client
-      - flutter build macos --no-tree-shake-icons --build-name=$APPVEYOR_BUILD_VERSION
+      - flutter build macos --build-name=$APPVEYOR_BUILD_VERSION
       - tar -czvf flet-macos-amd64.tar.gz -C build/macos/Build/Products/Release Flet.app
 
     artifacts:
