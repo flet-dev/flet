@@ -1,10 +1,13 @@
-from flet_core.utils import is_asyncio
+from flet_core.utils import is_asyncio, is_coroutine
 
 
 class EventHandler:
     def __init__(self, result_converter=None) -> None:
         self.__handlers = {}
         self.__result_converter = result_converter
+
+    def get_sync_handler(self):
+        return self.__sync_handler
 
     def get_handler(self):
         if is_asyncio():
@@ -36,9 +39,15 @@ class EventHandler:
                     r.data = e.data
                     r.control = e.control
                     r.page = e.page
-                    await h(r)
+                    if is_coroutine(h):
+                        await h(r)
+                    else:
+                        h(r)
             else:
-                await h(e)
+                if is_coroutine(h):
+                    await h(e)
+                else:
+                    h(e)
 
     def subscribe(self, handler):
         if handler is not None:

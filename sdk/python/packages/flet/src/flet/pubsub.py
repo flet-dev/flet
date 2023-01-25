@@ -3,8 +3,6 @@ import logging
 import threading
 from typing import Any, Callable, Dict, Iterable
 
-from flet_core.utils import is_asyncio
-
 
 class PubSubHub:
     def __init__(self):

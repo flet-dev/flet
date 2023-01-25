@@ -155,6 +155,7 @@ class Tabs(ConstrainedControl):
         # Tabs-specific
         tabs: Optional[List[Tab]] = None,
         selected_index: Optional[int] = None,
+        scrollable: Optional[bool] = None,
         animation_duration: Optional[int] = None,
         on_change=None,
     ):
@@ -189,6 +190,7 @@ class Tabs(ConstrainedControl):
 
         self.tabs = tabs
         self.selected_index = selected_index
+        self.scrollable = scrollable
         self.animation_duration = animation_duration
         self.on_change = on_change
 
@@ -224,6 +226,15 @@ class Tabs(ConstrainedControl):
     @selected_index.setter
     def selected_index(self, value: Optional[int]):
         self._set_attr("selectedIndex", value)
+
+    # scrollable
+    @property
+    def scrollable(self) -> Optional[bool]:
+        return self._get_attr("scrollable", data_type="bool", def_value=True)
+
+    @scrollable.setter
+    def scrollable(self, value: Optional[bool]):
+        self._set_attr("scrollable", value)
 
     # animation_duration
     @property

@@ -1,4 +1,4 @@
-# Flet - quickly build interactive apps for web, desktop and mobile in Python
+# Flet for Pyodide - build standalone Single-Page Applications (SPA) in Python with Flutter UI
 
 [Flet](https://flet.dev) is a rich User Interface (UI) framework to quickly build interactive web, desktop and mobile apps in Python without prior knowledge of web technologies like HTTP, HTML, CSS or JavaSscript. You build UI with [controls](https://flet.dev/docs/controls) based on [Flutter](https://flutter.dev/) widgets to ensure your programs look cool and professional.
 
@@ -47,25 +47,33 @@ def main(page: ft.Page):
 ft.app(main)
 ```
 
-## Run as a desktop app
-
-The following command will start the app in a native OS window:
-
-```
-flet run main.py
-```
-
-![Sample app in a native window](https://flet.dev/img/docs/getting-started/flet-counter-macos.png)
-
-## Run as a web app
-
-The following command will start the app as a web app:
+## Run the app
 
 ```
 flet run --web main.py
 ```
 
 ![Sample app in a browser](https://flet.dev/img/docs/getting-started/flet-counter-safari.png)
+
+## Publish app as a static website
+
+```
+flet publish main.py
+```
+
+A static website is published into `./dist` directory.
+
+## Test website
+
+```
+python -m http.server --directory dist
+```
+
+Open `http://localhost:8000` in your browser to check the published website.
+
+## Deploy website
+
+Deploy a static website to any free hosting such as GitHub Pages, Cloudflare Pages or Vercel!
 
 ## Learn more
 

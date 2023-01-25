@@ -256,12 +256,17 @@ for:
       # Flutter SDK
       - sudo apt update
       - sudo apt install -y clang libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - git clone https://github.com/flutter/flutter.git -b master "$HOME/flutter"
+      - git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
       - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter --version
-      - flutter channel stable
       - flutter upgrade
       - flutter doctor
+
+      # Fix Flutter on ARM
+      - pushd /tmp
+      - curl -O https://appveyordownloads.blob.core.windows.net/misc/shader_lib.tar.gz
+      - tar -zxf shader_lib.tar.gz
+      - cp -R shader_lib $HOME/flutter/bin/cache/artifacts/engine/linux-arm64
+      - popd
 
     build_script:
       - cd client
@@ -380,10 +385,9 @@ for:
       - rm -rf build/web/canvaskit
       - ls -alR build/web
       - cd ..
+      - tar -czvf flet-web.tar.gz -C client/build/web .
 
       # Flet Server in Go
-      - mkdir server/server/content
-      - cp -rf client/build/web/* server/server/content
       - cd server
       - sh: |
           if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
@@ -396,6 +400,16 @@ for:
     artifacts:
       - path: server/dist/fletd-*
       - path: server/dist/fletd_*/*
+      - path: flet-web.tar.gz
+        name: flet_web
+
+    deploy:
+      provider: GitHub
+      auth_token: $(GITHUB_TOKEN)
+      release: $(APPVEYOR_REPO_TAG_NAME)
+      artifact: flet_web
+      on:
+        APPVEYOR_REPO_TAG: true
 
   ######################
   #    Python Tests    #
@@ -436,8 +450,10 @@ for:
           $ErrorActionPreference = "Stop"
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
           $vp = "packages/flet/src/flet/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
+          $vp = "packages/flet-pyodide/src/flet/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
       - python3 patch_toml.py packages/flet/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-core/pyproject.toml $PYPI_VER
+      - python3 patch_toml.py packages/flet-pyodide/pyproject.toml $PYPI_VER
 
       # build "flet-core" package
       - pushd packages/flet-core
@@ -446,17 +462,24 @@ for:
 
       # build "flet" package
       - pushd packages/flet
+      - python3 download-web.py
       - poetry build
       - python3 build-wheels.py
+      - popd
+
+      # build "flet-pyodide" package
+      - pushd packages/flet-pyodide
+      - poetry build
       - popd
 
       # publish package
       - sh: |
           if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-              twine upload packages/flet-core/dist/* packages/flet/dist/*
+              twine upload packages/flet-core/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
           fi
           
 
     artifacts:
       - path: sdk/python/packages/flet-core/dist/*
       - path: sdk/python/packages/flet/dist/*
+      - path: sdk/python/packages/flet-pyodide/dist/*
