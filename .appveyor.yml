@@ -257,12 +257,15 @@ for:
       # Flutter SDK
       - sudo apt update
       - sudo apt install -y clang libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - git clone https://github.com/flutter/flutter.git -b master "$HOME/flutter"
+      - git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
       - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter --version
-      - flutter channel master
-      - flutter upgrade
+      #- flutter --version
+      #- flutter channel master
+      #- flutter upgrade
       - flutter doctor
+      - flutter create my_app
+      - cd my_app
+      - flutter build linux
 
     build_script:
       - cd client
