@@ -1,4 +1,4 @@
-# Flet for Pyodide - build standalone single-page applications (SPA) in Python with Flutter UI.
+# Flet for Pyodide - build standalone Single-Page Applications (SPA) in Python with Flutter UI
 
 [Flet](https://flet.dev) is a rich User Interface (UI) framework to quickly build interactive web, desktop and mobile apps in Python without prior knowledge of web technologies like HTTP, HTML, CSS or JavaSscript. You build UI with [controls](https://flet.dev/docs/controls) based on [Flutter](https://flutter.dev/) widgets to ensure your programs look cool and professional.
 
@@ -55,15 +55,15 @@ flet run --web main.py
 
 ![Sample app in a browser](https://flet.dev/img/docs/getting-started/flet-counter-safari.png)
 
-## Publish the app as a static website
+## Publish app as a static website
 
 ```
 flet publish main.py
 ```
 
-Website is published into `./dist` directory.
+A static website is published into `./dist` directory.
 
-## Test the website
+## Test website
 
 ```
 python -m http.server --directory dist
@@ -71,9 +71,13 @@ python -m http.server --directory dist
 
 Open `http://localhost:8000` in your browser to check the published website.
 
+## Deploy website
+
+Deploy a static website to any free hosting such as GitHub Pages, Cloudflare Pages or Vercel!
+
 ## Learn more
 
-Flet website: https://flet.dev
+Visit [Flet website](https://flet.dev).
 
 Continue with [Python guide](https://flet.dev/docs/getting-started/python) to learn how to make a real app.
 

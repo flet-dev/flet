@@ -47,7 +47,7 @@ def main(page: ft.Page):
 ft.app(main)
 ```
 
-## Run as a native app
+## Run as a desktop app
 
 The following command will start the app in a native OS window:
 
@@ -69,7 +69,7 @@ flet run --web main.py
 
 ## Learn more
 
-Flet website: https://flet.dev
+Visit [Flet website](https://flet.dev).
 
 Continue with [Python guide](https://flet.dev/docs/getting-started/python) to learn how to make a real app.
 
