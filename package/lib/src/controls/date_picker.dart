@@ -145,3 +145,27 @@ class _DatePickerControlState extends State<DatePickerControl> {
         });
   }
 }
+
+DatePickerMode parseDatePickerMode(String mode) {
+  switch (mode.toLowerCase()) {
+    case "day":
+      return DatePickerMode.day;
+    case "year":
+      return DatePickerMode.year;
+  }
+  return DatePickerMode.day;
+}
+
+DatePickerEntryMode parseDatePickerEntryMode(String mode) {
+  switch (mode.toLowerCase()) {
+    case "calendar":
+      return DatePickerEntryMode.calendar;
+    case "input":
+      return DatePickerEntryMode.input;
+    case "calendarOnly":
+      return DatePickerEntryMode.calendarOnly;
+    case "inputOnly":
+      return DatePickerEntryMode.inputOnly;
+  }
+  return DatePickerEntryMode.calendar;
+}
