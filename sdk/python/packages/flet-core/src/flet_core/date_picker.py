@@ -1,20 +1,12 @@
 from datetime import datetime, date
 from enum import Enum
 from typing import Any, Optional, Union
-from flet_core.text_style import TextStyle
-from flet_core.buttons import ButtonStyle
+
 from flet_core.control import Control, OptionalNumber
-from flet_core.focus import FocusData
-from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
 from flet_core.types import (
-    AnimationValue,
-    BorderRadiusValue,
-    OffsetValue,
-    PaddingValue,
     ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
 )
 
 try:
@@ -81,36 +73,52 @@ class DatePickerEntryMode(Enum):
 DatePickerState = Literal["pickDate", "initState"]
 
 
-class DateField(Control):
+class DatePicker(Control):
     """
     A button lets the user select date on datepicker dialog.
 
     Example:
     ```
     import flet as ft
+    from flet_core.date_picker import DatePickerMode, DatePickerEntryMode
+
 
     def main(page: ft.Page):
-        def button_clicked(e):
-            t.value = f"Datetime value are:  '{dt.value}'."
+        def change_date(e):
+            page.add(ft.Checkbox(label=f"Current date {date_picker.value}"))
+            date_button.text = f"{date_picker.value}"
             page.update()
 
-        t = ft.Text()
-        dt = ft.DateField(value=DateTime.now(), on_change=button_clicked)
-        b = ft.ElevatedButton(text="Submit", on_click=button_clicked)
-        page.add(dt, b, t)
+        date_picker = ft.DatePicker(
+            on_change=change_date,
+            date_picker_mode=DatePickerMode.YEAR,
+            date_picker_entry_mode=DatePickerEntryMode.INPUT,
+            hint_text="Say hello?",
+        )
+
+        page.overlay.append(date_picker)
+
+        date_button = ft.ElevatedButton(
+            "Pick date",
+            icon=ft.icons.CALENDAR_MONTH,
+            on_click=lambda _: date_picker.pick_date(),
+        )
+
+        page.add(date_button)
+
 
     ft.app(target=main)
     ```
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/datefield
+    Online docs: https://flet.dev/docs/controls/date_picker
     """
 
     def __init__(
             self,
             ref: Optional[Ref] = None,
-            expand: Union[None, bool, int] = None,
+            expand: Optional[Union[bool, int]] = None,
             col: Optional[ResponsiveNumber] = None,
             opacity: OptionalNumber = None,
             tooltip: Optional[str] = None,
@@ -118,25 +126,20 @@ class DateField(Control):
             disabled: Optional[bool] = None,
             data: Any = None,
 
-            text_style: Optional[TextStyle] = None,
             value: Optional[datetime] = None,
+            text_style: Optional[TextStyle] = None,
             first_date: Optional[datetime] = None,
             last_date: Optional[datetime] = None,
             keyboard_type: Optional[KeyboardType] = None,
-            date_picker_mode: Optional[DatePickerMode] = DatePickerMode.DAY,
-            date_picker_entry_mode: Optional[DatePickerEntryMode] = DatePickerEntryMode.CALENDAR,
-            read_only: Optional[bool] = None,
-            autofocus: Optional[bool] = None,
-            # button_style: Optional[ButtonStyle] = None,
+            date_picker_mode: Optional[DatePickerMode] = None,
+            date_picker_entry_mode: Optional[DatePickerEntryMode] = None,
             locale: Optional[str] = None,
             help_text: Optional[str] = None,
             cancel_text: Optional[str] = None,
             confirm_text: Optional[str] = None,
-            # hint_text: Optional[str] = None,
+            hint_text: Optional[str] = None,
             on_change=None,
             on_submit=None,
-            # on_focus=None,
-            # on_blur=None,
     ):
         Control.__init__(
             self,
@@ -149,7 +152,6 @@ class DateField(Control):
             disabled=disabled,
             data=data,
         )
-        # self.button_style = button_style
         self.value = value
         self.first_date = first_date
         self.last_date = last_date
@@ -161,29 +163,15 @@ class DateField(Control):
         self.date_picker_mode = date_picker_mode
         self.date_picker_entry_mode = date_picker_entry_mode
         self.text_style = text_style
-        self.read_only = read_only
-        self.autofocus = autofocus
+        self.hint_text = hint_text
         self.on_change = on_change
         self.on_submit = on_submit
-        # self.on_focus = on_focus
-        # self.on_blur = on_blur
 
     def _get_control_name(self):
-        return "datefield"
+        return "date_picker"
 
     def _before_build_command(self):
         super()._before_build_command()
-        # if self.bgcolor is not None and self.filled is None:
-        #     self.filled = True  # Flutter requires filled = True to display a bgcolor
-        # self._set_attr_json("buttonStyle", self.__button_style)
-
-    # def focus(self):
-    #     self._set_attr_json("focus", FocusData())
-    #     self.update()
-    #
-    # async def focus_async(self):
-    #     self._set_attr_json("focus", FocusData())
-    #     await self.update_async()
 
     def pick_date(self):
         self.state = "pickDate"
@@ -206,7 +194,7 @@ class DateField(Control):
     @property
     def value(self) -> Optional[datetime]:
         value_string = self._get_attr("value", def_value=None)
-        if value_string is None:
+        if value_string is None or value_string == 'null':
             return None
         else:
             return datetime.fromisoformat(value_string)
@@ -324,39 +312,12 @@ class DateField(Control):
     def date_picker_entry_mode(self, value: DatePickerEntryMode):
         self.__date_picker_entry_mode = value
         if isinstance(value, DatePickerEntryMode):
-            self._set_attr("datePickerMode", value.value)
+            self._set_attr("datePickerEntryMode", value.value)
         else:
             self.__set_date_picker_entry_mode(value)
 
     def __set_date_picker_entry_mode(self, value: DatePickerEntryMode):
-        self._set_attr("datePickerMode", value)
-
-    # # read_only
-    # @property
-    # def read_only(self) -> Optional[bool]:
-    #     return self._get_attr("readOnly", data_type="bool", def_value=False)
-    #
-    # @read_only.setter
-    # def read_only(self, value: Optional[bool]):
-    #     self._set_attr("readOnly", value)
-
-    # # autofocus
-    # @property
-    # def autofocus(self) -> Optional[bool]:
-    #     return self._get_attr("autofocus", data_type="bool", def_value=False)
-    #
-    # @autofocus.setter
-    # def autofocus(self, value: Optional[bool]):
-    #     self._set_attr("autofocus", value)
-
-    # # code_style
-    # @property
-    # def button_style(self):
-    #     return self.__button_style
-    #
-    # @button_style.setter
-    # def button_style(self, value: Optional[ButtonStyle]):
-    #     self.__button_style = value
+        self._set_attr("datePickerEntryMode", value)
 
     # on_change
     @property
@@ -379,21 +340,3 @@ class DateField(Control):
     @on_submit.setter
     def on_submit(self, handler):
         self._add_event_handler("submit", handler)
-
-    # # on_focus
-    # @property
-    # def on_focus(self):
-    #     return self._get_event_handler("focus")
-    #
-    # @on_focus.setter
-    # def on_focus(self, handler):
-    #     self._add_event_handler("focus", handler)
-    #
-    # # on_blur
-    # @property
-    # def on_blur(self):
-    #     return self._get_event_handler("blur")
-    #
-    # @on_blur.setter
-    # def on_blur(self, handler):
-    #     self._add_event_handler("blur", handler)
