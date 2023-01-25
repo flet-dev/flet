@@ -40,7 +40,7 @@ dependencies:
   shake: ^2.1.0
   path: ^1.8.2
 
-  # DatePicker specyfic dependencies
+  # DatePicker specific dependencies
   intl: ^0.18.0
 
   # DatePicker specific dependencies
