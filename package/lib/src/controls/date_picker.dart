@@ -8,13 +8,13 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import 'form_field.dart';
 
-class DateFieldControl extends StatefulWidget {
+class DatePickerControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
 
-  const DateFieldControl(
+  const DatePickerControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -23,10 +23,10 @@ class DateFieldControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<DateFieldControl> createState() => _DateFieldControlState();
+  State<DatePickerControl> createState() => _DatePickerControlState();
 }
 
-class _DateFieldControlState extends State<DateFieldControl> {
+class _DatePickerControlState extends State<DatePickerControl> {
   DateTime? _value;
   String? _state;
 
@@ -47,28 +47,29 @@ class _DateFieldControlState extends State<DateFieldControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("DateField build: ${widget.control.id}");
-    String state = widget.control.attrString("state") ?? "initState";
-    DateTime? firstDate = widget.control.attrDateTime("firstDate");
-    DateTime? lastDate = widget.control.attrDateTime("firstDate");
-    bool onChange = widget.control.attrBool("onChange", false)!;
-    String? localeString = widget.control.attrString("locale");
-    String? helpText = widget.control.attrString("helpText");
-    String? cancelText = widget.control.attrString("cancelText");
-    String? confirmText = widget.control.attrString("confirmText");
-    TextInputType keyboardType =
-        parseTextInputType(widget.control.attrString("keyboardType", "")!);
-    DatePickerMode datePickerMode =
-        parseDatePickerMode(widget.control.attrString("datePickerMode", "")!);
-    DatePickerEntryMode datePickerEntryMode = parseDatePickerEntryMode(
-        widget.control.attrString("datePickerEntryMode", "")!);
-    String? hintText = widget.control.attrString("hintText");
+    debugPrint("DatePicker build: ${widget.control.id}");
 
     return StoreConnector<AppState, Function>(
         distinct: true,
         converter: (store) => store.dispatch,
         builder: (context, dispatch) {
-          debugPrint("DateField StoreConnector build: ${widget.control.id}");
+          debugPrint("DatePicker StoreConnector build: ${widget.control.id}");
+
+          String state = widget.control.attrString("state") ?? "initState";
+          DateTime? firstDate = widget.control.attrDateTime("firstDate");
+          DateTime? lastDate = widget.control.attrDateTime("firstDate");
+          bool onChange = widget.control.attrBool("onChange", false)!;
+          String? localeString = widget.control.attrString("locale");
+          String? helpText = widget.control.attrString("helpText");
+          String? cancelText = widget.control.attrString("cancelText");
+          String? confirmText = widget.control.attrString("confirmText");
+          TextInputType keyboardType = parseTextInputType(
+              widget.control.attrString("keyboardType", "")!);
+          DatePickerMode datePickerMode = parseDatePickerMode(
+              widget.control.attrString("datePickerMode", "")!);
+          DatePickerEntryMode datePickerEntryMode = parseDatePickerEntryMode(
+              widget.control.attrString("datePickerEntryMode", "")!);
+          String? hintText = widget.control.attrString("hintText");
 
           Locale locale;
           if (localeString == null) {
@@ -105,13 +106,16 @@ class _DateFieldControlState extends State<DateFieldControl> {
 
           Widget selectDateDialog() {
             Widget dialog = DatePickerDialog(
-              initialDate: value ?? DateTime.now(),
+              initialDate: _value ?? DateTime.now(),
               firstDate: firstDate ?? DateTime(1900),
               lastDate: lastDate ?? DateTime(2050),
               helpText: helpText,
               cancelText: cancelText,
               confirmText: confirmText,
               keyboardType: keyboardType,
+              initialCalendarMode: datePickerMode,
+              initialEntryMode: datePickerEntryMode,
+              fieldHintText: hintText,
             );
 
             dialog = Localizations.override(
