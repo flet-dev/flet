@@ -8,40 +8,12 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     ResponsiveNumber,
 )
+from textfield import KeyboardType, KeyboardTypeString
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-KeyboardTypeString = Literal[
-    None,
-    "text",
-    "multiline",
-    "number",
-    "phone",
-    "datetime",
-    "email",
-    "url",
-    "visiblePassword",
-    "name",
-    "streetAddress",
-    "none",
-]
-
-
-class KeyboardType(Enum):
-    NONE = "none"
-    TEXT = "text"
-    MULTILINE = "multiline"
-    NUMBER = "number"
-    PHONE = "phone"
-    DATETIME = "datetime"
-    EMAIL = "email"
-    URL = "url"
-    VISIBLE_PASSWORD = "visiblePassword"
-    NAME = "name"
-    STREET_ADDRESS = "streetAddress"
 
 
 DatePickerModeString = Literal[
