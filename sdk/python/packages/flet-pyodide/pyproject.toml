@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "flet-pyodide"
 version = "0.1.0"
-description = "Flet for Pyodide"
+description = "Flet for Pyodide - build standalone SPA in Python with Flutter UI."
 authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
 license = "MIT"
 readme = "README.md"
