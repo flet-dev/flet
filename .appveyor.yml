@@ -264,9 +264,9 @@ for:
 
       # Fix Flutter on ARM
       - pushd /tmp
-      - curl -O https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.7.0-stable.tar.xz
-      - tar -xvf flutter_linux_3.7.0-stable.tar.xz flutter/bin/cache/artifacts/engine/linux-x64/shader_lib
-      - cp -R flutter/bin/cache/artifacts/engine/linux-x64/shader_lib $HOME/flutter/bin/cache/artifacts/engine/linux-arm64
+      - curl -O https://appveyordownloads.blob.core.windows.net/misc/shader_lib.tar.gz
+      - tar -zxf shader_lib.tar.gz
+      - cp -R shader_lib $HOME/flutter/bin/cache/artifacts/engine/linux-arm64
       - popd
 
     build_script:
