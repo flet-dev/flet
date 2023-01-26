@@ -19,10 +19,10 @@ def test_instance_no_attrs_set():
 
 
 # pick_date
-def test_pick_date():
+def test_value():
     r = ft.DatePicker()
     assert r._get_attr("state") == "initState"
-    r.update = lambda *_: None  # monkeypatch
+
     r.pick_date()
     r.state = "pickDate"
     assert r._get_attr("state") == "pickDate"
