@@ -33,6 +33,7 @@ class SyncLocalSocketConnection(LocalConnection):
         self.__port = port
         self.__on_event = on_event
         self.__on_session_created = on_session_created
+        self._control_id = 1
 
     def connect(self):
         self.__uds_path = None

@@ -43,9 +43,6 @@ class Command:
     attrs: Dict[str, str] = field(default_factory=dict)
     commands: List[Any] = field(default_factory=list)
 
-    def __str__(self):
-        return "{} {}".format(self.values, self.attrs)
-
 
 @dataclass
 class Message:

@@ -1,8 +1,10 @@
 import asyncio
+import inspect
 import logging
 import os
 import signal
 import subprocess
+import sys
 import tarfile
 import tempfile
 import threading
@@ -21,8 +23,6 @@ from flet.utils import (
     get_arch,
     get_current_script_dir,
     get_free_tcp_port,
-    get_package_bin_dir,
-    get_package_web_dir,
     get_platform,
     is_linux,
     is_linux_server,
@@ -34,7 +34,7 @@ from flet.utils import (
 )
 from flet_core.event import Event
 from flet_core.page import Page
-from flet_core.utils import is_coroutine, random_string
+from flet_core.utils import random_string
 
 try:
     from typing import Literal
@@ -60,11 +60,11 @@ def app(
     assets_dir=None,
     upload_dir=None,
     web_renderer="canvaskit",
-    route_url_strategy="path",
+    route_url_strategy="hash",
     auth_token=None,
 ):
-    if is_coroutine(target):
-        asyncio.get_event_loop().run_until_complete(
+    if inspect.iscoroutinefunction(target):
+        asyncio.run(
             app_async(
                 target=target,
                 name=name,
@@ -102,7 +102,7 @@ def __app_sync(
     assets_dir=None,
     upload_dir=None,
     web_renderer="canvaskit",
-    route_url_strategy="path",
+    route_url_strategy="hash",
     auth_token=None,
 ):
     force_web_view = os.environ.get("FLET_FORCE_WEB_VIEW")
@@ -406,8 +406,9 @@ def __start_flet_server(
     fletd_exe = "fletd.exe" if is_windows() else "fletd"
 
     # check if flet.exe exists in "bin" directory (user mode)
-    fletd_path = os.path.join(get_package_bin_dir(), fletd_exe)
-    if os.path.exists(fletd_path):
+    p = Path(__file__).parent.joinpath("bin", fletd_exe)
+    if p.exists():
+        fletd_path = str(p)
         logging.info(f"Flet Server found in: {fletd_path}")
     else:
         # check if flet.exe is in PATH (flet developer mode)
@@ -419,6 +420,9 @@ def __start_flet_server(
             logging.info(f"Flet Server found in PATH")
 
     fletd_env = {**os.environ}
+
+    if assets_dir:
+        fletd_env["FLET_STATIC_ROOT_DIR"] = assets_dir
 
     if upload_dir:
         if not Path(upload_dir).is_absolute():
@@ -443,17 +447,7 @@ def __start_flet_server(
         logging.info(f"Route URL strategy configured: {route_url_strategy}")
         fletd_env["FLET_ROUTE_URL_STRATEGY"] = route_url_strategy
 
-    web_root_dir = os.environ.get("FLET_WEB_PATH")
-    if not web_root_dir:
-        web_root_dir = get_package_web_dir()
-
-    if not os.path.exists(web_root_dir):
-        raise Exception("Web root path not found: {}".format(web_root_dir))
-
-    args = [fletd_path, "--content-dir", web_root_dir, "--port", str(port)]
-
-    if assets_dir:
-        args.extend(["--assets-dir", assets_dir])
+    args = [fletd_path, "--port", str(port)]
 
     creationflags = 0
     start_new_session = False
@@ -532,8 +526,9 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
         # check if flet_view.exe exists in "bin" directory (user mode)
-        flet_path = os.path.join(get_package_bin_dir(), "flet", flet_exe)
-        if os.path.exists(flet_path):
+        p = Path(__file__).parent.joinpath("bin", "flet", flet_exe)
+        if p.exists():
+            flet_path = str(p)
             logging.info(f"Flet View found in: {flet_path}")
         else:
             # check if flet.exe is in FLET_VIEW_PATH (flet developer mode)
@@ -565,8 +560,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
             if not temp_flet_dir.exists():
                 # check if flet.tar.gz exists
                 gz_filename = "flet-macos-amd64.tar.gz"
-                tar_file = os.path.join(get_package_bin_dir(), gz_filename)
-                if not os.path.exists(tar_file):
+                tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
+                if not tar_file.exists():
                     tar_file = __download_flet_client(gz_filename)
 
                 logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
@@ -591,8 +586,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         if not temp_flet_dir.exists():
             # check if flet.tar.gz exists
             gz_filename = f"flet-linux-{get_arch()}.tar.gz"
-            tar_file = os.path.join(get_package_bin_dir(), gz_filename)
-            if not os.path.exists(tar_file):
+            tar_file = Path(__file__).parent.joinpath("bin", gz_filename)
+            if not tar_file.exists():
                 tar_file = __download_flet_client(gz_filename)
 
             logging.info(f"Extracting Flet from archive to {temp_flet_dir}")

@@ -1,5 +1,5 @@
-import re
 import urllib.parse
+import re
 
 
 class UrlComponents:

@@ -2,7 +2,6 @@ import asyncio
 import inspect
 import random
 import string
-import sys
 
 
 def random_string(length):
@@ -11,7 +10,7 @@ def random_string(length):
 
 def is_asyncio():
     try:
-        return asyncio.current_task() is not None or sys.platform == "emscripten"
+        return asyncio.current_task() is not None
     except RuntimeError:
         return False
 

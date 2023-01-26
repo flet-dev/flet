@@ -50,30 +50,13 @@ except ImportError:
         pass
 
     class PubSub:
-        def __init__(self, pubsubhub, session_id) -> None:
-            pass
+        pass
 
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-
-class NopeLock(object):
-    def __enter__(self):
-        pass
-
-    def __exit__(self, *args):
-        pass
-
-
-class AsyncNopeLock(object):
-    async def __aenter__(self):
-        pass
-
-    async def __aexit__(self, *args):
-        pass
 
 
 class Page(Control):
@@ -111,8 +94,8 @@ class Page(Control):
         self._session_id = session_id
         self._index = {self._Control__uid: self}  # index with all page controls
 
-        self.__lock = threading.Lock() if not is_asyncio() else NopeLock()
-        self.__async_lock = asyncio.Lock() if is_asyncio() else AsyncNopeLock()
+        self.__lock = threading.Lock() if not is_asyncio() else None
+        self.__async_lock = asyncio.Lock() if is_asyncio() else None
 
         self.__views = [View()]
         self.__default_view = self.__views[0]
@@ -251,6 +234,7 @@ class Page(Control):
         self._set_attr("windowLeft", values[9], False)
 
     def update(self, *controls):
+        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             if len(controls) == 0:
                 r = self.__update(self)
@@ -259,6 +243,9 @@ class Page(Control):
         self.__handle_mount_unmount(*r)
 
     async def update_async(self, *controls):
+        assert (
+            self.__async_lock
+        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             if len(controls) == 0:
                 r = await self.__update_async(self)
@@ -267,18 +254,23 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def add(self, *controls):
+        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             self._controls.extend(controls)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     async def add_async(self, *controls):
+        assert (
+            self.__async_lock
+        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             self._controls.extend(controls)
             r = await self.__update_async(self)
         await self.__handle_mount_unmount_async(*r)
 
     def insert(self, at, *controls):
+        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             n = at
             for control in controls:
@@ -288,6 +280,9 @@ class Page(Control):
         self.__handle_mount_unmount(*r)
 
     async def insert_async(self, at, *controls):
+        assert (
+            self.__async_lock
+        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             n = at
             for control in controls:
@@ -297,6 +292,7 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def remove(self, *controls):
+        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             for control in controls:
                 self._controls.remove(control)
@@ -304,6 +300,9 @@ class Page(Control):
         self.__handle_mount_unmount(*r)
 
     async def remove_async(self, *controls):
+        assert (
+            self.__async_lock
+        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             for control in controls:
                 self._controls.remove(control)
@@ -311,12 +310,16 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def remove_at(self, index):
+        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             self._controls.pop(index)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     async def remove_at_async(self, index):
+        assert (
+            self.__async_lock
+        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             self._controls.pop(index)
             r = await self.__update_async(self)
@@ -331,6 +334,7 @@ class Page(Control):
         self._controls.clear()
 
     def _clean(self, control: Control):
+        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             control._previous_children.clear()
             assert control.uid is not None
@@ -344,6 +348,9 @@ class Page(Control):
                 c.will_unmount()
 
     async def _clean_async(self, control: Control):
+        assert (
+            self.__async_lock
+        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             control._previous_children.clear()
             assert control.uid is not None
@@ -358,14 +365,12 @@ class Page(Control):
 
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
-        self.__validate_controls_page(added_controls)
         results = self.__conn.send_commands(self._session_id, commands).results
         self.__update_control_ids(added_controls, results)
         return added_controls, removed_controls
 
     async def __update_async(self, *controls) -> Tuple[List[Control], List[Control]]:
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
-        self.__validate_controls_page(added_controls)
         results = (
             await self.__conn.send_commands_async(self._session_id, commands)
         ).results
@@ -387,13 +392,6 @@ class Page(Control):
             return commands, added_controls, removed_controls
 
         return commands, added_controls, removed_controls
-
-    def __validate_controls_page(self, added_controls):
-        for ctrl in added_controls:
-            if ctrl.page and ctrl.page != self:
-                raise Exception(
-                    "Control has already been added to another page: {}".format(ctrl)
-                )
 
     def __update_control_ids(self, added_controls, results):
         if len(results) > 0:
@@ -421,15 +419,20 @@ class Page(Control):
             await ctrl.did_mount_async()
 
     def error(self, message=""):
+        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             self._send_command("error", [message])
 
     async def error_async(self, message=""):
+        assert (
+            self.__async_lock
+        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             await self._send_command_async("error", [message])
 
     def on_event(self, e: Event):
         logging.info(f"page.on_event: {e.target} {e.name} {e.data}")
+        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             if e.target == "page" and e.name == "change":
                 self.__on_page_change_event(e.data)
@@ -468,7 +471,7 @@ class Page(Control):
     def go(self, route, **kwargs):
         self.route = route if kwargs == {} else route + self.query.post(kwargs)
 
-        self.__on_route_change.get_sync_handler()(
+        self.__on_route_change.get_handler()(
             ControlEvent(
                 target="page",
                 name="route_change",
@@ -550,9 +553,7 @@ class Page(Control):
                 )
         else:
             self.__authorization.dehydrate_token(saved_token)
-            self.__on_login.get_sync_handler()(
-                LoginEvent(error="", error_description="")
-            )
+            self.__on_login.get_handler()(LoginEvent(error="", error_description=""))
         return self.__authorization
 
     async def login_async(
@@ -624,7 +625,7 @@ class Page(Control):
                 self.__authorization.request_token(code)
             except Exception as ex:
                 login_evt.error = str(ex)
-        self.__on_login.get_sync_handler()(login_evt)
+        self.__on_login.get_handler()(login_evt)
 
     async def __on_authorize_async(self, e):
         assert self.__authorization is not None
@@ -655,7 +656,7 @@ class Page(Control):
 
     def logout(self):
         self.__authorization = None
-        self.__on_logout.get_sync_handler()(
+        self.__on_logout.get_handler()(
             ControlEvent(target="page", name="logout", data="", control=self, page=self)
         )
 

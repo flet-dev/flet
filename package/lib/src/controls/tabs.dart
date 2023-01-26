@@ -120,7 +120,7 @@ class _TabsControlState extends State<TabsControl>
 
           var tabBar = TabBar(
               controller: _tabController,
-              isScrollable: widget.control.attrBool("scrollable", true)!,
+              isScrollable: true,
               indicatorColor: Theme.of(context).colorScheme.primary,
               labelColor: Theme.of(context).colorScheme.primary,
               unselectedLabelColor: Theme.of(context).colorScheme.onSurface,

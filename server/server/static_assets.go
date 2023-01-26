@@ -7,34 +7,36 @@ import (
 )
 
 type AssetsFS struct {
-	staticContent *FileSystemAssetsSFS
-	userAssets    *FileSystemAssetsSFS
+	embedAssets *EmbedAssetsSFS
+	fsAssets    *FileSystemAssetsSFS
 }
 
-func newAssetsFS(contentDir string, assetsDir string) AssetsFS {
+func newAssetsFS() AssetsFS {
+	embedFs := newEmbedAssetsSFS()
+	fileSystemFs := newFileSystemAssetsSFS()
 	return AssetsFS{
-		staticContent: newFileSystemAssetsSFS(contentDir),
-		userAssets:    newFileSystemAssetsSFS(assetsDir),
+		embedAssets: embedFs,
+		fsAssets:    fileSystemFs,
 	}
 }
 
 func (fs AssetsFS) Exists(prefix string, path string) bool {
 	//log.Debugln("AssetsSFS Exists:", prefix, path)
-	if fs.userAssets != nil && fs.userAssets.Exists(prefix, path) {
+	if fs.fsAssets != nil && fs.fsAssets.Exists(prefix, path) {
 		return true
 	}
-	return fs.staticContent.Exists(prefix, path)
+	return fs.embedAssets.Exists(prefix, path)
 }
 
 func (fs AssetsFS) Open(name string) (file http.File, err error) {
 	//log.Debugln("AssetsSFS Open:", name, fs.fsAssets)
-	if fs.userAssets != nil {
-		file, err = fs.userAssets.Open(name)
+	if fs.fsAssets != nil {
+		file, err = fs.fsAssets.Open(name)
 		if err == nil {
 			return
 		}
 		log.Debugln("FileSystemSFS error:", err)
 	}
-	file, err = fs.staticContent.Open(name)
+	file, err = fs.embedAssets.Open(name)
 	return
 }

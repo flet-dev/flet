@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flet/flet.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
@@ -20,11 +20,7 @@ void main([List<String>? args]) async {
   //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
-    if (kIsWeb) {
-      pageUrl = "http://localhost:8550";
-    } else {
-      pageUrl = "tcp://localhost:8550";
-    }
+    pageUrl = "http://localhost:8550";
   }
 
   if (kIsWeb) {

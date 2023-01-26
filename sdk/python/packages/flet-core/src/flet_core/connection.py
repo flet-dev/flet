@@ -5,9 +5,7 @@ from flet_core.protocol import Command
 try:
     from flet.pubsub import PubSubHub
 except ImportError:
-
-    class PubSubHub:
-        pass
+    pass
 
 
 class Connection:

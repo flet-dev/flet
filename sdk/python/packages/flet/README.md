@@ -12,64 +12,21 @@
 pip install flet
 ```
 
-## Create the app
-
-Create `main.py` file with the following content:
+## Hello, world!
 
 ```python
-import flet as ft
+import flet
+from flet import Page, Text
 
-def main(page: ft.Page):
-    page.title = "Flet counter example"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+def main(page: Page):
+    page.add(Text("Hello, world!"))
 
-    txt_number = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
-
-    def minus_click(e):
-        txt_number.value = str(int(txt_number.value) - 1)
-        page.update()
-
-    def plus_click(e):
-        txt_number.value = str(int(txt_number.value) + 1)
-        page.update()
-
-    page.add(
-        ft.Row(
-            [
-                ft.IconButton(ft.icons.REMOVE, on_click=minus_click),
-                txt_number,
-                ft.IconButton(ft.icons.ADD, on_click=plus_click),
-            ],
-            alignment=ft.MainAxisAlignment.CENTER,
-        )
-    )
-
-ft.app(main)
+flet.app(target=main)
 ```
 
-## Run as a desktop app
+Run the sample above and the app will be started in a native OS window:
 
-The following command will start the app in a native OS window:
-
-```
-flet run main.py
-```
-
-![Sample app in a native window](https://flet.dev/img/docs/getting-started/flet-counter-macos.png)
-
-## Run as a web app
-
-The following command will start the app as a web app:
-
-```
-flet run --web main.py
-```
-
-![Sample app in a browser](https://flet.dev/img/docs/getting-started/flet-counter-safari.png)
-
-## Learn more
-
-Visit [Flet website](https://flet.dev).
+![Sample app in a browser](https://flet.dev//img/docs/getting-started/flet-counter-macos.png "Sample app in a native window")
 
 Continue with [Python guide](https://flet.dev/docs/getting-started/python) to learn how to make a real app.
 
