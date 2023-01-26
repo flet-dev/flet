@@ -138,6 +138,7 @@ class DatePicker(Control):
         self.hint_text = hint_text
         self.on_change = on_change
         self.on_submit = on_submit
+        self.state = "initState"
 
     def _get_control_name(self):
         return "date_picker"
@@ -192,7 +193,7 @@ class DatePicker(Control):
             value = value.isoformat()
         self._set_attr("firstDate", value)
 
-    # first_date
+    # last_date
     @property
     def last_date(self) -> Optional[datetime]:
         value_string = self._get_attr("lastDate", def_value=None)
