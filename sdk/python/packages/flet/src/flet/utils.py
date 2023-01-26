@@ -116,7 +116,8 @@ def get_package_bin_dir():
 
 
 def get_package_web_dir():
-    return os.path.join(get_package_root_dir(), "web")
+    web_root_dir = os.environ.get("FLET_WEB_PATH")
+    return web_root_dir if web_root_dir else os.path.join(get_package_root_dir(), "web")
 
 
 def get_free_tcp_port():

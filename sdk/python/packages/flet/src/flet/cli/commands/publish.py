@@ -206,13 +206,20 @@ class Command(BaseCommand):
                 ),
             )
         if options.app_title:
-            index = index.replace(
-                'content="Flet"', 'content="{}"'.format(options.app_title)
+            index = re.sub(
+                r"\<meta name=\"apple-mobile-web-app-title\" content=\"(.+)\">",
+                r'<meta name="apple-mobile-web-app-title" content="{}">'.format(
+                    options.app_title
+                ),
+                index,
             )
         if options.app_description:
-            index = index.replace(
-                'content="Flet application."',
-                'content="{}"'.format(options.app_description),
+            index = re.sub(
+                r"\<meta name=\"description\" content=\"(.+)\">",
+                r'<meta name="description" content="{}">'.format(
+                    options.app_description
+                ),
+                index,
             )
 
         with open(index_path, "w") as f:

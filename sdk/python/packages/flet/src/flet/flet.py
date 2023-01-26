@@ -443,9 +443,7 @@ def __start_flet_server(
         logging.info(f"Route URL strategy configured: {route_url_strategy}")
         fletd_env["FLET_ROUTE_URL_STRATEGY"] = route_url_strategy
 
-    web_root_dir = os.environ.get("FLET_WEB_PATH")
-    if not web_root_dir:
-        web_root_dir = get_package_web_dir()
+    web_root_dir = get_package_web_dir()
 
     if not os.path.exists(web_root_dir):
         raise Exception("Web root path not found: {}".format(web_root_dir))
