@@ -46,7 +46,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   audioplayers_darwin: dcad41de4fbd0099cb3749f7ab3b0cb8f70b810c
-  FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+  FlutterMacOS: ae6af50a8ea7d6103d888583d46bd8328a7e9811
   path_provider_macos: 05fb0ef0cedf3e5bd179b9e41a638682b37133ea
   screen_retriever: 59634572a57080243dd1bf715e55b6c54f241a38
   shared_preferences_foundation: 297b3ebca31b34ec92be11acd7fb0ba932c822ca
@@ -54,6 +54,6 @@ SPEC CHECKSUMS:
   window_manager: 3a1844359a6295ab1e47659b1a777e36773cd6e8
   window_to_front: 4cdc24ddd8461ad1a55fa06286d6a79d8b29e8d8
 
-PODFILE CHECKSUM: 353c8bcc5d5b0994e508d035b5431cfe18c1dea7
+PODFILE CHECKSUM: 6eac6b3292e5142cfc23bdeb71848a40ec51c14c
 
 COCOAPODS: 1.11.3
