@@ -1074,14 +1074,14 @@ watchmedo = ["PyYAML (>=3.10)"]
 
 [[package]]
 name = "websocket-client"
-version = "1.4.2"
+version = "1.5.0"
 description = "WebSocket client for Python with low level API options"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "websocket-client-1.4.2.tar.gz", hash = "sha256:d6e8f90ca8e2dd4e8027c4561adeb9456b54044312dba655e7cae652ceb9ae59"},
-    {file = "websocket_client-1.4.2-py3-none-any.whl", hash = "sha256:d6b06432f184438d99ac1f456eaf22fe1ade524c3dd16e661142dc54e9cba574"},
+    {file = "websocket-client-1.5.0.tar.gz", hash = "sha256:561ca949e5bbb5d33409a37235db55c279235c78ee407802f1d2314fff8a8536"},
+    {file = "websocket_client-1.5.0-py3-none-any.whl", hash = "sha256:fb5d81b95d350f3a54838ebcb4c68a5353bbd1412ae8f068b1e5280faeb13074"},
 ]
 
 [package.extras]

@@ -12,6 +12,7 @@ import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
+import 'autocomplete.dart';
 import 'banner.dart';
 import 'bottom_sheet.dart';
 import 'card.dart';
@@ -315,6 +316,11 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "dropdown":
           return DropdownControl(
+              parent: parent,
+              control: controlView.control,
+              parentDisabled: parentDisabled);
+        case "autocomplete":
+          return AutocompleteControl(
               parent: parent,
               control: controlView.control,
               parentDisabled: parentDisabled);

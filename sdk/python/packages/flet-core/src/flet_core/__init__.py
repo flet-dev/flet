@@ -18,6 +18,7 @@ from flet_core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransi
 from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
+from flet_core.autocomplete import Autocomplete
 from flet_core.banner import Banner
 from flet_core.border import Border, BorderSide
 from flet_core.border_radius import BorderRadius
@@ -49,7 +50,7 @@ from flet_core.date_picker import DatePicker, DatePickerMode, DatePickerEntryMod
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
-from flet_core.dropdown import Dropdown
+from flet_core.dropdown import Dropdown, Option
 from flet_core.elevated_button import ElevatedButton
 from flet_core.file_picker import (
     FilePicker,
