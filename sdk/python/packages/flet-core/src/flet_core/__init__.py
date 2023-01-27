@@ -154,6 +154,7 @@ from flet_core.types import (
     LabelPosition,
     MainAxisAlignment,
     MaterialState,
+    PaddingValue,
     PageDesignLanguage,
     ScrollMode,
     TextAlign,
