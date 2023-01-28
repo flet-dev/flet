@@ -16,10 +16,9 @@ import 'protocol/update_control_props_payload.dart';
 import 'utils/client_storage.dart';
 import 'utils/desktop.dart';
 import 'utils/launch_url.dart';
-import 'utils/platform_utils_non_web.dart'
-    if (dart.library.js) "utils/platform_utils_web.dart";
-import 'utils/session_store_non_web.dart'
-    if (dart.library.js) "utils/session_store_web.dart";
+import 'utils/image_viewer.dart';
+import 'utils/platform_utils_non_web.dart' if (dart.library.js) "utils/platform_utils_web.dart";
+import 'utils/session_store_non_web.dart' if (dart.library.js) "utils/session_store_web.dart";
 import 'utils/uri.dart';
 
 enum Actions { increment, setText, setError }
@@ -27,11 +26,7 @@ enum Actions { increment, setText, setError }
 AppState appReducer(AppState state, dynamic action) {
   if (action is PageLoadAction) {
     var sessionId = SessionStore.get("sessionId");
-    return state.copyWith(
-        pageUri: action.pageUri,
-        assetsDir: action.assetsDir,
-        sessionId: sessionId,
-        isLoading: true);
+    return state.copyWith(pageUri: action.pageUri, assetsDir: action.assetsDir, sessionId: sessionId, isLoading: true);
   } else if (action is PageSizeChangeAction) {
     //
     // page size changed
@@ -55,15 +50,10 @@ AppState appReducer(AppState state, dynamic action) {
       }
       controls[page.id] = page.copyWith(attrs: pageAttrs);
       action.server.updateControlProps(props: props);
-      action.server.sendPageEvent(
-          eventTarget: "page",
-          eventName: "resize",
-          eventData:
-              "${action.newPageSize.width},${action.newPageSize.height}");
+      action.server.sendPageEvent(eventTarget: "page", eventName: "resize", eventData: "${action.newPageSize.width},${action.newPageSize.height}");
     }
 
-    return state.copyWith(
-        isRegistered: true, controls: controls, size: action.newPageSize);
+    return state.copyWith(isRegistered: true, controls: controls, size: action.newPageSize);
   } else if (action is SetPageRouteAction) {
     //
     // page route changed
@@ -103,10 +93,7 @@ AppState appReducer(AppState state, dynamic action) {
           {"i": "page", "route": action.route},
         ];
         action.server.updateControlProps(props: props);
-        action.server.sendPageEvent(
-            eventTarget: "page",
-            eventName: "route_change",
-            eventData: action.route);
+        action.server.sendPageEvent(eventTarget: "page", eventName: "route_change", eventData: action.route);
       }
     }
 
@@ -127,10 +114,7 @@ AppState appReducer(AppState state, dynamic action) {
 
       controls[page.id] = page.copyWith(attrs: pageAttrs);
       action.server.updateControlProps(props: props);
-      action.server.sendPageEvent(
-          eventTarget: "page",
-          eventName: "window_event",
-          eventData: action.eventName);
+      action.server.sendPageEvent(eventTarget: "page", eventName: "window_event", eventData: action.eventName);
     }
 
     return state.copyWith(controls: controls);
@@ -142,10 +126,7 @@ AppState appReducer(AppState state, dynamic action) {
     //
     if (action.payload.error != null && action.payload.error!.isNotEmpty) {
       // error or inactive app
-      return state.copyWith(
-          isLoading: action.payload.appInactive,
-          reconnectingTimeout: 0,
-          error: action.payload.error);
+      return state.copyWith(isLoading: action.payload.appInactive, reconnectingTimeout: 0, error: action.payload.error);
     } else {
       final sessionId = action.payload.session!.id;
 
@@ -153,24 +134,13 @@ AppState appReducer(AppState state, dynamic action) {
       SessionStore.set("sessionId", sessionId);
 
       // connected to the session
-      return state.copyWith(
-          isLoading: false,
-          reconnectingTimeout: 0,
-          sessionId: sessionId,
-          error: "",
-          controls: action.payload.session!.controls);
+      return state.copyWith(isLoading: false, reconnectingTimeout: 0, sessionId: sessionId, error: "", controls: action.payload.session!.controls);
     }
   } else if (action is PageReconnectingAction) {
     //
     // reconnecting WebSocket
     //
-    return state.copyWith(
-        isLoading: true,
-        error: "Please wait while the application is re-connecting...",
-        reconnectingTimeout:
-            state.reconnectingTimeout == 0 || isLocalhost(state.pageUri!)
-                ? 1
-                : state.reconnectingTimeout * 2);
+    return state.copyWith(isLoading: true, error: "Please wait while the application is re-connecting...", reconnectingTimeout: state.reconnectingTimeout == 0 || isLocalhost(state.pageUri!) ? 1 : state.reconnectingTimeout * 2);
   } else if (action is AppBecomeActiveAction) {
     //
     // app become active
@@ -188,28 +158,20 @@ AppState appReducer(AppState state, dynamic action) {
     //
     return state.copyWith(error: action.payload.message);
   } else if (action is InvokeMethodAction) {
-    debugPrint(
-        "InvokeMethodAction: ${action.payload.methodName} (${action.payload.args})");
+    debugPrint("InvokeMethodAction: ${action.payload.methodName} (${action.payload.args})");
     switch (action.payload.methodName) {
       case "closeInAppWebView":
         closeInAppWebView();
         break;
       case "launchUrl":
-        openWebBrowser(
-            action.payload.args["url"]!,
-            action.payload.args["web_window_name"],
-            action.payload.args["web_popup_window"]?.toLowerCase() == "true",
-            int.tryParse(action.payload.args["window_width"] ?? ""),
-            int.tryParse(action.payload.args["window_height"] ?? ""));
+        openWebBrowser(action.payload.args["url"]!, action.payload.args["web_window_name"], action.payload.args["web_popup_window"]?.toLowerCase() == "true", int.tryParse(action.payload.args["window_width"] ?? ""), int.tryParse(action.payload.args["window_height"] ?? ""));
         break;
       case "canLaunchUrl":
-        canLaunchUrl(Uri.parse(action.payload.args["url"]!)).then((value) =>
-            action.server.sendPageEvent(
-                eventTarget: "page",
-                eventName: "invoke_method_result",
-                eventData: json.encode(InvokeMethodResult(
-                    methodId: action.payload.methodId,
-                    result: value.toString()))));
+        canLaunchUrl(Uri.parse(action.payload.args["url"]!)).then((value) => action.server.sendPageEvent(eventTarget: "page", eventName: "invoke_method_result", eventData: json.encode(InvokeMethodResult(methodId: action.payload.methodId, result: value.toString()))));
+        break;
+      case "openImageViewer":
+        openImageViewer(action.payload.args["image"]!, action.payload.args["swipe_dismissable"]?.toLowerCase() == "true", action.payload.args["double_tap_zoomable"]?.toLowerCase() == "true", action.payload.args["background_color"], action.payload.args["close_button_color"], action.payload.args["close_button_tooltip"], action.payload.args["immersive"]?.toLowerCase() == "true",
+            int.tryParse(action.payload.args["initial_index"] ?? "0"));
         break;
       case "windowToFront":
         windowToFront();
@@ -217,11 +179,7 @@ AppState appReducer(AppState state, dynamic action) {
     }
     var clientStoragePrefix = "clientStorage:";
     if (action.payload.methodName.startsWith(clientStoragePrefix)) {
-      invokeClientStorage(
-          action.payload.methodId,
-          action.payload.methodName.substring(clientStoragePrefix.length),
-          action.payload.args,
-          action.server);
+      invokeClientStorage(action.payload.methodId, action.payload.methodName.substring(clientStoragePrefix.length), action.payload.args, action.server);
     }
   } else if (action is AddPageControlsAction) {
     //
@@ -298,8 +256,7 @@ AppState appReducer(AppState state, dynamic action) {
   return state;
 }
 
-addWindowMediaEventProps(WindowMediaData wmd, Map<String, String> pageAttrs,
-    List<Map<String, String>> props) {
+addWindowMediaEventProps(WindowMediaData wmd, Map<String, String> pageAttrs, List<Map<String, String>> props) {
   pageAttrs["windowwidth"] = wmd.width.toString();
   pageAttrs["windowheight"] = wmd.height.toString();
   pageAttrs["windowtop"] = wmd.top.toString();
@@ -331,8 +288,7 @@ addControls(Map<String, Control> controls, List<Control> newControls) {
     final existingControl = controls[ctrl.id];
     controls[ctrl.id] = ctrl;
     if (existingControl != null) {
-      controls[ctrl.id] =
-          ctrl.copyWith(childIds: List.from(existingControl.childIds));
+      controls[ctrl.id] = ctrl.copyWith(childIds: List.from(existingControl.childIds));
     }
 
     if (ctrl.pid == firstParentId && existingControl == null) {
@@ -340,13 +296,10 @@ addControls(Map<String, Control> controls, List<Control> newControls) {
       final parentCtrl = controls[ctrl.pid]!;
       if (ctrl.attrs["at"] == null) {
         // append to the end
-        controls[parentCtrl.id] = parentCtrl.copyWith(
-            childIds: List.from(parentCtrl.childIds)..add(ctrl.id));
+        controls[parentCtrl.id] = parentCtrl.copyWith(childIds: List.from(parentCtrl.childIds)..add(ctrl.id));
       } else {
         // insert at specified position
-        controls[parentCtrl.id] = parentCtrl.copyWith(
-            childIds: List.from(parentCtrl.childIds)
-              ..insert(int.parse(ctrl.attrs["at"]!), ctrl.id));
+        controls[parentCtrl.id] = parentCtrl.copyWith(childIds: List.from(parentCtrl.childIds)..insert(int.parse(ctrl.attrs["at"]!), ctrl.id));
       }
     }
   }
@@ -418,9 +371,7 @@ removeControls(Map<String, Control> controls, List<String> ids) {
 
     // remove control's ID from parent's children collection
     final parentCtrl = controls[ctrl!.pid];
-    controls[parentCtrl!.id] = parentCtrl.copyWith(
-        childIds:
-            parentCtrl.childIds.where((childId) => childId != id).toList());
+    controls[parentCtrl!.id] = parentCtrl.copyWith(childIds: parentCtrl.childIds.where((childId) => childId != id).toList());
   }
 }
 
