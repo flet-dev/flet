@@ -40,6 +40,9 @@ dependencies:
   shake: ^2.1.0
   path: ^1.8.2
 
+  # DatePicker specific dependencies
+  intl: ^0.18.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -24,8 +24,6 @@
 .python-version
 vendor/
 
-# poetry and flutter lock files
-*.lock
-
 # pyCharm and ItelliJ
 .idea
+.run
