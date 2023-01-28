@@ -72,6 +72,14 @@ class Control extends Equatable {
     return defValue;
   }
 
+  DateTime? attrDateTime(String name, [DateTime? defValue]) {
+    var value = attrs[name.toLowerCase()];
+    if (value == null) {
+      return defValue;
+    }
+    return DateTime.parse(value);
+  }
+
   Control copyWith(
           {String? id,
           String? pid,
