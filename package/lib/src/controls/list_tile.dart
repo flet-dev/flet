@@ -23,7 +23,7 @@ class ListTileControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
 
-    final ws = FletAppServices.of(context).ws;
+    final server = FletAppServices.of(context).server;
 
     var leadingCtrls =
         children.where((c) => c.name == "leading" && c.isVisible);
@@ -44,7 +44,7 @@ class ListTileControl extends StatelessWidget {
         ? null
         : () {
             debugPrint("ListTile ${control.id} clicked!");
-            ws.pageEventFromWeb(
+            server.sendPageEvent(
                 eventTarget: control.id, eventName: "click", eventData: "");
           };
 
@@ -52,7 +52,7 @@ class ListTileControl extends StatelessWidget {
         ? null
         : () {
             debugPrint("Button ${control.id} clicked!");
-            ws.pageEventFromWeb(
+            server.sendPageEvent(
                 eventTarget: control.id,
                 eventName: "long_press",
                 eventData: "");

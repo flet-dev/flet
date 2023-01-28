@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
+import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
+import '../widgets/adjustable_scroll_controller.dart';
 import 'create_control.dart';
 
 class GridViewControl extends StatelessWidget {
@@ -57,6 +59,7 @@ class GridViewControl extends StatelessWidget {
 
         return GridView.builder(
           scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+          controller: isWindowsDesktop() ? AdjustableScrollController() : null,
           shrinkWrap: shrinkWrap,
           padding: padding,
           gridDelegate: gridDelegate,

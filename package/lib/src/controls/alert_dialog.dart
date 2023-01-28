@@ -110,9 +110,9 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
                   dispatch(UpdateControlPropsAction(
                       UpdateControlPropsPayload(props: props)));
                   FletAppServices.of(context)
-                      .ws
+                      .server
                       .updateControlProps(props: props);
-                  FletAppServices.of(context).ws.pageEventFromWeb(
+                  FletAppServices.of(context).server.sendPageEvent(
                       eventTarget: widget.control.id,
                       eventName: "dismiss",
                       eventData: "");

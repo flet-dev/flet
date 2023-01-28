@@ -21,6 +21,7 @@ class FletAppControl extends StatelessWidget {
         context,
         FletApp(
           pageUrl: url,
+          assetsDir: "",
         ),
         parent,
         control);

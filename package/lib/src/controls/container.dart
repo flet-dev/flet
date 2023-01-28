@@ -8,6 +8,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/page_args_model.dart';
 import '../protocol/container_tap_event.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
@@ -65,12 +66,12 @@ class ContainerControl extends StatelessWidget {
 
     var animation = parseAnimation(control, "animate");
 
-    final ws = FletAppServices.of(context).ws;
+    final server = FletAppServices.of(context).server;
 
-    return StoreConnector<AppState, Uri?>(
+    return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
-        converter: (store) => store.state.pageUri,
-        builder: (context, pageUri) {
+        converter: (store) => PageArgsModel.fromStore(store),
+        builder: (context, pageArgs) {
           DecorationImage? image;
 
           if (imageSrcBase64 != "") {
@@ -85,11 +86,13 @@ class ContainerControl extends StatelessWidget {
               return ErrorControl("Error decoding base64: ${ex.toString()}");
             }
           } else if (imageSrc != "") {
-            var uri = Uri.parse(imageSrc);
+            var assetSrc =
+                getAssetSrc(imageSrc, pageArgs.pageUri!, pageArgs.assetsDir);
+
             image = DecorationImage(
-                image: NetworkImage(uri.hasAuthority
-                    ? imageSrc
-                    : getAssetUri(pageUri!, imageSrc).toString()),
+                image: assetSrc.isFile
+                    ? getFileImageProvider(assetSrc.path)
+                    : NetworkImage(assetSrc.path),
                 repeat: imageRepeat,
                 fit: imageFit,
                 opacity: imageOpacity);
@@ -126,7 +129,7 @@ class ContainerControl extends StatelessWidget {
                   onTapDown: onClick
                       ? (details) {
                           debugPrint("Container ${control.id} clicked!");
-                          ws.pageEventFromWeb(
+                          server.sendPageEvent(
                               eventTarget: control.id,
                               eventName: "click",
                               eventData: json.encode(ContainerTapEvent(
@@ -140,7 +143,7 @@ class ContainerControl extends StatelessWidget {
                   onLongPress: onLongPress
                       ? () {
                           debugPrint("Container ${control.id} long pressed!");
-                          ws.pageEventFromWeb(
+                          server.sendPageEvent(
                               eventTarget: control.id,
                               eventName: "long_press",
                               eventData: "");
@@ -149,7 +152,7 @@ class ContainerControl extends StatelessWidget {
                   onHover: onHover
                       ? (value) {
                           debugPrint("Container ${control.id} hovered!");
-                          ws.pageEventFromWeb(
+                          server.sendPageEvent(
                               eventTarget: control.id,
                               eventName: "hover",
                               eventData: value.toString());
@@ -182,7 +185,7 @@ class ContainerControl extends StatelessWidget {
                         clipBehavior: clipBehavior,
                         onEnd: control.attrBool("onAnimationEnd", false)!
                             ? () {
-                                ws.pageEventFromWeb(
+                                server.sendPageEvent(
                                     eventTarget: control.id,
                                     eventName: "animation_end",
                                     eventData: "container");
@@ -214,7 +217,7 @@ class ContainerControl extends StatelessWidget {
                     clipBehavior: clipBehavior,
                     onEnd: control.attrBool("onAnimationEnd", false)!
                         ? () {
-                            ws.pageEventFromWeb(
+                            server.sendPageEvent(
                                 eventTarget: control.id,
                                 eventName: "animation_end",
                                 eventData: "container");
@@ -229,7 +232,7 @@ class ContainerControl extends StatelessWidget {
                     ? (value) {
                         debugPrint(
                             "Container's mouse region ${control.id} entered!");
-                        ws.pageEventFromWeb(
+                        server.sendPageEvent(
                             eventTarget: control.id,
                             eventName: "hover",
                             eventData: "true");
@@ -239,7 +242,7 @@ class ContainerControl extends StatelessWidget {
                     ? (value) {
                         debugPrint(
                             "Container's mouse region ${control.id} exited!");
-                        ws.pageEventFromWeb(
+                        server.sendPageEvent(
                             eventTarget: control.id,
                             eventName: "hover",
                             eventData: "false");
@@ -249,7 +252,7 @@ class ContainerControl extends StatelessWidget {
                   onTapDown: onClick
                       ? (details) {
                           debugPrint("Container ${control.id} clicked!");
-                          ws.pageEventFromWeb(
+                          server.sendPageEvent(
                               eventTarget: control.id,
                               eventName: "click",
                               eventData: json.encode(ContainerTapEvent(
@@ -263,7 +266,7 @@ class ContainerControl extends StatelessWidget {
                   onLongPress: onLongPress
                       ? () {
                           debugPrint("Container ${control.id} clicked!");
-                          ws.pageEventFromWeb(
+                          server.sendPageEvent(
                               eventTarget: control.id,
                               eventName: "long_press",
                               eventData: "");

@@ -1,30 +1,32 @@
-import 'package:flet/src/flet_app_errors_handler.dart';
+import 'flet_app_errors_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 
 import 'actions.dart';
 import 'models/app_state.dart';
 import 'reducers.dart';
-import 'web_socket_client.dart';
+import 'flet_server.dart';
 
 class FletAppServices extends InheritedWidget {
   final String pageUrl;
+  final String assetsDir;
   final FletAppErrorsHandler? errorsHandler;
-  late final WebSocketClient ws;
+  late final FletServer server;
   late final Store<AppState> store;
 
   FletAppServices(
       {Key? key,
       required Widget child,
       required this.pageUrl,
+      required this.assetsDir,
       this.errorsHandler})
       : super(key: key, child: child) {
     store = Store<AppState>(appReducer, initialState: AppState.initial());
-    ws = WebSocketClient(store);
+    server = FletServer(store);
     if (errorsHandler != null) {
       errorsHandler!.addListener(() {
         if (store.state.isRegistered) {
-          ws.pageEventFromWeb(
+          server.sendPageEvent(
               eventTarget: "page",
               eventName: "error",
               eventData: errorsHandler!.error!);
@@ -33,7 +35,7 @@ class FletAppServices extends InheritedWidget {
     }
     // connect to a page
     var pageUri = Uri.parse(pageUrl);
-    store.dispatch(PageLoadAction(pageUri, ws));
+    store.dispatch(PageLoadAction(pageUri, assetsDir, server));
   }
 
   @override
@@ -42,7 +44,7 @@ class FletAppServices extends InheritedWidget {
   }
 
   void close() {
-    ws.close();
+    server.disconnect();
   }
 
   static FletAppServices of(BuildContext context) =>

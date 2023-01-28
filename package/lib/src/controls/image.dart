@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io' as io;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -8,11 +9,13 @@ import 'package:flutter_svg/svg.dart';
 
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/page_args_model.dart';
 import '../utils/borders.dart';
 import '../utils/collections.dart';
 import '../utils/colors.dart';
 import '../utils/images.dart';
 import '../utils/uri.dart';
+import '../utils/desktop.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -47,10 +50,10 @@ class ImageControl extends StatelessWidget {
     String? semanticsLabel = control.attrString("semanticsLabel");
     var gaplessPlayback = control.attrBool("gaplessPlayback");
 
-    return StoreConnector<AppState, Uri?>(
+    return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
-        converter: (store) => store.state.pageUri,
-        builder: (context, pageUri) {
+        converter: (store) => PageArgsModel.fromStore(store),
+        builder: (context, pageArgs) {
           Widget? image;
 
           if (srcBase64 != "") {
@@ -89,27 +92,52 @@ class ImageControl extends StatelessWidget {
                 colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
                 semanticsLabel: semanticsLabel);
           } else {
-            var uri = Uri.parse(src);
-            var imgSrc =
-                uri.hasAuthority ? src : getAssetUri(pageUri!, src).toString();
-            if (imgSrc.endsWith(".svg")) {
-              image = SvgPicture.network(imgSrc,
-                  width: width,
-                  height: height,
-                  fit: fit ?? BoxFit.contain,
-                  color: color,
-                  colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
-                  semanticsLabel: semanticsLabel);
+            var assetSrc =
+                getAssetSrc(src, pageArgs.pageUri!, pageArgs.assetsDir);
+
+            if (assetSrc.isFile) {
+              // from File
+              if (assetSrc.path.endsWith(".svg")) {
+                image = getSvgPictureFromFile(
+                    src: assetSrc.path,
+                    width: width,
+                    height: height,
+                    fit: fit ?? BoxFit.contain,
+                    color: color,
+                    blendMode: colorBlendMode ?? BlendMode.srcIn,
+                    semanticsLabel: semanticsLabel);
+              } else {
+                image = Image.file(io.File(assetSrc.path),
+                    width: width,
+                    height: height,
+                    repeat: repeat,
+                    fit: fit,
+                    color: color,
+                    gaplessPlayback: gaplessPlayback ?? false,
+                    colorBlendMode: colorBlendMode,
+                    semanticLabel: semanticsLabel);
+              }
             } else {
-              image = Image.network(imgSrc,
-                  width: width,
-                  height: height,
-                  repeat: repeat,
-                  fit: fit,
-                  color: color,
-                  gaplessPlayback: gaplessPlayback ?? false,
-                  colorBlendMode: colorBlendMode,
-                  semanticLabel: semanticsLabel);
+              // URL
+              if (assetSrc.path.endsWith(".svg")) {
+                image = SvgPicture.network(assetSrc.path,
+                    width: width,
+                    height: height,
+                    fit: fit ?? BoxFit.contain,
+                    color: color,
+                    colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
+                    semanticsLabel: semanticsLabel);
+              } else {
+                image = Image.network(assetSrc.path,
+                    width: width,
+                    height: height,
+                    repeat: repeat,
+                    fit: fit,
+                    color: color,
+                    gaplessPlayback: gaplessPlayback ?? false,
+                    colorBlendMode: colorBlendMode,
+                    semanticLabel: semanticsLabel);
+              }
             }
           }
 

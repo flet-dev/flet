@@ -25,19 +25,17 @@ class FletAppMain extends StatelessWidget {
         builder: (context, viewModel) {
           if (viewModel.error != "" && !viewModel.isLoading) {
             return MaterialApp(
-                title: title,
-                home: Scaffold(
-                  body: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.error_outline,
-                          color: Colors.red, size: 25),
-                      Text(viewModel.error,
-                          style: const TextStyle(color: Colors.red))
-                    ],
-                  ),
-                ),
-                scrollBehavior: DragScrollBehavior(),
+              title: title,
+              home: Scaffold(
+                body: Container(
+                    padding: const EdgeInsets.all(30),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [const Icon(Icons.error, color: Colors.redAccent, size: 30), const SizedBox(height: 8), Flexible(child: Text(viewModel.error, textAlign: TextAlign.center, style: const TextStyle(color: Colors.red)))],
+                    )),
+              ),
+              scrollBehavior: DragScrollBehavior(),
             );
           } else {
             return createControl(null, "page", false);
@@ -50,10 +48,10 @@ class FletAppMain extends StatelessWidget {
 
 class DragScrollBehavior extends MaterialScrollBehavior {
   @override
-  Set<PointerDeviceKind> get dragDevices => { 
-    PointerDeviceKind.touch,
-    PointerDeviceKind.mouse,
-    PointerDeviceKind.stylus,
-    PointerDeviceKind.unknown,
-  };
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.unknown,
+      };
 }

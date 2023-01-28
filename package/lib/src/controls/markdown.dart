@@ -7,6 +7,7 @@ import 'package:markdown/markdown.dart' as md;
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/page_args_model.dart';
 import '../utils/text.dart';
 import '../utils/uri.dart';
 import 'create_control.dart';
@@ -23,10 +24,8 @@ class MarkdownControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Markdown build: ${control.id}");
 
-    final ws = FletAppServices.of(context).ws;
-
     var value = control.attrString("value", "")!;
-    var codeTheme = control.attrString("codeTheme", "github")!;
+    var codeTheme = control.attrString("codeTheme", "")!;
     md.ExtensionSet extensionSet = md.ExtensionSet.none;
     switch (control.attrString("extensionSet", "")!.toLowerCase()) {
       case "commonmark":
@@ -50,22 +49,25 @@ class MarkdownControl extends StatelessWidget {
                 .bodyMedium!
                 .copyWith(fontFamily: "monospace"));
 
-    return StoreConnector<AppState, Uri?>(
+    return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
-        converter: (store) => store.state.pageUri,
-        builder: (context, pageUri) {
+        converter: (store) => PageArgsModel.fromStore(store),
+        builder: (context, pageArgs) {
           Widget markdown = MarkdownBody(
               data: value,
               selectable: control.attrBool("selectable", false)!,
-              imageDirectory: getBaseUri(pageUri!).toString(),
+              imageDirectory: pageArgs.assetsDir != ""
+                  ? pageArgs.assetsDir
+                  : getBaseUri(pageArgs.pageUri!).toString(),
               extensionSet: extensionSet,
               builders: {
-                'code': CodeElementBuilder(codeTheme, mdStyleSheet),
+                'code':
+                    CodeElementBuilder(codeTheme.toLowerCase(), mdStyleSheet),
               },
               styleSheet: mdStyleSheet,
               onTapLink: (String text, String? href, String title) {
                 debugPrint("Markdown link tapped ${control.id} clicked: $href");
-                ws.pageEventFromWeb(
+                FletAppServices.of(context).server.sendPageEvent(
                     eventTarget: control.id,
                     eventName: "tap_link",
                     eventData: href?.toString() ?? "");
@@ -105,7 +107,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
         // Specify highlight theme
         // All available themes are listed in `themes` folder
-        theme: themeMap[codeTheme] ?? themeMap["github"]!,
+        theme: themeMap[codeTheme] ?? {},
 
         // Specify padding
         padding: mdStyleSheet.codeblockPadding,

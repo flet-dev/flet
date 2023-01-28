@@ -1,52 +1,24 @@
-[project]
-name = "flet"
+[tool.poetry]
+name = "flet-project"
 version = "0.1.0"
-description = "Flet for Python - easily build interactive multi-platform apps in Python"
-readme = "README.md"
-authors = [
-    { name = "Appveyor Systems Inc.", email = "hello@flet.dev" },
-]
-dependencies = [
-    "websocket-client>=1.2.1",
-    "beartype>=0.9.1",
-    'typing_extensions; python_version < "3.8"',
-    "repath>=0.9.0",
-    "watchdog>=2.1.9",
-    "requests>=2.28.1",
-    "oauthlib>=3.2.0"]
-requires-python = ">=3.7"
-license = { text = "MIT" }
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
+description = ""
+authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
+license = "MIT"
 
-[project.urls]
-repository = "https://github.com/flet-dev/flet"
-documentation = "https://flet.dev/docs/"
+[tool.poetry.dependencies]
+python = "<3.12,>=3.7"
 
-[project.optional-dependencies]
-
-[tool.pdm.dev-dependencies]
-tests = [
-    "pytest>=6.1.2",
-]
-dev = [
-    "pre-commit>=2.17.0"]
-
-[project.scripts]
-flet = "flet.flet:main"
-
-[project.entry-points.pyinstaller40]
-hook-dirs = "flet.__pyinstaller:get_hook_dirs"
+[tool.poetry.group.dev.dependencies]
+flet-core = {path = "packages/flet-core", develop = true}
+flet = {path = "packages/flet", develop = true}
+pytest = "^7.2.0"
+black = "^22.12.0"
+tomlkit = "^0.11.6"
+cryptography = "^39.0.0"
+pyinstaller = "^5.7.0"
+pillow = "^9.4.0"
+pre-commit = "^2.21.0"
 
 [build-system]
-requires = ["pdm-pep517"]
-build-backend = "pdm.pep517.api"
-
-[tool.isort]
-profile = "black"
-float_to_top = true
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

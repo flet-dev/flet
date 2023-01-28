@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "flet"
+version = "0.1.0"
+description = "Flet for Python - easily build interactive multi-platform apps in Python"
+authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
+license = "MIT"
+readme = "README.md"
+
+packages = [
+    { include = "flet", from = "src" },
+]
+
+[tool.poetry.urls]
+homepage = "https://flet.dev"
+repository = "https://github.com/flet-dev/flet"
+documentation = "https://flet.dev/docs"
+
+[tool.poetry.dependencies]
+flet-core = "0.1.0"
+python = "^3.7"
+typing-extensions = { version = "^4.4.0", python = "<3.8" }
+websocket-client = "^1.4.2"
+watchdog = "^2.2.1"
+oauthlib = "^3.2.2"
+websockets = "^10.4"
+httpx = "^0.23.3"
+packaging = "^23.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^2.6"
+pytest = "^7.2.0"
+cryptography = "^39.0.0"
+
+[tool.poetry.scripts]
+flet = "flet.cli.cli:main"
+
+[tool.poetry.plugins."pyinstaller40"]
+hook-dirs = "flet.__pyinstaller:get_hook_dirs"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+float_to_top = true

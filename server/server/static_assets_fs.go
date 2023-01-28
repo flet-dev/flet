@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/flet-dev/flet/server/config"
+	"github.com/flet-dev/flet/server/utils"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -15,14 +15,12 @@ type FileSystemAssetsSFS struct {
 	httpFS     http.FileSystem
 }
 
-func newFileSystemAssetsSFS() *FileSystemAssetsSFS {
-	rootWebDir := config.StaticRootDir()
-
+func newFileSystemAssetsSFS(rootWebDir string) *FileSystemAssetsSFS {
 	if rootWebDir == "" {
-		log.Debugln("Variable FLET_STATIC_ROOT_DIR with path to web static content is not set.")
+		log.Debugln("Directory with web content is not set.")
 		return nil
 	} else if _, err := os.Stat(rootWebDir); os.IsNotExist(err) {
-		log.Warnf("Directory %s with web static content does not exist.", rootWebDir)
+		log.Warnf("Directory %s with web content does not exist.", rootWebDir)
 		return nil
 	}
 
@@ -48,7 +46,11 @@ func (fs *FileSystemAssetsSFS) findFullPath(path string) string {
 	pathParts := strings.Split(strings.TrimPrefix(path, "/"), "/")
 	for i := 0; i < len(pathParts); i++ {
 		partialPath := strings.Join(pathParts[i:], "/")
-		if _, err := os.Stat(filepath.Join(fs.rootWebDir, partialPath)); err == nil {
+		fullPath := filepath.Clean(filepath.Join(fs.rootWebDir, partialPath))
+		if err := utils.InTrustedRoot(fullPath, fs.rootWebDir); err != nil {
+			return ""
+		}
+		if _, err := os.Stat(fullPath); err == nil {
 			return partialPath
 		}
 	}

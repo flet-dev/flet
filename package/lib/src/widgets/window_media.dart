@@ -18,7 +18,6 @@ class WindowMedia extends StatefulWidget {
 }
 
 class WindowMediaState extends State<WindowMedia> with WindowListener {
-  Timer? _debounce;
   Function? _dispatch;
 
   @override
@@ -30,7 +29,6 @@ class WindowMediaState extends State<WindowMedia> with WindowListener {
   @override
   void dispose() {
     windowManager.removeListener(this);
-    _debounce?.cancel();
     super.dispose();
   }
 
@@ -53,22 +51,11 @@ class WindowMediaState extends State<WindowMedia> with WindowListener {
       return;
     }
 
-    send() {
-      debugPrint('[WindowManager] onWindowEvent: $eventName');
-      getWindowMediaData().then((wmd) {
-        debugPrint("WindowMediaData: $wmd");
-        _dispatch!(
-            WindowEventAction(eventName, wmd, FletAppServices.of(context).ws));
-      });
-    }
-
-    if (eventName == "resized" || eventName == "moved") {
-      if (_debounce?.isActive ?? false) _debounce!.cancel();
-      _debounce = Timer(const Duration(milliseconds: 300), () {
-        send();
-      });
-    } else {
-      send();
-    }
+    debugPrint('[WindowManager] onWindowEvent: $eventName');
+    getWindowMediaData().then((wmd) {
+      debugPrint("WindowMediaData: $wmd");
+      _dispatch!(WindowEventAction(
+          eventName, wmd, FletAppServices.of(context).server));
+    });
   }
 }

@@ -1,9 +1,9 @@
-import 'package:flet/src/controls/error.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../models/control.dart';
 import 'create_control.dart';
+import 'error.dart';
 
 class WindowDragAreaControl extends StatelessWidget {
   final Control? parent;

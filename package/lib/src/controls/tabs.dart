@@ -66,9 +66,9 @@ class _TabsControlState extends State<TabsControl>
       ];
       _dispatch(
           UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      final ws = FletAppServices.of(context).ws;
-      ws.updateControlProps(props: props);
-      ws.pageEventFromWeb(
+      final server = FletAppServices.of(context).server;
+      server.updateControlProps(props: props);
+      server.sendPageEvent(
           eventTarget: widget.control.id,
           eventName: "change",
           eventData: index.toString());
@@ -120,7 +120,7 @@ class _TabsControlState extends State<TabsControl>
 
           var tabBar = TabBar(
               controller: _tabController,
-              isScrollable: true,
+              isScrollable: widget.control.attrBool("scrollable", true)!,
               indicatorColor: Theme.of(context).colorScheme.primary,
               labelColor: Theme.of(context).colorScheme.primary,
               unselectedLabelColor: Theme.of(context).colorScheme.onSurface,

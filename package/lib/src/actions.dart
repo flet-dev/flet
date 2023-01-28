@@ -13,12 +13,13 @@ import 'protocol/remove_control_payload.dart';
 import 'protocol/replace_page_controls_payload.dart';
 import 'protocol/session_crashed_payload.dart';
 import 'protocol/update_control_props_payload.dart';
-import 'web_socket_client.dart';
+import 'flet_server.dart';
 
 class PageLoadAction {
   final Uri pageUri;
-  final WebSocketClient ws;
-  PageLoadAction(this.pageUri, this.ws);
+  final String assetsDir;
+  final FletServer server;
+  PageLoadAction(this.pageUri, this.assetsDir, this.server);
 }
 
 class PageReconnectingAction {
@@ -28,21 +29,21 @@ class PageReconnectingAction {
 class PageSizeChangeAction {
   final Size newPageSize;
   final WindowMediaData? wmd;
-  final WebSocketClient ws;
-  PageSizeChangeAction(this.newPageSize, this.wmd, this.ws);
+  final FletServer server;
+  PageSizeChangeAction(this.newPageSize, this.wmd, this.server);
 }
 
 class SetPageRouteAction {
   final String route;
-  final WebSocketClient ws;
-  SetPageRouteAction(this.route, this.ws);
+  final FletServer server;
+  SetPageRouteAction(this.route, this.server);
 }
 
 class WindowEventAction {
   final String eventName;
   final WindowMediaData wmd;
-  final WebSocketClient ws;
-  WindowEventAction(this.eventName, this.wmd, this.ws);
+  final FletServer server;
+  WindowEventAction(this.eventName, this.wmd, this.server);
 }
 
 class PageBrightnessChangeAction {
@@ -56,9 +57,9 @@ class RegisterWebClientAction {
 }
 
 class AppBecomeActiveAction {
-  final WebSocketClient ws;
+  final FletServer server;
   final AppBecomeActivePayload payload;
-  AppBecomeActiveAction(this.ws, this.payload);
+  AppBecomeActiveAction(this.server, this.payload);
 }
 
 class AppBecomeInactiveAction {
@@ -73,8 +74,8 @@ class SessionCrashedAction {
 
 class InvokeMethodAction {
   final InvokeMethodPayload payload;
-  final WebSocketClient ws;
-  InvokeMethodAction(this.payload, this.ws);
+  final FletServer server;
+  InvokeMethodAction(this.payload, this.server);
 }
 
 class AddPageControlsAction {
