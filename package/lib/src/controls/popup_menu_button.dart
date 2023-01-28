@@ -26,7 +26,7 @@ class PopupMenuButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("PopupMenuButton build: ${control.id}");
 
-    final ws = FletAppServices.of(context).ws;
+    final server = FletAppServices.of(context).server;
 
     var icon = getMaterialIcon(control.attrString("icon", "")!);
     var tooltip = control.attrString("tooltip");
@@ -52,13 +52,13 @@ class PopupMenuButtonControl extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10))
                   : null,
               onCanceled: () {
-                ws.pageEventFromWeb(
+                server.sendPageEvent(
                     eventTarget: control.id,
                     eventName: "cancelled",
                     eventData: "");
               },
               onSelected: (itemId) {
-                ws.pageEventFromWeb(
+                server.sendPageEvent(
                     eventTarget: itemId, eventName: "click", eventData: "");
               },
               itemBuilder: (BuildContext context) =>

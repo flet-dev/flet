@@ -40,7 +40,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).ws.pageEventFromWeb(
+    FletAppServices.of(context).server.sendPageEvent(
         eventTarget: widget.control.id,
         eventName: _focusNode.hasFocus ? "focus" : "blur",
         eventData: "");
@@ -90,9 +90,9 @@ class _CheckboxControlState extends State<CheckboxControl> {
             ];
             dispatch(UpdateControlPropsAction(
                 UpdateControlPropsPayload(props: props)));
-            var ws = FletAppServices.of(context).ws;
-            ws.updateControlProps(props: props);
-            ws.pageEventFromWeb(
+            var server = FletAppServices.of(context).server;
+            server.updateControlProps(props: props);
+            server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "change",
                 eventData: svalue);

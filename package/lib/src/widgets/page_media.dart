@@ -32,12 +32,12 @@ class _PageMediaState extends State<PageMedia> {
         debugPrint("Send current size to reducer: $newSize");
         getWindowMediaData().then((wmd) {
           dispatch(PageSizeChangeAction(
-              newSize, wmd, FletAppServices.of(context).ws));
+              newSize, wmd, FletAppServices.of(context).server));
         });
       });
     } else {
-      dispatch(
-          PageSizeChangeAction(newSize, null, FletAppServices.of(context).ws));
+      dispatch(PageSizeChangeAction(
+          newSize, null, FletAppServices.of(context).server));
     }
   }
 

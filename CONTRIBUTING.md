@@ -10,35 +10,19 @@ git clone https://github.com/flet-dev/flet
 
 ## Python SDK
 
-### Install PDM
+### Install Poetry
 
 #### Windows
 
 ```powershell
-(Invoke-WebRequest -Uri https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py -UseBasicParsing).Content | python -
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
 ```
-
-Enable PEP 582:
-
-```
-pdm --pep582
-```
-
-Run `refreshenv` after installing PDM on Windows or restart terminal.
 
 #### macOS
 
 ```
-brew install pdm
+curl -sSL https://install.python-poetry.org | python3 -
 ```
-
-Enable PEP 582:
-
-```
-pdm --pep582 >> ~/.zprofile
-```
-
-Restart the terminal session to take effect.
 
 ### Open worker directory
 
@@ -51,7 +35,7 @@ cd sdk/python
 To install all Flet dependencies and enable the project as editable package run:
 
 ```
-pdm install
+poetry install
 ```
 
 ### Check the installation
@@ -71,19 +55,19 @@ flet.app(target=main)
 and then run it:
 
 ```
-python3 hello.py
+poetry run python hello.py
 ```
 
-During the first run Flet Server (`fletd`) and Flet Client (`flet`) executables will be downloaded from [Flet GitHub releases](https://github.com/flet-dev/flet/releases) to a user temp directory and then started from there. The version of release to download from is taken from `flet/version.py` file.
+During the first run Flet Client (`flet`) executable will be downloaded from [Flet GitHub releases](https://github.com/flet-dev/flet/releases) to a user temp directory and then started from there. The version of release to download from is taken from `flet/version.py` file.
 
 You should see a new native OS window opened with "Hello, world!" in it.
 
 ### Running tests
 
-Pytest should be run with `pdm run`:
+Pytest should be run with `poetry run`:
 
 ```
-pdm run pytest
+poetry run pytest
 ```
 
 ### Code formatting

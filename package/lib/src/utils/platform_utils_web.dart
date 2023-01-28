@@ -13,6 +13,13 @@ String getFletRouteUrlStrategy() {
   return meta != null ? meta.attributes["content"]! : "";
 }
 
+bool isFletWebPyodideMode() {
+  var meta = html.document.head?.querySelector("meta[name='flet-web-pyodide']");
+  return meta != null
+      ? meta.attributes["content"]?.toLowerCase() == "true"
+      : false;
+}
+
 void openPopupBrowserWindow(
     String url, String windowName, int width, int height) {
   int screenWidth = html.window.screen!.width!;

@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "flet-core"
+version = "0.1.0"
+description = "Flet core library"
+authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
+license = "MIT"
+readme = "README.md"
+
+packages = [
+    { include = "flet_core", from = "src" },
+]
+
+[tool.poetry.urls]
+homepage = "https://flet.dev"
+repository = "https://github.com/flet-dev/flet"
+documentation = "https://flet.dev/docs"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+typing-extensions = { version = "^4.4.0", python = "<3.8" }
+repath = "^0.9.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^2.6"
+pytest = "^7.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+float_to_top = true

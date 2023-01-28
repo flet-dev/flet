@@ -57,7 +57,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
       ];
       widget.dispatch(
           UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      FletAppServices.of(context).ws.updateControlProps(props: props);
+      FletAppServices.of(context).server.updateControlProps(props: props);
     }
 
     if (!open && _open) {
@@ -84,7 +84,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
           if (shouldDismiss) {
             resetOpenState();
-            FletAppServices.of(context).ws.pageEventFromWeb(
+            FletAppServices.of(context).server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "dismiss",
                 eventData: "");

@@ -37,8 +37,12 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
+func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int, contentDir string, assetsDir string) {
 	defer wg.Done()
+
+	if contentDir == "" {
+		log.Fatalf("contentDir is not set")
+	}
 
 	Port = serverPort
 
@@ -69,7 +73,7 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 	mime.AddExtensionType(".js", "application/javascript")
 
 	// Serve frontend static files
-	assetsFS := newAssetsFS()
+	assetsFS := newAssetsFS(contentDir, assetsDir)
 	router.Use(static.Serve("/", assetsFS))
 
 	// WebSockets

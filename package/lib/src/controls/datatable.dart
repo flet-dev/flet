@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -12,6 +11,7 @@ import '../utils/borders.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 
 class DataTableControl extends StatefulWidget {
@@ -39,7 +39,7 @@ class _DataTableControlState extends State<DataTableControl> {
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    var ws = FletAppServices.of(context).ws;
+    var server = FletAppServices.of(context).server;
 
     var datatable = StoreConnector<AppState, ControlsViewModel>(
         distinct: true,
@@ -104,7 +104,7 @@ class _DataTableControlState extends State<DataTableControl> {
               sortColumnIndex: widget.control.attrInt("sortColumnIndex"),
               onSelectAll: widget.control.attrBool("onSelectAll", false)!
                   ? (selected) {
-                      ws.pageEventFromWeb(
+                      server.sendPageEvent(
                           eventTarget: widget.control.id,
                           eventName: "select_all",
                           eventData:
@@ -120,7 +120,7 @@ class _DataTableControlState extends State<DataTableControl> {
                     tooltip: column.control.attrString("tooltip"),
                     onSort: column.control.attrBool("onSort", false)!
                         ? (columnIndex, ascending) {
-                            ws.pageEventFromWeb(
+                            server.sendPageEvent(
                                 eventTarget: column.control.id,
                                 eventName: "sort",
                                 eventData: json.encode(
@@ -141,7 +141,7 @@ class _DataTableControlState extends State<DataTableControl> {
                     onSelectChanged:
                         row.control.attrBool("onSelectChanged", false)!
                             ? (selected) {
-                                ws.pageEventFromWeb(
+                                server.sendPageEvent(
                                     eventTarget: row.control.id,
                                     eventName: "select_changed",
                                     eventData: selected != null
@@ -151,7 +151,7 @@ class _DataTableControlState extends State<DataTableControl> {
                             : null,
                     onLongPress: row.control.attrBool("onLongPress", false)!
                         ? () {
-                            ws.pageEventFromWeb(
+                            server.sendPageEvent(
                                 eventTarget: row.control.id,
                                 eventName: "long_press",
                                 eventData: "");
@@ -166,7 +166,7 @@ class _DataTableControlState extends State<DataTableControl> {
                                   cell.attrBool("showEditIcon", false)!,
                               onDoubleTap: cell.attrBool("onDoubleTap", false)!
                                   ? () {
-                                      ws.pageEventFromWeb(
+                                      server.sendPageEvent(
                                           eventTarget: cell.id,
                                           eventName: "double_tap",
                                           eventData: "");
@@ -174,7 +174,7 @@ class _DataTableControlState extends State<DataTableControl> {
                                   : null,
                               onLongPress: cell.attrBool("onLongPress", false)!
                                   ? () {
-                                      ws.pageEventFromWeb(
+                                      server.sendPageEvent(
                                           eventTarget: cell.id,
                                           eventName: "long_press",
                                           eventData: "");
@@ -182,7 +182,7 @@ class _DataTableControlState extends State<DataTableControl> {
                                   : null,
                               onTap: cell.attrBool("onTap", false)!
                                   ? () {
-                                      ws.pageEventFromWeb(
+                                      server.sendPageEvent(
                                           eventTarget: cell.id,
                                           eventName: "tap",
                                           eventData: "");
@@ -190,7 +190,7 @@ class _DataTableControlState extends State<DataTableControl> {
                                   : null,
                               onTapCancel: cell.attrBool("onTapCancel", false)!
                                   ? () {
-                                      ws.pageEventFromWeb(
+                                      server.sendPageEvent(
                                           eventTarget: cell.id,
                                           eventName: "tap_cancel",
                                           eventData: "");
@@ -198,7 +198,7 @@ class _DataTableControlState extends State<DataTableControl> {
                                   : null,
                               onTapDown: cell.attrBool("onTapDown", false)!
                                   ? (details) {
-                                      ws.pageEventFromWeb(
+                                      server.sendPageEvent(
                                           eventTarget: cell.id,
                                           eventName: "tap_down",
                                           eventData: json.encode({

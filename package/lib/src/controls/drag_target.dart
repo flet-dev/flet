@@ -39,7 +39,7 @@ class DragTargetControl extends StatelessWidget {
       return const ErrorControl("DragTarget should have content.");
     }
 
-    final ws = FletAppServices.of(context).ws;
+    final server = FletAppServices.of(context).server;
 
     return DragTarget<String>(
       builder: (
@@ -59,7 +59,7 @@ class DragTargetControl extends StatelessWidget {
           srcGroup = jd["group"] as String;
         }
         var groupsEqual = srcGroup == group;
-        ws.pageEventFromWeb(
+        server.sendPageEvent(
             eventTarget: control.id,
             eventName: "will_accept",
             eventData: groupsEqual.toString());
@@ -70,7 +70,7 @@ class DragTargetControl extends StatelessWidget {
         debugPrint("DragTarget.onAcceptWithDetails ${control.id}: $data");
         var jd = json.decode(data);
         var srcId = jd["id"] as String;
-        ws.pageEventFromWeb(
+        server.sendPageEvent(
             eventTarget: control.id,
             eventName: "accept",
             eventData: json.encode(DragTargetAcceptEvent(
@@ -84,7 +84,7 @@ class DragTargetControl extends StatelessWidget {
           var jd = json.decode(data);
           srcId = jd["id"] as String;
         }
-        ws.pageEventFromWeb(
+        server.sendPageEvent(
             eventTarget: control.id, eventName: "leave", eventData: srcId);
       },
     );

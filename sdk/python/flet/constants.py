@@ -1,4 +1,0 @@
-INDEX_PAGE = "p/index"
-HOSTED_SERVICE_URL = "https://app.flet.dev"
-CONNECT_TIMEOUT_SECONDS = 30
-ZERO_SESSION = "0"

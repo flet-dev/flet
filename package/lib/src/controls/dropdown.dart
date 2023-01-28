@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/alignment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -10,6 +9,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_children_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
@@ -48,7 +48,7 @@ class _DropdownControlState extends State<DropdownControl> {
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    FletAppServices.of(context).ws.pageEventFromWeb(
+    FletAppServices.of(context).server.sendPageEvent(
         eventTarget: widget.control.id,
         eventName: _focusNode.hasFocus ? "focus" : "blur",
         eventData: "");
@@ -65,7 +65,7 @@ class _DropdownControlState extends State<DropdownControl> {
   Widget build(BuildContext context) {
     debugPrint("Dropdown build: ${widget.control.id}");
 
-    final ws = FletAppServices.of(context).ws;
+    final server = FletAppServices.of(context).server;
 
     return StoreConnector<AppState, ControlChildrenViewModel>(
         distinct: true,
@@ -166,8 +166,8 @@ class _DropdownControlState extends State<DropdownControl> {
               ];
               itemsView.dispatch(UpdateControlPropsAction(
                   UpdateControlPropsPayload(props: props)));
-              ws.updateControlProps(props: props);
-              ws.pageEventFromWeb(
+              server.updateControlProps(props: props);
+              server.sendPageEvent(
                   eventTarget: widget.control.id,
                   eventName: "change",
                   eventData: value);

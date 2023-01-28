@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/numbers.dart';
-
 import '../models/control.dart';
+import '../utils/numbers.dart';
 
 Map<String, double> parseResponsiveNumber(
     Control control, String propName, double defaultValue) {
