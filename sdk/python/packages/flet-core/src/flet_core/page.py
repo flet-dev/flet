@@ -777,6 +777,55 @@ class Page(Control):
             == "true"
         )
 
+    def open_image_viewer(
+        self,
+        image: Union[str, List[str]],
+        swipe_dismissible: Optional[bool] = True,
+        double_tap_zoomable: Optional[bool] = True,
+        background_color: Optional[str] = None,
+        close_button_color: Optional[str] = None,
+        close_button_tooltip: Optional[str] = "Close",
+        immersive: Optional[bool] = True,
+        initial_index: Optional[int] = 0,
+    ):
+        self.invoke_method(
+            "openImageViewer",
+            self.__get_image_viewer_args(image=image,
+                swipe_dismissible=swipe_dismissible, 
+                double_tap_zoomable=double_tap_zoomable,
+                background_color=background_color,
+                close_button_color=close_button_color,
+                close_button_tooltip=close_button_tooltip,
+                immersive=immersive,
+                initial_index=initial_index,
+            ),
+        )
+
+    def __get_image_viewer_args(
+        self,
+        image: Union[str, List[str]],
+        swipe_dismissible: Optional[bool] = True,
+        double_tap_zoomable: Optional[bool] = True,
+        background_color: Optional[str] = None,
+        close_button_color: Optional[str] = None,
+        close_button_tooltip: Optional[str] = "Close",
+        immersive: Optional[bool] = True,
+        initial_index: Optional[int] = 0,
+    ):
+        img = image
+        if isinstance(image, List):
+            img = '|'.join(image)
+        args = {"image": img, 
+             "swipe_dismissible":str(swipe_dismissible), 
+             "double_tap_zoomable":str(double_tap_zoomable),
+             "background_color":str(background_color),
+             "close_button_color":str(close_button_color),
+             "close_button_tooltip":close_button_tooltip,
+             "immersive":str(immersive),
+             "initial_index":str(initial_index),
+            };
+        return args
+
     def close_in_app_web_view(self):
         self.invoke_method("closeInAppWebView")
 

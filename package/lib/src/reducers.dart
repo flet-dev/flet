@@ -16,6 +16,7 @@ import 'protocol/update_control_props_payload.dart';
 import 'utils/client_storage.dart';
 import 'utils/desktop.dart';
 import 'utils/launch_url.dart';
+import 'utils/image_viewer.dart';
 import 'utils/platform_utils_non_web.dart'
     if (dart.library.js) "utils/platform_utils_web.dart";
 import 'utils/session_store_non_web.dart'
@@ -210,6 +211,10 @@ AppState appReducer(AppState state, dynamic action) {
                 eventData: json.encode(InvokeMethodResult(
                     methodId: action.payload.methodId,
                     result: value.toString()))));
+        break;
+      case "openImageViewer":
+        openImageViewer(action.payload.args["image"]!, action.payload.args["swipe_dismissable"]?.toLowerCase() == "true", action.payload.args["double_tap_zoomable"]?.toLowerCase() == "true", action.payload.args["background_color"], action.payload.args["close_button_color"], action.payload.args["close_button_tooltip"], action.payload.args["immersive"]?.toLowerCase() == "true",
+            int.tryParse(action.payload.args["initial_index"] ?? "0"));
         break;
       case "windowToFront":
         windowToFront();
