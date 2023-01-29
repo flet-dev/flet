@@ -21,27 +21,27 @@ Future openImageViewer(String image, bool swipeDismissible, bool doubleTapZoomab
     builder: (context, pageArgs) {
       var imageProvider;
       if (image.contains('|')) {
-        List<dynamic> imageList = [];
+        List<ImageProvider<Object>> imageList = [];
         for (String imageSrc in image.split('|')) {
           var assetSrc = getAssetSrc(imageSrc, pageArgs.pageUri!, pageArgs.assetsDir);
           imageList.add(assetSrc.isFile ? getFileImageProvider(assetSrc.path) : NetworkImage(assetSrc.path));
         }
-        imageProvider = MultiImageProvider(imageList, initialIndex: initialIndex);
+        imageProvider = MultiImageProvider(imageList, initialIndex: initialIndex ?? 0);
       } else {
         var assetSrc = getAssetSrc(image, pageArgs.pageUri!, pageArgs.assetsDir);
         imageProvider = SingleImageProvider(assetSrc.isFile ? getFileImageProvider(assetSrc.path) : NetworkImage(assetSrc.path));
       }
-      var background_color = checkString(backgroundColor) ? HexColor.fromString(Theme.of(context), backgroundColor!) : Colors.black;
-      var close_button_color = checkString(closeButtonColor) ? HexColor.fromString(Theme.of(context), closeButtonColor!) : Colors.white;
+      Color background_color = checkString(backgroundColor) ? HexColor.fromString(Theme.of(context), backgroundColor!) : Colors.black;
+      Color close_button_color = checkString(closeButtonColor) ? HexColor.fromString(Theme.of(context), closeButtonColor!) : Colors.white;
       return showImageViewerPager(
         context,
         imageProvider!,
         swipeDismissible: swipeDismissible,
         doubleTapZoomable: doubleTapZoomable,
-        backgroundColor: background_color,
-        closeButtonColor: close_button_color,
-        closeButtonTooltip: closeButtonTooltip,
-        immersive: immersive,
+        backgroundColor: background_color!,
+        closeButtonColor: close_button_color!,
+        closeButtonTooltip: closeButtonTooltip ?? "Close",
+        immersive: immersive ?? true,
       );
     },
   );
