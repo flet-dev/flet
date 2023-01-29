@@ -19,9 +19,9 @@ Future openImageViewer(String image, bool swipeDismissible, bool doubleTapZoomab
     distinct: true,
     converter: (store) => PageArgsModel.fromStore(store),
     builder: (context, pageArgs) {
-      List<String> imageList = [];
       var imageProvider;
       if (image.contains('|')) {
+        List<dynamic> imageList = [];
         for (String imageSrc in image.split('|')) {
           var assetSrc = getAssetSrc(imageSrc, pageArgs.pageUri!, pageArgs.assetsDir);
           imageList.add(assetSrc.isFile ? getFileImageProvider(assetSrc.path) : NetworkImage(assetSrc.path));
@@ -33,7 +33,7 @@ Future openImageViewer(String image, bool swipeDismissible, bool doubleTapZoomab
       }
       var background_color = checkString(backgroundColor) ? HexColor.fromString(Theme.of(context), backgroundColor!) : Colors.black;
       var close_button_color = checkString(closeButtonColor) ? HexColor.fromString(Theme.of(context), closeButtonColor!) : Colors.white;
-      showImageViewerPager(
+      return showImageViewerPager(
         context,
         imageProvider!,
         swipeDismissible: swipeDismissible,
@@ -42,7 +42,6 @@ Future openImageViewer(String image, bool swipeDismissible, bool doubleTapZoomab
         closeButtonColor: close_button_color,
         closeButtonTooltip: closeButtonTooltip,
         immersive: immersive,
-        initialIndex: initialIndex,
       );
     },
   );
