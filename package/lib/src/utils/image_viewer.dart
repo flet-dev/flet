@@ -31,9 +31,9 @@ Future openImageViewer(String image, bool swipeDismissible, bool doubleTapZoomab
         var assetSrc = getAssetSrc(image, pageArgs.pageUri!, pageArgs.assetsDir);
         imageProvider = SingleImageProvider(assetSrc.isFile ? getFileImageProvider(assetSrc.path) : NetworkImage(assetSrc.path));
       }
-      Color background_color = checkString(backgroundColor) ? HexColor.fromString(Theme.of(context), backgroundColor!) : Colors.black;
-      Color close_button_color = checkString(closeButtonColor) ? HexColor.fromString(Theme.of(context), closeButtonColor!) : Colors.white;
-      return showImageViewerPager(
+      var background_color = checkString(backgroundColor) ? HexColor.fromString(Theme.of(context), backgroundColor!) : Colors.black;
+      var close_button_color = checkString(closeButtonColor) ? HexColor.fromString(Theme.of(context), closeButtonColor!) : Colors.white;
+      showImageViewerPager(
         context,
         imageProvider!,
         swipeDismissible: swipeDismissible,
@@ -43,6 +43,7 @@ Future openImageViewer(String image, bool swipeDismissible, bool doubleTapZoomab
         closeButtonTooltip: closeButtonTooltip ?? "Close",
         immersive: immersive ?? true,
       );
+      return Container();
     },
   );
 }
