@@ -167,7 +167,7 @@ class DatePicker(Control):
     @property
     def value(self) -> Optional[datetime]:
         value_string = self._get_attr("value", def_value=None)
-        return datetime.fromisoformat(value_string) if len(value_string) else None
+        return datetime.fromisoformat(value_string) if value_string else None
 
     @value.setter
     def value(self, value: Optional[Union[datetime, str]]):
@@ -179,10 +179,7 @@ class DatePicker(Control):
     @property
     def first_date(self) -> Optional[datetime]:
         value_string = self._get_attr("firstDate", def_value=None)
-        if value_string is None:
-            return None
-        else:
-            return datetime.fromisoformat(value_string)
+        return datetime.fromisoformat(value_string) if value_string else None
 
     @first_date.setter
     def first_date(self, value: Optional[Union[datetime, str]]):
@@ -194,10 +191,7 @@ class DatePicker(Control):
     @property
     def last_date(self) -> Optional[datetime]:
         value_string = self._get_attr("lastDate", def_value=None)
-        if value_string is None:
-            return None
-        else:
-            return datetime.fromisoformat(value_string)
+        return datetime.fromisoformat(value_string) if value_string else None
 
     @last_date.setter
     def last_date(self, value: Optional[Union[datetime, str]]):
