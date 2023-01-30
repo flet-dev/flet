@@ -141,7 +141,7 @@ class DatePicker(Control):
         self.state = "initState"
 
     def _get_control_name(self):
-        return "date_picker"
+        return "datepicker"
 
     def _before_build_command(self):
         super()._before_build_command()
