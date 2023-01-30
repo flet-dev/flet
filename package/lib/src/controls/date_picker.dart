@@ -81,10 +81,6 @@ class _DatePickerControlState extends State<DatePickerControl> {
           void onChanged(DateTime? dateValue) {
             debugPrint("New date: $dateValue");
             var newState = "initState";
-            setState(() {
-              _value = dateValue;
-              _state = newState;
-            });
             String stringValue = dateValue?.toIso8601String() ?? "";
             List<Map<String, String>> props = [
               {"i": widget.control.id, "value": stringValue, "state": newState}
