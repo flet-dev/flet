@@ -167,10 +167,7 @@ class DatePicker(Control):
     @property
     def value(self) -> Optional[datetime]:
         value_string = self._get_attr("value", def_value=None)
-        if value_string is None or value_string == '':
-            return None
-        else:
-            return datetime.fromisoformat(value_string)
+        return datetime.fromisoformat(value_string) if len(value_string) else None
 
     @value.setter
     def value(self, value: Optional[Union[datetime, str]]):
