@@ -221,7 +221,7 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case "date_picker":
+        case "datepicker":
           return DatePickerControl(
               parent: parent,
               control: controlView.control,

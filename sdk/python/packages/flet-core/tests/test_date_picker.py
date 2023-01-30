@@ -11,7 +11,7 @@ def test_instance_no_attrs_set():
         Command(
             indent=0,
             name=None,
-            values=["date_picker"],
+            values=["datepicker"],
             attrs={'state': 'initState'},
             commands=[],
         )
