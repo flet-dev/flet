@@ -116,7 +116,7 @@ class Autocomplete(FormFieldControl):
             #
             value: Optional[str] = None,
             autofocus: Optional[bool] = None,
-            options: Optional[list[Option]] = None,
+            options: Optional[list] = None,
             alignment: Optional[Alignment] = None,
             on_change=None,
             on_submit=None,
