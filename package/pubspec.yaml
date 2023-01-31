@@ -38,6 +38,7 @@ dependencies:
   window_to_front: ^0.0.3
   audioplayers: ^3.0.0
   shake: ^2.1.0
+  easy_image_viewer: ^1.2.0
   path: ^1.8.2
 
 dev_dependencies:
