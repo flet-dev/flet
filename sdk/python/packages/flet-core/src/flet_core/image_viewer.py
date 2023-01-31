@@ -33,7 +33,7 @@ class ImageViewer(Control):
                         fit=ft.ImageFit.NONE,
                     ),
                     data=f"https://picsum.photos/150/150?{i}",
-                    on_click=show_image_viewer_click,
+                    on_tap=show_image_viewer_click,
                 )
             )
         
