@@ -30,6 +30,7 @@ AppState appReducer(AppState state, dynamic action) {
     return state.copyWith(
         pageUri: action.pageUri,
         assetsDir: action.assetsDir,
+        controlsMapping: action.controlsMapping,
         sessionId: sessionId,
         isLoading: true);
   } else if (action is PageSizeChangeAction) {

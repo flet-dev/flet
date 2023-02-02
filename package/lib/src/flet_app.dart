@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'flet_app_errors_handler.dart';
 import 'flet_app_main.dart';
 import 'flet_app_services.dart';
+import 'models/control.dart';
+import 'models/control_view_model.dart';
 
 class FletApp extends StatefulWidget {
   final String pageUrl;
   final String assetsDir;
+  final Map<String, Widget Function(Control?, ControlViewModel)>?
+      controlsMapping;
   final String? title;
   final FletAppErrorsHandler? errorsHandler;
 
@@ -14,6 +18,7 @@ class FletApp extends StatefulWidget {
       {Key? key,
       required this.pageUrl,
       required this.assetsDir,
+      this.controlsMapping,
       this.title,
       this.errorsHandler})
       : super(key: key);
@@ -39,6 +44,7 @@ class _FletAppState extends State<FletApp> {
       _appServices = FletAppServices(
           pageUrl: widget.pageUrl,
           assetsDir: widget.assetsDir,
+          controlsMapping: widget.controlsMapping,
           errorsHandler: widget.errorsHandler,
           child: FletAppMain(title: widget.title ?? "Flet"));
     }
