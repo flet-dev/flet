@@ -7,6 +7,7 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
+import '../models/page_args_model.dart';
 import '../utils/animations.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
@@ -68,302 +69,322 @@ import 'window_drag_area.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled) {
   //debugPrint("createControl(): $id");
-  return StoreConnector<AppState, ControlViewModel>(
-    key: ValueKey<String>(id),
+  return StoreConnector<AppState, PageArgsModel>(
     distinct: true,
-    converter: (store) {
-      //debugPrint("ControlViewModel $id converter");
-      return ControlViewModel.fromStore(store, id);
-    },
-    // onWillChange: (prev, next) {
-    //   debugPrint("onWillChange() $id: $prev, $next");
-    // },
-    ignoreChange: (state) {
-      //debugPrint("ignoreChange: $id");
-      return state.controls[id] == null;
-    },
-    builder: (context, controlView) {
-      //debugPrint("createControl builder(): $id");
-      switch (controlView.control.type) {
-        case "page":
-          return PageControl(
-              control: controlView.control,
-              children: controlView.children,
-              dispatch: controlView.dispatch);
-        case "text":
-          return TextControl(parent: parent, control: controlView.control);
-        case "icon":
-          return IconControl(parent: parent, control: controlView.control);
-        case "filepicker":
-          return FilePickerControl(
-              parent: parent, control: controlView.control);
-        case "markdown":
-          return MarkdownControl(parent: parent, control: controlView.control);
-        case "fletapp":
-          return FletAppControl(parent: parent, control: controlView.control);
-        case "image":
-          return ImageControl(parent: parent, control: controlView.control);
-        case "audio":
-          return AudioControl(parent: parent, control: controlView.control);
-        case "divider":
-          return DividerControl(parent: parent, control: controlView.control);
-        case "clipboard":
-          return ClipboardControl(parent: parent, control: controlView.control);
-        case "hapticfeedback":
-          return HapticFeedbackControl(
-              parent: parent, control: controlView.control);
-        case "shakedetector":
-          return ShakeDetectorControl(
-              parent: parent, control: controlView.control);
-        case "verticaldivider":
-          return VerticalDividerControl(
-              parent: parent, control: controlView.control);
-        case "circleavatar":
-          return CircleAvatarControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "progressring":
-          return ProgressRingControl(
-              parent: parent, control: controlView.control);
-        case "progressbar":
-          return ProgressBarControl(
-              parent: parent, control: controlView.control);
-        case "elevatedbutton":
-          return ElevatedButtonControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "outlinedbutton":
-          return OutlinedButtonControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "textbutton":
-          return TextButtonControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "iconbutton":
-          return IconButtonControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "floatingactionbutton":
-          return FloatingActionButtonControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "popupmenubutton":
-          return PopupMenuButtonControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "column":
-          return ColumnControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "row":
-          return RowControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "responsiverow":
-          return ResponsiveRowControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "stack":
-          return StackControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "container":
-          return ContainerControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "draggable":
-          return DraggableControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "dragtarget":
-          return DragTargetControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "card":
-          return CardControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "datatable":
-          return DataTableControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "tooltip":
-          return TooltipControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "transparentpointer":
-          return TransparentPointerControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "gesturedetector":
-          return GestureDetectorControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "semantics":
-          return SemanticsControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "shadermask":
-          return ShaderMaskControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "animatedswitcher":
-          return AnimatedSwitcherControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "listtile":
-          return ListTileControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "listview":
-          return ListViewControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "gridview":
-          return GridViewControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "textfield":
-          return TextFieldControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "checkbox":
-          return CheckboxControl(
-              parent: parent,
-              control: controlView.control,
-              parentDisabled: parentDisabled);
-        case "switch":
-          return SwitchControl(
-              parent: parent,
-              control: controlView.control,
-              parentDisabled: parentDisabled);
-        case "slider":
-          return SliderControl(
-              parent: parent,
-              control: controlView.control,
-              parentDisabled: parentDisabled);
-        case "radiogroup":
-          return RadioGroupControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "radio":
-          return RadioControl(
-              parent: parent,
-              control: controlView.control,
-              parentDisabled: parentDisabled);
-        case "dropdown":
-          return DropdownControl(
-              parent: parent,
-              control: controlView.control,
-              parentDisabled: parentDisabled);
-        case "snackbar":
-          return SnackBarControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "alertdialog":
-          return AlertDialogControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "bottomsheet":
-          return BottomSheetControl(
-            parent: parent,
-            control: controlView.control,
-            children: controlView.children,
-            parentDisabled: parentDisabled,
-            dispatch: controlView.dispatch,
-          );
-        case "banner":
-          return BannerControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "tabs":
-          return TabsControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "navigationrail":
-          return NavigationRailControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "navigationbar":
-          return NavigationBarControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        case "windowdragarea":
-          return WindowDragAreaControl(
-              parent: parent,
-              control: controlView.control,
-              children: controlView.children,
-              parentDisabled: parentDisabled);
-        default:
-          throw Exception("Unknown control type: ${controlView.control.type}");
-      }
+    converter: (store) => PageArgsModel.fromStore(store),
+    builder: (context, pageArgs) {
+      return StoreConnector<AppState, ControlViewModel>(
+        key: ValueKey<String>(id),
+        distinct: true,
+        converter: (store) {
+          //debugPrint("ControlViewModel $id converter");
+          return ControlViewModel.fromStore(store, id);
+        },
+        // onWillChange: (prev, next) {
+        //   debugPrint("onWillChange() $id: $prev, $next");
+        // },
+        ignoreChange: (state) {
+          //debugPrint("ignoreChange: $id");
+          return state.controls[id] == null;
+        },
+        builder: (context, controlView) {
+          //debugPrint("createControl builder(): $id");
+          if (pageArgs.controlsMapping != null) {
+            if (pageArgs.controlsMapping!
+                .containsKey(controlView.control.type)) {
+              var generator =
+                  pageArgs.controlsMapping![controlView.control.type];
+              return generator!(parent, controlView);
+            }
+          }
+
+          switch (controlView.control.type) {
+            case "page":
+              return PageControl(
+                  control: controlView.control,
+                  children: controlView.children,
+                  dispatch: controlView.dispatch);
+            case "text":
+              return TextControl(parent: parent, control: controlView.control);
+            case "icon":
+              return IconControl(parent: parent, control: controlView.control);
+            case "filepicker":
+              return FilePickerControl(
+                  parent: parent, control: controlView.control);
+            case "markdown":
+              return MarkdownControl(
+                  parent: parent, control: controlView.control);
+            case "fletapp":
+              return FletAppControl(
+                  parent: parent, control: controlView.control);
+            case "image":
+              return ImageControl(parent: parent, control: controlView.control);
+            case "audio":
+              return AudioControl(parent: parent, control: controlView.control);
+            case "divider":
+              return DividerControl(
+                  parent: parent, control: controlView.control);
+            case "clipboard":
+              return ClipboardControl(
+                  parent: parent, control: controlView.control);
+            case "hapticfeedback":
+              return HapticFeedbackControl(
+                  parent: parent, control: controlView.control);
+            case "shakedetector":
+              return ShakeDetectorControl(
+                  parent: parent, control: controlView.control);
+            case "verticaldivider":
+              return VerticalDividerControl(
+                  parent: parent, control: controlView.control);
+            case "circleavatar":
+              return CircleAvatarControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "progressring":
+              return ProgressRingControl(
+                  parent: parent, control: controlView.control);
+            case "progressbar":
+              return ProgressBarControl(
+                  parent: parent, control: controlView.control);
+            case "elevatedbutton":
+              return ElevatedButtonControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "outlinedbutton":
+              return OutlinedButtonControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "textbutton":
+              return TextButtonControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "iconbutton":
+              return IconButtonControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "floatingactionbutton":
+              return FloatingActionButtonControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "popupmenubutton":
+              return PopupMenuButtonControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "column":
+              return ColumnControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "row":
+              return RowControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "responsiverow":
+              return ResponsiveRowControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "stack":
+              return StackControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "container":
+              return ContainerControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "draggable":
+              return DraggableControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "dragtarget":
+              return DragTargetControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "card":
+              return CardControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "datatable":
+              return DataTableControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "tooltip":
+              return TooltipControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "transparentpointer":
+              return TransparentPointerControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "gesturedetector":
+              return GestureDetectorControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "semantics":
+              return SemanticsControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "shadermask":
+              return ShaderMaskControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "animatedswitcher":
+              return AnimatedSwitcherControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "listtile":
+              return ListTileControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "listview":
+              return ListViewControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "gridview":
+              return GridViewControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "textfield":
+              return TextFieldControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "checkbox":
+              return CheckboxControl(
+                  parent: parent,
+                  control: controlView.control,
+                  parentDisabled: parentDisabled);
+            case "switch":
+              return SwitchControl(
+                  parent: parent,
+                  control: controlView.control,
+                  parentDisabled: parentDisabled);
+            case "slider":
+              return SliderControl(
+                  parent: parent,
+                  control: controlView.control,
+                  parentDisabled: parentDisabled);
+            case "radiogroup":
+              return RadioGroupControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "radio":
+              return RadioControl(
+                  parent: parent,
+                  control: controlView.control,
+                  parentDisabled: parentDisabled);
+            case "dropdown":
+              return DropdownControl(
+                  parent: parent,
+                  control: controlView.control,
+                  parentDisabled: parentDisabled);
+            case "snackbar":
+              return SnackBarControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "alertdialog":
+              return AlertDialogControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "bottomsheet":
+              return BottomSheetControl(
+                parent: parent,
+                control: controlView.control,
+                children: controlView.children,
+                parentDisabled: parentDisabled,
+                dispatch: controlView.dispatch,
+              );
+            case "banner":
+              return BannerControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "tabs":
+              return TabsControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "navigationrail":
+              return NavigationRailControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "navigationbar":
+              return NavigationBarControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            case "windowdragarea":
+              return WindowDragAreaControl(
+                  parent: parent,
+                  control: controlView.control,
+                  children: controlView.children,
+                  parentDisabled: parentDisabled);
+            default:
+              throw Exception(
+                  "Unknown control type: ${controlView.control.type}");
+          }
+        },
+      );
     },
   );
 }
