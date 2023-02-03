@@ -27,7 +27,6 @@ class FletServer {
   final Store<AppState> _store;
   late FletServerProtocol _clientProtocol;
   String _address = "";
-  bool _connected = false;
   String _pageName = "";
   String _pageHash = "";
   String _pageWidth = "";
@@ -52,22 +51,20 @@ class FletServer {
           onDisconnect: _onDisconnect,
           onMessage: _onMessage);
       await _clientProtocol.connect();
-      _connected = true;
+      registerWebClientInternal();
     } catch (e) {
       debugPrint("Error connecting to Flet server: $e");
+      _onDisconnect();
     }
   }
 
   _onDisconnect() {
-    if (_connected) {
-      _store.dispatch(PageReconnectingAction());
-      debugPrint("Reconnect in ${_store.state.reconnectingTimeout} seconds");
-      Future.delayed(Duration(seconds: _store.state.reconnectingTimeout))
-          .then((value) {
-        connect(address: _address);
-        registerWebClientInternal();
-      });
-    }
+    _store.dispatch(PageReconnectingAction());
+    debugPrint("Reconnect in ${_store.state.reconnectingTimeout} seconds");
+    Future.delayed(Duration(seconds: _store.state.reconnectingTimeout))
+        .then((value) async {
+      await connect(address: _address);
+    });
   }
 
   registerWebClient({
@@ -83,7 +80,6 @@ class FletServer {
     required String isWeb,
     required String platform,
   }) {
-    bool firstCall = _pageName == "";
     _pageName = pageName;
     _pageHash = pageRoute;
     _pageWidth = pageWidth;
@@ -95,10 +91,6 @@ class FletServer {
     _isPWA = isPWA;
     _isWeb = isWeb;
     _platform = platform;
-
-    if (firstCall) {
-      registerWebClientInternal();
-    }
   }
 
   registerWebClientInternal() {

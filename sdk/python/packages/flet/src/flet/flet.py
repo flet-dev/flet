@@ -265,6 +265,11 @@ def __connect_internal_sync(
     web_renderer=None,
     route_url_strategy=None,
 ):
+
+    env_port = os.getenv("FLET_SERVER_PORT")
+    if env_port is not None and env_port:
+        port = int(env_port)
+
     is_desktop = view == FLET_APP or view == FLET_APP_HIDDEN
     if server is None and not is_desktop:
         server = __start_flet_server(
@@ -332,6 +337,11 @@ async def __connect_internal_async(
     web_renderer=None,
     route_url_strategy=None,
 ):
+
+    env_port = os.getenv("FLET_SERVER_PORT")
+    if env_port is not None and env_port:
+        port = int(env_port)
+
     is_desktop = view == FLET_APP or view == FLET_APP_HIDDEN
     if server is None and not is_desktop:
         server = __start_flet_server(
@@ -391,11 +401,6 @@ async def __connect_internal_async(
 def __start_flet_server(
     host, port, assets_dir, upload_dir, web_renderer, route_url_strategy
 ):
-    # local mode
-    env_port = os.getenv("FLET_SERVER_PORT")
-    if env_port is not None and env_port:
-        port = env_port
-
     server_ip = host if host not in [None, "", "*"] else "127.0.0.1"
 
     if port == 0:

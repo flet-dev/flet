@@ -97,6 +97,7 @@ class FletTcpSocketServerProtocol implements FletServerProtocol {
       onDone: () {
         debugPrint('Server left.');
         _socket?.destroy();
+        onDisconnect();
       },
     );
   }
