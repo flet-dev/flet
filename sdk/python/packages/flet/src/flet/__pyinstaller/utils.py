@@ -1,7 +1,7 @@
 import os
-import shutil
 import tempfile
 import uuid
+from distutils.dir_util import copy_tree
 from pathlib import Path
 
 from flet.utils import get_package_bin_dir
@@ -21,5 +21,5 @@ def copy_flet_bin():
 
     # create temp bin dir
     temp_bin_dir = Path(tempfile.gettempdir()).joinpath(str(uuid.uuid4()))
-    shutil.copytree(bin_path, str(temp_bin_dir))
+    copy_tree(bin_path, str(temp_bin_dir))
     return str(temp_bin_dir)

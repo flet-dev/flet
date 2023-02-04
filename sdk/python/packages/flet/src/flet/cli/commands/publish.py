@@ -4,6 +4,7 @@ import re
 import shutil
 import tarfile
 import tempfile
+from distutils.dir_util import copy_tree
 from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
@@ -100,7 +101,7 @@ class Command(BaseCommand):
         if not os.path.exists(web_path):
             print("Flet module does not contain 'web' directory.")
             exit(1)
-        shutil.copytree(web_path, dist_dir, dirs_exist_ok=True)
+        copy_tree(web_path, dist_dir)
 
         # copy assets
         assets_dir = options.assets_dir
@@ -112,7 +113,7 @@ class Command(BaseCommand):
             if not os.path.exists(assets_dir):
                 print("Assets dir not found:", assets_dir)
                 exit(1)
-            shutil.copytree(assets_dir, dist_dir, dirs_exist_ok=True)
+            copy_tree(assets_dir, dist_dir)
 
         # create "./dist/requirements.txt" if not exist
         # add flet-pyodide=={version} to dist/requirements.txt
