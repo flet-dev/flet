@@ -257,7 +257,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 			if sessionID, err := c.decryptSensitiveData(request.SessionID, ""); err == nil {
 				session = store.GetSession(page, sessionID)
 			} else {
-				response.Error = fmt.Sprintf("error decrypting request.SessionID %s from %s: %s", request.SessionID, c.clientIP, err)
+				response.Error = fmt.Sprintf("error decrypting session ID %s from %s: %s", request.SessionID, c.clientIP, err)
 				return
 			}
 		}
@@ -337,7 +337,7 @@ func (c *Client) registerHostClient(message *Message) {
 	if request.HostClientID != "" {
 		hostClientID, err := c.decryptSensitiveData(request.HostClientID, c.clientIP)
 		if err != nil {
-			log.Errorf("error decrypting request.HostClientID %s from %s: %s", request.HostClientID, c.clientIP, err)
+			log.Errorf("error decrypting host client ID %s from %s: %s", request.HostClientID, c.clientIP, err)
 		}
 		if hostClientID != "" && c.id != hostClientID {
 			log.Printf("Updating host client ID to %s", hostClientID)
