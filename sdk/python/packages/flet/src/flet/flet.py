@@ -176,7 +176,7 @@ async def app_async(
     assets_dir=None,
     upload_dir=None,
     web_renderer="canvaskit",
-    route_url_strategy="hash",
+    route_url_strategy="path",
     auth_token=None,
 ):
     force_web_view = os.environ.get("FLET_FORCE_WEB_VIEW")
