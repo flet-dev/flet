@@ -1,5 +1,27 @@
 # Flet changelog
 
+## 0.4.0
+
+* Changed re-connection logic to make hot reload work ([#971](https://github.com/flet-dev/flet/issues/971))
+* Pyodide publishing fixes and improvements ([#953](https://github.com/flet-dev/flet/issues/953))
+* feat: Add PaddingValue to __init__.py ([#936](https://github.com/flet-dev/flet/issues/936))
+* Standalone Flet web apps with Pyodide ([#913](https://github.com/flet-dev/flet/issues/913))
+* modified `tooltip` attribute from `prefere*` to `prefer*` ([#909](https://github.com/flet-dev/flet/issues/909))
+* Fix unicode encoding in `FletTcpSocketServerProtocol`
+* Fix relative assets path in desktop app
+* PDM changed to Poetry
+* Add `--hidden-import` option to `flet pack` command
+* Add transparancy to matplotlib ([#889](https://github.com/flet-dev/flet/issues/889))
+* Replace Fletd server for desktop apps with a light-weight Python shim ([#838](https://github.com/flet-dev/flet/issues/838))
+* add default values in Border dataclass ([#883](https://github.com/flet-dev/flet/issues/883))
+* Fix for issue in control.py when checking add command ([#835](https://github.com/flet-dev/flet/issues/835))
+* Fix async pubsub ([#868](https://github.com/flet-dev/flet/issues/868))
+* add: Border, BorderSide, Scale Offset, Rotate to `__init__.py` ([#866](https://github.com/flet-dev/flet/issues/866))
+* Loading images from a local file ([#817](https://github.com/flet-dev/flet/issues/817))
+* Asyncio support ([#799](https://github.com/flet-dev/flet/issues/799))
+* Set filled=True when setting bgcolor in TextField ([#807](https://github.com/flet-dev/flet/issues/807))
+* Page transition without animation ([#809](https://github.com/flet-dev/flet/issues/809))
+
 ## 0.3.2
 
 * Fix `flet pack` command on Windows and macOS ([#795](https://github.com/flet-dev/flet/issues/795))
