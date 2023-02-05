@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flet/src/controls/table_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -217,6 +218,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "datatable":
           return DataTableControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "tablecalendar":
+          return TableCalendarControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

@@ -130,6 +130,7 @@ from flet_core.snack_bar import SnackBar
 from flet_core.stack import Stack
 from flet_core.switch import Switch
 from flet_core.tabs import Tab, Tabs
+from flet_core.table_calendar import TableCalendar, CalendarEvent, CalendarFormat, CalendarRangeSelectionMode
 from flet_core.template_route import TemplateRoute
 from flet_core.text import Text, TextOverflow, TextThemeStyle
 from flet_core.text_button import TextButton
