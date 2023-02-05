@@ -385,7 +385,7 @@ for:
       - rm -rf build/web/canvaskit
       - ls -alR build/web
       - cd ..
-      - tar -czvf flet-web.tar.gz -C client/build/web .
+      - tar -czvf client/build/flet-web.tar.gz -C client/build/web .
 
       # Flet Server in Go
       - cd server
@@ -400,7 +400,7 @@ for:
     artifacts:
       - path: server/dist/fletd-*
       - path: server/dist/fletd_*/*
-      - path: flet-web.tar.gz
+      - path: client/build/flet-web.tar.gz
         name: flet_web
 
     deploy:
@@ -477,7 +477,6 @@ for:
           if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
               twine upload packages/flet-core/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
           fi
-          
 
     artifacts:
       - path: sdk/python/packages/flet-core/dist/*
