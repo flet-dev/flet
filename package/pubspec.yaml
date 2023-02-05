@@ -47,12 +47,6 @@ dependencies:
   # DatePicker specific dependencies
   intl: ^0.18.0
 
-  # TableCalendar specific dependencies
-  table_calendar: ^3.0.9
-
-  # DatePicker specific dependencies
-  intl: ^0.18.0
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
