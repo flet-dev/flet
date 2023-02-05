@@ -43,8 +43,43 @@ class CalendarRangeSelectionMode(Enum):
 
 class TableCalendar(ConstrainedControl):
     """
-    TODO: write docs.
-    TODO: write examples.
+    Calendar view base on: https://pub.dev/packages/table_calendar
+
+    Example:
+    ```
+    import flet as ft
+
+    def main(page: ft.Page):
+        def on_click_week(_):
+            calendar.calendar_format = ft.CalendarFormat.WEEK
+            page.update()
+        week_button = ft.ElevatedButton(
+            "Week",
+            icon=ft.icons.CALENDAR_VIEW_WEEK,
+            on_click=on_click_week,
+        )
+        def on_click_month(_):
+            calendar.calendar_format = ft.CalendarFormat.MONTH
+            page.update()
+        month_button = ft.ElevatedButton(
+            "Month",
+            icon=ft.icons.CALENDAR_MONTH,
+            on_click=on_click_month,
+        )
+
+        calendar = ft.TableCalendar(
+            calendar_format=ft.CalendarFormat.WEEK
+        )
+
+        page.add(week_button, month_button, calendar)
+
+
+    ft.app(target=main)
+    ```
+
+    -----
+
+    Online docs: https://flet.dev/docs/controls/table_calendar
     """
 
     def __init__(
@@ -111,18 +146,18 @@ class TableCalendar(ConstrainedControl):
             data=data
         )
 
-        self.__events = [],
-        self.focused_day = focused_day,
-        self.first_day = first_day,
-        self.last_day = last_day,
-        self.current_day = current_day,
-        self.locale = locale,
-        self.calendar_format = calendar_format,
-        self.range_selection_mode = range_selection_mode,
-        self.on_day_selected = on_day_selected,
-        self.on_range_selected = on_range_selected,
-        self.on_format_changed = on_format_changed,
-        self.on_page_changed = on_page_changed,
+        self.__events = []
+        self.focused_day = focused_day
+        self.first_day = first_day
+        self.last_day = last_day
+        self.current_day = current_day
+        self.locale = locale
+        self.calendar_format = calendar_format
+        self.range_selection_mode = range_selection_mode
+        self.on_day_selected = on_day_selected
+        self.on_range_selected = on_range_selected
+        self.on_format_changed = on_format_changed
+        self.on_page_changed = on_page_changed
         self.events = events
 
     def _get_control_name(self):
