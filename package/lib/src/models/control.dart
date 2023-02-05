@@ -77,7 +77,11 @@ class Control extends Equatable {
     if (value == null) {
       return defValue;
     }
-    return DateTime.parse(value);
+    try {
+      return DateTime.parse(value);
+    } on FormatException catch (_) {
+      return null;
+    }
   }
 
   Control copyWith(
