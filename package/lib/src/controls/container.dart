@@ -17,7 +17,6 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
-import '../utils/uri.dart';
 import 'create_control.dart';
 import 'error.dart';
 
