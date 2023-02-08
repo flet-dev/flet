@@ -142,7 +142,11 @@ class Handler(FileSystemEventHandler):
             p_env["FLET_SERVER_PORT"] = str(self.port)
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
 
-        self.p = subprocess.Popen(self.args, env=p_env, stdout=subprocess.PIPE)
+        p_env["PYTHONIOENCODING"] = "utf-8"
+
+        self.p = subprocess.Popen(
+            self.args, env=p_env, stdout=subprocess.PIPE, encoding="utf-8"
+        )
         self.is_running = True
         th = threading.Thread(target=self.print_output, args=[self.p], daemon=True)
         th.start()
@@ -162,7 +166,7 @@ class Handler(FileSystemEventHandler):
             line = p.stdout.readline()
             if not line:
                 break
-            line = line.decode("utf-8").rstrip("\r\n")
+            line = line.rstrip("\r\n")
             if line.startswith(self.page_url_prefix):
                 if not self.page_url:
                     self.page_url = line[len(self.page_url_prefix) + 1 :]
