@@ -75,13 +75,13 @@ class _TableCalendarControlState extends State<TableCalendarControl> {
                     widget.control.attrDateTime("currentDay");
 
                 bool onDaySelected =
-                    widget.control.attrBool("daySelected", false)!;
+                    widget.control.attrBool("onDaySelected", false)!;
                 bool onRangeSelected =
-                    widget.control.attrBool("rangeSelected", false)!;
+                    widget.control.attrBool("onRangeSelected", false)!;
                 bool onFormatChanged =
-                    widget.control.attrBool("formatSelected", false)!;
+                    widget.control.attrBool("onFormatChange", false)!;
                 bool onPageChanged =
-                    widget.control.attrBool("pageSelected", false)!;
+                    widget.control.attrBool("onPageChanged", false)!;
 
                 String? localeString = widget.control.attrString("locale");
                 CalendarFormat calendarFormat = parseCalendarFormat(
@@ -226,7 +226,7 @@ class _TableCalendarControlState extends State<TableCalendarControl> {
                   if (onPageChanged) {
                     FletAppServices.of(context).server.sendPageEvent(
                         eventTarget: widget.control.id,
-                        eventName: "daySelected",
+                        eventName: "pageChanged",
                         eventData: stringValue);
                   }
                 }

@@ -277,6 +277,10 @@ class TableCalendar(ConstrainedControl):
     @on_day_selected.setter
     def on_day_selected(self, handler):
         self._add_event_handler("daySelected", handler)
+        if handler is not None:
+            self._set_attr("onDaySelected", True)
+        else:
+            self._set_attr("onDaySelected", None)
 
     # on_range_selected
     @property
@@ -286,6 +290,10 @@ class TableCalendar(ConstrainedControl):
     @on_range_selected.setter
     def on_range_selected(self, handler):
         self._add_event_handler("rangeSelected", handler)
+        if handler is not None:
+            self._set_attr("onRangeSelected", True)
+        else:
+            self._set_attr("onRangeSelected", None)
 
     # on_format_changed
     @property
@@ -295,6 +303,10 @@ class TableCalendar(ConstrainedControl):
     @on_format_changed.setter
     def on_format_changed(self, handler):
         self._add_event_handler("formatChange", handler)
+        if handler is not None:
+            self._set_attr("onFormatChange", True)
+        else:
+            self._set_attr("onFormatChange", None)
 
     # on_format_changed
     @property
@@ -304,6 +316,10 @@ class TableCalendar(ConstrainedControl):
     @on_page_changed.setter
     def on_page_changed(self, handler):
         self._add_event_handler("pageChanged", handler)
+        if handler is not None:
+            self._set_attr("onPageChanged", True)
+        else:
+            self._set_attr("onPageChanged", None)
 
 
 class CalendarEvent(Control):
