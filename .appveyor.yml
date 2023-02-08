@@ -135,7 +135,7 @@ for:
               echo $PUB_DEV_TOKEN | base64 --decode > $HOME/.config/dart/pub-credentials.json
               dart pub publish --force
           else
-              dart pub publish --dry-run
+              dart pub publish --force --dry-run
           fi
 
   # ======================================
