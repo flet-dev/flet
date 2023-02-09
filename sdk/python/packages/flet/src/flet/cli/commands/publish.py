@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import re
 import shutil
@@ -35,11 +36,18 @@ class Command(BaseCommand):
             help="path to an assets directory",
         )
         parser.add_argument(
-            "--app-title",
-            dest="app_title",
+            "--app-name",
+            dest="app_name",
             type=str,
             default=None,
-            help="application title",
+            help="application name",
+        )
+        parser.add_argument(
+            "--app-short-name",
+            dest="app_short_name",
+            type=str,
+            default=None,
+            help="application short name",
         )
         parser.add_argument(
             "--app-description",
@@ -206,11 +214,11 @@ class Command(BaseCommand):
                     "/" if base_url == "" else "/{}/".format(base_url)
                 ),
             )
-        if options.app_title:
+        if options.app_name:
             index = re.sub(
                 r"\<meta name=\"apple-mobile-web-app-title\" content=\"(.+)\">",
                 r'<meta name="apple-mobile-web-app-title" content="{}">'.format(
-                    options.app_title
+                    options.app_name
                 ),
                 index,
             )
@@ -225,3 +233,22 @@ class Command(BaseCommand):
 
         with open(index_path, "w") as f:
             f.write(index)
+
+        # patch manifest.json
+        print("Patching manifest.json")
+        manifest_path = os.path.join(dist_dir, "manifest.json")
+        with open(manifest_path, "r") as f:
+            manifest = json.loads(f.read())
+
+        if options.app_name:
+            manifest["name"] = options.app_name
+            manifest["short_name"] = options.app_name
+
+        if options.app_short_name:
+            manifest["short_name"] = options.app_short_name
+
+        if options.app_description:
+            manifest["description"] = options.app_description
+
+        with open(manifest_path, "w") as f:
+            f.write(json.dumps(manifest, indent=2))
