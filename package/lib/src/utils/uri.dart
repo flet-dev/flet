@@ -21,7 +21,8 @@ Uri getAssetUri(Uri pageUri, String assetPath) {
       scheme: pageUri.scheme,
       host: pageUri.host,
       port: pageUri.port,
-      path: assetPath);
+      path: pageUri.path +
+          (assetPath.startsWith("/") ? assetPath.substring(1) : assetPath));
 }
 
 Uri getBaseUri(Uri pageUri) {

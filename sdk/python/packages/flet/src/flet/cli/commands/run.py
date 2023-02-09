@@ -153,6 +153,8 @@ class Handler(FileSystemEventHandler):
             p_env["FLET_SERVER_PORT"] = str(self.port)
         if self.uds_path is not None:
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
+        if self.assets_dir is not None:
+            p_env["FLET_ASSETS_PATH"] = self.assets_dir
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
 
         p_env["PYTHONIOENCODING"] = "utf-8"
