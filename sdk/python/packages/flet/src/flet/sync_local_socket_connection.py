@@ -42,6 +42,7 @@ class SyncLocalSocketConnection(LocalConnection):
             self.page_url = f"tcp://localhost:{port}"
             server_address = ("localhost", port)
             self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.__sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             logging.info(f"Starting up TCP server on {server_address}")
             self.__sock.bind(server_address)
         else:

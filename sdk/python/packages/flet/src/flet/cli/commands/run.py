@@ -1,5 +1,6 @@
 import argparse
 import os
+import signal
 import subprocess
 import sys
 import threading
@@ -8,7 +9,7 @@ from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
 from flet.flet import close_flet_view, open_flet_view
-from flet.utils import get_free_tcp_port, open_in_browser
+from flet.utils import get_free_tcp_port, is_windows, open_in_browser
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -187,12 +188,17 @@ class Handler(FileSystemEventHandler):
             self.page_url, self.assets_dir, self.hidden
         )
         self.fvp.wait()
-        self.p.kill()
+        if is_windows():
+            self.p.kill()
+        else:
+            self.p.send_signal(signal.SIGTERM)
         self.terminate.set()
 
     def restart_program(self):
         self.is_running = False
-        self.p.kill()
+        if is_windows():
+            self.p.kill()
+        else:
+            self.p.send_signal(signal.SIGTERM)
         self.p.wait()
-        time.sleep(0.5)
         self.start_process()
