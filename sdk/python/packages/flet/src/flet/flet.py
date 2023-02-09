@@ -461,6 +461,10 @@ def __start_flet_server(
 
     args = [fletd_path, "--content-dir", web_root_dir, "--port", str(port)]
 
+    env_assets_dir = os.getenv("FLET_ASSETS_PATH")
+    if env_assets_dir:
+        assets_dir = env_assets_dir
+
     if assets_dir:
         args.extend(["--assets-dir", assets_dir])
 
