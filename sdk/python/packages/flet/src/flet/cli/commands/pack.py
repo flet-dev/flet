@@ -36,6 +36,11 @@ class Command(BaseCommand):
             help="create a one-folder bundle containing an executable (Windows)",
         )
         parser.add_argument(
+            "--distpath",
+            dest="distpath",
+            help="where to put the bundled app (default: ./dist)",
+        )
+        parser.add_argument(
             "--add-data",
             dest="add_data",
             action="append",
@@ -99,7 +104,6 @@ class Command(BaseCommand):
 
         try:
             import PyInstaller.__main__
-
             from flet.__pyinstaller.utils import copy_flet_bin
 
             pyi_args = [options.script, "--noconsole", "--noconfirm"]
@@ -107,6 +111,8 @@ class Command(BaseCommand):
                 pyi_args.extend(["--icon", options.icon])
             if options.name:
                 pyi_args.extend(["--name", options.name])
+            if options.distpath:
+                pyi_args.extend(["--distpath", options.distpath])
             if options.add_data:
                 for add_data_arr in options.add_data:
                     for add_data_item in add_data_arr:
