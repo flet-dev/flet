@@ -36,6 +36,11 @@ class Command(BaseCommand):
             help="path to an assets directory",
         )
         parser.add_argument(
+            "--distpath",
+            dest="distpath",
+            help="where to put the published app (default: ./dist)",
+        )
+        parser.add_argument(
             "--app-name",
             dest="app_name",
             type=str,
@@ -82,14 +87,13 @@ class Command(BaseCommand):
 
         # constants
         dist_name = "dist"
-        flet_web_filename = "flet-web.tar.gz"
         app_tar_gz_filename = "app.tar.gz"
         reqs_filename = "requirements.txt"
 
         # script path
         script_path = options.script
-        if not os.path.isabs(options.script):
-            script_path = str(Path(os.getcwd()).joinpath(options.script).resolve())
+        if not os.path.isabs(script_path):
+            script_path = str(Path(os.getcwd()).joinpath(script_path).resolve())
 
         if not Path(script_path).exists():
             print(f"File not found: {script_path}")
@@ -98,7 +102,13 @@ class Command(BaseCommand):
         script_dir = os.path.dirname(script_path)
 
         # delete "dist" directory
-        dist_dir = os.path.join(script_dir, dist_name)
+        dist_dir = options.distpath
+        if dist_dir:
+            if not os.path.isabs(dist_dir):
+                dist_dir = str(Path(os.getcwd()).joinpath(dist_dir).resolve())
+        else:
+            dist_dir = os.path.join(script_dir, dist_name)
+
         print(f"Cleaning up {dist_dir}...")
         if os.path.exists(dist_dir):
             shutil.rmtree(dist_dir, ignore_errors=True)
