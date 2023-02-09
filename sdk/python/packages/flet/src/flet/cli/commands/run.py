@@ -200,17 +200,11 @@ class Handler(FileSystemEventHandler):
             self.page_url, self.assets_dir, self.hidden
         )
         self.fvp.wait()
-        if is_windows():
-            self.p.kill()
-        else:
-            self.p.send_signal(signal.SIGTERM)
+        self.p.send_signal(signal.SIGTERM)
         self.terminate.set()
 
     def restart_program(self):
         self.is_running = False
-        if is_windows():
-            self.p.kill()
-        else:
-            self.p.send_signal(signal.SIGTERM)
+        self.p.send_signal(signal.SIGTERM)
         self.p.wait()
         self.start_process()
