@@ -6,7 +6,7 @@ import struct
 import tempfile
 import threading
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from flet.utils import get_free_tcp_port, is_windows
 from flet_core.local_connection import LocalConnection
@@ -26,16 +26,17 @@ class SyncLocalSocketConnection(LocalConnection):
     def __init__(
         self,
         port: int = 0,
+        uds_path: Optional[str] = None,
         on_event=None,
         on_session_created=None,
     ):
         super().__init__()
         self.__port = port
+        self.__uds_path = uds_path
         self.__on_event = on_event
         self.__on_session_created = on_session_created
 
     def connect(self):
-        self.__uds_path = None
         if is_windows() or self.__port > 0:
             # TCP
             port = self.__port if self.__port > 0 else get_free_tcp_port()
@@ -47,9 +48,10 @@ class SyncLocalSocketConnection(LocalConnection):
             self.__sock.bind(server_address)
         else:
             # UDS
-            self.__uds_path = str(
-                Path(tempfile.gettempdir()).joinpath(random_string(10))
-            )
+            if not self.__uds_path:
+                self.__uds_path = str(
+                    Path(tempfile.gettempdir()).joinpath(random_string(10))
+                )
             self.page_url = self.__uds_path
             self.__sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             logging.info(f"Starting up UDS server on {self.__uds_path}")

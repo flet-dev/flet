@@ -7,7 +7,7 @@ import struct
 import tempfile
 import threading
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from flet.utils import get_free_tcp_port, is_windows
 from flet_core.local_connection import LocalConnection
@@ -27,18 +27,19 @@ class AsyncLocalSocketConnection(LocalConnection):
     def __init__(
         self,
         port: int = 0,
+        uds_path: Optional[str] = None,
         on_event=None,
         on_session_created=None,
     ):
         super().__init__()
         self.__send_queue = asyncio.Queue(1)
         self.__port = port
+        self.__uds_path = uds_path
         self.__on_event = on_event
         self.__on_session_created = on_session_created
 
     async def connect(self):
         self.__connected = False
-        self.__uds_path = None
         if is_windows() or self.__port > 0:
             # TCP
             host = "localhost"
@@ -49,9 +50,10 @@ class AsyncLocalSocketConnection(LocalConnection):
             self.__server = asyncio.create_task(server.serve_forever())
         else:
             # UDS
-            self.__uds_path = str(
-                Path(tempfile.gettempdir()).joinpath(random_string(10))
-            )
+            if not self.__uds_path:
+                self.__uds_path = str(
+                    Path(tempfile.gettempdir()).joinpath(random_string(10))
+                )
             self.page_url = self.__uds_path
             logging.info(f"Starting up UDS server on {self.__uds_path}")
             server = await asyncio.start_unix_server(
@@ -65,8 +67,8 @@ class AsyncLocalSocketConnection(LocalConnection):
         if not self.__connected:
             self.__connected = True
             logging.debug("Connected new TCP client")
-            asyncio.create_task(self.__receive_loop(reader))
-            asyncio.create_task(self.__send_loop(writer))
+            self.__receive_loop_task = asyncio.create_task(self.__receive_loop(reader))
+            self.__send_loop_task = asyncio.create_task(self.__send_loop(writer))
 
     async def __receive_loop(self, reader: asyncio.StreamReader):
         while True:
@@ -156,6 +158,10 @@ class AsyncLocalSocketConnection(LocalConnection):
     async def close(self):
         logging.debug("Closing connection...")
         # close socket
+        if self.__receive_loop_task:
+            self.__receive_loop_task.cancel()
+        if self.__send_loop_task:
+            self.__send_loop_task.cancel()
         if self.__server:
             self.__server.cancel()
 
