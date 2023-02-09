@@ -205,7 +205,7 @@ async def app_async(
 
     def exit_gracefully(signum, frame):
         logging.debug("Gracefully terminating Flet app...")
-        terminate.set()
+        asyncio.get_running_loop().call_soon_threadsafe(terminate.set)
 
     signal.signal(signal.SIGINT, exit_gracefully)
     signal.signal(signal.SIGTERM, exit_gracefully)
@@ -270,6 +270,8 @@ def __connect_internal_sync(
     if env_port is not None and env_port:
         port = int(env_port)
 
+    uds_path = os.getenv("FLET_SERVER_UDS_PATH")
+
     is_desktop = view == FLET_APP or view == FLET_APP_HIDDEN
     if server is None and not is_desktop:
         server = __start_flet_server(
@@ -308,6 +310,7 @@ def __connect_internal_sync(
     if is_desktop:
         conn = SyncLocalSocketConnection(
             port,
+            uds_path,
             on_event=on_event,
             on_session_created=on_session_created,
         )
@@ -341,6 +344,8 @@ async def __connect_internal_async(
     env_port = os.getenv("FLET_SERVER_PORT")
     if env_port is not None and env_port:
         port = int(env_port)
+
+    uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
     is_desktop = view == FLET_APP or view == FLET_APP_HIDDEN
     if server is None and not is_desktop:
@@ -382,6 +387,7 @@ async def __connect_internal_async(
     if is_desktop:
         conn = AsyncLocalSocketConnection(
             port,
+            uds_path,
             on_event=on_event,
             on_session_created=on_session_created,
         )
