@@ -159,8 +159,11 @@ class SyncLocalSocketConnection(LocalConnection):
     def __send_msg(self, sock, msg):
         # Prefix each message with a 4-byte length (network byte order)
         msg = struct.pack(">I", len(msg)) + msg
-        sock.sendall(msg)
-        logging.debug("Sent: {}".format(len(msg)))
+        try:
+            sock.sendall(msg)
+            logging.debug("Sent: {}".format(len(msg)))
+        except Exception as e:
+            logging.debug("Error sending a message over a socket: {}".format(e))
 
     def __recv_msg(self, sock):
         # Read message length and unpack it into an integer
