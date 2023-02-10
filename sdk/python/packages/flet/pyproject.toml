@@ -3,7 +3,7 @@ name = "flet"
 version = "0.1.0"
 description = "Flet for Python - easily build interactive multi-platform apps in Python"
 authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
-license = "MIT"
+license = "Apache-2.0"
 readme = "README.md"
 
 packages = [

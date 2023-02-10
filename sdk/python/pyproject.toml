@@ -3,7 +3,7 @@ name = "flet-project"
 version = "0.1.0"
 description = ""
 authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
-license = "MIT"
+license = "Apache-2.0"
 
 [tool.poetry.dependencies]
 python = "<3.12,>=3.7"
