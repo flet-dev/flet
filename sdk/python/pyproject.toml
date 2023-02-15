@@ -15,7 +15,7 @@ pytest = "^7.2.0"
 black = "^22.12.0"
 tomlkit = "^0.11.6"
 cryptography = "^39.0.0"
-pyinstaller = "^5.7.0"
+pyinstaller = "^5.8.0"
 pillow = "^9.4.0"
 pre-commit = "^2.21.0"
 

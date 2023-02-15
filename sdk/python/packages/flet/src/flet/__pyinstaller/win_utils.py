@@ -8,7 +8,13 @@ import pefile
 from PyInstaller.building.icon import normalize_icon_type
 from PyInstaller.compat import win32api
 from PyInstaller.utils.win32.icon import IconFile, normalize_icon_type
-from PyInstaller.utils.win32.versioninfo import decode
+
+try:
+    # PyInstaller 5.7.0
+    from PyInstaller.utils.win32.versioninfo import decode
+except ImportError:
+    # PyInstaller 5.8.0
+    from PyInstaller.utils.misc import decode
 
 
 def update_flet_view_icon(exe_path, icon_path):
