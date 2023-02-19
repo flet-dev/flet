@@ -156,22 +156,24 @@ class _DropdownControlState extends State<DropdownControl> {
                 suffixControls.isNotEmpty ? suffixControls.first : null,
                 null,
                 _focused),
-            onChanged: (String? value) {
-              debugPrint("Dropdown selected value: $value");
-              setState(() {
-                _value = value!;
-              });
-              List<Map<String, String>> props = [
-                {"i": widget.control.id, "value": value!}
-              ];
-              itemsView.dispatch(UpdateControlPropsAction(
-                  UpdateControlPropsPayload(props: props)));
-              server.updateControlProps(props: props);
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "change",
-                  eventData: value);
-            },
+            onChanged: disabled
+                ? null
+                : (String? value) {
+                    debugPrint("Dropdown selected value: $value");
+                    setState(() {
+                      _value = value!;
+                    });
+                    List<Map<String, String>> props = [
+                      {"i": widget.control.id, "value": value!}
+                    ];
+                    itemsView.dispatch(UpdateControlPropsAction(
+                        UpdateControlPropsPayload(props: props)));
+                    server.updateControlProps(props: props);
+                    server.sendPageEvent(
+                        eventTarget: widget.control.id,
+                        eventName: "change",
+                        eventData: value);
+                  },
             items: items,
           );
 
