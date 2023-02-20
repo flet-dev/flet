@@ -1,5 +1,10 @@
 # Flet changelog
 
+## 0.4.2
+
+* Fix reading versioninfo for PyInstaller 5.8.0
+* Fix `Dropdown.disable` property
+
 ## 0.4.1
 
 * Slider.round to round slider value on a label
