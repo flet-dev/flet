@@ -17,7 +17,7 @@ body:
     attributes:
       label: Your question
       description: Type out your question as precisely as possible.
-      value: ""
+      value: X
     validations:
       required: true
   - type: textarea
@@ -26,12 +26,12 @@ body:
       label: Code sample
       description: |
         If applicable, paste in a code sample of your best attempt so far. It will automatically be rendered as python code.
-      value: ""
+      value: X
       render: python
   - type: textarea
     id: error
     attributes:
       label: Error message
       description: If applicable, paste in the full error message you received.
-      value: ""
+      value: X
       render: bash
