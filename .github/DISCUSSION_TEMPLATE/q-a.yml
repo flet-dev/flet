@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        This is the place to ask for specifics about flet or for help with problems you encountered while using it.
+        This is the place to ask for specifics about Flet or for help with problems you encountered while using it.
   - type: textarea
     id: question
     attributes:
