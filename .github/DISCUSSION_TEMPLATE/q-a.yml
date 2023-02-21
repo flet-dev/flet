@@ -16,7 +16,7 @@ body:
     id: question
     attributes:
       label: Your question
-      description: Type out your question as precisely as possible.
+      description: Please formulate your question as precisely as possible.
     validations:
       required: true
   - type: textarea
