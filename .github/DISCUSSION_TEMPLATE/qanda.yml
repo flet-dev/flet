@@ -8,7 +8,7 @@ body:
   - type: checkboxes
     id: similar-search
     attributes:
-      label: ----------------------------------------------------------------------------
+      label: ------------------------------------------------------
       options:
         - label: I have searched for answers to my question both in the issues and in previous discussions.
           required: true
