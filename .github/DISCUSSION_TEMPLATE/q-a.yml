@@ -5,13 +5,6 @@ body:
     attributes:
       value: |
         This is the place to ask for specifics about flet or for help with problems you encountered while using it.
-  - type: checkboxes
-    id: similar-search
-    attributes:
-      label: ------------------------------------------------------
-      options:
-        - label: I have searched for answers to my question both in the issues and in previous discussions.
-          required: true
   - type: textarea
     id: question
     attributes:
@@ -32,3 +25,10 @@ body:
       label: Error message
       description: If applicable, paste in the full error message you received.
       render: bash
+  - type: checkboxes
+    id: similar-search
+    attributes:
+      label: ------------------------------------------------------
+      options:
+        - label: I have searched for answers to my question both in the issues and in previous discussions.
+          required: true
