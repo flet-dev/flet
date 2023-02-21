@@ -8,7 +8,7 @@ body:
   - type: textarea
     id: question
     attributes:
-      label: Your question
+      label: Question
       description: Please formulate your question as precisely as possible.
     validations:
       required: true
