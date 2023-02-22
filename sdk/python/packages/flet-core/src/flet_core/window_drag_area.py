@@ -71,6 +71,7 @@ class WindowDragArea(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        maximizable: Optional[bool] = None,
     ):
 
         ConstrainedControl.__init__(
@@ -105,6 +106,7 @@ class WindowDragArea(ConstrainedControl):
         self.__content: Optional[Control] = None
 
         self.content = content
+        self.maximizable = maximizable
 
     def _get_control_name(self):
         return "windowDragArea"
@@ -124,3 +126,12 @@ class WindowDragArea(ConstrainedControl):
     @content.setter
     def content(self, value):
         self.__content = value
+
+    # maximizable
+    @property
+    def maximizable(self) -> Optional[bool]:
+        return self._get_attr("maximizable", data_type="bool", def_value=True)
+
+    @maximizable.setter
+    def maximizable(self, value: Optional[bool]):
+        self._set_attr("maximizable", value)
