@@ -1,5 +1,8 @@
+import dataclasses
 import json
-from typing import Any, Optional, Union
+from dataclasses import field
+from enum import Enum
+from typing import Any, List, Optional, Tuple, Union
 
 from flet_core.alignment import Alignment
 from flet_core.border import Border
@@ -33,6 +36,36 @@ try:
     from typing import Literal
 except:
     from typing_extensions import Literal
+
+
+class BlurTileMode(Enum):
+    CLAMP = "clamp"
+    DECAL = "decal"
+    MIRROR = "mirror"
+    REPEATED = "repeated"
+
+
+class ShadowBlurStyle(Enum):
+    NORMAL = "normal"
+    SOLID = "solid"
+    OUTER = "outer"
+    INNER = "inner"
+
+
+@dataclasses.dataclass
+class Blur:
+    sigma_x: float
+    sigma_y: float
+    tile_mode: BlurTileMode = field(default=BlurTileMode.CLAMP)
+
+
+@dataclasses.dataclass
+class BoxShadow:
+    spread_radius: Optional[float] = field(default=None)
+    blur_radius: Optional[float] = field(default=None)
+    color: Optional[str] = field(default=None)
+    offset: OffsetValue = field(default=None)
+    tile_mode: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
 
 
 class Container(ConstrainedControl):
@@ -110,6 +143,10 @@ class Container(ConstrainedControl):
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
         animate: AnimationValue = None,
+        blur: Union[
+            None, float, int, Tuple[Union[float, int], Union[float, int]], Blur
+        ] = None,
+        shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
         on_click=None,
         on_long_press=None,
         on_hover=None,
@@ -168,6 +205,8 @@ class Container(ConstrainedControl):
         self.clip_behavior = clip_behavior
         self.ink = ink
         self.animate = animate
+        self.blur = blur
+        self.shadow = shadow
         self.on_click = on_click
         self.on_long_press = on_long_press
         self.on_hover = on_hover
@@ -184,6 +223,8 @@ class Container(ConstrainedControl):
         self._set_attr_json("alignment", self.__alignment)
         self._set_attr_json("gradient", self.__gradient)
         self._set_attr_json("animate", self.__animate)
+        self._set_attr_json("blur", self.__blur)
+        self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
 
     def _get_children(self):
         children = []
@@ -257,6 +298,29 @@ class Container(ConstrainedControl):
 
     def __set_blend_mode(self, value: BlendModeString):
         self._set_attr("blendMode", value)
+
+    # blur
+    @property
+    def blur(self):
+        return self.__blur
+
+    @blur.setter
+    def blur(
+        self,
+        value: Union[
+            None, float, int, Tuple[Union[float, int], Union[float, int]], Blur
+        ],
+    ):
+        self.__blur = value
+
+    # shadow
+    @property
+    def shadow(self):
+        return self.__shadow
+
+    @shadow.setter
+    def shadow(self, value: Union[None, BoxShadow, List[BoxShadow]]):
+        self.__shadow = value if value is not None else []
 
     # border
     @property
