@@ -66,10 +66,6 @@ class ContainerControl extends StatelessWidget {
     var animation = parseAnimation(control, "animate");
     var blur = parseBlur(control, "blur");
 
-    if (blur != null) {
-      child = ClipRect(child: BackdropFilter(filter: blur, child: child));
-    }
-
     final server = FletAppServices.of(context).server;
 
     return StoreConnector<AppState, PageArgsModel>(
@@ -112,6 +108,8 @@ class ContainerControl extends StatelessWidget {
                   control.attrString("shape", "")!.toLowerCase(),
               orElse: () => BoxShape.rectangle);
 
+          var borderRadius = parseBorderRadius(control, "borderRadius");
+
           var boxDecor = BoxDecoration(
               color: bgColor,
               gradient: gradient,
@@ -119,7 +117,7 @@ class ContainerControl extends StatelessWidget {
               backgroundBlendMode:
                   bgColor != null || gradient != null ? blendMode : null,
               border: parseBorder(Theme.of(context), control, "border"),
-              borderRadius: parseBorderRadius(control, "borderRadius"),
+              borderRadius: borderRadius,
               shape: shape);
 
           Widget? result;
@@ -279,6 +277,14 @@ class ContainerControl extends StatelessWidget {
                 ),
               );
             }
+          }
+
+          if (blur != null) {
+            result = borderRadius != null
+                ? ClipRRect(
+                    borderRadius: borderRadius,
+                    child: BackdropFilter(filter: blur, child: result))
+                : ClipRect(child: BackdropFilter(filter: blur, child: result));
           }
 
           return constrainedControl(context, result, parent, control);
