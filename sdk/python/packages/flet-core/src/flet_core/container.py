@@ -222,7 +222,7 @@ class Container(ConstrainedControl):
         self._set_attr_json("gradient", self.__gradient)
         self._set_attr_json("animate", self.__animate)
         self._set_attr_json("blur", self.__blur)
-        self._set_attr_json("shadow", self.__shadow)
+        self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
 
     def _get_children(self):
         children = []
