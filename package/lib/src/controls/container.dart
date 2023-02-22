@@ -64,6 +64,11 @@ class ContainerControl extends StatelessWidget {
         : null;
 
     var animation = parseAnimation(control, "animate");
+    var blur = parseBlur(control, "blur");
+
+    if (blur != null) {
+      child = ClipRect(child: BackdropFilter(filter: blur, child: child));
+    }
 
     final server = FletAppServices.of(context).server;
 
@@ -117,6 +122,8 @@ class ContainerControl extends StatelessWidget {
               borderRadius: parseBorderRadius(control, "borderRadius"),
               shape: shape);
 
+          Widget? result;
+
           if ((onClick || onLongPress || onHover) && ink && !disabled) {
             var ink = Ink(
                 decoration: boxDecor,
@@ -165,36 +172,33 @@ class ContainerControl extends StatelessWidget {
                     child: child,
                   ),
                 ));
-            return constrainedControl(
-                context,
-                animation == null
-                    ? Container(
-                        width: control.attrDouble("width"),
-                        height: control.attrDouble("height"),
-                        margin: parseEdgeInsets(control, "margin"),
-                        clipBehavior: clipBehavior,
-                        child: ink,
-                      )
-                    : AnimatedContainer(
-                        duration: animation.duration,
-                        curve: animation.curve,
-                        width: control.attrDouble("width"),
-                        height: control.attrDouble("height"),
-                        margin: parseEdgeInsets(control, "margin"),
-                        clipBehavior: clipBehavior,
-                        onEnd: control.attrBool("onAnimationEnd", false)!
-                            ? () {
-                                server.sendPageEvent(
-                                    eventTarget: control.id,
-                                    eventName: "animation_end",
-                                    eventData: "container");
-                              }
-                            : null,
-                        child: ink),
-                parent,
-                control);
+
+            result = animation == null
+                ? Container(
+                    width: control.attrDouble("width"),
+                    height: control.attrDouble("height"),
+                    margin: parseEdgeInsets(control, "margin"),
+                    clipBehavior: clipBehavior,
+                    child: ink,
+                  )
+                : AnimatedContainer(
+                    duration: animation.duration,
+                    curve: animation.curve,
+                    width: control.attrDouble("width"),
+                    height: control.attrDouble("height"),
+                    margin: parseEdgeInsets(control, "margin"),
+                    clipBehavior: clipBehavior,
+                    onEnd: control.attrBool("onAnimationEnd", false)!
+                        ? () {
+                            server.sendPageEvent(
+                                eventTarget: control.id,
+                                eventName: "animation_end",
+                                eventData: "container");
+                          }
+                        : null,
+                    child: ink);
           } else {
-            Widget container = animation == null
+            result = animation == null
                 ? Container(
                     width: control.attrDouble("width"),
                     height: control.attrDouble("height"),
@@ -225,7 +229,7 @@ class ContainerControl extends StatelessWidget {
                     child: child);
 
             if ((onClick || onLongPress || onHover) && !disabled) {
-              container = MouseRegion(
+              result = MouseRegion(
                 cursor: SystemMouseCursors.click,
                 onEnter: onHover
                     ? (value) {
@@ -271,12 +275,13 @@ class ContainerControl extends StatelessWidget {
                               eventData: "");
                         }
                       : null,
-                  child: container,
+                  child: result,
                 ),
               );
             }
-            return constrainedControl(context, container, parent, control);
           }
+
+          return constrainedControl(context, result, parent, control);
         });
   }
 }
