@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -118,7 +119,8 @@ class ContainerControl extends StatelessWidget {
                   bgColor != null || gradient != null ? blendMode : null,
               border: parseBorder(Theme.of(context), control, "border"),
               borderRadius: borderRadius,
-              shape: shape);
+              shape: shape,
+              boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"));
 
           Widget? result;
 
