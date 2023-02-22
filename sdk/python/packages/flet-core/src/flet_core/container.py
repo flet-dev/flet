@@ -2,7 +2,7 @@ import dataclasses
 import json
 from dataclasses import field
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Tuple, Union
 
 from flet_core.alignment import Alignment
 from flet_core.border import Border
@@ -143,7 +143,9 @@ class Container(ConstrainedControl):
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
         animate: AnimationValue = None,
-        blur: Union[None, float, int, Blur] = None,
+        blur: Union[
+            None, float, int, Tuple[Union[float, int], Union[float, int]], Blur
+        ] = None,
         shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
         on_click=None,
         on_long_press=None,
@@ -303,7 +305,12 @@ class Container(ConstrainedControl):
         return self.__blur
 
     @blur.setter
-    def blur(self, value: Union[None, float, int, Blur]):
+    def blur(
+        self,
+        value: Union[
+            None, float, int, Tuple[Union[float, int], Union[float, int]], Blur
+        ],
+    ):
         self.__blur = value
 
     # shadow
