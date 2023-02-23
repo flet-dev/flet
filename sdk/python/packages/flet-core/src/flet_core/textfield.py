@@ -1,8 +1,8 @@
+import time
 from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
-from flet_core.focus import FocusData
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
@@ -273,11 +273,11 @@ class TextField(FormFieldControl):
             self.filled = True  # Flutter requires filled = True to display a bgcolor
 
     def focus(self):
-        self._set_attr_json("focus", FocusData())
+        self._set_attr_json("focus", str(time.time()))
         self.update()
 
     async def focus_async(self):
-        self._set_attr_json("focus", FocusData())
+        self._set_attr_json("focus", str(time.time()))
         await self.update_async()
 
     # value

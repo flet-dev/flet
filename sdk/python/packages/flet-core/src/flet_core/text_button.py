@@ -1,3 +1,4 @@
+import time
 from typing import Any, Optional, Union
 
 from flet_core.buttons import ButtonStyle
@@ -75,6 +76,8 @@ class TextButton(ConstrainedControl):
         on_click=None,
         on_long_press=None,
         on_hover=None,
+        on_focus=None,
+        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -114,6 +117,8 @@ class TextButton(ConstrainedControl):
         self.on_click = on_click
         self.on_long_press = on_long_press
         self.on_hover = on_hover
+        self.on_focus = on_focus
+        self.on_blur = on_blur
 
     def _get_control_name(self):
         return "textbutton"
@@ -127,6 +132,14 @@ class TextButton(ConstrainedControl):
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
+
+    def focus(self):
+        self._set_attr_json("focus", str(time.time()))
+        self.update()
+
+    async def focus_async(self):
+        self._set_attr_json("focus", str(time.time()))
+        await self.update_async()
 
     # text
     @property
@@ -213,3 +226,21 @@ class TextButton(ConstrainedControl):
             self._set_attr("onHover", True)
         else:
             self._set_attr("onHover", None)
+
+    # on_focus
+    @property
+    def on_focus(self):
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self):
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler):
+        self._add_event_handler("blur", handler)
