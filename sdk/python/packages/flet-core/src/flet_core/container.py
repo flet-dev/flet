@@ -65,7 +65,7 @@ class BoxShadow:
     blur_radius: Optional[float] = field(default=None)
     color: Optional[str] = field(default=None)
     offset: OffsetValue = field(default=None)
-    tile_mode: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
+    blur_style: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
 
 
 class Container(ConstrainedControl):
