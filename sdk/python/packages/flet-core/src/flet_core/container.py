@@ -9,6 +9,9 @@ from flet_core.border import Border
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.dimensions import Dimensions, DimensionsError
+from flet_core.padding import Padding
+from flet_core.margin import Margin
 from flet_core.event_handler import EventHandler
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
@@ -34,7 +37,7 @@ from flet_core.types import (
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 
@@ -211,8 +214,66 @@ class Container(ConstrainedControl):
         self.on_long_press = on_long_press
         self.on_hover = on_hover
 
+        self._ensure_fit()
+
     def _get_control_name(self):
         return "container"
+
+    def _get_usable_window_dimensions(self) -> Dimensions:
+        def deduct_padding() -> None:
+            if self.padding is None:
+                return
+            if not isinstance(self.padding, Padding):
+                window.width -= self.padding * 2
+                window.height -= self.padding * 2
+                return
+            window.width -= self.padding.left + self.padding.right
+            window.height -= self.padding.top + self.padding.bottom
+
+        def deduct_margin() -> None:
+            if self.margin is None:
+                return
+            if not isinstance(self.margin, Margin):
+                window.width -= self.margin * 2
+                window.height -= self.margin * 2
+                return
+            window.width -= self.margin.left + self.margin.right
+            window.height -= self.margin.top + self.margin.bottom
+
+        def deduct_border() -> None:
+            if self.border is None:
+                return
+            for side in (self.border.left, self.border.right):
+                if side is not None and side.width is not None:
+                    window.width -= side.width
+            for side in (self.border.top, self.border.bottom):
+                if side is not None and side.width is not None:
+                    window.height -= side.width
+
+        assert self.dimensions is not None
+        window = self.dimensions
+        deduct_padding()
+        deduct_margin()
+        deduct_border()
+        return window
+
+    def _ensure_fit(self) -> None:
+        if (
+            not isinstance(self.content, ConstrainedControl)
+            or self.content.dimensions is None
+            or self.dimensions is None
+        ):
+            return
+
+        usable_window_dimensions = self._get_usable_window_dimensions()
+        if (
+            usable_window_dimensions.height < self.content.dimensions.height
+            or usable_window_dimensions.width < self.content.dimensions.width
+        ):
+            raise DimensionsError(
+                """Content could't be added to container 
+                as it would be too large to correctly display."""
+            )
 
     def _before_build_command(self):
         super()._before_build_command()
