@@ -1,7 +1,9 @@
 from typing import Any, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
+from flet_core.dimensions import Dimensions
 from flet_core.ref import Ref
+from flet_core.transform import Scale
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -244,3 +246,24 @@ class ConstrainedControl(Control):
             self._set_attr("onAnimationEnd", True)
         else:
             self._set_attr("onAnimationEnd", None)
+
+    @property
+    def dimensions(self) -> Dimensions | None:
+        if self.width is None or self.height is None:
+            return
+        if self.scale is None:
+            return Dimensions(width=self.width, height=self.height)
+        if not isinstance(self.scale, Scale):
+            return Dimensions(
+                width=self.width * self.scale, height=self.height * self.scale
+            )
+        if self.scale.scale:
+            return Dimensions(
+                width=self.width * self.scale.scale,
+                height=self.height * self.scale.scale,
+            )
+        width_scale = self.scale.scale_x or 1.0
+        height_scale = self.scale.scale_y or 1.0
+        return Dimensions(
+            width=self.width * width_scale, height=self.height * height_scale
+        )
