@@ -25,6 +25,7 @@ class WindowDragAreaControl extends StatelessWidget {
 
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
+    bool maximizable = control.attrBool("maximizable", true)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     if (contentCtrls.isEmpty) {
@@ -33,9 +34,40 @@ class WindowDragAreaControl extends StatelessWidget {
 
     return constrainedControl(
         context,
-        DragToMoveArea(
+        WindowDragArea(
+            maximizable: maximizable,
             child: createControl(control, contentCtrls.first.id, disabled)),
         parent,
         control);
+  }
+}
+
+class WindowDragArea extends StatelessWidget {
+  final Widget child;
+  final bool maximizable;
+
+  const WindowDragArea(
+      {Key? key, required this.child, required this.maximizable})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onPanStart: (details) {
+        windowManager.startDragging();
+      },
+      onDoubleTap: maximizable
+          ? () async {
+              bool isMaximized = await windowManager.isMaximized();
+              if (!isMaximized) {
+                windowManager.maximize();
+              } else {
+                windowManager.unmaximize();
+              }
+            }
+          : null,
+      child: child,
+    );
   }
 }
