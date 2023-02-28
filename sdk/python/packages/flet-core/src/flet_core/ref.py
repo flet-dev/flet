@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Optional, List, Any
 
 T = TypeVar("T")
 
@@ -14,3 +14,8 @@ class Ref(Generic[T]):
     @current.setter
     def current(self, value: T):
         self._current = value
+
+    @property
+    def previous_children(self) -> Optional[List[Any]]:
+        return self._current._Control__previous_children
+
