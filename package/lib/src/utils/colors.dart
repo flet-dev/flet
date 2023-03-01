@@ -100,6 +100,7 @@ Map<String, MaterialColor> _materialColors = {
   "deeporange": Colors.deepOrange,
   "brown": Colors.brown,
   "bluegrey": Colors.blueGrey,
+  "grey": Colors.grey
 };
 
 Map<String, MaterialAccentColor> _materialAccentColors = {

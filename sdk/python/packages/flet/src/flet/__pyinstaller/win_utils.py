@@ -5,16 +5,10 @@ from pathlib import Path
 
 import packaging.version as version
 import pefile
+import PyInstaller.utils.win32.versioninfo as versioninfo
 from PyInstaller.building.icon import normalize_icon_type
 from PyInstaller.compat import win32api
 from PyInstaller.utils.win32.icon import IconFile, normalize_icon_type
-
-try:
-    # PyInstaller 5.7.0
-    from PyInstaller.utils.win32.versioninfo import decode
-except ImportError:
-    # PyInstaller 5.8.0
-    from PyInstaller.utils.misc import decode
 
 
 def update_flet_view_icon(exe_path, icon_path):
@@ -59,7 +53,10 @@ def update_flet_view_version_info(
     print("Updating Flet View version info", exe_path)
 
     # load versioninfo from exe
-    vs = decode(exe_path)
+    if versioninfo.read_version_info_from_executable:
+        vs = versioninfo.read_version_info_from_executable(exe_path)
+    else:
+        vs = versioninfo.decode(exe_path)
 
     # update file version
     if file_version:

@@ -1,3 +1,22 @@
+## 0.4.2
+
+* Fix reading versioninfo for PyInstaller 5.8.0
+* Fix `Dropdown.disable` property
+
+## 0.4.1
+
+* Slider.round to round slider value on a label
+* Fix page.client_storage.get_keys() timeout 
+* Fix encode() import in PyInstaller integration
+* Fix "ConnectionAbortedError" error on Windows
+* Consistent licensing across the code - Apache 2.0
+* Fix assets loading in a sub-directory app ([#1019](https://github.com/flet-dev/flet/issues/1019)
+* Add --distpath option to flet pack and flet publish commands ([#1018](https://github.com/flet-dev/flet/issues/1018)
+* Updating manifest.json when using flet publish ([#1014](https://github.com/flet-dev/flet/issues/1014)
+* Fix "Address already in use" error on flet run hot reload ([#1007](https://github.com/flet-dev/flet/issues/1007)
+* Force Python sub-process to run with UTF-8 encoding ([#1002](https://github.com/flet-dev/flet/issues/1002)
+* Fix: View with content crashes in some routing scenarios ([#1001](https://github.com/flet-dev/flet/issues/1001)
+
 ## 0.4.0
 
 * Changed re-connection logic to make hot reload work ([#971](https://github.com/flet-dev/flet/issues/971))

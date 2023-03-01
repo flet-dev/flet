@@ -89,6 +89,9 @@ class Card(ConstrainedControl):
         #
         margin: MarginValue = None,
         elevation: OptionalNumber = None,
+        color: Optional[str] = None,
+        shadow_color: Optional[str] = None,
+        surface_tint_color: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -122,6 +125,9 @@ class Card(ConstrainedControl):
         self.content = content
         self.margin = margin
         self.elevation = elevation
+        self.color = color
+        self.shadow_color = shadow_color
+        self.surface_tint_color = surface_tint_color
 
     def _get_control_name(self):
         return "card"
@@ -154,6 +160,33 @@ class Card(ConstrainedControl):
     @elevation.setter
     def elevation(self, value: OptionalNumber):
         self._set_attr("elevation", value)
+
+    # color
+    @property
+    def color(self):
+        return self._get_attr("color")
+
+    @color.setter
+    def color(self, value):
+        self._set_attr("color", value)
+
+    # shadow_color
+    @property
+    def shadow_color(self):
+        return self._get_attr("shadowColor")
+
+    @shadow_color.setter
+    def shadow_color(self, value):
+        self._set_attr("shadowColor", value)
+
+    # surface_tint_color
+    @property
+    def surface_tint_color(self):
+        return self._get_attr("surfaceTintColor")
+
+    @surface_tint_color.setter
+    def surface_tint_color(self, value):
+        self._set_attr("surfaceTintColor", value)
 
     # content
     @property

@@ -35,7 +35,14 @@ from flet_core.card import Card
 from flet_core.checkbox import Checkbox
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
-from flet_core.container import Container, ContainerTapEvent
+from flet_core.container import (
+    Blur,
+    BlurTileMode,
+    BoxShadow,
+    Container,
+    ContainerTapEvent,
+    ShadowBlurStyle,
+)
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.datatable import (
