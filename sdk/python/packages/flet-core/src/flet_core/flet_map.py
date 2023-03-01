@@ -1,38 +1,20 @@
-import io
-import re
-import xml.etree.ElementTree as ET
 from typing import Any, Optional, Union
 import math
-import base64
-from io import BytesIO
-import requests
-from flet_core import alignment
-from flet_core.container import Container
-from flet_core.control import OptionalNumber
-from flet_core.image import Image
-from flet_core.ref import Ref
-from flet_core.types import (
+from flet import alignment
+import flet as ft
+from flet.container import Container
+from flet.control import OptionalNumber
+from flet.image import Image as ftImage
+from flet.ref import Ref
+from flet.row import Row
+from flet.column import Column
+from flet.types import (
     AnimationValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
-
-import numpy as np
-
-try:
-    from matplotlib.figure import Figure
-except ImportError:
-    raise Exception(
-        'Install "matplotlib" Python package to use MatplotlibChart control.'
-    )
-try:
-    from PIL import Image
-except ImportError:
-    raise Exception(
-        'Install "pillow" Python package to use FletMap control.'
-    )
 
 
 class FletMap(Container):
@@ -60,11 +42,12 @@ class FletMap(Container):
         #
         # Specific
         #
-        latitude: float = 0.0,
-        longtitude: float = 0.0,
-        delta_lat: float = 0.0,
-        delta_long: float = 0.0,
-        zoom: float = 0.0,
+        screenView: Optional[list]=[],
+        latitude: Optional[float] = 0.0,
+        longtitude: Optional[float] = 0.0,
+        delta_lat: Optional[float] = 0.0,
+        delta_long: Optional[float] = 0.0,
+        zoom: Optional[float] = 0.0,
         isolated: bool = False,
         original_size: bool = False,
         transparent: bool = False,
@@ -98,57 +81,54 @@ class FletMap(Container):
         self.delta_lat = delta_lat
         self.delta_long = delta_long
         self.zoom = zoom
+        self.screenView = screenView
         self.isolated = isolated
         self.original_size = original_size
         self.transparent = transparent
-        self.__figure=Figure()
-        
 
     def _is_isolated(self):
         return self.__isolated
 
     def _build(self):
         self.alignment = alignment.center
-        self.__img = Image(fit="fill")
-        self.content = self.__img
+        self.__img = ftImage(fit="fill")
+        self.__row = Row()
+        self.__col = Column()
+        # self.content
+        # self.content = self.__img
 
     def _get_image_cluster(self):
-        headers = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
+        index = 0
         smurl = r"http://a.tile.openstreetmap.org/{0}/{1}/{2}.png"
-        xmin, ymax =self.deg2num(self.latitude, self.longtitude, self.zoom)
-        xmax, ymin =self.deg2num(self.latitude + self.delta_lat, self.longtitude + self.delta_long, self.zoom)
-    
-        cluster = Image.new('RGB',((xmax-xmin+1)*256-1,(ymax-ymin+1)*256-1) ) 
-        for xtile in range(xmin, xmax+1):
-            for ytile in range(ymin,  ymax+1):
+        
+        xmin, ymax = self.deg2num(self.latitude, self.longtitude, self.zoom)
+        xmax, ymin = self.deg2num(
+            self.latitude + self.delta_lat, self.longtitude + self.delta_long, self.zoom)
+        self.__row = Row(alignment=ft.MainAxisAlignment.CENTER,spacing=0,auto_scroll=True)
+        
+        for xtile in range(xmin, xmax+self.screenView[0]):
+            self.__col = Column(alignment=ft.MainAxisAlignment.CENTER,spacing=0,auto_scroll=True)
+            xtile
+            for ytile in range(ymin,  ymax+self.screenView[1]):
                 try:
                     imgurl = smurl.format(self.zoom, xtile, ytile)
-                    print("Opening: " + imgurl)
-                    imgstr = requests.get(imgurl, headers=headers)
-                    tile = Image.open(BytesIO(imgstr.content))
-                    cluster.paste(tile, box = ((xtile-xmin)*256 ,  (ytile-ymin)*255))
-                except: 
+                    self.__col.controls.append(
+                        ftImage(src=imgurl,
+                                ))
+                except:
                     print("Couldn't download image")
-                    tile = None
-    
-        return cluster
-
+            self.__row.controls.append(self.__col)
+            
+        self.content = self.__row
+        
     def _before_build_command(self):
         super()._before_build_command()
-        cluster = self._get_image_cluster()
-        # s = io.StringIO()
-        # self.__figure.savefig(
-        #     s, format="svg", transparent=self.__transparent)
-        # svg = s.getvalue()
+        # self.delta_lat = 0.5
+        # self.delta_lon = 0.5
+        self._get_image_cluster()
+        # print(self.__src_content)
+        # self.__img.src = self.__src_content
 
-        # if not self.__original_size:
-        #     root = ET.fromstring(svg)
-        #     w = float(re.findall(r"\d+", root.attrib["width"])[0])
-        #     h = float(re.findall(r"\d+", root.attrib["height"])[0])
-        #     self.__img.aspect_ratio = w / h
-        self.__img.src_base64 = base64.b64encode(np.asarray(cluster))
-
-    @staticmethod
     def deg2num(self, lat_deg, lon_deg, zoom):
         lat_rad = math.radians(lat_deg)
         n = 2.0 ** zoom
@@ -157,7 +137,6 @@ class FletMap(Container):
                     (1 / math.cos(lat_rad))) / math.pi) / 2.0 * n)
         return (xtile, ytile)
 
-    @staticmethod
     def num2deg(self, xtile, ytile, zoom):
         n = 2.0 ** zoom
         lon_deg = xtile / n * 360.0 - 180.0
@@ -180,7 +159,7 @@ class FletMap(Container):
         return self.__delta_long
 
     @delta_long.setter
-    def latitude(self, value):
+    def delta_long(self, value):
         self.__delta_long = value
 
     # delta_lat
@@ -207,7 +186,7 @@ class FletMap(Container):
         return self.__longtitude
 
     @longtitude.setter
-    def latitude(self, value):
+    def longtitude(self, value):
         self.__longtitude = value
 
     # original_size
@@ -245,7 +224,3 @@ class FletMap(Container):
     @transparent.setter
     def transparent(self, value: bool):
         self.__transparent = value
-
-
-
-
