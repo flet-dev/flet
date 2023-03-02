@@ -11,7 +11,7 @@ def main(page: ft.Page):
             expand=True,
             controls=[
                 ft.FletMap(expand=True, latitude=40.766666,
-                           longtitude=29.916668,zoom=12,screenView = [6,4],)
+                           longtitude=29.916668,zoom=15,screenView = [8,4],)
             ]
         ))
 
