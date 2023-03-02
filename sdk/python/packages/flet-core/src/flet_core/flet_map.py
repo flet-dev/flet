@@ -1,14 +1,14 @@
 from typing import Any, Optional, Union
 import math
-from flet import alignment
-import flet as ft
-from flet.container import Container
-from flet.control import OptionalNumber
-from flet.image import Image as ftImage
-from flet.ref import Ref
-from flet.row import Row
-from flet.column import Column
-from flet.types import (
+from flet_core import alignment
+import flet_core as ft
+from flet_core.container import Container
+from flet_core.control import OptionalNumber
+from flet_core.image import Image
+from flet_core.ref import Ref
+from flet_core.row import Row
+from flet_core.column import Column
+from flet_core.types import (
     AnimationValue,
     OffsetValue,
     ResponsiveNumber,
@@ -42,7 +42,7 @@ class FletMap(Container):
         #
         # Specific
         #
-        screenView: Optional[list]=[],
+        screenView: Optional[list] = [],
         latitude: Optional[float] = 0.0,
         longtitude: Optional[float] = 0.0,
         delta_lat: Optional[float] = 0.0,
@@ -91,7 +91,6 @@ class FletMap(Container):
 
     def _build(self):
         self.alignment = alignment.center
-        self.__img = ftImage(fit="fill")
         self.__row = Row()
         self.__col = Column()
         # self.content
@@ -100,27 +99,29 @@ class FletMap(Container):
     def _get_image_cluster(self):
         index = 0
         smurl = r"http://a.tile.openstreetmap.org/{0}/{1}/{2}.png"
-        
+
         xmin, ymax = self.deg2num(self.latitude, self.longtitude, self.zoom)
         xmax, ymin = self.deg2num(
             self.latitude + self.delta_lat, self.longtitude + self.delta_long, self.zoom)
-        self.__row = Row(alignment=ft.MainAxisAlignment.CENTER,spacing=0,auto_scroll=True)
-        
+        self.__row = Row(alignment=ft.MainAxisAlignment.CENTER,
+                         spacing=0, auto_scroll=True)
+
         for xtile in range(xmin, xmax+self.screenView[0]):
-            self.__col = Column(alignment=ft.MainAxisAlignment.CENTER,spacing=0,auto_scroll=True)
+            self.__col = Column(
+                alignment=ft.MainAxisAlignment.CENTER, spacing=0, auto_scroll=True)
             xtile
             for ytile in range(ymin,  ymax+self.screenView[1]):
                 try:
                     imgurl = smurl.format(self.zoom, xtile, ytile)
                     self.__col.controls.append(
-                        ftImage(src=imgurl,
-                                ))
+                        Image(src=imgurl,
+                              ))
                 except:
                     print("Couldn't download image")
             self.__row.controls.append(self.__col)
-            
+
         self.content = self.__row
-        
+
     def _before_build_command(self):
         super()._before_build_command()
         # self.delta_lat = 0.5
