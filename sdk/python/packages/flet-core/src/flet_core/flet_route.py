@@ -10,11 +10,10 @@ class Routing:
     """
 import flet as ft
 from flet_core import Routing,path
-from settings.routing import Routing
 
 def index_view(page: ft.Page,params={}):
-    "/",
     return ft.view(
+        "/",
         controls=[
             ft.Text("This Is Index View")
         ]
