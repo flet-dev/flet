@@ -5,6 +5,7 @@ import uuid
 from time import sleep
 from typing import List, Optional
 
+import flet
 from flet import constants
 from flet.reconnecting_websocket import ReconnectingWebSocket
 from flet_core.connection import Connection
@@ -22,6 +23,8 @@ from flet_core.protocol import (
     RegisterHostClientRequestPayload,
     RegisterHostClientResponsePayload,
 )
+
+logger = logging.getLogger(flet.__name__)
 
 
 class SyncWebSocketConnection(Connection):
@@ -78,7 +81,7 @@ class SyncWebSocketConnection(Connection):
         self.__connected.set()
 
     def __on_ws_message(self, data):
-        logging.debug(f"_on_message: {data}")
+        logger.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
         msg = Message(**msg_dict)
         if msg.id:
@@ -139,7 +142,7 @@ class SyncWebSocketConnection(Connection):
         msg_id = uuid.uuid4().hex
         msg = Message(msg_id, action_name, payload)
         j = json.dumps(msg, cls=CommandEncoder, separators=(",", ":"))
-        logging.debug(f"_send_message_with_result: {j}")
+        logger.debug(f"_send_message_with_result: {j}")
         evt = threading.Event()
         self.__ws_callbacks[msg_id] = (evt, None)
         self.__ws.send(j)
@@ -147,6 +150,6 @@ class SyncWebSocketConnection(Connection):
         return self.__ws_callbacks.pop(msg_id)[1]
 
     def close(self):
-        logging.debug("Closing connection...")
+        logger.debug("Closing connection...")
         if self.__ws is not None:
             self.__ws.close()

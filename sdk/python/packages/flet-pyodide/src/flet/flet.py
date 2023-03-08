@@ -1,6 +1,7 @@
 import logging
 import traceback
 
+import flet
 import flet_js
 from flet.pyodide_connection import PyodideConnection
 from flet_core.event import Event
@@ -15,6 +16,9 @@ except ImportError:
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
 FLET_APP_HIDDEN = "flet_app_hidden"
+
+
+logger = logging.getLogger(flet.__name__)
 
 
 def app(
@@ -61,14 +65,14 @@ def app_async(
                 Event(e.eventTarget, e.eventName, e.eventData)
             )
             if e.eventTarget == "page" and e.eventName == "close":
-                logging.info(f"Session closed: {e.sessionID}")
+                logger.info(f"Session closed: {e.sessionID}")
                 del conn.sessions[e.sessionID]
 
     async def on_session_created(session_data):
         page = Page(conn, session_data.sessionID)
         await page.fetch_page_details_async()
         conn.sessions[session_data.sessionID] = page
-        logging.info(f"Session started: {session_data.sessionID}")
+        logger.info(f"Session started: {session_data.sessionID}")
         try:
             assert target is not None
             if is_coroutine(target):

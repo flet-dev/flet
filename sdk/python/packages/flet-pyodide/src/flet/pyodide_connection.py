@@ -3,6 +3,7 @@ import json
 import logging
 from typing import List
 
+import flet
 import flet_js
 import js
 from flet_core.local_connection import LocalConnection
@@ -15,6 +16,8 @@ from flet_core.protocol import (
     PageCommandsBatchResponsePayload,
     RegisterWebClientRequestPayload,
 )
+
+logger = logging.getLogger(flet.__name__)
 
 
 class PyodideConnection(LocalConnection):
@@ -30,7 +33,7 @@ class PyodideConnection(LocalConnection):
         flet_js.start_connection = self.connect
 
     async def connect(self, send_callback):
-        logging.info("Starting Pyodide connection...")
+        logger.info("Starting Pyodide connection...")
         self.page_url = flet_js.documentUrl
         self.send_callback = send_callback
         asyncio.create_task(self.receive_loop())
@@ -42,11 +45,11 @@ class PyodideConnection(LocalConnection):
             await self.__on_message(message)
 
     def send_from_js(self, message: str):
-        logging.debug(f"Sending data from JavaScript to Python: {message}")
+        logger.debug(f"Sending data from JavaScript to Python: {message}")
         self.__receive_queue.put_nowait(message)
 
     async def __on_message(self, data: str):
-        logging.debug(f"_on_message: {data}")
+        logger.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
         msg = ClientMessage(**msg_dict)
         if msg.action == ClientActions.REGISTER_WEB_CLIENT:
@@ -103,5 +106,5 @@ class PyodideConnection(LocalConnection):
 
     def __send(self, message: ClientMessage):
         j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
-        logging.debug(f"__send: {j}")
+        logger.debug(f"__send: {j}")
         self.send_callback(j)

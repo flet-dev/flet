@@ -2,13 +2,12 @@ import asyncio
 import json
 import logging
 import os
-import socket
 import struct
 import tempfile
-import threading
 from pathlib import Path
 from typing import List, Optional
 
+import flet
 from flet.utils import get_free_tcp_port, is_windows
 from flet_core.local_connection import LocalConnection
 from flet_core.protocol import (
@@ -21,6 +20,8 @@ from flet_core.protocol import (
     RegisterWebClientRequestPayload,
 )
 from flet_core.utils import random_string
+
+logger = logging.getLogger(flet.__name__)
 
 
 class AsyncLocalSocketConnection(LocalConnection):
@@ -45,7 +46,7 @@ class AsyncLocalSocketConnection(LocalConnection):
             host = "localhost"
             port = self.__port if self.__port > 0 else get_free_tcp_port()
             self.page_url = f"tcp://{host}:{port}"
-            logging.info(f"Starting up TCP server on {host}:{port}")
+            logger.info(f"Starting up TCP server on {host}:{port}")
             server = await asyncio.start_server(self.handle_connection, host, port)
             self.__server = asyncio.create_task(server.serve_forever())
         else:
@@ -55,7 +56,7 @@ class AsyncLocalSocketConnection(LocalConnection):
                     Path(tempfile.gettempdir()).joinpath(random_string(10))
                 )
             self.page_url = self.__uds_path
-            logging.info(f"Starting up UDS server on {self.__uds_path}")
+            logger.info(f"Starting up UDS server on {self.__uds_path}")
             server = await asyncio.start_unix_server(
                 self.handle_connection, self.__uds_path
             )
@@ -66,7 +67,7 @@ class AsyncLocalSocketConnection(LocalConnection):
     ):
         if not self.__connected:
             self.__connected = True
-            logging.debug("Connected new TCP client")
+            logger.debug("Connected new TCP client")
             self.__receive_loop_task = asyncio.create_task(self.__receive_loop(reader))
             self.__send_loop_task = asyncio.create_task(self.__send_loop(writer))
 
@@ -92,14 +93,14 @@ class AsyncLocalSocketConnection(LocalConnection):
                 msg = struct.pack(">I", len(data)) + data
                 writer.write(msg)
                 # await writer.drain()
-                logging.debug("sent to TCP: {}".format(len(msg)))
+                logger.debug("sent to TCP: {}".format(len(msg)))
             except:
                 # re-enqueue the message to repeat it when re-connected
                 self.__send_queue.put_nowait(message)
                 raise
 
     async def __on_message(self, data: str):
-        logging.debug(f"_on_message: {data}")
+        logger.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
         msg = ClientMessage(**msg_dict)
         if msg.action == ClientActions.REGISTER_WEB_CLIENT:
@@ -152,11 +153,11 @@ class AsyncLocalSocketConnection(LocalConnection):
 
     async def __send(self, message: ClientMessage):
         j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
-        logging.debug(f"__send: {j}")
+        logger.debug(f"__send: {j}")
         await self.__send_queue.put(j)
 
     async def close(self):
-        logging.debug("Closing connection...")
+        logger.debug("Closing connection...")
         # close socket
         if self.__receive_loop_task:
             self.__receive_loop_task.cancel()
