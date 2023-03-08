@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
@@ -25,22 +26,22 @@ class FloatingActionButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("FloatingActionButtonControl build: ${control.id}");
 
-    final ws = FletAppServices.of(context).ws;
-
     String? text = control.attrString("text");
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
     Color? bgColor = HexColor.fromString(
         Theme.of(context), control.attrString("bgColor", "")!);
+    OutlinedBorder? shape = parseOutlinedBorder(control, "shape");
     var contentCtrls = children.where((c) => c.name == "content");
     var tooltip = control.attrString("tooltip");
     bool autofocus = control.attrBool("autofocus", false)!;
+    bool mini = control.attrBool("mini", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = disabled
         ? null
         : () {
             debugPrint("FloatingActionButtonControl ${control.id} clicked!");
-            ws.pageEventFromWeb(
+            FletAppServices.of(context).server.sendPageEvent(
                 eventTarget: control.id, eventName: "click", eventData: "");
           };
 
@@ -56,6 +57,8 @@ class FloatingActionButtonControl extends StatelessWidget {
           onPressed: onPressed,
           backgroundColor: bgColor,
           tooltip: tooltip,
+          shape: shape,
+          mini: mini,
           child: createControl(control, contentCtrls.first.id, disabled));
     } else if (icon != null && text == null) {
       button = FloatingActionButton(
@@ -63,6 +66,8 @@ class FloatingActionButtonControl extends StatelessWidget {
           onPressed: onPressed,
           backgroundColor: bgColor,
           tooltip: tooltip,
+          shape: shape,
+          mini: mini,
           child: Icon(icon));
     } else if (icon == null && text != null) {
       button = FloatingActionButton(
@@ -70,6 +75,8 @@ class FloatingActionButtonControl extends StatelessWidget {
         onPressed: onPressed,
         backgroundColor: bgColor,
         tooltip: tooltip,
+        shape: shape,
+        mini: mini,
         child: Text(text),
       );
     } else if (icon != null && text != null) {
@@ -80,6 +87,7 @@ class FloatingActionButtonControl extends StatelessWidget {
         icon: Icon(icon),
         backgroundColor: bgColor,
         tooltip: tooltip,
+        shape: shape,
       );
     } else {
       return const ErrorControl("FAB doesn't have a text, nor icon.");

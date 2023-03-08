@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:flet/src/utils/borders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -10,7 +7,9 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 import 'form_field.dart';
 
@@ -39,7 +38,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
   late TextEditingController _controller;
   late final FocusNode _focusNode;
   late final FocusNode _shiftEnterfocusNode;
-  String _lastFocusedTimestamp = "";
+  String? _lastFocusValue;
 
   @override
   void initState() {
@@ -49,7 +48,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
       onKey: (FocusNode node, RawKeyEvent evt) {
         if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
           if (evt is RawKeyDownEvent) {
-            FletAppServices.of(context).ws.pageEventFromWeb(
+            FletAppServices.of(context).server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "submit",
                 eventData: "");
@@ -79,7 +78,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    FletAppServices.of(context).ws.pageEventFromWeb(
+    FletAppServices.of(context).server.sendPageEvent(
         eventTarget: widget.control.id,
         eventName: _shiftEnterfocusNode.hasFocus ? "focus" : "blur",
         eventData: "");
@@ -89,7 +88,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    FletAppServices.of(context).ws.pageEventFromWeb(
+    FletAppServices.of(context).server.sendPageEvent(
         eventTarget: widget.control.id,
         eventName: _focusNode.hasFocus ? "focus" : "blur",
         eventData: "");
@@ -146,9 +145,10 @@ class _TextFieldControlState extends State<TextFieldControl> {
           var focusedColor = HexColor.fromString(Theme.of(context),
               widget.control.attrString("focusedColor", "")!);
 
-          TextStyle? textStyle;
+          TextStyle? textStyle =
+              parseTextStyle(Theme.of(context), widget.control, "textStyle");
           if (textSize != null || color != null || focusedColor != null) {
-            textStyle = TextStyle(
+            textStyle = (textStyle ?? const TextStyle()).copyWith(
                 fontSize: textSize,
                 color: _focused ? focusedColor ?? color : color);
           }
@@ -192,15 +192,9 @@ class _TextFieldControlState extends State<TextFieldControl> {
           FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
           var focusValue = widget.control.attrString("focus");
-          if (focusValue != null) {
-            debugPrint("Focus JSON value: $focusValue");
-            var jv = json.decode(focusValue);
-            var focus = jv["d"] as bool;
-            var ts = jv["ts"] as String;
-            if (focus && ts != _lastFocusedTimestamp) {
-              focusNode.requestFocus();
-              _lastFocusedTimestamp = ts;
-            }
+          if (focusValue != null && focusValue != _lastFocusValue) {
+            _lastFocusValue = focusValue;
+            focusNode.requestFocus();
           }
 
           Widget textField = TextFormField(
@@ -209,7 +203,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
               enabled: !disabled,
               onFieldSubmitted: !multiline
                   ? (_) {
-                      FletAppServices.of(context).ws.pageEventFromWeb(
+                      FletAppServices.of(context).server.sendPageEvent(
                           eventTarget: widget.control.id,
                           eventName: "submit",
                           eventData: "");
@@ -249,9 +243,11 @@ class _TextFieldControlState extends State<TextFieldControl> {
                 ];
                 dispatch(UpdateControlPropsAction(
                     UpdateControlPropsPayload(props: props)));
-                FletAppServices.of(context).ws.updateControlProps(props: props);
+                FletAppServices.of(context)
+                    .server
+                    .updateControlProps(props: props);
                 if (onChange) {
-                  FletAppServices.of(context).ws.pageEventFromWeb(
+                  FletAppServices.of(context).server.sendPageEvent(
                       eventTarget: widget.control.id,
                       eventName: "change",
                       eventData: value);

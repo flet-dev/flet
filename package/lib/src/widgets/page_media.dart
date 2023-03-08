@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import '../flet_app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/page_media_view_model.dart';
 import '../utils/desktop.dart';
@@ -32,12 +32,12 @@ class _PageMediaState extends State<PageMedia> {
         debugPrint("Send current size to reducer: $newSize");
         getWindowMediaData().then((wmd) {
           dispatch(PageSizeChangeAction(
-              newSize, wmd, FletAppServices.of(context).ws));
+              newSize, wmd, FletAppServices.of(context).server));
         });
       });
     } else {
-      dispatch(
-          PageSizeChangeAction(newSize, null, FletAppServices.of(context).ws));
+      dispatch(PageSizeChangeAction(
+          newSize, null, FletAppServices.of(context).server));
     }
   }
 

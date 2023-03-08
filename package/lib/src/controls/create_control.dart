@@ -1,10 +1,9 @@
 import 'dart:math';
 
-import 'package:flet/src/controls/error.dart';
-import 'package:flet/src/flet_app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
@@ -14,27 +13,33 @@ import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
 import 'banner.dart';
+import 'bottom_sheet.dart';
 import 'card.dart';
 import 'checkbox.dart';
 import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
+import 'datatable.dart';
 import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
+import 'error.dart';
 import 'file_picker.dart';
+import 'flet_app_control.dart';
 import 'floating_action_button.dart';
 import 'gesture_detector.dart';
 import 'grid_view.dart';
+import 'haptic_feedback.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
 import 'markdown.dart';
+import 'navigation_bar.dart';
 import 'navigation_rail.dart';
 import 'outlined_button.dart';
 import 'page.dart';
@@ -43,9 +48,11 @@ import 'progress_bar.dart';
 import 'progress_ring.dart';
 import 'radio.dart';
 import 'radio_group.dart';
+import 'responsive_row.dart';
 import 'row.dart';
 import 'semantics.dart';
 import 'shader_mask.dart';
+import 'shake_detector.dart';
 import 'slider.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
@@ -54,6 +61,8 @@ import 'tabs.dart';
 import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
+import 'tooltip.dart';
+import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
 
@@ -90,6 +99,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parent: parent, control: controlView.control);
         case "markdown":
           return MarkdownControl(parent: parent, control: controlView.control);
+        case "fletapp":
+          return FletAppControl(parent: parent, control: controlView.control);
         case "image":
           return ImageControl(parent: parent, control: controlView.control);
         case "audio":
@@ -98,6 +109,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return DividerControl(parent: parent, control: controlView.control);
         case "clipboard":
           return ClipboardControl(parent: parent, control: controlView.control);
+        case "hapticfeedback":
+          return HapticFeedbackControl(
+              parent: parent, control: controlView.control);
+        case "shakedetector":
+          return ShakeDetectorControl(
+              parent: parent, control: controlView.control);
         case "verticaldivider":
           return VerticalDividerControl(
               parent: parent, control: controlView.control);
@@ -161,6 +178,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
+        case "responsiverow":
+          return ResponsiveRowControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
         case "stack":
           return StackControl(
               parent: parent,
@@ -187,6 +210,24 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "card":
           return CardControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "datatable":
+          return DataTableControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "tooltip":
+          return TooltipControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "transparentpointer":
+          return TransparentPointerControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
@@ -282,6 +323,14 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
+        case "bottomsheet":
+          return BottomSheetControl(
+            parent: parent,
+            control: controlView.control,
+            children: controlView.children,
+            parentDisabled: parentDisabled,
+            dispatch: controlView.dispatch,
+          );
         case "banner":
           return BannerControl(
               parent: parent,
@@ -296,6 +345,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "navigationrail":
           return NavigationRailControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "navigationbar":
+          return NavigationBarControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
@@ -365,7 +420,7 @@ Widget _opacity(
       opacity: opacity ?? 1.0,
       onEnd: control.attrBool("onAnimationEnd", false)!
           ? () {
-              FletAppServices.of(context).ws.pageEventFromWeb(
+              FletAppServices.of(context).server.sendPageEvent(
                   eventTarget: control.id,
                   eventName: "animation_end",
                   eventData: "opacity");
@@ -418,7 +473,7 @@ Widget _rotatedControl(
         curve: animation.curve,
         onEnd: control.attrBool("onAnimationEnd", false)!
             ? () {
-                FletAppServices.of(context).ws.pageEventFromWeb(
+                FletAppServices.of(context).server.sendPageEvent(
                     eventTarget: control.id,
                     eventName: "animation_end",
                     eventData: "rotation");
@@ -446,7 +501,7 @@ Widget _scaledControl(
         curve: animation.curve,
         onEnd: control.attrBool("onAnimationEnd", false)!
             ? () {
-                FletAppServices.of(context).ws.pageEventFromWeb(
+                FletAppServices.of(context).server.sendPageEvent(
                     eventTarget: control.id,
                     eventName: "animation_end",
                     eventData: "scale");
@@ -475,13 +530,16 @@ Widget _offsetControl(
         curve: animation.curve,
         onEnd: control.attrBool("onAnimationEnd", false)!
             ? () {
-                FletAppServices.of(context).ws.pageEventFromWeb(
+                FletAppServices.of(context).server.sendPageEvent(
                     eventTarget: control.id,
                     eventName: "animation_end",
                     eventData: "offset");
               }
             : null,
         child: widget);
+  } else if (offsetDetails != null) {
+    return FractionalTranslation(
+        translation: Offset(offsetDetails.x, offsetDetails.y), child: widget);
   }
   return widget;
 }
@@ -509,7 +567,7 @@ Widget _positionedControl(
       bottom: bottom,
       onEnd: control.attrBool("onAnimationEnd", false)!
           ? () {
-              FletAppServices.of(context).ws.pageEventFromWeb(
+              FletAppServices.of(context).server.sendPageEvent(
                   eventTarget: control.id,
                   eventName: "animation_end",
                   eventData: "position");

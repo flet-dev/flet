@@ -67,6 +67,13 @@ Future setWindowMinimizability(bool minimizable) async {
   }
 }
 
+Future setWindowMaximizability(bool maximizable) async {
+  if (isDesktop()) {
+    debugPrint("setWindowMaximizability()");
+    await windowManager.setMaximizable(maximizable);
+  }
+}
+
 Future setWindowResizability(bool resizable) async {
   if (isDesktop()) {
     debugPrint("setWindowResizability()");
@@ -256,4 +263,8 @@ bool isDesktop() {
       (defaultTargetPlatform == TargetPlatform.windows ||
           defaultTargetPlatform == TargetPlatform.macOS ||
           defaultTargetPlatform == TargetPlatform.linux);
+}
+
+bool isWindowsDesktop() {
+  return !kIsWeb && (defaultTargetPlatform == TargetPlatform.windows);
 }

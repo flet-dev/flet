@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
@@ -16,10 +16,15 @@ void main([List<String>? args]) async {
   await setupDesktop();
 
   var pageUrl = Uri.base.toString();
+  var assetsDir = "";
   //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
-    pageUrl = "http://localhost:8550";
+    if (kIsWeb) {
+      pageUrl = "http://localhost:8550";
+    } else {
+      pageUrl = "tcp://localhost:8550";
+    }
   }
 
   if (kIsWeb) {
@@ -37,6 +42,16 @@ void main([List<String>? args]) async {
       throw Exception('Page URL must be provided as a first argument.');
     }
     pageUrl = args[0];
+    if (args.length > 1) {
+      var pidFilePath = args[1];
+      debugPrint("Args contain a path to PID file: $pidFilePath}");
+      var pidFile = await File(pidFilePath).create();
+      await pidFile.writeAsString("$pid");
+    }
+    if (args.length > 2) {
+      assetsDir = args[2];
+      debugPrint("Args contain a path assets directory: $assetsDir}");
+    }
   }
 
   debugPrint("Page URL: $pageUrl");
@@ -57,6 +72,7 @@ void main([List<String>? args]) async {
   runApp(FletApp(
     title: 'Flet',
     pageUrl: pageUrl,
+    assetsDir: assetsDir,
     errorsHandler: errorsHandler,
   ));
 }

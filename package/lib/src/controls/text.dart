@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
@@ -27,11 +30,20 @@ class TextControl extends StatelessWidget {
       style = getTextStyle(context, styleName);
     }
 
-    style ??= TextStyle(
+    var fontWeight = control.attrString("weight", "")!;
+
+    List<FontVariation> variations = [];
+    if (fontWeight.startsWith("w")) {
+      variations
+          .add(FontVariation('wght', parseDouble(fontWeight.substring(1))));
+    }
+
+    style = (style ?? const TextStyle()).copyWith(
         fontSize: control.attrDouble("size", null),
-        fontWeight: getFontWeight(control.attrString("weight", "")!),
+        fontWeight: getFontWeight(fontWeight),
         fontStyle: control.attrBool("italic", false)! ? FontStyle.italic : null,
         fontFamily: control.attrString("fontFamily"),
+        fontVariations: variations,
         color: HexColor.fromString(
             Theme.of(context), control.attrString("color", "")!),
         backgroundColor: HexColor.fromString(

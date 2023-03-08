@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../flet_server.dart';
 import '../protocol/invoke_method_result.dart';
-import '../web_socket_client.dart';
 
 void invokeClientStorage(String methodId, String methodName,
-    Map<String, String> args, WebSocketClient ws) async {
+    Map<String, String> args, FletServer server) async {
   sendResult(Object? result, String? error) {
-    ws.pageEventFromWeb(
+    server.sendPageEvent(
         eventTarget: "page",
         eventName: "invoke_method_result",
         eventData: json.encode(InvokeMethodResult(
@@ -33,7 +33,7 @@ void invokeClientStorage(String methodId, String methodName,
       sendResult(
           prefs
               .getKeys()
-              .where((key) => key.startsWith(args["prefix"]!))
+              .where((key) => key.startsWith(args["key_prefix"]!))
               .toList(),
           null);
       break;

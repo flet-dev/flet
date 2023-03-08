@@ -11,6 +11,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
 import '../models/controls_view_model.dart';
+import '../models/page_args_model.dart';
 import '../models/page_media_view_model.dart';
 import '../models/routes_view_model.dart';
 import '../protocol/keyboard_event.dart';
@@ -21,8 +22,8 @@ import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
+import '../utils/images.dart';
 import '../utils/theme.dart';
-import '../utils/uri.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/fade_transition_page.dart';
 import '../widgets/loading_page.dart';
@@ -63,6 +64,7 @@ class _PageControlState extends State<PageControl> {
   double? _windowLeft;
   double? _windowOpacity;
   bool? _windowMinimizable;
+  bool? _windowMaximizable;
   bool? _windowFullScreen;
   bool? _windowMovable;
   bool? _windowResizable;
@@ -111,8 +113,8 @@ class _PageControlState extends State<PageControl> {
   }
 
   void _routeChanged() {
-    widget.dispatch(
-        SetPageRouteAction(_routeState.route, FletAppServices.of(context).ws));
+    widget.dispatch(SetPageRouteAction(
+        _routeState.route, FletAppServices.of(context).server));
     _routeChanges--;
   }
 
@@ -133,7 +135,7 @@ class _PageControlState extends State<PageControl> {
         LogicalKeyboardKey.shiftLeft,
         LogicalKeyboardKey.shiftRight
       ].contains(k)) {
-        FletAppServices.of(context).ws.pageEventFromWeb(
+        FletAppServices.of(context).server.sendPageEvent(
             eventTarget: "page",
             eventName: "keyboard_event",
             eventData: json.encode(KeyboardEvent(
@@ -197,6 +199,7 @@ class _PageControlState extends State<PageControl> {
     var windowMaximized = widget.control.attrBool("windowMaximized");
     var windowOpacity = widget.control.attrDouble("windowOpacity");
     var windowMinimizable = widget.control.attrBool("windowMinimizable");
+    var windowMaximizable = widget.control.attrBool("windowMaximizable");
     var windowAlwaysOnTop = widget.control.attrBool("windowAlwaysOnTop");
     var windowResizable = widget.control.attrBool("windowResizable");
     var windowMovable = widget.control.attrBool("windowMovable");
@@ -294,6 +297,13 @@ class _PageControlState extends State<PageControl> {
           await restoreWindow();
         }
         _windowMinimized = windowMinimized;
+      }
+
+      // window maximizable
+      if (windowMaximizable != null &&
+          windowMaximizable != _windowMaximizable) {
+        await setWindowMaximizability(windowMaximizable);
+        _windowMaximizable = windowMaximizable;
       }
 
       // window maximize
@@ -404,20 +414,22 @@ class _PageControlState extends State<PageControl> {
 
     updateWindow();
 
-    return StoreConnector<AppState, Uri?>(
+    return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
-        converter: (store) => store.state.pageUri,
-        builder: (context, pageUri) {
+        converter: (store) => PageArgsModel.fromStore(store),
+        builder: (context, pageArgs) {
           debugPrint("Page fonts build: ${widget.control.id}");
 
           // load custom fonts
           parseFonts(widget.control, "fonts").forEach((fontFamily, fontUrl) {
-            var fontUri = Uri.parse(fontUrl);
-            if (!fontUri.hasAuthority) {
-              fontUri = getAssetUri(pageUri!, fontUrl);
+            var assetSrc =
+                getAssetSrc(fontUrl, pageArgs.pageUri!, pageArgs.assetsDir);
+
+            if (assetSrc.isFile) {
+              UserFonts.loadFontFromFile(fontFamily, assetSrc.path);
+            } else {
+              UserFonts.loadFontFromUrl(fontFamily, assetSrc.path);
             }
-            debugPrint("fontUri: $fontUri");
-            UserFonts.loadFont(fontFamily, fontUri);
           });
 
           return StoreConnector<AppState, PageMediaViewModel>(
@@ -494,21 +506,7 @@ class _PageControlState extends State<PageControl> {
               key: navigatorKey,
               pages: pages,
               onPopPage: (route, dynamic result) {
-                // if (!route.didPop(result)) {
-                //   return false;
-                // }
-                // debugPrint("onPopPage");
-
-                // if (route.settings is Page) {
-                //   ws.pageEventFromWeb(
-                //       eventTarget: "page",
-                //       eventName: "route_pop",
-                //       eventData:
-                //           ((route.settings as Page).key as ValueKey).value);
-                // }
-
-                // return true;
-                FletAppServices.of(context).ws.pageEventFromWeb(
+                FletAppServices.of(context).server.sendPageEvent(
                     eventTarget: "page",
                     eventName: "view_pop",
                     eventData:
@@ -553,6 +551,7 @@ class _PageControlState extends State<PageControl> {
 
           Control? appBar;
           Control? fab;
+          Control? navBar;
           List<Widget> controls = [];
           bool firstControl = true;
 
@@ -562,6 +561,9 @@ class _PageControlState extends State<PageControl> {
               continue;
             } else if (ctrl.type == "floatingactionbutton") {
               fab = ctrl;
+              continue;
+            } else if (ctrl.type == "navigationbar") {
+              navBar = ctrl;
               continue;
             }
             // spacer between displayed controls
@@ -640,6 +642,10 @@ class _PageControlState extends State<PageControl> {
                                     : column)),
                         ...overlayWidgets
                       ]),
+                      bottomNavigationBar: navBar != null
+                          ? createControl(
+                              control, navBar.id, control.isDisabled)
+                          : null,
                       floatingActionButton: fab != null
                           ? createControl(control, fab.id, control.isDisabled)
                           : null,

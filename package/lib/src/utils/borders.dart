@@ -36,6 +36,27 @@ Border? parseBorder(ThemeData theme, Control control, String propName,
   return borderFromJSON(theme, j1, defaultSideColor);
 }
 
+BorderSide parseBorderSide(ThemeData theme, Control control, String propName,
+    {Color? defaultSideColor}) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return BorderSide.none;
+  }
+
+  final j1 = json.decode(v);
+  return borderSideFromJSON(theme, j1, defaultSideColor);
+}
+
+OutlinedBorder? parseOutlinedBorder(Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return outlinedBorderFromJSON(j1);
+}
+
 BorderRadius borderRadiusFromJSON(dynamic json) {
   if (json is int || json is double) {
     return BorderRadius.all(Radius.circular(parseDouble(json)));

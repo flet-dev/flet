@@ -7,6 +7,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/alignment.dart';
+import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -61,6 +62,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
           .toList(),
       actionsPadding: parseEdgeInsets(widget.control, "actionsPadding"),
       actionsAlignment: actionsAlignment,
+      shape: parseOutlinedBorder(widget.control, "shape"),
     );
   }
 
@@ -108,9 +110,9 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
                   dispatch(UpdateControlPropsAction(
                       UpdateControlPropsPayload(props: props)));
                   FletAppServices.of(context)
-                      .ws
+                      .server
                       .updateControlProps(props: props);
-                  FletAppServices.of(context).ws.pageEventFromWeb(
+                  FletAppServices.of(context).server.sendPageEvent(
                       eventTarget: widget.control.id,
                       eventName: "dismiss",
                       eventData: "");

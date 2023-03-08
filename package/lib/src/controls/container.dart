@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/page_args_model.dart';
 import '../protocol/container_tap_event.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
@@ -16,7 +18,6 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
-import '../utils/uri.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -64,13 +65,14 @@ class ContainerControl extends StatelessWidget {
         : null;
 
     var animation = parseAnimation(control, "animate");
+    var blur = parseBlur(control, "blur");
 
-    final ws = FletAppServices.of(context).ws;
+    final server = FletAppServices.of(context).server;
 
-    return StoreConnector<AppState, Uri?>(
+    return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
-        converter: (store) => store.state.pageUri,
-        builder: (context, pageUri) {
+        converter: (store) => PageArgsModel.fromStore(store),
+        builder: (context, pageArgs) {
           DecorationImage? image;
 
           if (imageSrcBase64 != "") {
@@ -85,11 +87,13 @@ class ContainerControl extends StatelessWidget {
               return ErrorControl("Error decoding base64: ${ex.toString()}");
             }
           } else if (imageSrc != "") {
-            var uri = Uri.parse(imageSrc);
+            var assetSrc =
+                getAssetSrc(imageSrc, pageArgs.pageUri!, pageArgs.assetsDir);
+
             image = DecorationImage(
-                image: NetworkImage(uri.hasAuthority
-                    ? imageSrc
-                    : getAssetUri(pageUri!, imageSrc).toString()),
+                image: assetSrc.isFile
+                    ? getFileImageProvider(assetSrc.path)
+                    : NetworkImage(assetSrc.path),
                 repeat: imageRepeat,
                 fit: imageFit,
                 opacity: imageOpacity);
@@ -105,6 +109,8 @@ class ContainerControl extends StatelessWidget {
                   control.attrString("shape", "")!.toLowerCase(),
               orElse: () => BoxShape.rectangle);
 
+          var borderRadius = parseBorderRadius(control, "borderRadius");
+
           var boxDecor = BoxDecoration(
               color: bgColor,
               gradient: gradient,
@@ -112,8 +118,11 @@ class ContainerControl extends StatelessWidget {
               backgroundBlendMode:
                   bgColor != null || gradient != null ? blendMode : null,
               border: parseBorder(Theme.of(context), control, "border"),
-              borderRadius: parseBorderRadius(control, "borderRadius"),
-              shape: shape);
+              borderRadius: borderRadius,
+              shape: shape,
+              boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"));
+
+          Widget? result;
 
           if ((onClick || onLongPress || onHover) && ink && !disabled) {
             var ink = Ink(
@@ -126,7 +135,7 @@ class ContainerControl extends StatelessWidget {
                   onTapDown: onClick
                       ? (details) {
                           debugPrint("Container ${control.id} clicked!");
-                          ws.pageEventFromWeb(
+                          server.sendPageEvent(
                               eventTarget: control.id,
                               eventName: "click",
                               eventData: json.encode(ContainerTapEvent(
@@ -140,7 +149,7 @@ class ContainerControl extends StatelessWidget {
                   onLongPress: onLongPress
                       ? () {
                           debugPrint("Container ${control.id} long pressed!");
-                          ws.pageEventFromWeb(
+                          server.sendPageEvent(
                               eventTarget: control.id,
                               eventName: "long_press",
                               eventData: "");
@@ -149,7 +158,7 @@ class ContainerControl extends StatelessWidget {
                   onHover: onHover
                       ? (value) {
                           debugPrint("Container ${control.id} hovered!");
-                          ws.pageEventFromWeb(
+                          server.sendPageEvent(
                               eventTarget: control.id,
                               eventName: "hover",
                               eventData: value.toString());
@@ -163,36 +172,33 @@ class ContainerControl extends StatelessWidget {
                     child: child,
                   ),
                 ));
-            return constrainedControl(
-                context,
-                animation == null
-                    ? Container(
-                        width: control.attrDouble("width"),
-                        height: control.attrDouble("height"),
-                        margin: parseEdgeInsets(control, "margin"),
-                        clipBehavior: clipBehavior,
-                        child: ink,
-                      )
-                    : AnimatedContainer(
-                        duration: animation.duration,
-                        curve: animation.curve,
-                        width: control.attrDouble("width"),
-                        height: control.attrDouble("height"),
-                        margin: parseEdgeInsets(control, "margin"),
-                        clipBehavior: clipBehavior,
-                        onEnd: control.attrBool("onAnimationEnd", false)!
-                            ? () {
-                                ws.pageEventFromWeb(
-                                    eventTarget: control.id,
-                                    eventName: "animation_end",
-                                    eventData: "container");
-                              }
-                            : null,
-                        child: ink),
-                parent,
-                control);
+
+            result = animation == null
+                ? Container(
+                    width: control.attrDouble("width"),
+                    height: control.attrDouble("height"),
+                    margin: parseEdgeInsets(control, "margin"),
+                    clipBehavior: clipBehavior,
+                    child: ink,
+                  )
+                : AnimatedContainer(
+                    duration: animation.duration,
+                    curve: animation.curve,
+                    width: control.attrDouble("width"),
+                    height: control.attrDouble("height"),
+                    margin: parseEdgeInsets(control, "margin"),
+                    clipBehavior: clipBehavior,
+                    onEnd: control.attrBool("onAnimationEnd", false)!
+                        ? () {
+                            server.sendPageEvent(
+                                eventTarget: control.id,
+                                eventName: "animation_end",
+                                eventData: "container");
+                          }
+                        : null,
+                    child: ink);
           } else {
-            Widget container = animation == null
+            result = animation == null
                 ? Container(
                     width: control.attrDouble("width"),
                     height: control.attrDouble("height"),
@@ -214,7 +220,7 @@ class ContainerControl extends StatelessWidget {
                     clipBehavior: clipBehavior,
                     onEnd: control.attrBool("onAnimationEnd", false)!
                         ? () {
-                            ws.pageEventFromWeb(
+                            server.sendPageEvent(
                                 eventTarget: control.id,
                                 eventName: "animation_end",
                                 eventData: "container");
@@ -223,13 +229,13 @@ class ContainerControl extends StatelessWidget {
                     child: child);
 
             if ((onClick || onLongPress || onHover) && !disabled) {
-              container = MouseRegion(
+              result = MouseRegion(
                 cursor: SystemMouseCursors.click,
                 onEnter: onHover
                     ? (value) {
                         debugPrint(
                             "Container's mouse region ${control.id} entered!");
-                        ws.pageEventFromWeb(
+                        server.sendPageEvent(
                             eventTarget: control.id,
                             eventName: "hover",
                             eventData: "true");
@@ -239,7 +245,7 @@ class ContainerControl extends StatelessWidget {
                     ? (value) {
                         debugPrint(
                             "Container's mouse region ${control.id} exited!");
-                        ws.pageEventFromWeb(
+                        server.sendPageEvent(
                             eventTarget: control.id,
                             eventName: "hover",
                             eventData: "false");
@@ -249,7 +255,7 @@ class ContainerControl extends StatelessWidget {
                   onTapDown: onClick
                       ? (details) {
                           debugPrint("Container ${control.id} clicked!");
-                          ws.pageEventFromWeb(
+                          server.sendPageEvent(
                               eventTarget: control.id,
                               eventName: "click",
                               eventData: json.encode(ContainerTapEvent(
@@ -263,18 +269,27 @@ class ContainerControl extends StatelessWidget {
                   onLongPress: onLongPress
                       ? () {
                           debugPrint("Container ${control.id} clicked!");
-                          ws.pageEventFromWeb(
+                          server.sendPageEvent(
                               eventTarget: control.id,
                               eventName: "long_press",
                               eventData: "");
                         }
                       : null,
-                  child: container,
+                  child: result,
                 ),
               );
             }
-            return constrainedControl(context, container, parent, control);
           }
+
+          if (blur != null) {
+            result = borderRadius != null
+                ? ClipRRect(
+                    borderRadius: borderRadius,
+                    child: BackdropFilter(filter: blur, child: result))
+                : ClipRect(child: BackdropFilter(filter: blur, child: result));
+          }
+
+          return constrainedControl(context, result, parent, control);
         });
   }
 }

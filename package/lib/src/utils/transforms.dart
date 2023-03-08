@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'alignment.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import 'alignment.dart';
 import 'numbers.dart';
 
 RotationDetails? parseRotate(Control control, String propName) {
@@ -50,7 +50,7 @@ ScaleDetails scaleFromJSON(dynamic json) {
 OffsetDetails? parseOffset(Control control, String propName) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return OffsetDetails(x: 0, y: 0);
+    return null;
   }
 
   final j1 = json.decode(v);

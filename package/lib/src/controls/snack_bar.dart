@@ -47,7 +47,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
                 widget.control.attrString("actionColor", "")!),
             onPressed: () {
               debugPrint("SnackBar ${widget.control.id} clicked!");
-              FletAppServices.of(context).ws.pageEventFromWeb(
+              FletAppServices.of(context).server.sendPageEvent(
                   eventTarget: widget.control.id,
                   eventName: "action",
                   eventData: "");
@@ -97,7 +97,9 @@ class _SnackBarControlState extends State<SnackBarControl> {
               ];
               dispatch(UpdateControlPropsAction(
                   UpdateControlPropsPayload(props: props)));
-              FletAppServices.of(context).ws.updateControlProps(props: props);
+              FletAppServices.of(context)
+                  .server
+                  .updateControlProps(props: props);
             });
           }
 

@@ -8,6 +8,8 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/colors.dart';
+import '../utils/desktop.dart';
 import 'create_control.dart';
 
 class SliderControl extends StatefulWidget {
@@ -47,7 +49,7 @@ class _SliderControlState extends State<SliderControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).ws.pageEventFromWeb(
+    FletAppServices.of(context).server.sendPageEvent(
         eventTarget: widget.control.id,
         eventName: _focusNode.hasFocus ? "focus" : "blur",
         eventData: "");
@@ -66,10 +68,10 @@ class _SliderControlState extends State<SliderControl> {
     ];
     dispatch(UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
 
-    _debounce = Timer(const Duration(milliseconds: 100), () {
-      final ws = FletAppServices.of(context).ws;
-      ws.updateControlProps(props: props);
-      ws.pageEventFromWeb(
+    _debounce = Timer(Duration(milliseconds: isDesktop() ? 10 : 100), () {
+      final server = FletAppServices.of(context).server;
+      server.updateControlProps(props: props);
+      server.sendPageEvent(
           eventTarget: widget.control.id,
           eventName: "change",
           eventData: svalue);
@@ -87,6 +89,9 @@ class _SliderControlState extends State<SliderControl> {
     double min = widget.control.attrDouble("min", 0)!;
     double max = widget.control.attrDouble("max", 1)!;
     int? divisions = widget.control.attrInt("divisions");
+    int round = widget.control.attrInt("round", 0)!;
+
+    final server = FletAppServices.of(context).server;
 
     return StoreConnector<AppState, Function>(
         distinct: true,
@@ -107,10 +112,33 @@ class _SliderControlState extends State<SliderControl> {
               min: min,
               max: max,
               divisions: divisions,
-              label: label?.replaceAll("{value}", _value.toString()),
+              label:
+                  label?.replaceAll("{value}", _value.toStringAsFixed(round)),
+              activeColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("activeColor", "")!),
+              inactiveColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("inactiveColor", "")!),
+              thumbColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("thumbColor", "")!),
               onChanged: !disabled
                   ? (double value) {
                       onChange(value, dispatch);
+                    }
+                  : null,
+              onChangeStart: !disabled
+                  ? (double value) {
+                      server.sendPageEvent(
+                          eventTarget: widget.control.id,
+                          eventName: "change_start",
+                          eventData: value.toString());
+                    }
+                  : null,
+              onChangeEnd: !disabled
+                  ? (double value) {
+                      server.sendPageEvent(
+                          eventTarget: widget.control.id,
+                          eventName: "change_end",
+                          eventData: value.toString());
                     }
                   : null);
 

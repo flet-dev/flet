@@ -1,5 +1,5 @@
-import 'package:flet/src/utils/client_storage.dart';
-import 'package:flet/src/utils/launch_url.dart';
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -9,10 +9,13 @@ import 'models/control.dart';
 import 'models/window_media_data.dart';
 import 'protocol/add_page_controls_payload.dart';
 import 'protocol/clean_control_payload.dart';
+import 'protocol/invoke_method_result.dart';
 import 'protocol/message.dart';
 import 'protocol/remove_control_payload.dart';
 import 'protocol/update_control_props_payload.dart';
+import 'utils/client_storage.dart';
 import 'utils/desktop.dart';
+import 'utils/launch_url.dart';
 import 'utils/platform_utils_non_web.dart'
     if (dart.library.js) "utils/platform_utils_web.dart";
 import 'utils/session_store_non_web.dart'
@@ -23,25 +26,17 @@ enum Actions { increment, setText, setError }
 
 AppState appReducer(AppState state, dynamic action) {
   if (action is PageLoadAction) {
-    action.ws.connect(serverUrl: getWebSocketEndpoint(action.pageUri));
     var sessionId = SessionStore.get("sessionId");
     return state.copyWith(
-        pageUri: action.pageUri, sessionId: sessionId, isLoading: true);
+        pageUri: action.pageUri,
+        assetsDir: action.assetsDir,
+        sessionId: sessionId,
+        isLoading: true);
   } else if (action is PageSizeChangeAction) {
     //
     // page size changed
     //
-    // calculate break point
-    final width = action.newPageSize.width;
-    String newBreakpoint = "";
-    state.sizeBreakpoints.forEach((bpName, bpWidth) {
-      if (width >= bpWidth) {
-        newBreakpoint = bpName;
-      }
-    });
-
-    debugPrint(
-        "New page size: ${action.newPageSize}, new breakpoint: $newBreakpoint");
+    debugPrint("New page size: ${action.newPageSize}");
 
     var page = state.controls["page"];
     var controls = Map.of(state.controls);
@@ -59,8 +54,8 @@ AppState appReducer(AppState state, dynamic action) {
         addWindowMediaEventProps(action.wmd!, pageAttrs, props);
       }
       controls[page.id] = page.copyWith(attrs: pageAttrs);
-      action.ws.updateControlProps(props: props);
-      action.ws.pageEventFromWeb(
+      action.server.updateControlProps(props: props);
+      action.server.sendPageEvent(
           eventTarget: "page",
           eventName: "resize",
           eventData:
@@ -68,10 +63,7 @@ AppState appReducer(AppState state, dynamic action) {
     }
 
     return state.copyWith(
-        isRegistered: true,
-        controls: controls,
-        size: action.newPageSize,
-        sizeBreakpoint: newBreakpoint);
+        isRegistered: true, controls: controls, size: action.newPageSize);
   } else if (action is SetPageRouteAction) {
     //
     // page route changed
@@ -89,7 +81,7 @@ AppState appReducer(AppState state, dynamic action) {
         String pageName = getWebPageName(state.pageUri!);
 
         getWindowMediaData().then((wmd) {
-          action.ws.registerWebClient(
+          action.server.registerWebClient(
               pageName: pageName,
               pageRoute: action.route,
               pageWidth: state.size.width.toString(),
@@ -101,6 +93,8 @@ AppState appReducer(AppState state, dynamic action) {
               isPWA: isProgressiveWebApp().toString(),
               isWeb: kIsWeb.toString(),
               platform: defaultTargetPlatform.name.toLowerCase());
+
+          action.server.connect(address: state.pageUri!.toString());
         });
       } else {
         // existing route change
@@ -108,8 +102,8 @@ AppState appReducer(AppState state, dynamic action) {
         List<Map<String, String>> props = [
           {"i": "page", "route": action.route},
         ];
-        action.ws.updateControlProps(props: props);
-        action.ws.pageEventFromWeb(
+        action.server.updateControlProps(props: props);
+        action.server.sendPageEvent(
             eventTarget: "page",
             eventName: "route_change",
             eventData: action.route);
@@ -132,8 +126,8 @@ AppState appReducer(AppState state, dynamic action) {
       addWindowMediaEventProps(action.wmd, pageAttrs, props);
 
       controls[page.id] = page.copyWith(attrs: pageAttrs);
-      action.ws.updateControlProps(props: props);
-      action.ws.pageEventFromWeb(
+      action.server.updateControlProps(props: props);
+      action.server.sendPageEvent(
           eventTarget: "page",
           eventName: "window_event",
           eventData: action.eventName);
@@ -181,7 +175,7 @@ AppState appReducer(AppState state, dynamic action) {
     //
     // app become active
     //
-    action.ws.registerWebClientInternal();
+    action.server.registerWebClientInternal();
     return state.copyWith(error: "");
   } else if (action is AppBecomeInactiveAction) {
     //
@@ -208,6 +202,15 @@ AppState appReducer(AppState state, dynamic action) {
             int.tryParse(action.payload.args["window_width"] ?? ""),
             int.tryParse(action.payload.args["window_height"] ?? ""));
         break;
+      case "canLaunchUrl":
+        canLaunchUrl(Uri.parse(action.payload.args["url"]!)).then((value) =>
+            action.server.sendPageEvent(
+                eventTarget: "page",
+                eventName: "invoke_method_result",
+                eventData: json.encode(InvokeMethodResult(
+                    methodId: action.payload.methodId,
+                    result: value.toString()))));
+        break;
       case "windowToFront":
         windowToFront();
         break;
@@ -218,7 +221,7 @@ AppState appReducer(AppState state, dynamic action) {
           action.payload.methodId,
           action.payload.methodName.substring(clientStoragePrefix.length),
           action.payload.args,
-          action.ws);
+          action.server);
     }
   } else if (action is AddPageControlsAction) {
     //

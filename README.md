@@ -24,7 +24,7 @@ Flet UI is built with [Flutter](https://flutter.dev/), so your app looks profess
 
 ### 🌐 Speaks your language
 
-Flet is language-agnostic, so anyone on your team could develop Flet apps in their favorite language. [Python](https://flet.dev/docs/guides/python/getting-started) is already supported, Go, C# and others are [coming next](https://flet.dev/docs/roadmap).
+Flet is language-agnostic, so anyone on your team could develop Flet apps in their favorite language. [Python](https://flet.dev/docs/guides/python/getting-started) is already supported, Go, C# and others are [coming next](https://flet.dev/roadmap).
 
 ### 📱 Deliver to any device
 

@@ -38,7 +38,7 @@ class _ClipboardControlState extends State<ClipboardControl> {
         ];
         FletAppServices.of(context).store.dispatch(
             UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-        FletAppServices.of(context).ws.updateControlProps(props: props);
+        FletAppServices.of(context).server.updateControlProps(props: props);
 
         var mj = json.decode(method);
         var i = mj["i"] as int;
@@ -46,7 +46,7 @@ class _ClipboardControlState extends State<ClipboardControl> {
         var params = List<String>.from(mj["p"] as List);
 
         sendResult(Object? result, String? error) {
-          FletAppServices.of(context).ws.pageEventFromWeb(
+          FletAppServices.of(context).server.sendPageEvent(
               eventTarget: widget.control.id,
               eventName: "method_result",
               eventData: json.encode({

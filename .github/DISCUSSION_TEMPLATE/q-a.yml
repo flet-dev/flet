@@ -1,0 +1,34 @@
+title: "[Question]"
+labels: ["help wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is the place to ask for specifics about Flet or for help with problems you encountered while using it.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Please formulate your question as precisely as possible.
+    validations:
+      required: true
+  - type: textarea
+    id: code
+    attributes:
+      label: Code sample
+      description: |
+        If applicable, paste in a code sample of your best attempt so far. It will automatically be rendered as python code.
+      render: python
+  - type: textarea
+    id: error
+    attributes:
+      label: Error message
+      description: If applicable, paste in the full error message you received.
+      render: bash
+  - type: checkboxes
+    id: similar-search
+    attributes:
+      label: ------------------------------------------------------
+      options:
+        - label: I have searched for answers to my question both in the issues and in previous discussions.
+          required: true

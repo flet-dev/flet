@@ -2,10 +2,6 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flet/src/protocol/file_picker_upload_file.dart';
-import 'package:flet/src/protocol/file_picker_upload_progress_event.dart';
-import 'package:flet/src/utils/desktop.dart';
-import 'package:flet/src/web_socket_client.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -13,10 +9,14 @@ import 'package:http/http.dart' as http;
 
 import '../actions.dart';
 import '../flet_app_services.dart';
+import '../flet_server.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/file_picker_result_event.dart';
+import '../protocol/file_picker_upload_file.dart';
+import '../protocol/file_picker_upload_progress_event.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/desktop.dart';
 import '../utils/strings.dart';
 
 class FilePickerControl extends StatefulWidget {
@@ -72,7 +72,7 @@ class _FilePickerControlState extends State<FilePickerControl> {
             ];
             fletServices.store.dispatch(UpdateControlPropsAction(
                 UpdateControlPropsPayload(props: props)));
-            fletServices.ws.updateControlProps(props: props);
+            fletServices.server.updateControlProps(props: props);
           }
 
           sendEvent() {
@@ -81,7 +81,7 @@ class _FilePickerControlState extends State<FilePickerControl> {
               resetDialogState();
             }
             var fletServices = FletAppServices.of(context);
-            fletServices.ws.pageEventFromWeb(
+            fletServices.server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "result",
                 eventData: json.encode(FilePickerResultEvent(
@@ -158,14 +158,14 @@ class _FilePickerControlState extends State<FilePickerControl> {
           // upload files
           if (_upload != upload && upload != null && _files != null) {
             _upload = upload;
-            uploadFiles(upload, FletAppServices.of(context).ws, pageUri!);
+            uploadFiles(upload, FletAppServices.of(context).server, pageUri!);
           }
 
           return const SizedBox.shrink();
         });
   }
 
-  Future uploadFiles(String filesJson, WebSocketClient ws, Uri pageUri) async {
+  Future uploadFiles(String filesJson, FletServer server, Uri pageUri) async {
     var uj = json.decode(filesJson);
     var uploadFiles = (uj as List).map((u) => FilePickerUploadFile(
         name: u["name"], uploadUrl: u["upload_url"], method: u["method"]));
@@ -174,16 +174,16 @@ class _FilePickerControlState extends State<FilePickerControl> {
       if (file != null) {
         try {
           await uploadFile(
-              file, ws, getFullUploadUrl(pageUri, uf.uploadUrl), uf.method);
+              file, server, getFullUploadUrl(pageUri, uf.uploadUrl), uf.method);
           _files!.remove(file);
         } catch (e) {
-          sendProgress(ws, file.name, null, e.toString());
+          sendProgress(server, file.name, null, e.toString());
         }
       }
     }
   }
 
-  Future uploadFile(PlatformFile file, WebSocketClient ws, String uploadUrl,
+  Future uploadFile(PlatformFile file, FletServer server, String uploadUrl,
       String method) async {
     final fileReadStream = file.readStream;
     if (fileReadStream == null) {
@@ -197,7 +197,7 @@ class _FilePickerControlState extends State<FilePickerControl> {
     streamedRequest.contentLength = file.size;
 
     // send 0%
-    sendProgress(ws, file.name, 0, null);
+    sendProgress(server, file.name, 0, null);
 
     double lastSent = 0; // send every 10%
     double progress = 0;
@@ -210,7 +210,7 @@ class _FilePickerControlState extends State<FilePickerControl> {
       if (progress >= lastSent) {
         lastSent += 0.1;
         if (progress != 1.0) {
-          sendProgress(ws, file.name, progress, null);
+          sendProgress(server, file.name, progress, null);
         }
       }
     }, onDone: () {
@@ -220,17 +220,17 @@ class _FilePickerControlState extends State<FilePickerControl> {
     var streamedResponse = await streamedRequest.send();
     var response = await http.Response.fromStream(streamedResponse);
     if (response.statusCode < 200 || response.statusCode > 204) {
-      sendProgress(ws, file.name, null,
+      sendProgress(server, file.name, null,
           "Upload endpoint returned code ${response.statusCode}: ${response.body}");
     } else {
       // send 100%
-      sendProgress(ws, file.name, progress, null);
+      sendProgress(server, file.name, progress, null);
     }
   }
 
   void sendProgress(
-      WebSocketClient ws, String name, double? progress, String? error) {
-    ws.pageEventFromWeb(
+      FletServer server, String name, double? progress, String? error) {
+    server.sendPageEvent(
         eventTarget: widget.control.id,
         eventName: "upload",
         eventData: json.encode(FilePickerUploadProgressEvent(
