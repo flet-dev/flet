@@ -476,12 +476,12 @@ def __start_flet_server(
 
     args.append("--attached")
 
-    log_level = logger.getLogger().getEffectiveLevel()
-    if log_level == logger.CRITICAL:
-        log_level = logger.FATAL
+    log_level = logging.getLogger(flet.__name__).getEffectiveLevel()
+    if log_level == logging.CRITICAL:
+        log_level = logging.FATAL
 
-    if log_level != logger.NOTSET:
-        log_level_name = logger.getLevelName(log_level).lower()
+    if log_level != logging.NOTSET:
+        log_level_name = logging.getLevelName(log_level).lower()
         args.extend(["--log-level", log_level_name])
 
     startupinfo = None
@@ -494,8 +494,8 @@ def __start_flet_server(
         env=fletd_env,
         creationflags=creationflags,
         start_new_session=start_new_session,
-        stdout=subprocess.DEVNULL if log_level >= logger.WARNING else None,
-        stderr=subprocess.DEVNULL if log_level >= logger.WARNING else None,
+        stdout=subprocess.DEVNULL if log_level >= logging.WARNING else None,
+        stderr=subprocess.DEVNULL if log_level >= logging.WARNING else None,
         startupinfo=startupinfo,
     )
 

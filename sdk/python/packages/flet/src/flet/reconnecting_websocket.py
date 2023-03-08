@@ -24,8 +24,8 @@ class ReconnectingWebSocket:
         self.retry = 0
         # disable websocket logging completely
         # https://github.com/websocket-client/websocket-client/blob/master/websocket/_logger.py#L22-L51
-        ws_logger = logger.getLogger("websocket")
-        ws_logger.setLevel(logger.FATAL)
+        ws_logger = logging.getLogger("websocket")
+        ws_logger.setLevel(logging.FATAL)
 
     def _on_open(self, wsapp) -> None:
         logger.info(f"Successfully connected to {self._url}")
