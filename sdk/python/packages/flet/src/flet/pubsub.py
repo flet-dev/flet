@@ -3,6 +3,10 @@ import logging
 import threading
 from typing import Any, Callable, Dict, Iterable
 
+import flet
+
+logger = logging.getLogger(flet.__name__)
+
 
 class PubSubHub:
     def __init__(self):
@@ -17,47 +21,47 @@ class PubSubHub:
         ] = {}  # key: session_id, value: dict[topic, handler]
 
     def send_all(self, message: Any):
-        logging.debug(f"pubsub.send_all({message})")
+        logger.debug(f"pubsub.send_all({message})")
         with self.__lock:
             for handler in self.__subscribers.values():
                 self.__send(handler, [message])
 
     async def send_all_async(self, message: Any):
-        logging.debug(f"pubsub.send_all_async({message})")
+        logger.debug(f"pubsub.send_all_async({message})")
         async with self.__async_lock:
             for handler in self.__subscribers.values():
                 await self.__send_async(handler, [message])
 
     def send_all_on_topic(self, topic: str, message: Any):
-        logging.debug(f"pubsub.send_all_on_topic({topic}, {message})")
+        logger.debug(f"pubsub.send_all_on_topic({topic}, {message})")
         with self.__lock:
             if topic in self.__topic_subscribers:
                 for handler in self.__topic_subscribers[topic].values():
                     self.__send(handler, [topic, message])
 
     async def send_all_on_topic_async(self, topic: str, message: Any):
-        logging.debug(f"pubsub.send_all_on_topic_async({topic}, {message})")
+        logger.debug(f"pubsub.send_all_on_topic_async({topic}, {message})")
         async with self.__async_lock:
             if topic in self.__topic_subscribers:
                 for handler in self.__topic_subscribers[topic].values():
                     await self.__send_async(handler, [topic, message])
 
     def send_others(self, except_session_id: str, message: Any):
-        logging.debug(f"pubsub.send_others({except_session_id}, {message})")
+        logger.debug(f"pubsub.send_others({except_session_id}, {message})")
         with self.__lock:
             for session_id, handler in self.__subscribers.items():
                 if except_session_id != session_id:
                     self.__send(handler, [message])
 
     async def send_others_async(self, except_session_id: str, message: Any):
-        logging.debug(f"pubsub.send_others_async({except_session_id}, {message})")
+        logger.debug(f"pubsub.send_others_async({except_session_id}, {message})")
         async with self.__async_lock:
             for session_id, handler in self.__subscribers.items():
                 if except_session_id != session_id:
                     await self.__send_async(handler, [message])
 
     def send_others_on_topic(self, except_session_id: str, topic: str, message: Any):
-        logging.debug(
+        logger.debug(
             f"pubsub.send_others_on_topic({except_session_id}, {topic}, {message})"
         )
         with self.__lock:
@@ -69,7 +73,7 @@ class PubSubHub:
     async def send_others_on_topic_async(
         self, except_session_id: str, topic: str, message: Any
     ):
-        logging.debug(
+        logger.debug(
             f"pubsub.send_others_on_topic_async({except_session_id}, {topic}, {message})"
         )
         async with self.__async_lock:
@@ -79,22 +83,22 @@ class PubSubHub:
                         await self.__send_async(handler, [topic, message])
 
     def subscribe(self, session_id: str, handler: Callable):
-        logging.debug(f"pubsub.subscribe({session_id})")
+        logger.debug(f"pubsub.subscribe({session_id})")
         with self.__lock:
             self.__subscribers[session_id] = handler
 
     async def subscribe_async(self, session_id: str, handler):
-        logging.debug(f"pubsub.subscribe_async({session_id})")
+        logger.debug(f"pubsub.subscribe_async({session_id})")
         async with self.__async_lock:
             self.__subscribers[session_id] = handler
 
     def subscribe_topic(self, session_id: str, topic: str, handler: Callable):
-        logging.debug(f"pubsub.subscribe_topic({session_id}, {topic})")
+        logger.debug(f"pubsub.subscribe_topic({session_id}, {topic})")
         with self.__lock:
             self.__subscribe_topic(session_id, topic, handler)
 
     async def subscribe_topic_async(self, session_id: str, topic: str, handler):
-        logging.debug(f"pubsub.subscribe_topic_async({session_id}, {topic})")
+        logger.debug(f"pubsub.subscribe_topic_async({session_id}, {topic})")
         async with self.__async_lock:
             self.__subscribe_topic(session_id, topic, handler)
 
@@ -111,27 +115,27 @@ class PubSubHub:
         subscriber_topics[topic] = handler
 
     def unsubscribe(self, session_id: str):
-        logging.debug(f"pubsub.unsubscribe({session_id})")
+        logger.debug(f"pubsub.unsubscribe({session_id})")
         with self.__lock:
             self.__unsubscribe(session_id)
 
     async def unsubscribe_async(self, session_id: str):
-        logging.debug(f"pubsub.unsubscribe_async({session_id})")
+        logger.debug(f"pubsub.unsubscribe_async({session_id})")
         async with self.__async_lock:
             self.__unsubscribe(session_id)
 
     def unsubscribe_topic(self, session_id: str, topic: str):
-        logging.debug(f"pubsub.unsubscribe({session_id}, {topic})")
+        logger.debug(f"pubsub.unsubscribe({session_id}, {topic})")
         with self.__lock:
             self.__unsubscribe_topic(session_id, topic)
 
     async def unsubscribe_topic_async(self, session_id: str, topic: str):
-        logging.debug(f"pubsub.unsubscribe_topic_async({session_id}, {topic})")
+        logger.debug(f"pubsub.unsubscribe_topic_async({session_id}, {topic})")
         async with self.__async_lock:
             self.__unsubscribe_topic(session_id, topic)
 
     def unsubscribe_all(self, session_id: str):
-        logging.debug(f"pubsub.unsubscribe_all({session_id})")
+        logger.debug(f"pubsub.unsubscribe_all({session_id})")
         with self.__lock:
             self.__unsubscribe(session_id)
             if session_id in self.__subscriber_topics:
@@ -139,7 +143,7 @@ class PubSubHub:
                     self.__unsubscribe_topic(session_id, topic)
 
     async def unsubscribe_all_async(self, session_id: str):
-        logging.debug(f"pubsub.unsubscribe_all_async({session_id})")
+        logger.debug(f"pubsub.unsubscribe_all_async({session_id})")
         async with self.__async_lock:
             self.__unsubscribe(session_id)
             if session_id in self.__subscriber_topics:
@@ -147,11 +151,11 @@ class PubSubHub:
                     self.__unsubscribe_topic(session_id, topic)
 
     def __unsubscribe(self, session_id: str):
-        logging.debug(f"pubsub.__unsubscribe({session_id})")
+        logger.debug(f"pubsub.__unsubscribe({session_id})")
         self.__subscribers.pop(session_id)
 
     def __unsubscribe_topic(self, session_id: str, topic: str):
-        logging.debug(f"pubsub.__unsubscribe_topic({session_id}, {topic})")
+        logger.debug(f"pubsub.__unsubscribe_topic({session_id}, {topic})")
         topic_subscribers = self.__topic_subscribers.get(topic)
         if topic_subscribers is not None:
             topic_subscribers.pop(session_id)

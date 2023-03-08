@@ -12,6 +12,7 @@ import zipfile
 from pathlib import Path
 from typing import Optional
 
+import flet
 from flet import version
 from flet.async_local_socket_connection import AsyncLocalSocketConnection
 from flet.async_websocket_connection import AsyncWebSocketConnection
@@ -41,6 +42,8 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+
+logger = logging.getLogger(flet.__name__)
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
@@ -125,18 +128,18 @@ def __app_sync(
     if url_prefix is not None:
         print(url_prefix, conn.page_url)
     else:
-        logging.info(f"App URL: {conn.page_url}")
+        logger.info(f"App URL: {conn.page_url}")
 
     terminate = threading.Event()
 
     def exit_gracefully(signum, frame):
-        logging.debug("Gracefully terminating Flet app...")
+        logger.debug("Gracefully terminating Flet app...")
         terminate.set()
 
     signal.signal(signal.SIGINT, exit_gracefully)
     signal.signal(signal.SIGTERM, exit_gracefully)
 
-    logging.info("Connected to Flet app and handling user sessions...")
+    logger.info("Connected to Flet app and handling user sessions...")
 
     fvp = None
     pid_file = None
@@ -199,18 +202,18 @@ async def app_async(
     if url_prefix is not None:
         print(url_prefix, conn.page_url)
     else:
-        logging.info(f"App URL: {conn.page_url}")
+        logger.info(f"App URL: {conn.page_url}")
 
     terminate = asyncio.Event()
 
     def exit_gracefully(signum, frame):
-        logging.debug("Gracefully terminating Flet app...")
+        logger.debug("Gracefully terminating Flet app...")
         asyncio.get_running_loop().call_soon_threadsafe(terminate.set)
 
     signal.signal(signal.SIGINT, exit_gracefully)
     signal.signal(signal.SIGTERM, exit_gracefully)
 
-    logging.info("Connected to Flet app and handling user sessions...")
+    logger.info("Connected to Flet app and handling user sessions...")
 
     fvp = None
     pid_file = None
@@ -244,7 +247,7 @@ def close_flet_view(pid_file):
         try:
             with open(pid_file) as f:
                 fvp_pid = int(f.read())
-            logging.debug(f"Flet View process {fvp_pid}")
+            logger.debug(f"Flet View process {fvp_pid}")
             os.kill(fvp_pid, signal.SIGKILL)
         except:
             pass
@@ -289,14 +292,14 @@ def __connect_internal_sync(
                 Event(e.eventTarget, e.eventName, e.eventData)
             )
             if e.eventTarget == "page" and e.eventName == "close":
-                logging.info(f"Session closed: {e.sessionID}")
+                logger.info(f"Session closed: {e.sessionID}")
                 del conn.sessions[e.sessionID]
 
     def on_session_created(conn, session_data):
         page = Page(conn, session_data.sessionID)
         page.fetch_page_details()
         conn.sessions[session_data.sessionID] = page
-        logging.info(f"Session started: {session_data.sessionID}")
+        logger.info(f"Session started: {session_data.sessionID}")
         try:
             assert session_handler is not None
             session_handler(page)
@@ -364,14 +367,14 @@ async def __connect_internal_async(
                 Event(e.eventTarget, e.eventName, e.eventData)
             )
             if e.eventTarget == "page" and e.eventName == "close":
-                logging.info(f"Session closed: {e.sessionID}")
+                logger.info(f"Session closed: {e.sessionID}")
                 del conn.sessions[e.sessionID]
 
     async def on_session_created(session_data):
         page = Page(conn, session_data.sessionID)
         await page.fetch_page_details_async()
         conn.sessions[session_data.sessionID] = page
-        logging.info(f"Session started: {session_data.sessionID}")
+        logger.info(f"Session started: {session_data.sessionID}")
         try:
             assert session_handler is not None
             await session_handler(page)
@@ -412,14 +415,14 @@ def __start_flet_server(
     if port == 0:
         port = get_free_tcp_port()
 
-    logging.info(f"Starting local Flet Server on port {port}...")
+    logger.info(f"Starting local Flet Server on port {port}...")
 
     fletd_exe = "fletd.exe" if is_windows() else "fletd"
 
     # check if flet.exe exists in "bin" directory (user mode)
     fletd_path = os.path.join(get_package_bin_dir(), fletd_exe)
     if os.path.exists(fletd_path):
-        logging.info(f"Flet Server found in: {fletd_path}")
+        logger.info(f"Flet Server found in: {fletd_path}")
     else:
         # check if flet.exe is in PATH (flet developer mode)
         fletd_path = which(fletd_exe)
@@ -427,7 +430,7 @@ def __start_flet_server(
             # download flet from GitHub (python module developer mode)
             fletd_path = __download_fletd()
         else:
-            logging.info(f"Flet Server found in PATH")
+            logger.info(f"Flet Server found in PATH")
 
     fletd_env = {**os.environ}
 
@@ -436,22 +439,22 @@ def __start_flet_server(
             upload_dir = str(
                 Path(get_current_script_dir()).joinpath(upload_dir).resolve()
             )
-        logging.info(f"Upload path configured: {upload_dir}")
+        logger.info(f"Upload path configured: {upload_dir}")
         fletd_env["FLET_UPLOAD_ROOT_DIR"] = upload_dir
 
     if host not in [None, "", "*"]:
-        logging.info(f"Host binding configured: {host}")
+        logger.info(f"Host binding configured: {host}")
         fletd_env["FLET_SERVER_IP"] = host
 
         if host != "127.0.0.1":
             fletd_env["FLET_ALLOW_REMOTE_HOST_CLIENTS"] = "true"
 
     if web_renderer and web_renderer not in ["auto"]:
-        logging.info(f"Web renderer configured: {web_renderer}")
+        logger.info(f"Web renderer configured: {web_renderer}")
         fletd_env["FLET_WEB_RENDERER"] = web_renderer
 
     if route_url_strategy is not None:
-        logging.info(f"Route URL strategy configured: {route_url_strategy}")
+        logger.info(f"Route URL strategy configured: {route_url_strategy}")
         fletd_env["FLET_ROUTE_URL_STRATEGY"] = route_url_strategy
 
     web_root_dir = get_package_web_dir()
@@ -473,12 +476,12 @@ def __start_flet_server(
 
     args.append("--attached")
 
-    log_level = logging.getLogger().getEffectiveLevel()
-    if log_level == logging.CRITICAL:
-        log_level = logging.FATAL
+    log_level = logger.getLogger().getEffectiveLevel()
+    if log_level == logger.CRITICAL:
+        log_level = logger.FATAL
 
-    if log_level != logging.NOTSET:
-        log_level_name = logging.getLevelName(log_level).lower()
+    if log_level != logger.NOTSET:
+        log_level_name = logger.getLevelName(log_level).lower()
         args.extend(["--log-level", log_level_name])
 
     startupinfo = None
@@ -491,8 +494,8 @@ def __start_flet_server(
         env=fletd_env,
         creationflags=creationflags,
         start_new_session=start_new_session,
-        stdout=subprocess.DEVNULL if log_level >= logging.WARNING else None,
-        stderr=subprocess.DEVNULL if log_level >= logging.WARNING else None,
+        stdout=subprocess.DEVNULL if log_level >= logger.WARNING else None,
+        stderr=subprocess.DEVNULL if log_level >= logger.WARNING else None,
         startupinfo=startupinfo,
     )
 
@@ -528,12 +531,12 @@ def __get_assets_dir_path(assets_dir: Optional[str]):
                 assets_dir = str(
                     Path(get_current_script_dir()).joinpath(assets_dir).resolve()
                 )
-        logging.info(f"Assets path configured: {assets_dir}")
+        logger.info(f"Assets path configured: {assets_dir}")
     return assets_dir
 
 
 def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
-    logging.info(f"Starting Flet View app...")
+    logger.info(f"Starting Flet View app...")
 
     args = []
 
@@ -547,18 +550,18 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         # check if flet_view.exe exists in "bin" directory (user mode)
         flet_path = os.path.join(get_package_bin_dir(), "flet", flet_exe)
         if os.path.exists(flet_path):
-            logging.info(f"Flet View found in: {flet_path}")
+            logger.info(f"Flet View found in: {flet_path}")
         else:
             # check if flet.exe is in FLET_VIEW_PATH (flet developer mode)
             flet_path = os.environ.get("FLET_VIEW_PATH")
             if flet_path and os.path.exists(flet_path):
-                logging.info(f"Flet View found in PATH: {flet_path}")
+                logger.info(f"Flet View found in PATH: {flet_path}")
                 flet_path = os.path.join(flet_path, flet_exe)
             else:
                 if not temp_flet_dir.exists():
                     zip_file = __download_flet_client("flet-windows.zip")
 
-                    logging.info(f"Extracting flet.exe from archive to {temp_flet_dir}")
+                    logger.info(f"Extracting flet.exe from archive to {temp_flet_dir}")
                     temp_flet_dir.mkdir(parents=True, exist_ok=True)
                     with zipfile.ZipFile(zip_file, "r") as zip_arch:
                         zip_arch.extractall(str(temp_flet_dir))
@@ -571,7 +574,7 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         # check if flet.exe is in FLET_VIEW_PATH (flet developer mode)
         flet_path = os.environ.get("FLET_VIEW_PATH")
         if flet_path:
-            logging.info(f"Flet.app is set via FLET_VIEW_PATH: {flet_path}")
+            logger.info(f"Flet.app is set via FLET_VIEW_PATH: {flet_path}")
             temp_flet_dir = Path(flet_path)
         else:
             # check if flet_view.app exists in a temp directory
@@ -582,12 +585,12 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
                 if not os.path.exists(tar_file):
                     tar_file = __download_flet_client(gz_filename)
 
-                logging.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
+                logger.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
                 temp_flet_dir.mkdir(parents=True, exist_ok=True)
                 with tarfile.open(str(tar_file), "r:gz") as tar_arch:
                     safe_tar_extractall(tar_arch, str(temp_flet_dir))
             else:
-                logging.info(f"Flet View found in: {temp_flet_dir}")
+                logger.info(f"Flet View found in: {temp_flet_dir}")
 
         app_name = None
         for f in os.listdir(temp_flet_dir):
@@ -608,12 +611,12 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
             if not os.path.exists(tar_file):
                 tar_file = __download_flet_client(gz_filename)
 
-            logging.info(f"Extracting Flet from archive to {temp_flet_dir}")
+            logger.info(f"Extracting Flet from archive to {temp_flet_dir}")
             temp_flet_dir.mkdir(parents=True, exist_ok=True)
             with tarfile.open(str(tar_file), "r:gz") as tar_arch:
                 safe_tar_extractall(tar_arch, str(temp_flet_dir))
         else:
-            logging.info(f"Flet View found in: {temp_flet_dir}")
+            logger.info(f"Flet View found in: {temp_flet_dir}")
 
         app_path = temp_flet_dir.joinpath("flet", "flet")
         args = [str(app_path), page_url, pid_file]
@@ -637,7 +640,7 @@ def __download_fletd():
     temp_fletd_dir = Path.home().joinpath(".flet", "bin", f"fletd-{ver}")
 
     if not temp_fletd_dir.exists():
-        logging.info(f"Downloading Fletd v{ver} to {temp_fletd_dir}")
+        logger.info(f"Downloading Fletd v{ver} to {temp_fletd_dir}")
         temp_fletd_dir.mkdir(parents=True, exist_ok=True)
         ext = "zip" if is_windows() else "tar.gz"
         file_name = f"fletd-{ver}-{get_platform()}-{get_arch()}.{ext}"
@@ -657,7 +660,7 @@ def __download_fletd():
         finally:
             os.remove(temp_arch)
     else:
-        logging.info(
+        logger.info(
             f"Fletd v{version.version} is already installed in {temp_fletd_dir}"
         )
     return str(temp_fletd_dir.joinpath(flet_exe))
@@ -666,7 +669,7 @@ def __download_fletd():
 def __download_flet_client(file_name):
     ver = version.version
     temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
-    logging.info(f"Downloading Flet v{ver} to {temp_arch}")
+    logger.info(f"Downloading Flet v{ver} to {temp_arch}")
     flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
     urllib.request.urlretrieve(flet_url, temp_arch)
     return str(temp_arch)

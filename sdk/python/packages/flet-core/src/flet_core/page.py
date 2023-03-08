@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
+import flet_core
 from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
 from flet_core.client_storage import ClientStorage
@@ -36,6 +37,9 @@ from flet_core.types import (
 )
 from flet_core.utils import is_asyncio, is_coroutine
 from flet_core.view import View
+
+logger = logging.getLogger(flet_core.__name__)
+
 
 try:
     from flet.auth.authorization import Authorization
@@ -429,7 +433,7 @@ class Page(Control):
             await self._send_command_async("error", [message])
 
     def on_event(self, e: Event):
-        logging.info(f"page.on_event: {e.target} {e.name} {e.data}")
+        logger.info(f"page.on_event: {e.target} {e.name} {e.data}")
         with self.__lock:
             if e.target == "page" and e.name == "change":
                 self.__on_page_change_event(e.data)
@@ -442,7 +446,7 @@ class Page(Control):
                     t.start()
 
     async def on_event_async(self, e: Event):
-        logging.info(f"page.on_event_async: {e.target} {e.name} {e.data}")
+        logger.info(f"page.on_event_async: {e.target} {e.name} {e.data}")
 
         if e.target == "page" and e.name == "change":
             async with self.__async_lock:

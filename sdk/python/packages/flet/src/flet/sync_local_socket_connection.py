@@ -8,6 +8,7 @@ import threading
 from pathlib import Path
 from typing import List, Optional
 
+import flet
 from flet.utils import get_free_tcp_port, is_windows
 from flet_core.local_connection import LocalConnection
 from flet_core.protocol import (
@@ -20,6 +21,8 @@ from flet_core.protocol import (
     RegisterWebClientRequestPayload,
 )
 from flet_core.utils import random_string
+
+logger = logging.getLogger(flet.__name__)
 
 
 class SyncLocalSocketConnection(LocalConnection):
@@ -44,7 +47,7 @@ class SyncLocalSocketConnection(LocalConnection):
             server_address = ("localhost", port)
             self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.__sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            logging.info(f"Starting up TCP server on {server_address}")
+            logger.info(f"Starting up TCP server on {server_address}")
             self.__sock.bind(server_address)
         else:
             # UDS
@@ -54,7 +57,7 @@ class SyncLocalSocketConnection(LocalConnection):
                 )
             self.page_url = self.__uds_path
             self.__sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-            logging.info(f"Starting up UDS server on {self.__uds_path}")
+            logger.info(f"Starting up UDS server on {self.__uds_path}")
             self.__sock.bind(self.__uds_path)
 
         # Listen for incoming connections
@@ -65,7 +68,7 @@ class SyncLocalSocketConnection(LocalConnection):
         th.start()
 
     def __on_message(self, data):
-        logging.debug(f"_on_message: {data}")
+        logger.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
         msg = ClientMessage(**msg_dict)
         if msg.action == ClientActions.REGISTER_WEB_CLIENT:
@@ -125,7 +128,7 @@ class SyncLocalSocketConnection(LocalConnection):
         return PageCommandsBatchResponsePayload(results=results, error="")
 
     def close(self):
-        logging.debug("Closing connection...")
+        logger.debug("Closing connection...")
         # close socket
         if self.__sock:
             self.__sock.close()
@@ -136,10 +139,10 @@ class SyncLocalSocketConnection(LocalConnection):
 
     def __connection_loop(self):
         while True:
-            logging.debug("Waiting for a client connection")
+            logger.debug("Waiting for a client connection")
             self.__connection, client_address = self.__sock.accept()
             try:
-                logging.debug(f"Connection from {client_address}")
+                logger.debug(f"Connection from {client_address}")
 
                 # receive loop
                 while True:
@@ -148,12 +151,12 @@ class SyncLocalSocketConnection(LocalConnection):
                         self.__on_message(message.decode("utf-8"))
 
             finally:
-                logging.debug("Closing connection")
+                logger.debug("Closing connection")
                 self.__connection.close()
 
     def __send(self, message: ClientMessage):
         j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
-        logging.debug(f"__send: {j}")
+        logger.debug(f"__send: {j}")
         self.__send_msg(self.__connection, j.encode("utf-8"))
 
     def __send_msg(self, sock, msg):
@@ -161,9 +164,9 @@ class SyncLocalSocketConnection(LocalConnection):
         msg = struct.pack(">I", len(msg)) + msg
         try:
             sock.sendall(msg)
-            logging.debug("Sent: {}".format(len(msg)))
+            logger.debug("Sent: {}".format(len(msg)))
         except Exception as e:
-            logging.debug("Error sending a message over a socket: {}".format(e))
+            logger.debug("Error sending a message over a socket: {}".format(e))
 
     def __recv_msg(self, sock):
         # Read message length and unpack it into an integer
@@ -171,7 +174,7 @@ class SyncLocalSocketConnection(LocalConnection):
         if not raw_msglen:
             return None
         msglen = struct.unpack(">I", raw_msglen)[0]
-        logging.debug("Message size: {}".format(msglen))
+        logger.debug("Message size: {}".format(msglen))
         # Read the message data
         return self.__recvall(sock, msglen)
 
