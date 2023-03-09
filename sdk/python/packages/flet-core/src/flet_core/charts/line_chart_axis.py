@@ -1,10 +1,8 @@
 from typing import Any, List, Optional
 
-from beartype import beartype
-from flet.charts.line_chart_axis_label import LineChartAxisLabel
-
-from flet.control import Control, OptionalNumber
-from flet.ref import Ref
+from flet_core.charts.line_chart_axis_label import LineChartAxisLabel
+from flet_core.control import Control, OptionalNumber
+from flet_core.ref import Ref
 
 
 class LineChartAxis(Control):
@@ -57,7 +55,6 @@ class LineChartAxis(Control):
         return self.__title
 
     @title.setter
-    @beartype
     def title(self, value: Optional[Control]):
         self.__title = value
 
@@ -67,7 +64,6 @@ class LineChartAxis(Control):
         return self._get_attr("showLabels", data_type="bool", def_value=False)
 
     @show_labels.setter
-    @beartype
     def show_labels(self, value: Optional[bool]):
         self._set_attr("showLabels", value)
 
@@ -86,7 +82,6 @@ class LineChartAxis(Control):
         return self._get_attr("labelsInterval", data_type="float", def_value=1.0)
 
     @labels_interval.setter
-    @beartype
     def labels_interval(self, value: OptionalNumber):
         self._set_attr("labelsInterval", value)
 
@@ -96,6 +91,5 @@ class LineChartAxis(Control):
         return self._get_attr("reservedSize", data_type="float", def_value=1.0)
 
     @reserved_size.setter
-    @beartype
     def reserved_size(self, value: OptionalNumber):
         self._set_attr("reservedSize", value)

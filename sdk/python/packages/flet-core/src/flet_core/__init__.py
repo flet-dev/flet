@@ -32,6 +32,12 @@ from flet_core.buttons import (
     StadiumBorder,
 )
 from flet_core.card import Card
+from flet_core.charts.chart_grid_lines import ChartGridLines
+from flet_core.charts.line_chart import LineChart
+from flet_core.charts.line_chart_axis import LineChartAxis
+from flet_core.charts.line_chart_axis_label import LineChartAxisLabel
+from flet_core.charts.line_chart_data import LineChartData
+from flet_core.charts.line_chart_data_point import LineChartDataPoint
 from flet_core.checkbox import Checkbox
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column

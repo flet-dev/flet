@@ -1,14 +1,12 @@
 from typing import Any, List, Optional
 
-from beartype import beartype
-from flet.border import Border
-from flet.charts.line_chart_axis import LineChartAxis
-from flet.charts.line_chart_data import LineChartData
-from flet.charts.grid_lines import GridLines
-
-from flet.control import Control, OptionalNumber
-from flet.ref import Ref
-from flet.types import AnimationValue
+from flet_core.border import Border
+from flet_core.charts.chart_grid_lines import ChartGridLines
+from flet_core.charts.line_chart_axis import LineChartAxis
+from flet_core.charts.line_chart_data import LineChartData
+from flet_core.control import Control, OptionalNumber
+from flet_core.ref import Ref
+from flet_core.types import AnimationValue
 
 
 class LineChart(Control):
@@ -25,8 +23,8 @@ class LineChart(Control):
         animate: AnimationValue = None,
         bgcolor: Optional[str] = None,
         border: Optional[Border] = None,
-        horizontal_grid_lines: Optional[GridLines] = None,
-        vertical_grid_lines: Optional[GridLines] = None,
+        horizontal_grid_lines: Optional[ChartGridLines] = None,
+        vertical_grid_lines: Optional[ChartGridLines] = None,
         left_axis: Optional[LineChartAxis] = None,
         top_axis: Optional[LineChartAxis] = None,
         right_axis: Optional[LineChartAxis] = None,
@@ -106,7 +104,6 @@ class LineChart(Control):
         return self.__animate
 
     @animate.setter
-    @beartype
     def animate(self, value: AnimationValue):
         self.__animate = value
 
@@ -116,7 +113,6 @@ class LineChart(Control):
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    @beartype
     def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
@@ -126,28 +122,25 @@ class LineChart(Control):
         return self.__border
 
     @border.setter
-    @beartype
     def border(self, value: Optional[Border]):
         self.__border = value
 
     # horizontal_grid_lines
     @property
-    def horizontal_grid_lines(self) -> Optional[GridLines]:
+    def horizontal_grid_lines(self) -> Optional[ChartGridLines]:
         return self.__horizontal_grid_lines
 
     @horizontal_grid_lines.setter
-    @beartype
-    def horizontal_grid_lines(self, value: Optional[GridLines]):
+    def horizontal_grid_lines(self, value: Optional[ChartGridLines]):
         self.__horizontal_grid_lines = value
 
     # vertical_grid_lines
     @property
-    def vertical_grid_lines(self) -> Optional[GridLines]:
+    def vertical_grid_lines(self) -> Optional[ChartGridLines]:
         return self.__vertical_grid_lines
 
     @vertical_grid_lines.setter
-    @beartype
-    def vertical_grid_lines(self, value: Optional[GridLines]):
+    def vertical_grid_lines(self, value: Optional[ChartGridLines]):
         self.__vertical_grid_lines = value
 
     # left_axis
@@ -156,7 +149,6 @@ class LineChart(Control):
         return self.__left_axis
 
     @left_axis.setter
-    @beartype
     def left_axis(self, value: Optional[LineChartAxis]):
         self.__left_axis = value
 
@@ -166,7 +158,6 @@ class LineChart(Control):
         return self.__top_axis
 
     @top_axis.setter
-    @beartype
     def top_axis(self, value: Optional[LineChartAxis]):
         self.__top_axis = value
 
@@ -176,7 +167,6 @@ class LineChart(Control):
         return self.__right_axis
 
     @right_axis.setter
-    @beartype
     def right_axis(self, value: Optional[LineChartAxis]):
         self.__right_axis = value
 
@@ -186,7 +176,6 @@ class LineChart(Control):
         return self.__bottom_axis
 
     @bottom_axis.setter
-    @beartype
     def bottom_axis(self, value: Optional[LineChartAxis]):
         self.__bottom_axis = value
 
@@ -196,7 +185,6 @@ class LineChart(Control):
         return self._get_attr("baselinex", data_type="float", def_value=1.0)
 
     @baseline_x.setter
-    @beartype
     def baseline_x(self, value: OptionalNumber):
         self._set_attr("baselinex", value)
 
@@ -206,7 +194,6 @@ class LineChart(Control):
         return self._get_attr("baseliney", data_type="float", def_value=1.0)
 
     @baseline_y.setter
-    @beartype
     def baseline_y(self, value: OptionalNumber):
         self._set_attr("baseliney", value)
 
@@ -216,7 +203,6 @@ class LineChart(Control):
         return self._get_attr("minx", data_type="float", def_value=1.0)
 
     @min_x.setter
-    @beartype
     def min_x(self, value: OptionalNumber):
         self._set_attr("minx", value)
 
@@ -226,7 +212,6 @@ class LineChart(Control):
         return self._get_attr("maxx", data_type="float", def_value=1.0)
 
     @max_x.setter
-    @beartype
     def max_x(self, value: OptionalNumber):
         self._set_attr("maxx", value)
 
@@ -236,7 +221,6 @@ class LineChart(Control):
         return self._get_attr("miny", data_type="float", def_value=1.0)
 
     @min_y.setter
-    @beartype
     def min_y(self, value: OptionalNumber):
         self._set_attr("miny", value)
 
@@ -246,6 +230,5 @@ class LineChart(Control):
         return self._get_attr("maxy", data_type="float", def_value=1.0)
 
     @max_y.setter
-    @beartype
     def max_y(self, value: OptionalNumber):
         self._set_attr("maxy", value)

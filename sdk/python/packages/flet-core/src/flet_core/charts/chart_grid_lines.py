@@ -4,7 +4,7 @@ from typing import List, Optional
 
 
 @dataclasses.dataclass
-class GridLines:
+class ChartGridLines:
     show: bool = field(default=True)
     interval: Optional[float] = field(default=None)
     color: Optional[str] = field(default=None)

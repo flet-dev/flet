@@ -1,9 +1,7 @@
 from typing import Any, Optional
 
-from beartype import beartype
-
-from flet.control import Control, OptionalNumber
-from flet.ref import Ref
+from flet_core.control import Control, OptionalNumber
+from flet_core.ref import Ref
 
 
 class LineChartAxisLabel(Control):
@@ -47,7 +45,6 @@ class LineChartAxisLabel(Control):
         return self._get_attr("value", data_type="float", def_value=1.0)
 
     @value.setter
-    @beartype
     def value(self, value: OptionalNumber):
         self._set_attr("value", value)
 
@@ -57,6 +54,5 @@ class LineChartAxisLabel(Control):
         return self.__label
 
     @label.setter
-    @beartype
     def label(self, value: Optional[Control]):
         self.__label = value
