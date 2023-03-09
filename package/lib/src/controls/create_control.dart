@@ -36,6 +36,7 @@ import 'haptic_feedback.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
+import 'linechart.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
 import 'markdown.dart';
@@ -357,6 +358,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "windowdragarea":
           return WindowDragAreaControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "linechart":
+          return LineChartControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
