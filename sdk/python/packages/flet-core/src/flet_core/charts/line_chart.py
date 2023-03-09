@@ -118,23 +118,24 @@ class LineChart(ConstrainedControl):
         super()._before_build_command()
         self._set_attr_json("horizontalGridLines", self.__horizontal_grid_lines)
         self._set_attr_json("verticalGridLines", self.__vertical_grid_lines)
+        self._set_attr_json("animate", self.__animate)
+        self._set_attr_json("border", self.__border)
 
     def _get_children(self):
         children = []
         for ds in self.__data_series:
-            ds._set_attr_internal("n", "data")
             children.append(ds)
         if self.__left_axis:
-            self.__left_axis._set_attr_internal("n", "left_axis")
+            self.__left_axis._set_attr_internal("n", "l")
             children.append(self.__left_axis)
         if self.__top_axis:
-            self.__top_axis._set_attr_internal("n", "top_axis")
+            self.__top_axis._set_attr_internal("n", "t")
             children.append(self.__top_axis)
         if self.__right_axis:
-            self.__right_axis._set_attr_internal("n", "right_axis")
+            self.__right_axis._set_attr_internal("n", "r")
             children.append(self.__right_axis)
         if self.__bottom_axis:
-            self.__bottom_axis._set_attr_internal("n", "bottom_axis")
+            self.__bottom_axis._set_attr_internal("n", "b")
             children.append(self.__bottom_axis)
         return children
 

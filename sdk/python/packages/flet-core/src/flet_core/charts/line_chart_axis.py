@@ -42,10 +42,10 @@ class LineChartAxis(Control):
     def _get_children(self):
         children = []
         for label in self.__labels:
-            label._set_attr_internal("n", "label")
+            label._set_attr_internal("n", "l")
             children.append(label)
         if self.__title:
-            self.__title._set_attr_internal("n", "title")
+            self.__title._set_attr_internal("n", "t")
             children.append(self.__title)
         return children
 

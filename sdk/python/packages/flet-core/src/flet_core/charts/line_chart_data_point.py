@@ -39,7 +39,7 @@ class LineChartDataPoint(Control):
     # x
     @property
     def x(self) -> OptionalNumber:
-        return self._get_attr("x", data_type="float", def_value=1.0)
+        return self._get_attr("x", data_type="float", def_value=0)
 
     @x.setter
     def x(self, value: OptionalNumber):
@@ -48,7 +48,7 @@ class LineChartDataPoint(Control):
     # y
     @property
     def y(self) -> OptionalNumber:
-        return self._get_attr("y", data_type="float", def_value=1.0)
+        return self._get_attr("y", data_type="float", def_value=0)
 
     @y.setter
     def y(self, value: OptionalNumber):

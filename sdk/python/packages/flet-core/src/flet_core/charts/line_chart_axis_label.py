@@ -35,7 +35,6 @@ class LineChartAxisLabel(Control):
     def _get_children(self):
         children = []
         if self.__label:
-            self.__label._set_attr_internal("n", "label")
             children.append(self.__label)
         return children
 
