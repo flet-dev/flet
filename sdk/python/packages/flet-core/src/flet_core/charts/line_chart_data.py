@@ -2,6 +2,7 @@ from typing import Any, List, Optional
 
 from flet_core.charts.line_chart_data_point import LineChartDataPoint
 from flet_core.control import Control, OptionalNumber
+from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 
 
@@ -18,10 +19,13 @@ class LineChartData(Control):
         #
         curved: Optional[bool] = None,
         color: Optional[str] = None,
+        gradient: Optional[Gradient] = None,
         stroke_width: OptionalNumber = None,
         stroke_cap_round: Optional[bool] = None,
         above_line_color: Optional[str] = None,
+        above_line_gradient: Optional[Gradient] = None,
         below_line_color: Optional[str] = None,
+        below_line_gradient: Optional[Gradient] = None,
         show_markers: Optional[bool] = None,
     ):
 
@@ -36,14 +40,23 @@ class LineChartData(Control):
         self.data_points = data_points
         self.curved = curved
         self.color = color
+        self.gradient = gradient
         self.stroke_width = stroke_width
         self.stroke_cap_round = stroke_cap_round
         self.show_markers = show_markers
         self.above_line_color = above_line_color
+        self.above_line_gradient = above_line_gradient
         self.below_line_color = below_line_color
+        self.below_line_gradient = below_line_gradient
 
     def _get_control_name(self):
         return "data"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("gradient", self.__gradient)
+        self._set_attr_json("aboveLineGradient", self.__above_line_gradient)
+        self._set_attr_json("belowLineGradient", self.__below_line_gradient)
 
     def _get_children(self):
         return self.__data_points
@@ -84,6 +97,15 @@ class LineChartData(Control):
     def color(self, value: Optional[str]):
         self._set_attr("color", value)
 
+    # gradient
+    @property
+    def gradient(self) -> Optional[Gradient]:
+        return self.__gradient
+
+    @gradient.setter
+    def gradient(self, value: Optional[Gradient]):
+        self.__gradient = value
+
     # stroke_cap_round
     @property
     def stroke_cap_round(self) -> Optional[bool]:
@@ -111,6 +133,15 @@ class LineChartData(Control):
     def above_line_color(self, value: Optional[str]):
         self._set_attr("aboveLineColor", value)
 
+    # above_line_gradient
+    @property
+    def above_line_gradient(self) -> Optional[Gradient]:
+        return self.__above_line_gradient
+
+    @above_line_gradient.setter
+    def above_line_gradient(self, value: Optional[Gradient]):
+        self.__above_line_gradient = value
+
     # below_line_color
     @property
     def below_line_color(self) -> Optional[str]:
@@ -119,3 +150,12 @@ class LineChartData(Control):
     @below_line_color.setter
     def below_line_color(self, value: Optional[str]):
         self._set_attr("belowLineColor", value)
+
+    # below_line_gradient
+    @property
+    def below_line_gradient(self) -> Optional[Gradient]:
+        return self.__below_line_gradient
+
+    @below_line_gradient.setter
+    def below_line_gradient(self, value: Optional[Gradient]):
+        self.__below_line_gradient = value

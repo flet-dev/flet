@@ -16,10 +16,11 @@ class LineChartAxis(Control):
         # Specific
         #
         title: Optional[Control] = None,
+        title_size: OptionalNumber = None,
         show_labels: Optional[bool] = None,
         labels: Optional[List[LineChartAxisLabel]] = None,
         labels_interval: OptionalNumber = None,
-        reserved_size: OptionalNumber = None,
+        labels_size: OptionalNumber = None,
     ):
 
         Control.__init__(
@@ -31,10 +32,11 @@ class LineChartAxis(Control):
         )
 
         self.title = title
+        self.title_size = title_size
         self.show_labels = show_labels
         self.labels = labels
         self.labels_interval = labels_interval
-        self.reserved_size = reserved_size
+        self.labels_size = labels_size
 
     def _get_control_name(self):
         return "axis"
@@ -58,10 +60,19 @@ class LineChartAxis(Control):
     def title(self, value: Optional[Control]):
         self.__title = value
 
+    # title_size
+    @property
+    def title_size(self) -> OptionalNumber:
+        return self._get_attr("titleSize", data_type="float")
+
+    @title_size.setter
+    def title_size(self, value: OptionalNumber):
+        self._set_attr("titleSize", value)
+
     # show_labels
     @property
     def show_labels(self) -> Optional[bool]:
-        return self._get_attr("showLabels", data_type="bool", def_value=False)
+        return self._get_attr("showLabels", data_type="bool", def_value=True)
 
     @show_labels.setter
     def show_labels(self, value: Optional[bool]):
@@ -85,11 +96,11 @@ class LineChartAxis(Control):
     def labels_interval(self, value: OptionalNumber):
         self._set_attr("labelsInterval", value)
 
-    # reserved_size
+    # labels_size
     @property
-    def reserved_size(self) -> OptionalNumber:
-        return self._get_attr("reservedSize", data_type="float", def_value=1.0)
+    def labels_size(self) -> OptionalNumber:
+        return self._get_attr("labelsSize", data_type="float")
 
-    @reserved_size.setter
-    def reserved_size(self, value: OptionalNumber):
-        self._set_attr("reservedSize", value)
+    @labels_size.setter
+    def labels_size(self, value: OptionalNumber):
+        self._set_attr("labelsSize", value)
