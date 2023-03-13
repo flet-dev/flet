@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flet/src/utils/numbers.dart';
+import 'package:flet/src/utils/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -175,11 +177,20 @@ class _LineChartControlState extends State<LineChartControl> {
         theme, dataViewModel.control.attrString("belowLineColor", "")!);
     Gradient? belowLineGradient =
         parseGradient(theme, dataViewModel.control, "belowLineGradient");
+    var dashPattern = dataViewModel.control.attrString("dashPattern");
+    var shadow =
+        parseBoxShadow(Theme.of(context), dataViewModel.control, "shadow");
     return LineChartBarData(
         spots: dataViewModel.dataPoints.map((p) => FlSpot(p.x, p.y)).toList(),
         isCurved: dataViewModel.control.attrBool("curved"),
         isStrokeCapRound: dataViewModel.control.attrBool("strokeCapRound"),
         barWidth: dataViewModel.control.attrDouble("strokeWidth"),
+        dashArray: dashPattern != null
+            ? (json.decode(dashPattern) as List)
+                .map((e) => parseInt(e))
+                .toList()
+            : null,
+        shadow: shadow.isNotEmpty ? shadow[0] : null,
         dotData: showMarkers ? FlDotData(show: true) : FlDotData(show: false),
         aboveBarData: aboveLineColor != null || aboveLineGradient != null
             ? BarAreaData(
