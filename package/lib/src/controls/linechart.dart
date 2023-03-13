@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/linechart_axis_view_model.dart';
 import '../models/linechart_data_view_model.dart';
+import '../models/linechart_event_data.dart';
 import '../models/linechart_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
@@ -16,7 +20,7 @@ import '../utils/gradient.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
-class LineChartControl extends StatelessWidget {
+class LineChartControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -31,35 +35,44 @@ class LineChartControl extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    debugPrint("LineChart build: ${control.id}");
+  State<LineChartControl> createState() => _LineChartControlState();
+}
 
-    var animate = parseAnimation(control, "animate");
-    var border = parseBorder(Theme.of(context), control, "border");
-    bool disabled = control.isDisabled || parentDisabled;
+class _LineChartControlState extends State<LineChartControl> {
+  LinechartEventData? _eventData;
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("LineChart build: ${widget.control.id}");
+
+    var animate = parseAnimation(widget.control, "animate");
+    var border = parseBorder(Theme.of(context), widget.control, "border");
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     return StoreConnector<AppState, LineChartViewModel>(
         distinct: true,
-        converter: (store) =>
-            LineChartViewModel.fromStore(store, control, children),
+        converter: (store) => LineChartViewModel.fromStore(
+            store, widget.control, widget.children),
         builder: (context, viewModel) {
-          var leftTitles = getAxisTitles(control, viewModel.leftAxis, disabled);
-          var topTitles = getAxisTitles(control, viewModel.topAxis, disabled);
+          var leftTitles =
+              getAxisTitles(widget.control, viewModel.leftAxis, disabled);
+          var topTitles =
+              getAxisTitles(widget.control, viewModel.topAxis, disabled);
           var rightTitles =
-              getAxisTitles(control, viewModel.rightAxis, disabled);
+              getAxisTitles(widget.control, viewModel.rightAxis, disabled);
           var bottomTitles =
-              getAxisTitles(control, viewModel.bottomAxis, disabled);
+              getAxisTitles(widget.control, viewModel.bottomAxis, disabled);
 
           var chart = LineChart(
             LineChartData(
-                backgroundColor: HexColor.fromString(
-                    Theme.of(context), control.attrString("bgcolor", "")!),
-                minX: control.attrDouble("minx"),
-                maxX: control.attrDouble("maxx"),
-                minY: control.attrDouble("miny"),
-                maxY: control.attrDouble("maxy"),
-                baselineX: control.attrDouble("baselinex"),
-                baselineY: control.attrDouble("baseliney"),
+                backgroundColor: HexColor.fromString(Theme.of(context),
+                    widget.control.attrString("bgcolor", "")!),
+                minX: widget.control.attrDouble("minx"),
+                maxX: widget.control.attrDouble("maxx"),
+                minY: widget.control.attrDouble("miny"),
+                maxY: widget.control.attrDouble("maxy"),
+                baselineX: widget.control.attrDouble("baselinex"),
+                baselineY: widget.control.attrDouble("baseliney"),
                 //showingTooltipIndicators: [ShowingTooltipIndicators([LineBarSpot(bar, barIndex, spot)])],
                 titlesData: (leftTitles.sideTitles.showTitles ||
                         topTitles.sideTitles.showTitles ||
@@ -76,16 +89,17 @@ class LineChartControl extends StatelessWidget {
                 borderData: border != null
                     ? FlBorderData(show: true, border: border)
                     : FlBorderData(show: false),
-                gridData: parseChartGridData(Theme.of(context), control,
+                gridData: parseChartGridData(Theme.of(context), widget.control,
                     "horizontalGridLines", "verticalGridLines"),
                 lineBarsData: viewModel.dataSeries
-                    .map((d) => getBarData(Theme.of(context), control, d))
+                    .map(
+                        (d) => getBarData(Theme.of(context), widget.control, d))
                     .toList(),
                 lineTouchData: LineTouchData(
                   enabled: viewModel.control.attrBool("interactive", true)!,
                   touchTooltipData: LineTouchTooltipData(
                     tooltipBgColor: HexColor.fromString(Theme.of(context),
-                        control.attrString("tooltipBgcolor", "")!),
+                        widget.control.attrString("tooltipBgcolor", "")!),
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((spot) {
                         var dp = viewModel.dataSeries[spot.barIndex]
@@ -113,14 +127,31 @@ class LineChartControl extends StatelessWidget {
                       }).toList();
                     },
                   ),
-                  // touchCallback: (evt, resp) {
-                  //   if (resp != null &&
-                  //       resp.lineBarSpots != null &&
-                  //       resp.lineBarSpots!.length > 0) {
-                  //     debugPrint(
-                  //         "touchCallback: ${evt}, ${resp.lineBarSpots![0].y}");
-                  //   }
-                  // },
+                  touchCallback: widget.control.attrBool("onChartEvent", false)!
+                      ? (evt, resp) {
+                          var eventData = LinechartEventData(
+                              eventType: evt.runtimeType
+                                  .toString()
+                                  .substring(2), // remove "Fl"
+                              barSpots:
+                                  resp != null && resp.lineBarSpots != null
+                                      ? resp.lineBarSpots!
+                                          .map((bs) => LineChartEventDataSpot(
+                                              barIndex: bs.barIndex,
+                                              spotIndex: bs.spotIndex))
+                                          .toList()
+                                      : []);
+                          if (eventData != _eventData) {
+                            _eventData = eventData;
+                            debugPrint(
+                                "LineChart ${widget.control.id} ${eventData.eventType}");
+                            FletAppServices.of(context).server.sendPageEvent(
+                                eventTarget: widget.control.id,
+                                eventName: "chart_event",
+                                eventData: json.encode(eventData));
+                          }
+                        }
+                      : null,
                 )),
             swapAnimationDuration: animate != null
                 ? animate.duration
@@ -128,7 +159,8 @@ class LineChartControl extends StatelessWidget {
             swapAnimationCurve: animate != null ? animate.curve : Curves.linear,
           );
 
-          return constrainedControl(context, chart, parent, control);
+          return constrainedControl(
+              context, chart, widget.parent, widget.control);
         });
   }
 

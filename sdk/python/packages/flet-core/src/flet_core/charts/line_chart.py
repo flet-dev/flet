@@ -1,3 +1,4 @@
+import json
 from typing import Any, List, Optional, Union
 
 from flet_core.border import Border
@@ -6,6 +7,8 @@ from flet_core.charts.line_chart_axis import LineChartAxis
 from flet_core.charts.line_chart_data import LineChartData
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
+from flet_core.control_event import ControlEvent
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -65,6 +68,7 @@ class LineChart(ConstrainedControl):
         baseline_y: OptionalNumber = None,
         min_y: OptionalNumber = None,
         max_y: OptionalNumber = None,
+        on_chart_event=None,
     ):
 
         ConstrainedControl.__init__(
@@ -96,6 +100,13 @@ class LineChart(ConstrainedControl):
             data=data,
         )
 
+        def convert_linechart_event_data(e):
+            d = json.loads(e.data)
+            return LineChartEvent(**d)
+
+        self.__on_chart_event = EventHandler(convert_linechart_event_data)
+        self._add_event_handler("chart_event", self.__on_chart_event.get_handler())
+
         self.data_series = data_series
         self.animate = animate
         self.interactive = interactive
@@ -114,6 +125,7 @@ class LineChart(ConstrainedControl):
         self.max_x = max_x
         self.min_y = min_y
         self.max_y = max_y
+        self.on_chart_event = on_chart_event
 
     def _get_control_name(self):
         return "linechart"
@@ -304,3 +316,28 @@ class LineChart(ConstrainedControl):
     @max_y.setter
     def max_y(self, value: OptionalNumber):
         self._set_attr("maxy", value)
+
+    # on_chart_event
+    @property
+    def on_chart_event(self):
+        return self.__on_chart_event
+
+    @on_chart_event.setter
+    def on_chart_event(self, handler):
+        self.__on_chart_event.subscribe(handler)
+        if handler is not None:
+            self._set_attr("onChartEvent", True)
+        else:
+            self._set_attr("onChartEvent", None)
+
+
+class LineChartEvent(ControlEvent):
+    def __init__(self, type, spots) -> None:
+        self.type: str = type
+        self.spots: List[LineChartEventSpot] = spots
+
+
+class LineChartEventSpot:
+    def __init__(self, bar_index, spot_index) -> None:
+        self.bar_index: int = bar_index
+        self.spot_index: int = spot_index
