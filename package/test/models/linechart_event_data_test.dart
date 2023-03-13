@@ -37,6 +37,6 @@ void main() {
     final j = json.encode(e);
 
     expect(j,
-        '{"event_type":"Hover","spots":[{"bar_index":0,"spot_index":1},{"bar_index":1,"spot_index":1}]}');
+        '{"type":"Hover","spots":[{"bar_index":0,"spot_index":1},{"bar_index":1,"spot_index":1}]}');
   });
 }
