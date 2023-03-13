@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -12,6 +13,7 @@ import '../utils/borders.dart';
 import '../utils/charts.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 
 class LineChartControl extends StatelessWidget {
@@ -78,7 +80,48 @@ class LineChartControl extends StatelessWidget {
                     "horizontalGridLines", "verticalGridLines"),
                 lineBarsData: viewModel.dataSeries
                     .map((d) => getBarData(Theme.of(context), control, d))
-                    .toList()),
+                    .toList(),
+                lineTouchData: LineTouchData(
+                  enabled: viewModel.control.attrBool("interactive", true)!,
+                  touchTooltipData: LineTouchTooltipData(
+                    tooltipBgColor: HexColor.fromString(Theme.of(context),
+                        control.attrString("tooltipBgcolor", "")!),
+                    getTooltipItems: (touchedSpots) {
+                      return touchedSpots.map((spot) {
+                        var dp = viewModel.dataSeries[spot.barIndex]
+                            .dataPoints[spot.spotIndex];
+                        var tooltip = dp.tooltip ?? dp.y.toString();
+                        var tooltipStyle = parseTextStyle(
+                            Theme.of(context), dp.control, "tooltipStyle");
+                        tooltipStyle ??= const TextStyle();
+                        if (tooltipStyle.color == null) {
+                          tooltipStyle = tooltipStyle.copyWith(
+                              color: spot.bar.gradient?.colors.first ??
+                                  spot.bar.color ??
+                                  Colors.blueGrey);
+                        }
+                        TextAlign? tooltipAlign = TextAlign.values
+                            .firstWhereOrNull((a) =>
+                                a.name.toLowerCase() ==
+                                dp.control
+                                    .attrString("tooltipAlign", "")!
+                                    .toLowerCase());
+                        return dp.control.attrBool("showTooltip", true)!
+                            ? LineTooltipItem(tooltip, tooltipStyle,
+                                textAlign: tooltipAlign ?? TextAlign.center)
+                            : null;
+                      }).toList();
+                    },
+                  ),
+                  // touchCallback: (evt, resp) {
+                  //   if (resp != null &&
+                  //       resp.lineBarSpots != null &&
+                  //       resp.lineBarSpots!.length > 0) {
+                  //     debugPrint(
+                  //         "touchCallback: ${evt}, ${resp.lineBarSpots![0].y}");
+                  //   }
+                  // },
+                )),
             swapAnimationDuration: animate != null
                 ? animate.duration
                 : const Duration(milliseconds: 150), // Optional

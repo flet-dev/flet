@@ -21,8 +21,7 @@ class LineChartDataViewModel extends Equatable {
             .map((childId) => store.state.controls[childId])
             .whereNotNull()
             .where((c) => c.isVisible)
-            .map((c) => LineChartDataPointViewModel(
-                x: c.attrDouble("x")!, y: c.attrDouble("y")!))
+            .map((c) => LineChartDataPointViewModel.fromStore(store, c))
             .toList());
   }
 

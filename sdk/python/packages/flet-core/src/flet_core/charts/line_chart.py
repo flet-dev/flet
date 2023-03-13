@@ -49,7 +49,9 @@ class LineChart(ConstrainedControl):
         # Specific
         #
         animate: AnimationValue = None,
+        interactive: Optional[bool] = None,
         bgcolor: Optional[str] = None,
+        tooltip_bgcolor: Optional[str] = None,
         border: Optional[Border] = None,
         horizontal_grid_lines: Optional[ChartGridLines] = None,
         vertical_grid_lines: Optional[ChartGridLines] = None,
@@ -96,7 +98,9 @@ class LineChart(ConstrainedControl):
 
         self.data_series = data_series
         self.animate = animate
+        self.interactive = interactive
         self.bgcolor = bgcolor
+        self.toolip_bgcolor = tooltip_bgcolor
         self.border = border
         self.horizontal_grid_lines = horizontal_grid_lines
         self.vertical_grid_lines = vertical_grid_lines
@@ -165,6 +169,24 @@ class LineChart(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
+
+    # interactive
+    @property
+    def interactive(self) -> Optional[bool]:
+        return self._get_attr("interactive", data_type="bool", def_value=True)
+
+    @interactive.setter
+    def interactive(self, value: Optional[bool]):
+        self._set_attr("interactive", value)
+
+    # toolip_bgcolor
+    @property
+    def toolip_bgcolor(self) -> Optional[str]:
+        return self._get_attr("tooltipBgcolor")
+
+    @toolip_bgcolor.setter
+    def toolip_bgcolor(self, value: Optional[str]):
+        self._set_attr("tooltipBgcolor", value)
 
     # border
     @property
