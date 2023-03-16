@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flet/src/utils/numbers.dart';
-import 'package:flet/src/utils/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -19,6 +17,8 @@ import '../utils/borders.dart';
 import '../utils/charts.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
+import '../utils/numbers.dart';
+import '../utils/shadows.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
@@ -65,6 +65,8 @@ class _LineChartControlState extends State<LineChartControl> {
           var bottomTitles =
               getAxisTitles(widget.control, viewModel.bottomAxis, disabled);
 
+          List<LineChartBarData> barsData = [];
+
           var chart = LineChart(
             LineChartData(
                 backgroundColor: HexColor.fromString(Theme.of(context),
@@ -75,6 +77,7 @@ class _LineChartControlState extends State<LineChartControl> {
                 maxY: widget.control.attrDouble("maxy"),
                 baselineX: widget.control.attrDouble("baselinex"),
                 baselineY: widget.control.attrDouble("baseliney"),
+
                 //showingTooltipIndicators: [ShowingTooltipIndicators([LineBarSpot(bar, barIndex, spot)])],
                 titlesData: (leftTitles.sideTitles.showTitles ||
                         topTitles.sideTitles.showTitles ||
@@ -99,6 +102,42 @@ class _LineChartControlState extends State<LineChartControl> {
                     .toList(),
                 lineTouchData: LineTouchData(
                   enabled: viewModel.control.attrBool("interactive", true)!,
+                  getTouchedSpotIndicator:
+                      (LineChartBarData barData, List<int> spotIndexes) {
+                    var barIndex = barsData.indexWhere(
+                        (b) => b == barData.copyWith(showingIndicators: []));
+
+                    if (spotIndexes.isNotEmpty) {
+                      debugPrint(
+                          "Bar index: $barIndex, spotIndexes.length: ${spotIndexes.length}, spotIndexes: ${spotIndexes[0]}");
+                    }
+
+                    return spotIndexes.map((index) {
+                      if (barIndex == -1) {
+                        return null;
+                      }
+                      var dotPainter = parseChartDotPainter(
+                          Theme.of(context),
+                          viewModel.dataSeries[barIndex].control,
+                          "selectedMarker");
+                      return TouchedSpotIndicatorData(
+                        FlLine(
+                            color: barData.gradient != null &&
+                                    barData.gradient!.colors.isNotEmpty
+                                ? barData.gradient!.colors[0]
+                                : barData.color,
+                            strokeWidth: 3),
+                        FlDotData(
+                          show: dotPainter != null,
+                          getDotPainter: dotPainter != null
+                              ? (spot, percent, barData, index) {
+                                  return dotPainter;
+                                }
+                              : null,
+                        ),
+                      );
+                    }).toList();
+                  },
                   touchTooltipData: LineTouchTooltipData(
                     tooltipBgColor: HexColor.fromString(Theme.of(context),
                         widget.control.attrString("tooltipBgcolor", "")!),
@@ -161,6 +200,8 @@ class _LineChartControlState extends State<LineChartControl> {
             swapAnimationCurve: animate != null ? animate.curve : Curves.linear,
           );
 
+          barsData = chart.data.lineBarsData;
+
           return constrainedControl(
               context, chart, widget.parent, widget.control);
         });
@@ -180,6 +221,8 @@ class _LineChartControlState extends State<LineChartControl> {
     var dashPattern = dataViewModel.control.attrString("dashPattern");
     var shadow =
         parseBoxShadow(Theme.of(context), dataViewModel.control, "shadow");
+    var dotPainter =
+        parseChartDotPainter(theme, dataViewModel.control, "marker");
     return LineChartBarData(
         spots: dataViewModel.dataPoints.map((p) => FlSpot(p.x, p.y)).toList(),
         isCurved: dataViewModel.control.attrBool("curved"),
@@ -191,7 +234,15 @@ class _LineChartControlState extends State<LineChartControl> {
                 .toList()
             : null,
         shadow: shadow.isNotEmpty ? shadow[0] : null,
-        dotData: showMarkers ? FlDotData(show: true) : FlDotData(show: false),
+        dotData: showMarkers
+            ? FlDotData(
+                show: true,
+                getDotPainter: dotPainter != null
+                    ? (spot, percent, barData, index) {
+                        return dotPainter;
+                      }
+                    : null)
+            : FlDotData(show: false),
         aboveBarData: aboveLineColor != null || aboveLineGradient != null
             ? BarAreaData(
                 show: true, color: aboveLineColor, gradient: aboveLineGradient)

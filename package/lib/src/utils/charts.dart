@@ -49,3 +49,53 @@ FlLine? flineFromJSON(theme, j) {
           ? (j['dash_pattern'] as List).map((e) => parseInt(e)).toList()
           : null);
 }
+
+FlDotPainter? parseChartDotPainter(
+    ThemeData theme, Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j = json.decode(v);
+  return chartDotPainterFromJSON(theme, j);
+}
+
+FlDotPainter? chartDotPainterFromJSON(
+    ThemeData theme, Map<String, dynamic> json) {
+  String type = json["type"];
+  if (type == "circle") {
+    return FlDotCirclePainter(
+        color: json['color'] != null
+            ? HexColor.fromString(theme, json['color'] as String)
+            : null,
+        radius: json["radius"] != null ? parseDouble(json["radius"]) : null,
+        strokeColor: json['stroke_color'] != null
+            ? HexColor.fromString(theme, json['color'] as String)
+            : null,
+        strokeWidth: json["stroke_width"] != null
+            ? parseDouble(json["stroke_width"])
+            : null);
+  } else if (type == "square") {
+    return FlDotSquarePainter(
+        color: json['color'] != null
+            ? HexColor.fromString(theme, json['color'] as String)
+            : null,
+        size: json["size"] != null ? parseDouble(json["size"]) : null,
+        strokeColor: json['stroke_color'] != null
+            ? HexColor.fromString(theme, json['color'] as String)
+            : null,
+        strokeWidth: json["stroke_width"] != null
+            ? parseDouble(json["stroke_width"])
+            : null);
+  } else if (type == "cross") {
+    return FlDotCrossPainter(
+      color: json['color'] != null
+          ? HexColor.fromString(theme, json['color'] as String)
+          : null,
+      size: json["size"] != null ? parseDouble(json["size"]) : null,
+      width: json["width"] != null ? parseDouble(json["width"]) : null,
+    );
+  }
+  return null;
+}
