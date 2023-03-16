@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from flet_core.charts.chart_marker_painter import ChartDotMarker
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
@@ -11,10 +12,6 @@ class LineChartDataPoint(Control):
         self,
         x: OptionalNumber = None,
         y: OptionalNumber = None,
-        show_tooltip: Optional[bool] = None,
-        tooltip: Optional[str] = None,
-        tooltip_style: Optional[TextStyle] = None,
-        tooltip_align: TextAlign = TextAlign.NONE,
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
@@ -22,6 +19,12 @@ class LineChartDataPoint(Control):
         #
         # Specific
         #
+        show_tooltip: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+        tooltip_style: Optional[TextStyle] = None,
+        tooltip_align: TextAlign = TextAlign.NONE,
+        marker: Optional[ChartDotMarker] = None,
+        selected_marker: Optional[ChartDotMarker] = None,
     ):
 
         Control.__init__(
@@ -38,6 +41,8 @@ class LineChartDataPoint(Control):
         self.tooltip = tooltip
         self.tooltip_align = tooltip_align
         self.tooltip_style = tooltip_style
+        self.marker = marker
+        self.selected_marker = selected_marker
 
     def _get_control_name(self):
         return "p"
@@ -45,6 +50,8 @@ class LineChartDataPoint(Control):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("tooltipStyle", self.__tooltip_style)
+        self._set_attr_json("marker", self.__marker)
+        self._set_attr_json("selectedMarker", self.__selected_marker)
 
     def _get_children(self):
         children = []
@@ -110,3 +117,21 @@ class LineChartDataPoint(Control):
     @tooltip_style.setter
     def tooltip_style(self, value: Optional[TextStyle]):
         self.__tooltip_style = value
+
+    # marker
+    @property
+    def marker(self):
+        return self.__marker
+
+    @marker.setter
+    def marker(self, value: Optional[ChartDotMarker]):
+        self.__marker = value
+
+    # selected_marker
+    @property
+    def selected_marker(self):
+        return self.__selected_marker
+
+    @selected_marker.setter
+    def selected_marker(self, value: Optional[ChartDotMarker]):
+        self.__selected_marker = value

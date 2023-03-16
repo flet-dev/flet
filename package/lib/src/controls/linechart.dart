@@ -107,16 +107,16 @@ class _LineChartControlState extends State<LineChartControl> {
                     var barIndex = barsData.indexWhere(
                         (b) => b == barData.copyWith(showingIndicators: []));
 
-                    if (spotIndexes.isNotEmpty) {
-                      debugPrint(
-                          "Bar index: $barIndex, spotIndexes.length: ${spotIndexes.length}, spotIndexes: ${spotIndexes[0]}");
-                    }
+                    // if (spotIndexes.isNotEmpty) {
+                    //   debugPrint(
+                    //       "Bar index: $barIndex, spotIndexes.length: ${spotIndexes.length}, spotIndexes: ${spotIndexes[0]}");
+                    // }
 
                     return spotIndexes.map((index) {
                       if (barIndex == -1) {
                         return null;
                       }
-                      var dotPainter = parseChartDotPainter(
+                      var dataDotPainter = parseChartDotPainter(
                           Theme.of(context),
                           viewModel.dataSeries[barIndex].control,
                           "selectedMarker");
@@ -128,10 +128,15 @@ class _LineChartControlState extends State<LineChartControl> {
                                 : barData.color,
                             strokeWidth: 3),
                         FlDotData(
-                          show: dotPainter != null,
-                          getDotPainter: dotPainter != null
+                          show: dataDotPainter != null,
+                          getDotPainter: dataDotPainter != null
                               ? (spot, percent, barData, index) {
-                                  return dotPainter;
+                                  var dotPainter = parseChartDotPainter(
+                                      Theme.of(context),
+                                      viewModel.dataSeries[barIndex]
+                                          .dataPoints[index].control,
+                                      "selectedMarker");
+                                  return dotPainter ?? dataDotPainter;
                                 }
                               : null,
                         ),
@@ -221,7 +226,7 @@ class _LineChartControlState extends State<LineChartControl> {
     var dashPattern = dataViewModel.control.attrString("dashPattern");
     var shadow =
         parseBoxShadow(Theme.of(context), dataViewModel.control, "shadow");
-    var dotPainter =
+    var dataDotPainter =
         parseChartDotPainter(theme, dataViewModel.control, "marker");
     return LineChartBarData(
         spots: dataViewModel.dataPoints.map((p) => FlSpot(p.x, p.y)).toList(),
@@ -237,9 +242,11 @@ class _LineChartControlState extends State<LineChartControl> {
         dotData: showMarkers
             ? FlDotData(
                 show: true,
-                getDotPainter: dotPainter != null
+                getDotPainter: dataDotPainter != null
                     ? (spot, percent, barData, index) {
-                        return dotPainter;
+                        var dotPainter = parseChartDotPainter(theme,
+                            dataViewModel.dataPoints[index].control, "marker");
+                        return dotPainter ?? dataDotPainter;
                       }
                     : null)
             : FlDotData(show: false),
