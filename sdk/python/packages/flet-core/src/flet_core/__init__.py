@@ -33,11 +33,11 @@ from flet_core.buttons import (
 )
 from flet_core.card import Card
 from flet_core.charts.chart_grid_lines import ChartGridLines
-from flet_core.charts.chart_marker_painter import (
-    ChartCircleDotMarker,
-    ChartCrossDotMarker,
-    ChartDotMarker,
-    ChartSquareDotMarker,
+from flet_core.charts.chart_point_shape import (
+    ChartCirclePoint,
+    ChartCrossPoint,
+    ChartPointShape,
+    ChartSquarePoint,
 )
 from flet_core.charts.line_chart import LineChart
 from flet_core.charts.line_chart_axis import LineChartAxis

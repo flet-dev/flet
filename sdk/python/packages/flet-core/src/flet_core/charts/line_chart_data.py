@@ -1,6 +1,6 @@
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
-from flet_core.charts.chart_marker_painter import ChartDotMarker
+from flet_core.charts.chart_point_shape import ChartPointShape
 from flet_core.charts.line_chart_data_point import LineChartDataPoint
 from flet_core.container import BoxShadow
 from flet_core.control import Control, OptionalNumber
@@ -30,9 +30,8 @@ class LineChartData(Control):
         above_line_gradient: Optional[Gradient] = None,
         below_line_color: Optional[str] = None,
         below_line_gradient: Optional[Gradient] = None,
-        show_markers: Optional[bool] = None,
-        marker: Optional[ChartDotMarker] = None,
-        selected_marker: Optional[ChartDotMarker] = None,
+        point: Union[None, bool, ChartPointShape] = None,
+        selected_point: Union[None, bool, ChartPointShape] = None,
     ):
 
         Control.__init__(
@@ -55,9 +54,8 @@ class LineChartData(Control):
         self.above_line_gradient = above_line_gradient
         self.below_line_color = below_line_color
         self.below_line_gradient = below_line_gradient
-        self.show_markers = show_markers
-        self.marker = marker
-        self.selected_marker = selected_marker
+        self.point = point
+        self.selected_point = selected_point
 
     def _get_control_name(self):
         return "data"
@@ -66,8 +64,8 @@ class LineChartData(Control):
         super()._before_build_command()
         self._set_attr_json("gradient", self.__gradient)
         self._set_attr_json("shadow", self.__shadow)
-        self._set_attr_json("marker", self.__marker)
-        self._set_attr_json("selectedMarker", self.__selected_marker)
+        self._set_attr_json("point", self.__point)
+        self._set_attr_json("selectedPoint", self.__selected_point)
         self._set_attr_json("dashPattern", self.__dash_pattern)
         self._set_attr_json("aboveLineGradient", self.__above_line_gradient)
         self._set_attr_json("belowLineGradient", self.__below_line_gradient)
@@ -147,32 +145,23 @@ class LineChartData(Control):
     def shadow(self, value: Optional[BoxShadow]):
         self.__shadow = value
 
-    # show_markers
+    # point
     @property
-    def show_markers(self) -> Optional[bool]:
-        return self._get_attr("showMarkers", data_type="bool", def_value=False)
+    def point(self):
+        return self.__point
 
-    @show_markers.setter
-    def show_markers(self, value: Optional[bool]):
-        self._set_attr("showMarkers", value)
+    @point.setter
+    def point(self, value: Union[None, bool, ChartPointShape]):
+        self.__point = value
 
-    # marker
+    # selected_point
     @property
-    def marker(self):
-        return self.__marker
+    def selected_point(self):
+        return self.__selected_point
 
-    @marker.setter
-    def marker(self, value: Optional[ChartDotMarker]):
-        self.__marker = value
-
-    # selected_marker
-    @property
-    def selected_marker(self):
-        return self.__selected_marker
-
-    @selected_marker.setter
-    def selected_marker(self, value: Optional[ChartDotMarker]):
-        self.__selected_marker = value
+    @selected_point.setter
+    def selected_point(self, value: Union[None, bool, ChartPointShape]):
+        self.__selected_point = value
 
     # above_line_color
     @property

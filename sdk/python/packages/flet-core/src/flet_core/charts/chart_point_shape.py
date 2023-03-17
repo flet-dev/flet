@@ -2,19 +2,14 @@ import dataclasses
 from dataclasses import field
 from typing import Dict, Optional, Union
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 
 @dataclasses.dataclass
-class ChartDotMarker:
+class ChartPointShape:
     pass
 
 
 @dataclasses.dataclass
-class ChartCircleDotMarker(ChartDotMarker):
+class ChartCirclePoint(ChartPointShape):
     type: str = field(default="circle")
     color: Optional[str] = field(default=None)
     radius: Optional[float] = field(default=None)
@@ -23,7 +18,7 @@ class ChartCircleDotMarker(ChartDotMarker):
 
 
 @dataclasses.dataclass
-class ChartSquareDotMarker(ChartDotMarker):
+class ChartSquarePoint(ChartPointShape):
     type: str = field(default="square")
     color: Optional[str] = field(default=None)
     size: Optional[float] = field(default=None)
@@ -32,7 +27,7 @@ class ChartSquareDotMarker(ChartDotMarker):
 
 
 @dataclasses.dataclass
-class ChartCrossDotMarker(ChartDotMarker):
+class ChartCrossPoint(ChartPointShape):
     type: str = field(default="cross")
     color: Optional[str] = field(default=None)
     size: Optional[float] = field(default=None)
