@@ -116,29 +116,30 @@ class _LineChartControlState extends State<LineChartControl> {
                       if (barIndex == -1) {
                         return null;
                       }
-                      var allDotsPainter = parseChartDotPainter(
-                          Theme.of(context),
-                          viewModel.dataSeries[barIndex].control,
-                          "selectedPoint",
-                          barData.color,
-                          barData.gradient);
+
                       return TouchedSpotIndicatorData(
                         FlLine(
-                            color: barData.gradient != null &&
-                                    barData.gradient!.colors.isNotEmpty
-                                ? barData.gradient!.colors[0]
-                                : barData.color,
+                            color: defaultGetPointColor(
+                                barData.color, barData.gradient, 0),
                             strokeWidth: 3),
                         FlDotData(
                           show: true,
                           getDotPainter: (spot, percent, barData, index) {
+                            var allDotsPainter = parseChartDotPainter(
+                                Theme.of(context),
+                                viewModel.dataSeries[barIndex].control,
+                                "selectedPoint",
+                                barData.color,
+                                barData.gradient,
+                                percent);
                             var dotPainter = parseChartDotPainter(
                                 Theme.of(context),
                                 viewModel.dataSeries[barIndex].dataPoints[index]
                                     .control,
                                 "selectedPoint",
                                 barData.color,
-                                barData.gradient);
+                                barData.gradient,
+                                percent);
                             return dotPainter ??
                                 allDotsPainter ??
                                 getInvisiblePainter();
@@ -234,8 +235,6 @@ class _LineChartControlState extends State<LineChartControl> {
         Colors.cyan;
     Gradient? barGradient =
         parseGradient(theme, dataViewModel.control, "gradient");
-    var allDotsPainter = parseChartDotPainter(
-        theme, dataViewModel.control, "point", barColor, barGradient);
     return LineChartBarData(
         spots: dataViewModel.dataPoints.map((p) => FlSpot(p.x, p.y)).toList(),
         isCurved: dataViewModel.control.attrBool("curved"),
@@ -250,12 +249,20 @@ class _LineChartControlState extends State<LineChartControl> {
         dotData: FlDotData(
             show: true,
             getDotPainter: (spot, percent, barData, index) {
+              var allDotsPainter = parseChartDotPainter(
+                  theme,
+                  dataViewModel.control,
+                  "point",
+                  barColor,
+                  barGradient,
+                  percent);
               var dotPainter = parseChartDotPainter(
                   theme,
                   dataViewModel.dataPoints[index].control,
                   "point",
                   barColor,
-                  barGradient);
+                  barGradient,
+                  percent);
               return dotPainter ?? allDotsPainter ?? getInvisiblePainter();
             }),
         aboveBarData: aboveLineColor != null || aboveLineGradient != null

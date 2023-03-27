@@ -51,8 +51,13 @@ FlLine? flineFromJSON(theme, j) {
           : null);
 }
 
-FlDotPainter? parseChartDotPainter(ThemeData theme, Control control,
-    String propName, Color? barColor, Gradient? barGradient) {
+FlDotPainter? parseChartDotPainter(
+    ThemeData theme,
+    Control control,
+    String propName,
+    Color? barColor,
+    Gradient? barGradient,
+    double percentage) {
   var v = control.attrString(propName, null);
   if (v == null) {
     return null;
@@ -62,23 +67,27 @@ FlDotPainter? parseChartDotPainter(ThemeData theme, Control control,
   if (j == false) {
     return getInvisiblePainter();
   } else if (j == true) {
-    return getDefaultPainter(barColor, barGradient);
+    return getDefaultPainter(barColor, barGradient, percentage);
   }
-  return chartDotPainterFromJSON(theme, j, barColor, barGradient);
+  return chartDotPainterFromJSON(theme, j, barColor, barGradient, percentage);
 }
 
-FlDotPainter? chartDotPainterFromJSON(ThemeData theme,
-    Map<String, dynamic> json, Color? barColor, Gradient? barGradient) {
+FlDotPainter? chartDotPainterFromJSON(
+    ThemeData theme,
+    Map<String, dynamic> json,
+    Color? barColor,
+    Gradient? barGradient,
+    double percentage) {
   String type = json["type"];
   if (type == "circle") {
     return FlDotCirclePainter(
         color: json['color'] != null
             ? HexColor.fromString(theme, json['color'] as String)
-            : defaultGetPointColor(barColor, barGradient),
+            : defaultGetPointColor(barColor, barGradient, percentage),
         radius: json["radius"] != null ? parseDouble(json["radius"]) : null,
         strokeColor: json['stroke_color'] != null
             ? HexColor.fromString(theme, json['color'] as String)
-            : defaultGetDotStrokeColor(barColor, barGradient),
+            : defaultGetDotStrokeColor(barColor, barGradient, percentage),
         strokeWidth: json["stroke_width"] != null
             ? parseDouble(json["stroke_width"])
             : null);
@@ -86,11 +95,11 @@ FlDotPainter? chartDotPainterFromJSON(ThemeData theme,
     return FlDotSquarePainter(
         color: json['color'] != null
             ? HexColor.fromString(theme, json['color'] as String)
-            : defaultGetPointColor(barColor, barGradient),
+            : defaultGetPointColor(barColor, barGradient, percentage),
         size: json["size"] != null ? parseDouble(json["size"]) : null,
         strokeColor: json['stroke_color'] != null
             ? HexColor.fromString(theme, json['color'] as String)
-            : defaultGetDotStrokeColor(barColor, barGradient),
+            : defaultGetDotStrokeColor(barColor, barGradient, percentage),
         strokeWidth: json["stroke_width"] != null
             ? parseDouble(json["stroke_width"])
             : null);
@@ -98,7 +107,7 @@ FlDotPainter? chartDotPainterFromJSON(ThemeData theme,
     return FlDotCrossPainter(
       color: json['color'] != null
           ? HexColor.fromString(theme, json['color'] as String)
-          : defaultGetDotStrokeColor(barColor, barGradient),
+          : defaultGetDotStrokeColor(barColor, barGradient, percentage),
       size: json["size"] != null ? parseDouble(json["size"]) : null,
       width: json["width"] != null ? parseDouble(json["width"]) : null,
     );
@@ -110,26 +119,30 @@ FlDotPainter getInvisiblePainter() {
   return FlDotCirclePainter(radius: 0, strokeWidth: 0);
 }
 
-FlDotPainter getDefaultPainter(Color? barColor, Gradient? barGradient) {
+FlDotPainter getDefaultPainter(
+    Color? barColor, Gradient? barGradient, double percentage) {
   return FlDotCirclePainter(
       radius: 4,
-      color: defaultGetPointColor(barColor, barGradient),
-      strokeColor: defaultGetDotStrokeColor(barColor, barGradient),
+      color: defaultGetPointColor(barColor, barGradient, percentage),
+      strokeColor: defaultGetDotStrokeColor(barColor, barGradient, percentage),
       strokeWidth: 1);
 }
 
-Color defaultGetPointColor(Color? barColor, Gradient? barGradient) {
+Color defaultGetPointColor(
+    Color? barColor, Gradient? barGradient, double percentage) {
   if (barGradient != null && barGradient is LinearGradient) {
-    return lerpGradient(barGradient.colors, barGradient.getSafeColorStops(), 0);
+    return lerpGradient(
+        barGradient.colors, barGradient.getSafeColorStops(), percentage / 100);
   }
   return barGradient?.colors.first ?? barColor ?? Colors.blueGrey;
 }
 
-Color defaultGetDotStrokeColor(Color? barColor, Gradient? barGradient) {
+Color defaultGetDotStrokeColor(
+    Color? barColor, Gradient? barGradient, double percentage) {
   Color color;
   if (barGradient != null && barGradient is LinearGradient) {
-    color =
-        lerpGradient(barGradient.colors, barGradient.getSafeColorStops(), 0);
+    color = lerpGradient(
+        barGradient.colors, barGradient.getSafeColorStops(), percentage / 100);
   } else {
     color = barGradient?.colors.first ?? barColor ?? Colors.blueGrey;
   }
