@@ -30,11 +30,10 @@ class LineChartData(Control):
         above_line_bgcolor: Optional[str] = None,
         above_line_gradient: Optional[Gradient] = None,
         above_line: Optional[ChartPointLine] = None,
-        selected_above_line: Optional[ChartPointLine] = None,
         below_line_bgcolor: Optional[str] = None,
         below_line_gradient: Optional[Gradient] = None,
         below_line: Optional[ChartPointLine] = None,
-        selected_below_line: Optional[ChartPointLine] = None,
+        selected_below_line: Union[None, bool, ChartPointLine] = None,
         point: Union[None, bool, ChartPointShape] = None,
         selected_point: Union[None, bool, ChartPointShape] = None,
     ):
@@ -58,7 +57,6 @@ class LineChartData(Control):
         self.above_line_bgcolor = above_line_bgcolor
         self.above_line_gradient = above_line_gradient
         self.above_line = above_line
-        self.selected_above_line = selected_above_line
         self.below_line_bgcolor = below_line_bgcolor
         self.below_line_gradient = below_line_gradient
         self.below_line = below_line
@@ -79,7 +77,6 @@ class LineChartData(Control):
         self._set_attr_json("aboveLineGradient", self.__above_line_gradient)
         self._set_attr_json("belowLineGradient", self.__below_line_gradient)
         self._set_attr_json("aboveLine", self.__above_line)
-        self._set_attr_json("selectedAboveLine", self.__selected_above_line)
         self._set_attr_json("belowLine", self.__below_line)
         self._set_attr_json("selectedBelowLine", self.__selected_below_line)
 
@@ -203,15 +200,6 @@ class LineChartData(Control):
     def above_line(self, value: Optional[ChartPointLine]):
         self.__above_line = value
 
-    # selected_above_line
-    @property
-    def selected_above_line(self) -> Optional[ChartPointLine]:
-        return self.__selected_above_line
-
-    @selected_above_line.setter
-    def selected_above_line(self, value: Optional[ChartPointLine]):
-        self.__selected_above_line = value
-
     # below_line_bgcolor
     @property
     def below_line_bgcolor(self) -> Optional[str]:
@@ -241,9 +229,9 @@ class LineChartData(Control):
 
     # selected_below_line
     @property
-    def selected_below_line(self) -> Optional[ChartPointLine]:
+    def selected_below_line(self) -> Union[None, bool, ChartPointLine]:
         return self.__selected_below_line
 
     @selected_below_line.setter
-    def selected_below_line(self, value: Optional[ChartPointLine]):
+    def selected_below_line(self, value: Union[None, bool, ChartPointLine]):
         self.__selected_below_line = value

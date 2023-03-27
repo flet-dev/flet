@@ -27,9 +27,8 @@ class LineChartDataPoint(Control):
         point: Union[None, bool, ChartPointShape] = None,
         selected_point: Union[None, bool, ChartPointShape] = None,
         show_above_line: Optional[bool] = None,
-        selected_above_line: Optional[ChartPointLine] = None,
         show_below_line: Optional[bool] = None,
-        selected_below_line: Optional[ChartPointLine] = None,
+        selected_below_line: Union[None, bool, ChartPointLine] = None,
     ):
 
         Control.__init__(
@@ -50,7 +49,6 @@ class LineChartDataPoint(Control):
         self.selected_point = selected_point
         self.show_above_line = show_above_line
         self.show_below_line = show_below_line
-        self.selected_above_line = selected_above_line
         self.selected_below_line = selected_below_line
 
     def _get_control_name(self):
@@ -61,7 +59,6 @@ class LineChartDataPoint(Control):
         self._set_attr_json("tooltipStyle", self.__tooltip_style)
         self._set_attr_json("point", self.__point)
         self._set_attr_json("selectedPoint", self.__selected_point)
-        self._set_attr_json("selectedAboveLine", self.__selected_above_line)
         self._set_attr_json("selectedBelowLine", self.__selected_below_line)
 
     def _get_children(self):
@@ -165,20 +162,11 @@ class LineChartDataPoint(Control):
     def show_below_line(self, value: Optional[bool]):
         self._set_attr("showBelowLine", value)
 
-    # selected_above_line
-    @property
-    def selected_above_line(self) -> Optional[ChartPointLine]:
-        return self.__selected_above_line
-
-    @selected_above_line.setter
-    def selected_above_line(self, value: Optional[ChartPointLine]):
-        self.__selected_above_line = value
-
     # selected_below_line
     @property
-    def selected_below_line(self) -> Optional[ChartPointLine]:
+    def selected_below_line(self) -> Union[None, bool, ChartPointLine]:
         return self.__selected_below_line
 
     @selected_below_line.setter
-    def selected_below_line(self, value: Optional[ChartPointLine]):
+    def selected_below_line(self, value: Union[None, bool, ChartPointLine]):
         self.__selected_below_line = value

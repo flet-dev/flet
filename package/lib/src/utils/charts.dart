@@ -46,6 +46,30 @@ FlLine? parseFlLine(ThemeData theme, Control control, String propName) {
   return flineFromJSON(theme, j);
 }
 
+FlLine? parseSelectedFlLine(ThemeData theme, Control control, String propName,
+    Color? color, Gradient? gradient) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j = json.decode(v);
+  if (j == false) {
+    return getInvisibleLine();
+  } else if (j == true) {
+    return FlLine(
+        color: defaultGetPointColor(color, gradient, 0), strokeWidth: 3);
+  }
+  return FlLine(
+      color: j['color'] != null
+          ? HexColor.fromString(theme, j['color'] as String)
+          : defaultGetPointColor(color, gradient, 0),
+      strokeWidth: j['width'] != null ? parseDouble(j['width'], 3) : 3,
+      dashArray: j['dash_pattern'] != null
+          ? (j['dash_pattern'] as List).map((e) => parseInt(e)).toList()
+          : null);
+}
+
 FlLine? flineFromJSON(theme, j) {
   if (j == null ||
       (j['color'] == null && j['width'] == null && j['dash_pattern'] == null)) {
@@ -127,6 +151,10 @@ FlDotPainter? chartDotPainterFromJSON(
 
 FlDotPainter getInvisiblePainter() {
   return FlDotCirclePainter(radius: 0, strokeWidth: 0);
+}
+
+FlLine getInvisibleLine() {
+  return FlLine(strokeWidth: 0);
 }
 
 FlDotPainter getDefaultPainter(

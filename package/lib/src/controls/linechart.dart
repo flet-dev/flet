@@ -118,11 +118,28 @@ class _LineChartControlState extends State<LineChartControl> {
                         return null;
                       }
 
+                      FlLine? allDotsLine = parseSelectedFlLine(
+                          Theme.of(context),
+                          viewModel.dataSeries[barIndex].control,
+                          "selectedBelowLine",
+                          barData.color,
+                          barData.gradient);
+
+                      FlLine? dotLine = parseSelectedFlLine(
+                          Theme.of(context),
+                          viewModel
+                              .dataSeries[barIndex].dataPoints[index].control,
+                          "selectedBelowLine",
+                          barData.color,
+                          barData.gradient);
+
                       return TouchedSpotIndicatorData(
-                        FlLine(
-                            color: defaultGetPointColor(
-                                barData.color, barData.gradient, 0),
-                            strokeWidth: 3),
+                        dotLine ??
+                            allDotsLine ??
+                            FlLine(
+                                color: defaultGetPointColor(
+                                    barData.color, barData.gradient, 0),
+                                strokeWidth: 3),
                         FlDotData(
                           show: true,
                           getDotPainter: (spot, percent, barData, index) {
