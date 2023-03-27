@@ -1,5 +1,6 @@
 from typing import Any, List, Optional, Union
 
+from flet_core.charts.chart_point_line import ChartPointLine
 from flet_core.charts.chart_point_shape import ChartPointShape
 from flet_core.charts.line_chart_data_point import LineChartDataPoint
 from flet_core.container import BoxShadow
@@ -26,10 +27,14 @@ class LineChartData(Control):
         stroke_cap_round: Optional[bool] = None,
         dash_pattern: Optional[List[int]] = None,
         shadow: Optional[BoxShadow] = None,
-        above_line_color: Optional[str] = None,
+        above_line_bgcolor: Optional[str] = None,
         above_line_gradient: Optional[Gradient] = None,
-        below_line_color: Optional[str] = None,
+        above_line: Optional[ChartPointLine] = None,
+        selected_above_line: Optional[ChartPointLine] = None,
+        below_line_bgcolor: Optional[str] = None,
         below_line_gradient: Optional[Gradient] = None,
+        below_line: Optional[ChartPointLine] = None,
+        selected_below_line: Optional[ChartPointLine] = None,
         point: Union[None, bool, ChartPointShape] = None,
         selected_point: Union[None, bool, ChartPointShape] = None,
     ):
@@ -50,10 +55,14 @@ class LineChartData(Control):
         self.stroke_cap_round = stroke_cap_round
         self.shadow = shadow
         self.dash_pattern = dash_pattern
-        self.above_line_color = above_line_color
+        self.above_line_bgcolor = above_line_bgcolor
         self.above_line_gradient = above_line_gradient
-        self.below_line_color = below_line_color
+        self.above_line = above_line
+        self.selected_above_line = selected_above_line
+        self.below_line_bgcolor = below_line_bgcolor
         self.below_line_gradient = below_line_gradient
+        self.below_line = below_line
+        self.selected_below_line = selected_below_line
         self.point = point
         self.selected_point = selected_point
 
@@ -69,6 +78,10 @@ class LineChartData(Control):
         self._set_attr_json("dashPattern", self.__dash_pattern)
         self._set_attr_json("aboveLineGradient", self.__above_line_gradient)
         self._set_attr_json("belowLineGradient", self.__below_line_gradient)
+        self._set_attr_json("aboveLine", self.__above_line)
+        self._set_attr_json("selectedAboveLine", self.__selected_above_line)
+        self._set_attr_json("belowLine", self.__below_line)
+        self._set_attr_json("selectedBelowLine", self.__selected_below_line)
 
     def _get_children(self):
         return self.__data_points
@@ -163,14 +176,14 @@ class LineChartData(Control):
     def selected_point(self, value: Union[None, bool, ChartPointShape]):
         self.__selected_point = value
 
-    # above_line_color
+    # above_line_bgcolor
     @property
-    def above_line_color(self) -> Optional[str]:
-        return self._get_attr("aboveLineColor")
+    def above_line_bgcolor(self) -> Optional[str]:
+        return self._get_attr("aboveLineBgcolor")
 
-    @above_line_color.setter
-    def above_line_color(self, value: Optional[str]):
-        self._set_attr("aboveLineColor", value)
+    @above_line_bgcolor.setter
+    def above_line_bgcolor(self, value: Optional[str]):
+        self._set_attr("aboveLineBgcolor", value)
 
     # above_line_gradient
     @property
@@ -181,14 +194,32 @@ class LineChartData(Control):
     def above_line_gradient(self, value: Optional[Gradient]):
         self.__above_line_gradient = value
 
-    # below_line_color
+    # above_line
     @property
-    def below_line_color(self) -> Optional[str]:
-        return self._get_attr("belowLineColor")
+    def above_line(self) -> Optional[ChartPointLine]:
+        return self.__above_line
 
-    @below_line_color.setter
-    def below_line_color(self, value: Optional[str]):
-        self._set_attr("belowLineColor", value)
+    @above_line.setter
+    def above_line(self, value: Optional[ChartPointLine]):
+        self.__above_line = value
+
+    # selected_above_line
+    @property
+    def selected_above_line(self) -> Optional[ChartPointLine]:
+        return self.__selected_above_line
+
+    @selected_above_line.setter
+    def selected_above_line(self, value: Optional[ChartPointLine]):
+        self.__selected_above_line = value
+
+    # below_line_bgcolor
+    @property
+    def below_line_bgcolor(self) -> Optional[str]:
+        return self._get_attr("belowLineBgcolor")
+
+    @below_line_bgcolor.setter
+    def below_line_bgcolor(self, value: Optional[str]):
+        self._set_attr("belowLineBgcolor", value)
 
     # below_line_gradient
     @property
@@ -198,3 +229,21 @@ class LineChartData(Control):
     @below_line_gradient.setter
     def below_line_gradient(self, value: Optional[Gradient]):
         self.__below_line_gradient = value
+
+    # below_line
+    @property
+    def below_line(self) -> Optional[ChartPointLine]:
+        return self.__below_line
+
+    @below_line.setter
+    def below_line(self, value: Optional[ChartPointLine]):
+        self.__below_line = value
+
+    # selected_below_line
+    @property
+    def selected_below_line(self) -> Optional[ChartPointLine]:
+        return self.__selected_below_line
+
+    @selected_below_line.setter
+    def selected_below_line(self, value: Optional[ChartPointLine]):
+        self.__selected_below_line = value

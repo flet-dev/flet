@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:fl_chart/fl_chart.dart';
-import '../utils/gradient.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/gradient.dart';
 import 'colors.dart';
 import 'numbers.dart';
 
@@ -34,6 +34,16 @@ FlGridData parseChartGridData(ThemeData theme, Control control,
         : null,
     getDrawingVerticalLine: vLine == null ? null : (value) => vLine,
   );
+}
+
+FlLine? parseFlLine(ThemeData theme, Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j = json.decode(v);
+  return flineFromJSON(theme, j);
 }
 
 FlLine? flineFromJSON(theme, j) {

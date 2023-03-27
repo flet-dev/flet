@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flet/src/models/linechart_data_point_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -219,12 +220,12 @@ class _LineChartControlState extends State<LineChartControl> {
 
   LineChartBarData getBarData(
       ThemeData theme, Control parent, LineChartDataViewModel dataViewModel) {
-    Color? aboveLineColor = HexColor.fromString(
-        theme, dataViewModel.control.attrString("aboveLineColor", "")!);
+    Color? aboveLineBgcolor = HexColor.fromString(
+        theme, dataViewModel.control.attrString("aboveLineBgcolor", "")!);
     Gradient? aboveLineGradient =
         parseGradient(theme, dataViewModel.control, "aboveLineGradient");
-    Color? belowLineColor = HexColor.fromString(
-        theme, dataViewModel.control.attrString("belowLineColor", "")!);
+    Color? belowLineBgcolor = HexColor.fromString(
+        theme, dataViewModel.control.attrString("belowLineBgcolor", "")!);
     Gradient? belowLineGradient =
         parseGradient(theme, dataViewModel.control, "belowLineGradient");
     var dashPattern = dataViewModel.control.attrString("dashPattern");
@@ -235,6 +236,14 @@ class _LineChartControlState extends State<LineChartControl> {
         Colors.cyan;
     Gradient? barGradient =
         parseGradient(theme, dataViewModel.control, "gradient");
+    FlLine? aboveLine =
+        parseFlLine(Theme.of(context), dataViewModel.control, "aboveLine");
+    FlLine? belowLine =
+        parseFlLine(Theme.of(context), dataViewModel.control, "belowLine");
+
+    Map<FlSpot, LineChartDataPointViewModel> spots = {
+      for (var e in dataViewModel.dataPoints) FlSpot(e.x, e.y): e
+    };
     return LineChartBarData(
         spots: dataViewModel.dataPoints.map((p) => FlSpot(p.x, p.y)).toList(),
         isCurved: dataViewModel.control.attrBool("curved"),
@@ -265,13 +274,33 @@ class _LineChartControlState extends State<LineChartControl> {
                   percent);
               return dotPainter ?? allDotsPainter ?? getInvisiblePainter();
             }),
-        aboveBarData: aboveLineColor != null || aboveLineGradient != null
+        aboveBarData: aboveLineBgcolor != null ||
+                aboveLineGradient != null ||
+                aboveLine != null
             ? BarAreaData(
-                show: true, color: aboveLineColor, gradient: aboveLineGradient)
+                show: true,
+                color: aboveLineBgcolor,
+                gradient: aboveLineGradient,
+                spotsLine: BarAreaSpotsLine(
+                  show: true,
+                  flLineStyle: aboveLine,
+                  checkToShowSpotLine: (spot) =>
+                      spots[spot]!.control.attrBool("showAboveLine", true)!,
+                ))
             : null,
-        belowBarData: belowLineColor != null || belowLineGradient != null
+        belowBarData: belowLineBgcolor != null ||
+                belowLineGradient != null ||
+                belowLine != null
             ? BarAreaData(
-                show: true, color: belowLineColor, gradient: belowLineGradient)
+                show: true,
+                color: belowLineBgcolor,
+                gradient: belowLineGradient,
+                spotsLine: BarAreaSpotsLine(
+                  show: true,
+                  flLineStyle: belowLine,
+                  checkToShowSpotLine: (spot) =>
+                      spots[spot]!.control.attrBool("showBelowLine", true)!,
+                ))
             : null,
         color: barColor,
         gradient: barGradient);

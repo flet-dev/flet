@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union
 
+from flet_core.charts.chart_point_line import ChartPointLine
 from flet_core.charts.chart_point_shape import ChartPointShape
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -25,6 +26,10 @@ class LineChartDataPoint(Control):
         tooltip_align: TextAlign = TextAlign.NONE,
         point: Union[None, bool, ChartPointShape] = None,
         selected_point: Union[None, bool, ChartPointShape] = None,
+        show_above_line: Optional[bool] = None,
+        selected_above_line: Optional[ChartPointLine] = None,
+        show_below_line: Optional[bool] = None,
+        selected_below_line: Optional[ChartPointLine] = None,
     ):
 
         Control.__init__(
@@ -43,6 +48,10 @@ class LineChartDataPoint(Control):
         self.tooltip_style = tooltip_style
         self.point = point
         self.selected_point = selected_point
+        self.show_above_line = show_above_line
+        self.show_below_line = show_below_line
+        self.selected_above_line = selected_above_line
+        self.selected_below_line = selected_below_line
 
     def _get_control_name(self):
         return "p"
@@ -52,6 +61,8 @@ class LineChartDataPoint(Control):
         self._set_attr_json("tooltipStyle", self.__tooltip_style)
         self._set_attr_json("point", self.__point)
         self._set_attr_json("selectedPoint", self.__selected_point)
+        self._set_attr_json("selectedAboveLine", self.__selected_above_line)
+        self._set_attr_json("selectedBelowLine", self.__selected_below_line)
 
     def _get_children(self):
         children = []
@@ -135,3 +146,39 @@ class LineChartDataPoint(Control):
     @selected_point.setter
     def selected_point(self, value: Union[None, bool, ChartPointShape]):
         self.__selected_point = value
+
+    # show_above_line
+    @property
+    def show_above_line(self) -> Optional[bool]:
+        return self._get_attr("showAboveLine", data_type="bool", def_value=True)
+
+    @show_above_line.setter
+    def show_above_line(self, value: Optional[bool]):
+        self._set_attr("showAboveLine", value)
+
+    # show_below_line
+    @property
+    def show_below_line(self) -> Optional[bool]:
+        return self._get_attr("showBelowLine", data_type="bool", def_value=True)
+
+    @show_below_line.setter
+    def show_below_line(self, value: Optional[bool]):
+        self._set_attr("showBelowLine", value)
+
+    # selected_above_line
+    @property
+    def selected_above_line(self) -> Optional[ChartPointLine]:
+        return self.__selected_above_line
+
+    @selected_above_line.setter
+    def selected_above_line(self, value: Optional[ChartPointLine]):
+        self.__selected_above_line = value
+
+    # selected_below_line
+    @property
+    def selected_below_line(self) -> Optional[ChartPointLine]:
+        return self.__selected_below_line
+
+    @selected_below_line.setter
+    def selected_below_line(self, value: Optional[ChartPointLine]):
+        self.__selected_below_line = value

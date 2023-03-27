@@ -33,6 +33,7 @@ from flet_core.buttons import (
 )
 from flet_core.card import Card
 from flet_core.charts.chart_grid_lines import ChartGridLines
+from flet_core.charts.chart_point_line import ChartPointLine
 from flet_core.charts.chart_point_shape import (
     ChartCirclePoint,
     ChartCrossPoint,
