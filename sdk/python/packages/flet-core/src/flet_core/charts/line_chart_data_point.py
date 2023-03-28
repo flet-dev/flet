@@ -20,6 +20,7 @@ class LineChartDataPoint(Control):
         #
         # Specific
         #
+        selected: Optional[bool] = None,
         show_tooltip: Optional[bool] = None,
         tooltip: Optional[str] = None,
         tooltip_style: Optional[TextStyle] = None,
@@ -41,6 +42,7 @@ class LineChartDataPoint(Control):
 
         self.x = x
         self.y = y
+        self.selected = selected
         self.show_tooltip = show_tooltip
         self.tooltip = tooltip
         self.tooltip_align = tooltip_align
@@ -82,6 +84,15 @@ class LineChartDataPoint(Control):
     @y.setter
     def y(self, value: OptionalNumber):
         self._set_attr("y", value)
+
+    # selected
+    @property
+    def selected(self) -> Optional[bool]:
+        return self._get_attr("selected", data_type="bool", def_value=False)
+
+    @selected.setter
+    def selected(self, value: Optional[bool]):
+        self._set_attr("selected", value)
 
     # show_tooltip
     @property

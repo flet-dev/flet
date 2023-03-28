@@ -66,7 +66,30 @@ class _LineChartControlState extends State<LineChartControl> {
           var bottomTitles =
               getAxisTitles(widget.control, viewModel.bottomAxis, disabled);
 
+          var interactive = viewModel.control.attrBool("interactive", true)!;
+
           List<LineChartBarData> barsData = [];
+          List<LineBarSpot> selectedPoints = [];
+
+          var barIndex = 0;
+          for (var ds in viewModel.dataSeries) {
+            var barData =
+                getBarData(Theme.of(context), widget.control, interactive, ds);
+            barsData.add(barData);
+
+            if (!interactive) {
+              var spotIndex = 0;
+              for (var p in ds.dataPoints) {
+                if (p.control.attrBool("selected", false)!) {
+                  selectedPoints.add(
+                      LineBarSpot(barData, barIndex, barData.spots[spotIndex]));
+                }
+                spotIndex++;
+              }
+            }
+
+            barIndex++;
+          }
 
           var chart = LineChart(
             LineChartData(
@@ -78,8 +101,10 @@ class _LineChartControlState extends State<LineChartControl> {
                 maxY: widget.control.attrDouble("maxy"),
                 baselineX: widget.control.attrDouble("baselinex"),
                 baselineY: widget.control.attrDouble("baseliney"),
-
-                //showingTooltipIndicators: [ShowingTooltipIndicators([LineBarSpot(bar, barIndex, spot)])],
+                showingTooltipIndicators: groupBy(selectedPoints, (p) => p.x)
+                    .values
+                    .map((e) => ShowingTooltipIndicators(e))
+                    .toList(),
                 titlesData: (leftTitles.sideTitles.showTitles ||
                         topTitles.sideTitles.showTitles ||
                         rightTitles.sideTitles.showTitles ||
@@ -97,21 +122,15 @@ class _LineChartControlState extends State<LineChartControl> {
                     : FlBorderData(show: false),
                 gridData: parseChartGridData(Theme.of(context), widget.control,
                     "horizontalGridLines", "verticalGridLines"),
-                lineBarsData: viewModel.dataSeries
-                    .map(
-                        (d) => getBarData(Theme.of(context), widget.control, d))
-                    .toList(),
+                lineBarsData: barsData,
                 lineTouchData: LineTouchData(
-                  enabled: viewModel.control.attrBool("interactive", true)!,
+                  enabled: interactive,
                   getTouchedSpotIndicator:
                       (LineChartBarData barData, List<int> spotIndexes) {
-                    var barIndex = barsData.indexWhere(
-                        (b) => b == barData.copyWith(showingIndicators: []));
-
-                    // if (spotIndexes.isNotEmpty) {
-                    //   debugPrint(
-                    //       "Bar index: $barIndex, spotIndexes.length: ${spotIndexes.length}, spotIndexes: ${spotIndexes[0]}");
-                    // }
+                    var barIndex = interactive
+                        ? barsData.indexWhere(
+                            (b) => b == barData.copyWith(showingIndicators: []))
+                        : barsData.indexWhere((b) => b == barData);
 
                     return spotIndexes.map((index) {
                       if (barIndex == -1) {
@@ -228,15 +247,13 @@ class _LineChartControlState extends State<LineChartControl> {
             swapAnimationCurve: animate != null ? animate.curve : Curves.linear,
           );
 
-          barsData = chart.data.lineBarsData;
-
           return constrainedControl(
               context, chart, widget.parent, widget.control);
         });
   }
 
-  LineChartBarData getBarData(
-      ThemeData theme, Control parent, LineChartDataViewModel dataViewModel) {
+  LineChartBarData getBarData(ThemeData theme, Control parent,
+      bool interactiveChart, LineChartDataViewModel dataViewModel) {
     Color? aboveLineBgcolor = HexColor.fromString(
         theme, dataViewModel.control.attrString("aboveLineBgcolor", "")!);
     Gradient? aboveLineGradient =
@@ -263,6 +280,14 @@ class _LineChartControlState extends State<LineChartControl> {
     };
     return LineChartBarData(
         spots: dataViewModel.dataPoints.map((p) => FlSpot(p.x, p.y)).toList(),
+        showingIndicators: dataViewModel.dataPoints
+            .asMap()
+            .entries
+            .where((e) =>
+                !interactiveChart &&
+                e.value.control.attrBool("selected", false)!)
+            .map((e) => e.key)
+            .toList(),
         isCurved: dataViewModel.control.attrBool("curved"),
         isStrokeCapRound: dataViewModel.control.attrBool("strokeCapRound"),
         barWidth: dataViewModel.control.attrDouble("strokeWidth"),
