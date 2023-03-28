@@ -162,14 +162,14 @@ class _LineChartControlState extends State<LineChartControl> {
                         FlDotData(
                           show: true,
                           getDotPainter: (spot, percent, barData, index) {
-                            var allDotsPainter = parseChartDotPainter(
+                            var allDotsPainter = parseChartSelectedDotPainter(
                                 Theme.of(context),
                                 viewModel.dataSeries[barIndex].control,
                                 "selectedPoint",
                                 barData.color,
                                 barData.gradient,
                                 percent);
-                            var dotPainter = parseChartDotPainter(
+                            var dotPainter = parseChartSelectedDotPainter(
                                 Theme.of(context),
                                 viewModel.dataSeries[barIndex].dataPoints[index]
                                     .control,
@@ -179,7 +179,8 @@ class _LineChartControlState extends State<LineChartControl> {
                                 percent);
                             return dotPainter ??
                                 allDotsPainter ??
-                                getInvisiblePainter();
+                                getDefaultSelectedPainter(
+                                    barData.color, barData.gradient, percent);
                           },
                         ),
                       );
@@ -324,7 +325,7 @@ class _LineChartControlState extends State<LineChartControl> {
                 color: aboveLineBgcolor,
                 gradient: aboveLineGradient,
                 spotsLine: BarAreaSpotsLine(
-                  show: true,
+                  show: aboveLine != null,
                   flLineStyle: aboveLine,
                   checkToShowSpotLine: (spot) =>
                       spots[spot]!.control.attrBool("showAboveLine", true)!,
@@ -338,7 +339,7 @@ class _LineChartControlState extends State<LineChartControl> {
                 color: belowLineBgcolor,
                 gradient: belowLineGradient,
                 spotsLine: BarAreaSpotsLine(
-                  show: true,
+                  show: belowLine != null,
                   flLineStyle: belowLine,
                   checkToShowSpotLine: (spot) =>
                       spots[spot]!.control.attrBool("showBelowLine", true)!,

@@ -106,6 +106,27 @@ FlDotPainter? parseChartDotPainter(
   return chartDotPainterFromJSON(theme, j, barColor, barGradient, percentage);
 }
 
+FlDotPainter? parseChartSelectedDotPainter(
+    ThemeData theme,
+    Control control,
+    String propName,
+    Color? barColor,
+    Gradient? barGradient,
+    double percentage) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j = json.decode(v);
+  if (j == false) {
+    return getInvisiblePainter();
+  } else if (j == true) {
+    return getDefaultSelectedPainter(barColor, barGradient, percentage);
+  }
+  return chartDotPainterFromJSON(theme, j, barColor, barGradient, percentage);
+}
+
 FlDotPainter? chartDotPainterFromJSON(
     ThemeData theme,
     Map<String, dynamic> json,
@@ -164,6 +185,15 @@ FlDotPainter getDefaultPainter(
       color: defaultGetPointColor(barColor, barGradient, percentage),
       strokeColor: defaultGetDotStrokeColor(barColor, barGradient, percentage),
       strokeWidth: 1);
+}
+
+FlDotPainter getDefaultSelectedPainter(
+    Color? barColor, Gradient? barGradient, double percentage) {
+  return FlDotCirclePainter(
+      radius: 8,
+      color: defaultGetPointColor(barColor, barGradient, percentage),
+      strokeColor: defaultGetDotStrokeColor(barColor, barGradient, percentage),
+      strokeWidth: 2);
 }
 
 Color defaultGetPointColor(
