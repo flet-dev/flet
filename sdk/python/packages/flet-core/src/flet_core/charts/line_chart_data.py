@@ -29,9 +29,11 @@ class LineChartData(Control):
         shadow: Optional[BoxShadow] = None,
         above_line_bgcolor: Optional[str] = None,
         above_line_gradient: Optional[Gradient] = None,
+        above_line_cutoff_y: OptionalNumber = None,
         above_line: Optional[ChartPointLine] = None,
         below_line_bgcolor: Optional[str] = None,
         below_line_gradient: Optional[Gradient] = None,
+        below_line_cutoff_y: OptionalNumber = None,
         below_line: Optional[ChartPointLine] = None,
         selected_below_line: Union[None, bool, ChartPointLine] = None,
         point: Union[None, bool, ChartPointShape] = None,
@@ -56,9 +58,11 @@ class LineChartData(Control):
         self.dash_pattern = dash_pattern
         self.above_line_bgcolor = above_line_bgcolor
         self.above_line_gradient = above_line_gradient
+        self.above_line_cutoff_y = above_line_cutoff_y
         self.above_line = above_line
         self.below_line_bgcolor = below_line_bgcolor
         self.below_line_gradient = below_line_gradient
+        self.below_line_cutoff_y = below_line_cutoff_y
         self.below_line = below_line
         self.selected_below_line = selected_below_line
         self.point = point
@@ -191,6 +195,15 @@ class LineChartData(Control):
     def above_line_gradient(self, value: Optional[Gradient]):
         self.__above_line_gradient = value
 
+    # above_line_cutoff_y
+    @property
+    def above_line_cutoff_y(self) -> OptionalNumber:
+        return self._get_attr("aboveLineCutoffY", data_type="float")
+
+    @above_line_cutoff_y.setter
+    def above_line_cutoff_y(self, value: OptionalNumber):
+        self._set_attr("aboveLineCutoffY", value)
+
     # above_line
     @property
     def above_line(self) -> Optional[ChartPointLine]:
@@ -217,6 +230,15 @@ class LineChartData(Control):
     @below_line_gradient.setter
     def below_line_gradient(self, value: Optional[Gradient]):
         self.__below_line_gradient = value
+
+    # below_line_cutoff_y
+    @property
+    def below_line_cutoff_y(self) -> OptionalNumber:
+        return self._get_attr("belowLineCutoffY", data_type="float")
+
+    @below_line_cutoff_y.setter
+    def below_line_cutoff_y(self, value: OptionalNumber):
+        self._set_attr("belowLineCutoffY", value)
 
     # below_line
     @property

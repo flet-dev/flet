@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 Color? _getThemeColor(ThemeData theme, String colorName) {
@@ -125,13 +126,25 @@ Map<String, MaterialAccentColor> _materialAccentColors = {
 // https://stackoverflow.com/questions/50081213/how-do-i-use-hexadecimal-color-strings-in-flutter
 extension HexColor on Color {
   static Color? fromString(ThemeData? theme, String colorString) {
-    if (colorString.startsWith("#")) {
-      return HexColor._fromHex(colorString.substring(1));
-    } else if (colorString.startsWith("0x")) {
-      return HexColor._fromHex(colorString.substring(2));
+    var colorParts = colorString.split(",");
+
+    var colorValue = colorParts[0];
+    var colorOpacity = colorParts.length > 1 ? colorParts[1] : null;
+
+    Color? color;
+    if (colorValue.startsWith("#")) {
+      color = HexColor._fromHex(colorValue.substring(1));
+    } else if (colorValue.startsWith("0x")) {
+      color = HexColor._fromHex(colorValue.substring(2));
     } else {
-      return HexColor._fromNamedColor(theme, colorString);
+      color = HexColor._fromNamedColor(theme, colorValue);
     }
+
+    if (color != null && colorOpacity != null) {
+      color = color.withOpacity(parseDouble(colorOpacity));
+    }
+
+    return color;
   }
 
   static Color? _fromNamedColor(ThemeData? theme, String colorName) {

@@ -275,6 +275,10 @@ class _LineChartControlState extends State<LineChartControl> {
         parseFlLine(Theme.of(context), dataViewModel.control, "aboveLine");
     FlLine? belowLine =
         parseFlLine(Theme.of(context), dataViewModel.control, "belowLine");
+    double? aboveLineCutoffY =
+        dataViewModel.control.attrDouble("aboveLineCutoffY");
+    double? belowLineCutoffY =
+        dataViewModel.control.attrDouble("belowLineCutoffY");
 
     Map<FlSpot, LineChartDataPointViewModel> spots = {
       for (var e in dataViewModel.dataPoints) FlSpot(e.x, e.y): e
@@ -324,6 +328,8 @@ class _LineChartControlState extends State<LineChartControl> {
                 show: true,
                 color: aboveLineBgcolor,
                 gradient: aboveLineGradient,
+                applyCutOffY: aboveLineCutoffY != null,
+                cutOffY: aboveLineCutoffY,
                 spotsLine: BarAreaSpotsLine(
                   show: aboveLine != null,
                   flLineStyle: aboveLine,
@@ -338,6 +344,8 @@ class _LineChartControlState extends State<LineChartControl> {
                 show: true,
                 color: belowLineBgcolor,
                 gradient: belowLineGradient,
+                applyCutOffY: belowLineCutoffY != null,
+                cutOffY: belowLineCutoffY,
                 spotsLine: BarAreaSpotsLine(
                   show: belowLine != null,
                   flLineStyle: belowLine,
