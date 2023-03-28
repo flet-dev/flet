@@ -421,6 +421,7 @@ for:
     install:
       - python --version
       - cd sdk/python
+      - pip install --upgrade pip
       - pip install poetry
       - poetry install
 
