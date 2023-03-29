@@ -53,6 +53,8 @@ class LineChart(ConstrainedControl):
         #
         animate: AnimationValue = None,
         interactive: Optional[bool] = None,
+        point_line_start: OptionalNumber = None,
+        point_line_end: OptionalNumber = None,
         bgcolor: Optional[str] = None,
         tooltip_bgcolor: Optional[str] = None,
         border: Optional[Border] = None,
@@ -110,6 +112,8 @@ class LineChart(ConstrainedControl):
         self.data_series = data_series
         self.animate = animate
         self.interactive = interactive
+        self.point_line_start = point_line_start
+        self.point_line_end = point_line_end
         self.bgcolor = bgcolor
         self.toolip_bgcolor = tooltip_bgcolor
         self.border = border
@@ -191,6 +195,24 @@ class LineChart(ConstrainedControl):
     def interactive(self, value: Optional[bool]):
         self._set_attr("interactive", value)
 
+    # point_line_start
+    @property
+    def point_line_start(self) -> OptionalNumber:
+        return self._get_attr("pointLineStart", data_type="float")
+
+    @point_line_start.setter
+    def point_line_start(self, value: OptionalNumber):
+        self._set_attr("pointLineStart", value)
+
+    # point_line_end
+    @property
+    def point_line_end(self) -> OptionalNumber:
+        return self._get_attr("pointLineEnd", data_type="float")
+
+    @point_line_end.setter
+    def point_line_end(self, value: OptionalNumber):
+        self._set_attr("pointLineEnd", value)
+
     # toolip_bgcolor
     @property
     def toolip_bgcolor(self) -> Optional[str]:
@@ -266,7 +288,7 @@ class LineChart(ConstrainedControl):
     # baseline_x
     @property
     def baseline_x(self) -> OptionalNumber:
-        return self._get_attr("baselinex", data_type="float", def_value=1.0)
+        return self._get_attr("baselinex", data_type="float")
 
     @baseline_x.setter
     def baseline_x(self, value: OptionalNumber):
@@ -275,7 +297,7 @@ class LineChart(ConstrainedControl):
     # baseline_y
     @property
     def baseline_y(self) -> OptionalNumber:
-        return self._get_attr("baseliney", data_type="float", def_value=1.0)
+        return self._get_attr("baseliney", data_type="float")
 
     @baseline_y.setter
     def baseline_y(self, value: OptionalNumber):
@@ -284,7 +306,7 @@ class LineChart(ConstrainedControl):
     # min_x
     @property
     def min_x(self) -> OptionalNumber:
-        return self._get_attr("minx", data_type="float", def_value=1.0)
+        return self._get_attr("minx", data_type="float")
 
     @min_x.setter
     def min_x(self, value: OptionalNumber):
@@ -293,7 +315,7 @@ class LineChart(ConstrainedControl):
     # max_x
     @property
     def max_x(self) -> OptionalNumber:
-        return self._get_attr("maxx", data_type="float", def_value=1.0)
+        return self._get_attr("maxx", data_type="float")
 
     @max_x.setter
     def max_x(self, value: OptionalNumber):
@@ -302,7 +324,7 @@ class LineChart(ConstrainedControl):
     # min_y
     @property
     def min_y(self) -> OptionalNumber:
-        return self._get_attr("miny", data_type="float", def_value=1.0)
+        return self._get_attr("miny", data_type="float")
 
     @min_y.setter
     def min_y(self, value: OptionalNumber):
@@ -311,7 +333,7 @@ class LineChart(ConstrainedControl):
     # max_y
     @property
     def max_y(self) -> OptionalNumber:
-        return self._get_attr("maxy", data_type="float", def_value=1.0)
+        return self._get_attr("maxy", data_type="float")
 
     @max_y.setter
     def max_y(self, value: OptionalNumber):

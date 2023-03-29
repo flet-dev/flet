@@ -67,6 +67,8 @@ class _LineChartControlState extends State<LineChartControl> {
               getAxisTitles(widget.control, viewModel.bottomAxis, disabled);
 
           var interactive = viewModel.control.attrBool("interactive", true)!;
+          var pointLineStart = viewModel.control.attrDouble("pointLineStart");
+          var pointLineEnd = viewModel.control.attrDouble("pointLineEnd");
 
           List<LineChartBarData> barsData = [];
           List<LineBarSpot> selectedPoints = [];
@@ -125,6 +127,12 @@ class _LineChartControlState extends State<LineChartControl> {
                 lineBarsData: barsData,
                 lineTouchData: LineTouchData(
                   enabled: interactive,
+                  getTouchLineStart: pointLineStart != null
+                      ? (barData, spotIndex) => pointLineStart
+                      : null,
+                  getTouchLineEnd: pointLineEnd != null
+                      ? (barData, spotIndex) => pointLineEnd
+                      : null,
                   getTouchedSpotIndicator:
                       (LineChartBarData barData, List<int> spotIndexes) {
                     var barIndex = interactive
