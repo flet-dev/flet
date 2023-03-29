@@ -13,6 +13,7 @@ import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
 import 'banner.dart';
+import 'barchart.dart';
 import 'bottom_sheet.dart';
 import 'card.dart';
 import 'checkbox.dart';
@@ -364,6 +365,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "linechart":
           return LineChartControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "barchart":
+          return BarChartControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

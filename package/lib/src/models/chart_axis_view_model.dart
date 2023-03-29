@@ -3,31 +3,30 @@ import 'package:equatable/equatable.dart';
 import 'package:redux/redux.dart';
 
 import 'app_state.dart';
+import 'chart_axis_label_view_model.dart';
 import 'control.dart';
-import 'linechart_axis_label_view_model.dart';
 
-class LineChartAxisViewModel extends Equatable {
+class ChartAxisViewModel extends Equatable {
   final Control control;
   final Control? title;
   final Map<double, Control> labels;
 
-  const LineChartAxisViewModel(
+  const ChartAxisViewModel(
       {required this.control, required this.title, required this.labels});
 
-  static LineChartAxisViewModel fromStore(
-      Store<AppState> store, Control control) {
+  static ChartAxisViewModel fromStore(Store<AppState> store, Control control) {
     var children = store.state.controls[control.id]!.childIds
         .map((childId) => store.state.controls[childId])
         .whereNotNull()
         .where((c) => c.isVisible);
 
-    return LineChartAxisViewModel(
+    return ChartAxisViewModel(
         control: control,
         title: children.where((c) => c.name == "t").firstOrNull,
         labels: {
           for (var e in children
               .where((c) => c.name == "l")
-              .map((c) => LineChartAxisLabelViewModel.fromStore(store, c))
+              .map((c) => ChartAxisLabelViewModel.fromStore(store, c))
               .where((c) => c.control != null))
             e.value: e.control!
         });

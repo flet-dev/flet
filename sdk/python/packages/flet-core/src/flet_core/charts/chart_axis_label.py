@@ -4,7 +4,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
 
-class LineChartAxisLabel(Control):
+class ChartAxisLabel(Control):
     def __init__(
         self,
         ref: Optional[Ref] = None,

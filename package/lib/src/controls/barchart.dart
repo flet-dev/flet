@@ -23,13 +23,13 @@ import '../utils/shadows.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
-class LineChartControl extends StatefulWidget {
+class BarChartControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
 
-  const LineChartControl(
+  const BarChartControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -38,15 +38,15 @@ class LineChartControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<LineChartControl> createState() => _LineChartControlState();
+  State<BarChartControl> createState() => _BarChartControlState();
 }
 
-class _LineChartControlState extends State<LineChartControl> {
+class _BarChartControlState extends State<BarChartControl> {
   LinechartEventData? _eventData;
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("LineChart build: ${widget.control.id}");
+    debugPrint("BarChart build: ${widget.control.id}");
 
     var animate = parseAnimation(widget.control, "animate");
     var border = parseBorder(Theme.of(context), widget.control, "border");

@@ -3,15 +3,15 @@ import 'package:redux/redux.dart';
 
 import 'app_state.dart';
 import 'control.dart';
-import 'linechart_axis_view_model.dart';
+import 'chart_axis_view_model.dart';
 import 'linechart_data_view_model.dart';
 
 class LineChartViewModel extends Equatable {
   final Control control;
-  final LineChartAxisViewModel? leftAxis;
-  final LineChartAxisViewModel? topAxis;
-  final LineChartAxisViewModel? rightAxis;
-  final LineChartAxisViewModel? bottomAxis;
+  final ChartAxisViewModel? leftAxis;
+  final ChartAxisViewModel? topAxis;
+  final ChartAxisViewModel? rightAxis;
+  final ChartAxisViewModel? bottomAxis;
   final List<LineChartDataViewModel> dataSeries;
   final dynamic dispatch;
 
@@ -37,16 +37,16 @@ class LineChartViewModel extends Equatable {
     return LineChartViewModel(
         control: control,
         leftAxis: leftAxisCtrls.isNotEmpty
-            ? LineChartAxisViewModel.fromStore(store, leftAxisCtrls.first)
+            ? ChartAxisViewModel.fromStore(store, leftAxisCtrls.first)
             : null,
         topAxis: topAxisCtrls.isNotEmpty
-            ? LineChartAxisViewModel.fromStore(store, topAxisCtrls.first)
+            ? ChartAxisViewModel.fromStore(store, topAxisCtrls.first)
             : null,
         rightAxis: rightAxisCtrls.isNotEmpty
-            ? LineChartAxisViewModel.fromStore(store, rightAxisCtrls.first)
+            ? ChartAxisViewModel.fromStore(store, rightAxisCtrls.first)
             : null,
         bottomAxis: bottomAxisCtrls.isNotEmpty
-            ? LineChartAxisViewModel.fromStore(store, bottomAxisCtrls.first)
+            ? ChartAxisViewModel.fromStore(store, bottomAxisCtrls.first)
             : null,
         dataSeries: children
             .where((c) => c.type == "data" && c.isVisible)

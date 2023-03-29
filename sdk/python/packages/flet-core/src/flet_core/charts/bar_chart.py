@@ -19,7 +19,7 @@ from flet_core.types import (
 )
 
 
-class LineChart(ConstrainedControl):
+class BarChart(ConstrainedControl):
     def __init__(
         self,
         data_series: Optional[List[LineChartData]] = None,
@@ -53,8 +53,6 @@ class LineChart(ConstrainedControl):
         #
         animate: AnimationValue = None,
         interactive: Optional[bool] = None,
-        point_line_start: OptionalNumber = None,
-        point_line_end: OptionalNumber = None,
         bgcolor: Optional[str] = None,
         tooltip_bgcolor: Optional[str] = None,
         border: Optional[Border] = None,
@@ -64,9 +62,6 @@ class LineChart(ConstrainedControl):
         top_axis: Optional[ChartAxis] = None,
         right_axis: Optional[ChartAxis] = None,
         bottom_axis: Optional[ChartAxis] = None,
-        baseline_x: OptionalNumber = None,
-        min_x: OptionalNumber = None,
-        max_x: OptionalNumber = None,
         baseline_y: OptionalNumber = None,
         min_y: OptionalNumber = None,
         max_y: OptionalNumber = None,
@@ -104,7 +99,7 @@ class LineChart(ConstrainedControl):
 
         def convert_linechart_event_data(e):
             d = json.loads(e.data)
-            return LineChartEvent(**d)
+            return BarChartEvent(**d)
 
         self.__on_chart_event = EventHandler(convert_linechart_event_data)
         self._add_event_handler("chart_event", self.__on_chart_event.get_handler())
@@ -112,8 +107,6 @@ class LineChart(ConstrainedControl):
         self.data_series = data_series
         self.animate = animate
         self.interactive = interactive
-        self.point_line_start = point_line_start
-        self.point_line_end = point_line_end
         self.bgcolor = bgcolor
         self.tooltip_bgcolor = tooltip_bgcolor
         self.border = border
@@ -123,16 +116,13 @@ class LineChart(ConstrainedControl):
         self.top_axis = top_axis
         self.right_axis = right_axis
         self.bottom_axis = bottom_axis
-        self.baseline_x = baseline_x
         self.baseline_y = baseline_y
-        self.min_x = min_x
-        self.max_x = max_x
         self.min_y = min_y
         self.max_y = max_y
         self.on_chart_event = on_chart_event
 
     def _get_control_name(self):
-        return "linechart"
+        return "barchart"
 
     def _before_build_command(self):
         super()._before_build_command()
@@ -194,24 +184,6 @@ class LineChart(ConstrainedControl):
     @interactive.setter
     def interactive(self, value: Optional[bool]):
         self._set_attr("interactive", value)
-
-    # point_line_start
-    @property
-    def point_line_start(self) -> OptionalNumber:
-        return self._get_attr("pointLineStart", data_type="float")
-
-    @point_line_start.setter
-    def point_line_start(self, value: OptionalNumber):
-        self._set_attr("pointLineStart", value)
-
-    # point_line_end
-    @property
-    def point_line_end(self) -> OptionalNumber:
-        return self._get_attr("pointLineEnd", data_type="float")
-
-    @point_line_end.setter
-    def point_line_end(self, value: OptionalNumber):
-        self._set_attr("pointLineEnd", value)
 
     # tooltip_bgcolor
     @property
@@ -285,15 +257,6 @@ class LineChart(ConstrainedControl):
     def bottom_axis(self, value: Optional[ChartAxis]):
         self.__bottom_axis = value
 
-    # baseline_x
-    @property
-    def baseline_x(self) -> OptionalNumber:
-        return self._get_attr("baselinex", data_type="float")
-
-    @baseline_x.setter
-    def baseline_x(self, value: OptionalNumber):
-        self._set_attr("baselinex", value)
-
     # baseline_y
     @property
     def baseline_y(self) -> OptionalNumber:
@@ -302,24 +265,6 @@ class LineChart(ConstrainedControl):
     @baseline_y.setter
     def baseline_y(self, value: OptionalNumber):
         self._set_attr("baseliney", value)
-
-    # min_x
-    @property
-    def min_x(self) -> OptionalNumber:
-        return self._get_attr("minx", data_type="float")
-
-    @min_x.setter
-    def min_x(self, value: OptionalNumber):
-        self._set_attr("minx", value)
-
-    # max_x
-    @property
-    def max_x(self) -> OptionalNumber:
-        return self._get_attr("maxx", data_type="float")
-
-    @max_x.setter
-    def max_x(self, value: OptionalNumber):
-        self._set_attr("maxx", value)
 
     # min_y
     @property
@@ -353,13 +298,13 @@ class LineChart(ConstrainedControl):
             self._set_attr("onChartEvent", None)
 
 
-class LineChartEvent(ControlEvent):
+class BarChartEvent(ControlEvent):
     def __init__(self, type, spots) -> None:
         self.type: str = type
-        self.spots: List[LineChartEventSpot] = spots
+        self.spots: List[BarChartEventSpot] = spots
 
 
-class LineChartEventSpot:
+class BarChartEventSpot:
     def __init__(self, bar_index, spot_index) -> None:
         self.bar_index: int = bar_index
         self.spot_index: int = spot_index

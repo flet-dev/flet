@@ -1,11 +1,11 @@
 from typing import Any, List, Optional
 
-from flet_core.charts.line_chart_axis_label import LineChartAxisLabel
+from flet_core.charts.chart_axis_label import ChartAxisLabel
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
 
-class LineChartAxis(Control):
+class ChartAxis(Control):
     def __init__(
         self,
         ref: Optional[Ref] = None,
@@ -18,7 +18,7 @@ class LineChartAxis(Control):
         title: Optional[Control] = None,
         title_size: OptionalNumber = None,
         show_labels: Optional[bool] = None,
-        labels: Optional[List[LineChartAxisLabel]] = None,
+        labels: Optional[List[ChartAxisLabel]] = None,
         labels_interval: OptionalNumber = None,
         labels_size: OptionalNumber = None,
     ):
