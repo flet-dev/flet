@@ -42,7 +42,7 @@ class LineChartControl extends StatefulWidget {
 }
 
 class _LineChartControlState extends State<LineChartControl> {
-  LinechartEventData? _eventData;
+  LineChartEventData? _eventData;
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +226,7 @@ class _LineChartControlState extends State<LineChartControl> {
                   ),
                   touchCallback: widget.control.attrBool("onChartEvent", false)!
                       ? (evt, resp) {
-                          var eventData = LinechartEventData(
+                          var eventData = LineChartEventData(
                               eventType: evt.runtimeType
                                   .toString()
                                   .substring(2), // remove "Fl"

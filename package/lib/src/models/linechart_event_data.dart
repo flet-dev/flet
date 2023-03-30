@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-class LinechartEventData extends Equatable {
+class LineChartEventData extends Equatable {
   final String eventType;
   final List<LineChartEventDataSpot> barSpots;
 
-  const LinechartEventData({required this.eventType, required this.barSpots});
+  const LineChartEventData({required this.eventType, required this.barSpots});
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'type': eventType,

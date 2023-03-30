@@ -5,11 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("Test LinechartEventData equality", () {
-    var e1 = const LinechartEventData(eventType: "Hover", barSpots: [
+    var e1 = const LineChartEventData(eventType: "Hover", barSpots: [
       LineChartEventDataSpot(barIndex: 0, spotIndex: 1),
       LineChartEventDataSpot(barIndex: 1, spotIndex: 1)
     ]);
-    var e2 = const LinechartEventData(eventType: "Hover", barSpots: [
+    var e2 = const LineChartEventData(eventType: "Hover", barSpots: [
       LineChartEventDataSpot(barIndex: 0, spotIndex: 1),
       LineChartEventDataSpot(barIndex: 1, spotIndex: 1)
     ]);
@@ -17,11 +17,11 @@ void main() {
   });
 
   test("Test LinechartEventData inequality", () {
-    var e1 = const LinechartEventData(eventType: "Hover", barSpots: [
+    var e1 = const LineChartEventData(eventType: "Hover", barSpots: [
       LineChartEventDataSpot(barIndex: 0, spotIndex: 0),
       LineChartEventDataSpot(barIndex: 1, spotIndex: 0)
     ]);
-    var e2 = const LinechartEventData(eventType: "Hover", barSpots: [
+    var e2 = const LineChartEventData(eventType: "Hover", barSpots: [
       LineChartEventDataSpot(barIndex: 0, spotIndex: 1),
       LineChartEventDataSpot(barIndex: 1, spotIndex: 1)
     ]);
@@ -29,7 +29,7 @@ void main() {
   });
 
   test("LinechartEventData serialize to json", () {
-    var e = const LinechartEventData(eventType: "Hover", barSpots: [
+    var e = const LineChartEventData(eventType: "Hover", barSpots: [
       LineChartEventDataSpot(barIndex: 0, spotIndex: 1),
       LineChartEventDataSpot(barIndex: 1, spotIndex: 1)
     ]);

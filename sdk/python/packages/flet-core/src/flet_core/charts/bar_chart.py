@@ -310,12 +310,8 @@ class BarChart(ConstrainedControl):
 
 
 class BarChartEvent(ControlEvent):
-    def __init__(self, type, spots) -> None:
+    def __init__(self, type, group_index, rod_index, stack_item_index) -> None:
         self.type: str = type
-        self.spots: List[BarChartEventSpot] = spots
-
-
-class BarChartEventSpot:
-    def __init__(self, bar_index, spot_index) -> None:
-        self.bar_index: int = bar_index
-        self.spot_index: int = spot_index
+        self.group_index: int = group_index
+        self.rod_index: int = rod_index
+        self.stack_item_index: int = stack_item_index

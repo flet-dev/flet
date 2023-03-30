@@ -1,11 +1,12 @@
 from typing import Any, List, Optional
 
 from flet_core.border import BorderSide
-from flet_core.border_radius import BorderRadius
 from flet_core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
+from flet_core.types import BorderRadiusValue, TextAlign, TextAlignString
 
 
 class BarChartRod(Control):
@@ -24,12 +25,17 @@ class BarChartRod(Control):
         width: OptionalNumber = None,
         color: Optional[str] = None,
         gradient: Optional[Gradient] = None,
-        border_radius: Optional[BorderRadius] = None,
+        border_radius: BorderRadiusValue = None,
         border_side: Optional[BorderSide] = None,
         bg_from_y: OptionalNumber = None,
         bg_to_y: OptionalNumber = None,
         bg_color: Optional[str] = None,
         bg_gradient: Optional[Gradient] = None,
+        selected: Optional[bool] = None,
+        show_tooltip: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+        tooltip_style: Optional[TextStyle] = None,
+        tooltip_align: TextAlign = TextAlign.NONE,
     ):
 
         Control.__init__(
@@ -52,6 +58,11 @@ class BarChartRod(Control):
         self.bg_to_y = bg_to_y
         self.bg_color = bg_color
         self.bg_gradient = bg_gradient
+        self.selected = selected
+        self.show_tooltip = show_tooltip
+        self.tooltip = tooltip
+        self.tooltip_align = tooltip_align
+        self.tooltip_style = tooltip_style
 
     def _get_control_name(self):
         return "rod"
@@ -122,11 +133,11 @@ class BarChartRod(Control):
 
     # border_radius
     @property
-    def border_radius(self) -> Optional[BorderRadius]:
+    def border_radius(self) -> Optional[BorderRadiusValue]:
         return self.__border_radius
 
     @border_radius.setter
-    def border_radius(self, value: Optional[BorderRadius]):
+    def border_radius(self, value: Optional[BorderRadiusValue]):
         self.__border_radius = value
 
     # gradient
@@ -173,3 +184,55 @@ class BarChartRod(Control):
     @bg_gradient.setter
     def bg_gradient(self, value: Optional[Gradient]):
         self.__bg_gradient = value
+
+    # selected
+    @property
+    def selected(self) -> Optional[bool]:
+        return self._get_attr("selected", data_type="bool", def_value=False)
+
+    @selected.setter
+    def selected(self, value: Optional[bool]):
+        self._set_attr("selected", value)
+
+    # show_tooltip
+    @property
+    def show_tooltip(self) -> Optional[bool]:
+        return self._get_attr("showTooltip", data_type="bool", def_value=True)
+
+    @show_tooltip.setter
+    def show_tooltip(self, value: Optional[bool]):
+        self._set_attr("showTooltip", value)
+
+    # tooltip
+    @property
+    def tooltip(self) -> Optional[str]:
+        return self._get_attr("tooltip")
+
+    @tooltip.setter
+    def tooltip(self, value: Optional[str]):
+        self._set_attr("tooltip", value)
+
+    # tooltip_align
+    @property
+    def tooltip_align(self) -> TextAlign:
+        return self.__tooltip_align
+
+    @tooltip_align.setter
+    def tooltip_align(self, value: TextAlign):
+        self.__tooltip_align = value
+        if isinstance(value, TextAlign):
+            self._set_attr("tooltipAlign", value.value)
+        else:
+            self.__set_tooltip_align(value)
+
+    def __set_tooltip_align(self, value: TextAlignString):
+        self._set_attr("tooltipAlign", value)
+
+    # tooltip_style
+    @property
+    def tooltip_style(self):
+        return self.__tooltip_style
+
+    @tooltip_style.setter
+    def tooltip_style(self, value: Optional[TextStyle]):
+        self.__tooltip_style = value
