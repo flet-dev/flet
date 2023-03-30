@@ -33,6 +33,9 @@ from flet_core.buttons import (
 )
 from flet_core.card import Card
 from flet_core.charts.bar_chart import BarChart
+from flet_core.charts.bar_chart_group import BarChartGroup
+from flet_core.charts.bar_chart_rod import BarChartRod
+from flet_core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
 from flet_core.charts.chart_axis import ChartAxis
 from flet_core.charts.chart_axis_label import ChartAxisLabel
 from flet_core.charts.chart_grid_lines import ChartGridLines

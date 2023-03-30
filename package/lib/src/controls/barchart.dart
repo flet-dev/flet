@@ -8,8 +8,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
-import '../models/control.dart';
 import '../models/chart_axis_view_model.dart';
+import '../models/control.dart';
 import '../models/linechart_data_view_model.dart';
 import '../models/linechart_event_data.dart';
 import '../models/linechart_view_model.dart';
@@ -79,16 +79,16 @@ class _BarChartControlState extends State<BarChartControl> {
                 getBarData(Theme.of(context), widget.control, interactive, ds);
             barsData.add(barData);
 
-            if (!interactive) {
-              var spotIndex = 0;
-              for (var p in ds.dataPoints) {
-                if (p.control.attrBool("selected", false)!) {
-                  selectedPoints.add(
-                      LineBarSpot(barData, barIndex, barData.spots[spotIndex]));
-                }
-                spotIndex++;
-              }
-            }
+            // if (!interactive) {
+            //   var spotIndex = 0;
+            //   for (var p in ds.dataPoints) {
+            //     if (p.control.attrBool("selected", false)!) {
+            //       selectedPoints.add(
+            //           LineBarSpot(barData, barIndex, barData.spots[spotIndex]));
+            //     }
+            //     spotIndex++;
+            //   }
+            // }
 
             barIndex++;
           }

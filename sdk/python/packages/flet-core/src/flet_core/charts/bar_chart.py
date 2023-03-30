@@ -2,9 +2,9 @@ import json
 from typing import Any, List, Optional, Union
 
 from flet_core.border import Border
+from flet_core.charts.bar_chart_group import BarChartGroup
 from flet_core.charts.chart_axis import ChartAxis
 from flet_core.charts.chart_grid_lines import ChartGridLines
-from flet_core.charts.line_chart_data import LineChartData
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.control_event import ControlEvent
@@ -22,7 +22,7 @@ from flet_core.types import (
 class BarChart(ConstrainedControl):
     def __init__(
         self,
-        data_series: Optional[List[LineChartData]] = None,
+        bar_groups: Optional[List[BarChartGroup]] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -51,6 +51,7 @@ class BarChart(ConstrainedControl):
         #
         # Specific
         #
+        groups_space: OptionalNumber = None,
         animate: AnimationValue = None,
         interactive: Optional[bool] = None,
         bgcolor: Optional[str] = None,
@@ -104,7 +105,8 @@ class BarChart(ConstrainedControl):
         self.__on_chart_event = EventHandler(convert_linechart_event_data)
         self._add_event_handler("chart_event", self.__on_chart_event.get_handler())
 
-        self.data_series = data_series
+        self.bar_groups = bar_groups
+        self.groups_space = groups_space
         self.animate = animate
         self.interactive = interactive
         self.bgcolor = bgcolor
@@ -133,7 +135,7 @@ class BarChart(ConstrainedControl):
 
     def _get_children(self):
         children = []
-        for ds in self.__data_series:
+        for ds in self.__bar_groups:
             children.append(ds)
         if self.__left_axis:
             self.__left_axis._set_attr_internal("n", "l")
@@ -149,14 +151,23 @@ class BarChart(ConstrainedControl):
             children.append(self.__bottom_axis)
         return children
 
-    # data_series
+    # bar_groups
     @property
-    def data_series(self):
-        return self.__data_series
+    def bar_groups(self):
+        return self.__bar_groups
 
-    @data_series.setter
-    def data_series(self, value):
-        self.__data_series = value if value is not None else []
+    @bar_groups.setter
+    def bar_groups(self, value):
+        self.__bar_groups = value if value is not None else []
+
+    # groups_space
+    @property
+    def groups_space(self) -> OptionalNumber:
+        return self._get_attr("groupsSpace", data_type="float")
+
+    @groups_space.setter
+    def groups_space(self, value: OptionalNumber):
+        self._set_attr("groupsSpace", value)
 
     # animate
     @property
