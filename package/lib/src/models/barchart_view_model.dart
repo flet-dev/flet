@@ -49,7 +49,7 @@ class BarChartViewModel extends Equatable {
             ? ChartAxisViewModel.fromStore(store, bottomAxisCtrls.first)
             : null,
         barGroups: children
-            .where((c) => c.type == "data" && c.isVisible)
+            .where((c) => c.type == "group" && c.isVisible)
             .map((c) => BarChartGroupViewModel.fromStore(store, c))
             .toList(),
         dispatch: store.dispatch);

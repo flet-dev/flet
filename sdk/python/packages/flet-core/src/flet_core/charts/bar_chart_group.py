@@ -8,7 +8,7 @@ from flet_core.ref import Ref
 class BarChartGroup(Control):
     def __init__(
         self,
-        x: OptionalNumber = None,
+        x: Optional[int] = None,
         bar_rods: Optional[List[BarChartRod]] = None,
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
@@ -54,11 +54,11 @@ class BarChartGroup(Control):
 
     # x
     @property
-    def x(self) -> OptionalNumber:
-        return self._get_attr("x", data_type="float", def_value=1.0)
+    def x(self) -> Optional[int]:
+        return self._get_attr("x", data_type="int")
 
     @x.setter
-    def x(self, value: OptionalNumber):
+    def x(self, value: Optional[int]):
         self._set_attr("x", value)
 
     # group_vertically

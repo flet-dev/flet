@@ -1,26 +1,20 @@
-import 'dart:convert';
-
-import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flet/src/models/linechart_data_point_view_model.dart';
+import 'package:flet/src/models/barchart_rod_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import '../flet_app_services.dart';
 import '../models/app_state.dart';
+import '../models/barchart_group_view_model.dart';
+import '../models/barchart_rod_stack_item_view_model.dart';
+import '../models/barchart_view_model.dart';
 import '../models/chart_axis_view_model.dart';
 import '../models/control.dart';
-import '../models/linechart_data_view_model.dart';
 import '../models/linechart_event_data.dart';
-import '../models/linechart_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/charts.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
-import '../utils/numbers.dart';
-import '../utils/shadows.dart';
-import '../utils/text.dart';
 import 'create_control.dart';
 
 class BarChartControl extends StatefulWidget {
@@ -52,10 +46,10 @@ class _BarChartControlState extends State<BarChartControl> {
     var border = parseBorder(Theme.of(context), widget.control, "border");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    return StoreConnector<AppState, LineChartViewModel>(
+    return StoreConnector<AppState, BarChartViewModel>(
         distinct: true,
-        converter: (store) => LineChartViewModel.fromStore(
-            store, widget.control, widget.children),
+        converter: (store) =>
+            BarChartViewModel.fromStore(store, widget.control, widget.children),
         builder: (context, viewModel) {
           var leftTitles =
               getAxisTitles(widget.control, viewModel.leftAxis, disabled);
@@ -67,17 +61,14 @@ class _BarChartControlState extends State<BarChartControl> {
               getAxisTitles(widget.control, viewModel.bottomAxis, disabled);
 
           var interactive = viewModel.control.attrBool("interactive", true)!;
-          var pointLineStart = viewModel.control.attrDouble("pointLineStart");
-          var pointLineEnd = viewModel.control.attrDouble("pointLineEnd");
 
-          List<LineChartBarData> barsData = [];
-          List<LineBarSpot> selectedPoints = [];
+          List<BarChartGroupData> barGroups = [];
 
-          var barIndex = 0;
-          for (var ds in viewModel.dataSeries) {
-            var barData =
-                getBarData(Theme.of(context), widget.control, interactive, ds);
-            barsData.add(barData);
+          var groupIndex = 0;
+          for (var ds in viewModel.barGroups) {
+            var groupData = getGroupData(
+                Theme.of(context), widget.control, interactive, ds);
+            barGroups.add(groupData);
 
             // if (!interactive) {
             //   var spotIndex = 0;
@@ -90,166 +81,36 @@ class _BarChartControlState extends State<BarChartControl> {
             //   }
             // }
 
-            barIndex++;
+            groupIndex++;
           }
 
-          var chart = LineChart(
-            LineChartData(
-                backgroundColor: HexColor.fromString(Theme.of(context),
-                    widget.control.attrString("bgcolor", "")!),
-                minX: widget.control.attrDouble("minx"),
-                maxX: widget.control.attrDouble("maxx"),
-                minY: widget.control.attrDouble("miny"),
-                maxY: widget.control.attrDouble("maxy"),
-                baselineX: widget.control.attrDouble("baselinex"),
-                baselineY: widget.control.attrDouble("baseliney"),
-                showingTooltipIndicators: groupBy(selectedPoints, (p) => p.x)
-                    .values
-                    .map((e) => ShowingTooltipIndicators(e))
-                    .toList(),
-                titlesData: (leftTitles.sideTitles.showTitles ||
-                        topTitles.sideTitles.showTitles ||
-                        rightTitles.sideTitles.showTitles ||
-                        bottomTitles.sideTitles.showTitles)
-                    ? FlTitlesData(
-                        show: true,
-                        leftTitles: leftTitles,
-                        topTitles: topTitles,
-                        rightTitles: rightTitles,
-                        bottomTitles: bottomTitles,
-                      )
-                    : FlTitlesData(show: false),
-                borderData: border != null
-                    ? FlBorderData(show: true, border: border)
-                    : FlBorderData(show: false),
-                gridData: parseChartGridData(Theme.of(context), widget.control,
-                    "horizontalGridLines", "verticalGridLines"),
-                lineBarsData: barsData,
-                lineTouchData: LineTouchData(
-                  enabled: interactive,
-                  getTouchLineStart: pointLineStart != null
-                      ? (barData, spotIndex) => pointLineStart
-                      : null,
-                  getTouchLineEnd: pointLineEnd != null
-                      ? (barData, spotIndex) => pointLineEnd
-                      : null,
-                  getTouchedSpotIndicator:
-                      (LineChartBarData barData, List<int> spotIndexes) {
-                    var barIndex = interactive
-                        ? barsData.indexWhere(
-                            (b) => b == barData.copyWith(showingIndicators: []))
-                        : barsData.indexWhere((b) => b == barData);
-
-                    return spotIndexes.map((index) {
-                      if (barIndex == -1) {
-                        return null;
-                      }
-
-                      FlLine? allDotsLine = parseSelectedFlLine(
-                          Theme.of(context),
-                          viewModel.dataSeries[barIndex].control,
-                          "selectedBelowLine",
-                          barData.color,
-                          barData.gradient);
-
-                      FlLine? dotLine = parseSelectedFlLine(
-                          Theme.of(context),
-                          viewModel
-                              .dataSeries[barIndex].dataPoints[index].control,
-                          "selectedBelowLine",
-                          barData.color,
-                          barData.gradient);
-
-                      return TouchedSpotIndicatorData(
-                        dotLine ??
-                            allDotsLine ??
-                            FlLine(
-                                color: defaultGetPointColor(
-                                    barData.color, barData.gradient, 0),
-                                strokeWidth: 3),
-                        FlDotData(
-                          show: true,
-                          getDotPainter: (spot, percent, barData, index) {
-                            var allDotsPainter = parseChartSelectedDotPainter(
-                                Theme.of(context),
-                                viewModel.dataSeries[barIndex].control,
-                                "selectedPoint",
-                                barData.color,
-                                barData.gradient,
-                                percent);
-                            var dotPainter = parseChartSelectedDotPainter(
-                                Theme.of(context),
-                                viewModel.dataSeries[barIndex].dataPoints[index]
-                                    .control,
-                                "selectedPoint",
-                                barData.color,
-                                barData.gradient,
-                                percent);
-                            return dotPainter ??
-                                allDotsPainter ??
-                                getDefaultSelectedPainter(
-                                    barData.color, barData.gradient, percent);
-                          },
-                        ),
-                      );
-                    }).toList();
-                  },
-                  touchTooltipData: LineTouchTooltipData(
-                    tooltipBgColor: HexColor.fromString(Theme.of(context),
-                        widget.control.attrString("tooltipBgcolor", "")!),
-                    getTooltipItems: (touchedSpots) {
-                      return touchedSpots.map((spot) {
-                        var dp = viewModel.dataSeries[spot.barIndex]
-                            .dataPoints[spot.spotIndex];
-                        var tooltip = dp.tooltip ?? dp.y.toString();
-                        var tooltipStyle = parseTextStyle(
-                            Theme.of(context), dp.control, "tooltipStyle");
-                        tooltipStyle ??= const TextStyle();
-                        if (tooltipStyle.color == null) {
-                          tooltipStyle = tooltipStyle.copyWith(
-                              color: spot.bar.gradient?.colors.first ??
-                                  spot.bar.color ??
-                                  Colors.blueGrey);
-                        }
-                        TextAlign? tooltipAlign = TextAlign.values
-                            .firstWhereOrNull((a) =>
-                                a.name.toLowerCase() ==
-                                dp.control
-                                    .attrString("tooltipAlign", "")!
-                                    .toLowerCase());
-                        return dp.control.attrBool("showTooltip", true)!
-                            ? LineTooltipItem(tooltip, tooltipStyle,
-                                textAlign: tooltipAlign ?? TextAlign.center)
-                            : null;
-                      }).toList();
-                    },
-                  ),
-                  touchCallback: widget.control.attrBool("onChartEvent", false)!
-                      ? (evt, resp) {
-                          var eventData = LinechartEventData(
-                              eventType: evt.runtimeType
-                                  .toString()
-                                  .substring(2), // remove "Fl"
-                              barSpots:
-                                  resp != null && resp.lineBarSpots != null
-                                      ? resp.lineBarSpots!
-                                          .map((bs) => LineChartEventDataSpot(
-                                              barIndex: bs.barIndex,
-                                              spotIndex: bs.spotIndex))
-                                          .toList()
-                                      : []);
-                          if (eventData != _eventData) {
-                            _eventData = eventData;
-                            debugPrint(
-                                "LineChart ${widget.control.id} ${eventData.eventType}");
-                            FletAppServices.of(context).server.sendPageEvent(
-                                eventTarget: widget.control.id,
-                                eventName: "chart_event",
-                                eventData: json.encode(eventData));
-                          }
-                        }
-                      : null,
-                )),
+          var chart = BarChart(
+            BarChartData(
+              backgroundColor: HexColor.fromString(
+                  Theme.of(context), widget.control.attrString("bgcolor", "")!),
+              minY: widget.control.attrDouble("miny"),
+              maxY: widget.control.attrDouble("maxy"),
+              baselineY: widget.control.attrDouble("baseliney"),
+              titlesData: (leftTitles.sideTitles.showTitles ||
+                      topTitles.sideTitles.showTitles ||
+                      rightTitles.sideTitles.showTitles ||
+                      bottomTitles.sideTitles.showTitles)
+                  ? FlTitlesData(
+                      show: true,
+                      leftTitles: leftTitles,
+                      topTitles: topTitles,
+                      rightTitles: rightTitles,
+                      bottomTitles: bottomTitles,
+                    )
+                  : FlTitlesData(show: false),
+              borderData: border != null
+                  ? FlBorderData(show: true, border: border)
+                  : FlBorderData(show: false),
+              gridData: parseChartGridData(Theme.of(context), widget.control,
+                  "horizontalGridLines", "verticalGridLines"),
+              groupsSpace: widget.control.attrDouble("groupsSpace"),
+              barGroups: barGroups,
+            ),
             swapAnimationDuration: animate != null
                 ? animate.duration
                 : const Duration(milliseconds: 150), // Optional
@@ -261,108 +122,44 @@ class _BarChartControlState extends State<BarChartControl> {
         });
   }
 
-  LineChartBarData getBarData(ThemeData theme, Control parent,
-      bool interactiveChart, LineChartDataViewModel dataViewModel) {
-    Color? aboveLineBgcolor = HexColor.fromString(
-        theme, dataViewModel.control.attrString("aboveLineBgcolor", "")!);
-    Gradient? aboveLineGradient =
-        parseGradient(theme, dataViewModel.control, "aboveLineGradient");
-    Color? belowLineBgcolor = HexColor.fromString(
-        theme, dataViewModel.control.attrString("belowLineBgcolor", "")!);
-    Gradient? belowLineGradient =
-        parseGradient(theme, dataViewModel.control, "belowLineGradient");
-    var dashPattern = dataViewModel.control.attrString("dashPattern");
-    var shadow =
-        parseBoxShadow(Theme.of(context), dataViewModel.control, "shadow");
-    Color barColor = HexColor.fromString(
-            theme, dataViewModel.control.attrString("color", "")!) ??
-        Colors.cyan;
-    Gradient? barGradient =
-        parseGradient(theme, dataViewModel.control, "gradient");
-    FlLine? aboveLine =
-        parseFlLine(Theme.of(context), dataViewModel.control, "aboveLine");
-    FlLine? belowLine =
-        parseFlLine(Theme.of(context), dataViewModel.control, "belowLine");
-    double? aboveLineCutoffY =
-        dataViewModel.control.attrDouble("aboveLineCutoffY");
-    double? belowLineCutoffY =
-        dataViewModel.control.attrDouble("belowLineCutoffY");
+  BarChartGroupData getGroupData(ThemeData theme, Control parent,
+      bool interactiveChart, BarChartGroupViewModel groupViewModel) {
+    return BarChartGroupData(
+      x: groupViewModel.control.attrInt("x", 0)!,
+      barsSpace: groupViewModel.control.attrDouble("barsSpace"),
+      groupVertically: groupViewModel.control.attrBool("groupVertically"),
+      barRods: groupViewModel.barRods
+          .map((r) =>
+              getRodData(theme, groupViewModel.control, interactiveChart, r))
+          .toList(),
+    );
+  }
 
-    Map<FlSpot, LineChartDataPointViewModel> spots = {
-      for (var e in dataViewModel.dataPoints) FlSpot(e.x, e.y): e
-    };
-    return LineChartBarData(
-        spots: dataViewModel.dataPoints.map((p) => FlSpot(p.x, p.y)).toList(),
-        showingIndicators: dataViewModel.dataPoints
-            .asMap()
-            .entries
-            .where((e) =>
-                !interactiveChart &&
-                e.value.control.attrBool("selected", false)!)
-            .map((e) => e.key)
-            .toList(),
-        isCurved: dataViewModel.control.attrBool("curved"),
-        isStrokeCapRound: dataViewModel.control.attrBool("strokeCapRound"),
-        barWidth: dataViewModel.control.attrDouble("strokeWidth"),
-        dashArray: dashPattern != null
-            ? (json.decode(dashPattern) as List)
-                .map((e) => parseInt(e))
-                .toList()
-            : null,
-        shadow: shadow.isNotEmpty ? shadow[0] : null,
-        dotData: FlDotData(
-            show: true,
-            getDotPainter: (spot, percent, barData, index) {
-              var allDotsPainter = parseChartDotPainter(
-                  theme,
-                  dataViewModel.control,
-                  "point",
-                  barColor,
-                  barGradient,
-                  percent);
-              var dotPainter = parseChartDotPainter(
-                  theme,
-                  dataViewModel.dataPoints[index].control,
-                  "point",
-                  barColor,
-                  barGradient,
-                  percent);
-              return dotPainter ?? allDotsPainter ?? getInvisiblePainter();
-            }),
-        aboveBarData: aboveLineBgcolor != null ||
-                aboveLineGradient != null ||
-                aboveLine != null
-            ? BarAreaData(
-                show: true,
-                color: aboveLineBgcolor,
-                gradient: aboveLineGradient,
-                applyCutOffY: aboveLineCutoffY != null,
-                cutOffY: aboveLineCutoffY,
-                spotsLine: BarAreaSpotsLine(
-                  show: aboveLine != null,
-                  flLineStyle: aboveLine,
-                  checkToShowSpotLine: (spot) =>
-                      spots[spot]!.control.attrBool("showAboveLine", true)!,
-                ))
-            : null,
-        belowBarData: belowLineBgcolor != null ||
-                belowLineGradient != null ||
-                belowLine != null
-            ? BarAreaData(
-                show: true,
-                color: belowLineBgcolor,
-                gradient: belowLineGradient,
-                applyCutOffY: belowLineCutoffY != null,
-                cutOffY: belowLineCutoffY,
-                spotsLine: BarAreaSpotsLine(
-                  show: belowLine != null,
-                  flLineStyle: belowLine,
-                  checkToShowSpotLine: (spot) =>
-                      spots[spot]!.control.attrBool("showBelowLine", true)!,
-                ))
-            : null,
-        color: barColor,
-        gradient: barGradient);
+  BarChartRodData getRodData(ThemeData theme, Control parent,
+      bool interactiveChart, BarChartRodViewModel rodViewModel) {
+    return BarChartRodData(
+        fromY: rodViewModel.control.attrDouble("fromY"),
+        toY: rodViewModel.control.attrDouble("toY", 0)!,
+        width: rodViewModel.control.attrDouble("width"),
+        color: HexColor.fromString(
+            theme, rodViewModel.control.attrString("color", "")!),
+        gradient: parseGradient(theme, rodViewModel.control, "gradient"),
+        borderRadius: parseBorderRadius(rodViewModel.control, "borderRadius"),
+        borderSide: parseBorderSide(theme, rodViewModel.control, "borderSide"),
+        rodStackItems: rodViewModel.rodStackItems
+            .map((item) => getRodStackItem(
+                theme, rodViewModel.control, interactiveChart, item))
+            .toList());
+  }
+
+  BarChartRodStackItem getRodStackItem(ThemeData theme, Control parent,
+      bool interactiveChart, BarChartRodStackItemViewModel stackItemViewModel) {
+    return BarChartRodStackItem(
+        stackItemViewModel.control.attrDouble("fromY")!,
+        stackItemViewModel.control.attrDouble("toY", 0)!,
+        HexColor.fromString(
+            theme, stackItemViewModel.control.attrString("color", "")!)!,
+        parseBorderSide(theme, stackItemViewModel.control, "borderSide"));
   }
 
   AxisTitles getAxisTitles(
