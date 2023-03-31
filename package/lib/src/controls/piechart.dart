@@ -42,32 +42,25 @@ class _PieChartControlState extends State<PieChartControl> {
     debugPrint("PieChart build: ${widget.control.id}");
 
     var animate = parseAnimation(widget.control, "animate");
-    var border = parseBorder(Theme.of(context), widget.control, "border");
 
-    return StoreConnector<AppState, PieChartViewModel>(
+    var result = StoreConnector<AppState, PieChartViewModel>(
         distinct: true,
         converter: (store) =>
             PieChartViewModel.fromStore(store, widget.control, widget.children),
         builder: (context, viewModel) {
-          var interactive = viewModel.control.attrBool("interactive", true)!;
-
           List<PieChartSectionData> sections = viewModel.sections
-              .map((g) => getSectionData(
-                  Theme.of(context), widget.control, interactive, g))
+              .map((g) => getSectionData(Theme.of(context), widget.control, g))
               .toList();
 
-          var chart = PieChart(
+          Widget chart = PieChart(
             PieChartData(
               centerSpaceColor: HexColor.fromString(Theme.of(context),
                   widget.control.attrString("centerSpaceColor", "")!),
               centerSpaceRadius: widget.control.attrDouble("centerSpaceRadius"),
               sectionsSpace: widget.control.attrDouble("sectionsSpace"),
               startDegreeOffset: widget.control.attrDouble("startDegreeOffset"),
-              borderData: border != null
-                  ? FlBorderData(show: true, border: border)
-                  : FlBorderData(show: false),
               pieTouchData: PieTouchData(
-                enabled: interactive,
+                enabled: true,
                 touchCallback: widget.control.attrBool("onChartEvent", false)!
                     ? (evt, resp) {
                         var eventData = resp != null &&
@@ -103,13 +96,22 @@ class _PieChartControlState extends State<PieChartControl> {
             swapAnimationCurve: animate != null ? animate.curve : Curves.linear,
           );
 
-          return constrainedControl(
-              context, chart, widget.parent, widget.control);
+          return LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+            return (constraints.maxHeight == double.infinity)
+                ? ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 300),
+                    child: chart,
+                  )
+                : chart;
+          });
         });
+
+    return constrainedControl(context, result, widget.parent, widget.control);
   }
 
   PieChartSectionData getSectionData(ThemeData theme, Control parent,
-      bool interactiveChart, PieChartSectionViewModel sectionViewModel) {
+      PieChartSectionViewModel sectionViewModel) {
     return PieChartSectionData(
       value: sectionViewModel.control.attrDouble("value"),
       color: HexColor.fromString(

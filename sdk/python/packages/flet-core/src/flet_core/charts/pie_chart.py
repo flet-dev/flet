@@ -54,8 +54,6 @@ class PieChart(ConstrainedControl):
         sections_space: OptionalNumber = None,
         start_degree_offset: OptionalNumber = None,
         animate: AnimationValue = None,
-        interactive: Optional[bool] = None,
-        border: Optional[Border] = None,
         on_chart_event=None,
     ):
 
@@ -101,8 +99,6 @@ class PieChart(ConstrainedControl):
         self.sections_space = sections_space
         self.start_degree_offset = start_degree_offset
         self.animate = animate
-        self.interactive = interactive
-        self.border = border
         self.on_chart_event = on_chart_event
 
     def _get_control_name(self):
@@ -111,7 +107,6 @@ class PieChart(ConstrainedControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("animate", self.__animate)
-        self._set_attr_json("border", self.__border)
 
     def _get_children(self):
         children = []
@@ -172,24 +167,6 @@ class PieChart(ConstrainedControl):
     @animate.setter
     def animate(self, value: AnimationValue):
         self.__animate = value
-
-    # interactive
-    @property
-    def interactive(self) -> Optional[bool]:
-        return self._get_attr("interactive", data_type="bool", def_value=True)
-
-    @interactive.setter
-    def interactive(self, value: Optional[bool]):
-        self._set_attr("interactive", value)
-
-    # border
-    @property
-    def border(self) -> Optional[Border]:
-        return self.__border
-
-    @border.setter
-    def border(self, value: Optional[Border]):
-        self.__border = value
 
     # on_chart_event
     @property
