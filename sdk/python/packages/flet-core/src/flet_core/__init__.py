@@ -49,6 +49,8 @@ from flet_core.charts.chart_point_shape import (
 from flet_core.charts.line_chart import LineChart, LineChartEvent, LineChartEventSpot
 from flet_core.charts.line_chart_data import LineChartData
 from flet_core.charts.line_chart_data_point import LineChartDataPoint
+from flet_core.charts.pie_chart import PieChart, PieChartEvent
+from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.checkbox import Checkbox
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
