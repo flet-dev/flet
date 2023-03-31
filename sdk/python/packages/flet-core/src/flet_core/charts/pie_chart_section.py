@@ -19,7 +19,6 @@ class PieChartSection(Control):
         #
         radius: OptionalNumber = None,
         color: Optional[str] = None,
-        show_title: Optional[bool] = None,
         border_side: Optional[BorderSide] = None,
         title: Optional[str] = None,
         title_style: Optional[TextStyle] = None,
@@ -39,7 +38,6 @@ class PieChartSection(Control):
         self.value = value
         self.radius = radius
         self.color = color
-        self.show_title = show_title
         self.border_side = border_side
         self.title = title
         self.title_style = title_style
@@ -115,15 +113,6 @@ class PieChartSection(Control):
     @badge_position.setter
     def badge_position(self, value: OptionalNumber):
         self._set_attr("badgePosition", value)
-
-    # show_title
-    @property
-    def show_title(self) -> Optional[bool]:
-        return self._get_attr("showTitle", data_type="bool", def_value=True)
-
-    @show_title.setter
-    def show_title(self, value: Optional[bool]):
-        self._set_attr("showTitle", value)
 
     # title
     @property

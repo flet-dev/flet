@@ -115,7 +115,7 @@ class _PieChartControlState extends State<PieChartControl> {
       color: HexColor.fromString(
           Theme.of(context), sectionViewModel.control.attrString("color", "")!),
       radius: sectionViewModel.control.attrDouble("radius"),
-      showTitle: sectionViewModel.control.attrBool("showTitle"),
+      showTitle: sectionViewModel.control.attrString("title", "")! != "",
       title: sectionViewModel.control.attrString("title"),
       titleStyle: parseTextStyle(
           Theme.of(context), sectionViewModel.control, "titleStyle"),
