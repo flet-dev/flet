@@ -1,16 +1,20 @@
-import 'flet_app_errors_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 
 import 'actions.dart';
-import 'models/app_state.dart';
-import 'reducers.dart';
+import 'flet_app_errors_handler.dart';
 import 'flet_server.dart';
+import 'models/app_state.dart';
+import 'models/control.dart';
+import 'models/control_view_model.dart';
+import 'reducers.dart';
 
 class FletAppServices extends InheritedWidget {
   final String pageUrl;
   final String assetsDir;
   final FletAppErrorsHandler? errorsHandler;
+  final Map<String, Widget Function(Control?, ControlViewModel)>?
+      controlsMapping;
   late final FletServer server;
   late final Store<AppState> store;
 
@@ -19,6 +23,7 @@ class FletAppServices extends InheritedWidget {
       required Widget child,
       required this.pageUrl,
       required this.assetsDir,
+      this.controlsMapping,
       this.errorsHandler})
       : super(key: key, child: child) {
     store = Store<AppState>(appReducer, initialState: AppState.initial());
@@ -35,7 +40,7 @@ class FletAppServices extends InheritedWidget {
     }
     // connect to a page
     var pageUri = Uri.parse(pageUrl);
-    store.dispatch(PageLoadAction(pageUri, assetsDir, server));
+    store.dispatch(PageLoadAction(pageUri, assetsDir, server, controlsMapping));
   }
 
   @override

@@ -1,6 +1,6 @@
-import 'dart:ui';
-
 import 'package:equatable/equatable.dart';
+import 'package:flet/src/models/control_view_model.dart';
+import 'package:flutter/material.dart';
 
 import 'control.dart';
 
@@ -12,6 +12,8 @@ class Counter {
 class AppState extends Equatable {
   final Uri? pageUri;
   final String assetsDir;
+  final Map<String, Widget Function(Control?, ControlViewModel)>?
+      controlsMapping;
   final String route;
   final String sessionId;
   final bool isLoading;
@@ -26,6 +28,7 @@ class AppState extends Equatable {
   const AppState(
       {required this.pageUri,
       required this.assetsDir,
+      required this.controlsMapping,
       required this.route,
       required this.sessionId,
       required this.isLoading,
@@ -40,6 +43,7 @@ class AppState extends Equatable {
   factory AppState.initial() => const AppState(
       pageUri: null,
       assetsDir: "",
+      controlsMapping: null,
       route: "",
       sessionId: "",
       isLoading: true,
@@ -78,20 +82,24 @@ class AppState extends Equatable {
           Size? size,
           Map<String, double>? sizeBreakpoints,
           Brightness? displayBrightness,
-          Map<String, Control>? controls}) =>
+          Map<String, Control>? controls,
+          Map<String, Widget Function(Control?, ControlViewModel)>?
+              controlsMapping}) =>
       AppState(
-          pageUri: pageUri ?? this.pageUri,
-          assetsDir: assetsDir ?? this.assetsDir,
-          route: route ?? this.route,
-          sessionId: sessionId ?? this.sessionId,
-          isLoading: isLoading ?? this.isLoading,
-          isRegistered: isRegistered ?? this.isRegistered,
-          reconnectingTimeout: reconnectingTimeout ?? this.reconnectingTimeout,
-          error: error ?? this.error,
-          size: size ?? this.size,
-          sizeBreakpoints: sizeBreakpoints ?? this.sizeBreakpoints,
-          displayBrightness: displayBrightness ?? this.displayBrightness,
-          controls: controls ?? this.controls);
+        pageUri: pageUri ?? this.pageUri,
+        assetsDir: assetsDir ?? this.assetsDir,
+        route: route ?? this.route,
+        sessionId: sessionId ?? this.sessionId,
+        isLoading: isLoading ?? this.isLoading,
+        isRegistered: isRegistered ?? this.isRegistered,
+        reconnectingTimeout: reconnectingTimeout ?? this.reconnectingTimeout,
+        error: error ?? this.error,
+        size: size ?? this.size,
+        sizeBreakpoints: sizeBreakpoints ?? this.sizeBreakpoints,
+        displayBrightness: displayBrightness ?? this.displayBrightness,
+        controls: controls ?? this.controls,
+        controlsMapping: controlsMapping ?? this.controlsMapping,
+      );
 
   @override
   List<Object?> get props => [isLoading, error, sessionId, controls];

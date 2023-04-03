@@ -5,6 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
 
+// To use a custom controls add your controls mapper
+// Example of external control mapper:
+// import 'hello_world_mapper_example.dart';
+
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
 void main([List<String>? args]) async {
@@ -73,6 +77,7 @@ void main([List<String>? args]) async {
     title: 'Flet',
     pageUrl: pageUrl,
     assetsDir: assetsDir,
+    // controlsMapping: controlsMapping,
     errorsHandler: errorsHandler,
   ));
 }
