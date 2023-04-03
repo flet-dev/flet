@@ -10,6 +10,6 @@ class HelloWorldControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("Hello world: $control");
+    return Text("Hello world: $parent => $control");
   }
 }
