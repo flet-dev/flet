@@ -1,5 +1,8 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
+import 'flet_server.dart';
+import 'models/control.dart';
+import 'models/control_view_model.dart';
 import 'models/window_media_data.dart';
 import 'protocol/add_page_controls_payload.dart';
 import 'protocol/app_become_active_payload.dart';
@@ -13,13 +16,15 @@ import 'protocol/remove_control_payload.dart';
 import 'protocol/replace_page_controls_payload.dart';
 import 'protocol/session_crashed_payload.dart';
 import 'protocol/update_control_props_payload.dart';
-import 'flet_server.dart';
 
 class PageLoadAction {
   final Uri pageUri;
   final String assetsDir;
   final FletServer server;
-  PageLoadAction(this.pageUri, this.assetsDir, this.server);
+  final Map<String, Widget Function(Control?, ControlViewModel)>?
+      controlsMapping;
+  PageLoadAction(
+      this.pageUri, this.assetsDir, this.server, this.controlsMapping);
 }
 
 class PageReconnectingAction {
