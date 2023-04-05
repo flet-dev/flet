@@ -51,7 +51,7 @@ class _BarChartControlState extends State<BarChartControl> {
     var border = parseBorder(Theme.of(context), widget.control, "border");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    return StoreConnector<AppState, BarChartViewModel>(
+    var result = StoreConnector<AppState, BarChartViewModel>(
         distinct: true,
         converter: (store) =>
             BarChartViewModel.fromStore(store, widget.control, widget.children),
@@ -166,9 +166,18 @@ class _BarChartControlState extends State<BarChartControl> {
             swapAnimationCurve: animate != null ? animate.curve : Curves.linear,
           );
 
-          return constrainedControl(
-              context, chart, widget.parent, widget.control);
+          return LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+            return (constraints.maxHeight == double.infinity)
+                ? ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 300),
+                    child: chart,
+                  )
+                : chart;
+          });
         });
+
+    return constrainedControl(context, result, widget.parent, widget.control);
   }
 
   BarChartGroupData getGroupData(ThemeData theme, Control parent,
@@ -213,6 +222,7 @@ class _BarChartControlState extends State<BarChartControl> {
                 bgColor != null ||
                 bgGradient != null
             ? BackgroundBarChartRodData(
+                show: true,
                 fromY: bgFromY,
                 toY: bgToY,
                 color: bgColor,

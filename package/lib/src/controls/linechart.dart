@@ -8,8 +8,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
-import '../models/control.dart';
 import '../models/chart_axis_view_model.dart';
+import '../models/control.dart';
 import '../models/linechart_data_view_model.dart';
 import '../models/linechart_event_data.dart';
 import '../models/linechart_view_model.dart';
@@ -52,7 +52,7 @@ class _LineChartControlState extends State<LineChartControl> {
     var border = parseBorder(Theme.of(context), widget.control, "border");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    return StoreConnector<AppState, LineChartViewModel>(
+    var result = StoreConnector<AppState, LineChartViewModel>(
         distinct: true,
         converter: (store) => LineChartViewModel.fromStore(
             store, widget.control, widget.children),
@@ -256,9 +256,18 @@ class _LineChartControlState extends State<LineChartControl> {
             swapAnimationCurve: animate != null ? animate.curve : Curves.linear,
           );
 
-          return constrainedControl(
-              context, chart, widget.parent, widget.control);
+          return LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+            return (constraints.maxHeight == double.infinity)
+                ? ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 300),
+                    child: chart,
+                  )
+                : chart;
+          });
         });
+
+    return constrainedControl(context, result, widget.parent, widget.control);
   }
 
   LineChartBarData getBarData(ThemeData theme, Control parent,
