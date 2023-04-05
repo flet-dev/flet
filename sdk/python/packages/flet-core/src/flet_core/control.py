@@ -381,12 +381,17 @@ class Control:
         self.__previous_children.extend(current_children)
 
     def _remove_control_recursively(self, index, control):
-        removed_controls = [control]
+        removed_controls = []
+
+        for child in control._previous_children:
+            removed_controls.extend(self._remove_control_recursively(index, child))
+
         for child in control._get_children():
             removed_controls.extend(self._remove_control_recursively(index, child))
 
         if control.__uid in index:
             del index[control.__uid]
+            removed_controls.append(control)
 
         return removed_controls
 
