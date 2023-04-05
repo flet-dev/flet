@@ -3,6 +3,7 @@
 ## 0.5.0
 
 * 1st class Flet charts based on fl_chart package ([#1255](https://github.com/flet-dev/flet/issues/1255))
+* Pyodide 0.23
 * Use named loggers in Python ([#1157](https://github.com/flet-dev/flet/issues/1157))
 * Fix Contribution guide as PDM is no longer used ([#1124](https://github.com/flet-dev/flet/issues/1124))
 * Added focus() method, focus and blur events to Elevated, Outlined, Text and Icon buttons ([#1079](https://github.com/flet-dev/flet/issues/1079))
