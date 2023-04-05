@@ -392,6 +392,8 @@ class Control:
         if control.__uid in index:
             del index[control.__uid]
             removed_controls.append(control)
+            control.page = None
+            control.__event_handlers.clear()
 
         return removed_controls
 
