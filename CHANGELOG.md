@@ -1,5 +1,16 @@
 # Flet changelog
 
+## 0.5.0
+
+* 1st class Flet charts based on fl_chart package ([#1255](https://github.com/flet-dev/flet/issues/1255))
+* Use named loggers in Python ([#1157](https://github.com/flet-dev/flet/issues/1157))
+* Fix Contribution guide as PDM is no longer used ([#1124](https://github.com/flet-dev/flet/issues/1124))
+* Added focus() method, focus and blur events to Elevated, Outlined, Text and Icon buttons ([#1079](https://github.com/flet-dev/flet/issues/1079))
+* New Card props: color, shadow_color, surface_tint_color ([#1078](https://github.com/flet-dev/flet/issues/1078))
+* Added WindowDragArea.maximizable property ([#1077](https://github.com/flet-dev/flet/issues/1077))
+* Added Container.blur and Container.shadow properties ([#1076](https://github.com/flet-dev/flet/issues/1076))
+* Add template for Q&A discussions ([#1070](https://github.com/flet-dev/flet/issues/1070))
+
 ## 0.4.2
 
 * Fix reading versioninfo for PyInstaller 5.8.0
@@ -12,12 +23,12 @@
 * Fix encode() import in PyInstaller integration
 * Fix "ConnectionAbortedError" error on Windows
 * Consistent licensing across the code - Apache 2.0
-* Fix assets loading in a sub-directory app ([#1019](https://github.com/flet-dev/flet/issues/1019)
-* Add --distpath option to flet pack and flet publish commands ([#1018](https://github.com/flet-dev/flet/issues/1018)
-* Updating manifest.json when using flet publish ([#1014](https://github.com/flet-dev/flet/issues/1014)
-* Fix "Address already in use" error on flet run hot reload ([#1007](https://github.com/flet-dev/flet/issues/1007)
-* Force Python sub-process to run with UTF-8 encoding ([#1002](https://github.com/flet-dev/flet/issues/1002)
-* Fix: View with content crashes in some routing scenarios ([#1001](https://github.com/flet-dev/flet/issues/1001)
+* Fix assets loading in a sub-directory app ([#1019](https://github.com/flet-dev/flet/issues/1019))
+* Add --distpath option to flet pack and flet publish commands ([#1018](https://github.com/flet-dev/flet/issues/1018))
+* Updating manifest.json when using flet publish ([#1014](https://github.com/flet-dev/flet/issues/1014))
+* Fix "Address already in use" error on flet run hot reload ([#1007](https://github.com/flet-dev/flet/issues/1007))
+* Force Python sub-process to run with UTF-8 encoding ([#1002](https://github.com/flet-dev/flet/issues/1002))
+* Fix: View with content crashes in some routing scenarios ([#1001](https://github.com/flet-dev/flet/issues/1001))
 
 ## 0.4.0
 
