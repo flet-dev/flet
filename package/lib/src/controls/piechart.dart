@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flet/src/models/piechart_section_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -9,6 +8,7 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/piechart_event_data.dart';
+import '../models/piechart_section_view_model.dart';
 import '../models/piechart_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';

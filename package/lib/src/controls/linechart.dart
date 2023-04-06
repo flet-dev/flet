@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flet/src/models/linechart_data_point_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -10,6 +9,7 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/chart_axis_view_model.dart';
 import '../models/control.dart';
+import '../models/linechart_data_point_view_model.dart';
 import '../models/linechart_data_view_model.dart';
 import '../models/linechart_event_data.dart';
 import '../models/linechart_view_model.dart';

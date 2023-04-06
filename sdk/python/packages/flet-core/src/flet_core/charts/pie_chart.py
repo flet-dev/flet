@@ -1,7 +1,6 @@
 import json
 from typing import Any, List, Optional, Union
 
-from flet_core.border import Border
 from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
