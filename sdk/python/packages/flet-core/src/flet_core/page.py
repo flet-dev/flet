@@ -361,22 +361,25 @@ class Page(Control):
                 await c.will_unmount_async()
 
     def _close(self):
-        removed_controls = self._remove_control_recursively(self.index, self)
-        self._controls.clear()
-        self._previous_children.clear()
-        self.__on_route_change = None
-        self.__on_view_pop = None
+        removed_controls = self.__close_internal()
         for c in removed_controls:
             c.will_unmount()
 
     async def _close_async(self):
+        removed_controls = self.__close_internal()
+        for c in removed_controls:
+            await c.will_unmount_async()
+
+    def __close_internal(self):
         removed_controls = self._remove_control_recursively(self.index, self)
         self._controls.clear()
         self._previous_children.clear()
         self.__on_route_change = None
         self.__on_view_pop = None
-        for c in removed_controls:
-            await c.will_unmount_async()
+        self.__client_storage = None
+        self.__session_storage = None
+        self.__query = None
+        return removed_controls
 
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
@@ -458,13 +461,7 @@ class Page(Control):
 
             elif e.target in self._index:
                 ce = ControlEvent(e.target, e.name, e.data, self._index[e.target], self)
-
-                if e.target == "page" and e.name == "close":
-                    handler = self.__on_close.get_handler()
-                    self._close()
-                else:
-                    handler = self._index[e.target].event_handlers.get(e.name)
-
+                handler = self._index[e.target].event_handlers.get(e.name)
                 if handler:
                     t = threading.Thread(target=handler, args=(ce,), daemon=True)
                     t.start()
@@ -478,13 +475,7 @@ class Page(Control):
 
         elif e.target in self._index:
             ce = ControlEvent(e.target, e.name, e.data, self._index[e.target], self)
-
-            if e.target == "page" and e.name == "close":
-                handler = self.__on_close.get_handler()
-                await self._close_async()
-            else:
-                handler = self._index[e.target].event_handlers.get(e.name)
-
+            handler = self._index[e.target].event_handlers.get(e.name)
             if handler:
                 if is_coroutine(handler):
                     await handler(ce)
