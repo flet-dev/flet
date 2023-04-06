@@ -2,6 +2,8 @@
 
 ## 0.5.0
 
+* Fixed: Memory usage continues to increase. ([#1223](https://github.com/flet-dev/flet/issues/1223))
+* Fixed: possible memory leak ([#969](https://github.com/flet-dev/flet/issues/969))
 * 1st class Flet charts based on fl_chart package ([#1255](https://github.com/flet-dev/flet/issues/1255))
 * Pyodide 0.23
 * Use named loggers in Python ([#1157](https://github.com/flet-dev/flet/issues/1157))
