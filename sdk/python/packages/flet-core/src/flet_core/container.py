@@ -12,6 +12,7 @@ from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
+from flet_core.shadow import BoxShadow
 from flet_core.types import (
     AnimationValue,
     BlendMode,
@@ -45,27 +46,11 @@ class BlurTileMode(Enum):
     REPEATED = "repeated"
 
 
-class ShadowBlurStyle(Enum):
-    NORMAL = "normal"
-    SOLID = "solid"
-    OUTER = "outer"
-    INNER = "inner"
-
-
 @dataclasses.dataclass
 class Blur:
     sigma_x: float
     sigma_y: float
     tile_mode: BlurTileMode = field(default=BlurTileMode.CLAMP)
-
-
-@dataclasses.dataclass
-class BoxShadow:
-    spread_radius: Optional[float] = field(default=None)
-    blur_radius: Optional[float] = field(default=None)
-    color: Optional[str] = field(default=None)
-    offset: OffsetValue = field(default=None)
-    blur_style: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
 
 
 class Container(ConstrainedControl):

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -49,17 +50,13 @@ class TextControl extends StatelessWidget {
         backgroundColor: HexColor.fromString(
             Theme.of(context), control.attrString("bgcolor", "")!));
 
-    TextAlign? textAlign = TextAlign.values.firstWhere(
-        (a) =>
-            a.name.toLowerCase() ==
-            control.attrString("textAlign", "")!.toLowerCase(),
-        orElse: () => TextAlign.start);
+    TextAlign? textAlign = TextAlign.values.firstWhereOrNull((a) =>
+        a.name.toLowerCase() ==
+        control.attrString("textAlign", "")!.toLowerCase());
 
-    TextOverflow? overflow = TextOverflow.values.firstWhere(
-        (v) =>
-            v.name.toLowerCase() ==
-            control.attrString("overflow", "")!.toLowerCase(),
-        orElse: () => TextOverflow.fade);
+    TextOverflow? overflow = TextOverflow.values.firstWhereOrNull((v) =>
+        v.name.toLowerCase() ==
+        control.attrString("overflow", "")!.toLowerCase());
 
     return constrainedControl(
         context,

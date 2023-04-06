@@ -293,7 +293,9 @@ def __connect_internal_sync(
             )
             if e.eventTarget == "page" and e.eventName == "close":
                 logger.info(f"Session closed: {e.sessionID}")
-                del conn.sessions[e.sessionID]
+                page = conn.sessions.pop(e.sessionID)
+                page._close()
+                del page
 
     def on_session_created(conn, session_data):
         page = Page(conn, session_data.sessionID)
@@ -368,7 +370,9 @@ async def __connect_internal_async(
             )
             if e.eventTarget == "page" and e.eventName == "close":
                 logger.info(f"Session closed: {e.sessionID}")
-                del conn.sessions[e.sessionID]
+                page = conn.sessions.pop(e.sessionID)
+                await page._close_async()
+                del page
 
     async def on_session_created(session_data):
         page = Page(conn, session_data.sessionID)

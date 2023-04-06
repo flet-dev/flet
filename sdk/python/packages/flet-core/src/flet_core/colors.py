@@ -34,6 +34,11 @@
 
 # }
 
+
+def with_opacity(opacity: float, color: str):
+    return f"{color},{opacity}"
+
+
 PRIMARY = "primary"
 ON_PRIMARY = "onprimary"
 PRIMARY_CONTAINER = "primarycontainer"

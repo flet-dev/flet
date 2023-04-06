@@ -161,13 +161,21 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.5"
+  fl_chart:
+    dependency: transitive
+    description:
+      name: fl_chart
+      sha256: e97c5b850ad056e9b3a85d3afeb44c239a83aa994a90723940dac82234f2efaf
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.61.0"
   flet:
     dependency: "direct main"
     description:
       path: "../package"
       relative: true
     source: path
-    version: "0.4.2"
+    version: "0.5.0"
   flutter:
     dependency: "direct main"
     description: flutter

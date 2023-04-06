@@ -360,6 +360,27 @@ class Page(Control):
             for c in removed_controls:
                 await c.will_unmount_async()
 
+    def _close(self):
+        removed_controls = self.__close_internal()
+        for c in removed_controls:
+            c.will_unmount()
+
+    async def _close_async(self):
+        removed_controls = self.__close_internal()
+        for c in removed_controls:
+            await c.will_unmount_async()
+
+    def __close_internal(self):
+        removed_controls = self._remove_control_recursively(self.index, self)
+        self._controls.clear()
+        self._previous_children.clear()
+        self.__on_route_change = None
+        self.__on_view_pop = None
+        self.__client_storage = None
+        self.__session_storage = None
+        self.__query = None
+        return removed_controls
+
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
         self.__validate_controls_page(added_controls)

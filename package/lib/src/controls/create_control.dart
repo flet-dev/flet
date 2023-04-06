@@ -13,6 +13,7 @@ import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
 import 'banner.dart';
+import 'barchart.dart';
 import 'bottom_sheet.dart';
 import 'card.dart';
 import 'checkbox.dart';
@@ -36,6 +37,7 @@ import 'haptic_feedback.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
+import 'linechart.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
 import 'markdown.dart';
@@ -43,6 +45,7 @@ import 'navigation_bar.dart';
 import 'navigation_rail.dart';
 import 'outlined_button.dart';
 import 'page.dart';
+import 'piechart.dart';
 import 'popup_menu_button.dart';
 import 'progress_bar.dart';
 import 'progress_ring.dart';
@@ -357,6 +360,24 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "windowdragarea":
           return WindowDragAreaControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "linechart":
+          return LineChartControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "barchart":
+          return BarChartControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "piechart":
+          return PieChartControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
