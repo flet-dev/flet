@@ -392,8 +392,6 @@ class Control:
         if control.__uid in index:
             del index[control.__uid]
             removed_controls.append(control)
-            control.page = None
-            control.__event_handlers.clear()
 
         return removed_controls
 
@@ -468,3 +466,7 @@ class Control:
             command.values.append(self.__uid)
 
         return command
+
+    def _dispose(self):
+        self.page = None
+        self.__event_handlers.clear()

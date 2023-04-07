@@ -346,6 +346,7 @@ class Page(Control):
             self._send_command("clean", [control.uid])
             for c in removed_controls:
                 c.will_unmount()
+                c._dispose()
 
     async def _clean_async(self, control: Control):
         async with self.__async_lock:
@@ -359,19 +360,23 @@ class Page(Control):
             await self._send_command_async("clean", [control.uid])
             for c in removed_controls:
                 await c.will_unmount_async()
+                c._dispose()
 
     def _close(self):
-        removed_controls = self.__close_internal()
+        removed_controls = self._remove_control_recursively(self.index, self)
         for c in removed_controls:
             c.will_unmount()
+            c._dispose()
+        self.__close_internal()
 
     async def _close_async(self):
-        removed_controls = self.__close_internal()
+        removed_controls = self._remove_control_recursively(self.index, self)
         for c in removed_controls:
             await c.will_unmount_async()
+            c._dispose()
+        self.__close_internal()
 
     def __close_internal(self):
-        removed_controls = self._remove_control_recursively(self.index, self)
         self._controls.clear()
         self._previous_children.clear()
         self.__on_route_change = None
@@ -379,7 +384,6 @@ class Page(Control):
         self.__client_storage = None
         self.__session_storage = None
         self.__query = None
-        return removed_controls
 
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
@@ -436,12 +440,14 @@ class Page(Control):
     def __handle_mount_unmount(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             ctrl.will_unmount()
+            ctrl._dispose()
         for ctrl in added_controls:
             ctrl.did_mount()
 
     async def __handle_mount_unmount_async(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             await ctrl.will_unmount_async()
+            ctrl._dispose()
         for ctrl in added_controls:
             await ctrl.did_mount_async()
 
