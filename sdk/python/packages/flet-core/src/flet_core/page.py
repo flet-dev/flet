@@ -200,6 +200,9 @@ class Page(Control):
         if self.__on_keyboard_event.count() > 0:
             self._set_attr("onKeyboardEvent", True)
 
+    def _get_control_name(self):
+        return "page"
+
     def _get_children(self):
         children = []
         children.extend(self.__views)
