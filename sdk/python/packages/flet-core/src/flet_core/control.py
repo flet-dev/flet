@@ -381,12 +381,18 @@ class Control:
         self.__previous_children.extend(current_children)
 
     def _remove_control_recursively(self, index, control):
-        removed_controls = [control]
-        for child in control._get_children():
-            removed_controls.extend(self._remove_control_recursively(index, child))
+        removed_controls = []
 
         if control.__uid in index:
             del index[control.__uid]
+
+            for child in control._get_children():
+                removed_controls.extend(self._remove_control_recursively(index, child))
+
+            for child in control._previous_children:
+                removed_controls.extend(self._remove_control_recursively(index, child))
+
+            removed_controls.append(control)
 
         return removed_controls
 
@@ -461,3 +467,7 @@ class Control:
             command.values.append(self.__uid)
 
         return command
+
+    def _dispose(self):
+        self.page = None
+        self.__event_handlers.clear()

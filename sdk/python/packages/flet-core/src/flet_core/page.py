@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
+import flet_core
 from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
 from flet_core.client_storage import ClientStorage
@@ -36,6 +37,9 @@ from flet_core.types import (
 )
 from flet_core.utils import is_asyncio, is_coroutine
 from flet_core.view import View
+
+logger = logging.getLogger(flet_core.__name__)
+
 
 try:
     from flet.auth.authorization import Authorization
@@ -196,6 +200,9 @@ class Page(Control):
         if self.__on_keyboard_event.count() > 0:
             self._set_attr("onKeyboardEvent", True)
 
+    def _get_control_name(self):
+        return "page"
+
     def _get_children(self):
         children = []
         children.extend(self.__views)
@@ -342,6 +349,7 @@ class Page(Control):
             self._send_command("clean", [control.uid])
             for c in removed_controls:
                 c.will_unmount()
+                c._dispose()
 
     async def _clean_async(self, control: Control):
         async with self.__async_lock:
@@ -355,6 +363,30 @@ class Page(Control):
             await self._send_command_async("clean", [control.uid])
             for c in removed_controls:
                 await c.will_unmount_async()
+                c._dispose()
+
+    def _close(self):
+        removed_controls = self._remove_control_recursively(self.index, self)
+        for c in removed_controls:
+            c.will_unmount()
+            c._dispose()
+        self.__close_internal()
+
+    async def _close_async(self):
+        removed_controls = self._remove_control_recursively(self.index, self)
+        for c in removed_controls:
+            await c.will_unmount_async()
+            c._dispose()
+        self.__close_internal()
+
+    def __close_internal(self):
+        self._controls.clear()
+        self._previous_children.clear()
+        self.__on_route_change = None
+        self.__on_view_pop = None
+        self.__client_storage = None
+        self.__session_storage = None
+        self.__query = None
 
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
@@ -411,12 +443,14 @@ class Page(Control):
     def __handle_mount_unmount(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             ctrl.will_unmount()
+            ctrl._dispose()
         for ctrl in added_controls:
             ctrl.did_mount()
 
     async def __handle_mount_unmount_async(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             await ctrl.will_unmount_async()
+            ctrl._dispose()
         for ctrl in added_controls:
             await ctrl.did_mount_async()
 
@@ -429,7 +463,7 @@ class Page(Control):
             await self._send_command_async("error", [message])
 
     def on_event(self, e: Event):
-        logging.info(f"page.on_event: {e.target} {e.name} {e.data}")
+        logger.info(f"page.on_event: {e.target} {e.name} {e.data}")
         with self.__lock:
             if e.target == "page" and e.name == "change":
                 self.__on_page_change_event(e.data)
@@ -442,7 +476,7 @@ class Page(Control):
                     t.start()
 
     async def on_event_async(self, e: Event):
-        logging.info(f"page.on_event_async: {e.target} {e.name} {e.data}")
+        logger.info(f"page.on_event_async: {e.target} {e.name} {e.data}")
 
         if e.target == "page" and e.name == "change":
             async with self.__async_lock:

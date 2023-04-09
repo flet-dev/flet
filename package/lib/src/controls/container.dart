@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -17,7 +18,6 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
-import '../utils/uri.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -65,6 +65,7 @@ class ContainerControl extends StatelessWidget {
         : null;
 
     var animation = parseAnimation(control, "animate");
+    var blur = parseBlur(control, "blur");
 
     final server = FletAppServices.of(context).server;
 
@@ -108,6 +109,8 @@ class ContainerControl extends StatelessWidget {
                   control.attrString("shape", "")!.toLowerCase(),
               orElse: () => BoxShape.rectangle);
 
+          var borderRadius = parseBorderRadius(control, "borderRadius");
+
           var boxDecor = BoxDecoration(
               color: bgColor,
               gradient: gradient,
@@ -115,8 +118,11 @@ class ContainerControl extends StatelessWidget {
               backgroundBlendMode:
                   bgColor != null || gradient != null ? blendMode : null,
               border: parseBorder(Theme.of(context), control, "border"),
-              borderRadius: parseBorderRadius(control, "borderRadius"),
-              shape: shape);
+              borderRadius: borderRadius,
+              shape: shape,
+              boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"));
+
+          Widget? result;
 
           if ((onClick || onLongPress || onHover) && ink && !disabled) {
             var ink = Ink(
@@ -166,36 +172,33 @@ class ContainerControl extends StatelessWidget {
                     child: child,
                   ),
                 ));
-            return constrainedControl(
-                context,
-                animation == null
-                    ? Container(
-                        width: control.attrDouble("width"),
-                        height: control.attrDouble("height"),
-                        margin: parseEdgeInsets(control, "margin"),
-                        clipBehavior: clipBehavior,
-                        child: ink,
-                      )
-                    : AnimatedContainer(
-                        duration: animation.duration,
-                        curve: animation.curve,
-                        width: control.attrDouble("width"),
-                        height: control.attrDouble("height"),
-                        margin: parseEdgeInsets(control, "margin"),
-                        clipBehavior: clipBehavior,
-                        onEnd: control.attrBool("onAnimationEnd", false)!
-                            ? () {
-                                server.sendPageEvent(
-                                    eventTarget: control.id,
-                                    eventName: "animation_end",
-                                    eventData: "container");
-                              }
-                            : null,
-                        child: ink),
-                parent,
-                control);
+
+            result = animation == null
+                ? Container(
+                    width: control.attrDouble("width"),
+                    height: control.attrDouble("height"),
+                    margin: parseEdgeInsets(control, "margin"),
+                    clipBehavior: clipBehavior,
+                    child: ink,
+                  )
+                : AnimatedContainer(
+                    duration: animation.duration,
+                    curve: animation.curve,
+                    width: control.attrDouble("width"),
+                    height: control.attrDouble("height"),
+                    margin: parseEdgeInsets(control, "margin"),
+                    clipBehavior: clipBehavior,
+                    onEnd: control.attrBool("onAnimationEnd", false)!
+                        ? () {
+                            server.sendPageEvent(
+                                eventTarget: control.id,
+                                eventName: "animation_end",
+                                eventData: "container");
+                          }
+                        : null,
+                    child: ink);
           } else {
-            Widget container = animation == null
+            result = animation == null
                 ? Container(
                     width: control.attrDouble("width"),
                     height: control.attrDouble("height"),
@@ -226,7 +229,7 @@ class ContainerControl extends StatelessWidget {
                     child: child);
 
             if ((onClick || onLongPress || onHover) && !disabled) {
-              container = MouseRegion(
+              result = MouseRegion(
                 cursor: SystemMouseCursors.click,
                 onEnter: onHover
                     ? (value) {
@@ -272,12 +275,21 @@ class ContainerControl extends StatelessWidget {
                               eventData: "");
                         }
                       : null,
-                  child: container,
+                  child: result,
                 ),
               );
             }
-            return constrainedControl(context, container, parent, control);
           }
+
+          if (blur != null) {
+            result = borderRadius != null
+                ? ClipRRect(
+                    borderRadius: borderRadius,
+                    child: BackdropFilter(filter: blur, child: result))
+                : ClipRect(child: BackdropFilter(filter: blur, child: result));
+          }
+
+          return constrainedControl(context, result, parent, control);
         });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 
@@ -31,6 +32,12 @@ class CardControl extends StatelessWidget {
         Card(
             elevation: control.attrDouble("elevation"),
             margin: parseEdgeInsets(control, "margin"),
+            color: HexColor.fromString(
+                Theme.of(context), control.attrString("color", "")!),
+            shadowColor: HexColor.fromString(
+                Theme.of(context), control.attrString("shadowColor", "")!),
+            surfaceTintColor: HexColor.fromString(
+                Theme.of(context), control.attrString("surfaceTintColor", "")!),
             child: contentCtrls.isNotEmpty
                 ? createControl(control, contentCtrls.first.id, disabled)
                 : null),

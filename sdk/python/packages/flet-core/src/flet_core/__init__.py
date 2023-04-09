@@ -32,10 +32,29 @@ from flet_core.buttons import (
     StadiumBorder,
 )
 from flet_core.card import Card
+from flet_core.charts.bar_chart import BarChart, BarChartEvent
+from flet_core.charts.bar_chart_group import BarChartGroup
+from flet_core.charts.bar_chart_rod import BarChartRod
+from flet_core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
+from flet_core.charts.chart_axis import ChartAxis
+from flet_core.charts.chart_axis_label import ChartAxisLabel
+from flet_core.charts.chart_grid_lines import ChartGridLines
+from flet_core.charts.chart_point_line import ChartPointLine
+from flet_core.charts.chart_point_shape import (
+    ChartCirclePoint,
+    ChartCrossPoint,
+    ChartPointShape,
+    ChartSquarePoint,
+)
+from flet_core.charts.line_chart import LineChart, LineChartEvent, LineChartEventSpot
+from flet_core.charts.line_chart_data import LineChartData
+from flet_core.charts.line_chart_data_point import LineChartDataPoint
+from flet_core.charts.pie_chart import PieChart, PieChartEvent
+from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.checkbox import Checkbox
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
-from flet_core.container import Container, ContainerTapEvent
+from flet_core.container import Blur, BlurTileMode, Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.datatable import (
@@ -124,6 +143,7 @@ from flet_core.responsive_row import ResponsiveRow
 from flet_core.row import Row
 from flet_core.semantics import Semantics
 from flet_core.shader_mask import ShaderMask
+from flet_core.shadow import BoxShadow, ShadowBlurStyle
 from flet_core.shake_detector import ShakeDetector
 from flet_core.slider import Slider
 from flet_core.snack_bar import SnackBar

@@ -1,14 +1,17 @@
 import argparse
 import os
+import signal
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
 from flet.flet import close_flet_view, open_flet_view
-from flet.utils import get_free_tcp_port, open_in_browser
+from flet.utils import get_free_tcp_port, is_windows, open_in_browser
+from flet_core.utils import random_string
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -82,8 +85,12 @@ class Command(BaseCommand):
         script_dir = os.path.dirname(script_path)
 
         port = options.port
-        if options.port is None:
+        if port is None and is_windows():
             port = get_free_tcp_port()
+
+        uds_path = None
+        if port is None and not is_windows():
+            uds_path = str(Path(tempfile.gettempdir()).joinpath(random_string(10)))
 
         assets_dir = options.assets_dir
         if assets_dir and not Path(assets_dir).is_absolute():
@@ -95,6 +102,7 @@ class Command(BaseCommand):
             [sys.executable, "-u", script_path],
             None if options.directory or options.recursive else script_path,
             port,
+            uds_path,
             options.web,
             options.hidden,
             assets_dir,
@@ -117,11 +125,14 @@ class Command(BaseCommand):
 
 
 class Handler(FileSystemEventHandler):
-    def __init__(self, args, script_path, port, web, hidden, assets_dir) -> None:
+    def __init__(
+        self, args, script_path, port, uds_path, web, hidden, assets_dir
+    ) -> None:
         super().__init__()
         self.args = args
         self.script_path = script_path
         self.port = port
+        self.uds_path = uds_path
         self.web = web
         self.hidden = hidden
         self.assets_dir = assets_dir
@@ -140,9 +151,17 @@ class Handler(FileSystemEventHandler):
             p_env["FLET_FORCE_WEB_VIEW"] = "true"
         if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
+        if self.uds_path is not None:
+            p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
+        if self.assets_dir is not None:
+            p_env["FLET_ASSETS_PATH"] = self.assets_dir
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
 
-        self.p = subprocess.Popen(self.args, env=p_env, stdout=subprocess.PIPE)
+        p_env["PYTHONIOENCODING"] = "utf-8"
+
+        self.p = subprocess.Popen(
+            self.args, env=p_env, stdout=subprocess.PIPE, encoding="utf-8"
+        )
         self.is_running = True
         th = threading.Thread(target=self.print_output, args=[self.p], daemon=True)
         th.start()
@@ -162,7 +181,7 @@ class Handler(FileSystemEventHandler):
             line = p.stdout.readline()
             if not line:
                 break
-            line = line.decode("utf-8").rstrip("\r\n")
+            line = line.rstrip("\r\n")
             if line.startswith(self.page_url_prefix):
                 if not self.page_url:
                     self.page_url = line[len(self.page_url_prefix) + 1 :]
@@ -183,12 +202,11 @@ class Handler(FileSystemEventHandler):
             self.page_url, self.assets_dir, self.hidden
         )
         self.fvp.wait()
-        self.p.kill()
+        self.p.send_signal(signal.SIGTERM)
         self.terminate.set()
 
     def restart_program(self):
         self.is_running = False
-        self.p.kill()
+        self.p.send_signal(signal.SIGTERM)
         self.p.wait()
-        time.sleep(0.5)
         self.start_process()

@@ -10,9 +10,7 @@ build_jobs = {}
 
 
 def download_flet_web(jobId, dest_file):
-    flet_web_url = (
-        f"https://ci.appveyor.com/api/buildjobs/{jobId}/artifacts/flet-web.tar.gz"
-    )
+    flet_web_url = f"https://ci.appveyor.com/api/buildjobs/{jobId}/artifacts/client/build/flet-web.tar.gz"
     print(f"Downloading {flet_web_url}...")
     urllib.request.urlretrieve(flet_web_url, dest_file)
 

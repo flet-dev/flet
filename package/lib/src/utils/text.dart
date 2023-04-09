@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/numbers.dart';
+import '../utils/shadows.dart';
 import 'colors.dart';
 
 TextStyle? getTextStyle(BuildContext context, String styleName) {
@@ -100,5 +101,8 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
       fontFamily: json["font_family"],
       fontVariations: variations,
       color: HexColor.fromString(theme, json["color"] ?? ""),
-      backgroundColor: HexColor.fromString(theme, json["bgcolor"] ?? ""));
+      backgroundColor: HexColor.fromString(theme, json["bgcolor"] ?? ""),
+      shadows: json["shadow"] != null
+          ? boxShadowsFromJSON(theme, json["shadow"])
+          : null);
 }

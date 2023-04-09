@@ -59,6 +59,9 @@ func DecryptWithKey(cipherData []byte, secretKey string) ([]byte, error) {
 	}
 
 	nonceSize := aesgcm.NonceSize()
+	if len(cipherData) < nonceSize {
+		return nil, errors.New("invalid cipher data")
+	}
 	nonce, ciphertext := cipherData[:nonceSize], cipherData[nonceSize:]
 
 	plaintext, err := aesgcm.Open(nil, nonce, ciphertext, nil)

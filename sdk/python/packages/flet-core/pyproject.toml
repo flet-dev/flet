@@ -3,7 +3,7 @@ name = "flet-core"
 version = "0.1.0"
 description = "Flet core library"
 authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
-license = "MIT"
+license = "Apache-2.0"
 readme = "README.md"
 
 packages = [

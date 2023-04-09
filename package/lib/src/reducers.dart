@@ -81,20 +81,20 @@ AppState appReducer(AppState state, dynamic action) {
         String pageName = getWebPageName(state.pageUri!);
 
         getWindowMediaData().then((wmd) {
-          action.server.connect(address: state.pageUri!.toString()).then((s) {
-            action.server.registerWebClient(
-                pageName: pageName,
-                pageRoute: action.route,
-                pageWidth: state.size.width.toString(),
-                pageHeight: state.size.height.toString(),
-                windowWidth: wmd.width != null ? wmd.width.toString() : "",
-                windowHeight: wmd.height != null ? wmd.height.toString() : "",
-                windowTop: wmd.top != null ? wmd.top.toString() : "",
-                windowLeft: wmd.left != null ? wmd.left.toString() : "",
-                isPWA: isProgressiveWebApp().toString(),
-                isWeb: kIsWeb.toString(),
-                platform: defaultTargetPlatform.name.toLowerCase());
-          });
+          action.server.registerWebClient(
+              pageName: pageName,
+              pageRoute: action.route,
+              pageWidth: state.size.width.toString(),
+              pageHeight: state.size.height.toString(),
+              windowWidth: wmd.width != null ? wmd.width.toString() : "",
+              windowHeight: wmd.height != null ? wmd.height.toString() : "",
+              windowTop: wmd.top != null ? wmd.top.toString() : "",
+              windowLeft: wmd.left != null ? wmd.left.toString() : "",
+              isPWA: isProgressiveWebApp().toString(),
+              isWeb: kIsWeb.toString(),
+              platform: defaultTargetPlatform.name.toLowerCase());
+
+          action.server.connect(address: state.pageUri!.toString());
         });
       } else {
         // existing route change

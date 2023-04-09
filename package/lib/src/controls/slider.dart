@@ -89,6 +89,7 @@ class _SliderControlState extends State<SliderControl> {
     double min = widget.control.attrDouble("min", 0)!;
     double max = widget.control.attrDouble("max", 1)!;
     int? divisions = widget.control.attrInt("divisions");
+    int round = widget.control.attrInt("round", 0)!;
 
     final server = FletAppServices.of(context).server;
 
@@ -111,7 +112,8 @@ class _SliderControlState extends State<SliderControl> {
               min: min,
               max: max,
               divisions: divisions,
-              label: label?.replaceAll("{value}", _value.toString()),
+              label:
+                  label?.replaceAll("{value}", _value.toStringAsFixed(round)),
               activeColor: HexColor.fromString(Theme.of(context),
                   widget.control.attrString("activeColor", "")!),
               inactiveColor: HexColor.fromString(Theme.of(context),

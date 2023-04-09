@@ -1,3 +1,4 @@
+import time
 from typing import Any, Optional, Union
 
 from flet_core.buttons import ButtonStyle
@@ -93,6 +94,8 @@ class IconButton(ConstrainedControl):
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,
         on_click=None,
+        on_focus=None,
+        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -134,6 +137,8 @@ class IconButton(ConstrainedControl):
         self.content = content
         self.autofocus = autofocus
         self.on_click = on_click
+        self.on_focus = on_focus
+        self.on_blur = on_blur
 
     def _get_control_name(self):
         return "iconbutton"
@@ -147,6 +152,14 @@ class IconButton(ConstrainedControl):
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
+
+    def focus(self):
+        self._set_attr_json("focus", str(time.time()))
+        self.update()
+
+    async def focus_async(self):
+        self._set_attr_json("focus", str(time.time()))
+        await self.update_async()
 
     # icon
     @property
@@ -246,3 +259,21 @@ class IconButton(ConstrainedControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # on_focus
+    @property
+    def on_focus(self):
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self):
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler):
+        self._add_event_handler("blur", handler)

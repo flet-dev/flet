@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'numbers.dart';
+
 Color? _getThemeColor(ThemeData theme, String colorName) {
   var scheme = theme.colorScheme;
   switch (colorName.toLowerCase()) {
@@ -100,6 +102,7 @@ Map<String, MaterialColor> _materialColors = {
   "deeporange": Colors.deepOrange,
   "brown": Colors.brown,
   "bluegrey": Colors.blueGrey,
+  "grey": Colors.grey
 };
 
 Map<String, MaterialAccentColor> _materialAccentColors = {
@@ -124,13 +127,25 @@ Map<String, MaterialAccentColor> _materialAccentColors = {
 // https://stackoverflow.com/questions/50081213/how-do-i-use-hexadecimal-color-strings-in-flutter
 extension HexColor on Color {
   static Color? fromString(ThemeData? theme, String colorString) {
-    if (colorString.startsWith("#")) {
-      return HexColor._fromHex(colorString.substring(1));
-    } else if (colorString.startsWith("0x")) {
-      return HexColor._fromHex(colorString.substring(2));
+    var colorParts = colorString.split(",");
+
+    var colorValue = colorParts[0];
+    var colorOpacity = colorParts.length > 1 ? colorParts[1] : null;
+
+    Color? color;
+    if (colorValue.startsWith("#")) {
+      color = HexColor._fromHex(colorValue.substring(1));
+    } else if (colorValue.startsWith("0x")) {
+      color = HexColor._fromHex(colorValue.substring(2));
     } else {
-      return HexColor._fromNamedColor(theme, colorString);
+      color = HexColor._fromNamedColor(theme, colorValue);
     }
+
+    if (color != null && colorOpacity != null) {
+      color = color.withOpacity(parseDouble(colorOpacity));
+    }
+
+    return color;
   }
 
   static Color? _fromNamedColor(ThemeData? theme, String colorName) {
@@ -188,4 +203,18 @@ extension HexColor on Color {
       '${red.toRadixString(16).padLeft(2, '0')}'
       '${green.toRadixString(16).padLeft(2, '0')}'
       '${blue.toRadixString(16).padLeft(2, '0')}';
+}
+
+extension ColorExtension on Color {
+  /// Convert the color to a darken color based on the [percent]
+  Color darken([int percent = 40]) {
+    assert(1 <= percent && percent <= 100);
+    final value = 1 - percent / 100;
+    return Color.fromARGB(
+      alpha,
+      (red * value).round(),
+      (green * value).round(),
+      (blue * value).round(),
+    );
+  }
 }

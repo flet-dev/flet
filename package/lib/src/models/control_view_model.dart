@@ -1,5 +1,5 @@
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 
 import 'app_state.dart';
@@ -17,7 +17,8 @@ class ControlViewModel extends Equatable {
     return ControlViewModel(
         control: store.state.controls[id]!,
         children: store.state.controls[id]!.childIds
-            .map((childId) => store.state.controls[childId]!)
+            .map((childId) => store.state.controls[childId])
+            .whereNotNull()
             .toList(),
         dispatch: store.dispatch);
   }

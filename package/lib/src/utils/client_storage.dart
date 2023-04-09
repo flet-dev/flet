@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../protocol/invoke_method_result.dart';
 import '../flet_server.dart';
+import '../protocol/invoke_method_result.dart';
 
 void invokeClientStorage(String methodId, String methodName,
     Map<String, String> args, FletServer server) async {
@@ -33,7 +33,7 @@ void invokeClientStorage(String methodId, String methodName,
       sendResult(
           prefs
               .getKeys()
-              .where((key) => key.startsWith(args["prefix"]!))
+              .where((key) => key.startsWith(args["key_prefix"]!))
               .toList(),
           null);
       break;

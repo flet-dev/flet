@@ -14,8 +14,6 @@ import '../utils/borders.dart';
 import '../utils/collections.dart';
 import '../utils/colors.dart';
 import '../utils/images.dart';
-import '../utils/uri.dart';
-import '../utils/desktop.dart';
 import 'create_control.dart';
 import 'error.dart';
 

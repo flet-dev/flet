@@ -1,9 +1,11 @@
 import argparse
+import json
 import os
 import re
 import shutil
 import tarfile
 import tempfile
+from distutils.dir_util import copy_tree
 from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
@@ -34,11 +36,23 @@ class Command(BaseCommand):
             help="path to an assets directory",
         )
         parser.add_argument(
-            "--app-title",
-            dest="app_title",
+            "--distpath",
+            dest="distpath",
+            help="where to put the published app (default: ./dist)",
+        )
+        parser.add_argument(
+            "--app-name",
+            dest="app_name",
             type=str,
             default=None,
-            help="application title",
+            help="application name",
+        )
+        parser.add_argument(
+            "--app-short-name",
+            dest="app_short_name",
+            type=str,
+            default=None,
+            help="application short name",
         )
         parser.add_argument(
             "--app-description",
@@ -73,14 +87,13 @@ class Command(BaseCommand):
 
         # constants
         dist_name = "dist"
-        flet_web_filename = "flet-web.tar.gz"
         app_tar_gz_filename = "app.tar.gz"
         reqs_filename = "requirements.txt"
 
         # script path
         script_path = options.script
-        if not os.path.isabs(options.script):
-            script_path = str(Path(os.getcwd()).joinpath(options.script).resolve())
+        if not os.path.isabs(script_path):
+            script_path = str(Path(os.getcwd()).joinpath(script_path).resolve())
 
         if not Path(script_path).exists():
             print(f"File not found: {script_path}")
@@ -89,7 +102,13 @@ class Command(BaseCommand):
         script_dir = os.path.dirname(script_path)
 
         # delete "dist" directory
-        dist_dir = os.path.join(script_dir, dist_name)
+        dist_dir = options.distpath
+        if dist_dir:
+            if not os.path.isabs(dist_dir):
+                dist_dir = str(Path(os.getcwd()).joinpath(dist_dir).resolve())
+        else:
+            dist_dir = os.path.join(script_dir, dist_name)
+
         print(f"Cleaning up {dist_dir}...")
         if os.path.exists(dist_dir):
             shutil.rmtree(dist_dir, ignore_errors=True)
@@ -100,7 +119,7 @@ class Command(BaseCommand):
         if not os.path.exists(web_path):
             print("Flet module does not contain 'web' directory.")
             exit(1)
-        shutil.copytree(web_path, dist_dir, dirs_exist_ok=True)
+        copy_tree(web_path, dist_dir)
 
         # copy assets
         assets_dir = options.assets_dir
@@ -112,7 +131,7 @@ class Command(BaseCommand):
             if not os.path.exists(assets_dir):
                 print("Assets dir not found:", assets_dir)
                 exit(1)
-            shutil.copytree(assets_dir, dist_dir, dirs_exist_ok=True)
+            copy_tree(assets_dir, dist_dir)
 
         # create "./dist/requirements.txt" if not exist
         # add flet-pyodide=={version} to dist/requirements.txt
@@ -205,11 +224,11 @@ class Command(BaseCommand):
                     "/" if base_url == "" else "/{}/".format(base_url)
                 ),
             )
-        if options.app_title:
+        if options.app_name:
             index = re.sub(
                 r"\<meta name=\"apple-mobile-web-app-title\" content=\"(.+)\">",
                 r'<meta name="apple-mobile-web-app-title" content="{}">'.format(
-                    options.app_title
+                    options.app_name
                 ),
                 index,
             )
@@ -224,3 +243,22 @@ class Command(BaseCommand):
 
         with open(index_path, "w") as f:
             f.write(index)
+
+        # patch manifest.json
+        print("Patching manifest.json")
+        manifest_path = os.path.join(dist_dir, "manifest.json")
+        with open(manifest_path, "r") as f:
+            manifest = json.loads(f.read())
+
+        if options.app_name:
+            manifest["name"] = options.app_name
+            manifest["short_name"] = options.app_name
+
+        if options.app_short_name:
+            manifest["short_name"] = options.app_short_name
+
+        if options.app_description:
+            manifest["description"] = options.app_description
+
+        with open(manifest_path, "w") as f:
+            f.write(json.dumps(manifest, indent=2))

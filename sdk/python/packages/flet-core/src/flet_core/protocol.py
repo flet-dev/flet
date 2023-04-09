@@ -44,7 +44,7 @@ class Command:
     commands: List[Any] = field(default_factory=list)
 
     def __str__(self):
-        return "{} {}".format(self.values, self.attrs)
+        return "{} {} {}".format(self.name, self.values, self.attrs)
 
 
 @dataclass

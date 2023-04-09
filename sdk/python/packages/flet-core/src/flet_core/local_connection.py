@@ -1,8 +1,11 @@
 import logging
 from typing import List
 
+import flet_core
 from flet_core.connection import Connection
 from flet_core.protocol import *
+
+logger = logging.getLogger(flet_core.__name__)
 
 
 class LocalConnection(Connection):
@@ -71,7 +74,7 @@ class LocalConnection(Connection):
         )
 
     def _process_command(self, command: Command):
-        logging.debug("_process_command: {}".format(command))
+        logger.debug("_process_command: {}".format(command))
         if command.name == "get":
             return self._process_get_command(command.values)
         elif command.name == "add":

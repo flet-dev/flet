@@ -1,5 +1,61 @@
 # Flet changelog
 
+## 0.5.0
+
+* Fixed: Memory usage continues to increase. ([#1223](https://github.com/flet-dev/flet/issues/1223))
+* Fixed: possible memory leak ([#969](https://github.com/flet-dev/flet/issues/969))
+* Color values can contain opacity, e.g. `color=red,0.5` or `ft.colors.with_opacity(0.5, "red")`
+* 1st class Flet charts based on fl_chart package ([#1255](https://github.com/flet-dev/flet/issues/1255))
+* Pyodide 0.23
+* Use named loggers in Python ([#1157](https://github.com/flet-dev/flet/issues/1157))
+* Fix Contribution guide as PDM is no longer used ([#1124](https://github.com/flet-dev/flet/issues/1124))
+* Added focus() method, focus and blur events to Elevated, Outlined, Text and Icon buttons ([#1079](https://github.com/flet-dev/flet/issues/1079))
+* New Card props: color, shadow_color, surface_tint_color ([#1078](https://github.com/flet-dev/flet/issues/1078))
+* Added WindowDragArea.maximizable property ([#1077](https://github.com/flet-dev/flet/issues/1077))
+* Added Container.blur and Container.shadow properties ([#1076](https://github.com/flet-dev/flet/issues/1076))
+* Add template for Q&A discussions ([#1070](https://github.com/flet-dev/flet/issues/1070))
+
+## 0.4.2
+
+* Fix reading versioninfo for PyInstaller 5.8.0
+* Fix `Dropdown.disable` property
+
+## 0.4.1
+
+* Slider.round to round slider value on a label
+* Fix page.client_storage.get_keys() timeout 
+* Fix encode() import in PyInstaller integration
+* Fix "ConnectionAbortedError" error on Windows
+* Consistent licensing across the code - Apache 2.0
+* Fix assets loading in a sub-directory app ([#1019](https://github.com/flet-dev/flet/issues/1019))
+* Add --distpath option to flet pack and flet publish commands ([#1018](https://github.com/flet-dev/flet/issues/1018))
+* Updating manifest.json when using flet publish ([#1014](https://github.com/flet-dev/flet/issues/1014))
+* Fix "Address already in use" error on flet run hot reload ([#1007](https://github.com/flet-dev/flet/issues/1007))
+* Force Python sub-process to run with UTF-8 encoding ([#1002](https://github.com/flet-dev/flet/issues/1002))
+* Fix: View with content crashes in some routing scenarios ([#1001](https://github.com/flet-dev/flet/issues/1001))
+
+## 0.4.0
+
+* Changed re-connection logic to make hot reload work ([#971](https://github.com/flet-dev/flet/issues/971))
+* Pyodide publishing fixes and improvements ([#953](https://github.com/flet-dev/flet/issues/953))
+* feat: Add PaddingValue to __init__.py ([#936](https://github.com/flet-dev/flet/issues/936))
+* Standalone Flet web apps with Pyodide ([#913](https://github.com/flet-dev/flet/issues/913))
+* modified `tooltip` attribute from `prefere*` to `prefer*` ([#909](https://github.com/flet-dev/flet/issues/909))
+* Fix unicode encoding in `FletTcpSocketServerProtocol`
+* Fix relative assets path in desktop app
+* PDM changed to Poetry
+* Add `--hidden-import` option to `flet pack` command
+* Add transparancy to matplotlib ([#889](https://github.com/flet-dev/flet/issues/889))
+* Replace Fletd server for desktop apps with a light-weight Python shim ([#838](https://github.com/flet-dev/flet/issues/838))
+* add default values in Border dataclass ([#883](https://github.com/flet-dev/flet/issues/883))
+* Fix for issue in control.py when checking add command ([#835](https://github.com/flet-dev/flet/issues/835))
+* Fix async pubsub ([#868](https://github.com/flet-dev/flet/issues/868))
+* add: Border, BorderSide, Scale Offset, Rotate to `__init__.py` ([#866](https://github.com/flet-dev/flet/issues/866))
+* Loading images from a local file ([#817](https://github.com/flet-dev/flet/issues/817))
+* Asyncio support ([#799](https://github.com/flet-dev/flet/issues/799))
+* Set filled=True when setting bgcolor in TextField ([#807](https://github.com/flet-dev/flet/issues/807))
+* Page transition without animation ([#809](https://github.com/flet-dev/flet/issues/809))
+
 ## 0.3.2
 
 * Fix `flet pack` command on Windows and macOS ([#795](https://github.com/flet-dev/flet/issues/795))
