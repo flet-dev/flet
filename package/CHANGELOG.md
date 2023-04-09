@@ -1,3 +1,7 @@
+## 0.5.1
+
+* Fix `page` reference in `will_unmount` method.
+
 ## 0.5.0
 
 * Fixed: Memory usage continues to increase. ([#1223](https://github.com/flet-dev/flet/issues/1223))
