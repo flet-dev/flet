@@ -19,6 +19,7 @@ from flet_core.control_event import ControlEvent
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import FloatingActionButton
+from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
 from flet_core.protocol import Command
 from flet_core.querystring import QueryString
@@ -62,22 +63,6 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-
-class NopeLock(object):
-    def __enter__(self):
-        pass
-
-    def __exit__(self, *args):
-        pass
-
-
-class AsyncNopeLock(object):
-    async def __aenter__(self):
-        pass
-
-    async def __aexit__(self, *args):
-        pass
 
 
 class Page(Control):

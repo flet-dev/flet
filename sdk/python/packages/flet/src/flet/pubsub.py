@@ -4,14 +4,16 @@ import threading
 from typing import Any, Callable, Dict, Iterable
 
 import flet
+from flet_core.locks import AsyncNopeLock, NopeLock
+from flet_core.utils import is_asyncio
 
 logger = logging.getLogger(flet.__name__)
 
 
 class PubSubHub:
     def __init__(self):
-        self.__lock = threading.Lock()
-        self.__async_lock = asyncio.Lock()
+        self.__lock = threading.Lock() if not is_asyncio() else NopeLock()
+        self.__async_lock = asyncio.Lock() if is_asyncio() else AsyncNopeLock()
         self.__subscribers: Dict[str, Callable] = {}  # key: session_id, value: handler
         self.__topic_subscribers: Dict[
             str, Dict[str, Callable]

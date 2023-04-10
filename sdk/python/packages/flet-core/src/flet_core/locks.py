@@ -1,0 +1,14 @@
+class NopeLock(object):
+    def __enter__(self):
+        pass
+
+    def __exit__(self, *args):
+        pass
+
+
+class AsyncNopeLock(object):
+    async def __aenter__(self):
+        pass
+
+    async def __aexit__(self, *args):
+        pass
