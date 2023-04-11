@@ -1,5 +1,10 @@
 # Flet changelog
 
+## 0.5.2
+
+* Fix: Dispose controls only on session closed event
+* Fix "There is no current event loop" error in auth module
+
 ## 0.5.1
 
 * Fix `page` reference in `will_unmount` method.
