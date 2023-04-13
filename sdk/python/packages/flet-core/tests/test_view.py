@@ -11,7 +11,7 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=["view"],
-            attrs={},
+            attrs={"padding":'0'},
             commands=[],
         )
     ], "Test failed"
