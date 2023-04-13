@@ -37,7 +37,7 @@ class View(Control):
         vertical_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
         horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
         spacing: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: PaddingValue = 0,
         bgcolor: Optional[str] = None,
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
