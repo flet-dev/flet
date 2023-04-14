@@ -84,7 +84,7 @@ class _PageControlState extends State<PageControl> {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
-  int _prevViewsCount = 0;
+  String? _prevViewsIds;
   bool _keyboardHandlerSubscribed = false;
 
   @override
@@ -491,17 +491,17 @@ class _PageControlState extends State<PageControl> {
               return overlayWidgets;
             }
 
+            String viewIds = routesView.viewIds.join();
             pages = routesView.viewIds.map((viewId) {
               var key = ValueKey(viewId);
               var child = _buildViewWidget(
                   routesView.page, viewId, overlayWidgets(viewId));
-              return _prevViewsCount == 0 ||
-                      _prevViewsCount == routesView.viewIds.length
+              return _prevViewsIds == null || _prevViewsIds == viewIds
                   ? FadeTransitionPage(key: key, child: child)
                   : MaterialPage(key: key, child: child);
             }).toList();
 
-            _prevViewsCount = pages.length;
+            _prevViewsIds = viewIds;
           }
 
           return Navigator(
