@@ -84,7 +84,7 @@ class _PageControlState extends State<PageControl> {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
-  int _routeChanges = 2;
+  int _prevViewsCount = 0;
   bool _keyboardHandlerSubscribed = false;
 
   @override
@@ -115,7 +115,6 @@ class _PageControlState extends State<PageControl> {
   void _routeChanged() {
     widget.dispatch(SetPageRouteAction(
         _routeState.route, FletAppServices.of(context).server));
-    _routeChanges--;
   }
 
   void _handleKeyDown(RawKeyEvent e) {
@@ -496,10 +495,13 @@ class _PageControlState extends State<PageControl> {
               var key = ValueKey(viewId);
               var child = _buildViewWidget(
                   routesView.page, viewId, overlayWidgets(viewId));
-              return _routeChanges > 0
+              return _prevViewsCount == 0 ||
+                      _prevViewsCount == routesView.viewIds.length
                   ? FadeTransitionPage(key: key, child: child)
                   : MaterialPage(key: key, child: child);
             }).toList();
+
+            _prevViewsCount = pages.length;
           }
 
           return Navigator(
