@@ -57,6 +57,7 @@ class SnackBar(Control):
         action: Optional[str] = None,
         action_color: Optional[str] = None,
         bgcolor: Optional[str] = None,
+        duration: Optional[int] = None,
         on_action=None,
     ):
 
@@ -74,6 +75,7 @@ class SnackBar(Control):
         self.action = action
         self.action_color = action_color
         self.bgcolor = bgcolor
+        self.duration = duration
         self.on_action = on_action
 
     def _get_control_name(self):
@@ -142,6 +144,15 @@ class SnackBar(Control):
     @bgcolor.setter
     def bgcolor(self, value):
         self._set_attr("bgColor", value)
+
+    # duration
+    @property
+    def duration(self) -> Optional[int]:
+        return self._get_attr("duration")
+
+    @duration.setter
+    def duration(self, value: Optional[int]):
+        self._set_attr("duration", value)
 
     # on_action
     @property

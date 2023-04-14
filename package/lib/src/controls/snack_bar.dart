@@ -58,7 +58,9 @@ class _SnackBarControlState extends State<SnackBarControl> {
         content: createControl(widget.control, contentCtrls.first.id, disabled),
         backgroundColor: HexColor.fromString(
             Theme.of(context), widget.control.attrString("bgColor", "")!),
-        action: action);
+        action: action,
+        duration:
+            Duration(milliseconds: widget.control.attrInt("duration", 4000)!));
   }
 
   @override
