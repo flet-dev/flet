@@ -136,6 +136,7 @@ class Page(Control):
             if self.__last_route == e.data:
                 return None  # avoid duplicate calls
             self.__last_route = e.data
+            self._set_attr("route", e.data, False)
             self.query()  # Update query url (required when manually changed from browser)
             return RouteChangeEvent(route=e.data)
 

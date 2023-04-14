@@ -276,6 +276,18 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 			sessionCreated = true
 		} else {
 			log.Debugf("Existing session %s found for %s page\n", session.ID, page.Name)
+
+			// update existing page props
+			handler := newSessionHandler(session)
+			handler.setInternal(&model.Command{
+				Name:   "set",
+				Values: []string{"page"},
+				Attrs: map[string]string{
+					"route": request.PageRoute,
+				},
+			})
+
+			sendPageEventToSession(session, "route_change", request.PageRoute)
 		}
 
 		c.register(WebClient)
