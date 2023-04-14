@@ -32,11 +32,15 @@ class DataColumn(Control):
         self,
         label: Control,
         ref=None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        # specific
         numeric: Optional[bool] = None,
         tooltip: Optional[str] = None,
         on_sort=None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
         self.__on_sort = EventHandler(
             lambda e: DataColumnSortEvent(**json.loads(e.data))
@@ -101,6 +105,10 @@ class DataCell(Control):
         self,
         content: Control,
         ref=None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        # specific
         on_double_tap=None,
         on_long_press=None,
         on_tap=None,
@@ -109,7 +117,7 @@ class DataCell(Control):
         placeholder: Optional[bool] = None,
         show_edit_icon: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
         self.__on_tap_down = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
         self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
@@ -212,12 +220,16 @@ class DataRow(Control):
         self,
         cells: Optional[List[Control]] = None,
         ref=None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        # specific
         color: Union[None, str, Dict[MaterialState, str]] = None,
         selected: Optional[bool] = None,
         on_long_press=None,
         on_select_changed=None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
         self.cells = cells
         self.color = color
