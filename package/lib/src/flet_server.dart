@@ -100,8 +100,7 @@ class FletServer {
         action: MessageAction.registerWebClient,
         payload: RegisterWebClientRequest(
             pageName: _pageName,
-            pageRoute:
-                _store.state.route != "" ? _store.state.route : _pageHash,
+            pageRoute: _pageHash != "" ? _pageHash : _store.state.route,
             pageWidth: page?.attrString("pageWidth") ?? _pageWidth,
             pageHeight: page?.attrString("pageHeight") ?? _pageHeight,
             windowLeft: page?.attrString("windowLeft") ?? _windowLeft,
@@ -112,6 +111,7 @@ class FletServer {
             isWeb: _isWeb,
             platform: _platform,
             sessionId: _store.state.sessionId)));
+    _pageHash = "";
   }
 
   sendPageEvent(
