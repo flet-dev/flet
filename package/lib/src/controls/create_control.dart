@@ -21,6 +21,7 @@ import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
+import 'custom_paint.dart';
 import 'datatable.dart';
 import 'divider.dart';
 import 'drag_target.dart';
@@ -378,6 +379,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parentDisabled: parentDisabled);
         case "piechart":
           return PieChartControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "custompaint":
+          return CustomPaintControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

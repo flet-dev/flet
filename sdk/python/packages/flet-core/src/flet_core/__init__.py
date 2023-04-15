@@ -57,6 +57,14 @@ from flet_core.column import Column
 from flet_core.container import Blur, BlurTileMode, Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.custom_paint import (
+    CustomPaint,
+    CustomPaintResizeEvent,
+    DrawCircle,
+    DrawLine,
+    DrawShape,
+    Paint,
+)
 from flet_core.datatable import (
     DataCell,
     DataColumn,
