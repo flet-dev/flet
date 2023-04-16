@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, Union
+from typing import Dict, Tuple, Union
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
@@ -23,7 +23,7 @@ RotateValue = Union[None, int, float, Rotate]
 
 ScaleValue = Union[None, int, float, Scale]
 
-OffsetValue = Union[None, Offset]
+OffsetValue = Union[None, Offset, Tuple[Union[float, int], Union[float, int]]]
 
 AnimationValue = Union[None, bool, int, Animation]
 

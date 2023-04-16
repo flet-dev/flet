@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
 import '../models/control.dart';
+import '../utils/drawing.dart';
 import 'create_control.dart';
 
 typedef CustomPaintControlOnPaintCallback = void Function(Size size);
@@ -42,6 +43,7 @@ class _CustomPaintControlState extends State<CustomPaintControl> {
 
     var paint = CustomPaint(
       painter: FletCustomPainter(
+        theme: Theme.of(context),
         controls: contentCtrls,
         onPaintCallback: (size) {
           if (onResize) {
@@ -65,11 +67,14 @@ class _CustomPaintControlState extends State<CustomPaintControl> {
 }
 
 class FletCustomPainter extends CustomPainter {
+  final ThemeData theme;
   final Iterable<Control> controls;
   final CustomPaintControlOnPaintCallback onPaintCallback;
 
   const FletCustomPainter(
-      {required this.controls, required this.onPaintCallback});
+      {required this.theme,
+      required this.controls,
+      required this.onPaintCallback});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -84,15 +89,6 @@ class FletCustomPainter extends CustomPainter {
         drawCircle(canvas, c);
       }
     }
-
-    // // 1
-    // Offset startPoint = Offset(0, 0);
-    // // 2
-    // Offset endPoint = Offset(size.width, size.height);
-    // // 3
-    // Paint paint = Paint();
-    // // 4
-    // canvas.drawLine(startPoint, endPoint, paint);
   }
 
   @override
@@ -103,14 +99,14 @@ class FletCustomPainter extends CustomPainter {
   void drawLine(Canvas canvas, Control c) {
     var p1 = parseOffset(c, "p1")!;
     var p2 = parseOffset(c, "p2")!;
-    Paint paint = Paint();
+    Paint paint = parsePaint(theme, c, "paint");
     canvas.drawLine(Offset(p1.x, p1.y), Offset(p2.x, p2.y), paint);
   }
 
   void drawCircle(Canvas canvas, Control c) {
     var center = parseOffset(c, "center")!;
     var radius = c.attrDouble("radius", 0)!;
-    Paint paint = Paint();
+    Paint paint = parsePaint(theme, c, "paint");
     canvas.drawCircle(Offset(center.x, center.y), radius, paint);
   }
 }

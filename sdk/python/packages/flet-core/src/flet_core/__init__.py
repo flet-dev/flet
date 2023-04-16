@@ -9,6 +9,7 @@ from flet_core import (
     icons,
     margin,
     padding,
+    paint,
     transform,
     utils,
 )
@@ -19,6 +20,7 @@ from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
 from flet_core.banner import Banner
+from flet_core.blur import Blur, BlurTileMode
 from flet_core.border import Border, BorderSide
 from flet_core.border_radius import BorderRadius
 from flet_core.bottom_sheet import BottomSheet
@@ -54,17 +56,10 @@ from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.checkbox import Checkbox
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
-from flet_core.container import Blur, BlurTileMode, Container, ContainerTapEvent
+from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
-from flet_core.custom_paint import (
-    CustomPaint,
-    CustomPaintResizeEvent,
-    DrawCircle,
-    DrawLine,
-    DrawShape,
-    Paint,
-)
+from flet_core.custom_paint import CustomPaint, CustomPaintResizeEvent
 from flet_core.datatable import (
     DataCell,
     DataColumn,
@@ -75,6 +70,7 @@ from flet_core.datatable import (
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
+from flet_core.draw import DrawCircle, DrawLine, DrawShape
 from flet_core.dropdown import Dropdown
 from flet_core.elevated_button import ElevatedButton
 from flet_core.file_picker import (
@@ -138,6 +134,15 @@ from flet_core.page import (
     Page,
     RouteChangeEvent,
     ViewPopEvent,
+)
+from flet_core.paint import (
+    Paint,
+    PaintingStyle,
+    PaintLinearGradient,
+    PaintRadialGradient,
+    PaintSweepGradient,
+    StrokeCap,
+    StrokeJoin,
 )
 from flet_core.popup_menu_button import PopupMenuButton, PopupMenuItem
 from flet_core.progress_bar import ProgressBar

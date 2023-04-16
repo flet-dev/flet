@@ -105,7 +105,12 @@ class OffsetDetails {
 
   OffsetDetails({required this.x, required this.y});
 
-  factory OffsetDetails.fromJson(Map<String, dynamic> json) {
-    return OffsetDetails(x: parseDouble(json["x"]), y: parseDouble(json["y"]));
+  factory OffsetDetails.fromJson(dynamic json) {
+    if (json is List && json.length > 1) {
+      return OffsetDetails(x: parseDouble(json[0]), y: parseDouble(json[1]));
+    } else {
+      return OffsetDetails(
+          x: parseDouble(json["x"]), y: parseDouble(json["y"]));
+    }
   }
 }
