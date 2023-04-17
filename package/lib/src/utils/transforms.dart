@@ -57,6 +57,19 @@ OffsetDetails? parseOffset(Control control, String propName) {
   return offsetFromJSON(j1);
 }
 
+List<Offset>? parseOffsetList(Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return (j1 as List).map((e) {
+    var d = offsetFromJSON(e);
+    return Offset(d.x, d.y);
+  }).toList();
+}
+
 OffsetDetails offsetFromJSON(dynamic json) {
   return OffsetDetails.fromJson(json);
 }

@@ -77,6 +77,7 @@ from flet_core.draw import (
     DrawLine,
     DrawOval,
     DrawPaint,
+    DrawPoints,
     DrawShape,
 )
 from flet_core.dropdown import Dropdown
@@ -149,6 +150,7 @@ from flet_core.paint import (
     PaintLinearGradient,
     PaintRadialGradient,
     PaintSweepGradient,
+    PointMode,
     StrokeCap,
     StrokeJoin,
 )

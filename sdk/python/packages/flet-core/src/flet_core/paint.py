@@ -78,3 +78,9 @@ class Paint:
     stroke_miter_limit: Optional[float] = dataclasses.field(default=None)
     stroke_width: Optional[float] = dataclasses.field(default=None)
     style: Optional[PaintingStyle] = dataclasses.field(default=None)
+
+
+class PointMode(Enum):
+    POINTS = "points"
+    LINES = "lines"
+    POLYGON = "polygon"

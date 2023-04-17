@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flet/src/utils/transforms.dart';
 import 'package:flutter/material.dart';
@@ -108,6 +109,8 @@ class FletCustomPainter extends CustomPainter {
         drawOval(canvas, shape);
       } else if (shape.control.type == "paint") {
         drawPaint(canvas, shape);
+      } else if (shape.control.type == "points") {
+        drawPoints(canvas, shape);
       }
     }
   }
@@ -166,5 +169,16 @@ class FletCustomPainter extends CustomPainter {
     var height = shape.control.attrDouble("height", 0)!;
     Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawOval(Rect.fromLTWH(start.x, start.y, width, height), paint);
+  }
+
+  void drawPoints(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    var points = parseOffsetList(shape.control, "points")!;
+    var pointMode = PointMode.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            shape.control.attrString("pointMode", "")!.toLowerCase(),
+        orElse: () => PointMode.points);
+    Paint paint = parsePaint(theme, shape.control, "paint");
+    canvas.drawPoints(pointMode, points, paint);
   }
 }
