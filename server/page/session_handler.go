@@ -47,7 +47,7 @@ type addCommandBatchItem struct {
 }
 
 // NewSession creates a new instance of Session.
-func newSession(page *model.Page, id string, clientIP string,
+func newSession(page *model.Page, id string, clientIP string, clientUserAgent string,
 	pageRoute string, pageWidth string, pageHeight string,
 	windowWidth string, windowHeight string,
 	windowTop string, windowLeft string, isPwa string, isWeb string, platform string) *model.Session {
@@ -70,6 +70,8 @@ func newSession(page *model.Page, id string, clientIP string,
 	p.SetAttr("pwa", isPwa)
 	p.SetAttr("web", isWeb)
 	p.SetAttr("platform", platform)
+	p.SetAttr("clientIP", clientIP)
+	p.SetAttr("clientUserAgent", clientUserAgent)
 	h.addControl(p)
 
 	return s

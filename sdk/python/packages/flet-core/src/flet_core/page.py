@@ -229,6 +229,8 @@ class Page(Control):
             Command(0, "get", ["page", "windowHeight"]),
             Command(0, "get", ["page", "windowTop"]),
             Command(0, "get", ["page", "windowLeft"]),
+            Command(0, "get", ["page", "clientIP"]),
+            Command(0, "get", ["page", "clientUserAgent"]),
         ]
 
     def __set_page_details(self, values):
@@ -242,6 +244,8 @@ class Page(Control):
         self._set_attr("windowHeight", values[7], False)
         self._set_attr("windowTop", values[8], False)
         self._set_attr("windowLeft", values[9], False)
+        self._set_attr("clientIP", values[10], False)
+        self._set_attr("clientUserAgent", values[11], False)
 
     def update(self, *controls):
         with self.__lock:
@@ -1009,6 +1013,16 @@ class Page(Control):
     @property
     def platform(self):
         return self._get_attr("platform")
+
+    # client_ip
+    @property
+    def client_ip(self):
+        return self._get_attr("clientIP")
+
+    # client_user_agent
+    @property
+    def client_user_agent(self):
+        return self._get_attr("clientUserAgent")
 
     # design
     @property
