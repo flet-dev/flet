@@ -206,5 +206,5 @@ func websocketHandler(c *gin.Context) {
 	}
 
 	wsc := page_connection.NewWebSocket(conn)
-	page.NewClient(wsc, c.ClientIP())
+	page.NewClient(wsc, c.ClientIP(), c.Request.UserAgent())
 }
