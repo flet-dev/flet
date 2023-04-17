@@ -2,9 +2,14 @@ import 'dart:convert';
 
 import 'package:flet/src/utils/transforms.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 import '../flet_app_services.dart';
+import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/custom_paint_draw_shape_view_model.dart';
+import '../models/custom_paint_view_model.dart';
+import '../utils/colors.dart';
 import '../utils/drawing.dart';
 import 'create_control.dart';
 
@@ -36,57 +41,67 @@ class _CustomPaintControlState extends State<CustomPaintControl> {
   Widget build(BuildContext context) {
     debugPrint("CustomPaint build: ${widget.control.id}");
 
-    var contentCtrls = widget.children.where((c) => c.isVisible);
+    var result = StoreConnector<AppState, CustomPaintViewModel>(
+        distinct: true,
+        converter: (store) => CustomPaintViewModel.fromStore(
+            store, widget.control, widget.children),
+        builder: (context, viewModel) {
+          var onResize = viewModel.control.attrBool("onResize", false)!;
+          var resizeInterval = viewModel.control.attrInt("resizeInterval", 10)!;
 
-    var onResize = widget.control.attrBool("onResize", false)!;
-    var resizeInterval = widget.control.attrInt("resizeInterval", 10)!;
+          var paint = CustomPaint(
+            painter: FletCustomPainter(
+              theme: Theme.of(context),
+              shapes: viewModel.shapes,
+              onPaintCallback: (size) {
+                if (onResize) {
+                  var now = DateTime.now().millisecondsSinceEpoch;
+                  if ((now - _lastResize > resizeInterval &&
+                          _lastSize != size) ||
+                      _lastSize == null) {
+                    _lastResize = now;
+                    _lastSize = size;
+                    FletAppServices.of(context).server.sendPageEvent(
+                        eventTarget: viewModel.control.id,
+                        eventName: "resize",
+                        eventData:
+                            json.encode({"w": size.width, "h": size.height}));
+                  }
+                }
+              },
+            ),
+          );
 
-    var paint = CustomPaint(
-      painter: FletCustomPainter(
-        theme: Theme.of(context),
-        controls: contentCtrls,
-        onPaintCallback: (size) {
-          if (onResize) {
-            var now = DateTime.now().millisecondsSinceEpoch;
-            if ((now - _lastResize > resizeInterval && _lastSize != size) ||
-                _lastSize == null) {
-              _lastResize = now;
-              _lastSize = size;
-              FletAppServices.of(context).server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "resize",
-                  eventData: json.encode({"w": size.width, "h": size.height}));
-            }
-          }
-        },
-      ),
-    );
+          return paint;
+        });
 
-    return constrainedControl(context, paint, widget.parent, widget.control);
+    return constrainedControl(context, result, widget.parent, widget.control);
   }
 }
 
 class FletCustomPainter extends CustomPainter {
   final ThemeData theme;
-  final Iterable<Control> controls;
+  final List<CustomPaintDrawShapeViewModel> shapes;
   final CustomPaintControlOnPaintCallback onPaintCallback;
 
   const FletCustomPainter(
       {required this.theme,
-      required this.controls,
+      required this.shapes,
       required this.onPaintCallback});
 
   @override
   void paint(Canvas canvas, Size size) {
     onPaintCallback(size);
 
-    debugPrint("SHAPE CONTROLS: $controls");
+    debugPrint("SHAPE CONTROLS: $shapes");
 
-    for (var c in controls) {
-      if (c.type == "line") {
-        drawLine(canvas, c);
-      } else if (c.type == "circle") {
-        drawCircle(canvas, c);
+    for (var shape in shapes) {
+      if (shape.control.type == "line") {
+        drawLine(canvas, shape);
+      } else if (shape.control.type == "circle") {
+        drawCircle(canvas, shape);
+      } else if (shape.control.type == "arc") {
+        drawArc(canvas, shape);
       }
     }
   }
@@ -96,17 +111,41 @@ class FletCustomPainter extends CustomPainter {
     return true;
   }
 
-  void drawLine(Canvas canvas, Control c) {
-    var p1 = parseOffset(c, "p1")!;
-    var p2 = parseOffset(c, "p2")!;
-    Paint paint = parsePaint(theme, c, "paint");
+  void drawLine(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    var p1 = parseOffset(shape.control, "p1")!;
+    var p2 = parseOffset(shape.control, "p2")!;
+    Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawLine(Offset(p1.x, p1.y), Offset(p2.x, p2.y), paint);
   }
 
-  void drawCircle(Canvas canvas, Control c) {
-    var center = parseOffset(c, "center")!;
-    var radius = c.attrDouble("radius", 0)!;
-    Paint paint = parsePaint(theme, c, "paint");
+  void drawCircle(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    var center = parseOffset(shape.control, "center")!;
+    var radius = shape.control.attrDouble("radius", 0)!;
+    Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawCircle(Offset(center.x, center.y), radius, paint);
+  }
+
+  void drawArc(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    var start = parseOffset(shape.control, "start")!;
+    var width = shape.control.attrDouble("width", 0)!;
+    var height = shape.control.attrDouble("height", 0)!;
+    var startAngle = shape.control.attrDouble("startAngle", 0)!;
+    var sweepAngle = shape.control.attrDouble("sweepAngle", 0)!;
+    var useCenter = shape.control.attrBool("useCenter", false)!;
+    Paint paint = parsePaint(theme, shape.control, "paint");
+    canvas.drawArc(Rect.fromLTWH(start.x, start.y, width, height), startAngle,
+        sweepAngle, useCenter, paint);
+  }
+
+  void drawColor(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    var color =
+        HexColor.fromString(theme, shape.control.attrString("color", "")!) ??
+            Colors.black;
+    var blendMode = BlendMode.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            shape.control.attrString("blendMode", "")!.toLowerCase(),
+        orElse: () => BlendMode.srcOver);
+    canvas.drawColor(color, blendMode);
   }
 }
