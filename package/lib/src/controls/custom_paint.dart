@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -95,7 +95,7 @@ class FletCustomPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     onPaintCallback(size);
 
-    debugPrint("SHAPE CONTROLS: $shapes");
+    //debugPrint("SHAPE CONTROLS: $shapes");
 
     for (var shape in shapes) {
       if (shape.control.type == "line") {
@@ -114,6 +114,8 @@ class FletCustomPainter extends CustomPainter {
         drawPoints(canvas, shape);
       } else if (shape.control.type == "rect") {
         drawRect(canvas, shape);
+      } else if (shape.control.type == "path") {
+        drawPath(canvas, shape);
       }
     }
   }
@@ -176,11 +178,11 @@ class FletCustomPainter extends CustomPainter {
 
   void drawPoints(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
     var points = parseOffsetList(shape.control, "points")!;
-    var pointMode = PointMode.values.firstWhere(
+    var pointMode = ui.PointMode.values.firstWhere(
         (e) =>
             e.name.toLowerCase() ==
             shape.control.attrString("pointMode", "")!.toLowerCase(),
-        orElse: () => PointMode.points);
+        orElse: () => ui.PointMode.points);
     Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawPoints(pointMode, points, paint);
   }
@@ -198,5 +200,48 @@ class FletCustomPainter extends CustomPainter {
             bottomLeft: borderRadius?.bottomLeft ?? Radius.zero,
             bottomRight: borderRadius?.bottomRight ?? Radius.zero),
         paint);
+  }
+
+  void drawPath(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    var path = buildPath(shape.shapes);
+    Paint paint = parsePaint(theme, shape.control, "paint");
+    canvas.drawPath(path, paint);
+  }
+
+  ui.Path buildPath(List<CustomPaintDrawShapeViewModel> shapes) {
+    var path = ui.Path();
+    for (var shape in shapes) {
+      if (shape.control.type == "moveto") {
+        path.moveTo(
+            shape.control.attrDouble("x")!, shape.control.attrDouble("y")!);
+      } else if (shape.control.type == "lineto") {
+        path.lineTo(
+            shape.control.attrDouble("x")!, shape.control.attrDouble("y")!);
+      } else if (shape.control.type == "conicto") {
+        path.conicTo(
+            shape.control.attrDouble("x1")!,
+            shape.control.attrDouble("y1")!,
+            shape.control.attrDouble("x2")!,
+            shape.control.attrDouble("y2")!,
+            shape.control.attrDouble("w")!);
+      } else if (shape.control.type == "cubicto") {
+        path.cubicTo(
+            shape.control.attrDouble("x1")!,
+            shape.control.attrDouble("y1")!,
+            shape.control.attrDouble("x2")!,
+            shape.control.attrDouble("y2")!,
+            shape.control.attrDouble("x3")!,
+            shape.control.attrDouble("y3")!);
+      } else if (shape.control.type == "bezierto") {
+        path.quadraticBezierTo(
+            shape.control.attrDouble("x1")!,
+            shape.control.attrDouble("y1")!,
+            shape.control.attrDouble("x2")!,
+            shape.control.attrDouble("y2")!);
+      } else if (shape.control.type == "close") {
+        path.close();
+      }
+    }
+    return path;
   }
 }

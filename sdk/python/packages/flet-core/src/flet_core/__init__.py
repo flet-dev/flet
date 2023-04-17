@@ -77,6 +77,7 @@ from flet_core.draw import (
     DrawLine,
     DrawOval,
     DrawPaint,
+    DrawPath,
     DrawPoints,
     DrawRect,
     DrawShape,
