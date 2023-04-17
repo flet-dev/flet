@@ -38,6 +38,7 @@ type Client struct {
 	role                 ClientRole
 	conn                 connection.Conn
 	clientIP             string
+	clientUserAgent      string
 	subscription         chan []byte
 	sessions             map[string]*model.Session
 	pages                map[string]*model.Page
@@ -49,7 +50,7 @@ func autoID() string {
 	return uuid.New().String()
 }
 
-func NewClient(conn connection.Conn, clientIP string) *Client {
+func NewClient(conn connection.Conn, clientIP string, clientUserAgent string) *Client {
 
 	ip := clientIP
 	if ip == "::1" {
@@ -60,6 +61,7 @@ func NewClient(conn connection.Conn, clientIP string) *Client {
 		id:                   autoID(),
 		conn:                 conn,
 		clientIP:             ip,
+		clientUserAgent:      clientUserAgent,
 		sessions:             make(map[string]*model.Session),
 		pages:                make(map[string]*model.Page),
 		pageNames:            make(map[string]bool),
@@ -269,7 +271,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 				return
 			}
 
-			session = newSession(page, uuid.New().String(), c.clientIP,
+			session = newSession(page, uuid.New().String(), c.clientIP, c.clientUserAgent,
 				request.PageRoute, request.PageWidth, request.PageHeight,
 				request.WindowWidth, request.WindowHeight, request.WindowTop, request.WindowLeft,
 				request.IsPWA, request.IsWeb, request.Platform)
@@ -425,7 +427,7 @@ func (c *Client) registerHostClient(message *Message) {
 		// retrieve zero session
 		session := store.GetSession(page, ZeroSession)
 		if session == nil {
-			session = newSession(page, ZeroSession, c.clientIP, "", "", "", "", "", "", "", "", "", "")
+			session = newSession(page, ZeroSession, c.clientIP, c.clientUserAgent, "", "", "", "", "", "", "", "", "", "")
 		} else if !request.Update {
 			err = cleanPage(session)
 			if err != nil {
