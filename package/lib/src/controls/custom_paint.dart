@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:flet/src/utils/transforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -10,8 +9,10 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/custom_paint_draw_shape_view_model.dart';
 import '../models/custom_paint_view_model.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/drawing.dart';
+import '../utils/transforms.dart';
 import 'create_control.dart';
 
 typedef CustomPaintControlOnPaintCallback = void Function(Size size);
@@ -111,6 +112,8 @@ class FletCustomPainter extends CustomPainter {
         drawPaint(canvas, shape);
       } else if (shape.control.type == "points") {
         drawPoints(canvas, shape);
+      } else if (shape.control.type == "rect") {
+        drawRect(canvas, shape);
       }
     }
   }
@@ -180,5 +183,20 @@ class FletCustomPainter extends CustomPainter {
         orElse: () => PointMode.points);
     Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawPoints(pointMode, points, paint);
+  }
+
+  void drawRect(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    var start = parseOffset(shape.control, "start")!;
+    var width = shape.control.attrDouble("width", 0)!;
+    var height = shape.control.attrDouble("height", 0)!;
+    var borderRadius = parseBorderRadius(shape.control, "borderRadius");
+    Paint paint = parsePaint(theme, shape.control, "paint");
+    canvas.drawRRect(
+        RRect.fromRectAndCorners(Rect.fromLTWH(start.x, start.y, width, height),
+            topLeft: borderRadius?.topLeft ?? Radius.zero,
+            topRight: borderRadius?.topRight ?? Radius.zero,
+            bottomLeft: borderRadius?.bottomLeft ?? Radius.zero,
+            bottomRight: borderRadius?.bottomRight ?? Radius.zero),
+        paint);
   }
 }

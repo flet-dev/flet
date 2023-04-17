@@ -2,7 +2,7 @@ from typing import Any, List, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.paint import Paint, PointMode
-from flet_core.types import BlendMode, BlendModeString, OffsetValue
+from flet_core.types import BlendMode, BlendModeString, BorderRadiusValue, OffsetValue
 
 
 class DrawShape(Control):
@@ -411,6 +411,83 @@ class DrawPoints(DrawShape):
     @points.setter
     def points(self, value: Optional[List[OffsetValue]]):
         self.__points = value if value is not None else []
+
+    # paint
+    @property
+    def paint(self) -> Optional[Paint]:
+        return self.__paint
+
+    @paint.setter
+    def paint(self, value: Optional[Paint]):
+        self.__paint = value
+
+
+class DrawRect(DrawShape):
+    def __init__(
+        self,
+        start: OffsetValue = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        border_radius: Optional[BorderRadiusValue] = None,
+        paint: Optional[Paint] = None,
+        # base
+        ref=None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+    ):
+        DrawShape.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
+
+        self.start = start
+        self.width = width
+        self.height = height
+        self.border_radius = border_radius
+        self.paint = paint
+
+    def _get_control_name(self):
+        return "rect"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("start", self.__start)
+        self._set_attr_json("borderRadius", self.__border_radius)
+        self._set_attr_json("paint", self.__paint)
+
+    # start
+    @property
+    def start(self) -> OffsetValue:
+        return self.__start
+
+    @start.setter
+    def start(self, value: OffsetValue):
+        self.__start = value
+
+    # width
+    @property
+    def width(self) -> OptionalNumber:
+        return self._get_attr("width")
+
+    @width.setter
+    def width(self, value: OptionalNumber):
+        self._set_attr("width", value)
+
+    # height
+    @property
+    def height(self) -> OptionalNumber:
+        return self._get_attr("height")
+
+    @height.setter
+    def height(self, value: OptionalNumber):
+        self._set_attr("height", value)
+
+    # border_radius
+    @property
+    def border_radius(self) -> BorderRadiusValue:
+        return self.__border_radius
+
+    @border_radius.setter
+    def border_radius(self, value: BorderRadiusValue):
+        self.__border_radius = value
 
     # paint
     @property

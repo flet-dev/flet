@@ -78,6 +78,7 @@ from flet_core.draw import (
     DrawOval,
     DrawPaint,
     DrawPoints,
+    DrawRect,
     DrawShape,
 )
 from flet_core.dropdown import Dropdown
