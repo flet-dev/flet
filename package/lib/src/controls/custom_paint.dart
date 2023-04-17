@@ -140,7 +140,7 @@ class FletCustomPainter extends CustomPainter {
   }
 
   void drawArc(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
-    var start = parseOffset(shape.control, "start")!;
+    var start = parseOffset(shape.control, "offset")!;
     var width = shape.control.attrDouble("width", 0)!;
     var height = shape.control.attrDouble("height", 0)!;
     var startAngle = shape.control.attrDouble("startAngle", 0)!;
@@ -169,7 +169,7 @@ class FletCustomPainter extends CustomPainter {
   }
 
   void drawOval(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
-    var start = parseOffset(shape.control, "start")!;
+    var start = parseOffset(shape.control, "offset")!;
     var width = shape.control.attrDouble("width", 0)!;
     var height = shape.control.attrDouble("height", 0)!;
     Paint paint = parsePaint(theme, shape.control, "paint");
@@ -188,7 +188,7 @@ class FletCustomPainter extends CustomPainter {
   }
 
   void drawRect(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
-    var start = parseOffset(shape.control, "start")!;
+    var start = parseOffset(shape.control, "offset")!;
     var width = shape.control.attrDouble("width", 0)!;
     var height = shape.control.attrDouble("height", 0)!;
     var borderRadius = parseBorderRadius(shape.control, "borderRadius");

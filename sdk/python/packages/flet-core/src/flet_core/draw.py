@@ -19,7 +19,7 @@ class DrawShape(Control):
 class DrawArc(DrawShape):
     def __init__(
         self,
-        start: OffsetValue = None,
+        offset: OffsetValue = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         start_agnle: OptionalNumber = None,
@@ -34,7 +34,7 @@ class DrawArc(DrawShape):
     ):
         DrawShape.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
-        self.start = start
+        self.offset = offset
         self.width = width
         self.height = height
         self.start_angle = start_agnle
@@ -47,17 +47,17 @@ class DrawArc(DrawShape):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("start", self.__start)
+        self._set_attr_json("offset", self.__offset)
         self._set_attr_json("paint", self.__paint)
 
-    # start
+    # offset
     @property
-    def start(self) -> OffsetValue:
-        return self.__start
+    def offset(self) -> OffsetValue:
+        return self.__offset
 
-    @start.setter
-    def start(self, value: OffsetValue):
-        self.__start = value
+    @offset.setter
+    def offset(self, value: OffsetValue):
+        self.__offset = value
 
     # width
     @property
@@ -274,7 +274,7 @@ class DrawLine(DrawShape):
 class DrawOval(DrawShape):
     def __init__(
         self,
-        start: OffsetValue = None,
+        offset: OffsetValue = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         paint: Optional[Paint] = None,
@@ -286,7 +286,7 @@ class DrawOval(DrawShape):
     ):
         DrawShape.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
-        self.start = start
+        self.offset = offset
         self.width = width
         self.height = height
         self.paint = paint
@@ -296,17 +296,17 @@ class DrawOval(DrawShape):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("start", self.__start)
+        self._set_attr_json("offset", self.__offset)
         self._set_attr_json("paint", self.__paint)
 
-    # start
+    # offset
     @property
-    def start(self) -> OffsetValue:
-        return self.__start
+    def offset(self) -> OffsetValue:
+        return self.__offset
 
-    @start.setter
-    def start(self, value: OffsetValue):
-        self.__start = value
+    @offset.setter
+    def offset(self, value: OffsetValue):
+        self.__offset = value
 
     # width
     @property
@@ -425,7 +425,7 @@ class DrawPoints(DrawShape):
 class DrawRect(DrawShape):
     def __init__(
         self,
-        start: OffsetValue = None,
+        offset: OffsetValue = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         border_radius: Optional[BorderRadiusValue] = None,
@@ -438,7 +438,7 @@ class DrawRect(DrawShape):
     ):
         DrawShape.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
-        self.start = start
+        self.offset = offset
         self.width = width
         self.height = height
         self.border_radius = border_radius
@@ -449,18 +449,18 @@ class DrawRect(DrawShape):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("start", self.__start)
+        self._set_attr_json("offset", self.__offset)
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("paint", self.__paint)
 
-    # start
+    # offset
     @property
-    def start(self) -> OffsetValue:
-        return self.__start
+    def offset(self) -> OffsetValue:
+        return self.__offset
 
-    @start.setter
-    def start(self, value: OffsetValue):
-        self.__start = value
+    @offset.setter
+    def offset(self, value: OffsetValue):
+        self.__offset = value
 
     # width
     @property
