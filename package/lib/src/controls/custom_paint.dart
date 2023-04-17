@@ -102,6 +102,12 @@ class FletCustomPainter extends CustomPainter {
         drawCircle(canvas, shape);
       } else if (shape.control.type == "arc") {
         drawArc(canvas, shape);
+      } else if (shape.control.type == "color") {
+        drawColor(canvas, shape);
+      } else if (shape.control.type == "oval") {
+        drawOval(canvas, shape);
+      } else if (shape.control.type == "paint") {
+        drawPaint(canvas, shape);
       }
     }
   }
@@ -137,6 +143,11 @@ class FletCustomPainter extends CustomPainter {
         sweepAngle, useCenter, paint);
   }
 
+  void drawPaint(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    Paint paint = parsePaint(theme, shape.control, "paint");
+    canvas.drawPaint(paint);
+  }
+
   void drawColor(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
     var color =
         HexColor.fromString(theme, shape.control.attrString("color", "")!) ??
@@ -147,5 +158,13 @@ class FletCustomPainter extends CustomPainter {
             shape.control.attrString("blendMode", "")!.toLowerCase(),
         orElse: () => BlendMode.srcOver);
     canvas.drawColor(color, blendMode);
+  }
+
+  void drawOval(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    var start = parseOffset(shape.control, "start")!;
+    var width = shape.control.attrDouble("width", 0)!;
+    var height = shape.control.attrDouble("height", 0)!;
+    Paint paint = parsePaint(theme, shape.control, "paint");
+    canvas.drawOval(Rect.fromLTWH(start.x, start.y, width, height), paint);
   }
 }

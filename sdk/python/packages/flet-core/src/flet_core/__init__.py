@@ -70,7 +70,15 @@ from flet_core.datatable import (
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
-from flet_core.draw import DrawArc, DrawCircle, DrawColor, DrawLine, DrawShape
+from flet_core.draw import (
+    DrawArc,
+    DrawCircle,
+    DrawColor,
+    DrawLine,
+    DrawOval,
+    DrawPaint,
+    DrawShape,
+)
 from flet_core.dropdown import Dropdown
 from flet_core.elevated_button import ElevatedButton
 from flet_core.file_picker import (
