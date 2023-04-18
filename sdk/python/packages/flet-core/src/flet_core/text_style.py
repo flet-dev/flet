@@ -2,6 +2,7 @@ import dataclasses
 from dataclasses import field
 from typing import List, Optional, Union
 
+from flet_core.painting import Paint
 from flet_core.shadow import BoxShadow
 from flet_core.types import FontWeight
 
@@ -15,3 +16,4 @@ class TextStyle:
     color: Optional[str] = field(default=None)
     bgcolor: Optional[str] = field(default=None)
     shadow: Union[None, BoxShadow, List[BoxShadow]] = field(default=None)
+    foreground: Optional[Paint] = field(default=None)

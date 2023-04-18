@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/drawing.dart';
 import '../utils/numbers.dart';
 import '../utils/shadows.dart';
 import 'colors.dart';
@@ -126,5 +127,8 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
       backgroundColor: HexColor.fromString(theme, json["bgcolor"] ?? ""),
       shadows: json["shadow"] != null
           ? boxShadowsFromJSON(theme, json["shadow"])
+          : null,
+      foreground: json["foreground"] != null
+          ? paintFromJSON(theme, json["foreground"])
           : null);
 }

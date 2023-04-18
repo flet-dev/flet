@@ -39,7 +39,7 @@ Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
     paint.imageFilter = blurImageFilterFromJSON(json["blur_image"]);
   }
   if (json["gradient"] != null) {
-    paint.shader = gradientFromJSON(theme, json["gradient"]);
+    paint.shader = paintGradientFromJSON(theme, json["gradient"]);
   }
   if (json["stroke_miter_limit"] != null) {
     paint.strokeMiterLimit = parseDouble(json["stroke_miter_limit"]);
@@ -65,7 +65,8 @@ Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
   return paint;
 }
 
-ui.Gradient? gradientFromJSON(ThemeData? theme, Map<String, dynamic> json) {
+ui.Gradient? paintGradientFromJSON(
+    ThemeData? theme, Map<String, dynamic> json) {
   String type = json["type"];
   if (type == "linear") {
     return ui.Gradient.linear(
