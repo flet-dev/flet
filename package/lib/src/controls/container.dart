@@ -43,11 +43,6 @@ class ContainerControl extends StatelessWidget {
         Theme.of(context), control.attrString("bgColor", "")!);
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
     bool ink = control.attrBool("ink", false)!;
     bool onClick = control.attrBool("onclick", false)!;
     bool onLongPress = control.attrBool("onLongPress", false)!;
@@ -111,6 +106,13 @@ class ContainerControl extends StatelessWidget {
 
           var borderRadius = parseBorderRadius(control, "borderRadius");
 
+          var clipBehavior = Clip.values.firstWhere(
+              (e) =>
+                  e.name.toLowerCase() ==
+                  control.attrString("clipBehavior", "")!.toLowerCase(),
+              orElse: () =>
+                  borderRadius != null ? Clip.antiAlias : Clip.hardEdge);
+
           var boxDecor = BoxDecoration(
               color: bgColor,
               gradient: gradient,
@@ -164,11 +166,11 @@ class ContainerControl extends StatelessWidget {
                               eventData: value.toString());
                         }
                       : null,
-                  borderRadius: parseBorderRadius(control, "borderRadius"),
+                  borderRadius: borderRadius,
                   child: Container(
                     padding: parseEdgeInsets(control, "padding"),
                     alignment: parseAlignment(control, "alignment"),
-                    clipBehavior: clipBehavior,
+                    clipBehavior: Clip.none,
                     child: child,
                   ),
                 ));
@@ -178,7 +180,7 @@ class ContainerControl extends StatelessWidget {
                     width: control.attrDouble("width"),
                     height: control.attrDouble("height"),
                     margin: parseEdgeInsets(control, "margin"),
-                    clipBehavior: clipBehavior,
+                    clipBehavior: Clip.none,
                     child: ink,
                   )
                 : AnimatedContainer(
