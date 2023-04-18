@@ -9,7 +9,7 @@ from flet_core import (
     icons,
     margin,
     padding,
-    paint,
+    painting,
     transform,
     utils,
 )
@@ -81,6 +81,7 @@ from flet_core.draw import (
     DrawPoints,
     DrawRect,
     DrawShape,
+    DrawText,
 )
 from flet_core.dropdown import Dropdown
 from flet_core.elevated_button import ElevatedButton
@@ -146,7 +147,7 @@ from flet_core.page import (
     RouteChangeEvent,
     ViewPopEvent,
 )
-from flet_core.paint import (
+from flet_core.painting import (
     Paint,
     PaintingStyle,
     PaintLinearGradient,
@@ -177,6 +178,7 @@ from flet_core.tabs import Tab, Tabs
 from flet_core.template_route import TemplateRoute
 from flet_core.text import Text, TextOverflow, TextThemeStyle
 from flet_core.text_button import TextButton
+from flet_core.text_span import TextSpan
 from flet_core.text_style import TextStyle
 from flet_core.textfield import KeyboardType, TextCapitalization, TextField
 from flet_core.theme import (

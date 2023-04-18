@@ -143,7 +143,6 @@ class Text(ConstrainedControl):
         bgcolor: Optional[str] = None,
         semantics_label: Optional[str] = None,
     ):
-
         ConstrainedControl.__init__(
             self,
             ref=ref,

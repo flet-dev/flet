@@ -73,6 +73,28 @@ FontWeight? getFontWeight(String weightName) {
   return null;
 }
 
+List<TextSpan>? parseTextSpans(
+    ThemeData theme, Control control, String propName) {
+  dynamic j;
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+  j = json.decode(v);
+  return (j as List).map((s) => textSpanFromJson(theme, s)).toList();
+}
+
+TextSpan textSpanFromJson(ThemeData theme, Map<String, dynamic> json) {
+  return TextSpan(
+      text: json["text"],
+      style: textStyleFromJson(theme, json["style"]),
+      children: json["spans"] != null
+          ? (json["spans"] as List)
+              .map((s) => textSpanFromJson(theme, s))
+              .toList()
+          : null);
+}
+
 TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
   dynamic j;
   var v = control.attrString(propName, null);

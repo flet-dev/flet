@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 
+import 'package:collection/collection.dart';
+import 'package:flet/src/utils/alignment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -12,6 +14,7 @@ import '../models/custom_paint_view_model.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/drawing.dart';
+import '../utils/text.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
 
@@ -116,6 +119,8 @@ class FletCustomPainter extends CustomPainter {
         drawRect(canvas, shape);
       } else if (shape.control.type == "path") {
         drawPath(canvas, shape);
+      } else if (shape.control.type == "text") {
+        drawText(canvas, shape);
       }
     }
   }
@@ -200,6 +205,54 @@ class FletCustomPainter extends CustomPainter {
             bottomLeft: borderRadius?.bottomLeft ?? Radius.zero,
             bottomRight: borderRadius?.bottomRight ?? Radius.zero),
         paint);
+  }
+
+  void drawText(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    var offsetDetails = parseOffset(shape.control, "offset")!;
+    var offset = Offset(offsetDetails.x, offsetDetails.y);
+    var alignment =
+        parseAlignment(shape.control, "alignment") ?? Alignment.topLeft;
+    var text = shape.control.attrString("text", "")!;
+    TextStyle style = parseTextStyle(theme, shape.control, "style") ??
+        theme.textTheme.bodyMedium!;
+
+    if (style.color == null) {
+      style = style.copyWith(color: theme.textTheme.bodyMedium!.color);
+    }
+
+    TextAlign? textAlign = TextAlign.values.firstWhereOrNull((a) =>
+        a.name.toLowerCase() ==
+        shape.control.attrString("textAlign", "")!.toLowerCase());
+    TextSpan span = TextSpan(
+        text: text,
+        style: style,
+        children: parseTextSpans(theme, shape.control, "spans"));
+
+    var maxLines = shape.control.attrInt("maxLines");
+    var maxWidth = shape.control.attrDouble("maxWidth");
+    var ellipsis = shape.control.attrString("ellipsis");
+
+    // paint
+    TextPainter textPainter = TextPainter(
+        text: span,
+        textAlign: textAlign ?? TextAlign.start,
+        maxLines: maxLines,
+        ellipsis: ellipsis);
+    textPainter.layout(maxWidth: maxWidth ?? double.infinity);
+
+    var angle = shape.control.attrDouble("rotate", 0)!;
+
+    final delta = Offset(
+        offset.dx - textPainter.size.width / 2 * (alignment.x + 1.0),
+        offset.dy - textPainter.size.height / 2 * (alignment.y + 1.0));
+
+    // rotate the text around offset point
+    canvas.save();
+    canvas.translate(offset.dx, offset.dy);
+    canvas.rotate(angle);
+    canvas.translate(-offset.dx, -offset.dy);
+    textPainter.paint(canvas, delta);
+    canvas.restore();
   }
 
   void drawPath(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
