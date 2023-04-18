@@ -77,6 +77,7 @@ class Paint:
     stroke_join: Optional[StrokeJoin] = dataclasses.field(default=None)
     stroke_miter_limit: Optional[float] = dataclasses.field(default=None)
     stroke_width: Optional[float] = dataclasses.field(default=None)
+    stroke_dash_pattern: Optional[List[float]] = dataclasses.field(default=None)
     style: Optional[PaintingStyle] = dataclasses.field(default=None)
 
 

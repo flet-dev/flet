@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/alignment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -11,8 +10,10 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/custom_paint_draw_shape_view_model.dart';
 import '../models/custom_paint_view_model.dart';
+import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/dash_path.dart';
 import '../utils/drawing.dart';
 import '../utils/text.dart';
 import '../utils/transforms.dart';
@@ -134,7 +135,16 @@ class FletCustomPainter extends CustomPainter {
     var p1 = parseOffset(shape.control, "p1")!;
     var p2 = parseOffset(shape.control, "p2")!;
     Paint paint = parsePaint(theme, shape.control, "paint");
-    canvas.drawLine(Offset(p1.x, p1.y), Offset(p2.x, p2.y), paint);
+    var dashPattern = parsePaintStrokeDashPattern(shape.control, "paint");
+    paint.style = ui.PaintingStyle.stroke;
+    var path = ui.Path();
+    path.moveTo(p1.x, p1.y);
+    path.lineTo(p2.x, p2.y);
+
+    if (dashPattern != null) {
+      path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+    }
+    canvas.drawPath(path, paint);
   }
 
   void drawCircle(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
@@ -144,15 +154,23 @@ class FletCustomPainter extends CustomPainter {
     canvas.drawCircle(Offset(center.x, center.y), radius, paint);
   }
 
+  void drawOval(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    var offset = parseOffset(shape.control, "offset")!;
+    var width = shape.control.attrDouble("width", 0)!;
+    var height = shape.control.attrDouble("height", 0)!;
+    Paint paint = parsePaint(theme, shape.control, "paint");
+    canvas.drawOval(Rect.fromLTWH(offset.x, offset.y, width, height), paint);
+  }
+
   void drawArc(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
-    var start = parseOffset(shape.control, "offset")!;
+    var offset = parseOffset(shape.control, "offset")!;
     var width = shape.control.attrDouble("width", 0)!;
     var height = shape.control.attrDouble("height", 0)!;
     var startAngle = shape.control.attrDouble("startAngle", 0)!;
     var sweepAngle = shape.control.attrDouble("sweepAngle", 0)!;
     var useCenter = shape.control.attrBool("useCenter", false)!;
     Paint paint = parsePaint(theme, shape.control, "paint");
-    canvas.drawArc(Rect.fromLTWH(start.x, start.y, width, height), startAngle,
+    canvas.drawArc(Rect.fromLTWH(offset.x, offset.y, width, height), startAngle,
         sweepAngle, useCenter, paint);
   }
 
@@ -171,14 +189,6 @@ class FletCustomPainter extends CustomPainter {
             shape.control.attrString("blendMode", "")!.toLowerCase(),
         orElse: () => BlendMode.srcOver);
     canvas.drawColor(color, blendMode);
-  }
-
-  void drawOval(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
-    var start = parseOffset(shape.control, "offset")!;
-    var width = shape.control.attrDouble("width", 0)!;
-    var height = shape.control.attrDouble("height", 0)!;
-    Paint paint = parsePaint(theme, shape.control, "paint");
-    canvas.drawOval(Rect.fromLTWH(start.x, start.y, width, height), paint);
   }
 
   void drawPoints(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
@@ -258,6 +268,10 @@ class FletCustomPainter extends CustomPainter {
   void drawPath(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
     var path = buildPath(shape.shapes);
     Paint paint = parsePaint(theme, shape.control, "paint");
+    var dashPattern = parsePaintStrokeDashPattern(shape.control, "paint");
+    if (dashPattern != null) {
+      path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
+    }
     canvas.drawPath(path, paint);
   }
 

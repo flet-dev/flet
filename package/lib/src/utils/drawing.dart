@@ -20,8 +20,21 @@ Paint parsePaint(ThemeData theme, Control control, String propName) {
   return paintFromJSON(theme, j1);
 }
 
+List<double>? parsePaintStrokeDashPattern(Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+
+  return j1["stroke_dash_pattern"] != null
+      ? (j1["stroke_dash_pattern"] as List).map((e) => parseDouble(e)).toList()
+      : null;
+}
+
 Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
-  debugPrint("paintFromJSON: $json");
+  //debugPrint("paintFromJSON: $json");
   var paint = Paint();
   if (json["color"] != null) {
     paint.color =
