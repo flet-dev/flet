@@ -80,7 +80,7 @@ class Command(BaseCommand):
 
         if not Path(script_path).exists():
             print(f"File not found: {script_path}")
-            exit(1)
+            sys.exit(1)
 
         script_dir = os.path.dirname(script_path)
 

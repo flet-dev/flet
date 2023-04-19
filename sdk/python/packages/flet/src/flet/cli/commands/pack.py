@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 import shutil
 from pathlib import Path
 
@@ -126,7 +127,7 @@ class Command(BaseCommand):
             if options.onedir:
                 if is_macos():
                     print("--onedir options is not supported on macOS.")
-                    exit(1)
+                    sys.exit(1)
                 pyi_args.append("--onedir")
             else:
                 pyi_args.append("--onefile")
@@ -221,4 +222,4 @@ class Command(BaseCommand):
                 shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
         except ImportError as e:
             print("Please install PyInstaller module to use flet pack command:", e)
-            exit(1)
+            sys.exit(1)
