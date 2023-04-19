@@ -1,9 +1,7 @@
 from typing import Any, Optional
 
 from flet_core.canvas.shape import Shape
-from flet_core.control import OptionalNumber
-from flet_core.painting import Paint
-from flet_core.types import BlendMode, BlendModeString, OffsetValue
+from flet_core.types import BlendMode, BlendModeString
 
 
 class Color(Shape):

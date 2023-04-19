@@ -3,13 +3,13 @@ from typing import Any, Optional
 from flet_core.canvas.shape import Shape
 from flet_core.control import OptionalNumber
 from flet_core.painting import Paint
-from flet_core.types import OffsetValue
 
 
 class Circle(Shape):
     def __init__(
         self,
-        center: OffsetValue = None,
+        x: OptionalNumber = None,
+        y: OptionalNumber = None,
         radius: OptionalNumber = None,
         paint: Optional[Paint] = None,
         # base
@@ -20,7 +20,8 @@ class Circle(Shape):
     ):
         Shape.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
-        self.center = center
+        self.x = x
+        self.y = y
         self.radius = radius
         self.paint = paint
 
@@ -29,17 +30,25 @@ class Circle(Shape):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("center", self.__center)
         self._set_attr_json("paint", self.__paint)
 
-    # center
+    # x
     @property
-    def center(self) -> OffsetValue:
-        return self.__center
+    def x(self) -> OptionalNumber:
+        return self._get_attr("x")
 
-    @center.setter
-    def center(self, value: OffsetValue):
-        self.__center = value
+    @x.setter
+    def x(self, value: OptionalNumber):
+        self._set_attr("x", value)
+
+    # y
+    @property
+    def y(self) -> OptionalNumber:
+        return self._get_attr("y")
+
+    @y.setter
+    def y(self, value: OptionalNumber):
+        self._set_attr("y", value)
 
     # radius
     @property

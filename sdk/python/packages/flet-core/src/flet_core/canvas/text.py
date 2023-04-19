@@ -3,19 +3,19 @@ from typing import Any, List, Optional
 from flet_core.alignment import Alignment
 from flet_core.canvas.shape import Shape
 from flet_core.control import OptionalNumber
-from flet_core.painting import Paint
 from flet_core.text_span import TextSpan
 from flet_core.text_style import TextStyle
-from flet_core.types import OffsetValue, TextAlign, TextAlignString
+from flet_core.types import TextAlign, TextAlignString
 
 
 class Text(Shape):
     def __init__(
         self,
+        x: OptionalNumber = None,
+        y: OptionalNumber = None,
         text: Optional[str] = None,
         style: Optional[TextStyle] = None,
         spans: Optional[List[TextSpan]] = None,
-        offset: OffsetValue = None,
         alignment: Optional[Alignment] = None,
         text_align: TextAlign = TextAlign.NONE,
         max_lines: Optional[int] = None,
@@ -30,10 +30,11 @@ class Text(Shape):
     ):
         Shape.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
+        self.x = x
+        self.y = y
         self.text = text
         self.style = style
         self.spans = spans
-        self.offset = offset
         self.alignment = alignment
         self.text_align = text_align
         self.max_lines = max_lines
@@ -48,8 +49,25 @@ class Text(Shape):
         super()._before_build_command()
         self._set_attr_json("style", self.__style)
         self._set_attr_json("spans", self.__spans)
-        self._set_attr_json("offset", self.__offset)
         self._set_attr_json("alignment", self.__alignment)
+
+    # x
+    @property
+    def x(self) -> OptionalNumber:
+        return self._get_attr("x")
+
+    @x.setter
+    def x(self, value: OptionalNumber):
+        self._set_attr("x", value)
+
+    # y
+    @property
+    def y(self) -> OptionalNumber:
+        return self._get_attr("y")
+
+    @y.setter
+    def y(self, value: OptionalNumber):
+        self._set_attr("y", value)
 
     # text
     @property
@@ -77,15 +95,6 @@ class Text(Shape):
     @spans.setter
     def spans(self, value: Optional[List[TextSpan]]):
         self.__spans = value if value is not None else []
-
-    # offset
-    @property
-    def offset(self) -> OffsetValue:
-        return self.__offset
-
-    @offset.setter
-    def offset(self, value: OffsetValue):
-        self.__offset = value
 
     # alignment
     @property

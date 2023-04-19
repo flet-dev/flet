@@ -3,13 +3,13 @@ from typing import Any, Optional
 from flet_core.canvas.shape import Shape
 from flet_core.control import OptionalNumber
 from flet_core.painting import Paint
-from flet_core.types import OffsetValue
 
 
 class Arc(Shape):
     def __init__(
         self,
-        offset: OffsetValue = None,
+        x: OptionalNumber = None,
+        y: OptionalNumber = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         start_agnle: OptionalNumber = None,
@@ -24,7 +24,8 @@ class Arc(Shape):
     ):
         Shape.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
-        self.offset = offset
+        self.x = x
+        self.y = y
         self.width = width
         self.height = height
         self.start_angle = start_agnle
@@ -37,17 +38,25 @@ class Arc(Shape):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("offset", self.__offset)
         self._set_attr_json("paint", self.__paint)
 
-    # offset
+    # x
     @property
-    def offset(self) -> OffsetValue:
-        return self.__offset
+    def x(self) -> OptionalNumber:
+        return self._get_attr("x")
 
-    @offset.setter
-    def offset(self, value: OffsetValue):
-        self.__offset = value
+    @x.setter
+    def x(self, value: OptionalNumber):
+        self._set_attr("x", value)
+
+    # y
+    @property
+    def y(self) -> OptionalNumber:
+        return self._get_attr("y")
+
+    @y.setter
+    def y(self, value: OptionalNumber):
+        self._set_attr("y", value)
 
     # width
     @property

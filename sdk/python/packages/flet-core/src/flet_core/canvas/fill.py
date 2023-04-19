@@ -19,7 +19,7 @@ class Fill(Shape):
         self.paint = paint
 
     def _get_control_name(self):
-        return "paint"
+        return "fill"
 
     def _before_build_command(self):
         super()._before_build_command()

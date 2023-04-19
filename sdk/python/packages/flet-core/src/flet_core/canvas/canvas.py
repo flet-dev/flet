@@ -21,7 +21,7 @@ TShape = TypeVar("TShape", bound=Shape)
 class Canvas(ConstrainedControl):
     def __init__(
         self,
-        canvas: Optional[List[TShape]] = None,
+        shapes: Optional[List[TShape]] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -87,7 +87,7 @@ class Canvas(ConstrainedControl):
         self.__on_resize = EventHandler(convert_custom_paint_resize_event_data)
         self._add_event_handler("resize", self.__on_resize.get_handler())
 
-        self.canvas = canvas
+        self.shapes = shapes
         self.resize_interval = resize_interval
         self.on_resize = on_resize
 
@@ -114,13 +114,13 @@ class Canvas(ConstrainedControl):
     def resize_interval(self, value: OptionalNumber):
         self._set_attr("resizeInterval", value)
 
-    # canvas
+    # shapes
     @property
-    def canvas(self):
+    def shapes(self):
         return self.__canvas
 
-    @canvas.setter
-    def canvas(self, value: Optional[List[TShape]]):
+    @shapes.setter
+    def shapes(self, value: Optional[List[TShape]]):
         self.__canvas = value if value is not None else []
 
     # on_resize

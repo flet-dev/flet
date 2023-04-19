@@ -2,9 +2,8 @@ import dataclasses
 from typing import Any, List, Optional
 
 from flet_core.canvas.shape import Shape
-from flet_core.control import OptionalNumber
 from flet_core.painting import Paint
-from flet_core.types import BorderRadiusValue, OffsetValue
+from flet_core.types import BorderRadiusValue
 
 
 class Path(Shape):

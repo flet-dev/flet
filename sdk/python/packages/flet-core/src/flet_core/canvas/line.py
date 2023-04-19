@@ -1,15 +1,17 @@
 from typing import Any, Optional
 
 from flet_core.canvas.shape import Shape
+from flet_core.control import OptionalNumber
 from flet_core.painting import Paint
-from flet_core.types import OffsetValue
 
 
 class Line(Shape):
     def __init__(
         self,
-        p1: OffsetValue = None,
-        p2: OffsetValue = None,
+        x1: OptionalNumber = None,
+        y1: OptionalNumber = None,
+        x2: OptionalNumber = None,
+        y2: OptionalNumber = None,
         paint: Optional[Paint] = None,
         # base
         ref=None,
@@ -19,8 +21,10 @@ class Line(Shape):
     ):
         Shape.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
-        self.p1 = p1
-        self.p2 = p2
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
         self.paint = paint
 
     def _get_control_name(self):
@@ -28,27 +32,43 @@ class Line(Shape):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("p1", self.__p1)
-        self._set_attr_json("p2", self.__p2)
         self._set_attr_json("paint", self.__paint)
 
-    # p1
+    # x1
     @property
-    def p1(self) -> OffsetValue:
-        return self.__p1
+    def x1(self) -> OptionalNumber:
+        return self._get_attr("x1")
 
-    @p1.setter
-    def p1(self, value: OffsetValue):
-        self.__p1 = value
+    @x1.setter
+    def x1(self, value: OptionalNumber):
+        self._set_attr("x1", value)
 
-    # p2
+    # y1
     @property
-    def p2(self) -> OffsetValue:
-        return self.__p2
+    def y1(self) -> OptionalNumber:
+        return self._get_attr("y1")
 
-    @p2.setter
-    def p2(self, value: OffsetValue):
-        self.__p2 = value
+    @y1.setter
+    def y1(self, value: OptionalNumber):
+        self._set_attr("y1", value)
+
+    # x2
+    @property
+    def x2(self) -> OptionalNumber:
+        return self._get_attr("x2")
+
+    @x2.setter
+    def x2(self, value: OptionalNumber):
+        self._set_attr("x2", value)
+
+    # y2
+    @property
+    def y2(self) -> OptionalNumber:
+        return self._get_attr("y2")
+
+    @y2.setter
+    def y2(self, value: OptionalNumber):
+        self._set_attr("y2", value)
 
     # paint
     @property
