@@ -153,7 +153,7 @@ class Command(BaseCommand):
                 pyodide_dep_found = True
                 break
         if not pyodide_dep_found:
-            deps.append(f"flet-pyodide")
+            deps.append("flet-pyodide")
 
         temp_reqs_txt = Path(tempfile.gettempdir()).joinpath(random_string(10))
         with open(temp_reqs_txt, "w") as f:
