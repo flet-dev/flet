@@ -79,9 +79,3 @@ class Paint:
     stroke_width: Optional[float] = dataclasses.field(default=None)
     stroke_dash_pattern: Optional[List[float]] = dataclasses.field(default=None)
     style: Optional[PaintingStyle] = dataclasses.field(default=None)
-
-
-class PointMode(Enum):
-    POINTS = "points"
-    LINES = "lines"
-    POLYGON = "polygon"

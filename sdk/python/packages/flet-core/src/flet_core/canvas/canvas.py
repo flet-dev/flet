@@ -1,10 +1,10 @@
 import json
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, TypeVar, Union
 
+from flet_core.canvas.shape import Shape
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.control_event import ControlEvent
-from flet_core.draw import DrawShape
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.types import (
@@ -15,11 +15,13 @@ from flet_core.types import (
     ScaleValue,
 )
 
+TShape = TypeVar("TShape", bound=Shape)
 
-class CustomPaint(ConstrainedControl):
+
+class Canvas(ConstrainedControl):
     def __init__(
         self,
-        canvas: Optional[List[DrawShape]] = None,
+        canvas: Optional[List[TShape]] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -80,7 +82,7 @@ class CustomPaint(ConstrainedControl):
 
         def convert_custom_paint_resize_event_data(e):
             d = json.loads(e.data)
-            return CustomPaintResizeEvent(**d)
+            return CanvasResizeEvent(**d)
 
         self.__on_resize = EventHandler(convert_custom_paint_resize_event_data)
         self._add_event_handler("resize", self.__on_resize.get_handler())
@@ -118,7 +120,7 @@ class CustomPaint(ConstrainedControl):
         return self.__canvas
 
     @canvas.setter
-    def canvas(self, value: Optional[List[DrawShape]]):
+    def canvas(self, value: Optional[List[TShape]]):
         self.__canvas = value if value is not None else []
 
     # on_resize
@@ -135,7 +137,7 @@ class CustomPaint(ConstrainedControl):
             self._set_attr("onresize", None)
 
 
-class CustomPaintResizeEvent(ControlEvent):
+class CanvasResizeEvent(ControlEvent):
     def __init__(self, w, h) -> None:
         self.width: float = w
         self.height: float = h

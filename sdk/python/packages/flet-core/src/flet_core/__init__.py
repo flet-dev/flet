@@ -4,6 +4,7 @@ from flet_core import (
     audio,
     border,
     border_radius,
+    canvas,
     colors,
     dropdown,
     icons,
@@ -59,7 +60,6 @@ from flet_core.column import Column
 from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
-from flet_core.custom_paint import CustomPaint, CustomPaintResizeEvent
 from flet_core.datatable import (
     DataCell,
     DataColumn,
@@ -70,19 +70,6 @@ from flet_core.datatable import (
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
-from flet_core.draw import (
-    DrawArc,
-    DrawCircle,
-    DrawColor,
-    DrawLine,
-    DrawOval,
-    DrawPaint,
-    DrawPath,
-    DrawPoints,
-    DrawRect,
-    DrawShape,
-    DrawText,
-)
 from flet_core.dropdown import Dropdown
 from flet_core.elevated_button import ElevatedButton
 from flet_core.file_picker import (
@@ -153,7 +140,6 @@ from flet_core.painting import (
     PaintLinearGradient,
     PaintRadialGradient,
     PaintSweepGradient,
-    PointMode,
     StrokeCap,
     StrokeJoin,
 )
