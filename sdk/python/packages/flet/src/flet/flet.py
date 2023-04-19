@@ -249,7 +249,7 @@ def close_flet_view(pid_file):
                 fvp_pid = int(f.read())
             logger.debug(f"Flet View process {fvp_pid}")
             os.kill(fvp_pid, signal.SIGKILL)
-        except:
+        except Exception:
             pass
         finally:
             os.remove(pid_file)

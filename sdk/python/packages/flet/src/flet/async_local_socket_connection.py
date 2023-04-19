@@ -75,7 +75,7 @@ class AsyncLocalSocketConnection(LocalConnection):
         while True:
             try:
                 raw_msglen = await reader.readexactly(4)
-            except:
+            except Exception:
                 return None
 
             if not raw_msglen:
@@ -94,7 +94,7 @@ class AsyncLocalSocketConnection(LocalConnection):
                 writer.write(msg)
                 # await writer.drain()
                 logger.debug(f"sent to TCP: {len(msg)}")
-            except:
+            except Exception:
                 # re-enqueue the message to repeat it when re-connected
                 self.__send_queue.put_nowait(message)
                 raise

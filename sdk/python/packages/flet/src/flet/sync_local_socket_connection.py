@@ -184,7 +184,7 @@ class SyncLocalSocketConnection(LocalConnection):
         while len(data) < n:
             try:
                 packet = sock.recv(n - len(data))
-            except:
+            except Exception:
                 return None
             # print("packet received:", len(packet))
             if not packet:
