@@ -3,9 +3,9 @@ import tempfile
 import uuid
 from pathlib import Path
 
-import packaging.version as version
+from packaging import version
 import pefile
-import PyInstaller.utils.win32.versioninfo as versioninfo
+from PyInstaller.utils.win32 import versioninfo
 from PyInstaller.building.icon import normalize_icon_type
 from PyInstaller.compat import win32api
 from PyInstaller.utils.win32.icon import IconFile, normalize_icon_type

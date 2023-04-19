@@ -34,7 +34,7 @@ def test_text_align_enum():
 
 def test_text_style_enum():
     r = ft.Text()
-    assert r.style == None
+    assert r.style is None
     assert r._get_attr("style") is None
 
     r = ft.Text(style=ft.TextThemeStyle.DISPLAY_LARGE)
@@ -64,7 +64,7 @@ def test_text_overflow_enum():
 
 def test_weight_enum():
     r = ft.Text()
-    assert r.weight == None
+    assert r.weight is None
     assert r._get_attr("weight") is None
 
     r = ft.Text(weight=ft.FontWeight.BOLD)

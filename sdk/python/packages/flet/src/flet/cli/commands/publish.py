@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import sys
 import re
 import shutil
 import tarfile
@@ -97,7 +98,7 @@ class Command(BaseCommand):
 
         if not Path(script_path).exists():
             print(f"File not found: {script_path}")
-            exit(1)
+            sys.exit(1)
 
         script_dir = os.path.dirname(script_path)
 
@@ -118,7 +119,7 @@ class Command(BaseCommand):
         web_path = get_package_web_dir()
         if not os.path.exists(web_path):
             print("Flet module does not contain 'web' directory.")
-            exit(1)
+            sys.exit(1)
         copy_tree(web_path, dist_dir)
 
         # copy assets
@@ -130,7 +131,7 @@ class Command(BaseCommand):
         if assets_dir:
             if not os.path.exists(assets_dir):
                 print("Assets dir not found:", assets_dir)
-                exit(1)
+                sys.exit(1)
             copy_tree(assets_dir, dist_dir)
 
         # create "./dist/requirements.txt" if not exist
@@ -153,7 +154,7 @@ class Command(BaseCommand):
                 pyodide_dep_found = True
                 break
         if not pyodide_dep_found:
-            deps.append(f"flet-pyodide")
+            deps.append("flet-pyodide")
 
         temp_reqs_txt = Path(tempfile.gettempdir()).joinpath(random_string(10))
         with open(temp_reqs_txt, "w") as f:
