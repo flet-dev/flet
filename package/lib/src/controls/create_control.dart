@@ -15,13 +15,13 @@ import 'audio.dart';
 import 'banner.dart';
 import 'barchart.dart';
 import 'bottom_sheet.dart';
+import 'canvas.dart';
 import 'card.dart';
 import 'checkbox.dart';
 import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
-import 'custom_paint.dart';
 import 'datatable.dart';
 import 'divider.dart';
 import 'drag_target.dart';
@@ -383,8 +383,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               control: controlView.control,
               children: controlView.children,
               parentDisabled: parentDisabled);
-        case "custompaint":
-          return CustomPaintControl(
+        case "canvas":
+          return CanvasControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

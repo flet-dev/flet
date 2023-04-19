@@ -92,7 +92,7 @@ class Canvas(ConstrainedControl):
         self.on_resize = on_resize
 
     def _get_control_name(self):
-        return "custompaint"
+        return "canvas"
 
     def _get_children(self):
         return self.__canvas

@@ -20,15 +20,15 @@ import '../utils/text.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
 
-typedef CustomPaintControlOnPaintCallback = void Function(Size size);
+typedef CanvasControlOnPaintCallback = void Function(Size size);
 
-class CustomPaintControl extends StatefulWidget {
+class CanvasControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
 
-  const CustomPaintControl(
+  const CanvasControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -37,10 +37,10 @@ class CustomPaintControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<CustomPaintControl> createState() => _CustomPaintControlState();
+  State<CanvasControl> createState() => _CanvasControlState();
 }
 
-class _CustomPaintControlState extends State<CustomPaintControl> {
+class _CanvasControlState extends State<CanvasControl> {
   int _lastResize = DateTime.now().millisecondsSinceEpoch;
   Size? _lastSize;
 
@@ -89,7 +89,7 @@ class _CustomPaintControlState extends State<CustomPaintControl> {
 class FletCustomPainter extends CustomPainter {
   final ThemeData theme;
   final List<CustomPaintDrawShapeViewModel> shapes;
-  final CustomPaintControlOnPaintCallback onPaintCallback;
+  final CanvasControlOnPaintCallback onPaintCallback;
 
   const FletCustomPainter(
       {required this.theme,
