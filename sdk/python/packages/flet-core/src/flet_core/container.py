@@ -33,7 +33,7 @@ from flet_core.types import (
 
 try:
     from typing import Literal
-except:
+except Exception:
     from typing_extensions import Literal
 
 

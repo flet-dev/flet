@@ -106,7 +106,7 @@ class SyncLocalSocketConnection(LocalConnection):
                 th.start()
         else:
             # it's something else
-            raise Exception('Unknown message "{}": {}'.format(msg.action, msg.payload))
+            raise Exception(f'Unknown message "{msg.action}": {msg.payload}')
 
     def send_command(self, session_id: str, command: Command):
         result, message = self._process_command(command)
@@ -164,9 +164,9 @@ class SyncLocalSocketConnection(LocalConnection):
         msg = struct.pack(">I", len(msg)) + msg
         try:
             sock.sendall(msg)
-            logger.debug("Sent: {}".format(len(msg)))
+            logger.debug(f"Sent: {len(msg)}")
         except Exception as e:
-            logger.debug("Error sending a message over a socket: {}".format(e))
+            logger.debug(f"Error sending a message over a socket: {e}")
 
     def __recv_msg(self, sock):
         # Read message length and unpack it into an integer
@@ -174,7 +174,7 @@ class SyncLocalSocketConnection(LocalConnection):
         if not raw_msglen:
             return None
         msglen = struct.unpack(">I", raw_msglen)[0]
-        logger.debug("Message size: {}".format(msglen))
+        logger.debug(f"Message size: {msglen}")
         # Read the message data
         return self.__recvall(sock, msglen)
 
@@ -184,7 +184,7 @@ class SyncLocalSocketConnection(LocalConnection):
         while len(data) < n:
             try:
                 packet = sock.recv(n - len(data))
-            except:
+            except Exception:
                 return None
             # print("packet received:", len(packet))
             if not packet:

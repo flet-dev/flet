@@ -19,7 +19,7 @@ def test_instance_no_attrs_set():
 
 def test_switch_in_curve_enum():
     r = ft.AnimatedSwitcher()
-    assert r.switch_in_curve == None
+    assert r.switch_in_curve is None
     assert r._get_attr("switchInCurve") is None
 
     r = ft.AnimatedSwitcher(switch_in_curve=ft.AnimationCurve.BOUNCE_IN)
@@ -34,7 +34,7 @@ def test_switch_in_curve_enum():
 
 def test_switch_out_curve_enum():
     r = ft.AnimatedSwitcher()
-    assert r.switch_out_curve == None
+    assert r.switch_out_curve is None
     assert r._get_attr("switchOutCurve") is None
 
     r = ft.AnimatedSwitcher(switch_out_curve=ft.AnimationCurve.BOUNCE_IN)
@@ -49,7 +49,7 @@ def test_switch_out_curve_enum():
 
 def test_transition_enum():
     r = ft.AnimatedSwitcher()
-    assert r.transition == None
+    assert r.transition is None
     assert r._get_attr("transition") is None
 
     r = ft.AnimatedSwitcher(transition=ft.AnimatedSwitcherTransition.FADE)

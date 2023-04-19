@@ -114,7 +114,7 @@ class AsyncWebSocketConnection(Connection):
 
         # re-connect if one of tasks failed
         if failed:
-            logger.debug(f"Re-connecting to Flet server in 1 second")
+            logger.debug("Re-connecting to Flet server in 1 second")
             await asyncio.sleep(self.__CONNECT_TIMEOUT)
             await self.connect()
 
@@ -148,7 +148,7 @@ class AsyncWebSocketConnection(Connection):
             message = await self.__send_queue.get()
             try:
                 await self.__ws.send(message)
-            except:
+            except Exception:
                 # re-enqueue the message to repeat it when re-connected
                 self.__send_queue.put_nowait(message)
                 raise
@@ -195,5 +195,5 @@ class AsyncWebSocketConnection(Connection):
         if self.__ws:
             try:
                 await self.__ws.close()
-            except:
+            except Exception:
                 pass  # do nothing

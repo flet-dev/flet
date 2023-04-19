@@ -249,7 +249,7 @@ def close_flet_view(pid_file):
                 fvp_pid = int(f.read())
             logger.debug(f"Flet View process {fvp_pid}")
             os.kill(fvp_pid, signal.SIGKILL)
-        except:
+        except Exception:
             pass
         finally:
             os.remove(pid_file)
@@ -434,7 +434,7 @@ def __start_flet_server(
             # download flet from GitHub (python module developer mode)
             fletd_path = __download_fletd()
         else:
-            logger.info(f"Flet Server found in PATH")
+            logger.info("Flet Server found in PATH")
 
     fletd_env = {**os.environ}
 
@@ -464,7 +464,7 @@ def __start_flet_server(
     web_root_dir = get_package_web_dir()
 
     if not os.path.exists(web_root_dir):
-        raise Exception("Web root path not found: {}".format(web_root_dir))
+        raise Exception(f"Web root path not found: {web_root_dir}")
 
     args = [fletd_path, "--content-dir", web_root_dir, "--port", str(port)]
 
@@ -540,7 +540,7 @@ def __get_assets_dir_path(assets_dir: Optional[str]):
 
 
 def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
-    logger.info(f"Starting Flet View app...")
+    logger.info("Starting Flet View app...")
 
     args = []
 

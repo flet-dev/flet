@@ -154,7 +154,7 @@ class Control:
         attrs = {}
         for k, v in self.__attrs.items():
             attrs[k] = v[0]
-        return "{} {}".format(self._get_control_name(), attrs)
+        return f"{self._get_control_name()} {attrs}"
 
     # event_handlers
     @property

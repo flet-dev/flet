@@ -412,7 +412,7 @@ class Page(Control):
         for ctrl in added_controls:
             if ctrl.page and ctrl.page != self:
                 raise Exception(
-                    "Control has already been added to another page: {}".format(ctrl)
+                    f"Control has already been added to another page: {ctrl}"
                 )
 
     def __update_control_ids(self, added_controls, results):
@@ -486,7 +486,7 @@ class Page(Control):
                         self._index[id]._set_attr(name, props[name], dirty=False)
 
     def go(self, route, **kwargs):
-        self.route = route if kwargs == {} else route + self.query.post(kwargs)
+        self.route = route if not kwargs else route + self.query.post(kwargs)
 
         self.__on_route_change.get_sync_handler()(
             ControlEvent(
@@ -501,7 +501,7 @@ class Page(Control):
         self.query()  # Update query url (required when using go)
 
     async def go_async(self, route, **kwargs):
-        self.route = route if kwargs == {} else route + self.query.post(kwargs)
+        self.route = route if not kwargs else route + self.query.post(kwargs)
 
         await self.__on_route_change.get_handler()(
             ControlEvent(
@@ -776,13 +776,13 @@ class Page(Control):
         window_height: Optional[int] = None,
     ):
         args = {"url": url}
-        if web_window_name != None:
+        if web_window_name is not None:
             args["web_window_name"] = web_window_name
-        if web_popup_window != None:
+        if web_popup_window is not None:
             args["web_popup_window"] = str(web_popup_window)
-        if window_width != None:
+        if window_width is not None:
             args["window_width"] = str(window_width)
-        if window_height != None:
+        if window_height is not None:
             args["window_height"] = str(window_height)
         return args
 
@@ -845,9 +845,9 @@ class Page(Control):
             )
 
         result, err = self.__method_call_results.pop(evt)
-        if err != None:
+        if err is not None:
             raise Exception(err)
-        if result == None:
+        if result is None:
             return None
         return result
 
@@ -889,9 +889,9 @@ class Page(Control):
             )
 
         result, err = self.__method_call_results.pop(evt)
-        if err != None:
+        if err is not None:
             raise Exception(err)
-        if result == None:
+        if result is None:
             return None
         return result
 
@@ -899,7 +899,7 @@ class Page(Control):
         d = json.loads(e.data)
         result = InvokeMethodResults(**d)
         evt = self.__method_calls.pop(result.method_id, None)
-        if evt == None:
+        if evt is None:
             return
         self.__method_call_results[evt] = (result.result, result.error)
         evt.set()

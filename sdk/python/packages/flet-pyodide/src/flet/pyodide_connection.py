@@ -77,7 +77,7 @@ class PyodideConnection(LocalConnection):
                 )
         else:
             # it's something else
-            raise Exception('Unknown message "{}": {}'.format(msg.action, msg.payload))
+            raise Exception(f'Unknown message "{msg.action}": {msg.payload}')
 
     async def send_command_async(self, session_id: str, command: Command):
         return self.send_command(session_id, command)
