@@ -101,7 +101,14 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
             }
           }
 
-          switch (controlView.control.type) {
+          if (pageArgs.controlsMapping != null) {
+            if (pageArgs.controlsMapping!
+                .containsKey(controlView.control.type)) {
+              var generator =
+                  pageArgs.controlsMapping![controlView.control.type];
+              return generator!(parent, controlView);
+            }
+          }switch (controlView.control.type) {
             case "page":
               return PageControl(
                   control: controlView.control,
