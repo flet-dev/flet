@@ -93,7 +93,7 @@ class AsyncLocalSocketConnection(LocalConnection):
                 msg = struct.pack(">I", len(data)) + data
                 writer.write(msg)
                 # await writer.drain()
-                logger.debug("sent to TCP: {}".format(len(msg)))
+                logger.debug(f"sent to TCP: {len(msg)}")
             except:
                 # re-enqueue the message to repeat it when re-connected
                 self.__send_queue.put_nowait(message)
@@ -128,7 +128,7 @@ class AsyncLocalSocketConnection(LocalConnection):
                 )
         else:
             # it's something else
-            raise Exception('Unknown message "{}": {}'.format(msg.action, msg.payload))
+            raise Exception(f'Unknown message "{msg.action}": {msg.payload}')
 
     async def send_command_async(self, session_id: str, command: Command):
         result, message = self._process_command(command)

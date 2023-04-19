@@ -93,6 +93,6 @@ class GitHubOAuthProvider(OAuthProvider):
 
     def __get_client_headers(self, access_token):
         return {
-            "Authorization": "Bearer {}".format(access_token),
-            "User-Agent": "Flet/{}".format(version),
+            "Authorization": f"Bearer {access_token}",
+            "User-Agent": f"Flet/{version}",
         }

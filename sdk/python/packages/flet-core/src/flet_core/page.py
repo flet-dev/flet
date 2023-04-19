@@ -412,7 +412,7 @@ class Page(Control):
         for ctrl in added_controls:
             if ctrl.page and ctrl.page != self:
                 raise Exception(
-                    "Control has already been added to another page: {}".format(ctrl)
+                    f"Control has already been added to another page: {ctrl}"
                 )
 
     def __update_control_ids(self, added_controls, results):

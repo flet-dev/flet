@@ -74,7 +74,7 @@ class LocalConnection(Connection):
         )
 
     def _process_command(self, command: Command):
-        logger.debug("_process_command: {}".format(command))
+        logger.debug(f"_process_command: {command}")
         if command.name == "get":
             return self._process_get_command(command.values)
         elif command.name == "add":
@@ -89,7 +89,7 @@ class LocalConnection(Connection):
             return self._process_invoke_method_command(command.values, command.attrs)
         elif command.name == "error":
             return self._process_error_command(command.values)
-        raise Exception("Unsupported command: {}".format(command.name))
+        raise Exception(f"Unsupported command: {command.name}")
 
     def _process_add_command(self, command: Command):
 
@@ -131,7 +131,7 @@ class LocalConnection(Connection):
 
             id = cmd.attrs.get("id", "")
             if not id:
-                id = "_{}".format(self._control_id)
+                id = f"_{self._control_id}"
                 self._control_id += 1
                 cmd.attrs["id"] = id
 

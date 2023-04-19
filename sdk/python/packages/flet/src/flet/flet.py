@@ -464,7 +464,7 @@ def __start_flet_server(
     web_root_dir = get_package_web_dir()
 
     if not os.path.exists(web_root_dir):
-        raise Exception("Web root path not found: {}".format(web_root_dir))
+        raise Exception(f"Web root path not found: {web_root_dir}")
 
     args = [fletd_path, "--content-dir", web_root_dir, "--port", str(port)]
 

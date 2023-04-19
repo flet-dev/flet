@@ -215,7 +215,7 @@ class Authorization:
         assert self.token is not None
         assert self.provider.user_endpoint is not None
         headers = self.__get_default_headers()
-        headers["Authorization"] = "Bearer {}".format(self.token.access_token)
+        headers["Authorization"] = f"Bearer {self.token.access_token}"
         return httpx.Request("GET", self.provider.user_endpoint, headers=headers)
 
     def __complete_user_request(self, user_resp):
@@ -226,5 +226,5 @@ class Authorization:
 
     def __get_default_headers(self):
         return {
-            "User-Agent": "Flet/{}".format(version),
+            "User-Agent": f"Flet/{version}",
         }

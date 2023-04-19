@@ -11,7 +11,7 @@ if len(sys.argv) < 3:
 current_dir = pathlib.Path(os.getcwd())
 toml_path = current_dir.joinpath(current_dir, sys.argv[1])
 ver = sys.argv[2]
-print("Patching TOML file {} to {}".format(toml_path, ver))
+print(f"Patching TOML file {toml_path} to {ver}")
 
 # read
 with open(toml_path, "r") as f:
