@@ -60,11 +60,11 @@ class DataColumn(Control):
 
     # label
     @property
-    def label(self):
+    def label(self) -> Optional[Control]:
         return self.__label
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Optional[Control]):
         self.__label = value
 
     # numeric

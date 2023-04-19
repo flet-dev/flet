@@ -106,11 +106,11 @@ class NavigationDestination(Control):
 
     # label
     @property
-    def label(self):
+    def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
 
 
