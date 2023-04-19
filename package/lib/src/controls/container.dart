@@ -232,7 +232,7 @@ class ContainerControl extends StatelessWidget {
 
             if ((onClick || onLongPress || onHover) && !disabled) {
               result = MouseRegion(
-                cursor: SystemMouseCursors.click,
+                cursor: onClick ? SystemMouseCursors.click : MouseCursor.defer,
                 onEnter: onHover
                     ? (value) {
                         debugPrint(
