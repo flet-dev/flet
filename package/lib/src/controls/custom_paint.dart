@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -266,7 +267,8 @@ class FletCustomPainter extends CustomPainter {
   }
 
   void drawPath(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
-    var path = buildPath(shape.shapes);
+    var path =
+        buildPath(json.decode(shape.control.attrString("elements", "[]")!));
     Paint paint = parsePaint(theme, shape.control, "paint");
     var dashPattern = parsePaintStrokeDashPattern(shape.control, "paint");
     if (dashPattern != null) {
@@ -275,37 +277,48 @@ class FletCustomPainter extends CustomPainter {
     canvas.drawPath(path, paint);
   }
 
-  ui.Path buildPath(List<CustomPaintDrawShapeViewModel> shapes) {
+  ui.Path buildPath(dynamic j) {
     var path = ui.Path();
-    for (var shape in shapes) {
-      if (shape.control.type == "moveto") {
-        path.moveTo(
-            shape.control.attrDouble("x")!, shape.control.attrDouble("y")!);
-      } else if (shape.control.type == "lineto") {
-        path.lineTo(
-            shape.control.attrDouble("x")!, shape.control.attrDouble("y")!);
-      } else if (shape.control.type == "conicto") {
+    if (j == null) {
+      return path;
+    }
+    for (var elem in (j as List)) {
+      var type = elem["type"];
+      if (type == "moveto") {
+        path.moveTo(parseDouble(elem["x"]), parseDouble(elem["y"]));
+      } else if (type == "lineto") {
+        path.lineTo(parseDouble(elem["x"]), parseDouble(elem["y"]));
+      } else if (type == "arc") {
+        path.addArc(
+            Rect.fromLTWH(parseDouble(elem["x"]), parseDouble(elem["y"]),
+                parseDouble(elem["width"]), parseDouble(elem["height"])),
+            parseDouble(elem["start_angle"]),
+            parseDouble(elem["sweep_angle"]));
+      } else if (type == "arcto") {
+        path.arcToPoint(Offset(parseDouble(elem["x"]), parseDouble(elem["y"])),
+            radius: Radius.circular(parseDouble(elem["radius"])),
+            rotation: parseDouble(elem["rotation"]),
+            largeArc: parseBool(elem["large_arc"]),
+            clockwise: parseBool(elem["clockwise"]));
+      } else if (type == "conicto") {
         path.conicTo(
-            shape.control.attrDouble("x1")!,
-            shape.control.attrDouble("y1")!,
-            shape.control.attrDouble("x2")!,
-            shape.control.attrDouble("y2")!,
-            shape.control.attrDouble("w")!);
-      } else if (shape.control.type == "cubicto") {
+            parseDouble(elem["cp1x"]),
+            parseDouble(elem["cp1y"]),
+            parseDouble(elem["x"]),
+            parseDouble(elem["y"]),
+            parseDouble(elem["w"]));
+      } else if (type == "cubicto") {
         path.cubicTo(
-            shape.control.attrDouble("x1")!,
-            shape.control.attrDouble("y1")!,
-            shape.control.attrDouble("x2")!,
-            shape.control.attrDouble("y2")!,
-            shape.control.attrDouble("x3")!,
-            shape.control.attrDouble("y3")!);
-      } else if (shape.control.type == "bezierto") {
-        path.quadraticBezierTo(
-            shape.control.attrDouble("x1")!,
-            shape.control.attrDouble("y1")!,
-            shape.control.attrDouble("x2")!,
-            shape.control.attrDouble("y2")!);
-      } else if (shape.control.type == "close") {
+            parseDouble(elem["cp1x"]),
+            parseDouble(elem["cp1y"]),
+            parseDouble(elem["cp2x"]),
+            parseDouble(elem["cp2y"]),
+            parseDouble(elem["x"]),
+            parseDouble(elem["y"]));
+      } else if (type == "path") {
+        path.addPath(buildPath(elem["elements"]),
+            Offset(parseDouble(elem["x"]), parseDouble(elem["y"])));
+      } else if (type == "close") {
         path.close();
       }
     }

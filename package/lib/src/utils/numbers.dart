@@ -17,3 +17,13 @@ int parseInt(dynamic v, [int defValue = 0]) {
     return int.tryParse(v.toString()) ?? defValue;
   }
 }
+
+bool parseBool(dynamic v, [bool defValue = false]) {
+  if (v is bool) {
+    return v;
+  } else if (v == null) {
+    return defValue;
+  } else {
+    return "true" == v.toString().toLowerCase();
+  }
+}

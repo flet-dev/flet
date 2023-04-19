@@ -514,9 +514,75 @@ class DrawRect(DrawShape):
 
 
 class DrawPath(DrawShape):
+    @dataclasses.dataclass
+    class PathElement:
+        pass
+
+    @dataclasses.dataclass
+    class Arc(PathElement):
+        x: float
+        y: float
+        width: float
+        height: float
+        start_angle: float
+        sweep_angle: float
+        type: str = dataclasses.field(default="arc")
+
+    @dataclasses.dataclass
+    class ArcTo(PathElement):
+        x: float
+        y: float
+        radius: float = dataclasses.field(default=0)
+        rotation: float = dataclasses.field(default=0)
+        large_arc: bool = dataclasses.field(default=False)
+        clockwise: bool = dataclasses.field(default=True)
+        type: str = dataclasses.field(default="arcto")
+
+    @dataclasses.dataclass
+    class MoveTo(PathElement):
+        x: float
+        y: float
+        type: str = dataclasses.field(default="moveto")
+
+    @dataclasses.dataclass
+    class LineTo(PathElement):
+        x: float
+        y: float
+        type: str = dataclasses.field(default="lineto")
+
+    @dataclasses.dataclass
+    class QuadraticTo(PathElement):
+        cp1x: float
+        cp1y: float
+        x: float
+        y: float
+        w: float = dataclasses.field(default=1)
+        type: str = dataclasses.field(default="conicto")
+
+    @dataclasses.dataclass
+    class CubicTo(PathElement):
+        cp1x: float
+        cp1y: float
+        cp2x: float
+        cp2y: float
+        x: float
+        y: float
+        type: str = dataclasses.field(default="cubicto")
+
+    @dataclasses.dataclass
+    class Path(PathElement):
+        elements: List["DrawPath.PathElement"]
+        x: float
+        y: float
+        type: str = dataclasses.field(default="path")
+
+    @dataclasses.dataclass
+    class Close(PathElement):
+        type: str = dataclasses.field(default="close")
+
     def __init__(
         self,
-        elements: Optional[List[DrawShape]] = None,
+        elements: Optional[List[PathElement]] = None,
         paint: Optional[Paint] = None,
         # base
         ref=None,
@@ -532,11 +598,9 @@ class DrawPath(DrawShape):
     def _get_control_name(self):
         return "path"
 
-    def _get_children(self):
-        return self.__elements
-
     def _before_build_command(self):
         super()._before_build_command()
+        self._set_attr_json("elements", self.__elements)
         self._set_attr_json("paint", self.__paint)
 
     # elements
@@ -545,7 +609,7 @@ class DrawPath(DrawShape):
         return self.__elements
 
     @elements.setter
-    def elements(self, value: Optional[List[DrawShape]]):
+    def elements(self, value: Optional[List[PathElement]]):
         self.__elements = value if value is not None else []
 
     # paint
@@ -556,316 +620,6 @@ class DrawPath(DrawShape):
     @paint.setter
     def paint(self, value: Optional[Paint]):
         self.__paint = value
-
-    class MoveTo(DrawShape):
-        def __init__(
-            self,
-            x: OptionalNumber = None,
-            y: OptionalNumber = None,
-            # base
-            ref=None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-        ):
-            DrawShape.__init__(
-                self, ref=ref, visible=visible, disabled=disabled, data=data
-            )
-
-            self.x = x
-            self.y = y
-
-        def _get_control_name(self):
-            return "moveto"
-
-        # x
-        @property
-        def x(self) -> OptionalNumber:
-            return self._get_attr("x")
-
-        @x.setter
-        def x(self, value: OptionalNumber):
-            self._set_attr("x", value)
-
-        # y
-        @property
-        def y(self) -> OptionalNumber:
-            return self._get_attr("y")
-
-        @y.setter
-        def y(self, value: OptionalNumber):
-            self._set_attr("y", value)
-
-    class LineTo(DrawShape):
-        def __init__(
-            self,
-            x: OptionalNumber = None,
-            y: OptionalNumber = None,
-            # base
-            ref=None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-        ):
-            DrawShape.__init__(
-                self, ref=ref, visible=visible, disabled=disabled, data=data
-            )
-
-            self.x = x
-            self.y = y
-
-        def _get_control_name(self):
-            return "lineto"
-
-        # x
-        @property
-        def x(self) -> OptionalNumber:
-            return self._get_attr("x")
-
-        @x.setter
-        def x(self, value: OptionalNumber):
-            self._set_attr("x", value)
-
-        # y
-        @property
-        def y(self) -> OptionalNumber:
-            return self._get_attr("y")
-
-        @y.setter
-        def y(self, value: OptionalNumber):
-            self._set_attr("y", value)
-
-    class ConicTo(DrawShape):
-        def __init__(
-            self,
-            x1: OptionalNumber = None,
-            y1: OptionalNumber = None,
-            x2: OptionalNumber = None,
-            y2: OptionalNumber = None,
-            w: OptionalNumber = 1,
-            # base
-            ref=None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-        ):
-            DrawShape.__init__(
-                self, ref=ref, visible=visible, disabled=disabled, data=data
-            )
-
-            self.x1 = x1
-            self.y1 = y1
-            self.x2 = x2
-            self.y2 = y2
-            self.w = w
-
-        def _get_control_name(self):
-            return "conicto"
-
-        # x1
-        @property
-        def x1(self) -> OptionalNumber:
-            return self._get_attr("x1")
-
-        @x1.setter
-        def x1(self, value: OptionalNumber):
-            self._set_attr("x1", value)
-
-        # y1
-        @property
-        def y1(self) -> OptionalNumber:
-            return self._get_attr("y1")
-
-        @y1.setter
-        def y1(self, value: OptionalNumber):
-            self._set_attr("y1", value)
-
-        # x2
-        @property
-        def x2(self) -> OptionalNumber:
-            return self._get_attr("x2")
-
-        @x2.setter
-        def x2(self, value: OptionalNumber):
-            self._set_attr("x2", value)
-
-        # y2
-        @property
-        def y2(self) -> OptionalNumber:
-            return self._get_attr("y2")
-
-        @y2.setter
-        def y2(self, value: OptionalNumber):
-            self._set_attr("y2", value)
-
-        # w
-        @property
-        def w(self) -> OptionalNumber:
-            return self._get_attr("w", data_type="float", def_value=1)
-
-        @w.setter
-        def w(self, value: OptionalNumber):
-            self._set_attr("w", value)
-
-    class CubicTo(DrawShape):
-        def __init__(
-            self,
-            x1: OptionalNumber = None,
-            y1: OptionalNumber = None,
-            x2: OptionalNumber = None,
-            y2: OptionalNumber = None,
-            x3: OptionalNumber = None,
-            y3: OptionalNumber = None,
-            # base
-            ref=None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-        ):
-            DrawShape.__init__(
-                self, ref=ref, visible=visible, disabled=disabled, data=data
-            )
-
-            self.x1 = x1
-            self.y1 = y1
-            self.x2 = x2
-            self.y2 = y2
-            self.x3 = x3
-            self.y3 = y3
-
-        def _get_control_name(self):
-            return "cubicto"
-
-        # x1
-        @property
-        def x1(self) -> OptionalNumber:
-            return self._get_attr("x1")
-
-        @x1.setter
-        def x1(self, value: OptionalNumber):
-            self._set_attr("x1", value)
-
-        # y1
-        @property
-        def y1(self) -> OptionalNumber:
-            return self._get_attr("y1")
-
-        @y1.setter
-        def y1(self, value: OptionalNumber):
-            self._set_attr("y1", value)
-
-        # x2
-        @property
-        def x2(self) -> OptionalNumber:
-            return self._get_attr("x2")
-
-        @x2.setter
-        def x2(self, value: OptionalNumber):
-            self._set_attr("x2", value)
-
-        # y2
-        @property
-        def y2(self) -> OptionalNumber:
-            return self._get_attr("y2")
-
-        @y2.setter
-        def y2(self, value: OptionalNumber):
-            self._set_attr("y2", value)
-
-        # x3
-        @property
-        def x3(self) -> OptionalNumber:
-            return self._get_attr("x3")
-
-        @x3.setter
-        def x3(self, value: OptionalNumber):
-            self._set_attr("x3", value)
-
-        # y3
-        @property
-        def y3(self) -> OptionalNumber:
-            return self._get_attr("y3")
-
-        @y3.setter
-        def y3(self, value: OptionalNumber):
-            self._set_attr("y3", value)
-
-    class BezierTo(DrawShape):
-        def __init__(
-            self,
-            x1: OptionalNumber = None,
-            y1: OptionalNumber = None,
-            x2: OptionalNumber = None,
-            y2: OptionalNumber = None,
-            # base
-            ref=None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-        ):
-            DrawShape.__init__(
-                self, ref=ref, visible=visible, disabled=disabled, data=data
-            )
-
-            self.x1 = x1
-            self.y1 = y1
-            self.x2 = x2
-            self.y2 = y2
-
-        def _get_control_name(self):
-            return "bezierto"
-
-        # x1
-        @property
-        def x1(self) -> OptionalNumber:
-            return self._get_attr("x1")
-
-        @x1.setter
-        def x1(self, value: OptionalNumber):
-            self._set_attr("x1", value)
-
-        # y1
-        @property
-        def y1(self) -> OptionalNumber:
-            return self._get_attr("y1")
-
-        @y1.setter
-        def y1(self, value: OptionalNumber):
-            self._set_attr("y1", value)
-
-        # x2
-        @property
-        def x2(self) -> OptionalNumber:
-            return self._get_attr("x2")
-
-        @x2.setter
-        def x2(self, value: OptionalNumber):
-            self._set_attr("x2", value)
-
-        # y2
-        @property
-        def y2(self) -> OptionalNumber:
-            return self._get_attr("y2")
-
-        @y2.setter
-        def y2(self, value: OptionalNumber):
-            self._set_attr("y2", value)
-
-    class Close(DrawShape):
-        def __init__(
-            self,
-            # base
-            ref=None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-        ):
-            DrawShape.__init__(
-                self, ref=ref, visible=visible, disabled=disabled, data=data
-            )
-
-        def _get_control_name(self):
-            return "close"
 
 
 class DrawText(DrawShape):
