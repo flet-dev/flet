@@ -6,6 +6,6 @@ from flet_core.canvas.fill import Fill
 from flet_core.canvas.line import Line
 from flet_core.canvas.oval import Oval
 from flet_core.canvas.path import Path
-from flet_core.canvas.points import Points
+from flet_core.canvas.points import PointMode, Points
 from flet_core.canvas.rect import Rect
 from flet_core.canvas.text import Text

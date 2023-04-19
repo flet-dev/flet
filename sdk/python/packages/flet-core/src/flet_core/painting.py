@@ -4,9 +4,8 @@ from enum import Enum
 from typing import List, Optional, Tuple, Union
 
 from flet_core.blur import Blur
-from flet_core.gradients import Gradient, GradientTileMode
-from flet_core.transform import Offset
-from flet_core.types import BlendMode
+from flet_core.gradients import GradientTileMode
+from flet_core.types import BlendMode, OffsetValue
 
 
 class StrokeCap(Enum):
@@ -33,8 +32,8 @@ class PaintGradient:
 
 @dataclasses.dataclass
 class PaintLinearGradient(PaintGradient):
-    begin: Offset
-    end: Offset
+    begin: OffsetValue
+    end: OffsetValue
     colors: List[str]
     color_stops: Optional[List[float]] = dataclasses.field(default=None)
     tile_mode: GradientTileMode = dataclasses.field(default=GradientTileMode.CLAMP)
@@ -43,19 +42,19 @@ class PaintLinearGradient(PaintGradient):
 
 @dataclasses.dataclass
 class PaintRadialGradient(PaintGradient):
-    center: Offset
+    center: OffsetValue
     radius: Union[float, int]
     colors: List[str]
     color_stops: Optional[List[float]] = dataclasses.field(default=None)
     tile_mode: GradientTileMode = dataclasses.field(default=GradientTileMode.CLAMP)
-    focal: Optional[Offset] = dataclasses.field(default=None)
+    focal: Optional[OffsetValue] = dataclasses.field(default=None)
     focal_radius: Union[float, int] = dataclasses.field(default=0.0)
     type: str = dataclasses.field(default="radial")
 
 
 @dataclasses.dataclass
 class PaintSweepGradient(PaintGradient):
-    center: Offset
+    center: OffsetValue
     colors: List[str]
     color_stops: Optional[List[float]] = dataclasses.field(default=None)
     tile_mode: GradientTileMode = dataclasses.field(default=GradientTileMode.CLAMP)
