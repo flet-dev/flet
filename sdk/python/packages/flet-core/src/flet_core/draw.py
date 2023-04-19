@@ -519,26 +519,6 @@ class DrawPath(DrawShape):
         pass
 
     @dataclasses.dataclass
-    class Arc(PathElement):
-        x: float
-        y: float
-        width: float
-        height: float
-        start_angle: float
-        sweep_angle: float
-        type: str = dataclasses.field(default="arc")
-
-    @dataclasses.dataclass
-    class ArcTo(PathElement):
-        x: float
-        y: float
-        radius: float = dataclasses.field(default=0)
-        rotation: float = dataclasses.field(default=0)
-        large_arc: bool = dataclasses.field(default=False)
-        clockwise: bool = dataclasses.field(default=True)
-        type: str = dataclasses.field(default="arcto")
-
-    @dataclasses.dataclass
     class MoveTo(PathElement):
         x: float
         y: float
@@ -575,6 +555,43 @@ class DrawPath(DrawShape):
         x: float
         y: float
         type: str = dataclasses.field(default="path")
+
+    @dataclasses.dataclass
+    class Arc(PathElement):
+        x: float
+        y: float
+        width: float
+        height: float
+        start_angle: float
+        sweep_angle: float
+        type: str = dataclasses.field(default="arc")
+
+    @dataclasses.dataclass
+    class ArcTo(PathElement):
+        x: float
+        y: float
+        radius: float = dataclasses.field(default=0)
+        rotation: float = dataclasses.field(default=0)
+        large_arc: bool = dataclasses.field(default=False)
+        clockwise: bool = dataclasses.field(default=True)
+        type: str = dataclasses.field(default="arcto")
+
+    @dataclasses.dataclass
+    class Oval(PathElement):
+        x: float
+        y: float
+        width: float
+        height: float
+        type: str = dataclasses.field(default="oval")
+
+    @dataclasses.dataclass
+    class Rect(PathElement):
+        x: float
+        y: float
+        width: float
+        height: float
+        border_radius: BorderRadiusValue = dataclasses.field(default=None)
+        type: str = dataclasses.field(default="rect")
 
     @dataclasses.dataclass
     class Close(PathElement):

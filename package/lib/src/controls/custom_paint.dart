@@ -300,6 +300,23 @@ class FletCustomPainter extends CustomPainter {
             rotation: parseDouble(elem["rotation"]),
             largeArc: parseBool(elem["large_arc"]),
             clockwise: parseBool(elem["clockwise"]));
+      } else if (type == "oval") {
+        path.addOval(Rect.fromLTWH(
+            parseDouble(elem["x"]),
+            parseDouble(elem["y"]),
+            parseDouble(elem["width"]),
+            parseDouble(elem["height"])));
+      } else if (type == "rect") {
+        var borderRadius = elem["border_radius"] != null
+            ? borderRadiusFromJSON(elem["border_radius"])
+            : null;
+        path.addRRect(RRect.fromRectAndCorners(
+            Rect.fromLTWH(parseDouble(elem["x"]), parseDouble(elem["y"]),
+                parseDouble(elem["width"]), parseDouble(elem["height"])),
+            topLeft: borderRadius?.topLeft ?? Radius.zero,
+            topRight: borderRadius?.topRight ?? Radius.zero,
+            bottomLeft: borderRadius?.bottomLeft ?? Radius.zero,
+            bottomRight: borderRadius?.bottomRight ?? Radius.zero));
       } else if (type == "conicto") {
         path.conicTo(
             parseDouble(elem["cp1x"]),
