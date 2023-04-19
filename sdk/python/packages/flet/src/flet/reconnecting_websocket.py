@@ -65,7 +65,7 @@ class ReconnectingWebSocket:
                 else _REMOTE_CONNECT_TIMEOUT_SEC
             )
             r = self.wsapp.run_forever()
-            logger.debug(f"Exited run_forever()")
+            logger.debug("Exited run_forever()")
             websocket.setdefaulttimeout(self.default_timeout)
             self.connected.clear()
             if r is not True:

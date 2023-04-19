@@ -434,7 +434,7 @@ def __start_flet_server(
             # download flet from GitHub (python module developer mode)
             fletd_path = __download_fletd()
         else:
-            logger.info(f"Flet Server found in PATH")
+            logger.info("Flet Server found in PATH")
 
     fletd_env = {**os.environ}
 
@@ -540,7 +540,7 @@ def __get_assets_dir_path(assets_dir: Optional[str]):
 
 
 def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
-    logger.info(f"Starting Flet View app...")
+    logger.info("Starting Flet View app...")
 
     args = []
 
