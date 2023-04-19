@@ -227,9 +227,9 @@ class Column(ConstrainedControl):
             self.__set_scroll(value)
 
     def __set_scroll(self, value: Optional[ScrollModeString]):
-        if value == True:
+        if value is True:
             value = "auto"
-        elif value == False:
+        elif value is False:
             value = None
         self._set_attr("scroll", value)
 

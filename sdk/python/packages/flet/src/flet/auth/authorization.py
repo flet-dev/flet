@@ -117,13 +117,13 @@ class Authorization:
         assert self.__token is not None
         if self.fetch_user:
             self.user = self.provider._fetch_user(self.__token.access_token)
-            if self.user == None and self.provider.user_endpoint != None:
-                if self.provider.user_id_fn == None:
+            if self.user is None and self.provider.user_endpoint is not None:
+                if self.provider.user_id_fn is None:
                     raise Exception(
                         "user_id_fn must be specified too if user_endpoint is not None"
                     )
                 self.user = self.__get_user()
-            if self.fetch_groups and self.user != None:
+            if self.fetch_groups and self.user is not None:
                 self.user.groups = self.provider._fetch_groups(
                     self.__token.access_token
                 )
@@ -132,13 +132,13 @@ class Authorization:
         assert self.__token is not None
         if self.fetch_user:
             self.user = await self.provider._fetch_user_async(self.__token.access_token)
-            if self.user == None and self.provider.user_endpoint != None:
-                if self.provider.user_id_fn == None:
+            if self.user is None and self.provider.user_endpoint is not None:
+                if self.provider.user_id_fn is None:
                     raise Exception(
                         "user_id_fn must be specified too if user_endpoint is not None"
                     )
                 self.user = await self.__get_user_async()
-            if self.fetch_groups and self.user != None:
+            if self.fetch_groups and self.user is not None:
                 self.user.groups = await self.provider._fetch_groups_async(
                     self.__token.access_token
                 )
@@ -195,7 +195,7 @@ class Authorization:
         assert self.__token is not None
         client = WebApplicationClient(self.provider.client_id)
         t = client.parse_request_body_response(refresh_resp.text)
-        if t.get("refresh_token") == None:
+        if t.get("refresh_token") is None:
             t["refresh_token"] = self.__token.refresh_token
         self.__token = self.__convert_token(t)
 

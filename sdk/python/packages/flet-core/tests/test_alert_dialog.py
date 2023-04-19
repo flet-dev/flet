@@ -32,4 +32,3 @@ def test_alignment_str():
     assert isinstance(r._get_attr("actionsalignment"), str)
     cmd = r._build_add_commands()
     assert cmd[0].attrs["actionsalignment"] == "center"
-
