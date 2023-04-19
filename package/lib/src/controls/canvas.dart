@@ -121,6 +121,8 @@ class FletCustomPainter extends CustomPainter {
         drawRect(canvas, shape);
       } else if (shape.control.type == "path") {
         drawPath(canvas, shape);
+      } else if (shape.control.type == "shadow") {
+        drawShadow(canvas, shape);
       } else if (shape.control.type == "text") {
         drawText(canvas, shape);
       }
@@ -284,6 +286,17 @@ class FletCustomPainter extends CustomPainter {
       path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
     }
     canvas.drawPath(path, paint);
+  }
+
+  void drawShadow(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+    var path = buildPath(json.decode(shape.control.attrString("path", "[]")!));
+    var color =
+        HexColor.fromString(theme, shape.control.attrString("color", "")!) ??
+            Colors.black;
+    var elevation = shape.control.attrDouble("elevation", 0)!;
+    var transparentOccluder =
+        shape.control.attrBool("transparentOccluder", false)!;
+    canvas.drawShadow(path, color, elevation, transparentOccluder);
   }
 
   ui.Path buildPath(dynamic j) {
