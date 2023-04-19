@@ -3,7 +3,7 @@ from typing import Any, List, Optional, TypeVar, Union
 
 from flet_core.canvas.shape import Shape
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
+from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
@@ -22,6 +22,7 @@ class Canvas(ConstrainedControl):
     def __init__(
         self,
         shapes: Optional[List[TShape]] = None,
+        content: Optional[Control] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -88,6 +89,7 @@ class Canvas(ConstrainedControl):
         self._add_event_handler("resize", self.__on_resize.get_handler())
 
         self.shapes = shapes
+        self.content = content
         self.resize_interval = resize_interval
         self.on_resize = on_resize
 
@@ -95,7 +97,12 @@ class Canvas(ConstrainedControl):
         return "canvas"
 
     def _get_children(self):
-        return self.__canvas
+        children = []
+        children.extend(self.__canvas)
+        if self.__content is not None:
+            self.__content._set_attr_internal("n", "content")
+            children.append(self.__content)
+        return children
 
     def clean(self):
         super().clean()
@@ -105,15 +112,6 @@ class Canvas(ConstrainedControl):
         await super().clean_async()
         self.__canvas.clear()
 
-    # resize_interval
-    @property
-    def resize_interval(self) -> OptionalNumber:
-        return self._get_attr("resizeInterval")
-
-    @resize_interval.setter
-    def resize_interval(self, value: OptionalNumber):
-        self._set_attr("resizeInterval", value)
-
     # shapes
     @property
     def shapes(self):
@@ -122,6 +120,24 @@ class Canvas(ConstrainedControl):
     @shapes.setter
     def shapes(self, value: Optional[List[TShape]]):
         self.__canvas = value if value is not None else []
+
+    # content
+    @property
+    def content(self) -> Optional[Control]:
+        return self.__content
+
+    @content.setter
+    def content(self, value: Optional[Control]):
+        self.__content = value
+
+    # resize_interval
+    @property
+    def resize_interval(self) -> OptionalNumber:
+        return self._get_attr("resizeInterval")
+
+    @resize_interval.setter
+    def resize_interval(self, value: OptionalNumber):
+        self._set_attr("resizeInterval", value)
 
     # on_resize
     @property

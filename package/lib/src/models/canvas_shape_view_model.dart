@@ -5,22 +5,21 @@ import 'package:redux/redux.dart';
 import 'app_state.dart';
 import 'control.dart';
 
-class CustomPaintDrawShapeViewModel extends Equatable {
+class CanvasShapeViewModel extends Equatable {
   final Control control;
-  final List<CustomPaintDrawShapeViewModel> shapes;
+  final List<CanvasShapeViewModel> shapes;
 
-  const CustomPaintDrawShapeViewModel(
-      {required this.control, required this.shapes});
+  const CanvasShapeViewModel({required this.control, required this.shapes});
 
-  static CustomPaintDrawShapeViewModel fromStore(
+  static CanvasShapeViewModel fromStore(
       Store<AppState> store, Control control) {
-    return CustomPaintDrawShapeViewModel(
+    return CanvasShapeViewModel(
         control: control,
         shapes: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
             .whereNotNull()
             .where((c) => c.isVisible)
-            .map((c) => CustomPaintDrawShapeViewModel.fromStore(store, c))
+            .map((c) => CanvasShapeViewModel.fromStore(store, c))
             .toList());
   }
 

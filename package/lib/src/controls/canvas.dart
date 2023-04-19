@@ -2,20 +2,20 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
+import '../models/canvas_shape_view_model.dart';
+import '../models/canvas_view_model.dart';
 import '../models/control.dart';
-import '../models/custom_paint_draw_shape_view_model.dart';
-import '../models/custom_paint_view_model.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/dash_path.dart';
 import '../utils/drawing.dart';
+import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
@@ -48,10 +48,10 @@ class _CanvasControlState extends State<CanvasControl> {
   Widget build(BuildContext context) {
     debugPrint("CustomPaint build: ${widget.control.id}");
 
-    var result = StoreConnector<AppState, CustomPaintViewModel>(
+    var result = StoreConnector<AppState, CanvasViewModel>(
         distinct: true,
-        converter: (store) => CustomPaintViewModel.fromStore(
-            store, widget.control, widget.children),
+        converter: (store) =>
+            CanvasViewModel.fromStore(store, widget.control, widget.children),
         builder: (context, viewModel) {
           var onResize = viewModel.control.attrBool("onResize", false)!;
           var resizeInterval = viewModel.control.attrInt("resizeInterval", 10)!;
@@ -77,6 +77,10 @@ class _CanvasControlState extends State<CanvasControl> {
                 }
               },
             ),
+            child: viewModel.child != null
+                ? createControl(viewModel.control, viewModel.child!.id,
+                    viewModel.control.isDisabled)
+                : null,
           );
 
           return paint;
@@ -88,7 +92,7 @@ class _CanvasControlState extends State<CanvasControl> {
 
 class FletCustomPainter extends CustomPainter {
   final ThemeData theme;
-  final List<CustomPaintDrawShapeViewModel> shapes;
+  final List<CanvasShapeViewModel> shapes;
   final CanvasControlOnPaintCallback onPaintCallback;
 
   const FletCustomPainter(
@@ -134,7 +138,7 @@ class FletCustomPainter extends CustomPainter {
     return true;
   }
 
-  void drawLine(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+  void drawLine(Canvas canvas, CanvasShapeViewModel shape) {
     Paint paint = parsePaint(theme, shape.control, "paint");
     var dashPattern = parsePaintStrokeDashPattern(shape.control, "paint");
     paint.style = ui.PaintingStyle.stroke;
@@ -150,7 +154,7 @@ class FletCustomPainter extends CustomPainter {
     canvas.drawPath(path, paint);
   }
 
-  void drawCircle(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+  void drawCircle(Canvas canvas, CanvasShapeViewModel shape) {
     var radius = shape.control.attrDouble("radius", 0)!;
     Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawCircle(
@@ -159,7 +163,7 @@ class FletCustomPainter extends CustomPainter {
         paint);
   }
 
-  void drawOval(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+  void drawOval(Canvas canvas, CanvasShapeViewModel shape) {
     var width = shape.control.attrDouble("width", 0)!;
     var height = shape.control.attrDouble("height", 0)!;
     Paint paint = parsePaint(theme, shape.control, "paint");
@@ -169,7 +173,7 @@ class FletCustomPainter extends CustomPainter {
         paint);
   }
 
-  void drawArc(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+  void drawArc(Canvas canvas, CanvasShapeViewModel shape) {
     var width = shape.control.attrDouble("width", 0)!;
     var height = shape.control.attrDouble("height", 0)!;
     var startAngle = shape.control.attrDouble("startAngle", 0)!;
@@ -185,12 +189,12 @@ class FletCustomPainter extends CustomPainter {
         paint);
   }
 
-  void drawFill(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+  void drawFill(Canvas canvas, CanvasShapeViewModel shape) {
     Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawPaint(paint);
   }
 
-  void drawColor(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+  void drawColor(Canvas canvas, CanvasShapeViewModel shape) {
     var color =
         HexColor.fromString(theme, shape.control.attrString("color", "")!) ??
             Colors.black;
@@ -202,7 +206,7 @@ class FletCustomPainter extends CustomPainter {
     canvas.drawColor(color, blendMode);
   }
 
-  void drawPoints(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+  void drawPoints(Canvas canvas, CanvasShapeViewModel shape) {
     var points = parseOffsetList(shape.control, "points")!;
     var pointMode = ui.PointMode.values.firstWhere(
         (e) =>
@@ -213,7 +217,7 @@ class FletCustomPainter extends CustomPainter {
     canvas.drawPoints(pointMode, points, paint);
   }
 
-  void drawRect(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+  void drawRect(Canvas canvas, CanvasShapeViewModel shape) {
     var width = shape.control.attrDouble("width", 0)!;
     var height = shape.control.attrDouble("height", 0)!;
     var borderRadius = parseBorderRadius(shape.control, "borderRadius");
@@ -229,7 +233,7 @@ class FletCustomPainter extends CustomPainter {
         paint);
   }
 
-  void drawText(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+  void drawText(Canvas canvas, CanvasShapeViewModel shape) {
     var offset =
         Offset(shape.control.attrDouble("x")!, shape.control.attrDouble("y")!);
     var alignment =
@@ -277,7 +281,7 @@ class FletCustomPainter extends CustomPainter {
     canvas.restore();
   }
 
-  void drawPath(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+  void drawPath(Canvas canvas, CanvasShapeViewModel shape) {
     var path =
         buildPath(json.decode(shape.control.attrString("elements", "[]")!));
     Paint paint = parsePaint(theme, shape.control, "paint");
@@ -288,7 +292,7 @@ class FletCustomPainter extends CustomPainter {
     canvas.drawPath(path, paint);
   }
 
-  void drawShadow(Canvas canvas, CustomPaintDrawShapeViewModel shape) {
+  void drawShadow(Canvas canvas, CanvasShapeViewModel shape) {
     var path = buildPath(json.decode(shape.control.attrString("path", "[]")!));
     var color =
         HexColor.fromString(theme, shape.control.attrString("color", "")!) ??
