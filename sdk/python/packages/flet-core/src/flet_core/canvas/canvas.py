@@ -1,5 +1,5 @@
 import json
-from typing import Any, List, Optional, TypeVar, Union
+from typing import Any, List, Optional, Union
 
 from flet_core.canvas.shape import Shape
 from flet_core.constrained_control import ConstrainedControl
@@ -15,13 +15,11 @@ from flet_core.types import (
     ScaleValue,
 )
 
-TShape = TypeVar("TShape", bound=Shape)
-
 
 class Canvas(ConstrainedControl):
     def __init__(
         self,
-        shapes: Optional[List[TShape]] = None,
+        shapes: Optional[List[Shape]] = None,
         content: Optional[Control] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
@@ -98,7 +96,7 @@ class Canvas(ConstrainedControl):
 
     def _get_children(self):
         children = []
-        children.extend(self.__canvas)
+        children.extend(self.__shapes)
         if self.__content is not None:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
@@ -106,20 +104,20 @@ class Canvas(ConstrainedControl):
 
     def clean(self):
         super().clean()
-        self.__canvas.clear()
+        self.__shapes.clear()
 
     async def clean_async(self):
         await super().clean_async()
-        self.__canvas.clear()
+        self.__shapes.clear()
 
     # shapes
     @property
-    def shapes(self):
-        return self.__canvas
+    def shapes(self) -> List[Shape]:
+        return self.__shapes
 
     @shapes.setter
-    def shapes(self, value: Optional[List[TShape]]):
-        self.__canvas = value if value is not None else []
+    def shapes(self, value: Optional[List[Shape]]):
+        self.__shapes = value if value is not None else []
 
     # content
     @property

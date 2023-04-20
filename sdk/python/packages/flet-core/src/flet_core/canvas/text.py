@@ -5,7 +5,7 @@ from flet_core.canvas.shape import Shape
 from flet_core.control import OptionalNumber
 from flet_core.text_span import TextSpan
 from flet_core.text_style import TextStyle
-from flet_core.types import TextAlign, TextAlignString
+from flet_core.types import TextAlign
 
 
 class Text(Shape):
@@ -107,19 +107,13 @@ class Text(Shape):
 
     # text_align
     @property
-    def text_align(self) -> TextAlign:
+    def text_align(self) -> Optional[TextAlign]:
         return self.__text_align
 
     @text_align.setter
-    def text_align(self, value: TextAlign):
+    def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
-
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
+        self._set_attr("textAlign", value.value if value is not None else None)
 
     # max_lines
     @property

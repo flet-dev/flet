@@ -46,7 +46,7 @@ class Points(Shape):
     @point_mode.setter
     def point_mode(self, value: Optional[PointMode]):
         self.__point_mode = value
-        self._set_attr("pointMode", value.value)
+        self._set_attr("pointMode", value.value if value is not None else None)
 
     # points
     @property
