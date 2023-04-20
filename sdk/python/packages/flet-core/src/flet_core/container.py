@@ -380,10 +380,11 @@ class Container(ConstrainedControl):
     # shape
     @property
     def shape(self):
-        return self._get_attr("shape")
+        return self.__shape
 
     @shape.setter
     def shape(self, value: Optional[BoxShape]):
+        self.__shape = value
         self._set_attr("shape", value.value if value is not None else None)
 
     # clip_behavior
