@@ -43,11 +43,11 @@ class Path(Shape):
         type: str = dataclasses.field(default="cubicto")
 
     @dataclasses.dataclass
-    class Path(PathElement):
+    class SubPath(PathElement):
         elements: List["Path.PathElement"]
         x: float
         y: float
-        type: str = dataclasses.field(default="path")
+        type: str = dataclasses.field(default="subpath")
 
     @dataclasses.dataclass
     class Arc(PathElement):

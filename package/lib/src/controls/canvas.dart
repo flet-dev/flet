@@ -358,7 +358,7 @@ class FletCustomPainter extends CustomPainter {
             parseDouble(elem["cp2y"]),
             parseDouble(elem["x"]),
             parseDouble(elem["y"]));
-      } else if (type == "path") {
+      } else if (type == "subpath") {
         path.addPath(buildPath(elem["elements"]),
             Offset(parseDouble(elem["x"]), parseDouble(elem["y"])));
       } else if (type == "close") {
