@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -21,6 +20,7 @@ class TextControl extends StatelessWidget {
     debugPrint("Text build: ${control.id}");
 
     String text = control.attrString("value", "")!;
+    List<TextSpan>? spans = parseTextSpans(Theme.of(context), control, "spans");
     String? semanticsLabel = control.attrString("semanticsLabel");
     bool noWrap = control.attrBool("noWrap", false)!;
     int? maxLines = control.attrInt("maxLines");
@@ -46,17 +46,22 @@ class TextControl extends StatelessWidget {
         fontFamily: control.attrString("fontFamily"),
         fontVariations: variations,
         color: HexColor.fromString(
-            Theme.of(context), control.attrString("color", "")!),
+                Theme.of(context), control.attrString("color", "")!) ??
+            Theme.of(context).textTheme.bodyMedium!.color,
         backgroundColor: HexColor.fromString(
             Theme.of(context), control.attrString("bgcolor", "")!));
 
-    TextAlign? textAlign = TextAlign.values.firstWhereOrNull((a) =>
-        a.name.toLowerCase() ==
-        control.attrString("textAlign", "")!.toLowerCase());
+    TextAlign textAlign = TextAlign.values.firstWhere(
+        (a) =>
+            a.name.toLowerCase() ==
+            control.attrString("textAlign", "")!.toLowerCase(),
+        orElse: () => TextAlign.start);
 
-    TextOverflow? overflow = TextOverflow.values.firstWhereOrNull((v) =>
-        v.name.toLowerCase() ==
-        control.attrString("overflow", "")!.toLowerCase());
+    TextOverflow overflow = TextOverflow.values.firstWhere(
+        (v) =>
+            v.name.toLowerCase() ==
+            control.attrString("overflow", "")!.toLowerCase(),
+        orElse: () => TextOverflow.clip);
 
     return constrainedControl(
         context,
@@ -68,15 +73,23 @@ class TextControl extends StatelessWidget {
                 style: style,
                 textAlign: textAlign,
               )
-            : Text(
-                text,
-                semanticsLabel: semanticsLabel,
-                maxLines: maxLines,
-                softWrap: !noWrap,
-                style: style,
-                textAlign: textAlign,
-                overflow: overflow,
-              ),
+            : (spans != null && spans.isNotEmpty)
+                ? RichText(
+                    text: TextSpan(text: text, style: style, children: spans),
+                    maxLines: maxLines,
+                    softWrap: !noWrap,
+                    textAlign: textAlign,
+                    overflow: overflow,
+                  )
+                : Text(
+                    text,
+                    semanticsLabel: semanticsLabel,
+                    maxLines: maxLines,
+                    softWrap: !noWrap,
+                    style: style,
+                    textAlign: textAlign,
+                    overflow: overflow,
+                  ),
         parent,
         control);
   }

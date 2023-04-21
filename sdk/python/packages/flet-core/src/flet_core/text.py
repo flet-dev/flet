@@ -1,9 +1,10 @@
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, List, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.text_span import TextSpan
 from flet_core.types import (
     AnimationValue,
     FontWeight,
@@ -129,6 +130,7 @@ class Text(ConstrainedControl):
         #
         # text-specific
         #
+        spans: Optional[List[TextSpan]] = None,
         text_align: TextAlign = TextAlign.NONE,
         font_family: Optional[str] = None,
         size: OptionalNumber = None,
@@ -173,6 +175,7 @@ class Text(ConstrainedControl):
         )
 
         self.value = value
+        self.spans = spans
         self.text_align = text_align
         self.font_family = font_family
         self.size = size
@@ -190,6 +193,10 @@ class Text(ConstrainedControl):
     def _get_control_name(self):
         return "text"
 
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("spans", self.__spans)
+
     # value
     @property
     def value(self) -> Optional[str]:
@@ -198,6 +205,15 @@ class Text(ConstrainedControl):
     @value.setter
     def value(self, value: Optional[str]):
         self._set_attr("value", value)
+
+    # spans
+    @property
+    def spans(self) -> Optional[List[TextSpan]]:
+        return self.__spans
+
+    @spans.setter
+    def spans(self, value: Optional[List[TextSpan]]):
+        self.__spans = value if value is not None else []
 
     # text_align
     @property
