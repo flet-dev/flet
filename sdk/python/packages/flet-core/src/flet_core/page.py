@@ -111,6 +111,7 @@ class Page(Control):
         self.__offstage = Offstage()
         self.__theme = None
         self.__dark_theme = None
+        self.__theme_mode = ThemeMode.SYSTEM  # Default Theme Mode
         self.__pubsub = PubSub(conn.pubsubhub, session_id)
         self.__client_storage = ClientStorage(self)
         self.__session_storage = SessionStorage(self)
