@@ -5,24 +5,24 @@ import 'package:redux/redux.dart';
 import 'app_state.dart';
 import 'control.dart';
 
-class CanvasShapeViewModel extends Equatable {
+class ControlTreeViewModel extends Equatable {
   final Control control;
-  final List<CanvasShapeViewModel> shapes;
+  final List<ControlTreeViewModel> children;
 
-  const CanvasShapeViewModel({required this.control, required this.shapes});
+  const ControlTreeViewModel({required this.control, required this.children});
 
-  static CanvasShapeViewModel fromStore(
+  static ControlTreeViewModel fromStore(
       Store<AppState> store, Control control) {
-    return CanvasShapeViewModel(
+    return ControlTreeViewModel(
         control: control,
-        shapes: store.state.controls[control.id]!.childIds
+        children: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
             .whereNotNull()
             .where((c) => c.isVisible)
-            .map((c) => CanvasShapeViewModel.fromStore(store, c))
+            .map((c) => ControlTreeViewModel.fromStore(store, c))
             .toList());
   }
 
   @override
-  List<Object?> get props => [control, shapes];
+  List<Object?> get props => [control, children];
 }

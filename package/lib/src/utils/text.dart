@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../models/control_tree_view_model.dart';
 import '../utils/drawing.dart';
 import '../utils/numbers.dart';
 import '../utils/shadows.dart';
@@ -74,26 +76,23 @@ FontWeight? getFontWeight(String weightName) {
   return null;
 }
 
-List<TextSpan>? parseTextSpans(
-    ThemeData theme, Control control, String propName) {
-  dynamic j;
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-  j = json.decode(v);
-  return (j as List).map((s) => textSpanFromJson(theme, s)).toList();
+List<InlineSpan> parseTextSpans(
+    ThemeData theme, ControlTreeViewModel viewModel) {
+  return viewModel.children
+      .map((c) => parseInlineSpan(theme, c))
+      .whereNotNull()
+      .toList();
 }
 
-TextSpan textSpanFromJson(ThemeData theme, Map<String, dynamic> json) {
-  return TextSpan(
-      text: json["text"],
-      style: textStyleFromJson(theme, json["style"]),
-      children: json["spans"] != null
-          ? (json["spans"] as List)
-              .map((s) => textSpanFromJson(theme, s))
-              .toList()
-          : null);
+InlineSpan? parseInlineSpan(
+    ThemeData theme, ControlTreeViewModel spanViewModel) {
+  if (spanViewModel.control.type == "textspan") {
+    return TextSpan(
+        text: spanViewModel.control.attrString("text"),
+        style: parseTextStyle(theme, spanViewModel.control, "style"),
+        children: parseTextSpans(theme, spanViewModel));
+  }
+  return null;
 }
 
 TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
@@ -107,24 +106,27 @@ TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
 }
 
 TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
-  var fontWeight = json["weight"] ?? "";
+  var fontWeight = json["weight"];
 
-  List<FontVariation> variations = [];
-  if (fontWeight.startsWith("w")) {
-    variations.add(FontVariation('wght', parseDouble(fontWeight.substring(1))));
+  List<FontVariation>? variations;
+  if (fontWeight != null && fontWeight.startsWith("w")) {
+    variations = [FontVariation('wght', parseDouble(fontWeight.substring(1)))];
   }
 
-  var size = json["size"] ?? theme.textTheme.bodyMedium?.fontSize;
-
   return TextStyle(
-      fontSize: parseDouble(size),
-      fontWeight: getFontWeight(fontWeight),
-      fontStyle:
-          (json["italic"] ?? false) ? FontStyle.italic : FontStyle.normal,
+      fontSize: json["size"] != null ? parseDouble(json["size"]) : null,
+      fontWeight: fontWeight != null ? getFontWeight(fontWeight) : null,
+      fontStyle: (json["italic"] != null)
+          ? (parseBool(json["italic"]) ? FontStyle.italic : null)
+          : null,
       fontFamily: json["font_family"],
       fontVariations: variations,
-      color: HexColor.fromString(theme, json["color"] ?? ""),
-      backgroundColor: HexColor.fromString(theme, json["bgcolor"] ?? ""),
+      color: json["color"] != null
+          ? HexColor.fromString(theme, json["color"] ?? "")
+          : null,
+      backgroundColor: json["bgcolor"] != null
+          ? HexColor.fromString(theme, json["bgcolor"] ?? "")
+          : null,
       shadows: json["shadow"] != null
           ? boxShadowsFromJSON(theme, json["shadow"])
           : null,

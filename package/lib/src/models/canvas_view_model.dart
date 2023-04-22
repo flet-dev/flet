@@ -3,13 +3,13 @@ import 'package:equatable/equatable.dart';
 import 'package:redux/redux.dart';
 
 import 'app_state.dart';
-import 'canvas_shape_view_model.dart';
 import 'control.dart';
+import 'control_tree_view_model.dart';
 
 class CanvasViewModel extends Equatable {
   final Control control;
   final Control? child;
-  final List<CanvasShapeViewModel> shapes;
+  final List<ControlTreeViewModel> shapes;
   final dynamic dispatch;
 
   const CanvasViewModel(
@@ -29,7 +29,7 @@ class CanvasViewModel extends Equatable {
             .firstOrNull,
         shapes: children
             .where((c) => c.name != "content" && c.isVisible)
-            .map((c) => CanvasShapeViewModel.fromStore(store, c))
+            .map((c) => ControlTreeViewModel.fromStore(store, c))
             .toList(),
         dispatch: store.dispatch);
   }

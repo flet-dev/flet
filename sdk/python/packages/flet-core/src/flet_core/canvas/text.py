@@ -3,6 +3,7 @@ from typing import Any, List, Optional
 from flet_core.alignment import Alignment
 from flet_core.canvas.shape import Shape
 from flet_core.control import OptionalNumber
+from flet_core.inline_span import InlineSpan
 from flet_core.text_span import TextSpan
 from flet_core.text_style import TextStyle
 from flet_core.types import TextAlign
@@ -15,7 +16,7 @@ class Text(Shape):
         y: OptionalNumber = None,
         text: Optional[str] = None,
         style: Optional[TextStyle] = None,
-        spans: Optional[List[TextSpan]] = None,
+        spans: Optional[List[InlineSpan]] = None,
         alignment: Optional[Alignment] = None,
         text_align: TextAlign = TextAlign.NONE,
         max_lines: Optional[int] = None,
@@ -45,10 +46,14 @@ class Text(Shape):
     def _get_control_name(self):
         return "text"
 
+    def _get_children(self):
+        children = []
+        children.extend(self.__spans)
+        return children
+
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("style", self.__style)
-        self._set_attr_json("spans", self.__spans)
         self._set_attr_json("alignment", self.__alignment)
 
     # x
@@ -89,11 +94,11 @@ class Text(Shape):
 
     # spans
     @property
-    def spans(self) -> Optional[List[TextSpan]]:
+    def spans(self) -> Optional[List[InlineSpan]]:
         return self.__spans
 
     @spans.setter
-    def spans(self, value: Optional[List[TextSpan]]):
+    def spans(self, value: Optional[List[InlineSpan]]):
         self.__spans = value if value is not None else []
 
     # alignment

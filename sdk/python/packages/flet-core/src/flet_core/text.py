@@ -193,9 +193,10 @@ class Text(ConstrainedControl):
     def _get_control_name(self):
         return "text"
 
-    def _before_build_command(self):
-        super()._before_build_command()
-        self._set_attr_json("spans", self.__spans)
+    def _get_children(self):
+        children = []
+        children.extend(self.__spans)
+        return children
 
     # value
     @property
