@@ -113,6 +113,18 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
     variations = [FontVariation('wght', parseDouble(fontWeight.substring(1)))];
   }
 
+  List<TextDecoration> decorations = [];
+  var decor = parseInt(json["decoration"]);
+  if (decor & 0x1 > 0) {
+    decorations.add(TextDecoration.underline);
+  }
+  if (decor & 0x2 > 0) {
+    decorations.add(TextDecoration.overline);
+  }
+  if (decor & 0x4 > 0) {
+    decorations.add(TextDecoration.lineThrough);
+  }
+
   return TextStyle(
       fontSize: json["size"] != null ? parseDouble(json["size"]) : null,
       fontWeight: fontWeight != null ? getFontWeight(fontWeight) : null,
@@ -121,6 +133,18 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
           : null,
       fontFamily: json["font_family"],
       fontVariations: variations,
+      decoration:
+          decorations.isNotEmpty ? TextDecoration.combine(decorations) : null,
+      decorationStyle: json["decoration_style"] != null
+          ? TextDecorationStyle.values.firstWhereOrNull((v) =>
+              v.name.toLowerCase() == json["decoration_style"].toLowerCase())
+          : null,
+      decorationColor: json["decoration_color"] != null
+          ? HexColor.fromString(theme, json["decoration_color"] ?? "")
+          : null,
+      decorationThickness: json["decoration_thickness"] != null
+          ? parseDouble(json["decoration_thickness"])
+          : null,
       color: json["color"] != null
           ? HexColor.fromString(theme, json["color"] ?? "")
           : null,
