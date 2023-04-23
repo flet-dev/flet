@@ -13,14 +13,17 @@ class ControlTreeViewModel extends Equatable {
 
   static ControlTreeViewModel fromStore(
       Store<AppState> store, Control control) {
+    var ctrl = store.state.controls[control.id];
     return ControlTreeViewModel(
         control: control,
-        children: store.state.controls[control.id]!.childIds
-            .map((childId) => store.state.controls[childId])
-            .whereNotNull()
-            .where((c) => c.isVisible)
-            .map((c) => ControlTreeViewModel.fromStore(store, c))
-            .toList());
+        children: ctrl != null
+            ? ctrl.childIds
+                .map((childId) => store.state.controls[childId])
+                .whereNotNull()
+                .where((c) => c.isVisible)
+                .map((c) => ControlTreeViewModel.fromStore(store, c))
+                .toList()
+            : []);
   }
 
   @override
