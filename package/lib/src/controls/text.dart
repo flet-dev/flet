@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_tree_view_model.dart';
@@ -14,8 +15,13 @@ import 'create_control.dart';
 class TextControl extends StatelessWidget {
   final Control? parent;
   final Control control;
+  final bool parentDisabled;
 
-  const TextControl({Key? key, required this.parent, required this.control})
+  const TextControl(
+      {Key? key,
+      required this.parent,
+      required this.control,
+      required this.parentDisabled})
       : super(key: key);
 
   @override
@@ -26,9 +32,11 @@ class TextControl extends StatelessWidget {
         builder: (context, viewModel) {
           debugPrint("Text build: ${control.id}");
 
+          bool disabled = control.isDisabled || parentDisabled;
+
           String text = control.attrString("value", "")!;
-          List<InlineSpan>? spans =
-              parseTextSpans(Theme.of(context), viewModel);
+          List<InlineSpan>? spans = parseTextSpans(Theme.of(context), viewModel,
+              disabled, FletAppServices.of(context).server);
           String? semanticsLabel = control.attrString("semanticsLabel");
           bool noWrap = control.attrBool("noWrap", false)!;
           int? maxLines = control.attrInt("maxLines");

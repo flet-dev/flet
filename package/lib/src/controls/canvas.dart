@@ -250,7 +250,9 @@ class FletCustomPainter extends CustomPainter {
         a.name.toLowerCase() ==
         shape.control.attrString("textAlign", "")!.toLowerCase());
     TextSpan span = TextSpan(
-        text: text, style: style, children: parseTextSpans(theme, shape));
+        text: text,
+        style: style,
+        children: parseTextSpans(theme, shape, false, null));
 
     var maxLines = shape.control.attrInt("maxLines");
     var maxWidth = shape.control.attrDouble("maxWidth");

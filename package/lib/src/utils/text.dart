@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_server.dart';
 import '../models/control.dart';
 import '../models/control_tree_view_model.dart';
 import '../utils/drawing.dart';
@@ -76,21 +78,59 @@ FontWeight? getFontWeight(String weightName) {
   return null;
 }
 
-List<InlineSpan> parseTextSpans(
-    ThemeData theme, ControlTreeViewModel viewModel) {
+List<InlineSpan> parseTextSpans(ThemeData theme, ControlTreeViewModel viewModel,
+    bool parentDisabled, FletServer? server) {
   return viewModel.children
-      .map((c) => parseInlineSpan(theme, c))
+      .map((c) => parseInlineSpan(theme, c, parentDisabled, server))
       .whereNotNull()
       .toList();
 }
 
-InlineSpan? parseInlineSpan(
-    ThemeData theme, ControlTreeViewModel spanViewModel) {
+InlineSpan? parseInlineSpan(ThemeData theme, ControlTreeViewModel spanViewModel,
+    bool parentDisabled, FletServer? server) {
   if (spanViewModel.control.type == "textspan") {
+    bool disabled = spanViewModel.control.isDisabled || parentDisabled;
+    var onClick = spanViewModel.control.attrBool("onClick", false)!;
     return TextSpan(
-        text: spanViewModel.control.attrString("text"),
-        style: parseTextStyle(theme, spanViewModel.control, "style"),
-        children: parseTextSpans(theme, spanViewModel));
+      text: spanViewModel.control.attrString("text"),
+      style: parseTextStyle(theme, spanViewModel.control, "style"),
+      children: parseTextSpans(theme, spanViewModel, parentDisabled, server),
+      mouseCursor: onClick && !disabled && server != null
+          ? SystemMouseCursors.click
+          : null,
+      recognizer: onClick && !disabled && server != null
+          ? (TapGestureRecognizer()
+            ..onTap = () {
+              debugPrint("TextSpan ${spanViewModel.control.id} clicked!");
+              server.sendPageEvent(
+                  eventTarget: spanViewModel.control.id,
+                  eventName: "click",
+                  eventData: "");
+            })
+          : null,
+      onEnter: spanViewModel.control.attrBool("onEnter", false)! &&
+              !disabled &&
+              server != null
+          ? (event) {
+              debugPrint("TextSpan ${spanViewModel.control.id} entered!");
+              server.sendPageEvent(
+                  eventTarget: spanViewModel.control.id,
+                  eventName: "enter",
+                  eventData: "");
+            }
+          : null,
+      onExit: spanViewModel.control.attrBool("onExit", false)! &&
+              !disabled &&
+              server != null
+          ? (event) {
+              debugPrint("TextSpan ${spanViewModel.control.id} exited!");
+              server.sendPageEvent(
+                  eventTarget: spanViewModel.control.id,
+                  eventName: "exit",
+                  eventData: "");
+            }
+          : null,
+    );
   }
   return null;
 }

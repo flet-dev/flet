@@ -10,6 +10,9 @@ class TextSpan(InlineSpan):
         text: Optional[str] = None,
         style: Optional[TextStyle] = None,
         spans: Optional[List[InlineSpan]] = None,
+        on_click=None,
+        on_enter=None,
+        on_exit=None,
         # base
         ref=None,
         visible: Optional[bool] = None,
@@ -23,6 +26,9 @@ class TextSpan(InlineSpan):
         self.text = text
         self.style = style
         self.spans = spans
+        self.on_click = on_click
+        self.on_enter = on_enter
+        self.on_exit = on_exit
 
     def _get_control_name(self):
         return "textspan"
@@ -62,3 +68,33 @@ class TextSpan(InlineSpan):
     @spans.setter
     def spans(self, value: Optional[List[InlineSpan]]):
         self.__spans = value if value is not None else []
+
+    # on_click
+    @property
+    def on_click(self):
+        return self._get_event_handler("click")
+
+    @on_click.setter
+    def on_click(self, handler):
+        self._add_event_handler("click", handler)
+        self._set_attr("onClick", True if handler is not None else None)
+
+    # on_enter
+    @property
+    def on_enter(self):
+        return self._get_event_handler("enter")
+
+    @on_enter.setter
+    def on_enter(self, handler):
+        self._add_event_handler("enter", handler)
+        self._set_attr("onEnter", True if handler is not None else None)
+
+    # on_exit
+    @property
+    def on_exit(self):
+        return self._get_event_handler("exit")
+
+    @on_exit.setter
+    def on_exit(self, handler):
+        self._add_event_handler("exit", handler)
+        self._set_attr("onExit", True if handler is not None else None)

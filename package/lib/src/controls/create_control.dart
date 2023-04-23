@@ -95,7 +95,10 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               children: controlView.children,
               dispatch: controlView.dispatch);
         case "text":
-          return TextControl(parent: parent, control: controlView.control);
+          return TextControl(
+              parent: parent,
+              control: controlView.control,
+              parentDisabled: parentDisabled);
         case "icon":
           return IconControl(parent: parent, control: controlView.control);
         case "filepicker":
