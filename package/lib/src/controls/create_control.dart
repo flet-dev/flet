@@ -15,6 +15,7 @@ import 'audio.dart';
 import 'banner.dart';
 import 'barchart.dart';
 import 'bottom_sheet.dart';
+import 'canvas.dart';
 import 'card.dart';
 import 'checkbox.dart';
 import 'circle_avatar.dart';
@@ -95,7 +96,10 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
               children: controlView.children,
               dispatch: controlView.dispatch);
         case "text":
-          return TextControl(parent: parent, control: controlView.control);
+          return TextControl(
+              parent: parent,
+              control: controlView.control,
+              parentDisabled: parentDisabled);
         case "icon":
           return IconControl(parent: parent, control: controlView.control);
         case "filepicker":
@@ -396,6 +400,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
               parentDisabled: parentDisabled);
         case "piechart":
           return PieChartControl(
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled);
+        case "canvas":
+          return CanvasControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,

@@ -1,10 +1,8 @@
-import dataclasses
 import json
-from dataclasses import field
-from enum import Enum
 from typing import Any, List, Optional, Tuple, Union
 
 from flet_core.alignment import Alignment
+from flet_core.blur import Blur
 from flet_core.border import Border
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -37,20 +35,6 @@ try:
     from typing import Literal
 except Exception:
     from typing_extensions import Literal
-
-
-class BlurTileMode(Enum):
-    CLAMP = "clamp"
-    DECAL = "decal"
-    MIRROR = "mirror"
-    REPEATED = "repeated"
-
-
-@dataclasses.dataclass
-class Blur:
-    sigma_x: float
-    sigma_y: float
-    tile_mode: BlurTileMode = field(default=BlurTileMode.CLAMP)
 
 
 class Container(ConstrainedControl):
@@ -396,10 +380,11 @@ class Container(ConstrainedControl):
     # shape
     @property
     def shape(self):
-        return self._get_attr("shape")
+        return self.__shape
 
     @shape.setter
     def shape(self, value: Optional[BoxShape]):
+        self.__shape = value
         self._set_attr("shape", value.value if value is not None else None)
 
     # clip_behavior

@@ -25,10 +25,10 @@ class EmbedJsonEncoder(json.JSONEncoder):
             }
         elif isinstance(obj, BorderRadius):
             return {
-                "bl": obj.bottomLeft,
-                "br": obj.bottomRight,
-                "tl": obj.topLeft,
-                "tr": obj.topRight,
+                "bl": obj.bottom_left,
+                "br": obj.bottom_right,
+                "tl": obj.top_left,
+                "tr": obj.top_right,
             }
         elif isinstance(obj, (Margin, Padding)):
             return {

@@ -4,11 +4,13 @@ from flet_core import (
     audio,
     border,
     border_radius,
+    canvas,
     colors,
     dropdown,
     icons,
     margin,
     padding,
+    painting,
     transform,
     utils,
 )
@@ -19,6 +21,7 @@ from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
 from flet_core.banner import Banner
+from flet_core.blur import Blur, BlurTileMode
 from flet_core.border import Border, BorderSide
 from flet_core.border_radius import BorderRadius
 from flet_core.bottom_sheet import BottomSheet
@@ -54,7 +57,7 @@ from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.checkbox import Checkbox
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
-from flet_core.container import Blur, BlurTileMode, Container, ContainerTapEvent
+from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.datatable import (
@@ -131,6 +134,15 @@ from flet_core.page import (
     RouteChangeEvent,
     ViewPopEvent,
 )
+from flet_core.painting import (
+    Paint,
+    PaintingStyle,
+    PaintLinearGradient,
+    PaintRadialGradient,
+    PaintSweepGradient,
+    StrokeCap,
+    StrokeJoin,
+)
 from flet_core.popup_menu_button import PopupMenuButton, PopupMenuItem
 from flet_core.progress_bar import ProgressBar
 from flet_core.progress_ring import ProgressRing
@@ -152,7 +164,8 @@ from flet_core.tabs import Tab, Tabs
 from flet_core.template_route import TemplateRoute
 from flet_core.text import Text, TextOverflow, TextThemeStyle
 from flet_core.text_button import TextButton
-from flet_core.text_style import TextStyle
+from flet_core.text_span import TextSpan
+from flet_core.text_style import TextDecoration, TextDecorationStyle, TextStyle
 from flet_core.textfield import KeyboardType, TextCapitalization, TextField
 from flet_core.theme import (
     PageTransitionsTheme,
