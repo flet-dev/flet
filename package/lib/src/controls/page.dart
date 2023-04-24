@@ -478,8 +478,9 @@ class _PageControlState extends State<PageControl> {
               List<Widget> overlayWidgets = [];
 
               if (viewId == routesView.viewIds.last) {
-                overlayWidgets.addAll(routesView.offstageControls.map((c) =>
-                    createControl(
+                overlayWidgets.addAll(routesView.offstageControls
+                    .where((c) => !c.isNonVisual)
+                    .map((c) => createControl(
                         routesView.page, c.id, routesView.page.isDisabled)));
                 overlayWidgets.add(const PageMedia());
               }
@@ -504,7 +505,7 @@ class _PageControlState extends State<PageControl> {
             _prevViewsIds = viewIds;
           }
 
-          return Navigator(
+          Widget nextChild = Navigator(
               key: navigatorKey,
               pages: pages,
               onPopPage: (route, dynamic result) {
@@ -515,6 +516,16 @@ class _PageControlState extends State<PageControl> {
                         ((route.settings as Page).key as ValueKey).value);
                 return false;
               });
+
+          // wrap navigator into non-visual offstage controls
+          for (var c
+              in routesView.offstageControls.where((c) => c.isNonVisual)) {
+            nextChild = createControl(
+                routesView.page, c.id, routesView.page.isDisabled,
+                nextChild: nextChild);
+          }
+
+          return nextChild;
         });
   }
 
@@ -605,7 +616,7 @@ class _PageControlState extends State<PageControl> {
                 return false;
               },
               builder: (context, childrenViews) {
-                debugPrint("Route view StoreConnector build");
+                debugPrint("Route view StoreConnector build: $viewId");
 
                 var appBarView =
                     appBar != null ? childrenViews.controlViews.last : null;

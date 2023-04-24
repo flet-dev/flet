@@ -11,9 +11,13 @@ import '../protocol/update_control_props_payload.dart';
 class HapticFeedbackControl extends StatefulWidget {
   final Control? parent;
   final Control control;
+  final Widget? nextChild;
 
   const HapticFeedbackControl(
-      {Key? key, required this.parent, required this.control})
+      {Key? key,
+      required this.parent,
+      required this.control,
+      required this.nextChild})
       : super(key: key);
 
   @override
@@ -60,6 +64,6 @@ class _HapticFeedbackControlState extends State<HapticFeedbackControl> {
       }
     }();
 
-    return const SizedBox.shrink();
+    return widget.nextChild ?? const SizedBox.shrink();
   }
 }

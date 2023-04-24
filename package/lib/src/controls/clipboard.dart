@@ -11,9 +11,13 @@ import '../protocol/update_control_props_payload.dart';
 class ClipboardControl extends StatefulWidget {
   final Control? parent;
   final Control control;
+  final Widget? nextChild;
 
   const ClipboardControl(
-      {Key? key, required this.parent, required this.control})
+      {Key? key,
+      required this.parent,
+      required this.control,
+      required this.nextChild})
       : super(key: key);
 
   @override
@@ -74,6 +78,6 @@ class _ClipboardControlState extends State<ClipboardControl> {
       }
     }();
 
-    return const SizedBox.shrink();
+    return widget.nextChild ?? const SizedBox.shrink();
   }
 }

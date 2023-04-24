@@ -15,13 +15,15 @@ class SnackBarControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final Widget? nextChild;
 
   const SnackBarControl(
       {Key? key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.nextChild})
       : super(key: key);
 
   @override
@@ -107,7 +109,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
 
           _open = open;
 
-          return const SizedBox.shrink();
+          return widget.nextChild ?? const SizedBox.shrink();
         });
   }
 }
