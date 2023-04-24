@@ -13,6 +13,7 @@ class BottomSheetControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final dynamic dispatch;
+  final Widget? nextChild;
 
   const BottomSheetControl(
       {Key? key,
@@ -20,7 +21,8 @@ class BottomSheetControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch})
+      required this.dispatch,
+      required this.nextChild})
       : super(key: key);
 
   @override
@@ -90,6 +92,6 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
       });
     }
 
-    return const SizedBox.shrink();
+    return widget.nextChild ?? const SizedBox.shrink();
   }
 }

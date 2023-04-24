@@ -6,18 +6,27 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/page_args_model.dart';
+import '../protocol/update_control_props_payload.dart';
 import '../utils/images.dart';
 import 'error.dart';
 
 class AudioControl extends StatefulWidget {
   final Control? parent;
   final Control control;
+  final dynamic dispatch;
+  final Widget? nextChild;
 
-  const AudioControl({Key? key, required this.parent, required this.control})
+  const AudioControl(
+      {Key? key,
+      required this.parent,
+      required this.control,
+      required this.dispatch,
+      required this.nextChild})
       : super(key: key);
 
   @override
@@ -193,7 +202,14 @@ class _AudioControlState extends State<AudioControl> {
             var method = widget.control.attrString("method");
             if (method != null && method != _method) {
               _method = method;
-              debugPrint("Audio JSON value: $_method");
+              debugPrint("Audio JSON method: $method, $_method");
+
+              List<Map<String, String>> props = [
+                {"i": widget.control.id, "method": ""}
+              ];
+              widget.dispatch(UpdateControlPropsAction(
+                  UpdateControlPropsPayload(props: props)));
+              server.updateControlProps(props: props);
 
               var mj = json.decode(method);
               var i = mj["i"] as int;
@@ -245,7 +261,7 @@ class _AudioControlState extends State<AudioControl> {
             }
           }();
 
-          return const SizedBox.shrink();
+          return widget.nextChild ?? const SizedBox.shrink();
         });
   }
 }

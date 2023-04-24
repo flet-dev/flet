@@ -69,7 +69,8 @@ import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
 
-Widget createControl(Control? parent, String id, bool parentDisabled) {
+Widget createControl(Control? parent, String id, bool parentDisabled,
+    {Widget? nextChild}) {
   //debugPrint("createControl(): $id");
   return StoreConnector<AppState, ControlViewModel>(
     key: ValueKey<String>(id),
@@ -99,7 +100,10 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
           return IconControl(parent: parent, control: controlView.control);
         case "filepicker":
           return FilePickerControl(
-              parent: parent, control: controlView.control);
+            parent: parent,
+            control: controlView.control,
+            nextChild: nextChild,
+          );
         case "markdown":
           return MarkdownControl(parent: parent, control: controlView.control);
         case "fletapp":
@@ -107,17 +111,28 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
         case "image":
           return ImageControl(parent: parent, control: controlView.control);
         case "audio":
-          return AudioControl(parent: parent, control: controlView.control);
+          return AudioControl(
+              parent: parent,
+              control: controlView.control,
+              dispatch: controlView.dispatch,
+              nextChild: nextChild);
         case "divider":
           return DividerControl(parent: parent, control: controlView.control);
         case "clipboard":
-          return ClipboardControl(parent: parent, control: controlView.control);
+          return ClipboardControl(
+              parent: parent,
+              control: controlView.control,
+              nextChild: nextChild);
         case "hapticfeedback":
           return HapticFeedbackControl(
-              parent: parent, control: controlView.control);
+              parent: parent,
+              control: controlView.control,
+              nextChild: nextChild);
         case "shakedetector":
           return ShakeDetectorControl(
-              parent: parent, control: controlView.control);
+              parent: parent,
+              control: controlView.control,
+              nextChild: nextChild);
         case "verticaldivider":
           return VerticalDividerControl(
               parent: parent, control: controlView.control);
@@ -319,27 +334,30 @@ Widget createControl(Control? parent, String id, bool parentDisabled) {
               parent: parent,
               control: controlView.control,
               children: controlView.children,
-              parentDisabled: parentDisabled);
+              parentDisabled: parentDisabled,
+              nextChild: nextChild);
         case "alertdialog":
           return AlertDialogControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
-              parentDisabled: parentDisabled);
+              parentDisabled: parentDisabled,
+              nextChild: nextChild);
         case "bottomsheet":
           return BottomSheetControl(
-            parent: parent,
-            control: controlView.control,
-            children: controlView.children,
-            parentDisabled: parentDisabled,
-            dispatch: controlView.dispatch,
-          );
+              parent: parent,
+              control: controlView.control,
+              children: controlView.children,
+              parentDisabled: parentDisabled,
+              dispatch: controlView.dispatch,
+              nextChild: nextChild);
         case "banner":
           return BannerControl(
               parent: parent,
               control: controlView.control,
               children: controlView.children,
-              parentDisabled: parentDisabled);
+              parentDisabled: parentDisabled,
+              nextChild: nextChild);
         case "tabs":
           return TabsControl(
               parent: parent,

@@ -22,9 +22,13 @@ import '../utils/strings.dart';
 class FilePickerControl extends StatefulWidget {
   final Control? parent;
   final Control control;
+  final Widget? nextChild;
 
   const FilePickerControl(
-      {Key? key, required this.parent, required this.control})
+      {Key? key,
+      required this.parent,
+      required this.control,
+      required this.nextChild})
       : super(key: key);
 
   @override
@@ -161,7 +165,7 @@ class _FilePickerControlState extends State<FilePickerControl> {
             uploadFiles(upload, FletAppServices.of(context).server, pageUri!);
           }
 
-          return const SizedBox.shrink();
+          return widget.nextChild ?? const SizedBox.shrink();
         });
   }
 
