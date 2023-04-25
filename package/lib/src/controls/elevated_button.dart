@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -58,6 +59,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl> {
     final server = FletAppServices.of(context).server;
 
     String text = widget.control.attrString("text", "")!;
+    String url = widget.control.attrString("url", "")!;
     IconData? icon = getMaterialIcon(widget.control.attrString("icon", "")!);
     Color? iconColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("iconColor", "")!);
@@ -70,6 +72,10 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl> {
     Function()? onPressed = !disabled
         ? () {
             debugPrint("Button ${widget.control.id} clicked!");
+            if (url != "") {
+              openWebBrowser(url,
+                  webWindowName: widget.control.attrString("urlTarget"));
+            }
             server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "click",

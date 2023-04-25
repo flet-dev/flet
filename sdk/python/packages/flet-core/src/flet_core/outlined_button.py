@@ -73,6 +73,8 @@ class OutlinedButton(ConstrainedControl):
         style: Optional[ButtonStyle] = None,
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
         on_click=None,
         on_long_press=None,
         on_hover=None,
@@ -114,6 +116,8 @@ class OutlinedButton(ConstrainedControl):
         self.style = style
         self.content = content
         self.autofocus = autofocus
+        self.url = url
+        self.url_target = url_target
         self.on_click = on_click
         self.on_long_press = on_long_press
         self.on_hover = on_hover
@@ -176,6 +180,24 @@ class OutlinedButton(ConstrainedControl):
     @style.setter
     def style(self, value: Optional[ButtonStyle]):
         self.__style = value
+
+    # url
+    @property
+    def url(self):
+        return self._get_attr("url")
+
+    @url.setter
+    def url(self, value):
+        self._set_attr("url", value)
+
+    # url_target
+    @property
+    def url_target(self):
+        return self._get_attr("urlTarget")
+
+    @url_target.setter
+    def url_target(self, value):
+        self._set_attr("urlTarget", value)
 
     # on_click
     @property

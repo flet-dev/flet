@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/launch_url.dart';
 import 'create_control.dart';
 
 class OutlinedButtonControl extends StatefulWidget {
@@ -61,6 +62,8 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl> {
     Color? iconColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("iconColor", "")!);
     var contentCtrls = widget.children.where((c) => c.name == "content");
+    String url = widget.control.attrString("url", "")!;
+    String? urlTarget = widget.control.attrString("urlTarget");
     bool onHover = widget.control.attrBool("onHover", false)!;
     bool onLongPress = widget.control.attrBool("onLongPress", false)!;
     bool autofocus = widget.control.attrBool("autofocus", false)!;
@@ -69,6 +72,9 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl> {
     Function()? onPressed = !disabled
         ? () {
             debugPrint("Button ${widget.control.id} clicked!");
+            if (url != "") {
+              openWebBrowser(url, webWindowName: urlTarget);
+            }
             server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "click",

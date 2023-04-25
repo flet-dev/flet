@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -28,6 +29,8 @@ class FloatingActionButtonControl extends StatelessWidget {
 
     String? text = control.attrString("text");
     IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
+    String url = control.attrString("url", "")!;
+    String? urlTarget = control.attrString("urlTarget");
     Color? bgColor = HexColor.fromString(
         Theme.of(context), control.attrString("bgColor", "")!);
     OutlinedBorder? shape = parseOutlinedBorder(control, "shape");
@@ -41,6 +44,9 @@ class FloatingActionButtonControl extends StatelessWidget {
         ? null
         : () {
             debugPrint("FloatingActionButtonControl ${control.id} clicked!");
+            if (url != "") {
+              openWebBrowser(url, webWindowName: urlTarget);
+            }
             FletAppServices.of(context).server.sendPageEvent(
                 eventTarget: control.id, eventName: "click", eventData: "");
           };

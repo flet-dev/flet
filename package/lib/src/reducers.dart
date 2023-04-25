@@ -195,12 +195,15 @@ AppState appReducer(AppState state, dynamic action) {
         closeInAppWebView();
         break;
       case "launchUrl":
-        openWebBrowser(
-            action.payload.args["url"]!,
-            action.payload.args["web_window_name"],
-            action.payload.args["web_popup_window"]?.toLowerCase() == "true",
-            int.tryParse(action.payload.args["window_width"] ?? ""),
-            int.tryParse(action.payload.args["window_height"] ?? ""));
+        openWebBrowser(action.payload.args["url"]!,
+            webWindowName: action.payload.args["web_window_name"],
+            webPopupWindow:
+                action.payload.args["web_popup_window"]?.toLowerCase() ==
+                    "true",
+            windowWidth:
+                int.tryParse(action.payload.args["window_width"] ?? ""),
+            windowHeight:
+                int.tryParse(action.payload.args["window_height"] ?? ""));
         break;
       case "canLaunchUrl":
         canLaunchUrl(Uri.parse(action.payload.args["url"]!)).then((value) =>

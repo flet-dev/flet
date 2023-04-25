@@ -8,6 +8,7 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/page_args_model.dart';
+import '../utils/launch_url.dart';
 import '../utils/text.dart';
 import '../utils/uri.dart';
 import 'create_control.dart';
@@ -49,6 +50,9 @@ class MarkdownControl extends StatelessWidget {
                 .bodyMedium!
                 .copyWith(fontFamily: "monospace"));
 
+    var autoFollowLinks = control.attrBool("autoFollowLinks", false)!;
+    var autoFollowLinksTarget = control.attrString("autoFollowLinksTarget");
+
     return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
         converter: (store) => PageArgsModel.fromStore(store),
@@ -67,6 +71,9 @@ class MarkdownControl extends StatelessWidget {
               styleSheet: mdStyleSheet,
               onTapLink: (String text, String? href, String title) {
                 debugPrint("Markdown link tapped ${control.id} clicked: $href");
+                if (autoFollowLinks && href != null) {
+                  openWebBrowser(href, webWindowName: autoFollowLinksTarget);
+                }
                 FletAppServices.of(context).server.sendPageEvent(
                     eventTarget: control.id,
                     eventName: "tap_link",

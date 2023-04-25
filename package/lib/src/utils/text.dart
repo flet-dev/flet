@@ -12,6 +12,7 @@ import '../utils/drawing.dart';
 import '../utils/numbers.dart';
 import '../utils/shadows.dart';
 import 'colors.dart';
+import 'launch_url.dart';
 
 TextStyle? getTextStyle(BuildContext context, String styleName) {
   var textTheme = Theme.of(context).textTheme;
@@ -91,6 +92,8 @@ InlineSpan? parseInlineSpan(ThemeData theme, ControlTreeViewModel spanViewModel,
   if (spanViewModel.control.type == "textspan") {
     bool disabled = spanViewModel.control.isDisabled || parentDisabled;
     var onClick = spanViewModel.control.attrBool("onClick", false)!;
+    String url = spanViewModel.control.attrString("url", "")!;
+    String? urlTarget = spanViewModel.control.attrString("urlTarget");
     return TextSpan(
       text: spanViewModel.control.attrString("text"),
       style: parseTextStyle(theme, spanViewModel.control, "style"),
@@ -98,14 +101,19 @@ InlineSpan? parseInlineSpan(ThemeData theme, ControlTreeViewModel spanViewModel,
       mouseCursor: onClick && !disabled && server != null
           ? SystemMouseCursors.click
           : null,
-      recognizer: onClick && !disabled && server != null
+      recognizer: (onClick || url != "") && !disabled && server != null
           ? (TapGestureRecognizer()
             ..onTap = () {
               debugPrint("TextSpan ${spanViewModel.control.id} clicked!");
-              server.sendPageEvent(
-                  eventTarget: spanViewModel.control.id,
-                  eventName: "click",
-                  eventData: "");
+              if (url != "") {
+                openWebBrowser(url, webWindowName: urlTarget);
+              }
+              if (onClick) {
+                server.sendPageEvent(
+                    eventTarget: spanViewModel.control.id,
+                    eventName: "click",
+                    eventData: "");
+              }
             })
           : null,
       onEnter: spanViewModel.control.attrBool("onEnter", false)! &&

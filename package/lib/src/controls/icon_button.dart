@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -69,12 +70,17 @@ class _IconButtonControlState extends State<IconButtonControl> {
     var contentCtrls = widget.children.where((c) => c.name == "content");
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool selected = widget.control.attrBool("selected", false)!;
+    String url = widget.control.attrString("url", "")!;
+    String? urlTarget = widget.control.attrString("urlTarget");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     Function()? onPressed = disabled
         ? null
         : () {
             debugPrint("Button ${widget.control.id} clicked!");
+            if (url != "") {
+              openWebBrowser(url, webWindowName: urlTarget);
+            }
             FletAppServices.of(context).server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "click",

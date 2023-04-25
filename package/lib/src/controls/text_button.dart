@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/launch_url.dart';
 import 'create_control.dart';
 
 class TextButtonControl extends StatefulWidget {
@@ -63,12 +64,17 @@ class _TextButtonControlState extends State<TextButtonControl> {
     var contentCtrls = widget.children.where((c) => c.name == "content");
     bool onHover = widget.control.attrBool("onHover", false)!;
     bool onLongPress = widget.control.attrBool("onLongPress", false)!;
+    String url = widget.control.attrString("url", "")!;
+    String? urlTarget = widget.control.attrString("urlTarget");
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     Function()? onPressed = !disabled
         ? () {
             debugPrint("Button ${widget.control.id} clicked!");
+            if (url != "") {
+              openWebBrowser(url, webWindowName: urlTarget);
+            }
             server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "click",
