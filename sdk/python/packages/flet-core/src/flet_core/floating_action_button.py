@@ -99,6 +99,8 @@ class FloatingActionButton(ConstrainedControl):
         autofocus: Optional[bool] = None,
         shape: Optional[OutlinedBorder] = None,
         mini: Optional[bool] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
         on_click=None,
     ):
         ConstrainedControl.__init__(
@@ -137,6 +139,8 @@ class FloatingActionButton(ConstrainedControl):
         self.autofocus = autofocus
         self.shape = shape
         self.mini = mini
+        self.url = url
+        self.url_target = url_target
         self.on_click = on_click
 
     def _get_control_name(self):
@@ -178,6 +182,24 @@ class FloatingActionButton(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
+
+    # url
+    @property
+    def url(self):
+        return self._get_attr("url")
+
+    @url.setter
+    def url(self, value):
+        self._set_attr("url", value)
+
+    # url_target
+    @property
+    def url_target(self):
+        return self._get_attr("urlTarget")
+
+    @url_target.setter
+    def url_target(self, value):
+        self._set_attr("urlTarget", value)
 
     # on_click
     @property

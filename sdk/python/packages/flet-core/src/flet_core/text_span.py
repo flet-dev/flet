@@ -10,6 +10,8 @@ class TextSpan(InlineSpan):
         text: Optional[str] = None,
         style: Optional[TextStyle] = None,
         spans: Optional[List[InlineSpan]] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
         on_click=None,
         on_enter=None,
         on_exit=None,
@@ -26,6 +28,8 @@ class TextSpan(InlineSpan):
         self.text = text
         self.style = style
         self.spans = spans
+        self.url = url
+        self.url_target = url_target
         self.on_click = on_click
         self.on_enter = on_enter
         self.on_exit = on_exit
@@ -68,6 +72,24 @@ class TextSpan(InlineSpan):
     @spans.setter
     def spans(self, value: Optional[List[InlineSpan]]):
         self.__spans = value if value is not None else []
+
+    # url
+    @property
+    def url(self):
+        return self._get_attr("url")
+
+    @url.setter
+    def url(self, value):
+        self._set_attr("url", value)
+
+    # url_target
+    @property
+    def url_target(self):
+        return self._get_attr("urlTarget")
+
+    @url_target.setter
+    def url_target(self, value):
+        self._set_attr("urlTarget", value)
 
     # on_click
     @property

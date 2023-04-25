@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
+import '../utils/launch_url.dart';
 import 'create_control.dart';
 
 class ListTileControl extends StatelessWidget {
@@ -38,15 +39,22 @@ class ListTileControl extends StatelessWidget {
     bool isThreeLine = control.attrBool("isThreeLine", false)!;
     bool autofocus = control.attrBool("autofocus", false)!;
     bool onclick = control.attrBool("onclick", false)!;
+    String url = control.attrString("url", "")!;
+    String? urlTarget = control.attrString("urlTarget");
     bool disabled = control.isDisabled || parentDisabled;
 
-    Function()? onPressed = disabled || !onclick
-        ? null
-        : () {
+    Function()? onPressed = (onclick || url != "") && !disabled
+        ? () {
             debugPrint("ListTile ${control.id} clicked!");
-            server.sendPageEvent(
-                eventTarget: control.id, eventName: "click", eventData: "");
-          };
+            if (url != "") {
+              openWebBrowser(url, webWindowName: urlTarget);
+            }
+            if (onclick) {
+              server.sendPageEvent(
+                  eventTarget: control.id, eventName: "click", eventData: "");
+            }
+          }
+        : null;
 
     Function()? onLongPress = disabled
         ? null

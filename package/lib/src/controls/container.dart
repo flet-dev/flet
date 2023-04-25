@@ -18,6 +18,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
+import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -45,6 +46,8 @@ class ContainerControl extends StatelessWidget {
         children.where((c) => c.name == "content" && c.isVisible);
     bool ink = control.attrBool("ink", false)!;
     bool onClick = control.attrBool("onclick", false)!;
+    String url = control.attrString("url", "")!;
+    String? urlTarget = control.attrString("urlTarget");
     bool onLongPress = control.attrBool("onLongPress", false)!;
     bool onHover = control.attrBool("onHover", false)!;
     bool disabled = control.isDisabled || parentDisabled;
@@ -126,7 +129,9 @@ class ContainerControl extends StatelessWidget {
 
           Widget? result;
 
-          if ((onClick || onLongPress || onHover) && ink && !disabled) {
+          if ((onClick || url != "" || onLongPress || onHover) &&
+              ink &&
+              !disabled) {
             var ink = Ink(
                 decoration: boxDecor,
                 child: InkWell(
@@ -134,18 +139,23 @@ class ContainerControl extends StatelessWidget {
                   // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
                   // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
                   onTap: onHover ? () {} : null,
-                  onTapDown: onClick
+                  onTapDown: onClick || url != ""
                       ? (details) {
                           debugPrint("Container ${control.id} clicked!");
-                          server.sendPageEvent(
-                              eventTarget: control.id,
-                              eventName: "click",
-                              eventData: json.encode(ContainerTapEvent(
-                                      localX: details.localPosition.dx,
-                                      localY: details.localPosition.dy,
-                                      globalX: details.globalPosition.dx,
-                                      globalY: details.globalPosition.dy)
-                                  .toJson()));
+                          if (url != "") {
+                            openWebBrowser(url, webWindowName: urlTarget);
+                          }
+                          if (onClick) {
+                            server.sendPageEvent(
+                                eventTarget: control.id,
+                                eventName: "click",
+                                eventData: json.encode(ContainerTapEvent(
+                                        localX: details.localPosition.dx,
+                                        localY: details.localPosition.dy,
+                                        globalX: details.globalPosition.dx,
+                                        globalY: details.globalPosition.dy)
+                                    .toJson()));
+                          }
                         }
                       : null,
                   onLongPress: onLongPress
@@ -230,9 +240,11 @@ class ContainerControl extends StatelessWidget {
                         : null,
                     child: child);
 
-            if ((onClick || onLongPress || onHover) && !disabled) {
+            if ((onClick || onLongPress || onHover || url != "") && !disabled) {
               result = MouseRegion(
-                cursor: onClick ? SystemMouseCursors.click : MouseCursor.defer,
+                cursor: onClick || url != ""
+                    ? SystemMouseCursors.click
+                    : MouseCursor.defer,
                 onEnter: onHover
                     ? (value) {
                         debugPrint(
@@ -254,18 +266,23 @@ class ContainerControl extends StatelessWidget {
                       }
                     : null,
                 child: GestureDetector(
-                  onTapDown: onClick
+                  onTapDown: onClick || url != ""
                       ? (details) {
                           debugPrint("Container ${control.id} clicked!");
-                          server.sendPageEvent(
-                              eventTarget: control.id,
-                              eventName: "click",
-                              eventData: json.encode(ContainerTapEvent(
-                                      localX: details.localPosition.dx,
-                                      localY: details.localPosition.dy,
-                                      globalX: details.globalPosition.dx,
-                                      globalY: details.globalPosition.dy)
-                                  .toJson()));
+                          if (url != "") {
+                            openWebBrowser(url, webWindowName: urlTarget);
+                          }
+                          if (onClick) {
+                            server.sendPageEvent(
+                                eventTarget: control.id,
+                                eventName: "click",
+                                eventData: json.encode(ContainerTapEvent(
+                                        localX: details.localPosition.dx,
+                                        localY: details.localPosition.dy,
+                                        globalX: details.globalPosition.dx,
+                                        globalY: details.globalPosition.dy)
+                                    .toJson()));
+                          }
                         }
                       : null,
                   onLongPress: onLongPress
