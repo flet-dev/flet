@@ -1,3 +1,13 @@
+## 0.6.0
+
+* `Canvas` control ([docs](https://flet.dev/docs/controls/canvas)).
+* Rich text support in [`Text` control](https://flet.dev/docs/controls/text#spans).
+* Added `url` and `url_target` to controls with `on_click` event ([#1337](https://github.com/flet-dev/flet/pull/1337))
+* Auto-follow links in `Markdown` ([docs](https://flet.dev/docs/controls/markdown#auto_follow_links)).
+* Capturing web client info: IP and user agent ([#1302](https://github.com/flet-dev/flet/pull/1302))
+* Fix: Make non-visual controls working with routing ([#1333](https://github.com/flet-dev/flet/pull/1333))
+* Fix: Update `page.route` if typed in the URL ([#1289](https://github.com/flet-dev/flet/pull/1289))
+
 ## 0.5.2
 
 * Fix: Dispose controls only on session closed event
