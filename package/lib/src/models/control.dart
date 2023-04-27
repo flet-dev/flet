@@ -45,10 +45,10 @@ class Control extends Equatable {
 
   bool get isNonVisual {
     return [
-      "alertdialog",
+      //"alertdialog",
       "audio",
       "banner",
-      "bottomsheet",
+      //"bottomsheet",
       "clipboard",
       "filepicker",
       "hapticfeedback",

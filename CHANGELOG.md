@@ -1,5 +1,9 @@
 # Flet changelog
 
+## 0.6.1
+
+* Fix regression in `AlertDialog` and `BottomSheet` controls ([#1344](https://github.com/flet-dev/flet/issues/1344))
+
 ## 0.6.0
 
 * `Canvas` control ([docs](https://flet.dev/docs/controls/canvas)).
