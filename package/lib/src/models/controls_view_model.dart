@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:redux/redux.dart';
 
@@ -13,8 +14,10 @@ class ControlsViewModel extends Equatable {
   static ControlsViewModel fromStore(
       Store<AppState> store, Iterable<String> ids) {
     return ControlsViewModel(
-        controlViews:
-            ids.map((id) => ControlViewModel.fromStore(store, id)).toList(),
+        controlViews: ids
+            .map((id) => ControlViewModel.fromStore(store, id))
+            .whereNotNull()
+            .toList(),
         dispatch: store.dispatch);
   }
 

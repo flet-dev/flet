@@ -534,7 +534,7 @@ class _PageControlState extends State<PageControl> {
     return StoreConnector<AppState, ControlViewModel>(
         distinct: true,
         converter: (store) {
-          return ControlViewModel.fromStore(store, viewId);
+          return ControlViewModel.fromStore(store, viewId)!;
         },
         ignoreChange: (state) {
           return state.controls[viewId] == null;

@@ -73,7 +73,7 @@ import 'window_drag_area.dart';
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild}) {
   //debugPrint("createControl(): $id");
-  return StoreConnector<AppState, ControlViewModel>(
+  return StoreConnector<AppState, ControlViewModel?>(
     key: ValueKey<String>(id),
     distinct: true,
     converter: (store) {
@@ -88,6 +88,10 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
       return state.controls[id] == null;
     },
     builder: (context, controlView) {
+      if (controlView == null) {
+        return const SizedBox.shrink();
+      }
+
       //debugPrint("createControl builder(): $id");
       switch (controlView.control.type) {
         case "page":

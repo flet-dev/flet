@@ -13,14 +13,17 @@ class ControlViewModel extends Equatable {
   const ControlViewModel(
       {required this.control, required this.children, required this.dispatch});
 
-  static ControlViewModel fromStore(Store<AppState> store, String id) {
-    return ControlViewModel(
-        control: store.state.controls[id]!,
-        children: store.state.controls[id]!.childIds
-            .map((childId) => store.state.controls[childId])
-            .whereNotNull()
-            .toList(),
-        dispatch: store.dispatch);
+  static ControlViewModel? fromStore(Store<AppState> store, String id) {
+    var control = store.state.controls[id];
+    return control != null
+        ? ControlViewModel(
+            control: control,
+            children: control.childIds
+                .map((childId) => store.state.controls[childId])
+                .whereNotNull()
+                .toList(),
+            dispatch: store.dispatch)
+        : null;
   }
 
   @override
