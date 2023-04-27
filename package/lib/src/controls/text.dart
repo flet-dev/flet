@@ -64,7 +64,9 @@ class TextControl extends StatelessWidget {
               fontVariations: variations,
               color: HexColor.fromString(
                       Theme.of(context), control.attrString("color", "")!) ??
-                  Theme.of(context).textTheme.bodyMedium!.color,
+                  (spans.isNotEmpty
+                      ? DefaultTextStyle.of(context).style.color
+                      : null),
               backgroundColor: HexColor.fromString(
                   Theme.of(context), control.attrString("bgcolor", "")!));
 
