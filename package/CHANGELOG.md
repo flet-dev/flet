@@ -1,3 +1,8 @@
+## 0.6.2
+
+* Fix `SnackBar` (and other controls) exit animation.
+* Fix `Text` default style color.
+
 ## 0.6.1
 
 * Fix regression in `AlertDialog` and `BottomSheet` controls ([#1344](https://github.com/flet-dev/flet/issues/1344))
