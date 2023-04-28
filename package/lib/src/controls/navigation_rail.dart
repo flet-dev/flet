@@ -88,8 +88,10 @@ class _NavigationRailControlState extends State<NavigationRailControl> {
 
           return LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
-              debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
+              debugPrint(
+                  "NavigationRail constraints.maxWidth: ${constraints.maxWidth}");
+              debugPrint(
+                  "NavigationRail constraints.maxHeight: ${constraints.maxHeight}");
 
               if (constraints.maxHeight == double.infinity &&
                   widget.control.attrs["height"] == null) {

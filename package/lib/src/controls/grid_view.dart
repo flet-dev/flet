@@ -38,8 +38,8 @@ class GridViewControl extends StatelessWidget {
 
     var gridView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
-        debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
+        debugPrint("GridView constraints.maxWidth: ${constraints.maxWidth}");
+        debugPrint("GridView constraints.maxHeight: ${constraints.maxHeight}");
 
         var shrinkWrap =
             (!horizontal && constraints.maxHeight == double.infinity) ||

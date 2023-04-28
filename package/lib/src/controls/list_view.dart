@@ -55,8 +55,8 @@ class ListViewControl extends StatelessWidget {
 
     var listView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
-        debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
+        debugPrint("ListView constraints.maxWidth: ${constraints.maxWidth}");
+        debugPrint("ListView constraints.maxHeight: ${constraints.maxHeight}");
 
         var shrinkWrap =
             (!horizontal && constraints.maxHeight == double.infinity) ||

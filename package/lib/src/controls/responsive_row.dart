@@ -38,8 +38,10 @@ class ResponsiveRowControl extends StatelessWidget {
         builder: (context, view) {
           var w = LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-            // debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
-            // debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
+            debugPrint(
+                "ResponsiveRow constraints.maxWidth: ${constraints.maxWidth}");
+            debugPrint(
+                "ResponsiveRow constraints.maxHeight: ${constraints.maxHeight}");
 
             var bpSpacing =
                 getBreakpointNumber(spacing, view.size.width, view.breakpoints);
