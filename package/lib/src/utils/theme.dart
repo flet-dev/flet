@@ -17,57 +17,34 @@ ThemeData parseTheme(Control control, String propName, Brightness? brightness,
 
 ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     ThemeData? parentTheme) {
-  // deal with color scheme
-  ColorScheme? colorScheme;
+  ThemeData? theme = parentTheme;
 
-  // try creating scheme from a primary swatch (old method)
-  var primaryColorSwatch =
-      HexColor.fromString(null, json?["primary_color_swatch"] ?? "");
-  if (primaryColorSwatch != null) {
-    colorScheme = ColorScheme.fromSwatch(
-        primarySwatch: primaryColorSwatch as MaterialColor,
-        brightness: brightness ?? Brightness.light);
-  }
+  var primarySwatch = HexColor.fromString(null, json?["primary_swatch"] ?? "");
 
-  // try creating scheme from a seed color
   var colorSchemeSeed =
       HexColor.fromString(null, json?["color_scheme_seed"] ?? "");
-  if (colorSchemeSeed != null) {
-    colorScheme = ColorScheme.fromSeed(
-        seedColor: colorSchemeSeed, brightness: brightness ?? Brightness.light);
+
+  if (colorSchemeSeed != null && primarySwatch != null) {
+    throw Exception(
+        "Either color_scheme_seed or primary_swatch must be specified.");
   }
 
-  // take original color scheme from parent
-  if (parentTheme != null && colorScheme == null) {
-    colorScheme = parentTheme.colorScheme;
+  if (colorSchemeSeed == null && primarySwatch == null) {
+    colorSchemeSeed = Colors.blue;
   }
 
-  // create default scheme
-  colorScheme ??= ColorScheme.fromSeed(
-      seedColor: Colors.blue, brightness: brightness ?? Brightness.light);
+  // create new theme
+  theme ??= ThemeData(
+      primarySwatch:
+          primarySwatch != null ? primarySwatch as MaterialColor : null,
+      colorSchemeSeed: colorSchemeSeed,
+      fontFamily: json?["font_family"],
+      brightness: brightness,
+      useMaterial3: json?["use_material3"] ?? true);
 
   var jcs = json?["color_scheme"];
-  if (jcs != null) {
-    colorScheme = colorScheme.copyWith(
-        primary: HexColor.fromString(null, jcs["primary"] ?? ""),
-        onPrimary: HexColor.fromString(null, jcs["on_primary"] ?? ""),
-        primaryContainer:
-            HexColor.fromString(null, jcs["primary_container"] ?? ""),
-        onPrimaryContainer:
-            HexColor.fromString(null, jcs["on_primary_container"] ?? ""));
-  }
 
-  var theme = parentTheme ??
-      ThemeData(
-          colorScheme: colorScheme,
-          fontFamily: json?["font_family"],
-          brightness: brightness,
-          useMaterial3: json?["use_material3"] ?? true,
-          visualDensity: parseVisualDensity(json?["visual_density"]),
-          pageTransitionsTheme:
-              parsePageTransitions(json?["page_transitions"]));
   return theme.copyWith(
-      brightness: brightness ?? theme.brightness,
       useMaterial3: json?["use_material3"] ?? theme.useMaterial3,
       visualDensity: json?["visual_density"] != null
           ? parseVisualDensity(json?["visual_density"])
@@ -75,7 +52,15 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       pageTransitionsTheme: json?["page_transitions"] != null
           ? parsePageTransitions(json?["page_transitions"])
           : theme.pageTransitionsTheme,
-      colorScheme: colorScheme);
+      colorScheme: jcs != null
+          ? theme.colorScheme.copyWith(
+              primary: HexColor.fromString(null, jcs["primary"] ?? ""),
+              onPrimary: HexColor.fromString(null, jcs["on_primary"] ?? ""),
+              primaryContainer:
+                  HexColor.fromString(null, jcs["primary_container"] ?? ""),
+              onPrimaryContainer:
+                  HexColor.fromString(null, jcs["on_primary_container"] ?? ""))
+          : null);
 }
 
 VisualDensity parseVisualDensity(String? vd) {

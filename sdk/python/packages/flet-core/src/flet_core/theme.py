@@ -81,7 +81,7 @@ class ColorScheme:
 @dataclasses.dataclass
 class Theme:
     color_scheme_seed: Optional[str] = field(default=None)
-    primary_color_swatch: Optional[str] = field(default=None)
+    primary_swatch: Optional[str] = field(default=None)
     color_scheme: Optional[ColorScheme] = field(default=None)
     font_family: Optional[str] = field(default=None)
     use_material3: bool = field(default=True)
