@@ -1,7 +1,9 @@
 import dataclasses
 from dataclasses import field
-from typing import Optional
 from enum import Enum
+from typing import Optional
+
+from flet_core.types import ThemeMode
 
 try:
     from typing import Literal
@@ -42,8 +44,45 @@ class PageTransitionsTheme:
 
 
 @dataclasses.dataclass
+class ColorScheme:
+    brightness: ThemeMode = field(default=ThemeMode.LIGHT)
+    primary: Optional[str] = field(default=None)
+    on_primary: Optional[str] = field(default=None)
+    primary_container: Optional[str] = field(default=None)
+    on_primary_container: Optional[str] = field(default=None)
+    secondary: Optional[str] = field(default=None)
+    on_secondary: Optional[str] = field(default=None)
+    secondary_container: Optional[str] = field(default=None)
+    on_secondary_container: Optional[str] = field(default=None)
+    tertiary: Optional[str] = field(default=None)
+    on_tertiary: Optional[str] = field(default=None)
+    tertiary_container: Optional[str] = field(default=None)
+    on_tertiary_container: Optional[str] = field(default=None)
+    error: Optional[str] = field(default=None)
+    on_error: Optional[str] = field(default=None)
+    error_container: Optional[str] = field(default=None)
+    on_error_container: Optional[str] = field(default=None)
+    background: Optional[str] = field(default=None)
+    on_background: Optional[str] = field(default=None)
+    surface: Optional[str] = field(default=None)
+    on_surface: Optional[str] = field(default=None)
+    surface_variant: Optional[str] = field(default=None)
+    on_surface_variant: Optional[str] = field(default=None)
+    outline: Optional[str] = field(default=None)
+    outline_variant: Optional[str] = field(default=None)
+    shadow: Optional[str] = field(default=None)
+    scrim: Optional[str] = field(default=None)
+    inverse_surface: Optional[str] = field(default=None)
+    on_inverse_surface: Optional[str] = field(default=None)
+    inverse_primary: Optional[str] = field(default=None)
+    surface_tint: Optional[str] = field(default=None)
+
+
+@dataclasses.dataclass
 class Theme:
     color_scheme_seed: Optional[str] = field(default=None)
+    primary_color_swatch: Optional[str] = field(default=None)
+    color_scheme: Optional[ColorScheme] = field(default=None)
     font_family: Optional[str] = field(default=None)
     use_material3: bool = field(default=True)
     visual_density: ThemeVisualDensity = field(default=ThemeVisualDensity.STANDARD)
