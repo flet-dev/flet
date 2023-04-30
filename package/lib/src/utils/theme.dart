@@ -8,7 +8,7 @@ import 'colors.dart';
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
   dynamic j;
-  var v = control.attrString(propName, null);
+  var v = control.attrString(propName);
   if (v != null) {
     j = json.decode(v);
   }
@@ -24,9 +24,8 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
   var colorSchemeSeed =
       HexColor.fromString(null, json?["color_scheme_seed"] ?? "");
 
-  if (colorSchemeSeed != null && primarySwatch != null) {
-    throw Exception(
-        "Either color_scheme_seed or primary_swatch must be specified.");
+  if (colorSchemeSeed != null) {
+    primarySwatch = null;
   }
 
   if (colorSchemeSeed == null && primarySwatch == null) {
@@ -40,7 +39,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       colorSchemeSeed: colorSchemeSeed,
       fontFamily: json?["font_family"],
       brightness: brightness,
-      useMaterial3: json?["use_material3"] ?? true);
+      useMaterial3: json?["use_material3"] ?? primarySwatch == null);
 
   var jcs = json?["color_scheme"];
 

@@ -162,8 +162,10 @@ class _PageControlState extends State<PageControl> {
     }
 
     // theme
-    var lightTheme = parseTheme(widget.control, "theme", Brightness.light);
-    var darkTheme = parseTheme(widget.control, "darkTheme", Brightness.dark);
+    var theme = parseTheme(widget.control, "theme", Brightness.light);
+    var darkTheme = widget.control.attrString("darkTheme") == null
+        ? parseTheme(widget.control, "theme", Brightness.dark)
+        : parseTheme(widget.control, "darkTheme", Brightness.dark);
     var themeMode = ThemeMode.values.firstWhere(
         (t) =>
             t.name.toLowerCase() ==
@@ -443,7 +445,7 @@ class _PageControlState extends State<PageControl> {
                   routerDelegate: _routerDelegate,
                   routeInformationParser: _routeParser,
                   title: windowTitle,
-                  theme: lightTheme,
+                  theme: theme,
                   darkTheme: darkTheme,
                   themeMode: themeMode,
                 );

@@ -84,6 +84,6 @@ class Theme:
     primary_swatch: Optional[str] = field(default=None)
     color_scheme: Optional[ColorScheme] = field(default=None)
     font_family: Optional[str] = field(default=None)
-    use_material3: bool = field(default=True)
+    use_material3: Optional[bool] = field(default=None)
     visual_density: ThemeVisualDensity = field(default=ThemeVisualDensity.STANDARD)
     page_transitions: PageTransitionsTheme = field(default_factory=PageTransitionsTheme)
