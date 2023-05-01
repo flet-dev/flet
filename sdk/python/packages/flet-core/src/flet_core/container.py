@@ -11,6 +11,7 @@ from flet_core.event_handler import EventHandler
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.shadow import BoxShadow
+from flet_core.theme import Theme
 from flet_core.types import (
     AnimationValue,
     BlendMode,
@@ -29,6 +30,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ThemeMode,
 )
 
 try:
@@ -118,6 +120,8 @@ class Container(ConstrainedControl):
         shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
+        theme: Optional[Theme] = None,
+        theme_mode: Optional[ThemeMode] = None,
         on_click=None,
         on_long_press=None,
         on_hover=None,
@@ -180,6 +184,8 @@ class Container(ConstrainedControl):
         self.shadow = shadow
         self.url = url
         self.url_target = url_target
+        self.theme = theme
+        self.theme_mode = theme_mode
         self.on_click = on_click
         self.on_long_press = on_long_press
         self.on_hover = on_hover
@@ -198,6 +204,7 @@ class Container(ConstrainedControl):
         self._set_attr_json("animate", self.__animate)
         self._set_attr_json("blur", self.__blur)
         self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
+        self._set_attr_json("theme", self.__theme)
 
     def _get_children(self):
         children = []
@@ -442,6 +449,25 @@ class Container(ConstrainedControl):
     @url_target.setter
     def url_target(self, value):
         self._set_attr("urlTarget", value)
+
+    # theme
+    @property
+    def theme(self) -> Optional[Theme]:
+        return self.__theme
+
+    @theme.setter
+    def theme(self, value: Optional[Theme]):
+        self.__theme = value
+
+    # theme_mode
+    @property
+    def theme_mode(self) -> Optional[ThemeMode]:
+        return self.__theme_mode
+
+    @theme_mode.setter
+    def theme_mode(self, value: Optional[ThemeMode]):
+        self.__theme_mode = value
+        self._set_attr("themeMode", value.value if value is not None else None)
 
     # on_click
     @property
