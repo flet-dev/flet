@@ -58,7 +58,47 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
               primaryContainer:
                   HexColor.fromString(null, jcs["primary_container"] ?? ""),
               onPrimaryContainer:
-                  HexColor.fromString(null, jcs["on_primary_container"] ?? ""))
+                  HexColor.fromString(null, jcs["on_primary_container"] ?? ""),
+              secondary: HexColor.fromString(null, jcs["secondary"] ?? ""),
+              onSecondary: HexColor.fromString(null, jcs["on_secondary"] ?? ""),
+              secondaryContainer:
+                  HexColor.fromString(null, jcs["secondary_container"] ?? ""),
+              onSecondaryContainer: HexColor.fromString(
+                  null, jcs["on_secondary_container"] ?? ""),
+              tertiary: HexColor.fromString(null, jcs["tertiary"] ?? ""),
+              onTertiary: HexColor.fromString(null, jcs["on_tertiary"] ?? ""),
+              tertiaryContainer:
+                  HexColor.fromString(null, jcs["tertiary_container"] ?? ""),
+              onTertiaryContainer:
+                  HexColor.fromString(null, jcs["on_tertiary_container"] ?? ""),
+              error: HexColor.fromString(null, jcs["error"] ?? ""),
+              onError: HexColor.fromString(null, jcs["on_error"] ?? ""),
+              errorContainer:
+                  HexColor.fromString(null, jcs["error_container"] ?? ""),
+              onErrorContainer:
+                  HexColor.fromString(null, jcs["on_error_container"] ?? ""),
+              background: HexColor.fromString(null, jcs["background"] ?? ""),
+              onBackground:
+                  HexColor.fromString(null, jcs["on_background"] ?? ""),
+              surface: HexColor.fromString(null, jcs["surface"] ?? ""),
+              onSurface: HexColor.fromString(null, jcs["on_surface"] ?? ""),
+              surfaceVariant:
+                  HexColor.fromString(null, jcs["surface_variant"] ?? ""),
+              onSurfaceVariant:
+                  HexColor.fromString(null, jcs["on_surface_variant"] ?? ""),
+              outline: HexColor.fromString(null, jcs["outline"] ?? ""),
+              outlineVariant:
+                  HexColor.fromString(null, jcs["outline_variant"] ?? ""),
+              shadow: HexColor.fromString(null, jcs["shadow"] ?? ""),
+              scrim: HexColor.fromString(null, jcs["scrim"] ?? ""),
+              inverseSurface:
+                  HexColor.fromString(null, jcs["inverse_surface"] ?? ""),
+              onInverseSurface:
+                  HexColor.fromString(null, jcs["on_inverse_surface"] ?? ""),
+              inversePrimary:
+                  HexColor.fromString(null, jcs["inverse_primary"] ?? ""),
+              surfaceTint: HexColor.fromString(null, jcs["surface_tint"] ?? ""),
+            )
           : null);
 }
 

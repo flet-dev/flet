@@ -45,7 +45,6 @@ class PageTransitionsTheme:
 
 @dataclasses.dataclass
 class ColorScheme:
-    brightness: ThemeMode = field(default=ThemeMode.LIGHT)
     primary: Optional[str] = field(default=None)
     on_primary: Optional[str] = field(default=None)
     primary_container: Optional[str] = field(default=None)
