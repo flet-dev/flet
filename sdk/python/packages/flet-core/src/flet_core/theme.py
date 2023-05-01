@@ -1,9 +1,9 @@
 import dataclasses
 from dataclasses import field
 from enum import Enum
-from typing import Optional
+from typing import Dict, Optional, Union
 
-from flet_core.types import ThemeMode
+from flet_core.types import MaterialState, ThemeMode
 
 try:
     from typing import Literal
@@ -78,10 +78,32 @@ class ColorScheme:
 
 
 @dataclasses.dataclass
+class ScrollbarTheme:
+    thumb_visibility: Union[None, bool, Dict[MaterialState, bool]] = field(default=None)
+    thickness: Union[None, float, Dict[MaterialState, float]] = field(default=None)
+    track_visibility: Union[None, bool, Dict[MaterialState, bool]] = field(default=None)
+    radius: Optional[float] = field(default=None)
+    thumb_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    track_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    track_border_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    cross_axis_margin: Optional[float] = field(default=None)
+    main_axis_margin: Optional[float] = field(default=None)
+    min_thumb_length: Optional[float] = field(default=None)
+    interactive: Optional[bool] = field(default=None)
+
+
+@dataclasses.dataclass
 class Theme:
     color_scheme_seed: Optional[str] = field(default=None)
     primary_swatch: Optional[str] = field(default=None)
     color_scheme: Optional[ColorScheme] = field(default=None)
+    scrollbar_theme: Optional[ScrollbarTheme] = field(default=None)
     font_family: Optional[str] = field(default=None)
     use_material3: Optional[bool] = field(default=None)
     visual_density: ThemeVisualDensity = field(default=ThemeVisualDensity.STANDARD)

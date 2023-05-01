@@ -7,9 +7,19 @@ from flet_core.border_radius import BorderRadius
 from flet_core.buttons import ButtonStyle
 from flet_core.margin import Margin
 from flet_core.padding import Padding
+from flet_core.theme import ScrollbarTheme
 
 
 class EmbedJsonEncoder(json.JSONEncoder):
+    ignored_props = [
+        "ButtonStyle.animation_duration",
+        "ScrollbarTheme.interactive",
+        "ScrollbarTheme.radius",
+        "ScrollbarTheme.cross_axis_margin",
+        "ScrollbarTheme.main_axis_margin",
+        "ScrollbarTheme.min_thumb_length",
+    ]
+
     def default(self, obj):
         if isinstance(obj, BorderSide):
             return {
@@ -37,13 +47,15 @@ class EmbedJsonEncoder(json.JSONEncoder):
                 "r": obj.right,
                 "b": obj.bottom,
             }
-        elif isinstance(obj, ButtonStyle):
+        elif isinstance(obj, (ButtonStyle, ScrollbarTheme)):
             for k, v in obj.__dict__.items():
-                if v is not None:
+                if (
+                    v is not None
+                    and f"{obj.__class__.__name__}.{k}" not in self.ignored_props
+                ):
                     if not isinstance(v, Dict):
                         obj.__dict__[k] = {"": v}
-                    if k != "animation_duration":
-                        obj.__dict__[k] = self._cleanup_dict(obj.__dict__[k])
+                    obj.__dict__[k] = self._cleanup_dict(obj.__dict__[k])
             return self._cleanup_dict(obj.__dict__)
         elif isinstance(obj, object):
             return self._cleanup_dict(obj.__dict__)

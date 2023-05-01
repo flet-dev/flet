@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'colors.dart';
+import 'material_state.dart';
 
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
@@ -42,6 +44,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       useMaterial3: json?["use_material3"] ?? primarySwatch == null);
 
   var jcs = json?["color_scheme"];
+  var jsbt = json?["scrollbar_theme"];
 
   return theme.copyWith(
       useMaterial3: json?["use_material3"] ?? theme.useMaterial3,
@@ -98,6 +101,39 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
               inversePrimary:
                   HexColor.fromString(null, jcs["inverse_primary"] ?? ""),
               surfaceTint: HexColor.fromString(null, jcs["surface_tint"] ?? ""),
+            )
+          : null,
+      scrollbarTheme: jsbt != null
+          ? theme.scrollbarTheme.copyWith(
+              trackVisibility: getMaterialStateProperty(
+                  jsbt["track_visibility"], (jv) => parseBool(jv), null),
+              trackColor: getMaterialStateProperty(jsbt["track_color"],
+                  (jv) => HexColor.fromString(theme, jv as String), null),
+              trackBorderColor: getMaterialStateProperty(
+                  jsbt["track_border_color"],
+                  (jv) => HexColor.fromString(theme, jv as String),
+                  null),
+              thumbVisibility: getMaterialStateProperty(
+                  jsbt["thumb_visibility"], (jv) => parseBool(jv), null),
+              thumbColor: getMaterialStateProperty(jsbt["thumb_color"],
+                  (jv) => HexColor.fromString(theme, jv as String), null),
+              thickness: getMaterialStateProperty(
+                  jsbt["thickness"], (jv) => parseDouble(jv), null),
+              radius: jsbt["radius"] != null
+                  ? Radius.circular(parseDouble(jsbt["radius"]))
+                  : null,
+              crossAxisMargin: jsbt["cross_axis_margin"] != null
+                  ? parseDouble(jsbt["cross_axis_margin"])
+                  : null,
+              mainAxisMargin: jsbt["main_axis_margin"] != null
+                  ? parseDouble(jsbt["main_axis_margin"])
+                  : null,
+              minThumbLength: jsbt["min_thumb_length"] != null
+                  ? parseDouble(jsbt["min_thumb_length"])
+                  : null,
+              interactive: jsbt["interactive"] != null
+                  ? parseBool(jsbt["interactive"])
+                  : null,
             )
           : null);
 }
