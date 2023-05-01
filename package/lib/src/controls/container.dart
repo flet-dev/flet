@@ -113,8 +113,7 @@ class ContainerControl extends StatelessWidget {
               (e) =>
                   e.name.toLowerCase() ==
                   control.attrString("clipBehavior", "")!.toLowerCase(),
-              orElse: () =>
-                  borderRadius != null ? Clip.antiAlias : Clip.hardEdge);
+              orElse: () => borderRadius != null ? Clip.antiAlias : Clip.none);
 
           var boxDecor = BoxDecoration(
               color: bgColor,
