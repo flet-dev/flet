@@ -1516,6 +1516,15 @@ class Page(Control):
     def window_visible(self, value: Optional[bool]):
         self._set_attr("windowVisible", value)
 
+    # on_scroll_interval
+    @property
+    def on_scroll_interval(self) -> OptionalNumber:
+        return self.__default_view.on_scroll_interval
+
+    @on_scroll_interval.setter
+    def on_scroll_interval(self, value: OptionalNumber):
+        self.__default_view.on_scroll_interval
+
     # on_close
     @property
     def on_close(self):
@@ -1615,6 +1624,15 @@ class Page(Control):
     def on_error(self, handler):
         self.__on_error.subscribe(handler)
 
+    # on_scroll
+    @property
+    def on_scroll(self):
+        return self.__default_view.on_scroll
+
+    @on_scroll.setter
+    def on_scroll(self, handler):
+        self.__default_view.on_scroll
+
 
 class Offstage(Control):
     def __init__(
@@ -1623,7 +1641,6 @@ class Offstage(Control):
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
-
         Control.__init__(
             self,
             visible=visible,

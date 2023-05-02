@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import 'create_control.dart';
+import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
 class RowControl extends StatelessWidget {
@@ -55,39 +56,26 @@ class RowControl extends StatelessWidget {
       controls.add(createControl(control, ctrl.id, disabled));
     }
 
-    return constrainedControl(
-        context,
-        wrapAutoScroll(
-            wrap
-                ? Wrap(
-                    direction: Axis.horizontal,
-                    spacing: spacing,
-                    runSpacing: control.attrDouble("runSpacing", 10)!,
-                    alignment: parseWrapAlignment(
-                        control, "alignment", WrapAlignment.start),
-                    crossAxisAlignment: parseWrapCrossAlignment(control,
-                        "verticalAlignment", WrapCrossAlignment.center),
-                    children: controls,
-                  )
-                : Row(
-                    mainAxisAlignment: mainAlignment,
-                    mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
-                    crossAxisAlignment: parseCrossAxisAlignment(control,
-                        "verticalAlignment", CrossAxisAlignment.center),
-                    children: controls,
-                  ),
-            wrap: wrap,
-            scrollMode: scrollMode,
-            autoScroll: autoScroll),
-        parent,
-        control);
-  }
+    Widget child = wrap
+        ? Wrap(
+            direction: Axis.horizontal,
+            spacing: spacing,
+            runSpacing: control.attrDouble("runSpacing", 10)!,
+            alignment:
+                parseWrapAlignment(control, "alignment", WrapAlignment.start),
+            crossAxisAlignment: parseWrapCrossAlignment(
+                control, "verticalAlignment", WrapCrossAlignment.center),
+            children: controls,
+          )
+        : Row(
+            mainAxisAlignment: mainAlignment,
+            mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
+            crossAxisAlignment: parseCrossAxisAlignment(
+                control, "verticalAlignment", CrossAxisAlignment.center),
+            children: controls,
+          );
 
-  Widget wrapAutoScroll(Widget child,
-      {required bool wrap,
-      required ScrollMode scrollMode,
-      required bool autoScroll}) {
-    return scrollMode != ScrollMode.none
+    child = scrollMode != ScrollMode.none
         ? ScrollableControl(
             scrollDirection: wrap ? Axis.vertical : Axis.horizontal,
             scrollMode: scrollMode,
@@ -95,5 +83,11 @@ class RowControl extends StatelessWidget {
             child: child,
           )
         : child;
+
+    if (control.attrBool("onScroll", false)!) {
+      child = ScrollNotificationControl(control: control, child: child);
+    }
+
+    return constrainedControl(context, child, parent, control);
   }
 }

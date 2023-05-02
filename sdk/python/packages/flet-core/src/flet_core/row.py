@@ -3,6 +3,7 @@ from typing import Any, List, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     AnimationValue,
     CrossAxisAlignment,
@@ -18,7 +19,7 @@ from flet_core.types import (
 )
 
 
-class Row(ConstrainedControl):
+class Row(ConstrainedControl, ScrollableControl):
     """
     A control that displays its children in a horizontal array.
 
@@ -85,6 +86,13 @@ class Row(ConstrainedControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         #
+        # ScrollableControl specific
+        #
+        scroll: Optional[ScrollMode] = None,
+        auto_scroll: Optional[bool] = None,
+        on_scroll_interval: OptionalNumber = None,
+        on_scroll: Any = None,
+        #
         # Row specific
         #
         alignment: MainAxisAlignment = MainAxisAlignment.NONE,
@@ -93,8 +101,6 @@ class Row(ConstrainedControl):
         tight: Optional[bool] = None,
         wrap: Optional[bool] = None,
         run_spacing: OptionalNumber = None,
-        scroll: Optional[ScrollMode] = None,
-        auto_scroll: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -124,6 +130,14 @@ class Row(ConstrainedControl):
             data=data,
         )
 
+        ScrollableControl.__init__(
+            self,
+            scroll=scroll,
+            auto_scroll=auto_scroll,
+            on_scroll_interval=on_scroll_interval,
+            on_scroll=on_scroll,
+        )
+
         self.controls = controls
         self.alignment = alignment
         self.vertical_alignment = vertical_alignment
@@ -131,8 +145,6 @@ class Row(ConstrainedControl):
         self.tight = tight
         self.wrap = wrap
         self.run_spacing = run_spacing
-        self.scroll = scroll
-        self.auto_scroll = auto_scroll
 
     def _get_control_name(self):
         return "row"
@@ -215,35 +227,6 @@ class Row(ConstrainedControl):
     @run_spacing.setter
     def run_spacing(self, value: OptionalNumber):
         self._set_attr("runSpacing", value)
-
-    # scroll
-    @property
-    def scroll(self) -> Optional[ScrollMode]:
-        return self.__scroll
-
-    @scroll.setter
-    def scroll(self, value: Optional[ScrollMode]):
-        self.__scroll = value
-        if isinstance(value, ScrollMode):
-            self._set_attr("scroll", value.value)
-        else:
-            self.__set_scroll(value)
-
-    def __set_scroll(self, value: Optional[ScrollModeString]):
-        if value is True:
-            value = "auto"
-        elif value is False:
-            value = None
-        self._set_attr("scroll", value)
-
-    # auto_scroll
-    @property
-    def auto_scroll(self) -> Optional[bool]:
-        return self._get_attr("autoScroll")
-
-    @auto_scroll.setter
-    def auto_scroll(self, value: Optional[bool]):
-        self._set_attr("autoScroll", value)
 
     # controls
     @property

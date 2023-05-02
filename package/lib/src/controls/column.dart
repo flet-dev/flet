@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import 'create_control.dart';
+import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
 class ColumnControl extends StatelessWidget {
@@ -55,7 +56,7 @@ class ColumnControl extends StatelessWidget {
       controls.add(createControl(control, ctrl.id, disabled));
     }
 
-    Widget widget = wrap
+    Widget child = wrap
         ? Wrap(
             direction: Axis.vertical,
             spacing: spacing,
@@ -74,17 +75,19 @@ class ColumnControl extends StatelessWidget {
             children: controls,
           );
 
-    return constrainedControl(
-        context,
-        scrollMode != ScrollMode.none
-            ? ScrollableControl(
-                scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
-                scrollMode: scrollMode,
-                autoScroll: autoScroll,
-                child: widget,
-              )
-            : widget,
-        parent,
-        control);
+    child = scrollMode != ScrollMode.none
+        ? ScrollableControl(
+            scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
+            scrollMode: scrollMode,
+            autoScroll: autoScroll,
+            child: child,
+          )
+        : child;
+
+    if (control.attrBool("onScroll", false)!) {
+      child = ScrollNotificationControl(control: control, child: child);
+    }
+
+    return constrainedControl(context, child, parent, control);
   }
 }

@@ -5,6 +5,7 @@ import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
 import '../widgets/adjustable_scroll_controller.dart';
 import 'create_control.dart';
+import 'scroll_notification_control.dart';
 
 class ListViewControl extends StatelessWidget {
   final Control? parent;
@@ -53,7 +54,7 @@ class ListViewControl extends StatelessWidget {
       });
     }
 
-    var listView = LayoutBuilder(
+    Widget listView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         debugPrint("ListView constraints.maxWidth: ${constraints.maxWidth}");
         debugPrint("ListView constraints.maxHeight: ${constraints.maxHeight}");
@@ -102,6 +103,10 @@ class ListViewControl extends StatelessWidget {
               );
       },
     );
+
+    if (control.attrBool("onScroll", false)!) {
+      listView = ScrollNotificationControl(control: control, child: listView);
+    }
 
     return constrainedControl(context, listView, parent, control);
   }

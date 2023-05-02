@@ -3,6 +3,7 @@ from typing import Any, List, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -10,10 +11,11 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ScrollMode,
 )
 
 
-class ListView(ConstrainedControl):
+class ListView(ConstrainedControl, ScrollableControl):
     """
     A scrollable list of controls arranged linearly.
 
@@ -80,6 +82,12 @@ class ListView(ConstrainedControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         #
+        # ScrollableControl specific
+        #
+        auto_scroll: Optional[bool] = None,
+        on_scroll_interval: OptionalNumber = None,
+        on_scroll: Any = None,
+        #
         # Specific
         #
         horizontal: Optional[bool] = None,
@@ -88,7 +96,6 @@ class ListView(ConstrainedControl):
         first_item_prototype: Optional[bool] = None,
         divider_thickness: OptionalNumber = None,
         padding: PaddingValue = None,
-        auto_scroll: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -118,6 +125,13 @@ class ListView(ConstrainedControl):
             data=data,
         )
 
+        ScrollableControl.__init__(
+            self,
+            auto_scroll=auto_scroll,
+            on_scroll_interval=on_scroll_interval,
+            on_scroll=on_scroll,
+        )
+
         self.__controls: List[Control] = []
         self.controls = controls
         self.horizontal = horizontal
@@ -126,7 +140,6 @@ class ListView(ConstrainedControl):
         self.item_extent = item_extent
         self.first_item_prototype = first_item_prototype
         self.padding = padding
-        self.auto_scroll = auto_scroll
 
     def _get_control_name(self):
         return "listview"
@@ -208,12 +221,3 @@ class ListView(ConstrainedControl):
     @controls.setter
     def controls(self, value):
         self.__controls = value if value is not None else []
-
-    # auto_scroll
-    @property
-    def auto_scroll(self) -> Optional[bool]:
-        return self._get_attr("autoScroll")
-
-    @auto_scroll.setter
-    def auto_scroll(self, value: Optional[bool]):
-        self._set_attr("autoScroll", value)

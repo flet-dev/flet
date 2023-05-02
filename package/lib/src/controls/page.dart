@@ -31,6 +31,7 @@ import '../widgets/page_media.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
+import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
 class PageControl extends StatefulWidget {
@@ -628,6 +629,20 @@ class _PageControlState extends State<PageControl> {
                     crossAxisAlignment: crossAlignment,
                     children: controls);
 
+                Widget child = scrollMode != ScrollMode.none
+                    ? ScrollableControl(
+                        scrollDirection: Axis.vertical,
+                        scrollMode: scrollMode,
+                        autoScroll: autoScroll,
+                        child: column,
+                      )
+                    : column;
+
+                if (control.attrBool("onScroll", false)!) {
+                  child =
+                      ScrollNotificationControl(control: control, child: child);
+                }
+
                 return Directionality(
                     textDirection: textDirection,
                     child: Scaffold(
@@ -647,14 +662,7 @@ class _PageControlState extends State<PageControl> {
                             child: Container(
                                 padding: parseEdgeInsets(control, "padding") ??
                                     const EdgeInsets.all(10),
-                                child: scrollMode != ScrollMode.none
-                                    ? ScrollableControl(
-                                        scrollDirection: Axis.vertical,
-                                        scrollMode: scrollMode,
-                                        autoScroll: autoScroll,
-                                        child: column,
-                                      )
-                                    : column)),
+                                child: child)),
                         ...overlayWidgets
                       ]),
                       bottomNavigationBar: navBar != null
