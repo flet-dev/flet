@@ -20,8 +20,7 @@ class ScrollNotificationControl extends StatefulWidget {
 
 class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
   int _onScrollInterval = 0;
-  int _lastEventTimestamp = DateTime.now().millisecondsSinceEpoch;
-  String? _lastEventType;
+  final Map<String, int> _lastEventTimestamps = {};
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +49,10 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
     if (notification.depth == 0) {
       var eventType = notification.runtimeType.toString();
       var now = DateTime.now().millisecondsSinceEpoch;
-      if (now - _lastEventTimestamp > _onScrollInterval ||
-          _lastEventType != eventType) {
-        _lastEventTimestamp = now;
-        _lastEventType = eventType;
+      var lastEventTimestamp = _lastEventTimestamps[eventType];
+      if (lastEventTimestamp == null ||
+          now - lastEventTimestamp > _onScrollInterval) {
+        _lastEventTimestamps[eventType] = now;
 
         Map<String, Object?> data = {
           "p": notification.metrics.pixels,
