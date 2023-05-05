@@ -86,28 +86,7 @@ Open user settings, search by "pylance", scroll down to **Python > Analysis: Typ
 
 #### Sort imports on Save
 
-VS Code includes "isort" by default.
-
-Add the following to user's `settings.json` :
-
-```json
-"[python]": {
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": true
-    }
-},
-"python.sortImports.args": [
-    "--trailing-comma",
-    "--use-parentheses",
-    "--line-width",
-    "88",
-    "--multi-line",
-    "3",
-    "--float-to-top"
-],
-```
-
-All isort command line options can be found [here](https://pycqa.github.io/isort/docs/configuration/options.html).
+Install `isort` extension for imports formatting: https://marketplace.visualstudio.com/items?itemName=ms-python.isort
 
 ### pre-commit
 
