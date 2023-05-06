@@ -11,13 +11,15 @@ class ColumnControl extends StatelessWidget {
   final Control control;
   final bool parentDisabled;
   final List<Control> children;
+  final dynamic dispatch;
 
   const ColumnControl(
       {Key? key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -29,12 +31,6 @@ class ColumnControl extends StatelessWidget {
         parseMainAxisAlignment(control, "alignment", MainAxisAlignment.start);
     bool tight = control.attrBool("tight", false)!;
     bool wrap = control.attrBool("wrap", false)!;
-    ScrollMode scrollMode = ScrollMode.values.firstWhere(
-        (m) =>
-            m.name.toLowerCase() ==
-            control.attrString("scroll", "")!.toLowerCase(),
-        orElse: () => ScrollMode.none);
-    final autoScroll = control.attrBool("autoScroll", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     List<Widget> controls = [];
@@ -75,14 +71,12 @@ class ColumnControl extends StatelessWidget {
             children: controls,
           );
 
-    child = scrollMode != ScrollMode.none
-        ? ScrollableControl(
-            scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
-            scrollMode: scrollMode,
-            autoScroll: autoScroll,
-            child: child,
-          )
-        : child;
+    child = ScrollableControl(
+      control: control,
+      scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
+      dispatch: dispatch,
+      child: child,
+    );
 
     if (control.attrBool("onScroll", false)!) {
       child = ScrollNotificationControl(control: control, child: child);
