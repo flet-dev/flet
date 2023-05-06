@@ -92,7 +92,7 @@ Install `isort` extension for imports formatting: https://marketplace.visualstud
 
 [pre-commit](https://pre-commit.com) is a dev dependency of Flet and is automatically installed by `poetry install`.
 To install the pre-commit hooks run: `pre-commit install`.
-Once installed, everytime you commit, pre-commit will run the configured hooks against changed files.
+Once installed, every time you commit, pre-commit will run the configured hooks against changed files.
 
 ## Possible installation error when working with a source package
 
