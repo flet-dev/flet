@@ -301,6 +301,7 @@ class DataTable(ConstrainedControl):
         columns: Optional[List[DataColumn]] = None,
         rows: Optional[List[DataRow]] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -353,6 +354,7 @@ class DataTable(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -642,7 +644,6 @@ class Item(Control):
         self.obj = obj
 
     def _set_attr(self, name, value, dirty=True):
-
         if value is None:
             return
 

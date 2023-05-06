@@ -47,6 +47,7 @@ class Icon(ConstrainedControl):
         self,
         name: Optional[str] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         expand: Union[None, bool, int] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
@@ -71,10 +72,10 @@ class Icon(ConstrainedControl):
         color: Optional[str] = None,
         size: OptionalNumber = None,
     ):
-
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             expand=expand,
             col=col,
             opacity=opacity,

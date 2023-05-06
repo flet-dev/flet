@@ -95,16 +95,16 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
         return const SizedBox.shrink();
       }
 
-      GlobalKey? key;
-      var href = controlView.control.attrString("href", "")!;
-      if (href != "") {
-        key = GlobalKey();
-        FletAppServices.of(context).hrefs[href] = key;
+      GlobalKey? globalKey;
+      var key = controlView.control.attrString("key", "")!;
+      if (key != "") {
+        globalKey = GlobalKey();
+        FletAppServices.of(context).globalKeys[key] = globalKey;
       }
 
       // create control widget
-      var widget =
-          createWidget(key, controlView, parent, parentDisabled, nextChild);
+      var widget = createWidget(
+          globalKey, controlView, parent, parentDisabled, nextChild);
 
       // no theme defined? return widget!
       if (controlView.control.attrString("theme") == null) {

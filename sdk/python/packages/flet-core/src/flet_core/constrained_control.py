@@ -25,7 +25,7 @@ class ConstrainedControl(Control):
         #
         # ConstrainedControl specific
         #
-        href: Optional[str] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -56,7 +56,7 @@ class ConstrainedControl(Control):
             data=data,
         )
 
-        self.href = href
+        self.key = key
         self.width = width
         self.height = height
         self.left = left
@@ -87,14 +87,14 @@ class ConstrainedControl(Control):
         self._set_attr_json("animateScale", self.__animate_scale)
         self._set_attr_json("animateOffset", self.__animate_offset)
 
-    # href
+    # key
     @property
-    def href(self) -> Optional[str]:
-        return self._get_attr("href")
+    def key(self) -> Optional[str]:
+        return self._get_attr("key")
 
-    @href.setter
-    def href(self, value: Optional[str]):
-        self._set_attr("href", value)
+    @key.setter
+    def key(self, value: Optional[str]):
+        self._set_attr("key", value)
 
     # width
     @property

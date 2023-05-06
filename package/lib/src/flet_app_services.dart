@@ -13,7 +13,7 @@ class FletAppServices extends InheritedWidget {
   final FletAppErrorsHandler? errorsHandler;
   late final FletServer server;
   late final Store<AppState> store;
-  final Map<String, GlobalKey> hrefs = {};
+  final Map<String, GlobalKey> globalKeys = {};
 
   FletAppServices(
       {Key? key,

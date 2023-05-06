@@ -52,6 +52,7 @@ class PlotlyChart(Container):
         self,
         figure: Optional[Figure] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         expand: Union[None, bool, int] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
@@ -76,10 +77,10 @@ class PlotlyChart(Container):
         isolated: bool = False,
         original_size: bool = False,
     ):
-
         Container.__init__(
             self,
             ref=ref,
+            key=key,
             expand=expand,
             col=col,
             opacity=opacity,

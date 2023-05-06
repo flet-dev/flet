@@ -53,6 +53,7 @@ class Dropdown(FormFieldControl):
     def __init__(
         self,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
@@ -124,6 +125,7 @@ class Dropdown(FormFieldControl):
         FormFieldControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             expand=expand,

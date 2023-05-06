@@ -156,7 +156,7 @@ class _PageControlState extends State<PageControl> {
     //debugDumpRenderTree();
 
     // clear hrefs index
-    FletAppServices.of(context).hrefs.clear();
+    FletAppServices.of(context).globalKeys.clear();
 
     // page route
     var route = widget.control.attrString("route");

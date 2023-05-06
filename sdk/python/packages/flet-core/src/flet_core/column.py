@@ -59,6 +59,7 @@ class Column(ConstrainedControl, ScrollableControl):
         self,
         controls: Optional[List[Control]] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -102,6 +103,7 @@ class Column(ConstrainedControl, ScrollableControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,

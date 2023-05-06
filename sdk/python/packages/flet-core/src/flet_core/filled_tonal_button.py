@@ -36,6 +36,7 @@ class FilledTonalButton(ElevatedButton):
         self,
         text: Optional[str] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
@@ -62,6 +63,7 @@ class FilledTonalButton(ElevatedButton):
         ElevatedButton.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             expand=expand,

@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
 import flet_core
+from flet_core.animation import AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
 from flet_core.client_storage import ClientStorage
@@ -809,6 +810,18 @@ class Page(Control):
 
     async def window_to_front_async(self):
         await self.invoke_method_async("windowToFront")
+
+    def scroll_to(
+        self,
+        offset: Optional[float] = None,
+        delta: Optional[float] = None,
+        key: Optional[str] = None,
+        duration: Optional[int] = None,
+        curve: Optional[AnimationCurve] = None,
+    ):
+        self.__default_view.scroll_to(
+            offset=offset, delta=delta, key=key, duration=duration, curve=curve
+        )
 
     def invoke_method(
         self,

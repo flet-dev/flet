@@ -33,7 +33,7 @@ class ScrollableControl(Control):
         self,
         offset: Optional[float] = None,
         delta: Optional[float] = None,
-        href: Optional[str] = None,
+        key: Optional[str] = None,
         duration: Optional[int] = None,
         curve: Optional[AnimationCurve] = None,
     ):
@@ -43,7 +43,7 @@ class ScrollableControl(Control):
             "p": {
                 "offset": offset,
                 "delta": delta,
-                "href": href,
+                "key": key,
                 "duration": duration,
                 "curve": curve.value if curve is not None else None,
             },
