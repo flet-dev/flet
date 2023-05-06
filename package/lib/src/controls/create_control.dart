@@ -374,11 +374,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           dispatch: controlView.dispatch);
     case "gridview":
       return GridViewControl(
-          key: key,
-          parent: parent,
-          control: controlView.control,
-          children: controlView.children,
-          parentDisabled: parentDisabled);
+        key: key,
+        parent: parent,
+        control: controlView.control,
+        children: controlView.children,
+        parentDisabled: parentDisabled,
+        dispatch: controlView.dispatch,
+      );
     case "textfield":
       return TextFieldControl(
           key: key,

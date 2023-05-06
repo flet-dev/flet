@@ -118,14 +118,14 @@ class _ListViewControlState extends State<ListViewControl> {
           child: child,
         );
 
+        if (widget.control.attrBool("onScroll", false)!) {
+          child =
+              ScrollNotificationControl(control: widget.control, child: child);
+        }
+
         return child;
       },
     );
-
-    if (widget.control.attrBool("onScroll", false)!) {
-      listView =
-          ScrollNotificationControl(control: widget.control, child: listView);
-    }
 
     return constrainedControl(context, listView, widget.parent, widget.control);
   }
