@@ -4,7 +4,7 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/xwablctxslvey576/branch/main?svg=true)](https://ci.appveyor.com/project/flet-dev/flet/branch/main)
 
-Flet is a framework that enables you to easily build realtime web, mobile, and desktop apps in your favorite language and securely share them with your team. No frontend experience required.
+Flet is a framework that enables you to easily build real-time web, mobile, and desktop apps in your favorite language and securely share them with your team. No frontend experience is required.
 
 ### ⚡From idea to app in minutes
 
@@ -12,15 +12,15 @@ An internal tool or a dashboard for your team, weekend project, data entry form,
 
 ### 📐 Simple architecture
 
-No more complex architecture with JavaScript frontend, REST API backend, database, cache, etc. With Flet you just write a monolith stateful app in Python only and get multi-user, realtime Single-Page Application (SPA).
+No more complex architecture with JavaScript frontend, REST API backend, database, cache, etc. With Flet you just write a monolith stateful app in Python only and get multi-user, real-time Single-Page Application (SPA).
 
 ### 🔋Batteries included
 
-To start developing with Flet, you just need your favorite IDE or text editor. No SDKs, no thousands of dependencies, no complex tooling - Flet has built-in web server with assets hosting and desktop clients.
+To start developing with Flet, you just need your favorite IDE or text editor. No SDKs, no thousands of dependencies, no complex tooling - Flet has a built-in web server with assets hosting and desktop clients.
 
 ### &nbsp;<img src="media/flutter/icon_flutter.svg" height="20px" />&nbsp;&nbsp;Powered by Flutter
 
-Flet UI is built with [Flutter](https://flutter.dev/), so your app looks professional and could be delivered to any platform. Flet simplifies Flutter model by combining smaller "widgets" to ready-to-use "controls" with an imperative programming model.
+Flet UI is built with [Flutter](https://flutter.dev/), so your app looks professional and could be delivered to any platform. Flet simplifies the Flutter model by combining smaller "widgets" to ready-to-use "controls" with an imperative programming model.
 
 ### 🌐 Speaks your language
 
