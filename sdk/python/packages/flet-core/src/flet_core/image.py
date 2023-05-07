@@ -56,6 +56,7 @@ class Image(ConstrainedControl):
         self,
         src: Optional[str] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -92,10 +93,10 @@ class Image(ConstrainedControl):
         gapless_playback: Optional[bool] = None,
         semantics_label: Optional[str] = None,
     ):
-
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,

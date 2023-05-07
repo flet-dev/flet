@@ -155,6 +155,9 @@ class _PageControlState extends State<PageControl> {
 
     //debugDumpRenderTree();
 
+    // clear hrefs index
+    FletAppServices.of(context).globalKeys.clear();
+
     // page route
     var route = widget.control.attrString("route");
     if (_routeState.route != route && route != null) {
@@ -557,14 +560,6 @@ class _PageControlState extends State<PageControl> {
           final crossAlignment = parseCrossAxisAlignment(
               control, "horizontalAlignment", CrossAxisAlignment.start);
 
-          ScrollMode scrollMode = ScrollMode.values.firstWhere(
-              (m) =>
-                  m.name.toLowerCase() ==
-                  control.attrString("scroll", "")!.toLowerCase(),
-              orElse: () => ScrollMode.none);
-
-          final autoScroll = control.attrBool("autoScroll", false)!;
-
           Control? appBar;
           Control? fab;
           Control? navBar;
@@ -629,14 +624,12 @@ class _PageControlState extends State<PageControl> {
                     crossAxisAlignment: crossAlignment,
                     children: controls);
 
-                Widget child = scrollMode != ScrollMode.none
-                    ? ScrollableControl(
-                        scrollDirection: Axis.vertical,
-                        scrollMode: scrollMode,
-                        autoScroll: autoScroll,
-                        child: column,
-                      )
-                    : column;
+                Widget child = ScrollableControl(
+                  control: control,
+                  scrollDirection: Axis.vertical,
+                  dispatch: widget.dispatch,
+                  child: column,
+                );
 
                 if (control.attrBool("onScroll", false)!) {
                   child =

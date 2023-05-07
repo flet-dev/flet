@@ -25,6 +25,7 @@ class ConstrainedControl(Control):
         #
         # ConstrainedControl specific
         #
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -55,6 +56,7 @@ class ConstrainedControl(Control):
             data=data,
         )
 
+        self.key = key
         self.width = width
         self.height = height
         self.left = left
@@ -84,6 +86,15 @@ class ConstrainedControl(Control):
         self._set_attr_json("animateRotation", self.__animate_rotation)
         self._set_attr_json("animateScale", self.__animate_scale)
         self._set_attr_json("animateOffset", self.__animate_offset)
+
+    # key
+    @property
+    def key(self) -> Optional[str]:
+        return self._get_attr("key")
+
+    @key.setter
+    def key(self, value: Optional[str]):
+        self._set_attr("key", value)
 
     # width
     @property

@@ -1,6 +1,8 @@
 import json
+import time
 from typing import Any, Optional
 
+from flet_core.animation import AnimationCurve
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
@@ -26,6 +28,28 @@ class ScrollableControl(Control):
         self.auto_scroll = auto_scroll
         self.on_scroll_interval = on_scroll_interval
         self.on_scroll = on_scroll
+
+    def scroll_to(
+        self,
+        offset: Optional[float] = None,
+        delta: Optional[float] = None,
+        key: Optional[str] = None,
+        duration: Optional[int] = None,
+        curve: Optional[AnimationCurve] = None,
+    ):
+        m = {
+            "n": "scroll_to",
+            "i": str(time.time()),
+            "p": {
+                "offset": offset,
+                "delta": delta,
+                "key": key,
+                "duration": duration,
+                "curve": curve.value if curve is not None else None,
+            },
+        }
+        self._set_attr_json("method", m)
+        self.update()
 
     # scroll
     @property

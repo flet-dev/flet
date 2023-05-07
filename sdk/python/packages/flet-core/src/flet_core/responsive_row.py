@@ -52,6 +52,7 @@ class ResponsiveRow(ConstrainedControl):
         self,
         controls: Optional[List[Control]] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -87,6 +88,7 @@ class ResponsiveRow(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
