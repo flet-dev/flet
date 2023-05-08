@@ -5,6 +5,7 @@ from typing import Dict, Optional, Union
 
 from flet_core.border import BorderSide
 from flet_core.border_radius import BorderRadius
+from flet_core.text_style import TextStyle
 from flet_core.types import MaterialState, PaddingValue, ThemeMode
 
 try:
@@ -80,6 +81,25 @@ class ColorScheme:
 
 
 @dataclasses.dataclass
+class TextTheme:
+    body_large: Optional[TextStyle] = field(default=None)
+    body_medium: Optional[TextStyle] = field(default=None)
+    body_small: Optional[TextStyle] = field(default=None)
+    display_large: Optional[TextStyle] = field(default=None)
+    display_medium: Optional[TextStyle] = field(default=None)
+    display_small: Optional[TextStyle] = field(default=None)
+    headline_large: Optional[TextStyle] = field(default=None)
+    headline_medium: Optional[TextStyle] = field(default=None)
+    headline_small: Optional[TextStyle] = field(default=None)
+    label_large: Optional[TextStyle] = field(default=None)
+    label_medium: Optional[TextStyle] = field(default=None)
+    label_small: Optional[TextStyle] = field(default=None)
+    title_large: Optional[TextStyle] = field(default=None)
+    title_medium: Optional[TextStyle] = field(default=None)
+    title_small: Optional[TextStyle] = field(default=None)
+
+
+@dataclasses.dataclass
 class ScrollbarTheme:
     thumb_visibility: Union[None, bool, Dict[MaterialState, bool]] = field(default=None)
     thickness: Union[None, float, Dict[MaterialState, float]] = field(default=None)
@@ -112,6 +132,8 @@ class Theme:
     color_scheme_seed: Optional[str] = field(default=None)
     primary_swatch: Optional[str] = field(default=None)
     color_scheme: Optional[ColorScheme] = field(default=None)
+    text_theme: Optional[TextTheme] = field(default=None)
+    primary_text_theme: Optional[TextTheme] = field(default=None)
     scrollbar_theme: Optional[ScrollbarTheme] = field(default=None)
     tabs_theme: Optional[TabsTheme] = field(default=None)
     font_family: Optional[str] = field(default=None)

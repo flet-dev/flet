@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flet/src/utils/borders.dart';
 import 'package:flet/src/utils/edge_insets.dart';
 import 'package:flet/src/utils/numbers.dart';
+import 'package:flet/src/utils/text.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -54,6 +55,9 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
           ? parsePageTransitions(json?["page_transitions"])
           : theme.pageTransitionsTheme,
       colorScheme: parseColorScheme(theme, json?["color_scheme"]),
+      textTheme: parseTextTheme(theme, theme.textTheme, json?["text_theme"]),
+      primaryTextTheme: parseTextTheme(
+          theme, theme.primaryTextTheme, json?["primary_text_theme"]),
       scrollbarTheme: parseScrollBarTheme(theme, json?["scrollbar_theme"]),
       tabBarTheme: parseTabBarTheme(theme, json?["tabs_theme"]));
 }
@@ -97,6 +101,34 @@ ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {
     onInverseSurface: HexColor.fromString(null, j["on_inverse_surface"] ?? ""),
     inversePrimary: HexColor.fromString(null, j["inverse_primary"] ?? ""),
     surfaceTint: HexColor.fromString(null, j["surface_tint"] ?? ""),
+  );
+}
+
+TextTheme? parseTextTheme(
+    ThemeData theme, TextTheme textTheme, Map<String, dynamic>? j) {
+  if (j == null) {
+    return null;
+  }
+  TextStyle? parseTextStyle(String propName) {
+    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
+  }
+
+  return textTheme.copyWith(
+    bodyLarge: parseTextStyle("body_large"),
+    bodyMedium: parseTextStyle("body_medium"),
+    bodySmall: parseTextStyle("body_small"),
+    displayLarge: parseTextStyle("display_large"),
+    displayMedium: parseTextStyle("display_medium"),
+    displaySmall: parseTextStyle("display_small"),
+    headlineLarge: parseTextStyle("headline_large"),
+    headlineMedium: parseTextStyle("headline_medium"),
+    headlineSmall: parseTextStyle("headline_small"),
+    labelLarge: parseTextStyle("label_large"),
+    labelMedium: parseTextStyle("label_medium"),
+    labelSmall: parseTextStyle("label_small"),
+    titleLarge: parseTextStyle("title_large"),
+    titleMedium: parseTextStyle("title_medium"),
+    titleSmall: parseTextStyle("title_small"),
   );
 }
 
