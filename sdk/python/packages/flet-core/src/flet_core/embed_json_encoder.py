@@ -39,6 +39,9 @@ class EmbedJsonEncoder(json.JSONEncoder):
         else:
             return self._convert_enums(obj.__dict__)
 
+    def encode(self, o):
+        return super().encode(self._convert_enums(o))
+
     def _convert_enums(self, obj):
         if isinstance(obj, Dict):
             return dict(

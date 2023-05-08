@@ -8,8 +8,11 @@ Map<String, double> parseResponsiveNumber(
   var v = control.attrString(propName, null);
   Map<String, double> result = {};
   if (v != null) {
-    final j1 = json.decode(v);
-    result = responsiveNumberFromJson(j1);
+    var j = json.decode(v);
+    if (j is! Map<String, dynamic>) {
+      j = {"": j};
+    }
+    result = responsiveNumberFromJson(j);
   }
   if (result[""] == null) {
     result[""] = defaultValue;

@@ -147,8 +147,8 @@ class Switch(ConstrainedControl):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("thumbColor", self._wrap_attr_dict(self.__thumb_color))
-        self._set_attr_json("trackColor", self._wrap_attr_dict(self.__track_color))
+        self._set_attr_json("thumbColor", self.__thumb_color)
+        self._set_attr_json("trackColor", self.__track_color)
 
     # value
     @property

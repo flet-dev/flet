@@ -131,7 +131,7 @@ class Radio(ConstrainedControl):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("fillColor", self._wrap_attr_dict(self.__fill_color))
+        self._set_attr_json("fillColor", self.__fill_color)
 
     # value
     @property

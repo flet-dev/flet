@@ -57,7 +57,7 @@ class Control:
         pass
 
     def _before_build_command(self):
-        self._set_attr_json("col", self._wrap_attr_dict(self.__col))
+        self._set_attr_json("col", self.__col)
 
     def did_mount(self):
         pass
@@ -144,11 +144,6 @@ class Control:
             if value is not None
             else None
         )
-
-    def _wrap_attr_dict(self, value):
-        if value is None or isinstance(value, Dict):
-            return value
-        return {"": value}
 
     def __str__(self):
         attrs = {}
@@ -398,7 +393,6 @@ class Control:
 
     # private methods
     def _build_add_commands(self, indent=0, index=None, added_controls=None):
-
         self._build()
 
         # remove control from index
