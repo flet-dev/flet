@@ -173,7 +173,7 @@ from flet_core.theme import (
     PageTransitionsTheme,
     PageTransitionTheme,
     ScrollbarTheme,
-    TabBarScheme,
+    TabsTheme,
     Theme,
     ThemeVisualDensity,
 )

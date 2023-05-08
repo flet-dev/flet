@@ -55,7 +55,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
           : theme.pageTransitionsTheme,
       colorScheme: parseColorScheme(theme, json?["color_scheme"]),
       scrollbarTheme: parseScrollBarTheme(theme, json?["scrollbar_theme"]),
-      tabBarTheme: parseTabBarTheme(theme, json?["tab_bar_theme"]));
+      tabBarTheme: parseTabBarTheme(theme, json?["tabs_theme"]));
 }
 
 ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {

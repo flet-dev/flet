@@ -95,7 +95,7 @@ class ScrollbarTheme:
 
 
 @dataclasses.dataclass
-class TabBarScheme:
+class TabsTheme:
     divider_color: Optional[str] = field(default=None)
     indicator_border_radius: Optional[BorderRadius] = field(default=None)
     indicator_border_side: Optional[BorderSide] = field(default=None)
@@ -113,7 +113,7 @@ class Theme:
     primary_swatch: Optional[str] = field(default=None)
     color_scheme: Optional[ColorScheme] = field(default=None)
     scrollbar_theme: Optional[ScrollbarTheme] = field(default=None)
-    tab_bar_theme: Optional[TabBarScheme] = field(default=None)
+    tabs_theme: Optional[TabsTheme] = field(default=None)
     font_family: Optional[str] = field(default=None)
     use_material3: Optional[bool] = field(default=None)
     visual_density: ThemeVisualDensity = field(default=ThemeVisualDensity.STANDARD)
