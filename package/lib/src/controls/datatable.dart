@@ -71,11 +71,10 @@ class _DataTableControlState extends State<DataTableControl> {
           }
 
           TableBorder? tableBorder;
-          if (horizontalLines != BorderSide.none ||
-              verticalLines != BorderSide.none) {
+          if (horizontalLines != null || verticalLines != null) {
             tableBorder = TableBorder(
-                horizontalInside: horizontalLines,
-                verticalInside: verticalLines);
+                horizontalInside: horizontalLines ?? BorderSide.none,
+                verticalInside: verticalLines ?? BorderSide.none);
           }
 
           return DataTable(

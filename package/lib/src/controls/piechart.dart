@@ -122,7 +122,8 @@ class _PieChartControlState extends State<PieChartControl> {
       titleStyle: parseTextStyle(
           Theme.of(context), sectionViewModel.control, "titleStyle"),
       borderSide:
-          parseBorderSide(theme, sectionViewModel.control, "borderSide"),
+          parseBorderSide(theme, sectionViewModel.control, "borderSide") ??
+              BorderSide.none,
       titlePositionPercentageOffset:
           sectionViewModel.control.attrDouble("titlePosition"),
       badgeWidget: sectionViewModel.badge != null

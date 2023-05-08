@@ -1,11 +1,16 @@
-from typing import Any, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
+from flet_core.border import BorderSide
+from flet_core.border_radius import BorderRadius
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    BorderRadiusValue,
+    MaterialState,
     OffsetValue,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -158,6 +163,15 @@ class Tabs(ConstrainedControl):
         selected_index: Optional[int] = None,
         scrollable: Optional[bool] = None,
         animation_duration: Optional[int] = None,
+        divider_color: Optional[str] = None,
+        indicator_color: Optional[str] = None,
+        indicator_border_radius: BorderRadiusValue = None,
+        indicator_border_side: Optional[BorderSide] = None,
+        indicator_padding: PaddingValue = None,
+        indicator_tab_size: Optional[bool] = None,
+        label_color: Optional[str] = None,
+        unselected_label_color: Optional[str] = None,
+        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
         on_change=None,
     ):
         ConstrainedControl.__init__(
@@ -193,10 +207,26 @@ class Tabs(ConstrainedControl):
         self.selected_index = selected_index
         self.scrollable = scrollable
         self.animation_duration = animation_duration
+        self.divider_color = divider_color
+        self.label_color = label_color
+        self.unselected_label_color = unselected_label_color
+        self.indicator_color = indicator_color
+        self.indicator_border_radius = indicator_border_radius
+        self.indicator_border_side = indicator_border_side
+        self.indicator_padding = indicator_padding
+        self.indicator_tab_size = indicator_tab_size
+        self.overlay_color = overlay_color
         self.on_change = on_change
 
     def _get_control_name(self):
         return "tabs"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("indicatorBorderRadius", self.__indicator_border_radius)
+        self._set_attr_json("indicatorBorderSide", self.__indicator_border_side)
+        self._set_attr_json("indicatorPadding", self.__indicator_padding)
 
     def _get_children(self):
         return self.__tabs
@@ -245,3 +275,84 @@ class Tabs(ConstrainedControl):
     @animation_duration.setter
     def animation_duration(self, value: Optional[int]):
         self._set_attr("animationDuration", value)
+
+    # divider_color
+    @property
+    def divider_color(self) -> Optional[str]:
+        return self._get_attr("dividerColor")
+
+    @divider_color.setter
+    def divider_color(self, value: Optional[str]):
+        self._set_attr("dividerColor", value)
+
+    # indicator_color
+    @property
+    def indicator_color(self) -> Optional[str]:
+        return self._get_attr("indicatorColor")
+
+    @indicator_color.setter
+    def indicator_color(self, value: Optional[str]):
+        self._set_attr("indicatorColor", value)
+
+    # indicator_border_radius
+    @property
+    def indicator_border_radius(self) -> BorderRadiusValue:
+        return self.__indicator_border_radius
+
+    @indicator_border_radius.setter
+    def indicator_border_radius(self, value: BorderRadiusValue):
+        self.__indicator_border_radius = value
+
+    # indicator_border_side
+    @property
+    def indicator_border_side(self) -> Optional[BorderSide]:
+        return self.__indicator_border_side
+
+    @indicator_border_side.setter
+    def indicator_border_side(self, value: Optional[BorderSide]):
+        self.__indicator_border_side = value
+
+    # indicator_padding
+    @property
+    def indicator_padding(self) -> PaddingValue:
+        return self.__indicator_padding
+
+    @indicator_padding.setter
+    def indicator_padding(self, value: PaddingValue):
+        self.__indicator_padding = value
+
+    # indicator_tab_size
+    @property
+    def indicator_tab_size(self) -> Optional[bool]:
+        return self._get_attr("indicatorTabSize", data_type="bool", def_value=False)
+
+    @indicator_tab_size.setter
+    def indicator_tab_size(self, value: Optional[bool]):
+        self._set_attr("indicatorTabSize", value)
+
+    # label_color
+    @property
+    def label_color(self) -> Optional[str]:
+        return self._get_attr("labelColor")
+
+    @label_color.setter
+    def label_color(self, value: Optional[str]):
+        self._set_attr("labelColor", value)
+
+    # unselected_label_color
+    @property
+    def unselected_label_color(self) -> Optional[str]:
+        return self._get_attr("unselectedLabelColor")
+
+    @unselected_label_color.setter
+    def unselected_label_color(self, value: Optional[str]):
+        self._set_attr("unselectedLabelColor", value)
+
+    # overlay_color
+    @property
+    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__overlay_color
+
+    @overlay_color.setter
+    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__overlay_color = value

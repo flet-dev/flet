@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-MaterialStateProperty<T>? getMaterialStateProperty<T>(
-    Map<String, dynamic>? jsonDictValue,
-    T Function(dynamic) converterFromJson,
-    T defaultValue) {
+MaterialStateProperty<T>? getMaterialStateProperty<T>(dynamic jsonDictValue,
+    T Function(dynamic) converterFromJson, T defaultValue) {
   if (jsonDictValue == null) {
     return null;
   }
-  return MaterialStateFromJSON(jsonDictValue, converterFromJson, defaultValue);
+  var j = jsonDictValue;
+  if (j is! Map<String, dynamic>) {
+    j = {"": j};
+  }
+  return MaterialStateFromJSON(j, converterFromJson, defaultValue);
 }
 
 class MaterialStateFromJSON<T> extends MaterialStateProperty<T> {

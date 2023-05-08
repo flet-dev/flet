@@ -3,7 +3,9 @@ from dataclasses import field
 from enum import Enum
 from typing import Dict, Optional, Union
 
-from flet_core.types import MaterialState, ThemeMode
+from flet_core.border import BorderSide
+from flet_core.border_radius import BorderRadius
+from flet_core.types import MaterialState, PaddingValue, ThemeMode
 
 try:
     from typing import Literal
@@ -83,19 +85,26 @@ class ScrollbarTheme:
     thickness: Union[None, float, Dict[MaterialState, float]] = field(default=None)
     track_visibility: Union[None, bool, Dict[MaterialState, bool]] = field(default=None)
     radius: Optional[float] = field(default=None)
-    thumb_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
-    )
-    track_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
-    )
-    track_border_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
-    )
+    thumb_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
+    track_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
+    track_border_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
     cross_axis_margin: Optional[float] = field(default=None)
     main_axis_margin: Optional[float] = field(default=None)
     min_thumb_length: Optional[float] = field(default=None)
     interactive: Optional[bool] = field(default=None)
+
+
+@dataclasses.dataclass
+class TabBarScheme:
+    divider_color: Optional[str] = field(default=None)
+    indicator_border_radius: Optional[BorderRadius] = field(default=None)
+    indicator_border_side: Optional[BorderSide] = field(default=None)
+    indicator_padding: PaddingValue = field(default=None)
+    indicator_color: Optional[str] = field(default=None)
+    indicator_tab_size: Optional[bool] = field(default=None)
+    label_color: Optional[str] = field(default=None)
+    unselected_label_color: Optional[str] = field(default=None)
+    overlay_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -104,6 +113,7 @@ class Theme:
     primary_swatch: Optional[str] = field(default=None)
     color_scheme: Optional[ColorScheme] = field(default=None)
     scrollbar_theme: Optional[ScrollbarTheme] = field(default=None)
+    tab_bar_theme: Optional[TabBarScheme] = field(default=None)
     font_family: Optional[str] = field(default=None)
     use_material3: Optional[bool] = field(default=None)
     visual_density: ThemeVisualDensity = field(default=ThemeVisualDensity.STANDARD)

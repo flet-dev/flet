@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -7,7 +9,11 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/borders.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
+import '../utils/material_state.dart';
 import 'create_control.dart';
 
 class TabsControl extends StatefulWidget {
@@ -118,12 +124,70 @@ class _TabsControlState extends State<TabsControl>
           bool emptyTabs = !viewModel.controlViews
               .any((t) => t.children.any((c) => c.name == "content"));
 
+          var overlayColorStr = widget.control.attrString("overlayColor");
+          dynamic overlayColor;
+          if (overlayColorStr != null) {
+            overlayColor = json.decode(overlayColorStr);
+          }
+
+          var indicatorBorderRadius =
+              parseBorderRadius(widget.control, "indicatorBorderRadius");
+          var inidicatorBorderSide = parseBorderSide(
+              Theme.of(context), widget.control, "inidicatorBorderSide");
+          var indicatorPadding =
+              parseEdgeInsets(widget.control, "indicatorPadding");
+
+          var inidicatorColor = HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("indicatorColor", "")!) ??
+              TabBarTheme.of(context).indicatorColor ??
+              Theme.of(context).colorScheme.primary;
+
+          var themeIndicator =
+              TabBarTheme.of(context).indicator as UnderlineTabIndicator?;
+
+          var indicatorTabSize = widget.control.attrBool("indicatorTabSize");
+
           var tabBar = TabBar(
               controller: _tabController,
               isScrollable: widget.control.attrBool("scrollable", true)!,
-              indicatorColor: Theme.of(context).colorScheme.primary,
-              labelColor: Theme.of(context).colorScheme.primary,
-              unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
+              dividerColor:
+                  HexColor.fromString(Theme.of(context), widget.control.attrString("dividerColor", "")!) ??
+                      TabBarTheme.of(context).dividerColor,
+              indicatorSize: indicatorTabSize != null
+                  ? (indicatorTabSize
+                      ? TabBarIndicatorSize.tab
+                      : TabBarIndicatorSize.label)
+                  : TabBarTheme.of(context).indicatorSize,
+              indicator: indicatorBorderRadius != null ||
+                      inidicatorBorderSide != null ||
+                      indicatorPadding != null
+                  ? UnderlineTabIndicator(
+                      borderRadius: indicatorBorderRadius ??
+                          themeIndicator?.borderRadius ??
+                          const BorderRadius.only(
+                              topLeft: Radius.circular(2),
+                              topRight: Radius.circular(2)),
+                      borderSide: inidicatorBorderSide ??
+                          themeIndicator?.borderSide ??
+                          BorderSide(
+                              width: themeIndicator?.borderSide.width ?? 2,
+                              color: themeIndicator?.borderSide.color ??
+                                  inidicatorColor),
+                      insets: indicatorPadding ??
+                          themeIndicator?.insets ??
+                          EdgeInsets.zero)
+                  : TabBarTheme.of(context).indicator,
+              indicatorColor: inidicatorColor,
+              labelColor: HexColor.fromString(Theme.of(context), widget.control.attrString("labelColor", "")!) ??
+                  TabBarTheme.of(context).labelColor ??
+                  Theme.of(context).colorScheme.primary,
+              unselectedLabelColor:
+                  HexColor.fromString(Theme.of(context), widget.control.attrString("unselectedLabelColor", "")!) ??
+                      TabBarTheme.of(context).unselectedLabelColor ??
+                      Theme.of(context).colorScheme.onSurface,
+              overlayColor: getMaterialStateProperty(
+                      overlayColor, (jv) => HexColor.fromString(Theme.of(context), jv as String), null) ??
+                  TabBarTheme.of(context).overlayColor,
               tabs: viewModel.controlViews.map((tabView) {
                 var text = tabView.control.attrString("text");
                 var icon =
