@@ -39,6 +39,8 @@ Color? _getThemeColor(ThemeData theme, String colorName) {
       return scheme.onErrorContainer;
     case "outline":
       return scheme.outline;
+    case "outlinevariant":
+      return scheme.outlineVariant;
     case "background":
       return scheme.background;
     case "onbackground":
@@ -51,6 +53,8 @@ Color? _getThemeColor(ThemeData theme, String colorName) {
       return scheme.surfaceVariant;
     case "onsurfacevariant":
       return scheme.onSurfaceVariant;
+    case "surfacetint":
+      return scheme.surfaceTint;
     case "inversesurface":
       return scheme.inverseSurface;
     case "oninversesurface":
@@ -59,6 +63,8 @@ Color? _getThemeColor(ThemeData theme, String colorName) {
       return scheme.inversePrimary;
     case "shadow":
       return scheme.shadow;
+    case "scrim":
+      return scheme.scrim;
   }
   return null;
 }
