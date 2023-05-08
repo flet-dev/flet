@@ -51,6 +51,28 @@ class ScrollableControl(Control):
         self._set_attr_json("method", m)
         self.update()
 
+    async def scroll_to_async(
+        self,
+        offset: Optional[float] = None,
+        delta: Optional[float] = None,
+        key: Optional[str] = None,
+        duration: Optional[int] = None,
+        curve: Optional[AnimationCurve] = None,
+    ):
+        m = {
+            "n": "scroll_to",
+            "i": str(time.time()),
+            "p": {
+                "offset": offset,
+                "delta": delta,
+                "key": key,
+                "duration": duration,
+                "curve": curve.value if curve is not None else None,
+            },
+        }
+        self._set_attr_json("method", m)
+        await self.update_async()
+
     # scroll
     @property
     def scroll(self) -> Optional[ScrollMode]:
