@@ -823,6 +823,18 @@ class Page(Control):
             offset=offset, delta=delta, key=key, duration=duration, curve=curve
         )
 
+    async def scroll_to_async(
+        self,
+        offset: Optional[float] = None,
+        delta: Optional[float] = None,
+        key: Optional[str] = None,
+        duration: Optional[int] = None,
+        curve: Optional[AnimationCurve] = None,
+    ):
+        await self.__default_view.scroll_to_async(
+            offset=offset, delta=delta, key=key, duration=duration, curve=curve
+        )
+
     def invoke_method(
         self,
         method_name: str,
