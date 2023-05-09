@@ -46,10 +46,10 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
       python_stack: ""
 
-    - job_name: Build Flet for iOS
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+    # - job_name: Build Flet for iOS
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     - job_name: Build Flet Studio for iOS
       job_group: build_flet
@@ -319,8 +319,8 @@ for:
           fi
 
     artifacts:
-      - path: studio/client/build/flet-studio.ipa
-        name: flet_studio_ios
+      - path: studio/client/build/flet.ipa
+        name: flet_ios
 
   # ======================================
   #      Build Flet View for iOS
