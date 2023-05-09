@@ -347,7 +347,7 @@ class Container(ConstrainedControl):
         return get_enum_from_value(ImageFit, self.__image_fit, ImageFitDefault)
 
     @image_fit.setter
-    def image_fit(self, value: ImageFit]:
+    def image_fit(self, value: ImageFit):
         self.__image_fit = get_str_from_enum(ImageFit, value)
         self._set_attr("imageFit", self.__image_fit)
 

@@ -6,7 +6,7 @@ import string
 import sys
 import unicodedata
 from enum import Enum
-from typing import Any, Union, Type, Optional, TypeVar
+from typing import Union, Type, Optional, TypeVar
 
 
 T = TypeVar('T', bound=Enum)
@@ -186,3 +186,4 @@ class Vector(complex):
         radians = math.radians(value)
         magnitude = abs(self)
         return type(self).polar(radians, magnitude)
+
