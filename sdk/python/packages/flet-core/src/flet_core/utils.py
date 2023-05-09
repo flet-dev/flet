@@ -5,6 +5,11 @@ import random
 import string
 import sys
 import unicodedata
+from enum import Enum
+from typing import Any, Union, Type, Optional, TypeVar
+
+
+T = TypeVar('T', bound=Enum)
 
 
 def random_string(length):
@@ -21,6 +26,17 @@ def is_asyncio():
 def is_coroutine(method):
     return inspect.iscoroutinefunction(method)
 
+
+def get_str_from_enum(enum: Type[Enum], value: Union[Enum, str]) -> Optional[str]:
+    if isinstance(value, Enum):
+        return str(value.value)
+    if value in enum.__dict__['_value2member_map_']:
+        return value
+    return None
+
+
+def get_enum_from_value(enum: Type[T], value: Optional[str], default: T) -> T:
+    return enum.__dict__['_value2member_map_'].get(value, default)
 
 def slugify(original: str) -> str:
     """

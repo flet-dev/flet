@@ -3,7 +3,8 @@ from typing import Any, List, Optional
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import MainAxisAlignment, MainAxisAlignmentString, PaddingValue
+from flet_core.types import MainAxisAlignment, MainAxisAlignmentDefault, PaddingValue
+from flet_core.utils import get_enum_from_value, get_str_from_enum
 
 
 class AlertDialog(Control):
@@ -76,7 +77,7 @@ class AlertDialog(Control):
         content_padding: PaddingValue = None,
         actions: Optional[List[Control]] = None,
         actions_padding: PaddingValue = None,
-        actions_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        actions_alignment: MainAxisAlignment = MainAxisAlignmentDefault,
         shape: Optional[OutlinedBorder] = None,
         on_dismiss=None,
     ):
@@ -203,18 +204,12 @@ class AlertDialog(Control):
     # actions_alignment
     @property
     def actions_alignment(self) -> MainAxisAlignment:
-        return self.__actions_alignment
+        return get_enum_from_value(MainAxisAlignment, self.__actions_alignment, MainAxisAlignmentDefault)
 
     @actions_alignment.setter
     def actions_alignment(self, value: MainAxisAlignment):
-        self.__actions_alignment = value
-        if isinstance(value, MainAxisAlignment):
-            self._set_attr("actionsAlignment", value.value)
-        else:
-            self.__set_actions_alignment(value)
-
-    def __set_actions_alignment(self, value: MainAxisAlignmentString):
-        self._set_attr("actionsAlignment", value)
+        self.__actions_alignment = get_str_from_enum(MainAxisAlignment, value)
+        self._set_attr("actionsAlignment", self.__actions_alignment)
 
     # shape
     @property

@@ -9,7 +9,7 @@ from flet_core.types import (
     CrossAxisAlignment,
     CrossAxisAlignmentString,
     MainAxisAlignment,
-    MainAxisAlignmentString,
+    MainAxisAlignmentDefault,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -17,6 +17,7 @@ from flet_core.types import (
     ScrollMode,
     ScrollModeString,
 )
+from flet_core.utils import get_enum_from_value, get_str_from_enum
 
 
 class Column(ConstrainedControl, ScrollableControl):
@@ -93,7 +94,7 @@ class Column(ConstrainedControl, ScrollableControl):
         #
         # Column specific
         #
-        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        alignment: MainAxisAlignment = MainAxisAlignmentDefault,
         horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
         spacing: OptionalNumber = None,
         tight: Optional[bool] = None,
@@ -171,18 +172,12 @@ class Column(ConstrainedControl, ScrollableControl):
     # alignment
     @property
     def alignment(self) -> MainAxisAlignment:
-        return self.__alignment
+        return get_enum_from_value(MainAxisAlignment, self.__alignment, MainAxisAlignmentDefault)
 
     @alignment.setter
     def alignment(self, value: MainAxisAlignment):
-        self.__alignment = value
-        if isinstance(value, MainAxisAlignment):
-            self._set_attr("alignment", value.value)
-        else:
-            self.__set_alignment(value)
-
-    def __set_alignment(self, value: MainAxisAlignmentString):
-        self._set_attr("alignment", value)
+        self.__alignment = get_str_from_enum(MainAxisAlignment, value)
+        self._set_attr("alignment", self.__alignment)
 
     # horizontal_alignment
     @property

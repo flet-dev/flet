@@ -10,11 +10,12 @@ from flet_core.types import (
     CrossAxisAlignment,
     CrossAxisAlignmentString,
     MainAxisAlignment,
-    MainAxisAlignmentString,
+    MainAxisAlignmentDefault,
     PaddingValue,
     ScrollMode,
     ScrollModeString,
 )
+from flet_core.utils import get_enum_from_value, get_str_from_enum
 
 
 class View(ScrollableControl):
@@ -35,7 +36,7 @@ class View(ScrollableControl):
         appbar: Optional[AppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
         navigation_bar: Optional[NavigationBar] = None,
-        vertical_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        vertical_alignment: MainAxisAlignment = MainAxisAlignmentDefault,
         horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
         spacing: OptionalNumber = None,
         padding: PaddingValue = None,
@@ -153,18 +154,12 @@ class View(ScrollableControl):
     # vertical_alignment
     @property
     def vertical_alignment(self) -> MainAxisAlignment:
-        return self.__vertical_alignment
+        return get_enum_from_value(MainAxisAlignment, self.__vertical_alignment, MainAxisAlignmentDefault)
 
     @vertical_alignment.setter
     def vertical_alignment(self, value: MainAxisAlignment):
-        self.__vertical_alignment = value
-        if isinstance(value, MainAxisAlignment):
-            self._set_attr("verticalAlignment", value.value)
-        else:
-            self.__set_vertical_alignment(value)
-
-    def __set_vertical_alignment(self, value: MainAxisAlignmentString):
-        self._set_attr("verticalAlignment", value)
+        self.__vertical_alignment = get_str_from_enum(MainAxisAlignment, value)
+        self._set_attr("verticalAlignment", self.__vertical_alignment)
 
     # spacing
     @property

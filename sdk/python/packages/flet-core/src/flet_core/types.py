@@ -95,16 +95,6 @@ class MaterialState(Enum):
     DEFAULT = ""
 
 
-MainAxisAlignmentString = Literal[
-    None,
-    "start",
-    "end",
-    "center",
-    "spaceBetween",
-    "spaceAround",
-    "spaceEvenly",
-]
-
 CrossAxisAlignmentString = Literal[
     None,
     "start",
@@ -115,8 +105,7 @@ CrossAxisAlignmentString = Literal[
 ]
 
 
-class MainAxisAlignment(Enum):
-    NONE = None
+class MainAxisAlignment(str, Enum):
     START = "start"
     END = "end"
     CENTER = "center"
@@ -248,12 +237,7 @@ class ClipBehavior(Enum):
     HARD_EDGE = "hardEdge"
 
 
-ImageFitString = Literal[
-    None, "none", "contain", "cover", "fill", "fitHeight", "fitWidth", "scaleDown"
-]
-
-
-class ImageFit(Enum):
+class ImageFit(str, Enum):
     NONE = "none"
     CONTAIN = "contain"
     COVER = "cover"
@@ -291,3 +275,7 @@ class ThemeMode(Enum):
     SYSTEM = "system"
     LIGHT = "light"
     DARK = "dark"
+
+
+ImageFitDefault = ImageFit.CONTAIN
+MainAxisAlignmentDefault = MainAxisAlignment.START

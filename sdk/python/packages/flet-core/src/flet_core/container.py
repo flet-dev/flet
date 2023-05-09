@@ -21,7 +21,7 @@ from flet_core.types import (
     ClipBehavior,
     ClipBehaviorString,
     ImageFit,
-    ImageFitString,
+    ImageFitDefault,
     ImageRepeat,
     ImageRepeatString,
     MarginValue,
@@ -32,6 +32,7 @@ from flet_core.types import (
     ScaleValue,
     ThemeMode,
 )
+from flet_core.utils import get_enum_from_value, get_str_from_enum
 
 try:
     from typing import Literal
@@ -109,7 +110,7 @@ class Container(ConstrainedControl):
         image_src: Optional[str] = None,
         image_src_base64: Optional[str] = None,
         image_repeat: Optional[ImageRepeat] = None,
-        image_fit: Optional[ImageFit] = None,
+        image_fit: ImageFit = ImageFitDefault,
         image_opacity: OptionalNumber = None,
         shape: Optional[BoxShape] = None,
         clip_behavior: Optional[ClipBehavior] = None,
@@ -342,19 +343,13 @@ class Container(ConstrainedControl):
 
     # image_fit
     @property
-    def image_fit(self) -> Optional[ImageFit]:
-        return self.__image_fit
+    def image_fit(self) -> ImageFit:
+        return get_enum_from_value(ImageFit, self.__image_fit, ImageFitDefault)
 
     @image_fit.setter
-    def image_fit(self, value: Optional[ImageFit]):
-        self.__image_fit = value
-        if isinstance(value, ImageFit):
-            self._set_attr("imageFit", value.value)
-        else:
-            self.__set_image_fit(value)
-
-    def __set_image_fit(self, value: ImageFitString):
-        self._set_attr("imageFit", value)
+    def image_fit(self, value: ImageFit]:
+        self.__image_fit = get_str_from_enum(ImageFit, value)
+        self._set_attr("imageFit", self.__image_fit)
 
     # image_repeat
     @property
