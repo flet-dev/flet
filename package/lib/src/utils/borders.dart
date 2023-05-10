@@ -36,11 +36,11 @@ Border? parseBorder(ThemeData theme, Control control, String propName,
   return borderFromJSON(theme, j1, defaultSideColor);
 }
 
-BorderSide parseBorderSide(ThemeData theme, Control control, String propName,
+BorderSide? parseBorderSide(ThemeData theme, Control control, String propName,
     {Color? defaultSideColor}) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return BorderSide.none;
+    return null;
   }
 
   final j1 = json.decode(v);
@@ -72,13 +72,17 @@ BorderRadius borderRadiusFromJSON(dynamic json) {
 Border borderFromJSON(
     ThemeData? theme, Map<String, dynamic> json, Color? defaultSideColor) {
   return Border(
-      top: borderSideFromJSON(theme, json['t'], defaultSideColor),
-      right: borderSideFromJSON(theme, json['r'], defaultSideColor),
-      bottom: borderSideFromJSON(theme, json['b'], defaultSideColor),
-      left: borderSideFromJSON(theme, json['l'], defaultSideColor));
+      top: borderSideFromJSON(theme, json['t'], defaultSideColor) ??
+          BorderSide.none,
+      right: borderSideFromJSON(theme, json['r'], defaultSideColor) ??
+          BorderSide.none,
+      bottom: borderSideFromJSON(theme, json['b'], defaultSideColor) ??
+          BorderSide.none,
+      left: borderSideFromJSON(theme, json['l'], defaultSideColor) ??
+          BorderSide.none);
 }
 
-BorderSide borderSideFromJSON(
+BorderSide? borderSideFromJSON(
     ThemeData? theme, dynamic json, Color? defaultSideColor) {
   return json != null
       ? BorderSide(
@@ -89,7 +93,7 @@ BorderSide borderSideFromJSON(
               : Colors.black,
           width: parseDouble(json['w'], 1),
           style: BorderStyle.solid)
-      : BorderSide.none;
+      : null;
 }
 
 OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic> json) {

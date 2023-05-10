@@ -87,6 +87,7 @@ class Card(ConstrainedControl):
         #
         # Specific
         #
+        key: Optional[str] = None,
         margin: MarginValue = None,
         elevation: OptionalNumber = None,
         color: Optional[str] = None,
@@ -96,6 +97,7 @@ class Card(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,

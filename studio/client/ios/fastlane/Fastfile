@@ -59,11 +59,11 @@ platform :ios do
     gym(
       export_method: "ad-hoc",
       output_directory: "../build",
-      output_name: "flet-studio.ipa",
+      output_name: "flet.ipa",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
         provisioningProfiles: { 
-          "com.appveyor.fletstudio" => "match AdHoc com.appveyor.fletstudio"
+          "com.appveyor.flet" => "match AdHoc com.appveyor.flet"
         }
       }
     )
@@ -79,11 +79,11 @@ platform :ios do
     gym(
       export_method: "app-store",
       output_directory: "../build",
-      output_name: "flet-studio.ipa",
+      output_name: "flet.ipa",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
         provisioningProfiles: { 
-          "com.appveyor.fletstudio" => "match AppStore com.appveyor.fletstudio"
+          "com.appveyor.flet" => "match AppStore com.appveyor.flet"
         }
       }
     )

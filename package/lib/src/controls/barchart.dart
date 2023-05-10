@@ -216,7 +216,9 @@ class _BarChartControlState extends State<BarChartControl> {
             theme, rodViewModel.control.attrString("color", "")!),
         gradient: parseGradient(theme, rodViewModel.control, "gradient"),
         borderRadius: parseBorderRadius(rodViewModel.control, "borderRadius"),
-        borderSide: parseBorderSide(theme, rodViewModel.control, "borderSide"),
+        borderSide:
+            parseBorderSide(theme, rodViewModel.control, "borderSide") ??
+                BorderSide.none,
         backDrawRodData: bgFromY != null ||
                 bgToY != null ||
                 bgColor != null ||
@@ -241,7 +243,8 @@ class _BarChartControlState extends State<BarChartControl> {
         stackItemViewModel.control.attrDouble("toY", 0)!,
         HexColor.fromString(
             theme, stackItemViewModel.control.attrString("color", "")!)!,
-        parseBorderSide(theme, stackItemViewModel.control, "borderSide"));
+        parseBorderSide(theme, stackItemViewModel.control, "borderSide") ??
+            BorderSide.none);
   }
 
   AxisTitles getAxisTitles(

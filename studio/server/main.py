@@ -1,5 +1,7 @@
 import logging
 
+from flet.view import View
+
 import flet
 from flet import (
     AppBar,
@@ -15,7 +17,6 @@ from flet import (
     TransparentPointer,
     colors,
 )
-from flet.view import View
 
 # logging.basicConfig(level=logging.DEBUG)
 
@@ -24,7 +25,7 @@ def main(page: Page):
     hf = HapticFeedback()
     page.overlay.append(hf)
     # page.padding = 0
-    page.appbar = AppBar(title=Text("Flet Studio"))
+    page.appbar = AppBar(title=Text("Flet"))
 
     def return_to_main(_):
         if len(page.views) > 1:

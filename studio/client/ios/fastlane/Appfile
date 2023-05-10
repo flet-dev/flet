@@ -1,4 +1,4 @@
-app_identifier("com.appveyor.fletstudio")
+app_identifier("com.appveyor.flet")
 # apple_id("[[APPLE_ID]]") # Your Apple Developer Portal username
 
 

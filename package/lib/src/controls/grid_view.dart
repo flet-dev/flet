@@ -5,36 +5,61 @@ import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
 import '../widgets/adjustable_scroll_controller.dart';
 import 'create_control.dart';
+import 'scroll_notification_control.dart';
+import 'scrollable_control.dart';
 
-class GridViewControl extends StatelessWidget {
+class GridViewControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final List<Control> children;
+  final dynamic dispatch;
 
   const GridViewControl(
       {Key? key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
   @override
+  State<GridViewControl> createState() => _GridViewControlState();
+}
+
+class _GridViewControlState extends State<GridViewControl> {
+  late final ScrollController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        isWindowsDesktop() ? AdjustableScrollController() : ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    debugPrint("GridViewControl build: ${control.id}");
+    debugPrint("GridViewControl build: ${widget.control.id}");
 
-    bool disabled = control.isDisabled || parentDisabled;
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    final horizontal = control.attrBool("horizontal", false)!;
-    final runsCount = control.attrInt("runsCount", 1)!;
-    final maxExtent = control.attrDouble("maxExtent");
-    final spacing = control.attrDouble("spacing", 10)!;
-    final runSpacing = control.attrDouble("runSpacing", 10)!;
-    final padding = parseEdgeInsets(control, "padding");
-    final childAspectRatio = control.attrDouble("childAspectRatio", 1)!;
+    final horizontal = widget.control.attrBool("horizontal", false)!;
+    final runsCount = widget.control.attrInt("runsCount", 1)!;
+    final maxExtent = widget.control.attrDouble("maxExtent");
+    final spacing = widget.control.attrDouble("spacing", 10)!;
+    final runSpacing = widget.control.attrDouble("runSpacing", 10)!;
+    final padding = parseEdgeInsets(widget.control, "padding");
+    final childAspectRatio = widget.control.attrDouble("childAspectRatio", 1)!;
 
-    List<Control> visibleControls = children.where((c) => c.isVisible).toList();
+    List<Control> visibleControls =
+        widget.children.where((c) => c.isVisible).toList();
 
     var gridView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -57,20 +82,36 @@ class GridViewControl extends StatelessWidget {
                 crossAxisSpacing: runSpacing,
                 childAspectRatio: childAspectRatio);
 
-        return GridView.builder(
+        Widget child = GridView.builder(
           scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
-          controller: isWindowsDesktop() ? AdjustableScrollController() : null,
+          controller: _controller,
           shrinkWrap: shrinkWrap,
           padding: padding,
           gridDelegate: gridDelegate,
           itemCount: visibleControls.length,
           itemBuilder: (context, index) {
-            return createControl(control, visibleControls[index].id, disabled);
+            return createControl(
+                widget.control, visibleControls[index].id, disabled);
           },
         );
+
+        child = ScrollableControl(
+          control: widget.control,
+          scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+          dispatch: widget.dispatch,
+          scrollController: _controller,
+          child: child,
+        );
+
+        if (widget.control.attrBool("onScroll", false)!) {
+          child =
+              ScrollNotificationControl(control: widget.control, child: child);
+        }
+
+        return child;
       },
     );
 
-    return constrainedControl(context, gridView, parent, control);
+    return constrainedControl(context, gridView, widget.parent, widget.control);
   }
 }

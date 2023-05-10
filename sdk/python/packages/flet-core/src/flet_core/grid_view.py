@@ -3,6 +3,7 @@ from typing import Any, List, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -13,7 +14,7 @@ from flet_core.types import (
 )
 
 
-class GridView(ConstrainedControl):
+class GridView(ConstrainedControl, ScrollableControl):
     """
     A scrollable, 2D array of controls.
 
@@ -64,6 +65,7 @@ class GridView(ConstrainedControl):
         self,
         controls: Optional[List[Control]] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -88,6 +90,12 @@ class GridView(ConstrainedControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         #
+        # ScrollableControl specific
+        #
+        auto_scroll: Optional[bool] = None,
+        on_scroll_interval: OptionalNumber = None,
+        on_scroll: Any = None,
+        #
         # Specific
         #
         horizontal: Optional[bool] = None,
@@ -101,6 +109,7 @@ class GridView(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -124,6 +133,13 @@ class GridView(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+        )
+
+        ScrollableControl.__init__(
+            self,
+            auto_scroll=auto_scroll,
+            on_scroll_interval=on_scroll_interval,
+            on_scroll=on_scroll,
         )
 
         self.__controls: List[Control] = []

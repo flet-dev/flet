@@ -242,7 +242,7 @@ class DataRow(Control):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("color", self._wrap_attr_dict(self.__color))
+        self._set_attr_json("color", self.__color)
 
     def _get_children(self):
         return self.__cells
@@ -301,6 +301,7 @@ class DataTable(ConstrainedControl):
         columns: Optional[List[DataColumn]] = None,
         rows: Optional[List[DataRow]] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -353,6 +354,7 @@ class DataTable(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -413,10 +415,8 @@ class DataTable(ConstrainedControl):
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("horizontalLines", self.__horizontal_lines)
         self._set_attr_json("verticalLines", self.__vertical_lines)
-        self._set_attr_json("dataRowColor", self._wrap_attr_dict(self.__data_row_color))
-        self._set_attr_json(
-            "headingRowColor", self._wrap_attr_dict(self.__heading_row_color)
-        )
+        self._set_attr_json("dataRowColor", self.__data_row_color)
+        self._set_attr_json("headingRowColor", self.__heading_row_color)
         self._set_attr_json("dataTextStyle", self.__data_text_style)
         self._set_attr_json("headingTextStyle", self.__heading_text_style)
 
@@ -642,7 +642,6 @@ class Item(Control):
         self.obj = obj
 
     def _set_attr(self, name, value, dirty=True):
-
         if value is None:
             return
 

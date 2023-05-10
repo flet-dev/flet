@@ -6,6 +6,7 @@ import '../models/control.dart';
 import 'borders.dart';
 import 'colors.dart';
 import 'edge_insets.dart';
+import 'material_state.dart';
 import 'numbers.dart';
 
 ButtonStyle? parseButtonStyle(ThemeData theme, Control control, String propName,
@@ -84,7 +85,7 @@ ButtonStyle? buttonStyleFromJSON(
       elevation: getMaterialStateProperty(
           json["elevation"], (jv) => parseDouble(jv), defaultElevation),
       animationDuration: json["animation_duration"] != null
-          ? Duration(milliseconds: parseInt(json["animation_duration"][""]))
+          ? Duration(milliseconds: parseInt(json["animation_duration"]))
           : null,
       padding: getMaterialStateProperty(
           json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
@@ -94,49 +95,4 @@ ButtonStyle? buttonStyleFromJSON(
           defaultBorderSide),
       shape: getMaterialStateProperty(
           json["shape"], (jv) => outlinedBorderFromJSON(jv), defaultShape));
-}
-
-MaterialStateProperty<T>? getMaterialStateProperty<T>(
-    Map<String, dynamic>? jsonDictValue,
-    T Function(dynamic) converterFromJson,
-    T defaultValue) {
-  if (jsonDictValue == null) {
-    return null;
-  }
-  return MaterialStateFromJSON(jsonDictValue, converterFromJson, defaultValue);
-}
-
-class MaterialStateFromJSON<T> extends MaterialStateProperty<T> {
-  late final Map<String, T> _states;
-  late final T _defaultValue;
-  MaterialStateFromJSON(Map<String, dynamic>? jsonDictValue,
-      T Function(dynamic) converterFromJson, T defaultValue) {
-    _defaultValue = defaultValue;
-    _states = {};
-    if (jsonDictValue != null) {
-      jsonDictValue.forEach((stateStr, jv) {
-        stateStr.split(",").map((s) => s.trim().toLowerCase()).forEach((state) {
-          _states[state] = converterFromJson(jv);
-        });
-      });
-    }
-  }
-
-  @override
-  T resolve(Set<MaterialState> states) {
-    //debugPrint("MaterialStateFromJSON states: $states, _states: $_states");
-    // find specific state
-    for (var state in states) {
-      if (_states.containsKey(state.name)) {
-        return _states[state.name]!;
-      }
-    }
-
-    // catch-all value
-    if (_states.containsKey("")) {
-      return _states[""]!;
-    }
-
-    return _defaultValue;
-  }
 }

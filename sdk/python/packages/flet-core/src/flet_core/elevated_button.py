@@ -41,6 +41,7 @@ class ElevatedButton(ConstrainedControl):
         self,
         text: Optional[str] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -87,6 +88,7 @@ class ElevatedButton(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,

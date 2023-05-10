@@ -31,6 +31,7 @@ import '../widgets/page_media.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
+import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
 class PageControl extends StatefulWidget {
@@ -154,6 +155,9 @@ class _PageControlState extends State<PageControl> {
 
     //debugDumpRenderTree();
 
+    // clear hrefs index
+    FletAppServices.of(context).globalKeys.clear();
+
     // page route
     var route = widget.control.attrString("route");
     if (_routeState.route != route && route != null) {
@@ -162,8 +166,10 @@ class _PageControlState extends State<PageControl> {
     }
 
     // theme
-    var lightTheme = parseTheme(widget.control, "theme", Brightness.light);
-    var darkTheme = parseTheme(widget.control, "darkTheme", Brightness.dark);
+    var theme = parseTheme(widget.control, "theme", Brightness.light);
+    var darkTheme = widget.control.attrString("darkTheme") == null
+        ? parseTheme(widget.control, "theme", Brightness.dark)
+        : parseTheme(widget.control, "darkTheme", Brightness.dark);
     var themeMode = ThemeMode.values.firstWhere(
         (t) =>
             t.name.toLowerCase() ==
@@ -443,7 +449,7 @@ class _PageControlState extends State<PageControl> {
                   routerDelegate: _routerDelegate,
                   routeInformationParser: _routeParser,
                   title: windowTitle,
-                  theme: lightTheme,
+                  theme: theme,
                   darkTheme: darkTheme,
                   themeMode: themeMode,
                 );
@@ -554,14 +560,6 @@ class _PageControlState extends State<PageControl> {
           final crossAlignment = parseCrossAxisAlignment(
               control, "horizontalAlignment", CrossAxisAlignment.start);
 
-          ScrollMode scrollMode = ScrollMode.values.firstWhere(
-              (m) =>
-                  m.name.toLowerCase() ==
-                  control.attrString("scroll", "")!.toLowerCase(),
-              orElse: () => ScrollMode.none);
-
-          final autoScroll = control.attrBool("autoScroll", false)!;
-
           Control? appBar;
           Control? fab;
           Control? navBar;
@@ -626,6 +624,18 @@ class _PageControlState extends State<PageControl> {
                     crossAxisAlignment: crossAlignment,
                     children: controls);
 
+                Widget child = ScrollableControl(
+                  control: control,
+                  scrollDirection: Axis.vertical,
+                  dispatch: widget.dispatch,
+                  child: column,
+                );
+
+                if (control.attrBool("onScroll", false)!) {
+                  child =
+                      ScrollNotificationControl(control: control, child: child);
+                }
+
                 return Directionality(
                     textDirection: textDirection,
                     child: Scaffold(
@@ -645,14 +655,7 @@ class _PageControlState extends State<PageControl> {
                             child: Container(
                                 padding: parseEdgeInsets(control, "padding") ??
                                     const EdgeInsets.all(10),
-                                child: scrollMode != ScrollMode.none
-                                    ? ScrollableControl(
-                                        scrollDirection: Axis.vertical,
-                                        scrollMode: scrollMode,
-                                        autoScroll: autoScroll,
-                                        child: column,
-                                      )
-                                    : column)),
+                                child: child)),
                         ...overlayWidgets
                       ]),
                       bottomNavigationBar: navBar != null

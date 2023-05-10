@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
 import flet_core
+from flet_core.animation import AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
 from flet_core.client_storage import ClientStorage
@@ -810,6 +811,30 @@ class Page(Control):
     async def window_to_front_async(self):
         await self.invoke_method_async("windowToFront")
 
+    def scroll_to(
+        self,
+        offset: Optional[float] = None,
+        delta: Optional[float] = None,
+        key: Optional[str] = None,
+        duration: Optional[int] = None,
+        curve: Optional[AnimationCurve] = None,
+    ):
+        self.__default_view.scroll_to(
+            offset=offset, delta=delta, key=key, duration=duration, curve=curve
+        )
+
+    async def scroll_to_async(
+        self,
+        offset: Optional[float] = None,
+        delta: Optional[float] = None,
+        key: Optional[str] = None,
+        duration: Optional[int] = None,
+        curve: Optional[AnimationCurve] = None,
+    ):
+        await self.__default_view.scroll_to_async(
+            offset=offset, delta=delta, key=key, duration=duration, curve=curve
+        )
+
     def invoke_method(
         self,
         method_name: str,
@@ -1516,6 +1541,15 @@ class Page(Control):
     def window_visible(self, value: Optional[bool]):
         self._set_attr("windowVisible", value)
 
+    # on_scroll_interval
+    @property
+    def on_scroll_interval(self) -> OptionalNumber:
+        return self.__default_view.on_scroll_interval
+
+    @on_scroll_interval.setter
+    def on_scroll_interval(self, value: OptionalNumber):
+        self.__default_view.on_scroll_interval
+
     # on_close
     @property
     def on_close(self):
@@ -1615,6 +1649,15 @@ class Page(Control):
     def on_error(self, handler):
         self.__on_error.subscribe(handler)
 
+    # on_scroll
+    @property
+    def on_scroll(self):
+        return self.__default_view.on_scroll
+
+    @on_scroll.setter
+    def on_scroll(self, handler):
+        self.__default_view.on_scroll
+
 
 class Offstage(Control):
     def __init__(
@@ -1623,7 +1666,6 @@ class Offstage(Control):
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
-
         Control.__init__(
             self,
             visible=visible,
