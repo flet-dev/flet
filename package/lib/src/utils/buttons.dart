@@ -47,7 +47,7 @@ MaterialStateProperty<Color?>? parseMaterialStateColor(
   }
 
   final j1 = json.decode(v);
-  return getMaterialStateProperty(
+  return getMaterialStateProperty<Color?>(
       j1, (jv) => HexColor.fromString(theme, jv as String), null);
 }
 
@@ -64,21 +64,21 @@ ButtonStyle? buttonStyleFromJSON(
     BorderSide defaultBorderSide,
     OutlinedBorder defaultShape) {
   return ButtonStyle(
-      foregroundColor: getMaterialStateProperty(
+      foregroundColor: getMaterialStateProperty<Color?>(
           json["color"],
           (jv) => HexColor.fromString(theme, jv as String),
           defaultForegroundColor),
-      backgroundColor: getMaterialStateProperty(
+      backgroundColor: getMaterialStateProperty<Color?>(
           json["bgcolor"],
           (jv) => HexColor.fromString(theme, jv as String),
           defaultBackgroundColor),
-      overlayColor: getMaterialStateProperty(
+      overlayColor: getMaterialStateProperty<Color?>(
           json["overlay_color"],
           (jv) => HexColor.fromString(theme, jv as String),
           defaultOverlayColor),
-      shadowColor: getMaterialStateProperty(json["shadow_color"],
+      shadowColor: getMaterialStateProperty<Color?>(json["shadow_color"],
           (jv) => HexColor.fromString(theme, jv as String), defaultShadowColor),
-      surfaceTintColor: getMaterialStateProperty(
+      surfaceTintColor: getMaterialStateProperty<Color?>(
           json["surface_tint_color"],
           (jv) => HexColor.fromString(theme, jv as String),
           defaultSurfaceTintColor),
@@ -89,10 +89,10 @@ ButtonStyle? buttonStyleFromJSON(
           : null,
       padding: getMaterialStateProperty(
           json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
-      side: getMaterialStateProperty(
+      side: getMaterialStateProperty<BorderSide?>(
           json["side"],
           (jv) => borderSideFromJSON(theme, jv, theme.colorScheme.outline),
           defaultBorderSide),
-      shape: getMaterialStateProperty(
+      shape: getMaterialStateProperty<OutlinedBorder?>(
           json["shape"], (jv) => outlinedBorderFromJSON(jv), defaultShape));
 }
