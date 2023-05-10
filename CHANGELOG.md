@@ -1,5 +1,14 @@
 # Flet changelog
 
+## 0.7.0
+
+* Programmatically [control scroll position](https://flet.dev/blog/scrolling-controls-and-theming#controlling-scroll-position) and subscribe to [scrolling notifications](https://flet.dev/blog/scrolling-controls-and-theming#receiving-scroll-notifications) in Page, View, Column, Row, ListView and GridView controls.
+* [Material color scheme customization](https://flet.dev/blog/scrolling-controls-and-theming#color-scheme-customization)
+* [Text theming](https://flet.dev/blog/scrolling-controls-and-theming#text-theming)
+* [Scrollbars theming](https://flet.dev/blog/scrolling-controls-and-theming#scrollbar-theme)
+* [Tabs theming](https://flet.dev/blog/scrolling-controls-and-theming#styling-tabs-control)
+* [Nested page themes](https://flet.dev/blog/scrolling-controls-and-theming#nested-page-themes)
+
 ## 0.6.2
 
 * Fix `SnackBar` (and other controls) exit animation.
