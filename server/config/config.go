@@ -73,6 +73,7 @@ const (
 	// development
 	uploadRootDir           = "UPLOAD_ROOT_DIR"
 	webRenderer             = "WEB_RENDERER"
+	useColorEmoji           = "USE_COLOR_EMOJI"
 	routeUrlStrategy        = "ROUTE_URL_STRATEGY"
 	defaultRouteUrlStrategy = "hash"
 )
@@ -292,6 +293,10 @@ func UploadRootDir() string {
 
 func WebRenderer() string {
 	return viper.GetString(webRenderer)
+}
+
+func UseColorEmoji() bool {
+	return viper.GetBool(useColorEmoji)
 }
 
 func RouteUrlStrategy() string {

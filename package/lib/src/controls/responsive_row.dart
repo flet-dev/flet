@@ -92,7 +92,7 @@ class ResponsiveRowControl extends StatelessWidget {
                       alignment: parseWrapAlignment(
                           control, "alignment", WrapAlignment.start),
                       crossAxisAlignment: parseWrapCrossAlignment(control,
-                          "verticalAlignment", WrapCrossAlignment.center),
+                          "verticalAlignment", WrapCrossAlignment.start),
                       children: controls,
                     )
                   : Row(
@@ -100,7 +100,7 @@ class ResponsiveRowControl extends StatelessWidget {
                           control, "alignment", MainAxisAlignment.start),
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: parseCrossAxisAlignment(control,
-                          "verticalAlignment", CrossAxisAlignment.center),
+                          "verticalAlignment", CrossAxisAlignment.start),
                       children: controls,
                     );
             } catch (e) {

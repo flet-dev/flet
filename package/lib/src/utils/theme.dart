@@ -138,18 +138,18 @@ ScrollbarThemeData? parseScrollBarTheme(
     return null;
   }
   return theme.scrollbarTheme.copyWith(
-    trackVisibility: getMaterialStateProperty(
+    trackVisibility: getMaterialStateProperty<bool?>(
         j["track_visibility"], (jv) => parseBool(jv), null),
-    trackColor: getMaterialStateProperty(j["track_color"],
+    trackColor: getMaterialStateProperty<Color?>(j["track_color"],
         (jv) => HexColor.fromString(theme, jv as String), null),
-    trackBorderColor: getMaterialStateProperty(j["track_border_color"],
+    trackBorderColor: getMaterialStateProperty<Color?>(j["track_border_color"],
         (jv) => HexColor.fromString(theme, jv as String), null),
-    thumbVisibility: getMaterialStateProperty(
+    thumbVisibility: getMaterialStateProperty<bool?>(
         j["thumb_visibility"], (jv) => parseBool(jv), null),
-    thumbColor: getMaterialStateProperty(j["thumb_color"],
+    thumbColor: getMaterialStateProperty<Color?>(j["thumb_color"],
         (jv) => HexColor.fromString(theme, jv as String), null),
-    thickness:
-        getMaterialStateProperty(j["thickness"], (jv) => parseDouble(jv), null),
+    thickness: getMaterialStateProperty<double?>(
+        j["thickness"], (jv) => parseDouble(jv), null),
     radius:
         j["radius"] != null ? Radius.circular(parseDouble(j["radius"])) : null,
     crossAxisMargin: j["cross_axis_margin"] != null
@@ -173,7 +173,7 @@ TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
   var indicatorColor = HexColor.fromString(theme, j["indicator_color"] ?? "");
 
   return theme.tabBarTheme.copyWith(
-    overlayColor: getMaterialStateProperty(j["overlay_color"],
+    overlayColor: getMaterialStateProperty<Color?>(j["overlay_color"],
         (jv) => HexColor.fromString(theme, jv as String), null),
     dividerColor: HexColor.fromString(theme, j["divider_color"] ?? ""),
     indicatorColor: indicatorColor,

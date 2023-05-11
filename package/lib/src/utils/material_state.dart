@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
-MaterialStateProperty<T>? getMaterialStateProperty<T>(dynamic jsonDictValue,
+MaterialStateProperty<T?>? getMaterialStateProperty<T>(dynamic jsonDictValue,
     T Function(dynamic) converterFromJson, T defaultValue) {
+  debugPrint("jsonDictValue: $jsonDictValue");
   if (jsonDictValue == null) {
     return null;
   }
   var j = jsonDictValue;
   if (j is! Map<String, dynamic>) {
     j = {"": j};
+    debugPrint("jsonDictValue DICT: $j");
   }
   return MaterialStateFromJSON(j, converterFromJson, defaultValue);
 }
 
-class MaterialStateFromJSON<T> extends MaterialStateProperty<T> {
+class MaterialStateFromJSON<T> extends MaterialStateProperty<T?> {
   late final Map<String, T> _states;
   late final T _defaultValue;
   MaterialStateFromJSON(Map<String, dynamic>? jsonDictValue,
@@ -29,7 +31,7 @@ class MaterialStateFromJSON<T> extends MaterialStateProperty<T> {
   }
 
   @override
-  T resolve(Set<MaterialState> states) {
+  T? resolve(Set<MaterialState> states) {
     //debugPrint("MaterialStateFromJSON states: $states, _states: $_states");
     // find specific state
     for (var state in states) {
@@ -40,7 +42,7 @@ class MaterialStateFromJSON<T> extends MaterialStateProperty<T> {
 
     // catch-all value
     if (_states.containsKey("")) {
-      return _states[""]!;
+      return _states[""];
     }
 
     return _defaultValue;

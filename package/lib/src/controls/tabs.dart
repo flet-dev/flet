@@ -185,7 +185,7 @@ class _TabsControlState extends State<TabsControl>
                   HexColor.fromString(Theme.of(context), widget.control.attrString("unselectedLabelColor", "")!) ??
                       TabBarTheme.of(context).unselectedLabelColor ??
                       Theme.of(context).colorScheme.onSurface,
-              overlayColor: getMaterialStateProperty(
+              overlayColor: getMaterialStateProperty<Color?>(
                       overlayColor, (jv) => HexColor.fromString(Theme.of(context), jv as String), null) ??
                   TabBarTheme.of(context).overlayColor,
               tabs: viewModel.controlViews.map((tabView) {
