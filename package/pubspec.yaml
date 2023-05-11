@@ -24,23 +24,23 @@ dependencies:
   flutter_redux: ^0.10.0
   equatable: ^2.0.3
   web_socket_channel: ^2.1.0
-  window_manager: ^0.3.0
+  window_manager: ^0.3.2
   http: ^0.13.3
   collection: ^1.16.0
   url_launcher: ^6.1.5
-  flutter_markdown: ^0.6.10+3
+  flutter_markdown: ^0.6.14
   flutter_highlight: ^0.7.0
   highlight: ^0.7.0
-  markdown: ^6.0.1
-  file_picker: ^5.2.5
+  markdown: ^7.0.0
+  file_picker: ^5.3.0
   shared_preferences: ^2.0.15
-  flutter_svg: ^1.1.6
+  flutter_svg: ^2.0.5
   window_to_front: ^0.0.3
   audioplayers: ^4.0.1
-  shake: ^2.1.0
+  shake: ^2.2.0
   path: ^1.8.2
   js: ^0.6.5
-  fl_chart: ^0.61.0
+  fl_chart: ^0.62.0
 
 dev_dependencies:
   flutter_test:
