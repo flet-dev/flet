@@ -8,6 +8,7 @@
 * [Nested page themes](https://flet.dev/blog/scrolling-controls-and-theming#nested-page-themes)
 * Flutter upgraded to 3.10 with Dart 3.0 required. CanvasKit WASM size reduced from 2.8 to 1.5 MB.
 * Bumped Flutter dependencies: window_manager 0.3.0 → 0.3.2, flutter_markdown 0.6.13 → 0.6.14, markdown 6.0.1 → 7.0.0, file_picker 5.2.5 → 5.3.0, flutter_svg 1.1.6 → 2.0.5, shake 2.1.0 → 2.2.0, fl_chart 0.61.0 → 0.62.0.
+* Color emoji support in web apps with "canvaskit" renderer ([docs](https://flet.dev/docs/guides/python/publishing-static-website#color-emojis)).
 * Add CLI option -m to run as module ([#1389](https://github.com/flet-dev/flet/issues/1389)).
 * Selectable rich text control ([#1386](https://github.com/flet-dev/flet/issues/1386)).
 
