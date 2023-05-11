@@ -83,13 +83,19 @@ class TextControl extends StatelessWidget {
               orElse: () => TextOverflow.clip);
 
           return control.attrBool("selectable", false)!
-              ? SelectableText(
-                  text,
-                  semanticsLabel: semanticsLabel,
-                  maxLines: maxLines,
-                  style: style,
-                  textAlign: textAlign,
-                )
+              ? (spans.isNotEmpty)
+                  ? SelectableText.rich(
+                      TextSpan(text: text, style: style, children: spans),
+                      maxLines: maxLines,
+                      textAlign: textAlign,
+                    )
+                  : SelectableText(
+                      text,
+                      semanticsLabel: semanticsLabel,
+                      maxLines: maxLines,
+                      style: style,
+                      textAlign: textAlign,
+                    )
               : (spans.isNotEmpty)
                   ? RichText(
                       text: TextSpan(text: text, style: style, children: spans),
