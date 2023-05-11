@@ -25,6 +25,7 @@
   <link rel="manifest" href="manifest.json">
 
   <!-- flutterWebRenderer -->
+  <!-- useColorEmoji -->
 
   <!-- pyodideCode -->
 
@@ -103,7 +104,10 @@
         }
       }).then(function (engineInitializer) {
         loading.classList.add('main_done');
-        return engineInitializer.initializeEngine();
+        return engineInitializer.initializeEngine({
+          renderer: flutterWebRenderer,
+          useColorEmoji: useColorEmoji,
+        });
       }).then(function (appRunner) {
         loading.classList.add('init_done');
         return appRunner.runApp();

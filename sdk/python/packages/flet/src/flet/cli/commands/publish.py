@@ -1,9 +1,9 @@
 import argparse
 import json
 import os
-import sys
 import re
 import shutil
+import sys
 import tarfile
 import tempfile
 from distutils.dir_util import copy_tree
@@ -77,6 +77,13 @@ class Command(BaseCommand):
             help="web renderer to use",
         )
         parser.add_argument(
+            "--use-color-emoji",
+            dest="use_color_emoji",
+            action="store_true",
+            default=False,
+            help="enables color emojis with CanvasKit renderer",
+        )
+        parser.add_argument(
             "--route-url-strategy",
             dest="route_url_strategy",
             choices=["path", "hash"],
@@ -85,7 +92,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
-
         # constants
         dist_name = "dist"
         app_tar_gz_filename = "app.tar.gz"
@@ -213,7 +219,11 @@ class Command(BaseCommand):
         index = index.replace("<!-- pyodideCode -->", pyodideCode)
         index = index.replace(
             "<!-- flutterWebRenderer -->",
-            f'<script>window.flutterWebRenderer="{options.web_renderer}";</script>',
+            f'<script>var flutterWebRenderer="{options.web_renderer}";</script>',
+        )
+        index = index.replace(
+            "<!-- useColorEmoji -->",
+            f"<script>var useColorEmoji={str(options.use_color_emoji).lower()};</script>",
         )
         index = index.replace("%FLET_ROUTE_URL_STRATEGY%", options.route_url_strategy)
 

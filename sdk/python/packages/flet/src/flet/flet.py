@@ -63,6 +63,7 @@ def app(
     assets_dir=None,
     upload_dir=None,
     web_renderer="canvaskit",
+    use_color_emoji=False,
     route_url_strategy="path",
     auth_token=None,
 ):
@@ -77,6 +78,7 @@ def app(
                 assets_dir=assets_dir,
                 upload_dir=upload_dir,
                 web_renderer=web_renderer,
+                use_color_emoji=use_color_emoji,
                 route_url_strategy=route_url_strategy,
                 auth_token=auth_token,
             )
@@ -91,6 +93,7 @@ def app(
             assets_dir=assets_dir,
             upload_dir=upload_dir,
             web_renderer=web_renderer,
+            use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
             auth_token=auth_token,
         )
@@ -105,6 +108,7 @@ def __app_sync(
     assets_dir=None,
     upload_dir=None,
     web_renderer="canvaskit",
+    use_color_emoji=False,
     route_url_strategy="path",
     auth_token=None,
 ):
@@ -121,6 +125,7 @@ def __app_sync(
         assets_dir=assets_dir,
         upload_dir=upload_dir,
         web_renderer=web_renderer,
+        use_color_emoji=use_color_emoji,
         route_url_strategy=route_url_strategy,
     )
 
@@ -154,7 +159,7 @@ def __app_sync(
         )
         try:
             fvp.wait()
-        except (Exception) as e:
+        except Exception as e:
             pass
     else:
         if view == WEB_BROWSER and url_prefix is None:
@@ -179,6 +184,7 @@ async def app_async(
     assets_dir=None,
     upload_dir=None,
     web_renderer="canvaskit",
+    use_color_emoji=False,
     route_url_strategy="path",
     auth_token=None,
 ):
@@ -195,6 +201,7 @@ async def app_async(
         assets_dir=assets_dir,
         upload_dir=upload_dir,
         web_renderer=web_renderer,
+        use_color_emoji=use_color_emoji,
         route_url_strategy=route_url_strategy,
     )
 
@@ -228,7 +235,7 @@ async def app_async(
         )
         try:
             await fvp.wait()
-        except (Exception) as e:
+        except Exception as e:
             pass
     else:
         if view == WEB_BROWSER and url_prefix is None:
@@ -266,9 +273,9 @@ def __connect_internal_sync(
     assets_dir=None,
     upload_dir=None,
     web_renderer=None,
+    use_color_emoji=False,
     route_url_strategy=None,
 ):
-
     env_port = os.getenv("FLET_SERVER_PORT")
     if env_port is not None and env_port:
         port = int(env_port)
@@ -283,6 +290,7 @@ def __connect_internal_sync(
             assets_dir,
             upload_dir,
             web_renderer,
+            use_color_emoji,
             route_url_strategy,
         )
 
@@ -343,9 +351,9 @@ async def __connect_internal_async(
     assets_dir=None,
     upload_dir=None,
     web_renderer=None,
+    use_color_emoji=False,
     route_url_strategy=None,
 ):
-
     env_port = os.getenv("FLET_SERVER_PORT")
     if env_port is not None and env_port:
         port = int(env_port)
@@ -360,6 +368,7 @@ async def __connect_internal_async(
             assets_dir,
             upload_dir,
             web_renderer,
+            use_color_emoji,
             route_url_strategy,
         )
 
@@ -412,7 +421,13 @@ async def __connect_internal_async(
 
 
 def __start_flet_server(
-    host, port, assets_dir, upload_dir, web_renderer, route_url_strategy
+    host,
+    port,
+    assets_dir,
+    upload_dir,
+    web_renderer,
+    use_color_emoji,
+    route_url_strategy,
 ):
     server_ip = host if host not in [None, "", "*"] else "127.0.0.1"
 
@@ -456,6 +471,9 @@ def __start_flet_server(
     if web_renderer and web_renderer not in ["auto"]:
         logger.info(f"Web renderer configured: {web_renderer}")
         fletd_env["FLET_WEB_RENDERER"] = web_renderer
+
+    logger.info(f"Use color emoji: {use_color_emoji}")
+    fletd_env["FLET_USE_COLOR_EMOJI"] = str(use_color_emoji).lower()
 
     if route_url_strategy is not None:
         logger.info(f"Route URL strategy configured: {route_url_strategy}")
