@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 
 // PowerShell script to generate icons list
 //
-// $url = 'https://raw.githubusercontent.com/flutter/flutter/3.7.0/packages/flutter/lib/src/material/icons.dart'
-// (Invoke-WebRequest $url).Content.Split("`n") | ForEach-Object {
-//     $found = $_ -match ' const IconData ([a-z0-9_]+) '
-//     if ($found) {
-//         "`"$($matches[1])`": Icons.$($matches[1]),"
-//     }
-// } | Set-Content "$HOME/icons.txt"
+/*
+
+$url = 'https://raw.githubusercontent.com/flutter/flutter/3.10.0/packages/flutter/lib/src/material/icons.dart'
+$lines = ('Map<String, IconData> materialIcons = {')
+$lines += (Invoke-WebRequest $url).Content.Split("`n") | ForEach-Object {
+    $found = $_ -match ' const IconData ([a-z0-9_]+) '
+    if ($found) {
+        "`"$($matches[1])`": Icons.$($matches[1]),"
+    }
+}
+$lines += '};'
+$lines | Set-Content "$HOME/icons.txt"
+
+*/
 
 Map<String, IconData> materialIcons = {
   "ten_k": Icons.ten_k,
