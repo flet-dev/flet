@@ -32,6 +32,14 @@ class Command(BaseCommand):
             help="custom TCP port to run Flet app on",
         )
         parser.add_argument(
+            "-m",
+            "--module",
+            dest="module",
+            action="store_true",
+            default=False,
+            help="treat the script as a python module path as opposed to a file path",
+        )
+        parser.add_argument(
             "-d",
             "--directory",
             dest="directory",
@@ -74,9 +82,17 @@ class Command(BaseCommand):
 
     def handle(self, options: argparse.Namespace) -> None:
         # print("RUN COMMAND", options)
-        script_path = options.script
-        if not os.path.isabs(options.script):
-            script_path = str(Path(os.getcwd()).joinpath(options.script).resolve())
+        if options.module:
+            script_path = str(options.script).replace(".", "/")
+            if os.path.isdir(script_path):
+                script_path += "/__main__.py"
+            else:
+                script_path += ".py"
+        else:
+            script_path = options.script
+
+        if not os.path.isabs(script_path):
+            script_path = str(Path(os.getcwd()).joinpath(script_path).resolve())
 
         if not Path(script_path).exists():
             print(f"File not found: {script_path}")
@@ -99,7 +115,8 @@ class Command(BaseCommand):
             )
 
         my_event_handler = Handler(
-            [sys.executable, "-u", script_path],
+            [sys.executable, "-u"] + ["-m"] * options.module +
+            [options.script if options.module else script_path],
             None if options.directory or options.recursive else script_path,
             port,
             uds_path,
