@@ -145,6 +145,11 @@ class Control:
             else None
         )
 
+    def _wrap_attr_dict(self, value):
+        if value is None or isinstance(value, Dict):
+            return value
+        return {"": value}
+
     def __str__(self):
         attrs = {}
         for k, v in self.__attrs.items():

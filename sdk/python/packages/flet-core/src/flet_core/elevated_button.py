@@ -154,6 +154,9 @@ class ElevatedButton(ConstrainedControl):
                 self.__style.bgcolor = self.__bgcolor
             if self.__style.elevation != self.__elevation:
                 self.__style.elevation = self.__elevation
+        if self.__style is not None:
+            self.__style.side = self._wrap_attr_dict(self.__style.side)
+            self.__style.shape = self._wrap_attr_dict(self.__style.shape)
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
