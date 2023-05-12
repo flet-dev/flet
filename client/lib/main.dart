@@ -20,11 +20,7 @@ void main([List<String>? args]) async {
   //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
-    if (kIsWeb) {
-      pageUrl = "http://localhost:8550";
-    } else {
-      pageUrl = "tcp://localhost:8550";
-    }
+    pageUrl = "http://localhost:8550";
   }
 
   if (kIsWeb) {
