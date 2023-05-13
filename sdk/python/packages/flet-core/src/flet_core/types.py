@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, Tuple, Union
+from typing import Dict, Tuple, Union, Type, TypeVar
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
@@ -12,6 +12,14 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+try:
+    from enum import StrEnum
+except ImportError:
+    class StrEnum(str, Enum):
+        value: str
+
+
+T = TypeVar('T', bound=StrEnum)
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
 FLET_APP_WEB = "flet_app_web"
@@ -105,7 +113,7 @@ CrossAxisAlignmentString = Literal[
 ]
 
 
-class MainAxisAlignment(str, Enum):
+class MainAxisAlignment(StrEnum):
     START = "start"
     END = "end"
     CENTER = "center"
@@ -237,7 +245,7 @@ class ClipBehavior(Enum):
     HARD_EDGE = "hardEdge"
 
 
-class ImageFit(str, Enum):
+class ImageFit(StrEnum):
     NONE = "none"
     CONTAIN = "contain"
     COVER = "cover"
@@ -277,5 +285,7 @@ class ThemeMode(Enum):
     DARK = "dark"
 
 
-ImageFitDefault = ImageFit.CONTAIN
-MainAxisAlignmentDefault = MainAxisAlignment.START
+def get_str_from_enum(enum: Type[T], value: Union[T, str], default: T) -> T:
+    if isinstance(value, enum):
+        return value
+    return enum.__dict__['_value2member_map_'].get(value, default)

@@ -8,13 +8,15 @@ from flet_core.types import (
     CrossAxisAlignment,
     CrossAxisAlignmentString,
     MainAxisAlignment,
-    MainAxisAlignmentDefault,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    get_str_from_enum,
 )
-from flet_core.utils import get_enum_from_value, get_str_from_enum
+
+
+_MainAxisAlignmentDefault = MainAxisAlignment.START
 
 
 class ResponsiveRow(ConstrainedControl):
@@ -81,7 +83,7 @@ class ResponsiveRow(ConstrainedControl):
         # Row specific
         #
         columns: Optional[ResponsiveNumber] = None,
-        alignment: MainAxisAlignment = MainAxisAlignmentDefault,
+        alignment: MainAxisAlignment = _MainAxisAlignmentDefault,
         vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
         spacing: Optional[ResponsiveNumber] = None,
         run_spacing: Optional[ResponsiveNumber] = None,
@@ -145,12 +147,12 @@ class ResponsiveRow(ConstrainedControl):
     # horizontal_alignment
     @property
     def alignment(self) -> MainAxisAlignment:
-        return get_enum_from_value(MainAxisAlignment, self.__alignment, MainAxisAlignmentDefault)
+        return self.__alignment
 
     @alignment.setter
     def alignment(self, value: MainAxisAlignment):
-        self.__alignment = get_str_from_enum(MainAxisAlignment, value)
-        self._set_attr("alignment", self.__alignment)
+        self.__alignment = get_str_from_enum(MainAxisAlignment, value, _MainAxisAlignmentDefault)
+        self._set_attr("alignment", self.__alignment.value)
 
     # vertical_alignment
     @property

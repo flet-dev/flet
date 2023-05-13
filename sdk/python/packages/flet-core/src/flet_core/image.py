@@ -9,21 +9,17 @@ from flet_core.types import (
     BlendModeString,
     BorderRadiusValue,
     ImageFit,
-    ImageFitDefault,
     ImageRepeat,
     ImageRepeatString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ImageFitDefault,
+    get_str_from_enum,
 )
-from flet_core.utils import get_enum_from_value, get_str_from_enum
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
+
+_ImageFitDefault = ImageFit.CONTAIN
 
 
 class Image(ConstrainedControl):
@@ -89,7 +85,7 @@ class Image(ConstrainedControl):
         src_base64: Optional[str] = None,
         error_content: Optional[Control] = None,
         repeat: Optional[ImageRepeat] = None,
-        fit: ImageFit = ImageFitDefault,
+        fit: ImageFit = _ImageFitDefault,
         border_radius: BorderRadiusValue = None,
         color: Optional[str] = None,
         color_blend_mode: BlendMode = BlendMode.NONE,
@@ -172,12 +168,12 @@ class Image(ConstrainedControl):
     # fit
     @property
     def fit(self) -> ImageFit:
-        return get_enum_from_value(ImageFit, self.__fit, ImageFitDefault)
+        return self.__fit
 
     @fit.setter
     def fit(self, value: ImageFit):
-        self.__fit = get_str_from_enum(ImageFit, value)
-        self._set_attr("fit", self.__fit)
+        self.__fit = get_str_from_enum(ImageFit, value, _ImageFitDefault)
+        self._set_attr("fit", self.__fit.value)
 
     # repeat
     @property
