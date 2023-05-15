@@ -145,6 +145,14 @@ Check the contents of Git repo - you should see two folders there: `certs` and `
 
 Open "Keychain access" application, choose "login" keychain and click "My certificates" tab - those certificates were installed by Match. This is, if you ever need that, the place where you can export your signing certificates in `.p12` format (including private key).
 
+## Syncing Match on your machine
+
+Run:
+
+```
+bundle exec fastlane match
+```
+
 ## Configuring iOS project
 
 You are still in `ios` directory.
