@@ -26,6 +26,7 @@ import 'protocol/update_control_props_request.dart';
 class FletServer {
   final Store<AppState> _store;
   late FletServerProtocol _clientProtocol;
+  bool _disposed = false;
   String _address = "";
   String _pageName = "";
   String _pageHash = "";
@@ -59,6 +60,9 @@ class FletServer {
   }
 
   _onDisconnect() {
+    if (_disposed) {
+      return;
+    }
     _store.dispatch(PageReconnectingAction());
     debugPrint("Reconnect in ${_store.state.reconnectingTimeout} seconds");
     Future.delayed(Duration(seconds: _store.state.reconnectingTimeout))
@@ -194,6 +198,8 @@ class FletServer {
   }
 
   void disconnect() {
+    debugPrint("Disconnecting from Flet server.");
+    _disposed = true;
     _clientProtocol.disconnect();
   }
 }
