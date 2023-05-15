@@ -196,3 +196,9 @@ Encoding GitHub token to clone match repo:
 ```
 echo -n "<username>:<personal-access-token>" | base64
 ```
+
+## Troubleshooting
+
+* [Getting UDID](https://www.sourcefuse.com/blog/how-to-find-udid-in-the-new-iphone-xs-iphone-xr-and-iphone-xs-max/#:~:text=iOS%20App%20Development%3F-,Your%20UDID%20is%20a%20unique%20identifier%20that%20Apple%20uses%20to,releases%20of%20iOS%20for%20testing.)
+* https://stackoverflow.com/questions/71359062/iproxy-cannot-be-opened-because-the-developer-cannot-be-verified
+* https://stackoverflow.com/questions/72598348/xcode-14-beta-build-issues-with-lldb
