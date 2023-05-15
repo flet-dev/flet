@@ -37,7 +37,7 @@ def test_vertical_alignment_enum():
     r = ft.View(vertical_alignment=ft.MainAxisAlignment.CENTER)
     assert isinstance(r.vertical_alignment, ft.MainAxisAlignment)
     assert isinstance(r._get_attr('verticalAlignment'), str)
-    assert r.alignment == ft.MainAxisAlignment.CENTER
+    assert r.vertical_alignment == ft.MainAxisAlignment.CENTER
     assert r._get_attr('verticalAlignment') == ft.MainAxisAlignment.CENTER.value
     cmd = r._build_add_commands()
     assert cmd[0].attrs['verticalalignment'] == 'center'
@@ -47,7 +47,7 @@ def test_vertical_alignment_str():
     r = ft.View(vertical_alignment='center')
     assert isinstance(r.vertical_alignment, ft.MainAxisAlignment)
     assert isinstance(r._get_attr('verticalAlignment'), str)
-    assert r.alignment == ft.MainAxisAlignment.CENTER
+    assert r.vertical_alignment == ft.MainAxisAlignment.CENTER
     assert r._get_attr('verticalAlignment') == ft.MainAxisAlignment.CENTER.value
     cmd = r._build_add_commands()
     assert cmd[0].attrs['verticalalignment'] == 'center'
