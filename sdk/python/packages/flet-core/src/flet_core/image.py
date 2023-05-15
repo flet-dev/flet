@@ -19,7 +19,7 @@ from flet_core.types import (
 )
 
 
-_ImageFitDefault = ImageFit.CONTAIN
+_ImageFitDefault = ImageFit.NONE
 
 
 class Image(ConstrainedControl):

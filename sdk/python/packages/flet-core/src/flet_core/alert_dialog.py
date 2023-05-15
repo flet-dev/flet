@@ -6,7 +6,7 @@ from flet_core.ref import Ref
 from flet_core.types import MainAxisAlignment, PaddingValue, get_valid_enum
 
 
-_MainAxisAlignmentDefault = MainAxisAlignment.START
+_MainAxisAlignmentDefault = MainAxisAlignment.END
 
 
 class AlertDialog(Control):

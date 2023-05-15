@@ -11,24 +11,32 @@ def test_instance_no_attrs_set():
         Command(
             indent=0,
             name=None,
-            values=["alertdialog"],
-            attrs={"modal": "false", "open": "false"},
+            values=['alertdialog'],
+            attrs={
+                'actionsalignment': 'end',
+                'modal': 'false',
+                'open': 'false'
+            },
             commands=[],
         )
-    ], "Test failed"
+    ], 'Test failed'
 
 
 def test_alignment_enum():
     r = ft.AlertDialog(actions_alignment=ft.MainAxisAlignment.SPACE_AROUND)
     assert isinstance(r.actions_alignment, ft.MainAxisAlignment)
-    assert isinstance(r._get_attr("actionsAlignment"), str)
+    assert isinstance(r._get_attr('actionsAlignment'), str)
+    assert r.alignment == ft.MainAxisAlignment.SPACE_AROUND
+    assert r._get_attr('actionsAlignment') == ft.MainAxisAlignment.SPACE_AROUND.value
     cmd = r._build_add_commands()
-    assert cmd[0].attrs["actionsalignment"] == "spaceAround"
+    assert cmd[0].attrs['actionsalignment'] == 'spaceAround'
 
 
 def test_alignment_str():
-    r = ft.AlertDialog(actions_alignment="center")
-    assert isinstance(r.actions_alignment, str)
-    assert isinstance(r._get_attr("actionsalignment"), str)
+    r = ft.AlertDialog(actions_alignment='center')
+    assert isinstance(r.actions_alignment, ft.MainAxisAlignment)
+    assert isinstance(r._get_attr('actionsAlignment'), str)
+    assert r.alignment == ft.MainAxisAlignment.SPACE_AROUND
+    assert r._get_attr('actionsAlignment') == ft.MainAxisAlignment.CENTER.value
     cmd = r._build_add_commands()
-    assert cmd[0].attrs["actionsalignment"] == "center"
+    assert cmd[0].attrs['actionsalignment'] == 'center'

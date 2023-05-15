@@ -5,7 +5,7 @@ from flet_core.protocol import Command
 
 def test_image_add():
     i = ft.Image(
-        src="https://www.w3schools.com/css/img_5terre.jpg",
+        src='https://www.w3schools.com/css/img_5terre.jpg',
     )
     assert isinstance(i, ft.Control)
     assert isinstance(i, ft.Image)
@@ -13,13 +13,14 @@ def test_image_add():
         Command(
             indent=0,
             name=None,
-            values=["image"],
+            values=['image'],
             attrs={
-                "src": "https://www.w3schools.com/css/img_5terre.jpg",
+                'fit': 'none',
+                'src': 'https://www.w3schools.com/css/img_5terre.jpg',
             },
             commands=[],
         )
-    ], "Test failed"
+    ], 'Test failed'
 
 
 def test_color_blend_mode_enum():
@@ -55,14 +56,17 @@ def test_repeat_enum():
 
 def test_fit_enum():
     r = ft.Image()
-    assert r.fit is None
-    assert r._get_attr("fit") is None
+    assert r.fit == ft.ImageFit.NONE
+    assert r._get_attr('fit') == ft.ImageFit.NONE.value
 
     r = ft.Image(fit=ft.ImageFit.FILL)
     assert isinstance(r.fit, ft.ImageFit)
+    assert isinstance(r._get_attr('fit'), str)
     assert r.fit == ft.ImageFit.FILL
-    assert r._get_attr("fit") == "fill"
+    assert r._get_attr('fit') == 'fill'
 
-    r = ft.Image(fit="none")
-    assert isinstance(r.fit, str)
-    assert r._get_attr("fit") == "none"
+    r = ft.Image(fit='none')
+    assert isinstance(r.fit, ft.ImageFit)
+    assert isinstance(r._get_attr('fit'), str)
+    assert r.fit == ft.ImageFit.NONE
+    assert r._get_attr('fit') == 'none'

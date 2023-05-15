@@ -10,11 +10,11 @@ def test_instance_no_attrs_set():
         Command(
             indent=0,
             name=None,
-            values=["container"],
-            attrs={},
+            values=['container'],
+            attrs={'imagefit': 'none'},
             commands=[],
         )
-    ], "Test failed"
+    ], 'Test failed'
 
 
 def test_gradient():
@@ -102,14 +102,17 @@ def test_image_repeat_enum():
 
 def test_image_fit_enum():
     r = ft.Container()
-    assert r.image_fit is None
-    assert r._get_attr("imageFit") is None
+    assert r.image_fit == ft.ImageFit.NONE
+    assert r._get_attr('imageFit') == ft.ImageFit.NONE.value
 
     r = ft.Container(image_fit=ft.ImageFit.FILL)
     assert isinstance(r.image_fit, ft.ImageFit)
+    assert isinstance(r._get_attr('imageFit'), str)
     assert r.image_fit == ft.ImageFit.FILL
-    assert r._get_attr("imageFit") == "fill"
+    assert r._get_attr('imageFit') == 'fill'
 
-    r = ft.Container(image_fit="none")
-    assert isinstance(r.image_fit, str)
-    assert r._get_attr("imageFit") == "none"
+    r = ft.Container(image_fit='none')
+    assert isinstance(r.image_fit, ft.ImageFit)
+    assert isinstance(r._get_attr('imageFit'), str)
+    assert r.image_fit == ft.ImageFit.NONE
+    assert r._get_attr('imageFit') == 'none'

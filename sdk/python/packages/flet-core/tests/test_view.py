@@ -10,11 +10,11 @@ def test_instance_no_attrs_set():
         Command(
             indent=0,
             name=None,
-            values=["view"],
-            attrs={},
+            values=['view'],
+            attrs={'verticalalignment': 'start'},
             commands=[],
         )
-    ], "Test failed"
+    ], 'Test failed'
 
 
 def test_horizontal_alignment_enum():
@@ -36,17 +36,21 @@ def test_horizontal_alignment_str():
 def test_vertical_alignment_enum():
     r = ft.View(vertical_alignment=ft.MainAxisAlignment.CENTER)
     assert isinstance(r.vertical_alignment, ft.MainAxisAlignment)
-    assert isinstance(r._get_attr("verticalAlignment"), str)
+    assert isinstance(r._get_attr('verticalAlignment'), str)
+    assert r.alignment == ft.MainAxisAlignment.CENTER
+    assert r._get_attr('verticalAlignment') == ft.MainAxisAlignment.CENTER.value
     cmd = r._build_add_commands()
-    assert cmd[0].attrs["verticalalignment"] == "center"
+    assert cmd[0].attrs['verticalalignment'] == 'center'
 
 
 def test_vertical_alignment_str():
-    r = ft.View(vertical_alignment="center")
-    assert isinstance(r.vertical_alignment, str)
-    assert isinstance(r._get_attr("verticalAlignment"), str)
+    r = ft.View(vertical_alignment='center')
+    assert isinstance(r.vertical_alignment, ft.MainAxisAlignment)
+    assert isinstance(r._get_attr('verticalAlignment'), str)
+    assert r.alignment == ft.MainAxisAlignment.CENTER
+    assert r._get_attr('verticalAlignment') == ft.MainAxisAlignment.CENTER.value
     cmd = r._build_add_commands()
-    assert cmd[0].attrs["verticalalignment"] == "center"
+    assert cmd[0].attrs['verticalalignment'] == 'center'
 
 
 def test_scroll_enum():
