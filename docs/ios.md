@@ -8,6 +8,8 @@ Open `Runner.xcworkspace`, not `Runner.xcodeproj` - otherwise `audioplayers_darw
 
 If you get "invalid signature" error while trying to run on a connected iPhone device try re-connecting the cable.
 
+Renewing certificates and profiles: https://stackoverflow.com/a/56180645/1435891
+
 ## Ruby
 
 Ensure you have a proper Ruby installed:
