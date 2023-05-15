@@ -15,7 +15,7 @@ from flet_core.types import (
     ScaleValue,
     ScrollMode,
     ScrollModeString,
-    get_str_from_enum,
+    get_valid_enum,
 )
 
 
@@ -181,7 +181,7 @@ class Row(ConstrainedControl, ScrollableControl):
 
     @alignment.setter
     def alignment(self, value: MainAxisAlignment):
-        self.__alignment = get_str_from_enum(MainAxisAlignment, value, _MainAxisAlignmentDefault)
+        self.__alignment = get_valid_enum(MainAxisAlignment, value, _MainAxisAlignmentDefault)
         self._set_attr("alignment", self.__alignment.value)
 
     # vertical_alignment

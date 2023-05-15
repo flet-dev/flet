@@ -30,7 +30,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ThemeMode,
-    get_str_from_enum,
+    get_valid_enum,
 )
 
 
@@ -345,7 +345,7 @@ class Container(ConstrainedControl):
 
     @image_fit.setter
     def image_fit(self, value: ImageFit):
-        self.__image_fit = get_str_from_enum(ImageFit, value, _ImageFitDefault)
+        self.__image_fit = get_valid_enum(ImageFit, value, _ImageFitDefault)
         self._set_attr("imageFit", self.__image_fit)
 
     # image_repeat

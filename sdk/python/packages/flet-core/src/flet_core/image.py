@@ -15,7 +15,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    get_str_from_enum,
+    get_valid_enum,
 )
 
 
@@ -172,7 +172,7 @@ class Image(ConstrainedControl):
 
     @fit.setter
     def fit(self, value: ImageFit):
-        self.__fit = get_str_from_enum(ImageFit, value, _ImageFitDefault)
+        self.__fit = get_valid_enum(ImageFit, value, _ImageFitDefault)
         self._set_attr("fit", self.__fit.value)
 
     # repeat

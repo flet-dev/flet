@@ -13,7 +13,7 @@ from flet_core.types import (
     PaddingValue,
     ScrollMode,
     ScrollModeString,
-    get_str_from_enum,
+    get_valid_enum,
 )
 
 
@@ -160,7 +160,7 @@ class View(ScrollableControl):
 
     @vertical_alignment.setter
     def vertical_alignment(self, value: MainAxisAlignment):
-        self.__vertical_alignment = get_str_from_enum(
+        self.__vertical_alignment = get_valid_enum(
             MainAxisAlignment, value, _MainAxisAlignmentDefault,
         )
         self._set_attr("verticalAlignment", self.__vertical_alignment.value)

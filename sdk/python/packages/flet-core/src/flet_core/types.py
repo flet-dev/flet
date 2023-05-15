@@ -285,7 +285,7 @@ class ThemeMode(Enum):
     DARK = "dark"
 
 
-def get_str_from_enum(enum: Type[T], value: Union[T, str], default: T) -> T:
+def get_valid_enum(enum: Type[T], value: Union[T, str], default: T) -> T:
     if isinstance(value, enum):
         return value
     return enum.__dict__['_value2member_map_'].get(value, default)
