@@ -193,11 +193,7 @@ class BlendMode(Enum):
     XOR = "xor"
 
 
-TextAlignString = Literal[None, "left", "right", "center", "justify", "start", "end"]
-
-
-class TextAlign(Enum):
-    NONE = None
+class TextAlign(StrEnum):
     LEFT = "left"
     RIGHT = "right"
     CENTER = "center"

@@ -5,7 +5,10 @@ from flet_core.charts.chart_point_shape import ChartPointShape
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import TextAlign, TextAlignString
+from flet_core.types import TextAlign, get_valid_enum
+
+
+_TextAlignDefault = TextAlign.LEFT
 
 
 class LineChartDataPoint(Control):
@@ -24,7 +27,7 @@ class LineChartDataPoint(Control):
         show_tooltip: Optional[bool] = None,
         tooltip: Optional[str] = None,
         tooltip_style: Optional[TextStyle] = None,
-        tooltip_align: TextAlign = TextAlign.NONE,
+        tooltip_align: TextAlign = _TextAlignDefault,
         point: Union[None, bool, ChartPointShape] = None,
         selected_point: Union[None, bool, ChartPointShape] = None,
         show_above_line: Optional[bool] = None,
@@ -119,14 +122,8 @@ class LineChartDataPoint(Control):
 
     @tooltip_align.setter
     def tooltip_align(self, value: TextAlign):
-        self.__tooltip_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("tooltipAlign", value.value)
-        else:
-            self.__set_tooltip_align(value)
-
-    def __set_tooltip_align(self, value: TextAlignString):
-        self._set_attr("tooltipAlign", value)
+        self.__tooltip_align = get_valid_enum(TextAlign, value, _TextAlignDefault)
+        self._set_attr("tooltipAlign", self.__tooltip_align.value)
 
     # tooltip_style
     @property

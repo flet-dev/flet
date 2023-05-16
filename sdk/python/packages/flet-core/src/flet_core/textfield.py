@@ -15,8 +15,10 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
-    TextAlignString,
+    get_valid_enum,
 )
+
+_TextAlignDefault = TextAlign.LEFT
 
 try:
     from typing import Literal
@@ -167,7 +169,7 @@ class TextField(FormFieldControl):
         can_reveal_password: Optional[bool] = None,
         read_only: Optional[bool] = None,
         shift_enter: Optional[bool] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: TextAlign = _TextAlignDefault,
         autofocus: Optional[bool] = None,
         capitalization: TextCapitalization = TextCapitalization.NONE,
         cursor_color: Optional[str] = None,
@@ -314,14 +316,8 @@ class TextField(FormFieldControl):
 
     @text_align.setter
     def text_align(self, value: TextAlign):
-        self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
-
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
+        self.__text_align = get_valid_enum(TextAlign, value, _TextAlignDefault)
+        self._set_attr("textAlign", self.__text_align.value)
 
     # multiline
     @property

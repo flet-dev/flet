@@ -11,8 +11,11 @@ from flet_core.types import (
     MarginValue,
     PaddingValue,
     TextAlign,
-    TextAlignString,
+    get_valid_enum,
 )
+
+
+_TextAlignDefault = TextAlign.LEFT
 
 
 class Tooltip(Control):
@@ -85,7 +88,7 @@ class Tooltip(Control):
         shape: Optional[BoxShape] = None,
         message: Optional[str] = None,
         text_style: Optional[TextStyle] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: TextAlign = _TextAlignDefault,
         prefer_below: Optional[bool] = None,
         show_duration: Optional[int] = None,
         wait_duration: Optional[int] = None,
@@ -224,14 +227,8 @@ class Tooltip(Control):
 
     @text_align.setter
     def text_align(self, value: TextAlign):
-        self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
-
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
+        self.__text_align = get_valid_enum(TextAlign, value, _TextAlignDefault)
+        self._set_attr("textAlign", self.__text_align.value)
 
     # text_style
     @property

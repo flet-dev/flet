@@ -14,7 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
-    TextAlignString,
+    get_valid_enum,
 )
 
 try:
@@ -23,6 +23,7 @@ except ImportError:
     from typing_extensions import Literal
 
 TextOverflowString = Literal[None, "clip", "ellipsis", "fade", "visible"]
+_TextAlignDefault = TextAlign.LEFT
 
 
 class TextOverflow(Enum):
@@ -132,7 +133,7 @@ class Text(ConstrainedControl):
         # text-specific
         #
         spans: Optional[List[TextSpan]] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: TextAlign = _TextAlignDefault,
         font_family: Optional[str] = None,
         size: OptionalNumber = None,
         weight: Optional[FontWeight] = None,
@@ -225,14 +226,8 @@ class Text(ConstrainedControl):
 
     @text_align.setter
     def text_align(self, value: TextAlign):
-        self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
-
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
+        self.__text_align = get_valid_enum(TextAlign, value, _TextAlignDefault)
+        self._set_attr("textAlign", self.__text_align.value)
 
     # font_family
     @property
