@@ -34,7 +34,7 @@ dependencies:
   markdown: ^7.0.0
   file_picker: ^5.3.0
   shared_preferences: ^2.0.15
-  flutter_svg: ^2.0.5
+  flutter_svg: ^1.1.6
   window_to_front: ^0.0.3
   audioplayers: ^4.0.1
   shake: ^2.2.0
