@@ -47,9 +47,10 @@ logger = logging.getLogger(flet.__name__)
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
+FLET_APP_WEB = "flet_app_web"
 FLET_APP_HIDDEN = "flet_app_hidden"
 
-AppViewer = Literal[None, "web_browser", "flet_app", "flet_app_hidden"]
+AppViewer = Literal[None, "web_browser", "flet_app", "flet_app_web", "flet_app_hidden"]
 
 WebRenderer = Literal[None, "auto", "html", "canvaskit"]
 
@@ -150,7 +151,7 @@ def __app_sync(
     pid_file = None
 
     if (
-        (view == FLET_APP or view == FLET_APP_HIDDEN)
+        (view == FLET_APP or view == FLET_APP_HIDDEN or view == FLET_APP_WEB)
         and not is_linux_server()
         and url_prefix is None
     ):
@@ -226,7 +227,7 @@ async def app_async(
     pid_file = None
 
     if (
-        (view == FLET_APP or view == FLET_APP_HIDDEN)
+        (view == FLET_APP or view == FLET_APP_HIDDEN or view == FLET_APP_WEB)
         and not is_linux_server()
         and url_prefix is None
     ):
@@ -282,8 +283,8 @@ def __connect_internal_sync(
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
-    is_desktop = view == FLET_APP or view == FLET_APP_HIDDEN
-    if server is None and not is_desktop:
+    is_socket_server = server is None and (view == FLET_APP or view == FLET_APP_HIDDEN)
+    if not is_socket_server:
         server = __start_flet_server(
             host,
             port,
@@ -320,7 +321,7 @@ def __connect_internal_sync(
             )
             page.error(f"There was an error while processing your request: {e}")
 
-    if is_desktop:
+    if is_socket_server:
         conn = SyncLocalSocketConnection(
             port,
             uds_path,
@@ -360,8 +361,8 @@ async def __connect_internal_async(
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
-    is_desktop = view == FLET_APP or view == FLET_APP_HIDDEN
-    if server is None and not is_desktop:
+    is_socket_server = server is None and (view == FLET_APP or view == FLET_APP_HIDDEN)
+    if not is_socket_server:
         server = __start_flet_server(
             host,
             port,
@@ -400,7 +401,7 @@ async def __connect_internal_async(
                 f"There was an error while processing your request: {e}"
             )
 
-    if is_desktop:
+    if is_socket_server:
         conn = AsyncLocalSocketConnection(
             port,
             uds_path,
