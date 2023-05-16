@@ -8,6 +8,8 @@ Open `Runner.xcworkspace`, not `Runner.xcodeproj` - otherwise `audioplayers_darw
 
 If you get "invalid signature" error while trying to run on a connected iPhone device try re-connecting the cable.
 
+Renewing certificates and profiles: https://stackoverflow.com/a/56180645/1435891
+
 ## Ruby
 
 Ensure you have a proper Ruby installed:
@@ -145,6 +147,14 @@ Check the contents of Git repo - you should see two folders there: `certs` and `
 
 Open "Keychain access" application, choose "login" keychain and click "My certificates" tab - those certificates were installed by Match. This is, if you ever need that, the place where you can export your signing certificates in `.p12` format (including private key).
 
+## Syncing Match on your machine
+
+Run:
+
+```
+bundle exec fastlane match
+```
+
 ## Configuring iOS project
 
 You are still in `ios` directory.
@@ -196,3 +206,10 @@ Encoding GitHub token to clone match repo:
 ```
 echo -n "<username>:<personal-access-token>" | base64
 ```
+
+## Troubleshooting
+
+* [Getting UDID](https://www.sourcefuse.com/blog/how-to-find-udid-in-the-new-iphone-xs-iphone-xr-and-iphone-xs-max/#:~:text=iOS%20App%20Development%3F-,Your%20UDID%20is%20a%20unique%20identifier%20that%20Apple%20uses%20to,releases%20of%20iOS%20for%20testing.)
+* https://stackoverflow.com/questions/71359062/iproxy-cannot-be-opened-because-the-developer-cannot-be-verified
+* https://stackoverflow.com/questions/72598348/xcode-14-beta-build-issues-with-lldb
+* How to open Flet web app from iPhone connected via USB: https://stackoverflow.com/a/26065841/1435891
