@@ -10,23 +10,26 @@ def test_instance_no_attrs_set():
         Command(
             indent=0,
             name=None,
-            values=["tooltip"],
-            attrs={},
+            values=['tooltip'],
+            attrs={'textalign': 'left'},
             commands=[],
         )
-    ], "Test failed"
+    ], 'Test failed'
 
 
 def test_text_align_enum():
     r = ft.Tooltip()
-    assert r.text_align == ft.TextAlign.NONE
-    assert r._get_attr("textAlign") is None
+    assert r.text_align == ft.TextAlign.LEFT
+    assert r._get_attr('textAlign') == ft.TextAlign.LEFT.value
 
     r = ft.Tooltip(text_align=ft.TextAlign.RIGHT)
     assert isinstance(r.text_align, ft.TextAlign)
+    assert isinstance(r._get_attr('textAlign'), str)
     assert r.text_align == ft.TextAlign.RIGHT
-    assert r._get_attr("textAlign") == "right"
+    assert r._get_attr('textAlign') == 'right'
 
-    r = ft.Tooltip(text_align="left")
-    assert isinstance(r.text_align, str)
-    assert r._get_attr("textAlign") == "left"
+    r = ft.Tooltip(text_align='left')
+    assert isinstance(r.text_align, ft.TextAlign)
+    assert isinstance(r._get_attr('textAlign'), str)
+    assert r.text_align == ft.TextAlign.LEFT
+    assert r._get_attr('textAlign') == 'left'
