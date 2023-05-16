@@ -131,11 +131,7 @@ class CrossAxisAlignment(Enum):
     BASELINE = "baseline"
 
 
-LabelPositionString = Literal[None, "right", "left"]
-
-
-class LabelPosition(Enum):
-    NONE = None
+class LabelPosition(StrEnum):
     RIGHT = "right"
     LEFT = "left"
 

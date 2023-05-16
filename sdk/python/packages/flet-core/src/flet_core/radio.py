@@ -6,18 +6,16 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
-    LabelPositionString,
     MaterialState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    get_valid_enum,
 )
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
+
+_LabelPositionDefault = LabelPosition.RIGHT
 
 
 class Radio(ConstrainedControl):
@@ -82,7 +80,7 @@ class Radio(ConstrainedControl):
         # Specific
         #
         label: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
+        label_position: LabelPosition = _LabelPositionDefault,
         value: Optional[str] = None,
         autofocus: Optional[bool] = None,
         fill_color: Union[None, str, Dict[MaterialState, str]] = None,
@@ -158,14 +156,8 @@ class Radio(ConstrainedControl):
 
     @label_position.setter
     def label_position(self, value: LabelPosition):
-        self.__label_position = value
-        if isinstance(value, LabelPosition):
-            self._set_attr("labelPosition", value.value)
-        else:
-            self.__set_label_position(value)
-
-    def __set_label_position(self, value: LabelPositionString):
-        self._set_attr("labelPosition", value)
+        self.__label_position = get_valid_enum(LabelPosition, value, _LabelPositionDefault)
+        self._set_attr("labelPosition", self.__label_position.value)
 
     # fill_color
     @property
