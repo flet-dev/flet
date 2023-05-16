@@ -7,7 +7,7 @@ def test_instance_no_attrs_set():
     r = ft.Switch()
     assert isinstance(r, ft.Control)
     assert r._build_add_commands() == [
-        Command(label_position
+        Command(
             indent=0,
             name=None,
             values=['switch'],
