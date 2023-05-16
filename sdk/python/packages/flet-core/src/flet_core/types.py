@@ -103,16 +103,6 @@ class MaterialState(Enum):
     DEFAULT = ""
 
 
-CrossAxisAlignmentString = Literal[
-    None,
-    "start",
-    "end",
-    "center",
-    "stretch",
-    "baseline",
-]
-
-
 class MainAxisAlignment(StrEnum):
     START = "start"
     END = "end"
@@ -122,8 +112,7 @@ class MainAxisAlignment(StrEnum):
     SPACE_EVENLY = "spaceEvenly"
 
 
-class CrossAxisAlignment(Enum):
-    NONE = None
+class CrossAxisAlignment(StrEnum):
     START = "start"
     END = "end"
     CENTER = "center"

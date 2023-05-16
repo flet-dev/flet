@@ -8,7 +8,6 @@ from flet_core.navigation_bar import NavigationBar
 from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     CrossAxisAlignment,
-    CrossAxisAlignmentString,
     MainAxisAlignment,
     PaddingValue,
     ScrollMode,
@@ -17,6 +16,7 @@ from flet_core.types import (
 )
 
 
+_CrossAxisAlignmentDefault = CrossAxisAlignment.START
 _MainAxisAlignmentDefault = MainAxisAlignment.START
 
 
@@ -39,7 +39,7 @@ class View(ScrollableControl):
         floating_action_button: Optional[FloatingActionButton] = None,
         navigation_bar: Optional[NavigationBar] = None,
         vertical_alignment: MainAxisAlignment = _MainAxisAlignmentDefault,
-        horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        horizontal_alignment: CrossAxisAlignment = _CrossAxisAlignmentDefault,
         spacing: OptionalNumber = None,
         padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
@@ -144,14 +144,8 @@ class View(ScrollableControl):
 
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
-        self.__horizontal_alignment = value
-        if isinstance(value, CrossAxisAlignment):
-            self._set_attr("horizontalAlignment", value.value)
-        else:
-            self.__set_horizontal_alignment(value)
-
-    def __set_horizontal_alignment(self, value: CrossAxisAlignmentString):
-        self._set_attr("horizontalAlignment", value)
+        self.__horizontal_alignment = get_valid_enum(CrossAxisAlignment, value, _CrossAxisAlignmentDefault)
+        self._set_attr("horizontalAlignment", self.__horizontal_alignment.value)
 
     # vertical_alignment
     @property

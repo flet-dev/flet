@@ -7,7 +7,6 @@ from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     AnimationValue,
     CrossAxisAlignment,
-    CrossAxisAlignmentString,
     MainAxisAlignment,
     OffsetValue,
     ResponsiveNumber,
@@ -18,7 +17,7 @@ from flet_core.types import (
     get_valid_enum,
 )
 
-
+_CrossAxisAlignmentDefault = CrossAxisAlignment.START
 _MainAxisAlignmentDefault = MainAxisAlignment.START
 
 
@@ -97,7 +96,7 @@ class Column(ConstrainedControl, ScrollableControl):
         # Column specific
         #
         alignment: MainAxisAlignment = _MainAxisAlignmentDefault,
-        horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        horizontal_alignment: CrossAxisAlignment = _CrossAxisAlignmentDefault,
         spacing: OptionalNumber = None,
         tight: Optional[bool] = None,
         wrap: Optional[bool] = None,
@@ -188,14 +187,8 @@ class Column(ConstrainedControl, ScrollableControl):
 
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
-        self.__horizontal_alignment = value
-        if isinstance(value, CrossAxisAlignment):
-            self._set_attr("horizontalAlignment", value.value)
-        else:
-            self.__set_horizontal_alignment(value)
-
-    def __set_horizontal_alignment(self, value: CrossAxisAlignmentString):
-        self._set_attr("horizontalAlignment", value)
+        self.__horizontal_alignment = get_valid_enum(CrossAxisAlignment, value, _CrossAxisAlignmentDefault)
+        self._set_attr("horizontalAlignment", self.__horizontal_alignment.value)
 
     # spacing
     @property

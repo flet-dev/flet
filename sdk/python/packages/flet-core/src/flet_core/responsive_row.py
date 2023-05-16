@@ -6,7 +6,6 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     CrossAxisAlignment,
-    CrossAxisAlignmentString,
     MainAxisAlignment,
     OffsetValue,
     ResponsiveNumber,
@@ -16,6 +15,7 @@ from flet_core.types import (
 )
 
 
+_CrossAxisAlignmentDefault = CrossAxisAlignment.START
 _MainAxisAlignmentDefault = MainAxisAlignment.START
 
 
@@ -84,7 +84,7 @@ class ResponsiveRow(ConstrainedControl):
         #
         columns: Optional[ResponsiveNumber] = None,
         alignment: MainAxisAlignment = _MainAxisAlignmentDefault,
-        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        vertical_alignment: CrossAxisAlignment = _CrossAxisAlignmentDefault,
         spacing: Optional[ResponsiveNumber] = None,
         run_spacing: Optional[ResponsiveNumber] = None,
     ):
@@ -161,14 +161,8 @@ class ResponsiveRow(ConstrainedControl):
 
     @vertical_alignment.setter
     def vertical_alignment(self, value: CrossAxisAlignment):
-        self.__vertical_alignment = value
-        if isinstance(value, CrossAxisAlignment):
-            self._set_attr("verticalAlignment", value.value)
-        else:
-            self.__set_vertical_alignment(value)
-
-    def __set_vertical_alignment(self, value: CrossAxisAlignmentString):
-        self._set_attr("verticalAlignment", value)
+        self.__vertical_alignment = get_valid_enum(CrossAxisAlignment, value, _CrossAxisAlignmentDefault)
+        self._set_attr("verticalAlignment", self.__vertical_alignment.value)
 
     # columns
     @property
