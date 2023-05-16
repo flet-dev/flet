@@ -11,7 +11,10 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=['view'],
-            attrs={'verticalalignment': 'start'},
+            attrs={
+                'horizontalalignment': 'start',
+                'verticalalignment': 'start',
+            },
             commands=[],
         )
     ], 'Test failed'
@@ -21,14 +24,18 @@ def test_horizontal_alignment_enum():
     r = ft.View(horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
     assert isinstance(r.horizontal_alignment, ft.CrossAxisAlignment)
     assert isinstance(r._get_attr("horizontalAlignment"), str)
+    assert r.horizontal_alignment == ft.CrossAxisAlignment.STRETCH
+    assert r._get_attr('horizontalAlignment') == ft.CrossAxisAlignment.STRETCH.value
     cmd = r._build_add_commands()
     assert cmd[0].attrs["horizontalalignment"] == "stretch"
 
 
 def test_horizontal_alignment_str():
     r = ft.View(horizontal_alignment="center")
-    assert isinstance(r.horizontal_alignment, str)
+    assert isinstance(r.horizontal_alignment, ft.CrossAxisAlignment)
     assert isinstance(r._get_attr("horizontalAlignment"), str)
+    assert r.horizontal_alignment == ft.CrossAxisAlignment.CENTER
+    assert r._get_attr('horizontalAlignment') == ft.CrossAxisAlignment.CENTER.value
     cmd = r._build_add_commands()
     assert cmd[0].attrs["horizontalalignment"] == "center"
 

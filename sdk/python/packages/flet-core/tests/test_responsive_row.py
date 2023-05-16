@@ -11,7 +11,10 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=['responsiverow'],
-            attrs={'alignment': 'start'},
+            attrs={
+                'alignment': 'start',
+                'verticalalignment': 'start',
+            },
             commands=[],
         )
     ], 'Test failed'
@@ -41,13 +44,17 @@ def test_vertical_alignment_enum():
     r = ft.ResponsiveRow(vertical_alignment=ft.CrossAxisAlignment.STRETCH)
     assert isinstance(r.vertical_alignment, ft.CrossAxisAlignment)
     assert isinstance(r._get_attr("verticalAlignment"), str)
+    assert r.vertical_alignment == ft.CrossAxisAlignment.STRETCH
+    assert r._get_attr('verticalAlignment') == ft.CrossAxisAlignment.STRETCH.value
     cmd = r._build_add_commands()
     assert cmd[0].attrs["verticalalignment"] == "stretch"
 
 
 def test_vertical_alignment_str():
     r = ft.ResponsiveRow(vertical_alignment="center")
-    assert isinstance(r.vertical_alignment, str)
+    assert isinstance(r.vertical_alignment, ft.CrossAxisAlignment)
     assert isinstance(r._get_attr("verticalAlignment"), str)
+    assert r.vertical_alignment == ft.CrossAxisAlignment.CENTER
+    assert r._get_attr('verticalAlignment') == ft.CrossAxisAlignment.CENTER.value
     cmd = r._build_add_commands()
     assert cmd[0].attrs["verticalalignment"] == "center"
