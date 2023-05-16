@@ -10,24 +10,28 @@ def test_instance_no_attrs_set():
         Command(
             indent=0,
             name=None,
-            values=["checkbox"],
-            attrs={},
+            values=['checkbox'],
+            attrs={'labelposition': 'right'},
             commands=[],
         )
-    ], "Test failed"
+    ], 'Test failed'
 
 
 def test_label_position_enum():
     r = ft.Checkbox(label_position=ft.LabelPosition.LEFT)
     assert isinstance(r.label_position, ft.LabelPosition)
-    assert isinstance(r._get_attr("labelPosition"), str)
+    assert isinstance(r._get_attr('labelPosition'), str)
+    assert r.label_position == ft.LabelPosition.LEFT
+    assert r._get_attr('labelPosition') == ft.LabelPosition.LEFT.value
     cmd = r._build_add_commands()
-    assert cmd[0].attrs["labelposition"] == "left"
+    assert cmd[0].attrs['labelposition'] == 'left'
 
 
 def test_label_position_str():
-    r = ft.Checkbox(label_position="left")
-    assert isinstance(r.label_position, str)
-    assert isinstance(r._get_attr("labelPosition"), str)
+    r = ft.Checkbox(label_position='left')
+    assert isinstance(r.label_position, ft.LabelPosition)
+    assert isinstance(r._get_attr('labelPosition'), str)
+    assert r.label_position == ft.LabelPosition.LEFT
+    assert r._get_attr('labelPosition') == ft.LabelPosition.LEFT.value
     cmd = r._build_add_commands()
-    assert cmd[0].attrs["labelposition"] == "left"
+    assert cmd[0].attrs['labelposition'] == 'left'
