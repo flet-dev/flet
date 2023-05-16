@@ -18,7 +18,7 @@ class Text(Shape):
         style: Optional[TextStyle] = None,
         spans: Optional[List[InlineSpan]] = None,
         alignment: Optional[Alignment] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: Optional[TextAlign] = None,
         max_lines: Optional[int] = None,
         max_width: OptionalNumber = None,
         ellipsis: Optional[str] = None,
