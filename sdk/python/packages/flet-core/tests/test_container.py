@@ -11,7 +11,10 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=['container'],
-            attrs={'imagefit': 'none'},
+            attrs={
+                'clipbehavior': 'antiAlias',
+                'imagefit': 'none',
+            },
             commands=[],
         )
     ], 'Test failed'
@@ -72,16 +75,19 @@ def test_blend_mode_str():
 
 def test_clip_behavior_enum():
     r = ft.Container()
-    assert r.clip_behavior is None
-    assert r._get_attr("clipBehavior") is None
+    assert r.clip_behavior == ft.ClipBehavior.ANTI_ALIAS
+    assert r._get_attr("clipBehavior") == ft.ClipBehavior.ANTI_ALIAS.value
 
     r = ft.Container(clip_behavior=ft.ClipBehavior.ANTI_ALIAS)
     assert isinstance(r.clip_behavior, ft.ClipBehavior)
+    assert isinstance(r._get_attr("clipBehavior"), str)
     assert r.clip_behavior == ft.ClipBehavior.ANTI_ALIAS
     assert r._get_attr("clipBehavior") == "antiAlias"
 
     r = ft.Container(clip_behavior="none")
-    assert isinstance(r.clip_behavior, str)
+    assert isinstance(r.clip_behavior, ft.ClipBehavior)
+    assert isinstance(r._get_attr("clipBehavior"), str)
+    assert r.clip_behavior == ft.ClipBehavior.NONE
     assert r._get_attr("clipBehavior") == "none"
 
 
