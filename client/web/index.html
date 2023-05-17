@@ -24,7 +24,12 @@
   <title>Flet</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- flutterWebRenderer -->
+  <script>
+    var webRenderer = "auto";
+    var useColorEmoji = false;
+  </script>
+
+  <!-- webRenderer -->
   <!-- useColorEmoji -->
 
   <!-- pyodideCode -->
@@ -105,7 +110,7 @@
       }).then(function (engineInitializer) {
         loading.classList.add('main_done');
         return engineInitializer.initializeEngine({
-          renderer: flutterWebRenderer,
+          renderer: webRenderer,
           useColorEmoji: useColorEmoji,
         });
       }).then(function (appRunner) {
