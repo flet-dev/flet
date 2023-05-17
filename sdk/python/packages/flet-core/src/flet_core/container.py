@@ -19,7 +19,6 @@ from flet_core.types import (
     BorderRadiusValue,
     BoxShape,
     ClipBehavior,
-    ClipBehaviorString,
     ImageFit,
     ImageRepeat,
     ImageRepeatString,
@@ -34,6 +33,7 @@ from flet_core.types import (
 )
 
 
+_ClipBehaviorDefault = ClipBehavior.ANTI_ALIAS
 _ImageFitDefault = ImageFit.NONE
 
 
@@ -110,7 +110,7 @@ class Container(ConstrainedControl):
         image_fit: ImageFit = _ImageFitDefault,
         image_opacity: OptionalNumber = None,
         shape: Optional[BoxShape] = None,
-        clip_behavior: Optional[ClipBehavior] = None,
+        clip_behavior: ClipBehavior = _ClipBehaviorDefault,
         ink: Optional[bool] = None,
         animate: AnimationValue = None,
         blur: Union[
@@ -394,19 +394,13 @@ class Container(ConstrainedControl):
 
     # clip_behavior
     @property
-    def clip_behavior(self) -> Optional[ClipBehavior]:
+    def clip_behavior(self) -> ClipBehavior:
         return self.__clip_behavior
 
     @clip_behavior.setter
-    def clip_behavior(self, value: Optional[ClipBehavior]):
-        self.__clip_behavior = value
-        if isinstance(value, ClipBehavior):
-            self._set_attr("clipBehavior", value.value)
-        else:
-            self.__set_clip_behavior(value)
-
-    def __set_clip_behavior(self, value: Optional[ClipBehaviorString]):
-        self._set_attr("clipBehavior", value)
+    def clip_behavior(self, value: ClipBehavior):
+        self.__clip_behavior = get_valid_enum(ClipBehavior, value, _ClipBehaviorDefault)
+        self._set_attr("clipBehavior", self.__clip_behavior.value)
 
     # ink
     @property

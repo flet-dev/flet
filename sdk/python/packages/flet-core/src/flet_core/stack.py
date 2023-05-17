@@ -6,17 +6,15 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
-    ClipBehaviorString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    get_valid_enum,
 )
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
+
+_ClipBehaviorDefault = ClipBehavior.HARD_EDGE
 
 
 class Stack(ConstrainedControl):
@@ -99,7 +97,7 @@ class Stack(ConstrainedControl):
         #
         # Stack-specific
         #
-        clip_behavior: Optional[ClipBehavior] = None,
+        clip_behavior: ClipBehavior = _ClipBehaviorDefault,
     ):
         ConstrainedControl.__init__(
             self,
@@ -151,16 +149,10 @@ class Stack(ConstrainedControl):
 
     # clip_behavior
     @property
-    def clip_behavior(self) -> Optional[ClipBehavior]:
+    def clip_behavior(self) -> ClipBehavior:
         return self.__clip_behavior
 
     @clip_behavior.setter
-    def clip_behavior(self, value: Optional[ClipBehavior]):
-        self.__clip_behavior = value
-        if isinstance(value, ClipBehavior):
-            self._set_attr("clipBehavior", value.value)
-        else:
-            self.__set_clip_behavior(value)
-
-    def __set_clip_behavior(self, value: Optional[ClipBehaviorString]):
-        self._set_attr("clipBehavior", value)
+    def clip_behavior(self, value: ClipBehavior):
+        self.__clip_behavior = get_valid_enum(ClipBehavior, value, _ClipBehaviorDefault)
+        self._set_attr("clipBehavior", self.__clip_behavior.value)
