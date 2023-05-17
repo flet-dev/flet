@@ -196,10 +196,7 @@ class ImageFit(StrEnum):
     SCALE_DOWN = "scaleDown"
 
 
-ImageRepeatString = Literal[None, "noRepeat", "repeat", "repeatX", "repeatY"]
-
-
-class ImageRepeat(Enum):
+class ImageRepeat(StrEnum):
     NO_REPEAT = "noRepeat"
     REPEAT = "repeat"
     REPEAT_X = "repeatX"

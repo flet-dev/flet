@@ -20,7 +20,6 @@ from flet_core.types import (
     ClipBehavior,
     ImageFit,
     ImageRepeat,
-    ImageRepeatString,
     MarginValue,
     OffsetValue,
     PaddingValue,
@@ -35,6 +34,7 @@ from flet_core.types import (
 _BlendModeDefault = BlendMode.MODULATE
 _ClipBehaviorDefault = ClipBehavior.ANTI_ALIAS
 _ImageFitDefault = ImageFit.NONE
+_ImageRepeatDefault = ImageRepeat.NO_REPEAT
 
 
 class Container(ConstrainedControl):
@@ -106,7 +106,7 @@ class Container(ConstrainedControl):
         border_radius: BorderRadiusValue = None,
         image_src: Optional[str] = None,
         image_src_base64: Optional[str] = None,
-        image_repeat: Optional[ImageRepeat] = None,
+        image_repeat: ImageRepeat = _ImageRepeatDefault,
         image_fit: ImageFit = _ImageFitDefault,
         image_opacity: OptionalNumber = None,
         shape: Optional[BoxShape] = None,
@@ -344,19 +344,13 @@ class Container(ConstrainedControl):
 
     # image_repeat
     @property
-    def image_repeat(self) -> Optional[ImageRepeat]:
+    def image_repeat(self) -> ImageRepeat:
         return self.__image_repeat
 
     @image_repeat.setter
-    def image_repeat(self, value: Optional[ImageRepeat]):
-        self.__image_repeat = value
-        if isinstance(value, ImageRepeat):
-            self._set_attr("imageRepeat", value.value)
-        else:
-            self.__set_image_repeat(value)
-
-    def __set_image_repeat(self, value: ImageRepeatString):
-        self._set_attr("imageRepeat", value)
+    def image_repeat(self, value: ImageRepeat):
+        self.__image_repeat = get_valid_enum(ImageRepeat, value, _ImageRepeatDefault)
+        self._set_attr("imageRepeat", self.__image_repeat.value)
 
     # image_opacity
     @property

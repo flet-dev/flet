@@ -9,7 +9,6 @@ from flet_core.types import (
     BorderRadiusValue,
     ImageFit,
     ImageRepeat,
-    ImageRepeatString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -20,6 +19,7 @@ from flet_core.types import (
 
 _BlendModeDefault = BlendMode.MODULATE
 _ImageFitDefault = ImageFit.NONE
+_ImageRepeatDefault = ImageRepeat.NO_REPEAT
 
 
 class Image(ConstrainedControl):
@@ -84,7 +84,7 @@ class Image(ConstrainedControl):
         #
         src_base64: Optional[str] = None,
         error_content: Optional[Control] = None,
-        repeat: Optional[ImageRepeat] = None,
+        repeat: ImageRepeat = _ImageRepeatDefault,
         fit: ImageFit = _ImageFitDefault,
         border_radius: BorderRadiusValue = None,
         color: Optional[str] = None,
@@ -177,19 +177,13 @@ class Image(ConstrainedControl):
 
     # repeat
     @property
-    def repeat(self) -> Optional[ImageRepeat]:
+    def repeat(self) -> ImageRepeat:
         return self.__repeat
 
     @repeat.setter
-    def repeat(self, value: Optional[ImageRepeat]):
-        self.__repeat = value
-        if isinstance(value, ImageRepeat):
-            self._set_attr("repeat", value.value)
-        else:
-            self.__set_repeat(value)
-
-    def __set_repeat(self, value: ImageRepeatString):
-        self._set_attr("repeat", value)
+    def repeat(self, value: ImageRepeat):
+        self.__repeat = get_valid_enum(ImageRepeat, value, _ImageRepeatDefault)
+        self._set_attr("repeat", self.__repeat.value)
 
     # border_radius
     @property
