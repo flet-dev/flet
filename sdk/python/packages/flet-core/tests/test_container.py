@@ -15,6 +15,7 @@ def test_instance_no_attrs_set():
                 'blendmode': 'modulate',
                 'clipbehavior': 'antiAlias',
                 'imagefit': 'none',
+                'imagerepeat': 'noRepeat',
             },
             commands=[],
         )
@@ -98,16 +99,19 @@ def test_clip_behavior_enum():
 
 def test_image_repeat_enum():
     r = ft.Container()
-    assert r.image_repeat is None
-    assert r._get_attr("imageRepeat") is None
+    assert r.image_repeat == ft.ImageRepeat.NO_REPEAT
+    assert r._get_attr("imageRepeat") == ft.ImageRepeat.NO_REPEAT.value
 
     r = ft.Container(image_repeat=ft.ImageRepeat.REPEAT)
     assert isinstance(r.image_repeat, ft.ImageRepeat)
+    assert isinstance(r._get_attr("imageRepeat"), str)
     assert r.image_repeat == ft.ImageRepeat.REPEAT
     assert r._get_attr("imageRepeat") == "repeat"
 
     r = ft.Container(image_repeat="repeatX")
-    assert isinstance(r.image_repeat, str)
+    assert isinstance(r.image_repeat, ft.ImageRepeat)
+    assert isinstance(r._get_attr("imageRepeat"), str)
+    assert r.image_repeat == ft.ImageRepeat.REPEAT_X
     assert r._get_attr("imageRepeat") == "repeatX"
 
 

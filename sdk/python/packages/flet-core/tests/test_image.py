@@ -17,6 +17,7 @@ def test_image_add():
             attrs={
                 'colorblendmode': 'modulate',
                 'fit': 'none',
+                'repeat': 'noRepeat',
                 'src': 'https://www.w3schools.com/css/img_5terre.jpg',
             },
             commands=[],
@@ -27,36 +28,39 @@ def test_image_add():
 def test_color_blend_mode_enum():
     r = ft.Image(color_blend_mode=ft.BlendMode.LIGHTEN)
     assert isinstance(r.color_blend_mode, ft.BlendMode)
-    assert isinstance(r._get_attr("colorBlendMode"), str)
+    assert isinstance(r._get_attr('colorBlendMode'), str)
     assert r.color_blend_mode == ft.BlendMode.LIGHTEN
-    assert r._get_attr("colorBlendMode") == ft.BlendMode.LIGHTEN.value
+    assert r._get_attr('colorBlendMode') == ft.BlendMode.LIGHTEN.value
     cmd = r._build_add_commands()
-    assert cmd[0].attrs["colorblendmode"] == "lighten"
+    assert cmd[0].attrs['colorblendmode'] == 'lighten'
 
 
 def test_color_blend_mode_str():
-    r = ft.Image(color_blend_mode="darken")
+    r = ft.Image(color_blend_mode='darken')
     assert isinstance(r.color_blend_mode, ft.BlendMode)
-    assert isinstance(r._get_attr("colorBlendMode"), str)
+    assert isinstance(r._get_attr('colorBlendMode'), str)
     assert r.color_blend_mode == ft.BlendMode.DARKEN
-    assert r._get_attr("colorBlendMode") == ft.BlendMode.DARKEN.value
+    assert r._get_attr('colorBlendMode') == ft.BlendMode.DARKEN.value
     cmd = r._build_add_commands()
-    assert cmd[0].attrs["colorblendmode"] == "darken"
+    assert cmd[0].attrs['colorblendmode'] == 'darken'
 
 
 def test_repeat_enum():
     r = ft.Image()
-    assert r.repeat is None
-    assert r._get_attr("repeat") is None
+    assert r.repeat == ft.ImageRepeat.NO_REPEAT
+    assert r._get_attr('repeat') == ft.ImageRepeat.NO_REPEAT.value
 
     r = ft.Image(repeat=ft.ImageRepeat.REPEAT)
     assert isinstance(r.repeat, ft.ImageRepeat)
+    assert isinstance(r._get_attr('repeat'), str)
     assert r.repeat == ft.ImageRepeat.REPEAT
-    assert r._get_attr("repeat") == "repeat"
+    assert r._get_attr('repeat') == 'repeat'
 
-    r = ft.Image(repeat="repeatX")
-    assert isinstance(r.repeat, str)
-    assert r._get_attr("repeat") == "repeatX"
+    r = ft.Image(repeat='repeatX')
+    assert isinstance(r.repeat, ft.ImageRepeat)
+    assert isinstance(r._get_attr('repeat'), str)
+    assert r.repeat == ft.ImageRepeat.REPEAT_X
+    assert r._get_attr('repeat') == 'repeatX'
 
 
 def test_fit_enum():
