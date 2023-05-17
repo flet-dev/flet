@@ -15,7 +15,6 @@ from flet_core.theme import Theme
 from flet_core.types import (
     AnimationValue,
     BlendMode,
-    BlendModeString,
     BorderRadiusValue,
     BoxShape,
     ClipBehavior,
@@ -33,6 +32,7 @@ from flet_core.types import (
 )
 
 
+_BlendModeDefault = BlendMode.MODULATE
 _ClipBehaviorDefault = ClipBehavior.ANTI_ALIAS
 _ImageFitDefault = ImageFit.NONE
 
@@ -101,7 +101,7 @@ class Container(ConstrainedControl):
         alignment: Optional[Alignment] = None,
         bgcolor: Optional[str] = None,
         gradient: Optional[Gradient] = None,
-        blend_mode: BlendMode = BlendMode.NONE,
+        blend_mode: BlendMode = _BlendModeDefault,
         border: Optional[Border] = None,
         border_radius: BorderRadiusValue = None,
         image_src: Optional[str] = None,
@@ -270,14 +270,8 @@ class Container(ConstrainedControl):
 
     @blend_mode.setter
     def blend_mode(self, value: BlendMode):
-        self.__blend_mode = value
-        if isinstance(value, BlendMode):
-            self._set_attr("blendMode", value.value)
-        else:
-            self.__set_blend_mode(value)
-
-    def __set_blend_mode(self, value: BlendModeString):
-        self._set_attr("blendMode", value)
+        self.__blend_mode = get_valid_enum(BlendMode, value, _BlendModeDefault)
+        self._set_attr("blendMode", self.__blend_mode.value)
 
     # blur
     @property

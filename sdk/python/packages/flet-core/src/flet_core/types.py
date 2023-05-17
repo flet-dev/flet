@@ -125,42 +125,7 @@ class LabelPosition(StrEnum):
     LEFT = "left"
 
 
-BlendModeString = Literal[
-    "clear",
-    "color",
-    "colorBurn",
-    "colorDodge",
-    "darken",
-    "difference",
-    "dst",
-    "dstATop",
-    "dstIn",
-    "dstOut",
-    "dstOver",
-    "exclusion",
-    "hardLight",
-    "hue",
-    "lighten",
-    "luminosity",
-    "modulate",
-    "multiply",
-    "overlay",
-    "plus",
-    "saturation",
-    "screen",
-    "softLight",
-    "src",
-    "srcATop",
-    "srcIn",
-    "srcOut",
-    "srcOver",
-    "values",
-    "xor",
-]
-
-
-class BlendMode(Enum):
-    NONE = None
+class BlendMode(StrEnum):
     CLEAR = "clear"
     COLOR = "color"
     COLOR_BURN = "colorBurn"

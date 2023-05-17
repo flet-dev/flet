@@ -1,14 +1,17 @@
 from typing import Any, Optional
 
 from flet_core.canvas.shape import Shape
-from flet_core.types import BlendMode, BlendModeString
+from flet_core.types import BlendMode, get_valid_enum
+
+
+_BlendModeDefault = BlendMode.MODULATE
 
 
 class Color(Shape):
     def __init__(
         self,
         color: Optional[str] = None,
-        blend_mode: BlendMode = BlendMode.NONE,
+        blend_mode: BlendMode = _BlendModeDefault,
         # base
         ref=None,
         visible: Optional[bool] = None,
@@ -42,11 +45,5 @@ class Color(Shape):
 
     @blend_mode.setter
     def blend_mode(self, value: BlendMode):
-        self.__blend_mode = value
-        if isinstance(value, BlendMode):
-            self._set_attr("blendMode", value.value)
-        else:
-            self.__set_blend_mode(value)
-
-    def __set_blend_mode(self, value: BlendModeString):
-        self._set_attr("blendMode", value)
+        self.__blend_mode = get_valid_enum(BlendMode, value, _BlendModeDefault)
+        self._set_attr("blendMode", self.__blend_mode.value)

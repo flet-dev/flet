@@ -6,7 +6,6 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     BlendMode,
-    BlendModeString,
     BorderRadiusValue,
     ImageFit,
     ImageRepeat,
@@ -19,6 +18,7 @@ from flet_core.types import (
 )
 
 
+_BlendModeDefault = BlendMode.MODULATE
 _ImageFitDefault = ImageFit.NONE
 
 
@@ -88,7 +88,7 @@ class Image(ConstrainedControl):
         fit: ImageFit = _ImageFitDefault,
         border_radius: BorderRadiusValue = None,
         color: Optional[str] = None,
-        color_blend_mode: BlendMode = BlendMode.NONE,
+        color_blend_mode: BlendMode = _BlendModeDefault,
         gapless_playback: Optional[bool] = None,
         semantics_label: Optional[str] = None,
     ):
@@ -216,14 +216,8 @@ class Image(ConstrainedControl):
 
     @color_blend_mode.setter
     def color_blend_mode(self, value: BlendMode):
-        self.__blend_mode = value
-        if isinstance(value, BlendMode):
-            self._set_attr("colorBlendMode", value.value)
-        else:
-            self.__set_blend_mode(value)
-
-    def __set_blend_mode(self, value: BlendModeString):
-        self._set_attr("colorBlendMode", value)
+        self.__blend_mode = get_valid_enum(BlendMode, value, _BlendModeDefault)
+        self._set_attr("colorBlendMode", self.__blend_mode.value)
 
     # gapless_playback
     @property
