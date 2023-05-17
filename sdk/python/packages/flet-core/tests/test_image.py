@@ -15,6 +15,7 @@ def test_image_add():
             name=None,
             values=['image'],
             attrs={
+                'colorblendmode': 'modulate',
                 'fit': 'none',
                 'src': 'https://www.w3schools.com/css/img_5terre.jpg',
             },
@@ -27,14 +28,18 @@ def test_color_blend_mode_enum():
     r = ft.Image(color_blend_mode=ft.BlendMode.LIGHTEN)
     assert isinstance(r.color_blend_mode, ft.BlendMode)
     assert isinstance(r._get_attr("colorBlendMode"), str)
+    assert r.color_blend_mode == ft.BlendMode.LIGHTEN
+    assert r._get_attr("colorBlendMode") == ft.BlendMode.LIGHTEN.value
     cmd = r._build_add_commands()
     assert cmd[0].attrs["colorblendmode"] == "lighten"
 
 
 def test_color_blend_mode_str():
     r = ft.Image(color_blend_mode="darken")
-    assert isinstance(r.color_blend_mode, str)
+    assert isinstance(r.color_blend_mode, ft.BlendMode)
     assert isinstance(r._get_attr("colorBlendMode"), str)
+    assert r.color_blend_mode == ft.BlendMode.DARKEN
+    assert r._get_attr("colorBlendMode") == ft.BlendMode.DARKEN.value
     cmd = r._build_add_commands()
     assert cmd[0].attrs["colorblendmode"] == "darken"
 

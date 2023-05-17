@@ -12,6 +12,7 @@ def test_instance_no_attrs_set():
             name=None,
             values=['container'],
             attrs={
+                'blendmode': 'modulate',
                 'clipbehavior': 'antiAlias',
                 'imagefit': 'none',
             },
@@ -61,14 +62,18 @@ def test_blend_mode_enum():
     r = ft.Container(blend_mode=ft.BlendMode.LIGHTEN)
     assert isinstance(r.blend_mode, ft.BlendMode)
     assert isinstance(r._get_attr("blendMode"), str)
+    assert r.blend_mode == ft.BlendMode.LIGHTEN
+    assert r._get_attr("blendMode") == ft.BlendMode.LIGHTEN.value
     cmd = r._build_add_commands()
     assert cmd[0].attrs["blendmode"] == "lighten"
 
 
 def test_blend_mode_str():
     r = ft.Container(blend_mode="darken")
-    assert isinstance(r.blend_mode, str)
+    assert isinstance(r.blend_mode, ft.BlendMode)
     assert isinstance(r._get_attr("blendMode"), str)
+    assert r.blend_mode == ft.BlendMode.DARKEN
+    assert r._get_attr("blendMode") == ft.BlendMode.DARKEN.value
     cmd = r._build_add_commands()
     assert cmd[0].attrs["blendmode"] == "darken"
 
