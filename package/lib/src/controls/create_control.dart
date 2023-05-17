@@ -107,7 +107,7 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
           globalKey, controlView, parent, parentDisabled, nextChild);
 
       // no theme defined? return widget!
-      if (controlView.control.attrString("theme") == null) {
+      if (id == "page" || controlView.control.attrString("theme") == null) {
         return widget;
       }
 

@@ -137,14 +137,14 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int, contentDir s
 			// web renderer
 			if config.WebRenderer() != "" {
 				indexData = bytes.Replace(indexData,
-					[]byte("<!-- flutterWebRenderer -->"),
-					[]byte(fmt.Sprintf("<script>var flutterWebRenderer=\"%s\";</script>", config.WebRenderer())), 1)
+					[]byte("<!-- webRenderer -->"),
+					[]byte(fmt.Sprintf("<script>webRenderer=\"%s\";</script>", config.WebRenderer())), 1)
 			}
 
 			// color emoji
 			indexData = bytes.Replace(indexData,
 				[]byte("<!-- useColorEmoji -->"),
-				[]byte(fmt.Sprintf("<script>var useColorEmoji=%v;</script>", config.UseColorEmoji())), 1)
+				[]byte(fmt.Sprintf("<script>useColorEmoji=%v;</script>", config.UseColorEmoji())), 1)
 
 			c.Data(http.StatusOK, "text/html", indexData)
 		} else {

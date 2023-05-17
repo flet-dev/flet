@@ -218,12 +218,12 @@ class Command(BaseCommand):
         index = index.replace("%FLET_WEB_PYODIDE%", "true")
         index = index.replace("<!-- pyodideCode -->", pyodideCode)
         index = index.replace(
-            "<!-- flutterWebRenderer -->",
-            f'<script>var flutterWebRenderer="{options.web_renderer}";</script>',
+            "<!-- webRenderer -->",
+            f'<script>webRenderer="{options.web_renderer}";</script>',
         )
         index = index.replace(
             "<!-- useColorEmoji -->",
-            f"<script>var useColorEmoji={str(options.use_color_emoji).lower()};</script>",
+            f"<script>useColorEmoji={str(options.use_color_emoji).lower()};</script>",
         )
         index = index.replace("%FLET_ROUTE_URL_STRATEGY%", options.route_url_strategy)
 
