@@ -440,7 +440,7 @@ for:
     install:
       - python --version
       - cd sdk/python
-      - pip install --upgrade setuptools wheel twine poetry tomlkit
+      - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
       - poetry install
 
     test: off
