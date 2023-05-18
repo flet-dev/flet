@@ -1,5 +1,9 @@
 # Flet changelog
 
+## 0.7.3
+
+* Fix missing `FLET_APP_WEB` declaration in `flet-pyodide`.
+
 ## 0.7.2
 
 * Fix: Route change by url is not working if `page.theme` specified ([#1406](https://github.com/flet-dev/flet/issues/1406)).

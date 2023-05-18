@@ -16,7 +16,7 @@ except ImportError:
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
 FLET_APP_HIDDEN = "flet_app_hidden"
-
+FLET_APP_WEB = "flet_app_web"
 
 logger = logging.getLogger(flet.__name__)
 
