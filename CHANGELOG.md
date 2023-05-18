@@ -1,5 +1,9 @@
 # Flet changelog
 
+## 0.7.4
+
+* Added `use_color_emoji` to `ft.app()` in `flet-pyodide` ([#1416](https://github.com/flet-dev/flet/issues/1416)).
+
 ## 0.7.3
 
 * Fix missing `FLET_APP_WEB` declaration in `flet-pyodide`.
