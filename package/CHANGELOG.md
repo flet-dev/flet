@@ -1,3 +1,9 @@
+## 0.7.2
+
+* Fix: Route change by url is not working if `page.theme` specified ([#1406](https://github.com/flet-dev/flet/issues/1406)).
+* Rollback flutter_svg to 1.1.6 to fix regressions in Plotly charts ([#1402](https://github.com/flet-dev/flet/issues/1402)).
+* Force web server in desktop mode with `ft.app(view=ft.FLET_APP_WEB)`.
+
 ## 0.7.1
 
 * `ButtonStyle` with `shape` or `side` params failed in flet 0.7.0 ([#1390](https://github.com/flet-dev/flet/issues/1390)).
