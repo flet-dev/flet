@@ -11,7 +11,6 @@ from flet_core.types import (
     MainAxisAlignment,
     PaddingValue,
     ScrollMode,
-    ScrollModeString,
     get_valid_enum,
 )
 

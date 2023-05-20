@@ -20,6 +20,14 @@ except ImportError:
 
 
 T = TypeVar('T', bound=StrEnum)
+R = TypeVar('R')
+
+
+def get_valid_enum(enum: Type[T], value: Union[T, str, None], default: R) -> Union[T, R]:
+    if isinstance(value, enum):
+        return value
+    return enum.__dict__['_value2member_map_'].get(value, default)
+
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
 FLET_APP_WEB = "flet_app_web"
@@ -37,7 +45,6 @@ class WebRenderer(Enum):
     AUTO = "auto"
     HTML = "html"
     CANVAS_KIT = "canvaskit"
-
 
 PaddingValue = Union[None, int, float, Padding]
 
@@ -167,12 +174,7 @@ class TextAlign(StrEnum):
     END = "end"
 
 
-ScrollModeString = Literal[
-    None, True, False, "none", "auto", "adaptive", "always", "hidden"
-]
-
-
-class ScrollMode(Enum):
+class ScrollMode(StrEnum):
     AUTO = "auto"
     ADAPTIVE = "adaptive"
     ALWAYS = "always"
@@ -221,9 +223,3 @@ class ThemeMode(Enum):
     SYSTEM = "system"
     LIGHT = "light"
     DARK = "dark"
-
-
-def get_valid_enum(enum: Type[T], value: Union[T, str], default: T) -> T:
-    if isinstance(value, enum):
-        return value
-    return enum.__dict__['_value2member_map_'].get(value, default)
