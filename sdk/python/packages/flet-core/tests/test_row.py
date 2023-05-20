@@ -67,17 +67,14 @@ def test_scroll_enum():
 
     r = ft.Row(scroll=ft.ScrollMode.ALWAYS)
     assert isinstance(r.scroll, ft.ScrollMode)
+    assert isinstance(r._get_attr("scroll"), str)
     assert r.scroll == ft.ScrollMode.ALWAYS
+    assert r._get_attr('scroll') == ft.ScrollMode.ALWAYS.value
     assert r._get_attr("scroll") == "always"
 
     r = ft.Row(scroll="adaptive")
-    assert isinstance(r.scroll, str)
+    assert isinstance(r.scroll, ft.ScrollMode)
+    assert isinstance(r._get_attr("scroll"), str)
+    assert r.scroll == ft.ScrollMode.ADAPTIVE
+    assert r._get_attr('scroll') == ft.ScrollMode.ADAPTIVE.value
     assert r._get_attr("scroll") == "adaptive"
-
-    r = ft.Row(scroll=True)
-    assert isinstance(r.scroll, bool)
-    assert r._get_attr("scroll") == "auto"
-
-    r = ft.Row(scroll=False)
-    assert isinstance(r.scroll, bool)
-    assert r._get_attr("scroll") is None
