@@ -29,6 +29,13 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
       let ws = Py_DecodeLocale("Test", nil)
         PyMem_RawFree(ws)
 
+      var math = PyImport_ImportModule("math")
+      if (math == nil) {
+        result(FlutterError.init(code: "NATIVE_ERR",
+                                                 message: "Cannot load math module",
+                                                 details: nil))
+      }
+
       print("hi!")
       print("AAA\nBBBB")
       NSLog("Before\nAfter")

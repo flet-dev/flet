@@ -37,8 +37,8 @@ class _MyAppState extends State<MyApp> {
     try {
       platformVersion = await _pythonEnginePlugin.getPlatformVersion() ??
           'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+    } on PlatformException catch (e) {
+      platformVersion = 'Failed to get platform version: ${e.message}';
     }
 
     // If the widget was removed from the tree while the asynchronous platform
