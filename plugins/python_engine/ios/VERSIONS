@@ -1,0 +1,8 @@
+Python version: 3.11.0 
+Build: b1
+Min iOS version: 12.0
+---------------------
+libFFI: 3.4.2
+BZip2: 1.0.8
+OpenSSL: 3.0.5
+XZ: 5.2.6
