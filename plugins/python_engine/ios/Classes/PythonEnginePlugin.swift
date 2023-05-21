@@ -27,8 +27,15 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
       Py_Initialize()
 
       let ws = Py_DecodeLocale("Test", nil)
+        PyMem_RawFree(ws)
 
-      result("iOS " + stdLibPath)
+      print("hi!")
+      print("AAA\nBBBB")
+      NSLog("Before\nAfter")
+      NSLog("\nHello, World!")
+      
+
+      result("iOS 123" + stdLibPath)
     default:
       result(FlutterMethodNotImplemented)
     }

@@ -38,6 +38,9 @@ dependencies:
   flet:
     path: ../../package/
 
+  python_engine:
+    path: ../../plugins/python_engine
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
