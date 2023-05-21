@@ -30,6 +30,7 @@ def app(
     assets_dir=None,
     upload_dir=None,
     web_renderer=None,
+    use_color_emoji=False,
     route_url_strategy=None,
     auth_token=None,
 ):
@@ -42,6 +43,7 @@ def app(
         assets_dir=assets_dir,
         upload_dir=upload_dir,
         web_renderer=web_renderer,
+        use_color_emoji=use_color_emoji,
         route_url_strategy=route_url_strategy,
         auth_token=auth_token,
     )
@@ -56,6 +58,7 @@ def app_async(
     assets_dir=None,
     upload_dir=None,
     web_renderer=None,
+    use_color_emoji=False,
     route_url_strategy=None,
     auth_token=None,
 ):
