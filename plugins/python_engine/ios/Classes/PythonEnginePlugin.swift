@@ -40,18 +40,27 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
             let appModuleName = args["appModuleName"] as! String
             
             setenv("PYTHONHOME", stdLibPath, 1)
-            setenv("PYTHONPATH", "\(modulesPath):\(stdLibPath):\(libDynloadPath)", 1)
+            setenv("PYTHONPATH", "\(modulesPath)/__pypackages__:\(stdLibPath):\(libDynloadPath)", 1)
             
             var preconfig: PyPreConfig = PyPreConfig()
             var config: PyConfig = PyConfig()
             
-            PyPreConfig_InitIsolatedConfig(&preconfig)
-            PyConfig_InitIsolatedConfig(&config)
+            // Configure the Python interpreter:
+            // Enforce UTF-8 encoding for stderr, stdout, file-system encoding and locale.
+            // See https://docs.python.org/3/library/os.html#python-utf-8-mode.
+            preconfig.utf8_mode = 1
+            // Don't buffer stdio. We want output to appears in the log immediately
+            config.buffered_stdio = 0
+            // Don't write bytecode; we can't modify the app bundle
+            // after it has been signed.
+            config.write_bytecode = 0
+            // Isolated apps need to set the full PYTHONPATH manually.
+            config.module_search_paths_set = 1
             
-            Py_Initialize()
+            PyPreConfig_InitPythonConfig(&preconfig)
+            PyConfig_InitPythonConfig(&config)
             
-            let ws = Py_DecodeLocale("Test", nil)
-            PyMem_RawFree(ws)
+            Py_InitializeFromConfig(&config)
             
             let math = PyImport_ImportModule("math")
             if (math == nil) {
