@@ -59,15 +59,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Column(
-          children: [Text('Running on: $_runResult\n')],
-        ),
-      ),
+    return const FletApp(
+      pageUrl: "http://192.168.1.243:8550/",
+      assetsDir: "",
     );
   }
 }

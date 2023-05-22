@@ -2,6 +2,13 @@ import Flutter
 import UIKit
 import Python
 
+class MyThread: Thread {
+
+    override func main() { // Thread's starting point
+            var appModule = PyImport_ImportModule("main")
+    }
+}
+
 public class PythonEnginePlugin: NSObject, FlutterPlugin {
 
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -36,25 +43,16 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
       let ws = Py_DecodeLocale("Test", nil)
       PyMem_RawFree(ws)
 
-      var math = PyImport_ImportModule("math")
+      let math = PyImport_ImportModule("math")
       if (math == nil) {
         result(FlutterError.init(code: "NATIVE_ERR",
                                                  message: "Cannot load math module",
                                                  details: nil))
       }
 
-      var appModule = PyImport_ImportModule(appModuleName)
-      if (appModule == nil) {
-        result(FlutterError.init(code: "NATIVE_ERR",
-                                                 message: "Cannot load appModuleName module",
-                                                 details: nil))
-      }
-
-      print("hi!")
-      print("AAA\nBBBB")
-      NSLog("Before\nAfter")
-      NSLog("\nHello, World!")
-      
+    // run user pgoram in a thread
+      let thread = MyThread()
+      thread.start()
 
       result("OK")
     default:
