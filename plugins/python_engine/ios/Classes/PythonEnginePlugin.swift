@@ -10,7 +10,7 @@ class MyThread: Thread {
     override func main() { // Thread's starting point
         //var appModule = PyImport_ImportModule(self.appModuleName)
         let file = fopen(self.appModuleName, "r")
-        Py_Initialize()
+        //Py_Initialize()
         let dir = URL(fileURLWithPath: self.appModuleName).deletingLastPathComponent().path
         chdir(dir)
         PyRun_SimpleFile(file, self.appModuleName)
@@ -45,6 +45,9 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
             var preconfig: PyPreConfig = PyPreConfig()
             var config: PyConfig = PyConfig()
             
+            PyPreConfig_InitPythonConfig(&preconfig)
+            PyConfig_InitPythonConfig(&config)
+            
             // Configure the Python interpreter:
             // Enforce UTF-8 encoding for stderr, stdout, file-system encoding and locale.
             // See https://docs.python.org/3/library/os.html#python-utf-8-mode.
@@ -55,10 +58,7 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
             // after it has been signed.
             config.write_bytecode = 0
             // Isolated apps need to set the full PYTHONPATH manually.
-            config.module_search_paths_set = 1
-            
-            PyPreConfig_InitPythonConfig(&preconfig)
-            PyConfig_InitPythonConfig(&config)
+            //config.module_search_paths_set = 1
             
             Py_InitializeFromConfig(&config)
             

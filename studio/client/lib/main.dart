@@ -7,10 +7,6 @@ import 'utils.dart';
 
 void main() async {
   await setupDesktop();
-  // runApp(const FletApp(
-  //   pageUrl: "http://Feodors-MacBook-Pro.local:8550",
-  //   assetsDir: "",
-  // ));
   runApp(const MyApp());
 }
 
@@ -22,7 +18,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _runResult = 'Unknown';
   final _pythonEnginePlugin = PythonEngine();
 
   @override
@@ -37,28 +32,22 @@ class _MyAppState extends State<MyApp> {
         await extractZipArchive("assets/python-app/app.zip", "python-app");
     debugPrint("PYTHON APP PATH: $appPath");
 
-    String runResult;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      runResult = await _pythonEnginePlugin.runPython(appPath, "main") ??
+      await _pythonEnginePlugin.runPython(appPath, "main") ??
           'Unknown run python result';
     } on PlatformException catch (e) {
-      runResult = 'Failed to run Python: ${e.message}';
+      debugPrint('Failed to run Python: ${e.message}');
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _runResult = runResult;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // TODO
+    // get getTemporaryDirectory()
+    // create UDS path
+
     return const FletApp(
       pageUrl: "http://192.168.1.243:8550/",
       assetsDir: "",
