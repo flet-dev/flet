@@ -216,10 +216,7 @@ class PageDesignLanguage(Enum):
     ADAPTIVE = "adaptive"
 
 
-ThemeModeString = Literal[None, "system", "light", "dark"]
-
-
-class ThemeMode(Enum):
+class ThemeMode(StrEnum):
     SYSTEM = "system"
     LIGHT = "light"
     DARK = "dark"

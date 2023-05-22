@@ -37,12 +37,13 @@ from flet_core.types import (
     PageDesignString,
     ScrollMode,
     ThemeMode,
-    ThemeModeString,
+    get_valid_enum,
 )
 from flet_core.utils import is_asyncio, is_coroutine
 from flet_core.view import View
 
 logger = logging.getLogger(flet_core.__name__)
+_ThemeModeDefault = ThemeMode.SYSTEM
 
 
 try:
@@ -114,7 +115,7 @@ class Page(Control):
         self.__offstage = Offstage()
         self.__theme = None
         self.__dark_theme = None
-        self.__theme_mode = ThemeMode.SYSTEM  # Default Theme Mode
+        self.__theme_mode = _ThemeModeDefault
         self.__pubsub = PubSub(conn.pubsubhub, session_id)
         self.__client_storage = ClientStorage(self)
         self.__session_storage = SessionStorage(self)
@@ -1320,19 +1321,13 @@ class Page(Control):
 
     # theme_mode
     @property
-    def theme_mode(self) -> Optional[ThemeMode]:
+    def theme_mode(self) -> ThemeMode:
         return self.__theme_mode
 
     @theme_mode.setter
-    def theme_mode(self, value: Optional[ThemeMode]):
-        self.__theme_mode = value
-        if isinstance(value, ThemeMode):
-            self._set_attr("themeMode", value.value)
-        else:
-            self.__set_theme_mode(value)
-
-    def __set_theme_mode(self, value: ThemeModeString):
-        self._set_attr("themeMode", value)
+    def theme_mode(self, value: ThemeMode):
+        self.__theme_mode = get_valid_enum(ThemeMode, value, _ThemeModeDefault)
+        self._set_attr("themeMode", self.__theme_mode.value)
 
     # theme
     @property
