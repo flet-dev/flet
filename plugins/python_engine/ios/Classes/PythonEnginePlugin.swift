@@ -13,10 +13,17 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
     case "getPlatformVersion":
+      result("iOS 1.0.0")
+    case "runPython":
+      let args: [String: Any] = call.arguments as? [String: Any] ?? [:]
+
       guard let stdLibPath = Bundle(for: type(of: self)).path(forResource: "python-stdlib", ofType: nil) else { return }
       guard let libDynloadPath = Bundle(for: type(of: self)).path(forResource: "python-stdlib/lib-dynload", ofType: nil) else { return }
+      let modulesPath = args["modulesPath"] as! String
+      let appModuleName = args["appModuleName"] as! String
+
       setenv("PYTHONHOME", stdLibPath, 1)
-      setenv("PYTHONPATH", "\(stdLibPath):\(libDynloadPath)", 1)
+      setenv("PYTHONPATH", "\(modulesPath):\(stdLibPath):\(libDynloadPath)", 1)
 
       var preconfig: PyPreConfig = PyPreConfig()
       var config: PyConfig = PyConfig()
@@ -27,12 +34,19 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
       Py_Initialize()
 
       let ws = Py_DecodeLocale("Test", nil)
-        PyMem_RawFree(ws)
+      PyMem_RawFree(ws)
 
       var math = PyImport_ImportModule("math")
       if (math == nil) {
         result(FlutterError.init(code: "NATIVE_ERR",
                                                  message: "Cannot load math module",
+                                                 details: nil))
+      }
+
+      var appModule = PyImport_ImportModule(appModuleName)
+      if (appModule == nil) {
+        result(FlutterError.init(code: "NATIVE_ERR",
+                                                 message: "Cannot load appModuleName module",
                                                  details: nil))
       }
 
@@ -42,7 +56,7 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
       NSLog("\nHello, World!")
       
 
-      result("iOS 123" + stdLibPath)
+      result("OK")
     default:
       result(FlutterMethodNotImplemented)
     }

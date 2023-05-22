@@ -1,15 +1,20 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:python_engine/python_engine.dart';
-import 'package:python_engine/python_engine_platform_interface.dart';
-import 'package:python_engine/python_engine_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:python_engine/python_engine.dart';
+import 'package:python_engine/python_engine_method_channel.dart';
+import 'package:python_engine/python_engine_platform_interface.dart';
 
 class MockPythonEnginePlatform
     with MockPlatformInterfaceMixin
     implements PythonEnginePlatform {
-
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
+
+  @override
+  Future<String?> runPython(String modulesPath, String appModuleName) {
+    // TODO: implement runPython
+    throw UnimplementedError();
+  }
 }
 
 void main() {
