@@ -102,10 +102,12 @@ run again and now you instantly get a web app:
 
 ## Sample apps in Python
 
-* [Greeter](https://github.com/flet-dev/examples/blob/main/python/apps/greeter/greeter.py)
-* [Counter](https://github.com/flet-dev/examples/blob/main/python/apps/counter/counter.py)
-* [To-Do](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py)
-* [Icons Browser](https://github.com/flet-dev/examples/blob/main/python/apps/icons-browser/main.py) ([Online Demo](https://flet-icons-browser.fly.dev/))
+* [Greeter](https://github.com/flet-dev/examples/blob/main/python/apps/greeter/greeter.py) ([Online Demo](https://gallery.flet.dev/greeter/))
+* [Counter](https://github.com/flet-dev/examples/blob/main/python/apps/counter/counter.py) ([Online Demo](https://gallery.flet.dev/counter/))
+* [To-Do](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py) ([Online Demo](https://gallery.flet.dev/todo/))
+* [Icons Browser](https://github.com/flet-dev/examples/blob/main/python/apps/icons-browser/main.py) ([Online Demo](https://gallery.flet.dev/icons-browser/))
+
+More demo applications can be found in the [gallery](https://flet.dev/gallery/).
 
 ## Community
 
