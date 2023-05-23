@@ -26,8 +26,18 @@ A new Flutter plugin project.
   }
   s.swift_version = '5.0'
 
+  python_framework = 'dist/frameworks/Python.xcframework'
+  s.prepare_command = <<-CMD
+    mkdir -p #{python_framework}
+    cp -R pod_templates/Python.xcframework/* #{python_framework}
+    cp dist/lib/libpython3.a #{python_framework}/ios-arm64
+    cp dist/lib/libpython3.a #{python_framework}/ios-arm64_x86_64-simulator
+    cp -R dist/root/python3/include/python3.10/* #{python_framework}/ios-arm64/Headers
+    cp -R dist/root/python3/include/python3.10/* #{python_framework}/ios-arm64_x86_64-simulator/Headers
+CMD
+
   s.libraries = 'z', 'bz2', 'c++', 'sqlite3'
   s.vendored_libraries = 'dist/lib/*.a'
-  s.vendored_frameworks = 'dist/frameworks/Python.xcframework'
+  s.vendored_frameworks = python_framework
   s.resource = ['dist/root/python3/lib']
 end
