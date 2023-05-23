@@ -36,6 +36,7 @@ flutter:
     platforms:
       ios:
         pluginClass: PythonEnginePlugin
+        ffiPlugin: true
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

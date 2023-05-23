@@ -13,22 +13,21 @@ A new Flutter plugin project.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  #s.static_framework = true
+  s.source_files = ['Classes/**/*']
   s.dependency 'Flutter'
-  s.platform = :ios, '12.0'
+  s.platform = :ios, '11.0'
 
   # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
+  s.pod_target_xcconfig = {
+    'DEFINES_MODULE' => 'YES',
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
+    'OTHER_LDFLAGS' => '-ObjC -all_load -lc++'
+  }
   s.swift_version = '5.0'
 
-  s.prepare_command = <<-CMD
-    PYTHON_DIST_FILENAME="Python-3.11-iOS-support.b1.tar.gz"
-    curl -sLO https://github.com/beeware/Python-Apple-support/releases/download/3.11-b1/$PYTHON_DIST_FILENAME
-    tar -zxvf $PYTHON_DIST_FILENAME -C Frameworks
-    cp module.modulemap Frameworks/Python.xcframework/ios-arm64/Headers
-    cp module.modulemap Frameworks/Python.xcframework/ios-arm64_x86_64-simulator/Headers
-    rm $PYTHON_DIST_FILENAME
-CMD
-  s.vendored_frameworks = 'Frameworks/Python.xcframework'
-  s.resource = ['Frameworks/python-stdlib', 'Frameworks/platform-site']
+  s.libraries = 'z', 'bz2', 'c++', 'sqlite3'
+  s.vendored_libraries = 'dist/lib/*.a'
+  s.vendored_frameworks = 'dist/frameworks/Python.xcframework'
+  s.resource = ['dist/root/python3/lib']
 end
