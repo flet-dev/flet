@@ -1,11 +1,16 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:python_engine/python_engine.dart';
 
 import 'utils.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var tmpDir = await getTemporaryDirectory();
+  debugPrint("TEMP DIR IN DART: ${tmpDir.path}");
+
   await setupDesktop();
   runApp(const MyApp());
 }
