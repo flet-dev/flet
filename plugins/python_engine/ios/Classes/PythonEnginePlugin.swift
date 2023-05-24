@@ -7,15 +7,20 @@ class MyThread: Thread {
     init(appModuleName: String) {
         self.appModuleName = appModuleName
     }
-    override func main() { // Thread's starting point
-        //var appModule = PyImport_ImportModule(self.appModuleName)
+    
+    // Thread's starting point
+    override func main() {
+        Py_Initialize();
+        
         let file = fopen(self.appModuleName, "r")
-        //Py_Initialize()
         let dir = URL(fileURLWithPath: self.appModuleName).deletingLastPathComponent().path
         chdir(dir)
+        let gilCheck = PyGILState_Check()
+        print("GIL CHECK: \(gilCheck)")
         PyRun_SimpleFile(file, self.appModuleName)
-        Py_Finalize()
         fclose(file)
+        
+        Py_Finalize()
     }
 }
 
@@ -48,15 +53,13 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
             
             setenv("PYTHONHOME", resourcePath, 1)
             setenv("PYTHONPATH", "\(modulesPath)/__pypackages__:\(resourcePath):\(resourcePath)/lib/python3.10:\(resourcePath)/lib/python3.10/site-packages", 1)
-
-            Py_Initialize();
             
-            let math = PyImport_ImportModule("math")
-            if (math == nil) {
-                result(FlutterError.init(code: "NATIVE_ERR",
-                                         message: "Cannot load math module",
-                                         details: nil))
-            }
+//            let math = PyImport_ImportModule("math")
+//            if (math == nil) {
+//                result(FlutterError.init(code: "NATIVE_ERR",
+//                                         message: "Cannot load math module",
+//                                         details: nil))
+//            }
             
             // run user pgoram in a thread
             let thread = MyThread(appModuleName: modulesPath + "/" + appModuleName + ".py")

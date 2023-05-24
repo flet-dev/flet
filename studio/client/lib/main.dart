@@ -49,12 +49,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO
-    // get getTemporaryDirectory()
-    // create UDS path
-
     return const FletApp(
-      pageUrl: "http://192.168.1.243:8550/",
+      pageUrl: "http://Feodors-MacBook-Pro.local:8550/",
       assetsDir: "",
     );
   }
