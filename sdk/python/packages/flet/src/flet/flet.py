@@ -28,6 +28,7 @@ from flet.utils import (
     is_linux,
     is_linux_server,
     is_macos,
+    is_mobile,
     is_windows,
     open_in_browser,
     safe_tar_extractall,
@@ -153,6 +154,7 @@ def __app_sync(
     if (
         (view == FLET_APP or view == FLET_APP_HIDDEN or view == FLET_APP_WEB)
         and not is_linux_server()
+        and not is_mobile()
         and url_prefix is None
     ):
         fvp, pid_file = open_flet_view(
@@ -229,6 +231,7 @@ async def app_async(
     if (
         (view == FLET_APP or view == FLET_APP_HIDDEN or view == FLET_APP_WEB)
         and not is_linux_server()
+        and not is_mobile()
         and url_prefix is None
     ):
         fvp, pid_file = await open_flet_view_async(
@@ -283,7 +286,10 @@ def __connect_internal_sync(
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
-    is_socket_server = server is None and (view == FLET_APP or view == FLET_APP_HIDDEN)
+    is_socket_server = server is None and (
+        is_mobile() or view == FLET_APP or view == FLET_APP_HIDDEN
+    )
+
     if not is_socket_server:
         server = __start_flet_server(
             host,
@@ -361,7 +367,9 @@ async def __connect_internal_async(
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
-    is_socket_server = server is None and (view == FLET_APP or view == FLET_APP_HIDDEN)
+    is_socket_server = server is None and (
+        is_mobile() or view == FLET_APP or view == FLET_APP_HIDDEN
+    )
     if not is_socket_server:
         server = __start_flet_server(
             host,

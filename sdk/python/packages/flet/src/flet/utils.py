@@ -1,23 +1,38 @@
 import math
 import os
-import platform
 import socket
 import sys
 import unicodedata
-import webbrowser
 from pathlib import Path
 
 
+def is_ios():
+    return os.getenv("FLET_PLATFORM") == "iOS"
+
+
+def is_android():
+    return os.getenv("FLET_PLATFORM") == "Android"
+
+
+def is_mobile():
+    return is_ios() or is_android()
+
+
+if not is_mobile():
+    import platform
+    import webbrowser
+
+
 def is_windows():
-    return platform.system() == "Windows"
+    return not is_mobile() and platform.system() == "Windows"
 
 
 def is_linux():
-    return platform.system() == "Linux"
+    return not is_mobile() and platform.system() == "Linux"
 
 
 def is_linux_server():
-    if platform.system() == "Linux":
+    if not is_mobile() and platform.system() == "Linux":
         # check if it's WSL
         p = "/proc/version"
         if os.path.exists(p):
@@ -29,11 +44,11 @@ def is_linux_server():
 
 
 def is_macos():
-    return platform.system() == "Darwin"
+    return not is_mobile() and platform.system() == "Darwin"
 
 
 def get_platform():
-    p = platform.system()
+    p = platform.system() if not is_mobile() else ""
     if is_windows():
         return "windows"
     elif p == "Linux":
@@ -45,7 +60,7 @@ def get_platform():
 
 
 def get_arch():
-    a = platform.machine().lower()
+    a = platform.machine().lower() if not is_mobile() else ""
     if a == "x86_64" or a == "amd64":
         return "amd64"
     elif a == "arm64" or a == "aarch64":
@@ -57,7 +72,8 @@ def get_arch():
 
 
 def open_in_browser(url):
-    webbrowser.open(url)
+    if not is_mobile():
+        webbrowser.open(url)
 
 
 # https://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
@@ -79,7 +95,6 @@ def which(program, exclude_exe=None):
 
 
 def is_within_directory(directory, target):
-
     abs_directory = os.path.abspath(directory)
     abs_target = os.path.abspath(target)
 
@@ -89,7 +104,6 @@ def is_within_directory(directory, target):
 
 
 def safe_tar_extractall(tar, path=".", members=None, *, numeric_owner=False):
-
     for member in tar.getmembers():
         member_path = os.path.join(path, member.name)
         if not is_within_directory(path, member_path):

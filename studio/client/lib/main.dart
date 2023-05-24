@@ -22,7 +22,7 @@ void main() async {
 
   await setupDesktop();
   runApp(const FletApp(
-    pageUrl: "http://Feodors-MacBook-Pro.local:8550/",
+    pageUrl: "flet.sock",
     assetsDir: "",
   ));
 }

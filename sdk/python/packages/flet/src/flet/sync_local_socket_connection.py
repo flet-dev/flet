@@ -55,6 +55,8 @@ class SyncLocalSocketConnection(LocalConnection):
                 self.__uds_path = str(
                     Path(tempfile.gettempdir()).joinpath(random_string(10))
                 )
+            if os.path.exists(self.__uds_path):
+                os.remove(self.__uds_path)
             self.page_url = self.__uds_path
             self.__sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             logger.info(f"Starting up UDS server on {self.__uds_path}")

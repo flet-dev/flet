@@ -45,11 +45,14 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
             let modulesPath = args["modulesPath"] as! String
             let appModuleName = args["appModuleName"] as! String
 
-            setenv("PYTHONOPTIMIZE", "2", 1);
-            setenv("PYTHONDONTWRITEBYTECODE", "1", 1);
-            setenv("PYTHONNOUSERSITE", "1", 1);
-            setenv("PYTHONUNBUFFERED", "1", 1);
-            setenv("LC_CTYPE", "UTF-8", 1);
+            setenv("PYTHONOPTIMIZE", "2", 1)
+            setenv("PYTHONDONTWRITEBYTECODE", "1", 1)
+            setenv("PYTHONNOUSERSITE", "1", 1)
+            setenv("PYTHONUNBUFFERED", "1", 1)
+            setenv("LC_CTYPE", "UTF-8", 1)
+            
+            setenv("FLET_PLATFORM", "iOS", 1)
+            setenv("FLET_SERVER_UDS_PATH", "flet.sock", 1)
             
             setenv("PYTHONHOME", resourcePath, 1)
             setenv("PYTHONPATH", "\(modulesPath)/__pypackages__:\(resourcePath):\(resourcePath)/lib/python3.10:\(resourcePath)/lib/python3.10/site-packages", 1)
