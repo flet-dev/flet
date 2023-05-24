@@ -1,7 +1,7 @@
-import 'flet_server_protocol.dart';
 import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import 'flet_server_protocol.dart';
 import 'utils/uri.dart';
 
 class FletWebSocketServerProtocol implements FletServerProtocol {
@@ -18,14 +18,20 @@ class FletWebSocketServerProtocol implements FletServerProtocol {
   }
 
   @override
-  connect() async {
+  Future connect() async {
     debugPrint("Connecting to WebSocket server $_wsUrl...");
-    _channel = WebSocketChannel.connect(Uri.parse(_wsUrl));
+    try {
+      // todo
+      _channel = WebSocketChannel.connect(Uri.parse(_wsUrl));
+    } catch (e) {
+      throw Exception('WebSocket connect error: $e');
+    }
     _channel!.stream.listen(_onMessage, onDone: () async {
       debugPrint("WebSocket stream closed");
       onDisconnect();
     }, onError: (error) async {
-      debugPrint("WebSocket stream error $error");
+      var socketError = error as WebSocketChannelException;
+      debugPrint("WebSocket stream error: ${socketError.message}");
     });
   }
 
