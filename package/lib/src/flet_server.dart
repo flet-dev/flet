@@ -64,8 +64,9 @@ class FletServer {
       return;
     }
     _store.dispatch(PageReconnectingAction());
-    debugPrint("Reconnect in ${_store.state.reconnectingTimeout} seconds");
-    Future.delayed(Duration(seconds: _store.state.reconnectingTimeout))
+    debugPrint(
+        "Reconnect in ${_store.state.reconnectingTimeoutMs} milliseconds");
+    Future.delayed(Duration(milliseconds: _store.state.reconnectingTimeoutMs))
         .then((value) async {
       await connect(address: _address);
     });

@@ -32,3 +32,7 @@ Uri getBaseUri(Uri pageUri) {
 bool isLocalhost(Uri uri) {
   return uri.host == "localhost" || uri.host == "127.0.0.1";
 }
+
+bool isUdsPath(Uri uri) {
+  return !uri.hasScheme;
+}

@@ -13,12 +13,9 @@ class MyThread: Thread {
         Py_Initialize();
         
         let file = fopen(self.appModuleName, "r")
-        let dir = URL(fileURLWithPath: self.appModuleName).deletingLastPathComponent().path
-        chdir(dir)
-        let gilCheck = PyGILState_Check()
-        print("GIL CHECK: \(gilCheck)")
-        PyRun_SimpleFile(file, self.appModuleName)
-        fclose(file)
+        //let dir = URL(fileURLWithPath: self.appModuleName).deletingLastPathComponent().path
+        //chdir(dir)
+        PyRun_SimpleFileEx(file, self.appModuleName, 1)
         
         Py_Finalize()
     }
@@ -38,12 +35,13 @@ public class PythonEnginePlugin: NSObject, FlutterPlugin {
             result("iOS 1.0.0")
         case "runPython":
             let args: [String: Any] = call.arguments as? [String: Any] ?? [:]
-
-            print("INSIDE runPython() of plugin")
-            
-            guard let resourcePath = Bundle(for: type(of: self)).resourcePath else { return }
             let modulesPath = args["modulesPath"] as! String
             let appModuleName = args["appModuleName"] as! String
+            
+            print("INSIDE runPython() of plugin")
+            
+            // bundle root path
+            guard let resourcePath = Bundle(for: type(of: self)).resourcePath else { return }
 
             setenv("PYTHONOPTIMIZE", "2", 1)
             setenv("PYTHONDONTWRITEBYTECODE", "1", 1)

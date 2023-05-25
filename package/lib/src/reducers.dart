@@ -144,7 +144,7 @@ AppState appReducer(AppState state, dynamic action) {
       // error or inactive app
       return state.copyWith(
           isLoading: action.payload.appInactive,
-          reconnectingTimeout: 0,
+          reconnectingTimeoutMs: 0,
           error: action.payload.error);
     } else {
       final sessionId = action.payload.session!.id;
@@ -155,7 +155,7 @@ AppState appReducer(AppState state, dynamic action) {
       // connected to the session
       return state.copyWith(
           isLoading: false,
-          reconnectingTimeout: 0,
+          reconnectingTimeoutMs: 0,
           sessionId: sessionId,
           error: "",
           controls: action.payload.session!.controls);
@@ -166,11 +166,13 @@ AppState appReducer(AppState state, dynamic action) {
     //
     return state.copyWith(
         isLoading: true,
-        error: "Please wait while the application is re-connecting...",
-        reconnectingTimeout:
-            state.reconnectingTimeout == 0 || isLocalhost(state.pageUri!)
-                ? 1
-                : state.reconnectingTimeout * 2);
+        error: !isUdsPath(state.pageUri!) ? "Loading..." : "",
+        reconnectingTimeoutMs:
+            state.reconnectingTimeoutMs == 0 || isUdsPath(state.pageUri!)
+                ? 100
+                : isLocalhost(state.pageUri!)
+                    ? 1000
+                    : state.reconnectingTimeoutMs * 2);
   } else if (action is AppBecomeActiveAction) {
     //
     // app become active
