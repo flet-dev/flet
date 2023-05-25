@@ -1,4 +1,5 @@
 """Provide the current Flet version."""
 
-# this value will be replaced by CI
-version = ""
+import flet_core.version
+
+version = flet_core.version.version
