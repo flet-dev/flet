@@ -7,8 +7,11 @@ import 'package:path_provider/path_provider.dart';
 
 Future<String> extractZipArchive(String assetPath, String destDirName) async {
   final documentsDir = await getApplicationDocumentsDirectory();
-  final tempDir =
-      await Directory(p.join(documentsDir.path, destDirName)).create();
+  final tempDir = Directory(p.join(documentsDir.path, destDirName));
+  if (await tempDir.exists()) {
+    await tempDir.delete(recursive: true);
+  }
+  await tempDir.create();
   final bytes = await rootBundle.load(assetPath);
   final archive = ZipDecoder().decodeBytes(bytes.buffer.asUint8List());
   for (final file in archive) {

@@ -55,6 +55,8 @@ class AsyncLocalSocketConnection(LocalConnection):
                 self.__uds_path = str(
                     Path(tempfile.gettempdir()).joinpath(random_string(10))
                 )
+            if os.path.exists(self.__uds_path):
+                os.remove(self.__uds_path)
             self.page_url = self.__uds_path
             logger.info(f"Starting up UDS server on {self.__uds_path}")
             server = await asyncio.start_unix_server(
