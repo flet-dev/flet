@@ -35,6 +35,9 @@ A new Flutter plugin project.
     cp dist/lib/libpython3.a #{python_framework}/ios-arm64_x86_64-simulator
     cp -R dist/root/python3/include/python3.10/* #{python_framework}/ios-arm64/Headers
     cp -R dist/root/python3/include/python3.10/* #{python_framework}/ios-arm64_x86_64-simulator/Headers
+
+    # fix import subprocess, asyncio
+    cp -R pod_templates/site-packages/* dist/root/python3/lib/python3.10/site-packages
 CMD
 
   s.libraries = 'z', 'bz2', 'c++', 'sqlite3'
