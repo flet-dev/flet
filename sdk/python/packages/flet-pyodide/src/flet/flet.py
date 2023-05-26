@@ -8,11 +8,6 @@ from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.utils import is_coroutine
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
 FLET_APP_HIDDEN = "flet_app_hidden"
