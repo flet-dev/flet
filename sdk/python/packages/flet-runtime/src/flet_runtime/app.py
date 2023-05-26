@@ -12,13 +12,14 @@ import zipfile
 from pathlib import Path
 from typing import Optional
 
-import flet
-from flet import version
-from flet.async_local_socket_connection import AsyncLocalSocketConnection
-from flet.async_websocket_connection import AsyncWebSocketConnection
-from flet.sync_local_socket_connection import SyncLocalSocketConnection
-from flet.sync_websocket_connection import SyncWebSocketConnection
-from flet.utils import (
+import flet_runtime
+from flet_core.event import Event
+from flet_core.page import Page
+from flet_core.utils import is_coroutine, random_string
+from flet_runtime import version
+from flet_runtime.async_local_socket_connection import AsyncLocalSocketConnection
+from flet_runtime.sync_local_socket_connection import SyncLocalSocketConnection
+from flet_runtime.utils import (
     get_arch,
     get_current_script_dir,
     get_free_tcp_port,
@@ -34,9 +35,19 @@ from flet.utils import (
     safe_tar_extractall,
     which,
 )
-from flet_core.event import Event
-from flet_core.page import Page
-from flet_core.utils import is_coroutine, random_string
+
+try:
+    from flet.async_websocket_connection import AsyncWebSocketConnection
+    from flet.sync_websocket_connection import SyncWebSocketConnection
+except ImportError:
+    from flet_core.connection import Connection
+
+    class AsyncWebSocketConnection(Connection):
+        pass
+
+    class SyncWebSocketConnection(Connection):
+        pass
+
 
 try:
     from typing import Literal
@@ -44,7 +55,7 @@ except ImportError:
     from typing_extensions import Literal
 
 
-logger = logging.getLogger(flet.__name__)
+logger = logging.getLogger(flet_runtime.__name__)
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
@@ -507,7 +518,7 @@ def __start_flet_server(
 
     args.append("--attached")
 
-    log_level = logging.getLogger(flet.__name__).getEffectiveLevel()
+    log_level = logging.getLogger(flet_runtime.__name__).getEffectiveLevel()
     if log_level == logging.CRITICAL:
         log_level = logging.FATAL
 

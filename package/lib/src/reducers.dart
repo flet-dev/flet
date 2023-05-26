@@ -169,7 +169,7 @@ AppState appReducer(AppState state, dynamic action) {
         error: !isUdsPath(state.pageUri!) ? "Loading..." : "",
         reconnectingTimeoutMs:
             state.reconnectingTimeoutMs == 0 || isUdsPath(state.pageUri!)
-                ? 100
+                ? 200
                 : isLocalhost(state.pageUri!)
                     ? 1000
                     : state.reconnectingTimeoutMs * 2);

@@ -2,12 +2,10 @@ import json
 from typing import List, Optional
 
 import httpx
-
-from flet.auth.group import Group
-from flet.auth.oauth_provider import OAuthProvider
-from flet.auth.user import User
-
-from flet.version import version
+from flet_runtime.auth.group import Group
+from flet_runtime.auth.oauth_provider import OAuthProvider
+from flet_runtime.auth.user import User
+from flet_runtime.version import version
 
 
 class GitHubOAuthProvider(OAuthProvider):

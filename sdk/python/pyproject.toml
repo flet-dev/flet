@@ -10,6 +10,7 @@ python = "<3.12,>=3.7"
 
 [tool.poetry.group.dev.dependencies]
 flet-core = {path = "packages/flet-core", develop = true}
+flet-runtime = {path = "packages/flet-runtime", develop = true}
 flet = {path = "packages/flet", develop = true}
 pytest = "^7.2.0"
 black = "^22.12.0"

@@ -1,4 +1,4 @@
-from flet.auth.oauth_provider import OAuthProvider
+from flet_runtime.auth.oauth_provider import OAuthProvider
 
 
 class GoogleOAuthProvider(OAuthProvider):

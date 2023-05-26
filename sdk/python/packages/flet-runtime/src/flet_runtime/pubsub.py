@@ -3,11 +3,11 @@ import logging
 import threading
 from typing import Any, Callable, Dict, Iterable
 
-import flet
+import flet_runtime
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.utils import is_asyncio
 
-logger = logging.getLogger(flet.__name__)
+logger = logging.getLogger(flet_runtime.__name__)
 
 
 class PubSubHub:

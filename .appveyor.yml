@@ -452,11 +452,17 @@ for:
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
           $vp = "packages/flet-core/src/flet/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
       - python3 patch_toml.py packages/flet/pyproject.toml $PYPI_VER
+      - python3 patch_toml.py packages/flet-runtime/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-core/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-pyodide/pyproject.toml $PYPI_VER
 
       # build "flet-core" package
       - pushd packages/flet-core
+      - poetry build
+      - popd
+
+      # build "flet-runtime" package
+      - pushd packages/flet-runtime
       - poetry build
       - popd
 
@@ -475,10 +481,11 @@ for:
       # publish package
       - sh: |
           if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-              twine upload packages/flet-core/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
+              twine upload packages/flet-core/dist/* packages/flet-runtime/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
           fi
 
     artifacts:
       - path: sdk/python/packages/flet-core/dist/*
+      - path: sdk/python/packages/flet-runtime/dist/*
       - path: sdk/python/packages/flet/dist/*
       - path: sdk/python/packages/flet-pyodide/dist/*

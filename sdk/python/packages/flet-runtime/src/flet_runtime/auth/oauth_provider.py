@@ -1,7 +1,7 @@
 from typing import Callable, List, Optional
 
-from flet.auth.group import Group
-from flet.auth.user import User
+from flet_runtime.auth.group import Group
+from flet_runtime.auth.user import User
 
 
 class OAuthProvider:

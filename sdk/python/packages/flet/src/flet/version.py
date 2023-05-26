@@ -7,8 +7,7 @@ from pathlib import Path
 
 import flet
 import flet_core.version
-
-from .utils import is_mobile, is_windows, which
+from flet_runtime.utils import is_mobile, is_windows, which
 
 version = flet_core.version.version
 
