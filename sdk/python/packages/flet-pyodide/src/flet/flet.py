@@ -8,11 +8,6 @@ from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.utils import is_coroutine
 
-WEB_BROWSER = "web_browser"
-FLET_APP = "flet_app"
-FLET_APP_HIDDEN = "flet_app_hidden"
-FLET_APP_WEB = "flet_app_web"
-
 logger = logging.getLogger(flet.__name__)
 
 

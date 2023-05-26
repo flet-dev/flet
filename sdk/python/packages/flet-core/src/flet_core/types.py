@@ -12,6 +12,24 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+WEB_BROWSER = "web_browser"
+FLET_APP = "flet_app"
+FLET_APP_WEB = "flet_app_web"
+FLET_APP_HIDDEN = "flet_app_hidden"
+
+
+class AppView(Enum):
+    WEB_BROWSER = "web_browser"
+    FLET_APP = "flet_app"
+    FLET_APP_WEB = "flet_app_web"
+    FLET_APP_HIDDEN = "flet_app_hidden"
+
+
+class WebRenderer(Enum):
+    AUTO = "auto"
+    HTML = "html"
+    CANVAS_KIT = "canvaskit"
+
 
 PaddingValue = Union[None, int, float, Padding]
 

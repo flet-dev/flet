@@ -13,6 +13,14 @@ from pathlib import Path
 from typing import Optional
 
 import flet_runtime
+from flet_core import (
+    FLET_APP,
+    FLET_APP_HIDDEN,
+    FLET_APP_WEB,
+    WEB_BROWSER,
+    AppView,
+    WebRenderer,
+)
 from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.utils import is_coroutine, random_string
@@ -49,22 +57,7 @@ except ImportError:
         pass
 
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
-
 logger = logging.getLogger(flet_runtime.__name__)
-
-WEB_BROWSER = "web_browser"
-FLET_APP = "flet_app"
-FLET_APP_WEB = "flet_app_web"
-FLET_APP_HIDDEN = "flet_app_hidden"
-
-AppViewer = Literal[None, "web_browser", "flet_app", "flet_app_web", "flet_app_hidden"]
-
-WebRenderer = Literal[None, "auto", "html", "canvaskit"]
 
 
 def app(
@@ -72,10 +65,10 @@ def app(
     name="",
     host=None,
     port=0,
-    view: AppViewer = FLET_APP,
+    view: Optional[AppView] = AppView.FLET_APP,
     assets_dir=None,
     upload_dir=None,
-    web_renderer="canvaskit",
+    web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
     route_url_strategy="path",
     auth_token=None,
@@ -117,20 +110,26 @@ def __app_sync(
     name="",
     host=None,
     port=0,
-    view: AppViewer = FLET_APP,
+    view: Optional[AppView] = AppView.FLET_APP,
     assets_dir=None,
     upload_dir=None,
-    web_renderer="canvaskit",
+    web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
     route_url_strategy="path",
     auth_token=None,
 ):
+    if isinstance(view, str):
+        view = AppView(view)
+
+    if isinstance(web_renderer, str):
+        web_renderer = WebRenderer(web_renderer)
+
     force_web_view = os.environ.get("FLET_FORCE_WEB_VIEW")
     assets_dir = __get_assets_dir_path(assets_dir)
 
     conn = __connect_internal_sync(
         page_name=name,
-        view=view if not force_web_view else WEB_BROWSER,
+        view=view if not force_web_view else AppView.WEB_BROWSER,
         host=host,
         port=port,
         auth_token=auth_token,
@@ -163,20 +162,24 @@ def __app_sync(
     pid_file = None
 
     if (
-        (view == FLET_APP or view == FLET_APP_HIDDEN or view == FLET_APP_WEB)
+        (
+            view == AppView.FLET_APP
+            or view == AppView.FLET_APP_HIDDEN
+            or view == AppView.FLET_APP_WEB
+        )
         and not is_linux_server()
         and not is_mobile()
         and url_prefix is None
     ):
         fvp, pid_file = open_flet_view(
-            conn.page_url, assets_dir, view == FLET_APP_HIDDEN
+            conn.page_url, assets_dir, view == AppView.FLET_APP_HIDDEN
         )
         try:
             fvp.wait()
         except Exception as e:
             pass
     else:
-        if view == WEB_BROWSER and url_prefix is None:
+        if view == AppView.WEB_BROWSER and url_prefix is None:
             open_in_browser(conn.page_url)
         try:
             while True:
@@ -194,20 +197,26 @@ async def app_async(
     name="",
     host=None,
     port=0,
-    view: AppViewer = FLET_APP,
+    view: Optional[AppView] = AppView.FLET_APP,
     assets_dir=None,
     upload_dir=None,
-    web_renderer="canvaskit",
+    web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
     route_url_strategy="path",
     auth_token=None,
 ):
+    if isinstance(view, str):
+        view = AppView(view)
+
+    if isinstance(web_renderer, str):
+        web_renderer = WebRenderer(web_renderer)
+
     force_web_view = os.environ.get("FLET_FORCE_WEB_VIEW")
     assets_dir = __get_assets_dir_path(assets_dir)
 
     conn = await __connect_internal_async(
         page_name=name,
-        view=view if not force_web_view else WEB_BROWSER,
+        view=view if not force_web_view else AppView.WEB_BROWSER,
         host=host,
         port=port,
         auth_token=auth_token,
@@ -240,20 +249,24 @@ async def app_async(
     pid_file = None
 
     if (
-        (view == FLET_APP or view == FLET_APP_HIDDEN or view == FLET_APP_WEB)
+        (
+            view == AppView.FLET_APP
+            or view == AppView.FLET_APP_HIDDEN
+            or view == AppView.FLET_APP_WEB
+        )
         and not is_linux_server()
         and not is_mobile()
         and url_prefix is None
     ):
         fvp, pid_file = await open_flet_view_async(
-            conn.page_url, assets_dir, view == FLET_APP_HIDDEN
+            conn.page_url, assets_dir, view == AppView.FLET_APP_HIDDEN
         )
         try:
             await fvp.wait()
         except Exception as e:
             pass
     else:
-        if view == WEB_BROWSER and url_prefix is None:
+        if view == AppView.WEB_BROWSER and url_prefix is None:
             open_in_browser(conn.page_url)
         try:
             await terminate.wait()
@@ -279,7 +292,7 @@ def close_flet_view(pid_file):
 
 def __connect_internal_sync(
     page_name,
-    view: AppViewer = None,
+    view: Optional[AppView] = None,
     host=None,
     port=0,
     server=None,
@@ -287,7 +300,7 @@ def __connect_internal_sync(
     session_handler=None,
     assets_dir=None,
     upload_dir=None,
-    web_renderer=None,
+    web_renderer: Optional[WebRenderer] = None,
     use_color_emoji=False,
     route_url_strategy=None,
 ):
@@ -298,7 +311,7 @@ def __connect_internal_sync(
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
     is_socket_server = server is None and (
-        is_mobile() or view == FLET_APP or view == FLET_APP_HIDDEN
+        is_mobile() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
     )
 
     if not is_socket_server:
@@ -360,7 +373,7 @@ def __connect_internal_sync(
 
 async def __connect_internal_async(
     page_name,
-    view: AppViewer = None,
+    view: Optional[AppView] = None,
     host=None,
     port=0,
     server=None,
@@ -368,7 +381,7 @@ async def __connect_internal_async(
     session_handler=None,
     assets_dir=None,
     upload_dir=None,
-    web_renderer=None,
+    web_renderer: Optional[WebRenderer] = None,
     use_color_emoji=False,
     route_url_strategy=None,
 ):
@@ -379,7 +392,7 @@ async def __connect_internal_async(
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
     is_socket_server = server is None and (
-        is_mobile() or view == FLET_APP or view == FLET_APP_HIDDEN
+        is_mobile() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
     )
     if not is_socket_server:
         server = __start_flet_server(
@@ -445,7 +458,7 @@ def __start_flet_server(
     port,
     assets_dir,
     upload_dir,
-    web_renderer,
+    web_renderer: Optional[WebRenderer],
     use_color_emoji,
     route_url_strategy,
 ):
@@ -488,9 +501,9 @@ def __start_flet_server(
         if host != "127.0.0.1":
             fletd_env["FLET_ALLOW_REMOTE_HOST_CLIENTS"] = "true"
 
-    if web_renderer and web_renderer not in ["auto"]:
-        logger.info(f"Web renderer configured: {web_renderer}")
-        fletd_env["FLET_WEB_RENDERER"] = web_renderer
+    if web_renderer and web_renderer not in [WebRenderer.AUTO]:
+        logger.info(f"Web renderer configured: {web_renderer.value}")
+        fletd_env["FLET_WEB_RENDERER"] = web_renderer.value
 
     logger.info(f"Use color emoji: {use_color_emoji}")
     fletd_env["FLET_USE_COLOR_EMOJI"] = str(use_color_emoji).lower()
