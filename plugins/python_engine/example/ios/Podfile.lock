@@ -2,12 +2,16 @@ PODS:
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
-  - python_engine (0.0.1):
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - python_engine (0.1.0):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - python_engine (from `.symlinks/plugins/python_engine/ios`)
 
 EXTERNAL SOURCES:
@@ -15,13 +19,16 @@ EXTERNAL SOURCES:
     :path: Flutter
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   python_engine:
     :path: ".symlinks/plugins/python_engine/ios"
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   integration_test: 13825b8a9334a850581300559b8839134b124670
-  python_engine: 8ea24213fa44a74416a73628ee38125ca5b51ac8
+  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
+  python_engine: 0bebb331783f0be2da65597497303eb2736952fa
 
 PODFILE CHECKSUM: 7be2f5f74864d463a8ad433546ed1de7e0f29aef
 

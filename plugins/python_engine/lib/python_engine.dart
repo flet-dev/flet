@@ -5,7 +5,9 @@ class PythonEngine {
     return PythonEnginePlatform.instance.getPlatformVersion();
   }
 
-  Future<String?> runPython(String modulesPath, String appModuleName) {
-    return PythonEnginePlatform.instance.runPython(modulesPath, appModuleName);
+  Future<String?> runPython(String appPath,
+      {List<String>? modulePaths, Map<String, String>? environmentVariables}) {
+    return PythonEnginePlatform.instance.runPython(appPath,
+        modulePaths: modulePaths, environmentVariables: environmentVariables);
   }
 }

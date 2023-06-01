@@ -27,7 +27,8 @@ abstract class PythonEnginePlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<String?> runPython(String modulesPath, String appModuleName) {
+  Future<String?> runPython(String appPath,
+      {List<String>? modulePaths, Map<String, String>? environmentVariables}) {
     throw UnimplementedError('runPython() has not been implemented.');
   }
 }

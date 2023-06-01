@@ -17,10 +17,13 @@ class MethodChannelPythonEngine extends PythonEnginePlatform {
   }
 
   @override
-  Future<String?> runPython(String modulesPath, String appModuleName) async {
+  Future<String?> runPython(String appPath,
+      {List<String>? modulePaths,
+      Map<String, String>? environmentVariables}) async {
     final Map<String, dynamic> arguments = {
-      'modulesPath': modulesPath,
-      'appModuleName': appModuleName
+      'appPath': appPath,
+      'modulePaths': modulePaths,
+      'environmentVariables': environmentVariables
     };
     return await methodChannel.invokeMethod<String>('runPython', arguments);
   }
