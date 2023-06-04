@@ -23,10 +23,13 @@ T = TypeVar('T', bound=StrEnum)
 R = TypeVar('R')
 
 
-def get_valid_enum(enum: Type[T], value: Union[T, str, None], default: R) -> Union[T, R]:
-    if isinstance(value, enum):
+def get_valid_enum(cls_enum: Type[T], value: Union[T, str, None], default: R) -> Union[T, R]:
+    if isinstance(value, cls_enum):
         return value
-    return enum.__dict__['_value2member_map_'].get(value, default)
+    return cls_enum.__dict__['_value2member_map_'].get(value, default)
+
+def get_non_default_value(enum: StrEnum, default_enum: StrEnum, spare_value: R = None) -> Union[str, R]:
+    return spare_value if enum == default_enum else enum.value
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
