@@ -14,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     get_valid_enum,
+    get_non_default_value,
 )
 
 
@@ -173,7 +174,7 @@ class Image(ConstrainedControl):
     @fit.setter
     def fit(self, value: ImageFit):
         self.__fit = get_valid_enum(ImageFit, value, _ImageFitDefault)
-        self._set_attr("fit", self.__fit.value)
+        self._set_attr("fit", get_non_default_value(self.__fit, _ImageFitDefault))
 
     # repeat
     @property
@@ -183,7 +184,7 @@ class Image(ConstrainedControl):
     @repeat.setter
     def repeat(self, value: ImageRepeat):
         self.__repeat = get_valid_enum(ImageRepeat, value, _ImageRepeatDefault)
-        self._set_attr("repeat", self.__repeat.value)
+        self._set_attr("repeat", get_non_default_value(self.__repeat, _ImageRepeatDefault))
 
     # border_radius
     @property
@@ -211,7 +212,7 @@ class Image(ConstrainedControl):
     @color_blend_mode.setter
     def color_blend_mode(self, value: BlendMode):
         self.__blend_mode = get_valid_enum(BlendMode, value, _BlendModeDefault)
-        self._set_attr("colorBlendMode", self.__blend_mode.value)
+        self._set_attr("colorBlendMode", get_non_default_value(self.__blend_mode, _BlendModeDefault))
 
     # gapless_playback
     @property

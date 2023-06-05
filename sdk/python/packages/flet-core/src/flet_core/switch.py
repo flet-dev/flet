@@ -12,6 +12,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     get_valid_enum,
+    get_non_default_value,
 )
 
 
@@ -174,7 +175,7 @@ class Switch(ConstrainedControl):
     @label_position.setter
     def label_position(self, value: LabelPosition):
         self.__label_position = get_valid_enum(LabelPosition, value, _LabelPositionDefault)
-        self._set_attr("labelPosition", self.__label_position.value)
+        self._set_attr("labelPosition", get_non_default_value(self.__label_position, _LabelPositionDefault))
 
     # autofocus
     @property

@@ -6,7 +6,7 @@ from flet_core.animation import AnimationCurve
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
-from flet_core.types import ScrollMode, get_valid_enum
+from flet_core.types import ScrollMode, get_valid_enum, get_non_default_value
 
 
 class ScrollableControl(Control):
@@ -81,10 +81,7 @@ class ScrollableControl(Control):
     @scroll.setter
     def scroll(self, value: Optional[ScrollMode]):
         self.__scroll = get_valid_enum(ScrollMode, value, None)
-        self._set_attr(
-            "scroll",
-            self.__scroll if self.__scroll is None else self.__scroll.value,
-        )
+        self._set_attr("scroll", get_non_default_value(self.__scroll, None))
 
     # auto_scroll
     @property

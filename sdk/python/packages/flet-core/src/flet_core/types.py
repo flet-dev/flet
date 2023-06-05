@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, Tuple, Union, Type, TypeVar
+from typing import Dict, Tuple, Union, Type, TypeVar, Optional
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
@@ -28,8 +28,12 @@ def get_valid_enum(cls_enum: Type[T], value: Union[T, str, None], default: R) ->
         return value
     return cls_enum.__dict__['_value2member_map_'].get(value, default)
 
-def get_non_default_value(enum: StrEnum, default_enum: StrEnum, spare_value: R = None) -> Union[str, R]:
-    return spare_value if enum == default_enum else enum.value
+def get_non_default_value(
+        enum: Optional[StrEnum], default: Optional[StrEnum], spare_value: R = None,
+    ) -> Union[str, None, R]:
+    if enum == default:
+        return spare_value
+    return enum if enum is None else enum.value
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"

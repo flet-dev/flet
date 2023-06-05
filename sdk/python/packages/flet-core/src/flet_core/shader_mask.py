@@ -13,6 +13,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     get_valid_enum,
+    get_non_default_value,
 )
 
 
@@ -157,7 +158,7 @@ class ShaderMask(ConstrainedControl):
     @blend_mode.setter
     def blend_mode(self, value: BlendMode):
         self.__blend_mode = get_valid_enum(BlendMode, value, _BlendModeDefault)
-        self._set_attr("blendMode", self.__blend_mode.value)
+        self._set_attr("blendMode", get_non_default_value(self.__blend_mode, _BlendModeDefault))
 
     # shader
     @property

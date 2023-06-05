@@ -16,6 +16,7 @@ from flet_core.types import (
     ScaleValue,
     TextAlign,
     get_valid_enum,
+    get_non_default_value,
 )
 
 _TextAlignDefault = TextAlign.LEFT
@@ -317,7 +318,7 @@ class TextField(FormFieldControl):
     @text_align.setter
     def text_align(self, value: TextAlign):
         self.__text_align = get_valid_enum(TextAlign, value, _TextAlignDefault)
-        self._set_attr("textAlign", self.__text_align.value)
+        self._set_attr("textAlign", get_non_default_value(self.__text_align, _TextAlignDefault))
 
     # multiline
     @property

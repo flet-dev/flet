@@ -12,6 +12,7 @@ from flet_core.types import (
     PaddingValue,
     ScrollMode,
     get_valid_enum,
+    get_non_default_value,
 )
 
 
@@ -144,7 +145,9 @@ class View(ScrollableControl):
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__horizontal_alignment = get_valid_enum(CrossAxisAlignment, value, _CrossAxisAlignmentDefault)
-        self._set_attr("horizontalAlignment", self.__horizontal_alignment.value)
+        self._set_attr("horizontalAlignment", get_non_default_value(
+            self.__horizontal_alignment, _CrossAxisAlignmentDefault,
+        ))
 
     # vertical_alignment
     @property
@@ -156,7 +159,9 @@ class View(ScrollableControl):
         self.__vertical_alignment = get_valid_enum(
             MainAxisAlignment, value, _MainAxisAlignmentDefault,
         )
-        self._set_attr("verticalAlignment", self.__vertical_alignment.value)
+        self._set_attr("verticalAlignment", get_non_default_value(
+            self.__vertical_alignment, _MainAxisAlignmentDefault,
+        ))
 
     # spacing
     @property

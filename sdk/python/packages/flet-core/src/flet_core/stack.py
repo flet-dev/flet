@@ -11,6 +11,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     get_valid_enum,
+    get_non_default_value,
 )
 
 
@@ -155,4 +156,4 @@ class Stack(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: ClipBehavior):
         self.__clip_behavior = get_valid_enum(ClipBehavior, value, _ClipBehaviorDefault)
-        self._set_attr("clipBehavior", self.__clip_behavior.value)
+        self._set_attr("clipBehavior", get_non_default_value(self.__clip_behavior, _ClipBehaviorDefault))

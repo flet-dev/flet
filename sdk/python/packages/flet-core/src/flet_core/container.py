@@ -28,6 +28,7 @@ from flet_core.types import (
     ScaleValue,
     ThemeMode,
     get_valid_enum,
+    get_non_default_value,
 )
 
 
@@ -271,7 +272,7 @@ class Container(ConstrainedControl):
     @blend_mode.setter
     def blend_mode(self, value: BlendMode):
         self.__blend_mode = get_valid_enum(BlendMode, value, _BlendModeDefault)
-        self._set_attr("blendMode", self.__blend_mode.value)
+        self._set_attr("blendMode", get_non_default_value(self.__blend_mode, _BlendModeDefault))
 
     # blur
     @property
@@ -340,7 +341,7 @@ class Container(ConstrainedControl):
     @image_fit.setter
     def image_fit(self, value: ImageFit):
         self.__image_fit = get_valid_enum(ImageFit, value, _ImageFitDefault)
-        self._set_attr("imageFit", self.__image_fit.value)
+        self._set_attr("imageFit", get_non_default_value(self.__image_fit, _ImageFitDefault))
 
     # image_repeat
     @property
@@ -350,7 +351,7 @@ class Container(ConstrainedControl):
     @image_repeat.setter
     def image_repeat(self, value: ImageRepeat):
         self.__image_repeat = get_valid_enum(ImageRepeat, value, _ImageRepeatDefault)
-        self._set_attr("imageRepeat", self.__image_repeat.value)
+        self._set_attr("imageRepeat", get_non_default_value(self.__image_repeat, _ImageRepeatDefault))
 
     # image_opacity
     @property
@@ -388,7 +389,7 @@ class Container(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: ClipBehavior):
         self.__clip_behavior = get_valid_enum(ClipBehavior, value, _ClipBehaviorDefault)
-        self._set_attr("clipBehavior", self.__clip_behavior.value)
+        self._set_attr("clipBehavior", get_non_default_value(self.__clip_behavior, _ClipBehaviorDefault))
 
     # ink
     @property

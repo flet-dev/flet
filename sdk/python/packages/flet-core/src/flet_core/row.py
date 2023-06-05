@@ -14,6 +14,7 @@ from flet_core.types import (
     ScaleValue,
     ScrollMode,
     get_valid_enum,
+    get_non_default_value,
 )
 
 
@@ -181,7 +182,7 @@ class Row(ConstrainedControl, ScrollableControl):
     @alignment.setter
     def alignment(self, value: MainAxisAlignment):
         self.__alignment = get_valid_enum(MainAxisAlignment, value, _MainAxisAlignmentDefault)
-        self._set_attr("alignment", self.__alignment.value)
+        self._set_attr("alignment", get_non_default_value(self.__alignment, _MainAxisAlignmentDefault))
 
     # vertical_alignment
     @property
@@ -191,7 +192,9 @@ class Row(ConstrainedControl, ScrollableControl):
     @vertical_alignment.setter
     def vertical_alignment(self, value: CrossAxisAlignment):
         self.__vertical_alignment = get_valid_enum(CrossAxisAlignment, value, _CrossAxisAlignmentDefault)
-        self._set_attr("verticalAlignment", self.__vertical_alignment.value)
+        self._set_attr("verticalAlignment", get_non_default_value(
+            self.__vertical_alignment, _CrossAxisAlignmentDefault,
+        ))
 
     # spacing
     @property
