@@ -8,7 +8,6 @@ from flet_core.text_span import TextSpan
 from flet_core.types import (
     AnimationValue,
     FontWeight,
-    FontWeightString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -24,6 +23,7 @@ except ImportError:
     from typing_extensions import Literal
 
 TextOverflowString = Literal[None, "clip", "ellipsis", "fade", "visible"]
+_FontWeightDefault = FontWeight.NORMAL
 _TextAlignDefault = TextAlign.LEFT
 
 
@@ -137,7 +137,7 @@ class Text(ConstrainedControl):
         text_align: TextAlign = _TextAlignDefault,
         font_family: Optional[str] = None,
         size: OptionalNumber = None,
-        weight: Optional[FontWeight] = None,
+        weight: FontWeight = _FontWeightDefault,
         italic: Optional[bool] = None,
         style: Optional[TextThemeStyle] = None,
         max_lines: Optional[int] = None,
@@ -250,19 +250,13 @@ class Text(ConstrainedControl):
 
     # weight
     @property
-    def weight(self) -> Optional[FontWeight]:
+    def weight(self) -> FontWeight:
         return self.__weight
 
     @weight.setter
-    def weight(self, value: Optional[FontWeight]):
-        self.__weight = value
-        if isinstance(value, FontWeight):
-            self._set_attr("weight", value.value)
-        else:
-            self.__set_weight(value)
-
-    def __set_weight(self, value: FontWeightString):
-        self._set_attr("weight", value)
+    def weight(self, value: FontWeight):
+        self.__weight = get_valid_enum(FontWeight, value, _FontWeightDefault)
+        self._set_attr("weight", get_non_default_value(self.__weight, _FontWeightDefault))
 
     # style
     @property

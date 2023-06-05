@@ -67,23 +67,8 @@ OffsetValue = Union[None, Offset, Tuple[Union[float, int], Union[float, int]]]
 
 AnimationValue = Union[None, bool, int, Animation]
 
-FontWeightString = Literal[
-    None,
-    "normal",
-    "bold",
-    "w100",
-    "w200",
-    "w300",
-    "w400",
-    "w500",
-    "w600",
-    "w700",
-    "w800",
-    "w900",
-]
 
-
-class FontWeight(Enum):
+class FontWeight(StrEnum):
     NORMAL = "normal"
     BOLD = "bold"
     W_100 = "w100"
