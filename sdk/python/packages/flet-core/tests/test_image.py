@@ -43,7 +43,7 @@ def test_color_blend_mode_str():
 def test_repeat_enum():
     r = ft.Image()
     assert r.repeat == ft.ImageRepeat.NO_REPEAT
-    assert r._get_attr('repeat') == ft.ImageRepeat.NO_REPEAT.value
+    assert r._get_attr('repeat') is None
 
     r = ft.Image(repeat=ft.ImageRepeat.REPEAT)
     assert isinstance(r.repeat, ft.ImageRepeat)

@@ -79,11 +79,11 @@ def test_clip_behavior_enum():
     assert r.clip_behavior == ft.ClipBehavior.ANTI_ALIAS
     assert r._get_attr("clipBehavior") is None
 
-    r = ft.Container(clip_behavior=ft.ClipBehavior.ANTI_ALIAS)
+    r = ft.Container(clip_behavior=ft.ClipBehavior.HARD_EDGE)
     assert isinstance(r.clip_behavior, ft.ClipBehavior)
     assert isinstance(r._get_attr("clipBehavior"), str)
-    assert r.clip_behavior == ft.ClipBehavior.ANTI_ALIAS
-    assert r._get_attr("clipBehavior") == "antiAlias"
+    assert r.clip_behavior == ft.ClipBehavior.HARD_EDGE
+    assert r._get_attr("clipBehavior") == "hardEdge"
 
     r = ft.Container(clip_behavior="none")
     assert isinstance(r.clip_behavior, ft.ClipBehavior)
@@ -121,8 +121,8 @@ def test_image_fit_enum():
     assert r.image_fit == ft.ImageFit.FILL
     assert r._get_attr('imageFit') == 'fill'
 
-    r = ft.Container(image_fit='none')
+    r = ft.Container(image_fit='contain')
     assert isinstance(r.image_fit, ft.ImageFit)
     assert isinstance(r._get_attr('imageFit'), str)
-    assert r.image_fit == ft.ImageFit.NONE
-    assert r._get_attr('imageFit') == 'none'
+    assert r.image_fit == ft.ImageFit.CONTAIN
+    assert r._get_attr('imageFit') == 'contain'
