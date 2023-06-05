@@ -34,17 +34,17 @@ from flet_core.types import (
     MainAxisAlignment,
     PaddingValue,
     PageDesignLanguage,
-    PageDesignString,
     ScrollMode,
     ThemeMode,
     get_valid_enum,
+    get_non_default_value,
 )
 from flet_core.utils import is_asyncio, is_coroutine
 from flet_core.view import View
 
 logger = logging.getLogger(flet_core.__name__)
 _ThemeModeDefault = ThemeMode.SYSTEM
-
+_PageDesignLanguageDefault = None
 
 try:
     from flet.auth.authorization import Authorization
@@ -1142,14 +1142,10 @@ class Page(Control):
 
     @design.setter
     def design(self, value: Optional[PageDesignLanguage]):
-        self.__design = value
-        if isinstance(value, PageDesignLanguage):
-            self._set_attr("design", value.value)
-        else:
-            self.__set_design(value)
-
-    def __set_design(self, value: PageDesignString):
-        self._set_attr("design", value)
+        self.__design = get_valid_enum(PageDesignLanguage, value, _PageDesignLanguageDefault)
+        self._set_attr("design", get_non_default_value(
+            self.__design, _PageDesignLanguageDefault,
+        ))
 
     # fonts
     @property

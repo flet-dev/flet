@@ -212,10 +212,7 @@ class ImageRepeat(StrEnum):
     REPEAT_Y = "repeatY"
 
 
-PageDesignString = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
-
-
-class PageDesignLanguage(Enum):
+class PageDesignLanguage(StrEnum):
     MATERIAL = "material"
     CUPERTINO = "cupertino"
     FLUENT = "fluent"
