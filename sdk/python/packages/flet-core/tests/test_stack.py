@@ -11,7 +11,7 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=['stack'],
-            attrs={'clipbehavior': 'hardEdge'},
+            attrs={},
             commands=[],
         )
     ], 'Test failed'
@@ -20,7 +20,7 @@ def test_instance_no_attrs_set():
 def test_clip_behavior_enum():
     r = ft.Stack()
     assert r.clip_behavior == ft.ClipBehavior.HARD_EDGE
-    assert r._get_attr('clipBehavior') == ft.ClipBehavior.HARD_EDGE.value
+    assert r._get_attr('clipBehavior') is None
 
     r = ft.Stack(clip_behavior=ft.ClipBehavior.ANTI_ALIAS)
     assert isinstance(r.clip_behavior, ft.ClipBehavior)

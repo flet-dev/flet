@@ -11,30 +11,30 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=['textfield'],
-            attrs={'textalign': 'left'},
+            attrs={},
             commands=[],
         )
     ], 'Test failed'
 
 
 def test_text_align_enum():
-    r = ft.TextField(text_align=ft.TextAlign.LEFT)
+    r = ft.TextField(text_align=ft.TextAlign.RIGHT)
     assert isinstance(r.text_align, ft.TextAlign)
     assert isinstance(r._get_attr('textAlign'), str)
-    assert r.text_align == ft.TextAlign.LEFT
-    assert r._get_attr('textAlign') == ft.TextAlign.LEFT.value
+    assert r.text_align == ft.TextAlign.RIGHT
+    assert r._get_attr('textAlign') == ft.TextAlign.RIGHT.value
     cmd = r._build_add_commands()
-    assert cmd[0].attrs['textalign'] == 'left'
+    assert cmd[0].attrs['textalign'] == 'right'
 
 
 def test_text_align_str():
-    r = ft.TextField(text_align='left')
+    r = ft.TextField(text_align='center')
     assert isinstance(r.text_align, ft.TextAlign)
     assert isinstance(r._get_attr('textAlign'), str)
-    assert r.text_align == ft.TextAlign.LEFT
-    assert r._get_attr('textAlign') == ft.TextAlign.LEFT.value
+    assert r.text_align == ft.TextAlign.CENTER
+    assert r._get_attr('textAlign') == ft.TextAlign.CENTER.value
     cmd = r._build_add_commands()
-    assert cmd[0].attrs['textalign'] == 'left'
+    assert cmd[0].attrs['textalign'] == 'center'
 
 
 def test_keyboard_type_enum():

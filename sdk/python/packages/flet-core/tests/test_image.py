@@ -14,12 +14,7 @@ def test_image_add():
             indent=0,
             name=None,
             values=['image'],
-            attrs={
-                'colorblendmode': 'modulate',
-                'fit': 'none',
-                'repeat': 'noRepeat',
-                'src': 'https://www.w3schools.com/css/img_5terre.jpg',
-            },
+            attrs={'src': 'https://www.w3schools.com/css/img_5terre.jpg'},
             commands=[],
         )
     ], 'Test failed'
@@ -66,7 +61,7 @@ def test_repeat_enum():
 def test_fit_enum():
     r = ft.Image()
     assert r.fit == ft.ImageFit.NONE
-    assert r._get_attr('fit') == ft.ImageFit.NONE.value
+    assert r._get_attr('fit') is None
 
     r = ft.Image(fit=ft.ImageFit.FILL)
     assert isinstance(r.fit, ft.ImageFit)
@@ -74,8 +69,8 @@ def test_fit_enum():
     assert r.fit == ft.ImageFit.FILL
     assert r._get_attr('fit') == 'fill'
 
-    r = ft.Image(fit='none')
+    r = ft.Image(fit='contain')
     assert isinstance(r.fit, ft.ImageFit)
     assert isinstance(r._get_attr('fit'), str)
-    assert r.fit == ft.ImageFit.NONE
-    assert r._get_attr('fit') == 'none'
+    assert r.fit == ft.ImageFit.CONTAIN
+    assert r._get_attr('fit') == 'contain'

@@ -11,7 +11,7 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=['switch'],
-            attrs={'labelposition': 'right'},
+            attrs={},
             commands=[],
         )
     ], 'Test failed'

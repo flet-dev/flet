@@ -11,10 +11,7 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=['responsiverow'],
-            attrs={
-                'alignment': 'start',
-                'verticalalignment': 'start',
-            },
+            attrs={},
             commands=[],
         )
     ], 'Test failed'

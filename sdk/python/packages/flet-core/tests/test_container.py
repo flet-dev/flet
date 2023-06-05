@@ -11,12 +11,7 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=['container'],
-            attrs={
-                'blendmode': 'modulate',
-                'clipbehavior': 'antiAlias',
-                'imagefit': 'none',
-                'imagerepeat': 'noRepeat',
-            },
+            attrs={},
             commands=[],
         )
     ], 'Test failed'
@@ -82,7 +77,7 @@ def test_blend_mode_str():
 def test_clip_behavior_enum():
     r = ft.Container()
     assert r.clip_behavior == ft.ClipBehavior.ANTI_ALIAS
-    assert r._get_attr("clipBehavior") == ft.ClipBehavior.ANTI_ALIAS.value
+    assert r._get_attr("clipBehavior") is None
 
     r = ft.Container(clip_behavior=ft.ClipBehavior.ANTI_ALIAS)
     assert isinstance(r.clip_behavior, ft.ClipBehavior)
@@ -100,7 +95,7 @@ def test_clip_behavior_enum():
 def test_image_repeat_enum():
     r = ft.Container()
     assert r.image_repeat == ft.ImageRepeat.NO_REPEAT
-    assert r._get_attr("imageRepeat") == ft.ImageRepeat.NO_REPEAT.value
+    assert r._get_attr("imageRepeat") is None
 
     r = ft.Container(image_repeat=ft.ImageRepeat.REPEAT)
     assert isinstance(r.image_repeat, ft.ImageRepeat)
@@ -118,7 +113,7 @@ def test_image_repeat_enum():
 def test_image_fit_enum():
     r = ft.Container()
     assert r.image_fit == ft.ImageFit.NONE
-    assert r._get_attr('imageFit') == ft.ImageFit.NONE.value
+    assert r._get_attr('imageFit') is None
 
     r = ft.Container(image_fit=ft.ImageFit.FILL)
     assert isinstance(r.image_fit, ft.ImageFit)
