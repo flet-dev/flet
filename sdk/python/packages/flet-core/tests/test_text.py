@@ -67,14 +67,17 @@ def test_text_overflow_enum():
 
 def test_weight_enum():
     r = ft.Text()
-    assert r.weight is None
+    assert r.weight == ft.FontWeight.NORMAL
     assert r._get_attr('weight') is None
 
     r = ft.Text(weight=ft.FontWeight.BOLD)
     assert isinstance(r.weight, ft.FontWeight)
+    assert isinstance(r._get_attr('weight'), str)
     assert r.weight == ft.FontWeight.BOLD
     assert r._get_attr('weight') == 'bold'
 
     r = ft.Text(weight='w100')
-    assert isinstance(r.weight, str)
+    assert isinstance(r.weight, ft.FontWeight)
+    assert isinstance(r._get_attr('weight'), str)
+    assert r.weight == ft.FontWeight.W_100
     assert r._get_attr('weight') == 'w100'
