@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
-from flet_core.animation import AnimationCurve, AnimationCurveString
+from flet_core.animation import AnimationCurve
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -23,6 +23,7 @@ except ImportError:
 
 
 _AnimatedSwitcherTransitionDefault = AnimatedSwitcherTransition.FADE
+_AnimationCurveDefault = AnimationCurve.LINEAR
 
 
 class AnimatedSwitcher(ConstrainedControl):
@@ -190,35 +191,27 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # switch_in_curve
     @property
-    def switch_in_curve(self) -> Optional[AnimationCurve]:
+    def switch_in_curve(self) -> AnimationCurve:
         return self.__switch_in_curve
 
     @switch_in_curve.setter
-    def switch_in_curve(self, value: Optional[AnimationCurve]):
-        self.__switch_in_curve = value
-        if isinstance(value, AnimationCurve):
-            self._set_attr("switchInCurve", value.value)
-        else:
-            self.__set_switch_in_curve(value)
-
-    def __set_switch_in_curve(self, value: Optional[AnimationCurveString]):
-        self._set_attr("switchInCurve", value)
+    def switch_in_curve(self, value: AnimationCurve):
+        self.__switch_in_curve = get_valid_enum(AnimationCurve, value, _AnimationCurveDefault)
+        self._set_attr("switchInCurve", get_non_default_value(
+            self.__switch_in_curve, _AnimationCurveDefault,
+        ))
 
     # switch_out_curve
     @property
-    def switch_out_curve(self) -> Optional[AnimationCurve]:
+    def switch_out_curve(self) -> AnimationCurve:
         return self.__switch_out_curve
 
     @switch_out_curve.setter
-    def switch_out_curve(self, value: Optional[AnimationCurve]):
-        self.__switch_out_curve = value
-        if isinstance(value, AnimationCurve):
-            self._set_attr("switchOutCurve", value.value)
-        else:
-            self.__set_switch_out_curve(value)
-
-    def __set_switch_out_curve(self, value: Optional[AnimationCurveString]):
-        self._set_attr("switchOutCurve", value)
+    def switch_out_curve(self, value: AnimationCurve):
+        self.__switch_out_curve = get_valid_enum(AnimationCurve, value, _AnimationCurveDefault)
+        self._set_attr("switchOutCurve", get_non_default_value(
+            self.__switch_out_curve, _AnimationCurveDefault,
+        ))
 
     # transition
     @property
