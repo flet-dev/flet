@@ -7,10 +7,13 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    AnimatedSwitcherTransition,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    get_valid_enum,
+    get_non_default_value,
 )
 
 try:
@@ -18,13 +21,8 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-TransitionValueString = Literal["fade", "rotation", "scale"]
 
-
-class AnimatedSwitcherTransition(Enum):
-    FADE = "fade"
-    ROTATION = "rotation"
-    SCALE = "scale"
+_AnimatedSwitcherTransitionDefault = AnimatedSwitcherTransition.FADE
 
 
 class AnimatedSwitcher(ConstrainedControl):
@@ -224,16 +222,14 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # transition
     @property
-    def transition(self) -> Optional[AnimatedSwitcherTransition]:
+    def transition(self) -> AnimatedSwitcherTransition:
         return self.__transition
 
     @transition.setter
-    def transition(self, value: Optional[AnimatedSwitcherTransition]):
-        self.__transition = value
-        if isinstance(value, AnimatedSwitcherTransition):
-            self._set_attr("transition", value.value)
-        else:
-            self.__set_transition(value)
-
-    def __set_transition(self, value: Optional[TransitionValueString]):
-        self._set_attr("transition", value)
+    def transition(self, value: AnimatedSwitcherTransition):
+        self.__transition = get_valid_enum(
+            AnimatedSwitcherTransition, value, _AnimatedSwitcherTransitionDefault,
+        )
+        self._set_attr("transition", get_non_default_value(
+            self.__transition, _AnimatedSwitcherTransitionDefault,
+        ))

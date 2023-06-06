@@ -68,6 +68,12 @@ OffsetValue = Union[None, Offset, Tuple[Union[float, int], Union[float, int]]]
 AnimationValue = Union[None, bool, int, Animation]
 
 
+class AnimatedSwitcherTransition(StrEnum):
+    FADE = "fade"
+    ROTATION = "rotation"
+    SCALE = "scale"
+
+
 class FontWeight(StrEnum):
     NORMAL = "normal"
     BOLD = "bold"
