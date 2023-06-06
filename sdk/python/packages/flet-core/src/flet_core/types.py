@@ -82,7 +82,7 @@ class FontWeight(StrEnum):
     W_900 = "w900"
 
 
-class BoxShape(Enum):
+class BoxShape(StrEnum):
     RECTANGLE = "rectangle"
     CIRCLE = "circle"
 

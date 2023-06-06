@@ -16,6 +16,7 @@ from flet_core.types import (
 )
 
 
+_BoxShapeDefault = BoxShape.RECTANGLE
 _TextAlignDefault = TextAlign.LEFT
 
 
@@ -86,7 +87,7 @@ class Tooltip(Control):
         gradient: Optional[Gradient] = None,
         border: Optional[Border] = None,
         border_radius: BorderRadiusValue = None,
-        shape: Optional[BoxShape] = None,
+        shape: BoxShape = _BoxShapeDefault,
         message: Optional[str] = None,
         text_style: Optional[TextStyle] = None,
         text_align: TextAlign = _TextAlignDefault,
@@ -204,13 +205,13 @@ class Tooltip(Control):
 
     # shape
     @property
-    def shape(self):
+    def shape(self) -> BoxShape:
         return self.__shape
 
     @shape.setter
-    def shape(self, value: Optional[BoxShape]):
-        self.__shape = value
-        self._set_attr("shape", value.value if value is not None else None)
+    def shape(self, value: BoxShape):
+        self.__shape = get_valid_enum(BoxShape, value, _BoxShapeDefault)
+        self._set_attr("shape", get_non_default_value(self.__shape, _BoxShapeDefault))
 
     # message
     @property

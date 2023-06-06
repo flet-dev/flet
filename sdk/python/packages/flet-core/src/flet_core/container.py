@@ -33,6 +33,7 @@ from flet_core.types import (
 
 
 _BlendModeDefault = BlendMode.MODULATE
+_BoxShapeDefault = BoxShape.RECTANGLE
 _ClipBehaviorDefault = ClipBehavior.ANTI_ALIAS
 _ImageFitDefault = ImageFit.NONE
 _ImageRepeatDefault = ImageRepeat.NO_REPEAT
@@ -110,7 +111,7 @@ class Container(ConstrainedControl):
         image_repeat: ImageRepeat = _ImageRepeatDefault,
         image_fit: ImageFit = _ImageFitDefault,
         image_opacity: OptionalNumber = None,
-        shape: Optional[BoxShape] = None,
+        shape: BoxShape = _BoxShapeDefault,
         clip_behavior: ClipBehavior = _ClipBehaviorDefault,
         ink: Optional[bool] = None,
         animate: AnimationValue = None,
@@ -373,13 +374,13 @@ class Container(ConstrainedControl):
 
     # shape
     @property
-    def shape(self):
+    def shape(self) -> BoxShape:
         return self.__shape
 
     @shape.setter
-    def shape(self, value: Optional[BoxShape]):
-        self.__shape = value
-        self._set_attr("shape", value.value if value is not None else None)
+    def shape(self, value: BoxShape):
+        self.__shape = get_valid_enum(BoxShape, value, _BoxShapeDefault)
+        self._set_attr("shape", get_non_default_value(self.__shape, _BoxShapeDefault))
 
     # clip_behavior
     @property
