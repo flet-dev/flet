@@ -49,14 +49,20 @@ def test_switch_out_curve_enum():
 
 def test_transition_enum():
     r = ft.AnimatedSwitcher()
-    assert r.transition is None
+    assert r.transition == ft.AnimatedSwitcherTransition.FADE
     assert r._get_attr("transition") is None
 
-    r = ft.AnimatedSwitcher(transition=ft.AnimatedSwitcherTransition.FADE)
+    r = ft.AnimatedSwitcher(transition=ft.AnimatedSwitcherTransition.ROTATION)
     assert isinstance(r.transition, ft.AnimatedSwitcherTransition)
-    assert r.transition == ft.AnimatedSwitcherTransition.FADE
-    assert r._get_attr("transition") == "fade"
+    assert isinstance(r._get_attr("transition"), str)
+    assert r.transition == ft.AnimatedSwitcherTransition.ROTATION
+    assert r._get_attr('transition') == ft.AnimatedSwitcherTransition.ROTATION.value
+    assert r._get_attr("transition") == "rotation"
 
     r = ft.AnimatedSwitcher(transition="scale")
-    assert isinstance(r.transition, str)
+    assert isinstance(r.transition, ft.AnimatedSwitcherTransition)
+    assert isinstance(r._get_attr("transition"), str)
+    assert r.transition == ft.AnimatedSwitcherTransition.SCALE
+    assert r._get_attr('transition') == ft.AnimatedSwitcherTransition.SCALE.value
     assert r._get_attr("transition") == "scale"
+
