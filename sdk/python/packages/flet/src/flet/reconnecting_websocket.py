@@ -4,7 +4,7 @@ import threading
 
 import flet
 import websocket
-from flet.utils import is_localhost_url
+from flet_runtime.utils import is_localhost_url
 
 _REMOTE_CONNECT_TIMEOUT_SEC = 5
 _LOCAL_CONNECT_TIMEOUT_SEC = 0.2

@@ -51,11 +51,6 @@ environment:
     #   job_depends_on: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
-    - job_name: Build Flet Studio for iOS
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
-
     - job_name: Build Fletd
       job_group: build_flet
       job_depends_on: build_flet_package
@@ -287,42 +282,6 @@ for:
         APPVEYOR_REPO_TAG: true
 
   # ======================================
-  #      Build Flet Studio for iOS
-  # ======================================
-
-  - matrix:
-      only:
-        - job_name: Build Flet Studio for iOS
-
-    install:
-      - export LANG=en_US.UTF-8
-      - curl $FLUTTER_MACOS_URL -o "$HOME/flutter_macos_stable.zip"
-      - unzip -qq "$HOME/flutter_macos_stable.zip" -d $HOME
-      - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter channel stable
-      - flutter upgrade
-      - flutter doctor
-
-    build_script:
-      - cd studio/client/ios
-      - rvm use 3.0
-      - ruby --version
-      - bundle install
-      - sh: |
-          export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
-          if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
-            bundle exec fastlane build_flutter      
-          elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-            bundle exec fastlane upload_appstore
-          else
-            bundle exec fastlane build_ipa
-          fi
-
-    artifacts:
-      - path: studio/client/build/flet.ipa
-        name: flet_ios
-
-  # ======================================
   #      Build Flet View for iOS
   # ======================================
 
@@ -440,7 +399,7 @@ for:
     install:
       - python --version
       - cd sdk/python
-      - pip install --upgrade setuptools wheel twine poetry tomlkit
+      - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
       - poetry install
 
     test: off
@@ -450,14 +409,25 @@ for:
       - ps: |
           $ErrorActionPreference = "Stop"
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
-          $vp = "packages/flet/src/flet/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
-          $vp = "packages/flet-pyodide/src/flet/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
+          $vp = "packages/flet-core/src/flet_core/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
       - python3 patch_toml.py packages/flet/pyproject.toml $PYPI_VER
+      - python3 patch_toml.py packages/flet-embed/pyproject.toml $PYPI_VER
+      - python3 patch_toml.py packages/flet-runtime/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-core/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-pyodide/pyproject.toml $PYPI_VER
 
       # build "flet-core" package
       - pushd packages/flet-core
+      - poetry build
+      - popd
+
+      # build "flet-runtime" package
+      - pushd packages/flet-runtime
+      - poetry build
+      - popd
+
+      # build "flet-embed" package
+      - pushd packages/flet-embed
       - poetry build
       - popd
 
@@ -476,10 +446,12 @@ for:
       # publish package
       - sh: |
           if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-              twine upload packages/flet-core/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
+              twine upload packages/flet-core/dist/* packages/flet-runtime/dist/* packages/flet-embed/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
           fi
 
     artifacts:
       - path: sdk/python/packages/flet-core/dist/*
+      - path: sdk/python/packages/flet-runtime/dist/*
       - path: sdk/python/packages/flet/dist/*
+      - path: sdk/python/packages/flet-embed/dist/*
       - path: sdk/python/packages/flet-pyodide/dist/*

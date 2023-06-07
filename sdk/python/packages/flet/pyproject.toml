@@ -16,15 +16,13 @@ repository = "https://github.com/flet-dev/flet"
 documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
-flet-core = "0.1.0"
+flet-runtime = "0.1.0"
 python = "^3.7"
-typing-extensions = { version = "^4.4.0", python = "<3.8" }
-websocket-client = "^1.4.2"
-watchdog = "^2.2.1"
-oauthlib = "^3.2.2"
-websockets = "^10.4"
-httpx = "^0.23.3"
-packaging = "^23.0"
+typing-extensions = { version = "^4.6.2", python = "<3.8" }
+websocket-client = "^1.5.2"
+watchdog = "^3.0.0"
+websockets = "^11.0.3"
+packaging = "^23.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.6"

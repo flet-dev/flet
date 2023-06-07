@@ -49,5 +49,7 @@
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key> 
 	<string>The app needs access to photo library, so that photos can be selected.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

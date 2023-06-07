@@ -11,19 +11,23 @@ class LoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("LoadingPage build");
+    List<Widget> children = [const CircularProgressIndicator()];
+    if (message != "") {
+      children.addAll([
+        const SizedBox(height: 10),
+        Text(
+          message,
+          style: Theme.of(context).textTheme.bodySmall,
+        )
+      ]);
+    }
     return Scaffold(
         body: Stack(children: [
       Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const CircularProgressIndicator(),
-          const SizedBox(height: 10),
-          Text(
-            message,
-            style: Theme.of(context).textTheme.bodySmall,
-          )
-        ],
+        children: children,
       )),
       const PageMedia()
     ]));

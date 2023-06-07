@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "flet-runtime"
+version = "0.1.0"
+description = "Flet Runtime - a base package for Flet desktop and Flet mobile."
+authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+packages = [
+    { include = "flet_runtime", from = "src" },
+]
+
+[tool.poetry.urls]
+homepage = "https://flet.dev"
+repository = "https://github.com/flet-dev/flet"
+documentation = "https://flet.dev/docs"
+
+[tool.poetry.dependencies]
+flet-core = "0.1.0"
+python = "^3.7"
+oauthlib = "^3.2.2"
+httpx = "^0.24.1"
+typing-extensions = { version = "^4.6.2", python = "<3.8" }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+float_to_top = true
