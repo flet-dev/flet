@@ -9,7 +9,29 @@ from enum import Enum
 from typing import Union, Type, Optional, TypeVar
 
 
-T = TypeVar('T', bound=Enum)
+if sys.version_info >= (3, 11):
+    from enum import StrEnum
+else:
+    class StrEnum(str, Enum):
+        value: str
+
+
+T = TypeVar('T', bound=StrEnum)
+R = TypeVar('R')
+
+
+def get_valid_enum(cls_enum: Type[T], value: Union[T, str, None], default: R) -> Union[T, R]:
+    if isinstance(value, cls_enum):
+        return value
+    return cls_enum.__dict__['_value2member_map_'].get(value, default)
+
+
+def get_non_default_value(
+    enum: Optional[StrEnum], default: Optional[StrEnum], spare_value: Optional[R] = None,
+) -> Union[str, None, R]:
+    if enum == default:
+        return spare_value
+    return enum if enum is None else enum.value
 
 
 def random_string(length):

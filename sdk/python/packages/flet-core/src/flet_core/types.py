@@ -1,39 +1,12 @@
 from enum import Enum
-from typing import Dict, Tuple, Union, Type, TypeVar, Optional
+from typing import Dict, Tuple, Union
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
-try:
-    from enum import StrEnum
-except ImportError:
-    class StrEnum(str, Enum):
-        value: str
-
-
-T = TypeVar('T', bound=StrEnum)
-R = TypeVar('R')
-
-
-def get_valid_enum(cls_enum: Type[T], value: Union[T, str, None], default: R) -> Union[T, R]:
-    if isinstance(value, cls_enum):
-        return value
-    return cls_enum.__dict__['_value2member_map_'].get(value, default)
-
-def get_non_default_value(
-        enum: Optional[StrEnum], default: Optional[StrEnum], spare_value: R = None,
-    ) -> Union[str, None, R]:
-    if enum == default:
-        return spare_value
-    return enum if enum is None else enum.value
+from flet_core.utils import StrEnum
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
@@ -72,51 +45,6 @@ class AnimatedSwitcherTransition(StrEnum):
     FADE = "fade"
     ROTATION = "rotation"
     SCALE = "scale"
-
-
-class AnimationCurve(StrEnum):
-    BOUNCE_IN = "bounceIn"
-    BOUNCE_IN_OUT = "bounceInOut"
-    BOUNCE_OUT = "bounceOut"
-    DECELERATE = "decelerate"
-    EASE = "ease"
-    EASE_IN = "easeIn"
-    EASE_IN_BACK = "easeInBack"
-    EASE_IN_CIRC = "easeInCirc"
-    EASE_IN_CUBIC = "easeInCubic"
-    EASE_IN_EXPO = "easeInExpo"
-    EASE_IN_OUT = "easeInOut"
-    EASE_IN_OUT_BACK = "easeInOutBack"
-    EASE_IN_OUT_CIRC = "easeInOutCirc"
-    EASE_IN_OUT_CUBIC = "easeInOutCubic"
-    EASE_IN_OUT_CUBIC_EMPHASIZED = "easeInOutCubicEmphasized"
-    EASE_IN_OUT_EXPO = "easeInOutExpo"
-    EASE_IN_OUT_QUAD = "easeInOutQuad"
-    EASE_IN_OUT_QUART = "easeInOutQuart"
-    EASE_IN_OUT_QUINT = "easeInOutQuint"
-    EASE_IN_OUT_SINE = "easeInOutSine"
-    EASE_IN_QUAD = "easeInQuad"
-    EASE_IN_QUART = "easeInQuart"
-    EASE_IN_QUINT = "easeInQuint"
-    EASE_IN_SINE = "easeInSine"
-    EASE_IN_TO_LINEAR = "easeInToLinear"
-    EASE_OUT = "easeOut"
-    EASE_OUT_BACK = "easeOutBack"
-    EASE_OUT_CIRC = "easeOutCirc"
-    EASE_OUT_CUBIC = "easeOutCubic"
-    EASE_OUT_EXPO = "easeOutExpo"
-    EASE_OUT_QUAD = "easeOutQuad"
-    EASE_OUT_QUART = "easeOutQuart"
-    EASE_OUT_QUINT = "easeOutQuint"
-    EASE_OUT_SINE = "easeOutSine"
-    ELASTIC_IN = "elasticIn"
-    ELASTIC_IN_OUT = "elasticInOut"
-    ELASTIC_OUT = "elasticOut"
-    FAST_LINEAR_TO_SLOW_EASE_IN = "fastLinearToSlowEaseIn"
-    FAST_OUT_SLOWIN = "fastOutSlowIn"
-    LINEAR = "linear"
-    LINEAR_TO_EASE_OUT = "linearToEaseOut"
-    SLOW_MIDDLE = "slowMiddle"
 
 
 class FontWeight(StrEnum):

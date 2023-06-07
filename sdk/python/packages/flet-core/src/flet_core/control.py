@@ -8,11 +8,6 @@ from flet_core.protocol import Command
 from flet_core.ref import Ref
 from flet_core.types import ResponsiveNumber
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 
 if TYPE_CHECKING:
     from .page import Page

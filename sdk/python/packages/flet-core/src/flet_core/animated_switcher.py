@@ -12,14 +12,8 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    get_valid_enum,
-    get_non_default_value,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
+from flet_core.utils import get_valid_enum, get_non_default_value
 
 
 _AnimatedSwitcherTransitionDefault = AnimatedSwitcherTransition.FADE

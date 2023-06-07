@@ -36,10 +36,13 @@ from flet_core.types import (
     PageDesignLanguage,
     ScrollMode,
     ThemeMode,
+)
+from flet_core.utils import (
+    is_asyncio,
+    is_coroutine,
     get_valid_enum,
     get_non_default_value,
 )
-from flet_core.utils import is_asyncio, is_coroutine
 from flet_core.view import View
 
 logger = logging.getLogger(flet_core.__name__)

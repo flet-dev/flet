@@ -5,11 +5,6 @@ from typing import Dict, Optional, Union
 from flet_core.border import BorderSide
 from flet_core.types import BorderRadiusValue, MaterialState, PaddingValue
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 
 @dataclasses.dataclass
 class OutlinedBorder:

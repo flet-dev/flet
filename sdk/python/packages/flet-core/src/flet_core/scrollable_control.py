@@ -6,7 +6,8 @@ from flet_core.animation import AnimationCurve
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
-from flet_core.types import ScrollMode, get_valid_enum, get_non_default_value
+from flet_core.types import ScrollMode
+from flet_core.utils import get_valid_enum, get_non_default_value
 
 
 class ScrollableControl(Control):

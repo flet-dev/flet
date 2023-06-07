@@ -13,9 +13,8 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    get_valid_enum,
-    get_non_default_value,
 )
+from flet_core.utils import get_valid_enum, get_non_default_value
 
 
 _BlendModeDefault = BlendMode.MODULATE
