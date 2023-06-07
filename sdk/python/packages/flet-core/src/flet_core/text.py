@@ -13,9 +13,9 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
-    get_valid_enum,
-    get_non_default_value,
 )
+from flet_core.utils import get_valid_enum, get_non_default_value
+
 
 try:
     from typing import Literal
