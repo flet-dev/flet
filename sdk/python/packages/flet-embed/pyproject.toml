@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "flet"
+name = "flet-embed"
 version = "0.1.0"
-description = "Flet for Python - easily build interactive multi-platform apps in Python"
+description = "Flet Embed - embed Python into Flutter apps"
 authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
 license = "Apache-2.0"
 readme = "README.md"
 
 packages = [
-    { include = "flet", from = "src" },
+    { include = "flet-embed", from = "src" },
 ]
 
 [tool.poetry.urls]
@@ -19,21 +19,10 @@ documentation = "https://flet.dev/docs"
 flet-runtime = "0.1.0"
 python = "^3.7"
 typing-extensions = { version = "^4.6.2", python = "<3.8" }
-websocket-client = "^1.5.2"
-watchdog = "^3.0.0"
-websockets = "^11.0.3"
-packaging = "^23.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.6"
 pytest = "^7.2.0"
-cryptography = "^39.0.0"
-
-[tool.poetry.scripts]
-flet = "flet.cli.cli:main"
-
-[tool.poetry.plugins."pyinstaller40"]
-hook-dirs = "flet.__pyinstaller:get_hook_dirs"
 
 [build-system]
 requires = ["poetry-core"]
