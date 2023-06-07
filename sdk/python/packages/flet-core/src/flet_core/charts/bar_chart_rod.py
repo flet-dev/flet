@@ -6,7 +6,8 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import BorderRadiusValue, TextAlign, get_valid_enum
+from flet_core.types import BorderRadiusValue, TextAlign
+from flet_core.utils import get_valid_enum, get_non_default_value
 
 
 _TextAlignDefault = TextAlign.LEFT
@@ -223,7 +224,7 @@ class BarChartRod(Control):
     @tooltip_align.setter
     def tooltip_align(self, value: TextAlign):
         self.__tooltip_align = get_valid_enum(TextAlign, value, _TextAlignDefault)
-        self._set_attr("tooltipAlign", self.__tooltip_align.value)
+        self._set_attr("tooltipAlign", get_non_default_value(self.__tooltip_align, _TextAlignDefault))
 
     # tooltip_style
     @property
