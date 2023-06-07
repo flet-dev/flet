@@ -12,11 +12,7 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=['alertdialog'],
-            attrs={
-                'actionsalignment': 'end',
-                'modal': 'false',
-                'open': 'false'
-            },
+            attrs={"modal": "false", "open": "false"},
             commands=[],
         )
     ], 'Test failed'
