@@ -7,7 +7,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 packages = [
-    { include = "flet-embed", from = "src" },
+    { include = "flet", from = "src" },
 ]
 
 [tool.poetry.urls]
