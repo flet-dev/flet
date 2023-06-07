@@ -43,14 +43,14 @@ def test_switch_out_curve_enum():
     assert r._get_attr("switchOutCurve") is None
 
     r = ft.AnimatedSwitcher(switch_out_curve=ft.AnimationCurve.BOUNCE_IN)
-    assert isinstance(r.switch_in_curve, ft.AnimationCurve)
+    assert isinstance(r.switch_out_curve, ft.AnimationCurve)
     assert isinstance(r._get_attr("switchOutCurve"), str)
     assert r.switch_out_curve == ft.AnimationCurve.BOUNCE_IN
     assert r._get_attr('switchOutCurve') == ft.AnimationCurve.BOUNCE_IN.value
     assert r._get_attr("switchOutCurve") == "bounceIn"
 
     r = ft.AnimatedSwitcher(switch_out_curve="easeIn")
-    assert isinstance(r.switch_in_curve, ft.AnimationCurve)
+    assert isinstance(r.switch_out_curve, ft.AnimationCurve)
     assert isinstance(r._get_attr("switchOutCurve"), str)
     assert r.switch_out_curve == ft.AnimationCurve.EASE_IN
     assert r._get_attr('switchOutCurve') == ft.AnimationCurve.EASE_IN.value
