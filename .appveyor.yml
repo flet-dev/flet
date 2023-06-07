@@ -51,11 +51,6 @@ environment:
     #   job_depends_on: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
-    - job_name: Build Flet Studio for iOS
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
-
     - job_name: Build Fletd
       job_group: build_flet
       job_depends_on: build_flet_package
@@ -285,42 +280,6 @@ for:
       artifact: flet_linux_arm64
       on:
         APPVEYOR_REPO_TAG: true
-
-  # ======================================
-  #      Build Flet Studio for iOS
-  # ======================================
-
-  - matrix:
-      only:
-        - job_name: Build Flet Studio for iOS
-
-    install:
-      - export LANG=en_US.UTF-8
-      - curl $FLUTTER_MACOS_URL -o "$HOME/flutter_macos_stable.zip"
-      - unzip -qq "$HOME/flutter_macos_stable.zip" -d $HOME
-      - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter channel stable
-      - flutter upgrade
-      - flutter doctor
-
-    build_script:
-      - cd studio/client/ios
-      - rvm use 3.0
-      - ruby --version
-      - bundle install
-      - sh: |
-          export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
-          if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
-            bundle exec fastlane build_flutter      
-          elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-            bundle exec fastlane upload_appstore
-          else
-            bundle exec fastlane build_ipa
-          fi
-
-    artifacts:
-      - path: studio/client/build/flet.ipa
-        name: flet_ios
 
   # ======================================
   #      Build Flet View for iOS
