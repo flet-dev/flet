@@ -1,12 +1,12 @@
 import argparse
 import os
-import sys
 import shutil
+import sys
 from pathlib import Path
 
 import flet.__pyinstaller.config as hook_config
 from flet.cli.commands.base import BaseCommand
-from flet.utils import is_macos, is_windows
+from flet_runtime.utils import is_macos, is_windows
 
 
 class Command(BaseCommand):
@@ -92,7 +92,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
-
         # delete "build" directory
         build_dir = os.path.join(os.getcwd(), "build")
         if os.path.exists(build_dir):
@@ -136,7 +135,6 @@ class Command(BaseCommand):
             hook_config.temp_bin_dir = copy_flet_bin()
 
             if hook_config.temp_bin_dir is not None:
-
                 # delete fletd/fletd.exe
                 fletd_path = os.path.join(
                     hook_config.temp_bin_dir, "fletd.exe" if is_windows() else "fletd"
@@ -145,7 +143,6 @@ class Command(BaseCommand):
                     os.remove(fletd_path)
 
                 if is_windows():
-
                     from flet.__pyinstaller.win_utils import (
                         update_flet_view_icon,
                         update_flet_view_version_info,
@@ -187,7 +184,6 @@ class Command(BaseCommand):
                         hook_config.temp_bin_dir, "flet-macos-amd64.tar.gz"
                     )
                     if os.path.exists(tar_path):
-
                         # unpack
                         app_path = unpack_app_bundle(tar_path)
 

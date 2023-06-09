@@ -10,8 +10,8 @@ from distutils.dir_util import copy_tree
 from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
-from flet.utils import get_package_web_dir, is_within_directory
 from flet_core.utils import random_string
+from flet_runtime.utils import get_package_web_dir, is_within_directory
 
 
 class Command(BaseCommand):

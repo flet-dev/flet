@@ -9,9 +9,9 @@ import time
 from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
-from flet.flet import close_flet_view, open_flet_view
-from flet.utils import get_free_tcp_port, is_windows, open_in_browser
 from flet_core.utils import random_string
+from flet_runtime.app import close_flet_view, open_flet_view
+from flet_runtime.utils import get_free_tcp_port, is_windows, open_in_browser
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -115,8 +115,9 @@ class Command(BaseCommand):
             )
 
         my_event_handler = Handler(
-            [sys.executable, "-u"] + ["-m"] * options.module +
-            [options.script if options.module else script_path],
+            [sys.executable, "-u"]
+            + ["-m"] * options.module
+            + [options.script if options.module else script_path],
             None if options.directory or options.recursive else script_path,
             port,
             uds_path,
