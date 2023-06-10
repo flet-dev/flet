@@ -60,9 +60,12 @@ class BottomSheet(Control):
         # Specific
         #
         open: bool = False,
+        dismissible: Optional[bool] = None,
+        enable_drag: Optional[bool] = None,
+        show_drag_handle: Optional[bool] = None,
+        use_safe_area: Optional[bool] = None,
         on_dismiss=None,
     ):
-
         Control.__init__(
             self,
             ref=ref,
@@ -76,6 +79,10 @@ class BottomSheet(Control):
         self.__actions: List[Control] = []
 
         self.open = open
+        self.dismissible = dismissible
+        self.enable_drag = enable_drag
+        self.show_drag_handle = show_drag_handle
+        self.use_safe_area = use_safe_area
         self.content = content
         self.on_dismiss = on_dismiss
 
@@ -97,6 +104,42 @@ class BottomSheet(Control):
     @open.setter
     def open(self, value: Optional[bool]):
         self._set_attr("open", value)
+
+    # dismissible
+    @property
+    def dismissible(self) -> Optional[bool]:
+        return self._get_attr("dismissible", data_type="bool", def_value=True)
+
+    @dismissible.setter
+    def dismissible(self, value: Optional[bool]):
+        self._set_attr("dismissible", value)
+
+    # enable_drag
+    @property
+    def enable_drag(self) -> Optional[bool]:
+        return self._get_attr("enableDrag", data_type="bool", def_value=False)
+
+    @enable_drag.setter
+    def enable_drag(self, value: Optional[bool]):
+        self._set_attr("enableDrag", value)
+
+    # show_drag_handle
+    @property
+    def show_drag_handle(self) -> Optional[bool]:
+        return self._get_attr("showDragHandle", data_type="bool", def_value=False)
+
+    @show_drag_handle.setter
+    def show_drag_handle(self, value: Optional[bool]):
+        self._set_attr("showDragHandle", value)
+
+    # use_safe_area
+    @property
+    def use_safe_area(self) -> Optional[bool]:
+        return self._get_attr("useSafeArea", data_type="bool", def_value=True)
+
+    @use_safe_area.setter
+    def use_safe_area(self, value: Optional[bool]):
+        self._set_attr("useSafeArea", value)
 
     # content
     @property

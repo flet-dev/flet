@@ -49,6 +49,10 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
     var open = widget.control.attrBool("open", false)!;
     //var modal = widget.control.attrBool("modal", true)!;
+    var dismissible = widget.control.attrBool("dismissible", true)!;
+    var enableDrag = widget.control.attrBool("enableDrag", false)!;
+    var showDragHandle = widget.control.attrBool("showDragHandle", false)!;
+    var useSafeArea = widget.control.attrBool("useSafeArea", true)!;
 
     void resetOpenState() {
       List<Map<String, String>> props = [
@@ -73,10 +77,15 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showModalBottomSheet<void>(
-            context: context,
-            builder: (context) {
-              return bottomSheet;
-            }).then((value) {
+                context: context,
+                builder: (context) {
+                  return bottomSheet;
+                },
+                isDismissible: dismissible,
+                enableDrag: enableDrag,
+                showDragHandle: showDragHandle,
+                useSafeArea: useSafeArea)
+            .then((value) {
           debugPrint("BottomSheet dismissed: $_open");
           bool shouldDismiss = _open;
           _open = false;
