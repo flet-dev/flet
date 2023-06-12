@@ -1,13 +1,16 @@
 import argparse
 import os
 import signal
+import socket
 import subprocess
 import sys
 import tempfile
 import threading
 import time
 from pathlib import Path
+from urllib.parse import quote, urlparse, urlunparse
 
+import qrcode
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string
 from flet_runtime.app import close_flet_view, open_flet_view
@@ -72,6 +75,13 @@ class Command(BaseCommand):
             help="open app in a web browser",
         )
         parser.add_argument(
+            "--ios",
+            dest="ios",
+            action="store_true",
+            default=False,
+            help="open app on iOS device",
+        )
+        parser.add_argument(
             "-a",
             "--assets",
             dest="assets_dir",
@@ -122,6 +132,7 @@ class Command(BaseCommand):
             port,
             uds_path,
             options.web,
+            options.ios,
             options.hidden,
             assets_dir,
         )
@@ -144,7 +155,7 @@ class Command(BaseCommand):
 
 class Handler(FileSystemEventHandler):
     def __init__(
-        self, args, script_path, port, uds_path, web, hidden, assets_dir
+        self, args, script_path, port, uds_path, web, ios, hidden, assets_dir
     ) -> None:
         super().__init__()
         self.args = args
@@ -152,6 +163,7 @@ class Handler(FileSystemEventHandler):
         self.port = port
         self.uds_path = uds_path
         self.web = web
+        self.ios = ios
         self.hidden = hidden
         self.assets_dir = assets_dir
         self.last_time = time.time()
@@ -165,7 +177,7 @@ class Handler(FileSystemEventHandler):
 
     def start_process(self):
         p_env = {**os.environ}
-        if self.web:
+        if self.web or self.ios:
             p_env["FLET_FORCE_WEB_VIEW"] = "true"
         if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
@@ -203,9 +215,11 @@ class Handler(FileSystemEventHandler):
             if line.startswith(self.page_url_prefix):
                 if not self.page_url:
                     self.page_url = line[len(self.page_url_prefix) + 1 :]
-                    if self.page_url.startswith("http"):
+                    if self.page_url.startswith("http") and not self.ios:
                         print(self.page_url)
-                    if self.web:
+                    if self.ios:
+                        self.print_qr_code(self.page_url)
+                    elif self.web:
                         open_in_browser(self.page_url)
                     else:
                         th = threading.Thread(
@@ -228,3 +242,21 @@ class Handler(FileSystemEventHandler):
         self.p.send_signal(signal.SIGTERM)
         self.p.wait()
         self.start_process()
+
+    def print_qr_code(self, orig_url: str):
+        u = urlparse(orig_url)
+        hostname = socket.gethostname()
+        ip_addr = socket.gethostbyname(hostname)
+        lan_url = urlunparse(
+            (u.scheme, f"{ip_addr}:{u.port}", u.path, None, None, None)
+        )
+        print("App is running on:", lan_url)
+        print("")
+        qr_url = urlunparse(
+            ("flet", "flet-host", quote(lan_url, safe=""), None, None, None)
+        )
+        qr = qrcode.QRCode()
+        qr.add_data(qr_url)
+        qr.print_ascii(invert=True)
+        print("")
+        print("Scan QR code above with Camera app.")
