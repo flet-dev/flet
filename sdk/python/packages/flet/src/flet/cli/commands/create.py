@@ -54,7 +54,7 @@ class Command(BaseCommand):
         if options.description is not None:
             template_data["description"] = options.description
 
-        print("Template data:", template_data)
+        # print("Template data:", template_data)
         with Worker(
             src_path="https://github.com/flet-dev/templates.git",
             dst_path=out_dir,
