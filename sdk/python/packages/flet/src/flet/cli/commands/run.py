@@ -1,5 +1,6 @@
 import argparse
 import os
+import platform
 import signal
 import socket
 import subprocess
@@ -250,6 +251,7 @@ class Handler(FileSystemEventHandler):
         lan_url = urlunparse(
             (u.scheme, f"{ip_addr}:{u.port}", u.path, None, None, None)
         )
+        self.clear_console()
         print("App is running on:", lan_url)
         print("")
         qr_url = urlunparse(
@@ -257,6 +259,19 @@ class Handler(FileSystemEventHandler):
         )
         qr = qrcode.QRCode()
         qr.add_data(qr_url)
-        qr.print_ascii(invert=True)
+        # qr.print_ascii(invert=True)
+        qr.print_tty()
         print("")
         print("Scan QR code above with Camera app.")
+
+    def clear_console(self):
+        if platform.system() == "Windows":
+            if platform.release() in {"10", "11"}:
+                subprocess.run(
+                    "", shell=True
+                )  # Needed to fix a bug regarding Windows 10; not sure about Windows 11
+                print("\033c", end="")
+            else:
+                subprocess.run(["cls"])
+        else:  # Linux and Mac
+            print("\033c", end="")
