@@ -16,7 +16,7 @@ from flet_runtime.utils import get_package_web_dir, is_within_directory
 
 class Command(BaseCommand):
     """
-    Publish Flet app as a standalone web app
+    Publish Flet app as a standalone web app.
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:

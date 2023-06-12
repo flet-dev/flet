@@ -18,7 +18,7 @@ from watchdog.observers import Observer
 
 class Command(BaseCommand):
     """
-    Run Flet app
+    Run Flet app.
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:

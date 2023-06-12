@@ -11,7 +11,7 @@ from flet_runtime.utils import is_macos, is_windows
 
 class Command(BaseCommand):
     """
-    Package Flet app to a standalone bundle
+    Package Flet app to a standalone bundle.
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
