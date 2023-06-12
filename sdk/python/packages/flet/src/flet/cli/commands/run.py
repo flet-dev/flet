@@ -26,7 +26,13 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
-        parser.add_argument("script", type=str, help="path to a Python script")
+        parser.add_argument(
+            "script",
+            type=str,
+            nargs="?",
+            default=".",
+            help="path to a Python script",
+        )
         parser.add_argument(
             "-p",
             "--port",
@@ -92,7 +98,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
-        # print("RUN COMMAND", options)
         if options.module:
             script_path = str(options.script).replace(".", "/")
             if os.path.isdir(script_path):
@@ -100,13 +105,14 @@ class Command(BaseCommand):
             else:
                 script_path += ".py"
         else:
-            script_path = options.script
-
-        if not os.path.isabs(script_path):
-            script_path = str(Path(os.getcwd()).joinpath(script_path).resolve())
+            script_path = str(options.script)
+            if not os.path.isabs(script_path):
+                script_path = str(Path(os.getcwd()).joinpath(script_path).resolve())
+            if os.path.isdir(script_path):
+                script_path = os.path.join(script_path, "main.py")
 
         if not Path(script_path).exists():
-            print(f"File not found: {script_path}")
+            print(f"File or directory not found: {script_path}")
             sys.exit(1)
 
         script_dir = os.path.dirname(script_path)
