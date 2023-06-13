@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
+import 'package:flet/src/flet_app_context.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -170,11 +172,10 @@ class _PageControlState extends State<PageControl> {
     var darkTheme = widget.control.attrString("darkTheme") == null
         ? parseTheme(widget.control, "theme", Brightness.dark)
         : parseTheme(widget.control, "darkTheme", Brightness.dark);
-    var themeMode = ThemeMode.values.firstWhere(
-        (t) =>
+    var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
             t.name.toLowerCase() ==
-            widget.control.attrString("themeMode", "")!.toLowerCase(),
-        orElse: () => ThemeMode.system);
+            widget.control.attrString("themeMode", "")!.toLowerCase()) ??
+        FletAppContext.of(context)?.themeMode;
 
     debugPrint("Page theme: $themeMode");
 
@@ -443,16 +444,18 @@ class _PageControlState extends State<PageControl> {
               builder: (context, media) {
                 debugPrint("MeterialApp.router build: ${widget.control.id}");
 
-                return MaterialApp.router(
-                  showSemanticsDebugger:
-                      widget.control.attrBool("showSemanticsDebugger", false)!,
-                  routerDelegate: _routerDelegate,
-                  routeInformationParser: _routeParser,
-                  title: windowTitle,
-                  theme: theme,
-                  darkTheme: darkTheme,
-                  themeMode: themeMode,
-                );
+                return FletAppContext(
+                    themeMode: themeMode,
+                    child: MaterialApp.router(
+                      showSemanticsDebugger: widget.control
+                          .attrBool("showSemanticsDebugger", false)!,
+                      routerDelegate: _routerDelegate,
+                      routeInformationParser: _routeParser,
+                      title: windowTitle,
+                      theme: theme,
+                      darkTheme: darkTheme,
+                      themeMode: themeMode,
+                    ));
               });
         });
   }
