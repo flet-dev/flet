@@ -27,9 +27,9 @@ class _FletAppState extends State<FletApp> {
   FletAppServices? _appServices;
 
   @override
-  void dispose() {
+  void deactivate() {
     _appServices?.close();
-    super.dispose();
+    super.deactivate();
   }
 
   @override
