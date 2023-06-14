@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'platform_utils_non_web.dart'
@@ -13,8 +12,11 @@ Future openWebBrowser(String url,
     openPopupBrowserWindow(
         url, webWindowName ?? "Flet", windowWidth ?? 1200, windowHeight ?? 800);
   } else {
-    LaunchMode? mode = LaunchMode.values.firstWhereOrNull(
-        (t) => t.name.toLowerCase() == (webWindowName ?? "").toLowerCase());
+    LaunchMode? mode;
+    if (webWindowName == "_blank") {
+      mode = LaunchMode.externalApplication;
+    }
+
     await launchUrl(Uri.parse(url),
         webOnlyWindowName: mode == null ? webWindowName : null,
         mode: mode ?? LaunchMode.platformDefault);
