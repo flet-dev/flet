@@ -1,1 +1,1 @@
-from flet_runtime.utils import Vector, slugify
+from flet_core.utils import Vector, slugify

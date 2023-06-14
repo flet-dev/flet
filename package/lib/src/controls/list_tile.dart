@@ -39,6 +39,7 @@ class ListTileControl extends StatelessWidget {
     bool isThreeLine = control.attrBool("isThreeLine", false)!;
     bool autofocus = control.attrBool("autofocus", false)!;
     bool onclick = control.attrBool("onclick", false)!;
+    bool onLongPressDefined = control.attrBool("onLongPress", false)!;
     String url = control.attrString("url", "")!;
     String? urlTarget = control.attrString("urlTarget");
     bool disabled = control.isDisabled || parentDisabled;
@@ -56,15 +57,15 @@ class ListTileControl extends StatelessWidget {
           }
         : null;
 
-    Function()? onLongPress = disabled
-        ? null
-        : () {
+    Function()? onLongPress = onLongPressDefined && !disabled
+        ? () {
             debugPrint("Button ${control.id} clicked!");
             server.sendPageEvent(
                 eventTarget: control.id,
                 eventName: "long_press",
                 eventData: "");
-          };
+          }
+        : null;
 
     ListTile tile = ListTile(
       autofocus: autofocus,
