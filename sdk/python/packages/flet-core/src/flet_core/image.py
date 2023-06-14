@@ -1,7 +1,7 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
+from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -85,6 +85,7 @@ class Image(ConstrainedControl):
         # Specific
         #
         src_base64: Optional[str] = None,
+        error_content: Optional[Control] = None,
         repeat: Optional[ImageRepeat] = None,
         fit: Optional[ImageFit] = None,
         border_radius: BorderRadiusValue = None,
@@ -125,6 +126,7 @@ class Image(ConstrainedControl):
 
         self.src = src
         self.src_base64 = src_base64
+        self.error_content = error_content
         self.fit = fit
         self.repeat = repeat
         self.border_radius = border_radius
@@ -135,6 +137,13 @@ class Image(ConstrainedControl):
 
     def _get_control_name(self):
         return "image"
+
+    def _get_children(self):
+        children = []
+        if self.__error_content is not None:
+            self.__error_content._set_attr_internal("n", "error_content")
+            children.append(self.__error_content)
+        return children
 
     def _before_build_command(self):
         super()._before_build_command()
@@ -241,3 +250,12 @@ class Image(ConstrainedControl):
     @semantics_label.setter
     def semantics_label(self, value):
         self._set_attr("semanticsLabel", value)
+
+    # error_content
+    @property
+    def error_content(self) -> Optional[Control]:
+        return self.__error_content
+
+    @error_content.setter
+    def error_content(self, value: Optional[Control]):
+        self.__error_content = value

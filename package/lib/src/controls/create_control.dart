@@ -172,7 +172,11 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           key: key, parent: parent, control: controlView.control);
     case "image":
       return ImageControl(
-          key: key, parent: parent, control: controlView.control);
+          key: key,
+          parent: parent,
+          children: controlView.children,
+          control: controlView.control,
+          parentDisabled: parentDisabled);
     case "audio":
       return AudioControl(
           parent: parent,
