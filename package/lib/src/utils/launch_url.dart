@@ -18,7 +18,7 @@ Future openWebBrowser(String url,
     }
 
     await launchUrl(Uri.parse(url),
-        webOnlyWindowName: mode == null ? webWindowName : null,
+        webOnlyWindowName: webWindowName,
         mode: mode ?? LaunchMode.platformDefault);
   }
 }
