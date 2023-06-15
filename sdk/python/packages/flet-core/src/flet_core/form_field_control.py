@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
@@ -14,19 +13,16 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
-InputBorderString = Literal[None, "outline", "underline", "none"]
+from flet_core.utils import StrEnum, get_valid_enum, get_non_default_value
 
 
-class InputBorder(Enum):
+class InputBorder(StrEnum):
     NONE = "none"
     OUTLINE = "outline"
     UNDERLINE = "underline"
+
+
+_InputBorderDefault = InputBorder.NONE
 
 
 class FormFieldControl(ConstrainedControl):
@@ -66,7 +62,7 @@ class FormFieldControl(ConstrainedControl):
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
-        border: Optional[InputBorder] = None,
+        border: InputBorder = _InputBorderDefault,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         border_radius: BorderRadiusValue = None,
@@ -231,19 +227,15 @@ class FormFieldControl(ConstrainedControl):
 
     # border
     @property
-    def border(self) -> Optional[InputBorder]:
+    def border(self) -> InputBorder:
         return self.__border
 
     @border.setter
-    def border(self, value: Optional[InputBorder]):
-        self.__border = value
-        if isinstance(value, InputBorder):
-            self._set_attr("border", value.value)
-        else:
-            self.__set_border(value)
-
-    def __set_border(self, value: Optional[InputBorderString]):
-        self._set_attr("border", value)
+    def border(self, value: InputBorder):
+        self.__border = get_valid_enum(InputBorder, value, _InputBorderDefault)
+        self._set_attr("border", get_non_default_value(
+            self.__border, _InputBorderDefault,
+        ))
 
     # color
     @property

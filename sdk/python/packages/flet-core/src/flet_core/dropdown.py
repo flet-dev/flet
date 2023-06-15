@@ -16,6 +16,8 @@ from flet_core.types import (
     ScaleValue,
 )
 
+_InputBorderDefault = InputBorder.OUTLINE
+
 
 class Dropdown(FormFieldControl):
     """
@@ -82,7 +84,7 @@ class Dropdown(FormFieldControl):
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
-        border: Optional[InputBorder] = None,
+        border: InputBorder = _InputBorderDefault,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         border_radius: BorderRadiusValue = None,

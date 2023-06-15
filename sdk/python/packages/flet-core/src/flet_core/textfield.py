@@ -19,6 +19,7 @@ from flet_core.types import (
 from flet_core.utils import get_valid_enum, get_non_default_value
 
 
+_InputBorderDefault = InputBorder.OUTLINE
 _TextAlignDefault = TextAlign.LEFT
 
 try:
@@ -128,7 +129,7 @@ class TextField(FormFieldControl):
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
-        border: Optional[InputBorder] = None,
+        border: InputBorder = _InputBorderDefault,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         border_radius: BorderRadiusValue = None,
