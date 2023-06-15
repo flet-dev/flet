@@ -3,12 +3,17 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import StrEnum
+from flet_core.utils import get_valid_enum, get_non_default_value
 
 
-class ReleaseMode(Enum):
+class ReleaseMode(StrEnum):
     RELEASE = "release"
     LOOP = "loop"
     STOP = "stop"
+
+
+_ReleaseModeDefault = ReleaseMode.RELEASE
 
 
 class Audio(Control):
@@ -50,7 +55,7 @@ class Audio(Control):
         volume: OptionalNumber = None,
         balance: OptionalNumber = None,
         playback_rate: OptionalNumber = None,
-        release_mode: Optional[ReleaseMode] = None,
+        release_mode: ReleaseMode = _ReleaseModeDefault,
         on_loaded=None,
         on_duration_changed=None,
         on_state_changed=None,
@@ -69,7 +74,7 @@ class Audio(Control):
         self.volume = volume
         self.balance = balance
         self.playback_rate = playback_rate
-        self.release_mode = release_mode
+        self._release_mode = release_mode
         self.on_loaded = on_loaded
         self.on_duration_changed = on_duration_changed
         self.on_state_changed = on_state_changed
@@ -196,12 +201,15 @@ class Audio(Control):
 
     # release_mode
     @property
-    def release_mode(self):
-        return self._get_attr("releaseMode")
+    def release_mode(self) -> ReleaseMode:
+        return self._release_mode
 
     @release_mode.setter
-    def release_mode(self, value: Optional[ReleaseMode]):
-        self._set_attr("releaseMode", value.value if value is not None else None)
+    def release_mode(self, value: ReleaseMode):
+        self._release_mode = get_valid_enum(ReleaseMode, value, _ReleaseModeDefault)
+        self._set_attr("releaseMode", get_non_default_value(
+            self._release_mode, _ReleaseModeDefault,
+        ))
 
     # on_loaded
     @property

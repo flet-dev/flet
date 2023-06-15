@@ -50,17 +50,6 @@ def is_coroutine(method):
     return inspect.iscoroutinefunction(method)
 
 
-def get_str_from_enum(enum: Type[Enum], value: Union[Enum, str]) -> Optional[str]:
-    if isinstance(value, Enum):
-        return str(value.value)
-    if value in enum.__dict__['_value2member_map_']:
-        return value
-    return None
-
-
-def get_enum_from_value(enum: Type[T], value: Optional[str], default: T) -> T:
-    return enum.__dict__['_value2member_map_'].get(value, default)
-
 def slugify(original: str) -> str:
     """
     Make a string url friendly. Useful for creating routes for navigation.
