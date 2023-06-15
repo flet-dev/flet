@@ -124,7 +124,6 @@ class FilePicker(Control):
             disabled=disabled,
             data=data,
         )
-        self.file_type = _FilePickerFileTypeDefault
 
         def convert_result_event_data(e):
             d = json.loads(e.data)
