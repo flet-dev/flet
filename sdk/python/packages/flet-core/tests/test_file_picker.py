@@ -21,10 +21,14 @@ def test_file_type_enum():
     r = ft.FilePicker()
     r.file_type = ft.FilePickerFileType.VIDEO
     assert isinstance(r.file_type, ft.FilePickerFileType)
+    assert isinstance(r._get_attr('fileType'), str)
     assert r.file_type == ft.FilePickerFileType.VIDEO
+    assert r._get_attr('fileType') == ft.FilePickerFileType.VIDEO.value
     assert r._get_attr("fileType") == "video"
 
     r = ft.FilePicker()
-    r.file_type = "any"
-    assert isinstance(r.file_type, str)
+    assert isinstance(r.file_type, ft.FilePickerFileType)
+    assert isinstance(r._get_attr('fileType'), str)
+    assert r.file_type == ft.FilePickerFileType.ANY
+    assert r._get_attr('fileType') == ft.FilePickerFileType.ANY.value
     assert r._get_attr("fileType") == "any"

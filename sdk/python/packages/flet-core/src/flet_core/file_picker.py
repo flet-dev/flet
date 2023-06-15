@@ -8,8 +8,7 @@ from flet_core.control_event import ControlEvent
 from flet_core.dropdown import Option
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
-from flet_core.types import StrEnum
-from flet_core.utils import get_valid_enum, get_non_default_value
+from flet_core.utils import StrEnum, get_valid_enum, get_non_default_value
 
 try:
     from typing import Literal
