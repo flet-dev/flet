@@ -69,11 +69,10 @@ def test_capitalization_enum():
 
 def test_border_enum():
     r = ft.TextField()
-    assert r.border == ft.InputBorder.OUTLINE
     assert isinstance(r.border, ft.InputBorder)
-    assert isinstance(r._get_attr('border'), str)
     assert r.border == ft.InputBorder.OUTLINE
-    assert r._get_attr('border') == ft.InputBorder.OUTLINE.value
+    assert r.border == "outline"
+    assert r._get_attr('border') is None
 
     r = ft.TextField(border=ft.InputBorder.NONE)
     assert isinstance(r.border, ft.InputBorder)

@@ -19,11 +19,10 @@ def test_instance_no_attrs_set():
 
 def test_border_enum():
     r = ft.Dropdown()
-    assert r.border == ft.InputBorder.OUTLINE
+    assert r._get_attr('border') is None
     assert isinstance(r.border, ft.InputBorder)
-    assert isinstance(r._get_attr('border'), str)
     assert r.border == ft.InputBorder.OUTLINE
-    assert r._get_attr('border') == ft.InputBorder.OUTLINE.value
+    assert r.border == "outline"
 
     r = ft.Dropdown(border=ft.InputBorder.NONE)
     assert isinstance(r.border, ft.InputBorder)
