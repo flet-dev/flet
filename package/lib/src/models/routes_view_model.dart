@@ -10,14 +10,14 @@ class RoutesViewModel extends Equatable {
   final bool isLoading;
   final String error;
   final List<Control> offstageControls;
-  final List<String> viewIds;
+  final List<Control> views;
 
   const RoutesViewModel(
       {required this.page,
       required this.isLoading,
       required this.error,
       required this.offstageControls,
-      required this.viewIds});
+      required this.views});
 
   static RoutesViewModel fromStore(Store<AppState> store) {
     Control? offstageControl = store.state.controls["page"]!.childIds
@@ -34,14 +34,12 @@ class RoutesViewModel extends Equatable {
                 .where((c) => c.isVisible)
                 .toList()
             : [],
-        viewIds: store.state.controls["page"]!.childIds
+        views: store.state.controls["page"]!.childIds
             .map((childId) => store.state.controls[childId]!)
             .where((c) => c.type != "offstage" && c.isVisible)
-            .map((c) => c.id)
             .toList());
   }
 
   @override
-  List<Object?> get props =>
-      [page, isLoading, error, offstageControls, viewIds];
+  List<Object?> get props => [page, isLoading, error, offstageControls, views];
 }
