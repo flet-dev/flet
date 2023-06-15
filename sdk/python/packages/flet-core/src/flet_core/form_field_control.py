@@ -22,7 +22,7 @@ class InputBorder(StrEnum):
     UNDERLINE = "underline"
 
 
-_InputBorderDefault = InputBorder.NONE
+_InputBorderDefault = InputBorder.OUTLINE
 
 
 class FormFieldControl(ConstrainedControl):
