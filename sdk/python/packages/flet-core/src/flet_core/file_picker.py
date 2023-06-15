@@ -8,23 +8,27 @@ from flet_core.control_event import ControlEvent
 from flet_core.dropdown import Option
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.types import StrEnum
+from flet_core.utils import get_valid_enum, get_non_default_value
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
 
-FileTypeString = Literal["any", "media", "image", "video", "audio", "custom"]
 FilePickerState = Literal["pickFiles", "saveFile", "getDirectoryPath"]
 
 
-class FilePickerFileType(Enum):
+class FilePickerFileType(StrEnum):
     ANY = "any"
     MEDIA = "media"
     IMAGE = "image"
     VIDEO = "video"
     AUDIO = "audio"
     CUSTOM = "custom"
+
+
+_FilePickerFileTypeDefault = FilePickerFileType.ANY
 
 
 @dataclass
@@ -155,7 +159,7 @@ class FilePicker(Control):
         self,
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        file_type: FilePickerFileType = _FilePickerFileTypeDefault,
         allowed_extensions: Optional[List[str]] = None,
         allow_multiple: Optional[bool] = False,
     ):
@@ -171,7 +175,7 @@ class FilePicker(Control):
         self,
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        file_type: FilePickerFileType = _FilePickerFileTypeDefault,
         allowed_extensions: Optional[List[str]] = None,
         allow_multiple: Optional[bool] = False,
     ):
@@ -188,7 +192,7 @@ class FilePicker(Control):
         dialog_title: Optional[str] = None,
         file_name: Optional[str] = None,
         initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        file_type: FilePickerFileType = _FilePickerFileTypeDefault,
         allowed_extensions: Optional[List[str]] = None,
     ):
         self.state = "saveFile"
@@ -204,7 +208,7 @@ class FilePicker(Control):
         dialog_title: Optional[str] = None,
         file_name: Optional[str] = None,
         initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        file_type: FilePickerFileType = _FilePickerFileTypeDefault,
         allowed_extensions: Optional[List[str]] = None,
     ):
         self.state = "saveFile"
@@ -291,14 +295,10 @@ class FilePicker(Control):
 
     @file_type.setter
     def file_type(self, value: FilePickerFileType):
-        self.__file_type = value
-        if isinstance(value, FilePickerFileType):
-            self._set_attr("fileType", value.value)
-        else:
-            self.__set_file_type(value)
-
-    def __set_file_type(self, value: FileTypeString):
-        self._set_attr("fileType", value)
+        self.__file_type = get_valid_enum(FilePickerFileType, value, _FilePickerFileTypeDefault)
+        self._set_attr("fileType", get_non_default_value(
+            self.__file_type, _FilePickerFileTypeDefault,
+        ))
 
     # allowed_extensions
     @property
