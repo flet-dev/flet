@@ -31,6 +31,7 @@ abstract class FletServerProtocol {
 
   Future connect();
   bool get isLocalConnection;
+  int get defaultReconnectIntervalMs;
   void send(String message);
   void disconnect();
 }

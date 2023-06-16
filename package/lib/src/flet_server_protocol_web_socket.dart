@@ -23,6 +23,9 @@ class FletWebSocketServerProtocol implements FletServerProtocol {
   bool get isLocalConnection => _isLocalConnection;
 
   @override
+  int get defaultReconnectIntervalMs => 500;
+
+  @override
   Future connect() async {
     debugPrint("Connecting to WebSocket server $_wsUrl...");
     try {

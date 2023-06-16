@@ -81,7 +81,7 @@ class FletServer {
     // set/update timeout
     nextReconnectDelayMs =
         nextReconnectDelayMs == 0 || _clientProtocol.isLocalConnection
-            ? reconnectIntervalMs ?? 200
+            ? reconnectIntervalMs ?? _clientProtocol.defaultReconnectIntervalMs
             : nextReconnectDelayMs * 2;
 
     debugPrint("reconnectTimeoutMs: $reconnectTimeoutMs");
