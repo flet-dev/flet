@@ -933,7 +933,7 @@ class Page(Control):
         evt.set()
 
     #
-    # Dialog
+    # SnackBar
     #
     def show_snack_bar(self, snack_bar: SnackBar):
         self.__offstage.snack_bar = snack_bar
@@ -944,18 +944,6 @@ class Page(Control):
         self.__offstage.snack_bar = snack_bar
         self.__offstage.snack_bar.open = True
         await self.__offstage.update_async()
-
-    def close_snack_bar(self):
-        if self.__offstage.snack_bar is not None:
-            self.__offstage.snack_bar.open = False
-            self.__offstage.update()
-            self.__offstage.snack_bar = None
-
-    async def close_snack_bar_async(self):
-        if self.__offstage.snack_bar is not None:
-            self.__offstage.snack_bar.open = False
-            await self.__offstage.update_async()
-            self.__offstage.snack_bar = None
 
     #
     # Dialog
@@ -1318,6 +1306,15 @@ class Page(Control):
     @dialog.setter
     def dialog(self, value: Optional[Control]):
         self.__offstage.dialog = value
+
+    # bottom_sheet
+    @property
+    def bottom_sheet(self) -> Optional[BottomSheet]:
+        return self.__offstage.bottom_sheet
+
+    @bottom_sheet.setter
+    def bottom_sheet(self, value: Optional[BottomSheet]):
+        self.__offstage.bottom_sheet = value
 
     # theme_mode
     @property
