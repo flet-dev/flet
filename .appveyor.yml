@@ -12,7 +12,7 @@ environment:
   GO_VERSION: 1.19
   GO_TAGS: --tags release
   python_stack: python 3.10
-  FLUTTER_MACOS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.10.0-stable.zip
+  FLUTTER_MACOS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.10.5-stable.zip
   GITHUB_TOKEN:
     secure: doX0dwjWhBmT56aJqR9NCbtMFJpDpdYxPCIB4vQoHfSR+nTa+pLCo6Yv5qWpD/90
   DOCKER_REGISTRY_USER:
