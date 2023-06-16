@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
 import '../flet_app_services.dart';
-import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
+import 'list_tile.dart';
 
 enum LabelPosition { right, left }
 
@@ -16,12 +15,14 @@ class CheckboxControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final dynamic dispatch;
 
   const CheckboxControl(
       {Key? key,
       this.parent,
       required this.control,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -30,6 +31,7 @@ class CheckboxControl extends StatefulWidget {
 
 class _CheckboxControlState extends State<CheckboxControl> {
   bool? _value;
+  bool _tristate = false;
   late final FocusNode _focusNode;
 
   @override
@@ -53,6 +55,35 @@ class _CheckboxControlState extends State<CheckboxControl> {
     super.dispose();
   }
 
+  void _toggleValue() {
+    bool? newValue;
+    if (!_tristate) {
+      newValue = !_value!;
+    } else if (_tristate && _value == null) {
+      newValue = false;
+    } else if (_tristate && _value == false) {
+      newValue = true;
+    }
+    _onChange(newValue);
+  }
+
+  void _onChange(bool? value) {
+    var svalue = value != null ? value.toString() : "";
+    //debugPrint(svalue);
+    setState(() {
+      _value = value;
+    });
+    List<Map<String, String>> props = [
+      {"i": widget.control.id, "value": svalue}
+    ];
+    widget.dispatch(
+        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+    var server = FletAppServices.of(context).server;
+    server.updateControlProps(props: props);
+    server.sendPageEvent(
+        eventTarget: widget.control.id, eventName: "change", eventData: svalue);
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("Checkbox build: ${widget.control.id}");
@@ -63,85 +94,50 @@ class _CheckboxControlState extends State<CheckboxControl> {
             p.name.toLowerCase() ==
             widget.control.attrString("labelPosition", "")!.toLowerCase(),
         orElse: () => LabelPosition.right);
-    bool tristate = widget.control.attrBool("tristate", false)!;
+    _tristate = widget.control.attrBool("tristate", false)!;
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    return StoreConnector<AppState, Function>(
-        distinct: true,
-        converter: (store) => store.dispatch,
-        builder: (context, dispatch) {
-          debugPrint("Checkbox StoreConnector build: ${widget.control.id}");
+    debugPrint("Checkbox StoreConnector build: ${widget.control.id}");
 
-          bool? value =
-              widget.control.attrBool("value", tristate ? null : false);
-          if (_value != value) {
-            _value = value;
-          }
+    bool? value = widget.control.attrBool("value", _tristate ? null : false);
+    if (_value != value) {
+      _value = value;
+    }
 
-          onChange(bool? value) {
-            var svalue = value != null ? value.toString() : "";
-            //debugPrint(svalue);
-            setState(() {
-              _value = value;
-            });
-            List<Map<String, String>> props = [
-              {"i": widget.control.id, "value": svalue}
-            ];
-            dispatch(UpdateControlPropsAction(
-                UpdateControlPropsPayload(props: props)));
-            var server = FletAppServices.of(context).server;
-            server.updateControlProps(props: props);
-            server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "change",
-                eventData: svalue);
-          }
+    var checkbox = Checkbox(
+        autofocus: autofocus,
+        focusNode: _focusNode,
+        value: _value,
+        checkColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("checkColor", "")!),
+        fillColor: parseMaterialStateColor(
+            Theme.of(context), widget.control, "fillColor"),
+        tristate: _tristate,
+        onChanged: !disabled
+            ? (bool? value) {
+                _onChange(value);
+              }
+            : null);
 
-          var checkbox = Checkbox(
-              autofocus: autofocus,
-              focusNode: _focusNode,
-              value: _value,
-              checkColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("checkColor", "")!),
-              fillColor: parseMaterialStateColor(
-                  Theme.of(context), widget.control, "fillColor"),
-              tristate: tristate,
-              onChanged: !disabled
-                  ? (bool? value) {
-                      onChange(value);
-                    }
-                  : null);
+    ListTileClicks.of(context)?.notifier.addListener(() {
+      _toggleValue();
+    });
 
-          Widget result = checkbox;
-          if (label != "") {
-            var labelWidget = disabled
-                ? Text(label,
-                    style: TextStyle(color: Theme.of(context).disabledColor))
-                : MouseRegion(
-                    cursor: SystemMouseCursors.click, child: Text(label));
-            result = MergeSemantics(
-                child: GestureDetector(
-                    onTap: !disabled
-                        ? () {
-                            bool? newValue;
-                            if (!tristate) {
-                              newValue = !_value!;
-                            } else if (tristate && _value == null) {
-                              newValue = false;
-                            } else if (tristate && _value == false) {
-                              newValue = true;
-                            }
-                            onChange(newValue);
-                          }
-                        : null,
-                    child: labelPosition == LabelPosition.right
-                        ? Row(children: [checkbox, labelWidget])
-                        : Row(children: [labelWidget, checkbox])));
-          }
+    Widget result = checkbox;
+    if (label != "") {
+      var labelWidget = disabled
+          ? Text(label,
+              style: TextStyle(color: Theme.of(context).disabledColor))
+          : MouseRegion(cursor: SystemMouseCursors.click, child: Text(label));
+      result = MergeSemantics(
+          child: GestureDetector(
+              onTap: !disabled ? _toggleValue : null,
+              child: labelPosition == LabelPosition.right
+                  ? Row(children: [checkbox, labelWidget])
+                  : Row(children: [labelWidget, checkbox])));
+    }
 
-          return constrainedControl(
-              context, result, widget.parent, widget.control);
-        });
+    return constrainedControl(context, result, widget.parent, widget.control);
   }
 }

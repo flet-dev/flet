@@ -6,10 +6,8 @@ import 'control.dart';
 
 class ControlAncestorViewModel extends Equatable {
   final Control? ancestor;
-  final Function dispatch;
 
-  const ControlAncestorViewModel(
-      {required this.ancestor, required this.dispatch});
+  const ControlAncestorViewModel({required this.ancestor});
 
   static ControlAncestorViewModel fromStore(
       Store<AppState> store, String id, String ancestorType) {
@@ -27,8 +25,7 @@ class ControlAncestorViewModel extends Equatable {
       controlId = ancestor.id;
     }
 
-    return ControlAncestorViewModel(
-        ancestor: ancestor, dispatch: store.dispatch);
+    return ControlAncestorViewModel(ancestor: ancestor);
   }
 
   @override
