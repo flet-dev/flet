@@ -5,7 +5,12 @@ Future<bool> isPrivateHost(String host) async {
   String? ip;
   var addr = InternetAddress.tryParse(host);
   if (addr == null) {
-    var ipAddr = (await InternetAddress.lookup(host)).first;
+    InternetAddress ipAddr;
+    try {
+      ipAddr = (await InternetAddress.lookup(host)).first;
+    } on SocketException {
+      throw Exception("Cannot resolve host: $host");
+    }
     if (ipAddr.rawAddress.length == 16) {
       return ipAddr.isLinkLocal || ipAddr.isLoopback;
     }

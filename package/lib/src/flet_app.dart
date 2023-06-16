@@ -7,15 +7,21 @@ import 'flet_app_services.dart';
 class FletApp extends StatefulWidget {
   final String pageUrl;
   final String assetsDir;
+  final String? controlId;
   final String? title;
   final FletAppErrorsHandler? errorsHandler;
+  final int? reconnectIntervalMs;
+  final int? reconnectTimeoutMs;
 
   const FletApp(
       {Key? key,
       required this.pageUrl,
       required this.assetsDir,
+      this.controlId,
       this.title,
-      this.errorsHandler})
+      this.errorsHandler,
+      this.reconnectIntervalMs,
+      this.reconnectTimeoutMs})
       : super(key: key);
 
   @override
@@ -37,6 +43,10 @@ class _FletAppState extends State<FletApp> {
     if (widget.pageUrl != _pageUrl) {
       _pageUrl = widget.pageUrl;
       _appServices = FletAppServices(
+          parentAppServices: FletAppServices.maybeOf(context),
+          controlId: widget.controlId,
+          reconnectIntervalMs: widget.reconnectIntervalMs,
+          reconnectTimeoutMs: widget.reconnectTimeoutMs,
           pageUrl: widget.pageUrl,
           assetsDir: widget.assetsDir,
           errorsHandler: widget.errorsHandler,

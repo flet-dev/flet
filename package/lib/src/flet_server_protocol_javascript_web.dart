@@ -31,6 +31,9 @@ class FletJavaScriptServerProtocol implements FletServerProtocol {
   }
 
   @override
+  bool get isLocalConnection => true;
+
+  @override
   void send(String message) {
     jsSend(message);
   }

@@ -30,6 +30,7 @@ abstract class FletServerProtocol {
   }
 
   Future connect();
+  bool get isLocalConnection;
   void send(String message);
   void disconnect();
 }

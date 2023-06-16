@@ -42,8 +42,10 @@ class FletApp(ConstrainedControl):
         #
         # Specific
         #
+        reconnect_interval_ms: Optional[int] = None,
+        reconnect_timeout_ms: Optional[int] = None,
+        on_error=None,
     ):
-
         ConstrainedControl.__init__(
             self,
             ref=ref,
@@ -73,6 +75,9 @@ class FletApp(ConstrainedControl):
         )
 
         self.url = url
+        self.reconnect_interval_ms = reconnect_interval_ms
+        self.reconnect_timeout_ms = reconnect_timeout_ms
+        self.on_error = on_error
 
     def _get_control_name(self):
         return "fletapp"
@@ -85,3 +90,30 @@ class FletApp(ConstrainedControl):
     @url.setter
     def url(self, value):
         self._set_attr("url", value)
+
+    # reconnect_interval_ms
+    @property
+    def reconnect_interval_ms(self) -> Optional[int]:
+        return self._get_attr("reconnectIntervalMs")
+
+    @reconnect_interval_ms.setter
+    def reconnect_interval_ms(self, value: Optional[int]):
+        self._set_attr("reconnectIntervalMs", value)
+
+    # reconnect_timeout_ms
+    @property
+    def reconnect_timeout_ms(self) -> Optional[int]:
+        return self._get_attr("reconnectTimeoutMs")
+
+    @reconnect_timeout_ms.setter
+    def reconnect_timeout_ms(self, value: Optional[int]):
+        self._set_attr("reconnectTimeoutMs", value)
+
+    # on_error
+    @property
+    def on_error(self):
+        return self._get_event_handler("error")
+
+    @on_error.setter
+    def on_error(self, handler):
+        self._add_event_handler("error", handler)
