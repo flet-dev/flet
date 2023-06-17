@@ -16,34 +16,16 @@ from flet_core.types import (
     ScaleValue,
     TextAlign,
 )
-from flet_core.utils import get_valid_enum, get_non_default_value
+from flet_core.utils import StrEnum, get_valid_enum, get_non_default_value
 
-
-_InputBorderDefault = InputBorder.OUTLINE
-_TextAlignDefault = TextAlign.LEFT
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
 
-KeyboardTypeString = Literal[
-    None,
-    "text",
-    "multiline",
-    "number",
-    "phone",
-    "datetime",
-    "email",
-    "url",
-    "visiblePassword",
-    "name",
-    "streetAddress",
-    "none",
-]
 
-
-class KeyboardType(Enum):
+class KeyboardType(StrEnum):
     NONE = "none"
     TEXT = "text"
     MULTILINE = "multiline"
@@ -65,6 +47,11 @@ class TextCapitalization(Enum):
     CHARACTERS = "characters"
     WORDS = "words"
     SENTENCES = "sentences"
+
+
+_InputBorderDefault = InputBorder.OUTLINE
+_KeyboardTypeDefault = KeyboardType.TEXT
+_TextAlignDefault = TextAlign.LEFT
 
 
 class TextField(FormFieldControl):
@@ -162,7 +149,7 @@ class TextField(FormFieldControl):
         # TextField Specific
         #
         value: Optional[str] = None,
-        keyboard_type: Optional[KeyboardType] = None,
+        keyboard_type: KeyboardType = _KeyboardTypeDefault,
         multiline: Optional[bool] = None,
         min_lines: Optional[int] = None,
         max_lines: Optional[int] = None,
@@ -297,19 +284,17 @@ class TextField(FormFieldControl):
 
     # keyboard_type
     @property
-    def keyboard_type(self) -> Optional[KeyboardType]:
+    def keyboard_type(self) -> KeyboardType:
         return self.__keyboard_type
 
     @keyboard_type.setter
-    def keyboard_type(self, value: Optional[KeyboardType]):
-        self.__keyboard_type = value
-        if isinstance(value, KeyboardType):
-            self._set_attr("keyboardType", value.value)
-        else:
-            self.__set_keyboard_type(value)
-
-    def __set_keyboard_type(self, value: KeyboardTypeString):
-        self._set_attr("keyboardType", value)
+    def keyboard_type(self, value: KeyboardType):
+        self.__keyboard_type = get_valid_enum(
+            KeyboardType, value, _KeyboardTypeDefault,
+        )
+        self._set_attr("keyboardType", get_non_default_value(
+            self.__keyboard_type, _KeyboardTypeDefault,
+        ))
 
     # text_align
     @property
