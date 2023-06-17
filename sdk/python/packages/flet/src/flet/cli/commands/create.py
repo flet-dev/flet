@@ -3,7 +3,7 @@ from pathlib import Path
 
 from copier.main import Worker
 from flet.cli.commands.base import BaseCommand
-from flet_runtime.utils import slugify
+from flet_core.utils import slugify
 
 
 class Command(BaseCommand):
