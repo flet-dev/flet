@@ -12,22 +12,17 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
-MarkdownExtensionSetString = Literal[
-    None, "none", "commonMark", "gitHubWeb", "gitHubFlavored"
-]
+from flet_core.utils import StrEnum, get_valid_enum, get_non_default_value
 
 
-class MarkdownExtensionSet(Enum):
+class MarkdownExtensionSet(StrEnum):
     NONE = "none"
     COMMON_MARK = "commonMark"
     GITHUB_WEB = "gitHubWeb"
     GITHUB_FLAVORED = "gitHubFlavored"
+
+
+_MarkdownExtensionSetDefault = MarkdownExtensionSet.NONE
 
 
 class Markdown(ConstrainedControl):
@@ -72,7 +67,7 @@ class Markdown(ConstrainedControl):
         # Specific
         #
         selectable: Optional[bool] = None,
-        extension_set: Optional[MarkdownExtensionSet] = None,
+        extension_set: MarkdownExtensionSet = _MarkdownExtensionSetDefault,
         code_theme: Optional[str] = None,
         code_style: Optional[TextStyle] = None,
         auto_follow_links: Optional[bool] = None,
@@ -145,19 +140,15 @@ class Markdown(ConstrainedControl):
 
     # extension_set
     @property
-    def extension_set(self) -> Optional[MarkdownExtensionSet]:
+    def extension_set(self) -> MarkdownExtensionSet:
         return self.__extension_set
 
     @extension_set.setter
-    def extension_set(self, value: Optional[MarkdownExtensionSet]):
-        self.__extension_set = value
-        if isinstance(value, MarkdownExtensionSet):
-            self._set_attr("extensionSet", value.value)
-        else:
-            self.__set_extension_set(value)
-
-    def __set_extension_set(self, value: MarkdownExtensionSetString):
-        self._set_attr("extensionSet", value)
+    def extension_set(self, value: MarkdownExtensionSet):
+        self.__extension_set = get_valid_enum(MarkdownExtensionSet, value, _MarkdownExtensionSetDefault)
+        self._set_attr("extensionSet", get_non_default_value(
+            self.__extension_set, _MarkdownExtensionSetDefault,
+        ))
 
     # code_theme
     @property
