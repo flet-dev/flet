@@ -14,7 +14,7 @@ from flet_core.types import (
     ScaleValue,
     TextAlign,
 )
-from flet_core.utils import get_valid_enum, get_non_default_value
+from flet_core.utils import StrEnum, get_valid_enum, get_non_default_value
 
 
 try:
@@ -22,13 +22,8 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-TextOverflowString = Literal[None, "clip", "ellipsis", "fade", "visible"]
-_FontWeightDefault = FontWeight.NORMAL
-_TextAlignDefault = TextAlign.LEFT
 
-
-class TextOverflow(Enum):
-    NONE = None
+class TextOverflow(StrEnum):
     CLIP = "clip"
     ELLIPSIS = "ellipsis"
     FADE = "fade"
@@ -70,6 +65,11 @@ class TextThemeStyle(Enum):
     BODY_LARGE = "bodyLarge"
     BODY_MEDIUM = "bodyMedium"
     BODY_SMALL = "bodySmall"
+
+
+_FontWeightDefault = FontWeight.NORMAL
+_TextAlignDefault = TextAlign.LEFT
+_TextOverflowDefault = TextOverflow.FADE
 
 
 class Text(ConstrainedControl):
@@ -141,7 +141,7 @@ class Text(ConstrainedControl):
         italic: Optional[bool] = None,
         style: Optional[TextThemeStyle] = None,
         max_lines: Optional[int] = None,
-        overflow: TextOverflow = TextOverflow.NONE,
+        overflow: TextOverflow = _TextOverflowDefault,
         selectable: Optional[bool] = None,
         no_wrap: Optional[bool] = None,
         color: Optional[str] = None,
@@ -317,14 +317,10 @@ class Text(ConstrainedControl):
 
     @overflow.setter
     def overflow(self, value: TextOverflow):
-        self.__overflow = value
-        if isinstance(value, TextOverflow):
-            self._set_attr("overflow", value.value)
-        else:
-            self.__set_overflow(value)
-
-    def __set_overflow(self, value: TextOverflowString):
-        self._set_attr("overflow", value)
+        self.__overflow = get_valid_enum(TextOverflow, value, _TextOverflowDefault)
+        self._set_attr("overflow", get_non_default_value(
+            self.__overflow, _TextOverflowDefault,
+        ))
 
     # color
     @property
