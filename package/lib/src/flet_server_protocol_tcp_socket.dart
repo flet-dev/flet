@@ -5,12 +5,18 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 
 import 'flet_server_protocol.dart';
+import 'utils/networking.dart';
+
+const int defaultLocalReconnectInterval = 200;
+const int defaultPublicReconnectInterval = 500;
 
 class FletTcpSocketServerProtocol implements FletServerProtocol {
   String address;
   FletServerProtocolOnMessageCallback onMessage;
   FletServerProtocolOnDisconnectCallback onDisconnect;
   Socket? _socket;
+  late final bool _isLocalConnection;
+  late final int _defaultReconnectIntervalMs;
 
   FletTcpSocketServerProtocol(
       {required this.address,
@@ -23,11 +29,17 @@ class FletTcpSocketServerProtocol implements FletServerProtocol {
 
     if (address.startsWith("tcp://")) {
       var u = Uri.parse(address);
+      _isLocalConnection = await isPrivateHost(u.host);
+      _defaultReconnectIntervalMs = _isLocalConnection
+          ? defaultLocalReconnectInterval
+          : defaultPublicReconnectInterval;
       _socket = await Socket.connect(u.host, u.port);
       debugPrint(
           'Connected to: ${_socket!.remoteAddress.address}:${_socket!.remotePort}');
     } else {
       final udsPath = InternetAddress(address, type: InternetAddressType.unix);
+      _isLocalConnection = true;
+      _defaultReconnectIntervalMs = defaultLocalReconnectInterval;
       _socket = await Socket.connect(udsPath, 0);
       debugPrint('Connected to: $udsPath');
     }
@@ -101,6 +113,12 @@ class FletTcpSocketServerProtocol implements FletServerProtocol {
       },
     );
   }
+
+  @override
+  bool get isLocalConnection => _isLocalConnection;
+
+  @override
+  int get defaultReconnectIntervalMs => _defaultReconnectIntervalMs;
 
   _onMessage(message) {
     onMessage(message);

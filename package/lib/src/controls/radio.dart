@@ -10,6 +10,7 @@ import '../protocol/update_control_props_payload.dart';
 import '../utils/buttons.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'list_tile.dart';
 
 enum LabelPosition { right, left }
 
@@ -17,12 +18,14 @@ class RadioControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final dynamic dispatch;
 
   const RadioControl(
       {Key? key,
       this.parent,
       required this.control,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -53,6 +56,21 @@ class _RadioControlState extends State<RadioControl> {
     super.dispose();
   }
 
+  void _onChange(String ancestorId, String? value) {
+    var svalue = value ?? "";
+    debugPrint(svalue);
+    List<Map<String, String>> props = [
+      {"i": ancestorId, "value": svalue}
+    ];
+    widget.dispatch(
+        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+
+    final server = FletAppServices.of(context).server;
+    server.updateControlProps(props: props);
+    server.sendPageEvent(
+        eventTarget: ancestorId, eventName: "change", eventData: svalue);
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("Radio build: ${widget.control.id}");
@@ -80,23 +98,7 @@ class _RadioControlState extends State<RadioControl> {
           }
 
           String groupValue = viewModel.ancestor!.attrString("value", "")!;
-
-          onChange(String? value) {
-            var svalue = value != null ? value.toString() : "";
-            debugPrint(svalue);
-            List<Map<String, String>> props = [
-              {"i": viewModel.ancestor!.id, "value": svalue}
-            ];
-            viewModel.dispatch(UpdateControlPropsAction(
-                UpdateControlPropsPayload(props: props)));
-
-            final server = FletAppServices.of(context).server;
-            server.updateControlProps(props: props);
-            server.sendPageEvent(
-                eventTarget: viewModel.ancestor!.id,
-                eventName: "change",
-                eventData: svalue);
-          }
+          String ancestorId = viewModel.ancestor!.id;
 
           var radio = Radio<String>(
               autofocus: autofocus,
@@ -107,9 +109,13 @@ class _RadioControlState extends State<RadioControl> {
                   Theme.of(context), widget.control, "fillColor"),
               onChanged: !disabled
                   ? (String? value) {
-                      onChange(value);
+                      _onChange(ancestorId, value);
                     }
                   : null);
+
+          ListTileClicks.of(context)?.notifier.addListener(() {
+            _onChange(ancestorId, value);
+          });
 
           Widget result = radio;
           if (label != "") {
@@ -122,7 +128,7 @@ class _RadioControlState extends State<RadioControl> {
                 child: GestureDetector(
                     onTap: !disabled
                         ? () {
-                            onChange(value);
+                            _onChange(ancestorId, value);
                           }
                         : null,
                     child: labelPosition == LabelPosition.right

@@ -9,6 +9,10 @@ import 'models/app_state.dart';
 import 'reducers.dart';
 
 class FletAppServices extends InheritedWidget {
+  final FletAppServices? parentAppServices;
+  final String? controlId;
+  final int? reconnectIntervalMs;
+  final int? reconnectTimeoutMs;
   final String pageUrl;
   final String assetsDir;
   final FletAppErrorsHandler? errorsHandler;
@@ -22,19 +26,37 @@ class FletAppServices extends InheritedWidget {
       required Widget child,
       required this.pageUrl,
       required this.assetsDir,
-      this.errorsHandler})
+      this.errorsHandler,
+      this.parentAppServices,
+      this.controlId,
+      this.reconnectIntervalMs,
+      this.reconnectTimeoutMs})
       : super(key: key, child: child) {
     store = Store<AppState>(appReducer, initialState: AppState.initial());
-    server = FletServer(store, controlInvokeMethods);
+    server = FletServer(store,
+        reconnectIntervalMs: reconnectIntervalMs,
+        reconnectTimeoutMs: reconnectTimeoutMs,
+        errorsHandler: errorsHandler);
     if (errorsHandler != null) {
-      errorsHandler!.addListener(() {
-        if (store.state.isRegistered) {
-          server.sendPageEvent(
-              eventTarget: "page",
+      if (controlId == null) {
+        // root error handler
+        errorsHandler!.addListener(() {
+          if (store.state.isRegistered) {
+            server.sendPageEvent(
+                eventTarget: "page",
+                eventName: "error",
+                eventData: errorsHandler!.error!);
+          }
+        });
+      } else if (controlId != null && parentAppServices != null) {
+        // parent error handler
+        errorsHandler?.addListener(() {
+          parentAppServices?.server.sendPageEvent(
+              eventTarget: controlId!,
               eventName: "error",
               eventData: errorsHandler!.error!);
-        }
-      });
+        });
+      }
     }
     // connect to a page
     var pageUri = Uri.parse(pageUrl);
@@ -50,6 +72,8 @@ class FletAppServices extends InheritedWidget {
     server.disconnect();
   }
 
-  static FletAppServices of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<FletAppServices>()!;
+  static FletAppServices? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<FletAppServices>();
+
+  static FletAppServices of(BuildContext context) => maybeOf(context)!;
 }

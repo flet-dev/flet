@@ -94,6 +94,7 @@ class ListTile(ConstrainedControl):
         selected: Optional[bool] = None,
         dense: Optional[bool] = None,
         autofocus: Optional[bool] = None,
+        toggle_inputs: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
         on_click=None,
@@ -138,6 +139,7 @@ class ListTile(ConstrainedControl):
         self.selected = selected
         self.dense = dense
         self.autofocus = autofocus
+        self.toggle_inputs = toggle_inputs
         self.url = url
         self.url_target = url_target
         self.on_click = on_click
@@ -246,6 +248,15 @@ class ListTile(ConstrainedControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # toggle_inputs
+    @property
+    def toggle_inputs(self) -> Optional[bool]:
+        return self._get_attr("toggleInputs", data_type="bool", def_value=False)
+
+    @toggle_inputs.setter
+    def toggle_inputs(self, value: Optional[bool]):
+        self._set_attr("toggleInputs", value)
 
     # url
     @property

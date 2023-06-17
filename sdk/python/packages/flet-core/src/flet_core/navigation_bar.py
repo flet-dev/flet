@@ -184,7 +184,6 @@ class NavigationBar(ConstrainedControl):
         elevation: OptionalNumber = None,
         on_change=None,
     ):
-
         ConstrainedControl.__init__(
             self,
             ref=ref,
@@ -249,7 +248,7 @@ class NavigationBar(ConstrainedControl):
     # selected_index
     @property
     def selected_index(self) -> Optional[int]:
-        return self._get_attr("selectedIndex", data_type="int")
+        return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
     def selected_index(self, value: Optional[int]):

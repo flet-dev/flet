@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
+import 'package:flet/src/flet_app_context.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -85,7 +87,7 @@ class _PageControlState extends State<PageControl> {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
-  String? _prevViewsIds;
+  String? _prevViewRoutes;
   bool _keyboardHandlerSubscribed = false;
 
   @override
@@ -170,11 +172,10 @@ class _PageControlState extends State<PageControl> {
     var darkTheme = widget.control.attrString("darkTheme") == null
         ? parseTheme(widget.control, "theme", Brightness.dark)
         : parseTheme(widget.control, "darkTheme", Brightness.dark);
-    var themeMode = ThemeMode.values.firstWhere(
-        (t) =>
+    var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
             t.name.toLowerCase() ==
-            widget.control.attrString("themeMode", "")!.toLowerCase(),
-        orElse: () => ThemeMode.system);
+            widget.control.attrString("themeMode", "")!.toLowerCase()) ??
+        FletAppContext.of(context)?.themeMode;
 
     debugPrint("Page theme: $themeMode");
 
@@ -443,16 +444,18 @@ class _PageControlState extends State<PageControl> {
               builder: (context, media) {
                 debugPrint("MeterialApp.router build: ${widget.control.id}");
 
-                return MaterialApp.router(
-                  showSemanticsDebugger:
-                      widget.control.attrBool("showSemanticsDebugger", false)!,
-                  routerDelegate: _routerDelegate,
-                  routeInformationParser: _routeParser,
-                  title: windowTitle,
-                  theme: theme,
-                  darkTheme: darkTheme,
-                  themeMode: themeMode,
-                );
+                return FletAppContext(
+                    themeMode: themeMode,
+                    child: MaterialApp.router(
+                      showSemanticsDebugger: widget.control
+                          .attrBool("showSemanticsDebugger", false)!,
+                      routerDelegate: _routerDelegate,
+                      routeInformationParser: _routeParser,
+                      title: windowTitle,
+                      theme: theme,
+                      darkTheme: darkTheme,
+                      themeMode: themeMode,
+                    ));
               });
         });
   }
@@ -471,7 +474,7 @@ class _PageControlState extends State<PageControl> {
           debugPrint("_buildNavigator build");
 
           List<Page<dynamic>> pages = [];
-          if (routesView.isLoading || routesView.viewIds.isEmpty) {
+          if (routesView.isLoading || routesView.views.isEmpty) {
             pages.add(FadeTransitionPage(
                 child: LoadingPage(
               key: const ValueKey("Loading page"),
@@ -483,7 +486,7 @@ class _PageControlState extends State<PageControl> {
             overlayWidgets(String viewId) {
               List<Widget> overlayWidgets = [];
 
-              if (viewId == routesView.viewIds.last) {
+              if (viewId == routesView.views.last.id) {
                 overlayWidgets.addAll(routesView.offstageControls
                     .where((c) => !c.isNonVisual)
                     .map((c) => createControl(
@@ -491,24 +494,26 @@ class _PageControlState extends State<PageControl> {
                 overlayWidgets.add(const PageMedia());
               }
 
-              if (viewId == routesView.viewIds.first && isDesktop()) {
+              if (viewId == routesView.views.first.id && isDesktop()) {
                 overlayWidgets.add(const WindowMedia());
               }
 
               return overlayWidgets;
             }
 
-            String viewIds = routesView.viewIds.join();
-            pages = routesView.viewIds.map((viewId) {
-              var key = ValueKey(viewId);
+            String viewRoutes = routesView.views
+                .map((v) => v.attrString("route") ?? v.id)
+                .join();
+            pages = routesView.views.map((view) {
+              var key = ValueKey(view.attrString("route") ?? view.id);
               var child = _buildViewWidget(
-                  routesView.page, viewId, overlayWidgets(viewId));
-              return _prevViewsIds == null || _prevViewsIds == viewIds
+                  routesView.page, view.id, overlayWidgets(view.id));
+              return _prevViewRoutes == null || _prevViewRoutes == viewRoutes
                   ? FadeTransitionPage(key: key, child: child)
                   : MaterialPage(key: key, child: child);
             }).toList();
 
-            _prevViewsIds = viewIds;
+            _prevViewRoutes = viewRoutes;
           }
 
           Widget nextChild = Navigator(
