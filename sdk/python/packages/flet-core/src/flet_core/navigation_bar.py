@@ -11,23 +11,18 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
-NavigationBarLabelBehaviorString = Literal[
-    None, "alwaysShow", "alwaysHide", "onlyShowSelected"
-]
+from flet_core.utils import StrEnum, get_valid_enum, get_non_default_value
 
 
-class NavigationBarLabelBehavior(Enum):
+class NavigationBarLabelBehavior(StrEnum):
     """Defines how the destinations' labels will be laid out and when they'll be displayed."""
 
     ALWAYS_SHOW = "alwaysShow"
     ALWAYS_HIDE = "alwaysHide"
     ONLY_SHOW_SELECTED = "onlyShowSelected"
+
+
+_NavigationBarLabelBehaviorDefault = NavigationBarLabelBehavior.ALWAYS_SHOW
 
 
 class NavigationDestination(Control):
@@ -180,7 +175,7 @@ class NavigationBar(ConstrainedControl):
         destinations: Optional[List[NavigationDestination]] = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
-        label_behavior: Optional[NavigationBarLabelBehavior] = None,
+        label_behavior: NavigationBarLabelBehavior = _NavigationBarLabelBehaviorDefault,
         elevation: OptionalNumber = None,
         on_change=None,
     ):
@@ -256,19 +251,17 @@ class NavigationBar(ConstrainedControl):
 
     # label_behavior
     @property
-    def label_behavior(self) -> Optional[NavigationBarLabelBehavior]:
+    def label_behavior(self) -> NavigationBarLabelBehavior:
         return self.__label_behavior
 
     @label_behavior.setter
-    def label_behavior(self, value: Optional[NavigationBarLabelBehavior]):
-        self.__label_behavior = value
-        if isinstance(value, NavigationBarLabelBehavior):
-            self._set_attr("labelType", value.value)
-        else:
-            self.__set_label_behavior(value)
-
-    def __set_label_behavior(self, value: NavigationBarLabelBehaviorString):
-        self._set_attr("labelType", value)
+    def label_behavior(self, value: NavigationBarLabelBehavior):
+        self.__label_behavior = get_valid_enum(
+            NavigationBarLabelBehavior, value, _NavigationBarLabelBehaviorDefault,
+        )
+        self._set_attr("labelType", get_non_default_value(
+            self.__label_behavior, _NavigationBarLabelBehaviorDefault,
+        ))
 
     # bgcolor
     @property
