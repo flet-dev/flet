@@ -19,14 +19,20 @@ def test_instance_no_attrs_set():
 
 def test_extension_set_enum():
     r = ft.NavigationRail()
-    assert r.label_type is None
+    assert isinstance(r.label_type, ft.NavigationRailLabelType)
+    assert r.label_type == ft.NavigationRailLabelType.NONE
     assert r._get_attr("labelType") is None
 
     r = ft.NavigationRail(label_type=ft.NavigationRailLabelType.SELECTED)
     assert isinstance(r.label_type, ft.NavigationRailLabelType)
+    assert isinstance(r._get_attr("labelType"), str)
     assert r.label_type == ft.NavigationRailLabelType.SELECTED
+    assert r._get_attr("labelType") == ft.NavigationRailLabelType.SELECTED.value
     assert r._get_attr("labelType") == "selected"
 
-    r = ft.NavigationRail(label_type="none")
-    assert isinstance(r.label_type, str)
-    assert r._get_attr("labelType") == "none"
+    r = ft.NavigationRail(label_type="all")
+    assert isinstance(r.label_type, ft.NavigationRailLabelType)
+    assert isinstance(r._get_attr("labelType"), str)
+    assert r.label_type == ft.NavigationRailLabelType.ALL
+    assert r._get_attr("labelType") == ft.NavigationRailLabelType.ALL.value
+    assert r._get_attr("labelType") == "all"
