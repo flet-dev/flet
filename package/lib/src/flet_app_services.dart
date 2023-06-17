@@ -33,7 +33,7 @@ class FletAppServices extends InheritedWidget {
       this.reconnectTimeoutMs})
       : super(key: key, child: child) {
     store = Store<AppState>(appReducer, initialState: AppState.initial());
-    server = FletServer(store,
+    server = FletServer(store, controlInvokeMethods,
         reconnectIntervalMs: reconnectIntervalMs,
         reconnectTimeoutMs: reconnectTimeoutMs,
         errorsHandler: errorsHandler);
