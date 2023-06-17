@@ -7,6 +7,8 @@ import 'utils/platform_utils_non_web.dart'
 
 typedef FletServerProtocolOnDisconnectCallback = void Function();
 typedef FletServerProtocolOnMessageCallback = void Function(String message);
+typedef ControlInvokeMethodCallback = Future<String?> Function(
+    String methodName, Map<String, String> args);
 
 abstract class FletServerProtocol {
   factory FletServerProtocol(

@@ -2,11 +2,11 @@ import dataclasses
 import time
 from typing import Any, Optional
 
-from flet_core.callable_control import CallableControl
+from flet_core.control import Control
 from flet_core.ref import Ref
 
 
-class HapticFeedback(CallableControl):
+class HapticFeedback(Control):
     """
     Allows access to the haptic feedback interface on the device.
 
@@ -40,8 +40,7 @@ class HapticFeedback(CallableControl):
         ref: Optional[Ref] = None,
         data: Any = None,
     ):
-
-        CallableControl.__init__(
+        Control.__init__(
             self,
             ref=ref,
             data=data,
@@ -54,25 +53,25 @@ class HapticFeedback(CallableControl):
         return True
 
     def heavy_impact(self):
-        self._call_method("heavy_impact", [], wait_for_result=False)
+        self.page.invoke_method("heavy_impact")
 
     async def heavy_impact_async(self):
-        await self._call_method_async("heavy_impact", [], wait_for_result=False)
+        await self.page.invoke_method_async("heavy_impact")
 
     def light_impact(self):
-        self._call_method("light_impact", [], wait_for_result=False)
+        self.page.invoke_method("light_impact")
 
     async def light_impact_async(self):
-        await self._call_method_async("light_impact", [], wait_for_result=False)
+        await self.page.invoke_method_async("light_impact")
 
     def medium_impact(self):
-        self._call_method("medium_impact", [], wait_for_result=False)
+        self.page.invoke_method("medium_impact")
 
     async def medium_impact_async(self):
-        await self._call_method_async("medium_impact", [], wait_for_result=False)
+        await self.page.invoke_method_async("medium_impact")
 
     def vibrate(self):
-        self._call_method("vibrate", [], wait_for_result=False)
+        self.page.invoke_method("vibrate")
 
     async def vibrate_async(self):
-        await self._call_method_async("vibrate", [], wait_for_result=False)
+        await self.page.invoke_method_async("vibrate")

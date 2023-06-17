@@ -46,8 +46,9 @@ class FletServer {
   String _isWeb = "";
   String _platform = "";
   int reconnectStarted = 0;
+  final Map<String, ControlInvokeMethodCallback> controlInvokeMethods;
 
-  FletServer(this._store,
+  FletServer(this._store, this.controlInvokeMethods,
       {this.reconnectIntervalMs, this.reconnectTimeoutMs, this.errorsHandler});
 
   Future connect({required String address}) async {

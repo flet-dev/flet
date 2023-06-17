@@ -92,7 +92,6 @@ class LocalConnection(Connection):
         raise Exception(f"Unsupported command: {command.name}")
 
     def _process_add_command(self, command: Command):
-
         top_parent_id = command.attrs.get("to", "page")
         top_parent_at = int(command.attrs.get("at", "-1"))
 
@@ -193,11 +192,14 @@ class LocalConnection(Connection):
 
     def _process_invoke_method_command(self, values, attrs):
         # "invokeMethod", values=[method_id, method_name], attrs=arguments
-        assert len(values) == 2, '"invokeMethod" command has wrong number of values'
+        assert len(values) == 3, '"invokeMethod" command has wrong number of values'
         return "", ClientMessage(
             ClientActions.INVOKE_METHOD,
             InvokeMethodPayload(
-                methodId=values[0], methodName=values[1], arguments=attrs
+                methodId=values[0],
+                methodName=values[1],
+                controlId=values[2],
+                arguments=attrs,
             ),
         )
 
