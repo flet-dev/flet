@@ -16,7 +16,7 @@ class AppState extends Equatable {
   final String sessionId;
   final bool isLoading;
   final bool isRegistered;
-  final int reconnectingTimeoutMs;
+  final int reconnectDelayMs;
   final String error;
   final Size size;
   final Brightness displayBrightness;
@@ -30,7 +30,7 @@ class AppState extends Equatable {
       required this.sessionId,
       required this.isLoading,
       required this.isRegistered,
-      required this.reconnectingTimeoutMs,
+      required this.reconnectDelayMs,
       required this.error,
       required this.size,
       required this.sizeBreakpoints,
@@ -44,7 +44,7 @@ class AppState extends Equatable {
       sessionId: "",
       isLoading: true,
       isRegistered: false,
-      reconnectingTimeoutMs: 0,
+      reconnectDelayMs: 0,
       error: "",
       size: Size(0, 0),
       sizeBreakpoints: {
@@ -73,7 +73,7 @@ class AppState extends Equatable {
           String? sessionId,
           bool? isLoading,
           bool? isRegistered,
-          int? reconnectingTimeoutMs,
+          int? reconnectDelayMs,
           String? error,
           Size? size,
           Map<String, double>? sizeBreakpoints,
@@ -86,8 +86,7 @@ class AppState extends Equatable {
           sessionId: sessionId ?? this.sessionId,
           isLoading: isLoading ?? this.isLoading,
           isRegistered: isRegistered ?? this.isRegistered,
-          reconnectingTimeoutMs:
-              reconnectingTimeoutMs ?? this.reconnectingTimeoutMs,
+          reconnectDelayMs: reconnectDelayMs ?? this.reconnectDelayMs,
           error: error ?? this.error,
           size: size ?? this.size,
           sizeBreakpoints: sizeBreakpoints ?? this.sizeBreakpoints,

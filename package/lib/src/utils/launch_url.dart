@@ -12,6 +12,13 @@ Future openWebBrowser(String url,
     openPopupBrowserWindow(
         url, webWindowName ?? "Flet", windowWidth ?? 1200, windowHeight ?? 800);
   } else {
-    await launchUrl(Uri.parse(url), webOnlyWindowName: webWindowName);
+    LaunchMode? mode;
+    if (webWindowName == "_blank") {
+      mode = LaunchMode.externalApplication;
+    }
+
+    await launchUrl(Uri.parse(url),
+        webOnlyWindowName: webWindowName,
+        mode: mode ?? LaunchMode.platformDefault);
   }
 }

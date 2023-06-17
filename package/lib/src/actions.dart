@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'flet_server.dart';
 import 'models/window_media_data.dart';
 import 'protocol/add_page_controls_payload.dart';
 import 'protocol/app_become_active_payload.dart';
@@ -13,7 +14,6 @@ import 'protocol/remove_control_payload.dart';
 import 'protocol/replace_page_controls_payload.dart';
 import 'protocol/session_crashed_payload.dart';
 import 'protocol/update_control_props_payload.dart';
-import 'flet_server.dart';
 
 class PageLoadAction {
   final Uri pageUri;
@@ -23,7 +23,9 @@ class PageLoadAction {
 }
 
 class PageReconnectingAction {
-  PageReconnectingAction();
+  final String connectMessage;
+  final int nextReconnectDelayMs;
+  PageReconnectingAction(this.connectMessage, this.nextReconnectDelayMs);
 }
 
 class PageSizeChangeAction {

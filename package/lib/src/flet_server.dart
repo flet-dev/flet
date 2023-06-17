@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:redux/redux.dart';
 
 import 'actions.dart';
+import 'flet_app_errors_handler.dart';
 import 'flet_server_protocol.dart';
 import 'models/app_state.dart';
 import 'protocol/add_page_controls_payload.dart';
@@ -22,9 +23,14 @@ import 'protocol/replace_page_controls_payload.dart';
 import 'protocol/session_crashed_payload.dart';
 import 'protocol/update_control_props_payload.dart';
 import 'protocol/update_control_props_request.dart';
+import 'utils/uri.dart';
 
 class FletServer {
   final Store<AppState> _store;
+  final int? reconnectIntervalMs;
+  final int? reconnectTimeoutMs;
+  final FletAppErrorsHandler? errorsHandler;
+
   late FletServerProtocol _clientProtocol;
   bool _disposed = false;
   String _address = "";
@@ -39,8 +45,10 @@ class FletServer {
   String _isPWA = "";
   String _isWeb = "";
   String _platform = "";
+  int reconnectStarted = 0;
 
-  FletServer(this._store);
+  FletServer(this._store,
+      {this.reconnectIntervalMs, this.reconnectTimeoutMs, this.errorsHandler});
 
   Future connect({required String address}) async {
     _address = address;
@@ -55,6 +63,7 @@ class FletServer {
       registerWebClientInternal();
     } catch (e) {
       debugPrint("Error connecting to Flet server: $e");
+      errorsHandler?.onError("Error connecting to Flet server: $e");
       _onDisconnect();
     }
   }
@@ -63,13 +72,36 @@ class FletServer {
     if (_disposed) {
       return;
     }
-    _store.dispatch(PageReconnectingAction());
-    debugPrint(
-        "Reconnect in ${_store.state.reconnectingTimeoutMs} milliseconds");
-    Future.delayed(Duration(milliseconds: _store.state.reconnectingTimeoutMs))
-        .then((value) async {
-      await connect(address: _address);
-    });
+
+    var nextReconnectDelayMs = _store.state.reconnectDelayMs;
+    if (nextReconnectDelayMs == 0) {
+      reconnectStarted = DateTime.now().millisecondsSinceEpoch;
+    }
+
+    // set/update timeout
+    nextReconnectDelayMs =
+        nextReconnectDelayMs == 0 || _clientProtocol.isLocalConnection
+            ? reconnectIntervalMs ?? _clientProtocol.defaultReconnectIntervalMs
+            : nextReconnectDelayMs * 2;
+
+    debugPrint("reconnectTimeoutMs: $reconnectTimeoutMs");
+
+    if (reconnectTimeoutMs == null ||
+        (DateTime.now().millisecondsSinceEpoch - reconnectStarted) <
+            reconnectTimeoutMs!) {
+      // re-connect
+      _store.dispatch(PageReconnectingAction(
+          isUdsPath(_address) ? "" : "Loading...", nextReconnectDelayMs));
+
+      debugPrint("Reconnect in $nextReconnectDelayMs milliseconds");
+      Future.delayed(Duration(milliseconds: nextReconnectDelayMs))
+          .then((value) async {
+        await connect(address: _address);
+      });
+    } else if (reconnectTimeoutMs != null) {
+      errorsHandler
+          ?.onError("Error connecting to a Flet service in a timely manner.");
+    }
   }
 
   registerWebClient({
