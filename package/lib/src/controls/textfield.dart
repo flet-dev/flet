@@ -189,6 +189,14 @@ class _TextFieldControlState extends State<TextFieldControl> {
             orElse: () => TextAlign.start,
           );
 
+          bool autocorrect = widget.control.attrBool("autocorrect", true)!;
+          bool enableSuggestions =
+              widget.control.attrBool("enableSuggestions", true)!;
+          bool smartDashesType =
+              widget.control.attrBool("smartDashesType", true)!;
+          bool smartQuotesType =
+              widget.control.attrBool("smartQuotesType", true)!;
+
           FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
           var focusValue = widget.control.attrString("focus");
@@ -220,6 +228,14 @@ class _TextFieldControlState extends State<TextFieldControl> {
               cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
               cursorRadius: parseRadius(widget.control, "cursorRadius"),
               keyboardType: keyboardType,
+              autocorrect: autocorrect,
+              enableSuggestions: enableSuggestions,
+              smartDashesType: smartDashesType
+                  ? SmartDashesType.enabled
+                  : SmartDashesType.disabled,
+              smartQuotesType: smartQuotesType
+                  ? SmartQuotesType.enabled
+                  : SmartQuotesType.disabled,
               textAlign: textAlign,
               minLines: minLines,
               maxLines: maxLines,
