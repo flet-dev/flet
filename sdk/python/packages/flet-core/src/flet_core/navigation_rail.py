@@ -12,19 +12,16 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
-NavigationRailLabelTypeString = Literal[None, "none", "all", "selected"]
+from flet_core.utils import StrEnum, get_valid_enum, get_non_default_value
 
 
-class NavigationRailLabelType(Enum):
+class NavigationRailLabelType(StrEnum):
     NONE = "none"
     ALL = "all"
     SELECTED = "selected"
+
+
+_NavigationRailLabelTypeDefault = NavigationRailLabelType.NONE
 
 
 class NavigationRailDestination(Control):
@@ -224,7 +221,7 @@ class NavigationRail(ConstrainedControl):
         destinations: Optional[List[NavigationRailDestination]] = None,
         selected_index: Optional[int] = None,
         extended: Optional[bool] = None,
-        label_type: Optional[NavigationRailLabelType] = None,
+        label_type: NavigationRailLabelType = _NavigationRailLabelTypeDefault,
         bgcolor: Optional[str] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -318,19 +315,17 @@ class NavigationRail(ConstrainedControl):
 
     # label_type
     @property
-    def label_type(self) -> Optional[NavigationRailLabelType]:
+    def label_type(self) -> NavigationRailLabelType:
         return self.__label_type
 
     @label_type.setter
-    def label_type(self, value: Optional[NavigationRailLabelType]):
-        self.__label_type = value
-        if isinstance(value, NavigationRailLabelType):
-            self._set_attr("labelType", value.value)
-        else:
-            self.__set_label_type(value)
-
-    def __set_label_type(self, value: NavigationRailLabelTypeString):
-        self._set_attr("labelType", value)
+    def label_type(self, value: NavigationRailLabelType):
+        self.__label_type = get_valid_enum(
+            NavigationRailLabelType, value, _NavigationRailLabelTypeDefault,
+        )
+        self._set_attr("labelType", get_non_default_value(
+            self.__label_type, _NavigationRailLabelTypeDefault,
+        ))
 
     # bgcolor
     @property
