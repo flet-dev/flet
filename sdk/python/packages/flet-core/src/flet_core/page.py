@@ -839,6 +839,7 @@ class Page(Control):
         self,
         method_name: str,
         arguments: Optional[Dict[str, str]] = None,
+        control_id: str = "",
         wait_for_result: bool = False,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
@@ -851,7 +852,7 @@ class Page(Control):
 
         # call method
         result = self._send_command(
-            "invokeMethod", values=[method_id, method_name], attrs=arguments
+            "invokeMethod", values=[method_id, method_name, control_id], attrs=arguments
         )
 
         if result.error != "":
@@ -881,6 +882,7 @@ class Page(Control):
         self,
         method_name: str,
         arguments: Optional[Dict[str, str]] = None,
+        control_id: str = "",
         wait_for_result: bool = False,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
@@ -893,7 +895,7 @@ class Page(Control):
 
         # call method
         result = await self._send_command_async(
-            "invokeMethod", values=[method_id, method_name], attrs=arguments
+            "invokeMethod", values=[method_id, method_name, control_id], attrs=arguments
         )
 
         if result.error != "":

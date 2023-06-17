@@ -6,12 +6,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
+import '../flet_server.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/page_args_model.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/images.dart';
 import 'error.dart';
 
@@ -40,7 +39,6 @@ class _AudioControlState extends State<AudioControl> {
   double? _volume;
   double? _balance;
   double? _playbackRate;
-  String? _method;
   void Function(Duration)? _onDurationChanged;
   void Function(PlayerState)? _onStateChanged;
   void Function(int)? _onPositionChanged;
@@ -48,6 +46,7 @@ class _AudioControlState extends State<AudioControl> {
   int _position = -1;
   void Function()? _onSeekComplete;
   late final AudioPlayer player;
+  FletServer? _server;
 
   @override
   void initState() {
@@ -77,9 +76,10 @@ class _AudioControlState extends State<AudioControl> {
   }
 
   @override
-  void dispose() {
+  void deactivate() {
+    _server?.controlInvokeMethods.remove(widget.control.id);
     player.dispose();
-    super.dispose();
+    super.deactivate();
   }
 
   @override
@@ -199,35 +199,10 @@ class _AudioControlState extends State<AudioControl> {
               await player.resume();
             }
 
-            var method = widget.control.attrString("method");
-            if (method != null && method != _method) {
-              _method = method;
-              debugPrint("Audio JSON method: $method, $_method");
-
-              List<Map<String, String>> props = [
-                {"i": widget.control.id, "method": ""}
-              ];
-              widget.dispatch(UpdateControlPropsAction(
-                  UpdateControlPropsPayload(props: props)));
-              server.updateControlProps(props: props);
-
-              var mj = json.decode(method);
-              var i = mj["i"] as int;
-              var name = mj["n"] as String;
-              var params = List<String>.from(mj["p"] as List);
-
-              sendResult(Object? result, String? error) {
-                server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "method_result",
-                    eventData: json.encode({
-                      "i": i,
-                      "r": result != null ? json.encode(result) : null,
-                      "e": error
-                    }));
-              }
-
-              switch (name) {
+            _server = server;
+            _server?.controlInvokeMethods[widget.control.id] =
+                (methodName, args) async {
+              switch (methodName) {
                 case "play":
                   await player.seek(const Duration(milliseconds: 0));
                   await player.resume();
@@ -242,23 +217,20 @@ class _AudioControlState extends State<AudioControl> {
                   await player.release();
                   break;
                 case "seek":
-                  await player.seek(
-                      Duration(milliseconds: int.tryParse(params[0]) ?? 0));
+                  await player.seek(Duration(
+                      milliseconds: int.tryParse(args["position"] ?? "") ?? 0));
                   break;
                 case "get_duration":
-                  sendResult(
-                      (await player.getDuration())?.inMilliseconds.toString(),
-                      null);
-                  break;
+                  return (await player.getDuration())
+                      ?.inMilliseconds
+                      .toString();
                 case "get_current_position":
-                  sendResult(
-                      (await player.getCurrentPosition())
-                          ?.inMilliseconds
-                          .toString(),
-                      null);
-                  break;
+                  return (await player.getCurrentPosition())
+                      ?.inMilliseconds
+                      .toString();
               }
-            }
+              return null;
+            };
           }();
 
           return widget.nextChild ?? const SizedBox.shrink();

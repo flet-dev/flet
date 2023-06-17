@@ -191,42 +191,64 @@ AppState appReducer(AppState state, dynamic action) {
     return state.copyWith(error: action.payload.message);
   } else if (action is InvokeMethodAction) {
     debugPrint(
-        "InvokeMethodAction: ${action.payload.methodName} (${action.payload.args})");
-    switch (action.payload.methodName) {
-      case "closeInAppWebView":
-        closeInAppWebView();
-        break;
-      case "launchUrl":
-        openWebBrowser(action.payload.args["url"]!,
-            webWindowName: action.payload.args["web_window_name"],
-            webPopupWindow:
-                action.payload.args["web_popup_window"]?.toLowerCase() ==
-                    "true",
-            windowWidth:
-                int.tryParse(action.payload.args["window_width"] ?? ""),
-            windowHeight:
-                int.tryParse(action.payload.args["window_height"] ?? ""));
-        break;
-      case "canLaunchUrl":
-        canLaunchUrl(Uri.parse(action.payload.args["url"]!)).then((value) =>
-            action.server.sendPageEvent(
+        "InvokeMethodAction: ${action.payload.methodName} (controlId: ${action.payload.controlId}) (${action.payload.args})");
+    if (action.payload.controlId != "") {
+      // control-specific method
+      var handler =
+          action.server.controlInvokeMethods[action.payload.controlId];
+      if (handler != null) {
+        handler(action.payload.methodName, action.payload.args)
+            .then((result) => action.server.sendPageEvent(
                 eventTarget: "page",
                 eventName: "invoke_method_result",
                 eventData: json.encode(InvokeMethodResult(
                     methodId: action.payload.methodId,
-                    result: value.toString()))));
-        break;
-      case "windowToFront":
-        windowToFront();
-        break;
-    }
-    var clientStoragePrefix = "clientStorage:";
-    if (action.payload.methodName.startsWith(clientStoragePrefix)) {
-      invokeClientStorage(
-          action.payload.methodId,
-          action.payload.methodName.substring(clientStoragePrefix.length),
-          action.payload.args,
-          action.server);
+                    result: result.toString()))))
+            .onError((error, stackTrace) => action.server.sendPageEvent(
+                eventTarget: "page",
+                eventName: "invoke_method_result",
+                eventData: json.encode(InvokeMethodResult(
+                    methodId: action.payload.methodId,
+                    error: error.toString()))));
+      }
+    } else {
+      // global methods
+      switch (action.payload.methodName) {
+        case "closeInAppWebView":
+          closeInAppWebView();
+          break;
+        case "launchUrl":
+          openWebBrowser(action.payload.args["url"]!,
+              webWindowName: action.payload.args["web_window_name"],
+              webPopupWindow:
+                  action.payload.args["web_popup_window"]?.toLowerCase() ==
+                      "true",
+              windowWidth:
+                  int.tryParse(action.payload.args["window_width"] ?? ""),
+              windowHeight:
+                  int.tryParse(action.payload.args["window_height"] ?? ""));
+          break;
+        case "canLaunchUrl":
+          canLaunchUrl(Uri.parse(action.payload.args["url"]!)).then((value) =>
+              action.server.sendPageEvent(
+                  eventTarget: "page",
+                  eventName: "invoke_method_result",
+                  eventData: json.encode(InvokeMethodResult(
+                      methodId: action.payload.methodId,
+                      result: value.toString()))));
+          break;
+        case "windowToFront":
+          windowToFront();
+          break;
+      }
+      var clientStoragePrefix = "clientStorage:";
+      if (action.payload.methodName.startsWith(clientStoragePrefix)) {
+        invokeClientStorage(
+            action.payload.methodId,
+            action.payload.methodName.substring(clientStoragePrefix.length),
+            action.payload.args,
+            action.server);
+      }
     }
   } else if (action is AddPageControlsAction) {
     //

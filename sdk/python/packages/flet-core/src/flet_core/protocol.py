@@ -181,6 +181,7 @@ class SessionCrashedPayload:
 class InvokeMethodPayload:
     methodId: str
     methodName: str
+    controlId: str
     arguments: Dict[str, str]
 
 

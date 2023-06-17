@@ -153,5 +153,6 @@ type SessionCrashedPayload struct {
 type InvokeMethodPayload struct {
 	MethodID   string            `json:"methodId"`
 	MethodName string            `json:"methodName"`
+	ControlID  string            `json:"controlId"`
 	Arguments  map[string]string `json:"arguments"`
 }

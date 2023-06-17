@@ -39,8 +39,9 @@ class FletServer {
   String _isPWA = "";
   String _isWeb = "";
   String _platform = "";
+  final Map<String, ControlInvokeMethodCallback> controlInvokeMethods;
 
-  FletServer(this._store);
+  FletServer(this._store, this.controlInvokeMethods);
 
   Future connect({required String address}) async {
     _address = address;

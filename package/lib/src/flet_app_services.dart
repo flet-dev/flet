@@ -1,11 +1,12 @@
-import 'flet_app_errors_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 
 import 'actions.dart';
+import 'flet_app_errors_handler.dart';
+import 'flet_server.dart';
+import 'flet_server_protocol.dart';
 import 'models/app_state.dart';
 import 'reducers.dart';
-import 'flet_server.dart';
 
 class FletAppServices extends InheritedWidget {
   final String pageUrl;
@@ -14,6 +15,7 @@ class FletAppServices extends InheritedWidget {
   late final FletServer server;
   late final Store<AppState> store;
   final Map<String, GlobalKey> globalKeys = {};
+  final Map<String, ControlInvokeMethodCallback> controlInvokeMethods = {};
 
   FletAppServices(
       {Key? key,
@@ -23,7 +25,7 @@ class FletAppServices extends InheritedWidget {
       this.errorsHandler})
       : super(key: key, child: child) {
     store = Store<AppState>(appReducer, initialState: AppState.initial());
-    server = FletServer(store);
+    server = FletServer(store, controlInvokeMethods);
     if (errorsHandler != null) {
       errorsHandler!.addListener(() {
         if (store.state.isRegistered) {
