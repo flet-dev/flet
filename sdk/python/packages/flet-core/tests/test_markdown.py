@@ -19,14 +19,19 @@ def test_instance_no_attrs_set():
 
 def test_extension_set_enum():
     r = ft.Markdown()
-    assert r.extension_set is None
+    assert isinstance(r.extension_set, ft.MarkdownExtensionSet)
+    assert r.extension_set == ft.MarkdownExtensionSet.NONE
     assert r._get_attr("extensionSet") is None
 
     r = ft.Markdown(extension_set=ft.MarkdownExtensionSet.COMMON_MARK)
     assert isinstance(r.extension_set, ft.MarkdownExtensionSet)
+    assert isinstance(r._get_attr('extensionSet'), str)
     assert r.extension_set == ft.MarkdownExtensionSet.COMMON_MARK
+    assert r._get_attr("extensionSet") == ft.MarkdownExtensionSet.COMMON_MARK.value
     assert r._get_attr("extensionSet") == "commonMark"
 
-    r = ft.Markdown(extension_set="none")
-    assert isinstance(r.extension_set, str)
-    assert r._get_attr("extensionSet") == "none"
+    r = ft.Markdown(extension_set="gitHubWeb")
+    assert isinstance(r.extension_set, ft.MarkdownExtensionSet)
+    assert isinstance(r._get_attr('extensionSet'), str)
+    assert r._get_attr("extensionSet") == ft.MarkdownExtensionSet.GITHUB_WEB.value
+    assert r._get_attr("extensionSet") == "gitHubWeb"
