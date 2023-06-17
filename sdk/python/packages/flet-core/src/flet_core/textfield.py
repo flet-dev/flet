@@ -19,12 +19,6 @@ from flet_core.types import (
 from flet_core.utils import StrEnum, get_valid_enum, get_non_default_value
 
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
-
 class KeyboardType(StrEnum):
     NONE = "none"
     TEXT = "text"
@@ -39,11 +33,8 @@ class KeyboardType(StrEnum):
     STREET_ADDRESS = "streetAddress"
 
 
-TextCapitalizationString = Literal[None, "none", "characters", "words", "sentences"]
-
-
-class TextCapitalization(Enum):
-    NONE = None
+class TextCapitalization(StrEnum):
+    NONE = "none"
     CHARACTERS = "characters"
     WORDS = "words"
     SENTENCES = "sentences"
@@ -52,6 +43,7 @@ class TextCapitalization(Enum):
 _InputBorderDefault = InputBorder.OUTLINE
 _KeyboardTypeDefault = KeyboardType.TEXT
 _TextAlignDefault = TextAlign.LEFT
+_TextCapitalizationDefault = TextCapitalization.NONE
 
 
 class TextField(FormFieldControl):
@@ -394,14 +386,12 @@ class TextField(FormFieldControl):
 
     @capitalization.setter
     def capitalization(self, value: TextCapitalization):
-        self.__capitalization = value
-        if isinstance(value, TextCapitalization):
-            self._set_attr("capitalization", value.value)
-        else:
-            self.__set_capitalization(value)
-
-    def __set_capitalization(self, value: TextCapitalizationString):
-        self._set_attr("capitalization", value)
+        self.__capitalization = get_valid_enum(
+            TextCapitalization, value, _TextCapitalizationDefault,
+        )
+        self._set_attr("capitalization", get_non_default_value(
+            self.__capitalization, _TextCapitalizationDefault,
+        ))
 
     # cursor_color
     @property
