@@ -20,7 +20,7 @@ def test_instance_no_attrs_set():
 def test_extension_set_enum():
     r = ft.NavigationBar()
     assert isinstance(r.label_behavior, ft.NavigationBarLabelBehavior)
-    assert r.extension_set == ft.NavigationBarLabelBehavior.ALWAYS_SHOW
+    assert r.label_behavior == ft.NavigationBarLabelBehavior.ALWAYS_SHOW
     assert r._get_attr("labelType") is None
 
     r = ft.NavigationBar(label_behavior=ft.NavigationBarLabelBehavior.ONLY_SHOW_SELECTED)
