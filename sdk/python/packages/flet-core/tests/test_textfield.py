@@ -39,16 +39,22 @@ def test_text_align_str():
 
 def test_keyboard_type_enum():
     r = ft.TextField()
-    assert r.keyboard_type is None
-    assert r._get_attr('keyboardType') is None
+    assert isinstance(r.keyboard_type, ft.KeyboardType)
+    assert r.keyboard_type == ft.KeyboardType.TEXT
+    assert r._get_attr("keyboardType") is None
 
     r = ft.TextField(keyboard_type=ft.KeyboardType.NONE)
     assert isinstance(r.keyboard_type, ft.KeyboardType)
+    assert isinstance(r._get_attr("keyboardType"), str)
     assert r.keyboard_type == ft.KeyboardType.NONE
+    assert r._get_attr("keyboardType") == ft.KeyboardType.NONE.value
     assert r._get_attr('keyboardType') == 'none'
 
     r = ft.TextField(keyboard_type='phone')
-    assert isinstance(r.keyboard_type, str)
+    assert isinstance(r.keyboard_type, ft.KeyboardType)
+    assert isinstance(r._get_attr("keyboardType"), str)
+    assert r.keyboard_type == ft.KeyboardType.PHONE
+    assert r._get_attr("keyboardType") == ft.KeyboardType.PHONE.value
     assert r._get_attr('keyboardType') == 'phone'
 
 
