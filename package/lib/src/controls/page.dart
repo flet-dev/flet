@@ -85,7 +85,7 @@ class _PageControlState extends State<PageControl> {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
-  String? _prevViewsIds;
+  String? _prevViewRoutes;
   bool _keyboardHandlerSubscribed = false;
 
   @override
@@ -471,7 +471,7 @@ class _PageControlState extends State<PageControl> {
           debugPrint("_buildNavigator build");
 
           List<Page<dynamic>> pages = [];
-          if (routesView.isLoading || routesView.viewIds.isEmpty) {
+          if (routesView.isLoading || routesView.views.isEmpty) {
             pages.add(FadeTransitionPage(
                 child: LoadingPage(
               key: const ValueKey("Loading page"),
@@ -483,7 +483,7 @@ class _PageControlState extends State<PageControl> {
             overlayWidgets(String viewId) {
               List<Widget> overlayWidgets = [];
 
-              if (viewId == routesView.viewIds.last) {
+              if (viewId == routesView.views.last.id) {
                 overlayWidgets.addAll(routesView.offstageControls
                     .where((c) => !c.isNonVisual)
                     .map((c) => createControl(
@@ -491,24 +491,26 @@ class _PageControlState extends State<PageControl> {
                 overlayWidgets.add(const PageMedia());
               }
 
-              if (viewId == routesView.viewIds.first && isDesktop()) {
+              if (viewId == routesView.views.first.id && isDesktop()) {
                 overlayWidgets.add(const WindowMedia());
               }
 
               return overlayWidgets;
             }
 
-            String viewIds = routesView.viewIds.join();
-            pages = routesView.viewIds.map((viewId) {
-              var key = ValueKey(viewId);
+            String viewRoutes = routesView.views
+                .map((v) => v.attrString("route") ?? v.id)
+                .join();
+            pages = routesView.views.map((view) {
+              var key = ValueKey(view.attrString("route") ?? view.id);
               var child = _buildViewWidget(
-                  routesView.page, viewId, overlayWidgets(viewId));
-              return _prevViewsIds == null || _prevViewsIds == viewIds
+                  routesView.page, view.id, overlayWidgets(view.id));
+              return _prevViewRoutes == null || _prevViewRoutes == viewRoutes
                   ? FadeTransitionPage(key: key, child: child)
                   : MaterialPage(key: key, child: child);
             }).toList();
 
-            _prevViewsIds = viewIds;
+            _prevViewRoutes = viewRoutes;
           }
 
           Widget nextChild = Navigator(

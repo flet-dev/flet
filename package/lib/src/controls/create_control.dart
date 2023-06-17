@@ -397,13 +397,15 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           key: key,
           parent: parent,
           control: controlView.control,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "switch":
       return SwitchControl(
           key: key,
           parent: parent,
           control: controlView.control,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "slider":
       return SliderControl(
           key: key,
@@ -422,7 +424,8 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           key: key,
           parent: parent,
           control: controlView.control,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "dropdown":
       return DropdownControl(
           key: key,

@@ -9,9 +9,11 @@ from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
 import flet_core
+from flet_core.alert_dialog import AlertDialog
 from flet_core.animation import AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
+from flet_core.bottom_sheet import BottomSheet
 from flet_core.client_storage import ClientStorage
 from flet_core.clipboard import Clipboard
 from flet_core.connection import Connection
@@ -930,13 +932,93 @@ class Page(Control):
         self.__method_call_results[evt] = (result.result, result.error)
         evt.set()
 
+    #
+    # SnackBar
+    #
     def show_snack_bar(self, snack_bar: SnackBar):
         self.__offstage.snack_bar = snack_bar
+        self.__offstage.snack_bar.open = True
         self.__offstage.update()
 
     async def show_snack_bar_async(self, snack_bar: SnackBar):
         self.__offstage.snack_bar = snack_bar
+        self.__offstage.snack_bar.open = True
         await self.__offstage.update_async()
+
+    #
+    # Dialog
+    #
+    def show_dialog(self, dialog: AlertDialog):
+        self.__offstage.dialog = dialog
+        self.__offstage.dialog.open = True
+        self.__offstage.update()
+
+    async def show_dialog_async(self, dialog: AlertDialog):
+        self.__offstage.dialog = dialog
+        self.__offstage.dialog.open = True
+        await self.__offstage.update_async()
+
+    def close_dialog(self):
+        if self.__offstage.dialog is not None:
+            self.__offstage.dialog.open = False
+            self.__offstage.update()
+            self.__offstage.dialog = None
+
+    async def close_dialog_async(self):
+        if self.__offstage.dialog is not None:
+            self.__offstage.dialog.open = False
+            await self.__offstage.update_async()
+            self.__offstage.dialog = None
+
+    #
+    # Banner
+    #
+    def show_banner(self, banner: Banner):
+        self.__offstage.banner = banner
+        self.__offstage.banner.open = True
+        self.__offstage.update()
+
+    async def show_banner_async(self, banner: Banner):
+        self.__offstage.banner = banner
+        self.__offstage.banner.open = True
+        await self.__offstage.update_async()
+
+    def close_banner(self):
+        if self.__offstage.banner is not None:
+            self.__offstage.banner.open = False
+            self.__offstage.update()
+            self.__offstage.banner = None
+
+    async def close_banner_async(self):
+        if self.__offstage.banner is not None:
+            self.__offstage.banner.open = False
+            await self.__offstage.update_async()
+            self.__offstage.banner = None
+
+    #
+    # BottomSheet
+    #
+    def show_bottom_sheet(self, bottom_sheet: BottomSheet):
+        self.__offstage.bottom_sheet = bottom_sheet
+        self.__offstage.bottom_sheet.open = True
+        self.__offstage.update()
+
+    async def show_bottom_sheet_async(self, bottom_sheet: BottomSheet):
+        self.__offstage.bottom_sheet = bottom_sheet
+        self.__offstage.bottom_sheet.open = True
+        await self.__offstage.update_async()
+
+    def close_bottom_sheet(self):
+        if self.__offstage.bottom_sheet is not None:
+            self.__offstage.bottom_sheet.open = False
+            self.__offstage.update()
+            self.__offstage.bottom_sheet = None
+
+    async def close_bottom_sheet_async(self):
+        if self.__offstage.bottom_sheet is not None:
+            self.__offstage.bottom_sheet.open = False
+            await self.__offstage.update_async()
+            self.__offstage.bottom_sheet = None
 
     def window_destroy(self):
         self._set_attr("windowDestroy", "true")
@@ -1224,6 +1306,15 @@ class Page(Control):
     @dialog.setter
     def dialog(self, value: Optional[Control]):
         self.__offstage.dialog = value
+
+    # bottom_sheet
+    @property
+    def bottom_sheet(self) -> Optional[BottomSheet]:
+        return self.__offstage.bottom_sheet
+
+    @bottom_sheet.setter
+    def bottom_sheet(self, value: Optional[BottomSheet]):
+        self.__offstage.bottom_sheet = value
 
     # theme_mode
     @property
@@ -1678,6 +1769,7 @@ class Offstage(Control):
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
+        self.__bottom_sheet = None
         self.__splash = None
 
     def _get_control_name(self):
@@ -1694,6 +1786,8 @@ class Offstage(Control):
             children.append(self.__snack_bar)
         if self.__dialog:
             children.append(self.__dialog)
+        if self.__bottom_sheet:
+            children.append(self.__bottom_sheet)
         if self.__splash:
             children.append(self.__splash)
         return children
@@ -1743,6 +1837,15 @@ class Offstage(Control):
     @dialog.setter
     def dialog(self, value: Optional[Control]):
         self.__dialog = value
+
+    # bottom_sheet
+    @property
+    def bottom_sheet(self) -> Optional[BottomSheet]:
+        return self.__bottom_sheet
+
+    @bottom_sheet.setter
+    def bottom_sheet(self, value: Optional[BottomSheet]):
+        self.__bottom_sheet = value
 
 
 @dataclass

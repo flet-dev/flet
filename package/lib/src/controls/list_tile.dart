@@ -6,13 +6,31 @@ import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 
+class ListTileClicks extends InheritedWidget {
+  const ListTileClicks({
+    super.key,
+    required this.notifier,
+    required super.child,
+  });
+
+  final ListTileClickNotifier notifier;
+
+  static ListTileClicks? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<ListTileClicks>();
+  }
+
+  @override
+  bool updateShouldNotify(ListTileClicks oldWidget) => true;
+}
+
 class ListTileControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final ListTileClickNotifier _clickNotifier = ListTileClickNotifier();
 
-  const ListTileControl(
+  ListTileControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -39,14 +57,18 @@ class ListTileControl extends StatelessWidget {
     bool isThreeLine = control.attrBool("isThreeLine", false)!;
     bool autofocus = control.attrBool("autofocus", false)!;
     bool onclick = control.attrBool("onclick", false)!;
+    bool toggleInputs = control.attrBool("toggleInputs", false)!;
     bool onLongPressDefined = control.attrBool("onLongPress", false)!;
     String url = control.attrString("url", "")!;
     String? urlTarget = control.attrString("urlTarget");
     bool disabled = control.isDisabled || parentDisabled;
 
-    Function()? onPressed = (onclick || url != "") && !disabled
+    Function()? onPressed = (onclick || toggleInputs || url != "") && !disabled
         ? () {
             debugPrint("ListTile ${control.id} clicked!");
+            if (toggleInputs) {
+              _clickNotifier.onClick();
+            }
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
@@ -67,7 +89,7 @@ class ListTileControl extends StatelessWidget {
           }
         : null;
 
-    ListTile tile = ListTile(
+    Widget tile = ListTile(
       autofocus: autofocus,
       contentPadding: parseEdgeInsets(control, "contentPadding"),
       isThreeLine: isThreeLine,
@@ -90,6 +112,16 @@ class ListTileControl extends StatelessWidget {
           : null,
     );
 
+    if (toggleInputs) {
+      tile = ListTileClicks(notifier: _clickNotifier, child: tile);
+    }
+
     return constrainedControl(context, tile, parent, control);
+  }
+}
+
+class ListTileClickNotifier extends ChangeNotifier {
+  void onClick() {
+    notifyListeners();
   }
 }
