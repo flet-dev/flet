@@ -52,17 +52,22 @@ def test_text_style_enum():
 
 def test_text_overflow_enum():
     r = ft.Text()
-    assert r.overflow == ft.TextOverflow.NONE
+    assert r.overflow == ft.TextOverflow.FADE
     assert r._get_attr('overflow') is None
 
     r = ft.Text(overflow=ft.TextOverflow.ELLIPSIS)
     assert isinstance(r.overflow, ft.TextOverflow)
+    assert isinstance(r._get_attr('overflow'), str)
     assert r.overflow == ft.TextOverflow.ELLIPSIS
+    assert r._get_attr('overflow') == ft.TextOverflow.ELLIPSIS.value
     assert r._get_attr('overflow') == 'ellipsis'
 
-    r = ft.Text(overflow='fade')
-    assert isinstance(r.overflow, str)
-    assert r._get_attr('overflow') == 'fade'
+    r = ft.Text(overflow='visible')
+    assert isinstance(r.overflow, ft.TextOverflow)
+    assert isinstance(r._get_attr('overflow'), str)
+    assert r.overflow == ft.TextOverflow.VISIBLE
+    assert r._get_attr('overflow') == ft.TextOverflow.VISIBLE.value
+    assert r._get_attr('overflow') == 'visible'
 
 
 def test_weight_enum():

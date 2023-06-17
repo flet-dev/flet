@@ -41,20 +41,20 @@ def test_keyboard_type_enum():
     r = ft.TextField()
     assert isinstance(r.keyboard_type, ft.KeyboardType)
     assert r.keyboard_type == ft.KeyboardType.TEXT
-    assert r._get_attr("keyboardType") is None
+    assert r._get_attr('keyboardType') is None
 
     r = ft.TextField(keyboard_type=ft.KeyboardType.NONE)
     assert isinstance(r.keyboard_type, ft.KeyboardType)
-    assert isinstance(r._get_attr("keyboardType"), str)
+    assert isinstance(r._get_attr('keyboardType'), str)
     assert r.keyboard_type == ft.KeyboardType.NONE
-    assert r._get_attr("keyboardType") == ft.KeyboardType.NONE.value
+    assert r._get_attr('keyboardType') == ft.KeyboardType.NONE.value
     assert r._get_attr('keyboardType') == 'none'
 
     r = ft.TextField(keyboard_type='phone')
     assert isinstance(r.keyboard_type, ft.KeyboardType)
-    assert isinstance(r._get_attr("keyboardType"), str)
+    assert isinstance(r._get_attr('keyboardType'), str)
     assert r.keyboard_type == ft.KeyboardType.PHONE
-    assert r._get_attr("keyboardType") == ft.KeyboardType.PHONE.value
+    assert r._get_attr('keyboardType') == ft.KeyboardType.PHONE.value
     assert r._get_attr('keyboardType') == 'phone'
 
 
@@ -77,7 +77,7 @@ def test_border_enum():
     r = ft.TextField()
     assert isinstance(r.border, ft.InputBorder)
     assert r.border == ft.InputBorder.OUTLINE
-    assert r.border == "outline"
+    assert r.border == 'outline'
     assert r._get_attr('border') is None
 
     r = ft.TextField(border=ft.InputBorder.NONE)
@@ -85,7 +85,7 @@ def test_border_enum():
     assert isinstance(r._get_attr('border'), str)
     assert r.border == ft.InputBorder.NONE
     assert r._get_attr('border') == ft.InputBorder.NONE.value
-    assert r._get_attr("border") == "none"
+    assert r._get_attr('border') == 'none'
 
 
 def test_bgcolor_sets_filled():
