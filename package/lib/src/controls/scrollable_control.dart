@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import '../flet_app_services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/animations.dart';
@@ -36,20 +36,27 @@ class ScrollableControl extends StatefulWidget {
 
 class _ScrollableControlState extends State<ScrollableControl> {
   late final ScrollController _controller;
+  late bool _ownController = false;
   String? _method;
 
   @override
   void initState() {
     super.initState();
-    _controller = widget.scrollController ??
-        (isWindowsDesktop()
-            ? AdjustableScrollController()
-            : ScrollController());
+    if (widget.scrollController != null) {
+      _controller = widget.scrollController!;
+    } else {
+      _controller = (isWindowsDesktop()
+          ? AdjustableScrollController()
+          : ScrollController());
+      _ownController = true;
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    if (_ownController) {
+      _controller.dispose();
+    }
     super.dispose();
   }
 
