@@ -467,20 +467,23 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "navigationrail":
       return NavigationRailControl(
           key: key,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "navigationbar":
       return NavigationBarControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "windowdragarea":
       return WindowDragAreaControl(
           parent: parent,
