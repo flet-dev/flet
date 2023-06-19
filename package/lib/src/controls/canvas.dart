@@ -50,6 +50,9 @@ class _CanvasControlState extends State<CanvasControl> {
 
     var result = StoreConnector<AppState, CanvasViewModel>(
         distinct: true,
+        ignoreChange: (state) {
+          return state.controls[widget.control.id] == null;
+        },
         converter: (store) =>
             CanvasViewModel.fromStore(store, widget.control, widget.children),
         builder: (context, viewModel) {
