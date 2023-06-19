@@ -21,13 +21,15 @@ class TabsControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final dynamic dispatch;
 
   const TabsControl(
       {Key? key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -36,22 +38,9 @@ class TabsControl extends StatefulWidget {
 
 class _TabsControlState extends State<TabsControl>
     with TickerProviderStateMixin {
-  List<String> _tabsIndex = [];
+  String? _tabsSnapshot;
   TabController? _tabController;
   int _selectedIndex = 0;
-  dynamic _dispatch;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabsIndex = widget.children.map((c) => c.id).toList();
-    _tabController = TabController(
-        length: _tabsIndex.length,
-        animationDuration: Duration(
-            milliseconds: widget.control.attrInt("animationDuration", 50)!),
-        vsync: this);
-    _tabController!.addListener(_tabChanged);
-  }
 
   @override
   void dispose() {
@@ -70,7 +59,7 @@ class _TabsControlState extends State<TabsControl>
       List<Map<String, String>> props = [
         {"i": widget.control.id, "selectedindex": index.toString()}
       ];
-      _dispatch(
+      widget.dispatch(
           UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
       final server = FletAppServices.of(context).server;
       server.updateControlProps(props: props);
@@ -86,39 +75,39 @@ class _TabsControlState extends State<TabsControl>
   Widget build(BuildContext context) {
     debugPrint("TabsControl build: ${widget.control.id}");
 
-    var tabsIndex = widget.children.map((c) => c.id).toList();
-    if (tabsIndex.length != _tabsIndex.length ||
-        !tabsIndex.every((item) => _tabsIndex.contains(item))) {
-      _tabsIndex = tabsIndex;
-      if (_tabController != null) {
-        _tabController!.removeListener(_tabChanged);
-        _tabController!.dispose();
-      }
-      _tabController = TabController(
-          length: _tabsIndex.length,
-          animationDuration: Duration(
-              milliseconds: widget.control.attrInt("animationDuration", 50)!),
-          vsync: this);
-      _tabController!.addListener(_tabChanged);
-    }
-
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    var selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
-
-    if (selectedIndex > -1 &&
-        selectedIndex < tabsIndex.length &&
-        _selectedIndex != selectedIndex) {
-      _selectedIndex = selectedIndex;
-      _tabController!.index = selectedIndex;
-    }
-
     var tabs = StoreConnector<AppState, ControlsViewModel>(
         distinct: true,
         converter: (store) => ControlsViewModel.fromStore(
             store, widget.children.map((c) => c.id)),
         builder: (content, viewModel) {
-          _dispatch = viewModel.dispatch;
+          var tabsSnapshot =
+              viewModel.controlViews.map((c) => c.control.id).join();
+          if (tabsSnapshot != _tabsSnapshot) {
+            _tabsSnapshot = tabsSnapshot;
+
+            if (_tabController != null) {
+              _tabController!.removeListener(_tabChanged);
+              _tabController!.dispose();
+            }
+            _tabController = TabController(
+                length: viewModel.controlViews.length,
+                animationDuration: Duration(
+                    milliseconds:
+                        widget.control.attrInt("animationDuration", 50)!),
+                vsync: this);
+            _tabController!.addListener(_tabChanged);
+          }
+
+          bool disabled = widget.control.isDisabled || widget.parentDisabled;
+
+          var selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
+
+          if (selectedIndex > -1 &&
+              selectedIndex < _tabController!.length &&
+              _selectedIndex != selectedIndex) {
+            _selectedIndex = selectedIndex;
+            _tabController!.index = selectedIndex;
+          }
 
           // check if all tabs have no content
           bool emptyTabs = !viewModel.controlViews
@@ -216,6 +205,8 @@ class _TabsControlState extends State<TabsControl>
                 }
                 return Tab(child: tabChild);
               }).toList());
+
+          debugPrint("tabs.length: ${tabBar.tabs.length}");
 
           if (emptyTabs) {
             return tabBar;

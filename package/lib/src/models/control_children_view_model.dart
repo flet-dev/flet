@@ -6,17 +6,17 @@ import 'control.dart';
 
 class ControlChildrenViewModel extends Equatable {
   final List<Control> children;
-  final dynamic dispatch;
 
-  const ControlChildrenViewModel({required this.children, this.dispatch});
+  const ControlChildrenViewModel({required this.children});
 
   static ControlChildrenViewModel fromStore(Store<AppState> store, String id,
       {dynamic dispatch}) {
     return ControlChildrenViewModel(
-        children: store.state.controls[id]!.childIds
-            .map((childId) => store.state.controls[childId]!)
-            .toList(),
-        dispatch: dispatch);
+        children: store.state.controls[id] != null
+            ? store.state.controls[id]!.childIds
+                .map((childId) => store.state.controls[childId]!)
+                .toList()
+            : []);
   }
 
   @override

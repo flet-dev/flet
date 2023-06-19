@@ -7,9 +7,8 @@ import 'control_view_model.dart';
 
 class ControlsViewModel extends Equatable {
   final List<ControlViewModel> controlViews;
-  final dynamic dispatch;
 
-  const ControlsViewModel({required this.controlViews, required this.dispatch});
+  const ControlsViewModel({required this.controlViews});
 
   static ControlsViewModel fromStore(
       Store<AppState> store, Iterable<String> ids) {
@@ -17,8 +16,7 @@ class ControlsViewModel extends Equatable {
         controlViews: ids
             .map((id) => ControlViewModel.fromStore(store, id))
             .whereNotNull()
-            .toList(),
-        dispatch: store.dispatch);
+            .toList());
   }
 
   @override

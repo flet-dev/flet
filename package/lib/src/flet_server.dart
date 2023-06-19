@@ -85,8 +85,6 @@ class FletServer {
             ? reconnectIntervalMs ?? _clientProtocol.defaultReconnectIntervalMs
             : nextReconnectDelayMs * 2;
 
-    debugPrint("reconnectTimeoutMs: $reconnectTimeoutMs");
-
     if (reconnectTimeoutMs == null ||
         (DateTime.now().millisecondsSinceEpoch - reconnectStarted) <
             reconnectTimeoutMs!) {

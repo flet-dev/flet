@@ -87,6 +87,9 @@ class _RadioControlState extends State<RadioControl> {
 
     return StoreConnector<AppState, ControlAncestorViewModel>(
         distinct: true,
+        ignoreChange: (state) {
+          return state.controls[widget.control.id] == null;
+        },
         converter: (store) => ControlAncestorViewModel.fromStore(
             store, widget.control.id, "radiogroup"),
         builder: (context, viewModel) {

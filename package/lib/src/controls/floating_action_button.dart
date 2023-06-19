@@ -59,6 +59,7 @@ class FloatingActionButtonControl extends StatelessWidget {
     Widget button;
     if (contentCtrls.isNotEmpty) {
       button = FloatingActionButton(
+          heroTag: control.id,
           autofocus: autofocus,
           onPressed: onPressed,
           backgroundColor: bgColor,
@@ -68,6 +69,7 @@ class FloatingActionButtonControl extends StatelessWidget {
           child: createControl(control, contentCtrls.first.id, disabled));
     } else if (icon != null && text == null) {
       button = FloatingActionButton(
+          heroTag: control.id,
           autofocus: autofocus,
           onPressed: onPressed,
           backgroundColor: bgColor,
@@ -77,6 +79,7 @@ class FloatingActionButtonControl extends StatelessWidget {
           child: Icon(icon));
     } else if (icon == null && text != null) {
       button = FloatingActionButton(
+        heroTag: control.id,
         autofocus: autofocus,
         onPressed: onPressed,
         backgroundColor: bgColor,
@@ -87,6 +90,7 @@ class FloatingActionButtonControl extends StatelessWidget {
       );
     } else if (icon != null && text != null) {
       button = FloatingActionButton.extended(
+        heroTag: control.id,
         autofocus: autofocus,
         onPressed: onPressed,
         label: Text(text),
