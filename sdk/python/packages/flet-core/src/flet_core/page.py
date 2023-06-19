@@ -843,6 +843,7 @@ class Page(Control):
         arguments: Optional[Dict[str, str]] = None,
         control_id: Optional[str] = "",
         wait_for_result: bool = False,
+        wait_timeout: Optional[float] = 5,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
 
@@ -867,7 +868,7 @@ class Page(Control):
 
         assert evt is not None
 
-        if not evt.wait(5):
+        if not evt.wait(wait_timeout):
             del self.__method_calls[method_id]
             raise Exception(
                 f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
@@ -886,6 +887,7 @@ class Page(Control):
         arguments: Optional[Dict[str, str]] = None,
         control_id: Optional[str] = "",
         wait_for_result: bool = False,
+        wait_timeout: Optional[float] = 5,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
 
@@ -911,7 +913,7 @@ class Page(Control):
         assert evt is not None
 
         try:
-            await asyncio.wait_for(evt.wait(), timeout=5)
+            await asyncio.wait_for(evt.wait(), timeout=wait_timeout)
         except TimeoutError:
             del self.__method_calls[method_id]
             raise Exception(

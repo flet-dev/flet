@@ -113,27 +113,43 @@ class Audio(Control):
             "seek", {"position": str(position_milliseconds)}, control_id=self.uid
         )
 
-    def get_duration(self) -> Optional[int]:
+    def get_duration(self, wait_timeout: Optional[float] = 5) -> Optional[int]:
         sr = self.page.invoke_method(
-            "get_duration", control_id=self.uid, wait_for_result=True
+            "get_duration",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
-    async def get_duration_async(self) -> Optional[int]:
+    async def get_duration_async(
+        self, wait_timeout: Optional[float] = 5
+    ) -> Optional[int]:
         sr = await self.page.invoke_method_async(
-            "get_duration", control_id=self.uid, wait_for_result=True
+            "get_duration",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
-    def get_current_position(self) -> Optional[int]:
+    def get_current_position(self, wait_timeout: Optional[float] = 5) -> Optional[int]:
         sr = self.page.invoke_method(
-            "get_current_position", control_id=self.uid, wait_for_result=True
+            "get_current_position",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
-    async def get_current_position_async(self) -> Optional[int]:
+    async def get_current_position_async(
+        self, wait_timeout: Optional[float] = 5
+    ) -> Optional[int]:
         sr = await self.page.invoke_method_async(
-            "get_current_position", control_id=self.uid, wait_for_result=True
+            "get_current_position",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
