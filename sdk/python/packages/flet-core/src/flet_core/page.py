@@ -841,7 +841,7 @@ class Page(Control):
         self,
         method_name: str,
         arguments: Optional[Dict[str, str]] = None,
-        control_id: str = "",
+        control_id: Optional[str] = "",
         wait_for_result: bool = False,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
@@ -884,7 +884,7 @@ class Page(Control):
         self,
         method_name: str,
         arguments: Optional[Dict[str, str]] = None,
-        control_id: str = "",
+        control_id: Optional[str] = "",
         wait_for_result: bool = False,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
