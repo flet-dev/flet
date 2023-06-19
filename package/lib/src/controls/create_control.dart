@@ -431,7 +431,8 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           key: key,
           parent: parent,
           control: controlView.control,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "snackbar":
       return SnackBarControl(
           parent: parent,

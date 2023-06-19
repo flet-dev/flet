@@ -18,12 +18,14 @@ class DropdownControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final dynamic dispatch;
 
   const DropdownControl(
       {Key? key,
       this.parent,
       required this.control,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -68,6 +70,9 @@ class _DropdownControlState extends State<DropdownControl> {
 
     return StoreConnector<AppState, ControlChildrenViewModel>(
         distinct: true,
+        ignoreChange: (state) {
+          return state.controls[widget.control.id] == null;
+        },
         converter: (store) => ControlChildrenViewModel.fromStore(
             store, widget.control.id,
             dispatch: store.dispatch),
@@ -161,7 +166,7 @@ class _DropdownControlState extends State<DropdownControl> {
                     List<Map<String, String>> props = [
                       {"i": widget.control.id, "value": value!}
                     ];
-                    itemsView.dispatch(UpdateControlPropsAction(
+                    widget.dispatch(UpdateControlPropsAction(
                         UpdateControlPropsPayload(props: props)));
                     server.updateControlProps(props: props);
                     server.sendPageEvent(
