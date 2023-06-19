@@ -542,10 +542,10 @@ class _PageControlState extends State<PageControl> {
 
   Widget _buildViewWidget(
       Control parent, String viewId, List<Widget> overlayWidgets) {
-    return StoreConnector<AppState, ControlViewModel>(
+    return StoreConnector<AppState, ControlViewModel?>(
         distinct: true,
         converter: (store) {
-          return ControlViewModel.fromStore(store, viewId)!;
+          return ControlViewModel.fromStore(store, viewId);
         },
         ignoreChange: (state) {
           return state.controls[viewId] == null;
@@ -555,6 +555,10 @@ class _PageControlState extends State<PageControl> {
         // },
         builder: (context, controlView) {
           debugPrint("View StoreConnector");
+
+          if (controlView == null) {
+            return const SizedBox.shrink();
+          }
 
           var control = controlView.control;
           var children = controlView.children;
