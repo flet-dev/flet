@@ -37,28 +37,26 @@ class LoadingPage extends StatelessWidget {
         children: children,
       );
     } else if (message != "") {
-      child = Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: theme.colorScheme.errorContainer,
-                borderRadius: BorderRadius.circular(8)),
-            child: Row(children: [
-              Icon(Icons.error_outline,
-                  color: theme.colorScheme.onErrorContainer, size: 30),
-              const SizedBox(width: 8),
-              Text(
-                message,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall!
-                    .copyWith(color: theme.colorScheme.onErrorContainer),
-              )
-            ]),
-          )
-        ],
+      child = Container(
+        margin: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: theme.colorScheme.errorContainer,
+            borderRadius: BorderRadius.circular(8)),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(Icons.error_outline,
+              color: theme.colorScheme.onErrorContainer, size: 30),
+          const SizedBox(width: 8),
+          Flexible(
+              child: Text(
+            message,
+            softWrap: true,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(color: theme.colorScheme.onErrorContainer),
+          ))
+        ]),
       );
     }
 
