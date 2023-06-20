@@ -24,7 +24,6 @@ from flet_core import (
 from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.utils import is_coroutine, random_string
-from flet_runtime import version
 from flet_runtime.async_local_socket_connection import AsyncLocalSocketConnection
 from flet_runtime.sync_local_socket_connection import SyncLocalSocketConnection
 from flet_runtime.utils import (
@@ -56,6 +55,11 @@ except ImportError:
     class SyncWebSocketConnection(Connection):
         pass
 
+
+try:
+    from flet import version
+except ImportError:
+    from flet_runtime import version
 
 logger = logging.getLogger(flet_runtime.__name__)
 
