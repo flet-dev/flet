@@ -118,8 +118,10 @@ class Command(BaseCommand):
         script_dir = os.path.dirname(script_path)
 
         port = options.port
-        if port is None and (is_windows() or options.web or options.ios):
+        if port is None and (is_windows() or options.web):
             port = get_free_tcp_port()
+        elif port is None and options.ios:
+            port = 8551
 
         uds_path = None
         if port is None and not is_windows():
@@ -187,6 +189,10 @@ class Handler(FileSystemEventHandler):
         if self.web or self.ios:
             p_env["FLET_FORCE_WEB_VIEW"] = "true"
             p_env["FLET_DETACH_FLETD"] = "true"
+
+            # force page name for ios
+            if self.ios:
+                p_env["FLET_PAGE_NAME"] = "/".join(Path(self.script_path).parts[-2:])
         if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
         if self.uds_path is not None:

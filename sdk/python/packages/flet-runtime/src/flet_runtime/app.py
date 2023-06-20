@@ -351,6 +351,8 @@ def __connect_internal_sync(
             )
             page.error(f"There was an error while processing your request: {e}")
 
+    env_page_name = os.getenv("FLET_PAGE_NAME")
+
     if is_socket_server:
         conn = SyncLocalSocketConnection(
             port,
@@ -362,7 +364,7 @@ def __connect_internal_sync(
         assert server
         conn = SyncWebSocketConnection(
             server_address=server,
-            page_name=page_name,
+            page_name=env_page_name if not page_name and env_page_name else page_name,
             token=auth_token,
             on_event=on_event,
             on_session_created=on_session_created,
@@ -433,6 +435,8 @@ async def __connect_internal_async(
                 f"There was an error while processing your request: {e}"
             )
 
+    env_page_name = os.getenv("FLET_PAGE_NAME")
+
     if is_socket_server:
         conn = AsyncLocalSocketConnection(
             port,
@@ -444,7 +448,7 @@ async def __connect_internal_async(
         assert server
         conn = AsyncWebSocketConnection(
             server_address=server,
-            page_name=page_name,
+            page_name=env_page_name if not page_name and env_page_name else page_name,
             auth_token=auth_token,
             on_event=on_event,
             on_session_created=on_session_created,
