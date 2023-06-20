@@ -186,6 +186,7 @@ class Handler(FileSystemEventHandler):
         p_env = {**os.environ}
         if self.web or self.ios:
             p_env["FLET_FORCE_WEB_VIEW"] = "true"
+            p_env["FLET_DETACH_FLETD"] = "true"
         if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
         if self.uds_path is not None:

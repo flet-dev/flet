@@ -529,7 +529,13 @@ def __start_flet_server(
     creationflags = 0
     start_new_session = False
 
-    args.append("--attached")
+    if os.getenv("FLET_DETACH_FLETD") is None:
+        args.append("--attached")
+    else:
+        if is_windows():
+            creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
+        else:
+            start_new_session = True
 
     log_level = logging.getLogger(flet_runtime.__name__).getEffectiveLevel()
     if log_level == logging.CRITICAL:
