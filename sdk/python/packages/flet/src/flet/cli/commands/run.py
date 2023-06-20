@@ -275,7 +275,7 @@ class Handler(FileSystemEventHandler):
         lan_url = urlunparse(
             (u.scheme, f"{ip_addr}:{u.port}", u.path, None, None, None)
         )
-        self.clear_console()
+        # self.clear_console()
         print("App is running on:", lan_url)
         print("")
         qr_url = urlunparse(
@@ -283,8 +283,8 @@ class Handler(FileSystemEventHandler):
         )
         qr = qrcode.QRCode()
         qr.add_data(qr_url)
-        # qr.print_ascii(invert=True)
-        qr.print_tty()
+        qr.print_ascii(invert=True)
+        # qr.print_tty()
         print("")
         print("Scan QR code above with Camera app.")
 
