@@ -11,13 +11,19 @@ import (
 	"github.com/flet-dev/flet/server/cache"
 	"github.com/flet-dev/flet/server/config"
 	"github.com/flet-dev/flet/server/server"
+	"github.com/flet-dev/flet/server/stats"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
+const (
+	DefaultShutdownTimeoutSeconds = 60
+)
+
 var (
-	version  = "unknown"
-	LogLevel string
+	version                = "unknown"
+	LogLevel               string
+	shutdownTimeoutSeconds int
 )
 
 func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
@@ -46,6 +52,8 @@ func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
 
 			if attachedProcess {
 				go monitorParentProcess(cancel)
+			} else {
+				go monitorConnectedClients(cancel)
 			}
 
 			// init cache
@@ -63,12 +71,24 @@ func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&LogLevel, "log-level", "l", "info", "verbosity level for logs")
 
 	cmd.Flags().IntVarP(&serverPort, "port", "p", config.ServerPort(), "port on which the server will listen")
+	cmd.Flags().IntVarP(&shutdownTimeoutSeconds, "shutdown", "", DefaultShutdownTimeoutSeconds, "shutdown server in N seconds after the last client disconnected")
 	cmd.Flags().StringVarP(&contentDir, "content-dir", "", "", "path to web content directory")
 	cmd.MarkFlagRequired("content-dir")
 	cmd.Flags().StringVarP(&assetsDir, "assets-dir", "", "", "path to user assets directory")
 	cmd.Flags().BoolVarP(&attachedProcess, "attached", "a", false, "attach background server process to the parent one")
 
 	return cmd
+}
+
+func monitorConnectedClients(cancel context.CancelFunc) {
+	defer cancel()
+	for {
+		if stats.LastClientDisconnected(shutdownTimeoutSeconds) {
+			log.Debugln("No more clients connected. Shutting down server...")
+			return
+		}
+		time.Sleep(1 * time.Second)
+	}
 }
 
 func monitorParentProcess(cancel context.CancelFunc) {

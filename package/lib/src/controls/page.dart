@@ -474,11 +474,10 @@ class _PageControlState extends State<PageControl> {
           debugPrint("_buildNavigator build");
 
           List<Page<dynamic>> pages = [];
-          if (routesView.isLoading || routesView.views.isEmpty) {
+          if (routesView.views.isEmpty) {
             pages.add(FadeTransitionPage(
                 child: LoadingPage(
-              key: const ValueKey("Loading page"),
-              title: "Flet is loading...",
+              isLoading: routesView.isLoading,
               message: routesView.error,
             )));
           } else {
@@ -496,6 +495,13 @@ class _PageControlState extends State<PageControl> {
 
               if (viewId == routesView.views.first.id && isDesktop()) {
                 overlayWidgets.add(const WindowMedia());
+              }
+
+              if (routesView.isLoading || routesView.error != "") {
+                overlayWidgets.add(LoadingPage(
+                  isLoading: routesView.isLoading,
+                  message: routesView.error,
+                ));
               }
 
               return overlayWidgets;

@@ -24,7 +24,6 @@ from flet_core import (
 from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.utils import is_coroutine, random_string
-from flet_runtime import version
 from flet_runtime.async_local_socket_connection import AsyncLocalSocketConnection
 from flet_runtime.sync_local_socket_connection import SyncLocalSocketConnection
 from flet_runtime.utils import (
@@ -57,6 +56,11 @@ except ImportError:
         pass
 
 
+try:
+    from flet import version
+except ImportError:
+    from flet_runtime import version
+
 logger = logging.getLogger(flet_runtime.__name__)
 
 
@@ -66,7 +70,7 @@ def app(
     host=None,
     port=0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir=None,
+    assets_dir="assets",
     upload_dir=None,
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
@@ -111,7 +115,7 @@ def __app_sync(
     host=None,
     port=0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir=None,
+    assets_dir="assets",
     upload_dir=None,
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
@@ -172,7 +176,9 @@ def __app_sync(
         and url_prefix is None
     ):
         fvp, pid_file = open_flet_view(
-            conn.page_url, assets_dir, view == AppView.FLET_APP_HIDDEN
+            conn.page_url,
+            assets_dir if view != AppView.FLET_APP_WEB else None,
+            view == AppView.FLET_APP_HIDDEN,
         )
         try:
             fvp.wait()
@@ -259,7 +265,9 @@ async def app_async(
         and url_prefix is None
     ):
         fvp, pid_file = await open_flet_view_async(
-            conn.page_url, assets_dir, view == AppView.FLET_APP_HIDDEN
+            conn.page_url,
+            assets_dir if view != AppView.FLET_APP_WEB else None,
+            view == AppView.FLET_APP_HIDDEN,
         )
         try:
             await fvp.wait()
@@ -351,6 +359,8 @@ def __connect_internal_sync(
             )
             page.error(f"There was an error while processing your request: {e}")
 
+    env_page_name = os.getenv("FLET_PAGE_NAME")
+
     if is_socket_server:
         conn = SyncLocalSocketConnection(
             port,
@@ -362,7 +372,7 @@ def __connect_internal_sync(
         assert server
         conn = SyncWebSocketConnection(
             server_address=server,
-            page_name=page_name,
+            page_name=env_page_name if not page_name and env_page_name else page_name,
             token=auth_token,
             on_event=on_event,
             on_session_created=on_session_created,
@@ -433,6 +443,8 @@ async def __connect_internal_async(
                 f"There was an error while processing your request: {e}"
             )
 
+    env_page_name = os.getenv("FLET_PAGE_NAME")
+
     if is_socket_server:
         conn = AsyncLocalSocketConnection(
             port,
@@ -444,7 +456,7 @@ async def __connect_internal_async(
         assert server
         conn = AsyncWebSocketConnection(
             server_address=server,
-            page_name=page_name,
+            page_name=env_page_name if not page_name and env_page_name else page_name,
             auth_token=auth_token,
             on_event=on_event,
             on_session_created=on_session_created,
@@ -529,7 +541,13 @@ def __start_flet_server(
     creationflags = 0
     start_new_session = False
 
-    args.append("--attached")
+    if os.getenv("FLET_DETACH_FLETD") is None:
+        args.append("--attached")
+    else:
+        if is_windows():
+            creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
+        else:
+            start_new_session = True
 
     log_level = logging.getLogger(flet_runtime.__name__).getEffectiveLevel()
     if log_level == logging.CRITICAL:

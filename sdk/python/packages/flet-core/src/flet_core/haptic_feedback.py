@@ -53,25 +53,25 @@ class HapticFeedback(Control):
         return True
 
     def heavy_impact(self):
-        self.page.invoke_method("heavy_impact")
+        self.page.invoke_method("heavy_impact", control_id=self.uid)
 
     async def heavy_impact_async(self):
-        await self.page.invoke_method_async("heavy_impact")
+        await self.page.invoke_method_async("heavy_impact", control_id=self.uid)
 
     def light_impact(self):
-        self.page.invoke_method("light_impact")
+        self.page.invoke_method("light_impact", control_id=self.uid)
 
     async def light_impact_async(self):
-        await self.page.invoke_method_async("light_impact")
+        await self.page.invoke_method_async("light_impact", control_id=self.uid)
 
     def medium_impact(self):
-        self.page.invoke_method("medium_impact")
+        self.page.invoke_method("medium_impact", control_id=self.uid)
 
     async def medium_impact_async(self):
-        await self.page.invoke_method_async("medium_impact")
+        await self.page.invoke_method_async("medium_impact", control_id=self.uid)
 
     def vibrate(self):
-        self.page.invoke_method("vibrate")
+        self.page.invoke_method("vibrate", control_id=self.uid)
 
     async def vibrate_async(self):
-        await self.page.invoke_method_async("vibrate")
+        await self.page.invoke_method_async("vibrate", control_id=self.uid)

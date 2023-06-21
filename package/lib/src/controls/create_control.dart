@@ -57,6 +57,7 @@ import 'radio.dart';
 import 'radio_group.dart';
 import 'responsive_row.dart';
 import 'row.dart';
+import 'safe_area.dart';
 import 'semantics.dart';
 import 'shader_mask.dart';
 import 'shake_detector.dart';
@@ -307,6 +308,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "card":
       return CardControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "safearea":
+      return SafeAreaControl(
           key: key,
           parent: parent,
           control: controlView.control,

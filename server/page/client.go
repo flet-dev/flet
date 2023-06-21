@@ -14,6 +14,7 @@ import (
 	"github.com/flet-dev/flet/server/model"
 	"github.com/flet-dev/flet/server/page/connection"
 	"github.com/flet-dev/flet/server/pubsub"
+	"github.com/flet-dev/flet/server/stats"
 	"github.com/flet-dev/flet/server/store"
 	"github.com/flet-dev/flet/server/utils"
 	"github.com/google/uuid"
@@ -74,6 +75,8 @@ func NewClient(conn connection.Conn, clientIP string, clientUserAgent string) *C
 	}()
 
 	log.Printf("New WebSocket client connected from %s: %s", clientIP, c.id)
+
+	stats.ClientConnected()
 
 	return c
 }
@@ -759,6 +762,8 @@ func (c *Client) registerSession(session *model.Session) {
 func (c *Client) unregister(normalClosure bool) {
 
 	log.Debugf("WebSocket client disconnected (normal closure=%t) from %s: %s", normalClosure, c.clientIP, c.id)
+
+	stats.ClientDisconnected()
 
 	if c.role == "" {
 		return

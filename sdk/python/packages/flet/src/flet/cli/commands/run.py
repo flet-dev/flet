@@ -42,6 +42,13 @@ class Command(BaseCommand):
             help="custom TCP port to run Flet app on",
         )
         parser.add_argument(
+            "--name",
+            dest="app_name",
+            type=str,
+            default=None,
+            help="app name to distinguish it from other on the same port",
+        )
+        parser.add_argument(
             "-m",
             "--module",
             dest="module",
@@ -94,7 +101,7 @@ class Command(BaseCommand):
             dest="assets_dir",
             type=str,
             default=None,
-            help="path to an assets directory",
+            help="path to assets directory",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -118,8 +125,10 @@ class Command(BaseCommand):
         script_dir = os.path.dirname(script_path)
 
         port = options.port
-        if port is None and is_windows():
+        if port is None and (is_windows() or options.web):
             port = get_free_tcp_port()
+        elif port is None and options.ios:
+            port = 8551
 
         uds_path = None
         if port is None and not is_windows():
@@ -137,6 +146,7 @@ class Command(BaseCommand):
             + [options.script if options.module else script_path],
             None if options.directory or options.recursive else script_path,
             port,
+            options.app_name,
             uds_path,
             options.web,
             options.ios,
@@ -162,12 +172,13 @@ class Command(BaseCommand):
 
 class Handler(FileSystemEventHandler):
     def __init__(
-        self, args, script_path, port, uds_path, web, ios, hidden, assets_dir
+        self, args, script_path, port, page_name, uds_path, web, ios, hidden, assets_dir
     ) -> None:
         super().__init__()
         self.args = args
         self.script_path = script_path
         self.port = port
+        self.page_name = page_name
         self.uds_path = uds_path
         self.web = web
         self.ios = ios
@@ -186,8 +197,15 @@ class Handler(FileSystemEventHandler):
         p_env = {**os.environ}
         if self.web or self.ios:
             p_env["FLET_FORCE_WEB_VIEW"] = "true"
+            p_env["FLET_DETACH_FLETD"] = "true"
+
+            # force page name for ios
+            if self.ios:
+                p_env["FLET_PAGE_NAME"] = "/".join(Path(self.script_path).parts[-2:])
         if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
+        if self.page_name:
+            p_env["FLET_PAGE_NAME"] = self.page_name
         if self.uds_path is not None:
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
         if self.assets_dir is not None:
@@ -257,7 +275,7 @@ class Handler(FileSystemEventHandler):
         lan_url = urlunparse(
             (u.scheme, f"{ip_addr}:{u.port}", u.path, None, None, None)
         )
-        self.clear_console()
+        # self.clear_console()
         print("App is running on:", lan_url)
         print("")
         qr_url = urlunparse(
@@ -265,8 +283,8 @@ class Handler(FileSystemEventHandler):
         )
         qr = qrcode.QRCode()
         qr.add_data(qr_url)
-        # qr.print_ascii(invert=True)
-        qr.print_tty()
+        qr.print_ascii(invert=True)
+        # qr.print_tty()
         print("")
         print("Scan QR code above with Camera app.")
 

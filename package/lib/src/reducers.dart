@@ -166,7 +166,7 @@ AppState appReducer(AppState state, dynamic action) {
     //
     return state.copyWith(
         isLoading: true,
-        error: action.connectMessage,
+        error: "", //action.connectMessage,
         reconnectDelayMs: action.nextReconnectDelayMs);
   } else if (action is AppBecomeActiveAction) {
     //
@@ -178,7 +178,7 @@ AppState appReducer(AppState state, dynamic action) {
     //
     // app become inactive
     //
-    return state.copyWith(isLoading: true, error: action.payload.message);
+    return state.copyWith(isLoading: true, error: "");
   } else if (action is SessionCrashedAction) {
     //
     // session crashed
