@@ -15,14 +15,13 @@ class NoAnimationPage<T> extends Page<T> {
   }) : super(key: key);
 
   @override
-  Route<T> createRoute(BuildContext context) =>
-      PageBasedFadeTransitionRoute<T>(this);
+  Route<T> createRoute(BuildContext context) => NoAnimationPageRoute<T>(this);
 }
 
-class PageBasedFadeTransitionRoute<T> extends PageRoute<T> {
+class NoAnimationPageRoute<T> extends PageRoute<T> {
   final NoAnimationPage<T> _page;
 
-  PageBasedFadeTransitionRoute(this._page) : super(settings: _page);
+  NoAnimationPageRoute(this._page) : super(settings: _page);
 
   @override
   Color? get barrierColor => null;
