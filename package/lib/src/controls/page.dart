@@ -29,6 +29,7 @@ import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/fade_transition_page.dart';
 import '../widgets/loading_page.dart';
+import '../widgets/no_animation_page.dart';
 import '../widgets/page_media.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
@@ -514,9 +515,11 @@ class _PageControlState extends State<PageControl> {
               var key = ValueKey(view.attrString("route") ?? view.id);
               var child = _buildViewWidget(
                   routesView.page, view.id, overlayWidgets(view.id));
-              return _prevViewRoutes == null || _prevViewRoutes == viewRoutes
+              return _prevViewRoutes == null
                   ? FadeTransitionPage(key: key, child: child)
-                  : MaterialPage(key: key, child: child);
+                  : _prevViewRoutes == viewRoutes
+                      ? NoAnimationPage(key: key, child: child)
+                      : MaterialPage(key: key, child: child);
             }).toList();
 
             _prevViewRoutes = viewRoutes;
