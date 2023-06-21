@@ -70,7 +70,7 @@ def app(
     host=None,
     port=0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir=None,
+    assets_dir="assets",
     upload_dir=None,
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
@@ -115,7 +115,7 @@ def __app_sync(
     host=None,
     port=0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir=None,
+    assets_dir="assets",
     upload_dir=None,
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
@@ -176,7 +176,9 @@ def __app_sync(
         and url_prefix is None
     ):
         fvp, pid_file = open_flet_view(
-            conn.page_url, assets_dir, view == AppView.FLET_APP_HIDDEN
+            conn.page_url,
+            assets_dir if view != AppView.FLET_APP_WEB else None,
+            view == AppView.FLET_APP_HIDDEN,
         )
         try:
             fvp.wait()
@@ -263,7 +265,9 @@ async def app_async(
         and url_prefix is None
     ):
         fvp, pid_file = await open_flet_view_async(
-            conn.page_url, assets_dir, view == AppView.FLET_APP_HIDDEN
+            conn.page_url,
+            assets_dir if view != AppView.FLET_APP_WEB else None,
+            view == AppView.FLET_APP_HIDDEN,
         )
         try:
             await fvp.wait()

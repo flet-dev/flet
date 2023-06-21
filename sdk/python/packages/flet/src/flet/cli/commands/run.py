@@ -101,7 +101,7 @@ class Command(BaseCommand):
             dest="assets_dir",
             type=str,
             default=None,
-            help="path to an assets directory",
+            help="path to assets directory",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
