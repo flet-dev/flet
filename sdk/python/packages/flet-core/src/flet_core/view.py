@@ -45,6 +45,7 @@ class View(ScrollableControl):
         #
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
+        fullscreen_dialog: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Any = None,
     ):
@@ -70,6 +71,7 @@ class View(ScrollableControl):
         self.bgcolor = bgcolor
         self.scroll = scroll
         self.auto_scroll = auto_scroll
+        self.fullscreen_dialog = fullscreen_dialog
 
     def _get_control_name(self):
         return "view"
@@ -192,3 +194,12 @@ class View(ScrollableControl):
     @bgcolor.setter
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
+
+    # fullscreen_dialog
+    @property
+    def fullscreen_dialog(self) -> Optional[bool]:
+        return self._get_attr("fullscreenDialog", data_type="bool", def_value=False)
+
+    @fullscreen_dialog.setter
+    def fullscreen_dialog(self, value: Optional[bool]):
+        self._set_attr("fullscreenDialog", value)

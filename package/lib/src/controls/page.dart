@@ -519,7 +519,11 @@ class _PageControlState extends State<PageControl> {
                   ? FadeTransitionPage(key: key, child: child)
                   : _prevViewRoutes == viewRoutes
                       ? NoAnimationPage(key: key, child: child)
-                      : MaterialPage(key: key, child: child);
+                      : MaterialPage(
+                          key: key,
+                          child: child,
+                          fullscreenDialog:
+                              view.attrBool("fullscreenDialog", false)!);
             }).toList();
 
             _prevViewRoutes = viewRoutes;
