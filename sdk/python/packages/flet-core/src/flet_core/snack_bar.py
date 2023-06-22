@@ -1,7 +1,24 @@
+from enum import Enum
 from typing import Any, Optional
 
-from flet_core.control import Control
+from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import MarginValue, PaddingValue
+
+
+class SnackBarBehavior(Enum):
+    FIXED = "fixed"
+    FLOATING = "floating"
+
+
+class DismissDirection(Enum):
+    NONE = "none"
+    VERTICAL = "vertical"
+    HORIZONTAL = "horizontal"
+    END_TO_START = "endToStart"
+    START_TO_END = "startToEnd"
+    UP = "up"
+    DOWN = "down"
 
 
 class SnackBar(Control):
@@ -53,14 +70,20 @@ class SnackBar(Control):
         # Specific
         #
         open: bool = False,
-        # remove_current_snackbar: bool = False,
+        behavior: Optional[SnackBarBehavior] = None,
+        dismiss_direction: Optional[DismissDirection] = None,
+        show_close_icon: Optional[bool] = False,
         action: Optional[str] = None,
         action_color: Optional[str] = None,
+        close_icon_color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         duration: Optional[int] = None,
+        margin: MarginValue = None,
+        padding: PaddingValue = None,
+        width: OptionalNumber = None,
+        elevation: OptionalNumber = None,
         on_action=None,
     ):
-
         Control.__init__(
             self,
             ref=ref,
@@ -70,12 +93,19 @@ class SnackBar(Control):
         )
 
         self.open = open
-        # self.remove_current_snackbar = remove_current_snackbar
+        self.behavior = behavior
+        self.dismiss_direction = dismiss_direction
+        self.show_close_icon = show_close_icon
+        self.close_icon_color = close_icon_color
+        self.margin = margin
+        self.padding = padding
+        self.width = width
         self.content = content
         self.action = action
         self.action_color = action_color
         self.bgcolor = bgcolor
         self.duration = duration
+        self.elevation = elevation
         self.on_action = on_action
 
     def _get_control_name(self):
@@ -88,6 +118,11 @@ class SnackBar(Control):
             children.append(self.__content)
         return children
 
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("margin", self.__margin)
+        self._set_attr_json("padding", self.__padding)
+
     # open
     @property
     def open(self) -> Optional[bool]:
@@ -97,17 +132,14 @@ class SnackBar(Control):
     def open(self, value: Optional[bool]):
         self._set_attr("open", value)
 
-    # # remove_current_snackbar
-    # @property
-    # def remove_current_snackbar(self):
-    #     return self._get_attr(
-    #         "removeCurrentSnackBar", data_type="bool", def_value=False
-    #     )
+    # show_close_icon
+    @property
+    def show_close_icon(self) -> Optional[bool]:
+        return self._get_attr("showCloseIcon", data_type="bool", def_value=False)
 
-    # @remove_current_snackbar.setter
-    #
-    # def remove_current_snackbar(self, value: Optional[bool]):
-    #     self._set_attr("removeCurrentSnackBar", value)
+    @show_close_icon.setter
+    def show_close_icon(self, value: Optional[bool]):
+        self._set_attr("showCloseIcon", value)
 
     # content
     @property
@@ -145,6 +177,15 @@ class SnackBar(Control):
     def bgcolor(self, value):
         self._set_attr("bgColor", value)
 
+    # close_icon_color
+    @property
+    def close_icon_color(self):
+        return self._get_attr("closeIconColor")
+
+    @close_icon_color.setter
+    def close_icon_color(self, value):
+        self._set_attr("closeIconColor", value)
+
     # duration
     @property
     def duration(self) -> Optional[int]:
@@ -153,6 +194,68 @@ class SnackBar(Control):
     @duration.setter
     def duration(self, value: Optional[int]):
         self._set_attr("duration", value)
+
+    # behavior
+    @property
+    def behavior(self) -> Optional[SnackBarBehavior]:
+        return self.__behavior
+
+    @behavior.setter
+    def behavior(self, value: Optional[SnackBarBehavior]):
+        self.__behavior = value
+        self._set_attr(
+            "behavior",
+            value.value if isinstance(value, SnackBarBehavior) else value,
+        )
+
+    # dismissDirection
+    @property
+    def dismiss_direction(self) -> Optional[DismissDirection]:
+        return self.__dismiss_direction
+
+    @dismiss_direction.setter
+    def dismiss_direction(self, value: Optional[DismissDirection]):
+        self.__dismiss_direction = value
+        self._set_attr(
+            "dismissDirection",
+            value.value if isinstance(value, DismissDirection) else value,
+        )
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+
+    # margin
+    @property
+    def margin(self) -> MarginValue:
+        return self.__margin
+
+    @margin.setter
+    def margin(self, value: MarginValue):
+        self.__margin = value
+
+    # width
+    @property
+    def width(self) -> OptionalNumber:
+        return self._get_attr("width")
+
+    @width.setter
+    def width(self, value: OptionalNumber):
+        self._set_attr("width", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation")
+
+    @elevation.setter
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
 
     # on_action
     @property

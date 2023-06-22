@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -7,6 +8,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -56,11 +58,30 @@ class _SnackBarControlState extends State<SnackBarControl> {
             })
         : null;
 
+    SnackBarBehavior? behavior = SnackBarBehavior.values.firstWhereOrNull((a) =>
+        a.name.toLowerCase() ==
+        widget.control.attrString("behavior", "")!.toLowerCase());
+
+    DismissDirection? dismissDirection = DismissDirection.values.firstWhere(
+        (a) =>
+            a.name.toLowerCase() ==
+            widget.control.attrString("dismissDirection", "")!.toLowerCase(),
+        orElse: () => DismissDirection.down);
+
     return SnackBar(
+        behavior: behavior,
+        dismissDirection: dismissDirection,
+        showCloseIcon: widget.control.attrBool("showCloseIcon"),
+        closeIconColor: HexColor.fromString(Theme.of(context),
+            widget.control.attrString("closeIconColor", "")!),
         content: createControl(widget.control, contentCtrls.first.id, disabled),
         backgroundColor: HexColor.fromString(
             Theme.of(context), widget.control.attrString("bgColor", "")!),
         action: action,
+        margin: parseEdgeInsets(widget.control, "margin"),
+        padding: parseEdgeInsets(widget.control, "padding"),
+        width: widget.control.attrDouble("width"),
+        elevation: widget.control.attrDouble("elevation"),
         duration:
             Duration(milliseconds: widget.control.attrInt("duration", 4000)!));
   }

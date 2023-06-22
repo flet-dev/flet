@@ -158,7 +158,7 @@ from flet_core.shader_mask import ShaderMask
 from flet_core.shadow import BoxShadow, ShadowBlurStyle
 from flet_core.shake_detector import ShakeDetector
 from flet_core.slider import Slider
-from flet_core.snack_bar import SnackBar
+from flet_core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
 from flet_core.stack import Stack
 from flet_core.switch import Switch
 from flet_core.tabs import Tab, Tabs
