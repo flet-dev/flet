@@ -50,7 +50,7 @@ func cleanupPagesAndSessions() {
 			store.DeleteSession(pageID, sessionID)
 
 			// delete page if no more sessions
-			if !page.IsApp && len(store.GetPageSessions(pageID)) == 0 && len(store.GetPageHostClients(page.ID)) == 0 {
+			if len(store.GetPageSessions(pageID)) == 0 && len(store.GetPageHostClients(page.ID)) == 0 {
 				store.DeletePage(pageID)
 			}
 		}

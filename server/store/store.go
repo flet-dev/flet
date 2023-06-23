@@ -146,8 +146,20 @@ func GetExpiredClients() []string {
 	return cache.SortedSetPopRange(clientsExpiredKey, 0, time.Now().Unix())
 }
 
-func GetClientSessions(clientID string) []string {
+func GetClientSessionIDs(clientID string) []string {
 	return cache.SetGet(fmt.Sprintf(clientSessionsKey, clientID))
+}
+
+func GetClientSessions(clientID string) []*model.Session {
+	sessions := make([]*model.Session, 0)
+	for _, fullSessionID := range GetClientSessionIDs(clientID) {
+		pageID, sessionID := model.ParseSessionID(fullSessionID)
+		page := GetPageByID(pageID)
+		if page != nil {
+			sessions = append(sessions, GetSession(page, sessionID))
+		}
+	}
+	return sessions
 }
 
 func DeleteExpiredClient(clientID string, removeExpiredClient bool) (webClients []string) {
@@ -155,14 +167,14 @@ func DeleteExpiredClient(clientID string, removeExpiredClient bool) (webClients 
 		cache.SortedSetRemove(clientsExpiredKey, clientID)
 	}
 	webClients = make([]string, 0)
-	for _, fullSessionID := range GetClientSessions(clientID) {
+	for _, fullSessionID := range GetClientSessionIDs(clientID) {
 		pageID, sessionID := model.ParseSessionID(fullSessionID)
 		cache.SetRemove(fmt.Sprintf(sessionHostClientsKey, pageID, sessionID), clientID)
 		cache.SetRemove(fmt.Sprintf(sessionWebClientsKey, pageID, sessionID), clientID)
 		cache.SetRemove(fmt.Sprintf(pageHostClientsKey, pageID), clientID)
 
 		page := GetPageByID(pageID)
-		if page != nil && page.IsApp {
+		if page != nil {
 			for _, sessionID := range GetPageHostClientSessions(pageID, clientID) {
 				RemoveSessionHostClient(pageID, sessionID, clientID)
 

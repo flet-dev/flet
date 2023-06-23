@@ -13,8 +13,6 @@ const (
 	// PageCommandFromHostAction adds, sets, gets, disconnects or performs other page-related command from host
 	PageCommandFromHostAction = "pageCommandFromHost"
 
-	InactiveAppFromHostAction = "inactiveAppFromHost"
-
 	// PageCommandFromHostAction adds, sets, gets, disconnects or performs other page-related command from host
 	PageCommandsBatchFromHostAction = "pageCommandsBatchFromHost"
 
