@@ -29,10 +29,9 @@ func cleanup() {
 }
 
 func cleanupPagesAndSessions() {
-	log.Debugln("cleanupPagesAndSessions()")
 	sessions := store.GetExpiredSessions()
 	if len(sessions) > 0 {
-		log.Debugln("Deleting old sessions:", len(sessions))
+		log.Debugln("Deleting expired sessions:", len(sessions))
 		for _, fullSessionID := range sessions {
 			pageID, sessionID := model.ParseSessionID(fullSessionID)
 
@@ -50,7 +49,7 @@ func cleanupPagesAndSessions() {
 			store.DeleteSession(pageID, sessionID)
 
 			// delete page if no more sessions
-			if !page.IsApp && len(store.GetPageSessions(pageID)) == 0 && len(store.GetPageHostClients(page.ID)) == 0 {
+			if len(store.GetPageSessions(pageID)) == 0 && len(store.GetPageHostClients(page.ID)) == 0 {
 				store.DeletePage(pageID)
 			}
 		}
@@ -58,18 +57,22 @@ func cleanupPagesAndSessions() {
 }
 
 func cleanupExpiredClients() {
-	log.Debugln("cleanupExpiredClients()")
 	clients := store.GetExpiredClients()
-	for _, clientID := range clients {
-		deleteExpiredClient(clientID, false)
+	if len(clients) > 0 {
+		log.Debugln("Delete expired clients:", len(clients))
+		for _, clientID := range clients {
+			deleteExpiredClient(clientID, false)
+		}
 	}
 }
 
 func cleanupExpiredPageNameRegistrations() {
-	log.Debugln("cleanupExpiredPageNameRegistrations()")
 	pageNameRegs := store.GetExpiredPageNameRegistrations()
-	for _, pageName := range pageNameRegs {
-		store.RemovePageNameRegistration(pageName)
+	if len(pageNameRegs) > 0 {
+		log.Debugln("Delete expired pageName registrations:", len(pageNameRegs))
+		for _, pageName := range pageNameRegs {
+			store.RemovePageNameRegistration(pageName)
+		}
 	}
 }
 

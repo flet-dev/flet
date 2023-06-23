@@ -56,7 +56,9 @@ func (c *memoryCache) cleanExpiredEntries() {
 
 		c.Lock()
 		entries := c.expireEntries.GetByScoreRange(0, sortedset.SCORE(time.Now().Unix()), &sortedset.GetByScoreRangeOptions{})
-		log.Debugln("Expired entries:", len(entries))
+		if len(entries) > 0 {
+			log.Debugln("Expired entries:", len(entries))
+		}
 		for _, entry := range entries {
 			c.deleteEntry(entry.Key())
 			c.expireEntries.Remove(entry.Key())
@@ -453,7 +455,6 @@ func (c *memoryCache) send(channel string, message []byte) {
 	}
 }
 
-//
 // Locks
 // Source: https://stackoverflow.com/questions/40931373/how-to-gc-a-map-of-mutexes-in-go
 // =============================
