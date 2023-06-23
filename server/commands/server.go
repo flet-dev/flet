@@ -52,7 +52,7 @@ func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
 
 			if attachedProcess {
 				go monitorParentProcess(cancel)
-			} else {
+			} else if shutdownTimeoutSeconds > 0 {
 				go monitorConnectedClients(cancel)
 			}
 
