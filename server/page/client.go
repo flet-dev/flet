@@ -673,33 +673,32 @@ func (c *Client) unregister(normalClosure bool) {
 		return
 	}
 
-	sessions := store.GetClientSessions(c.id)
-
-	log.Printf("Unregistering %s client %s (%d sessions)", c.role, c.id, len(sessions))
-
 	// unsubscribe from pubsub
 	pubsub.Unsubscribe(c.subscription)
 
 	c.exitExtendExpiration <- true
 
 	// unregister from all sessions
-	for _, session := range sessions {
-		log.Printf("Unregistering %v client %s from session %s:%s", c.role, c.id, session.Page.Name, session.ID)
-
-		if c.role == WebClient {
+	if c.role == WebClient {
+		for _, session := range store.GetClientSessions(c.id) {
+			log.Printf("Unregistering web client %s from session %s:%s", c.id, session.Page.Name, session.ID)
 			store.RemoveSessionWebClient(session.Page.ID, session.ID, c.id)
 			sendPageEventToSession(session, "disconnect", "")
 		}
 	}
 
-	// unregister from all pages
-	for _, page := range c.pages {
-		c.unregisterPage(page)
+	// unregister host client from all pages
+	if c.role == HostClient {
+		for _, page := range c.pages {
+			c.unregisterPage(page)
+		}
 	}
 
 	// unregister web client from a page name
-	for pageName := range c.pageNames {
-		store.RemovePageNameWebClient(pageName, c.id)
+	if c.role == WebClient {
+		for pageName := range c.pageNames {
+			store.RemovePageNameWebClient(pageName, c.id)
+		}
 	}
 
 	// expire client immediately
