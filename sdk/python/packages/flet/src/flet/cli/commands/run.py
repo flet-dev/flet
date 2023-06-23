@@ -100,7 +100,7 @@ class Command(BaseCommand):
             "--assets",
             dest="assets_dir",
             type=str,
-            default=None,
+            default="assets",
             help="path to assets directory",
         )
 
