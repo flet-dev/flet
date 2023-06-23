@@ -69,7 +69,7 @@ func cleanupExpiredClients() {
 func cleanupExpiredPageNameRegistrations() {
 	pageNameRegs := store.GetExpiredPageNameRegistrations()
 	if len(pageNameRegs) > 0 {
-		log.Debugln("Delete expired pageName registrations", len(pageNameRegs))
+		log.Debugln("Delete expired pageName registrations:", len(pageNameRegs))
 		for _, pageName := range pageNameRegs {
 			store.RemovePageNameRegistration(pageName)
 		}
