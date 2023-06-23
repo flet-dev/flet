@@ -966,13 +966,11 @@ class Page(Control):
         if self.__offstage.dialog is not None:
             self.__offstage.dialog.open = False
             self.__offstage.update()
-            self.__offstage.dialog = None
 
     async def close_dialog_async(self):
         if self.__offstage.dialog is not None:
             self.__offstage.dialog.open = False
             await self.__offstage.update_async()
-            self.__offstage.dialog = None
 
     #
     # Banner
@@ -991,13 +989,11 @@ class Page(Control):
         if self.__offstage.banner is not None:
             self.__offstage.banner.open = False
             self.__offstage.update()
-            self.__offstage.banner = None
 
     async def close_banner_async(self):
         if self.__offstage.banner is not None:
             self.__offstage.banner.open = False
             await self.__offstage.update_async()
-            self.__offstage.banner = None
 
     #
     # BottomSheet
@@ -1016,13 +1012,11 @@ class Page(Control):
         if self.__offstage.bottom_sheet is not None:
             self.__offstage.bottom_sheet.open = False
             self.__offstage.update()
-            self.__offstage.bottom_sheet = None
 
     async def close_bottom_sheet_async(self):
         if self.__offstage.bottom_sheet is not None:
             self.__offstage.bottom_sheet.open = False
             await self.__offstage.update_async()
-            self.__offstage.bottom_sheet = None
 
     def window_destroy(self):
         self._set_attr("windowDestroy", "true")
@@ -1835,11 +1829,11 @@ class Offstage(Control):
 
     # dialog
     @property
-    def dialog(self) -> Optional[Control]:
+    def dialog(self) -> Optional[AlertDialog]:
         return self.__dialog
 
     @dialog.setter
-    def dialog(self, value: Optional[Control]):
+    def dialog(self, value: Optional[AlertDialog]):
         self.__dialog = value
 
     # bottom_sheet
