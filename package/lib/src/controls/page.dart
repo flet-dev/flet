@@ -477,9 +477,11 @@ class _PageControlState extends State<PageControl> {
           List<Page<dynamic>> pages = [];
           if (routesView.views.isEmpty) {
             pages.add(FadeTransitionPage(
-                child: LoadingPage(
-              isLoading: routesView.isLoading,
-              message: routesView.error,
+                child: Scaffold(
+              body: LoadingPage(
+                isLoading: routesView.isLoading,
+                message: routesView.error,
+              ),
             )));
           } else {
             // offstage
