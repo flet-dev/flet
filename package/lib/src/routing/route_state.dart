@@ -9,18 +9,33 @@ import 'route_parser.dart';
 class RouteState extends ChangeNotifier {
   final RouteParser _parser;
   String _route;
+  final List<String> _routesBuffer = [];
 
   RouteState(this._parser) : _route = "";
 
   String get route => _route;
 
   set route(String route) {
-    // Don't notify listeners if the path hasn't changed.
-    if (_route == route) return;
+    if (hasListeners) {
+      // Don't notify listeners if the path hasn't changed.
+      if (_route == route) return;
 
-    _route = route;
-    debugPrint("Route changed to: $route");
-    notifyListeners();
+      _route = route;
+      debugPrint("Route changed to: $route");
+      notifyListeners();
+    } else {
+      // add route to a buffer
+      _routesBuffer.add(route);
+    }
+  }
+
+  void addPageListener(VoidCallback listener) {
+    addListener(listener);
+    for (var route in _routesBuffer) {
+      _route = route;
+      notifyListeners();
+    }
+    _routesBuffer.clear();
   }
 
   Future<void> go(String route) async {

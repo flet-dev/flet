@@ -97,7 +97,7 @@ class _PageControlState extends State<PageControl> {
     _routeParser = RouteParser();
 
     _routeState = RouteState(_routeParser);
-    _routeState.addListener(_routeChanged);
+    _routeState.addPageListener(_routeChanged);
 
     _routerDelegate = SimpleRouterDelegate(
       routeState: _routeState,
