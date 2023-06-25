@@ -16,27 +16,20 @@ class RouteState extends ChangeNotifier {
   String get route => _route;
 
   set route(String route) {
-    if (hasListeners || route == "/") {
-      // Don't notify listeners if the path hasn't changed.
-      if (_route == route) return;
-
-      _route = route;
-      debugPrint("Route changed to: $route");
+    _route = route;
+    if (_route != route) {
       notifyListeners();
-    } else {
-      // add route to a buffer
-      _routesBuffer.add(route);
     }
   }
 
-  void addPageListener(VoidCallback listener) {
-    addListener(listener);
-    for (var route in _routesBuffer) {
-      _route = route;
-      notifyListeners();
-    }
-    _routesBuffer.clear();
-  }
+  // void addPageListener(VoidCallback listener) {
+  //   addListener(listener);
+  //   for (var route in _routesBuffer) {
+  //     _route = route;
+  //     notifyListeners();
+  //   }
+  //   _routesBuffer.clear();
+  // }
 
   Future<void> go(String route) async {
     this.route =
