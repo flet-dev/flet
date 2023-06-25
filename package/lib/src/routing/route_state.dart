@@ -16,10 +16,10 @@ class RouteState extends ChangeNotifier {
   String get route => _route;
 
   set route(String route) {
-    _route = route;
     if (_route != route) {
       notifyListeners();
     }
+    _route = route;
   }
 
   // void addPageListener(VoidCallback listener) {
