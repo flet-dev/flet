@@ -16,7 +16,7 @@ class RouteState extends ChangeNotifier {
   String get route => _route;
 
   set route(String route) {
-    if (hasListeners) {
+    if (hasListeners || route == "/") {
       // Don't notify listeners if the path hasn't changed.
       if (_route == route) return;
 
