@@ -17,9 +17,9 @@ class RouteState extends ChangeNotifier {
 
   set route(String route) {
     if (_route != route) {
+      _route = route;
       notifyListeners();
     }
-    _route = route;
   }
 
   // void addPageListener(VoidCallback listener) {
