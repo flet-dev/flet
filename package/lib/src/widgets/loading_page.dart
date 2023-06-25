@@ -64,7 +64,7 @@ class LoadingPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: Container(
           alignment: Alignment.center,
-          color: theme.colorScheme.surface.withOpacity(0.7),
+          color: theme.colorScheme.background.withOpacity(0.7),
           child: child),
     );
   }

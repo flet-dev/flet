@@ -474,13 +474,18 @@ class _PageControlState extends State<PageControl> {
         builder: (context, routesView) {
           debugPrint("_buildNavigator build");
 
+          var hideLoadingPage =
+              FletAppServices.of(context).hideLoadingPage ?? false;
+
           List<Page<dynamic>> pages = [];
           if (routesView.views.isEmpty) {
             pages.add(FadeTransitionPage(
-                child: LoadingPage(
-              isLoading: routesView.isLoading,
-              message: routesView.error,
-            )));
+                child: hideLoadingPage
+                    ? const Scaffold()
+                    : LoadingPage(
+                        isLoading: routesView.isLoading,
+                        message: routesView.error,
+                      )));
           } else {
             Widget? loadingPage;
             // offstage
@@ -502,7 +507,8 @@ class _PageControlState extends State<PageControl> {
               return overlayWidgets;
             }
 
-            if (routesView.isLoading || routesView.error != "") {
+            if ((routesView.isLoading || routesView.error != "") &&
+                !hideLoadingPage) {
               loadingPage = LoadingPage(
                 isLoading: routesView.isLoading,
                 message: routesView.error,
