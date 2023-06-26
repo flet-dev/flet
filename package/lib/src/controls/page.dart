@@ -646,7 +646,9 @@ class _PageControlState extends State<PageControl> {
                 debugPrint("Route view StoreConnector build: $viewId");
 
                 var appBarView =
-                    appBar != null ? childrenViews.controlViews.last : null;
+                    appBar != null && childrenViews.controlViews.isNotEmpty
+                        ? childrenViews.controlViews.last
+                        : null;
 
                 var column = Column(
                     mainAxisAlignment: mainAlignment,
