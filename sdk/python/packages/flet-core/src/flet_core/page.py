@@ -435,6 +435,7 @@ class Page(Control):
     def __handle_mount_unmount(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             ctrl.will_unmount()
+            ctrl.page = None
         for ctrl in added_controls:
             ctrl.did_mount()
 
