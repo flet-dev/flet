@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
-import 'numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'alignment.dart';
 import 'colors.dart';
+import 'numbers.dart';
 
 Gradient? parseGradient(ThemeData theme, Control control, String propName) {
   var v = control.attrString(propName, null);
@@ -80,6 +81,13 @@ GradientRotation? parseRotation(dynamic jv) {
     return null;
   }
   return GradientRotation(parseDouble(jv));
+}
+
+Float64List? parseRotationToMatrix4(dynamic jv, Rect bounds) {
+  if (jv == null) {
+    return null;
+  }
+  return GradientRotation(parseDouble(jv)).transform(bounds).storage;
 }
 
 extension GradientExtension on Gradient {
