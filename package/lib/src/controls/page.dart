@@ -165,7 +165,7 @@ class _PageControlState extends State<PageControl> {
     var route = widget.control.attrString("route");
     if (_routeState.route != route && route != null) {
       // route updated
-      //_routeState.route = route;
+      _routeState.route = route;
     }
 
     // theme
