@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet/src/flet_server.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -70,6 +71,8 @@ AppState appReducer(AppState state, dynamic action) {
     //
     var page = state.controls["page"];
     var controls = Map.of(state.controls);
+    String? deepLinkingRoute;
+
     if (page != null) {
       var pageAttrs = Map.of(page.attrs);
       pageAttrs["route"] = action.route;
@@ -96,21 +99,20 @@ AppState appReducer(AppState state, dynamic action) {
 
           action.server.connect(address: state.pageUri!.toString());
         });
+      } else if (state.isLoading) {
+        // buffer route
+        deepLinkingRoute = action.route;
       } else {
         // existing route change
         debugPrint("New page route: ${action.route}");
-        List<Map<String, String>> props = [
-          {"i": "page", "route": action.route},
-        ];
-        action.server.updateControlProps(props: props);
-        action.server.sendPageEvent(
-            eventTarget: "page",
-            eventName: "route_change",
-            eventData: action.route);
+        sendRouteChangeEvent(action.server, action.route);
       }
     }
 
-    return state.copyWith(controls: controls, route: action.route);
+    return state.copyWith(
+        controls: controls,
+        route: action.route,
+        deepLinkingRoute: deepLinkingRoute);
   } else if (action is WindowEventAction) {
     //
     // window event
@@ -152,9 +154,16 @@ AppState appReducer(AppState state, dynamic action) {
       // store sessionId in a cookie
       SessionStore.set("sessionId", sessionId);
 
+      if (state.deepLinkingRoute != "") {
+        debugPrint(
+            "Sending buffered deep link route: ${state.deepLinkingRoute}");
+        sendRouteChangeEvent(action.server, state.deepLinkingRoute);
+      }
+
       // connected to the session
       return state.copyWith(
           isLoading: false,
+          deepLinkingRoute: "",
           reconnectDelayMs: 0,
           sessionId: sessionId,
           error: "",
@@ -457,4 +466,13 @@ List<String> getAllDescendantIds(Map<String, Control> controls, String id) {
     return childIds;
   }
   return [];
+}
+
+void sendRouteChangeEvent(FletServer server, String route) {
+  List<Map<String, String>> props = [
+    {"i": "page", "route": route},
+  ];
+  server.updateControlProps(props: props);
+  server.sendPageEvent(
+      eventTarget: "page", eventName: "route_change", eventData: route);
 }

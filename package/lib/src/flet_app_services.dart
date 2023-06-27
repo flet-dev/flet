@@ -10,6 +10,7 @@ import 'reducers.dart';
 
 class FletAppServices extends InheritedWidget {
   final FletAppServices? parentAppServices;
+  final bool? hideLoadingPage;
   final String? controlId;
   final int? reconnectIntervalMs;
   final int? reconnectTimeoutMs;
@@ -28,6 +29,7 @@ class FletAppServices extends InheritedWidget {
       required this.assetsDir,
       this.errorsHandler,
       this.parentAppServices,
+      this.hideLoadingPage,
       this.controlId,
       this.reconnectIntervalMs,
       this.reconnectTimeoutMs})

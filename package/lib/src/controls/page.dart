@@ -474,16 +474,20 @@ class _PageControlState extends State<PageControl> {
         builder: (context, routesView) {
           debugPrint("_buildNavigator build");
 
+          var hideLoadingPage =
+              FletAppServices.of(context).hideLoadingPage ?? false;
+
           List<Page<dynamic>> pages = [];
           if (routesView.views.isEmpty) {
             pages.add(FadeTransitionPage(
-                child: Scaffold(
-              body: LoadingPage(
-                isLoading: routesView.isLoading,
-                message: routesView.error,
-              ),
-            )));
+                child: hideLoadingPage
+                    ? const Scaffold()
+                    : LoadingPage(
+                        isLoading: routesView.isLoading,
+                        message: routesView.error,
+                      )));
           } else {
+            Widget? loadingPage;
             // offstage
             overlayWidgets(String viewId) {
               List<Widget> overlayWidgets = [];
@@ -500,14 +504,15 @@ class _PageControlState extends State<PageControl> {
                 overlayWidgets.add(const WindowMedia());
               }
 
-              if (routesView.isLoading || routesView.error != "") {
-                overlayWidgets.add(LoadingPage(
-                  isLoading: routesView.isLoading,
-                  message: routesView.error,
-                ));
-              }
-
               return overlayWidgets;
+            }
+
+            if ((routesView.isLoading || routesView.error != "") &&
+                !hideLoadingPage) {
+              loadingPage = LoadingPage(
+                isLoading: routesView.isLoading,
+                message: routesView.error,
+              );
             }
 
             String viewRoutes = routesView.views
@@ -515,8 +520,8 @@ class _PageControlState extends State<PageControl> {
                 .join();
             pages = routesView.views.map((view) {
               var key = ValueKey(view.attrString("route") ?? view.id);
-              var child = _buildViewWidget(
-                  routesView.page, view.id, overlayWidgets(view.id));
+              var child = _buildViewWidget(routesView.page, view.id,
+                  overlayWidgets(view.id), loadingPage);
               return _prevViewRoutes == null
                   ? FadeTransitionPage(key: key, child: child)
                   : _prevViewRoutes == viewRoutes
@@ -555,8 +560,8 @@ class _PageControlState extends State<PageControl> {
         });
   }
 
-  Widget _buildViewWidget(
-      Control parent, String viewId, List<Widget> overlayWidgets) {
+  Widget _buildViewWidget(Control parent, String viewId,
+      List<Widget> overlayWidgets, Widget? loadingPage) {
     return StoreConnector<AppState, ControlViewModel?>(
         distinct: true,
         converter: (store) {
@@ -641,7 +646,9 @@ class _PageControlState extends State<PageControl> {
                 debugPrint("Route view StoreConnector build: $viewId");
 
                 var appBarView =
-                    appBar != null ? childrenViews.controlViews.last : null;
+                    appBar != null && childrenViews.controlViews.isNotEmpty
+                        ? childrenViews.controlViews.last
+                        : null;
 
                 var column = Column(
                     mainAxisAlignment: mainAlignment,
@@ -660,36 +667,41 @@ class _PageControlState extends State<PageControl> {
                       ScrollNotificationControl(control: control, child: child);
                 }
 
+                var scaffold = Scaffold(
+                  backgroundColor: HexColor.fromString(
+                      Theme.of(context), control.attrString("bgcolor", "")!),
+                  appBar: appBarView != null
+                      ? AppBarControl(
+                          parent: control,
+                          control: appBarView.control,
+                          children: appBarView.children,
+                          parentDisabled: control.isDisabled,
+                          height: appBarView.control
+                              .attrDouble("toolbarHeight", kToolbarHeight)!)
+                      : null,
+                  body: Stack(children: [
+                    SizedBox.expand(
+                        child: Container(
+                            padding: parseEdgeInsets(control, "padding") ??
+                                const EdgeInsets.all(10),
+                            child: child)),
+                    ...overlayWidgets
+                  ]),
+                  bottomNavigationBar: navBar != null
+                      ? createControl(control, navBar.id, control.isDisabled)
+                      : null,
+                  floatingActionButton: fab != null
+                      ? createControl(control, fab.id, control.isDisabled)
+                      : null,
+                );
+
                 return Directionality(
                     textDirection: textDirection,
-                    child: Scaffold(
-                      backgroundColor: HexColor.fromString(Theme.of(context),
-                          control.attrString("bgcolor", "")!),
-                      appBar: appBarView != null
-                          ? AppBarControl(
-                              parent: control,
-                              control: appBarView.control,
-                              children: appBarView.children,
-                              parentDisabled: control.isDisabled,
-                              height: appBarView.control
-                                  .attrDouble("toolbarHeight", kToolbarHeight)!)
-                          : null,
-                      body: Stack(children: [
-                        SizedBox.expand(
-                            child: Container(
-                                padding: parseEdgeInsets(control, "padding") ??
-                                    const EdgeInsets.all(10),
-                                child: child)),
-                        ...overlayWidgets
-                      ]),
-                      bottomNavigationBar: navBar != null
-                          ? createControl(
-                              control, navBar.id, control.isDisabled)
-                          : null,
-                      floatingActionButton: fab != null
-                          ? createControl(control, fab.id, control.isDisabled)
-                          : null,
-                    ));
+                    child: loadingPage != null
+                        ? Stack(
+                            children: [scaffold, loadingPage],
+                          )
+                        : scaffold);
               });
         });
   }

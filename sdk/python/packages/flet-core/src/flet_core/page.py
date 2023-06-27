@@ -435,12 +435,14 @@ class Page(Control):
     def __handle_mount_unmount(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             ctrl.will_unmount()
+            ctrl.page = None
         for ctrl in added_controls:
             ctrl.did_mount()
 
     async def __handle_mount_unmount_async(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             await ctrl.will_unmount_async()
+            ctrl.page = None
         for ctrl in added_controls:
             await ctrl.did_mount_async()
 

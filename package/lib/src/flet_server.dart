@@ -174,7 +174,7 @@ class FletServer {
     switch (msg.action) {
       case MessageAction.registerWebClient:
         _store.dispatch(RegisterWebClientAction(
-            RegisterWebClientResponse.fromJson(msg.payload)));
+            RegisterWebClientResponse.fromJson(msg.payload), this));
         break;
       case MessageAction.appBecomeActive:
         _store.dispatch(AppBecomeActiveAction(

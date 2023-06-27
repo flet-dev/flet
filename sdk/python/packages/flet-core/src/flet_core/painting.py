@@ -60,6 +60,7 @@ class PaintSweepGradient(PaintGradient):
     tile_mode: GradientTileMode = dataclasses.field(default=GradientTileMode.CLAMP)
     start_angle: float = dataclasses.field(default=0.0)
     end_angle: float = dataclasses.field(default=math.pi * 2)
+    rotation: Union[None, float, int] = dataclasses.field(default=None)
     type: str = dataclasses.field(default="sweep")
 
 

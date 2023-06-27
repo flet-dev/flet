@@ -7,6 +7,7 @@ import 'flet_app_services.dart';
 class FletApp extends StatefulWidget {
   final String pageUrl;
   final String assetsDir;
+  final bool? hideLoadingPage;
   final String? controlId;
   final String? title;
   final FletAppErrorsHandler? errorsHandler;
@@ -17,6 +18,7 @@ class FletApp extends StatefulWidget {
       {Key? key,
       required this.pageUrl,
       required this.assetsDir,
+      this.hideLoadingPage,
       this.controlId,
       this.title,
       this.errorsHandler,
@@ -44,6 +46,7 @@ class _FletAppState extends State<FletApp> {
       _pageUrl = widget.pageUrl;
       _appServices = FletAppServices(
           parentAppServices: FletAppServices.maybeOf(context),
+          hideLoadingPage: widget.hideLoadingPage,
           controlId: widget.controlId,
           reconnectIntervalMs: widget.reconnectIntervalMs,
           reconnectTimeoutMs: widget.reconnectTimeoutMs,

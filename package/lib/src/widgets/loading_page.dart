@@ -60,9 +60,12 @@ class LoadingPage extends StatelessWidget {
       );
     }
 
-    return Container(
-        alignment: Alignment.center,
-        color: theme.colorScheme.surface.withOpacity(0.7),
-        child: child);
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+          alignment: Alignment.center,
+          color: theme.colorScheme.background.withOpacity(0.7),
+          child: child),
+    );
   }
 }

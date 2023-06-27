@@ -55,7 +55,8 @@ class PageBrightnessChangeAction {
 
 class RegisterWebClientAction {
   final RegisterWebClientResponse payload;
-  RegisterWebClientAction(this.payload);
+  final FletServer server;
+  RegisterWebClientAction(this.payload, this.server);
 }
 
 class AppBecomeActiveAction {

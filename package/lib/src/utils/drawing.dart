@@ -90,22 +90,26 @@ ui.Gradient? paintGradientFromJSON(
         parseTileMode(json["tile_mode"]));
   } else if (type == "radial") {
     return ui.Gradient.radial(
-        offsetFromJson(json["center"])!,
-        parseDouble(json["radius"]),
-        parseColors(theme, json["colors"]),
-        parseStops(json["color_stops"]),
-        parseTileMode(json["tile_mode"]),
-        null,
-        offsetFromJson(json["focal"]),
-        parseDouble(json["focal_radius"]));
+      offsetFromJson(json["center"])!,
+      parseDouble(json["radius"]),
+      parseColors(theme, json["colors"]),
+      parseStops(json["color_stops"]),
+      parseTileMode(json["tile_mode"]),
+      null,
+      offsetFromJson(json["focal"]),
+      parseDouble(json["focal_radius"]),
+    );
   } else if (type == "sweep") {
+    Offset center = offsetFromJson(json["center"])!;
     return ui.Gradient.sweep(
-        offsetFromJson(json["center"])!,
+        center,
         parseColors(theme, json["colors"]),
         parseStops(json["color_stops"]),
         parseTileMode(json["tile_mode"]),
         parseDouble(json["start_angle"]),
-        parseDouble(json["end_angle"]));
+        parseDouble(json["end_angle"]),
+        parseRotationToMatrix4(
+            json["rotation"], Rect.fromCircle(center: center, radius: 10)));
   }
   return null;
 }
