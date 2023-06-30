@@ -448,6 +448,7 @@ class _PageControlState extends State<PageControl> {
                 return FletAppContext(
                     themeMode: themeMode,
                     child: MaterialApp.router(
+                      debugShowCheckedModeBanner: false,
                       showSemanticsDebugger: widget.control
                           .attrBool("showSemanticsDebugger", false)!,
                       routerDelegate: _routerDelegate,
