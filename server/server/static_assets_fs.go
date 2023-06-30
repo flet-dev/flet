@@ -24,7 +24,7 @@ func newFileSystemAssetsSFS(rootWebDir string) *FileSystemAssetsSFS {
 		return nil
 	}
 
-	log.Debugln("Static assets directory configured:", rootWebDir)
+	//log.Debugln("Static assets directory configured:", rootWebDir)
 
 	return &FileSystemAssetsSFS{
 		rootWebDir: rootWebDir,
@@ -32,13 +32,14 @@ func newFileSystemAssetsSFS(rootWebDir string) *FileSystemAssetsSFS {
 	}
 }
 
-func (fs *FileSystemAssetsSFS) Exists(prefix string, path string) bool {
-	//log.Debugln("FileSystemAssetsFS Exists: ", prefix, path)
-	return fs.findFullPath(path) != ""
+func (fs *FileSystemAssetsSFS) Exists(path string) bool {
+	r := fs.findFullPath(path) != ""
+	log.Debugln("FileSystemAssetsFS Exists:", r, fs.rootWebDir, path)
+	return r
 }
 
 func (fs *FileSystemAssetsSFS) Open(name string) (http.File, error) {
-	//log.Debugln("FileSystemAssetsFS Open: ", name)
+	log.Debugln("FileSystemAssetsFS Open:", fs.rootWebDir, name)
 	return fs.httpFS.Open(fs.findFullPath(name))
 }
 

@@ -36,6 +36,7 @@ class AsyncWebSocketConnection(Connection):
         self,
         server_address: str,
         page_name: str,
+        assets_dir: Optional[str],
         auth_token: Optional[str],
         on_event=None,
         on_session_created=None,
@@ -47,6 +48,7 @@ class AsyncWebSocketConnection(Connection):
         self.__is_reconnecting = False
         self.__host_client_id: Optional[str] = None
         self.__auth_token = auth_token
+        self.__assets_dir = assets_dir
         self.__ws_callbacks = {}
         self.__on_event = on_event
         self.__on_session_created = on_session_created
@@ -80,8 +82,7 @@ class AsyncWebSocketConnection(Connection):
         payload = RegisterHostClientRequestPayload(
             hostClientID=self.__host_client_id,
             pageName=self.page_name,
-            isApp=True,
-            update=False,
+            assetsDir=self.__assets_dir,
             authToken=self.__auth_token,
             permissions=None,
         )

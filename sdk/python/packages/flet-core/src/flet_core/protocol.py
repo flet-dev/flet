@@ -93,8 +93,7 @@ class PageEventPayload:
 class RegisterHostClientRequestPayload:
     hostClientID: Optional[str]
     pageName: str
-    isApp: bool
-    update: bool
+    assetsDir: Optional[str]
     authToken: Optional[str]
     permissions: Optional[str]
 

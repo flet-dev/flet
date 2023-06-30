@@ -387,7 +387,7 @@ func (c *Client) registerHostClient(message *Message) {
 		}
 
 		// create new page
-		page = model.NewPage(response.PageName, request.Permissions, c.clientIP)
+		page = model.NewPage(response.PageName, request.AssetsDir, request.Permissions, c.clientIP)
 		store.AddPage(page)
 	}
 
