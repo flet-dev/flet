@@ -32,6 +32,7 @@ class SyncWebSocketConnection(Connection):
         self,
         server_address: str,
         page_name: str,
+        assets_dir: Optional[str],
         token: Optional[str],
         on_event=None,
         on_session_created=None,
@@ -40,6 +41,7 @@ class SyncWebSocketConnection(Connection):
         self.page_name = page_name
         self.__host_client_id: Optional[str] = None
         self.__token = token
+        self.__assets_dir = assets_dir
         self.__server_address = server_address
         self.__ws = ReconnectingWebSocket(
             self._get_ws_url(server_address),
@@ -66,8 +68,7 @@ class SyncWebSocketConnection(Connection):
         payload = RegisterHostClientRequestPayload(
             hostClientID=self.__host_client_id,
             pageName=self.page_name,
-            isApp=True,
-            update=False,
+            assetsDir=self.__assets_dir,
             authToken=self.__token,
             permissions=None,
         )

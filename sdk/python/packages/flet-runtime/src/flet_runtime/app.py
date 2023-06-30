@@ -318,6 +318,10 @@ def __connect_internal_sync(
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
+    env_assets_dir = os.getenv("FLET_ASSETS_PATH")
+    if env_assets_dir:
+        assets_dir = env_assets_dir
+
     is_socket_server = server is None and (
         is_mobile() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
     )
@@ -326,7 +330,6 @@ def __connect_internal_sync(
         server = __start_flet_server(
             host,
             port,
-            assets_dir,
             upload_dir,
             web_renderer,
             use_color_emoji,
@@ -373,6 +376,7 @@ def __connect_internal_sync(
         conn = SyncWebSocketConnection(
             server_address=server,
             page_name=env_page_name if not page_name and env_page_name else page_name,
+            assets_dir=assets_dir,
             token=auth_token,
             on_event=on_event,
             on_session_created=on_session_created,
@@ -401,6 +405,10 @@ async def __connect_internal_async(
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
+    env_assets_dir = os.getenv("FLET_ASSETS_PATH")
+    if env_assets_dir:
+        assets_dir = env_assets_dir
+
     is_socket_server = server is None and (
         is_mobile() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
     )
@@ -408,7 +416,6 @@ async def __connect_internal_async(
         server = __start_flet_server(
             host,
             port,
-            assets_dir,
             upload_dir,
             web_renderer,
             use_color_emoji,
@@ -457,6 +464,7 @@ async def __connect_internal_async(
         conn = AsyncWebSocketConnection(
             server_address=server,
             page_name=env_page_name if not page_name and env_page_name else page_name,
+            assets_dir=assets_dir,
             auth_token=auth_token,
             on_event=on_event,
             on_session_created=on_session_created,
@@ -468,7 +476,6 @@ async def __connect_internal_async(
 def __start_flet_server(
     host,
     port,
-    assets_dir,
     upload_dir,
     web_renderer: Optional[WebRenderer],
     use_color_emoji,
@@ -530,13 +537,6 @@ def __start_flet_server(
         raise Exception(f"Web root path not found: {web_root_dir}")
 
     args = [fletd_path, "--content-dir", web_root_dir, "--port", str(port)]
-
-    env_assets_dir = os.getenv("FLET_ASSETS_PATH")
-    if env_assets_dir:
-        assets_dir = env_assets_dir
-
-    if assets_dir:
-        args.extend(["--assets-dir", assets_dir])
 
     creationflags = 0
     start_new_session = False

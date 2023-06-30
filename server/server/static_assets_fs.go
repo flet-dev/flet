@@ -15,16 +15,16 @@ type FileSystemAssetsSFS struct {
 	httpFS     http.FileSystem
 }
 
-func newFileSystemAssetsSFS(rootWebDir string) *FileSystemAssetsSFS {
+func newFileSystemAssetsSFS(rootWebDir string, checkDirExists bool) *FileSystemAssetsSFS {
 	if rootWebDir == "" {
-		log.Debugln("Directory with web content is not set.")
-		return nil
-	} else if _, err := os.Stat(rootWebDir); os.IsNotExist(err) {
-		log.Warnf("Directory %s with web content does not exist.", rootWebDir)
-		return nil
+		log.Fatalln("directory with web content is not set.")
 	}
 
-	log.Debugln("Static assets directory configured:", rootWebDir)
+	if checkDirExists {
+		if _, err := os.Stat(rootWebDir); os.IsNotExist(err) {
+			log.Fatalf("directory %s with web content does not exist.", rootWebDir)
+		}
+	}
 
 	return &FileSystemAssetsSFS{
 		rootWebDir: rootWebDir,
@@ -32,13 +32,14 @@ func newFileSystemAssetsSFS(rootWebDir string) *FileSystemAssetsSFS {
 	}
 }
 
-func (fs *FileSystemAssetsSFS) Exists(prefix string, path string) bool {
-	//log.Debugln("FileSystemAssetsFS Exists: ", prefix, path)
-	return fs.findFullPath(path) != ""
+func (fs *FileSystemAssetsSFS) Exists(path string) bool {
+	r := fs.findFullPath(path) != ""
+	log.Debugln("FileSystemAssetsFS Exists:", r, fs.rootWebDir, path)
+	return r
 }
 
 func (fs *FileSystemAssetsSFS) Open(name string) (http.File, error) {
-	//log.Debugln("FileSystemAssetsFS Open: ", name)
+	log.Debugln("FileSystemAssetsFS Open:", fs.rootWebDir, name)
 	return fs.httpFS.Open(fs.findFullPath(name))
 }
 

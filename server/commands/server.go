@@ -30,7 +30,6 @@ func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
 
 	var serverPort int
 	var contentDir string
-	var assetsDir string
 	var attachedProcess bool
 
 	var cmd = &cobra.Command{
@@ -61,7 +60,7 @@ func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
 
 			waitGroup := sync.WaitGroup{}
 			waitGroup.Add(1)
-			go server.Start(cmd.Context(), &waitGroup, serverPort, contentDir, assetsDir)
+			go server.Start(cmd.Context(), &waitGroup, serverPort, contentDir)
 			waitGroup.Wait()
 		},
 	}
@@ -74,7 +73,6 @@ func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
 	cmd.Flags().IntVarP(&shutdownTimeoutSeconds, "shutdown", "", DefaultShutdownTimeoutSeconds, "shutdown server in N seconds after the last client disconnected")
 	cmd.Flags().StringVarP(&contentDir, "content-dir", "", "", "path to web content directory")
 	cmd.MarkFlagRequired("content-dir")
-	cmd.Flags().StringVarP(&assetsDir, "assets-dir", "", "", "path to user assets directory")
 	cmd.Flags().BoolVarP(&attachedProcess, "attached", "a", false, "attach background server process to the parent one")
 
 	return cmd

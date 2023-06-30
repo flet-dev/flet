@@ -113,15 +113,15 @@ func TestRedisScanStruct(t *testing.T) {
 func TestHashGetObject(t *testing.T) {
 
 	o1 := model.Page{
-		ID:    1,
-		Name:  "obj 1",
-		IsApp: true,
+		ID:        1,
+		Name:      "obj 1",
+		AssetsDir: "",
 	}
 
 	key := "hobj1"
 	Remove(key)
 
-	HashSet(key, "id", o1.ID, "name", o1.Name, "isApp", o1.IsApp)
+	HashSet(key, "id", o1.ID, "name", o1.Name, "assetsDir", "")
 
 	var o2 model.Page
 	HashGetObject(key, &o2)
