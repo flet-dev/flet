@@ -15,7 +15,7 @@ type AssetsFS struct {
 
 func newAssetsFS(contentDir string) AssetsFS {
 	return AssetsFS{
-		staticContent: newFileSystemAssetsSFS(contentDir),
+		staticContent: newFileSystemAssetsSFS(contentDir, true),
 	}
 }
 
@@ -66,6 +66,6 @@ func (fs AssetsFS) getAssetsSFS(path string) (afs *FileSystemAssetsSFS, err erro
 		return
 	}
 
-	afs = newFileSystemAssetsSFS(page.AssetsDir)
+	afs = newFileSystemAssetsSFS(page.AssetsDir, false)
 	return
 }
