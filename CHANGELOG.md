@@ -2,7 +2,7 @@
 
 ## 0.8.0
 
-* iOS support - build standalone iOS apps in Python:
+* 📱🎉 iOS support - build standalone iOS apps in Python:
   * [Flet](https://apps.apple.com/app/flet/id1624979699) app in App Store to test Flet projects on iOS devices.
   * New `--ios` switch for `flet run` command to test Flet app on your iOS device.
   * [Testing on iOS guide](https://flet.dev/docs/guides/python/testing-on-ios).
@@ -20,7 +20,7 @@ ft.app(main, view=ft.AppView.WEB_BROWSER, web_renderer=ft.WebRenderer.HTML)
 > string values are still supported for backward compatibility.
 
 * Flet packages `version` is centralized in `flet_core.version`.
-* **Breaking change:** OAuth providers must be imported from `flet.auth.providers` module, for example:
+* 💥 **Breaking change:** OAuth providers must be imported from `flet.auth.providers` module, for example:
 
 ```python
 from flet.auth.providers import GitHubOAuthProvider
