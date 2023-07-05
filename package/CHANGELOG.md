@@ -1,3 +1,38 @@
+## 0.8.0
+
+* 📱🎉 **iOS support** - build standalone iOS apps in Python:
+  * [Flet](https://apps.apple.com/app/flet/id1624979699) app in App Store to test Flet projects on iOS devices.
+  * New `--ios` switch for `flet run` command to test Flet app on your iOS device.
+  * [Testing on iOS guide](https://flet.dev/docs/guides/python/testing-on-ios).
+  * [serious_python](https://pub.dev/packages/serious_python) Flutter package to add Python support to a Flutter app.
+  * [An example of Flutter app](https://github.com/flet-dev/serious-python/tree/main/example/flet_example) combining [serious_python](https://pub.dev/packages/serious_python) package, [flet](https://pub.dev/packages/flet) package and your Python program into a ready iOS app.
+* Part of `flet` package logic moved to a new `flet-runtime` package. `flet` package depends on `flet-runtime`. The new `flet-embed` package introduced depending on `flet-runtime` - to run Python apps embedded into Flutter apps.
+* Less annoying re-connecting logic and loading page for mobile Flet apps.
+* Enum parameters for `ft.app()`s `view: ft.AppView` and `web_renderer: ft.WebRenderer` parameters (string values are still supported for backward compatibility), for example:
+
+```python
+ft.app(main, view=ft.AppView.WEB_BROWSER, web_renderer=ft.WebRenderer.HTML)
+```
+
+* Flet packages `version` is centralized in `flet_core.version`.
+* 💥 **Breaking change:** OAuth providers must be imported from `flet.auth.providers` module, for example:
+
+```python
+from flet.auth.providers import GitHubOAuthProvider
+```
+
+* Added `Image.error_content` property - fallback content if image cannot be loaded.
+* New `BottomSheet` properties: `dismissible`, `enable_drag`, `show_drag_handle`, `use_safe_area` ([#1468](https://github.com/flet-dev/flet/issues/1468)).
+* `ListTile.toggle_inputs` property - clicking on a list tile should toggle the state of `Radio`, `Checkbox` or `Switch` inside the tile.
+* New `page` methods for showing/closing overlays: `page.open_banner()`, `page.close_banner()`, `page.open_dialog()`, `page.close_dialog()`, `page.open_bottom_sheet()`, `page.close_bottom_sheet()`.
+* New `FletApp` properties: `reconnect_interval_ms`, `reconnect_timeout_ms`, `on_error`.
+* New `TextField` properties: `autocorrect`, `enable_suggestions`, `smart_dashes_type`, `smart_quotes_type`.
+* New `SafeArea` control.
+* New `SnackBar` properties: `behavior`, `dismiss_direction`, `show_close_icon`, `close_icon_color`, `margin`, `padding`, `width`, `elevation`.
+* New `View.fullscreen_dialog` property.
+* `ft.app()` assumes `assets_dir="assets"` by default.
+* New `PaintSweepGradient.rotation` property.
+
 ## 0.7.4
 
 * Added `use_color_emoji` to `ft.app()` in `flet-pyodide` ([#1416](https://github.com/flet-dev/flet/issues/1416)).
