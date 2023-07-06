@@ -4,7 +4,7 @@ import uuid
 from distutils.dir_util import copy_tree
 from pathlib import Path
 
-from flet.utils import get_package_bin_dir
+from flet_runtime.utils import get_package_bin_dir
 
 
 def get_flet_bin_path():
