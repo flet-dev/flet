@@ -46,9 +46,9 @@ logger = logging.getLogger(flet_core.__name__)
 
 
 try:
-    from flet.auth.authorization import Authorization
-    from flet.auth.oauth_provider import OAuthProvider
-    from flet.pubsub import PubSub
+    from flet_runtime.auth.authorization import Authorization
+    from flet_runtime.auth.oauth_provider import OAuthProvider
+    from flet_runtime.pubsub import PubSub
 except ImportError:
 
     class Authorization:
