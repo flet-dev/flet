@@ -265,6 +265,12 @@ bool isDesktop() {
           defaultTargetPlatform == TargetPlatform.linux);
 }
 
+bool isMobile() {
+  return !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
+}
+
 bool isWindowsDesktop() {
   return !kIsWeb && (defaultTargetPlatform == TargetPlatform.windows);
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../models/asset_src.dart';
-import 'uri.dart';
 
 SvgPicture getSvgPictureFromFile(
     {required String src,
@@ -16,10 +15,8 @@ SvgPicture getSvgPictureFromFile(
 }
 
 AssetSrc getAssetSrc(String src, Uri pageUri, String assetsDir) {
-  var uri = Uri.parse(src);
   return AssetSrc(
-      path: uri.hasAuthority ? src : getAssetUri(pageUri, src).toString(),
-      isFile: false);
+      path: src.startsWith("/") ? src.substring(1) : src, isFile: false);
 }
 
 ImageProvider getFileImageProvider(String path) {

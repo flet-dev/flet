@@ -11,4 +11,4 @@ PRODUCT_NAME = Flet
 PRODUCT_BUNDLE_IDENTIFIER = com.appveyor.flet
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2022 Appveyor Systems Inc. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 Appveyor Systems Inc. All rights reserved. Licensed under the Apache License, Version 2.0

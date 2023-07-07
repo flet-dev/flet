@@ -34,8 +34,7 @@ func NewMessage(id string, action string, payload interface{}) *Message {
 type RegisterHostClientRequestPayload struct {
 	HostClientID string `json:"hostClientID"`
 	PageName     string `json:"pageName"`
-	IsApp        bool   `json:"isApp"`
-	Update       bool   `json:"update"`
+	AssetsDir    string `json:"assetsDir"`
 	AuthToken    string `json:"authToken"`
 	Permissions  string `json:"permissions"`
 }
@@ -153,5 +152,6 @@ type SessionCrashedPayload struct {
 type InvokeMethodPayload struct {
 	MethodID   string            `json:"methodId"`
 	MethodName string            `json:"methodName"`
+	ControlID  string            `json:"controlId"`
 	Arguments  map[string]string `json:"arguments"`
 }

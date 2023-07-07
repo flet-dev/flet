@@ -1,25 +1,38 @@
 import argparse
 import os
+import platform
+import signal
+import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 from pathlib import Path
+from urllib.parse import quote, urlparse, urlunparse
 
+import qrcode
 from flet.cli.commands.base import BaseCommand
-from flet.flet import close_flet_view, open_flet_view
-from flet.utils import get_free_tcp_port, open_in_browser
+from flet_core.utils import random_string
+from flet_runtime.app import close_flet_view, open_flet_view
+from flet_runtime.utils import get_free_tcp_port, is_windows, open_in_browser
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 
 class Command(BaseCommand):
     """
-    Run Flet app
+    Run Flet app.
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
-        parser.add_argument("script", type=str, help="path to a Python script")
+        parser.add_argument(
+            "script",
+            type=str,
+            nargs="?",
+            default=".",
+            help="path to a Python script",
+        )
         parser.add_argument(
             "-p",
             "--port",
@@ -27,6 +40,21 @@ class Command(BaseCommand):
             type=int,
             default=None,
             help="custom TCP port to run Flet app on",
+        )
+        parser.add_argument(
+            "--name",
+            dest="app_name",
+            type=str,
+            default=None,
+            help="app name to distinguish it from other on the same port",
+        )
+        parser.add_argument(
+            "-m",
+            "--module",
+            dest="module",
+            action="store_true",
+            default=False,
+            help="treat the script as a python module path as opposed to a file path",
         )
         parser.add_argument(
             "-d",
@@ -61,29 +89,50 @@ class Command(BaseCommand):
             help="open app in a web browser",
         )
         parser.add_argument(
+            "--ios",
+            dest="ios",
+            action="store_true",
+            default=False,
+            help="open app on iOS device",
+        )
+        parser.add_argument(
             "-a",
             "--assets",
             dest="assets_dir",
             type=str,
-            default=None,
-            help="path to an assets directory",
+            default="assets",
+            help="path to assets directory",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
-        # print("RUN COMMAND", options)
-        script_path = options.script
-        if not os.path.isabs(options.script):
-            script_path = str(Path(os.getcwd()).joinpath(options.script).resolve())
+        if options.module:
+            script_path = str(options.script).replace(".", "/")
+            if os.path.isdir(script_path):
+                script_path += "/__main__.py"
+            else:
+                script_path += ".py"
+        else:
+            script_path = str(options.script)
+            if not os.path.isabs(script_path):
+                script_path = str(Path(os.getcwd()).joinpath(script_path).resolve())
+            if os.path.isdir(script_path):
+                script_path = os.path.join(script_path, "main.py")
 
         if not Path(script_path).exists():
-            print(f"File not found: {script_path}")
-            exit(1)
+            print(f"File or directory not found: {script_path}")
+            sys.exit(1)
 
         script_dir = os.path.dirname(script_path)
 
         port = options.port
-        if options.port is None:
+        if port is None and (is_windows() or options.web):
             port = get_free_tcp_port()
+        elif port is None and options.ios:
+            port = 8551
+
+        uds_path = None
+        if port is None and not is_windows():
+            uds_path = str(Path(tempfile.gettempdir()).joinpath(random_string(10)))
 
         assets_dir = options.assets_dir
         if assets_dir and not Path(assets_dir).is_absolute():
@@ -92,10 +141,15 @@ class Command(BaseCommand):
             )
 
         my_event_handler = Handler(
-            [sys.executable, "-u", script_path],
+            [sys.executable, "-u"]
+            + ["-m"] * options.module
+            + [options.script if options.module else script_path],
             None if options.directory or options.recursive else script_path,
             port,
+            options.app_name,
+            uds_path,
             options.web,
+            options.ios,
             options.hidden,
             assets_dir,
         )
@@ -117,12 +171,17 @@ class Command(BaseCommand):
 
 
 class Handler(FileSystemEventHandler):
-    def __init__(self, args, script_path, port, web, hidden, assets_dir) -> None:
+    def __init__(
+        self, args, script_path, port, page_name, uds_path, web, ios, hidden, assets_dir
+    ) -> None:
         super().__init__()
         self.args = args
         self.script_path = script_path
         self.port = port
+        self.page_name = page_name
+        self.uds_path = uds_path
         self.web = web
+        self.ios = ios
         self.hidden = hidden
         self.assets_dir = assets_dir
         self.last_time = time.time()
@@ -136,13 +195,28 @@ class Handler(FileSystemEventHandler):
 
     def start_process(self):
         p_env = {**os.environ}
-        if self.web:
+        if self.web or self.ios:
             p_env["FLET_FORCE_WEB_VIEW"] = "true"
+            p_env["FLET_DETACH_FLETD"] = "true"
+
+            # force page name for ios
+            if self.ios:
+                p_env["FLET_PAGE_NAME"] = "/".join(Path(self.script_path).parts[-2:])
         if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
+        if self.page_name:
+            p_env["FLET_PAGE_NAME"] = self.page_name
+        if self.uds_path is not None:
+            p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
+        if self.assets_dir is not None:
+            p_env["FLET_ASSETS_PATH"] = self.assets_dir
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
 
-        self.p = subprocess.Popen(self.args, env=p_env, stdout=subprocess.PIPE)
+        p_env["PYTHONIOENCODING"] = "utf-8"
+
+        self.p = subprocess.Popen(
+            self.args, env=p_env, stdout=subprocess.PIPE, encoding="utf-8"
+        )
         self.is_running = True
         th = threading.Thread(target=self.print_output, args=[self.p], daemon=True)
         th.start()
@@ -162,13 +236,15 @@ class Handler(FileSystemEventHandler):
             line = p.stdout.readline()
             if not line:
                 break
-            line = line.decode("utf-8").rstrip("\r\n")
+            line = line.rstrip("\r\n")
             if line.startswith(self.page_url_prefix):
                 if not self.page_url:
                     self.page_url = line[len(self.page_url_prefix) + 1 :]
-                    if self.page_url.startswith("http"):
+                    if self.page_url.startswith("http") and not self.ios:
                         print(self.page_url)
-                    if self.web:
+                    if self.ios:
+                        self.print_qr_code(self.page_url)
+                    elif self.web:
                         open_in_browser(self.page_url)
                     else:
                         th = threading.Thread(
@@ -183,12 +259,43 @@ class Handler(FileSystemEventHandler):
             self.page_url, self.assets_dir, self.hidden
         )
         self.fvp.wait()
-        self.p.kill()
+        self.p.send_signal(signal.SIGTERM)
         self.terminate.set()
 
     def restart_program(self):
         self.is_running = False
-        self.p.kill()
+        self.p.send_signal(signal.SIGTERM)
         self.p.wait()
-        time.sleep(0.5)
         self.start_process()
+
+    def print_qr_code(self, orig_url: str):
+        u = urlparse(orig_url)
+        hostname = socket.gethostname()
+        ip_addr = socket.gethostbyname(hostname)
+        lan_url = urlunparse(
+            (u.scheme, f"{ip_addr}:{u.port}", u.path, None, None, None)
+        )
+        # self.clear_console()
+        print("App is running on:", lan_url)
+        print("")
+        qr_url = urlunparse(
+            ("flet", "flet-host", quote(lan_url, safe=""), None, None, None)
+        )
+        qr = qrcode.QRCode()
+        qr.add_data(qr_url)
+        qr.print_ascii(invert=True)
+        # qr.print_tty()
+        print("")
+        print("Scan QR code above with Camera app.")
+
+    def clear_console(self):
+        if platform.system() == "Windows":
+            if platform.release() in {"10", "11"}:
+                subprocess.run(
+                    "", shell=True
+                )  # Needed to fix a bug regarding Windows 10; not sure about Windows 11
+                print("\033c", end="")
+            else:
+                subprocess.run(["cls"])
+        else:  # Linux and Mac
+            print("\033c", end="")

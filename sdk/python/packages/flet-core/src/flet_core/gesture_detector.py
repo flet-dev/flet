@@ -109,6 +109,7 @@ class GestureDetector(ConstrainedControl):
         self,
         content: Optional[Control] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -170,10 +171,10 @@ class GestureDetector(ConstrainedControl):
         on_exit=None,
         on_scroll=None,
     ):
-
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -401,10 +402,11 @@ class GestureDetector(ConstrainedControl):
     # mouse_cursor
     @property
     def mouse_cursor(self):
-        return self._get_attr("mouseCursor")
+        return self.__mouse_cursor
 
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
         self._set_attr("mouseCursor", value.value if value is not None else None)
 
     # drag_interval

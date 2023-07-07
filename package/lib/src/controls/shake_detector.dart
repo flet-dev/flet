@@ -7,9 +7,13 @@ import '../models/control.dart';
 class ShakeDetectorControl extends StatefulWidget {
   final Control? parent;
   final Control control;
+  final Widget? nextChild;
 
   const ShakeDetectorControl(
-      {Key? key, required this.parent, required this.control})
+      {Key? key,
+      required this.parent,
+      required this.control,
+      required this.nextChild})
       : super(key: key);
 
   @override
@@ -64,6 +68,6 @@ class _ShakeDetectorControlState extends State<ShakeDetectorControl> {
       );
     }
 
-    return const SizedBox.shrink();
+    return widget.nextChild ?? const SizedBox.shrink();
   }
 }

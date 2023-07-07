@@ -1,8 +1,11 @@
 import logging
 from typing import List
 
+import flet_core
 from flet_core.connection import Connection
 from flet_core.protocol import *
+
+logger = logging.getLogger(flet_core.__name__)
 
 
 class LocalConnection(Connection):
@@ -71,7 +74,7 @@ class LocalConnection(Connection):
         )
 
     def _process_command(self, command: Command):
-        logging.debug("_process_command: {}".format(command))
+        logger.debug(f"_process_command: {command}")
         if command.name == "get":
             return self._process_get_command(command.values)
         elif command.name == "add":
@@ -86,10 +89,9 @@ class LocalConnection(Connection):
             return self._process_invoke_method_command(command.values, command.attrs)
         elif command.name == "error":
             return self._process_error_command(command.values)
-        raise Exception("Unsupported command: {}".format(command.name))
+        raise Exception(f"Unsupported command: {command.name}")
 
     def _process_add_command(self, command: Command):
-
         top_parent_id = command.attrs.get("to", "page")
         top_parent_at = int(command.attrs.get("at", "-1"))
 
@@ -128,7 +130,7 @@ class LocalConnection(Connection):
 
             id = cmd.attrs.get("id", "")
             if not id:
-                id = "_{}".format(self._control_id)
+                id = f"_{self._control_id}"
                 self._control_id += 1
                 cmd.attrs["id"] = id
 
@@ -190,11 +192,14 @@ class LocalConnection(Connection):
 
     def _process_invoke_method_command(self, values, attrs):
         # "invokeMethod", values=[method_id, method_name], attrs=arguments
-        assert len(values) == 2, '"invokeMethod" command has wrong number of values'
+        assert len(values) == 3, '"invokeMethod" command has wrong number of values'
         return "", ClientMessage(
             ClientActions.INVOKE_METHOD,
             InvokeMethodPayload(
-                methodId=values[0], methodName=values[1], arguments=attrs
+                methodId=values[0],
+                methodName=values[1],
+                controlId=values[2],
+                arguments=attrs,
             ),
         )
 

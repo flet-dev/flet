@@ -57,6 +57,7 @@ class ListTile(ConstrainedControl):
     def __init__(
         self,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -93,12 +94,16 @@ class ListTile(ConstrainedControl):
         selected: Optional[bool] = None,
         dense: Optional[bool] = None,
         autofocus: Optional[bool] = None,
+        toggle_inputs: Optional[bool] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
         on_click=None,
         on_long_press=None,
     ):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -134,6 +139,9 @@ class ListTile(ConstrainedControl):
         self.selected = selected
         self.dense = dense
         self.autofocus = autofocus
+        self.toggle_inputs = toggle_inputs
+        self.url = url
+        self.url_target = url_target
         self.on_click = on_click
         self.on_long_press = on_long_press
 
@@ -240,6 +248,33 @@ class ListTile(ConstrainedControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # toggle_inputs
+    @property
+    def toggle_inputs(self) -> Optional[bool]:
+        return self._get_attr("toggleInputs", data_type="bool", def_value=False)
+
+    @toggle_inputs.setter
+    def toggle_inputs(self, value: Optional[bool]):
+        self._set_attr("toggleInputs", value)
+
+    # url
+    @property
+    def url(self):
+        return self._get_attr("url")
+
+    @url.setter
+    def url(self, value):
+        self._set_attr("url", value)
+
+    # url_target
+    @property
+    def url_target(self):
+        return self._get_attr("urlTarget")
+
+    @url_target.setter
+    def url_target(self, value):
+        self._set_attr("urlTarget", value)
 
     # on_click
     @property

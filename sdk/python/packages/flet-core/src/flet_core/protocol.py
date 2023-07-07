@@ -43,6 +43,9 @@ class Command:
     attrs: Dict[str, str] = field(default_factory=dict)
     commands: List[Any] = field(default_factory=list)
 
+    def __str__(self):
+        return f"{self.name} {self.values} {self.attrs}"
+
 
 @dataclass
 class Message:
@@ -90,8 +93,7 @@ class PageEventPayload:
 class RegisterHostClientRequestPayload:
     hostClientID: Optional[str]
     pageName: str
-    isApp: bool
-    update: bool
+    assetsDir: Optional[str]
     authToken: Optional[str]
     permissions: Optional[str]
 
@@ -178,6 +180,7 @@ class SessionCrashedPayload:
 class InvokeMethodPayload:
     methodId: str
     methodName: str
+    controlId: str
     arguments: Dict[str, str]
 
 

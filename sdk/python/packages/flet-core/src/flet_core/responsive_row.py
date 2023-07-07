@@ -52,6 +52,7 @@ class ResponsiveRow(ConstrainedControl):
         self,
         controls: Optional[List[Control]] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -87,6 +88,7 @@ class ResponsiveRow(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -124,9 +126,9 @@ class ResponsiveRow(ConstrainedControl):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("columns", self._wrap_attr_dict(self.__columns))
-        self._set_attr_json("spacing", self._wrap_attr_dict(self.__spacing))
-        self._set_attr_json("runSpacing", self._wrap_attr_dict(self.__run_spacing))
+        self._set_attr_json("columns", self.__columns)
+        self._set_attr_json("spacing", self.__spacing)
+        self._set_attr_json("runSpacing", self.__run_spacing)
 
     def _get_children(self):
         return self.__controls

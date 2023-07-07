@@ -1,8 +1,7 @@
 from enum import Enum
 from typing import Any, Optional
 
-from flet_core.callable_control import CallableControl
-from flet_core.control import OptionalNumber
+from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
 
@@ -12,7 +11,7 @@ class ReleaseMode(Enum):
     STOP = "stop"
 
 
-class Audio(CallableControl):
+class Audio(Control):
     """
     A control to simultaneously play multiple audio files. Works on macOS, Linux, Windows, iOS, Android and web. Based on audioplayers Flutter widget (https://pub.dev/packages/audioplayers).
 
@@ -58,8 +57,7 @@ class Audio(CallableControl):
         on_position_changed=None,
         on_seek_complete=None,
     ):
-
-        CallableControl.__init__(
+        Control.__init__(
             self,
             ref=ref,
             data=data,
@@ -82,53 +80,77 @@ class Audio(CallableControl):
         return "audio"
 
     def play(self):
-        self._call_method("play", params=[], wait_for_result=False)
+        self.page.invoke_method("play", control_id=self.uid)
 
     async def play_async(self):
-        await self._call_method_async("play", params=[], wait_for_result=False)
+        await self.page.invoke_method_async("play", control_id=self.uid)
 
     def pause(self):
-        self._call_method("pause", params=[], wait_for_result=False)
+        self.page.invoke_method("pause", control_id=self.uid)
 
     async def pause_async(self):
-        await self._call_method_async("pause", params=[], wait_for_result=False)
+        await self.page.invoke_method_async("pause", control_id=self.uid)
 
     def resume(self):
-        self._call_method("resume", params=[], wait_for_result=False)
+        self.page.invoke_method("resume", control_id=self.uid)
 
     async def resume_async(self):
-        await self._call_method_async("resume", params=[], wait_for_result=False)
+        await self.page.invoke_method_async("resume", control_id=self.uid)
 
     def release(self):
-        self._call_method("release", params=[], wait_for_result=False)
+        self.page.invoke_method("release", control_id=self.uid)
 
     async def release_async(self):
-        await self._call_method_async("release", params=[], wait_for_result=False)
+        await self.page.invoke_method_async("release", control_id=self.uid)
 
     def seek(self, position_milliseconds: int):
-        self._call_method(
-            "seek", params=[str(position_milliseconds)], wait_for_result=False
+        self.page.invoke_method(
+            "seek", {"position": str(position_milliseconds)}, control_id=self.uid
         )
 
     async def seek_async(self, position_milliseconds: int):
-        await self._call_method_async(
-            "seek", params=[str(position_milliseconds)], wait_for_result=False
+        await self.page.invoke_method_async(
+            "seek", {"position": str(position_milliseconds)}, control_id=self.uid
         )
 
-    def get_duration(self) -> Optional[int]:
-        sr = self._call_method("get_duration", [])
+    def get_duration(self, wait_timeout: Optional[float] = 5) -> Optional[int]:
+        sr = self.page.invoke_method(
+            "get_duration",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
         return int(sr) if sr else None
 
-    async def get_duration_async(self) -> Optional[int]:
-        sr = await self._call_method_async("get_duration", [])
+    async def get_duration_async(
+        self, wait_timeout: Optional[float] = 5
+    ) -> Optional[int]:
+        sr = await self.page.invoke_method_async(
+            "get_duration",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
         return int(sr) if sr else None
 
-    def get_current_position(self) -> Optional[int]:
-        sr = self._call_method("get_current_position", [])
+    def get_current_position(self, wait_timeout: Optional[float] = 5) -> Optional[int]:
+        sr = self.page.invoke_method(
+            "get_current_position",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
         return int(sr) if sr else None
 
-    async def get_current_position_async(self) -> Optional[int]:
-        sr = await self._call_method_async("get_current_position", [])
+    async def get_current_position_async(
+        self, wait_timeout: Optional[float] = 5
+    ) -> Optional[int]:
+        sr = await self.page.invoke_method_async(
+            "get_current_position",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
         return int(sr) if sr else None
 
     # src

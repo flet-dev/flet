@@ -1,7 +1,9 @@
 import argparse
 import sys
 
+import flet.cli.commands.create
 import flet.cli.commands.pack
+import flet.cli.commands.publish
 import flet.cli.commands.run
 import flet.version
 
@@ -61,8 +63,10 @@ def main():
     sp = parser.add_subparsers(dest="command")
     # sp.default = "run"
 
+    flet.cli.commands.create.Command.register_to(sp, "create")
     flet.cli.commands.run.Command.register_to(sp, "run")
     flet.cli.commands.pack.Command.register_to(sp, "pack")
+    flet.cli.commands.publish.Command.register_to(sp, "publish")
     parser.set_default_subparser("run", positional_args=1)
 
     # print usage if called without args

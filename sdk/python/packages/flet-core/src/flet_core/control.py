@@ -57,7 +57,7 @@ class Control:
         pass
 
     def _before_build_command(self):
-        self._set_attr_json("col", self._wrap_attr_dict(self.__col))
+        self._set_attr_json("col", self.__col)
 
     def did_mount(self):
         pass
@@ -149,6 +149,12 @@ class Control:
         if value is None or isinstance(value, Dict):
             return value
         return {"": value}
+
+    def __str__(self):
+        attrs = {}
+        for k, v in self.__attrs.items():
+            attrs[k] = v[0]
+        return f"{self._get_control_name()} {attrs}"
 
     # event_handlers
     @property
@@ -375,18 +381,23 @@ class Control:
         self.__previous_children.extend(current_children)
 
     def _remove_control_recursively(self, index, control):
-        removed_controls = [control]
-        for child in control._get_children():
-            removed_controls.extend(self._remove_control_recursively(index, child))
+        removed_controls = []
 
         if control.__uid in index:
             del index[control.__uid]
+
+            for child in control._get_children():
+                removed_controls.extend(self._remove_control_recursively(index, child))
+
+            for child in control._previous_children:
+                removed_controls.extend(self._remove_control_recursively(index, child))
+
+            removed_controls.append(control)
 
         return removed_controls
 
     # private methods
     def _build_add_commands(self, indent=0, index=None, added_controls=None):
-
         self._build()
 
         # remove control from index
@@ -455,3 +466,7 @@ class Control:
             command.values.append(self.__uid)
 
         return command
+
+    def _dispose(self):
+        self.page = None
+        self.__event_handlers.clear()

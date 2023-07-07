@@ -47,7 +47,7 @@ type addCommandBatchItem struct {
 }
 
 // NewSession creates a new instance of Session.
-func newSession(page *model.Page, id string, clientIP string,
+func newSession(page *model.Page, id string, clientIP string, clientUserAgent string,
 	pageRoute string, pageWidth string, pageHeight string,
 	windowWidth string, windowHeight string,
 	windowTop string, windowLeft string, isPwa string, isWeb string, platform string) *model.Session {
@@ -70,6 +70,8 @@ func newSession(page *model.Page, id string, clientIP string,
 	p.SetAttr("pwa", isPwa)
 	p.SetAttr("web", isWeb)
 	p.SetAttr("platform", platform)
+	p.SetAttr("clientIP", clientIP)
+	p.SetAttr("clientUserAgent", clientUserAgent)
 	h.addControl(p)
 
 	return s
@@ -714,7 +716,7 @@ func (h *sessionHandler) oauthAuthorize(cmd *model.Command) (result string, err 
 
 func (h *sessionHandler) invokeMethod(cmd *model.Command) (result string, err error) {
 
-	if len(cmd.Values) < 2 {
+	if len(cmd.Values) < 3 {
 		return "", fmt.Errorf("invokeMethod command received wrong number of arguments")
 	}
 
@@ -722,6 +724,7 @@ func (h *sessionHandler) invokeMethod(cmd *model.Command) (result string, err er
 	h.broadcastCommandToWebClients(NewMessage("", InvokeMethodAction, &InvokeMethodPayload{
 		MethodID:   cmd.Values[0],
 		MethodName: cmd.Values[1],
+		ControlID:  cmd.Values[2],
 		Arguments:  cmd.Attrs,
 	}))
 

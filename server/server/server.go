@@ -37,8 +37,12 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
+func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int, contentDir string) {
 	defer wg.Done()
+
+	if contentDir == "" {
+		log.Fatalf("contentDir is not set")
+	}
 
 	Port = serverPort
 
@@ -69,7 +73,7 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 	mime.AddExtensionType(".js", "application/javascript")
 
 	// Serve frontend static files
-	assetsFS := newAssetsFS()
+	assetsFS := newAssetsFS(contentDir)
 	router.Use(static.Serve("/", assetsFS))
 
 	// WebSockets
@@ -133,9 +137,14 @@ func Start(ctx context.Context, wg *sync.WaitGroup, serverPort int) {
 			// web renderer
 			if config.WebRenderer() != "" {
 				indexData = bytes.Replace(indexData,
-					[]byte("<!-- flutterWebRenderer -->"),
-					[]byte("<script>window.flutterWebRenderer=\""+config.WebRenderer()+"\";</script>"), 1)
+					[]byte("<!-- webRenderer -->"),
+					[]byte(fmt.Sprintf("<script>webRenderer=\"%s\";</script>", config.WebRenderer())), 1)
 			}
+
+			// color emoji
+			indexData = bytes.Replace(indexData,
+				[]byte("<!-- useColorEmoji -->"),
+				[]byte(fmt.Sprintf("<script>useColorEmoji=%v;</script>", config.UseColorEmoji())), 1)
 
 			c.Data(http.StatusOK, "text/html", indexData)
 		} else {
@@ -202,5 +211,5 @@ func websocketHandler(c *gin.Context) {
 	}
 
 	wsc := page_connection.NewWebSocket(conn)
-	page.NewClient(wsc, c.ClientIP())
+	page.NewClient(wsc, c.ClientIP(), c.Request.UserAgent())
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -17,7 +18,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
-import '../utils/uri.dart';
+import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -43,13 +44,10 @@ class ContainerControl extends StatelessWidget {
         Theme.of(context), control.attrString("bgColor", "")!);
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
     bool ink = control.attrBool("ink", false)!;
     bool onClick = control.attrBool("onclick", false)!;
+    String url = control.attrString("url", "")!;
+    String? urlTarget = control.attrString("urlTarget");
     bool onLongPress = control.attrBool("onLongPress", false)!;
     bool onHover = control.attrBool("onHover", false)!;
     bool disabled = control.isDisabled || parentDisabled;
@@ -65,6 +63,7 @@ class ContainerControl extends StatelessWidget {
         : null;
 
     var animation = parseAnimation(control, "animate");
+    var blur = parseBlur(control, "blur");
 
     final server = FletAppServices.of(context).server;
 
@@ -108,6 +107,14 @@ class ContainerControl extends StatelessWidget {
                   control.attrString("shape", "")!.toLowerCase(),
               orElse: () => BoxShape.rectangle);
 
+          var borderRadius = parseBorderRadius(control, "borderRadius");
+
+          var clipBehavior = Clip.values.firstWhere(
+              (e) =>
+                  e.name.toLowerCase() ==
+                  control.attrString("clipBehavior", "")!.toLowerCase(),
+              orElse: () => borderRadius != null ? Clip.antiAlias : Clip.none);
+
           var boxDecor = BoxDecoration(
               color: bgColor,
               gradient: gradient,
@@ -115,10 +122,15 @@ class ContainerControl extends StatelessWidget {
               backgroundBlendMode:
                   bgColor != null || gradient != null ? blendMode : null,
               border: parseBorder(Theme.of(context), control, "border"),
-              borderRadius: parseBorderRadius(control, "borderRadius"),
-              shape: shape);
+              borderRadius: borderRadius,
+              shape: shape,
+              boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"));
 
-          if ((onClick || onLongPress || onHover) && ink && !disabled) {
+          Widget? result;
+
+          if ((onClick || url != "" || onLongPress || onHover) &&
+              ink &&
+              !disabled) {
             var ink = Ink(
                 decoration: boxDecor,
                 child: InkWell(
@@ -126,18 +138,23 @@ class ContainerControl extends StatelessWidget {
                   // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
                   // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
                   onTap: onHover ? () {} : null,
-                  onTapDown: onClick
+                  onTapDown: onClick || url != ""
                       ? (details) {
                           debugPrint("Container ${control.id} clicked!");
-                          server.sendPageEvent(
-                              eventTarget: control.id,
-                              eventName: "click",
-                              eventData: json.encode(ContainerTapEvent(
-                                      localX: details.localPosition.dx,
-                                      localY: details.localPosition.dy,
-                                      globalX: details.globalPosition.dx,
-                                      globalY: details.globalPosition.dy)
-                                  .toJson()));
+                          if (url != "") {
+                            openWebBrowser(url, webWindowName: urlTarget);
+                          }
+                          if (onClick) {
+                            server.sendPageEvent(
+                                eventTarget: control.id,
+                                eventName: "click",
+                                eventData: json.encode(ContainerTapEvent(
+                                        localX: details.localPosition.dx,
+                                        localY: details.localPosition.dy,
+                                        globalX: details.globalPosition.dx,
+                                        globalY: details.globalPosition.dy)
+                                    .toJson()));
+                          }
                         }
                       : null,
                   onLongPress: onLongPress
@@ -158,44 +175,41 @@ class ContainerControl extends StatelessWidget {
                               eventData: value.toString());
                         }
                       : null,
-                  borderRadius: parseBorderRadius(control, "borderRadius"),
+                  borderRadius: borderRadius,
                   child: Container(
                     padding: parseEdgeInsets(control, "padding"),
                     alignment: parseAlignment(control, "alignment"),
-                    clipBehavior: clipBehavior,
+                    clipBehavior: Clip.none,
                     child: child,
                   ),
                 ));
-            return constrainedControl(
-                context,
-                animation == null
-                    ? Container(
-                        width: control.attrDouble("width"),
-                        height: control.attrDouble("height"),
-                        margin: parseEdgeInsets(control, "margin"),
-                        clipBehavior: clipBehavior,
-                        child: ink,
-                      )
-                    : AnimatedContainer(
-                        duration: animation.duration,
-                        curve: animation.curve,
-                        width: control.attrDouble("width"),
-                        height: control.attrDouble("height"),
-                        margin: parseEdgeInsets(control, "margin"),
-                        clipBehavior: clipBehavior,
-                        onEnd: control.attrBool("onAnimationEnd", false)!
-                            ? () {
-                                server.sendPageEvent(
-                                    eventTarget: control.id,
-                                    eventName: "animation_end",
-                                    eventData: "container");
-                              }
-                            : null,
-                        child: ink),
-                parent,
-                control);
+
+            result = animation == null
+                ? Container(
+                    width: control.attrDouble("width"),
+                    height: control.attrDouble("height"),
+                    margin: parseEdgeInsets(control, "margin"),
+                    clipBehavior: Clip.none,
+                    child: ink,
+                  )
+                : AnimatedContainer(
+                    duration: animation.duration,
+                    curve: animation.curve,
+                    width: control.attrDouble("width"),
+                    height: control.attrDouble("height"),
+                    margin: parseEdgeInsets(control, "margin"),
+                    clipBehavior: clipBehavior,
+                    onEnd: control.attrBool("onAnimationEnd", false)!
+                        ? () {
+                            server.sendPageEvent(
+                                eventTarget: control.id,
+                                eventName: "animation_end",
+                                eventData: "container");
+                          }
+                        : null,
+                    child: ink);
           } else {
-            Widget container = animation == null
+            result = animation == null
                 ? Container(
                     width: control.attrDouble("width"),
                     height: control.attrDouble("height"),
@@ -225,9 +239,11 @@ class ContainerControl extends StatelessWidget {
                         : null,
                     child: child);
 
-            if ((onClick || onLongPress || onHover) && !disabled) {
-              container = MouseRegion(
-                cursor: SystemMouseCursors.click,
+            if ((onClick || onLongPress || onHover || url != "") && !disabled) {
+              result = MouseRegion(
+                cursor: onClick || url != ""
+                    ? SystemMouseCursors.click
+                    : MouseCursor.defer,
                 onEnter: onHover
                     ? (value) {
                         debugPrint(
@@ -249,18 +265,23 @@ class ContainerControl extends StatelessWidget {
                       }
                     : null,
                 child: GestureDetector(
-                  onTapDown: onClick
+                  onTapDown: onClick || url != ""
                       ? (details) {
                           debugPrint("Container ${control.id} clicked!");
-                          server.sendPageEvent(
-                              eventTarget: control.id,
-                              eventName: "click",
-                              eventData: json.encode(ContainerTapEvent(
-                                      localX: details.localPosition.dx,
-                                      localY: details.localPosition.dy,
-                                      globalX: details.globalPosition.dx,
-                                      globalY: details.globalPosition.dy)
-                                  .toJson()));
+                          if (url != "") {
+                            openWebBrowser(url, webWindowName: urlTarget);
+                          }
+                          if (onClick) {
+                            server.sendPageEvent(
+                                eventTarget: control.id,
+                                eventName: "click",
+                                eventData: json.encode(ContainerTapEvent(
+                                        localX: details.localPosition.dx,
+                                        localY: details.localPosition.dy,
+                                        globalX: details.globalPosition.dx,
+                                        globalY: details.globalPosition.dy)
+                                    .toJson()));
+                          }
                         }
                       : null,
                   onLongPress: onLongPress
@@ -272,12 +293,21 @@ class ContainerControl extends StatelessWidget {
                               eventData: "");
                         }
                       : null,
-                  child: container,
+                  child: result,
                 ),
               );
             }
-            return constrainedControl(context, container, parent, control);
           }
+
+          if (blur != null) {
+            result = borderRadius != null
+                ? ClipRRect(
+                    borderRadius: borderRadius,
+                    child: BackdropFilter(filter: blur, child: result))
+                : ClipRect(child: BackdropFilter(filter: blur, child: result));
+          }
+
+          return constrainedControl(context, result, parent, control);
         });
   }
 }

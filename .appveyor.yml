@@ -12,7 +12,7 @@ environment:
   GO_VERSION: 1.19
   GO_TAGS: --tags release
   python_stack: python 3.10
-  FLUTTER_MACOS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.3.3-stable.zip
+  FLUTTER_MACOS_URL: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.10.5-stable.zip
   GITHUB_TOKEN:
     secure: doX0dwjWhBmT56aJqR9NCbtMFJpDpdYxPCIB4vQoHfSR+nTa+pLCo6Yv5qWpD/90
   DOCKER_REGISTRY_USER:
@@ -46,15 +46,10 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
       python_stack: ""
 
-    - job_name: Build Flet for iOS
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
-
-    - job_name: Build Flet Studio for iOS
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+    # - job_name: Build Flet for iOS
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     - job_name: Build Fletd
       job_group: build_flet
@@ -121,7 +116,7 @@ for:
             $v = "$($cv.major).$($cv.minor+1).0+$($env:APPVEYOR_BUILD_NUMBER)"
           }
           Update-AppveyorBuild -Version $v
-      - flutter upgrade
+      - flutter upgrade --force
 
     build_script:
       - cd package
@@ -133,7 +128,7 @@ for:
           if [[ "$APPVEYOR_REPO_TAG_NAME" != "" ]]; then
               mkdir -p $HOME/.config/dart
               echo $PUB_DEV_TOKEN | base64 --decode > $HOME/.config/dart/pub-credentials.json
-              dart pub publish -f 
+              dart pub publish --force
           fi
 
   # ======================================
@@ -148,7 +143,7 @@ for:
       VC_REDIST_DIR: 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Redist\MSVC\14.29.30133\x64\Microsoft.VC142.CRT'
 
     install:
-      - flutter upgrade
+      - flutter upgrade --force
 
     build_script:
       - cd client
@@ -222,9 +217,9 @@ for:
         - job_name: Build Flet for Linux
 
     install:
-      - sudo apt update
+      - sudo apt update --allow-releaseinfo-change
       - sudo apt install -y libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - flutter upgrade
+      - flutter upgrade --force
 
     build_script:
       - cd client
@@ -254,14 +249,19 @@ for:
 
     install:
       # Flutter SDK
-      - sudo apt update
+      - sudo apt update --allow-releaseinfo-change
       - sudo apt install -y clang libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - git clone https://github.com/flutter/flutter.git -b master "$HOME/flutter"
+      - git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
       - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter --version
-      - flutter channel stable
       - flutter upgrade
       - flutter doctor
+
+      # Fix Flutter on ARM
+      - pushd /tmp
+      - curl -O https://appveyordownloads.blob.core.windows.net/misc/shader_lib.tar.gz
+      - tar -zxf shader_lib.tar.gz
+      - cp -R shader_lib $HOME/flutter/bin/cache/artifacts/engine/linux-arm64
+      - popd
 
     build_script:
       - cd client
@@ -280,42 +280,6 @@ for:
       artifact: flet_linux_arm64
       on:
         APPVEYOR_REPO_TAG: true
-
-  # ======================================
-  #      Build Flet Studio for iOS
-  # ======================================
-
-  - matrix:
-      only:
-        - job_name: Build Flet Studio for iOS
-
-    install:
-      - export LANG=en_US.UTF-8
-      - curl $FLUTTER_MACOS_URL -o "$HOME/flutter_macos_stable.zip"
-      - unzip -qq "$HOME/flutter_macos_stable.zip" -d $HOME
-      - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter channel stable
-      - flutter upgrade
-      - flutter doctor
-
-    build_script:
-      - cd studio/client/ios
-      - rvm use 3.0
-      - ruby --version
-      - bundle install
-      - sh: |
-          export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
-          if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
-            bundle exec fastlane build_flutter      
-          elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-            bundle exec fastlane upload_appstore
-          else
-            bundle exec fastlane build_ipa
-          fi
-
-    artifacts:
-      - path: studio/client/build/flet-studio.ipa
-        name: flet_studio_ios
 
   # ======================================
   #      Build Flet View for iOS
@@ -364,7 +328,7 @@ for:
         - job_name: Build Fletd
 
     install:
-      - flutter upgrade
+      - flutter upgrade --force
 
       # Go and GoReleaser
       - gvm install go${GO_VERSION} -B
@@ -380,10 +344,9 @@ for:
       - rm -rf build/web/canvaskit
       - ls -alR build/web
       - cd ..
+      - tar -czvf client/build/flet-web.tar.gz -C client/build/web .
 
       # Flet Server in Go
-      - mkdir server/server/content
-      - cp -rf client/build/web/* server/server/content
       - cd server
       - sh: |
           if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
@@ -396,6 +359,16 @@ for:
     artifacts:
       - path: server/dist/fletd-*
       - path: server/dist/fletd_*/*
+      - path: client/build/flet-web.tar.gz
+        name: flet_web
+
+    deploy:
+      provider: GitHub
+      auth_token: $(GITHUB_TOKEN)
+      release: $(APPVEYOR_REPO_TAG_NAME)
+      artifact: flet_web
+      on:
+        APPVEYOR_REPO_TAG: true
 
   ######################
   #    Python Tests    #
@@ -407,6 +380,7 @@ for:
     install:
       - python --version
       - cd sdk/python
+      - pip install --upgrade pip virtualenv
       - pip install poetry
       - poetry install
 
@@ -425,7 +399,7 @@ for:
     install:
       - python --version
       - cd sdk/python
-      - pip install --upgrade setuptools wheel twine poetry tomlkit
+      - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
       - poetry install
 
     test: off
@@ -435,28 +409,49 @@ for:
       - ps: |
           $ErrorActionPreference = "Stop"
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
-          $vp = "packages/flet/src/flet/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
+          $vp = "packages/flet-core/src/flet_core/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
       - python3 patch_toml.py packages/flet/pyproject.toml $PYPI_VER
+      - python3 patch_toml.py packages/flet-embed/pyproject.toml $PYPI_VER
+      - python3 patch_toml.py packages/flet-runtime/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-core/pyproject.toml $PYPI_VER
+      - python3 patch_toml.py packages/flet-pyodide/pyproject.toml $PYPI_VER
 
       # build "flet-core" package
       - pushd packages/flet-core
       - poetry build
       - popd
 
+      # build "flet-runtime" package
+      - pushd packages/flet-runtime
+      - poetry build
+      - popd
+
+      # build "flet-embed" package
+      - pushd packages/flet-embed
+      - poetry build
+      - popd
+
       # build "flet" package
       - pushd packages/flet
+      - python3 download-web.py
       - poetry build
       - python3 build-wheels.py
+      - popd
+
+      # build "flet-pyodide" package
+      - pushd packages/flet-pyodide
+      - poetry build
       - popd
 
       # publish package
       - sh: |
           if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-              twine upload packages/flet-core/dist/* packages/flet/dist/*
+              twine upload packages/flet-core/dist/* packages/flet-runtime/dist/* packages/flet-embed/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
           fi
-          
 
     artifacts:
       - path: sdk/python/packages/flet-core/dist/*
+      - path: sdk/python/packages/flet-runtime/dist/*
       - path: sdk/python/packages/flet/dist/*
+      - path: sdk/python/packages/flet-embed/dist/*
+      - path: sdk/python/packages/flet-pyodide/dist/*

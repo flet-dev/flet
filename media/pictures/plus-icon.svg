@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (b0a84865, 2022-12-01)"
+   sodipodi:docname="plus-icon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.84096521"
+     inkscape:cx="395.37902"
+     inkscape:cy="423.91766"
+     inkscape:window-width="1728"
+     inkscape:window-height="985"
+     inkscape:window-x="0"
+     inkscape:window-y="38"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient1149"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#dbe3de;stop-opacity:1;"
+         offset="0"
+         id="stop1147" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient981"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#0000ff;stop-opacity:1;"
+         offset="0"
+         id="stop979" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1149"
+       id="linearGradient1151"
+       x1="79.653456"
+       y1="69.22956"
+       x2="96.691574"
+       y2="69.22956"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ffffff;fill-opacity:0.324232;stroke-width:0.263711;stroke-linecap:square;stroke-linejoin:round"
+       id="rect1361"
+       width="65"
+       height="65"
+       x="67.957626"
+       y="25.798729"
+       inkscape:export-filename="../../../../../Documents/plus-icon.png"
+       inkscape:export-xdpi="400.14771"
+       inkscape:export-ydpi="400.14771" />
+    <circle
+       style="fill:#2a7fff;fill-opacity:1;stroke-width:0.318392;stroke-linecap:square;stroke-linejoin:round"
+       id="path144"
+       cx="100.50847"
+       cy="58.349579"
+       r="25" />
+    <text
+       xml:space="preserve"
+       style="font-size:33.6439px;fill:#ffffff;fill-opacity:1;stroke-width:2.80365;stroke-linecap:square;stroke-linejoin:round"
+       x="88.113884"
+       y="68.53347"
+       id="text1145"
+       transform="scale(0.97590005,1.0246951)"><tspan
+         sodipodi:role="line"
+         id="tspan1143"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff;fill-opacity:1;stroke-width:2.80365"
+         x="88.113884"
+         y="68.53347">+</tspan></text>
+  </g>
+</svg>

@@ -1,3 +1,4 @@
+import time
 from typing import Any, Optional, Union
 
 from flet_core.buttons import ButtonStyle
@@ -40,6 +41,7 @@ class OutlinedButton(ConstrainedControl):
         self,
         text: Optional[str] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -72,13 +74,18 @@ class OutlinedButton(ConstrainedControl):
         style: Optional[ButtonStyle] = None,
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
         on_click=None,
         on_long_press=None,
         on_hover=None,
+        on_focus=None,
+        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -111,15 +118,22 @@ class OutlinedButton(ConstrainedControl):
         self.style = style
         self.content = content
         self.autofocus = autofocus
+        self.url = url
+        self.url_target = url_target
         self.on_click = on_click
         self.on_long_press = on_long_press
         self.on_hover = on_hover
+        self.on_focus = on_focus
+        self.on_blur = on_blur
 
     def _get_control_name(self):
         return "outlinedbutton"
 
     def _before_build_command(self):
         super()._before_build_command()
+        if self.__style is not None:
+            self.__style.side = self._wrap_attr_dict(self.__style.side)
+            self.__style.shape = self._wrap_attr_dict(self.__style.shape)
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
@@ -127,6 +141,14 @@ class OutlinedButton(ConstrainedControl):
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
+
+    def focus(self):
+        self._set_attr_json("focus", str(time.time()))
+        self.update()
+
+    async def focus_async(self):
+        self._set_attr_json("focus", str(time.time()))
+        await self.update_async()
 
     # text
     @property
@@ -163,6 +185,24 @@ class OutlinedButton(ConstrainedControl):
     @style.setter
     def style(self, value: Optional[ButtonStyle]):
         self.__style = value
+
+    # url
+    @property
+    def url(self):
+        return self._get_attr("url")
+
+    @url.setter
+    def url(self, value):
+        self._set_attr("url", value)
+
+    # url_target
+    @property
+    def url_target(self):
+        return self._get_attr("urlTarget")
+
+    @url_target.setter
+    def url_target(self, value):
+        self._set_attr("urlTarget", value)
 
     # on_click
     @property
@@ -213,3 +253,21 @@ class OutlinedButton(ConstrainedControl):
             self._set_attr("onHover", True)
         else:
             self._set_attr("onHover", None)
+
+    # on_focus
+    @property
+    def on_focus(self):
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self):
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler):
+        self._add_event_handler("blur", handler)

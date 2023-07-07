@@ -8,8 +8,12 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
+import flet_core
+from flet_core.alert_dialog import AlertDialog
+from flet_core.animation import AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
+from flet_core.bottom_sheet import BottomSheet
 from flet_core.client_storage import ClientStorage
 from flet_core.clipboard import Clipboard
 from flet_core.connection import Connection
@@ -18,6 +22,7 @@ from flet_core.control_event import ControlEvent
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import FloatingActionButton
+from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
 from flet_core.protocol import Command
 from flet_core.querystring import QueryString
@@ -37,10 +42,13 @@ from flet_core.types import (
 from flet_core.utils import is_asyncio, is_coroutine
 from flet_core.view import View
 
+logger = logging.getLogger(flet_core.__name__)
+
+
 try:
-    from flet.auth.authorization import Authorization
-    from flet.auth.oauth_provider import OAuthProvider
-    from flet.pubsub import PubSub
+    from flet_runtime.auth.authorization import Authorization
+    from flet_runtime.auth.oauth_provider import OAuthProvider
+    from flet_runtime.pubsub import PubSub
 except ImportError:
 
     class Authorization:
@@ -50,7 +58,8 @@ except ImportError:
         pass
 
     class PubSub:
-        pass
+        def __init__(self, pubsubhub, session_id) -> None:
+            pass
 
 
 try:
@@ -94,8 +103,8 @@ class Page(Control):
         self._session_id = session_id
         self._index = {self._Control__uid: self}  # index with all page controls
 
-        self.__lock = threading.Lock() if not is_asyncio() else None
-        self.__async_lock = asyncio.Lock() if is_asyncio() else None
+        self.__lock = threading.Lock() if not is_asyncio() else NopeLock()
+        self.__async_lock = asyncio.Lock() if is_asyncio() else AsyncNopeLock()
 
         self.__views = [View()]
         self.__default_view = self.__views[0]
@@ -105,6 +114,7 @@ class Page(Control):
         self.__offstage = Offstage()
         self.__theme = None
         self.__dark_theme = None
+        self.__theme_mode = ThemeMode.SYSTEM  # Default Theme Mode
         self.__pubsub = PubSub(conn.pubsubhub, session_id)
         self.__client_storage = ClientStorage(self)
         self.__session_storage = SessionStorage(self)
@@ -130,6 +140,7 @@ class Page(Control):
             if self.__last_route == e.data:
                 return None  # avoid duplicate calls
             self.__last_route = e.data
+            self._set_attr("route", e.data, False)
             self.query()  # Update query url (required when manually changed from browser)
             return RouteChangeEvent(route=e.data)
 
@@ -179,6 +190,9 @@ class Page(Control):
         if self.__on_keyboard_event.count() > 0:
             self._set_attr("onKeyboardEvent", True)
 
+    def _get_control_name(self):
+        return "page"
+
     def _get_children(self):
         children = []
         children.extend(self.__views)
@@ -219,6 +233,8 @@ class Page(Control):
             Command(0, "get", ["page", "windowHeight"]),
             Command(0, "get", ["page", "windowTop"]),
             Command(0, "get", ["page", "windowLeft"]),
+            Command(0, "get", ["page", "clientIP"]),
+            Command(0, "get", ["page", "clientUserAgent"]),
         ]
 
     def __set_page_details(self, values):
@@ -232,9 +248,10 @@ class Page(Control):
         self._set_attr("windowHeight", values[7], False)
         self._set_attr("windowTop", values[8], False)
         self._set_attr("windowLeft", values[9], False)
+        self._set_attr("clientIP", values[10], False)
+        self._set_attr("clientUserAgent", values[11], False)
 
     def update(self, *controls):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             if len(controls) == 0:
                 r = self.__update(self)
@@ -243,9 +260,6 @@ class Page(Control):
         self.__handle_mount_unmount(*r)
 
     async def update_async(self, *controls):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             if len(controls) == 0:
                 r = await self.__update_async(self)
@@ -254,23 +268,18 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def add(self, *controls):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             self._controls.extend(controls)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     async def add_async(self, *controls):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             self._controls.extend(controls)
             r = await self.__update_async(self)
         await self.__handle_mount_unmount_async(*r)
 
     def insert(self, at, *controls):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             n = at
             for control in controls:
@@ -280,9 +289,6 @@ class Page(Control):
         self.__handle_mount_unmount(*r)
 
     async def insert_async(self, at, *controls):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             n = at
             for control in controls:
@@ -292,7 +298,6 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def remove(self, *controls):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             for control in controls:
                 self._controls.remove(control)
@@ -300,9 +305,6 @@ class Page(Control):
         self.__handle_mount_unmount(*r)
 
     async def remove_async(self, *controls):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             for control in controls:
                 self._controls.remove(control)
@@ -310,16 +312,12 @@ class Page(Control):
         await self.__handle_mount_unmount_async(*r)
 
     def remove_at(self, index):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             self._controls.pop(index)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     async def remove_at_async(self, index):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             self._controls.pop(index)
             r = await self.__update_async(self)
@@ -334,7 +332,6 @@ class Page(Control):
         self._controls.clear()
 
     def _clean(self, control: Control):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             control._previous_children.clear()
             assert control.uid is not None
@@ -348,9 +345,6 @@ class Page(Control):
                 c.will_unmount()
 
     async def _clean_async(self, control: Control):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             control._previous_children.clear()
             assert control.uid is not None
@@ -363,14 +357,39 @@ class Page(Control):
             for c in removed_controls:
                 await c.will_unmount_async()
 
+    def _close(self):
+        removed_controls = self._remove_control_recursively(self.index, self)
+        for c in removed_controls:
+            c.will_unmount()
+            c._dispose()
+        self.__close_internal()
+
+    async def _close_async(self):
+        removed_controls = self._remove_control_recursively(self.index, self)
+        for c in removed_controls:
+            await c.will_unmount_async()
+            c._dispose()
+        self.__close_internal()
+
+    def __close_internal(self):
+        self._controls.clear()
+        self._previous_children.clear()
+        self.__on_route_change = None
+        self.__on_view_pop = None
+        self.__client_storage = None
+        self.__session_storage = None
+        self.__query = None
+
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
+        self.__validate_controls_page(added_controls)
         results = self.__conn.send_commands(self._session_id, commands).results
         self.__update_control_ids(added_controls, results)
         return added_controls, removed_controls
 
     async def __update_async(self, *controls) -> Tuple[List[Control], List[Control]]:
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
+        self.__validate_controls_page(added_controls)
         results = (
             await self.__conn.send_commands_async(self._session_id, commands)
         ).results
@@ -393,6 +412,13 @@ class Page(Control):
 
         return commands, added_controls, removed_controls
 
+    def __validate_controls_page(self, added_controls):
+        for ctrl in added_controls:
+            if ctrl.page and ctrl.page != self:
+                raise Exception(
+                    f"Control has already been added to another page: {ctrl}"
+                )
+
     def __update_control_ids(self, added_controls, results):
         if len(results) > 0:
             n = 0
@@ -409,30 +435,27 @@ class Page(Control):
     def __handle_mount_unmount(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             ctrl.will_unmount()
+            ctrl.page = None
         for ctrl in added_controls:
             ctrl.did_mount()
 
     async def __handle_mount_unmount_async(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             await ctrl.will_unmount_async()
+            ctrl.page = None
         for ctrl in added_controls:
             await ctrl.did_mount_async()
 
     def error(self, message=""):
-        assert self.__lock, "Sync method calls are not supported in async app."
         with self.__lock:
             self._send_command("error", [message])
 
     async def error_async(self, message=""):
-        assert (
-            self.__async_lock
-        ), "Async method calls are not supported in a regular app."
         async with self.__async_lock:
             await self._send_command_async("error", [message])
 
     def on_event(self, e: Event):
-        logging.info(f"page.on_event: {e.target} {e.name} {e.data}")
-        assert self.__lock, "Sync method calls are not supported in async app."
+        logger.info(f"page.on_event: {e.target} {e.name} {e.data}")
         with self.__lock:
             if e.target == "page" and e.name == "change":
                 self.__on_page_change_event(e.data)
@@ -445,7 +468,7 @@ class Page(Control):
                     t.start()
 
     async def on_event_async(self, e: Event):
-        logging.info(f"page.on_event_async: {e.target} {e.name} {e.data}")
+        logger.info(f"page.on_event_async: {e.target} {e.name} {e.data}")
 
         if e.target == "page" and e.name == "change":
             async with self.__async_lock:
@@ -469,9 +492,9 @@ class Page(Control):
                         self._index[id]._set_attr(name, props[name], dirty=False)
 
     def go(self, route, **kwargs):
-        self.route = route if kwargs == {} else route + self.query.post(kwargs)
+        self.route = route if not kwargs else route + self.query.post(kwargs)
 
-        self.__on_route_change.get_handler()(
+        self.__on_route_change.get_sync_handler()(
             ControlEvent(
                 target="page",
                 name="route_change",
@@ -484,7 +507,7 @@ class Page(Control):
         self.query()  # Update query url (required when using go)
 
     async def go_async(self, route, **kwargs):
-        self.route = route if kwargs == {} else route + self.query.post(kwargs)
+        self.route = route if not kwargs else route + self.query.post(kwargs)
 
         await self.__on_route_change.get_handler()(
             ControlEvent(
@@ -553,7 +576,9 @@ class Page(Control):
                 )
         else:
             self.__authorization.dehydrate_token(saved_token)
-            self.__on_login.get_handler()(LoginEvent(error="", error_description=""))
+            self.__on_login.get_sync_handler()(
+                LoginEvent(error="", error_description="")
+            )
         return self.__authorization
 
     async def login_async(
@@ -625,7 +650,7 @@ class Page(Control):
                 self.__authorization.request_token(code)
             except Exception as ex:
                 login_evt.error = str(ex)
-        self.__on_login.get_handler()(login_evt)
+        self.__on_login.get_sync_handler()(login_evt)
 
     async def __on_authorize_async(self, e):
         assert self.__authorization is not None
@@ -656,7 +681,7 @@ class Page(Control):
 
     def logout(self):
         self.__authorization = None
-        self.__on_logout.get_handler()(
+        self.__on_logout.get_sync_handler()(
             ControlEvent(target="page", name="logout", data="", control=self, page=self)
         )
 
@@ -757,13 +782,13 @@ class Page(Control):
         window_height: Optional[int] = None,
     ):
         args = {"url": url}
-        if web_window_name != None:
+        if web_window_name is not None:
             args["web_window_name"] = web_window_name
-        if web_popup_window != None:
+        if web_popup_window is not None:
             args["web_popup_window"] = str(web_popup_window)
-        if window_width != None:
+        if window_width is not None:
             args["window_width"] = str(window_width)
-        if window_height != None:
+        if window_height is not None:
             args["window_height"] = str(window_height)
         return args
 
@@ -790,11 +815,37 @@ class Page(Control):
     async def window_to_front_async(self):
         await self.invoke_method_async("windowToFront")
 
+    def scroll_to(
+        self,
+        offset: Optional[float] = None,
+        delta: Optional[float] = None,
+        key: Optional[str] = None,
+        duration: Optional[int] = None,
+        curve: Optional[AnimationCurve] = None,
+    ):
+        self.__default_view.scroll_to(
+            offset=offset, delta=delta, key=key, duration=duration, curve=curve
+        )
+
+    async def scroll_to_async(
+        self,
+        offset: Optional[float] = None,
+        delta: Optional[float] = None,
+        key: Optional[str] = None,
+        duration: Optional[int] = None,
+        curve: Optional[AnimationCurve] = None,
+    ):
+        await self.__default_view.scroll_to_async(
+            offset=offset, delta=delta, key=key, duration=duration, curve=curve
+        )
+
     def invoke_method(
         self,
         method_name: str,
         arguments: Optional[Dict[str, str]] = None,
+        control_id: Optional[str] = "",
         wait_for_result: bool = False,
+        wait_timeout: Optional[float] = 5,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
 
@@ -806,7 +857,7 @@ class Page(Control):
 
         # call method
         result = self._send_command(
-            "invokeMethod", values=[method_id, method_name], attrs=arguments
+            "invokeMethod", values=[method_id, method_name, control_id], attrs=arguments
         )
 
         if result.error != "":
@@ -819,16 +870,16 @@ class Page(Control):
 
         assert evt is not None
 
-        if not evt.wait(5):
+        if not evt.wait(wait_timeout):
             del self.__method_calls[method_id]
             raise Exception(
                 f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
             )
 
         result, err = self.__method_call_results.pop(evt)
-        if err != None:
+        if err is not None:
             raise Exception(err)
-        if result == None:
+        if result is None:
             return None
         return result
 
@@ -836,7 +887,9 @@ class Page(Control):
         self,
         method_name: str,
         arguments: Optional[Dict[str, str]] = None,
+        control_id: Optional[str] = "",
         wait_for_result: bool = False,
+        wait_timeout: Optional[float] = 5,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
 
@@ -848,7 +901,7 @@ class Page(Control):
 
         # call method
         result = await self._send_command_async(
-            "invokeMethod", values=[method_id, method_name], attrs=arguments
+            "invokeMethod", values=[method_id, method_name, control_id], attrs=arguments
         )
 
         if result.error != "":
@@ -862,7 +915,7 @@ class Page(Control):
         assert evt is not None
 
         try:
-            await asyncio.wait_for(evt.wait(), timeout=5)
+            await asyncio.wait_for(evt.wait(), timeout=wait_timeout)
         except TimeoutError:
             del self.__method_calls[method_id]
             raise Exception(
@@ -870,9 +923,9 @@ class Page(Control):
             )
 
         result, err = self.__method_call_results.pop(evt)
-        if err != None:
+        if err is not None:
             raise Exception(err)
-        if result == None:
+        if result is None:
             return None
         return result
 
@@ -880,18 +933,92 @@ class Page(Control):
         d = json.loads(e.data)
         result = InvokeMethodResults(**d)
         evt = self.__method_calls.pop(result.method_id, None)
-        if evt == None:
+        if evt is None:
             return
         self.__method_call_results[evt] = (result.result, result.error)
         evt.set()
 
+    #
+    # SnackBar
+    #
     def show_snack_bar(self, snack_bar: SnackBar):
         self.__offstage.snack_bar = snack_bar
+        self.__offstage.snack_bar.open = True
         self.__offstage.update()
 
     async def show_snack_bar_async(self, snack_bar: SnackBar):
         self.__offstage.snack_bar = snack_bar
+        self.__offstage.snack_bar.open = True
         await self.__offstage.update_async()
+
+    #
+    # Dialog
+    #
+    def show_dialog(self, dialog: AlertDialog):
+        self.__offstage.dialog = dialog
+        self.__offstage.dialog.open = True
+        self.__offstage.update()
+
+    async def show_dialog_async(self, dialog: AlertDialog):
+        self.__offstage.dialog = dialog
+        self.__offstage.dialog.open = True
+        await self.__offstage.update_async()
+
+    def close_dialog(self):
+        if self.__offstage.dialog is not None:
+            self.__offstage.dialog.open = False
+            self.__offstage.update()
+
+    async def close_dialog_async(self):
+        if self.__offstage.dialog is not None:
+            self.__offstage.dialog.open = False
+            await self.__offstage.update_async()
+
+    #
+    # Banner
+    #
+    def show_banner(self, banner: Banner):
+        self.__offstage.banner = banner
+        self.__offstage.banner.open = True
+        self.__offstage.update()
+
+    async def show_banner_async(self, banner: Banner):
+        self.__offstage.banner = banner
+        self.__offstage.banner.open = True
+        await self.__offstage.update_async()
+
+    def close_banner(self):
+        if self.__offstage.banner is not None:
+            self.__offstage.banner.open = False
+            self.__offstage.update()
+
+    async def close_banner_async(self):
+        if self.__offstage.banner is not None:
+            self.__offstage.banner.open = False
+            await self.__offstage.update_async()
+
+    #
+    # BottomSheet
+    #
+    def show_bottom_sheet(self, bottom_sheet: BottomSheet):
+        self.__offstage.bottom_sheet = bottom_sheet
+        self.__offstage.bottom_sheet.open = True
+        self.__offstage.update()
+
+    async def show_bottom_sheet_async(self, bottom_sheet: BottomSheet):
+        self.__offstage.bottom_sheet = bottom_sheet
+        self.__offstage.bottom_sheet.open = True
+        await self.__offstage.update_async()
+
+    def close_bottom_sheet(self):
+        if self.__offstage.bottom_sheet is not None:
+            self.__offstage.bottom_sheet.open = False
+            self.__offstage.update()
+
+    async def close_bottom_sheet_async(self):
+        if self.__offstage.bottom_sheet is not None:
+            self.__offstage.bottom_sheet.open = False
+            await self.__offstage.update_async()
 
     def window_destroy(self):
         self._set_attr("windowDestroy", "true")
@@ -994,6 +1121,16 @@ class Page(Control):
     @property
     def platform(self):
         return self._get_attr("platform")
+
+    # client_ip
+    @property
+    def client_ip(self):
+        return self._get_attr("clientIP")
+
+    # client_user_agent
+    @property
+    def client_user_agent(self):
+        return self._get_attr("clientUserAgent")
 
     # design
     @property
@@ -1169,6 +1306,15 @@ class Page(Control):
     @dialog.setter
     def dialog(self, value: Optional[Control]):
         self.__offstage.dialog = value
+
+    # bottom_sheet
+    @property
+    def bottom_sheet(self) -> Optional[BottomSheet]:
+        return self.__offstage.bottom_sheet
+
+    @bottom_sheet.setter
+    def bottom_sheet(self, value: Optional[BottomSheet]):
+        self.__offstage.bottom_sheet = value
 
     # theme_mode
     @property
@@ -1486,6 +1632,15 @@ class Page(Control):
     def window_visible(self, value: Optional[bool]):
         self._set_attr("windowVisible", value)
 
+    # on_scroll_interval
+    @property
+    def on_scroll_interval(self) -> OptionalNumber:
+        return self.__default_view.on_scroll_interval
+
+    @on_scroll_interval.setter
+    def on_scroll_interval(self, value: OptionalNumber):
+        self.__default_view.on_scroll_interval
+
     # on_close
     @property
     def on_close(self):
@@ -1585,6 +1740,15 @@ class Page(Control):
     def on_error(self, handler):
         self.__on_error.subscribe(handler)
 
+    # on_scroll
+    @property
+    def on_scroll(self):
+        return self.__default_view.on_scroll
+
+    @on_scroll.setter
+    def on_scroll(self, handler):
+        self.__default_view.on_scroll
+
 
 class Offstage(Control):
     def __init__(
@@ -1593,7 +1757,6 @@ class Offstage(Control):
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
-
         Control.__init__(
             self,
             visible=visible,
@@ -1606,6 +1769,7 @@ class Offstage(Control):
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
+        self.__bottom_sheet = None
         self.__splash = None
 
     def _get_control_name(self):
@@ -1622,6 +1786,8 @@ class Offstage(Control):
             children.append(self.__snack_bar)
         if self.__dialog:
             children.append(self.__dialog)
+        if self.__bottom_sheet:
+            children.append(self.__bottom_sheet)
         if self.__splash:
             children.append(self.__splash)
         return children
@@ -1665,12 +1831,21 @@ class Offstage(Control):
 
     # dialog
     @property
-    def dialog(self) -> Optional[Control]:
+    def dialog(self) -> Optional[AlertDialog]:
         return self.__dialog
 
     @dialog.setter
-    def dialog(self, value: Optional[Control]):
+    def dialog(self, value: Optional[AlertDialog]):
         self.__dialog = value
+
+    # bottom_sheet
+    @property
+    def bottom_sheet(self) -> Optional[BottomSheet]:
+        return self.__bottom_sheet
+
+    @bottom_sheet.setter
+    def bottom_sheet(self, value: Optional[BottomSheet]):
+        self.__bottom_sheet = value
 
 
 @dataclass

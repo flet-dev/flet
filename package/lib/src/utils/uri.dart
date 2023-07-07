@@ -21,7 +21,8 @@ Uri getAssetUri(Uri pageUri, String assetPath) {
       scheme: pageUri.scheme,
       host: pageUri.host,
       port: pageUri.port,
-      path: assetPath);
+      path: pageUri.path +
+          (assetPath.startsWith("/") ? assetPath.substring(1) : assetPath));
 }
 
 Uri getBaseUri(Uri pageUri) {
@@ -30,4 +31,9 @@ Uri getBaseUri(Uri pageUri) {
 
 bool isLocalhost(Uri uri) {
   return uri.host == "localhost" || uri.host == "127.0.0.1";
+}
+
+bool isUdsPath(String address) {
+  var uri = Uri.tryParse(address);
+  return uri == null || !uri.hasScheme;
 }

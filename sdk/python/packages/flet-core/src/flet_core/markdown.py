@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, cast
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
@@ -43,6 +43,7 @@ class Markdown(ConstrainedControl):
         self,
         value: Optional[str] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -74,11 +75,14 @@ class Markdown(ConstrainedControl):
         extension_set: Optional[MarkdownExtensionSet] = None,
         code_theme: Optional[str] = None,
         code_style: Optional[TextStyle] = None,
+        auto_follow_links: Optional[bool] = None,
+        auto_follow_links_target: Optional[str] = None,
         on_tap_link=None,
     ):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -110,6 +114,8 @@ class Markdown(ConstrainedControl):
         self.extension_set = extension_set
         self.code_theme = code_theme
         self.code_style = code_style
+        self.auto_follow_links = auto_follow_links
+        self.auto_follow_links_target = auto_follow_links_target
         self.on_tap_link = on_tap_link
 
     def _get_control_name(self):
@@ -170,6 +176,27 @@ class Markdown(ConstrainedControl):
     @code_style.setter
     def code_style(self, value: Optional[TextStyle]):
         self.__code_style = value
+
+    # auto_follow_links
+    @property
+    def auto_follow_links(self) -> Optional[bool]:
+        return cast(
+            Optional[bool],
+            self._get_attr("autoFollowLinks", data_type="bool", def_value=False),
+        )
+
+    @auto_follow_links.setter
+    def auto_follow_links(self, value: Optional[bool]):
+        self._set_attr("autoFollowLinks", value)
+
+    # auto_follow_links_target
+    @property
+    def auto_follow_links_target(self) -> Optional[str]:
+        return self._get_attr("autoFollowLinksTarget")
+
+    @auto_follow_links_target.setter
+    def auto_follow_links_target(self, value: Optional[str]):
+        self._set_attr("autoFollowLinksTarget", value)
 
     # on_tap_link
     @property

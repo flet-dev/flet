@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, Union
+from typing import Dict, Tuple, Union
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
@@ -12,6 +12,24 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+WEB_BROWSER = "web_browser"
+FLET_APP = "flet_app"
+FLET_APP_WEB = "flet_app_web"
+FLET_APP_HIDDEN = "flet_app_hidden"
+
+
+class AppView(Enum):
+    WEB_BROWSER = "web_browser"
+    FLET_APP = "flet_app"
+    FLET_APP_WEB = "flet_app_web"
+    FLET_APP_HIDDEN = "flet_app_hidden"
+
+
+class WebRenderer(Enum):
+    AUTO = "auto"
+    HTML = "html"
+    CANVAS_KIT = "canvaskit"
+
 
 PaddingValue = Union[None, int, float, Padding]
 
@@ -23,7 +41,7 @@ RotateValue = Union[None, int, float, Rotate]
 
 ScaleValue = Union[None, int, float, Scale]
 
-OffsetValue = Union[None, Offset]
+OffsetValue = Union[None, Offset, Tuple[Union[float, int], Union[float, int]]]
 
 AnimationValue = Union[None, bool, int, Animation]
 

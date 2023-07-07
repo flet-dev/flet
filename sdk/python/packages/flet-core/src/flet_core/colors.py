@@ -34,6 +34,11 @@
 
 # }
 
+
+def with_opacity(opacity: float, color: str):
+    return f"{color},{opacity}"
+
+
 PRIMARY = "primary"
 ON_PRIMARY = "onprimary"
 PRIMARY_CONTAINER = "primarycontainer"
@@ -51,16 +56,20 @@ ON_ERROR = "onerror"
 ERROR_CONTAINER = "errorcontainer"
 ON_ERROR_CONTAINER = "onerrorcontainer"
 OUTLINE = "outline"
+OUTLINE_VARIANT = "outlinevariant"
 BACKGROUND = "background"
 ON_BACKGROUND = "onbackground"
 SURFACE = "surface"
 ON_SURFACE = "onsurface"
+SURFACE_TINT = "surfacetint"
 SURFACE_VARIANT = "surfacevariant"
 ON_SURFACE_VARIANT = "onsurfacevariant"
 INVERSE_SURFACE = "inversesurface"
 ON_INVERSE_SURFACE = "oninversesurface"
 INVERSE_PRIMARY = "inverseprimary"
 SHADOW = "shadow"
+SCRIM = "scrim"
+
 WHITE10 = "white10"
 WHITE12 = "white12"
 WHITE24 = "white24"
@@ -356,3 +365,14 @@ DEEP_ORANGE_ACCENT_100 = "deeporangeaccent100"
 DEEP_ORANGE_ACCENT_200 = "deeporangeaccent200"
 DEEP_ORANGE_ACCENT_400 = "deeporangeaccent400"
 DEEP_ORANGE_ACCENT_700 = "deeporangeaccent700"
+GREY = "grey"
+GREY_50 = "grey50"
+GREY_100 = "grey100"
+GREY_200 = "grey200"
+GREY_300 = "grey300"
+GREY_400 = "grey400"
+GREY_500 = "grey500"
+GREY_600 = "grey600"
+GREY_700 = "grey700"
+GREY_800 = "grey800"
+GREY_900 = "grey900"

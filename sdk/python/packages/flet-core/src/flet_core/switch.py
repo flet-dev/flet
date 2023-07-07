@@ -57,6 +57,7 @@ class Switch(ConstrainedControl):
     def __init__(
         self,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -101,6 +102,7 @@ class Switch(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -145,8 +147,8 @@ class Switch(ConstrainedControl):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("thumbColor", self._wrap_attr_dict(self.__thumb_color))
-        self._set_attr_json("trackColor", self._wrap_attr_dict(self.__track_color))
+        self._set_attr_json("thumbColor", self.__thumb_color)
+        self._set_attr_json("trackColor", self.__track_color)
 
     # value
     @property

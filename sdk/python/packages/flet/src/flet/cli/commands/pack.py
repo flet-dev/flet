@@ -1,16 +1,17 @@
 import argparse
 import os
 import shutil
+import sys
 from pathlib import Path
 
 import flet.__pyinstaller.config as hook_config
 from flet.cli.commands.base import BaseCommand
-from flet.utils import is_macos, is_windows
+from flet_runtime.utils import is_macos, is_windows
 
 
 class Command(BaseCommand):
     """
-    Package Flet app to a standalone bundle
+    Package Flet app to a standalone bundle.
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -34,6 +35,11 @@ class Command(BaseCommand):
             action="store_true",
             default=False,
             help="create a one-folder bundle containing an executable (Windows)",
+        )
+        parser.add_argument(
+            "--distpath",
+            dest="distpath",
+            help="where to put the bundled app (default: ./dist)",
         )
         parser.add_argument(
             "--add-data",
@@ -86,7 +92,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
-
         # delete "build" directory
         build_dir = os.path.join(os.getcwd(), "build")
         if os.path.exists(build_dir):
@@ -99,7 +104,6 @@ class Command(BaseCommand):
 
         try:
             import PyInstaller.__main__
-
             from flet.__pyinstaller.utils import copy_flet_bin
 
             pyi_args = [options.script, "--noconsole", "--noconfirm"]
@@ -107,6 +111,8 @@ class Command(BaseCommand):
                 pyi_args.extend(["--icon", options.icon])
             if options.name:
                 pyi_args.extend(["--name", options.name])
+            if options.distpath:
+                pyi_args.extend(["--distpath", options.distpath])
             if options.add_data:
                 for add_data_arr in options.add_data:
                     for add_data_item in add_data_arr:
@@ -120,7 +126,7 @@ class Command(BaseCommand):
             if options.onedir:
                 if is_macos():
                     print("--onedir options is not supported on macOS.")
-                    exit(1)
+                    sys.exit(1)
                 pyi_args.append("--onedir")
             else:
                 pyi_args.append("--onefile")
@@ -129,7 +135,6 @@ class Command(BaseCommand):
             hook_config.temp_bin_dir = copy_flet_bin()
 
             if hook_config.temp_bin_dir is not None:
-
                 # delete fletd/fletd.exe
                 fletd_path = os.path.join(
                     hook_config.temp_bin_dir, "fletd.exe" if is_windows() else "fletd"
@@ -138,7 +143,6 @@ class Command(BaseCommand):
                     os.remove(fletd_path)
 
                 if is_windows():
-
                     from flet.__pyinstaller.win_utils import (
                         update_flet_view_icon,
                         update_flet_view_version_info,
@@ -180,7 +184,6 @@ class Command(BaseCommand):
                         hook_config.temp_bin_dir, "flet-macos-amd64.tar.gz"
                     )
                     if os.path.exists(tar_path):
-
                         # unpack
                         app_path = unpack_app_bundle(tar_path)
 
@@ -215,4 +218,4 @@ class Command(BaseCommand):
                 shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
         except ImportError as e:
             print("Please install PyInstaller module to use flet pack command:", e)
-            exit(1)
+            sys.exit(1)

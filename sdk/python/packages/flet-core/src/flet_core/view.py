@@ -1,10 +1,11 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from flet_core import Control
 from flet_core.app_bar import AppBar
 from flet_core.control import OptionalNumber
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.navigation_bar import NavigationBar
+from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     CrossAxisAlignment,
     CrossAxisAlignmentString,
@@ -16,7 +17,7 @@ from flet_core.types import (
 )
 
 
-class View(Control):
+class View(ScrollableControl):
     """
     View is the top most container for all other controls.
 
@@ -39,10 +40,24 @@ class View(Control):
         spacing: OptionalNumber = None,
         padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
+        #
+        # ScrollableControl specific
+        #
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
+        fullscreen_dialog: Optional[bool] = None,
+        on_scroll_interval: OptionalNumber = None,
+        on_scroll: Any = None,
     ):
         Control.__init__(self)
+
+        ScrollableControl.__init__(
+            self,
+            scroll=scroll,
+            auto_scroll=auto_scroll,
+            on_scroll_interval=on_scroll_interval,
+            on_scroll=on_scroll,
+        )
 
         self.controls = controls if controls is not None else []
         self.route = route
@@ -56,6 +71,7 @@ class View(Control):
         self.bgcolor = bgcolor
         self.scroll = scroll
         self.auto_scroll = auto_scroll
+        self.fullscreen_dialog = fullscreen_dialog
 
     def _get_control_name(self):
         return "view"
@@ -179,31 +195,11 @@ class View(Control):
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
 
-    # scroll
+    # fullscreen_dialog
     @property
-    def scroll(self) -> Optional[ScrollMode]:
-        return self.__scroll
+    def fullscreen_dialog(self) -> Optional[bool]:
+        return self._get_attr("fullscreenDialog", data_type="bool", def_value=False)
 
-    @scroll.setter
-    def scroll(self, value: Optional[ScrollMode]):
-        self.__scroll = value
-        if isinstance(value, ScrollMode):
-            self._set_attr("scroll", value.value)
-        else:
-            self.__set_scroll(value)
-
-    def __set_scroll(self, value: Optional[ScrollModeString]):
-        if value == True:
-            value = "auto"
-        elif value == False:
-            value = None
-        self._set_attr("scroll", value)
-
-    # auto_scroll
-    @property
-    def auto_scroll(self) -> Optional[bool]:
-        return self._get_attr("autoScroll")
-
-    @auto_scroll.setter
-    def auto_scroll(self, value: Optional[bool]):
-        self._set_attr("autoScroll", value)
+    @fullscreen_dialog.setter
+    def fullscreen_dialog(self, value: Optional[bool]):
+        self._set_attr("fullscreenDialog", value)

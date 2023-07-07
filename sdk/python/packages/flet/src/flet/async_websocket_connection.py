@@ -5,6 +5,7 @@ import uuid
 from asyncio.queues import Queue
 from typing import List, Optional
 
+import flet
 import websockets.client as ws_client
 from flet import constants
 from flet_core.connection import Connection
@@ -24,6 +25,8 @@ from flet_core.protocol import (
 )
 from websockets.client import WebSocketClientProtocol
 
+logger = logging.getLogger(flet.__name__)
+
 
 class AsyncWebSocketConnection(Connection):
     __CONNECT_TIMEOUT = 0.2
@@ -33,6 +36,7 @@ class AsyncWebSocketConnection(Connection):
         self,
         server_address: str,
         page_name: str,
+        assets_dir: Optional[str],
         auth_token: Optional[str],
         on_event=None,
         on_session_created=None,
@@ -44,13 +48,14 @@ class AsyncWebSocketConnection(Connection):
         self.__is_reconnecting = False
         self.__host_client_id: Optional[str] = None
         self.__auth_token = auth_token
+        self.__assets_dir = assets_dir
         self.__ws_callbacks = {}
         self.__on_event = on_event
         self.__on_session_created = on_session_created
 
     async def connect(self):
         ws_url = self._get_ws_url(self.__server_address)
-        logging.debug(f"Connecting via WebSockets to {ws_url}...")
+        logger.debug(f"Connecting via WebSockets to {ws_url}...")
 
         attempt = self.__CONNECT_ATTEMPTS
         while True:
@@ -58,14 +63,14 @@ class AsyncWebSocketConnection(Connection):
                 self.__ws: WebSocketClientProtocol = await ws_client.connect(ws_url)
                 break
             except Exception as e:
-                logging.debug(f"Error connecting to Flet server: {e}")
+                logger.debug(f"Error connecting to Flet server: {e}")
                 if attempt == 0 and not self.__is_reconnecting:
                     raise Exception(
                         f"Failed to connect Flet server in {self.__CONNECT_ATTEMPTS} attempts."
                     )
                 attempt -= 1
                 await asyncio.sleep(self.__CONNECT_TIMEOUT)
-        logging.debug(f"Connected to Flet server {self.__server_address}")
+        logger.debug(f"Connected to Flet server {self.__server_address}")
         self.__is_reconnecting = True
 
         # start send/receive loops
@@ -77,8 +82,7 @@ class AsyncWebSocketConnection(Connection):
         payload = RegisterHostClientRequestPayload(
             hostClientID=self.__host_client_id,
             pageName=self.page_name,
-            isApp=True,
-            update=False,
+            assetsDir=self.__assets_dir,
             authToken=self.__auth_token,
             permissions=None,
         )
@@ -104,19 +108,19 @@ class AsyncWebSocketConnection(Connection):
             name = task.get_name()
             exception = task.exception()
             if isinstance(exception, Exception):
-                logging.error(f"{name} threw {exception}")
+                logger.error(f"{name} threw {exception}")
                 failed = True
         for task in pending:
             task.cancel()
 
         # re-connect if one of tasks failed
         if failed:
-            logging.debug(f"Re-connecting to Flet server in 1 second")
+            logger.debug("Re-connecting to Flet server in 1 second")
             await asyncio.sleep(self.__CONNECT_TIMEOUT)
             await self.connect()
 
     async def __on_ws_message(self, data):
-        logging.debug(f"_on_message: {data}")
+        logger.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
         msg = Message(**msg_dict)
         if msg.id:
@@ -145,7 +149,7 @@ class AsyncWebSocketConnection(Connection):
             message = await self.__send_queue.get()
             try:
                 await self.__ws.send(message)
-            except:
+            except Exception:
                 # re-enqueue the message to repeat it when re-connected
                 self.__send_queue.put_nowait(message)
                 raise
@@ -176,7 +180,7 @@ class AsyncWebSocketConnection(Connection):
         msg_id = uuid.uuid4().hex
         msg = Message(msg_id, action_name, payload)
         j = json.dumps(msg, cls=CommandEncoder, separators=(",", ":"))
-        logging.debug(f"_send_message_with_result: {j}")
+        logger.debug(f"_send_message_with_result: {j}")
         evt = asyncio.Event()
         self.__ws_callbacks[msg_id] = (evt, None)
         await self.__send_queue.put(j)
@@ -184,7 +188,7 @@ class AsyncWebSocketConnection(Connection):
         return self.__ws_callbacks.pop(msg_id)[1]
 
     async def close(self):
-        logging.debug("Closing WebSockets connection...")
+        logger.debug("Closing WebSockets connection...")
         if self.__receive_loop_task:
             self.__receive_loop_task.cancel()
         if self.__send_loop_task:
@@ -192,5 +196,5 @@ class AsyncWebSocketConnection(Connection):
         if self.__ws:
             try:
                 await self.__ws.close()
-            except:
+            except Exception:
                 pass  # do nothing

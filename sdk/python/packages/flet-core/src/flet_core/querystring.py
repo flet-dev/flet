@@ -1,5 +1,5 @@
-import urllib.parse
 import re
+import urllib.parse
 
 
 class UrlComponents:
@@ -28,12 +28,10 @@ class UrlComponents:
         if "?" in self.url:
             q_result = self._querystring_part()
             return (
-                True
-                if self._decode_url_component(
+                self._decode_url_component(
                     self.url[q_result.start() + 1 : q_result.end()]
                 )
                 != self.url[q_result.start() + 1 : q_result.end()]
-                else False
             )
 
     def _querystring_part(self, url_string: bool = False):

@@ -1,8 +1,8 @@
+import time
 from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
-from flet_core.focus import FocusData
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
@@ -96,6 +96,7 @@ class TextField(FormFieldControl):
     def __init__(
         self,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
@@ -169,6 +170,10 @@ class TextField(FormFieldControl):
         text_align: TextAlign = TextAlign.NONE,
         autofocus: Optional[bool] = None,
         capitalization: TextCapitalization = TextCapitalization.NONE,
+        autocorrect: Optional[bool] = None,
+        enable_suggestions: Optional[bool] = None,
+        smart_dashes_type: Optional[bool] = None,
+        smart_quotes_type: Optional[bool] = None,
         cursor_color: Optional[str] = None,
         cursor_width: OptionalNumber = None,
         cursor_height: OptionalNumber = None,
@@ -182,6 +187,7 @@ class TextField(FormFieldControl):
         FormFieldControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             expand=expand,
@@ -254,6 +260,10 @@ class TextField(FormFieldControl):
         self.can_reveal_password = can_reveal_password
         self.autofocus = autofocus
         self.capitalization = capitalization
+        self.autocorrect = autocorrect
+        self.enable_suggestions = enable_suggestions
+        self.smart_dashes_type = smart_dashes_type
+        self.smart_quotes_type = smart_quotes_type
         self.cursor_color = cursor_color
         self.cursor_height = cursor_height
         self.cursor_width = cursor_width
@@ -273,11 +283,11 @@ class TextField(FormFieldControl):
             self.filled = True  # Flutter requires filled = True to display a bgcolor
 
     def focus(self):
-        self._set_attr_json("focus", FocusData())
+        self._set_attr_json("focus", str(time.time()))
         self.update()
 
     async def focus_async(self):
-        self._set_attr_json("focus", FocusData())
+        self._set_attr_json("focus", str(time.time()))
         await self.update_async()
 
     # value
@@ -417,6 +427,42 @@ class TextField(FormFieldControl):
 
     def __set_capitalization(self, value: TextCapitalizationString):
         self._set_attr("capitalization", value)
+
+    # autocorrect
+    @property
+    def autocorrect(self) -> Optional[bool]:
+        return self._get_attr("autocorrect", data_type="bool", def_value=True)
+
+    @autocorrect.setter
+    def autocorrect(self, value: Optional[bool]):
+        self._set_attr("autocorrect", value)
+
+    # enable_suggestions
+    @property
+    def enable_suggestions(self) -> Optional[bool]:
+        return self._get_attr("enableSuggestions", data_type="bool", def_value=True)
+
+    @enable_suggestions.setter
+    def enable_suggestions(self, value: Optional[bool]):
+        self._set_attr("enableSuggestions", value)
+
+    # smart_dashes_type
+    @property
+    def smart_dashes_type(self) -> Optional[bool]:
+        return self._get_attr("smartDashesType", data_type="bool", def_value=True)
+
+    @smart_dashes_type.setter
+    def smart_dashes_type(self, value: Optional[bool]):
+        self._set_attr("smartDashesType", value)
+
+    # smart_quotes_type
+    @property
+    def smart_quotes_type(self) -> Optional[bool]:
+        return self._get_attr("smartQuotesType", data_type="bool", def_value=True)
+
+    @smart_quotes_type.setter
+    def smart_quotes_type(self, value: Optional[bool]):
+        self._set_attr("smartQuotesType", value)
 
     # cursor_color
     @property

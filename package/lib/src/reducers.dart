@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet/src/flet_server.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -70,6 +71,8 @@ AppState appReducer(AppState state, dynamic action) {
     //
     var page = state.controls["page"];
     var controls = Map.of(state.controls);
+    String? deepLinkingRoute;
+
     if (page != null) {
       var pageAttrs = Map.of(page.attrs);
       pageAttrs["route"] = action.route;
@@ -81,36 +84,35 @@ AppState appReducer(AppState state, dynamic action) {
         String pageName = getWebPageName(state.pageUri!);
 
         getWindowMediaData().then((wmd) {
-          action.server.connect(address: state.pageUri!.toString()).then((s) {
-            action.server.registerWebClient(
-                pageName: pageName,
-                pageRoute: action.route,
-                pageWidth: state.size.width.toString(),
-                pageHeight: state.size.height.toString(),
-                windowWidth: wmd.width != null ? wmd.width.toString() : "",
-                windowHeight: wmd.height != null ? wmd.height.toString() : "",
-                windowTop: wmd.top != null ? wmd.top.toString() : "",
-                windowLeft: wmd.left != null ? wmd.left.toString() : "",
-                isPWA: isProgressiveWebApp().toString(),
-                isWeb: kIsWeb.toString(),
-                platform: defaultTargetPlatform.name.toLowerCase());
-          });
+          action.server.registerWebClient(
+              pageName: pageName,
+              pageRoute: action.route,
+              pageWidth: state.size.width.toString(),
+              pageHeight: state.size.height.toString(),
+              windowWidth: wmd.width != null ? wmd.width.toString() : "",
+              windowHeight: wmd.height != null ? wmd.height.toString() : "",
+              windowTop: wmd.top != null ? wmd.top.toString() : "",
+              windowLeft: wmd.left != null ? wmd.left.toString() : "",
+              isPWA: isProgressiveWebApp().toString(),
+              isWeb: kIsWeb.toString(),
+              platform: defaultTargetPlatform.name.toLowerCase());
+
+          action.server.connect(address: state.pageUri!.toString());
         });
+      } else if (state.isLoading) {
+        // buffer route
+        deepLinkingRoute = action.route;
       } else {
         // existing route change
         debugPrint("New page route: ${action.route}");
-        List<Map<String, String>> props = [
-          {"i": "page", "route": action.route},
-        ];
-        action.server.updateControlProps(props: props);
-        action.server.sendPageEvent(
-            eventTarget: "page",
-            eventName: "route_change",
-            eventData: action.route);
+        sendRouteChangeEvent(action.server, action.route);
       }
     }
 
-    return state.copyWith(controls: controls, route: action.route);
+    return state.copyWith(
+        controls: controls,
+        route: action.route,
+        deepLinkingRoute: deepLinkingRoute);
   } else if (action is WindowEventAction) {
     //
     // window event
@@ -144,7 +146,7 @@ AppState appReducer(AppState state, dynamic action) {
       // error or inactive app
       return state.copyWith(
           isLoading: action.payload.appInactive,
-          reconnectingTimeout: 0,
+          reconnectDelayMs: 0,
           error: action.payload.error);
     } else {
       final sessionId = action.payload.session!.id;
@@ -152,10 +154,17 @@ AppState appReducer(AppState state, dynamic action) {
       // store sessionId in a cookie
       SessionStore.set("sessionId", sessionId);
 
+      if (state.deepLinkingRoute != "") {
+        debugPrint(
+            "Sending buffered deep link route: ${state.deepLinkingRoute}");
+        sendRouteChangeEvent(action.server, state.deepLinkingRoute);
+      }
+
       // connected to the session
       return state.copyWith(
           isLoading: false,
-          reconnectingTimeout: 0,
+          deepLinkingRoute: "",
+          reconnectDelayMs: 0,
           sessionId: sessionId,
           error: "",
           controls: action.payload.session!.controls);
@@ -166,11 +175,8 @@ AppState appReducer(AppState state, dynamic action) {
     //
     return state.copyWith(
         isLoading: true,
-        error: "Please wait while the application is re-connecting...",
-        reconnectingTimeout:
-            state.reconnectingTimeout == 0 || isLocalhost(state.pageUri!)
-                ? 1
-                : state.reconnectingTimeout * 2);
+        error: "", //action.connectMessage,
+        reconnectDelayMs: action.nextReconnectDelayMs);
   } else if (action is AppBecomeActiveAction) {
     //
     // app become active
@@ -181,7 +187,7 @@ AppState appReducer(AppState state, dynamic action) {
     //
     // app become inactive
     //
-    return state.copyWith(isLoading: true, error: action.payload.message);
+    return state.copyWith(isLoading: true, error: "");
   } else if (action is SessionCrashedAction) {
     //
     // session crashed
@@ -189,39 +195,64 @@ AppState appReducer(AppState state, dynamic action) {
     return state.copyWith(error: action.payload.message);
   } else if (action is InvokeMethodAction) {
     debugPrint(
-        "InvokeMethodAction: ${action.payload.methodName} (${action.payload.args})");
-    switch (action.payload.methodName) {
-      case "closeInAppWebView":
-        closeInAppWebView();
-        break;
-      case "launchUrl":
-        openWebBrowser(
-            action.payload.args["url"]!,
-            action.payload.args["web_window_name"],
-            action.payload.args["web_popup_window"]?.toLowerCase() == "true",
-            int.tryParse(action.payload.args["window_width"] ?? ""),
-            int.tryParse(action.payload.args["window_height"] ?? ""));
-        break;
-      case "canLaunchUrl":
-        canLaunchUrl(Uri.parse(action.payload.args["url"]!)).then((value) =>
-            action.server.sendPageEvent(
+        "InvokeMethodAction: ${action.payload.methodName} (controlId: ${action.payload.controlId}) (${action.payload.args})");
+    if (action.payload.controlId != "") {
+      // control-specific method
+      var handler =
+          action.server.controlInvokeMethods[action.payload.controlId];
+      if (handler != null) {
+        handler(action.payload.methodName, action.payload.args)
+            .then((result) => action.server.sendPageEvent(
                 eventTarget: "page",
                 eventName: "invoke_method_result",
                 eventData: json.encode(InvokeMethodResult(
                     methodId: action.payload.methodId,
-                    result: value.toString()))));
-        break;
-      case "windowToFront":
-        windowToFront();
-        break;
-    }
-    var clientStoragePrefix = "clientStorage:";
-    if (action.payload.methodName.startsWith(clientStoragePrefix)) {
-      invokeClientStorage(
-          action.payload.methodId,
-          action.payload.methodName.substring(clientStoragePrefix.length),
-          action.payload.args,
-          action.server);
+                    result: result.toString()))))
+            .onError((error, stackTrace) => action.server.sendPageEvent(
+                eventTarget: "page",
+                eventName: "invoke_method_result",
+                eventData: json.encode(InvokeMethodResult(
+                    methodId: action.payload.methodId,
+                    error: error.toString()))));
+      }
+    } else {
+      // global methods
+      switch (action.payload.methodName) {
+        case "closeInAppWebView":
+          closeInAppWebView();
+          break;
+        case "launchUrl":
+          openWebBrowser(action.payload.args["url"]!,
+              webWindowName: action.payload.args["web_window_name"],
+              webPopupWindow:
+                  action.payload.args["web_popup_window"]?.toLowerCase() ==
+                      "true",
+              windowWidth:
+                  int.tryParse(action.payload.args["window_width"] ?? ""),
+              windowHeight:
+                  int.tryParse(action.payload.args["window_height"] ?? ""));
+          break;
+        case "canLaunchUrl":
+          canLaunchUrl(Uri.parse(action.payload.args["url"]!)).then((value) =>
+              action.server.sendPageEvent(
+                  eventTarget: "page",
+                  eventName: "invoke_method_result",
+                  eventData: json.encode(InvokeMethodResult(
+                      methodId: action.payload.methodId,
+                      result: value.toString()))));
+          break;
+        case "windowToFront":
+          windowToFront();
+          break;
+      }
+      var clientStoragePrefix = "clientStorage:";
+      if (action.payload.methodName.startsWith(clientStoragePrefix)) {
+        invokeClientStorage(
+            action.payload.methodId,
+            action.payload.methodName.substring(clientStoragePrefix.length),
+            action.payload.args,
+            action.server);
+      }
     }
   } else if (action is AddPageControlsAction) {
     //
@@ -435,4 +466,13 @@ List<String> getAllDescendantIds(Map<String, Control> controls, String id) {
     return childIds;
   }
   return [];
+}
+
+void sendRouteChangeEvent(FletServer server, String route) {
+  List<Map<String, String>> props = [
+    {"i": "page", "route": route},
+  ];
+  server.updateControlProps(props: props);
+  server.sendPageEvent(
+      eventTarget: "page", eventName: "route_change", eventData: route);
 }

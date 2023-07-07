@@ -5,6 +5,7 @@ import uuid
 from time import sleep
 from typing import List, Optional
 
+import flet
 from flet import constants
 from flet.reconnecting_websocket import ReconnectingWebSocket
 from flet_core.connection import Connection
@@ -23,12 +24,15 @@ from flet_core.protocol import (
     RegisterHostClientResponsePayload,
 )
 
+logger = logging.getLogger(flet.__name__)
+
 
 class SyncWebSocketConnection(Connection):
     def __init__(
         self,
         server_address: str,
         page_name: str,
+        assets_dir: Optional[str],
         token: Optional[str],
         on_event=None,
         on_session_created=None,
@@ -37,6 +41,7 @@ class SyncWebSocketConnection(Connection):
         self.page_name = page_name
         self.__host_client_id: Optional[str] = None
         self.__token = token
+        self.__assets_dir = assets_dir
         self.__server_address = server_address
         self.__ws = ReconnectingWebSocket(
             self._get_ws_url(server_address),
@@ -63,8 +68,7 @@ class SyncWebSocketConnection(Connection):
         payload = RegisterHostClientRequestPayload(
             hostClientID=self.__host_client_id,
             pageName=self.page_name,
-            isApp=True,
-            update=False,
+            assetsDir=self.__assets_dir,
             authToken=self.__token,
             permissions=None,
         )
@@ -78,7 +82,7 @@ class SyncWebSocketConnection(Connection):
         self.__connected.set()
 
     def __on_ws_message(self, data):
-        logging.debug(f"_on_message: {data}")
+        logger.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
         msg = Message(**msg_dict)
         if msg.id:
@@ -139,7 +143,7 @@ class SyncWebSocketConnection(Connection):
         msg_id = uuid.uuid4().hex
         msg = Message(msg_id, action_name, payload)
         j = json.dumps(msg, cls=CommandEncoder, separators=(",", ":"))
-        logging.debug(f"_send_message_with_result: {j}")
+        logger.debug(f"_send_message_with_result: {j}")
         evt = threading.Event()
         self.__ws_callbacks[msg_id] = (evt, None)
         self.__ws.send(j)
@@ -147,6 +151,6 @@ class SyncWebSocketConnection(Connection):
         return self.__ws_callbacks.pop(msg_id)[1]
 
     def close(self):
-        logging.debug("Closing connection...")
+        logger.debug("Closing connection...")
         if self.__ws is not None:
             self.__ws.close()

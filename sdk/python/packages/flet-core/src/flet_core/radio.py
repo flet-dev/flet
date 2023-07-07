@@ -53,6 +53,7 @@ class Radio(ConstrainedControl):
     def __init__(
         self,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -91,6 +92,7 @@ class Radio(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -129,7 +131,7 @@ class Radio(ConstrainedControl):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("fillColor", self._wrap_attr_dict(self.__fill_color))
+        self._set_attr_json("fillColor", self.__fill_color)
 
     # value
     @property

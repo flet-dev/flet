@@ -4,7 +4,6 @@ from typing import Dict
 
 from flet_core.border import Border, BorderSide
 from flet_core.border_radius import BorderRadius
-from flet_core.buttons import ButtonStyle
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 
@@ -25,10 +24,10 @@ class EmbedJsonEncoder(json.JSONEncoder):
             }
         elif isinstance(obj, BorderRadius):
             return {
-                "bl": obj.bottomLeft,
-                "br": obj.bottomRight,
-                "tl": obj.topLeft,
-                "tr": obj.topRight,
+                "bl": obj.bottom_left,
+                "br": obj.bottom_right,
+                "tl": obj.top_left,
+                "tr": obj.top_right,
             }
         elif isinstance(obj, (Margin, Padding)):
             return {
@@ -37,30 +36,30 @@ class EmbedJsonEncoder(json.JSONEncoder):
                 "r": obj.right,
                 "b": obj.bottom,
             }
-        elif isinstance(obj, ButtonStyle):
-            for k, v in obj.__dict__.items():
-                if v is not None:
-                    if not isinstance(v, Dict):
-                        obj.__dict__[k] = {"": v}
-                    if k != "animation_duration":
-                        obj.__dict__[k] = self._cleanup_dict(obj.__dict__[k])
-            return self._cleanup_dict(obj.__dict__)
-        elif isinstance(obj, object):
-            return self._cleanup_dict(obj.__dict__)
-        return json.JSONEncoder.default(self, obj)
+        else:
+            return self._convert_enums(obj.__dict__)
 
     def encode(self, o):
-        if isinstance(o, Dict):
-            o = self._cleanup_dict(o)
-        return super().encode(o)
+        return super().encode(self._convert_enums(o))
 
-    def _cleanup_dict(self, d):
-        return dict(
-            map(
-                lambda item: (
-                    item[0] if not isinstance(item[0], enum.Enum) else item[0].value,
-                    item[1] if not isinstance(item[1], enum.Enum) else item[1].value,
-                ),
-                filter(lambda item: item[1] is not None, d.items()),
+    def _convert_enums(self, obj):
+        if isinstance(obj, Dict):
+            return dict(
+                map(
+                    lambda item: (
+                        self._convert_enums(
+                            item[0]
+                            if not isinstance(item[0], enum.Enum)
+                            else item[0].value
+                        ),
+                        self._convert_enums(
+                            item[1]
+                            if not isinstance(item[1], enum.Enum)
+                            else item[1].value
+                        ),
+                    ),
+                    filter(lambda item: item[1] is not None, obj.items()),
+                )
             )
-        )
+        else:
+            return obj

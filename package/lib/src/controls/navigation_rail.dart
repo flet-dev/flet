@@ -18,13 +18,15 @@ class NavigationRailControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final dynamic dispatch;
 
   const NavigationRailControl(
       {Key? key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -33,7 +35,6 @@ class NavigationRailControl extends StatefulWidget {
 
 class _NavigationRailControlState extends State<NavigationRailControl> {
   int? _selectedIndex;
-  dynamic _dispatch;
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
@@ -41,7 +42,7 @@ class _NavigationRailControlState extends State<NavigationRailControl> {
     List<Map<String, String>> props = [
       {"i": widget.control.id, "selectedindex": _selectedIndex.toString()}
     ];
-    _dispatch(
+    widget.dispatch(
         UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
     final server = FletAppServices.of(context).server;
     server.updateControlProps(props: props);
@@ -84,12 +85,12 @@ class _NavigationRailControlState extends State<NavigationRailControl> {
                 .where((c) => c.isVisible && c.name == null)
                 .map((c) => c.id)),
         builder: (content, viewModel) {
-          _dispatch = viewModel.dispatch;
-
           return LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
-              debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
+              debugPrint(
+                  "NavigationRail constraints.maxWidth: ${constraints.maxWidth}");
+              debugPrint(
+                  "NavigationRail constraints.maxHeight: ${constraints.maxHeight}");
 
               if (constraints.maxHeight == double.infinity &&
                   widget.control.attrs["height"] == null) {

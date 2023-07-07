@@ -39,7 +39,7 @@ def test_datarow_color_literal_material_state_as_string():
             indent=0,
             name=None,
             values=["r"],
-            attrs={"color": '{"":"yellow"}'},
+            attrs={"color": '"yellow"'},
             commands=[],
         )
     ], "Test failed"

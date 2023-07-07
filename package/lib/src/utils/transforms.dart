@@ -57,6 +57,19 @@ OffsetDetails? parseOffset(Control control, String propName) {
   return offsetFromJSON(j1);
 }
 
+List<Offset>? parseOffsetList(Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return (j1 as List).map((e) {
+    var d = offsetFromJSON(e);
+    return Offset(d.x, d.y);
+  }).toList();
+}
+
 OffsetDetails offsetFromJSON(dynamic json) {
   return OffsetDetails.fromJson(json);
 }
@@ -105,7 +118,12 @@ class OffsetDetails {
 
   OffsetDetails({required this.x, required this.y});
 
-  factory OffsetDetails.fromJson(Map<String, dynamic> json) {
-    return OffsetDetails(x: parseDouble(json["x"]), y: parseDouble(json["y"]));
+  factory OffsetDetails.fromJson(dynamic json) {
+    if (json is List && json.length > 1) {
+      return OffsetDetails(x: parseDouble(json[0]), y: parseDouble(json[1]));
+    } else {
+      return OffsetDetails(
+          x: parseDouble(json["x"]), y: parseDouble(json["y"]));
+    }
   }
 }

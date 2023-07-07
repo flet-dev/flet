@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
 import '../flet_app_services.dart';
-import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
-import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -16,6 +13,7 @@ class BottomSheetControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final dynamic dispatch;
+  final Widget? nextChild;
 
   const BottomSheetControl(
       {Key? key,
@@ -23,7 +21,8 @@ class BottomSheetControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch})
+      required this.dispatch,
+      required this.nextChild})
       : super(key: key);
 
   @override
@@ -50,6 +49,10 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
     var open = widget.control.attrBool("open", false)!;
     //var modal = widget.control.attrBool("modal", true)!;
+    var dismissible = widget.control.attrBool("dismissible", true)!;
+    var enableDrag = widget.control.attrBool("enableDrag", false)!;
+    var showDragHandle = widget.control.attrBool("showDragHandle", false)!;
+    var useSafeArea = widget.control.attrBool("useSafeArea", true)!;
 
     void resetOpenState() {
       List<Map<String, String>> props = [
@@ -74,10 +77,15 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showModalBottomSheet<void>(
-            context: context,
-            builder: (context) {
-              return bottomSheet;
-            }).then((value) {
+                context: context,
+                builder: (context) {
+                  return bottomSheet;
+                },
+                isDismissible: dismissible,
+                enableDrag: enableDrag,
+                showDragHandle: showDragHandle,
+                useSafeArea: useSafeArea)
+            .then((value) {
           debugPrint("BottomSheet dismissed: $_open");
           bool shouldDismiss = _open;
           _open = false;
@@ -93,6 +101,6 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
       });
     }
 
-    return const SizedBox.shrink();
+    return widget.nextChild ?? const SizedBox.shrink();
   }
 }

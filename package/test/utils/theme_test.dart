@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flet/src/utils/theme.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -13,7 +14,7 @@ void main() {
       }''';
 
     final j1 = json.decode(t1);
-    var theme = themeFromJson(j1, Brightness.light);
+    var theme = themeFromJson(j1, Brightness.light, null);
 
     expect(theme.brightness, Brightness.light);
     expect(theme.useMaterial3, false);
@@ -27,7 +28,7 @@ void main() {
       }''';
 
     final j1 = json.decode(t1);
-    var theme = themeFromJson(j1, Brightness.dark);
+    var theme = themeFromJson(j1, Brightness.dark, null);
 
     expect(theme.brightness, Brightness.dark);
     expect(theme.useMaterial3, true);

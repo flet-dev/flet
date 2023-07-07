@@ -32,11 +32,15 @@ class DataColumn(Control):
         self,
         label: Control,
         ref=None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        # specific
         numeric: Optional[bool] = None,
         tooltip: Optional[str] = None,
         on_sort=None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
         self.__on_sort = EventHandler(
             lambda e: DataColumnSortEvent(**json.loads(e.data))
@@ -101,6 +105,10 @@ class DataCell(Control):
         self,
         content: Control,
         ref=None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        # specific
         on_double_tap=None,
         on_long_press=None,
         on_tap=None,
@@ -109,7 +117,7 @@ class DataCell(Control):
         placeholder: Optional[bool] = None,
         show_edit_icon: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
         self.__on_tap_down = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
         self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
@@ -212,12 +220,16 @@ class DataRow(Control):
         self,
         cells: Optional[List[Control]] = None,
         ref=None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        # specific
         color: Union[None, str, Dict[MaterialState, str]] = None,
         selected: Optional[bool] = None,
         on_long_press=None,
         on_select_changed=None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
         self.cells = cells
         self.color = color
@@ -230,7 +242,7 @@ class DataRow(Control):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("color", self._wrap_attr_dict(self.__color))
+        self._set_attr_json("color", self.__color)
 
     def _get_children(self):
         return self.__cells
@@ -289,6 +301,7 @@ class DataTable(ConstrainedControl):
         columns: Optional[List[DataColumn]] = None,
         rows: Optional[List[DataRow]] = None,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -341,6 +354,7 @@ class DataTable(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -401,10 +415,8 @@ class DataTable(ConstrainedControl):
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("horizontalLines", self.__horizontal_lines)
         self._set_attr_json("verticalLines", self.__vertical_lines)
-        self._set_attr_json("dataRowColor", self._wrap_attr_dict(self.__data_row_color))
-        self._set_attr_json(
-            "headingRowColor", self._wrap_attr_dict(self.__heading_row_color)
-        )
+        self._set_attr_json("dataRowColor", self.__data_row_color)
+        self._set_attr_json("headingRowColor", self.__heading_row_color)
         self._set_attr_json("dataTextStyle", self.__data_text_style)
         self._set_attr_json("headingTextStyle", self.__heading_text_style)
 
@@ -630,7 +642,6 @@ class Item(Control):
         self.obj = obj
 
     def _set_attr(self, name, value, dirty=True):
-
         if value is None:
             return
 

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:redux/redux.dart';
 
@@ -6,16 +7,16 @@ import 'control_view_model.dart';
 
 class ControlsViewModel extends Equatable {
   final List<ControlViewModel> controlViews;
-  final dynamic dispatch;
 
-  const ControlsViewModel({required this.controlViews, required this.dispatch});
+  const ControlsViewModel({required this.controlViews});
 
   static ControlsViewModel fromStore(
       Store<AppState> store, Iterable<String> ids) {
     return ControlsViewModel(
-        controlViews:
-            ids.map((id) => ControlViewModel.fromStore(store, id)).toList(),
-        dispatch: store.dispatch);
+        controlViews: ids
+            .map((id) => ControlViewModel.fromStore(store, id))
+            .whereNotNull()
+            .toList());
   }
 
   @override

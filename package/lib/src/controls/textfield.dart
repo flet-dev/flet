@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -40,7 +38,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
   late TextEditingController _controller;
   late final FocusNode _focusNode;
   late final FocusNode _shiftEnterfocusNode;
-  String _lastFocusedTimestamp = "";
+  String? _lastFocusValue;
 
   @override
   void initState() {
@@ -191,18 +189,20 @@ class _TextFieldControlState extends State<TextFieldControl> {
             orElse: () => TextAlign.start,
           );
 
+          bool autocorrect = widget.control.attrBool("autocorrect", true)!;
+          bool enableSuggestions =
+              widget.control.attrBool("enableSuggestions", true)!;
+          bool smartDashesType =
+              widget.control.attrBool("smartDashesType", true)!;
+          bool smartQuotesType =
+              widget.control.attrBool("smartQuotesType", true)!;
+
           FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
           var focusValue = widget.control.attrString("focus");
-          if (focusValue != null) {
-            debugPrint("Focus JSON value: $focusValue");
-            var jv = json.decode(focusValue);
-            var focus = jv["d"] as bool;
-            var ts = jv["ts"] as String;
-            if (focus && ts != _lastFocusedTimestamp) {
-              focusNode.requestFocus();
-              _lastFocusedTimestamp = ts;
-            }
+          if (focusValue != null && focusValue != _lastFocusValue) {
+            _lastFocusValue = focusValue;
+            focusNode.requestFocus();
           }
 
           Widget textField = TextFormField(
@@ -228,6 +228,14 @@ class _TextFieldControlState extends State<TextFieldControl> {
               cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
               cursorRadius: parseRadius(widget.control, "cursorRadius"),
               keyboardType: keyboardType,
+              autocorrect: autocorrect,
+              enableSuggestions: enableSuggestions,
+              smartDashesType: smartDashesType
+                  ? SmartDashesType.enabled
+                  : SmartDashesType.disabled,
+              smartQuotesType: smartQuotesType
+                  ? SmartQuotesType.enabled
+                  : SmartQuotesType.disabled,
               textAlign: textAlign,
               minLines: minLines,
               maxLines: maxLines,

@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import 'create_control.dart';
+import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
 class ColumnControl extends StatelessWidget {
@@ -10,13 +11,15 @@ class ColumnControl extends StatelessWidget {
   final Control control;
   final bool parentDisabled;
   final List<Control> children;
+  final dynamic dispatch;
 
   const ColumnControl(
       {Key? key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -28,12 +31,6 @@ class ColumnControl extends StatelessWidget {
         parseMainAxisAlignment(control, "alignment", MainAxisAlignment.start);
     bool tight = control.attrBool("tight", false)!;
     bool wrap = control.attrBool("wrap", false)!;
-    ScrollMode scrollMode = ScrollMode.values.firstWhere(
-        (m) =>
-            m.name.toLowerCase() ==
-            control.attrString("scroll", "")!.toLowerCase(),
-        orElse: () => ScrollMode.none);
-    final autoScroll = control.attrBool("autoScroll", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     List<Widget> controls = [];
@@ -55,7 +52,7 @@ class ColumnControl extends StatelessWidget {
       controls.add(createControl(control, ctrl.id, disabled));
     }
 
-    Widget widget = wrap
+    Widget child = wrap
         ? Wrap(
             direction: Axis.vertical,
             spacing: spacing,
@@ -74,17 +71,17 @@ class ColumnControl extends StatelessWidget {
             children: controls,
           );
 
-    return constrainedControl(
-        context,
-        scrollMode != ScrollMode.none
-            ? ScrollableControl(
-                scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
-                scrollMode: scrollMode,
-                autoScroll: autoScroll,
-                child: widget,
-              )
-            : widget,
-        parent,
-        control);
+    child = ScrollableControl(
+      control: control,
+      scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
+      dispatch: dispatch,
+      child: child,
+    );
+
+    if (control.attrBool("onScroll", false)!) {
+      child = ScrollNotificationControl(control: control, child: child);
+    }
+
+    return constrainedControl(context, child, parent, control);
   }
 }

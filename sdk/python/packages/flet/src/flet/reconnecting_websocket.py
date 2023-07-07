@@ -2,12 +2,13 @@ import logging
 import random
 import threading
 
+import flet
 import websocket
-
-from flet.utils import is_localhost_url
+from flet_runtime.utils import is_localhost_url
 
 _REMOTE_CONNECT_TIMEOUT_SEC = 5
 _LOCAL_CONNECT_TIMEOUT_SEC = 0.2
+logger = logging.getLogger(flet.__name__)
 
 
 class ReconnectingWebSocket:
@@ -22,12 +23,15 @@ class ReconnectingWebSocket:
         self.exit = threading.Event()
         self.retry = 0
         # disable websocket logging completely
-        # https://github.com/websocket-client/websocket-client/blob/master/websocket/_logging.py#L22-L51
+        # https://github.com/websocket-client/websocket-client/blob/master/websocket/_logger.py#L22-L51
         ws_logger = logging.getLogger("websocket")
-        ws_logger.setLevel(logging.FATAL)
+        if logger.getEffectiveLevel() == logging.DEBUG:
+            ws_logger.setLevel(logging.DEBUG)
+        else:
+            ws_logger.setLevel(logging.FATAL)
 
     def _on_open(self, wsapp) -> None:
-        logging.info(f"Successfully connected to {self._url}")
+        logger.info(f"Successfully connected to {self._url}")
         websocket.setdefaulttimeout(self.default_timeout)
         self.connected.set()
         self.retry = 0
@@ -56,7 +60,7 @@ class ReconnectingWebSocket:
 
     def _connect_loop(self):
         while not self.exit.is_set():
-            logging.info(f"Connecting Flet Server at {self._url}...")
+            logger.info(f"Connecting Flet Server at {self._url}...")
             self.default_timeout = websocket.getdefaulttimeout()
             websocket.setdefaulttimeout(
                 _LOCAL_CONNECT_TIMEOUT_SEC
@@ -64,10 +68,11 @@ class ReconnectingWebSocket:
                 else _REMOTE_CONNECT_TIMEOUT_SEC
             )
             r = self.wsapp.run_forever()
-            logging.debug(f"Exited run_forever()")
+            self.wsapp.sock = None
+            logger.debug("Exited run_forever()")
             websocket.setdefaulttimeout(self.default_timeout)
             self.connected.clear()
-            if r != True:
+            if r is not True:
                 return
 
             if self.retry == 0 and self._on_failed_connect_handler is not None:
@@ -80,6 +85,6 @@ class ReconnectingWebSocket:
             sleep = 0.1
             if not is_localhost_url(self._url):
                 sleep = backoff_in_seconds * 2**self.retry + random.uniform(0, 1)
-            logging.info(f"Reconnecting Flet Server in {sleep} seconds")
+            logger.info(f"Reconnecting Flet Server in {sleep} seconds")
             self.exit.wait(sleep)
             self.retry += 1

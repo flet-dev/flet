@@ -14,18 +14,23 @@ import '../utils/borders.dart';
 import '../utils/collections.dart';
 import '../utils/colors.dart';
 import '../utils/images.dart';
-import '../utils/uri.dart';
-import '../utils/desktop.dart';
 import 'create_control.dart';
 import 'error.dart';
 
 class ImageControl extends StatelessWidget {
   final Control? parent;
+  final List<Control> children;
   final Control control;
+  final bool parentDisabled;
 
   static const String svgTag = "<svg";
 
-  const ImageControl({Key? key, required this.parent, required this.control})
+  const ImageControl(
+      {Key? key,
+      required this.parent,
+      required this.children,
+      required this.control,
+      required this.parentDisabled})
       : super(key: key);
 
   @override
@@ -49,6 +54,9 @@ class ImageControl extends StatelessWidget {
         Theme.of(context), control.attrString("color", "")!);
     String? semanticsLabel = control.attrString("semanticsLabel");
     var gaplessPlayback = control.attrBool("gaplessPlayback");
+    bool disabled = control.isDisabled || parentDisabled;
+    var errorContentCtrls =
+        children.where((c) => c.name == "error_content" && c.isVisible);
 
     return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
@@ -107,15 +115,23 @@ class ImageControl extends StatelessWidget {
                     blendMode: colorBlendMode ?? BlendMode.srcIn,
                     semanticsLabel: semanticsLabel);
               } else {
-                image = Image.file(io.File(assetSrc.path),
-                    width: width,
-                    height: height,
-                    repeat: repeat,
-                    fit: fit,
-                    color: color,
-                    gaplessPlayback: gaplessPlayback ?? false,
-                    colorBlendMode: colorBlendMode,
-                    semanticLabel: semanticsLabel);
+                image = Image.file(
+                  io.File(assetSrc.path),
+                  width: width,
+                  height: height,
+                  repeat: repeat,
+                  fit: fit,
+                  color: color,
+                  gaplessPlayback: gaplessPlayback ?? false,
+                  colorBlendMode: colorBlendMode,
+                  semanticLabel: semanticsLabel,
+                  errorBuilder: errorContentCtrls.isNotEmpty
+                      ? (context, error, stackTrace) {
+                          return createControl(
+                              control, errorContentCtrls.first.id, disabled);
+                        }
+                      : null,
+                );
               }
             } else {
               // URL
@@ -136,7 +152,13 @@ class ImageControl extends StatelessWidget {
                     color: color,
                     gaplessPlayback: gaplessPlayback ?? false,
                     colorBlendMode: colorBlendMode,
-                    semanticLabel: semanticsLabel);
+                    semanticLabel: semanticsLabel,
+                    errorBuilder: errorContentCtrls.isNotEmpty
+                        ? (context, error, stackTrace) {
+                            return createControl(
+                                control, errorContentCtrls.first.id, disabled);
+                          }
+                        : null);
               }
             }
           }

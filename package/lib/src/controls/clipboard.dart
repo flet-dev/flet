@@ -1,19 +1,20 @@
-import 'dart:convert';
-
+import 'package:flet/src/flet_server.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 
 class ClipboardControl extends StatefulWidget {
   final Control? parent;
   final Control control;
+  final Widget? nextChild;
 
   const ClipboardControl(
-      {Key? key, required this.parent, required this.control})
+      {Key? key,
+      required this.parent,
+      required this.control,
+      required this.nextChild})
       : super(key: key);
 
   @override
@@ -21,59 +22,31 @@ class ClipboardControl extends StatefulWidget {
 }
 
 class _ClipboardControlState extends State<ClipboardControl> {
-  String? _method;
+  FletServer? _server;
+
+  @override
+  void deactivate() {
+    _server?.controlInvokeMethods.remove(widget.control.id);
+    super.deactivate();
+  }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Clipboard build: ${widget.control.id}");
 
-    () async {
-      var method = widget.control.attrString("method");
-      if (method != null && method != _method) {
-        _method = method;
-        debugPrint("Clipboard JSON value: $_method");
-
-        List<Map<String, String>> props = [
-          {"i": widget.control.id, "method": ""}
-        ];
-        FletAppServices.of(context).store.dispatch(
-            UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-        FletAppServices.of(context).server.updateControlProps(props: props);
-
-        var mj = json.decode(method);
-        var i = mj["i"] as int;
-        var name = mj["n"] as String;
-        var params = List<String>.from(mj["p"] as List);
-
-        sendResult(Object? result, String? error) {
-          FletAppServices.of(context).server.sendPageEvent(
-              eventTarget: widget.control.id,
-              eventName: "method_result",
-              eventData: json.encode({
-                "i": i,
-                "r": result != null ? json.encode(result) : null,
-                "e": error
-              }));
-        }
-
-        switch (name) {
-          case "set_data":
-            Clipboard.setData(ClipboardData(text: params[0]));
-            break;
-          case "get_data":
-            String? r;
-            String? ex;
-            try {
-              r = (await Clipboard.getData(Clipboard.kTextPlain))?.text;
-            } catch (e) {
-              ex = e.toString();
-            }
-            sendResult(r, ex);
-            break;
-        }
+    _server = FletAppServices.of(context).server;
+    _server?.controlInvokeMethods[widget.control.id] =
+        (methodName, args) async {
+      switch (methodName) {
+        case "set_data":
+          await Clipboard.setData(ClipboardData(text: args["data"]!));
+          return null;
+        case "get_data":
+          return (await Clipboard.getData(Clipboard.kTextPlain))?.text;
       }
-    }();
+      return null;
+    };
 
-    return const SizedBox.shrink();
+    return widget.nextChild ?? const SizedBox.shrink();
   }
 }

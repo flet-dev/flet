@@ -4,7 +4,7 @@ import '../../flet.dart';
 import '../models/control.dart';
 import 'create_control.dart';
 
-class FletAppControl extends StatelessWidget {
+class FletAppControl extends StatefulWidget {
   final Control? parent;
   final Control control;
 
@@ -12,18 +12,31 @@ class FletAppControl extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    debugPrint("FletApp build: ${control.id}");
+  State<FletAppControl> createState() => _FletAppControlState();
+}
 
-    var url = control.attrString("url", "")!;
+class _FletAppControlState extends State<FletAppControl> {
+  final _errorsHandler = FletAppErrorsHandler();
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("FletApp build: ${widget.control.id}");
+
+    var url = widget.control.attrString("url", "")!;
+    var reconnectIntervalMs = widget.control.attrInt("reconnectIntervalMs");
+    var reconnectTimeoutMs = widget.control.attrInt("reconnectTimeoutMs");
 
     return constrainedControl(
         context,
         FletApp(
+          controlId: widget.control.id,
+          reconnectIntervalMs: reconnectIntervalMs,
+          reconnectTimeoutMs: reconnectTimeoutMs,
           pageUrl: url,
           assetsDir: "",
+          errorsHandler: _errorsHandler,
         ),
-        parent,
-        control);
+        widget.parent,
+        widget.control);
   }
 }

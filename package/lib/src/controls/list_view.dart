@@ -5,73 +5,81 @@ import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
 import '../widgets/adjustable_scroll_controller.dart';
 import 'create_control.dart';
+import 'scroll_notification_control.dart';
+import 'scrollable_control.dart';
 
-class ListViewControl extends StatelessWidget {
+class ListViewControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final List<Control> children;
+  final dynamic dispatch;
 
-  ListViewControl(
+  const ListViewControl(
       {Key? key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
-  final ScrollController _controller =
-      isWindowsDesktop() ? AdjustableScrollController() : ScrollController();
+  @override
+  State<ListViewControl> createState() => _ListViewControlState();
+}
 
-  void _scrollDown() {
-    _controller.animateTo(
-      _controller.position.maxScrollExtent,
-      duration: const Duration(seconds: 1),
-      curve: Curves.fastOutSlowIn,
-    );
+class _ListViewControlState extends State<ListViewControl> {
+  late final ScrollController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        isWindowsDesktop() ? AdjustableScrollController() : ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("ListViewControl build: ${control.id}");
+    debugPrint("ListViewControl build: ${widget.control.id}");
 
-    bool disabled = control.isDisabled || parentDisabled;
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    final horizontal = control.attrBool("horizontal", false)!;
-    final autoScroll = control.attrBool("autoScroll", false)!;
-    final spacing = control.attrDouble("spacing", 0)!;
-    final dividerThickness = control.attrDouble("dividerThickness", 0)!;
-    final itemExtent = control.attrDouble("itemExtent");
-    final firstItemPrototype = control.attrBool("firstItemPrototype", false)!;
-    final padding = parseEdgeInsets(control, "padding");
+    final horizontal = widget.control.attrBool("horizontal", false)!;
+    final spacing = widget.control.attrDouble("spacing", 0)!;
+    final dividerThickness = widget.control.attrDouble("dividerThickness", 0)!;
+    final itemExtent = widget.control.attrDouble("itemExtent");
+    final firstItemPrototype =
+        widget.control.attrBool("firstItemPrototype", false)!;
+    final padding = parseEdgeInsets(widget.control, "padding");
 
-    List<Control> visibleControls = children.where((c) => c.isVisible).toList();
+    List<Control> visibleControls =
+        widget.children.where((c) => c.isVisible).toList();
 
-    if (autoScroll) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollDown();
-      });
-    }
-
-    var listView = LayoutBuilder(
+    Widget listView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
-        debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
+        debugPrint("ListView constraints.maxWidth: ${constraints.maxWidth}");
+        debugPrint("ListView constraints.maxHeight: ${constraints.maxHeight}");
 
         var shrinkWrap =
             (!horizontal && constraints.maxHeight == double.infinity) ||
                 (horizontal && constraints.maxWidth == double.infinity);
 
-        return spacing > 0
+        Widget child = spacing > 0
             ? ListView.separated(
                 controller: _controller,
                 scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
-                itemCount: children.length,
+                itemCount: widget.children.length,
                 itemBuilder: (context, index) {
                   return createControl(
-                      control, visibleControls[index].id, disabled);
+                      widget.control, visibleControls[index].id, disabled);
                 },
                 separatorBuilder: (context, index) {
                   return horizontal
@@ -90,19 +98,35 @@ class ListViewControl extends StatelessWidget {
                 scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
-                itemCount: children.length,
+                itemCount: widget.children.length,
                 itemExtent: itemExtent,
                 itemBuilder: (context, index) {
                   return createControl(
-                      control, visibleControls[index].id, disabled);
+                      widget.control, visibleControls[index].id, disabled);
                 },
-                prototypeItem: firstItemPrototype && children.isNotEmpty
-                    ? createControl(control, visibleControls[0].id, disabled)
+                prototypeItem: firstItemPrototype && widget.children.isNotEmpty
+                    ? createControl(
+                        widget.control, visibleControls[0].id, disabled)
                     : null,
               );
+
+        child = ScrollableControl(
+          control: widget.control,
+          scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+          dispatch: widget.dispatch,
+          scrollController: _controller,
+          child: child,
+        );
+
+        if (widget.control.attrBool("onScroll", false)!) {
+          child =
+              ScrollNotificationControl(control: widget.control, child: child);
+        }
+
+        return child;
       },
     );
 
-    return constrainedControl(context, listView, parent, control);
+    return constrainedControl(context, listView, widget.parent, widget.control);
   }
 }

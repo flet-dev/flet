@@ -40,6 +40,7 @@ class Slider(ConstrainedControl):
     def __init__(
         self,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -72,6 +73,7 @@ class Slider(ConstrainedControl):
         min: OptionalNumber = None,
         max: OptionalNumber = None,
         divisions: Optional[int] = None,
+        round: Optional[int] = None,
         autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
@@ -85,6 +87,7 @@ class Slider(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -115,6 +118,7 @@ class Slider(ConstrainedControl):
         self.min = min
         self.max = max
         self.divisions = divisions
+        self.round = round
         self.autofocus = autofocus
         self.active_color = active_color
         self.inactive_color = inactive_color
@@ -164,7 +168,7 @@ class Slider(ConstrainedControl):
     def max(self, value: OptionalNumber):
         self._set_attr("max", value)
 
-    # step
+    # divisions
     @property
     def divisions(self) -> Optional[int]:
         return self._get_attr("divisions")
@@ -172,6 +176,15 @@ class Slider(ConstrainedControl):
     @divisions.setter
     def divisions(self, value: Optional[int]):
         self._set_attr("divisions", value)
+
+    # round
+    @property
+    def round(self) -> Optional[int]:
+        return self._get_attr("round")
+
+    @round.setter
+    def round(self, value: Optional[int]):
+        self._set_attr("round", value)
 
     # autofocus
     @property

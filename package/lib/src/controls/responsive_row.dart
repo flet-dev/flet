@@ -38,8 +38,10 @@ class ResponsiveRowControl extends StatelessWidget {
         builder: (context, view) {
           var w = LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-            // debugPrint("constraints.maxWidth: ${constraints.maxWidth}");
-            // debugPrint("constraints.maxHeight: ${constraints.maxHeight}");
+            debugPrint(
+                "ResponsiveRow constraints.maxWidth: ${constraints.maxWidth}");
+            debugPrint(
+                "ResponsiveRow constraints.maxHeight: ${constraints.maxHeight}");
 
             var bpSpacing =
                 getBreakpointNumber(spacing, view.size.width, view.breakpoints);
@@ -90,7 +92,7 @@ class ResponsiveRowControl extends StatelessWidget {
                       alignment: parseWrapAlignment(
                           control, "alignment", WrapAlignment.start),
                       crossAxisAlignment: parseWrapCrossAlignment(control,
-                          "verticalAlignment", WrapCrossAlignment.center),
+                          "verticalAlignment", WrapCrossAlignment.start),
                       children: controls,
                     )
                   : Row(
@@ -98,7 +100,7 @@ class ResponsiveRowControl extends StatelessWidget {
                           control, "alignment", MainAxisAlignment.start),
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: parseCrossAxisAlignment(control,
-                          "verticalAlignment", CrossAxisAlignment.center),
+                          "verticalAlignment", CrossAxisAlignment.start),
                       children: controls,
                     );
             } catch (e) {

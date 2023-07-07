@@ -1,5 +1,161 @@
 # Flet changelog
 
+## 0.8.1
+
+* Fix `auth` and `PubSub` imports in `page.py` and `connection.py`.
+* Fix broken `flet pack` command.
+
+## 0.8.0
+
+* 📱🎉 **iOS support** - build standalone iOS apps in Python:
+  * [Flet](https://apps.apple.com/app/flet/id1624979699) app in App Store to test Flet projects on iOS devices.
+  * New `--ios` switch for `flet run` command to test Flet app on your iOS device.
+  * [Testing on iOS guide](https://flet.dev/docs/guides/python/testing-on-ios).
+  * [serious_python](https://pub.dev/packages/serious_python) Flutter package to add Python support to a Flutter app.
+  * [An example of Flutter app](https://github.com/flet-dev/serious-python/tree/main/example/flet_example) combining [serious_python](https://pub.dev/packages/serious_python) package, [flet](https://pub.dev/packages/flet) package and your Python program into a ready iOS app.
+* Part of `flet` package logic moved to a new `flet-runtime` package. `flet` package depends on `flet-runtime`. The new `flet-embed` package introduced depending on `flet-runtime` - to run Python apps embedded into Flutter apps.
+* Less annoying re-connecting logic and loading page for mobile Flet apps.
+* Enum parameters for `ft.app()`s `view: ft.AppView` and `web_renderer: ft.WebRenderer` parameters (string values are still supported for backward compatibility), for example:
+
+```python
+ft.app(main, view=ft.AppView.WEB_BROWSER, web_renderer=ft.WebRenderer.HTML)
+```
+
+* Flet packages `version` is centralized in `flet_core.version`.
+* 💥 **Breaking change:** OAuth providers must be imported from `flet.auth.providers` module, for example:
+
+```python
+from flet.auth.providers import GitHubOAuthProvider
+```
+
+* Added `Image.error_content` property - fallback content if image cannot be loaded.
+* New `BottomSheet` properties: `dismissible`, `enable_drag`, `show_drag_handle`, `use_safe_area` ([#1468](https://github.com/flet-dev/flet/issues/1468)).
+* `ListTile.toggle_inputs` property - clicking on a list tile should toggle the state of `Radio`, `Checkbox` or `Switch` inside the tile.
+* New `page` methods for showing/closing overlays: `page.open_banner()`, `page.close_banner()`, `page.open_dialog()`, `page.close_dialog()`, `page.open_bottom_sheet()`, `page.close_bottom_sheet()`.
+* New `FletApp` properties: `reconnect_interval_ms`, `reconnect_timeout_ms`, `on_error`.
+* New `TextField` properties: `autocorrect`, `enable_suggestions`, `smart_dashes_type`, `smart_quotes_type`.
+* New `SafeArea` control.
+* New `SnackBar` properties: `behavior`, `dismiss_direction`, `show_close_icon`, `close_icon_color`, `margin`, `padding`, `width`, `elevation`.
+* New `View.fullscreen_dialog` property.
+* `ft.app()` assumes `assets_dir="assets"` by default.
+* New `PaintSweepGradient.rotation` property.
+
+## 0.7.4
+
+* Added `use_color_emoji` to `ft.app()` in `flet-pyodide` ([#1416](https://github.com/flet-dev/flet/issues/1416)).
+
+## 0.7.3
+
+* Fix missing `FLET_APP_WEB` declaration in `flet-pyodide`.
+
+## 0.7.2
+
+* Fix: Route change by url is not working if `page.theme` specified ([#1406](https://github.com/flet-dev/flet/issues/1406)).
+* Rollback flutter_svg to 1.1.6 to fix regressions in Plotly charts ([#1402](https://github.com/flet-dev/flet/issues/1402)).
+* Force web server in desktop mode with `ft.app(view=ft.FLET_APP_WEB)`.
+
+## 0.7.1
+
+* `ButtonStyle` with `shape` or `side` params failed in flet 0.7.0 ([#1390](https://github.com/flet-dev/flet/issues/1390)).
+
+## 0.7.0
+
+* Programmatically [control scroll position](https://flet.dev/blog/scrolling-controls-and-theming#controlling-scroll-position) and subscribe to [scrolling notifications](https://flet.dev/blog/scrolling-controls-and-theming#receiving-scroll-notifications) in Page, View, Column, Row, ListView and GridView controls.
+* [Material color scheme customization](https://flet.dev/blog/scrolling-controls-and-theming#color-scheme-customization)
+* [Text theming](https://flet.dev/blog/scrolling-controls-and-theming#text-theming)
+* [Scrollbars theming](https://flet.dev/blog/scrolling-controls-and-theming#scrollbar-theme)
+* [Tabs theming](https://flet.dev/blog/scrolling-controls-and-theming#styling-tabs-control)
+* [Nested page themes](https://flet.dev/blog/scrolling-controls-and-theming#nested-page-themes)
+* Flutter upgraded to 3.10 with Dart 3.0 required. CanvasKit WASM size reduced from 2.8 to 1.5 MB.
+* Bumped Flutter dependencies: window_manager 0.3.0 → 0.3.2, flutter_markdown 0.6.13 → 0.6.14, markdown 6.0.1 → 7.0.0, file_picker 5.2.5 → 5.3.0, flutter_svg 1.1.6 → 2.0.5, shake 2.1.0 → 2.2.0, fl_chart 0.61.0 → 0.62.0.
+* Color emoji support in web apps with "canvaskit" renderer ([docs](https://flet.dev/docs/guides/python/publishing-static-website#color-emojis)).
+* Add CLI option -m to run as module ([#1389](https://github.com/flet-dev/flet/issues/1389)).
+* Selectable rich text control ([#1386](https://github.com/flet-dev/flet/issues/1386)).
+
+## 0.6.2
+
+* Fix `SnackBar` (and other controls) exit animation.
+* Fix `Text` default style color.
+
+## 0.6.1
+
+* Fix regression in `AlertDialog` and `BottomSheet` controls ([#1344](https://github.com/flet-dev/flet/issues/1344))
+
+## 0.6.0
+
+* `Canvas` control ([docs](https://flet.dev/docs/controls/canvas)).
+* Rich text support in [`Text` control](https://flet.dev/docs/controls/text#spans).
+* Added `url` and `url_target` to controls with `on_click` event ([#1337](https://github.com/flet-dev/flet/pull/1337))
+* Auto-follow links in `Markdown` ([docs](https://flet.dev/docs/controls/markdown#auto_follow_links)).
+* Capturing web client info: IP and user agent ([#1302](https://github.com/flet-dev/flet/pull/1302))
+* Fix: Make non-visual controls working with routing ([#1333](https://github.com/flet-dev/flet/pull/1333))
+* Fix: Update `page.route` if typed in the URL ([#1289](https://github.com/flet-dev/flet/pull/1289))
+
+## 0.5.2
+
+* Fix: Dispose controls only on session closed event
+* Fix "There is no current event loop" error in auth module
+
+## 0.5.1
+
+* Fix `page` reference in `will_unmount` method.
+
+## 0.5.0
+
+* Fixed: Memory usage continues to increase. ([#1223](https://github.com/flet-dev/flet/issues/1223))
+* Fixed: possible memory leak ([#969](https://github.com/flet-dev/flet/issues/969))
+* Color values can contain opacity, e.g. `color=red,0.5` or `ft.colors.with_opacity(0.5, "red")`
+* 1st class Flet charts based on fl_chart package ([#1255](https://github.com/flet-dev/flet/issues/1255))
+* Pyodide 0.23
+* Use named loggers in Python ([#1157](https://github.com/flet-dev/flet/issues/1157))
+* Fix Contribution guide as PDM is no longer used ([#1124](https://github.com/flet-dev/flet/issues/1124))
+* Added focus() method, focus and blur events to Elevated, Outlined, Text and Icon buttons ([#1079](https://github.com/flet-dev/flet/issues/1079))
+* New Card props: color, shadow_color, surface_tint_color ([#1078](https://github.com/flet-dev/flet/issues/1078))
+* Added WindowDragArea.maximizable property ([#1077](https://github.com/flet-dev/flet/issues/1077))
+* Added Container.blur and Container.shadow properties ([#1076](https://github.com/flet-dev/flet/issues/1076))
+* Add template for Q&A discussions ([#1070](https://github.com/flet-dev/flet/issues/1070))
+
+## 0.4.2
+
+* Fix reading versioninfo for PyInstaller 5.8.0
+* Fix `Dropdown.disable` property
+
+## 0.4.1
+
+* Slider.round to round slider value on a label
+* Fix page.client_storage.get_keys() timeout 
+* Fix encode() import in PyInstaller integration
+* Fix "ConnectionAbortedError" error on Windows
+* Consistent licensing across the code - Apache 2.0
+* Fix assets loading in a sub-directory app ([#1019](https://github.com/flet-dev/flet/issues/1019))
+* Add --distpath option to flet pack and flet publish commands ([#1018](https://github.com/flet-dev/flet/issues/1018))
+* Updating manifest.json when using flet publish ([#1014](https://github.com/flet-dev/flet/issues/1014))
+* Fix "Address already in use" error on flet run hot reload ([#1007](https://github.com/flet-dev/flet/issues/1007))
+* Force Python sub-process to run with UTF-8 encoding ([#1002](https://github.com/flet-dev/flet/issues/1002))
+* Fix: View with content crashes in some routing scenarios ([#1001](https://github.com/flet-dev/flet/issues/1001))
+
+## 0.4.0
+
+* Changed re-connection logic to make hot reload work ([#971](https://github.com/flet-dev/flet/issues/971))
+* Pyodide publishing fixes and improvements ([#953](https://github.com/flet-dev/flet/issues/953))
+* feat: Add PaddingValue to __init__.py ([#936](https://github.com/flet-dev/flet/issues/936))
+* Standalone Flet web apps with Pyodide ([#913](https://github.com/flet-dev/flet/issues/913))
+* modified `tooltip` attribute from `prefere*` to `prefer*` ([#909](https://github.com/flet-dev/flet/issues/909))
+* Fix unicode encoding in `FletTcpSocketServerProtocol`
+* Fix relative assets path in desktop app
+* PDM changed to Poetry
+* Add `--hidden-import` option to `flet pack` command
+* Add transparancy to matplotlib ([#889](https://github.com/flet-dev/flet/issues/889))
+* Replace Fletd server for desktop apps with a light-weight Python shim ([#838](https://github.com/flet-dev/flet/issues/838))
+* add default values in Border dataclass ([#883](https://github.com/flet-dev/flet/issues/883))
+* Fix for issue in control.py when checking add command ([#835](https://github.com/flet-dev/flet/issues/835))
+* Fix async pubsub ([#868](https://github.com/flet-dev/flet/issues/868))
+* add: Border, BorderSide, Scale Offset, Rotate to `__init__.py` ([#866](https://github.com/flet-dev/flet/issues/866))
+* Loading images from a local file ([#817](https://github.com/flet-dev/flet/issues/817))
+* Asyncio support ([#799](https://github.com/flet-dev/flet/issues/799))
+* Set filled=True when setting bgcolor in TextField ([#807](https://github.com/flet-dev/flet/issues/807))
+* Page transition without animation ([#809](https://github.com/flet-dev/flet/issues/809))
+
 ## 0.3.2
 
 * Fix `flet pack` command on Windows and macOS ([#795](https://github.com/flet-dev/flet/issues/795))

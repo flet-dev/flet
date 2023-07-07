@@ -61,6 +61,8 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
         widget.children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
+    var server = FletAppServices.of(context).server;
+
     void sendEvent(String eventName, dynamic eventData) {
       var d = "";
       if (eventData is String) {
@@ -70,7 +72,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       }
 
       debugPrint("GestureDetector ${widget.control.id} $eventName");
-      FletAppServices.of(context).server.sendPageEvent(
+      server.sendPageEvent(
           eventTarget: widget.control.id, eventName: eventName, eventData: d);
     }
 

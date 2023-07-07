@@ -5,9 +5,10 @@ import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/launch_url.dart';
 import 'create_control.dart';
 
-class OutlinedButtonControl extends StatelessWidget {
+class OutlinedButtonControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -22,34 +23,70 @@ class OutlinedButtonControl extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<OutlinedButtonControl> createState() => _OutlinedButtonControlState();
+}
+
+class _OutlinedButtonControlState extends State<OutlinedButtonControl> {
+  late final FocusNode _focusNode;
+  String? _lastFocusValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    FletAppServices.of(context).server.sendPageEvent(
+        eventTarget: widget.control.id,
+        eventName: _focusNode.hasFocus ? "focus" : "blur",
+        eventData: "");
+  }
+
+  @override
   Widget build(BuildContext context) {
-    debugPrint("Button build: ${control.id}");
+    debugPrint("Button build: ${widget.control.id}");
 
     final server = FletAppServices.of(context).server;
 
-    String text = control.attrString("text", "")!;
-    IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
+    String text = widget.control.attrString("text", "")!;
+    IconData? icon = getMaterialIcon(widget.control.attrString("icon", "")!);
     Color? iconColor = HexColor.fromString(
-        Theme.of(context), control.attrString("iconColor", "")!);
-    var contentCtrls = children.where((c) => c.name == "content");
-    bool onHover = control.attrBool("onHover", false)!;
-    bool onLongPress = control.attrBool("onLongPress", false)!;
-    bool autofocus = control.attrBool("autofocus", false)!;
-    bool disabled = control.isDisabled || parentDisabled;
+        Theme.of(context), widget.control.attrString("iconColor", "")!);
+    var contentCtrls = widget.children.where((c) => c.name == "content");
+    String url = widget.control.attrString("url", "")!;
+    String? urlTarget = widget.control.attrString("urlTarget");
+    bool onHover = widget.control.attrBool("onHover", false)!;
+    bool onLongPress = widget.control.attrBool("onLongPress", false)!;
+    bool autofocus = widget.control.attrBool("autofocus", false)!;
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     Function()? onPressed = !disabled
         ? () {
-            debugPrint("Button ${control.id} clicked!");
+            debugPrint("Button ${widget.control.id} clicked!");
+            if (url != "") {
+              openWebBrowser(url, webWindowName: urlTarget);
+            }
             server.sendPageEvent(
-                eventTarget: control.id, eventName: "click", eventData: "");
+                eventTarget: widget.control.id,
+                eventName: "click",
+                eventData: "");
           }
         : null;
 
     Function()? onLongPressHandler = onLongPress && !disabled
         ? () {
-            debugPrint("Button ${control.id} long pressed!");
+            debugPrint("Button ${widget.control.id} long pressed!");
             server.sendPageEvent(
-                eventTarget: control.id,
+                eventTarget: widget.control.id,
                 eventName: "long_press",
                 eventData: "");
           }
@@ -57,9 +94,9 @@ class OutlinedButtonControl extends StatelessWidget {
 
     Function(bool)? onHoverHandler = onHover && !disabled
         ? (state) {
-            debugPrint("Button ${control.id} hovered!");
+            debugPrint("Button ${widget.control.id} hovered!");
             server.sendPageEvent(
-                eventTarget: control.id,
+                eventTarget: widget.control.id,
                 eventName: "hover",
                 eventData: state.toString());
           }
@@ -69,7 +106,7 @@ class OutlinedButtonControl extends StatelessWidget {
 
     var theme = Theme.of(context);
 
-    var style = parseButtonStyle(Theme.of(context), control, "style",
+    var style = parseButtonStyle(Theme.of(context), widget.control, "style",
         defaultForegroundColor: theme.colorScheme.primary,
         defaultBackgroundColor: Colors.transparent,
         defaultOverlayColor: Colors.transparent,
@@ -85,6 +122,7 @@ class OutlinedButtonControl extends StatelessWidget {
     if (icon != null) {
       button = OutlinedButton.icon(
           autofocus: autofocus,
+          focusNode: _focusNode,
           onPressed: onPressed,
           onLongPress: onLongPressHandler,
           style: style,
@@ -96,13 +134,17 @@ class OutlinedButtonControl extends StatelessWidget {
     } else if (contentCtrls.isNotEmpty) {
       button = OutlinedButton(
           autofocus: autofocus,
+          focusNode: _focusNode,
           onPressed: onPressed,
           onLongPress: onLongPressHandler,
           onHover: onHoverHandler,
           style: style,
-          child: createControl(control, contentCtrls.first.id, disabled));
+          child:
+              createControl(widget.control, contentCtrls.first.id, disabled));
     } else {
       button = OutlinedButton(
+          autofocus: autofocus,
+          focusNode: _focusNode,
           style: style,
           onPressed: onPressed,
           onLongPress: onLongPressHandler,
@@ -110,6 +152,12 @@ class OutlinedButtonControl extends StatelessWidget {
           child: Text(text));
     }
 
-    return constrainedControl(context, button, parent, control);
+    var focusValue = widget.control.attrString("focus");
+    if (focusValue != null && focusValue != _lastFocusValue) {
+      _lastFocusValue = focusValue;
+      _focusNode.requestFocus();
+    }
+
+    return constrainedControl(context, button, widget.parent, widget.control);
   }
 }

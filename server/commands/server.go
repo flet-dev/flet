@@ -2,32 +2,34 @@ package commands
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"os"
-	"os/exec"
 	"runtime"
-	"strconv"
 	"sync"
 	"time"
 
 	"github.com/flet-dev/flet/server/cache"
 	"github.com/flet-dev/flet/server/config"
 	"github.com/flet-dev/flet/server/server"
-	"github.com/flet-dev/flet/server/utils"
+	"github.com/flet-dev/flet/server/stats"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
+const (
+	DefaultShutdownTimeoutSeconds = 60
+)
+
 var (
-	version  = "unknown"
-	LogLevel string
+	version                = "unknown"
+	LogLevel               string
+	shutdownTimeoutSeconds int
 )
 
 func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
 
 	var serverPort int
-	var background bool
+	var contentDir string
 	var attachedProcess bool
 
 	var cmd = &cobra.Command{
@@ -47,13 +49,10 @@ func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
 				}
 			}
 
-			if background {
-				startServerService(serverPort, attachedProcess)
-				return
-			}
-
 			if attachedProcess {
 				go monitorParentProcess(cancel)
+			} else if shutdownTimeoutSeconds > 0 {
+				go monitorConnectedClients(cancel)
 			}
 
 			// init cache
@@ -61,7 +60,7 @@ func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
 
 			waitGroup := sync.WaitGroup{}
 			waitGroup.Add(1)
-			go server.Start(cmd.Context(), &waitGroup, serverPort)
+			go server.Start(cmd.Context(), &waitGroup, serverPort, contentDir)
 			waitGroup.Wait()
 		},
 	}
@@ -71,10 +70,23 @@ func NewServerCommand(cancel context.CancelFunc) *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&LogLevel, "log-level", "l", "info", "verbosity level for logs")
 
 	cmd.Flags().IntVarP(&serverPort, "port", "p", config.ServerPort(), "port on which the server will listen")
-	//cmd.Flags().BoolVarP(&background, "background", "b", false, "run server in background")
+	cmd.Flags().IntVarP(&shutdownTimeoutSeconds, "shutdown", "", DefaultShutdownTimeoutSeconds, "shutdown server in N seconds after the last client disconnected")
+	cmd.Flags().StringVarP(&contentDir, "content-dir", "", "", "path to web content directory")
+	cmd.MarkFlagRequired("content-dir")
 	cmd.Flags().BoolVarP(&attachedProcess, "attached", "a", false, "attach background server process to the parent one")
 
 	return cmd
+}
+
+func monitorConnectedClients(cancel context.CancelFunc) {
+	defer cancel()
+	for {
+		if stats.LastClientDisconnected(shutdownTimeoutSeconds) {
+			log.Debugln("No more clients connected. Shutting down server...")
+			return
+		}
+		time.Sleep(1 * time.Second)
+	}
 }
 
 func monitorParentProcess(cancel context.CancelFunc) {
@@ -114,32 +126,6 @@ func monitorParentProcessWindows(cancel context.CancelFunc) {
 	log.Println("Parent process exited with code", ps.ExitCode())
 
 	cancel()
-}
-
-func startServerService(serverPort int, attached bool) {
-	log.Debugln("Starting Flet Server")
-
-	// run server
-	execPath, _ := os.Executable()
-
-	var cmd *exec.Cmd
-	args := []string{"server", "--port", strconv.Itoa(serverPort)}
-	if attached {
-		cmd = exec.Command(execPath, args...)
-	} else {
-		cmd = utils.GetDetachedCmd(execPath, args...)
-	}
-	cmd.Env = os.Environ()
-	cmd.Env = append(cmd.Env, fmt.Sprintf("%s=true", config.LogToFileFlag))
-
-	err := cmd.Start()
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	log.Debugln("Server process started with PID:", cmd.Process.Pid)
-	fmt.Println(serverPort)
 }
 
 func getFreePort() (int, error) {

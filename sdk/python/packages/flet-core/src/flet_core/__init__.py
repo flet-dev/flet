@@ -4,13 +4,14 @@ from flet_core import (
     audio,
     border,
     border_radius,
+    canvas,
     colors,
     dropdown,
     icons,
     margin,
     padding,
+    painting,
     transform,
-    utils,
 )
 from flet_core.alert_dialog import AlertDialog
 from flet_core.alignment import Alignment
@@ -19,6 +20,7 @@ from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
 from flet_core.banner import Banner
+from flet_core.blur import Blur, BlurTileMode
 from flet_core.border import Border, BorderSide
 from flet_core.border_radius import BorderRadius
 from flet_core.bottom_sheet import BottomSheet
@@ -32,6 +34,25 @@ from flet_core.buttons import (
     StadiumBorder,
 )
 from flet_core.card import Card
+from flet_core.charts.bar_chart import BarChart, BarChartEvent
+from flet_core.charts.bar_chart_group import BarChartGroup
+from flet_core.charts.bar_chart_rod import BarChartRod
+from flet_core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
+from flet_core.charts.chart_axis import ChartAxis
+from flet_core.charts.chart_axis_label import ChartAxisLabel
+from flet_core.charts.chart_grid_lines import ChartGridLines
+from flet_core.charts.chart_point_line import ChartPointLine
+from flet_core.charts.chart_point_shape import (
+    ChartCirclePoint,
+    ChartCrossPoint,
+    ChartPointShape,
+    ChartSquarePoint,
+)
+from flet_core.charts.line_chart import LineChart, LineChartEvent, LineChartEventSpot
+from flet_core.charts.line_chart_data import LineChartData
+from flet_core.charts.line_chart_data_point import LineChartDataPoint
+from flet_core.charts.pie_chart import PieChart, PieChartEvent
+from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.checkbox import Checkbox
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
@@ -112,6 +133,15 @@ from flet_core.page import (
     RouteChangeEvent,
     ViewPopEvent,
 )
+from flet_core.painting import (
+    Paint,
+    PaintingStyle,
+    PaintLinearGradient,
+    PaintRadialGradient,
+    PaintSweepGradient,
+    StrokeCap,
+    StrokeJoin,
+)
 from flet_core.popup_menu_button import PopupMenuButton, PopupMenuItem
 from flet_core.progress_bar import ProgressBar
 from flet_core.progress_ring import ProgressRing
@@ -121,22 +151,30 @@ from flet_core.radio_group import RadioGroup
 from flet_core.ref import Ref
 from flet_core.responsive_row import ResponsiveRow
 from flet_core.row import Row
+from flet_core.safe_area import SafeArea
+from flet_core.scrollable_control import OnScrollEvent
 from flet_core.semantics import Semantics
 from flet_core.shader_mask import ShaderMask
+from flet_core.shadow import BoxShadow, ShadowBlurStyle
 from flet_core.shake_detector import ShakeDetector
 from flet_core.slider import Slider
-from flet_core.snack_bar import SnackBar
+from flet_core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
 from flet_core.stack import Stack
 from flet_core.switch import Switch
 from flet_core.tabs import Tab, Tabs
 from flet_core.template_route import TemplateRoute
 from flet_core.text import Text, TextOverflow, TextThemeStyle
 from flet_core.text_button import TextButton
-from flet_core.text_style import TextStyle
+from flet_core.text_span import TextSpan
+from flet_core.text_style import TextDecoration, TextDecorationStyle, TextStyle
 from flet_core.textfield import KeyboardType, TextCapitalization, TextField
 from flet_core.theme import (
+    ColorScheme,
     PageTransitionsTheme,
     PageTransitionTheme,
+    ScrollbarTheme,
+    TabsTheme,
+    TextTheme,
     Theme,
     ThemeVisualDensity,
 )
@@ -144,6 +182,11 @@ from flet_core.tooltip import Tooltip
 from flet_core.transform import Offset, Rotate, Scale
 from flet_core.transparent_pointer import TransparentPointer
 from flet_core.types import (
+    FLET_APP,
+    FLET_APP_HIDDEN,
+    FLET_APP_WEB,
+    WEB_BROWSER,
+    AppView,
     BlendMode,
     BoxShape,
     ClipBehavior,
@@ -154,10 +197,12 @@ from flet_core.types import (
     LabelPosition,
     MainAxisAlignment,
     MaterialState,
+    PaddingValue,
     PageDesignLanguage,
     ScrollMode,
     TextAlign,
     ThemeMode,
+    WebRenderer,
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider

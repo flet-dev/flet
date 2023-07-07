@@ -1,8 +1,8 @@
+import time
 from typing import Any, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
-from flet_core.focus import FocusData
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
@@ -53,6 +53,7 @@ class Dropdown(FormFieldControl):
     def __init__(
         self,
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
@@ -124,6 +125,7 @@ class Dropdown(FormFieldControl):
         FormFieldControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             expand=expand,
@@ -205,11 +207,11 @@ class Dropdown(FormFieldControl):
         return result
 
     def focus(self):
-        self._set_attr_json("focus", FocusData())
+        self._set_attr_json("focus", str(time.time()))
         self.update()
 
     async def focus_async(self):
-        self._set_attr_json("focus", FocusData())
+        self._set_attr_json("focus", str(time.time()))
         await self.update_async()
 
     # options

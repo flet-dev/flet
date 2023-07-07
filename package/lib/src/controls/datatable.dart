@@ -37,7 +37,7 @@ class _DataTableControlState extends State<DataTableControl> {
   Widget build(BuildContext context) {
     debugPrint("DataTableControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool tableDisabled = widget.control.isDisabled || widget.parentDisabled;
 
     var server = FletAppServices.of(context).server;
 
@@ -71,11 +71,10 @@ class _DataTableControlState extends State<DataTableControl> {
           }
 
           TableBorder? tableBorder;
-          if (horizontalLines != BorderSide.none ||
-              verticalLines != BorderSide.none) {
+          if (horizontalLines != null || verticalLines != null) {
             tableBorder = TableBorder(
-                horizontalInside: horizontalLines,
-                verticalInside: verticalLines);
+                horizontalInside: horizontalLines ?? BorderSide.none,
+                verticalInside: verticalLines ?? BorderSide.none);
           }
 
           return DataTable(
@@ -127,8 +126,8 @@ class _DataTableControlState extends State<DataTableControl> {
                                     {"i": columnIndex, "a": ascending}));
                           }
                         : null,
-                    label: createControl(
-                        column.control, labelCtrls.first.id, disabled));
+                    label: createControl(column.control, labelCtrls.first.id,
+                        column.control.isDisabled || tableDisabled));
               }).toList(),
               rows: viewModel.controlViews
                   .where((c) => c.control.type == "r")
@@ -159,8 +158,8 @@ class _DataTableControlState extends State<DataTableControl> {
                         : null,
                     cells: row.children
                         .map((cell) => DataCell(
-                              createControl(
-                                  row.control, cell.childIds.first, disabled),
+                              createControl(row.control, cell.childIds.first,
+                                  row.control.isDisabled || tableDisabled),
                               placeholder: cell.attrBool("placeholder", false)!,
                               showEditIcon:
                                   cell.attrBool("showEditIcon", false)!,

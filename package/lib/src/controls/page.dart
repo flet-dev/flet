@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
+import 'package:flet/src/flet_app_context.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,10 +29,12 @@ import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/fade_transition_page.dart';
 import '../widgets/loading_page.dart';
+import '../widgets/no_animation_page.dart';
 import '../widgets/page_media.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
+import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
 class PageControl extends StatefulWidget {
@@ -84,7 +88,7 @@ class _PageControlState extends State<PageControl> {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
-  int _routeChanges = 2;
+  String? _prevViewRoutes;
   bool _keyboardHandlerSubscribed = false;
 
   @override
@@ -115,7 +119,6 @@ class _PageControlState extends State<PageControl> {
   void _routeChanged() {
     widget.dispatch(SetPageRouteAction(
         _routeState.route, FletAppServices.of(context).server));
-    _routeChanges--;
   }
 
   void _handleKeyDown(RawKeyEvent e) {
@@ -155,6 +158,9 @@ class _PageControlState extends State<PageControl> {
 
     //debugDumpRenderTree();
 
+    // clear hrefs index
+    FletAppServices.of(context).globalKeys.clear();
+
     // page route
     var route = widget.control.attrString("route");
     if (_routeState.route != route && route != null) {
@@ -163,13 +169,14 @@ class _PageControlState extends State<PageControl> {
     }
 
     // theme
-    var lightTheme = parseTheme(widget.control, "theme", Brightness.light);
-    var darkTheme = parseTheme(widget.control, "darkTheme", Brightness.dark);
-    var themeMode = ThemeMode.values.firstWhere(
-        (t) =>
+    var theme = parseTheme(widget.control, "theme", Brightness.light);
+    var darkTheme = widget.control.attrString("darkTheme") == null
+        ? parseTheme(widget.control, "theme", Brightness.dark)
+        : parseTheme(widget.control, "darkTheme", Brightness.dark);
+    var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
             t.name.toLowerCase() ==
-            widget.control.attrString("themeMode", "")!.toLowerCase(),
-        orElse: () => ThemeMode.system);
+            widget.control.attrString("themeMode", "")!.toLowerCase()) ??
+        FletAppContext.of(context)?.themeMode;
 
     debugPrint("Page theme: $themeMode");
 
@@ -438,16 +445,19 @@ class _PageControlState extends State<PageControl> {
               builder: (context, media) {
                 debugPrint("MeterialApp.router build: ${widget.control.id}");
 
-                return MaterialApp.router(
-                  showSemanticsDebugger:
-                      widget.control.attrBool("showSemanticsDebugger", false)!,
-                  routerDelegate: _routerDelegate,
-                  routeInformationParser: _routeParser,
-                  title: windowTitle,
-                  theme: lightTheme,
-                  darkTheme: darkTheme,
-                  themeMode: themeMode,
-                );
+                return FletAppContext(
+                    themeMode: themeMode,
+                    child: MaterialApp.router(
+                      debugShowCheckedModeBanner: false,
+                      showSemanticsDebugger: widget.control
+                          .attrBool("showSemanticsDebugger", false)!,
+                      routerDelegate: _routerDelegate,
+                      routeInformationParser: _routeParser,
+                      title: windowTitle,
+                      theme: theme,
+                      darkTheme: darkTheme,
+                      themeMode: themeMode,
+                    ));
               });
         });
   }
@@ -465,44 +475,69 @@ class _PageControlState extends State<PageControl> {
         builder: (context, routesView) {
           debugPrint("_buildNavigator build");
 
+          var hideLoadingPage =
+              FletAppServices.of(context).hideLoadingPage ?? false;
+
           List<Page<dynamic>> pages = [];
-          if (routesView.isLoading || routesView.viewIds.isEmpty) {
+          if (routesView.views.isEmpty) {
             pages.add(FadeTransitionPage(
-                child: LoadingPage(
-              key: const ValueKey("Loading page"),
-              title: "Flet is loading...",
-              message: routesView.error,
-            )));
+                child: hideLoadingPage
+                    ? const Scaffold()
+                    : LoadingPage(
+                        isLoading: routesView.isLoading,
+                        message: routesView.error,
+                      )));
           } else {
+            Widget? loadingPage;
             // offstage
             overlayWidgets(String viewId) {
               List<Widget> overlayWidgets = [];
 
-              if (viewId == routesView.viewIds.last) {
-                overlayWidgets.addAll(routesView.offstageControls.map((c) =>
-                    createControl(
+              if (viewId == routesView.views.last.id) {
+                overlayWidgets.addAll(routesView.offstageControls
+                    .where((c) => !c.isNonVisual)
+                    .map((c) => createControl(
                         routesView.page, c.id, routesView.page.isDisabled)));
                 overlayWidgets.add(const PageMedia());
               }
 
-              if (viewId == routesView.viewIds.first && isDesktop()) {
+              if (viewId == routesView.views.first.id && isDesktop()) {
                 overlayWidgets.add(const WindowMedia());
               }
 
               return overlayWidgets;
             }
 
-            pages = routesView.viewIds.map((viewId) {
-              var key = ValueKey(viewId);
-              var child = _buildViewWidget(
-                  routesView.page, viewId, overlayWidgets(viewId));
-              return _routeChanges > 0
+            if ((routesView.isLoading || routesView.error != "") &&
+                !hideLoadingPage) {
+              loadingPage = LoadingPage(
+                isLoading: routesView.isLoading,
+                message: routesView.error,
+              );
+            }
+
+            String viewRoutes = routesView.views
+                .map((v) => v.attrString("route") ?? v.id)
+                .join();
+            pages = routesView.views.map((view) {
+              var key = ValueKey(view.attrString("route") ?? view.id);
+              var child = _buildViewWidget(routesView.page, view.id,
+                  overlayWidgets(view.id), loadingPage);
+              return _prevViewRoutes == null
                   ? FadeTransitionPage(key: key, child: child)
-                  : MaterialPage(key: key, child: child);
+                  : _prevViewRoutes == viewRoutes
+                      ? NoAnimationPage(key: key, child: child)
+                      : MaterialPage(
+                          key: key,
+                          child: child,
+                          fullscreenDialog:
+                              view.attrBool("fullscreenDialog", false)!);
             }).toList();
+
+            _prevViewRoutes = viewRoutes;
           }
 
-          return Navigator(
+          Widget nextChild = Navigator(
               key: navigatorKey,
               pages: pages,
               onPopPage: (route, dynamic result) {
@@ -513,12 +548,22 @@ class _PageControlState extends State<PageControl> {
                         ((route.settings as Page).key as ValueKey).value);
                 return false;
               });
+
+          // wrap navigator into non-visual offstage controls
+          for (var c
+              in routesView.offstageControls.where((c) => c.isNonVisual)) {
+            nextChild = createControl(
+                routesView.page, c.id, routesView.page.isDisabled,
+                nextChild: nextChild);
+          }
+
+          return nextChild;
         });
   }
 
-  Widget _buildViewWidget(
-      Control parent, String viewId, List<Widget> overlayWidgets) {
-    return StoreConnector<AppState, ControlViewModel>(
+  Widget _buildViewWidget(Control parent, String viewId,
+      List<Widget> overlayWidgets, Widget? loadingPage) {
+    return StoreConnector<AppState, ControlViewModel?>(
         distinct: true,
         converter: (store) {
           return ControlViewModel.fromStore(store, viewId);
@@ -532,6 +577,10 @@ class _PageControlState extends State<PageControl> {
         builder: (context, controlView) {
           debugPrint("View StoreConnector");
 
+          if (controlView == null) {
+            return const SizedBox.shrink();
+          }
+
           var control = controlView.control;
           var children = controlView.children;
 
@@ -540,14 +589,6 @@ class _PageControlState extends State<PageControl> {
               control, "verticalAlignment", MainAxisAlignment.start);
           final crossAlignment = parseCrossAxisAlignment(
               control, "horizontalAlignment", CrossAxisAlignment.start);
-
-          ScrollMode scrollMode = ScrollMode.values.firstWhere(
-              (m) =>
-                  m.name.toLowerCase() ==
-                  control.attrString("scroll", "")!.toLowerCase(),
-              orElse: () => ScrollMode.none);
-
-          final autoScroll = control.attrBool("autoScroll", false)!;
 
           Control? appBar;
           Control? fab;
@@ -603,53 +644,65 @@ class _PageControlState extends State<PageControl> {
                 return false;
               },
               builder: (context, childrenViews) {
-                debugPrint("Route view StoreConnector build");
+                debugPrint("Route view StoreConnector build: $viewId");
 
                 var appBarView =
-                    appBar != null ? childrenViews.controlViews.last : null;
+                    appBar != null && childrenViews.controlViews.isNotEmpty
+                        ? childrenViews.controlViews.last
+                        : null;
 
                 var column = Column(
                     mainAxisAlignment: mainAlignment,
                     crossAxisAlignment: crossAlignment,
                     children: controls);
 
+                Widget child = ScrollableControl(
+                  control: control,
+                  scrollDirection: Axis.vertical,
+                  dispatch: widget.dispatch,
+                  child: column,
+                );
+
+                if (control.attrBool("onScroll", false)!) {
+                  child =
+                      ScrollNotificationControl(control: control, child: child);
+                }
+
+                var scaffold = Scaffold(
+                  backgroundColor: HexColor.fromString(
+                      Theme.of(context), control.attrString("bgcolor", "")!),
+                  appBar: appBarView != null
+                      ? AppBarControl(
+                          parent: control,
+                          control: appBarView.control,
+                          children: appBarView.children,
+                          parentDisabled: control.isDisabled,
+                          height: appBarView.control
+                              .attrDouble("toolbarHeight", kToolbarHeight)!)
+                      : null,
+                  body: Stack(children: [
+                    SizedBox.expand(
+                        child: Container(
+                            padding: parseEdgeInsets(control, "padding") ??
+                                const EdgeInsets.all(10),
+                            child: child)),
+                    ...overlayWidgets
+                  ]),
+                  bottomNavigationBar: navBar != null
+                      ? createControl(control, navBar.id, control.isDisabled)
+                      : null,
+                  floatingActionButton: fab != null
+                      ? createControl(control, fab.id, control.isDisabled)
+                      : null,
+                );
+
                 return Directionality(
                     textDirection: textDirection,
-                    child: Scaffold(
-                      backgroundColor: HexColor.fromString(Theme.of(context),
-                          control.attrString("bgcolor", "")!),
-                      appBar: appBarView != null
-                          ? AppBarControl(
-                              parent: control,
-                              control: appBarView.control,
-                              children: appBarView.children,
-                              parentDisabled: control.isDisabled,
-                              height: appBarView.control
-                                  .attrDouble("toolbarHeight", kToolbarHeight)!)
-                          : null,
-                      body: Stack(children: [
-                        SizedBox.expand(
-                            child: Container(
-                                padding: parseEdgeInsets(control, "padding") ??
-                                    const EdgeInsets.all(10),
-                                child: scrollMode != ScrollMode.none
-                                    ? ScrollableControl(
-                                        scrollDirection: Axis.vertical,
-                                        scrollMode: scrollMode,
-                                        autoScroll: autoScroll,
-                                        child: column,
-                                      )
-                                    : column)),
-                        ...overlayWidgets
-                      ]),
-                      bottomNavigationBar: navBar != null
-                          ? createControl(
-                              control, navBar.id, control.isDisabled)
-                          : null,
-                      floatingActionButton: fab != null
-                          ? createControl(control, fab.id, control.isDisabled)
-                          : null,
-                    ));
+                    child: loadingPage != null
+                        ? Stack(
+                            children: [scaffold, loadingPage],
+                          )
+                        : scaffold);
               });
         });
   }

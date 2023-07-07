@@ -17,13 +17,15 @@ class NavigationBarControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final dynamic dispatch;
 
   const NavigationBarControl(
       {Key? key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -32,7 +34,6 @@ class NavigationBarControl extends StatefulWidget {
 
 class _NavigationBarControlState extends State<NavigationBarControl> {
   int _selectedIndex = 0;
-  dynamic _dispatch;
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
@@ -40,7 +41,7 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
     List<Map<String, String>> props = [
       {"i": widget.control.id, "selectedindex": _selectedIndex.toString()}
     ];
-    _dispatch(
+    widget.dispatch(
         UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
     final server = FletAppServices.of(context).server;
     server.updateControlProps(props: props);
@@ -74,8 +75,6 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
                 .where((c) => c.isVisible && c.name == null)
                 .map((c) => c.id)),
         builder: (content, viewModel) {
-          _dispatch = viewModel.dispatch;
-
           return NavigationBar(
               labelBehavior: labelBehavior,
               height: widget.control.attrDouble("height"),

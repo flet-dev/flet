@@ -233,7 +233,6 @@ class NavigationRail(ConstrainedControl):
         group_alignment: OptionalNumber = None,
         on_change=None,
     ):
-
         ConstrainedControl.__init__(
             self,
             ref=ref,
@@ -311,7 +310,7 @@ class NavigationRail(ConstrainedControl):
     # selected_index
     @property
     def selected_index(self) -> Optional[int]:
-        return self._get_attr("selectedIndex", data_type="int")
+        return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
     def selected_index(self, value: Optional[int]):

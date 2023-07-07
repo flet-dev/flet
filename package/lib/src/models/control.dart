@@ -43,6 +43,20 @@ class Control extends Equatable {
     return attrBool("visible", true)!;
   }
 
+  bool get isNonVisual {
+    return [
+      //"alertdialog",
+      "audio",
+      "banner",
+      //"bottomsheet",
+      "clipboard",
+      "filepicker",
+      "hapticfeedback",
+      "shakedetector",
+      "snackbar"
+    ].contains(type);
+  }
+
   bool? attrBool(String name, [bool? defValue]) {
     var r = attrs[name.toLowerCase()];
     return r != null ? r.toLowerCase() == "true" : defValue;

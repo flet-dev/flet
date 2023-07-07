@@ -71,6 +71,7 @@ class CircleAvatar(ConstrainedControl):
     def __init__(
         self,
         icon: Optional[str] = None,
+        key: Optional[str] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -111,6 +112,7 @@ class CircleAvatar(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
