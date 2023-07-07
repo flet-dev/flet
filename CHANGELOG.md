@@ -1,5 +1,10 @@
 # Flet changelog
 
+## 0.8.1
+
+* Fix `auth` and `PubSub` imports in `page.py` and `connection.py`.
+* Fix broken `flet pack` command.
+
 ## 0.8.0
 
 * 📱🎉 **iOS support** - build standalone iOS apps in Python:
