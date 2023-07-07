@@ -3,7 +3,7 @@ from typing import List, Optional
 from flet_core.protocol import Command
 
 try:
-    from flet.pubsub import PubSubHub
+    from flet_runtime.pubsub import PubSubHub
 except ImportError:
 
     class PubSubHub:
