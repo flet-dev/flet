@@ -1397,7 +1397,7 @@ class Page(Control):
     @property
     def window_width(self) -> OptionalNumber:
         w = self._get_attr("windowWidth")
-        if w:
+        if w and w != "null":
             return float(w)
         return 0
 
@@ -1409,7 +1409,7 @@ class Page(Control):
     @property
     def window_height(self) -> OptionalNumber:
         h = self._get_attr("windowHeight")
-        if h:
+        if h and h != "null":
             return float(h)
         return 0
 
