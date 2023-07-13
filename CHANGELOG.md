@@ -4,6 +4,7 @@
 
 * Fix `flet pack` command on macOS ([#1580](https://github.com/flet-dev/flet/issues/1580))
 * Fixed: Assets dir and manifest does not work ([#1573](https://github.com/flet-dev/flet/issues/1573))
+* Fixed: Flet CLI crashes if `git` is not installed ([#1581](https://github.com/flet-dev/flet/issues/1581))
 
 ## 0.8.1
 

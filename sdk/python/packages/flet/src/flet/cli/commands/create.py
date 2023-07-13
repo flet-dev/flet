@@ -1,7 +1,6 @@
 import argparse
 from pathlib import Path
 
-from copier.main import Worker
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import slugify
 
@@ -39,6 +38,8 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        from copier.main import Worker
+
         template_data = {"template_name": options.template}
 
         out_dir = Path(options.output_directory)
