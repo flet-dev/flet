@@ -5,9 +5,8 @@ import subprocess
 import tarfile
 from pathlib import Path
 
+from flet_runtime.utils import safe_tar_extractall
 from PyInstaller.building.icon import normalize_icon_type
-
-from flet.utils import safe_tar_extractall
 
 
 def unpack_app_bundle(tar_path):
@@ -76,7 +75,6 @@ def update_flet_view_version_info(
 
 
 def assemble_app_bundle(app_path, tar_path):
-
     # sign app bundle
     print(f"Signing file {app_path}")
     cmd_args = [

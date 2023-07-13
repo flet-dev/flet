@@ -1,3 +1,7 @@
+## 0.8.2
+
+* Fix `flet pack` command on macOS ([#1580](https://github.com/flet-dev/flet/issues/1580)).
+
 ## 0.8.1
 
 * Fix `auth` and `PubSub` imports in `page.py` and `connection.py`.
