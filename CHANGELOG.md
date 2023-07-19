@@ -28,10 +28,10 @@ ft.app(main, view=ft.AppView.WEB_BROWSER, web_renderer=ft.WebRenderer.HTML)
 ```
 
 * Flet packages `version` is centralized in `flet_core.version`.
-* 💥 **Breaking change:** OAuth providers must be imported from `flet.auth.providers` module, for example:
+* 💥 **Breaking change:** OAuth providers must now be imported from `flet_runtime.auth.oauth_provider` module, for example:
 
 ```python
-from flet.auth.providers import GitHubOAuthProvider
+from flet_runtime.auth.oauth_provider import GitHubOAuthProvider
 ```
 
 * Added `Image.error_content` property - fallback content if image cannot be loaded.
