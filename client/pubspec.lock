@@ -183,7 +183,7 @@ packages:
       path: "../package"
       relative: true
     source: path
-    version: "0.8.2"
+    version: "0.8.3"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -759,10 +759,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "1414f27dd781737e51afa9711f2ac2ace6ab4498ee98e20863fa5505aa00c58c"
+      sha256: a6f0236dbda0f63aa9a25ad1ff9a9d8a4eaaa5012da0dc59d21afdb1dc361ca4
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.4"
+    version: "3.1.4"
   window_manager:
     dependency: transitive
     description:
