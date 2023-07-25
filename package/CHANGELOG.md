@@ -1,3 +1,7 @@
+## 0.8.4
+
+* Bumping version as PyPi was out of space.
+
 ## 0.8.3
 
 * Fixed: FilePicker crash the flet.app() after open directory dialog and choose one directory ([#1572](https://github.com/flet-dev/flet/issues/1572))
