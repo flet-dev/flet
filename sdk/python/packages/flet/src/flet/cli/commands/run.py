@@ -125,10 +125,10 @@ class Command(BaseCommand):
         script_dir = os.path.dirname(script_path)
 
         port = options.port
-        if port is None and (is_windows() or options.web):
-            port = get_free_tcp_port()
-        elif port is None and options.ios:
+        if port is None and options.ios:
             port = 8551
+        elif port is None and (is_windows() or options.web):
+            port = get_free_tcp_port()
 
         uds_path = None
         if port is None and not is_windows():
