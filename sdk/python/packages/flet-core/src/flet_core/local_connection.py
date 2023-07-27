@@ -38,7 +38,7 @@ class LocalConnection(Connection):
                             "web": self._client_details.isWeb,
                             "debug": self._client_details.isDebug,
                             "platform": self._client_details.platform,
-                            "platform": self._client_details.platformBrightness,
+                            "platformBrightness": self._client_details.platformBrightness,
                         }
                     },
                 ),
