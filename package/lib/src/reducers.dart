@@ -27,7 +27,7 @@ enum Actions { increment, setText, setError }
 
 AppState appReducer(AppState state, dynamic action) {
   if (action is PageLoadAction) {
-    var sessionId = SessionStore.get("sessionId");
+    var sessionId = SessionStore.sessionId;
     return state.copyWith(
         pageUri: action.pageUri,
         assetsDir: action.assetsDir,
@@ -176,7 +176,7 @@ AppState appReducer(AppState state, dynamic action) {
       final sessionId = action.payload.session!.id;
 
       // store sessionId in a cookie
-      SessionStore.set("sessionId", sessionId);
+      SessionStore.sessionId = sessionId;
 
       if (state.deepLinkingRoute != "") {
         debugPrint(
