@@ -50,7 +50,8 @@ class WindowEventAction {
 
 class PageBrightnessChangeAction {
   final Brightness brightness;
-  PageBrightnessChangeAction(this.brightness);
+  final FletServer server;
+  PageBrightnessChangeAction(this.brightness, this.server);
 }
 
 class RegisterWebClientAction {

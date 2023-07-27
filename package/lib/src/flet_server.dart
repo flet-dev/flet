@@ -44,7 +44,9 @@ class FletServer {
   String _windowLeft = "";
   String _isPWA = "";
   String _isWeb = "";
+  String _isDebug = "";
   String _platform = "";
+  String _platformBrightness = "";
   int reconnectStarted = 0;
   final Map<String, ControlInvokeMethodCallback> controlInvokeMethods;
 
@@ -114,7 +116,9 @@ class FletServer {
     required String windowLeft,
     required String isPWA,
     required String isWeb,
+    required String isDebug,
     required String platform,
+    required String platformBrightness,
   }) {
     _pageName = pageName;
     _pageHash = pageRoute;
@@ -126,7 +130,9 @@ class FletServer {
     _windowLeft = windowLeft;
     _isPWA = isPWA;
     _isWeb = isWeb;
+    _isDebug = isDebug;
     _platform = platform;
+    _platformBrightness = platformBrightness;
   }
 
   registerWebClientInternal() {
@@ -145,7 +151,9 @@ class FletServer {
             windowHeight: page?.attrString("windowHeight") ?? _windowHeight,
             isPWA: _isPWA,
             isWeb: _isWeb,
+            isDebug: _isDebug,
             platform: _platform,
+            platformBrightness: _platformBrightness,
             sessionId: _store.state.sessionId)));
     _pageHash = "";
   }

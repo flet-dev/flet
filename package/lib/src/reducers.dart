@@ -95,7 +95,9 @@ AppState appReducer(AppState state, dynamic action) {
               windowLeft: wmd.left != null ? wmd.left.toString() : "",
               isPWA: isProgressiveWebApp().toString(),
               isWeb: kIsWeb.toString(),
-              platform: defaultTargetPlatform.name.toLowerCase());
+              isDebug: kDebugMode.toString(),
+              platform: defaultTargetPlatform.name.toLowerCase(),
+              platformBrightness: state.displayBrightness.name.toString());
 
           action.server.connect(address: state.pageUri!.toString());
         });
@@ -137,6 +139,28 @@ AppState appReducer(AppState state, dynamic action) {
 
     return state.copyWith(controls: controls);
   } else if (action is PageBrightnessChangeAction) {
+    //
+    // platform brightness changed
+    //
+    debugPrint("New platform brightness: ${action.brightness.name}");
+
+    var page = state.controls["page"];
+    var controls = Map.of(state.controls);
+    if (page != null && !state.isLoading) {
+      var pageAttrs = Map.of(page.attrs);
+      pageAttrs["platformBrightness"] = action.brightness.name.toString();
+
+      List<Map<String, String>> props = [
+        {"i": "page", "platformBrightness": action.brightness.name.toString()},
+      ];
+
+      controls[page.id] = page.copyWith(attrs: pageAttrs);
+      action.server.updateControlProps(props: props);
+      action.server.sendPageEvent(
+          eventTarget: "page",
+          eventName: "platformBrightnessChange",
+          eventData: action.brightness.name.toString());
+    }
     return state.copyWith(displayBrightness: action.brightness);
   } else if (action is RegisterWebClientAction) {
     //

@@ -47,18 +47,20 @@ type RegisterHostClientResponsePayload struct {
 }
 
 type RegisterWebClientRequestPayload struct {
-	PageName     string `json:"pageName"`
-	PageRoute    string `json:"pageRoute"`
-	PageWidth    string `json:"pageWidth"`
-	PageHeight   string `json:"pageHeight"`
-	WindowWidth  string `json:"windowWidth"`
-	WindowHeight string `json:"windowHeight"`
-	WindowTop    string `json:"windowTop"`
-	WindowLeft   string `json:"windowLeft"`
-	IsPWA        string `json:"isPWA"`
-	Platform     string `json:"platform"`
-	IsWeb        string `json:"isWeb"`
-	SessionID    string `json:"sessionID"`
+	PageName           string `json:"pageName"`
+	PageRoute          string `json:"pageRoute"`
+	PageWidth          string `json:"pageWidth"`
+	PageHeight         string `json:"pageHeight"`
+	WindowWidth        string `json:"windowWidth"`
+	WindowHeight       string `json:"windowHeight"`
+	WindowTop          string `json:"windowTop"`
+	WindowLeft         string `json:"windowLeft"`
+	IsPWA              string `json:"isPWA"`
+	IsWeb              string `json:"isWeb"`
+	IsDebug            string `json:"isDebug"`
+	Platform           string `json:"platform"`
+	PlatformBrightness string `json:"platformBrightness"`
+	SessionID          string `json:"sessionID"`
 }
 
 type RegisterWebClientResponsePayload struct {

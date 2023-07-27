@@ -43,7 +43,8 @@ class _PageMediaState extends State<PageMedia> {
 
   _onScreenBrightnessChanged(Brightness brightness, Function dispatch) {
     debugPrint("Send new brightness to reducer: $brightness");
-    dispatch(PageBrightnessChangeAction(brightness));
+    dispatch(PageBrightnessChangeAction(
+        brightness, FletAppServices.of(context).server));
   }
 
   @override
