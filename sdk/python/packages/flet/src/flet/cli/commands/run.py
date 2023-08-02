@@ -96,6 +96,13 @@ class Command(BaseCommand):
             help="open app on iOS device",
         )
         parser.add_argument(
+            "--android",
+            dest="android",
+            action="store_true",
+            default=False,
+            help="open app on Android device",
+        )
+        parser.add_argument(
             "-a",
             "--assets",
             dest="assets_dir",
@@ -125,7 +132,7 @@ class Command(BaseCommand):
         script_dir = os.path.dirname(script_path)
 
         port = options.port
-        if port is None and options.ios:
+        if port is None and (options.ios or options.android):
             port = 8551
         elif port is None and (is_windows() or options.web):
             port = get_free_tcp_port()
@@ -150,6 +157,7 @@ class Command(BaseCommand):
             uds_path,
             options.web,
             options.ios,
+            options.android,
             options.hidden,
             assets_dir,
         )
@@ -172,7 +180,17 @@ class Command(BaseCommand):
 
 class Handler(FileSystemEventHandler):
     def __init__(
-        self, args, script_path, port, page_name, uds_path, web, ios, hidden, assets_dir
+        self,
+        args,
+        script_path,
+        port,
+        page_name,
+        uds_path,
+        web,
+        ios,
+        android,
+        hidden,
+        assets_dir,
     ) -> None:
         super().__init__()
         self.args = args
@@ -182,6 +200,7 @@ class Handler(FileSystemEventHandler):
         self.uds_path = uds_path
         self.web = web
         self.ios = ios
+        self.android = android
         self.hidden = hidden
         self.assets_dir = assets_dir
         self.last_time = time.time()
@@ -195,12 +214,12 @@ class Handler(FileSystemEventHandler):
 
     def start_process(self):
         p_env = {**os.environ}
-        if self.web or self.ios:
+        if self.web or self.ios or self.android:
             p_env["FLET_FORCE_WEB_VIEW"] = "true"
             p_env["FLET_DETACH_FLETD"] = "true"
 
             # force page name for ios
-            if self.ios:
+            if self.ios or self.android:
                 p_env["FLET_PAGE_NAME"] = "/".join(Path(self.script_path).parts[-2:])
         if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
@@ -240,10 +259,14 @@ class Handler(FileSystemEventHandler):
             if line.startswith(self.page_url_prefix):
                 if not self.page_url:
                     self.page_url = line[len(self.page_url_prefix) + 1 :]
-                    if self.page_url.startswith("http") and not self.ios:
+                    if (
+                        self.page_url.startswith("http")
+                        and not self.ios
+                        and not self.android
+                    ):
                         print(self.page_url)
-                    if self.ios:
-                        self.print_qr_code(self.page_url)
+                    if self.ios or self.android:
+                        self.print_qr_code(self.page_url, self.android)
                     elif self.web:
                         open_in_browser(self.page_url)
                     else:
@@ -268,7 +291,7 @@ class Handler(FileSystemEventHandler):
         self.p.wait()
         self.start_process()
 
-    def print_qr_code(self, orig_url: str):
+    def print_qr_code(self, orig_url: str, android: bool):
         u = urlparse(orig_url)
         hostname = socket.gethostname()
         ip_addr = socket.gethostbyname(hostname)
@@ -278,9 +301,23 @@ class Handler(FileSystemEventHandler):
         # self.clear_console()
         print("App is running on:", lan_url)
         print("")
-        qr_url = urlunparse(
-            ("flet", "flet-host", quote(lan_url, safe=""), None, None, None)
+        qr_url = (
+            urlunparse(
+                (
+                    "https",
+                    "android.flet.dev",
+                    quote(f"{ip_addr}:{u.port}{u.path}", safe="/"),
+                    None,
+                    None,
+                    None,
+                )
+            )
+            if android
+            else urlunparse(
+                ("flet", "flet-host", quote(lan_url, safe=""), None, None, None)
+            )
         )
+        # print(qr_url)
         qr = qrcode.QRCode()
         qr.add_data(qr_url)
         qr.print_ascii(invert=True)
