@@ -147,7 +147,9 @@ class RegisterWebClientRequestPayload:
     windowLeft: str
     isPWA: str
     isWeb: str
+    isDebug: str
     platform: str
+    platformBrightness: str
     sessionId: str
 
 

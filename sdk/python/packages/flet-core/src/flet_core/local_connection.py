@@ -36,7 +36,9 @@ class LocalConnection(Connection):
                             "windowleft": self._client_details.windowLeft,
                             "pwa": self._client_details.isPWA,
                             "web": self._client_details.isWeb,
+                            "debug": self._client_details.isDebug,
                             "platform": self._client_details.platform,
+                            "platformBrightness": self._client_details.platformBrightness,
                         }
                     },
                 ),
@@ -216,8 +218,12 @@ class LocalConnection(Connection):
                 r = self._client_details.isPWA
             elif prop_name == "web":
                 r = self._client_details.isWeb
+            elif prop_name == "debug":
+                r = self._client_details.isDebug
             elif prop_name == "platform":
                 r = self._client_details.platform
+            elif prop_name == "platformBrightness":
+                r = self._client_details.platformBrightness
             elif prop_name == "width":
                 r = self._client_details.pageWidth
             elif prop_name == "height":

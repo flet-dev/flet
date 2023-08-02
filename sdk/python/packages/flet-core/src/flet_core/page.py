@@ -124,6 +124,11 @@ class Page(Control):
         self._add_event_handler("close", self.__on_close.get_handler())
         self.__on_resize = EventHandler()
         self._add_event_handler("resize", self.__on_resize.get_handler())
+        self.__on_platform_brightness_change = EventHandler()
+        self._add_event_handler(
+            "platformBrightnessChange",
+            self.__on_platform_brightness_change.get_handler(),
+        )
 
         self.__last_route = None
 
@@ -220,13 +225,11 @@ class Page(Control):
     def __get_page_detail_commands(self):
         return [
             Command(0, "get", ["page", "route"]),
-            Command(
-                0,
-                "get",
-                ["page", "pwa"],
-            ),
+            Command(0, "get", ["page", "pwa"]),
             Command(0, "get", ["page", "web"]),
+            Command(0, "get", ["page", "debug"]),
             Command(0, "get", ["page", "platform"]),
+            Command(0, "get", ["page", "platformBrightness"]),
             Command(0, "get", ["page", "width"]),
             Command(0, "get", ["page", "height"]),
             Command(0, "get", ["page", "windowWidth"]),
@@ -241,15 +244,17 @@ class Page(Control):
         self._set_attr("route", values[0], False)
         self._set_attr("pwa", values[1], False)
         self._set_attr("web", values[2], False)
-        self._set_attr("platform", values[3], False)
-        self._set_attr("width", values[4], False)
-        self._set_attr("height", values[5], False)
-        self._set_attr("windowWidth", values[6], False)
-        self._set_attr("windowHeight", values[7], False)
-        self._set_attr("windowTop", values[8], False)
-        self._set_attr("windowLeft", values[9], False)
-        self._set_attr("clientIP", values[10], False)
-        self._set_attr("clientUserAgent", values[11], False)
+        self._set_attr("debug", values[3], False)
+        self._set_attr("platform", values[4], False)
+        self._set_attr("platformBrightness", values[5], False)
+        self._set_attr("width", values[6], False)
+        self._set_attr("height", values[7], False)
+        self._set_attr("windowWidth", values[8], False)
+        self._set_attr("windowHeight", values[9], False)
+        self._set_attr("windowTop", values[10], False)
+        self._set_attr("windowLeft", values[11], False)
+        self._set_attr("clientIP", values[12], False)
+        self._set_attr("clientUserAgent", values[13], False)
 
     def update(self, *controls):
         with self.__lock:
@@ -1117,10 +1122,22 @@ class Page(Control):
     def web(self) -> bool:
         return cast(bool, self._get_attr("web", data_type="bool", def_value=False))
 
+    # debug
+    @property
+    def debug(self) -> bool:
+        return cast(bool, self._get_attr("debug", data_type="bool", def_value=False))
+
     # platform
     @property
     def platform(self):
         return self._get_attr("platform")
+
+    # platform_brightness
+    @property
+    def platform_brightness(self) -> ThemeMode:
+        brightness = self._get_attr("platformBrightness")
+        assert brightness is not None
+        return ThemeMode(brightness)
 
     # client_ip
     @property
@@ -1658,6 +1675,15 @@ class Page(Control):
     @on_resize.setter
     def on_resize(self, handler):
         self.__on_resize.subscribe(handler)
+
+    # on_platform_brightness_change
+    @property
+    def on_platform_brightness_change(self):
+        return self.__on_platform_brightness_change
+
+    @on_platform_brightness_change.setter
+    def on_platform_brightness_change(self, handler):
+        self.__on_platform_brightness_change.subscribe(handler)
 
     # on_route_change
     @property
