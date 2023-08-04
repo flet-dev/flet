@@ -1,5 +1,13 @@
 # Flet changelog
 
+## 0.9.0
+
+* Added `--android` option to `flet run` command.
+* Added `page.debug` property ([#1649](https://github.com/flet-dev/flet/issues/1649))
+* Added `page.platform_brightness` property and `page.platform_brightness_change` event ([#1630](https://github.com/flet-dev/flet/issues/1630))
+* Store session ID in `html.window.name` ([#1629](https://github.com/flet-dev/flet/issues/1629))
+* Do not assign random port on Windows with `--ios` flag ([#1620](https://github.com/flet-dev/flet/issues/1620))
+
 ## 0.8.4
 
 * Bumping version as PyPi was out of space.
