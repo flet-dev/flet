@@ -6,11 +6,13 @@ authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "<3.12,>=3.7"
+python = "<3.12,>=3.8"
+uvicorn = {extras = ["standard"], version = "^0.23.2"}
 
 [tool.poetry.group.dev.dependencies]
 flet-core = {path = "packages/flet-core", develop = true}
 flet-runtime = {path = "packages/flet-runtime", develop = true}
+flet-fastapi = {path = "packages/flet-fastapi", develop = true}
 flet = {path = "packages/flet", develop = true}
 pytest = "^7.2.0"
 black = "^22.12.0"

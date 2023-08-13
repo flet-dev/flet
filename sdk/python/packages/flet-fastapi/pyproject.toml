@@ -7,7 +7,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 packages = [
-    { include = "flet", from = "src" },
+    { include = "flet_fastapi", from = "src" },
 ]
 
 [tool.poetry.urls]
@@ -16,6 +16,7 @@ repository = "https://github.com/flet-dev/flet"
 documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
+flet = "0.1.0"
 python = "^3.7"
 fastapi = "^0.101.0"
 
