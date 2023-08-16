@@ -14,14 +14,18 @@ class LocalConnection(Connection):
         self._control_id = 1
         self._client_details = None
 
-    def _create_register_web_client_response(self):
+    def _create_register_web_client_response(
+        self, controls: Optional[Dict[str, Dict[str, Any]]] = None
+    ):
         assert self._client_details
         return ClientMessage(
             ClientActions.REGISTER_WEB_CLIENT,
             RegisterWebClientResponsePayload(
                 session=SessionPayload(
                     id=self._client_details.sessionId,
-                    controls={
+                    controls=controls
+                    if controls is not None
+                    else {
                         "page": {
                             "i": "page",
                             "t": "page",
