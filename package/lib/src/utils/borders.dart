@@ -112,7 +112,7 @@ OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic> json) {
         borderRadius: json["radius"] != null
             ? borderRadiusFromJSON(json["radius"])
             : BorderRadius.zero);
-  } else if (type == "countinuosRectangle") {
+  } else if (type == "continuousRectangle") {
     return ContinuousRectangleBorder(
         borderRadius: json["radius"] != null
             ? borderRadiusFromJSON(json["radius"])

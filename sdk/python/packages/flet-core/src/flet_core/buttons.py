@@ -39,8 +39,8 @@ class BeveledRectangleBorder(OutlinedBorder):
 
 
 @dataclasses.dataclass
-class CountinuosRectangleBorder(OutlinedBorder):
-    type: str = field(default="countinuosRectangle")
+class ContinuousRectangleBorder(OutlinedBorder):
+    type: str = field(default="continuousRectangle")
     radius: BorderRadiusValue = field(default=None)
 
 
