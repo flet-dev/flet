@@ -1,0 +1,1 @@
+from flet_fastapi.flet_static_files import FletStaticFiles
