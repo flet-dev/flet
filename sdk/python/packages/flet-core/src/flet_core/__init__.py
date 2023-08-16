@@ -28,7 +28,7 @@ from flet_core.buttons import (
     BeveledRectangleBorder,
     ButtonStyle,
     CircleBorder,
-    CountinuosRectangleBorder,
+    ContinuousRectangleBorder,
     OutlinedBorder,
     RoundedRectangleBorder,
     StadiumBorder,
