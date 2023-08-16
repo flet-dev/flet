@@ -56,10 +56,10 @@ environment:
       job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    - job_name: Test Python 3.7
-      job_group: python_tests
-      python_stack: python 3.7
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Test Python 3.7
+    #   job_group: python_tests
+    #   python_stack: python 3.7
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.8
       job_group: python_tests
