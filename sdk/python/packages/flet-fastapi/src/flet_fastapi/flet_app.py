@@ -2,7 +2,7 @@ import asyncio
 import json
 import logging
 import traceback
-from typing import List
+from typing import List, Optional
 
 import flet
 from fastapi import WebSocket, WebSocketDisconnect
@@ -20,6 +20,7 @@ from flet_core.protocol import (
     RegisterWebClientRequestPayload,
 )
 from flet_core.utils import is_coroutine, random_string
+from flet_runtime.uploads import build_upload_url
 
 logger = logging.getLogger(flet.__name__)
 
@@ -50,14 +51,16 @@ class SessionManager:
 session_manager = SessionManager()
 
 
-class FletConnection(LocalConnection):
-    def __init__(self, websocket: WebSocket, target):
+class FletApp(LocalConnection):
+    def __init__(self, session_handler, upload_path: Optional[str] = None):
         super().__init__()
         logger.info("New FletConnection")
-        self.__websocket = websocket
-        self.__target = target
 
-    async def accept(self):
+        self.__session_handler = session_handler
+        self.__upload_path = upload_path
+
+    async def handle(self, websocket: WebSocket):
+        self.__websocket = websocket
         await self.__websocket.accept()
         await self.__receive_loop()
 
@@ -73,11 +76,11 @@ class FletConnection(LocalConnection):
     async def __on_session_created(self, session_data):
         logger.info(f"Start session: {session_data.sessionID}")
         try:
-            assert self.__target is not None
-            if is_coroutine(self.__target):
-                await self.__target(self.page)
+            assert self.__session_handler is not None
+            if is_coroutine(self.__session_handler):
+                await self.__session_handler(self.page)
             else:
-                self.__target(self.page)
+                self.__session_handler(self.page)
         except Exception as e:
             print(
                 f"Unhandled error processing page session {self.page.session_id}:",
@@ -186,6 +189,14 @@ class FletConnection(LocalConnection):
         else:
             # it's something else
             raise Exception(f'Unknown message "{msg.action}": {msg.payload}')
+
+    def _process_get_upload_url_command(self, attrs):
+        assert len(attrs) == 2, '"getUploadUrl" command has wrong number of attrs'
+        assert self.__upload_path, "upload_path should be specified to enable uploads"
+        return (
+            build_upload_url(self.__upload_path, attrs["file"], int(attrs["expires"])),
+            None,
+        )
 
     async def send_command_async(self, session_id: str, command: Command):
         result, message = self._process_command(command)

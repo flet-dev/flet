@@ -1,2 +1,3 @@
-from flet_fastapi.flet_connection import FletConnection
+from flet_fastapi.flet_app import FletApp
 from flet_fastapi.flet_static_files import FletStaticFiles
+from flet_fastapi.flet_upload import FletUpload
