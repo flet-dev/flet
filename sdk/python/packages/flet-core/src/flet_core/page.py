@@ -256,6 +256,14 @@ class Page(Control):
         self._set_attr("clientIP", values[12], False)
         self._set_attr("clientUserAgent", values[13], False)
 
+    async def _connect(self, conn: Connection):
+        self.__conn = conn
+        await self.on_event_async(Event("page", "connect", ""))
+
+    async def _disconnect(self):
+        self.__conn = None
+        await self.on_event_async(Event("page", "disconnect", ""))
+
     def update(self, *controls):
         with self.__lock:
             if len(controls) == 0:

@@ -6,6 +6,7 @@ from typing import List
 
 import flet
 from fastapi import WebSocket, WebSocketDisconnect
+from flet_core.connection import Connection
 from flet_core.event import Event
 from flet_core.local_connection import LocalConnection
 from flet_core.page import Page
@@ -31,9 +32,15 @@ class SessionManager:
         logger.info(f"New session created: {session_id}")
         self.sessions[session_id] = conn
 
-    def disconnect(self, session_id: str):
+    async def reconnect(self, session_id: str, conn: Connection):
+        logger.info(f"Session reconnected: {session_id}")
+        if session_id in self.sessions:
+            await self.sessions[session_id]._connect(conn)
+
+    async def disconnect(self, session_id: str):
         logger.info(f"Session disconnected: {session_id}")
-        # self.active_connections.remove(websocket)
+        if session_id in self.sessions:
+            await self.sessions[session_id]._disconnect()
 
     def delete(self, session_id: str):
         logger.info(f"Delete session: {session_id}")
@@ -46,6 +53,7 @@ manager = SessionManager()
 class FletConnection(LocalConnection):
     def __init__(self, websocket: WebSocket, target):
         super().__init__()
+        logger.info("New FletConnection")
         self.__websocket = websocket
         self.__target = target
 
@@ -85,7 +93,7 @@ class FletConnection(LocalConnection):
                 await self.__on_message(await self.__websocket.receive_text())
         except WebSocketDisconnect:
             if self.page:
-                manager.disconnect(self.page.session_id)
+                await manager.disconnect(self.page.session_id)
 
     async def __on_message(self, data: str):
         logger.debug(f"_on_message: {data}")
@@ -132,6 +140,7 @@ class FletConnection(LocalConnection):
                 # register session
                 manager.create(self._client_details.sessionId, self.page)
             else:
+                # existing session
                 logger.info(
                     f"Existing session requested: {self._client_details.sessionId}"
                 )
@@ -139,13 +148,19 @@ class FletConnection(LocalConnection):
                 new_session = False
 
             # send register response
-            await self.__send(self._create_register_web_client_response())
+            controls = {}
+            self.page.serialize_to_json(controls)
+            await self.__send(
+                self._create_register_web_client_response(controls=controls)
+            )
 
             # start session
-            if new_session and self.__on_session_created is not None:
+            if new_session:
                 asyncio.create_task(
                     self.__on_session_created(self._create_session_handler_arg())
                 )
+            else:
+                await manager.reconnect(self._client_details.sessionId, self)
 
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
             if self.__on_event is not None:
