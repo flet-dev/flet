@@ -47,7 +47,7 @@ class SessionManager:
         pass
 
 
-manager = SessionManager()
+session_manager = SessionManager()
 
 
 class FletConnection(LocalConnection):
@@ -62,13 +62,13 @@ class FletConnection(LocalConnection):
         await self.__receive_loop()
 
     async def __on_event(self, e):
-        if e.sessionID in manager.sessions:
-            await manager.sessions[e.sessionID].on_event_async(
+        if e.sessionID in session_manager.sessions:
+            await session_manager.sessions[e.sessionID].on_event_async(
                 Event(e.eventTarget, e.eventName, e.eventData)
             )
             if e.eventTarget == "page" and e.eventName == "close":
                 logger.info(f"Session closed: {e.sessionID}")
-                manager.delete(e.sessionID)
+                session_manager.delete(e.sessionID)
 
     async def __on_session_created(self, session_data):
         logger.info(f"Start session: {session_data.sessionID}")
@@ -93,7 +93,7 @@ class FletConnection(LocalConnection):
                 await self.__on_message(await self.__websocket.receive_text())
         except WebSocketDisconnect:
             if self.page:
-                await manager.disconnect(self.page.session_id)
+                await session_manager.disconnect(self.page.session_id)
 
     async def __on_message(self, data: str):
         logger.debug(f"_on_message: {data}")
@@ -105,7 +105,7 @@ class FletConnection(LocalConnection):
             new_session = True
             if (
                 not self._client_details.sessionId
-                or self._client_details.sessionId not in manager.sessions
+                or self._client_details.sessionId not in session_manager.sessions
             ):
                 # generate session ID
                 self._client_details.sessionId = random_string(16)
@@ -134,17 +134,27 @@ class FletConnection(LocalConnection):
                 )
 
                 # TODO
-                self.page._set_attr("clientIP", "", False)
-                self.page._set_attr("clientUserAgent", "", False)
+                self.page._set_attr(
+                    "clientIP",
+                    self.__websocket.client.host if self.__websocket.client else "",
+                    False,
+                )
+                self.page._set_attr(
+                    "clientUserAgent",
+                    self.__websocket.headers["user-agent"]
+                    if "user-agent" in self.__websocket.headers
+                    else "",
+                    False,
+                )
 
                 # register session
-                manager.create(self._client_details.sessionId, self.page)
+                session_manager.create(self._client_details.sessionId, self.page)
             else:
                 # existing session
                 logger.info(
                     f"Existing session requested: {self._client_details.sessionId}"
                 )
-                self.page = manager.sessions[self._client_details.sessionId]
+                self.page = session_manager.sessions[self._client_details.sessionId]
                 new_session = False
 
             # send register response
@@ -160,7 +170,7 @@ class FletConnection(LocalConnection):
                     self.__on_session_created(self._create_session_handler_arg())
                 )
             else:
-                await manager.reconnect(self._client_details.sessionId, self)
+                await session_manager.reconnect(self._client_details.sessionId, self)
 
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
             if self.__on_event is not None:
