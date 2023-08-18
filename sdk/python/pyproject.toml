@@ -21,6 +21,8 @@ pyinstaller = "^5.8.0"
 pillow = "^9.4.0"
 pre-commit = "^2.21.0"
 hypercorn = "^0.14.4"
+gunicorn = "^21.2.0"
+uvicorn = "^0.23.2"
 
 [build-system]
 requires = ["poetry-core"]

@@ -89,6 +89,7 @@ class FletApp(LocalConnection):
         super().__init__()
         logger.info("New FletConnection")
 
+        self.__page = None
         self.__session_handler = session_handler
         self.__session_expires_in_seconds = session_expires_in_seconds
         self.__upload_endpoint_path = upload_endpoint_path
@@ -111,15 +112,15 @@ class FletApp(LocalConnection):
         try:
             assert self.__session_handler is not None
             if is_coroutine(self.__session_handler):
-                await self.__session_handler(self.page)
+                await self.__session_handler(self.__page)
             else:
-                self.__session_handler(self.page)
+                self.__session_handler(self.__page)
         except Exception as e:
             print(
-                f"Unhandled error processing page session {self.page.session_id}:",
+                f"Unhandled error processing page session {self.__page.session_id}:",
                 traceback.format_exc(),
             )
-            await self.page.error_async(
+            await self.__page.error_async(
                 f"There was an error while processing your request: {e}"
             )
 
@@ -128,12 +129,12 @@ class FletApp(LocalConnection):
             while True:
                 await self.__on_message(await self.__websocket.receive_text())
         except WebSocketDisconnect:
-            if self.page:
+            if self.__page:
                 await session_manager.disconnect(
-                    self.page.session_id, self.__session_expires_in_seconds
+                    self.__page.session_id, self.__session_expires_in_seconds
                 )
         self.__websocket = None
-        self.page = None
+        self.__page = None
 
     async def __on_message(self, data: str):
         logger.debug(f"_on_message: {data}")
@@ -151,35 +152,37 @@ class FletApp(LocalConnection):
                 self._client_details.sessionId = random_string(16)
 
                 # create new Page object
-                self.page = Page(self, self._client_details.sessionId)
-                self.page._set_attr("route", self._client_details.pageRoute, False)
-                self.page._set_attr("pwa", self._client_details.isPWA, False)
-                self.page._set_attr("web", self._client_details.isWeb, False)
-                self.page._set_attr("debug", self._client_details.isDebug, False)
-                self.page._set_attr("platform", self._client_details.platform, False)
-                self.page._set_attr(
+                self.__page = Page(self, self._client_details.sessionId)
+                self.__page._set_attr("route", self._client_details.pageRoute, False)
+                self.__page._set_attr("pwa", self._client_details.isPWA, False)
+                self.__page._set_attr("web", self._client_details.isWeb, False)
+                self.__page._set_attr("debug", self._client_details.isDebug, False)
+                self.__page._set_attr("platform", self._client_details.platform, False)
+                self.__page._set_attr(
                     "platformBrightness", self._client_details.platformBrightness, False
                 )
-                self.page._set_attr("width", self._client_details.pageWidth, False)
-                self.page._set_attr("height", self._client_details.pageHeight, False)
-                self.page._set_attr(
+                self.__page._set_attr("width", self._client_details.pageWidth, False)
+                self.__page._set_attr("height", self._client_details.pageHeight, False)
+                self.__page._set_attr(
                     "windowWidth", self._client_details.windowWidth, False
                 )
-                self.page._set_attr(
+                self.__page._set_attr(
                     "windowHeight", self._client_details.windowHeight, False
                 )
-                self.page._set_attr("windowTop", self._client_details.windowTop, False)
-                self.page._set_attr(
+                self.__page._set_attr(
+                    "windowTop", self._client_details.windowTop, False
+                )
+                self.__page._set_attr(
                     "windowLeft", self._client_details.windowLeft, False
                 )
 
                 # TODO
-                self.page._set_attr(
+                self.__page._set_attr(
                     "clientIP",
                     self.__websocket.client.host if self.__websocket.client else "",
                     False,
                 )
-                self.page._set_attr(
+                self.__page._set_attr(
                     "clientUserAgent",
                     self.__websocket.headers["user-agent"]
                     if "user-agent" in self.__websocket.headers
@@ -188,18 +191,20 @@ class FletApp(LocalConnection):
                 )
 
                 # register session
-                await session_manager.create(self._client_details.sessionId, self.page)
+                await session_manager.create(
+                    self._client_details.sessionId, self.__page
+                )
             else:
                 # existing session
                 logger.info(
                     f"Existing session requested: {self._client_details.sessionId}"
                 )
-                self.page = await session_manager.get(self._client_details.sessionId)
+                self.__page = await session_manager.get(self._client_details.sessionId)
                 new_session = False
 
             # send register response
             controls = {}
-            self.page.serialize_to_json(controls)
+            self.__page.serialize_to_json(controls)
             await self.__send(
                 self._create_register_web_client_response(controls=controls)
             )
