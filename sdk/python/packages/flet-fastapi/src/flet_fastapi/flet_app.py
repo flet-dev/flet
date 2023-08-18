@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import os
 import traceback
 from typing import List, Optional
 
@@ -24,21 +25,30 @@ from flet_runtime.uploads import build_upload_url
 
 logger = logging.getLogger(flet.__name__)
 
+DEFAULT_FLET_SESSION_TIMEOUT = 3600
+
 
 class FletApp(LocalConnection):
     def __init__(
         self,
         session_handler,
-        session_expires_in_seconds: int = 3600,
+        session_timeout_seconds: int = DEFAULT_FLET_SESSION_TIMEOUT,
         upload_endpoint_path: Optional[str] = None,
+        secret_key: Optional[str] = None,
     ):
         super().__init__()
         logger.info("New FletConnection")
 
         self.__page = None
         self.__session_handler = session_handler
-        self.__session_expires_in_seconds = session_expires_in_seconds
+        self.__session_timeout_seconds = session_timeout_seconds
+
+        env_session_timeout_seconds = os.getenv("FLET_SESSION_TIMEOUT")
+        if env_session_timeout_seconds:
+            self.__session_timeout_seconds = int(env_session_timeout_seconds)
+
         self.__upload_endpoint_path = upload_endpoint_path
+        self.__secret_key = secret_key
 
     async def handle(self, websocket: WebSocket):
         self.__websocket = websocket
@@ -77,7 +87,7 @@ class FletApp(LocalConnection):
         except WebSocketDisconnect:
             if self.__page:
                 await flet_app_manager.disconnect_session(
-                    self.__page.session_id, self.__session_expires_in_seconds
+                    self.__page.session_id, self.__session_timeout_seconds
                 )
         self.__websocket = None
         self.__page = None
@@ -190,7 +200,10 @@ class FletApp(LocalConnection):
         ), "upload_path should be specified to enable uploads"
         return (
             build_upload_url(
-                self.__upload_endpoint_path, attrs["file"], int(attrs["expires"])
+                self.__upload_endpoint_path,
+                attrs["file"],
+                int(attrs["expires"]),
+                self.__secret_key,
             ),
             None,
         )

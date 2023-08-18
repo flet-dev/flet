@@ -263,10 +263,10 @@ class Page(Control):
         self.__expires_at = None
         await self.on_event_async(Event("page", "connect", ""))
 
-    async def _disconnect(self, session_expires_in_seconds: int):
+    async def _disconnect(self, session_timeout_seconds: int):
         self.__conn = None
         self.__expires_at = datetime.utcnow() + timedelta(
-            seconds=session_expires_in_seconds
+            seconds=session_timeout_seconds
         )
         await self.on_event_async(Event("page", "disconnect", ""))
 

@@ -8,9 +8,15 @@ from flet_runtime.uploads import build_upload_query_string, get_upload_signature
 
 
 class FletUpload:
-    def __init__(self, upload_dir: str, max_upload_size: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        upload_dir: str,
+        max_upload_size: Optional[int] = None,
+        secret_key: Optional[str] = None,
+    ) -> None:
         self.__upload_dir = os.path.realpath(upload_dir)
         self.__max_upload_size = max_upload_size
+        self.__secret_key = secret_key
 
     async def handle(self, request: Request):
         file_name = request.query_params["f"]
@@ -23,7 +29,10 @@ class FletUpload:
 
         # verify signature
         query_string = build_upload_query_string(file_name, expire_str)
-        if get_upload_signature(request.url.path, query_string) != signature:
+        if (
+            get_upload_signature(request.url.path, query_string, self.__secret_key)
+            != signature
+        ):
             raise Exception("Invalid signature")
 
         # check expiration date
