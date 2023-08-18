@@ -7,7 +7,6 @@ license = "Apache-2.0"
 
 [tool.poetry.dependencies]
 python = "<3.12,>=3.8"
-uvicorn = {extras = ["standard"], version = "^0.23.2"}
 
 [tool.poetry.group.dev.dependencies]
 flet-core = {path = "packages/flet-core", develop = true}
@@ -21,6 +20,7 @@ cryptography = "^39.0.0"
 pyinstaller = "^5.8.0"
 pillow = "^9.4.0"
 pre-commit = "^2.21.0"
+hypercorn = "^0.14.4"
 
 [build-system]
 requires = ["poetry-core"]

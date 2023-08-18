@@ -5,6 +5,7 @@ import threading
 import time
 import uuid
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
@@ -99,6 +100,7 @@ class Page(Control):
         self._id = "page"
         self._Control__uid = "page"
         self.__conn = conn
+        self.__expires_at = None
         self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
         self._index = {self._Control__uid: self}  # index with all page controls
@@ -258,10 +260,14 @@ class Page(Control):
 
     async def _connect(self, conn: Connection):
         self.__conn = conn
+        self.__expires_at = None
         await self.on_event_async(Event("page", "connect", ""))
 
-    async def _disconnect(self):
+    async def _disconnect(self, session_expires_in_seconds: int):
         self.__conn = None
+        self.__expires_at = datetime.utcnow() + timedelta(
+            seconds=session_expires_in_seconds
+        )
         await self.on_event_async(Event("page", "disconnect", ""))
 
     def update(self, *controls):
@@ -1076,6 +1082,11 @@ class Page(Control):
     @property
     def connection(self):
         return self.__conn
+
+    # expires_at
+    @property
+    def expires_at(self):
+        return self.__expires_at
 
     # index
     @property

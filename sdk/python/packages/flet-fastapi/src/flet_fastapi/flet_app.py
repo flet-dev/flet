@@ -1,7 +1,10 @@
 import asyncio
+import gc
 import json
 import logging
+import sys
 import traceback
+from datetime import datetime
 from typing import List, Optional
 
 import flet
@@ -27,37 +30,68 @@ logger = logging.getLogger(flet.__name__)
 
 class SessionManager:
     def __init__(self):
-        self.sessions: dict[str, Page] = {}
+        self.__lock = asyncio.Lock()
+        self.__sessions: dict[str, Page] = {}
 
-    def create(self, session_id: str, conn: Page):
+    async def get(self, session_id: str):
+        async with self.__lock:
+            return self.__sessions.get(session_id)
+
+    async def create(self, session_id: str, conn: Page):
         logger.info(f"New session created: {session_id}")
-        self.sessions[session_id] = conn
+        async with self.__lock:
+            self.__sessions[session_id] = conn
 
     async def reconnect(self, session_id: str, conn: Connection):
         logger.info(f"Session reconnected: {session_id}")
-        if session_id in self.sessions:
-            await self.sessions[session_id]._connect(conn)
+        async with self.__lock:
+            if session_id in self.__sessions:
+                await self.__sessions[session_id]._connect(conn)
 
-    async def disconnect(self, session_id: str):
+    async def disconnect(self, session_id: str, session_expires_in_seconds: int):
         logger.info(f"Session disconnected: {session_id}")
-        if session_id in self.sessions:
-            await self.sessions[session_id]._disconnect()
+        if session_id in self.__sessions:
+            await self.__sessions[session_id]._disconnect(session_expires_in_seconds)
 
-    def delete(self, session_id: str):
+    async def delete(self, session_id: str):
+        async with self.__lock:
+            await self.__delete(session_id)
+
+    async def __delete(self, session_id: str):
         logger.info(f"Delete session: {session_id}")
-        pass
+        page = self.__sessions.pop(session_id, None)
+        if page is not None:
+            await page._close_async()
+
+    async def evict_expired_sessions(self):
+        while True:
+            await asyncio.sleep(10)
+            session_ids = []
+            async with self.__lock:
+                for session_id, page in self.__sessions.items():
+                    if page.expires_at and datetime.utcnow() > page.expires_at:
+                        session_ids.append(session_id)
+            for session_id in session_ids:
+                await self.__delete(session_id)
 
 
 session_manager = SessionManager()
+# asyncio.create_task(session_manager.evict_expired_sessions())
 
 
 class FletApp(LocalConnection):
-    def __init__(self, session_handler, upload_path: Optional[str] = None):
+    def __init__(
+        self,
+        session_handler,
+        session_expires_in_seconds: int = 3600,
+        upload_endpoint_path: Optional[str] = None,
+    ):
         super().__init__()
         logger.info("New FletConnection")
 
         self.__session_handler = session_handler
-        self.__upload_path = upload_path
+        self.__session_expires_in_seconds = session_expires_in_seconds
+        self.__upload_endpoint_path = upload_endpoint_path
 
     async def handle(self, websocket: WebSocket):
         self.__websocket = websocket
@@ -65,13 +99,12 @@ class FletApp(LocalConnection):
         await self.__receive_loop()
 
     async def __on_event(self, e):
-        if e.sessionID in session_manager.sessions:
-            await session_manager.sessions[e.sessionID].on_event_async(
-                Event(e.eventTarget, e.eventName, e.eventData)
-            )
+        session = await session_manager.get(e.sessionID)
+        if session is not None:
+            await session.on_event_async(Event(e.eventTarget, e.eventName, e.eventData))
             if e.eventTarget == "page" and e.eventName == "close":
                 logger.info(f"Session closed: {e.sessionID}")
-                session_manager.delete(e.sessionID)
+                await session_manager.delete(e.sessionID)
 
     async def __on_session_created(self, session_data):
         logger.info(f"Start session: {session_data.sessionID}")
@@ -96,7 +129,11 @@ class FletApp(LocalConnection):
                 await self.__on_message(await self.__websocket.receive_text())
         except WebSocketDisconnect:
             if self.page:
-                await session_manager.disconnect(self.page.session_id)
+                await session_manager.disconnect(
+                    self.page.session_id, self.__session_expires_in_seconds
+                )
+        self.__websocket = None
+        self.page = None
 
     async def __on_message(self, data: str):
         logger.debug(f"_on_message: {data}")
@@ -108,7 +145,7 @@ class FletApp(LocalConnection):
             new_session = True
             if (
                 not self._client_details.sessionId
-                or self._client_details.sessionId not in session_manager.sessions
+                or await session_manager.get(self._client_details.sessionId) is None
             ):
                 # generate session ID
                 self._client_details.sessionId = random_string(16)
@@ -151,13 +188,13 @@ class FletApp(LocalConnection):
                 )
 
                 # register session
-                session_manager.create(self._client_details.sessionId, self.page)
+                await session_manager.create(self._client_details.sessionId, self.page)
             else:
                 # existing session
                 logger.info(
                     f"Existing session requested: {self._client_details.sessionId}"
                 )
-                self.page = session_manager.sessions[self._client_details.sessionId]
+                self.page = await session_manager.get(self._client_details.sessionId)
                 new_session = False
 
             # send register response
@@ -192,9 +229,13 @@ class FletApp(LocalConnection):
 
     def _process_get_upload_url_command(self, attrs):
         assert len(attrs) == 2, '"getUploadUrl" command has wrong number of attrs'
-        assert self.__upload_path, "upload_path should be specified to enable uploads"
+        assert (
+            self.__upload_endpoint_path
+        ), "upload_path should be specified to enable uploads"
         return (
-            build_upload_url(self.__upload_path, attrs["file"], int(attrs["expires"])),
+            build_upload_url(
+                self.__upload_endpoint_path, attrs["file"], int(attrs["expires"])
+            ),
             None,
         )
 
