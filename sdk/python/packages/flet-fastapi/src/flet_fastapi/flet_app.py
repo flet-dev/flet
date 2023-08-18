@@ -1,15 +1,11 @@
 import asyncio
-import gc
 import json
 import logging
-import sys
 import traceback
-from datetime import datetime
 from typing import List, Optional
 
 import flet
 from fastapi import WebSocket, WebSocketDisconnect
-from flet_core.connection import Connection
 from flet_core.event import Event
 from flet_core.local_connection import LocalConnection
 from flet_core.page import Page
@@ -23,60 +19,10 @@ from flet_core.protocol import (
     RegisterWebClientRequestPayload,
 )
 from flet_core.utils import is_coroutine, random_string
+from flet_fastapi.flet_app_manager import flet_app_manager
 from flet_runtime.uploads import build_upload_url
 
 logger = logging.getLogger(flet.__name__)
-
-
-class SessionManager:
-    def __init__(self):
-        self.__lock = asyncio.Lock()
-        self.__sessions: dict[str, Page] = {}
-
-    async def get(self, session_id: str):
-        async with self.__lock:
-            return self.__sessions.get(session_id)
-
-    async def create(self, session_id: str, conn: Page):
-        logger.info(f"New session created: {session_id}")
-        async with self.__lock:
-            self.__sessions[session_id] = conn
-
-    async def reconnect(self, session_id: str, conn: Connection):
-        logger.info(f"Session reconnected: {session_id}")
-        async with self.__lock:
-            if session_id in self.__sessions:
-                await self.__sessions[session_id]._connect(conn)
-
-    async def disconnect(self, session_id: str, session_expires_in_seconds: int):
-        logger.info(f"Session disconnected: {session_id}")
-        if session_id in self.__sessions:
-            await self.__sessions[session_id]._disconnect(session_expires_in_seconds)
-
-    async def delete(self, session_id: str):
-        async with self.__lock:
-            await self.__delete(session_id)
-
-    async def __delete(self, session_id: str):
-        logger.info(f"Delete session: {session_id}")
-        page = self.__sessions.pop(session_id, None)
-        if page is not None:
-            await page._close_async()
-
-    async def evict_expired_sessions(self):
-        while True:
-            await asyncio.sleep(10)
-            session_ids = []
-            async with self.__lock:
-                for session_id, page in self.__sessions.items():
-                    if page.expires_at and datetime.utcnow() > page.expires_at:
-                        session_ids.append(session_id)
-            for session_id in session_ids:
-                await self.__delete(session_id)
-
-
-session_manager = SessionManager()
-# asyncio.create_task(session_manager.evict_expired_sessions())
 
 
 class FletApp(LocalConnection):
@@ -100,12 +46,12 @@ class FletApp(LocalConnection):
         await self.__receive_loop()
 
     async def __on_event(self, e):
-        session = await session_manager.get(e.sessionID)
+        session = await flet_app_manager.get_session(e.sessionID)
         if session is not None:
             await session.on_event_async(Event(e.eventTarget, e.eventName, e.eventData))
             if e.eventTarget == "page" and e.eventName == "close":
                 logger.info(f"Session closed: {e.sessionID}")
-                await session_manager.delete(e.sessionID)
+                await flet_app_manager.delete_session(e.sessionID)
 
     async def __on_session_created(self, session_data):
         logger.info(f"Start session: {session_data.sessionID}")
@@ -130,7 +76,7 @@ class FletApp(LocalConnection):
                 await self.__on_message(await self.__websocket.receive_text())
         except WebSocketDisconnect:
             if self.__page:
-                await session_manager.disconnect(
+                await flet_app_manager.disconnect_session(
                     self.__page.session_id, self.__session_expires_in_seconds
                 )
         self.__websocket = None
@@ -146,7 +92,8 @@ class FletApp(LocalConnection):
             new_session = True
             if (
                 not self._client_details.sessionId
-                or await session_manager.get(self._client_details.sessionId) is None
+                or await flet_app_manager.get_session(self._client_details.sessionId)
+                is None
             ):
                 # generate session ID
                 self._client_details.sessionId = random_string(16)
@@ -191,7 +138,7 @@ class FletApp(LocalConnection):
                 )
 
                 # register session
-                await session_manager.create(
+                await flet_app_manager.add_session(
                     self._client_details.sessionId, self.__page
                 )
             else:
@@ -199,7 +146,9 @@ class FletApp(LocalConnection):
                 logger.info(
                     f"Existing session requested: {self._client_details.sessionId}"
                 )
-                self.__page = await session_manager.get(self._client_details.sessionId)
+                self.__page = await flet_app_manager.get_session(
+                    self._client_details.sessionId
+                )
                 new_session = False
 
             # send register response
@@ -215,7 +164,9 @@ class FletApp(LocalConnection):
                     self.__on_session_created(self._create_session_handler_arg())
                 )
             else:
-                await session_manager.reconnect(self._client_details.sessionId, self)
+                await flet_app_manager.reconnect_session(
+                    self._client_details.sessionId, self
+                )
 
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
             if self.__on_event is not None:
