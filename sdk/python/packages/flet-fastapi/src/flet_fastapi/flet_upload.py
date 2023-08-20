@@ -27,29 +27,31 @@ class FletUpload:
         file_name = request.query_params["f"]
         expire_str = request.query_params["e"]
         signature = request.query_params["s"]
-        print(request.url.path)
 
         if not file_name or not expire_str or not signature:
-            raise Exception("All parameters must be provided")
+            raise Exception("Invalid request")
+
+        expire_date = datetime.fromisoformat(expire_str)
 
         # verify signature
-        query_string = build_upload_query_string(file_name, expire_str)
+        query_string = build_upload_query_string(file_name, expire_date)
         if (
-            get_upload_signature(request.url.path, query_string, self.__secret_key)
+            get_upload_signature(
+                request.url.path, query_string, expire_date, self.__secret_key
+            )
             != signature
         ):
-            raise Exception("Invalid signature")
+            raise Exception("Invalid request")
 
         # check expiration date
-        expires = datetime.fromisoformat(expire_str)
-        if datetime.utcnow() >= expires:
-            raise Exception("Upload URL has expired")
+        if datetime.utcnow() >= expire_date:
+            raise Exception("Invalid request")
 
         # build/validate dest path
         joined_path = os.path.join(self.__upload_dir, file_name)
         full_path = os.path.realpath(joined_path)
         if os.path.commonpath([full_path, self.__upload_dir]) != self.__upload_dir:
-            raise Exception("Upload path is outside of upload directory")
+            raise Exception("Invalid request")
 
         # create directory if not exists
         dest_dir = os.path.dirname(full_path)
