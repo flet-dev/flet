@@ -100,6 +100,7 @@ class Page(Control):
         self._id = "page"
         self._Control__uid = "page"
         self.__conn = conn
+        self.__next_control_id = 1
         self.__expires_at = None
         self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
@@ -205,6 +206,11 @@ class Page(Control):
         children.extend(self.__views)
         children.append(self.__offstage)
         return children
+    
+    def get_next_control_id(self):
+        r = self.__next_control_id
+        self.__next_control_id += 1
+        return r
 
     def fetch_page_details(self):
         assert self.__conn.page_name is not None
@@ -474,7 +480,7 @@ class Page(Control):
             await self._send_command_async("error", [message])
 
     def on_event(self, e: Event):
-        logger.info(f"page.on_event: {e.target} {e.name} {e.data}")
+        logger.debug(f"page.on_event: {e.target} {e.name} {e.data}")
         with self.__lock:
             if e.target == "page" and e.name == "change":
                 self.__on_page_change_event(e.data)
@@ -487,7 +493,7 @@ class Page(Control):
                     t.start()
 
     async def on_event_async(self, e: Event):
-        logger.info(f"page.on_event_async: {e.target} {e.name} {e.data}")
+        logger.debug(f"page.on_event_async: {e.target} {e.name} {e.data}")
 
         if e.target == "page" and e.name == "change":
             async with self.__async_lock:

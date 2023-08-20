@@ -1,9 +1,11 @@
+import logging
 import os
 import shutil
 import tempfile
 from pathlib import Path
 from typing import Optional, Tuple
 
+import flet_fastapi
 from fastapi.staticfiles import StaticFiles
 from flet_core import WebRenderer
 from flet_runtime.utils import (
@@ -11,6 +13,8 @@ from flet_runtime.utils import (
     patch_index_html,
     patch_manifest_json,
 )
+
+logger = logging.getLogger(flet_fastapi.__name__)
 
 
 class FletStaticFiles(StaticFiles):
@@ -24,7 +28,7 @@ class FletStaticFiles(StaticFiles):
         app_name: Optional[str] = None,
         app_short_name: Optional[str] = None,
         app_description: Optional[str] = None,
-        web_renderer: WebRenderer = WebRenderer.AUTO,
+        web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
         use_color_emoji: bool = False,
         route_url_strategy: str = "path",
     ) -> None:
@@ -33,18 +37,20 @@ class FletStaticFiles(StaticFiles):
 
         # where modified index.html is stored
         temp_dir = tempfile.mkdtemp()
-        # print("Temp dir:", temp_dir)
+        logger.info(f"Temp dir created for patched index and manifest: {temp_dir}")
 
         # "standard" web files
         web_dir = get_package_web_dir()
+        logger.info(f"Web root: {web_dir}")
 
         # user-defined assets
-        # print("assets_dir:", assets_dir)
         if assets_dir:
             if not Path(assets_dir).is_absolute():
                 raise Exception("assets_dir must be absolute path.")
             elif not os.path.exists(assets_dir):
-                raise Exception("assets_dir does not exists.")
+                raise Exception(f"assets_dir does not exists: {assets_dir}")
+
+        logger.info(f"Assets dir: {assets_dir}")
 
         # copy index.html from assets_dir or web_dir
         if assets_dir and os.path.exists(os.path.join(assets_dir, self.index)):

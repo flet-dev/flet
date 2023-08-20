@@ -11,7 +11,7 @@ logger = logging.getLogger(flet_core.__name__)
 class LocalConnection(Connection):
     def __init__(self):
         super().__init__()
-        self._control_id = 1
+        self.__control_id = 1
         self._client_details = None
 
     def _create_register_web_client_response(
@@ -138,8 +138,7 @@ class LocalConnection(Connection):
 
             id = cmd.attrs.get("id", "")
             if not id:
-                id = f"_{self._control_id}"
-                self._control_id += 1
+                id = f"_{self._get_next_control_id()}"
                 cmd.attrs["id"] = id
 
             ids.append(id)
@@ -247,3 +246,8 @@ class LocalConnection(Connection):
             elif prop_name == "windowLeft":
                 r = self._client_details.windowLeft
         return r, None
+
+    def _get_next_control_id(self):
+        r = self.__control_id
+        self.__control_id += 1
+        return r

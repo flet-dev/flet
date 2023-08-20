@@ -3,11 +3,11 @@ import logging
 from datetime import datetime
 from typing import Optional
 
-import flet
+import flet_fastapi
 from flet_core.connection import Connection
 from flet_core.page import Page
 
-logger = logging.getLogger(flet.__name__)
+logger = logging.getLogger(flet_fastapi.__name__)
 
 
 class FletAppManager:

@@ -5,7 +5,7 @@ import os
 import traceback
 from typing import List, Optional
 
-import flet
+import flet_fastapi
 from fastapi import WebSocket, WebSocketDisconnect
 from flet_core.event import Event
 from flet_core.local_connection import LocalConnection
@@ -23,7 +23,7 @@ from flet_core.utils import is_coroutine, random_string
 from flet_fastapi.flet_app_manager import flet_app_manager
 from flet_runtime.uploads import build_upload_url
 
-logger = logging.getLogger(flet.__name__)
+logger = logging.getLogger(flet_fastapi.__name__)
 
 DEFAULT_FLET_SESSION_TIMEOUT = 3600
 
@@ -52,7 +52,10 @@ class FletApp(LocalConnection):
 
     async def handle(self, websocket: WebSocket):
         self.__websocket = websocket
+        self.page_url = str(websocket.url)
         await self.__websocket.accept()
+        self.__send_queue = asyncio.Queue(1)
+        asyncio.create_task(self.__send_loop())
         await self.__receive_loop()
 
     async def __on_event(self, e):
@@ -79,6 +82,16 @@ class FletApp(LocalConnection):
             await self.__page.error_async(
                 f"There was an error while processing your request: {e}"
             )
+
+    async def __send_loop(self):
+        while True:
+            message = await self.__send_queue.get()
+            try:
+                await self.__websocket.send_text(message)
+            except Exception:
+                # re-enqueue the message to repeat it when re-connected
+                self.__send_queue.put_nowait(message)
+                raise
 
     async def __receive_loop(self):
         try:
@@ -230,6 +243,10 @@ class FletApp(LocalConnection):
         return PageCommandsBatchResponsePayload(results=results, error="")
 
     async def __send(self, message: ClientMessage):
-        j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
-        logger.debug(f"__send: {j}")
-        await self.__websocket.send_text(j)
+        m = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
+        logger.debug(f"__send: {m}")
+        await self.__send_queue.put(m)
+
+    def _get_next_control_id(self):
+        assert self.__page
+        return self.__page.get_next_control_id()
