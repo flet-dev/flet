@@ -7,7 +7,7 @@ from typing import Optional, Tuple
 
 import flet_fastapi
 from fastapi.staticfiles import StaticFiles
-from flet_core import WebRenderer
+from flet_core.types import WebRenderer
 from flet_fastapi.flet_app_manager import flet_app_manager
 from flet_runtime.utils import (
     get_package_web_dir,
@@ -24,8 +24,8 @@ class FletStaticFiles(StaticFiles):
 
     def __init__(
         self,
+        app_mount_path: str = "/",
         assets_dir: Optional[str] = None,
-        app_mount_path: Optional[str] = None,
         app_name: Optional[str] = None,
         app_short_name: Optional[str] = None,
         app_description: Optional[str] = None,
@@ -79,11 +79,16 @@ class FletStaticFiles(StaticFiles):
                 os.path.join(temp_dir, self.manifest_json),
             )
 
+        ws_path = websocket_endpoint_path
+        if not ws_path:
+            ws_path = app_mount_path.strip("/")
+            ws_path = f"{'/' if not app_mount_path else ''}{app_mount_path}/ws"
+
         # replace variables in index.html and manifest.json
         patch_index_html(
             index_path=os.path.join(temp_dir, self.index),
             base_href=app_mount_path,
-            websocket_endpoint_path=websocket_endpoint_path,
+            websocket_endpoint_path=ws_path,
             app_name=app_name,
             app_description=app_description,
             web_renderer=WebRenderer(web_renderer),

@@ -50,7 +50,8 @@ try:
     from flet_runtime.auth.authorization import Authorization
     from flet_runtime.auth.oauth_provider import OAuthProvider
     from flet_runtime.pubsub import PubSub
-except ImportError:
+except ImportError as e:
+    logger.warning("Authorization classes are not loaded, using fake implementations.")
 
     class Authorization:
         pass
@@ -206,7 +207,7 @@ class Page(Control):
         children.extend(self.__views)
         children.append(self.__offstage)
         return children
-    
+
     def get_next_control_id(self):
         r = self.__next_control_id
         self.__next_control_id += 1
@@ -650,6 +651,9 @@ class Page(Control):
             )
         return self.__authorization
 
+    async def _authorize_callback_async(self, data):
+        await self.on_event_async(Event("page", "authorize", json.dumps(data)))
+
     def __on_authorize(self, e):
         assert self.__authorization is not None
         d = json.loads(e.data)
@@ -667,7 +671,7 @@ class Page(Control):
         login_evt = LoginEvent(
             error=d["error"], error_description=d["error_description"]
         )
-        if login_evt.error == "":
+        if not login_evt.error:
             # perform token request
             code = d["code"]
             assert code not in [None, ""]
@@ -694,7 +698,7 @@ class Page(Control):
         login_evt = LoginEvent(
             error=d["error"], error_description=d["error_description"]
         )
-        if login_evt.error == "":
+        if not login_evt.error:
             # perform token request
             code = d["code"]
             assert code not in [None, ""]

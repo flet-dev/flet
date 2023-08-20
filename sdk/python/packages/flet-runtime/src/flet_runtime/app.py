@@ -13,7 +13,9 @@ from pathlib import Path
 from typing import Optional
 
 import flet_runtime
-from flet_core import (
+from flet_core.event import Event
+from flet_core.page import Page
+from flet_core.types import (
     FLET_APP,
     FLET_APP_HIDDEN,
     FLET_APP_WEB,
@@ -21,8 +23,6 @@ from flet_core import (
     AppView,
     WebRenderer,
 )
-from flet_core.event import Event
-from flet_core.page import Page
 from flet_core.utils import is_coroutine, random_string
 from flet_runtime.async_local_socket_connection import AsyncLocalSocketConnection
 from flet_runtime.sync_local_socket_connection import SyncLocalSocketConnection

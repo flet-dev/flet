@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from flet_core import WebRenderer
+from flet_core.types import WebRenderer
 
 
 def is_ios():
@@ -154,7 +154,7 @@ def get_current_script_dir():
 
 def patch_index_html(
     index_path: str,
-    base_href: Optional[str] = None,
+    base_href: str,
     websocket_endpoint_path: Optional[str] = None,
     app_name: Optional[str] = None,
     app_description: Optional[str] = None,

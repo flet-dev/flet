@@ -97,6 +97,8 @@ class LocalConnection(Connection):
             return self._process_error_command(command.values)
         elif command.name == "getUploadUrl":
             return self._process_get_upload_url_command(command.attrs)
+        elif command.name == "oauthAuthorize":
+            return self._process_oauth_authorize_command(command.attrs)
         raise Exception(f"Unsupported command: {command.name}")
 
     def _process_add_command(self, command: Command):
@@ -211,8 +213,10 @@ class LocalConnection(Connection):
         )
 
     def _process_get_upload_url_command(self, attrs):
-        assert len(attrs) == 2, '"getUploadUrl" command has wrong number of attrs'
-        raise Exception("get_upload_url() command is not supported.")
+        raise Exception("getUploadUrl command is not supported.")
+
+    def _process_oauth_authorize_command(self, attrs):
+        raise Exception("oauthAuthorize command is not supported.")
 
     def _process_get_command(self, values: List[str]):
         assert len(values) == 2, '"get" command has wrong number of values'

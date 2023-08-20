@@ -3,7 +3,8 @@ import json
 import logging
 import os
 import traceback
-from typing import List, Optional
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 
 import flet_fastapi
 from fastapi import WebSocket, WebSocketDisconnect
@@ -21,11 +22,13 @@ from flet_core.protocol import (
 )
 from flet_core.utils import is_coroutine, random_string
 from flet_fastapi.flet_app_manager import flet_app_manager
+from flet_fastapi.oauth_state import OAuthState
 from flet_runtime.uploads import build_upload_url
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
 DEFAULT_FLET_SESSION_TIMEOUT = 3600
+DEFAULT_FLET_OAUTH_STATE_TIMEOUT = 600
 
 
 class FletApp(LocalConnection):
@@ -33,6 +36,7 @@ class FletApp(LocalConnection):
         self,
         session_handler,
         session_timeout_seconds: int = DEFAULT_FLET_SESSION_TIMEOUT,
+        oauth_state_timeout_seconds: int = DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
         upload_endpoint_path: Optional[str] = None,
         secret_key: Optional[str] = None,
     ):
@@ -42,6 +46,7 @@ class FletApp(LocalConnection):
         self.__page = None
         self.__session_handler = session_handler
         self.__session_timeout_seconds = session_timeout_seconds
+        self.__oauth_state_timeout_seconds = oauth_state_timeout_seconds
 
         env_session_timeout_seconds = os.getenv("FLET_SESSION_TIMEOUT")
         if env_session_timeout_seconds:
@@ -52,11 +57,19 @@ class FletApp(LocalConnection):
 
     async def handle(self, websocket: WebSocket):
         self.__websocket = websocket
-        self.page_url = str(websocket.url)
+        self.page_url = str(websocket.url).rsplit("/", 1)[0]
+        self.page_name = websocket.url.path.rsplit("/", 1)[0].lstrip("/")
+
+        if not self.__upload_endpoint_path:
+            self.__upload_endpoint_path = (
+                f"{'/' if not self.page_name else ''}{self.page_name}/upload"
+            )
+
         await self.__websocket.accept()
         self.__send_queue = asyncio.Queue(1)
-        asyncio.create_task(self.__send_loop())
+        st = asyncio.create_task(self.__send_loop())
         await self.__receive_loop()
+        st.cancel()
 
     async def __on_event(self, e):
         session = await flet_app_manager.get_session(e.sessionID)
@@ -221,8 +234,28 @@ class FletApp(LocalConnection):
             None,
         )
 
+    async def __process_oauth_authorize_command(self, attrs: Dict[str, Any]):
+        state_id = attrs["state"]
+        state = OAuthState(
+            session_id=self._client_details.sessionId,
+            expires_at=datetime.utcnow()
+            + timedelta(seconds=self.__oauth_state_timeout_seconds),
+            complete_page_html=attrs.get("completePageHtml", None),
+            complete_page_url=attrs.get("completePageUrl", None),
+        )
+        await flet_app_manager.store_state(state_id, state)
+        return (
+            "",
+            None,
+        )
+
     async def send_command_async(self, session_id: str, command: Command):
-        result, message = self._process_command(command)
+        if command.name == "oauthAuthorize":
+            result, message = await self.__process_oauth_authorize_command(
+                command.attrs
+            )
+        else:
+            result, message = self._process_command(command)
         if message:
             await self.__send(message)
         return PageCommandResponsePayload(result=result, error="")
@@ -231,7 +264,12 @@ class FletApp(LocalConnection):
         results = []
         messages = []
         for command in commands:
-            result, message = self._process_command(command)
+            if command.name == "oauthAuthorize":
+                result, message = await self.__process_oauth_authorize_command(
+                    command.attrs
+                )
+            else:
+                result, message = self._process_command(command)
             if command.name in ["add", "get"]:
                 results.append(result)
             if message:
