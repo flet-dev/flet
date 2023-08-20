@@ -2,6 +2,10 @@ bool isProgressiveWebApp() {
   return false;
 }
 
+String getWebsocketEndpointPath() {
+  return "ws";
+}
+
 String getFletRouteUrlStrategy() {
   return "";
 }

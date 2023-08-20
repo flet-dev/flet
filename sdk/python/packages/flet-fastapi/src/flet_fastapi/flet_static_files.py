@@ -8,6 +8,7 @@ from typing import Optional, Tuple
 import flet_fastapi
 from fastapi.staticfiles import StaticFiles
 from flet_core import WebRenderer
+from flet_fastapi.flet_app_manager import flet_app_manager
 from flet_runtime.utils import (
     get_package_web_dir,
     patch_index_html,
@@ -31,12 +32,14 @@ class FletStaticFiles(StaticFiles):
         web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
         use_color_emoji: bool = False,
         route_url_strategy: str = "path",
+        websocket_endpoint_path: Optional[str] = None,
     ) -> None:
         self.index = "index.html"
         self.manifest_json = "manifest.json"
 
         # where modified index.html is stored
         temp_dir = tempfile.mkdtemp()
+        flet_app_manager.add_temp_dir(temp_dir)
         logger.info(f"Temp dir created for patched index and manifest: {temp_dir}")
 
         # "standard" web files
@@ -80,6 +83,7 @@ class FletStaticFiles(StaticFiles):
         patch_index_html(
             index_path=os.path.join(temp_dir, self.index),
             base_href=app_mount_path,
+            websocket_endpoint_path=websocket_endpoint_path,
             app_name=app_name,
             app_description=app_description,
             web_renderer=WebRenderer(web_renderer),

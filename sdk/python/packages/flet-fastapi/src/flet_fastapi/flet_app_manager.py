@@ -1,5 +1,7 @@
 import asyncio
 import logging
+import os
+import shutil
 from datetime import datetime
 from typing import Optional
 
@@ -14,6 +16,7 @@ class FletAppManager:
     def __init__(self):
         self.__lock = asyncio.Lock()
         self.__sessions: dict[str, Page] = {}
+        self.__temp_dirs = {}
 
     async def get_session(self, session_id: str) -> Optional[Page]:
         async with self.__lock:
@@ -45,6 +48,9 @@ class FletAppManager:
         if page is not None:
             await page._close_async()
 
+    def add_temp_dir(self, temp_dir: str):
+        self.__temp_dirs[temp_dir] = True
+
     async def start(self):
         logger.info("Starting up Flet App Manager")
         asyncio.create_task(self.__evict_expired_sessions())
@@ -52,7 +58,7 @@ class FletAppManager:
 
     async def shutdown(self):
         logger.info("Shutting down Flet App Manager")
-        # TODO
+        self.delete_temp_dirs()
 
     async def __evict_expired_sessions(self):
         while True:
@@ -69,6 +75,11 @@ class FletAppManager:
         while True:
             await asyncio.sleep(10)
             # TODO
+
+    def delete_temp_dirs(self):
+        for temp_dir in self.__temp_dirs.keys():
+            logger.info(f"Deleting temp dir: {temp_dir}")
+            shutil.rmtree(temp_dir, ignore_errors=True)
 
 
 flet_app_manager = FletAppManager()

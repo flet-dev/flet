@@ -155,6 +155,7 @@ def get_current_script_dir():
 def patch_index_html(
     index_path: str,
     base_href: Optional[str] = None,
+    websocket_endpoint_path: Optional[str] = None,
     app_name: Optional[str] = None,
     app_description: Optional[str] = None,
     pyodide: bool = False,
@@ -195,6 +196,14 @@ def patch_index_html(
             '<base href="{}">'.format(
                 "/" if base_url == "" else "/{}/".format(base_url)
             ),
+        )
+    if websocket_endpoint_path:
+        index = re.sub(
+            r"\<meta name=\"flet-websocket-endpoint-path\" content=\"(.+)\">",
+            r'<meta name="flet-websocket-endpoint-path" content="{}">'.format(
+                websocket_endpoint_path
+            ),
+            index,
         )
     if app_name:
         index = re.sub(

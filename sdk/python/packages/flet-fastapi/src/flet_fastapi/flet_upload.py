@@ -16,6 +16,11 @@ class FletUpload:
     ) -> None:
         self.__upload_dir = os.path.realpath(upload_dir)
         self.__max_upload_size = max_upload_size
+
+        env_max_upload_size = os.getenv("FLET_MAX_UPLOAD_SIZE")
+        if env_max_upload_size:
+            self.__max_upload_size = int(env_max_upload_size)
+
         self.__secret_key = secret_key
 
     async def handle(self, request: Request):
