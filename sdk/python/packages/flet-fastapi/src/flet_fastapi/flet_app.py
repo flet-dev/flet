@@ -62,7 +62,7 @@ class FletApp(LocalConnection):
 
         if not self.__upload_endpoint_path:
             self.__upload_endpoint_path = (
-                f"{'/' if not self.page_name else ''}{self.page_name}/upload"
+                f"{'' if self.page_name == '' else '/'}{self.page_name}/upload"
             )
 
         await self.__websocket.accept()
@@ -72,12 +72,16 @@ class FletApp(LocalConnection):
         st.cancel()
 
     async def __on_event(self, e):
-        session = await flet_app_manager.get_session(e.sessionID)
+        session = await flet_app_manager.get_session(
+            self.__get_unique_session_id(e.sessionID)
+        )
         if session is not None:
             await session.on_event_async(Event(e.eventTarget, e.eventName, e.eventData))
             if e.eventTarget == "page" and e.eventName == "close":
                 logger.info(f"Session closed: {e.sessionID}")
-                await flet_app_manager.delete_session(e.sessionID)
+                await flet_app_manager.delete_session(
+                    self.__get_unique_session_id(e.sessionID)
+                )
 
     async def __on_session_created(self, session_data):
         logger.info(f"Start session: {session_data.sessionID}")
@@ -113,7 +117,8 @@ class FletApp(LocalConnection):
         except WebSocketDisconnect:
             if self.__page:
                 await flet_app_manager.disconnect_session(
-                    self.__page.session_id, self.__session_timeout_seconds
+                    self.__get_unique_session_id(self.__page.session_id),
+                    self.__session_timeout_seconds,
                 )
         self.__websocket = None
         self.__page = None
@@ -128,7 +133,9 @@ class FletApp(LocalConnection):
             new_session = True
             if (
                 not self._client_details.sessionId
-                or await flet_app_manager.get_session(self._client_details.sessionId)
+                or await flet_app_manager.get_session(
+                    self.__get_unique_session_id(self._client_details.sessionId)
+                )
                 is None
             ):
                 # generate session ID
@@ -175,7 +182,8 @@ class FletApp(LocalConnection):
 
                 # register session
                 await flet_app_manager.add_session(
-                    self._client_details.sessionId, self.__page
+                    self.__get_unique_session_id(self._client_details.sessionId),
+                    self.__page,
                 )
             else:
                 # existing session
@@ -183,7 +191,7 @@ class FletApp(LocalConnection):
                     f"Existing session requested: {self._client_details.sessionId}"
                 )
                 self.__page = await flet_app_manager.get_session(
-                    self._client_details.sessionId
+                    self.__get_unique_session_id(self._client_details.sessionId)
                 )
                 new_session = False
 
@@ -201,7 +209,7 @@ class FletApp(LocalConnection):
                 )
             else:
                 await flet_app_manager.reconnect_session(
-                    self._client_details.sessionId, self
+                    self.__get_unique_session_id(self._client_details.sessionId), self
                 )
 
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
@@ -237,7 +245,7 @@ class FletApp(LocalConnection):
     async def __process_oauth_authorize_command(self, attrs: Dict[str, Any]):
         state_id = attrs["state"]
         state = OAuthState(
-            session_id=self._client_details.sessionId,
+            session_id=self.__get_unique_session_id(self._client_details.sessionId),
             expires_at=datetime.utcnow()
             + timedelta(seconds=self.__oauth_state_timeout_seconds),
             complete_page_html=attrs.get("completePageHtml", None),
@@ -288,3 +296,6 @@ class FletApp(LocalConnection):
     def _get_next_control_id(self):
         assert self.__page
         return self.__page.get_next_control_id()
+
+    def __get_unique_session_id(self, session_id: str):
+        return f"{self.page_name}{session_id}"

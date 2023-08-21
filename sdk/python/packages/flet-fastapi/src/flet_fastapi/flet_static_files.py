@@ -36,6 +36,7 @@ class FletStaticFiles(StaticFiles):
     ) -> None:
         self.index = "index.html"
         self.manifest_json = "manifest.json"
+        self.__app_mount_path = app_mount_path
 
         # where modified index.html is stored
         temp_dir = tempfile.mkdtemp()
@@ -82,7 +83,7 @@ class FletStaticFiles(StaticFiles):
         ws_path = websocket_endpoint_path
         if not ws_path:
             ws_path = app_mount_path.strip("/")
-            ws_path = f"{'/' if not app_mount_path else ''}{app_mount_path}/ws"
+            ws_path = f"{'' if ws_path == '' else '/'}{ws_path}/ws"
 
         # replace variables in index.html and manifest.json
         patch_index_html(
@@ -122,6 +123,7 @@ class FletStaticFiles(StaticFiles):
         Returns:
             [tuple[str, os.stat_result]]: Always retuens a full path and stat result.
         """
+        logger.debug(f"StaticFiles.lokup_path: {self.__app_mount_path} {path}")
         full_path, stat_result = super().lookup_path(path)
 
         # if a file cannot be found
