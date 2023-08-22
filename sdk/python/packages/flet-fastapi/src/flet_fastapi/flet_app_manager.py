@@ -20,17 +20,24 @@ class FletAppManager:
     def __init__(self):
         self.__sessions_lock = asyncio.Lock()
         self.__sessions: dict[str, Page] = {}
+        self.__evict_sessions_task = None
         self.__states_lock = asyncio.Lock()
         self.__states: dict[str, OAuthState] = {}
+        self.__evict_oauth_states_task = None
         self.__temp_dirs = {}
 
     async def start(self):
         """
         Background task evicting expired app data. Must be called at FastAPI application startup.
         """
-        logger.info("Starting up Flet App Manager")
-        asyncio.create_task(self.__evict_expired_sessions())
-        asyncio.create_task(self.__evict_expired_oauth_states())
+        if not self.__evict_sessions_task:
+            logger.info("Starting up Flet App Manager")
+            self.__evict_sessions_task = asyncio.create_task(
+                self.__evict_expired_sessions()
+            )
+            self.__evict_oauth_states_task = asyncio.create_task(
+                self.__evict_expired_oauth_states()
+            )
 
     async def shutdown(self):
         """
@@ -38,6 +45,10 @@ class FletAppManager:
         """
         logger.info("Shutting down Flet App Manager")
         self.delete_temp_dirs()
+        if self.__evict_sessions_task:
+            self.__evict_sessions_task.cancel()
+        if self.__evict_oauth_states_task:
+            self.__evict_oauth_states_task.cancel()
 
     async def get_session(self, session_id: str) -> Optional[Page]:
         async with self.__sessions_lock:
