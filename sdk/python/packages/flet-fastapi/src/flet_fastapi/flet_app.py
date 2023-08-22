@@ -143,42 +143,6 @@ class FletApp(LocalConnection):
 
                 # create new Page object
                 self.__page = Page(self, self._client_details.sessionId)
-                self.__page._set_attr("route", self._client_details.pageRoute, False)
-                self.__page._set_attr("pwa", self._client_details.isPWA, False)
-                self.__page._set_attr("web", self._client_details.isWeb, False)
-                self.__page._set_attr("debug", self._client_details.isDebug, False)
-                self.__page._set_attr("platform", self._client_details.platform, False)
-                self.__page._set_attr(
-                    "platformBrightness", self._client_details.platformBrightness, False
-                )
-                self.__page._set_attr("width", self._client_details.pageWidth, False)
-                self.__page._set_attr("height", self._client_details.pageHeight, False)
-                self.__page._set_attr(
-                    "windowWidth", self._client_details.windowWidth, False
-                )
-                self.__page._set_attr(
-                    "windowHeight", self._client_details.windowHeight, False
-                )
-                self.__page._set_attr(
-                    "windowTop", self._client_details.windowTop, False
-                )
-                self.__page._set_attr(
-                    "windowLeft", self._client_details.windowLeft, False
-                )
-
-                # TODO
-                self.__page._set_attr(
-                    "clientIP",
-                    self.__websocket.client.host if self.__websocket.client else "",
-                    False,
-                )
-                self.__page._set_attr(
-                    "clientUserAgent",
-                    self.__websocket.headers["user-agent"]
-                    if "user-agent" in self.__websocket.headers
-                    else "",
-                    False,
-                )
 
                 # register session
                 await flet_app_manager.add_session(
@@ -194,6 +158,40 @@ class FletApp(LocalConnection):
                     self.__get_unique_session_id(self._client_details.sessionId)
                 )
                 new_session = False
+
+            # update page props
+            original_route = self.__page.route
+            self.__page._set_attr("route", self._client_details.pageRoute, False)
+            self.__page._set_attr("pwa", self._client_details.isPWA, False)
+            self.__page._set_attr("web", self._client_details.isWeb, False)
+            self.__page._set_attr("debug", self._client_details.isDebug, False)
+            self.__page._set_attr("platform", self._client_details.platform, False)
+            self.__page._set_attr(
+                "platformBrightness", self._client_details.platformBrightness, False
+            )
+            self.__page._set_attr("width", self._client_details.pageWidth, False)
+            self.__page._set_attr("height", self._client_details.pageHeight, False)
+            self.__page._set_attr(
+                "windowWidth", self._client_details.windowWidth, False
+            )
+            self.__page._set_attr(
+                "windowHeight", self._client_details.windowHeight, False
+            )
+            self.__page._set_attr("windowTop", self._client_details.windowTop, False)
+            self.__page._set_attr("windowLeft", self._client_details.windowLeft, False)
+
+            self.__page._set_attr(
+                "clientIP",
+                self.__websocket.client.host if self.__websocket.client else "",
+                False,
+            )
+            self.__page._set_attr(
+                "clientUserAgent",
+                self.__websocket.headers["user-agent"]
+                if "user-agent" in self.__websocket.headers
+                else "",
+                False,
+            )
 
             # send register response
             controls = {}
@@ -211,6 +209,9 @@ class FletApp(LocalConnection):
                 await flet_app_manager.reconnect_session(
                     self.__get_unique_session_id(self._client_details.sessionId), self
                 )
+
+                if original_route != self.__page.route:
+                    await self.__page.go_async(self.__page.route)
 
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
             if self.__on_event is not None:
