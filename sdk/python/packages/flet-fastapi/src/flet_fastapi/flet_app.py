@@ -21,7 +21,7 @@ from flet_core.protocol import (
     RegisterWebClientRequestPayload,
 )
 from flet_core.utils import is_coroutine, random_string
-from flet_fastapi.flet_app_manager import flet_app_manager
+from flet_fastapi.flet_app_manager import app_manager
 from flet_fastapi.oauth_state import OAuthState
 from flet_runtime.uploads import build_upload_url
 
@@ -40,6 +40,17 @@ class FletApp(LocalConnection):
         upload_endpoint_path: Optional[str] = None,
         secret_key: Optional[str] = None,
     ):
+        """
+        Handle Flet app WebSocket connections.
+
+        Parameters:
+
+        * `session_handler` (Coroutine) - application entry point - an async method called for newly connected user. Handler coroutine must have 1 parameter: `page` - `Page` instance.
+        * `session_timeout_seconds` (int, optional)- session lifetime, in seconds, after user disconnected.
+        * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime, in seconds, which is a maximum allowed time between starting OAuth flow and redirecting to OAuth callback URL.
+        * `upload_endpoint_path` (str, optional) - absolute URL of upload endpoint, e.g. `/upload`.
+        * `secret_key` (str, optional) - secret key to sign upload requests.
+        """
         super().__init__()
         logger.info("New FletConnection")
 
@@ -52,10 +63,21 @@ class FletApp(LocalConnection):
         if env_session_timeout_seconds:
             self.__session_timeout_seconds = int(env_session_timeout_seconds)
 
+        env_oauth_state_timeout_seconds = os.getenv("FLET_OAUTH_STATE_TIMEOUT")
+        if env_oauth_state_timeout_seconds:
+            self.__oauth_state_timeout_seconds = int(env_oauth_state_timeout_seconds)
+
         self.__upload_endpoint_path = upload_endpoint_path
         self.__secret_key = secret_key
 
     async def handle(self, websocket: WebSocket):
+        """
+        Handle WebSocket connection.
+
+        Parameters:
+
+        * `websocket` (WebSocket) - Websocket instance.
+        """
         self.__websocket = websocket
         self.page_url = str(websocket.url).rsplit("/", 1)[0]
         self.page_name = websocket.url.path.rsplit("/", 1)[0].lstrip("/")
@@ -72,14 +94,14 @@ class FletApp(LocalConnection):
         st.cancel()
 
     async def __on_event(self, e):
-        session = await flet_app_manager.get_session(
+        session = await app_manager.get_session(
             self.__get_unique_session_id(e.sessionID)
         )
         if session is not None:
             await session.on_event_async(Event(e.eventTarget, e.eventName, e.eventData))
             if e.eventTarget == "page" and e.eventName == "close":
                 logger.info(f"Session closed: {e.sessionID}")
-                await flet_app_manager.delete_session(
+                await app_manager.delete_session(
                     self.__get_unique_session_id(e.sessionID)
                 )
 
@@ -116,7 +138,7 @@ class FletApp(LocalConnection):
                 await self.__on_message(await self.__websocket.receive_text())
         except WebSocketDisconnect:
             if self.__page:
-                await flet_app_manager.disconnect_session(
+                await app_manager.disconnect_session(
                     self.__get_unique_session_id(self.__page.session_id),
                     self.__session_timeout_seconds,
                 )
@@ -133,7 +155,7 @@ class FletApp(LocalConnection):
             new_session = True
             if (
                 not self._client_details.sessionId
-                or await flet_app_manager.get_session(
+                or await app_manager.get_session(
                     self.__get_unique_session_id(self._client_details.sessionId)
                 )
                 is None
@@ -145,7 +167,7 @@ class FletApp(LocalConnection):
                 self.__page = Page(self, self._client_details.sessionId)
 
                 # register session
-                await flet_app_manager.add_session(
+                await app_manager.add_session(
                     self.__get_unique_session_id(self._client_details.sessionId),
                     self.__page,
                 )
@@ -154,7 +176,7 @@ class FletApp(LocalConnection):
                 logger.info(
                     f"Existing session requested: {self._client_details.sessionId}"
                 )
-                self.__page = await flet_app_manager.get_session(
+                self.__page = await app_manager.get_session(
                     self.__get_unique_session_id(self._client_details.sessionId)
                 )
                 new_session = False
@@ -206,7 +228,7 @@ class FletApp(LocalConnection):
                     self.__on_session_created(self._create_session_handler_arg())
                 )
             else:
-                await flet_app_manager.reconnect_session(
+                await app_manager.reconnect_session(
                     self.__get_unique_session_id(self._client_details.sessionId), self
                 )
 
@@ -252,7 +274,7 @@ class FletApp(LocalConnection):
             complete_page_html=attrs.get("completePageHtml", None),
             complete_page_url=attrs.get("completePageUrl", None),
         )
-        await flet_app_manager.store_state(state_id, state)
+        await app_manager.store_state(state_id, state)
         return (
             "",
             None,

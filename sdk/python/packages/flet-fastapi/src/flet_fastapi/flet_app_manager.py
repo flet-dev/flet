@@ -13,12 +13,31 @@ logger = logging.getLogger(flet_fastapi.__name__)
 
 
 class FletAppManager:
+    """
+    Manage application sessions and their lifetime.
+    """
+
     def __init__(self):
         self.__sessions_lock = asyncio.Lock()
         self.__sessions: dict[str, Page] = {}
         self.__states_lock = asyncio.Lock()
         self.__states: dict[str, OAuthState] = {}
         self.__temp_dirs = {}
+
+    async def start(self):
+        """
+        Background task evicting expired app data. Must be called at FastAPI application startup.
+        """
+        logger.info("Starting up Flet App Manager")
+        asyncio.create_task(self.__evict_expired_sessions())
+        asyncio.create_task(self.__evict_expired_oauth_states())
+
+    async def shutdown(self):
+        """
+        Cleanup temporary Flet resources on application shutdown.
+        """
+        logger.info("Shutting down Flet App Manager")
+        self.delete_temp_dirs()
 
     async def get_session(self, session_id: str) -> Optional[Page]:
         async with self.__sessions_lock:
@@ -59,15 +78,6 @@ class FletAppManager:
     def add_temp_dir(self, temp_dir: str):
         self.__temp_dirs[temp_dir] = True
 
-    async def start(self):
-        logger.info("Starting up Flet App Manager")
-        asyncio.create_task(self.__evict_expired_sessions())
-        asyncio.create_task(self.__evict_expired_oauth_states())
-
-    async def shutdown(self):
-        logger.info("Shutting down Flet App Manager")
-        self.delete_temp_dirs()
-
     async def __evict_expired_sessions(self):
         while True:
             await asyncio.sleep(10)
@@ -97,4 +107,4 @@ class FletAppManager:
             shutil.rmtree(temp_dir, ignore_errors=True)
 
 
-flet_app_manager = FletAppManager()
+app_manager = FletAppManager()

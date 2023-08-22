@@ -1,25 +1,36 @@
 from fastapi import HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from flet_fastapi.flet_app_manager import flet_app_manager
+from flet_fastapi.flet_app_manager import app_manager
 from flet_fastapi.oauth_state import OAuthState
 
 
 class FletOAuth:
+    """
+    HTTP handler for OAuth callback.
+    """
+
     def __init__(self) -> None:
         pass
 
     async def handle(self, request: Request):
+        """
+        Handle OAuth callback request.
+
+        Request must contain minimum `code` and `state` query parameters.
+
+        Returns either redirect to a Flet page or a HTML page with further instructions.
+        """
         state_id = request.query_params.get("state")
 
         if not state_id:
             raise HTTPException(status_code=400, detail="Invalid state")
 
-        state = await flet_app_manager.retrieve_state(state_id)
+        state = await app_manager.retrieve_state(state_id)
 
         if not state:
             raise HTTPException(status_code=400, detail="Invalid state")
 
-        session = await flet_app_manager.get_session(state.session_id)
+        session = await app_manager.get_session(state.session_id)
         if not session:
             raise HTTPException(status_code=500, detail="Session not found")
 

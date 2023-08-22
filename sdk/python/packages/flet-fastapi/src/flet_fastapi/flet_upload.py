@@ -8,6 +8,16 @@ from flet_runtime.uploads import build_upload_query_string, get_upload_signature
 
 
 class FletUpload:
+    """
+    Flet app uploads handler.
+
+    Parameters:
+
+    * `upload_dir` (str) - an absolute path to a directory with uploaded files.
+    * `max_upload_size` (str, int) - maximum size of a single upload, bytes. Unlimited if `None`.
+    * `secret_key` (str, optional) - secret key to sign and verify upload requests.
+    """
+
     def __init__(
         self,
         upload_dir: str,
@@ -22,6 +32,12 @@ class FletUpload:
             self.__max_upload_size = int(env_max_upload_size)
 
         self.__secret_key = secret_key
+
+    """
+    Handle file upload.
+
+    Upload must be an non-encoded (raw) file in the requst body.
+    """
 
     async def handle(self, request: Request):
         file_name = request.query_params["f"]

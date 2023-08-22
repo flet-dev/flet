@@ -8,7 +8,7 @@ from typing import Optional, Tuple
 import flet_fastapi
 from fastapi.staticfiles import StaticFiles
 from flet_core.types import WebRenderer
-from flet_fastapi.flet_app_manager import flet_app_manager
+from flet_fastapi.flet_app_manager import app_manager
 from flet_runtime.utils import (
     get_package_web_dir,
     patch_index_html,
@@ -19,8 +19,21 @@ logger = logging.getLogger(flet_fastapi.__name__)
 
 
 class FletStaticFiles(StaticFiles):
-    """Acts similar to the bripkens/connect-history-api-fallback
-    NPM package."""
+    """
+    Serve Flet app static files.
+
+    Parameters:
+
+    * `app_mount_path` (str) - absolute URL of Flet app. Default is `/`.
+    * `assets_dir` (str, optional) - an absolute path to app's assets directory.
+    * `app_name` (str, optional) - PWA application name.
+    * `app_short_name` (str, optional) - PWA application short name.
+    * `app_description` (str, optional) - PWA application description.
+    * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.CANVAS_KIT`.
+    * `use_color_emoji` (bool) - whether to load a font with color emoji. Default is `False`.
+    * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
+    * `websocket_endpoint_path` (str, optional) - absolute URL of Flet app WebSocket handler. Default is `{app_mount_path}/ws`.
+    """
 
     def __init__(
         self,
@@ -40,7 +53,7 @@ class FletStaticFiles(StaticFiles):
 
         # where modified index.html is stored
         temp_dir = tempfile.mkdtemp()
-        flet_app_manager.add_temp_dir(temp_dir)
+        app_manager.add_temp_dir(temp_dir)
         logger.info(f"Temp dir created for patched index and manifest: {temp_dir}")
 
         # "standard" web files
