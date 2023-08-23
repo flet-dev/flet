@@ -1,4 +1,5 @@
 import asyncio
+import copy
 import json
 import logging
 import os
@@ -215,11 +216,20 @@ class FletApp(LocalConnection):
                 False,
             )
 
+            p = self.__page.snapshot.get("page")
+            if not p:
+                p = {
+                    "i": "page",
+                    "t": "page",
+                    "p": "",
+                    "c": [],
+                }
+                self.__page.snapshot["page"] = p
+            self.__page.copy_attrs(p)
+
             # send register response
-            controls = {}
-            self.__page.serialize_to_json(controls)
             await self.__send(
-                self._create_register_web_client_response(controls=controls)
+                self._create_register_web_client_response(controls=self.__page.snapshot)
             )
 
             # start session
@@ -279,6 +289,61 @@ class FletApp(LocalConnection):
             "",
             None,
         )
+
+    def _process_add_command(self, command: Command):
+        result, message = super()._process_add_command(command)
+        if message:
+            for oc in message.payload.controls:
+                control = copy.deepcopy(oc)
+                id = control["i"]
+                pid = control["p"]
+                parent = self.__page.snapshot[pid]
+                assert parent, f"parent control not found: {pid}"
+                if id not in parent["c"]:
+                    if "at" in parent:
+                        parent["c"].insert(int(parent["at"]), id)
+                    else:
+                        parent["c"].append(id)
+                self.__page.snapshot[id] = control
+        return result, message
+
+    def _process_set_command(self, values, attrs):
+        result, message = super()._process_set_command(values, attrs)
+        control = self.__page.snapshot.get(values[0])
+        if control:
+            for k, v in attrs.items():
+                control[k] = v
+        return result, message
+
+    def _process_remove_command(self, values):
+        result, message = super()._process_remove_command(values)
+        for id in values:
+            control = self.__page.snapshot.get(id)
+            for cid in self.__get_all_descendant_ids(id):
+                self.__page.snapshot.pop(cid, None)
+            # delete control itself
+            self.__page.snapshot.pop(id, None)
+            # remove id from parent
+            parent = self.__page.snapshot.get(control["p"])
+            if parent:
+                parent["c"].remove(id)
+        return result, message
+
+    def _process_clean_command(self, values):
+        result, message = super()._process_clean_command(values)
+        for id in values:
+            for cid in self.__get_all_descendant_ids(id):
+                self.__page.snapshot.pop(cid, None)
+        return result, message
+
+    def __get_all_descendant_ids(self, id):
+        ids = []
+        control = self.__page.snapshot.get(id)
+        if control:
+            for cid in control["c"]:
+                ids.append(cid)
+                ids.extend(self.__get_all_descendant_ids(cid))
+        return ids
 
     async def send_command_async(self, session_id: str, command: Command):
         if command.name == "oauthAuthorize":

@@ -102,6 +102,7 @@ class Page(Control):
         self._Control__uid = "page"
         self.__conn = conn
         self.__next_control_id = 1
+        self.__snapshot: Dict[str, Dict[str, Any]] = {}
         self.__expires_at = None
         self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
@@ -1092,6 +1093,11 @@ class Page(Control):
     @property
     def connection(self):
         return self.__conn
+
+    # snapshot
+    @property
+    def snapshot(self) -> Dict[str, Dict[str, Any]]:
+        return self.__snapshot
 
     # expires_at
     @property

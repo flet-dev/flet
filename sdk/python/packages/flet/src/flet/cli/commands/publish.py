@@ -10,7 +10,7 @@ from distutils.dir_util import copy_tree
 from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
-from flet_core import WebRenderer
+from flet_core.types import WebRenderer
 from flet_core.utils import random_string
 from flet_runtime.utils import (
     get_package_web_dir,

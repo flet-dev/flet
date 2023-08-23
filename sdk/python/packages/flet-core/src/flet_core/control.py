@@ -272,24 +272,7 @@ class Control:
         assert self.__page, "Control must be added to the page first."
         await self.__page._clean_async(self)
 
-    def serialize_to_json(
-        self, controls: Dict[str, Dict[str, Any]], parent_id: Optional[str] = ""
-    ):
-        if not self.uid:
-            return
-
-        children = self._get_children()
-
-        def get_uid(c: "Control"):
-            return c.uid
-
-        d = {
-            "i": self.uid,
-            "t": self._get_control_name(),
-            "p": parent_id,
-            "c": list(map(get_uid, [c for c in children if c.uid])),
-        }
-
+    def copy_attrs(self, dest: Dict[str, Any]):
         for attrName in sorted(self.__attrs):
             attrName = attrName.lower()
             dirty = self.__attrs[attrName][1]
@@ -307,12 +290,7 @@ class Control:
                 sval = val.isoformat()
             else:
                 sval = str(val)
-            d[attrName] = sval
-
-        controls[self.uid] = d
-
-        for child in children:
-            child.serialize_to_json(controls=controls, parent_id=self.uid)
+            dest[attrName] = sval
 
     def build_update_commands(
         self, index, commands, added_controls, removed_controls, isolated=False
