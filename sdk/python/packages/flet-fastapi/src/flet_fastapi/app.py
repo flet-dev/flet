@@ -1,6 +1,6 @@
-from typing import Any, Awaitable, Callable, Coroutine, Optional
+from typing import Awaitable, Callable, Optional
 
-from fastapi import FastAPI, Request, WebSocket
+from fastapi import Request, WebSocket
 from flet import WebRenderer
 from flet_core.page import Page
 from flet_fastapi.flet_app import (
@@ -8,15 +8,14 @@ from flet_fastapi.flet_app import (
     DEFAULT_FLET_SESSION_TIMEOUT,
     FletApp,
 )
+from flet_fastapi.flet_fastapi import FletFastAPI
 from flet_fastapi.flet_oauth import FletOAuth
 from flet_fastapi.flet_static_files import FletStaticFiles
 from flet_fastapi.flet_upload import FletUpload
 
 
 def app(
-    fastapi_app: FastAPI,
     session_handler: Callable[[Page], Awaitable],
-    path: str = "/",
     assets_dir: Optional[str] = None,
     app_name: Optional[str] = None,
     app_short_name: Optional[str] = None,
@@ -36,7 +35,6 @@ def app(
     Parameters:
     * `fastapi_app` (FastAPI) - FastAPI application instance.
     * `session_handler` (Coroutine) - application entry point - an async method called for newly connected user. Handler coroutine must have 1 parameter: `page` - `Page` instance.
-    * `path` (str) - an absolute URL of Flet app. Default is `/`.
     * `assets_dir` (str, optional) - an absolute path to app's assets directory.
     * `app_name` (str, optional) - PWA application name.
     * `app_short_name` (str, optional) - PWA application short name.
@@ -50,25 +48,21 @@ def app(
     * `session_timeout_seconds` (int, optional)- session lifetime, in seconds, after user disconnected.
     * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime, in seconds, which is a maximum allowed time between starting OAuth flow and redirecting to OAuth callback URL.
     """
-    app_path = f"/{path.strip('/')}"
-    app_prefix = "" if app_path == "/" else app_path
-    ws_path = f"{app_prefix}/ws"
-    upload_path = f"{app_prefix}/upload"
-    oauth_callback_path = f"{app_prefix}/oauth_callback"
 
-    @fastapi_app.websocket(ws_path)
+    fastapi_app = FletFastAPI()
+
+    @fastapi_app.websocket("/ws")
     async def app_handler(websocket: WebSocket):
         await FletApp(
             session_handler,
             session_timeout_seconds=session_timeout_seconds,
             oauth_state_timeout_seconds=oauth_state_timeout_seconds,
-            upload_endpoint_path=upload_path if upload_dir else None,
             secret_key=secret_key,
         ).handle(websocket)
 
     if upload_dir:
 
-        @fastapi_app.put(upload_path)
+        @fastapi_app.put("/upload")
         async def upload_handler(request: Request):
             if not upload_dir:
                 return
@@ -78,14 +72,13 @@ def app(
                 secret_key=secret_key,
             ).handle(request)
 
-    @fastapi_app.get(oauth_callback_path)
+    @fastapi_app.get("/oauth_callback")
     async def oauth_redirect_handler(request: Request):
         return await FletOAuth().handle(request)
 
     fastapi_app.mount(
-        path=app_path,
+        path="/",
         app=FletStaticFiles(
-            app_mount_path=app_path,
             assets_dir=assets_dir,
             app_name=app_name,
             app_short_name=app_short_name,
@@ -94,5 +87,6 @@ def app(
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
         ),
-        name=f"flet-app-{app_path}",
     )
+
+    return fastapi_app

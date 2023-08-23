@@ -9,11 +9,13 @@ import flet_fastapi
 from fastapi.staticfiles import StaticFiles
 from flet_core.types import WebRenderer
 from flet_fastapi.flet_app_manager import app_manager
+from flet_fastapi.once import Once
 from flet_runtime.utils import (
     get_package_web_dir,
     patch_index_html,
     patch_manifest_json,
 )
+from starlette.types import Receive, Scope, Send
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -37,7 +39,6 @@ class FletStaticFiles(StaticFiles):
 
     def __init__(
         self,
-        app_mount_path: str = "/",
         assets_dir: Optional[str] = None,
         app_name: Optional[str] = None,
         app_short_name: Optional[str] = None,
@@ -49,7 +50,40 @@ class FletStaticFiles(StaticFiles):
     ) -> None:
         self.index = "index.html"
         self.manifest_json = "manifest.json"
-        self.__app_mount_path = app_mount_path
+        self.__assets_dir = assets_dir
+        self.__app_name = app_name
+        self.__app_short_name = app_short_name
+        self.__app_description = app_description
+        self.__web_renderer = web_renderer
+        self.__use_color_emoji = use_color_emoji
+        self.__route_url_strategy = route_url_strategy
+        self.__websocket_endpoint_path = websocket_endpoint_path
+        self.__once = Once()
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        await self.__once.do(self.__config, scope["root_path"])
+        await super().__call__(scope, receive, send)
+
+    def lookup_path(self, path: str) -> Tuple[str, Optional[os.stat_result]]:
+        """Returns the index file when no match is found.
+
+        Args:
+            path (str): Resource path.
+
+        Returns:
+            [tuple[str, os.stat_result]]: Always retuens a full path and stat result.
+        """
+        logger.debug(f"StaticFiles.lookup_path: {self.__app_mount_path} {path}")
+        full_path, stat_result = super().lookup_path(path)
+
+        # if a file cannot be found
+        if stat_result is None:
+            return super().lookup_path(self.index)
+
+        return (full_path, stat_result)
+
+    async def __config(self, root_path: str):
+        self.__app_mount_path = root_path
 
         # where modified index.html is stored
         temp_dir = tempfile.mkdtemp()
@@ -61,18 +95,20 @@ class FletStaticFiles(StaticFiles):
         logger.info(f"Web root: {web_dir}")
 
         # user-defined assets
-        if assets_dir:
-            if not Path(assets_dir).is_absolute():
+        if self.__assets_dir:
+            if not Path(self.__assets_dir).is_absolute():
                 raise Exception("assets_dir must be absolute path.")
-            elif not os.path.exists(assets_dir):
-                raise Exception(f"assets_dir does not exists: {assets_dir}")
+            elif not os.path.exists(self.__assets_dir):
+                raise Exception(f"assets_dir does not exists: {self.__assets_dir}")
 
-        logger.info(f"Assets dir: {assets_dir}")
+        logger.info(f"Assets dir: {self.__assets_dir}")
 
         # copy index.html from assets_dir or web_dir
-        if assets_dir and os.path.exists(os.path.join(assets_dir, self.index)):
+        if self.__assets_dir and os.path.exists(
+            os.path.join(self.__assets_dir, self.index)
+        ):
             shutil.copyfile(
-                os.path.join(assets_dir, self.index),
+                os.path.join(self.__assets_dir, self.index),
                 os.path.join(temp_dir, self.index),
             )
         else:
@@ -82,9 +118,11 @@ class FletStaticFiles(StaticFiles):
             )
 
         # copy manifest.json from assets_dir or web_dir
-        if assets_dir and os.path.exists(os.path.join(assets_dir, self.manifest_json)):
+        if self.__assets_dir and os.path.exists(
+            os.path.join(self.__assets_dir, self.manifest_json)
+        ):
             shutil.copyfile(
-                os.path.join(assets_dir, self.manifest_json),
+                os.path.join(self.__assets_dir, self.manifest_json),
                 os.path.join(temp_dir, self.manifest_json),
             )
         else:
@@ -93,28 +131,28 @@ class FletStaticFiles(StaticFiles):
                 os.path.join(temp_dir, self.manifest_json),
             )
 
-        ws_path = websocket_endpoint_path
+        ws_path = self.__websocket_endpoint_path
         if not ws_path:
-            ws_path = app_mount_path.strip("/")
+            ws_path = self.__app_mount_path.strip("/")
             ws_path = f"{'' if ws_path == '' else '/'}{ws_path}/ws"
 
         # replace variables in index.html and manifest.json
         patch_index_html(
             index_path=os.path.join(temp_dir, self.index),
-            base_href=app_mount_path,
+            base_href=self.__app_mount_path,
             websocket_endpoint_path=ws_path,
-            app_name=app_name,
-            app_description=app_description,
-            web_renderer=WebRenderer(web_renderer),
-            use_color_emoji=use_color_emoji,
-            route_url_strategy=route_url_strategy,
+            app_name=self.__app_name,
+            app_description=self.__app_description,
+            web_renderer=WebRenderer(self.__web_renderer),
+            use_color_emoji=self.__use_color_emoji,
+            route_url_strategy=self.__route_url_strategy,
         )
 
         patch_manifest_json(
             manifest_path=os.path.join(temp_dir, self.manifest_json),
-            app_name=app_name,
-            app_short_name=app_short_name,
-            app_description=app_description,
+            app_name=self.__app_name,
+            app_short_name=self.__app_short_name,
+            app_description=self.__app_description,
         )
 
         # set html=True to resolve the index even when no
@@ -122,25 +160,7 @@ class FletStaticFiles(StaticFiles):
         super().__init__(directory=temp_dir, packages=None, html=True, check_dir=True)
 
         # add the rest of dirs
-        if assets_dir:
-            self.all_directories.append(assets_dir)
+        if self.__assets_dir:
+            self.all_directories.append(self.__assets_dir)
 
         self.all_directories.append(web_dir)
-
-    def lookup_path(self, path: str) -> Tuple[str, Optional[os.stat_result]]:
-        """Returns the index file when no match is found.
-
-        Args:
-            path (str): Resource path.
-
-        Returns:
-            [tuple[str, os.stat_result]]: Always retuens a full path and stat result.
-        """
-        logger.debug(f"StaticFiles.lokup_path: {self.__app_mount_path} {path}")
-        full_path, stat_result = super().lookup_path(path)
-
-        # if a file cannot be found
-        if stat_result is None:
-            return super().lookup_path(self.index)
-
-        return (full_path, stat_result)
