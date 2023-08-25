@@ -8,7 +8,7 @@ from flet_fastapi.flet_app import (
     DEFAULT_FLET_SESSION_TIMEOUT,
     FletApp,
 )
-from flet_fastapi.flet_fastapi import FletFastAPI
+from flet_fastapi.flet_fastapi import FastAPI
 from flet_fastapi.flet_oauth import FletOAuth
 from flet_fastapi.flet_static_files import FletStaticFiles
 from flet_fastapi.flet_upload import FletUpload
@@ -49,7 +49,7 @@ def app(
     * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime, in seconds, which is a maximum allowed time between starting OAuth flow and redirecting to OAuth callback URL.
     """
 
-    fastapi_app = FletFastAPI()
+    fastapi_app = FastAPI()
 
     @fastapi_app.websocket("/ws")
     async def app_handler(websocket: WebSocket):

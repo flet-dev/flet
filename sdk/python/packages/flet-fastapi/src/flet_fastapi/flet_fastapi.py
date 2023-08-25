@@ -1,8 +1,8 @@
 from contextlib import asynccontextmanager
 from typing import Any, Callable, Coroutine, Dict, List, Optional, Sequence, Type, Union
 
+import fastapi
 import flet_fastapi
-from fastapi import APIRouter, FastAPI, routing
 from fastapi.applications import AppType
 from fastapi.datastructures import Default
 from fastapi.params import Depends
@@ -14,7 +14,7 @@ from starlette.routing import BaseRoute
 from starlette.types import Lifespan
 
 
-class FletFastAPI(FastAPI):
+class FastAPI(fastapi.FastAPI):
     def __init__(
         self,
         *,
@@ -51,17 +51,17 @@ class FletFastAPI(FastAPI):
         root_path_in_servers: bool = True,
         responses: Optional[Dict[Union[int, str], Dict[str, Any]]] = None,
         callbacks: Optional[List[BaseRoute]] = None,
-        webhooks: Optional[routing.APIRouter] = None,
+        webhooks: Optional[fastapi.routing.APIRouter] = None,
         deprecated: Optional[bool] = None,
         include_in_schema: bool = True,
         swagger_ui_parameters: Optional[Dict[str, Any]] = None,
-        generate_unique_id_function: Callable[[routing.APIRoute], str] = Default(
-            generate_unique_id
-        ),
+        generate_unique_id_function: Callable[
+            [fastapi.routing.APIRoute], str
+        ] = Default(generate_unique_id),
         **extra: Any,
     ) -> None:
         @asynccontextmanager
-        async def lifespan(app: FastAPI):
+        async def lifespan(app: fastapi.FastAPI):
             await flet_fastapi.app_manager.start()
             yield
             await flet_fastapi.app_manager.shutdown()
