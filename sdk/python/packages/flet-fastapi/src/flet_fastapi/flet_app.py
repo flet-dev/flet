@@ -300,8 +300,8 @@ class FletApp(LocalConnection):
                 parent = self.__page.snapshot[pid]
                 assert parent, f"parent control not found: {pid}"
                 if id not in parent["c"]:
-                    if "at" in parent:
-                        parent["c"].insert(int(parent["at"]), id)
+                    if "at" in control:
+                        parent["c"].insert(int(control["at"]), id)
                     else:
                         parent["c"].append(id)
                 self.__page.snapshot[id] = control

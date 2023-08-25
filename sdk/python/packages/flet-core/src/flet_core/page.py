@@ -634,7 +634,7 @@ class Page(Control):
             if redirect_to_page:
                 up = urlparse(provider.redirect_url)
                 auth_attrs["completePageUrl"] = up._replace(
-                    path=self.__conn.page_name
+                    path=f"{self.__conn.page_name}{self.route}"
                 ).geturl()
             result = await self._send_command_async("oauthAuthorize", attrs=auth_attrs)
             if result.error != "":
