@@ -113,6 +113,10 @@ app.mount("/flet-app", flet_fastapi.app(main))
 
 When adding Flet app to the existing FastAPI app you need to call `flet_fastapi.app_manager.start()` on app start and `flet_fastapi.app_manager.shutdown()` on shutdown. Use the way that best suites you: lifespan (in the example above) or app events.
 
+`app_manager.start()` method starts background tasks cleaning up expired sessions and OAuth flow states.
+
+`app_manager.shutdown()` method removes any temporary files created by a Flet app.
+
 ## Running the app in production
 
 It is recommended to run FastAPI in production with [Hypercorn](https://github.com/pgjones/hypercorn/) which is ASGI web server, but it is also possible to run FastAPI apps with [Gunicorn](https://gunicorn.org/) which is a WSGI server, but has more features, like passing proxy headers.
