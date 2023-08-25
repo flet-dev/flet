@@ -1,6 +1,6 @@
 # Flet - a better UI for FastAPI
 
-Flet for FastAPI allows adding interactive real-time dashboards for your FastAPI services as well as host any Flet web app inside FastAPI with production-grade reliability.
+Flet for FastAPI allows adding interactive real-time dashboards to your FastAPI app as well as host any Flet web app inside FastAPI with production-grade reliability.
 
 ## Installation
 
@@ -38,7 +38,7 @@ That's a simple app displaying a counter and a button at the right bottom to inc
 
 `flet_fastapi.app()` configures a single Flet app at the root of FastAPI app with `main()` sessions handler and the following endpoints:
 
-`/ws` (WS) - WebSocket handler for a Flet app.
+`/ws` (WS) - WebSocket handler for the Flet app.
 
 `/upload` (PUT) - file uploads handler.
 
