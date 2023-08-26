@@ -11,17 +11,21 @@ logger = logging.getLogger(flet_core.__name__)
 class LocalConnection(Connection):
     def __init__(self):
         super().__init__()
-        self._control_id = 1
+        self.__control_id = 1
         self._client_details = None
 
-    def _create_register_web_client_response(self):
+    def _create_register_web_client_response(
+        self, controls: Optional[Dict[str, Dict[str, Any]]] = None
+    ):
         assert self._client_details
         return ClientMessage(
             ClientActions.REGISTER_WEB_CLIENT,
             RegisterWebClientResponsePayload(
                 session=SessionPayload(
                     id=self._client_details.sessionId,
-                    controls={
+                    controls=controls
+                    if controls is not None
+                    else {
                         "page": {
                             "i": "page",
                             "t": "page",
@@ -91,6 +95,10 @@ class LocalConnection(Connection):
             return self._process_invoke_method_command(command.values, command.attrs)
         elif command.name == "error":
             return self._process_error_command(command.values)
+        elif command.name == "getUploadUrl":
+            return self._process_get_upload_url_command(command.attrs)
+        elif command.name == "oauthAuthorize":
+            return self._process_oauth_authorize_command(command.attrs)
         raise Exception(f"Unsupported command: {command.name}")
 
     def _process_add_command(self, command: Command):
@@ -132,8 +140,7 @@ class LocalConnection(Connection):
 
             id = cmd.attrs.get("id", "")
             if not id:
-                id = f"_{self._control_id}"
-                self._control_id += 1
+                id = f"_{self._get_next_control_id()}"
                 cmd.attrs["id"] = id
 
             ids.append(id)
@@ -205,6 +212,12 @@ class LocalConnection(Connection):
             ),
         )
 
+    def _process_get_upload_url_command(self, attrs):
+        raise Exception("getUploadUrl command is not supported.")
+
+    def _process_oauth_authorize_command(self, attrs):
+        raise Exception("oauthAuthorize command is not supported.")
+
     def _process_get_command(self, values: List[str]):
         assert len(values) == 2, '"get" command has wrong number of values'
         assert self._client_details
@@ -237,3 +250,8 @@ class LocalConnection(Connection):
             elif prop_name == "windowLeft":
                 r = self._client_details.windowLeft
         return r, None
+
+    def _get_next_control_id(self):
+        r = self.__control_id
+        self.__control_id += 1
+        return r

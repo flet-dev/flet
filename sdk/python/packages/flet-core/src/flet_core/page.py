@@ -5,6 +5,7 @@ import threading
 import time
 import uuid
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
@@ -49,7 +50,8 @@ try:
     from flet_runtime.auth.authorization import Authorization
     from flet_runtime.auth.oauth_provider import OAuthProvider
     from flet_runtime.pubsub import PubSub
-except ImportError:
+except ImportError as e:
+    logger.warning("Authorization classes are not loaded, using fake implementations.")
 
     class Authorization:
         pass
@@ -99,6 +101,9 @@ class Page(Control):
         self._id = "page"
         self._Control__uid = "page"
         self.__conn = conn
+        self.__next_control_id = 1
+        self.__snapshot: Dict[str, Dict[str, Any]] = {}
+        self.__expires_at = None
         self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
         self._index = {self._Control__uid: self}  # index with all page controls
@@ -204,6 +209,11 @@ class Page(Control):
         children.append(self.__offstage)
         return children
 
+    def get_next_control_id(self):
+        r = self.__next_control_id
+        self.__next_control_id += 1
+        return r
+
     def fetch_page_details(self):
         assert self.__conn.page_name is not None
         values = self.__conn.send_commands(
@@ -255,6 +265,18 @@ class Page(Control):
         self._set_attr("windowLeft", values[11], False)
         self._set_attr("clientIP", values[12], False)
         self._set_attr("clientUserAgent", values[13], False)
+
+    async def _connect(self, conn: Connection):
+        self.__conn = conn
+        self.__expires_at = None
+        await self.on_event_async(Event("page", "connect", ""))
+
+    async def _disconnect(self, session_timeout_seconds: int):
+        self.__conn = None
+        self.__expires_at = datetime.utcnow() + timedelta(
+            seconds=session_timeout_seconds
+        )
+        await self.on_event_async(Event("page", "disconnect", ""))
 
     def update(self, *controls):
         with self.__lock:
@@ -460,7 +482,7 @@ class Page(Control):
             await self._send_command_async("error", [message])
 
     def on_event(self, e: Event):
-        logger.info(f"page.on_event: {e.target} {e.name} {e.data}")
+        logger.debug(f"page.on_event: {e.target} {e.name} {e.data}")
         with self.__lock:
             if e.target == "page" and e.name == "change":
                 self.__on_page_change_event(e.data)
@@ -473,7 +495,7 @@ class Page(Control):
                     t.start()
 
     async def on_event_async(self, e: Event):
-        logger.info(f"page.on_event_async: {e.target} {e.name} {e.data}")
+        logger.debug(f"page.on_event_async: {e.target} {e.name} {e.data}")
 
         if e.target == "page" and e.name == "change":
             async with self.__async_lock:
@@ -612,7 +634,7 @@ class Page(Control):
             if redirect_to_page:
                 up = urlparse(provider.redirect_url)
                 auth_attrs["completePageUrl"] = up._replace(
-                    path=self.__conn.page_name
+                    path=f"{self.__conn.page_name}{self.route}"
                 ).geturl()
             result = await self._send_command_async("oauthAuthorize", attrs=auth_attrs)
             if result.error != "":
@@ -629,6 +651,9 @@ class Page(Control):
                 LoginEvent(error="", error_description="")
             )
         return self.__authorization
+
+    async def _authorize_callback_async(self, data):
+        await self.on_event_async(Event("page", "authorize", json.dumps(data)))
 
     def __on_authorize(self, e):
         assert self.__authorization is not None
@@ -647,7 +672,7 @@ class Page(Control):
         login_evt = LoginEvent(
             error=d["error"], error_description=d["error_description"]
         )
-        if login_evt.error == "":
+        if not login_evt.error:
             # perform token request
             code = d["code"]
             assert code not in [None, ""]
@@ -674,7 +699,7 @@ class Page(Control):
         login_evt = LoginEvent(
             error=d["error"], error_description=d["error_description"]
         )
-        if login_evt.error == "":
+        if not login_evt.error:
             # perform token request
             code = d["code"]
             assert code not in [None, ""]
@@ -1068,6 +1093,16 @@ class Page(Control):
     @property
     def connection(self):
         return self.__conn
+
+    # snapshot
+    @property
+    def snapshot(self) -> Dict[str, Dict[str, Any]]:
+        return self.__snapshot
+
+    # expires_at
+    @property
+    def expires_at(self):
+        return self.__expires_at
 
     # index
     @property

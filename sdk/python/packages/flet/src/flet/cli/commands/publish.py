@@ -10,8 +10,14 @@ from distutils.dir_util import copy_tree
 from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
+from flet_core.types import WebRenderer
 from flet_core.utils import random_string
-from flet_runtime.utils import get_package_web_dir, is_within_directory
+from flet_runtime.utils import (
+    get_package_web_dir,
+    is_within_directory,
+    patch_index_html,
+    patch_manifest_json,
+)
 
 
 class Command(BaseCommand):
@@ -202,74 +208,23 @@ class Command(BaseCommand):
         # - %FLET_WEB_PYODIDE%
 
         print("Patching index.html")
-        index_path = os.path.join(dist_dir, "index.html")
-        with open(index_path, "r") as f:
-            index = f.read()
-
-        pre = "true" if options.pre else "false"
-        module_name = Path(script_path).stem
-        pyodideCode = f"""
-        <script>
-            var micropipIncludePre = {pre};
-            var pythonModuleName = "{module_name}";
-        </script>
-        <script src="python.js"></script>
-        """
-        index = index.replace("%FLET_WEB_PYODIDE%", "true")
-        index = index.replace("<!-- pyodideCode -->", pyodideCode)
-        index = index.replace(
-            "<!-- webRenderer -->",
-            f'<script>webRenderer="{options.web_renderer}";</script>',
+        patch_index_html(
+            index_path=os.path.join(dist_dir, "index.html"),
+            base_href=options.base_url,
+            app_name=options.app_name,
+            app_description=options.app_description,
+            pyodide=True,
+            pyodide_pre=options.pre,
+            pyodide_script_path=script_path,
+            web_renderer=WebRenderer(options.web_renderer),
+            use_color_emoji=options.use_color_emoji,
+            route_url_strategy=options.route_url_strategy,
         )
-        index = index.replace(
-            "<!-- useColorEmoji -->",
-            f"<script>useColorEmoji={str(options.use_color_emoji).lower()};</script>",
-        )
-        index = index.replace("%FLET_ROUTE_URL_STRATEGY%", options.route_url_strategy)
 
-        if options.base_url:
-            base_url = options.base_url.strip("/").strip()
-            index = index.replace(
-                '<base href="/">',
-                '<base href="{}">'.format(
-                    "/" if base_url == "" else "/{}/".format(base_url)
-                ),
-            )
-        if options.app_name:
-            index = re.sub(
-                r"\<meta name=\"apple-mobile-web-app-title\" content=\"(.+)\">",
-                r'<meta name="apple-mobile-web-app-title" content="{}">'.format(
-                    options.app_name
-                ),
-                index,
-            )
-        if options.app_description:
-            index = re.sub(
-                r"\<meta name=\"description\" content=\"(.+)\">",
-                r'<meta name="description" content="{}">'.format(
-                    options.app_description
-                ),
-                index,
-            )
-
-        with open(index_path, "w") as f:
-            f.write(index)
-
-        # patch manifest.json
         print("Patching manifest.json")
-        manifest_path = os.path.join(dist_dir, "manifest.json")
-        with open(manifest_path, "r") as f:
-            manifest = json.loads(f.read())
-
-        if options.app_name:
-            manifest["name"] = options.app_name
-            manifest["short_name"] = options.app_name
-
-        if options.app_short_name:
-            manifest["short_name"] = options.app_short_name
-
-        if options.app_description:
-            manifest["description"] = options.app_description
-
-        with open(manifest_path, "w") as f:
-            f.write(json.dumps(manifest, indent=2))
+        patch_manifest_json(
+            manifest_path=os.path.join(dist_dir, "manifest.json"),
+            app_name=options.app_name,
+            app_short_name=options.app_short_name,
+            app_description=options.app_description,
+        )

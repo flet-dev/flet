@@ -182,11 +182,6 @@ from flet_core.tooltip import Tooltip
 from flet_core.transform import Offset, Rotate, Scale
 from flet_core.transparent_pointer import TransparentPointer
 from flet_core.types import (
-    FLET_APP,
-    FLET_APP_HIDDEN,
-    FLET_APP_WEB,
-    WEB_BROWSER,
-    AppView,
     BlendMode,
     BoxShape,
     ClipBehavior,
@@ -202,7 +197,6 @@ from flet_core.types import (
     ScrollMode,
     TextAlign,
     ThemeMode,
-    WebRenderer,
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider

@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "flet-fastapi"
+version = "0.1.0"
+description = "Flet for Fast API - serve Flet app with Fast API server"
+authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+packages = [
+    { include = "flet_fastapi", from = "src" },
+]
+
+[tool.poetry.urls]
+homepage = "https://flet.dev"
+repository = "https://github.com/flet-dev/flet"
+documentation = "https://flet.dev/docs"
+
+[tool.poetry.dependencies]
+flet = "0.1.0"
+python = "^3.7"
+fastapi = "^0.101.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+float_to_top = true

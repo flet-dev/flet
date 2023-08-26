@@ -1,10 +1,18 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
+import 'strings.dart';
+
 bool isProgressiveWebApp() {
   return html.window.matchMedia('(display-mode: standalone)').matches ||
       html.window.matchMedia('(display-mode: fullscreen)').matches ||
       html.window.matchMedia('(display-mode: minimal-ui)').matches;
+}
+
+String getWebsocketEndpointPath() {
+  var meta = html.document.head
+      ?.querySelector("meta[name='flet-websocket-endpoint-path']");
+  return trim(meta?.attributes["content"] ?? "ws", "/");
 }
 
 String getFletRouteUrlStrategy() {

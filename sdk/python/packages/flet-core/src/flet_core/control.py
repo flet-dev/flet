@@ -34,7 +34,7 @@ class Control:
     ):
         super().__init__()
         self.__page: Optional[Page] = None
-        self.__attrs = {}
+        self.__attrs: Dict[str, Any] = {}
         self.__previous_children = []
         self._id = None
         self.__uid: Optional[str] = None
@@ -271,6 +271,26 @@ class Control:
     async def clean_async(self):
         assert self.__page, "Control must be added to the page first."
         await self.__page._clean_async(self)
+
+    def copy_attrs(self, dest: Dict[str, Any]):
+        for attrName in sorted(self.__attrs):
+            attrName = attrName.lower()
+            dirty = self.__attrs[attrName][1]
+
+            if dirty:
+                continue
+
+            val = self.__attrs[attrName][0]
+            sval = ""
+            if val is None:
+                continue
+            elif isinstance(val, bool):
+                sval = str(val).lower()
+            elif isinstance(val, dt.datetime) or isinstance(val, dt.date):
+                sval = val.isoformat()
+            else:
+                sval = str(val)
+            dest[attrName] = sval
 
     def build_update_commands(
         self, index, commands, added_controls, removed_controls, isolated=False

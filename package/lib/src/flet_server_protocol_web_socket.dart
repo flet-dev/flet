@@ -3,6 +3,8 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'flet_server_protocol.dart';
 import 'utils/networking.dart';
+import 'utils/platform_utils_non_web.dart'
+    if (dart.library.js) "utils/platform_utils_web.dart";
 import 'utils/uri.dart';
 
 class FletWebSocketServerProtocol implements FletServerProtocol {
@@ -62,5 +64,14 @@ class FletWebSocketServerProtocol implements FletServerProtocol {
   @override
   void disconnect() {
     _channel?.sink.close();
+  }
+
+  String getWebSocketEndpoint(Uri uri) {
+    final wsScheme = uri.scheme == "https" ? "wss" : "ws";
+    final path = getWebsocketEndpointPath();
+    if (path == "") {
+      throw Exception("WebSocket endpoint path cannot be empty.");
+    }
+    return "$wsScheme://${uri.authority}/$path";
   }
 }
