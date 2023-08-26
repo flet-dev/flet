@@ -26,6 +26,8 @@ if deps.get("flet-core"):
     deps["flet-core"] = ver
 if deps.get("flet-runtime"):
     deps["flet-runtime"] = ver
+if deps.get("flet"):
+    deps["flet"] = ver
 
 # save
 with open(toml_path, "w") as f:
