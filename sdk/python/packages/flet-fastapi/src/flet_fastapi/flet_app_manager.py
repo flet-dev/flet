@@ -74,11 +74,15 @@ class FletAppManager:
                 await self.__sessions[session_id]._disconnect(session_timeout_seconds)
 
     async def delete_session(self, session_id: str):
-        logger.info(f"Delete session: {session_id}")
         async with self.__sessions_lock:
             page = self.__sessions.pop(session_id, None)
-            if page is not None:
+            total = len(self.__sessions)
+        if page is not None:
+            logger.info(f"Delete session ({total} left): {session_id}")
+            try:
                 await page._close_async()
+            except Exception as e:
+                logger.error(f"Error deleting expired session: {e}")
 
     async def store_state(self, state_id: str, state: OAuthState):
         logger.info(f"Store oauth state: {state_id}")
