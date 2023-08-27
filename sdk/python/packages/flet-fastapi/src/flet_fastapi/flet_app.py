@@ -137,7 +137,7 @@ class FletApp(LocalConnection):
         try:
             while True:
                 await self.__on_message(await self.__websocket.receive_text())
-        except WebSocketDisconnect:
+        except Exception:
             if self.__page:
                 await app_manager.disconnect_session(
                     self.__get_unique_session_id(self.__page.session_id),
