@@ -69,8 +69,9 @@ class FletAppManager:
 
     async def disconnect_session(self, session_id: str, session_timeout_seconds: int):
         logger.info(f"Session disconnected: {session_id}")
-        if session_id in self.__sessions:
-            await self.__sessions[session_id]._disconnect(session_timeout_seconds)
+        async with self.__sessions_lock:
+            if session_id in self.__sessions:
+                await self.__sessions[session_id]._disconnect(session_timeout_seconds)
 
     async def delete_session(self, session_id: str):
         logger.info(f"Delete session: {session_id}")
