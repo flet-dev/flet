@@ -55,9 +55,11 @@ class FletAppManager:
             return self.__sessions.get(session_id)
 
     async def add_session(self, session_id: str, conn: Page):
-        logger.info(f"New session created: {session_id}")
         async with self.__sessions_lock:
             self.__sessions[session_id] = conn
+            logger.info(
+                f"New session created ({len(self.__sessions)} total): {session_id}"
+            )
 
     async def reconnect_session(self, session_id: str, conn: Connection):
         logger.info(f"Session reconnected: {session_id}")
