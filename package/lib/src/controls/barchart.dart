@@ -90,7 +90,7 @@ class _BarChartControlState extends State<BarChartControl> {
                       rightTitles: rightTitles,
                       bottomTitles: bottomTitles,
                     )
-                  : FlTitlesData(show: false),
+                  : const FlTitlesData(show: false),
               borderData: border != null
                   ? FlBorderData(show: true, border: border)
                   : FlBorderData(show: false),
@@ -250,20 +250,20 @@ class _BarChartControlState extends State<BarChartControl> {
   AxisTitles getAxisTitles(
       Control parent, ChartAxisViewModel? axisViewModel, bool disabled) {
     if (axisViewModel == null) {
-      return AxisTitles(sideTitles: SideTitles(showTitles: false));
+      return const AxisTitles(sideTitles: SideTitles(showTitles: false));
     }
 
     return AxisTitles(
         axisNameWidget: axisViewModel.title != null
             ? createControl(parent, axisViewModel.title!.id, disabled)
             : null,
-        axisNameSize: axisViewModel.control.attrDouble("titleSize"),
+        axisNameSize: axisViewModel.control.attrDouble("titleSize") ?? 16,
         sideTitles: SideTitles(
-          showTitles: axisViewModel.control.attrBool("showLabels", true),
-          reservedSize: axisViewModel.control.attrDouble("labelsSize"),
+          showTitles: axisViewModel.control.attrBool("showLabels", true)!,
+          reservedSize: axisViewModel.control.attrDouble("labelsSize") ?? 22,
           interval: axisViewModel.control.attrDouble("labelsInterval"),
           getTitlesWidget: axisViewModel.labels.isEmpty
-              ? null
+              ? defaultGetTitle
               : (value, meta) {
                   return axisViewModel.labels.containsKey(value)
                       ? createControl(

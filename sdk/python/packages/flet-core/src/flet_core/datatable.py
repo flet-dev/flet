@@ -336,7 +336,8 @@ class DataTable(ConstrainedControl):
         checkbox_horizontal_margin: OptionalNumber = None,
         column_spacing: OptionalNumber = None,
         data_row_color: Union[None, str, Dict[MaterialState, str]] = None,
-        data_row_height: OptionalNumber = None,
+        data_row_min_height: OptionalNumber = None,
+        data_row_max_height: OptionalNumber = None,
         data_text_style: Optional[TextStyle] = None,
         bgcolor: Optional[str] = None,
         gradient: Optional[Gradient] = None,
@@ -393,7 +394,8 @@ class DataTable(ConstrainedControl):
         self.checkbox_horizontal_margin = checkbox_horizontal_margin
         self.column_spacing = column_spacing
         self.data_row_color = data_row_color
-        self.data_row_height = data_row_height
+        self.data_row_min_height = data_row_min_height
+        self.data_row_max_height = data_row_max_height
         self.data_text_style = data_text_style
         self.heading_row_color = heading_row_color
         self.heading_row_height = heading_row_height
@@ -525,14 +527,23 @@ class DataTable(ConstrainedControl):
     def data_row_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__data_row_color = value
 
-    # data_row_height
+    # data_row_min_height
     @property
-    def data_row_height(self) -> OptionalNumber:
-        return self._get_attr("dataRowHeight")
+    def data_row_min_height(self) -> OptionalNumber:
+        return self._get_attr("dataRowMinHeight")
 
-    @data_row_height.setter
-    def data_row_height(self, value: OptionalNumber):
-        self._set_attr("dataRowHeight", value)
+    @data_row_min_height.setter
+    def data_row_min_height(self, value: OptionalNumber):
+        self._set_attr("dataRowMinHeight", value)
+
+    # data_row_max_height
+    @property
+    def data_row_max_height(self) -> OptionalNumber:
+        return self._get_attr("dataRowMaxHeight")
+
+    @data_row_max_height.setter
+    def data_row_max_height(self, value: OptionalNumber):
+        self._set_attr("dataRowMaxHeight", value)
 
     # data_text_style
     @property

@@ -74,8 +74,10 @@ class ImageControl extends StatelessWidget {
                     width: width,
                     height: height,
                     fit: fit ?? BoxFit.contain,
-                    color: color,
-                    colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
+                    colorFilter: color != null
+                        ? ColorFilter.mode(
+                            color, colorBlendMode ?? BlendMode.srcIn)
+                        : null,
                     semanticsLabel: semanticsLabel);
               } else {
                 image = Image.memory(bytes,
@@ -96,8 +98,9 @@ class ImageControl extends StatelessWidget {
                 width: width,
                 height: height,
                 fit: fit ?? BoxFit.contain,
-                color: color,
-                colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
+                colorFilter: color != null
+                    ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
+                    : null,
                 semanticsLabel: semanticsLabel);
           } else {
             var assetSrc =
@@ -140,8 +143,10 @@ class ImageControl extends StatelessWidget {
                     width: width,
                     height: height,
                     fit: fit ?? BoxFit.contain,
-                    color: color,
-                    colorBlendMode: colorBlendMode ?? BlendMode.srcIn,
+                    colorFilter: color != null
+                        ? ColorFilter.mode(
+                            color, colorBlendMode ?? BlendMode.srcIn)
+                        : null,
                     semanticsLabel: semanticsLabel);
               } else {
                 image = Image.network(assetSrc.path,

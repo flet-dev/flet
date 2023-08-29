@@ -118,7 +118,7 @@ class _LineChartControlState extends State<LineChartControl> {
                         rightTitles: rightTitles,
                         bottomTitles: bottomTitles,
                       )
-                    : FlTitlesData(show: false),
+                    : const FlTitlesData(show: false),
                 borderData: border != null
                     ? FlBorderData(show: true, border: border)
                     : FlBorderData(show: false),
@@ -129,10 +129,10 @@ class _LineChartControlState extends State<LineChartControl> {
                   enabled: interactive,
                   getTouchLineStart: pointLineStart != null
                       ? (barData, spotIndex) => pointLineStart
-                      : null,
+                      : defaultGetTouchLineStart,
                   getTouchLineEnd: pointLineEnd != null
                       ? (barData, spotIndex) => pointLineEnd
-                      : null,
+                      : defaultGetTouchLineEnd,
                   getTouchedSpotIndicator:
                       (LineChartBarData barData, List<int> spotIndexes) {
                     var barIndex = interactive
@@ -196,7 +196,8 @@ class _LineChartControlState extends State<LineChartControl> {
                   },
                   touchTooltipData: LineTouchTooltipData(
                     tooltipBgColor: HexColor.fromString(Theme.of(context),
-                        widget.control.attrString("tooltipBgcolor", "")!),
+                            widget.control.attrString("tooltipBgcolor", "")!) ??
+                        const Color.fromRGBO(96, 125, 139, 1),
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((spot) {
                         var dp = viewModel.dataSeries[spot.barIndex]
@@ -250,10 +251,10 @@ class _LineChartControlState extends State<LineChartControl> {
                         }
                       : null,
                 )),
-            swapAnimationDuration: animate != null
+            duration: animate != null
                 ? animate.duration
                 : const Duration(milliseconds: 150), // Optional
-            swapAnimationCurve: animate != null ? animate.curve : Curves.linear,
+            curve: animate != null ? animate.curve : Curves.linear,
           );
 
           return LayoutBuilder(
@@ -310,15 +311,18 @@ class _LineChartControlState extends State<LineChartControl> {
                 e.value.control.attrBool("selected", false)!)
             .map((e) => e.key)
             .toList(),
-        isCurved: dataViewModel.control.attrBool("curved"),
-        isStrokeCapRound: dataViewModel.control.attrBool("strokeCapRound"),
-        barWidth: dataViewModel.control.attrDouble("strokeWidth"),
+        isCurved: dataViewModel.control.attrBool("curved", false)!,
+        isStrokeCapRound:
+            dataViewModel.control.attrBool("strokeCapRound", false)!,
+        barWidth: dataViewModel.control.attrDouble("strokeWidth") ?? 2.0,
         dashArray: dashPattern != null
             ? (json.decode(dashPattern) as List)
                 .map((e) => parseInt(e))
                 .toList()
             : null,
-        shadow: shadow.isNotEmpty ? shadow[0] : null,
+        shadow: shadow.isNotEmpty
+            ? shadow[0]
+            : const Shadow(color: Colors.transparent),
         dotData: FlDotData(
             show: true,
             getDotPainter: (spot, percent, barData, index) {
@@ -346,10 +350,10 @@ class _LineChartControlState extends State<LineChartControl> {
                 color: aboveLineBgcolor,
                 gradient: aboveLineGradient,
                 applyCutOffY: aboveLineCutoffY != null,
-                cutOffY: aboveLineCutoffY,
+                cutOffY: aboveLineCutoffY ?? 0,
                 spotsLine: BarAreaSpotsLine(
                   show: aboveLine != null,
-                  flLineStyle: aboveLine,
+                  flLineStyle: aboveLine ?? const FlLine(),
                   checkToShowSpotLine: (spot) =>
                       spots[spot]!.control.attrBool("showAboveLine", true)!,
                 ))
@@ -362,10 +366,10 @@ class _LineChartControlState extends State<LineChartControl> {
                 color: belowLineBgcolor,
                 gradient: belowLineGradient,
                 applyCutOffY: belowLineCutoffY != null,
-                cutOffY: belowLineCutoffY,
+                cutOffY: belowLineCutoffY ?? 0,
                 spotsLine: BarAreaSpotsLine(
                   show: belowLine != null,
-                  flLineStyle: belowLine,
+                  flLineStyle: belowLine ?? const FlLine(),
                   checkToShowSpotLine: (spot) =>
                       spots[spot]!.control.attrBool("showBelowLine", true)!,
                 ))
@@ -377,20 +381,20 @@ class _LineChartControlState extends State<LineChartControl> {
   AxisTitles getAxisTitles(
       Control parent, ChartAxisViewModel? axisViewModel, bool disabled) {
     if (axisViewModel == null) {
-      return AxisTitles(sideTitles: SideTitles(showTitles: false));
+      return const AxisTitles(sideTitles: SideTitles(showTitles: false));
     }
 
     return AxisTitles(
         axisNameWidget: axisViewModel.title != null
             ? createControl(parent, axisViewModel.title!.id, disabled)
             : null,
-        axisNameSize: axisViewModel.control.attrDouble("titleSize"),
+        axisNameSize: axisViewModel.control.attrDouble("titleSize") ?? 16,
         sideTitles: SideTitles(
-          showTitles: axisViewModel.control.attrBool("showLabels", true),
-          reservedSize: axisViewModel.control.attrDouble("labelsSize"),
+          showTitles: axisViewModel.control.attrBool("showLabels", true)!,
+          reservedSize: axisViewModel.control.attrDouble("labelsSize") ?? 22,
           interval: axisViewModel.control.attrDouble("labelsInterval"),
           getTitlesWidget: axisViewModel.labels.isEmpty
-              ? null
+              ? defaultGetTitle
               : (value, meta) {
                   return axisViewModel.labels.containsKey(value)
                       ? createControl(

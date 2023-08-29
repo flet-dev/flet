@@ -13,7 +13,7 @@ FlGridData parseChartGridData(ThemeData theme, Control control,
   var hv = control.attrString(horizPropName, null);
   var vv = control.attrString(vertPropName, null);
   if (hv == null && vv == null) {
-    return FlGridData(show: false);
+    return const FlGridData(show: false);
   }
 
   var hj = hv != null ? json.decode(hv) : null;
@@ -27,12 +27,13 @@ FlGridData parseChartGridData(ThemeData theme, Control control,
     horizontalInterval: hj != null && hj["interval"] != null
         ? parseDouble(hj["interval"])
         : null,
-    getDrawingHorizontalLine: hLine == null ? null : (value) => hLine,
+    getDrawingHorizontalLine:
+        hLine == null ? defaultGridLine : (value) => hLine,
     drawVerticalLine: vv != null,
     verticalInterval: vj != null && vj["interval"] != null
         ? parseDouble(vj["interval"])
         : null,
-    getDrawingVerticalLine: vLine == null ? null : (value) => vLine,
+    getDrawingVerticalLine: vLine == null ? defaultGridLine : (value) => vLine,
   );
 }
 
@@ -62,7 +63,7 @@ FlLine? parseSelectedFlLine(ThemeData theme, Control control, String propName,
   }
   return FlLine(
       color: j['color'] != null
-          ? HexColor.fromString(theme, j['color'] as String)
+          ? HexColor.fromString(theme, j['color'] as String) ?? Colors.black
           : defaultGetPointColor(color, gradient, 0),
       strokeWidth: j['width'] != null ? parseDouble(j['width'], 3) : 3,
       dashArray: j['dash_pattern'] != null
@@ -77,9 +78,9 @@ FlLine? flineFromJSON(theme, j) {
   }
   return FlLine(
       color: j['color'] != null
-          ? HexColor.fromString(theme, j['color'] as String)
-          : null,
-      strokeWidth: j['width'] != null ? parseDouble(j['width'], 1) : null,
+          ? HexColor.fromString(theme, j['color'] as String) ?? Colors.black
+          : Colors.black,
+      strokeWidth: j['width'] != null ? parseDouble(j['width'], 1) : 2,
       dashArray: j['dash_pattern'] != null
           ? (j['dash_pattern'] as List).map((e) => parseInt(e)).toList()
           : null);
@@ -137,34 +138,38 @@ FlDotPainter? chartDotPainterFromJSON(
   if (type == "circle") {
     return FlDotCirclePainter(
         color: json['color'] != null
-            ? HexColor.fromString(theme, json['color'] as String)
+            ? HexColor.fromString(theme, json['color'] as String) ??
+                Colors.green
             : defaultGetPointColor(barColor, barGradient, percentage),
         radius: json["radius"] != null ? parseDouble(json["radius"]) : null,
         strokeColor: json['stroke_color'] != null
-            ? HexColor.fromString(theme, json['color'] as String)
+            ? HexColor.fromString(theme, json['color'] as String) ??
+                const Color.fromRGBO(76, 175, 80, 1)
             : defaultGetDotStrokeColor(barColor, barGradient, percentage),
         strokeWidth: json["stroke_width"] != null
             ? parseDouble(json["stroke_width"])
-            : null);
+            : 1.0);
   } else if (type == "square") {
     return FlDotSquarePainter(
         color: json['color'] != null
-            ? HexColor.fromString(theme, json['color'] as String)
+            ? HexColor.fromString(theme, json['color'] as String) ??
+                Colors.green
             : defaultGetPointColor(barColor, barGradient, percentage),
-        size: json["size"] != null ? parseDouble(json["size"]) : null,
+        size: json["size"] != null ? parseDouble(json["size"]) : 4.0,
         strokeColor: json['stroke_color'] != null
-            ? HexColor.fromString(theme, json['color'] as String)
+            ? HexColor.fromString(theme, json['color'] as String) ??
+                const Color.fromRGBO(76, 175, 80, 1)
             : defaultGetDotStrokeColor(barColor, barGradient, percentage),
         strokeWidth: json["stroke_width"] != null
             ? parseDouble(json["stroke_width"])
-            : null);
+            : 1.0);
   } else if (type == "cross") {
     return FlDotCrossPainter(
       color: json['color'] != null
-          ? HexColor.fromString(theme, json['color'] as String)
+          ? HexColor.fromString(theme, json['color'] as String) ?? Colors.green
           : defaultGetDotStrokeColor(barColor, barGradient, percentage),
-      size: json["size"] != null ? parseDouble(json["size"]) : null,
-      width: json["width"] != null ? parseDouble(json["width"]) : null,
+      size: json["size"] != null ? parseDouble(json["size"]) : 8.0,
+      width: json["width"] != null ? parseDouble(json["width"]) : 2.0,
     );
   }
   return null;
@@ -175,7 +180,7 @@ FlDotPainter getInvisiblePainter() {
 }
 
 FlLine getInvisibleLine() {
-  return FlLine(strokeWidth: 0);
+  return const FlLine(strokeWidth: 0);
 }
 
 FlDotPainter getDefaultPainter(

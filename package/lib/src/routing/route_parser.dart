@@ -4,10 +4,10 @@ class RouteParser extends RouteInformationParser<String> {
   @override
   Future<String> parseRouteInformation(
       RouteInformation routeInformation) async {
-    return routeInformation.location!;
+    return routeInformation.uri.toString();
   }
 
   @override
   RouteInformation restoreRouteInformation(String configuration) =>
-      RouteInformation(location: configuration);
+      RouteInformation(uri: Uri.parse(configuration));
 }
