@@ -19,8 +19,7 @@ SvgPicture getSvgPictureFromFile(
       width: width,
       height: height,
       fit: fit,
-      color: color,
-      colorBlendMode: blendMode,
+      colorFilter: color != null ? ColorFilter.mode(color, blendMode) : null,
       semanticsLabel: semanticsLabel);
 }
 
