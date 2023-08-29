@@ -1,3 +1,10 @@
+## 0.10.0
+
+* Hosting Flet web apps in FastAPI ([docs](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-fastapi/README.md)).
+* Migrated to Flutter 3.13.1.
+* Pydantic 2.0 support (Copier upgraded to 8.2.0).
+* BREAKING: `DataTable.data_row_height` replaced with `DataTable.data_row_min_height` and `DataTable.data_row_max_height`.
+
 ## 0.9.0
 
 * Added `--android` option to `flet run` command.
