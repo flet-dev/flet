@@ -32,15 +32,15 @@ dependencies:
   flutter_highlight: ^0.7.0
   highlight: ^0.7.0
   markdown: ^7.0.0
-  file_picker: ^5.2.5
+  file_picker: ^5.3.4
   shared_preferences: ^2.0.15
-  flutter_svg: ^1.1.6
+  flutter_svg: ^2.0.7
   window_to_front: ^0.0.3
-  audioplayers: ^4.1.0
+  audioplayers: ^5.1.0
   shake: ^2.2.0
   path: ^1.8.2
   js: ^0.6.5
-  fl_chart: ^0.62.0
+  fl_chart: ^0.63.0
 
 dev_dependencies:
   flutter_test:
