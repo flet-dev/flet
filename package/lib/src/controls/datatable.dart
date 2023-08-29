@@ -85,7 +85,8 @@ class _DataTableControlState extends State<DataTableControl> {
               columnSpacing: widget.control.attrDouble("columnSpacing"),
               dataRowColor: parseMaterialStateColor(
                   Theme.of(context), widget.control, "dataRowColor"),
-              dataRowHeight: widget.control.attrDouble("dataRowHeight"),
+              dataRowMinHeight: widget.control.attrDouble("dataRowMinHeight"),
+              dataRowMaxHeight: widget.control.attrDouble("dataRowMaxHeight"),
               dataTextStyle: parseTextStyle(
                   Theme.of(context), widget.control, "dataTextStyle"),
               headingRowColor: parseMaterialStateColor(
