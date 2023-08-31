@@ -15,7 +15,12 @@ import qrcode
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string
 from flet_runtime.app import close_flet_view, open_flet_view
-from flet_runtime.utils import get_free_tcp_port, is_windows, open_in_browser
+from flet_runtime.utils import (
+    get_free_tcp_port,
+    get_local_ip,
+    is_windows,
+    open_in_browser,
+)
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -293,8 +298,7 @@ class Handler(FileSystemEventHandler):
 
     def print_qr_code(self, orig_url: str, android: bool):
         u = urlparse(orig_url)
-        hostname = socket.gethostname()
-        ip_addr = socket.gethostbyname(hostname)
+        ip_addr = get_local_ip()
         lan_url = urlunparse(
             (u.scheme, f"{ip_addr}:{u.port}", u.path, None, None, None)
         )
