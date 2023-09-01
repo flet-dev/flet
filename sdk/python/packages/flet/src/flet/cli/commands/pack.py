@@ -49,6 +49,13 @@ class Command(BaseCommand):
             help="additional non-binary files or folders to be added to the executable",
         )
         parser.add_argument(
+            "--add-binary",
+            dest="add_binary",
+            action="append",
+            nargs="*",
+            help="additional binary files to be added to the executable",
+        )
+        parser.add_argument(
             "--hidden-import",
             dest="hidden_import",
             action="append",
@@ -86,6 +93,11 @@ class Command(BaseCommand):
             help="executable (Windows) or bundle (macOS) copyright",
         )
         parser.add_argument(
+            "--codesign-identity",
+            dest="codesign_identity",
+            help="Code signing identity (macOS)",
+        )
+        parser.add_argument(
             "--bundle-id",
             dest="bundle_id",
             help="bundle identifier (macOS)",
@@ -117,10 +129,16 @@ class Command(BaseCommand):
                 for add_data_arr in options.add_data:
                     for add_data_item in add_data_arr:
                         pyi_args.extend(["--add-data", add_data_item])
+            if options.add_binary:
+                for add_binary_arr in options.add_binary:
+                    for add_binary_item in add_binary_arr:
+                        pyi_args.extend(["--add-binary", add_binary_item])
             if options.hidden_import:
                 for hidden_import_arr in options.hidden_import:
                     for hidden_import_item in hidden_import_arr:
                         pyi_args.extend(["--hidden-import", hidden_import_item])
+            if options.codesign_identity:
+                pyi_args.extend(["--codesign-identity", options.codesign_identity])
             if options.bundle_id:
                 pyi_args.extend(["--osx-bundle-identifier", options.bundle_id])
             if options.onedir:
