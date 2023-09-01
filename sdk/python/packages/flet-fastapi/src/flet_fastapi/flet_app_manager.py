@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import shutil
+import traceback
 from datetime import datetime
 from typing import Optional
 
@@ -82,7 +83,9 @@ class FletAppManager:
             try:
                 await page._close_async()
             except Exception as e:
-                logger.error(f"Error deleting expired session: {e}")
+                logger.error(
+                    f"Error deleting expired session: {e} {traceback.format_exc()}"
+                )
 
     async def store_state(self, state_id: str, state: OAuthState):
         logger.info(f"Store oauth state: {state_id}")

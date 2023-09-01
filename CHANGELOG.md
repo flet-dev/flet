@@ -1,5 +1,10 @@
 # Flet changelog
 
+## 0.10.1
+
+* Fix Cavas.Text drawing ([#1783](https://github.com/flet-dev/flet/issues/1783))
+* Use alternative method to determine user computer's IP ([#1733](https://github.com/flet-dev/flet/issues/1733))
+
 ## 0.10.0
 
 * Hosting Flet web apps in FastAPI ([docs](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-fastapi/README.md)).
