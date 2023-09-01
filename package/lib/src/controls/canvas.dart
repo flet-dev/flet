@@ -61,6 +61,7 @@ class _CanvasControlState extends State<CanvasControl> {
 
           var paint = CustomPaint(
             painter: FletCustomPainter(
+              context: context,
               theme: Theme.of(context),
               shapes: viewModel.shapes,
               onPaintCallback: (size) {
@@ -94,12 +95,14 @@ class _CanvasControlState extends State<CanvasControl> {
 }
 
 class FletCustomPainter extends CustomPainter {
+  final BuildContext context;
   final ThemeData theme;
   final List<ControlTreeViewModel> shapes;
   final CanvasControlOnPaintCallback onPaintCallback;
 
   const FletCustomPainter(
-      {required this.theme,
+      {required this.context,
+      required this.theme,
       required this.shapes,
       required this.onPaintCallback});
 
@@ -131,7 +134,7 @@ class FletCustomPainter extends CustomPainter {
       } else if (shape.control.type == "shadow") {
         drawShadow(canvas, shape);
       } else if (shape.control.type == "text") {
-        drawText(canvas, shape);
+        drawText(context, canvas, shape);
       }
     }
   }
@@ -236,7 +239,8 @@ class FletCustomPainter extends CustomPainter {
         paint);
   }
 
-  void drawText(Canvas canvas, ControlTreeViewModel shape) {
+  void drawText(
+      BuildContext context, Canvas canvas, ControlTreeViewModel shape) {
     var offset =
         Offset(shape.control.attrDouble("x")!, shape.control.attrDouble("y")!);
     var alignment =
@@ -266,7 +270,8 @@ class FletCustomPainter extends CustomPainter {
         text: span,
         textAlign: textAlign ?? TextAlign.start,
         maxLines: maxLines,
-        ellipsis: ellipsis);
+        ellipsis: ellipsis,
+        textDirection: Directionality.of(context));
     textPainter.layout(maxWidth: maxWidth ?? double.infinity);
 
     var angle = shape.control.attrDouble("rotate", 0)!;
