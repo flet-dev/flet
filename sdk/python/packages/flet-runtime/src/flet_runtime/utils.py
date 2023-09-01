@@ -147,6 +147,17 @@ def get_free_tcp_port():
     return sock.getsockname()[1]
 
 
+def get_local_ip():
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.connect(("8.8.8.8", 80))
+            local_ip = s.getsockname()[0]
+        return local_ip
+    except Exception as e:
+        hostname = socket.gethostname()
+        return socket.gethostbyname(hostname)
+
+
 def get_current_script_dir():
     pathname = os.path.dirname(sys.argv[0])
     return os.path.abspath(pathname)
