@@ -12,7 +12,7 @@ class Arc(Shape):
         y: OptionalNumber = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
-        start_agnle: OptionalNumber = None,
+        start_angle: OptionalNumber = None,
         sweep_angle: OptionalNumber = None,
         use_center: Optional[bool] = None,
         paint: Optional[Paint] = None,
@@ -28,7 +28,7 @@ class Arc(Shape):
         self.y = y
         self.width = width
         self.height = height
-        self.start_angle = start_agnle
+        self.start_angle = start_angle
         self.sweep_angle = sweep_angle
         self.use_center = use_center
         self.paint = paint
