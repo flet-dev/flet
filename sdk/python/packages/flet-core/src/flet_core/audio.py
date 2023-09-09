@@ -187,7 +187,7 @@ class Audio(Control):
 
     @volume.setter
     def volume(self, value: OptionalNumber):
-        if value is None or (value >= 0 and value <= 1):
+        if value is None or (0 <= value <= 1):
             self._set_attr("volume", value)
 
     # balance
@@ -197,7 +197,7 @@ class Audio(Control):
 
     @balance.setter
     def balance(self, value: OptionalNumber):
-        if value is None or (value >= -1 and value <= 1):
+        if value is None or (-1 <= value <= 1):
             self._set_attr("balance", value)
 
     # playback_rate
@@ -207,7 +207,7 @@ class Audio(Control):
 
     @playback_rate.setter
     def playback_rate(self, value: OptionalNumber):
-        if value is None or (value >= 0 and value <= 2):
+        if value is None or (0 <= value <= 2):
             self._set_attr("playbackRate", value)
 
     # release_mode
