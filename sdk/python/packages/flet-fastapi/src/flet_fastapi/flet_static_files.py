@@ -85,8 +85,10 @@ class FletStaticFiles(StaticFiles):
         return (full_path, stat_result)
 
     async def __config(self, root_path: str):
-        self.__app_mount_path = root_path + self.__proxy_path.strip('/') + '/'
-        #self.__app_mount_path = '/app1/'
+        if self.__proxy_path:
+            self.__app_mount_path = self.__proxy_path + root_path
+        else:
+            self.__app_mount_path = root_path
 
         # where modified index.html is stored
         temp_dir = tempfile.mkdtemp()
