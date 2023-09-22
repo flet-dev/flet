@@ -1691,7 +1691,7 @@ class Page(Control):
 
     @on_scroll_interval.setter
     def on_scroll_interval(self, value: OptionalNumber):
-        self.__default_view.on_scroll_interval
+        self.__default_view.on_scroll_interval = value
 
     # on_close
     @property
@@ -1808,7 +1808,7 @@ class Page(Control):
 
     @on_scroll.setter
     def on_scroll(self, handler):
-        self.__default_view.on_scroll
+        self.__default_view.on_scroll = handler
 
 
 class Offstage(Control):
