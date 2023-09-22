@@ -73,6 +73,7 @@ import 'tooltip.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
+import 'mobilewebviewer.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild}) {
@@ -527,6 +528,12 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "mobilewebviewer":
+      return MobileWebViewer(
+        key: key,
+        parent: parent, 
+        control: controlView.control, 
+        parentDisabled: parentDisabled);
     default:
       throw Exception("Unknown control type: ${controlView.control.type}");
   }
