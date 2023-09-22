@@ -1,5 +1,13 @@
 # Flet changelog
 
+## 0.10.2
+
+* Wrapped --codesign-identity & --add-binary for flet pack ([#1789](https://github.com/flet-dev/flet/issues/1789)).
+* Fix incomplete code blocks in `flet_core/page.py`.
+* Fix disabled color of FilledButtons.
+* Add `AppView` and `WebRenderer` enums to flet-pyodide.
+* Pyodide v0.24.0.
+
 ## 0.10.1
 
 * Fix Cavas.Text drawing ([#1783](https://github.com/flet-dev/flet/issues/1783))
