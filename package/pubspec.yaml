@@ -43,7 +43,6 @@ dependencies:
   fl_chart: ^0.63.0
 
   webview_flutter: ^4.2.4
-  webview_universal: ^0.0.5
 
 dev_dependencies:
   flutter_test:
