@@ -39,6 +39,7 @@ class FletStaticFiles(StaticFiles):
 
     def __init__(
         self,
+        proxy_path: Optional[str] = None,
         assets_dir: Optional[str] = None,
         app_name: Optional[str] = None,
         app_short_name: Optional[str] = None,
@@ -50,6 +51,7 @@ class FletStaticFiles(StaticFiles):
     ) -> None:
         self.index = "index.html"
         self.manifest_json = "manifest.json"
+        self.__proxy_path = proxy_path
         self.__assets_dir = assets_dir
         self.__app_name = app_name
         self.__app_short_name = app_short_name
@@ -83,7 +85,10 @@ class FletStaticFiles(StaticFiles):
         return (full_path, stat_result)
 
     async def __config(self, root_path: str):
-        self.__app_mount_path = root_path
+        if self.__proxy_path:
+            self.__app_mount_path = self.__proxy_path + root_path
+        else:
+            self.__app_mount_path = root_path
 
         # where modified index.html is stored
         temp_dir = tempfile.mkdtemp()
