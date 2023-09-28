@@ -65,9 +65,10 @@ class Command(BaseCommand):
             defaults=True,
         ) as worker:
             worker.run_copy()
-            print(Fore.LIGHTGREEN_EX + "\nDone. Now run:\n")
+            print(Fore.LIGHTGREEN_EX + "Done. Now run:")
             print(Style.RESET_ALL)
-            print(Fore.CYAN + "cd", end=" ")
-            print(Fore.WHITE + project_name, end="\n")
+            if options.output_directory != ".":
+                print(Fore.CYAN + "cd", end=" ")
+                print(Fore.WHITE + project_name, end="\n")
             print(Fore.CYAN + "flet run")
             print(Style.RESET_ALL)
