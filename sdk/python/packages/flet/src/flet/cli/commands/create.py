@@ -1,9 +1,9 @@
 import argparse
 from pathlib import Path
 
+from colorama import Fore, Style
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import slugify
-from colorama import Fore, Style
 
 
 class Command(BaseCommand):
@@ -32,7 +32,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--template",
             dest="template",
-            choices=["minimal"],
+            choices=["minimal", "counter"],
             default="minimal",
             help="template to use for new Flet project",
             required=False,

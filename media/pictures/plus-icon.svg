@@ -26,10 +26,10 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.84096521"
-     inkscape:cx="395.37902"
-     inkscape:cy="423.91766"
+     inkscape:cx="337.11264"
+     inkscape:cy="424.51221"
      inkscape:window-width="1728"
-     inkscape:window-height="985"
+     inkscape:window-height="994"
      inkscape:window-x="0"
      inkscape:window-y="38"
      inkscape:window-maximized="1"
@@ -81,7 +81,10 @@
        id="path144"
        cx="100.50847"
        cy="58.349579"
-       r="25" />
+       r="25"
+       inkscape:export-filename="../../../../../Documents/plus-favicon.png"
+       inkscape:export-xdpi="24.384005"
+       inkscape:export-ydpi="24.384005" />
     <text
        xml:space="preserve"
        style="font-size:33.6439px;fill:#ffffff;fill-opacity:1;stroke-width:2.80365;stroke-linecap:square;stroke-linejoin:round"

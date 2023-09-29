@@ -1,5 +1,10 @@
 # Flet changelog
 
+# 0.10.3
+
+* Add proxy_path parameter to flet_fastapi.app() ([#1882](https://github.com/flet-dev/flet/issues/1882)).
+* Fix `flet create` crashes with an empty project name.
+
 ## 0.10.2
 
 * Wrapped --codesign-identity & --add-binary for flet pack ([#1789](https://github.com/flet-dev/flet/issues/1789)).
