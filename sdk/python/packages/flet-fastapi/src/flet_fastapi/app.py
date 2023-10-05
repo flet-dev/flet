@@ -16,6 +16,7 @@ from flet_fastapi.flet_upload import FletUpload
 
 def app(
     session_handler: Callable[[Page], Awaitable],
+    proxy_path: Optional[str] = None,
     assets_dir: Optional[str] = None,
     app_name: Optional[str] = None,
     app_short_name: Optional[str] = None,
@@ -79,6 +80,7 @@ def app(
     fastapi_app.mount(
         path="/",
         app=FletStaticFiles(
+            proxy_path=proxy_path,
             assets_dir=assets_dir,
             app_name=app_name,
             app_short_name=app_short_name,
