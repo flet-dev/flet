@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -13,13 +14,12 @@ import 'create_control.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
 
-
-class MobileWebViewer extends StatelessWidget {
+class WebView extends StatelessWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
 
-  const MobileWebViewer(
+  const WebView(
       {Key? key,
       required this.parent,
       required this.control,
@@ -48,8 +48,8 @@ class MobileWebViewer extends StatelessWidget {
             jsMode = JavaScriptMode.disabled;
           }
 
-          // // WebView controller
-          var controller = WebViewController()
+          if (Platform.isIOS || Platform.isAndroid){
+            var controller = WebViewController()
             ..setJavaScriptMode(jsMode)
             ..setBackgroundColor(bgcolor)
             ..setNavigationDelegate(
@@ -82,11 +82,16 @@ class MobileWebViewer extends StatelessWidget {
               ),
             )
             ..loadRequest(Uri.parse(url));
-          if (Platform.isIOS || Platform.isAndroid) {
             return WebViewWidget(
               controller: controller
             );
-          } else {
+          }else if (Platform.isMacOS){
+            return const Text("'MobileWbBrowser' is not supported on macOS yet.");
+          }else if (Platform.isWindows){
+            return const Text("'MobileWbBrowser' is not supported on windows yey.");
+          }else if (Platform.isLinux){
+            return const Text("'MobileWbBrowser' is not supported on this platform.");
+          }else{
             return const Text("'MobileWbBrowser' is not supported on this platform.");
           }
         });
