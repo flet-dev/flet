@@ -65,6 +65,8 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
       actionsPadding: parseEdgeInsets(widget.control, "actionsPadding"),
       actionsAlignment: actionsAlignment,
       shape: parseOutlinedBorder(widget.control, "shape"),
+      insetPadding: parseEdgeInsets(widget.control, "insetPadding") ??
+          const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
     );
   }
 
