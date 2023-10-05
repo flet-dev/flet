@@ -22,55 +22,8 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-TextOverflowString = Literal[None, "clip", "ellipsis", "fade", "visible"]
 
-
-class TextOverflow(Enum):
-    NONE = None
-    CLIP = "clip"
-    ELLIPSIS = "ellipsis"
-    FADE = "fade"
-    VISIBLE = "visible"
-
-
-TextThemeStyleString = Literal[
-    "displayLarge",
-    "displayMedium",
-    "displaySmall",
-    "headlineLarge",
-    "headlineMedium",
-    "headlineSmall",
-    "titleLarge",
-    "titleMedium",
-    "titleSmall",
-    "labelLarge",
-    "labelMedium",
-    "labelSmall",
-    "bodyLarge",
-    "bodyMedium",
-    "bodySmall",
-]
-
-
-class TextThemeStyle(Enum):
-    DISPLAY_LARGE = "displayLarge"
-    DISPLAY_MEDIUM = "displayMedium"
-    DISPLAY_SMALL = "displaySmall"
-    HEADLINE_LARGE = "headlineLarge"
-    HEADLINE_MEDIUM = "headlineMedium"
-    HEADLINE_SMALL = "headlineSmall"
-    TITLE_LARGE = "titleLarge"
-    TITLE_MEDIUM = "titleMedium"
-    TITLE_SMALL = "titleSmall"
-    LABEL_LARGE = "labelLarge"
-    LABEL_MEDIUM = "labelMedium"
-    LABEL_SMALL = "labelSmall"
-    BODY_LARGE = "bodyLarge"
-    BODY_MEDIUM = "bodyMedium"
-    BODY_SMALL = "bodySmall"
-
-
-class MobileWebViewer(ConstrainedControl):
+class WebView(ConstrainedControl):
     """
 Easily load webpages while allowing user interaction.
 

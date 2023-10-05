@@ -202,4 +202,4 @@ from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
 from flet_core.view import View
 from flet_core.window_drag_area import WindowDragArea
-from flet_core.mobilewebviewer import MobileWebViewer
+from flet_core.webview import WebView
