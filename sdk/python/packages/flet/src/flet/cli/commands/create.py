@@ -1,9 +1,9 @@
 import argparse
 from pathlib import Path
 
+from colorama import Fore, Style
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import slugify
-from colorama import Fore, Style
 
 
 class Command(BaseCommand):
@@ -32,7 +32,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--template",
             dest="template",
-            choices=["minimal"],
+            choices=["minimal", "counter"],
             default="minimal",
             help="template to use for new Flet project",
             required=False,
@@ -65,9 +65,10 @@ class Command(BaseCommand):
             defaults=True,
         ) as worker:
             worker.run_copy()
-            print(Fore.LIGHTGREEN_EX + "\nDone. Now run:\n")
+            print(Fore.LIGHTGREEN_EX + "Done. Now run:")
             print(Style.RESET_ALL)
-            print(Fore.CYAN + "cd", end=" ")
-            print(Fore.WHITE + project_name, end="\n")
+            if options.output_directory != ".":
+                print(Fore.CYAN + "cd", end=" ")
+                print(Fore.WHITE + project_name, end="\n")
             print(Fore.CYAN + "flet run")
             print(Style.RESET_ALL)
