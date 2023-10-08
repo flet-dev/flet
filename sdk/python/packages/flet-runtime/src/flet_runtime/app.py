@@ -12,7 +12,6 @@ import zipfile
 from pathlib import Path
 from typing import Optional
 
-import flet_runtime
 from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.types import (
@@ -24,6 +23,8 @@ from flet_core.types import (
     WebRenderer,
 )
 from flet_core.utils import is_coroutine, random_string
+
+import flet_runtime
 from flet_runtime.async_local_socket_connection import AsyncLocalSocketConnection
 from flet_runtime.sync_local_socket_connection import SyncLocalSocketConnection
 from flet_runtime.utils import (
@@ -196,6 +197,9 @@ def __app_sync(
 
     conn.close()
     close_flet_view(pid_file)
+    if fled_subprocess is not None:
+        fled_subprocess.send_signal(signal.SIGTERM)
+        fled_subprocess.wait()
 
 
 async def app_async(
@@ -220,7 +224,7 @@ async def app_async(
     force_web_view = os.environ.get("FLET_FORCE_WEB_VIEW")
     assets_dir = __get_assets_dir_path(assets_dir)
 
-    conn = await __connect_internal_async(
+    conn, fled_subprocess = await __connect_internal_async(
         page_name=name,
         view=view if not force_web_view else AppView.WEB_BROWSER,
         host=host,
@@ -283,6 +287,9 @@ async def app_async(
 
     await conn.close()
     close_flet_view(pid_file)
+    if fled_subprocess is not None:
+        fled_subprocess.send_signal(signal.SIGTERM)
+        fled_subprocess.wait()
 
 
 def close_flet_view(pid_file):
@@ -326,8 +333,9 @@ def __connect_internal_sync(
         is_mobile() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
     )
 
+    fled_subprocess = None
     if not is_socket_server:
-        server = __start_flet_server(
+        server, fled_subprocess = __start_flet_server(
             host,
             port,
             upload_dir,
@@ -382,7 +390,7 @@ def __connect_internal_sync(
             on_session_created=on_session_created,
         )
     conn.connect()
-    return conn
+    return conn, fled_subprocess
 
 
 async def __connect_internal_async(
@@ -412,8 +420,10 @@ async def __connect_internal_async(
     is_socket_server = server is None and (
         is_mobile() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
     )
+
+    fled_subprocess = None
     if not is_socket_server:
-        server = __start_flet_server(
+        server, fled_subprocess = __start_flet_server(
             host,
             port,
             upload_dir,
@@ -470,7 +480,7 @@ async def __connect_internal_async(
             on_session_created=on_session_created,
         )
     await conn.connect()
-    return conn
+    return conn, fled_subprocess
 
 
 def __start_flet_server(
@@ -562,7 +572,7 @@ def __start_flet_server(
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
-    subprocess.Popen(
+    fled_subprocess = subprocess.Popen(
         args,
         env=fletd_env,
         creationflags=creationflags,
@@ -572,7 +582,7 @@ def __start_flet_server(
         startupinfo=startupinfo,
     )
 
-    return f"http://{server_ip}:{port}"
+    return f"http://{server_ip}:{port}", fled_subprocess
 
 
 def open_flet_view(page_url, assets_dir, hidden):

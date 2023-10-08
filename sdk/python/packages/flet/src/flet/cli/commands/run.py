@@ -14,6 +14,9 @@ from urllib.parse import quote, urlparse, urlunparse
 import qrcode
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
+
 from flet_runtime.app import close_flet_view, open_flet_view
 from flet_runtime.utils import (
     get_free_tcp_port,
@@ -21,8 +24,6 @@ from flet_runtime.utils import (
     is_windows,
     open_in_browser,
 )
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
 
 
 class Command(BaseCommand):
@@ -287,14 +288,24 @@ class Handler(FileSystemEventHandler):
             self.page_url, self.assets_dir, self.hidden
         )
         self.fvp.wait()
+
         self.p.send_signal(signal.SIGTERM)
-        self.terminate.set()
+        self.p.wait()
+
+        if self.is_running:
+            self.terminate.set()
+        else:
+            self.start_process()
 
     def restart_program(self):
         self.is_running = False
-        self.p.send_signal(signal.SIGTERM)
-        self.p.wait()
-        self.start_process()
+        if self.pid_file is not None:
+            self.page_url = None
+            close_flet_view(self.pid_file)
+        else:
+            self.p.send_signal(signal.SIGTERM)
+            self.p.wait()
+            self.start_process()
 
     def print_qr_code(self, orig_url: str, android: bool):
         u = urlparse(orig_url)
