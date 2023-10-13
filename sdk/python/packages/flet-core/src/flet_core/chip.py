@@ -67,7 +67,8 @@ class Chip(ConstrainedControl):
         # color: Optional[str] = None,
         # shadow_color: Optional[str] = None,
         # surface_tint_color: Optional[str] = None,
-        label: Optional[str] = None,
+        label: Control = None,
+        bgcolor: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -101,6 +102,7 @@ class Chip(ConstrainedControl):
 
         #self.content = content
         self.label = label
+        self.bgcolor = bgcolor
 
     def _get_control_name(self):
         return "chip"
@@ -127,19 +129,50 @@ class Chip(ConstrainedControl):
 
 
     # label
+    # @property
+    # def label(self):
+    #     return self._get_attr("label")
+
+    # @label.setter
+    # def label(self, value):
+    #     self._set_attr("label", value)
+
+    # # label
+    # @property
+    # def label(self) -> Optional[Control]:
+    #     return self.__label
+
+    # @label.setter
+    # def label(self, value: Optional[Control]):
+    #     self.__label = value
+
+    # label
     @property
-    def label(self):
-        return self._get_attr("label")
+    def label(self) -> Control:
+        return self.__label
 
     @label.setter
-    def label(self, value):
-        self._set_attr("label", value)
+    def label(self, value: Control):
+        self.__label = value
+    
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
 
-    # # content
-    # @property
-    # def content(self) -> Optional[Control]:
-    #     return self.__content
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
 
-    # @content.setter
-    # def content(self, value: Optional[Control]):
-    #     self.__content = value
+    def _get_children(self):
+        children = []
+        if self.__label:
+            self.__label._set_attr_internal("n", "label")
+            children.append(self.__label)
+        # if self.__subtitle:
+        #     self.__subtitle._set_attr_internal("n", "subtitle")
+        #     children.append(self.__subtitle)
+        # if self.__trailing:
+        #     self.__trailing._set_attr_internal("n", "trailing")
+        #     children.append(self.__trailing)
+        return children

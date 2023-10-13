@@ -212,7 +212,7 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           key: key,
           parent: parent,
           control: controlView.control,
-          //children: controlView.children,
+          children: controlView.children,
           parentDisabled: parentDisabled);
 
     case "progressring":
