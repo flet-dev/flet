@@ -5,6 +5,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'package:flet/src/flet_app_services.dart';
 
 class ChipControl extends StatefulWidget {
   final Control? parent;
@@ -41,26 +42,32 @@ class _ChipControlState extends State<ChipControl> {
     var bgcolor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("bgcolor", "")!);
 
+    final server = FletAppServices.of(context).server;
+    bool onClick = widget.control.attrBool("onclick", false)!;
+
+    Function()? onClickHandler = onClick && !disabled
+        ? () {
+            debugPrint("Chip ${widget.control.id} clicked!");
+            server.sendPageEvent(
+                eventTarget: widget.control.id,
+                eventName: "click",
+                eventData: "");
+          }
+        : null;
+
     return constrainedControl(
         context,
-        Chip(
-          //label: Text(control.attrString("label", "")!),
-          //label: createControl(widget.control, contentCtrls.first.id, disabled)
+        // Chip(
+        //   //label: Text(control.attrString("label", "")!),
+        //   //label: createControl(widget.control, contentCtrls.first.id, disabled)
+        //   label: createControl(widget.control, labelCtrls.first.id, disabled),
+        //   backgroundColor: bgcolor,
+        // ),
+        InputChip(
           label: createControl(widget.control, labelCtrls.first.id, disabled),
           backgroundColor: bgcolor,
+          onPressed: onClickHandler,
         ),
-
-        //elevation: control.attrDouble("elevation"),
-        //margin: parseEdgeInsets(control, "margin"),
-        //color: HexColor.fromString(
-        //     Theme.of(context), control.attrString("color", "")!),
-        // shadowColor: HexColor.fromString(
-        //     Theme.of(context), control.attrString("shadowColor", "")!),
-        // surfaceTintColor: HexColor.fromString(
-        //     Theme.of(context), control.attrString("surfaceTintColor", "")!),
-        // child: contentCtrls.isNotEmpty
-        //     ? createControl(control, contentCtrls.first.id, disabled)
-        //     : null),
         widget.parent,
         widget.control);
   }

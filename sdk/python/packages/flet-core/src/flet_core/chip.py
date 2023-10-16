@@ -1,4 +1,5 @@
 from typing import Any, Optional, Union
+import json
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -11,6 +12,8 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.event_handler import EventHandler
+from flet_core.control_event import ControlEvent
 
 
 class Chip(ConstrainedControl):
@@ -31,7 +34,7 @@ class Chip(ConstrainedControl):
 
     def __init__(
         self,
-        #content: Optional[Control] = None,
+        # content: Optional[Control] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -61,7 +64,6 @@ class Chip(ConstrainedControl):
         #
         # Specific
         #
-
         # margin: MarginValue = None,
         # elevation: OptionalNumber = None,
         # color: Optional[str] = None,
@@ -69,6 +71,8 @@ class Chip(ConstrainedControl):
         # surface_tint_color: Optional[str] = None,
         label: Control = None,
         bgcolor: Optional[str] = None,
+        on_click=None,
+        # on_delete=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -100,51 +104,30 @@ class Chip(ConstrainedControl):
             data=data,
         )
 
-        #self.content = content
+        def convert_container_tap_event_data(e):
+            d = json.loads(e.data)
+            # return ContainerTapEvent(**d)
+            return ControlEvent(**d)
+
+        # self.__on_click = EventHandler(convert_container_tap_event_data)
+        self.on_click = on_click
+        # self._add_event_handler("click", self.__on_click.get_handler())
+        # self.content = content
         self.label = label
         self.bgcolor = bgcolor
 
     def _get_control_name(self):
         return "chip"
 
-    # def _before_build_command(self):
-    #     super()._before_build_command()
-    #     self._set_attr_json("margin", self.__margin)
+    # on_click
+    @property
+    def on_click(self):
+        return self._get_event_handler("click")
 
-    # def _get_children(self):
-    #     children = []
-    #     if self.__content is not None:
-    #         self.__content._set_attr_internal("n", "content")
-    #         children.append(self.__content)
-    #     return children
-
-    # # margin
-    # @property
-    # def margin(self) -> MarginValue:
-    #     return self.__margin
-
-    # @margin.setter
-    # def margin(self, value: MarginValue):
-    #     self.__margin = value
-
-
-    # label
-    # @property
-    # def label(self):
-    #     return self._get_attr("label")
-
-    # @label.setter
-    # def label(self, value):
-    #     self._set_attr("label", value)
-
-    # # label
-    # @property
-    # def label(self) -> Optional[Control]:
-    #     return self.__label
-
-    # @label.setter
-    # def label(self, value: Optional[Control]):
-    #     self.__label = value
+    @on_click.setter
+    def on_click(self, handler):
+        self._add_event_handler("click", handler)
+        self._set_attr("onclick", True if handler is not None else None)
 
     # label
     @property
@@ -154,7 +137,7 @@ class Chip(ConstrainedControl):
     @label.setter
     def label(self, value: Control):
         self.__label = value
-    
+
     # bgcolor
     @property
     def bgcolor(self):
