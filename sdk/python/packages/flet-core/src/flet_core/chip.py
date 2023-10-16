@@ -71,8 +71,10 @@ class Chip(ConstrainedControl):
         # surface_tint_color: Optional[str] = None,
         label: Control = None,
         bgcolor: Optional[str] = None,
+        selected: Optional[bool] = False,
         on_click=None,
-        # on_delete=None,
+        on_delete=None,
+        on_select=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -111,13 +113,25 @@ class Chip(ConstrainedControl):
 
         # self.__on_click = EventHandler(convert_container_tap_event_data)
         self.on_click = on_click
+        self.on_delete = on_delete
+        self.on_select = on_select
         # self._add_event_handler("click", self.__on_click.get_handler())
         # self.content = content
         self.label = label
         self.bgcolor = bgcolor
+        self.selected = selected
 
     def _get_control_name(self):
         return "chip"
+
+    # selected
+    @property
+    def selected(self) -> Optional[bool]:
+        return self._get_attr("selected")
+
+    @selected.setter
+    def selected(self, value: Optional[bool]):
+        self._set_attr("selected", value)
 
     # on_click
     @property
@@ -128,6 +142,26 @@ class Chip(ConstrainedControl):
     def on_click(self, handler):
         self._add_event_handler("click", handler)
         self._set_attr("onclick", True if handler is not None else None)
+
+    # on_delete
+    @property
+    def on_delete(self):
+        return self._get_event_handler("delete")
+
+    @on_delete.setter
+    def on_delete(self, handler):
+        self._add_event_handler("delete", handler)
+        self._set_attr("onDelete", True if handler is not None else None)
+
+    # on_select
+    @property
+    def on_select(self):
+        return self._get_event_handler("select")
+
+    @on_select.setter
+    def on_select(self, handler):
+        self._add_event_handler("select", handler)
+        self._set_attr("onSelect", True if handler is not None else None)
 
     # label
     @property

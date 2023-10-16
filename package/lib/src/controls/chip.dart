@@ -44,6 +44,7 @@ class _ChipControlState extends State<ChipControl> {
 
     final server = FletAppServices.of(context).server;
     bool onClick = widget.control.attrBool("onclick", false)!;
+    bool onDelete = widget.control.attrBool("onDelete", false)!;
 
     Function()? onClickHandler = onClick && !disabled
         ? () {
@@ -51,6 +52,16 @@ class _ChipControlState extends State<ChipControl> {
             server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "click",
+                eventData: "");
+          }
+        : null;
+
+    Function()? onDeleteHandler = onDelete && !disabled
+        ? () {
+            debugPrint("Chip ${widget.control.id} deleted!");
+            server.sendPageEvent(
+                eventTarget: widget.control.id,
+                eventName: "delete",
                 eventData: "");
           }
         : null;
@@ -67,6 +78,10 @@ class _ChipControlState extends State<ChipControl> {
           label: createControl(widget.control, labelCtrls.first.id, disabled),
           backgroundColor: bgcolor,
           onPressed: onClickHandler,
+          onDeleted: onDeleteHandler,
+          deleteIcon: const Icon(
+            Icons.cancel,
+          ),
         ),
         widget.parent,
         widget.control);
