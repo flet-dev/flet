@@ -26,6 +26,7 @@ class ChipControl extends StatefulWidget {
 }
 
 class _ChipControlState extends State<ChipControl> {
+  //bool? _selected;
   @override
   Widget build(BuildContext context) {
     debugPrint("Chip build: ${widget.control.id}");
@@ -68,20 +69,14 @@ class _ChipControlState extends State<ChipControl> {
 
     return constrainedControl(
         context,
-        // Chip(
-        //   //label: Text(control.attrString("label", "")!),
-        //   //label: createControl(widget.control, contentCtrls.first.id, disabled)
-        //   label: createControl(widget.control, labelCtrls.first.id, disabled),
-        //   backgroundColor: bgcolor,
-        // ),
         InputChip(
           label: createControl(widget.control, labelCtrls.first.id, disabled),
           backgroundColor: bgcolor,
           onPressed: onClickHandler,
           onDeleted: onDeleteHandler,
-          deleteIcon: const Icon(
-            Icons.cancel,
-          ),
+          // deleteIcon: const Icon(
+          //   Icons.cancel,
+          // ),
         ),
         widget.parent,
         widget.control);
