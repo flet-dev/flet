@@ -73,6 +73,7 @@ class Chip(ConstrainedControl):
         delete_button_tooltip_message: Optional[str] = None,
         delete_icon: Optional[Control] = None,
         delete_icon_color: Optional[str] = None,
+        disabled_color: Optional[str] = None,
         on_click=None,
         on_delete=None,
         on_select=None,
@@ -123,6 +124,7 @@ class Chip(ConstrainedControl):
         self.delete_button_tooltip_message = delete_button_tooltip_message
         self.delete_icon = delete_icon
         self.delete_icon_color = delete_icon_color
+        self.disabled_color = disabled_color
 
     def _get_control_name(self):
         return "chip"
@@ -210,6 +212,15 @@ class Chip(ConstrainedControl):
     @delete_icon_color.setter
     def delete_icon_color(self, value):
         self._set_attr("deleteIconColor", value)
+
+    # disabled_color
+    @property
+    def disabled_color(self):
+        return self._get_attr("disabledColor")
+
+    @disabled_color.setter
+    def disabled_color(self, value):
+        self._set_attr("disabledColor", value)
 
     # autofocus
     @property
