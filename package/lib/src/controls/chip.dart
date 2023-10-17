@@ -110,6 +110,9 @@ class _ChipControlState extends State<ChipControl> {
       _selected = selected;
     }
 
+    String deleteButtonTooltipMessage =
+        widget.control.attrString("deleteButtonTooltipMessage", "")!;
+
     Function()? onClickHandler = onClick && !disabled
         ? () {
             debugPrint("Chip ${widget.control.id} clicked!");
@@ -143,6 +146,7 @@ class _ChipControlState extends State<ChipControl> {
             checkmarkColor: HexColor.fromString(Theme.of(context),
                 widget.control.attrString("checkColor", "")!),
             selected: _selected,
+            deleteButtonTooltipMessage: deleteButtonTooltipMessage,
             onPressed: onClickHandler,
             onDeleted: onDeleteHandler,
             onSelected: onSelect && !disabled

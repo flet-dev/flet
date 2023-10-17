@@ -70,6 +70,7 @@ class Chip(ConstrainedControl):
         bgcolor: Optional[str] = None,
         selected: Optional[bool] = False,
         check_color: Optional[str] = None,
+        delete_button_tooltip_message: Optional[str] = None,
         on_click=None,
         on_delete=None,
         on_select=None,
@@ -117,6 +118,7 @@ class Chip(ConstrainedControl):
         self.bgcolor = bgcolor
         self.check_color = check_color
         self.selected = selected
+        self.delete_button_tooltip_message = delete_button_tooltip_message
 
     def _get_control_name(self):
         return "chip"
@@ -149,6 +151,15 @@ class Chip(ConstrainedControl):
     def on_delete(self, handler):
         self._add_event_handler("delete", handler)
         self._set_attr("onDelete", True if handler is not None else None)
+
+    # delete_button_tooltip_message
+    @property
+    def delete_button_tooltip_message(self):
+        return self._get_attr("deleteButtonTooltipMessage")
+
+    @delete_button_tooltip_message.setter
+    def delete_button_tooltip_message(self, value):
+        self._set_attr("deleteButtonTooltipMessage", value)
 
     # on_select
     @property
