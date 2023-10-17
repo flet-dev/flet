@@ -136,9 +136,12 @@ class _ChipControlState extends State<ChipControl> {
             autofocus: autofocus,
             focusNode: _focusNode,
             label: createControl(widget.control, labelCtrls.first.id, disabled),
-            avatar:
-                createControl(widget.control, leadingCtrls.first.id, disabled),
+            avatar: leadingCtrls.isNotEmpty
+                ? createControl(widget.control, leadingCtrls.first.id, disabled)
+                : null,
             backgroundColor: bgcolor,
+            checkmarkColor: HexColor.fromString(Theme.of(context),
+                widget.control.attrString("checkColor", "")!),
             selected: _selected,
             onPressed: onClickHandler,
             onDeleted: onDeleteHandler,

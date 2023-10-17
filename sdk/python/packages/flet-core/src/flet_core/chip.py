@@ -69,9 +69,12 @@ class Chip(ConstrainedControl):
         leading: Optional[Control] = None,
         bgcolor: Optional[str] = None,
         selected: Optional[bool] = False,
+        check_color: Optional[str] = None,
         on_click=None,
         on_delete=None,
         on_select=None,
+        on_focus=None,
+        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -106,10 +109,13 @@ class Chip(ConstrainedControl):
         self.on_click = on_click
         self.on_delete = on_delete
         self.on_select = on_select
+        self.on_focus = on_focus
+        self.on_blur = on_blur
         self.autofocus = autofocus
         self.label = label
         self.leading = leading
         self.bgcolor = bgcolor
+        self.check_color = check_color
         self.selected = selected
 
     def _get_control_name(self):
@@ -189,6 +195,15 @@ class Chip(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
+
+    # check_color
+    @property
+    def check_color(self):
+        return self._get_attr("checkColor")
+
+    @check_color.setter
+    def check_color(self, value):
+        self._set_attr("checkColor", value)
 
     def _get_children(self):
         children = []
