@@ -95,6 +95,8 @@ class _ChipControlState extends State<ChipControl> {
 
     var bgcolor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("bgcolor", "")!);
+    var deleteIconColor = HexColor.fromString(
+        Theme.of(context), widget.control.attrString("deleteIconColor", "")!);
 
     final server = FletAppServices.of(context).server;
     bool onClick = widget.control.attrBool("onclick", false)!;
@@ -160,12 +162,8 @@ class _ChipControlState extends State<ChipControl> {
               ? createControl(
                   widget.control, deleteIconCtrls.first.id, disabled)
               : null,
+          deleteIconColor: deleteIconColor,
         ),
-
-        // deleteIcon: const Icon(
-        //   Icons.cancel,
-        // ),
-
         widget.parent,
         widget.control);
   }
