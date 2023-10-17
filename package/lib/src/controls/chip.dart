@@ -88,6 +88,7 @@ class _ChipControlState extends State<ChipControl> {
     if (labelCtrls.isEmpty) {
       return const ErrorControl("Chip must have label specified.");
     }
+
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var bgcolor = HexColor.fromString(
@@ -97,6 +98,12 @@ class _ChipControlState extends State<ChipControl> {
     bool onClick = widget.control.attrBool("onclick", false)!;
     bool onDelete = widget.control.attrBool("onDelete", false)!;
     bool onSelect = widget.control.attrBool("onSelect", false)!;
+
+    if (onSelect && onClick) {
+      return const ErrorControl(
+          "Chip cannot have both on_select and on_click events specified.");
+    }
+
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool selected = widget.control.attrBool("selected", false)!;
     if (_selected != selected) {
