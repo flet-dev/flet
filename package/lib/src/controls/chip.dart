@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:highlight/languages/d.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
@@ -8,6 +9,7 @@ import 'error.dart';
 import 'package:flet/src/flet_app_services.dart';
 import '../actions.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/edge_insets.dart';
 
 class ChipControl extends StatefulWidget {
   final Control? parent;
@@ -169,6 +171,8 @@ class _ChipControlState extends State<ChipControl> {
           deleteIconColor: deleteIconColor,
           disabledColor: disabledColor,
           elevation: elevation,
+          isEnabled: !disabled,
+          labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
         ),
         widget.parent,
         widget.control);
