@@ -213,7 +213,8 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
 
     case "progressring":
       return ProgressRingControl(
