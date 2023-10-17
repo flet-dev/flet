@@ -64,11 +64,7 @@ class Chip(ConstrainedControl):
         #
         # Specific
         #
-        # margin: MarginValue = None,
-        # elevation: OptionalNumber = None,
-        # color: Optional[str] = None,
-        # shadow_color: Optional[str] = None,
-        # surface_tint_color: Optional[str] = None,
+        autofocus: Optional[bool] = None,
         label: Control = None,
         leading: Optional[Control] = None,
         bgcolor: Optional[str] = None,
@@ -107,17 +103,10 @@ class Chip(ConstrainedControl):
             data=data,
         )
 
-        def convert_container_tap_event_data(e):
-            d = json.loads(e.data)
-            # return ContainerTapEvent(**d)
-            return ControlEvent(**d)
-
-        # self.__on_click = EventHandler(convert_container_tap_event_data)
         self.on_click = on_click
         self.on_delete = on_delete
         self.on_select = on_select
-        # self._add_event_handler("click", self.__on_click.get_handler())
-        # self.content = content
+        self.autofocus = autofocus
         self.label = label
         self.leading = leading
         self.bgcolor = bgcolor
@@ -183,6 +172,15 @@ class Chip(ConstrainedControl):
     def leading(self, value: Optional[Control]):
         self.__leading = value
 
+    # autofocus
+    @property
+    def autofocus(self) -> Optional[bool]:
+        return self._get_attr("autofocus", data_type="bool", def_value=False)
+
+    @autofocus.setter
+    def autofocus(self, value: Optional[bool]):
+        self._set_attr("autofocus", value)
+
     # bgcolor
     @property
     def bgcolor(self):
@@ -204,3 +202,21 @@ class Chip(ConstrainedControl):
         #     self.__trailing._set_attr_internal("n", "trailing")
         #     children.append(self.__trailing)
         return children
+
+    # on_focus
+    @property
+    def on_focus(self):
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self):
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler):
+        self._add_event_handler("blur", handler)

@@ -32,6 +32,22 @@ class ChipControl extends StatefulWidget {
 class _ChipControlState extends State<ChipControl> {
   bool _selected = false;
 
+  late final FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   void _onSelect(bool selected) {
     var sselected = selected.toString();
     debugPrint(sselected);
@@ -49,6 +65,13 @@ class _ChipControlState extends State<ChipControl> {
         eventTarget: widget.control.id,
         eventName: "select",
         eventData: sselected);
+  }
+
+  void _onFocusChange() {
+    FletAppServices.of(context).server.sendPageEvent(
+        eventTarget: widget.control.id,
+        eventName: _focusNode.hasFocus ? "focus" : "blur",
+        eventData: "");
   }
 
   @override
@@ -74,7 +97,7 @@ class _ChipControlState extends State<ChipControl> {
     bool onClick = widget.control.attrBool("onclick", false)!;
     bool onDelete = widget.control.attrBool("onDelete", false)!;
     bool onSelect = widget.control.attrBool("onSelect", false)!;
-
+    bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool selected = widget.control.attrBool("selected", false)!;
     if (_selected != selected) {
       _selected = selected;
@@ -103,6 +126,8 @@ class _ChipControlState extends State<ChipControl> {
     return constrainedControl(
         context,
         InputChip(
+            autofocus: autofocus,
+            focusNode: _focusNode,
             label: createControl(widget.control, labelCtrls.first.id, disabled),
             avatar:
                 createControl(widget.control, leadingCtrls.first.id, disabled),
