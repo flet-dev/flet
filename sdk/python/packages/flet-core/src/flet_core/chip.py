@@ -71,6 +71,7 @@ class Chip(ConstrainedControl):
         selected: Optional[bool] = False,
         check_color: Optional[str] = None,
         delete_button_tooltip_message: Optional[str] = None,
+        delete_icon: Optional[Control] = None,
         on_click=None,
         on_delete=None,
         on_select=None,
@@ -119,6 +120,7 @@ class Chip(ConstrainedControl):
         self.check_color = check_color
         self.selected = selected
         self.delete_button_tooltip_message = delete_button_tooltip_message
+        self.delete_icon = delete_icon
 
     def _get_control_name(self):
         return "chip"
@@ -189,6 +191,15 @@ class Chip(ConstrainedControl):
     def leading(self, value: Optional[Control]):
         self.__leading = value
 
+    # delete_icon
+    @property
+    def delete_icon(self) -> Optional[Control]:
+        return self.__delete_icon
+
+    @delete_icon.setter
+    def delete_icon(self, value: Optional[Control]):
+        self.__delete_icon = value
+
     # autofocus
     @property
     def autofocus(self) -> Optional[bool]:
@@ -224,9 +235,9 @@ class Chip(ConstrainedControl):
         if self.__leading:
             self.__leading._set_attr_internal("n", "leading")
             children.append(self.__leading)
-        # if self.__trailing:
-        #     self.__trailing._set_attr_internal("n", "trailing")
-        #     children.append(self.__trailing)
+        if self.__delete_icon:
+            self.__delete_icon._set_attr_internal("n", "deleteIcon")
+            children.append(self.__delete_icon)
         return children
 
     # on_focus

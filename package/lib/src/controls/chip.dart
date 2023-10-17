@@ -84,6 +84,8 @@ class _ChipControlState extends State<ChipControl> {
         widget.children.where((c) => c.name == "label" && c.isVisible);
     var leadingCtrls =
         widget.children.where((c) => c.name == "leading" && c.isVisible);
+    var deleteIconCtrls =
+        widget.children.where((c) => c.name == "deleteIcon" && c.isVisible);
 
     if (labelCtrls.isEmpty) {
       return const ErrorControl("Chip must have label specified.");
@@ -136,24 +138,30 @@ class _ChipControlState extends State<ChipControl> {
     return constrainedControl(
         context,
         InputChip(
-            autofocus: autofocus,
-            focusNode: _focusNode,
-            label: createControl(widget.control, labelCtrls.first.id, disabled),
-            avatar: leadingCtrls.isNotEmpty
-                ? createControl(widget.control, leadingCtrls.first.id, disabled)
-                : null,
-            backgroundColor: bgcolor,
-            checkmarkColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("checkColor", "")!),
-            selected: _selected,
-            deleteButtonTooltipMessage: deleteButtonTooltipMessage,
-            onPressed: onClickHandler,
-            onDeleted: onDeleteHandler,
-            onSelected: onSelect && !disabled
-                ? (bool selected) {
-                    _onSelect(selected);
-                  }
-                : null),
+          autofocus: autofocus,
+          focusNode: _focusNode,
+          label: createControl(widget.control, labelCtrls.first.id, disabled),
+          avatar: leadingCtrls.isNotEmpty
+              ? createControl(widget.control, leadingCtrls.first.id, disabled)
+              : null,
+          backgroundColor: bgcolor,
+          checkmarkColor: HexColor.fromString(
+              Theme.of(context), widget.control.attrString("checkColor", "")!),
+          selected: _selected,
+          deleteButtonTooltipMessage: deleteButtonTooltipMessage,
+          onPressed: onClickHandler,
+          onDeleted: onDeleteHandler,
+          onSelected: onSelect && !disabled
+              ? (bool selected) {
+                  _onSelect(selected);
+                }
+              : null,
+          deleteIcon: deleteIconCtrls.isNotEmpty
+              ? createControl(
+                  widget.control, deleteIconCtrls.first.id, disabled)
+              : null,
+        ),
+
         // deleteIcon: const Icon(
         //   Icons.cancel,
         // ),
