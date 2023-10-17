@@ -59,6 +59,9 @@ class _ChipControlState extends State<ChipControl> {
     //     children.where((c) => c.name == "content" && c.isVisible);
     var labelCtrls =
         widget.children.where((c) => c.name == "label" && c.isVisible);
+    var leadingCtrls =
+        widget.children.where((c) => c.name == "leading" && c.isVisible);
+
     if (labelCtrls.isEmpty) {
       return const ErrorControl("Chip must have label specified.");
     }
@@ -101,6 +104,8 @@ class _ChipControlState extends State<ChipControl> {
         context,
         InputChip(
             label: createControl(widget.control, labelCtrls.first.id, disabled),
+            avatar:
+                createControl(widget.control, leadingCtrls.first.id, disabled),
             backgroundColor: bgcolor,
             selected: _selected,
             onPressed: onClickHandler,

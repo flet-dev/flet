@@ -70,6 +70,7 @@ class Chip(ConstrainedControl):
         # shadow_color: Optional[str] = None,
         # surface_tint_color: Optional[str] = None,
         label: Control = None,
+        leading: Optional[Control] = None,
         bgcolor: Optional[str] = None,
         selected: Optional[bool] = False,
         on_click=None,
@@ -118,6 +119,7 @@ class Chip(ConstrainedControl):
         # self._add_event_handler("click", self.__on_click.get_handler())
         # self.content = content
         self.label = label
+        self.leading = leading
         self.bgcolor = bgcolor
         self.selected = selected
 
@@ -172,6 +174,15 @@ class Chip(ConstrainedControl):
     def label(self, value: Control):
         self.__label = value
 
+    # leading
+    @property
+    def leading(self) -> Optional[Control]:
+        return self.__leading
+
+    @leading.setter
+    def leading(self, value: Optional[Control]):
+        self.__leading = value
+
     # bgcolor
     @property
     def bgcolor(self):
@@ -186,9 +197,9 @@ class Chip(ConstrainedControl):
         if self.__label:
             self.__label._set_attr_internal("n", "label")
             children.append(self.__label)
-        # if self.__subtitle:
-        #     self.__subtitle._set_attr_internal("n", "subtitle")
-        #     children.append(self.__subtitle)
+        if self.__leading:
+            self.__leading._set_attr_internal("n", "leading")
+            children.append(self.__leading)
         # if self.__trailing:
         #     self.__trailing._set_attr_internal("n", "trailing")
         #     children.append(self.__trailing)
