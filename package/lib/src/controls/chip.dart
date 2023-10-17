@@ -119,6 +119,8 @@ class _ChipControlState extends State<ChipControl> {
     String deleteButtonTooltipMessage =
         widget.control.attrString("deleteButtonTooltipMessage", "")!;
 
+    var elevation = widget.control.attrDouble("elevation");
+
     Function()? onClickHandler = onClick && !disabled
         ? () {
             debugPrint("Chip ${widget.control.id} clicked!");
@@ -166,6 +168,7 @@ class _ChipControlState extends State<ChipControl> {
               : null,
           deleteIconColor: deleteIconColor,
           disabledColor: disabledColor,
+          elevation: elevation,
         ),
         widget.parent,
         widget.control);

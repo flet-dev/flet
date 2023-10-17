@@ -74,6 +74,7 @@ class Chip(ConstrainedControl):
         delete_icon: Optional[Control] = None,
         delete_icon_color: Optional[str] = None,
         disabled_color: Optional[str] = None,
+        elevation: OptionalNumber = None,
         on_click=None,
         on_delete=None,
         on_select=None,
@@ -125,6 +126,7 @@ class Chip(ConstrainedControl):
         self.delete_icon = delete_icon
         self.delete_icon_color = delete_icon_color
         self.disabled_color = disabled_color
+        self.elevation = elevation
 
     def _get_control_name(self):
         return "chip"
@@ -248,6 +250,15 @@ class Chip(ConstrainedControl):
     @check_color.setter
     def check_color(self, value):
         self._set_attr("checkColor", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation")
+
+    @elevation.setter
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
 
     def _get_children(self):
         children = []
