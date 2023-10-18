@@ -21,6 +21,7 @@ import 'bottom_sheet.dart';
 import 'canvas.dart';
 import 'card.dart';
 import 'checkbox.dart';
+import 'chip.dart';
 import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
@@ -206,6 +207,15 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "chip":
+      return ChipControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
+
     case "progressring":
       return ProgressRingControl(
           key: key, parent: parent, control: controlView.control);

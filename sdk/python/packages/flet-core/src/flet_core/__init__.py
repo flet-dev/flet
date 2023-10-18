@@ -34,6 +34,7 @@ from flet_core.buttons import (
     StadiumBorder,
 )
 from flet_core.card import Card
+from flet_core.chip import Chip
 from flet_core.charts.bar_chart import BarChart, BarChartEvent
 from flet_core.charts.bar_chart_group import BarChartGroup
 from flet_core.charts.bar_chart_rod import BarChartRod
