@@ -118,11 +118,6 @@ class Chip(ConstrainedControl):
             data=data,
         )
 
-        self.on_click = on_click
-        self.on_delete = on_delete
-        self.on_select = on_select
-        self.on_focus = on_focus
-        self.on_blur = on_blur
         self.autofocus = autofocus
         self.label = label
         self.leading = leading
@@ -142,6 +137,11 @@ class Chip(ConstrainedControl):
         self.shadow_color = shadow_color
         self.shape = shape
         self.show_checkmark = show_checkmark
+        self.on_click = on_click
+        self.on_delete = on_delete
+        self.on_select = on_select
+        self.on_focus = on_focus
+        self.on_blur = on_blur
 
     def _get_control_name(self):
         return "chip"
@@ -152,6 +152,19 @@ class Chip(ConstrainedControl):
         self._set_attr_json("labelStyle", self.__label_style)
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("shape", self.__shape)
+
+    def _get_children(self):
+        children = []
+        if self.__label:
+            self.__label._set_attr_internal("n", "label")
+            children.append(self.__label)
+        if self.__leading:
+            self.__leading._set_attr_internal("n", "leading")
+            children.append(self.__leading)
+        if self.__delete_icon:
+            self.__delete_icon._set_attr_internal("n", "deleteIcon")
+            children.append(self.__delete_icon)
+        return children
 
     # padding
     @property
@@ -180,26 +193,6 @@ class Chip(ConstrainedControl):
     def show_checkmark(self, value: Optional[bool]):
         self._set_attr("showCheckmark", value)
 
-    # on_click
-    @property
-    def on_click(self):
-        return self._get_event_handler("click")
-
-    @on_click.setter
-    def on_click(self, handler):
-        self._add_event_handler("click", handler)
-        self._set_attr("onclick", True if handler is not None else None)
-
-    # on_delete
-    @property
-    def on_delete(self):
-        return self._get_event_handler("delete")
-
-    @on_delete.setter
-    def on_delete(self, handler):
-        self._add_event_handler("delete", handler)
-        self._set_attr("onDelete", True if handler is not None else None)
-
     # delete_button_tooltip_message
     @property
     def delete_button_tooltip_message(self):
@@ -208,16 +201,6 @@ class Chip(ConstrainedControl):
     @delete_button_tooltip_message.setter
     def delete_button_tooltip_message(self, value):
         self._set_attr("deleteButtonTooltipMessage", value)
-
-    # on_select
-    @property
-    def on_select(self):
-        return self._get_event_handler("select")
-
-    @on_select.setter
-    def on_select(self, handler):
-        self._add_event_handler("select", handler)
-        self._set_attr("onSelect", True if handler is not None else None)
 
     # label
     @property
@@ -354,18 +337,35 @@ class Chip(ConstrainedControl):
     def shape(self, value: Optional[OutlinedBorder]):
         self.__shape = value
 
-    def _get_children(self):
-        children = []
-        if self.__label:
-            self.__label._set_attr_internal("n", "label")
-            children.append(self.__label)
-        if self.__leading:
-            self.__leading._set_attr_internal("n", "leading")
-            children.append(self.__leading)
-        if self.__delete_icon:
-            self.__delete_icon._set_attr_internal("n", "deleteIcon")
-            children.append(self.__delete_icon)
-        return children
+    # on_click
+    @property
+    def on_click(self):
+        return self._get_event_handler("click")
+
+    @on_click.setter
+    def on_click(self, handler):
+        self._add_event_handler("click", handler)
+        self._set_attr("onclick", True if handler is not None else None)
+
+    # on_delete
+    @property
+    def on_delete(self):
+        return self._get_event_handler("delete")
+
+    @on_delete.setter
+    def on_delete(self, handler):
+        self._add_event_handler("delete", handler)
+        self._set_attr("onDelete", True if handler is not None else None)
+
+    # on_select
+    @property
+    def on_select(self):
+        return self._get_event_handler("select")
+
+    @on_select.setter
+    def on_select(self, handler):
+        self._add_event_handler("select", handler)
+        self._set_attr("onSelect", True if handler is not None else None)
 
     # on_focus
     @property
