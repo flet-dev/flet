@@ -1,20 +1,17 @@
 from typing import Any, Optional, Union
-import json
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
-    MarginValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     PaddingValue,
 )
-from flet_core.event_handler import EventHandler
-from flet_core.control_event import ControlEvent
+
 from flet_core.text_style import TextStyle
 from flet_core.buttons import OutlinedBorder
 
@@ -37,7 +34,6 @@ class Chip(ConstrainedControl):
 
     def __init__(
         self,
-        # content: Optional[Control] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
