@@ -10,6 +10,7 @@ import 'package:flet/src/flet_app_services.dart';
 import '../actions.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/edge_insets.dart';
+import '../utils/text.dart';
 
 class ChipControl extends StatefulWidget {
   final Control? parent;
@@ -80,8 +81,6 @@ class _ChipControlState extends State<ChipControl> {
   Widget build(BuildContext context) {
     debugPrint("Chip build: ${widget.control.id}");
 
-    // var contentCtrls =
-    //     children.where((c) => c.name == "content" && c.isVisible);
     var labelCtrls =
         widget.children.where((c) => c.name == "label" && c.isVisible);
     var leadingCtrls =
@@ -173,6 +172,8 @@ class _ChipControlState extends State<ChipControl> {
           elevation: elevation,
           isEnabled: !disabled,
           labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
+          labelStyle:
+              parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
         ),
         widget.parent,
         widget.control);

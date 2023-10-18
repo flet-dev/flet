@@ -15,6 +15,7 @@ from flet_core.types import (
 )
 from flet_core.event_handler import EventHandler
 from flet_core.control_event import ControlEvent
+from flet_core.text_style import TextStyle
 
 
 class Chip(ConstrainedControl):
@@ -77,6 +78,7 @@ class Chip(ConstrainedControl):
         disabled_color: Optional[str] = None,
         elevation: OptionalNumber = None,
         label_padding: PaddingValue = None,
+        label_style: Optional[TextStyle] = None,
         on_click=None,
         on_delete=None,
         on_select=None,
@@ -130,6 +132,7 @@ class Chip(ConstrainedControl):
         self.disabled_color = disabled_color
         self.elevation = elevation
         self.label_padding = label_padding
+        self.label_style = label_style
 
     def _get_control_name(self):
         return "chip"
@@ -137,6 +140,7 @@ class Chip(ConstrainedControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("labelPadding", self.__label_padding)
+        self._set_attr_json("labelStyle", self.__label_style)
 
     # selected
     @property
@@ -203,6 +207,15 @@ class Chip(ConstrainedControl):
     @label_padding.setter
     def label_padding(self, value: PaddingValue):
         self.__label_padding = value
+
+    # label_style
+    @property
+    def label_style(self):
+        return self.__label_style
+
+    @label_style.setter
+    def label_style(self, value: Optional[TextStyle]):
+        self.__label_style = value
 
     # leading
     @property
