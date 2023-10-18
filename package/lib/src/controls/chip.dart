@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:highlight/languages/d.dart';
+//import 'package:highlight/languages/d.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
-//import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
 import 'package:flet/src/flet_app_services.dart';
@@ -52,13 +51,13 @@ class _ChipControlState extends State<ChipControl> {
   }
 
   void _onSelect(bool selected) {
-    var sselected = selected.toString();
-    debugPrint(sselected);
+    var strSelected = selected.toString();
+    debugPrint(strSelected);
     setState(() {
       _selected = selected;
     });
     List<Map<String, String>> props = [
-      {"i": widget.control.id, "selected": sselected}
+      {"i": widget.control.id, "selected": strSelected}
     ];
     widget.dispatch(
         UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
@@ -67,7 +66,7 @@ class _ChipControlState extends State<ChipControl> {
     server.sendPageEvent(
         eventTarget: widget.control.id,
         eventName: "select",
-        eventData: sselected);
+        eventData: strSelected);
   }
 
   void _onFocusChange() {
