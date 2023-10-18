@@ -85,6 +85,7 @@ class Chip(ConstrainedControl):
         selected_shadow_color: Optional[str] = None,
         shadow_color: Optional[str] = None,
         shape: Optional[OutlinedBorder] = None,
+        show_checkmark: Optional[bool] = None,
         on_click=None,
         on_delete=None,
         on_select=None,
@@ -144,6 +145,7 @@ class Chip(ConstrainedControl):
         self.selected_shadow_color = selected_shadow_color
         self.shadow_color = shadow_color
         self.shape = shape
+        self.show_checkmark = show_checkmark
 
     def _get_control_name(self):
         return "chip"
@@ -172,6 +174,15 @@ class Chip(ConstrainedControl):
     @selected.setter
     def selected(self, value: Optional[bool]):
         self._set_attr("selected", value)
+
+    # show_checkmark
+    @property
+    def show_checkmark(self) -> Optional[bool]:
+        return self._get_attr("showCheckmark")
+
+    @show_checkmark.setter
+    def show_checkmark(self, value: Optional[bool]):
+        self._set_attr("showCheckmark", value)
 
     # on_click
     @property
