@@ -69,7 +69,7 @@ class Chip(ConstrainedControl):
         bgcolor: Optional[str] = None,
         selected: Optional[bool] = False,
         check_color: Optional[str] = None,
-        delete_icon_tooltip_message: Optional[str] = None,
+        delete_icon_tooltip: Optional[str] = None,
         delete_icon: Optional[Control] = None,
         delete_icon_color: Optional[str] = None,
         disabled_color: Optional[str] = None,
@@ -124,7 +124,7 @@ class Chip(ConstrainedControl):
         self.bgcolor = bgcolor
         self.check_color = check_color
         self.selected = selected
-        self.delete_icon_tooltip_message = delete_icon_tooltip_message
+        self.delete_icon_tooltip = delete_icon_tooltip
         self.delete_icon = delete_icon
         self.delete_icon_color = delete_icon_color
         self.disabled_color = disabled_color
@@ -193,13 +193,13 @@ class Chip(ConstrainedControl):
     def show_checkmark(self, value: Optional[bool]):
         self._set_attr("showCheckmark", value)
 
-    # delete_icon_tooltip_message
+    # delete_icon_tooltip
     @property
-    def delete_icon_tooltip_message(self):
+    def delete_icon_tooltip(self):
         return self._get_attr("deleteButtonTooltipMessage")
 
-    @delete_icon_tooltip_message.setter
-    def delete_icon_tooltip_message(self, value):
+    @delete_icon_tooltip.setter
+    def delete_icon_tooltip(self, value):
         self._set_attr("deleteButtonTooltipMessage", value)
 
     # label
