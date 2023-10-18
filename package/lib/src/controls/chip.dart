@@ -10,6 +10,7 @@ import '../actions.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/edge_insets.dart';
 import '../utils/text.dart';
+import '../utils/borders.dart';
 
 class ChipControl extends StatefulWidget {
   final Control? parent;
@@ -180,6 +181,7 @@ class _ChipControlState extends State<ChipControl> {
               widget.control.attrString("selectedShadowColor", "")!),
           shadowColor: HexColor.fromString(
               Theme.of(context), widget.control.attrString("shadowColor", "")!),
+          shape: parseOutlinedBorder(widget.control, "shape"),
         ),
         widget.parent,
         widget.control);

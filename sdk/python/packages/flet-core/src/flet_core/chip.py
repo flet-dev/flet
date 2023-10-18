@@ -16,6 +16,7 @@ from flet_core.types import (
 from flet_core.event_handler import EventHandler
 from flet_core.control_event import ControlEvent
 from flet_core.text_style import TextStyle
+from flet_core.buttons import OutlinedBorder
 
 
 class Chip(ConstrainedControl):
@@ -83,6 +84,7 @@ class Chip(ConstrainedControl):
         selected_color: Optional[str] = None,
         selected_shadow_color: Optional[str] = None,
         shadow_color: Optional[str] = None,
+        shape: Optional[OutlinedBorder] = None,
         on_click=None,
         on_delete=None,
         on_select=None,
@@ -141,6 +143,7 @@ class Chip(ConstrainedControl):
         self.selected_color = selected_color
         self.selected_shadow_color = selected_shadow_color
         self.shadow_color = shadow_color
+        self.shape = shape
 
     def _get_control_name(self):
         return "chip"
@@ -150,6 +153,7 @@ class Chip(ConstrainedControl):
         self._set_attr_json("labelPadding", self.__label_padding)
         self._set_attr_json("labelStyle", self.__label_style)
         self._set_attr_json("padding", self.__padding)
+        self._set_attr_json("shape", self.__shape)
 
     # padding
     @property
@@ -333,6 +337,15 @@ class Chip(ConstrainedControl):
     @elevation.setter
     def elevation(self, value: OptionalNumber):
         self._set_attr("elevation", value)
+
+    # shape
+    @property
+    def shape(self) -> Optional[OutlinedBorder]:
+        return self.__shape
+
+    @shape.setter
+    def shape(self, value: Optional[OutlinedBorder]):
+        self.__shape = value
 
     def _get_children(self):
         children = []
