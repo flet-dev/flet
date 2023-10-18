@@ -79,6 +79,7 @@ class Chip(ConstrainedControl):
         elevation: OptionalNumber = None,
         label_padding: PaddingValue = None,
         label_style: Optional[TextStyle] = None,
+        padding: PaddingValue = None,
         on_click=None,
         on_delete=None,
         on_select=None,
@@ -133,6 +134,7 @@ class Chip(ConstrainedControl):
         self.elevation = elevation
         self.label_padding = label_padding
         self.label_style = label_style
+        self.padding = padding
 
     def _get_control_name(self):
         return "chip"
@@ -141,6 +143,16 @@ class Chip(ConstrainedControl):
         super()._before_build_command()
         self._set_attr_json("labelPadding", self.__label_padding)
         self._set_attr_json("labelStyle", self.__label_style)
+        self._set_attr_json("padding", self.__padding)
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
 
     # selected
     @property

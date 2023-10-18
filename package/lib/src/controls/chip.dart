@@ -171,6 +171,7 @@ class _ChipControlState extends State<ChipControl> {
           disabledColor: disabledColor,
           elevation: elevation,
           isEnabled: !disabled,
+          padding: parseEdgeInsets(widget.control, "padding"),
           labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
           labelStyle:
               parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
