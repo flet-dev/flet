@@ -179,6 +179,8 @@ class _ChipControlState extends State<ChipControl> {
               widget.control.attrString("selectedColor", "")!),
           selectedShadowColor: HexColor.fromString(Theme.of(context),
               widget.control.attrString("selectedShadowColor", "")!),
+          shadowColor: HexColor.fromString(
+              Theme.of(context), widget.control.attrString("shadowColor", "")!),
         ),
         widget.parent,
         widget.control);
