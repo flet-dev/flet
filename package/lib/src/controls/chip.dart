@@ -175,6 +175,8 @@ class _ChipControlState extends State<ChipControl> {
           labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
           labelStyle:
               parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
+          selectedColor: HexColor.fromString(Theme.of(context),
+              widget.control.attrString("selectedColor", "")!),
         ),
         widget.parent,
         widget.control);
