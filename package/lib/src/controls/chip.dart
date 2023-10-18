@@ -177,6 +177,8 @@ class _ChipControlState extends State<ChipControl> {
               parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
           selectedColor: HexColor.fromString(Theme.of(context),
               widget.control.attrString("selectedColor", "")!),
+          selectedShadowColor: HexColor.fromString(Theme.of(context),
+              widget.control.attrString("selectedShadowColor", "")!),
         ),
         widget.parent,
         widget.control);

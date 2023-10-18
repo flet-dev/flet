@@ -81,6 +81,7 @@ class Chip(ConstrainedControl):
         label_style: Optional[TextStyle] = None,
         padding: PaddingValue = None,
         selected_color: Optional[str] = None,
+        selected_shadow_color: Optional[str] = None,
         on_click=None,
         on_delete=None,
         on_select=None,
@@ -137,6 +138,7 @@ class Chip(ConstrainedControl):
         self.label_style = label_style
         self.padding = padding
         self.selected_color = selected_color
+        self.selected_shadow_color = selected_shadow_color
 
     def _get_control_name(self):
         return "chip"
@@ -302,6 +304,15 @@ class Chip(ConstrainedControl):
     @selected_color.setter
     def selected_color(self, value):
         self._set_attr("selectedColor", value)
+
+    # selected_shadow_color
+    @property
+    def selected_shadow_color(self):
+        return self._get_attr("selectedShadowColor")
+
+    @selected_shadow_color.setter
+    def selected_shadow_color(self, value):
+        self._set_attr("selectedShadowColor", value)
 
     # elevation
     @property
