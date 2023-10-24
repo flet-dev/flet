@@ -57,7 +57,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
 
           String state = widget.control.attrString("state") ?? "initState";
           DateTime? firstDate = widget.control.attrDateTime("firstDate");
-          DateTime? lastDate = widget.control.attrDateTime("firstDate");
+          DateTime? lastDate = widget.control.attrDateTime("lastDate");
           bool onChange = widget.control.attrBool("onChange", false)!;
           String? localeString = widget.control.attrString("locale");
           String? helpText = widget.control.attrString("helpText");
