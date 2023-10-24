@@ -1,14 +1,12 @@
-from datetime import datetime, date
+from datetime import date, datetime
 from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import (
-    ResponsiveNumber,
-)
 from flet_core.textfield import KeyboardType, KeyboardTypeString
+from flet_core.types import ResponsiveNumber
 
 try:
     from typing import Literal
@@ -158,10 +156,7 @@ class DatePicker(Control):
     @property
     def value(self) -> Optional[datetime]:
         value_string = self._get_attr("value", def_value=None)
-        if value_string is None or value_string == "null":
-            return None
-        else:
-            return datetime.fromisoformat(value_string)
+        return datetime.fromisoformat(value_string) if value_string else None
 
     @value.setter
     def value(self, value: Optional[Union[datetime, str]]):
