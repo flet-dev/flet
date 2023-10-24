@@ -33,10 +33,10 @@ from flet_runtime.utils import (
     get_package_bin_dir,
     get_package_web_dir,
     get_platform,
+    is_embedded,
     is_linux,
     is_linux_server,
     is_macos,
-    is_mobile,
     is_windows,
     open_in_browser,
     safe_tar_extractall,
@@ -172,7 +172,7 @@ def __app_sync(
             or view == AppView.FLET_APP_WEB
         )
         and not is_linux_server()
-        and not is_mobile()
+        and not is_embedded()
         and url_prefix is None
     ):
         fvp, pid_file = open_flet_view(
@@ -261,7 +261,7 @@ async def app_async(
             or view == AppView.FLET_APP_WEB
         )
         and not is_linux_server()
-        and not is_mobile()
+        and not is_embedded()
         and url_prefix is None
     ):
         fvp, pid_file = await open_flet_view_async(
@@ -323,7 +323,7 @@ def __connect_internal_sync(
         assets_dir = env_assets_dir
 
     is_socket_server = server is None and (
-        is_mobile() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
+        is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
     )
 
     if not is_socket_server:
@@ -410,7 +410,7 @@ async def __connect_internal_async(
         assets_dir = env_assets_dir
 
     is_socket_server = server is None and (
-        is_mobile() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
+        is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
     )
     if not is_socket_server:
         server = __start_flet_server(

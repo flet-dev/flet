@@ -10,11 +10,15 @@ from flet_core.types import WebRenderer
 
 
 def is_ios():
-    return os.getenv("FLET_PLATFORM") == "iOS"
+    return os.getenv("FLET_PLATFORM") == "ios"
 
 
 def is_android():
-    return os.getenv("FLET_PLATFORM") == "Android"
+    return os.getenv("FLET_PLATFORM") == "android"
+
+
+def is_embedded():
+    return os.getenv("FLET_PLATFORM") is not None
 
 
 def is_mobile():
