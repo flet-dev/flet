@@ -29,32 +29,26 @@ class DatePickerControl extends StatefulWidget {
 }
 
 class _DatePickerControlState extends State<DatePickerControl> {
-  DateTime? _value;
   String? _state;
 
-  DateTime? get value {
-    return widget.control.attrDateTime("value");
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
-  @override
-  void initState() {
-    super.initState();
-    _value = value;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("DatePicker build: ${widget.control.id}");
 
     String state = widget.control.attrString("state") ?? "initState";
+    DateTime? value = widget.control.attrDateTime("value");
     DateTime? firstDate = widget.control.attrDateTime("firstDate");
     DateTime? lastDate = widget.control.attrDateTime("lastDate");
-    bool onChange = widget.control.attrBool("onChange", false)!;
     String? localeString = widget.control.attrString("locale");
     String? helpText = widget.control.attrString("helpText");
     String? cancelText = widget.control.attrString("cancelText");
@@ -84,19 +78,15 @@ class _DatePickerControlState extends State<DatePickerControl> {
       widget.dispatch(
           UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
       FletAppServices.of(context).server.updateControlProps(props: props);
-      if (onChange) {
-        FletAppServices.of(context).server.sendPageEvent(
-            eventTarget: widget.control.id,
-            eventName: "change",
-            eventData: stringValue);
-      }
       FletAppServices.of(context).server.sendPageEvent(
-          eventTarget: widget.control.id, eventName: "submit", eventData: "");
+          eventTarget: widget.control.id,
+          eventName: "change",
+          eventData: stringValue);
     }
 
-    Widget selectDateDialog() {
+    Widget createSelectDateDialog() {
       Widget dialog = DatePickerDialog(
-        initialDate: _value ?? DateTime.now(),
+        initialDate: value ?? DateTime.now(),
         firstDate: firstDate ?? DateTime(1900),
         lastDate: lastDate ?? DateTime(2050),
         helpText: helpText,
@@ -123,7 +113,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             showDialog<DateTime>(
                 context: context,
-                builder: (context) => selectDateDialog()).then((result) {
+                builder: (context) => createSelectDateDialog()).then((result) {
               debugPrint("pickDate() completed");
               onChanged(result);
             });
