@@ -74,6 +74,22 @@ class _DatePickerControlState extends State<DatePickerControl> {
           eventData: stringValue);
     }
 
+    void onDismissed() {
+      var newState = "initState";
+      String stringValue = value?.toIso8601String() ?? "";
+      List<Map<String, String>> props = [
+        {"i": widget.control.id, "value": stringValue, "state": newState}
+      ];
+      widget.dispatch(
+          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+      FletAppServices.of(context).server.updateControlProps(props: props);
+
+      FletAppServices.of(context).server.sendPageEvent(
+          eventTarget: widget.control.id,
+          eventName: "dismiss",
+          eventData: stringValue);
+    }
+
     Widget createSelectDateDialog() {
       Widget dialog = DatePickerDialog(
         initialDate: value ?? DateTime.now(),
@@ -105,7 +121,11 @@ class _DatePickerControlState extends State<DatePickerControl> {
                 context: context,
                 builder: (context) => createSelectDateDialog()).then((result) {
               debugPrint("pickDate() completed");
-              onChanged(result);
+              if (result != null) {
+                onChanged(result);
+              } else {
+                onDismissed();
+              }
             });
           });
           break;

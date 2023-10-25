@@ -100,6 +100,7 @@ class DatePicker(Control):
         confirm_text: Optional[str] = None,
         hint_text: Optional[str] = None,
         on_change=None,
+        on_dismiss=None,
     ):
         Control.__init__(
             self,
@@ -125,6 +126,7 @@ class DatePicker(Control):
         self.text_style = text_style
         self.hint_text = hint_text
         self.on_change = on_change
+        self.on_dismiss = on_dismiss
         self.state = "initState"
 
     def _get_control_name(self):
@@ -284,3 +286,12 @@ class DatePicker(Control):
     @on_change.setter
     def on_change(self, handler):
         self._add_event_handler("change", handler)
+
+    # on_dismiss
+    @property
+    def on_dismiss(self):
+        return self._get_event_handler("dismiss")
+
+    @on_dismiss.setter
+    def on_dismiss(self, handler):
+        self._add_event_handler("dismiss", handler)
