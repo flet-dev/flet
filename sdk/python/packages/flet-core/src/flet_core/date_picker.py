@@ -91,6 +91,7 @@ class DatePicker(Control):
         text_style: Optional[TextStyle] = None,
         first_date: Optional[datetime] = None,
         last_date: Optional[datetime] = None,
+        current_date: Optional[datetime] = None,
         keyboard_type: Optional[KeyboardType] = None,
         date_picker_mode: Optional[DatePickerMode] = None,
         date_picker_entry_mode: Optional[DatePickerEntryMode] = None,
@@ -116,6 +117,7 @@ class DatePicker(Control):
         self.value = value
         self.first_date = first_date
         self.last_date = last_date
+        self.current_date = current_date
         self.keyboard_type = keyboard_type
         self.locale = locale
         self.help_text = help_text
@@ -193,6 +195,21 @@ class DatePicker(Control):
         if isinstance(value, (date, datetime)):
             value = value.isoformat()
         self._set_attr("lastDate", value)
+
+    # current_date
+    @property
+    def current_date(self) -> Optional[datetime]:
+        value_string = self._get_attr("currentDate", def_value=None)
+        if value_string is None:
+            return None
+        else:
+            return datetime.fromisoformat(value_string)
+
+    @current_date.setter
+    def current_date(self, value: Optional[Union[datetime, str]]):
+        if isinstance(value, (date, datetime)):
+            value = value.isoformat()
+        self._set_attr("currentDate", value)
 
     # locale
     @property

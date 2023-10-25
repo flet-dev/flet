@@ -39,6 +39,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
     DateTime? value = widget.control.attrDateTime("value");
     DateTime? firstDate = widget.control.attrDateTime("firstDate");
     DateTime? lastDate = widget.control.attrDateTime("lastDate");
+    DateTime? currentDate = widget.control.attrDateTime("currentDate");
     String? localeString = widget.control.attrString("locale");
     String? helpText = widget.control.attrString("helpText");
     String? cancelText = widget.control.attrString("cancelText");
@@ -95,6 +96,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
         initialDate: value ?? DateTime.now(),
         firstDate: firstDate ?? DateTime(1900),
         lastDate: lastDate ?? DateTime(2050),
+        currentDate: currentDate ?? DateTime.now(),
         helpText: helpText,
         cancelText: cancelText,
         confirmText: confirmText,
