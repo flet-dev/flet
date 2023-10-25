@@ -13,14 +13,16 @@ class DatePickerControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final dynamic dispatch;
 
-  const DatePickerControl(
-      {Key? key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+  const DatePickerControl({
+    Key? key,
+    this.parent,
+    required this.control,
+    required this.children,
+    required this.parentDisabled,
+    required this.dispatch,
+  }) : super(key: key);
 
   @override
   State<DatePickerControl> createState() => _DatePickerControlState();
@@ -49,96 +51,87 @@ class _DatePickerControlState extends State<DatePickerControl> {
   Widget build(BuildContext context) {
     debugPrint("DatePicker build: ${widget.control.id}");
 
-    return StoreConnector<AppState, Function>(
-        distinct: true,
-        converter: (store) => store.dispatch,
-        builder: (context, dispatch) {
-          debugPrint("DatePicker StoreConnector build: ${widget.control.id}");
+    String state = widget.control.attrString("state") ?? "initState";
+    DateTime? firstDate = widget.control.attrDateTime("firstDate");
+    DateTime? lastDate = widget.control.attrDateTime("lastDate");
+    bool onChange = widget.control.attrBool("onChange", false)!;
+    String? localeString = widget.control.attrString("locale");
+    String? helpText = widget.control.attrString("helpText");
+    String? cancelText = widget.control.attrString("cancelText");
+    String? confirmText = widget.control.attrString("confirmText");
+    TextInputType keyboardType =
+        parseTextInputType(widget.control.attrString("keyboardType", "")!);
+    DatePickerMode datePickerMode =
+        parseDatePickerMode(widget.control.attrString("datePickerMode", "")!);
+    DatePickerEntryMode datePickerEntryMode = parseDatePickerEntryMode(
+        widget.control.attrString("datePickerEntryMode", "")!);
+    String? hintText = widget.control.attrString("hintText");
 
-          String state = widget.control.attrString("state") ?? "initState";
-          DateTime? firstDate = widget.control.attrDateTime("firstDate");
-          DateTime? lastDate = widget.control.attrDateTime("lastDate");
-          bool onChange = widget.control.attrBool("onChange", false)!;
-          String? localeString = widget.control.attrString("locale");
-          String? helpText = widget.control.attrString("helpText");
-          String? cancelText = widget.control.attrString("cancelText");
-          String? confirmText = widget.control.attrString("confirmText");
-          TextInputType keyboardType = parseTextInputType(
-              widget.control.attrString("keyboardType", "")!);
-          DatePickerMode datePickerMode = parseDatePickerMode(
-              widget.control.attrString("datePickerMode", "")!);
-          DatePickerEntryMode datePickerEntryMode = parseDatePickerEntryMode(
-              widget.control.attrString("datePickerEntryMode", "")!);
-          String? hintText = widget.control.attrString("hintText");
+    Locale locale;
+    if (localeString == null) {
+      locale = Localizations.localeOf(context);
+    } else {
+      locale = Locale(localeString);
+    }
 
-          Locale locale;
-          if (localeString == null) {
-            locale = Localizations.localeOf(context);
-          } else {
-            locale = Locale(localeString);
-          }
+    void onChanged(DateTime? dateValue) {
+      debugPrint("New date: $dateValue");
+      var newState = "initState";
+      String stringValue = dateValue?.toIso8601String() ?? "";
+      List<Map<String, String>> props = [
+        {"i": widget.control.id, "value": stringValue, "state": newState}
+      ];
+      widget.dispatch(
+          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+      FletAppServices.of(context).server.updateControlProps(props: props);
+      if (onChange) {
+        FletAppServices.of(context).server.sendPageEvent(
+            eventTarget: widget.control.id,
+            eventName: "change",
+            eventData: stringValue);
+      }
+      FletAppServices.of(context).server.sendPageEvent(
+          eventTarget: widget.control.id, eventName: "submit", eventData: "");
+    }
 
-          void onChanged(DateTime? dateValue) {
-            debugPrint("New date: $dateValue");
-            var newState = "initState";
-            String stringValue = dateValue?.toIso8601String() ?? "";
-            List<Map<String, String>> props = [
-              {"i": widget.control.id, "value": stringValue, "state": newState}
-            ];
-            dispatch(UpdateControlPropsAction(
-                UpdateControlPropsPayload(props: props)));
-            FletAppServices.of(context).server.updateControlProps(props: props);
-            if (onChange) {
-              FletAppServices.of(context).server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "change",
-                  eventData: stringValue);
-            }
-            FletAppServices.of(context).server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "submit",
-                eventData: "");
-          }
+    Widget selectDateDialog() {
+      Widget dialog = DatePickerDialog(
+        initialDate: _value ?? DateTime.now(),
+        firstDate: firstDate ?? DateTime(1900),
+        lastDate: lastDate ?? DateTime(2050),
+        helpText: helpText,
+        cancelText: cancelText,
+        confirmText: confirmText,
+        keyboardType: keyboardType,
+        initialCalendarMode: datePickerMode,
+        initialEntryMode: datePickerEntryMode,
+        fieldHintText: hintText,
+      );
 
-          Widget selectDateDialog() {
-            Widget dialog = DatePickerDialog(
-              initialDate: _value ?? DateTime.now(),
-              firstDate: firstDate ?? DateTime(1900),
-              lastDate: lastDate ?? DateTime(2050),
-              helpText: helpText,
-              cancelText: cancelText,
-              confirmText: confirmText,
-              keyboardType: keyboardType,
-              initialCalendarMode: datePickerMode,
-              initialEntryMode: datePickerEntryMode,
-              fieldHintText: hintText,
-            );
+      dialog = Localizations.override(
+        context: context,
+        locale: locale,
+        child: dialog,
+      );
 
-            dialog = Localizations.override(
-              context: context,
-              locale: locale,
-              child: dialog,
-            );
+      return dialog;
+    }
 
-            return dialog;
-          }
-
-          if (_state != state) {
-            switch (state) {
-              case "pickDate":
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  showDialog<DateTime>(
-                      context: context,
-                      builder: (context) => selectDateDialog()).then((result) {
-                    debugPrint("pickDate() completed");
-                    onChanged(result);
-                  });
-                });
-                break;
-            }
-          }
-          return const SizedBox.shrink();
-        });
+    if (_state != state) {
+      switch (state) {
+        case "pickDate":
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            showDialog<DateTime>(
+                context: context,
+                builder: (context) => selectDateDialog()).then((result) {
+              debugPrint("pickDate() completed");
+              onChanged(result);
+            });
+          });
+          break;
+      }
+    }
+    return const SizedBox.shrink();
   }
 }
 
