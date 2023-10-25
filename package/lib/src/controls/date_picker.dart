@@ -31,16 +31,6 @@ class DatePickerControl extends StatefulWidget {
 class _DatePickerControlState extends State<DatePickerControl> {
   String? _state;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("DatePicker build: ${widget.control.id}");

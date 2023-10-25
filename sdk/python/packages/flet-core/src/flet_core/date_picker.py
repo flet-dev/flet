@@ -100,7 +100,6 @@ class DatePicker(Control):
         confirm_text: Optional[str] = None,
         hint_text: Optional[str] = None,
         on_change=None,
-        on_submit=None,
     ):
         Control.__init__(
             self,
@@ -126,7 +125,6 @@ class DatePicker(Control):
         self.text_style = text_style
         self.hint_text = hint_text
         self.on_change = on_change
-        self.on_submit = on_submit
         self.state = "initState"
 
     def _get_control_name(self):
