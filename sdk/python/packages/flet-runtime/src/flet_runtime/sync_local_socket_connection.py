@@ -32,12 +32,14 @@ class SyncLocalSocketConnection(LocalConnection):
         uds_path: Optional[str] = None,
         on_event=None,
         on_session_created=None,
+        blocking=False,
     ):
         super().__init__()
         self.__port = port
         self.__uds_path = uds_path
         self.__on_event = on_event
         self.__on_session_created = on_session_created
+        self.__blocking = blocking
 
     def connect(self):
         if is_windows() or self.__port > 0:
@@ -66,8 +68,11 @@ class SyncLocalSocketConnection(LocalConnection):
         self.__sock.listen(1)
 
         # start connect loop
-        th = threading.Thread(target=self.__connection_loop, args=(), daemon=True)
-        th.start()
+        if self.__blocking:
+            self.__connection_loop()
+        else:
+            th = threading.Thread(target=self.__connection_loop, args=(), daemon=True)
+            th.start()
 
     def __on_message(self, data):
         logger.debug(f"_on_message: {data}")

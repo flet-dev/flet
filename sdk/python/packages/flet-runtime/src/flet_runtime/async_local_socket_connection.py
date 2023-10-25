@@ -31,6 +31,7 @@ class AsyncLocalSocketConnection(LocalConnection):
         uds_path: Optional[str] = None,
         on_event=None,
         on_session_created=None,
+        blocking=False,
     ):
         super().__init__()
         self.__send_queue = asyncio.Queue(1)
@@ -38,6 +39,7 @@ class AsyncLocalSocketConnection(LocalConnection):
         self.__uds_path = uds_path
         self.__on_event = on_event
         self.__on_session_created = on_session_created
+        self.__blocking = blocking
 
     async def connect(self):
         self.__connected = False
@@ -48,7 +50,6 @@ class AsyncLocalSocketConnection(LocalConnection):
             self.page_url = f"tcp://{host}:{port}"
             logger.info(f"Starting up TCP server on {host}:{port}")
             server = await asyncio.start_server(self.handle_connection, host, port)
-            self.__server = asyncio.create_task(server.serve_forever())
         else:
             # UDS
             if not self.__uds_path:
@@ -62,6 +63,11 @@ class AsyncLocalSocketConnection(LocalConnection):
             server = await asyncio.start_unix_server(
                 self.handle_connection, self.__uds_path
             )
+
+        if self.__blocking:
+            self.__server = None
+            await server.serve_forever()
+        else:
             self.__server = asyncio.create_task(server.serve_forever())
 
     async def handle_connection(
