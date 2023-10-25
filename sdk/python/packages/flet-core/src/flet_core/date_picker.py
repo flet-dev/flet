@@ -287,9 +287,9 @@ class DatePicker(Control):
     def on_change(self, handler):
         self._add_event_handler("change", handler)
         if handler is not None:
-            self._set_attr("onchange", True)
+            self._set_attr("onChange", True)
         else:
-            self._set_attr("onchange", None)
+            self._set_attr("onChange", None)
 
     # on_submit
     @property
