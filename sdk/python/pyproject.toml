@@ -23,6 +23,7 @@ pre-commit = "^2.21.0"
 hypercorn = "^0.14.4"
 gunicorn = "^21.2.0"
 uvicorn = "^0.23.2"
+pypi-cleanup = "^0.1.4"
 
 [build-system]
 requires = ["poetry-core"]
