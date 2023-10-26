@@ -51,7 +51,8 @@ class _DatePickerControlState extends State<DatePickerControl> {
         parseDatePickerMode(widget.control.attrString("datePickerMode", "")!);
     DatePickerEntryMode datePickerEntryMode = parseDatePickerEntryMode(
         widget.control.attrString("datePickerEntryMode", "")!);
-    String? hintText = widget.control.attrString("hintText");
+    String? fieldHintText = widget.control.attrString("fieldHintText");
+    String? fieldLabelText = widget.control.attrString("fieldLabelText");
 
     Locale locale;
     if (localeString == null) {
@@ -92,7 +93,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
 
     Widget createSelectDateDialog() {
       Widget dialog = DatePickerDialog(
-        initialDate: value ?? DateTime.now(),
+        initialDate: value ?? currentDate ?? DateTime.now(),
         firstDate: firstDate ?? DateTime(1900),
         lastDate: lastDate ?? DateTime(2050),
         currentDate: currentDate ?? DateTime.now(),
@@ -104,7 +105,8 @@ class _DatePickerControlState extends State<DatePickerControl> {
         keyboardType: keyboardType,
         initialCalendarMode: datePickerMode,
         initialEntryMode: datePickerEntryMode,
-        fieldHintText: hintText,
+        fieldHintText: fieldHintText,
+        fieldLabelText: fieldLabelText,
       );
 
       dialog = Localizations.override(

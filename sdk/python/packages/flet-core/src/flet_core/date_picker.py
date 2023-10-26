@@ -102,7 +102,8 @@ class DatePicker(Control):
         confirm_text: Optional[str] = None,
         error_format_text: Optional[str] = None,
         error_invalid_text: Optional[str] = None,
-        hint_text: Optional[str] = None,
+        field_hint_text: Optional[str] = None,
+        field_label_text: Optional[str] = None,
         on_change=None,
         on_dismiss=None,
     ):
@@ -131,7 +132,8 @@ class DatePicker(Control):
         self.date_picker_mode = date_picker_mode
         self.date_picker_entry_mode = date_picker_entry_mode
         self.text_style = text_style
-        self.hint_text = hint_text
+        self.field_hint_text = field_hint_text
+        self.field_label_text = field_label_text
         self.on_change = on_change
         self.on_dismiss = on_dismiss
         self.open = open
@@ -144,12 +146,10 @@ class DatePicker(Control):
 
     def pick_date(self):
         self.open = True
-        self.state = "pickDate"
         self.update()
 
     async def pick_date_async(self):
         self.open = True
-        self.state = "pickDate"
         await self.update_async()
 
     # open
@@ -226,6 +226,24 @@ class DatePicker(Control):
     @locale.setter
     def locale(self, value: Optional[str]):
         self._set_attr("locale", value)
+
+    # field_hint_text
+    @property
+    def field_hint_text(self) -> Optional[str]:
+        return self._get_attr("fieldHintText", def_value=None)
+
+    @field_hint_text.setter
+    def field_hint_text(self, value: Optional[str]):
+        self._set_attr("fieldHintText", value)
+
+    # field_label_text
+    @property
+    def field_label_text(self) -> Optional[str]:
+        return self._get_attr("fieldLabelText", def_value=None)
+
+    @field_label_text.setter
+    def field_label_text(self, value: Optional[str]):
+        self._set_attr("fieldLabelText", value)
 
     # help_text
     @property
