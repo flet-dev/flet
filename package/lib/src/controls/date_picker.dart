@@ -70,24 +70,17 @@ class _DatePickerControlState extends State<DatePickerControl> {
       locale = Locale(localeString);
     }
 
-    void onChanged(DateTime? dateValue) {
-      debugPrint("New date: $dateValue");
-      String stringValue = dateValue?.toIso8601String() ?? "";
-      List<Map<String, String>> props = [
-        {"i": widget.control.id, "value": stringValue, "open": "false"}
-      ];
-      widget.dispatch(
-          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      FletAppServices.of(context).server.updateControlProps(props: props);
-      FletAppServices.of(context).server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: "change",
-          eventData: stringValue);
-    }
-
-    void onDismissed() {
-      String stringValue =
-          value?.toIso8601String() ?? currentDate?.toIso8601String() ?? "";
+    void onClosed(DateTime? dateValue) {
+      String stringValue;
+      String eventName;
+      if (dateValue == null) {
+        stringValue =
+            value?.toIso8601String() ?? currentDate?.toIso8601String() ?? "";
+        eventName = "dismiss";
+      } else {
+        stringValue = dateValue?.toIso8601String() ?? "";
+        eventName = "change";
+      }
       List<Map<String, String>> props = [
         {"i": widget.control.id, "value": stringValue, "open": "false"}
       ];
@@ -97,7 +90,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
 
       FletAppServices.of(context).server.sendPageEvent(
           eventTarget: widget.control.id,
-          eventName: "dismiss",
+          eventName: eventName,
           eventData: stringValue);
     }
 
@@ -134,11 +127,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
             context: context,
             builder: (context) => createSelectDateDialog()).then((result) {
           debugPrint("pickDate() completed");
-          if (result != null) {
-            onChanged(result);
-          } else {
-            onDismissed();
-          }
+          onClosed(result);
         });
       });
     }
