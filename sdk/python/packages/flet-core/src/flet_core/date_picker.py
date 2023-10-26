@@ -96,7 +96,7 @@ class DatePicker(Control):
         keyboard_type: Optional[KeyboardType] = None,
         date_picker_mode: Optional[DatePickerMode] = None,
         date_picker_entry_mode: Optional[DatePickerEntryMode] = None,
-        locale: Optional[str] = None,
+        # locale: Optional[str] = None,
         help_text: Optional[str] = None,
         cancel_text: Optional[str] = None,
         confirm_text: Optional[str] = None,
@@ -123,7 +123,7 @@ class DatePicker(Control):
         self.last_date = last_date
         self.current_date = current_date
         self.keyboard_type = keyboard_type
-        self.locale = locale
+        # self.locale = locale
         self.help_text = help_text
         self.cancel_text = cancel_text
         self.confirm_text = confirm_text
@@ -218,14 +218,14 @@ class DatePicker(Control):
             value = value.isoformat()
         self._set_attr("currentDate", value)
 
-    # locale
-    @property
-    def locale(self) -> Optional[str]:
-        return self._get_attr("locale", def_value=None)
+    # # locale
+    # @property
+    # def locale(self) -> Optional[str]:
+    #     return self._get_attr("locale", def_value=None)
 
-    @locale.setter
-    def locale(self, value: Optional[str]):
-        self._set_attr("locale", value)
+    # @locale.setter
+    # def locale(self, value: Optional[str]):
+    #     self._set_attr("locale", value)
 
     # field_hint_text
     @property

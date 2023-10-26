@@ -39,7 +39,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
     DateTime? firstDate = widget.control.attrDateTime("firstDate");
     DateTime? lastDate = widget.control.attrDateTime("lastDate");
     DateTime? currentDate = widget.control.attrDateTime("currentDate");
-    String? localeString = widget.control.attrString("locale");
+    //String? localeString = widget.control.attrString("locale");
     String? helpText = widget.control.attrString("helpText");
     String? cancelText = widget.control.attrString("cancelText");
     String? confirmText = widget.control.attrString("confirmText");
@@ -63,12 +63,12 @@ class _DatePickerControlState extends State<DatePickerControl> {
     String? fieldHintText = widget.control.attrString("fieldHintText");
     String? fieldLabelText = widget.control.attrString("fieldLabelText");
 
-    Locale locale;
-    if (localeString == null) {
-      locale = Localizations.localeOf(context);
-    } else {
-      locale = Locale(localeString);
-    }
+    //Locale locale;
+    // if (localeString == null) {
+    //   locale = Localizations.localeOf(context);
+    // } else {
+    //   //locale = Locale(localeString);
+    // }
 
     void onClosed(DateTime? dateValue) {
       String stringValue;
@@ -112,11 +112,11 @@ class _DatePickerControlState extends State<DatePickerControl> {
         fieldLabelText: fieldLabelText,
       );
 
-      dialog = Localizations.override(
-        context: context,
-        locale: locale,
-        child: dialog,
-      );
+      // dialog = Localizations.override(
+      //   context: context,
+      //   locale: locale,
+      //   child: dialog,
+      // );
 
       return dialog;
     }
