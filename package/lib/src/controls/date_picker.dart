@@ -29,13 +29,12 @@ class DatePickerControl extends StatefulWidget {
 }
 
 class _DatePickerControlState extends State<DatePickerControl> {
-  String? _state;
+  bool _open = false;
 
   @override
   Widget build(BuildContext context) {
     debugPrint("DatePicker build: ${widget.control.id}");
-
-    String state = widget.control.attrString("state") ?? "initState";
+    var open = widget.control.attrBool("open", false)!;
     DateTime? value = widget.control.attrDateTime("value");
     DateTime? firstDate = widget.control.attrDateTime("firstDate");
     DateTime? lastDate = widget.control.attrDateTime("lastDate");
@@ -63,10 +62,9 @@ class _DatePickerControlState extends State<DatePickerControl> {
 
     void onChanged(DateTime? dateValue) {
       debugPrint("New date: $dateValue");
-      var newState = "initState";
       String stringValue = dateValue?.toIso8601String() ?? "";
       List<Map<String, String>> props = [
-        {"i": widget.control.id, "value": stringValue, "state": newState}
+        {"i": widget.control.id, "value": stringValue, "open": "false"}
       ];
       widget.dispatch(
           UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
@@ -78,10 +76,9 @@ class _DatePickerControlState extends State<DatePickerControl> {
     }
 
     void onDismissed() {
-      var newState = "initState";
       String stringValue = value?.toIso8601String() ?? "";
       List<Map<String, String>> props = [
-        {"i": widget.control.id, "value": stringValue, "state": newState}
+        {"i": widget.control.id, "value": stringValue, "open": "false"}
       ];
       widget.dispatch(
           UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
@@ -119,24 +116,22 @@ class _DatePickerControlState extends State<DatePickerControl> {
       return dialog;
     }
 
-    if (_state != state) {
-      switch (state) {
-        case "pickDate":
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            showDialog<DateTime>(
-                context: context,
-                builder: (context) => createSelectDateDialog()).then((result) {
-              debugPrint("pickDate() completed");
-              if (result != null) {
-                onChanged(result);
-              } else {
-                onDismissed();
-              }
-            });
-          });
-        //break;
-      }
+    if (open && !_open) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog<DateTime>(
+            context: context,
+            builder: (context) => createSelectDateDialog()).then((result) {
+          debugPrint("pickDate() completed");
+          if (result != null) {
+            onChanged(result);
+          } else {
+            onDismissed();
+          }
+        });
+      });
     }
+
+    _open = open;
     return const SizedBox.shrink();
   }
 }

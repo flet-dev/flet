@@ -87,6 +87,7 @@ class DatePicker(Control):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        open: bool = False,
         value: Optional[datetime] = None,
         text_style: Optional[TextStyle] = None,
         first_date: Optional[datetime] = None,
@@ -133,7 +134,7 @@ class DatePicker(Control):
         self.hint_text = hint_text
         self.on_change = on_change
         self.on_dismiss = on_dismiss
-        self.state = "initState"
+        self.open = open
 
     def _get_control_name(self):
         return "datepicker"
@@ -142,21 +143,23 @@ class DatePicker(Control):
         super()._before_build_command()
 
     def pick_date(self):
+        self.open = True
         self.state = "pickDate"
         self.update()
 
     async def pick_date_async(self):
+        self.open = True
         self.state = "pickDate"
         await self.update_async()
 
-    # state
+    # open
     @property
-    def state(self) -> Optional[DatePickerState]:
-        return self._get_attr("state")
+    def open(self) -> Optional[bool]:
+        return self._get_attr("open", data_type="bool", def_value=False)
 
-    @state.setter
-    def state(self, value: Optional[DatePickerState]):
-        self._set_attr("state", value)
+    @open.setter
+    def open(self, value: Optional[bool]):
+        self._set_attr("open", value)
 
     # value
     @property
