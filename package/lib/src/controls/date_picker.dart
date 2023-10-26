@@ -47,10 +47,19 @@ class _DatePickerControlState extends State<DatePickerControl> {
     String? errorInvalidText = widget.control.attrString("errorInvalidText");
     TextInputType keyboardType =
         parseTextInputType(widget.control.attrString("keyboardType", "")!);
-    DatePickerMode datePickerMode =
-        parseDatePickerMode(widget.control.attrString("datePickerMode", "")!);
-    DatePickerEntryMode datePickerEntryMode = parseDatePickerEntryMode(
-        widget.control.attrString("datePickerEntryMode", "")!);
+    DatePickerMode datePickerMode = DatePickerMode.values.firstWhere(
+        (a) =>
+            a.name.toLowerCase() ==
+            widget.control.attrString("datePickerMode", "")!.toLowerCase(),
+        orElse: () => DatePickerMode.day);
+    DatePickerEntryMode datePickerEntryMode = DatePickerEntryMode.values
+        .firstWhere(
+            (a) =>
+                a.name.toLowerCase() ==
+                widget.control
+                    .attrString("datePickerEntryMode", "")!
+                    .toLowerCase(),
+            orElse: () => DatePickerEntryMode.calendar);
     String? fieldHintText = widget.control.attrString("fieldHintText");
     String? fieldLabelText = widget.control.attrString("fieldLabelText");
 
@@ -136,28 +145,4 @@ class _DatePickerControlState extends State<DatePickerControl> {
     _open = open;
     return const SizedBox.shrink();
   }
-}
-
-DatePickerMode parseDatePickerMode(String mode) {
-  switch (mode.toLowerCase()) {
-    case "day":
-      return DatePickerMode.day;
-    case "year":
-      return DatePickerMode.year;
-  }
-  return DatePickerMode.day;
-}
-
-DatePickerEntryMode parseDatePickerEntryMode(String mode) {
-  switch (mode.toLowerCase()) {
-    case "calendar":
-      return DatePickerEntryMode.calendar;
-    case "input":
-      return DatePickerEntryMode.input;
-    case "calendarOnly":
-      return DatePickerEntryMode.calendarOnly;
-    case "inputOnly":
-      return DatePickerEntryMode.inputOnly;
-  }
-  return DatePickerEntryMode.calendar;
 }
