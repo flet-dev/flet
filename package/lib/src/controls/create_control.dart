@@ -97,16 +97,20 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
         return const SizedBox.shrink();
       }
 
-      GlobalKey? globalKey;
+      Key? controlKey;
       var key = controlView.control.attrString("key", "")!;
       if (key != "") {
-        globalKey = GlobalKey();
-        FletAppServices.of(context).globalKeys[key] = globalKey;
+        if (key.startsWith("test:")) {
+          controlKey = Key(key.substring(5));
+        } else {
+          var globalKey = controlKey = GlobalKey();
+          FletAppServices.of(context).globalKeys[key] = globalKey;
+        }
       }
 
       // create control widget
       var widget = createWidget(
-          globalKey, controlView, parent, parentDisabled, nextChild);
+          controlKey, controlView, parent, parentDisabled, nextChild);
 
       // no theme defined? return widget!
       if (id == "page" || controlView.control.attrString("theme") == null) {
