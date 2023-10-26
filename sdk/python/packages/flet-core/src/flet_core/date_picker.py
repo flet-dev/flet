@@ -99,6 +99,8 @@ class DatePicker(Control):
         help_text: Optional[str] = None,
         cancel_text: Optional[str] = None,
         confirm_text: Optional[str] = None,
+        error_format_text: Optional[str] = None,
+        error_invalid_text: Optional[str] = None,
         hint_text: Optional[str] = None,
         on_change=None,
         on_dismiss=None,
@@ -123,6 +125,8 @@ class DatePicker(Control):
         self.help_text = help_text
         self.cancel_text = cancel_text
         self.confirm_text = confirm_text
+        self.error_format_text = error_format_text
+        self.error_invalid_text = error_invalid_text
         self.date_picker_mode = date_picker_mode
         self.date_picker_entry_mode = date_picker_entry_mode
         self.text_style = text_style
@@ -246,6 +250,24 @@ class DatePicker(Control):
     @confirm_text.setter
     def confirm_text(self, value: Optional[str]):
         self._set_attr("confirmText", value)
+
+    # error_format_text
+    @property
+    def error_format_text(self) -> Optional[str]:
+        return self._get_attr("errorFormatText", def_value=None)
+
+    @error_format_text.setter
+    def error_format_text(self, value: Optional[str]):
+        self._set_attr("errorFormatText", value)
+
+    # error_invalid_text
+    @property
+    def error_invalid_text(self) -> Optional[str]:
+        return self._get_attr("errorInvalidText", def_value=None)
+
+    @error_invalid_text.setter
+    def error_invalid_text(self, value: Optional[str]):
+        self._set_attr("errorInvalidText", value)
 
     # keyboard_type
     @property

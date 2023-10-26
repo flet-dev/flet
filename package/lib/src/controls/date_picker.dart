@@ -44,6 +44,8 @@ class _DatePickerControlState extends State<DatePickerControl> {
     String? helpText = widget.control.attrString("helpText");
     String? cancelText = widget.control.attrString("cancelText");
     String? confirmText = widget.control.attrString("confirmText");
+    String? errorFormatText = widget.control.attrString("errorFormatText");
+    String? errorInvalidText = widget.control.attrString("errorInvalidText");
     TextInputType keyboardType =
         parseTextInputType(widget.control.attrString("keyboardType", "")!);
     DatePickerMode datePickerMode =
@@ -100,6 +102,8 @@ class _DatePickerControlState extends State<DatePickerControl> {
         helpText: helpText,
         cancelText: cancelText,
         confirmText: confirmText,
+        errorFormatText: errorFormatText,
+        errorInvalidText: errorInvalidText,
         keyboardType: keyboardType,
         initialCalendarMode: datePickerMode,
         initialEntryMode: datePickerEntryMode,
@@ -130,7 +134,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
               }
             });
           });
-          break;
+        //break;
       }
     }
     return const SizedBox.shrink();
