@@ -6,13 +6,13 @@ import shutil
 import sys
 import tarfile
 import tempfile
-from distutils.dir_util import copy_tree
 from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
 from flet_core.types import WebRenderer
 from flet_core.utils import random_string
 from flet_runtime.utils import (
+    copy_tree,
     get_package_web_dir,
     is_within_directory,
     patch_index_html,
