@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+//import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
 import '../flet_app_services.dart';
-import '../models/app_state.dart';
+//import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import 'form_field.dart';
@@ -86,7 +86,8 @@ class _DatePickerControlState extends State<DatePickerControl> {
     }
 
     void onDismissed() {
-      String stringValue = value?.toIso8601String() ?? "";
+      String stringValue =
+          value?.toIso8601String() ?? currentDate?.toIso8601String() ?? "";
       List<Map<String, String>> props = [
         {"i": widget.control.id, "value": stringValue, "open": "false"}
       ];
