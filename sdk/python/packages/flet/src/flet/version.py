@@ -11,6 +11,7 @@ from flet_runtime.utils import is_mobile, is_windows, which
 
 version = flet_core.version.version
 
+
 def update_version():
     """Return the current version or default."""
     working = Path().absolute()
