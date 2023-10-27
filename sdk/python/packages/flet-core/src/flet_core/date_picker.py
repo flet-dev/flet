@@ -39,44 +39,46 @@ class DatePicker(Control):
     """
     A Material-style date picker dialog.
 
-    It is added to page.overlay and can be called using its pick_date() method.
+    It is added to [`page.overlay`](page#overlay) and called using its `pick_date()` method.
 
-        Example:
-        ```
-    import datetime
-    import flet as ft
+    Depending on the `date_picker_mode`, it will show either a Calendar or an Input (TextField) for picking a date.
 
-    def main(page: ft.Page):
-        def change_date(e):
-            print(f"Date picker changed, value is {date_picker.value}")
+            Example:
+            ```
+        import datetime
+        import flet as ft
 
-        def date_picker_dismissed(e):
-            print(f"Date picker dismissed, value is {date_picker.value}")
+        def main(page: ft.Page):
+            def change_date(e):
+                print(f"Date picker changed, value is {date_picker.value}")
 
-        date_picker = ft.DatePicker(
-            on_change=change_date,
-            on_dismiss=date_picker_dismissed,
-            first_date=datetime.datetime(2023, 10, 1),
-            last_date=datetime.datetime(2024, 10, 1),
-        )
+            def date_picker_dismissed(e):
+                print(f"Date picker dismissed, value is {date_picker.value}")
 
-        page.overlay.append(date_picker)
+            date_picker = ft.DatePicker(
+                on_change=change_date,
+                on_dismiss=date_picker_dismissed,
+                first_date=datetime.datetime(2023, 10, 1),
+                last_date=datetime.datetime(2024, 10, 1),
+            )
 
-        date_button = ft.ElevatedButton(
-            "Pick date",
-            icon=ft.icons.CALENDAR_MONTH,
-            on_click=lambda _: date_picker.pick_date(),
-        )
+            page.overlay.append(date_picker)
 
-        page.add(date_button)
+            date_button = ft.ElevatedButton(
+                "Pick date",
+                icon=ft.icons.CALENDAR_MONTH,
+                on_click=lambda _: date_picker.pick_date(),
+            )
+
+            page.add(date_button)
 
 
-    ft.app(target=main)
-        ```
+        ft.app(target=main)
+            ```
 
-        -----
+            -----
 
-        Online docs: https://flet.dev/docs/controls/date_picker
+            Online docs: https://flet.dev/docs/controls/date_picker
     """
 
     def __init__(
