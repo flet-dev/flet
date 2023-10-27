@@ -12,7 +12,7 @@ import zipfile
 from pathlib import Path
 from typing import Optional
 
-import flet_runtime
+import flet_runtime 
 from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.types import (
@@ -23,6 +23,7 @@ from flet_core.types import (
     AppView,
     WebRenderer,
 )
+
 from flet_core.utils import is_coroutine, random_string
 from flet_runtime.async_local_socket_connection import AsyncLocalSocketConnection
 from flet_runtime.sync_local_socket_connection import SyncLocalSocketConnection
@@ -56,8 +57,12 @@ except ImportError:
         pass
 
 
+
+
 try:
     from flet import version
+    # from flet_runtime.version import version
+    print(f"Je suis ici update : {version.version}")
 except ImportError:
     from flet_runtime import version
 

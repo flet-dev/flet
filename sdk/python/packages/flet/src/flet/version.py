@@ -11,7 +11,6 @@ from flet_runtime.utils import is_mobile, is_windows, which
 
 version = flet_core.version.version
 
-
 def update_version():
     """Return the current version or default."""
     working = Path().absolute()
@@ -46,7 +45,7 @@ def update_version():
         version = git_p.stdout.strip()[1:]
 
     else:
-        version = "0.2.0"
+        version = "0.10.1"
     os.chdir(working)
     return version
 
