@@ -7,6 +7,7 @@ import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import 'form_field.dart';
+import '../utils/icons.dart';
 
 class DatePickerControl extends StatefulWidget {
   final Control? parent;
@@ -62,6 +63,10 @@ class _DatePickerControlState extends State<DatePickerControl> {
             orElse: () => DatePickerEntryMode.calendar);
     String? fieldHintText = widget.control.attrString("fieldHintText");
     String? fieldLabelText = widget.control.attrString("fieldLabelText");
+    IconData? switchToCalendarEntryModeIcon = getMaterialIcon(
+        widget.control.attrString("switchToCalendarEntryModeIcon", "")!);
+    IconData? switchToInputEntryModeIcon = getMaterialIcon(
+        widget.control.attrString("switchToInputEntryModeIcon", "")!);
 
     //Locale locale;
     // if (localeString == null) {
@@ -110,6 +115,12 @@ class _DatePickerControlState extends State<DatePickerControl> {
         initialEntryMode: datePickerEntryMode,
         fieldHintText: fieldHintText,
         fieldLabelText: fieldLabelText,
+        switchToCalendarEntryModeIcon: switchToCalendarEntryModeIcon != null
+            ? Icon(switchToCalendarEntryModeIcon)
+            : const Icon(Icons.calendar_today),
+        switchToInputEntryModeIcon: switchToInputEntryModeIcon != null
+            ? Icon(switchToInputEntryModeIcon)
+            : const Icon(Icons.edit_outlined),
       );
 
       // dialog = Localizations.override(

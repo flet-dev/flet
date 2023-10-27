@@ -37,25 +37,27 @@ DatePickerState = Literal["pickDate", "initState"]
 
 class DatePicker(Control):
     """
-    A button lets the user select date on datepicker dialog.
+    A Material-style date picker dialog.
 
-    Example:
-    ```
+    It is added to page.overlay and can be called using its pick_date() method.
+
+        Example:
+        ```
+    import datetime
     import flet as ft
-    from flet_core.date_picker import DatePickerMode, DatePickerEntryMode
-
 
     def main(page: ft.Page):
         def change_date(e):
-            page.add(ft.Checkbox(label=f"Current date {date_picker.value}"))
-            date_button.text = f"{date_picker.value}"
-            page.update()
+            print(f"Date picker changed, value is {date_picker.value}")
+
+        def date_picker_dismissed(e):
+            print(f"Date picker dismissed, value is {date_picker.value}")
 
         date_picker = ft.DatePicker(
             on_change=change_date,
-            date_picker_mode=DatePickerMode.YEAR,
-            date_picker_entry_mode=DatePickerEntryMode.INPUT,
-            hint_text="Say hello?",
+            on_dismiss=date_picker_dismissed,
+            first_date=datetime.datetime(2023, 10, 1),
+            last_date=datetime.datetime(2024, 10, 1),
         )
 
         page.overlay.append(date_picker)
@@ -70,11 +72,11 @@ class DatePicker(Control):
 
 
     ft.app(target=main)
-    ```
+        ```
 
-    -----
+        -----
 
-    Online docs: https://flet.dev/docs/controls/date_picker
+        Online docs: https://flet.dev/docs/controls/date_picker
     """
 
     def __init__(
@@ -104,6 +106,8 @@ class DatePicker(Control):
         error_invalid_text: Optional[str] = None,
         field_hint_text: Optional[str] = None,
         field_label_text: Optional[str] = None,
+        switch_to_calendar_icon: Optional[str] = None,
+        switch_to_input_icon: Optional[str] = None,
         on_change=None,
         on_dismiss=None,
     ):
@@ -134,6 +138,8 @@ class DatePicker(Control):
         self.text_style = text_style
         self.field_hint_text = field_hint_text
         self.field_label_text = field_label_text
+        self.switch_to_calendar_icon = switch_to_calendar_icon
+        self.switch_to_input_icon = switch_to_input_icon
         self.on_change = on_change
         self.on_dismiss = on_dismiss
         self.open = open
@@ -337,6 +343,24 @@ class DatePicker(Control):
 
     def __set_date_picker_entry_mode(self, value: DatePickerEntryMode):
         self._set_attr("datePickerEntryMode", value)
+
+    # switch_to_calendar_icon
+    @property
+    def switch_to_calendar_icon(self):
+        return self._get_attr("switchToCalendarEntryModeIcon")
+
+    @switch_to_calendar_icon.setter
+    def switch_to_calendar_icon(self, value):
+        self._set_attr("switchToCalendarEntryModeIcon", value)
+
+    # switch_to_input_icon
+    @property
+    def switch_to_input_icon(self):
+        return self._get_attr("switchToInputEntryModeIcon")
+
+    @switch_to_input_icon.setter
+    def switch_to_input_icon(self, value):
+        self._set_attr("switchToInputEntryModeIcon", value)
 
     # on_change
     @property
