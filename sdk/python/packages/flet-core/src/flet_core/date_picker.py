@@ -26,9 +26,6 @@ class DatePickerEntryMode(Enum):
     INPUT_ONLY = "inputOnly"
 
 
-DatePickerState = Literal["pickDate", "initState"]
-
-
 class DatePicker(Control):
     """
     A Material-style date picker dialog.
