@@ -14,15 +14,9 @@ except ImportError:
     from typing_extensions import Literal
 
 
-# DatePickerModeString = Literal["day", "year"]
-
-
 class DatePickerMode(Enum):
     DAY = "day"
     YEAR = "year"
-
-
-# DatePickerEntryModeString = Literal["calendar", "input", "calendarOnly", "inputOnly"]
 
 
 class DatePickerEntryMode(Enum):

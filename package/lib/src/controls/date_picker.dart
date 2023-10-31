@@ -117,10 +117,10 @@ class _DatePickerControlState extends State<DatePickerControl> {
         fieldLabelText: fieldLabelText,
         switchToCalendarEntryModeIcon: switchToCalendarEntryModeIcon != null
             ? Icon(switchToCalendarEntryModeIcon)
-            : const Icon(Icons.calendar_today),
+            : null,
         switchToInputEntryModeIcon: switchToInputEntryModeIcon != null
             ? Icon(switchToInputEntryModeIcon)
-            : const Icon(Icons.edit_outlined),
+            : null,
       );
 
       // dialog = Localizations.override(
