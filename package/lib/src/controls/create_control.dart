@@ -27,6 +27,7 @@ import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'datatable.dart';
+import 'date_picker.dart';
 import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
@@ -306,6 +307,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "datepicker":
+      return DatePickerControl(
+        parent: parent,
+        control: controlView.control,
+        children: controlView.children,
+        parentDisabled: parentDisabled,
+        dispatch: controlView.dispatch,
+      );
     case "draggable":
       return DraggableControl(
           key: key,
