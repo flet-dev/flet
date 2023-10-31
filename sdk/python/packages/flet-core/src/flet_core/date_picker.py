@@ -297,45 +297,29 @@ class DatePicker(Control):
     @keyboard_type.setter
     def keyboard_type(self, value: Optional[KeyboardType]):
         self.__keyboard_type = value
-        if isinstance(value, KeyboardType):
-            self._set_attr("keyboardType", value.value)
-        else:
-            self.__set_keyboard_type(value)
-
-    def __set_keyboard_type(self, value: KeyboardTypeString):
-        self._set_attr("keyboardType", value)
+        self._set_attr("keyboardType", value.value if value is not None else None)
 
     # date_picker_mode
     @property
-    def date_picker_mode(self) -> DatePickerMode:
+    def date_picker_mode(self) -> Optional[DatePickerMode]:
         return self.__date_picker_mode
 
     @date_picker_mode.setter
-    def date_picker_mode(self, value: DatePickerMode):
+    def date_picker_mode(self, value: Optional[DatePickerMode]):
         self.__date_picker_mode = value
-        if isinstance(value, DatePickerMode):
-            self._set_attr("datePickerMode", value.value)
-        else:
-            self.__set_date_picker_mode(value)
-
-    def __set_date_picker_mode(self, value: DatePickerMode):
-        self._set_attr("datePickerMode", value)
+        self._set_attr("datePickerMode", value.value if value is not None else None)
 
     # date_picker_entry_mode
     @property
-    def date_picker_entry_mode(self) -> DatePickerEntryMode:
+    def date_picker_entry_mode(self) -> Optional[DatePickerEntryMode]:
         return self.__date_picker_entry_mode
 
     @date_picker_entry_mode.setter
-    def date_picker_entry_mode(self, value: DatePickerEntryMode):
+    def date_picker_entry_mode(self, value: Optional[DatePickerEntryMode]):
         self.__date_picker_entry_mode = value
-        if isinstance(value, DatePickerEntryMode):
-            self._set_attr("datePickerEntryMode", value.value)
-        else:
-            self.__set_date_picker_entry_mode(value)
-
-    def __set_date_picker_entry_mode(self, value: DatePickerEntryMode):
-        self._set_attr("datePickerEntryMode", value)
+        self._set_attr(
+            "datePickerEntryMode", value.value if value is not None else None
+        )
 
     # switch_to_calendar_icon
     @property
