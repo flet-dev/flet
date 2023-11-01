@@ -86,8 +86,9 @@ class _SliderControlState extends State<RangeSliderControl> {
     double startValue = widget.control.attrDouble("startvalue", 0)!;
     double endValue = widget.control.attrDouble("endvalue", 0)!;
     //String? label = widget.control.attrString("label");
-    String? startLabel = widget.control.attrString("startlabel");
-    String? endLabel = widget.control.attrString("endlabel");
+    // String? startLabel = widget.control.attrString("startlabel");
+    // String? endLabel = widget.control.attrString("endlabel");
+    String? label = widget.control.attrString("label");
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
@@ -111,9 +112,9 @@ class _SliderControlState extends State<RangeSliderControl> {
             //focusNode: _focusNode,
             values: RangeValues(startValue, endValue),
             labels: RangeLabels(
-                (startLabel ?? "")
+                (label ?? "")
                     .replaceAll("{value}", startValue.toStringAsFixed(round)),
-                (endLabel ?? "")
+                (label ?? "")
                     .replaceAll("{value}", endValue.toStringAsFixed(round))),
             min: min,
             max: max,

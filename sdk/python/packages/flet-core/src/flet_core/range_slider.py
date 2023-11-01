@@ -73,8 +73,9 @@ class RangeSlider(ConstrainedControl):
         # value: OptionalNumber = None,
         # label: Optional[str] = None,
         # labels: Union[None, Tuple[str, str], List[str]] = None,
-        start_label: Optional[str] = None,
-        end_label: Optional[str] = None,
+        # start_label: Optional[str] = None,
+        # end_label: Optional[str] = None,
+        label: Optional[str] = None,
         min: OptionalNumber = None,
         max: OptionalNumber = None,
         divisions: Optional[int] = None,
@@ -120,8 +121,9 @@ class RangeSlider(ConstrainedControl):
         )
         self.start_value = start_value
         self.end_value = end_value
-        self.start_label = start_label
-        self.end_label = end_label
+        # self.start_label = start_label
+        # self.end_label = end_label
+        self.label = label
 
         self.min = min
         self.max = max
@@ -160,23 +162,32 @@ class RangeSlider(ConstrainedControl):
     def end_value(self, value: float):
         self._set_attr("endvalue", value)
 
-    # start_label
+    # label
     @property
-    def start_label(self) -> str:
-        return self._get_attr("startlabel")
+    def label(self) -> str:
+        return self._get_attr("label")
 
-    @start_label.setter
-    def start_label(self, value: str):
-        self._set_attr("startlabel", value)
+    @label.setter
+    def label(self, value: str):
+        self._set_attr("label", value)
 
-    # end_label
-    @property
-    def end_label(self) -> str:
-        return self._get_attr("endlabel")
+    # # start_label
+    # @property
+    # def start_label(self) -> str:
+    #     return self._get_attr("startlabel")
 
-    @end_label.setter
-    def end_label(self, value: str):
-        self._set_attr("endlabel", value)
+    # @start_label.setter
+    # def start_label(self, value: str):
+    #     self._set_attr("startlabel", value)
+
+    # # end_label
+    # @property
+    # def end_label(self) -> str:
+    #     return self._get_attr("endlabel")
+
+    # @end_label.setter
+    # def end_label(self, value: str):
+    #     self._set_attr("endlabel", value)
 
     # min
     @property
