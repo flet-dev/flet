@@ -85,7 +85,9 @@ class _SliderControlState extends State<RangeSliderControl> {
 
     double startValue = widget.control.attrDouble("startvalue", 0)!;
     double endValue = widget.control.attrDouble("endvalue", 0)!;
-    String? label = widget.control.attrString("label");
+    //String? label = widget.control.attrString("label");
+    String? startLabel = widget.control.attrString("startlabel");
+    String? endLabel = widget.control.attrString("endlabel");
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
@@ -93,7 +95,7 @@ class _SliderControlState extends State<RangeSliderControl> {
     double max = widget.control.attrDouble("max", 1)!;
 
     int? divisions = widget.control.attrInt("divisions");
-    //int round = widget.control.attrInt("round", 0)!;
+    int round = widget.control.attrInt("round", 0)!;
 
     final server = FletAppServices.of(context).server;
 
@@ -108,6 +110,11 @@ class _SliderControlState extends State<RangeSliderControl> {
             //autofocus: autofocus,
             //focusNode: _focusNode,
             values: RangeValues(startValue, endValue),
+            labels: RangeLabels(
+                (startLabel ?? "")
+                    .replaceAll("{value}", startValue.toStringAsFixed(round)),
+                (endLabel ?? "")
+                    .replaceAll("{value}", endValue.toStringAsFixed(round))),
             min: min,
             max: max,
             divisions: divisions,

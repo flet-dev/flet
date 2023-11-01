@@ -78,7 +78,7 @@ class RangeSlider(ConstrainedControl):
         min: OptionalNumber = None,
         max: OptionalNumber = None,
         divisions: Optional[int] = None,
-        # round: Optional[int] = None,
+        round: Optional[int] = None,
         # autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
@@ -126,7 +126,7 @@ class RangeSlider(ConstrainedControl):
         self.min = min
         self.max = max
         self.divisions = divisions
-        # self.round = round
+        self.round = round
         # self.autofocus = autofocus
         self.active_color = active_color
         self.inactive_color = inactive_color
@@ -205,14 +205,14 @@ class RangeSlider(ConstrainedControl):
     def divisions(self, value: Optional[int]):
         self._set_attr("divisions", value)
 
-    # # round
-    # @property
-    # def round(self) -> Optional[int]:
-    #     return self._get_attr("round")
+    # round
+    @property
+    def round(self) -> Optional[int]:
+        return self._get_attr("round")
 
-    # @round.setter
-    # def round(self, value: Optional[int]):
-    #     self._set_attr("round", value)
+    @round.setter
+    def round(self, value: Optional[int]):
+        self._set_attr("round", value)
 
     # # autofocus
     # @property
