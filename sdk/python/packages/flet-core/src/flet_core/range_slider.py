@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union, Tuple, List, Dict
+from typing import Any, Optional, Union, Dict
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -70,11 +70,6 @@ class RangeSlider(ConstrainedControl):
         #
         # Specific
         #
-        # value: OptionalNumber = None,
-        # label: Optional[str] = None,
-        # labels: Union[None, Tuple[str, str], List[str]] = None,
-        # start_label: Optional[str] = None,
-        # end_label: Optional[str] = None,
         label: Optional[str] = None,
         min: OptionalNumber = None,
         max: OptionalNumber = None,
@@ -83,9 +78,7 @@ class RangeSlider(ConstrainedControl):
         # autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
-        # overlay_color: Optional[str] = None,
         overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
-        # thumb_color: Optional[str] = None,
         on_change=None,
         on_change_start=None,
         on_change_end=None,

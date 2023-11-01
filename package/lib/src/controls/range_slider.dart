@@ -58,7 +58,6 @@ class _SliderControlState extends State<RangeSliderControl> {
   void onChange(double startValue, double endValue, Function dispatch) {
     var strStartValue = startValue.toString();
     var strEndValue = endValue.toString();
-    debugPrint(strStartValue);
 
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     List<Map<String, String>> props = [
@@ -74,9 +73,7 @@ class _SliderControlState extends State<RangeSliderControl> {
       final server = FletAppServices.of(context).server;
       server.updateControlProps(props: props);
       server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: "change",
-          eventData: strStartValue);
+          eventTarget: widget.control.id, eventName: "change", eventData: '');
     });
   }
 
@@ -86,9 +83,6 @@ class _SliderControlState extends State<RangeSliderControl> {
 
     double startValue = widget.control.attrDouble("startvalue", 0)!;
     double endValue = widget.control.attrDouble("endvalue", 0)!;
-    //String? label = widget.control.attrString("label");
-    // String? startLabel = widget.control.attrString("startlabel");
-    // String? endLabel = widget.control.attrString("endlabel");
     String? label = widget.control.attrString("label");
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
@@ -109,49 +103,44 @@ class _SliderControlState extends State<RangeSliderControl> {
               "SliderControl StoreConnector build: ${widget.control.id}");
 
           var rangeSlider = RangeSlider(
-            //autofocus: autofocus,
-            //focusNode: _focusNode,
-            values: RangeValues(startValue, endValue),
-            labels: RangeLabels(
-                (label ?? "")
-                    .replaceAll("{value}", startValue.toStringAsFixed(round)),
-                (label ?? "")
-                    .replaceAll("{value}", endValue.toStringAsFixed(round))),
-            min: min,
-            max: max,
-            divisions: divisions,
-            //label:
-            //    label?.replaceAll("{value}", _value.toStringAsFixed(round)),
-            activeColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("activeColor", "")!),
-            inactiveColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("inactiveColor", "")!),
-            // overlayColor: HexColor.fromString(Theme.of(context),
-            //     widget.control.attrString("overlayColor", "")!),
-            overlayColor: parseMaterialStateColor(
-                Theme.of(context), widget.control, "overlayColor"),
-            onChanged: !disabled
-                ? (RangeValues newValues) {
-                    onChange(newValues.start, newValues.end, dispatch);
-                  }
-                : null,
-            // onChangeStart: !disabled
-            //     ? (double value) {
-            //         server.sendPageEvent(
-            //             eventTarget: widget.control.id,
-            //             eventName: "change_start",
-            //             eventData: value.toString());
-            //       }
-            //     : null,
-            // onChangeEnd: !disabled
-            //     ? (double value) {
-            //         server.sendPageEvent(
-            //             eventTarget: widget.control.id,
-            //             eventName: "change_end",
-            //             eventData: value.toString());
-            //       }
-            //     : null);
-          );
+              //autofocus: autofocus,
+              //focusNode: _focusNode,
+              values: RangeValues(startValue, endValue),
+              labels: RangeLabels(
+                  (label ?? "")
+                      .replaceAll("{value}", startValue.toStringAsFixed(round)),
+                  (label ?? "")
+                      .replaceAll("{value}", endValue.toStringAsFixed(round))),
+              min: min,
+              max: max,
+              divisions: divisions,
+              activeColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("activeColor", "")!),
+              inactiveColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("inactiveColor", "")!),
+              overlayColor: parseMaterialStateColor(
+                  Theme.of(context), widget.control, "overlayColor"),
+              onChanged: !disabled
+                  ? (RangeValues newValues) {
+                      onChange(newValues.start, newValues.end, dispatch);
+                    }
+                  : null,
+              onChangeStart: !disabled
+                  ? (RangeValues newValues) {
+                      server.sendPageEvent(
+                          eventTarget: widget.control.id,
+                          eventName: "change_start",
+                          eventData: '');
+                    }
+                  : null,
+              onChangeEnd: !disabled
+                  ? (RangeValues newValues) {
+                      server.sendPageEvent(
+                          eventTarget: widget.control.id,
+                          eventName: "change_end",
+                          eventData: '');
+                    }
+                  : null);
 
           return constrainedControl(
               context, rangeSlider, widget.parent, widget.control);
