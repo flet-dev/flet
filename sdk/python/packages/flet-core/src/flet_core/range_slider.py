@@ -1,5 +1,4 @@
-from typing import Any, Optional, Union, Tuple, List
-
+from typing import Any, Optional, Union, Tuple, List, Dict
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -9,6 +8,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    MaterialState,
 )
 
 
@@ -83,6 +83,8 @@ class RangeSlider(ConstrainedControl):
         # autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
+        # overlay_color: Optional[str] = None,
+        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
         # thumb_color: Optional[str] = None,
         on_change=None,
         on_change_start=None,
@@ -132,6 +134,7 @@ class RangeSlider(ConstrainedControl):
         # self.autofocus = autofocus
         self.active_color = active_color
         self.inactive_color = inactive_color
+        self.overlay_color = overlay_color
         self.on_change = on_change
         self.on_change_start = on_change_start
         self.on_change_end = on_change_end
@@ -143,6 +146,7 @@ class RangeSlider(ConstrainedControl):
 
     def _before_build_command(self):
         super()._before_build_command()
+        self._set_attr_json("overlayColor", self.__overlay_color)
 
     # start_value
     @property
@@ -252,14 +256,14 @@ class RangeSlider(ConstrainedControl):
     def inactive_color(self, value):
         self._set_attr("inactiveColor", value)
 
-    # # thumb_color
-    # @property
-    # def thumb_color(self):
-    #     return self._get_attr("thumbColor")
+    # overlay_color
+    @property
+    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__overlay_color
 
-    # @thumb_color.setter
-    # def thumb_color(self, value):
-    #     self._set_attr("thumbColor", value)
+    @overlay_color.setter
+    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__overlay_color = value
 
     # on_change
     @property

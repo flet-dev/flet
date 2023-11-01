@@ -11,6 +11,7 @@ import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
 import 'create_control.dart';
+import '../utils/buttons.dart';
 
 class RangeSliderControl extends StatefulWidget {
   final Control? parent;
@@ -125,6 +126,10 @@ class _SliderControlState extends State<RangeSliderControl> {
                 widget.control.attrString("activeColor", "")!),
             inactiveColor: HexColor.fromString(Theme.of(context),
                 widget.control.attrString("inactiveColor", "")!),
+            // overlayColor: HexColor.fromString(Theme.of(context),
+            //     widget.control.attrString("overlayColor", "")!),
+            overlayColor: parseMaterialStateColor(
+                Theme.of(context), widget.control, "overlayColor"),
             onChanged: !disabled
                 ? (RangeValues newValues) {
                     onChange(newValues.start, newValues.end, dispatch);
