@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Tuple, List
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
@@ -12,11 +12,11 @@ from flet_core.types import (
 )
 
 
-class Slider(ConstrainedControl):
+class RangeSlider(ConstrainedControl):
     """
-    A slider provides a visual indication of adjustable content, as well as the current setting in the total range of content.
-
-    Use a slider when you want people to set defined values (such as volume or brightness), or when people would benefit from instant feedback on the effect of setting changes.
+    A Material Design range slider. Used to select a range from a range of values.
+    A range slider can be used to select from either a continuous or a discrete set of values.
+    The default is to use a continuous range of values from min to max.
 
     Example:
     ```
@@ -34,11 +34,13 @@ class Slider(ConstrainedControl):
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/slider
+    Online docs: https://flet.dev/docs/controls/rangeslider
     """
 
     def __init__(
         self,
+        start_value: [float],
+        end_value: [float],
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -68,16 +70,19 @@ class Slider(ConstrainedControl):
         #
         # Specific
         #
-        value: OptionalNumber = None,
-        label: Optional[str] = None,
+        # value: OptionalNumber = None,
+        # label: Optional[str] = None,
+        # labels: Union[None, Tuple[str, str], List[str]] = None,
+        start_label: Optional[str] = None,
+        end_label: Optional[str] = None,
         min: OptionalNumber = None,
         max: OptionalNumber = None,
         divisions: Optional[int] = None,
-        round: Optional[int] = None,
-        autofocus: Optional[bool] = None,
+        # round: Optional[int] = None,
+        # autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
-        thumb_color: Optional[str] = None,
+        # thumb_color: Optional[str] = None,
         on_change=None,
         on_change_start=None,
         on_change_end=None,
@@ -113,16 +118,18 @@ class Slider(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
-        self.value = value
-        self.label = label
+        self.start_value = start_value
+        self.end_value = end_value
+        self.start_label = start_label
+        self.end_label = end_label
+
         self.min = min
         self.max = max
         self.divisions = divisions
-        self.round = round
-        self.autofocus = autofocus
+        # self.round = round
+        # self.autofocus = autofocus
         self.active_color = active_color
         self.inactive_color = inactive_color
-        self.thumb_color = thumb_color
         self.on_change = on_change
         self.on_change_start = on_change_start
         self.on_change_end = on_change_end
@@ -130,28 +137,46 @@ class Slider(ConstrainedControl):
         self.on_blur = on_blur
 
     def _get_control_name(self):
-        return "slider"
+        return "rangeslider"
 
     def _before_build_command(self):
         super()._before_build_command()
 
-    # value
+    # start_value
     @property
-    def value(self) -> OptionalNumber:
-        return self._get_attr("value", data_type="float")
+    def start_value(self) -> float:
+        return self._get_attr("startvalue")
 
-    @value.setter
-    def value(self, value: OptionalNumber):
-        self._set_attr("value", value)
+    @start_value.setter
+    def start_value(self, value: float):
+        self._set_attr("startvalue", value)
 
-    # label
+    # end_value
     @property
-    def label(self):
-        return self._get_attr("label")
+    def end_value(self) -> float:
+        return self._get_attr("endvalue")
 
-    @label.setter
-    def label(self, value):
-        self._set_attr("label", value)
+    @end_value.setter
+    def end_value(self, value: float):
+        self._set_attr("endvalue", value)
+
+    # start_label
+    @property
+    def start_label(self) -> str:
+        return self._get_attr("startlabel")
+
+    @start_label.setter
+    def start_label(self, value: str):
+        self._set_attr("startlabel", value)
+
+    # end_label
+    @property
+    def end_label(self) -> str:
+        return self._get_attr("endlabel")
+
+    @end_label.setter
+    def end_label(self, value: str):
+        self._set_attr("endlabel", value)
 
     # min
     @property
@@ -180,23 +205,23 @@ class Slider(ConstrainedControl):
     def divisions(self, value: Optional[int]):
         self._set_attr("divisions", value)
 
-    # round
-    @property
-    def round(self) -> Optional[int]:
-        return self._get_attr("round")
+    # # round
+    # @property
+    # def round(self) -> Optional[int]:
+    #     return self._get_attr("round")
 
-    @round.setter
-    def round(self, value: Optional[int]):
-        self._set_attr("round", value)
+    # @round.setter
+    # def round(self, value: Optional[int]):
+    #     self._set_attr("round", value)
 
-    # autofocus
-    @property
-    def autofocus(self) -> Optional[bool]:
-        return self._get_attr("autofocus", data_type="bool", def_value=False)
+    # # autofocus
+    # @property
+    # def autofocus(self) -> Optional[bool]:
+    #     return self._get_attr("autofocus", data_type="bool", def_value=False)
 
-    @autofocus.setter
-    def autofocus(self, value: Optional[bool]):
-        self._set_attr("autofocus", value)
+    # @autofocus.setter
+    # def autofocus(self, value: Optional[bool]):
+    #     self._set_attr("autofocus", value)
 
     # active_color
     @property
@@ -216,14 +241,14 @@ class Slider(ConstrainedControl):
     def inactive_color(self, value):
         self._set_attr("inactiveColor", value)
 
-    # thumb_color
-    @property
-    def thumb_color(self):
-        return self._get_attr("thumbColor")
+    # # thumb_color
+    # @property
+    # def thumb_color(self):
+    #     return self._get_attr("thumbColor")
 
-    @thumb_color.setter
-    def thumb_color(self, value):
-        self._set_attr("thumbColor", value)
+    # @thumb_color.setter
+    # def thumb_color(self, value):
+    #     self._set_attr("thumbColor", value)
 
     # on_change
     @property
