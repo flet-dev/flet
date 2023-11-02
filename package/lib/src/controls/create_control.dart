@@ -76,6 +76,7 @@ import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
 import 'range_slider.dart';
+import 'badge.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild}) {
@@ -193,6 +194,9 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           nextChild: nextChild);
     case "divider":
       return DividerControl(
+          key: key, parent: parent, control: controlView.control);
+    case "badge":
+      return BadgeControl(
           key: key, parent: parent, control: controlView.control);
     case "clipboard":
       return ClipboardControl(
