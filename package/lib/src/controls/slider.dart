@@ -1,4 +1,4 @@
-import 'dart:async';
+//import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -10,6 +10,7 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
+import '../utils/debouncer.dart';
 import 'create_control.dart';
 
 class SliderControl extends StatefulWidget {
@@ -30,7 +31,8 @@ class SliderControl extends StatefulWidget {
 
 class _SliderControlState extends State<SliderControl> {
   double _value = 0;
-  Timer? _debounce;
+  final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
+  //Timer? _debounce;
   late final FocusNode _focusNode;
 
   @override
@@ -42,7 +44,8 @@ class _SliderControlState extends State<SliderControl> {
 
   @override
   void dispose() {
-    _debounce?.cancel();
+    //_debounce?.cancel();
+    _debouncer.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
     super.dispose();
@@ -62,19 +65,26 @@ class _SliderControlState extends State<SliderControl> {
       _value = value;
     });
 
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    //if (_debounce?.isActive ?? false) _debounce!.cancel();
     List<Map<String, String>> props = [
       {"i": widget.control.id, "value": svalue}
     ];
     dispatch(UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
 
-    _debounce = Timer(Duration(milliseconds: isDesktop() ? 10 : 100), () {
+    // _debounce = Timer(Duration(milliseconds: isDesktop() ? 10 : 100), () {
+    //   final server = FletAppServices.of(context).server;
+    //   server.updateControlProps(props: props);
+    //   server.sendPageEvent(
+    //       eventTarget: widget.control.id,
+    //       eventName: "change",
+    //       eventData: svalue);
+    // });
+
+    _debouncer.run(() {
       final server = FletAppServices.of(context).server;
       server.updateControlProps(props: props);
       server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: "change",
-          eventData: svalue);
+          eventTarget: widget.control.id, eventName: "change", eventData: '');
     });
   }
 
