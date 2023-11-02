@@ -1,5 +1,3 @@
-//import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -32,7 +30,6 @@ class SliderControl extends StatefulWidget {
 class _SliderControlState extends State<SliderControl> {
   double _value = 0;
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
-  //Timer? _debounce;
   late final FocusNode _focusNode;
 
   @override
@@ -44,7 +41,6 @@ class _SliderControlState extends State<SliderControl> {
 
   @override
   void dispose() {
-    //_debounce?.cancel();
     _debouncer.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
@@ -65,20 +61,10 @@ class _SliderControlState extends State<SliderControl> {
       _value = value;
     });
 
-    //if (_debounce?.isActive ?? false) _debounce!.cancel();
     List<Map<String, String>> props = [
       {"i": widget.control.id, "value": svalue}
     ];
     dispatch(UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-
-    // _debounce = Timer(Duration(milliseconds: isDesktop() ? 10 : 100), () {
-    //   final server = FletAppServices.of(context).server;
-    //   server.updateControlProps(props: props);
-    //   server.sendPageEvent(
-    //       eventTarget: widget.control.id,
-    //       eventName: "change",
-    //       eventData: svalue);
-    // });
 
     _debouncer.run(() {
       final server = FletAppServices.of(context).server;
