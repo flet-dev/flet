@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-
 import '../actions.dart';
 import '../flet_app_services.dart';
-import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
@@ -15,12 +12,14 @@ class SliderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final dynamic dispatch;
 
   const SliderControl(
       {Key? key,
       this.parent,
       required this.control,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -54,7 +53,7 @@ class _SliderControlState extends State<SliderControl> {
         eventData: "");
   }
 
-  void onChange(double value, Function dispatch) {
+  void onChange(double value) {
     var svalue = value.toString();
     debugPrint(svalue);
     setState(() {
@@ -64,7 +63,8 @@ class _SliderControlState extends State<SliderControl> {
     List<Map<String, String>> props = [
       {"i": widget.control.id, "value": svalue}
     ];
-    dispatch(UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+    widget.dispatch(
+        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
 
     _debouncer.run(() {
       final server = FletAppServices.of(context).server;
@@ -89,57 +89,49 @@ class _SliderControlState extends State<SliderControl> {
 
     final server = FletAppServices.of(context).server;
 
-    return StoreConnector<AppState, Function>(
-        distinct: true,
-        converter: (store) => store.dispatch,
-        builder: (context, dispatch) {
-          debugPrint(
-              "SliderControl StoreConnector build: ${widget.control.id}");
+    debugPrint("SliderControl StoreConnector build: ${widget.control.id}");
 
-          double value = widget.control.attrDouble("value", 0)!;
-          if (_value != value) {
-            _value = value;
-          }
+    double value = widget.control.attrDouble("value", 0)!;
+    if (_value != value) {
+      _value = value;
+    }
 
-          var slider = Slider(
-              autofocus: autofocus,
-              focusNode: _focusNode,
-              value: _value,
-              min: min,
-              max: max,
-              divisions: divisions,
-              label:
-                  label?.replaceAll("{value}", _value.toStringAsFixed(round)),
-              activeColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("activeColor", "")!),
-              inactiveColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("inactiveColor", "")!),
-              thumbColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("thumbColor", "")!),
-              onChanged: !disabled
-                  ? (double value) {
-                      onChange(value, dispatch);
-                    }
-                  : null,
-              onChangeStart: !disabled
-                  ? (double value) {
-                      server.sendPageEvent(
-                          eventTarget: widget.control.id,
-                          eventName: "change_start",
-                          eventData: value.toString());
-                    }
-                  : null,
-              onChangeEnd: !disabled
-                  ? (double value) {
-                      server.sendPageEvent(
-                          eventTarget: widget.control.id,
-                          eventName: "change_end",
-                          eventData: value.toString());
-                    }
-                  : null);
+    var slider = Slider(
+        autofocus: autofocus,
+        focusNode: _focusNode,
+        value: _value,
+        min: min,
+        max: max,
+        divisions: divisions,
+        label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
+        activeColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("activeColor", "")!),
+        inactiveColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("inactiveColor", "")!),
+        thumbColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("thumbColor", "")!),
+        onChanged: !disabled
+            ? (double value) {
+                onChange(value);
+              }
+            : null,
+        onChangeStart: !disabled
+            ? (double value) {
+                server.sendPageEvent(
+                    eventTarget: widget.control.id,
+                    eventName: "change_start",
+                    eventData: value.toString());
+              }
+            : null,
+        onChangeEnd: !disabled
+            ? (double value) {
+                server.sendPageEvent(
+                    eventTarget: widget.control.id,
+                    eventName: "change_end",
+                    eventData: value.toString());
+              }
+            : null);
 
-          return constrainedControl(
-              context, slider, widget.parent, widget.control);
-        });
+    return constrainedControl(context, slider, widget.parent, widget.control);
   }
 }

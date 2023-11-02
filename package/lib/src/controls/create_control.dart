@@ -440,10 +440,12 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           dispatch: controlView.dispatch);
     case "slider":
       return SliderControl(
-          key: key,
-          parent: parent,
-          control: controlView.control,
-          parentDisabled: parentDisabled);
+        key: key,
+        parent: parent,
+        control: controlView.control,
+        parentDisabled: parentDisabled,
+        dispatch: controlView.dispatch,
+      );
     case "rangeslider":
       return RangeSliderControl(
         key: key,
