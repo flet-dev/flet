@@ -24,6 +24,7 @@ class Badge(Control):
 
     def __init__(
         self,
+        content: Optional[Control] = None,
         ref: Optional[Ref] = None,
         opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
@@ -48,9 +49,17 @@ class Badge(Control):
         # self.thickness = thickness
         # self.color = color
         self.label = label
+        self.content = content
 
     def _get_control_name(self):
         return "badge"
+
+    def _get_children(self):
+        children = []
+        if self.__content is not None:
+            self.__content._set_attr_internal("n", "content")
+            children.append(self.__content)
+        return children
 
     # label
     @property
@@ -60,3 +69,12 @@ class Badge(Control):
     @label.setter
     def label(self, value: Optional[str]):
         self._set_attr("label", value)
+
+    # content
+    @property
+    def content(self) -> Optional[Control]:
+        return self.__content
+
+    @content.setter
+    def content(self, value: Optional[Control]):
+        self.__content = value

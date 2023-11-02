@@ -197,7 +197,12 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           key: key, parent: parent, control: controlView.control);
     case "badge":
       return BadgeControl(
-          key: key, parent: parent, control: controlView.control);
+        key: key,
+        parent: parent,
+        control: controlView.control,
+        children: controlView.children,
+        parentDisabled: parentDisabled,
+      );
     case "clipboard":
       return ClipboardControl(
           parent: parent, control: controlView.control, nextChild: nextChild);
