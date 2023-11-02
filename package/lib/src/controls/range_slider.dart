@@ -1,11 +1,6 @@
-//import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-
 import '../actions.dart';
 import '../flet_app_services.dart';
-import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
@@ -18,13 +13,15 @@ class RangeSliderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final dynamic dispatch;
 
-  const RangeSliderControl(
-      {Key? key,
-      this.parent,
-      required this.control,
-      required this.parentDisabled})
-      : super(key: key);
+  const RangeSliderControl({
+    Key? key,
+    this.parent,
+    required this.control,
+    required this.parentDisabled,
+    required this.dispatch,
+  }) : super(key: key);
 
   @override
   State<RangeSliderControl> createState() => _SliderControlState();
@@ -44,7 +41,7 @@ class _SliderControlState extends State<RangeSliderControl> {
     super.dispose();
   }
 
-  void onChange(double startValue, double endValue, Function dispatch) {
+  void onChange(double startValue, double endValue) {
     var strStartValue = startValue.toString();
     var strEndValue = endValue.toString();
 
@@ -55,7 +52,8 @@ class _SliderControlState extends State<RangeSliderControl> {
         "endvalue": strEndValue
       }
     ];
-    dispatch(UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+    widget.dispatch(
+        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
 
     _debouncer.run(() {
       final server = FletAppServices.of(context).server;
@@ -82,53 +80,47 @@ class _SliderControlState extends State<RangeSliderControl> {
 
     final server = FletAppServices.of(context).server;
 
-    return StoreConnector<AppState, Function>(
-        distinct: true,
-        converter: (store) => store.dispatch,
-        builder: (context, dispatch) {
-          debugPrint(
-              "SliderControl StoreConnector build: ${widget.control.id}");
+    debugPrint("SliderControl StoreConnector build: ${widget.control.id}");
 
-          var rangeSlider = RangeSlider(
-              values: RangeValues(startValue, endValue),
-              labels: RangeLabels(
-                  (label ?? "")
-                      .replaceAll("{value}", startValue.toStringAsFixed(round)),
-                  (label ?? "")
-                      .replaceAll("{value}", endValue.toStringAsFixed(round))),
-              min: min,
-              max: max,
-              divisions: divisions,
-              activeColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("activeColor", "")!),
-              inactiveColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("inactiveColor", "")!),
-              overlayColor: parseMaterialStateColor(
-                  Theme.of(context), widget.control, "overlayColor"),
-              onChanged: !disabled
-                  ? (RangeValues newValues) {
-                      onChange(newValues.start, newValues.end, dispatch);
-                    }
-                  : null,
-              onChangeStart: !disabled
-                  ? (RangeValues newValues) {
-                      server.sendPageEvent(
-                          eventTarget: widget.control.id,
-                          eventName: "change_start",
-                          eventData: '');
-                    }
-                  : null,
-              onChangeEnd: !disabled
-                  ? (RangeValues newValues) {
-                      server.sendPageEvent(
-                          eventTarget: widget.control.id,
-                          eventName: "change_end",
-                          eventData: '');
-                    }
-                  : null);
+    var rangeSlider = RangeSlider(
+        values: RangeValues(startValue, endValue),
+        labels: RangeLabels(
+            (label ?? "")
+                .replaceAll("{value}", startValue.toStringAsFixed(round)),
+            (label ?? "")
+                .replaceAll("{value}", endValue.toStringAsFixed(round))),
+        min: min,
+        max: max,
+        divisions: divisions,
+        activeColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("activeColor", "")!),
+        inactiveColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("inactiveColor", "")!),
+        overlayColor: parseMaterialStateColor(
+            Theme.of(context), widget.control, "overlayColor"),
+        onChanged: !disabled
+            ? (RangeValues newValues) {
+                onChange(newValues.start, newValues.end);
+              }
+            : null,
+        onChangeStart: !disabled
+            ? (RangeValues newValues) {
+                server.sendPageEvent(
+                    eventTarget: widget.control.id,
+                    eventName: "change_start",
+                    eventData: '');
+              }
+            : null,
+        onChangeEnd: !disabled
+            ? (RangeValues newValues) {
+                server.sendPageEvent(
+                    eventTarget: widget.control.id,
+                    eventName: "change_end",
+                    eventData: '');
+              }
+            : null);
 
-          return constrainedControl(
-              context, rangeSlider, widget.parent, widget.control);
-        });
+    return constrainedControl(
+        context, rangeSlider, widget.parent, widget.control);
   }
 }
