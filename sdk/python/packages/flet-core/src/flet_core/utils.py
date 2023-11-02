@@ -2,6 +2,7 @@ import asyncio
 import inspect
 import math
 import random
+import re
 import string
 import sys
 import unicodedata
@@ -22,28 +23,16 @@ def is_coroutine(method):
     return inspect.iscoroutinefunction(method)
 
 
-def slugify(original: str) -> str:
+def slugify(value: str) -> str:
     """
-    Make a string url friendly. Useful for creating routes for navigation.
-
-    >>> slugify("What's    up?")
-    'whats-up'
-
-    >>> slugify("  Mitä kuuluu?  ")
-    'mitä-kuuluu'
+    Converts to lowercase, removes non-word characters (alphanumerics and underscores)
+    and converts spaces to hyphens. Also strips leading and trailing whitespace.
     """
-    slugified = original.strip()
-    slugified = " ".join(slugified.split())  # Remove extra spaces between words
-    slugified = slugified.lower()
-    # Remove unicode punctuation
-    slugified = "".join(
-        character
-        for character in slugified
-        if not unicodedata.category(character).startswith("P")
+    value = (
+        unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
     )
-    slugified = slugified.replace(" ", "-")
-
-    return slugified
+    value = re.sub(r"[^\w\s-]", "", value).strip().lower()
+    return re.sub(r"[-\s]+", "-", value).strip("-")
 
 
 class Vector(complex):
