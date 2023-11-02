@@ -132,9 +132,6 @@ class Slider(ConstrainedControl):
     def _get_control_name(self):
         return "slider"
 
-    def _before_build_command(self):
-        super()._before_build_command()
-
     # value
     @property
     def value(self) -> OptionalNumber:
