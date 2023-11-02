@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/colors.dart';
 import 'create_control.dart';
+import '../utils/transforms.dart';
 
 class BadgeControl extends StatelessWidget {
   final Control? parent;
@@ -32,6 +32,8 @@ class BadgeControl extends StatelessWidget {
         ? createControl(control, contentCtrls.first.id, disabled)
         : null;
 
+    var offsetDetails = parseOffset(control, "offset");
+
     //var height = control.attrDouble("height");
     //var thickness = control.attrDouble("thickness");
     //var color = HexColor.fromString(
@@ -43,6 +45,9 @@ class BadgeControl extends StatelessWidget {
           //child: Text("Badge"),
 
           label: Text(label),
+          offset: offsetDetails != null
+              ? Offset(offsetDetails.x, offsetDetails.y)
+              : null,
           child: child,
         ),
         parent,

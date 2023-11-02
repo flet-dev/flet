@@ -2,6 +2,9 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import (
+    OffsetValue,
+)
 
 
 class Badge(Control):
@@ -36,6 +39,7 @@ class Badge(Control):
         # thickness: OptionalNumber = None,
         # color: Optional[str] = None,
         label: Optional[str] = None,
+        offset: OffsetValue = None,
     ):
         Control.__init__(
             self,
@@ -50,9 +54,14 @@ class Badge(Control):
         # self.color = color
         self.label = label
         self.content = content
+        self.offset = offset
 
     def _get_control_name(self):
         return "badge"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("offset", self.__offset)
 
     def _get_children(self):
         children = []
@@ -78,3 +87,12 @@ class Badge(Control):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # offset
+    @property
+    def offset(self) -> OffsetValue:
+        return self.__offset
+
+    @offset.setter
+    def offset(self, value: OffsetValue):
+        self.__offset = value
