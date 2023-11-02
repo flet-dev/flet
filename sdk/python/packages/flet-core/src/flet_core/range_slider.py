@@ -19,20 +19,55 @@ class RangeSlider(ConstrainedControl):
     The default is to use a continuous range of values from min to max.
 
     Example:
-    ```
+        ```
     import flet as ft
 
-    def main(page):
+
+    def range_slider_changed(e):
+        print(f"On change! Values are ({e.control.start_value}, {e.control.end_value})")
+
+
+    def range_slider_started_change(e):
+        print(
+            f"On change start! Values are ({e.control.start_value}, {e.control.end_value})"
+        )
+
+
+    def range_slider_ended_change(e):
+        print(f"On change end! Values are ({e.control.start_value}, {e.control.end_value})")
+
+
+    def main(page: ft.Page):
+        range_slider = ft.RangeSlider(
+            min=0,
+            max=50,
+            start_value=10,
+            divisions=10,
+            end_value=20,
+            inactive_color=ft.colors.GREEN_300,
+            active_color=ft.colors.GREEN_700,
+            overlay_color=ft.colors.GREEN_100,
+            on_change=range_slider_changed,
+            on_change_start=range_slider_started_change,
+            on_change_end=range_slider_ended_change,
+            label="{value}%",
+        )
+
         page.add(
-            ft.Text("Slider with value:"),
-            ft.Slider(value=0.3),
-            ft.Text("Slider with a custom range and label:"),
-            ft.Slider(min=0, max=100, divisions=10, label="{value}%"))
+            ft.Column(
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                controls=[
+                    ft.Text("Range slider", size=20, weight=ft.FontWeight.BOLD),
+                    range_slider,
+                ],
+            )
+        )
+
 
     ft.app(target=main)
-    ```
+        ```
 
-    -----
+        -----
 
     Online docs: https://flet.dev/docs/controls/rangeslider
     """
@@ -75,15 +110,12 @@ class RangeSlider(ConstrainedControl):
         max: OptionalNumber = None,
         divisions: Optional[int] = None,
         round: Optional[int] = None,
-        # autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
         overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
         on_change=None,
         on_change_start=None,
         on_change_end=None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -116,23 +148,18 @@ class RangeSlider(ConstrainedControl):
         )
         self.start_value = start_value
         self.end_value = end_value
-        # self.start_label = start_label
-        # self.end_label = end_label
         self.label = label
 
         self.min = min
         self.max = max
         self.divisions = divisions
         self.round = round
-        # self.autofocus = autofocus
         self.active_color = active_color
         self.inactive_color = inactive_color
         self.overlay_color = overlay_color
         self.on_change = on_change
         self.on_change_start = on_change_start
         self.on_change_end = on_change_end
-        self.on_focus = on_focus
-        self.on_blur = on_blur
 
     def _get_control_name(self):
         return "rangeslider"
@@ -167,24 +194,6 @@ class RangeSlider(ConstrainedControl):
     @label.setter
     def label(self, value: str):
         self._set_attr("label", value)
-
-    # # start_label
-    # @property
-    # def start_label(self) -> str:
-    #     return self._get_attr("startlabel")
-
-    # @start_label.setter
-    # def start_label(self, value: str):
-    #     self._set_attr("startlabel", value)
-
-    # # end_label
-    # @property
-    # def end_label(self) -> str:
-    #     return self._get_attr("endlabel")
-
-    # @end_label.setter
-    # def end_label(self, value: str):
-    #     self._set_attr("endlabel", value)
 
     # min
     @property
@@ -221,15 +230,6 @@ class RangeSlider(ConstrainedControl):
     @round.setter
     def round(self, value: Optional[int]):
         self._set_attr("round", value)
-
-    # # autofocus
-    # @property
-    # def autofocus(self) -> Optional[bool]:
-    #     return self._get_attr("autofocus", data_type="bool", def_value=False)
-
-    # @autofocus.setter
-    # def autofocus(self, value: Optional[bool]):
-    #     self._set_attr("autofocus", value)
 
     # active_color
     @property
@@ -284,21 +284,3 @@ class RangeSlider(ConstrainedControl):
     @on_change_end.setter
     def on_change_end(self, handler):
         self._add_event_handler("change_end", handler)
-
-    # on_focus
-    @property
-    def on_focus(self):
-        return self._get_event_handler("focus")
-
-    @on_focus.setter
-    def on_focus(self, handler):
-        self._add_event_handler("focus", handler)
-
-    # on_blur
-    @property
-    def on_blur(self):
-        return self._get_event_handler("blur")
-
-    @on_blur.setter
-    def on_blur(self, handler):
-        self._add_event_handler("blur", handler)

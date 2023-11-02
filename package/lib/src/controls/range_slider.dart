@@ -31,28 +31,16 @@ class RangeSliderControl extends StatefulWidget {
 
 class _SliderControlState extends State<RangeSliderControl> {
   Timer? _debounce;
-  late final FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
-    _focusNode.addListener(_onFocusChange);
   }
 
   @override
   void dispose() {
     _debounce?.cancel();
-    _focusNode.removeListener(_onFocusChange);
-    _focusNode.dispose();
     super.dispose();
-  }
-
-  void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
   }
 
   void onChange(double startValue, double endValue, Function dispatch) {
@@ -84,7 +72,6 @@ class _SliderControlState extends State<RangeSliderControl> {
     double startValue = widget.control.attrDouble("startvalue", 0)!;
     double endValue = widget.control.attrDouble("endvalue", 0)!;
     String? label = widget.control.attrString("label");
-    bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     double min = widget.control.attrDouble("min", 0)!;
@@ -103,8 +90,6 @@ class _SliderControlState extends State<RangeSliderControl> {
               "SliderControl StoreConnector build: ${widget.control.id}");
 
           var rangeSlider = RangeSlider(
-              //autofocus: autofocus,
-              //focusNode: _focusNode,
               values: RangeValues(startValue, endValue),
               labels: RangeLabels(
                   (label ?? "")
