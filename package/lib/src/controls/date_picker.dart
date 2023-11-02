@@ -80,7 +80,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
             value?.toIso8601String() ?? currentDate?.toIso8601String() ?? "";
         eventName = "dismiss";
       } else {
-        stringValue = dateValue?.toIso8601String() ?? "";
+        stringValue = dateValue.toIso8601String();
         eventName = "change";
       }
       List<Map<String, String>> props = [

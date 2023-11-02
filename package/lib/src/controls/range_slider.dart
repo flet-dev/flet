@@ -5,63 +5,52 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
-import '../utils/debouncer.dart';
 import 'create_control.dart';
+import '../utils/buttons.dart';
+import '../utils/debouncer.dart';
 
-class SliderControl extends StatefulWidget {
+class RangeSliderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final dynamic dispatch;
 
-  const SliderControl(
-      {Key? key,
-      this.parent,
-      required this.control,
-      required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+  const RangeSliderControl({
+    Key? key,
+    this.parent,
+    required this.control,
+    required this.parentDisabled,
+    required this.dispatch,
+  }) : super(key: key);
 
   @override
-  State<SliderControl> createState() => _SliderControlState();
+  State<RangeSliderControl> createState() => _SliderControlState();
 }
 
-class _SliderControlState extends State<SliderControl> {
-  double _value = 0;
+class _SliderControlState extends State<RangeSliderControl> {
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
-  late final FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
-    _focusNode.addListener(_onFocusChange);
   }
 
   @override
   void dispose() {
     _debouncer.dispose();
-    _focusNode.removeListener(_onFocusChange);
-    _focusNode.dispose();
     super.dispose();
   }
 
-  void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
-  }
-
-  void onChange(double value) {
-    var svalue = value.toString();
-    debugPrint(svalue);
-    setState(() {
-      _value = value;
-    });
+  void onChange(double startValue, double endValue) {
+    var strStartValue = startValue.toString();
+    var strEndValue = endValue.toString();
 
     List<Map<String, String>> props = [
-      {"i": widget.control.id, "value": svalue}
+      {
+        "i": widget.control.id,
+        "startvalue": strStartValue,
+        "endvalue": strEndValue
+      }
     ];
     widget.dispatch(
         UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
@@ -76,14 +65,16 @@ class _SliderControlState extends State<SliderControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("SliderControl build: ${widget.control.id}");
+    debugPrint("RangeSliderControl build: ${widget.control.id}");
 
+    double startValue = widget.control.attrDouble("startvalue", 0)!;
+    double endValue = widget.control.attrDouble("endvalue", 0)!;
     String? label = widget.control.attrString("label");
-    bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     double min = widget.control.attrDouble("min", 0)!;
     double max = widget.control.attrDouble("max", 1)!;
+
     int? divisions = widget.control.attrInt("divisions");
     int round = widget.control.attrInt("round", 0)!;
 
@@ -91,47 +82,45 @@ class _SliderControlState extends State<SliderControl> {
 
     debugPrint("SliderControl StoreConnector build: ${widget.control.id}");
 
-    double value = widget.control.attrDouble("value", 0)!;
-    if (_value != value) {
-      _value = value;
-    }
-
-    var slider = Slider(
-        autofocus: autofocus,
-        focusNode: _focusNode,
-        value: _value,
+    var rangeSlider = RangeSlider(
+        values: RangeValues(startValue, endValue),
+        labels: RangeLabels(
+            (label ?? "")
+                .replaceAll("{value}", startValue.toStringAsFixed(round)),
+            (label ?? "")
+                .replaceAll("{value}", endValue.toStringAsFixed(round))),
         min: min,
         max: max,
         divisions: divisions,
-        label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
         activeColor: HexColor.fromString(
             Theme.of(context), widget.control.attrString("activeColor", "")!),
         inactiveColor: HexColor.fromString(
             Theme.of(context), widget.control.attrString("inactiveColor", "")!),
-        thumbColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("thumbColor", "")!),
+        overlayColor: parseMaterialStateColor(
+            Theme.of(context), widget.control, "overlayColor"),
         onChanged: !disabled
-            ? (double value) {
-                onChange(value);
+            ? (RangeValues newValues) {
+                onChange(newValues.start, newValues.end);
               }
             : null,
         onChangeStart: !disabled
-            ? (double value) {
+            ? (RangeValues newValues) {
                 server.sendPageEvent(
                     eventTarget: widget.control.id,
                     eventName: "change_start",
-                    eventData: value.toString());
+                    eventData: '');
               }
             : null,
         onChangeEnd: !disabled
-            ? (double value) {
+            ? (RangeValues newValues) {
                 server.sendPageEvent(
                     eventTarget: widget.control.id,
                     eventName: "change_end",
-                    eventData: value.toString());
+                    eventData: '');
               }
             : null);
 
-    return constrainedControl(context, slider, widget.parent, widget.control);
+    return constrainedControl(
+        context, rangeSlider, widget.parent, widget.control);
   }
 }
