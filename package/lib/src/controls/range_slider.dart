@@ -1,4 +1,4 @@
-import 'dart:async';
+//import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -12,27 +12,7 @@ import '../utils/colors.dart';
 import '../utils/desktop.dart';
 import 'create_control.dart';
 import '../utils/buttons.dart';
-
-class Debouncer {
-  final int milliseconds;
-  Timer? _timer;
-
-  Debouncer({required this.milliseconds});
-
-  void run(VoidCallback action) {
-    //_timer?.cancel();
-    if (_timer?.isActive ?? false) _timer!.cancel();
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
-  }
-
-  void dispose() {
-    _timer?.cancel();
-  }
-
-  // void cancelTimer() {
-  //   if (_timer?.isActive ?? false) _timer!.cancel();
-  // }
-}
+import '../utils/debouncer.dart';
 
 class RangeSliderControl extends StatefulWidget {
   final Control? parent;
@@ -51,7 +31,6 @@ class RangeSliderControl extends StatefulWidget {
 }
 
 class _SliderControlState extends State<RangeSliderControl> {
-  //Timer? _debounce;
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
 
   @override
@@ -61,7 +40,6 @@ class _SliderControlState extends State<RangeSliderControl> {
 
   @override
   void dispose() {
-    //_debounce?.cancel();
     _debouncer.dispose();
     super.dispose();
   }
@@ -69,9 +47,6 @@ class _SliderControlState extends State<RangeSliderControl> {
   void onChange(double startValue, double endValue, Function dispatch) {
     var strStartValue = startValue.toString();
     var strEndValue = endValue.toString();
-
-    //if (_debounce?.isActive ?? false) _debounce!.cancel();
-    //_debouncer.cancelTimer();
 
     List<Map<String, String>> props = [
       {
@@ -82,12 +57,6 @@ class _SliderControlState extends State<RangeSliderControl> {
     ];
     dispatch(UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
 
-    // _debounce = Timer(Duration(milliseconds: isDesktop() ? 10 : 100), () {
-    //   final server = FletAppServices.of(context).server;
-    //   server.updateControlProps(props: props);
-    //   server.sendPageEvent(
-    //       eventTarget: widget.control.id, eventName: "change", eventData: '');
-    // });
     _debouncer.run(() {
       final server = FletAppServices.of(context).server;
       server.updateControlProps(props: props);
