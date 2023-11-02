@@ -1,9 +1,9 @@
 import argparse
 from pathlib import Path
 
-from colorama import Fore, Style
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import slugify
+from rich import print
 
 
 class Command(BaseCommand):
@@ -65,10 +65,7 @@ class Command(BaseCommand):
         )
 
         # print next steps
-        print(Fore.LIGHTGREEN_EX + "Done. Now run:")
-        print(Style.RESET_ALL)
+        print("[spring_green3]Done.[/spring_green3] Now run:\n")
         if options.output_directory != ".":
-            print(Fore.CYAN + "cd", end=" ")
-            print(Fore.WHITE + out_dir.name, end="\n")
-        print(Fore.CYAN + "flet run")
-        print(Style.RESET_ALL)
+            print(f"[cyan]cd[/cyan] [white]{out_dir.name}[/white]")
+        print("[cyan]flet run[/cyan]\n")
