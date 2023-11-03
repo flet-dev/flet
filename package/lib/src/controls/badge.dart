@@ -39,6 +39,8 @@ class BadgeControl extends StatelessWidget {
     var bgColor = HexColor.fromString(
         Theme.of(context), control.attrString("bgColor", "")!);
 
+    bool isLabelVisible = control.attrBool("isLabelVisible", true)!;
+
     //var height = control.attrDouble("height");
     //var thickness = control.attrDouble("thickness");
     //var color = HexColor.fromString(
@@ -50,6 +52,7 @@ class BadgeControl extends StatelessWidget {
           //child: Text("Badge"),
 
           label: Text(label),
+          isLabelVisible: isLabelVisible,
           offset: offsetDetails != null
               ? Offset(offsetDetails.x, offsetDetails.y)
               : null,
