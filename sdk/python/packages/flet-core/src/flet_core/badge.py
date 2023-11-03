@@ -42,6 +42,7 @@ class Badge(Control):
         label: Optional[str] = None,
         offset: OffsetValue = None,
         alignment: Optional[Alignment] = None,
+        bgcolor: Optional[str] = None,
     ):
         Control.__init__(
             self,
@@ -58,6 +59,7 @@ class Badge(Control):
         self.content = content
         self.offset = offset
         self.alignment = alignment
+        self.bgcolor = bgcolor
 
     def _get_control_name(self):
         return "badge"
@@ -114,3 +116,12 @@ class Badge(Control):
     @offset.setter
     def offset(self, value: OffsetValue):
         self.__offset = value
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgColor")
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgColor", value)

@@ -4,6 +4,7 @@ import '../models/control.dart';
 import 'create_control.dart';
 import '../utils/transforms.dart';
 import '../utils/alignment.dart';
+import '../utils/colors.dart';
 
 class BadgeControl extends StatelessWidget {
   final Control? parent;
@@ -35,6 +36,9 @@ class BadgeControl extends StatelessWidget {
 
     var offsetDetails = parseOffset(control, "offset");
 
+    var bgColor = HexColor.fromString(
+        Theme.of(context), control.attrString("bgColor", "")!);
+
     //var height = control.attrDouble("height");
     //var thickness = control.attrDouble("thickness");
     //var color = HexColor.fromString(
@@ -50,6 +54,7 @@ class BadgeControl extends StatelessWidget {
               ? Offset(offsetDetails.x, offsetDetails.y)
               : null,
           alignment: parseAlignment(control, "alignment"),
+          backgroundColor: bgColor,
           child: child,
         ),
         parent,
