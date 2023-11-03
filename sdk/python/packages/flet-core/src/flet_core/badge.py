@@ -3,9 +3,7 @@ from typing import Any, Optional
 from flet_core.control import Control, OptionalNumber
 from flet_core.alignment import Alignment
 from flet_core.ref import Ref
-from flet_core.types import (
-    OffsetValue,
-)
+from flet_core.types import OffsetValue, PaddingValue
 
 
 class Badge(Control):
@@ -44,6 +42,10 @@ class Badge(Control):
         alignment: Optional[Alignment] = None,
         bgcolor: Optional[str] = None,
         label_visible: Optional[bool] = None,
+        large_size: OptionalNumber = None,
+        padding: Optional[PaddingValue] = None,
+        small_size: OptionalNumber = None,
+        text_color: Optional[str] = None,
     ):
         Control.__init__(
             self,
@@ -62,6 +64,10 @@ class Badge(Control):
         self.alignment = alignment
         self.bgcolor = bgcolor
         self.label_visible = label_visible
+        self.large_size = large_size
+        self.padding = padding
+        self.small_size = small_size
+        self.text_color = text_color
 
     def _get_control_name(self):
         return "badge"
@@ -70,6 +76,7 @@ class Badge(Control):
         super()._before_build_command()
         self._set_attr_json("offset", self.__offset)
         self._set_attr_json("alignment", self.__alignment)
+        self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
         children = []
@@ -136,3 +143,39 @@ class Badge(Control):
     @label_visible.setter
     def label_visible(self, value: Optional[bool]):
         self._set_attr("isLabelVisible", value)
+
+    # large_size
+    @property
+    def large_size(self) -> OptionalNumber:
+        return self._get_attr("largeSize")
+
+    @large_size.setter
+    def large_size(self, value: OptionalNumber):
+        self._set_attr("largeSize", value)
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+
+    # small_size
+    @property
+    def small_size(self) -> OptionalNumber:
+        return self._get_attr("smallSize")
+
+    @small_size.setter
+    def small_size(self, value: OptionalNumber):
+        self._set_attr("smallSize", value)
+
+    # text_color
+    @property
+    def text_color(self):
+        return self._get_attr("textColor")
+
+    @text_color.setter
+    def text_color(self, value):
+        self._set_attr("textColor", value)

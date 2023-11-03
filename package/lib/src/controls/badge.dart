@@ -5,6 +5,7 @@ import 'create_control.dart';
 import '../utils/transforms.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 
 class BadgeControl extends StatelessWidget {
   final Control? parent;
@@ -24,7 +25,7 @@ class BadgeControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Badge build: ${control.id}");
 
-    String label = control.attrString("label", "")!;
+    String? label = control.attrString("label");
 
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
@@ -39,7 +40,12 @@ class BadgeControl extends StatelessWidget {
     var bgColor = HexColor.fromString(
         Theme.of(context), control.attrString("bgColor", "")!);
 
+    var textColor = HexColor.fromString(
+        Theme.of(context), control.attrString("textColor", "")!);
+
     bool isLabelVisible = control.attrBool("isLabelVisible", true)!;
+    var largeSize = control.attrDouble("largeSize");
+    var smallSize = control.attrDouble("smallSize");
 
     //var height = control.attrDouble("height");
     //var thickness = control.attrDouble("thickness");
@@ -51,13 +57,17 @@ class BadgeControl extends StatelessWidget {
         Badge(
           //child: Text("Badge"),
 
-          label: Text(label),
+          label: label != null ? Text(label) : null,
           isLabelVisible: isLabelVisible,
           offset: offsetDetails != null
               ? Offset(offsetDetails.x, offsetDetails.y)
               : null,
           alignment: parseAlignment(control, "alignment"),
           backgroundColor: bgColor,
+          largeSize: largeSize,
+          padding: parseEdgeInsets(control, "padding"),
+          smallSize: smallSize,
+          textColor: textColor,
           child: child,
         ),
         parent,
