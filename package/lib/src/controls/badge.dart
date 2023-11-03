@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import 'create_control.dart';
 import '../utils/transforms.dart';
+import '../utils/alignment.dart';
 
 class BadgeControl extends StatelessWidget {
   final Control? parent;
@@ -48,6 +49,7 @@ class BadgeControl extends StatelessWidget {
           offset: offsetDetails != null
               ? Offset(offsetDetails.x, offsetDetails.y)
               : null,
+          alignment: parseAlignment(control, "alignment"),
           child: child,
         ),
         parent,

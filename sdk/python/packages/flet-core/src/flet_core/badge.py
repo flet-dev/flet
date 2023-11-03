@@ -1,6 +1,7 @@
 from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
+from flet_core.alignment import Alignment
 from flet_core.ref import Ref
 from flet_core.types import (
     OffsetValue,
@@ -40,6 +41,7 @@ class Badge(Control):
         # color: Optional[str] = None,
         label: Optional[str] = None,
         offset: OffsetValue = None,
+        alignment: Optional[Alignment] = None,
     ):
         Control.__init__(
             self,
@@ -55,6 +57,7 @@ class Badge(Control):
         self.label = label
         self.content = content
         self.offset = offset
+        self.alignment = alignment
 
     def _get_control_name(self):
         return "badge"
@@ -62,6 +65,7 @@ class Badge(Control):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("offset", self.__offset)
+        self._set_attr_json("alignment", self.__alignment)
 
     def _get_children(self):
         children = []
@@ -69,6 +73,20 @@ class Badge(Control):
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
+
+    # alignment
+    @property
+    def alignment(self) -> Optional[Alignment]:
+        """:obj:`Alignment`, optional: Align the child control within the container.
+
+        Alignment is an instance of `alignment.Alignment` class object with `x` and `y` properties
+        representing the distance from the center of a rectangle.
+        """
+        return self.__alignment
+
+    @alignment.setter
+    def alignment(self, value: Optional[Alignment]):
+        self.__alignment = value
 
     # label
     @property
