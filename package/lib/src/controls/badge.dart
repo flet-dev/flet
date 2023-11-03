@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../models/control.dart';
 import 'create_control.dart';
 import '../utils/transforms.dart';
@@ -48,16 +47,9 @@ class BadgeControl extends StatelessWidget {
     var largeSize = control.attrDouble("largeSize");
     var smallSize = control.attrDouble("smallSize");
 
-    //var height = control.attrDouble("height");
-    //var thickness = control.attrDouble("thickness");
-    //var color = HexColor.fromString(
-    //    Theme.of(context), control.attrString("color", "")!);
-
     return baseControl(
         context,
         Badge(
-          //child: Text("Badge"),
-
           label: label != null ? Text(label) : null,
           isLabelVisible: isLabelVisible,
           offset: offsetDetails != null

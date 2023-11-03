@@ -35,9 +35,6 @@ class Badge(Control):
         #
         # Specific
         #
-        # height: OptionalNumber = None,
-        # thickness: OptionalNumber = None,
-        # color: Optional[str] = None,
         text: Optional[str] = None,
         offset: OffsetValue = None,
         alignment: Optional[Alignment] = None,
