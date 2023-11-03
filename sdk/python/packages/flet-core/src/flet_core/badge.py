@@ -4,6 +4,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.alignment import Alignment
 from flet_core.ref import Ref
 from flet_core.types import OffsetValue, PaddingValue
+from flet_core.text_style import TextStyle
 
 
 class Badge(Control):
@@ -37,7 +38,7 @@ class Badge(Control):
         # height: OptionalNumber = None,
         # thickness: OptionalNumber = None,
         # color: Optional[str] = None,
-        label: Optional[str] = None,
+        text: Optional[str] = None,
         offset: OffsetValue = None,
         alignment: Optional[Alignment] = None,
         bgcolor: Optional[str] = None,
@@ -46,6 +47,7 @@ class Badge(Control):
         padding: Optional[PaddingValue] = None,
         small_size: OptionalNumber = None,
         text_color: Optional[str] = None,
+        text_style: Optional[TextStyle] = None,
     ):
         Control.__init__(
             self,
@@ -58,7 +60,7 @@ class Badge(Control):
         # self.height = height
         # self.thickness = thickness
         # self.color = color
-        self.label = label
+        self.text = text
         self.content = content
         self.offset = offset
         self.alignment = alignment
@@ -68,6 +70,7 @@ class Badge(Control):
         self.padding = padding
         self.small_size = small_size
         self.text_color = text_color
+        self.text_style = text_style
 
     def _get_control_name(self):
         return "badge"
@@ -77,6 +80,7 @@ class Badge(Control):
         self._set_attr_json("offset", self.__offset)
         self._set_attr_json("alignment", self.__alignment)
         self._set_attr_json("padding", self.__padding)
+        self._set_attr_json("textStyle", self.__text_style)
 
     def _get_children(self):
         children = []
@@ -99,14 +103,14 @@ class Badge(Control):
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
 
-    # label
+    # text
     @property
-    def label(self) -> Optional[str]:
-        return self._get_attr("label")
+    def text(self) -> Optional[str]:
+        return self._get_attr("labelText")
 
-    @label.setter
-    def label(self, value: Optional[str]):
-        self._set_attr("label", value)
+    @text.setter
+    def text(self, value: Optional[str]):
+        self._set_attr("labelText", value)
 
     # content
     @property
@@ -179,3 +183,12 @@ class Badge(Control):
     @text_color.setter
     def text_color(self, value):
         self._set_attr("textColor", value)
+
+    # text_style
+    @property
+    def text_style(self):
+        return self.__text_style
+
+    @text_style.setter
+    def text_style(self, value: Optional[TextStyle]):
+        self.__text_style = value

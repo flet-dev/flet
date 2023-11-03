@@ -6,6 +6,7 @@ import '../utils/transforms.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/text.dart';
 
 class BadgeControl extends StatelessWidget {
   final Control? parent;
@@ -25,7 +26,7 @@ class BadgeControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Badge build: ${control.id}");
 
-    String? label = control.attrString("label");
+    String? label = control.attrString("labelText");
 
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
@@ -68,6 +69,7 @@ class BadgeControl extends StatelessWidget {
           padding: parseEdgeInsets(control, "padding"),
           smallSize: smallSize,
           textColor: textColor,
+          textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
           child: child,
         ),
         parent,
