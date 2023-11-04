@@ -8,6 +8,7 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
+import '../utils/control_global_state.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -33,7 +34,23 @@ class AlertDialogControl extends StatefulWidget {
 }
 
 class _AlertDialogControlState extends State<AlertDialogControl> {
-  bool _open = false;
+  String? _id;
+  ControlsGlobalState? _globalState;
+
+  @override
+  void initState() {
+    super.initState();
+    debugPrint("AlertDialog initState() ($hashCode)");
+  }
+
+  @override
+  void dispose() {
+    debugPrint("AlertDialog dispose() ($hashCode)");
+    if (_id != null) {
+      _globalState?.remove(_id!, "open", hashCode);
+    }
+    super.dispose();
+  }
 
   Widget _createAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
@@ -72,7 +89,13 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("AlertDialog build: ${widget.control.id}");
+    debugPrint("AlertDialog build ($hashCode): ${widget.control.id}");
+
+    _id = widget.control.id;
+    _globalState = FletAppServices.of(context).globalState;
+    var server = FletAppServices.of(context).server;
+
+    bool lastOpen = _globalState?.get(widget.control.id, "open") ?? false;
 
     return StoreConnector<AppState, Function>(
         distinct: true,
@@ -82,30 +105,28 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
 
           var open = widget.control.attrBool("open", false)!;
           var modal = widget.control.attrBool("modal", false)!;
-          // var removeCurrentSnackbar =
-          //     widget.control.attrBool("removeCurrentSnackBar", false)!;
 
-          debugPrint("Current open state: $_open");
+          debugPrint("Current open state: $lastOpen");
           debugPrint("New open state: $open");
 
-          if (open && (open != _open)) {
+          if (open && (open != lastOpen)) {
             var dialog = _createAlertDialog();
             if (dialog is ErrorControl) {
               return dialog;
             }
 
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              // if (removeCurrentSnackbar) {
-              //   ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              // }
+            _globalState?.set(widget.control.id, "open", open, hashCode);
 
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               showDialog(
                   barrierDismissible: !modal,
                   context: context,
                   builder: (context) => _createAlertDialog()).then((value) {
-                debugPrint("Dialog dismissed: $_open");
-                bool shouldDismiss = _open;
-                _open = false;
+                lastOpen =
+                    _globalState?.get(widget.control.id, "open") ?? false;
+                debugPrint("Dialog should be dismissed ($hashCode): $lastOpen");
+                bool shouldDismiss = lastOpen;
+                _globalState?.set(widget.control.id, "open", false, hashCode);
 
                 if (shouldDismiss) {
                   List<Map<String, String>> props = [
@@ -113,21 +134,17 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
                   ];
                   dispatch(UpdateControlPropsAction(
                       UpdateControlPropsPayload(props: props)));
-                  FletAppServices.of(context)
-                      .server
-                      .updateControlProps(props: props);
-                  FletAppServices.of(context).server.sendPageEvent(
+                  server.updateControlProps(props: props);
+                  server.sendPageEvent(
                       eventTarget: widget.control.id,
                       eventName: "dismiss",
                       eventData: "");
                 }
               });
             });
-          } else if (open != _open && _open) {
+          } else if (open != lastOpen && lastOpen) {
             Navigator.pop(context);
           }
-
-          _open = open;
 
           return widget.nextChild ?? const SizedBox.shrink();
         });
