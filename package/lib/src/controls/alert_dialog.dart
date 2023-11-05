@@ -8,7 +8,6 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
-import '../utils/control_global_state.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -34,21 +33,15 @@ class AlertDialogControl extends StatefulWidget {
 }
 
 class _AlertDialogControlState extends State<AlertDialogControl> {
-  String? _id;
-  ControlsGlobalState? _globalState;
-
   @override
   void initState() {
-    super.initState();
     debugPrint("AlertDialog initState() ($hashCode)");
+    super.initState();
   }
 
   @override
   void dispose() {
     debugPrint("AlertDialog dispose() ($hashCode)");
-    if (_id != null) {
-      _globalState?.remove(_id!, "open", hashCode);
-    }
     super.dispose();
   }
 
@@ -91,11 +84,9 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
   Widget build(BuildContext context) {
     debugPrint("AlertDialog build ($hashCode): ${widget.control.id}");
 
-    _id = widget.control.id;
-    _globalState = FletAppServices.of(context).globalState;
     var server = FletAppServices.of(context).server;
 
-    bool lastOpen = _globalState?.get(widget.control.id, "open") ?? false;
+    bool lastOpen = widget.control.state["open"] ?? false;
 
     return StoreConnector<AppState, Function>(
         distinct: true,
@@ -115,18 +106,17 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
               return dialog;
             }
 
-            _globalState?.set(widget.control.id, "open", open, hashCode);
+            widget.control.state["open"] = open;
 
             WidgetsBinding.instance.addPostFrameCallback((_) {
               showDialog(
                   barrierDismissible: !modal,
                   context: context,
                   builder: (context) => _createAlertDialog()).then((value) {
-                lastOpen =
-                    _globalState?.get(widget.control.id, "open") ?? false;
+                lastOpen = widget.control.state["open"] ?? false;
                 debugPrint("Dialog should be dismissed ($hashCode): $lastOpen");
                 bool shouldDismiss = lastOpen;
-                _globalState?.set(widget.control.id, "open", false, hashCode);
+                widget.control.state["open"] = false;
 
                 if (shouldDismiss) {
                   List<Map<String, String>> props = [

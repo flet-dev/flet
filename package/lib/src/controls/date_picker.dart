@@ -4,7 +4,6 @@ import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
-import '../utils/control_global_state.dart';
 import '../utils/icons.dart';
 import 'form_field.dart';
 
@@ -29,21 +28,15 @@ class DatePickerControl extends StatefulWidget {
 }
 
 class _DatePickerControlState extends State<DatePickerControl> {
-  String? _id;
-  ControlsGlobalState? _globalState;
-
   @override
   void initState() {
-    super.initState();
     debugPrint("DatePicker initState() ($hashCode)");
+    super.initState();
   }
 
   @override
   void dispose() {
     debugPrint("DatePicker dispose() ($hashCode)");
-    if (_id != null) {
-      _globalState?.remove(_id!, "open", hashCode);
-    }
     super.dispose();
   }
 
@@ -51,10 +44,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
   Widget build(BuildContext context) {
     debugPrint("DatePicker build: ${widget.control.id}");
 
-    _id = widget.control.id;
-    _globalState = FletAppServices.of(context).globalState;
-
-    bool lastOpen = _globalState?.get(widget.control.id, "open") ?? false;
+    bool lastOpen = widget.control.state["open"] ?? false;
 
     var open = widget.control.attrBool("open", false)!;
     DateTime? value = widget.control.attrDateTime("value");
@@ -107,7 +97,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
         stringValue = dateValue.toIso8601String();
         eventName = "change";
       }
-      _globalState?.set(widget.control.id, "open", false, hashCode);
+      widget.control.state["open"] = false;
       List<Map<String, String>> props = [
         {"i": widget.control.id, "value": stringValue, "open": "false"}
       ];
@@ -155,7 +145,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
     }
 
     if (open && (open != lastOpen)) {
-      _globalState?.set(widget.control.id, "open", open, hashCode);
+      widget.control.state["open"] = open;
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog<DateTime>(
