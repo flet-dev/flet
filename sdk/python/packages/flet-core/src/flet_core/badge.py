@@ -78,9 +78,6 @@ class Badge(Control):
             data=data,
         )
 
-        # self.height = height
-        # self.thickness = thickness
-        # self.color = color
         self.text = text
         self.content = content
         self.offset = offset
