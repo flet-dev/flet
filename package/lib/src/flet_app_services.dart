@@ -7,7 +7,6 @@ import 'flet_server.dart';
 import 'flet_server_protocol.dart';
 import 'models/app_state.dart';
 import 'reducers.dart';
-import 'utils/control_global_state.dart';
 
 class FletAppServices extends InheritedWidget {
   final FletAppServices? parentAppServices;
@@ -21,7 +20,6 @@ class FletAppServices extends InheritedWidget {
   late final FletServer server;
   late final Store<AppState> store;
   final Map<String, GlobalKey> globalKeys = {};
-  final ControlsGlobalState globalState = ControlsGlobalState();
   final Map<String, ControlInvokeMethodCallback> controlInvokeMethods = {};
 
   FletAppServices(

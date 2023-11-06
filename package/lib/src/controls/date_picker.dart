@@ -29,18 +29,6 @@ class DatePickerControl extends StatefulWidget {
 
 class _DatePickerControlState extends State<DatePickerControl> {
   @override
-  void initState() {
-    debugPrint("DatePicker initState() ($hashCode)");
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    debugPrint("DatePicker dispose() ($hashCode)");
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     debugPrint("DatePicker build: ${widget.control.id}");
 

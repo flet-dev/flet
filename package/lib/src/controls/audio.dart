@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -33,33 +34,37 @@ class AudioControl extends StatefulWidget {
 }
 
 class _AudioControlState extends State<AudioControl> {
-  String _src = "";
-  String _srcBase64 = "";
-  ReleaseMode? _releaseMode;
-  double? _volume;
-  double? _balance;
-  double? _playbackRate;
+  AudioPlayer? player;
   void Function(Duration)? _onDurationChanged;
   void Function(PlayerState)? _onStateChanged;
   void Function(int)? _onPositionChanged;
   Duration? _duration;
   int _position = -1;
   void Function()? _onSeekComplete;
-  late final AudioPlayer player;
+  StreamSubscription? _onDurationChangedSubscription;
+  StreamSubscription? _onStateChangedSubscription;
+  StreamSubscription? _onPositionChangedSubscription;
+  StreamSubscription? _onSeekCompleteSubscription;
   FletServer? _server;
 
   @override
   void initState() {
-    super.initState();
-    player = AudioPlayer();
-    player.onDurationChanged.listen((duration) {
+    debugPrint("Audio.initState($hashCode)");
+    player = widget.control.state["player"];
+    if (player == null) {
+      player = AudioPlayer();
+      player = widget.control.state["player"] = player;
+    }
+    _onDurationChangedSubscription =
+        player?.onDurationChanged.listen((duration) {
       _onDurationChanged?.call(duration);
       _duration = duration;
     });
-    player.onPlayerStateChanged.listen((state) {
+    _onStateChangedSubscription = player?.onPlayerStateChanged.listen((state) {
       _onStateChanged?.call(state);
     });
-    player.onPositionChanged.listen((position) {
+    _onPositionChangedSubscription =
+        player?.onPositionChanged.listen((position) {
       int posMs = (position.inMilliseconds / 1000).round() * 1000;
       if (posMs != _position) {
         _position = posMs;
@@ -70,21 +75,35 @@ class _AudioControlState extends State<AudioControl> {
       }
       _onPositionChanged?.call(_position);
     });
-    player.onSeekComplete.listen((event) {
+    _onSeekCompleteSubscription = player?.onSeekComplete.listen((event) {
       _onSeekComplete?.call();
     });
+
+    widget.control.onRemove.clear();
+    widget.control.onRemove.add(_onRemove);
+    super.initState();
+  }
+
+  void _onRemove() {
+    debugPrint("Audio.remove($hashCode)");
+    widget.control.state["player"]?.dispose();
+    _server?.controlInvokeMethods.remove(widget.control.id);
   }
 
   @override
   void deactivate() {
-    _server?.controlInvokeMethods.remove(widget.control.id);
-    player.dispose();
+    debugPrint("Audio.deactivate($hashCode)");
+    _onDurationChangedSubscription?.cancel();
+    _onStateChangedSubscription?.cancel();
+    _onPositionChangedSubscription?.cancel();
+    _onSeekCompleteSubscription?.cancel();
     super.deactivate();
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Audio build: ${widget.control.id}");
+    debugPrint(
+        "Audio build: ${widget.control.id} (${widget.control.hashCode})");
 
     var src = widget.control.attrString("src", "")!;
     var srcBase64 = widget.control.attrString("srcBase64", "")!;
@@ -104,6 +123,13 @@ class _AudioControlState extends State<AudioControl> {
 
     var server = FletAppServices.of(context).server;
 
+    final String prevSrc = widget.control.state["src"] ?? "";
+    final String prevSrcBase64 = widget.control.state["srcBase64"] ?? "";
+    final ReleaseMode? prevReleaseMode = widget.control.state["releaseMode"];
+    final double? prevVolume = widget.control.state["volume"];
+    final double? prevBalance = widget.control.state["balance"];
+    final double? prevPlaybackRate = widget.control.state["playbackRate"];
+
     return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
         converter: (store) => PageArgsModel.fromStore(store),
@@ -116,6 +142,7 @@ class _AudioControlState extends State<AudioControl> {
           };
 
           _onStateChanged = (state) {
+            debugPrint("Audio($hashCode) - state_changed: ${state.name}");
             server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "state_changed",
@@ -139,64 +166,74 @@ class _AudioControlState extends State<AudioControl> {
           };
 
           () async {
+            debugPrint("Audio ($hashCode) src=$src, prevSrc=$prevSrc");
+            debugPrint(
+                "Audio ($hashCode) srcBase64=$srcBase64, prevSrcBase64=$prevSrcBase64");
+
             bool srcChanged = false;
-            if (src != "" && src != _src) {
-              _src = src;
+            if (src != "" && src != prevSrc) {
+              widget.control.state["src"] = src;
               srcChanged = true;
 
               // URL or file?
               var assetSrc =
                   getAssetSrc(src, pageArgs.pageUri!, pageArgs.assetsDir);
               if (assetSrc.isFile) {
-                await player.setSourceDeviceFile(assetSrc.path);
+                await player?.setSourceDeviceFile(assetSrc.path);
               } else {
-                await player.setSourceUrl(assetSrc.path);
+                await player?.setSourceUrl(assetSrc.path);
               }
-            } else if (srcBase64 != "" && srcBase64 != _srcBase64) {
-              _srcBase64 = srcBase64;
+            } else if (srcBase64 != "" && srcBase64 != prevSrcBase64) {
+              widget.control.state["srcBase64"] = srcBase64;
               srcChanged = true;
-              await player.setSourceBytes(base64Decode(srcBase64));
+              await player?.setSourceBytes(base64Decode(srcBase64));
             }
 
             if (srcChanged) {
+              debugPrint("Audio.srcChanged!");
               server.sendPageEvent(
                   eventTarget: widget.control.id,
                   eventName: "loaded",
                   eventData: "");
             }
 
-            if (releaseMode != null && releaseMode != _releaseMode) {
-              _releaseMode = releaseMode;
-              await player.setReleaseMode(releaseMode);
+            if (releaseMode != null && releaseMode != prevReleaseMode) {
+              debugPrint("Audio.setReleaseMode($releaseMode)");
+              widget.control.state["releaseMode"] = releaseMode;
+              await player?.setReleaseMode(releaseMode);
             }
 
             if (volume != null &&
-                volume != _volume &&
+                volume != prevVolume &&
                 volume >= 0 &&
                 volume <= 1) {
-              _volume = volume;
-              await player.setVolume(volume);
+              widget.control.state["volume"] = volume;
+              debugPrint("Audio.setVolume($volume)");
+              await player?.setVolume(volume);
             }
 
             if (playbackRate != null &&
-                playbackRate != _playbackRate &&
+                playbackRate != prevPlaybackRate &&
                 playbackRate >= 0 &&
                 playbackRate <= 2) {
-              _playbackRate = playbackRate;
-              await player.setPlaybackRate(playbackRate);
+              widget.control.state["playbackRate"] = playbackRate;
+              debugPrint("Audio.setPlaybackRate($playbackRate)");
+              await player?.setPlaybackRate(playbackRate);
             }
 
             if (!kIsWeb &&
                 balance != null &&
-                balance != _balance &&
+                balance != prevBalance &&
                 balance >= -1 &&
                 balance <= 1) {
-              _balance = balance;
-              await player.setBalance(balance);
+              widget.control.state["balance"] = balance;
+              debugPrint("Audio.setBalance($balance)");
+              await player?.setBalance(balance);
             }
 
             if (srcChanged && autoplay) {
-              await player.resume();
+              debugPrint("Audio.resume($srcChanged, $autoplay)");
+              await player?.resume();
             }
 
             _server = server;
@@ -204,28 +241,28 @@ class _AudioControlState extends State<AudioControl> {
                 (methodName, args) async {
               switch (methodName) {
                 case "play":
-                  await player.seek(const Duration(milliseconds: 0));
-                  await player.resume();
+                  await player?.seek(const Duration(milliseconds: 0));
+                  await player?.resume();
                   break;
                 case "resume":
-                  await player.resume();
+                  await player?.resume();
                   break;
                 case "pause":
-                  await player.pause();
+                  await player?.pause();
                   break;
                 case "release":
-                  await player.release();
+                  await player?.release();
                   break;
                 case "seek":
-                  await player.seek(Duration(
+                  await player?.seek(Duration(
                       milliseconds: int.tryParse(args["position"] ?? "") ?? 0));
                   break;
                 case "get_duration":
-                  return (await player.getDuration())
+                  return (await player?.getDuration())
                       ?.inMilliseconds
                       .toString();
                 case "get_current_position":
-                  return (await player.getCurrentPosition())
+                  return (await player?.getCurrentPosition())
                       ?.inMilliseconds
                       .toString();
               }
@@ -233,7 +270,7 @@ class _AudioControlState extends State<AudioControl> {
             };
           }();
 
-          return widget.nextChild ?? const SizedBox.shrink();
+          return const SizedBox.shrink();
         });
   }
 }

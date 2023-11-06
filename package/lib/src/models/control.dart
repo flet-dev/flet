@@ -10,6 +10,7 @@ class Control extends Equatable {
   final List<String> childIds;
   final Map<String, String> attrs;
   final Map<String, dynamic> state = {};
+  final Set<void Function()> onRemove = {};
 
   Control(
       {required this.id,
@@ -113,6 +114,7 @@ class Control extends Equatable {
     for (var element in this.state.entries) {
       c.state[element.key] = element.value;
     }
+    c.onRemove.addAll(onRemove);
     return c;
   }
 
