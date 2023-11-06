@@ -5,21 +5,21 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("Two controls are equal", () {
-    Control c1 = const Control(
+    Control c1 = Control(
         id: "i1",
         pid: "p1",
         type: "stack",
         name: null,
-        childIds: ["txt1", "btn1"],
-        attrs: {"text": "Hello!", "width": "200"});
+        childIds: const ["txt1", "btn1"],
+        attrs: const {"text": "Hello!", "width": "200"});
 
-    Control c2 = const Control(
+    Control c2 = Control(
         id: "i1",
         pid: "p1",
         type: "stack",
         name: null,
-        childIds: ["txt1", "btn1"],
-        attrs: {"width": "200", "text": "Hello!"});
+        childIds: const ["txt1", "btn1"],
+        attrs: const {"width": "200", "text": "Hello!"});
 
     expect(c1 == c2, true);
   });
