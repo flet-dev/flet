@@ -9,20 +9,44 @@ from flet_core.text_style import TextStyle
 
 class Badge(Control):
     """
-    A Material Design "badge".
+        A Material Design "badge".
 
-    Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
-    or a button's icon.
+        Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
+        or a button's icon.
 
-    Example:
-        ```
+        Example:
+            ```
+    import flet as ft
+
+    def main(page: ft.Page):
+        page.title = "Badges in NavigationBar icons"
+        page.navigation_bar = ft.NavigationBar(
+            destinations=[
+                ft.NavigationDestination(
+                    icon_content=ft.Badge(
+                        content=ft.Icon(ft.icons.EXPLORE),
+                        small_size=10,
+                    ),
+                    label="Explore",
+                ),
+                ft.NavigationDestination(icon=ft.icons.COMMUTE, label="Commute"),
+                ft.NavigationDestination(
+                    icon_content=ft.Badge(content=ft.Icon(ft.icons.PHONE), text="10")
+                ),
+            ]
+        )
+        page.add(ft.Text("Body!"))
 
 
-        ```
+    ft.app(target=main)
 
-        -----
 
-        Online docs: https://flet.dev/docs/controls/badge
+
+            ```
+
+            -----
+
+            Online docs: https://flet.dev/docs/controls/badge
     """
 
     def __init__(
