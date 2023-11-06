@@ -205,3 +205,4 @@ from flet_core.vertical_divider import VerticalDivider
 from flet_core.view import View
 from flet_core.window_drag_area import WindowDragArea
 from flet_core.range_slider import RangeSlider
+from flet_core.badge import Badge
