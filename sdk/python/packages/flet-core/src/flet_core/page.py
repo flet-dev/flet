@@ -25,6 +25,7 @@ from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
+from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.protocol import Command
 from flet_core.querystring import QueryString
 from flet_core.session_storage import SessionStorage
@@ -1240,6 +1241,15 @@ class Page(Control):
     @navigation_bar.setter
     def navigation_bar(self, value: Optional[NavigationBar]):
         self.__default_view.navigation_bar = value
+
+    # end_drawer
+    @property
+    def end_drawer(self) -> Optional[NavigationDrawer]:
+        return self.__default_view.end_drawer
+
+    @end_drawer.setter
+    def end_drawer(self, value: Optional[NavigationDrawer]):
+        self.__default_view.end_drawer = value
 
     # floating_action_button
     @property
