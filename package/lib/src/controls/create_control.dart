@@ -15,6 +15,7 @@ import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
+import 'badge.dart';
 import 'banner.dart';
 import 'barchart.dart';
 import 'bottom_sheet.dart';
@@ -194,6 +195,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
     case "divider":
       return DividerControl(
           key: key, parent: parent, control: controlView.control);
+    case "badge":
+      return BadgeControl(
+        key: key,
+        parent: parent,
+        control: controlView.control,
+        children: controlView.children,
+        parentDisabled: parentDisabled,
+      );
     case "clipboard":
       return ClipboardControl(
           parent: parent, control: controlView.control, nextChild: nextChild);
