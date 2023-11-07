@@ -77,6 +77,7 @@ import 'vertical_divider.dart';
 import 'window_drag_area.dart';
 import 'range_slider.dart';
 import 'badge.dart';
+import 'navigation_drawer.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild}) {
@@ -498,6 +499,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           children: controlView.children,
           parentDisabled: parentDisabled,
           nextChild: nextChild);
+    case "navigationdrawer":
+      return NavigationDrawerControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          nextChild: nextChild,
+          dispatch: controlView.dispatch);
     case "bottomsheet":
       return BottomSheetControl(
           parent: parent,
