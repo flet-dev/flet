@@ -40,7 +40,7 @@ dependencies:
   shake: ^2.2.0
   path: ^1.8.2
   js: ^0.6.5
-  fl_chart: ^0.63.0
+  fl_chart: ^0.64.0
 
 dev_dependencies:
   flutter_test:
