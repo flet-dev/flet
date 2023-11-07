@@ -33,6 +33,43 @@ from flet_core.types import (
 class NavigationDrawerDestination(Control):
     """
     Displays an icon with a label, for use in NavigationDrawer destinations.
+
+    import time
+
+    import flet as ft
+
+
+    def main(page: ft.Page):
+        page.drawer = ft.NavigationDrawer(
+            destinations=[ft.NavigationDrawerDestination(icon=ft.icons.ABC, label="Item 1")]
+        )
+        page.end_drawer = ft.NavigationDrawer(
+            destinations=[
+                ft.NavigationDrawerDestination(icon=ft.icons.ABC, label="End drawer")
+            ]
+        )
+
+        def show_drawer(e):
+            page.drawer.open = True
+            page.drawer.update()
+            time.sleep(2)
+            page.drawer.open = False
+            page.drawer.update()
+
+        def show_end_drawer(e):
+            page.end_drawer.open = True
+            page.end_drawer.update()
+            time.sleep(3)
+            page.drawer.open = True
+            page.drawer.update()
+
+        page.add(
+            ft.ElevatedButton("Show drawer", on_click=show_drawer),
+            ft.ElevatedButton("Show end drawer", on_click=show_end_drawer),
+        )
+
+
+    ft.app(main)
     """
 
     def __init__(

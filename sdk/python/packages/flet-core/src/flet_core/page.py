@@ -1242,6 +1242,15 @@ class Page(Control):
     def navigation_bar(self, value: Optional[NavigationBar]):
         self.__default_view.navigation_bar = value
 
+    # drawer
+    @property
+    def drawer(self) -> Optional[NavigationDrawer]:
+        return self.__default_view.drawer
+
+    @drawer.setter
+    def drawer(self, value: Optional[NavigationDrawer]):
+        self.__default_view.drawer = value
+
     # end_drawer
     @property
     def end_drawer(self) -> Optional[NavigationDrawer]:

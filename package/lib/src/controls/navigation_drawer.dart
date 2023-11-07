@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -9,8 +8,6 @@ import '../models/control.dart';
 import '../models/controls_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
-import '../utils/icons.dart';
-import 'create_control.dart';
 
 class NavigationDrawerControl extends StatefulWidget {
   final Control? parent;
@@ -18,7 +15,6 @@ class NavigationDrawerControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final dynamic dispatch;
-  final Widget? nextChild;
 
   const NavigationDrawerControl(
       {Key? key,
@@ -26,8 +22,7 @@ class NavigationDrawerControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch,
-      required this.nextChild})
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -119,6 +114,6 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
 
     // return constrainedControl(
     //     context, navDrawer, widget.parent, widget.control);
-    return widget.nextChild ?? const SizedBox.shrink();
+    return navDrawer;
   }
 }

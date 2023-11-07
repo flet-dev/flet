@@ -15,6 +15,7 @@ import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
+import 'badge.dart';
 import 'banner.dart';
 import 'barchart.dart';
 import 'bottom_sheet.dart';
@@ -57,6 +58,7 @@ import 'progress_bar.dart';
 import 'progress_ring.dart';
 import 'radio.dart';
 import 'radio_group.dart';
+import 'range_slider.dart';
 import 'responsive_row.dart';
 import 'row.dart';
 import 'safe_area.dart';
@@ -75,9 +77,6 @@ import 'tooltip.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
-import 'range_slider.dart';
-import 'badge.dart';
-import 'navigation_drawer.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild}) {
@@ -499,14 +498,6 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           children: controlView.children,
           parentDisabled: parentDisabled,
           nextChild: nextChild);
-    case "navigationdrawer":
-      return NavigationDrawerControl(
-          parent: parent,
-          control: controlView.control,
-          children: controlView.children,
-          parentDisabled: parentDisabled,
-          nextChild: nextChild,
-          dispatch: controlView.dispatch);
     case "bottomsheet":
       return BottomSheetControl(
           parent: parent,

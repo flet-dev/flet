@@ -36,6 +36,7 @@ class View(ScrollableControl):
         appbar: Optional[AppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
         navigation_bar: Optional[NavigationBar] = None,
+        drawer: Optional[NavigationDrawer] = None,
         end_drawer: Optional[NavigationDrawer] = None,
         vertical_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
         horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
@@ -65,6 +66,7 @@ class View(ScrollableControl):
         self.route = route
         self.appbar = appbar
         self.navigation_bar = navigation_bar
+        self.drawer = drawer
         self.end_drawer = end_drawer
         self.floating_action_button = floating_action_button
         self.vertical_alignment = vertical_alignment
@@ -91,7 +93,11 @@ class View(ScrollableControl):
             children.append(self.__fab)
         if self.__navigation_bar:
             children.append(self.__navigation_bar)
+        if self.__drawer:
+            self.__drawer._set_attr_internal("n", "start")
+            children.append(self.__drawer)
         if self.__end_drawer:
+            self.__end_drawer._set_attr_internal("n", "end")
             children.append(self.__end_drawer)
         children.extend(self.__controls)
         return children
@@ -140,6 +146,15 @@ class View(ScrollableControl):
     @navigation_bar.setter
     def navigation_bar(self, value: Optional[NavigationBar]):
         self.__navigation_bar = value
+
+    # drawer
+    @property
+    def drawer(self) -> Optional[NavigationDrawer]:
+        return self.__drawer
+
+    @drawer.setter
+    def drawer(self, value: Optional[NavigationDrawer]):
+        self.__drawer = value
 
     # end_drawer
     @property
