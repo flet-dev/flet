@@ -16,11 +16,15 @@ def update_version():
     """Return the current version or default."""
     working = Path().absolute()
     os.chdir(Path(flet.__file__).absolute().parent)
-    in_repo = which("git.exe" if is_windows() else "git") and sp.run(
-        ["git", "status"],
-        capture_output=True,
-        text=True,
-    ).stdout.startswith("On branch ")
+    in_repo = (
+        which("git.exe" if is_windows() else "git")
+        and sp.run(
+            ["git", "status"],
+            capture_output=True,
+            text=True,
+        ).returncode
+        == 0
+    )
 
     if in_repo:
         # NOTE: this may break if there is a tag name starting with
