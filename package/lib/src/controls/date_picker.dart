@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+
 import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
-import 'form_field.dart';
 import '../utils/icons.dart';
+import 'form_field.dart';
 
 class DatePickerControl extends StatefulWidget {
   final Control? parent;
@@ -27,11 +28,12 @@ class DatePickerControl extends StatefulWidget {
 }
 
 class _DatePickerControlState extends State<DatePickerControl> {
-  bool _open = false;
-
   @override
   Widget build(BuildContext context) {
     debugPrint("DatePicker build: ${widget.control.id}");
+
+    bool lastOpen = widget.control.state["open"] ?? false;
+
     var open = widget.control.attrBool("open", false)!;
     DateTime? value = widget.control.attrDateTime("value");
     DateTime? firstDate = widget.control.attrDateTime("firstDate");
@@ -83,6 +85,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
         stringValue = dateValue.toIso8601String();
         eventName = "change";
       }
+      widget.control.state["open"] = false;
       List<Map<String, String>> props = [
         {"i": widget.control.id, "value": stringValue, "open": "false"}
       ];
@@ -129,7 +132,9 @@ class _DatePickerControlState extends State<DatePickerControl> {
       return dialog;
     }
 
-    if (open && !_open) {
+    if (open && (open != lastOpen)) {
+      widget.control.state["open"] = open;
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog<DateTime>(
             context: context,
@@ -139,8 +144,6 @@ class _DatePickerControlState extends State<DatePickerControl> {
         });
       });
     }
-
-    _open = open;
     return const SizedBox.shrink();
   }
 }

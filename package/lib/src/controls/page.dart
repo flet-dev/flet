@@ -482,11 +482,16 @@ class _PageControlState extends State<PageControl> {
           if (routesView.views.isEmpty) {
             pages.add(FadeTransitionPage(
                 child: hideLoadingPage
-                    ? const Scaffold()
-                    : LoadingPage(
-                        isLoading: routesView.isLoading,
-                        message: routesView.error,
-                      )));
+                    ? const Scaffold(
+                        body: PageMedia(),
+                      )
+                    : Stack(children: [
+                        const PageMedia(),
+                        LoadingPage(
+                          isLoading: routesView.isLoading,
+                          message: routesView.error,
+                        )
+                      ])));
           } else {
             Widget? loadingPage;
             // offstage

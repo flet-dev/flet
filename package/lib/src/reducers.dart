@@ -469,6 +469,11 @@ removeControls(Map<String, Control> controls, List<String> ids) {
     }
 
     // delete control itself
+    if (ctrl != null) {
+      for (var handler in ctrl.onRemove) {
+        handler();
+      }
+    }
     controls.remove(id);
 
     // remove control's ID from parent's children collection

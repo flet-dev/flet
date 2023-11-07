@@ -33,8 +33,6 @@ class AlertDialogControl extends StatefulWidget {
 }
 
 class _AlertDialogControlState extends State<AlertDialogControl> {
-  bool _open = false;
-
   Widget _createAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var titleCtrls =
@@ -72,7 +70,11 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("AlertDialog build: ${widget.control.id}");
+    debugPrint("AlertDialog build ($hashCode): ${widget.control.id}");
+
+    var server = FletAppServices.of(context).server;
+
+    bool lastOpen = widget.control.state["open"] ?? false;
 
     return StoreConnector<AppState, Function>(
         distinct: true,
@@ -82,30 +84,27 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
 
           var open = widget.control.attrBool("open", false)!;
           var modal = widget.control.attrBool("modal", false)!;
-          // var removeCurrentSnackbar =
-          //     widget.control.attrBool("removeCurrentSnackBar", false)!;
 
-          debugPrint("Current open state: $_open");
+          debugPrint("Current open state: $lastOpen");
           debugPrint("New open state: $open");
 
-          if (open && (open != _open)) {
+          if (open && (open != lastOpen)) {
             var dialog = _createAlertDialog();
             if (dialog is ErrorControl) {
               return dialog;
             }
 
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              // if (removeCurrentSnackbar) {
-              //   ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              // }
+            widget.control.state["open"] = open;
 
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               showDialog(
                   barrierDismissible: !modal,
                   context: context,
                   builder: (context) => _createAlertDialog()).then((value) {
-                debugPrint("Dialog dismissed: $_open");
-                bool shouldDismiss = _open;
-                _open = false;
+                lastOpen = widget.control.state["open"] ?? false;
+                debugPrint("Dialog should be dismissed ($hashCode): $lastOpen");
+                bool shouldDismiss = lastOpen;
+                widget.control.state["open"] = false;
 
                 if (shouldDismiss) {
                   List<Map<String, String>> props = [
@@ -113,21 +112,17 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
                   ];
                   dispatch(UpdateControlPropsAction(
                       UpdateControlPropsPayload(props: props)));
-                  FletAppServices.of(context)
-                      .server
-                      .updateControlProps(props: props);
-                  FletAppServices.of(context).server.sendPageEvent(
+                  server.updateControlProps(props: props);
+                  server.sendPageEvent(
                       eventTarget: widget.control.id,
                       eventName: "dismiss",
                       eventData: "");
                 }
               });
             });
-          } else if (open != _open && _open) {
+          } else if (open != lastOpen && lastOpen) {
             Navigator.pop(context);
           }
-
-          _open = open;
 
           return widget.nextChild ?? const SizedBox.shrink();
         });

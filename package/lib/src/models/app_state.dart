@@ -39,7 +39,7 @@ class AppState extends Equatable {
       required this.displayBrightness,
       required this.controls});
 
-  factory AppState.initial() => const AppState(
+  factory AppState.initial() => AppState(
       pageUri: null,
       assetsDir: "",
       route: "",
@@ -49,8 +49,8 @@ class AppState extends Equatable {
       isRegistered: false,
       reconnectDelayMs: 0,
       error: "",
-      size: Size(0, 0),
-      sizeBreakpoints: {
+      size: const Size(0, 0),
+      sizeBreakpoints: const {
         "xs": 0,
         "sm": 576,
         "md": 768,
@@ -65,8 +65,8 @@ class AppState extends Equatable {
             pid: "",
             type: "page",
             name: "",
-            childIds: [],
-            attrs: {})
+            childIds: const [],
+            attrs: const {})
       });
 
   AppState copyWith(
