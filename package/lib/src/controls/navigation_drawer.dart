@@ -84,7 +84,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
               return NavigationDrawerDestination(
                 // backgroundColor: HexColor.fromString(Theme.of(context),
                 //     destView.control.attrString("bgColor", "")!),
-
+                // flutter issue https://github.com/flutter/flutter/issues/138105
                 icon: iconContentCtrls.isNotEmpty
                     ? createControl(
                         destView.control, iconContentCtrls.first.id, disabled)
