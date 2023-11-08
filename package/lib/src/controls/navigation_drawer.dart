@@ -9,6 +9,7 @@ import '../models/controls_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import 'create_control.dart';
 
 class NavigationDrawerControl extends StatefulWidget {
   final Control? parent;
@@ -77,8 +78,13 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
           List<Widget> children = viewModel.controlViews.map((destView) {
             var icon =
                 getMaterialIcon(destView.control.attrString("icon", "")!);
+            var iconContentCtrls =
+                destView.children.where((c) => c.name == "icon_content");
             return NavigationDrawerDestination(
-              icon: Icon(icon),
+              icon: iconContentCtrls.isNotEmpty
+                  ? createControl(
+                      destView.control, iconContentCtrls.first.id, disabled)
+                  : Icon(icon),
               label: Text('Text'),
             );
           }).toList();
