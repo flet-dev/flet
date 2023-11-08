@@ -82,11 +82,14 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
               var iconContentCtrls =
                   destView.children.where((c) => c.name == "icon_content");
               return NavigationDrawerDestination(
+                // backgroundColor: HexColor.fromString(Theme.of(context),
+                //     destView.control.attrString("bgColor", "")!),
+
                 icon: iconContentCtrls.isNotEmpty
                     ? createControl(
                         destView.control, iconContentCtrls.first.id, disabled)
                     : Icon(icon),
-                label: Text('Text'),
+                label: Text('Text2'),
               );
             } else {
               return createControl(

@@ -75,7 +75,7 @@ class NavigationDrawerDestination(Control):
     def __init__(
         self,
         ref: Optional[Ref] = None,
-        bgcolor: Optional[str] = None,
+        # bgcolor: Optional[str] = None,
         icon: Optional[str] = None,
         icon_content: Optional[Control] = None,
         label: Optional[str] = None,
@@ -84,7 +84,7 @@ class NavigationDrawerDestination(Control):
     ):
         Control.__init__(self, ref=ref)
         self.label = label
-        self.bgcolor = bgcolor
+        # self.bgcolor = bgcolor
         self.icon = icon
         self.__icon_content: Optional[Control] = None
         self.icon_content = icon_content
@@ -107,14 +107,14 @@ class NavigationDrawerDestination(Control):
             children.append(self.__selected_icon_content)
         return children
 
-    # bgcolor
-    @property
-    def bgcolor(self):
-        return self._get_attr("bgColor")
+    # # bgcolor
+    # @property
+    # def bgcolor(self):
+    #     return self._get_attr("bgColor")
 
-    @bgcolor.setter
-    def bgcolor(self, value):
-        self._set_attr("bgColor", value)
+    # @bgcolor.setter
+    # def bgcolor(self, value):
+    #     self._set_attr("bgColor", value)
 
     # icon
     @property
