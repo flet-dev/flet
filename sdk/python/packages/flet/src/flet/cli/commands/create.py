@@ -1,9 +1,9 @@
 import argparse
 from pathlib import Path
 
-from colorama import Fore, Style
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import slugify
+from rich import print
 
 
 class Command(BaseCommand):
@@ -39,36 +39,33 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
-        from copier.main import Worker
+        from cookiecutter.main import cookiecutter
 
         template_data = {"template_name": options.template}
 
-        out_dir = Path(options.output_directory)
-        project_name = options.project_name
-        if project_name is None:
-            project_slug = slugify(out_dir.name)
-            if project_slug is not None and project_slug != "":
-                project_name = project_slug
+        out_dir = Path(options.output_directory).resolve()
+        template_data["out_dir"] = out_dir.name
 
-        if project_name is not None:
-            template_data["project_name"] = project_name
+        project_name = slugify(
+            options.project_name if options.project_name else out_dir.name
+        )
+        template_data["project_name"] = project_name
 
         if options.description is not None:
             template_data["description"] = options.description
 
         # print("Template data:", template_data)
-        with Worker(
-            src_path="https://github.com/flet-dev/templates.git",
-            dst_path=out_dir,
-            vcs_ref="HEAD",
-            data=template_data,
-            defaults=True,
-        ) as worker:
-            worker.run_copy()
-            print(Fore.LIGHTGREEN_EX + "Done. Now run:")
-            print(Style.RESET_ALL)
-            if options.output_directory != ".":
-                print(Fore.CYAN + "cd", end=" ")
-                print(Fore.WHITE + project_name, end="\n")
-            print(Fore.CYAN + "flet run")
-            print(Style.RESET_ALL)
+        cookiecutter(
+            f"gh:flet-dev/flet-app-templates",
+            directory=options.template,
+            output_dir=str(out_dir.parent),
+            no_input=True,
+            overwrite_if_exists=True,
+            extra_context=template_data,
+        )
+
+        # print next steps
+        print("[spring_green3]Done.[/spring_green3] Now run:\n")
+        if options.output_directory != ".":
+            print(f"[cyan]cd[/cyan] [white]{out_dir.name}[/white]")
+        print("[cyan]flet run[/cyan]\n")
