@@ -84,10 +84,10 @@ class Card(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        key: Optional[str] = None,
         #
         # Specific
         #
-        key: Optional[str] = None,
         margin: MarginValue = None,
         elevation: OptionalNumber = None,
         color: Optional[str] = None,

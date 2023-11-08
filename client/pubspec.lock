@@ -173,17 +173,17 @@ packages:
     dependency: transitive
     description:
       name: fl_chart
-      sha256: c1e26c7e48496be85104c16c040950b0436674cdf0737f3f6e95511b2529b592
+      sha256: "6b9eb2b3017241d05c482c01f668dd05cc909ec9a0114fdd49acd958ff2432fa"
       url: "https://pub.dev"
     source: hosted
-    version: "0.63.0"
+    version: "0.64.0"
   flet:
     dependency: "direct main"
     description:
       path: "../package"
       relative: true
     source: path
-    version: "0.10.3"
+    version: "0.11.0"
   flutter:
     dependency: "direct main"
     description: flutter

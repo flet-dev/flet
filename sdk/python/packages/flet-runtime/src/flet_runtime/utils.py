@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import shutil
 import socket
 import sys
 from pathlib import Path
@@ -10,11 +11,15 @@ from flet_core.types import WebRenderer
 
 
 def is_ios():
-    return os.getenv("FLET_PLATFORM") == "iOS"
+    return os.getenv("FLET_PLATFORM") == "ios"
 
 
 def is_android():
-    return os.getenv("FLET_PLATFORM") == "Android"
+    return os.getenv("FLET_PLATFORM") == "android"
+
+
+def is_embedded():
+    return os.getenv("FLET_PLATFORM") is not None
 
 
 def is_mobile():
@@ -254,3 +259,25 @@ def patch_manifest_json(
 
     with open(manifest_path, "w") as f:
         f.write(json.dumps(manifest, indent=2))
+
+
+def copy_tree(src, dst):
+    """Recursively copy a directory tree using shutil.copy2().
+
+    Arguments:
+    src -- source directory path
+    dst -- destination directory path
+
+    Return a list of files that were copied or might have been copied.
+    """
+    if not os.path.isdir(src):
+        raise OSError("Source is not a directory")
+
+    os.makedirs(dst, exist_ok=True)
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            copy_tree(s, d)
+        else:
+            shutil.copy2(s, d)

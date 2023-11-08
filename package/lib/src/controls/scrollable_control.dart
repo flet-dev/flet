@@ -102,9 +102,7 @@ class _ScrollableControlState extends State<ScrollableControl> {
       var params = Map<String, dynamic>.from(mj["p"] as Map);
 
       if (name == "scroll_to") {
-        var duration = params["duration"] != null
-            ? Duration(milliseconds: parseInt(params["duration"]))
-            : Duration.zero;
+        var duration = parseInt(params["duration"]);
         var curve = params["curve"] != null
             ? parseCurve(params["curve"] as String)
             : Curves.ease;
@@ -114,7 +112,11 @@ class _ScrollableControlState extends State<ScrollableControl> {
             if (key != null) {
               var ctx = key.currentContext;
               if (ctx != null) {
-                Scrollable.ensureVisible(ctx, duration: duration, curve: curve);
+                Scrollable.ensureVisible(ctx,
+                    duration: duration > 0
+                        ? Duration(milliseconds: duration)
+                        : Duration.zero,
+                    curve: curve);
               }
             }
           });
@@ -124,21 +126,29 @@ class _ScrollableControlState extends State<ScrollableControl> {
             if (offset < 0) {
               offset = _controller.position.maxScrollExtent + offset + 1;
             }
-            _controller.animateTo(
-              offset,
-              duration: duration,
-              curve: curve,
-            );
+            if (duration < 1) {
+              _controller.jumpTo(offset);
+            } else {
+              _controller.animateTo(
+                offset,
+                duration: Duration(milliseconds: duration),
+                curve: curve,
+              );
+            }
           });
         } else if (params["delta"] != null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             var delta = parseDouble(params["delta"]);
             var offset = _controller.position.pixels + delta;
-            _controller.animateTo(
-              offset,
-              duration: duration,
-              curve: curve,
-            );
+            if (duration < 1) {
+              _controller.jumpTo(offset);
+            } else {
+              _controller.animateTo(
+                offset,
+                duration: Duration(milliseconds: duration),
+                curve: curve,
+              );
+            }
           });
         }
       }

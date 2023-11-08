@@ -34,6 +34,7 @@ from flet_core.buttons import (
     StadiumBorder,
 )
 from flet_core.card import Card
+from flet_core.chip import Chip
 from flet_core.charts.bar_chart import BarChart, BarChartEvent
 from flet_core.charts.bar_chart_group import BarChartGroup
 from flet_core.charts.bar_chart_rod import BarChartRod
@@ -66,6 +67,7 @@ from flet_core.datatable import (
     DataRow,
     DataTable,
 )
+from flet_core.date_picker import DatePicker, DatePickerMode, DatePickerEntryMode
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
@@ -203,3 +205,5 @@ from flet_core.vertical_divider import VerticalDivider
 from flet_core.view import View
 from flet_core.window_drag_area import WindowDragArea
 from flet_core.webview import WebView
+from flet_core.range_slider import RangeSlider
+from flet_core.badge import Badge

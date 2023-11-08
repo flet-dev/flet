@@ -33,10 +33,10 @@ from flet_runtime.utils import (
     get_package_bin_dir,
     get_package_web_dir,
     get_platform,
+    is_embedded,
     is_linux,
     is_linux_server,
     is_macos,
-    is_mobile,
     is_windows,
     open_in_browser,
     safe_tar_extractall,
@@ -151,19 +151,7 @@ def __app_sync(
     else:
         logger.info(f"App URL: {conn.page_url}")
 
-    terminate = threading.Event()
-
-    def exit_gracefully(signum, frame):
-        logger.debug("Gracefully terminating Flet app...")
-        terminate.set()
-
-    signal.signal(signal.SIGINT, exit_gracefully)
-    signal.signal(signal.SIGTERM, exit_gracefully)
-
     logger.info("Connected to Flet app and handling user sessions...")
-
-    fvp = None
-    pid_file = None
 
     if (
         (
@@ -172,7 +160,7 @@ def __app_sync(
             or view == AppView.FLET_APP_WEB
         )
         and not is_linux_server()
-        and not is_mobile()
+        and not is_embedded()
         and url_prefix is None
     ):
         fvp, pid_file = open_flet_view(
@@ -182,11 +170,25 @@ def __app_sync(
         )
         try:
             fvp.wait()
-        except Exception as e:
+        except:
             pass
-    else:
+
+        close_flet_view(pid_file)
+        conn.close()
+
+    elif not is_embedded():
         if view == AppView.WEB_BROWSER and url_prefix is None:
             open_in_browser(conn.page_url)
+
+        terminate = threading.Event()
+
+        def exit_gracefully(signum, frame):
+            logger.debug("Gracefully terminating Flet app...")
+            terminate.set()
+
+        signal.signal(signal.SIGINT, exit_gracefully)
+        signal.signal(signal.SIGTERM, exit_gracefully)
+
         try:
             while True:
                 if terminate.wait(1):
@@ -194,8 +196,7 @@ def __app_sync(
         except KeyboardInterrupt:
             pass
 
-    conn.close()
-    close_flet_view(pid_file)
+        conn.close()
 
 
 async def app_async(
@@ -251,9 +252,6 @@ async def app_async(
 
     logger.info("Connected to Flet app and handling user sessions...")
 
-    fvp = None
-    pid_file = None
-
     if (
         (
             view == AppView.FLET_APP
@@ -261,7 +259,7 @@ async def app_async(
             or view == AppView.FLET_APP_WEB
         )
         and not is_linux_server()
-        and not is_mobile()
+        and not is_embedded()
         and url_prefix is None
     ):
         fvp, pid_file = await open_flet_view_async(
@@ -271,18 +269,22 @@ async def app_async(
         )
         try:
             await fvp.wait()
-        except Exception as e:
+        except:
             pass
-    else:
+
+        close_flet_view(pid_file)
+        await conn.close()
+
+    elif not is_embedded():
         if view == AppView.WEB_BROWSER and url_prefix is None:
             open_in_browser(conn.page_url)
+
         try:
             await terminate.wait()
         except KeyboardInterrupt:
             pass
 
-    await conn.close()
-    close_flet_view(pid_file)
+        await conn.close()
 
 
 def close_flet_view(pid_file):
@@ -323,7 +325,7 @@ def __connect_internal_sync(
         assets_dir = env_assets_dir
 
     is_socket_server = server is None and (
-        is_mobile() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
+        is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
     )
 
     if not is_socket_server:
@@ -370,6 +372,7 @@ def __connect_internal_sync(
             uds_path,
             on_event=on_event,
             on_session_created=on_session_created,
+            blocking=is_embedded(),
         )
     else:
         assert server
@@ -410,7 +413,7 @@ async def __connect_internal_async(
         assets_dir = env_assets_dir
 
     is_socket_server = server is None and (
-        is_mobile() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
+        is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
     )
     if not is_socket_server:
         server = __start_flet_server(
@@ -458,6 +461,7 @@ async def __connect_internal_async(
             uds_path,
             on_event=on_event,
             on_session_created=on_session_created,
+            blocking=is_embedded(),
         )
     else:
         assert server

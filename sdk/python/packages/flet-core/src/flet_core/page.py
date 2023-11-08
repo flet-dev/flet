@@ -518,18 +518,20 @@ class Page(Control):
                     if name != "i":
                         self._index[id]._set_attr(name, props[name], dirty=False)
 
-    def go(self, route, **kwargs):
+    def go(self, route, skip_route_change_event=False, **kwargs):
         self.route = route if not kwargs else route + self.query.post(kwargs)
 
-        self.__on_route_change.get_sync_handler()(
-            ControlEvent(
-                target="page",
-                name="route_change",
-                data=self.route,
-                page=self,
-                control=self,
+        if not skip_route_change_event:
+            self.__on_route_change.get_sync_handler()(
+                ControlEvent(
+                    target="page",
+                    name="route_change",
+                    data=self.route,
+                    page=self,
+                    control=self,
+                )
             )
-        )
+
         self.update()
         self.query()  # Update query url (required when using go)
 

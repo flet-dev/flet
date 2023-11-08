@@ -15,17 +15,20 @@ import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
+import 'badge.dart';
 import 'banner.dart';
 import 'barchart.dart';
 import 'bottom_sheet.dart';
 import 'canvas.dart';
 import 'card.dart';
 import 'checkbox.dart';
+import 'chip.dart';
 import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'datatable.dart';
+import 'date_picker.dart';
 import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
@@ -55,6 +58,7 @@ import 'progress_bar.dart';
 import 'progress_ring.dart';
 import 'radio.dart';
 import 'radio_group.dart';
+import 'range_slider.dart';
 import 'responsive_row.dart';
 import 'row.dart';
 import 'safe_area.dart';
@@ -97,16 +101,20 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
         return const SizedBox.shrink();
       }
 
-      GlobalKey? globalKey;
+      Key? controlKey;
       var key = controlView.control.attrString("key", "")!;
       if (key != "") {
-        globalKey = GlobalKey();
-        FletAppServices.of(context).globalKeys[key] = globalKey;
+        if (key.startsWith("test:")) {
+          controlKey = Key(key.substring(5));
+        } else {
+          var globalKey = controlKey = GlobalKey();
+          FletAppServices.of(context).globalKeys[key] = globalKey;
+        }
       }
 
       // create control widget
       var widget = createWidget(
-          globalKey, controlView, parent, parentDisabled, nextChild);
+          controlKey, controlView, parent, parentDisabled, nextChild);
 
       // no theme defined? return widget!
       if (id == "page" || controlView.control.attrString("theme") == null) {
@@ -188,6 +196,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
     case "divider":
       return DividerControl(
           key: key, parent: parent, control: controlView.control);
+    case "badge":
+      return BadgeControl(
+        key: key,
+        parent: parent,
+        control: controlView.control,
+        children: controlView.children,
+        parentDisabled: parentDisabled,
+      );
     case "clipboard":
       return ClipboardControl(
           parent: parent, control: controlView.control, nextChild: nextChild);
@@ -207,6 +223,15 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "chip":
+      return ChipControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
+
     case "progressring":
       return ProgressRingControl(
           key: key, parent: parent, control: controlView.control);
@@ -293,6 +318,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "datepicker":
+      return DatePickerControl(
+        parent: parent,
+        control: controlView.control,
+        children: controlView.children,
+        parentDisabled: parentDisabled,
+        dispatch: controlView.dispatch,
+      );
     case "draggable":
       return DraggableControl(
           key: key,
@@ -417,10 +450,20 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           dispatch: controlView.dispatch);
     case "slider":
       return SliderControl(
-          key: key,
-          parent: parent,
-          control: controlView.control,
-          parentDisabled: parentDisabled);
+        key: key,
+        parent: parent,
+        control: controlView.control,
+        parentDisabled: parentDisabled,
+        dispatch: controlView.dispatch,
+      );
+    case "rangeslider":
+      return RangeSliderControl(
+        key: key,
+        parent: parent,
+        control: controlView.control,
+        parentDisabled: parentDisabled,
+        dispatch: controlView.dispatch,
+      );
     case "radiogroup":
       return RadioGroupControl(
           key: key,

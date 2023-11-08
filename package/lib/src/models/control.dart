@@ -9,8 +9,10 @@ class Control extends Equatable {
   final String? name;
   final List<String> childIds;
   final Map<String, String> attrs;
+  final Map<String, dynamic> state = {};
+  final Set<void Function()> onRemove = {};
 
-  const Control(
+  Control(
       {required this.id,
       required this.pid,
       required this.type,
@@ -46,7 +48,7 @@ class Control extends Equatable {
   bool get isNonVisual {
     return [
       //"alertdialog",
-      "audio",
+      //"audio",
       "banner",
       //"bottomsheet",
       "clipboard",
@@ -86,20 +88,35 @@ class Control extends Equatable {
     return defValue;
   }
 
+  DateTime? attrDateTime(String name, [DateTime? defValue]) {
+    var value = attrs[name.toLowerCase()];
+    if (value == null) {
+      return defValue;
+    }
+    return DateTime.parse(value);
+  }
+
   Control copyWith(
-          {String? id,
-          String? pid,
-          String? type,
-          String? name,
-          List<String>? childIds,
-          Map<String, String>? attrs}) =>
-      Control(
-          id: id ?? this.id,
-          pid: pid ?? this.pid,
-          type: type ?? this.type,
-          name: name ?? this.name,
-          childIds: childIds ?? this.childIds,
-          attrs: attrs ?? this.attrs);
+      {String? id,
+      String? pid,
+      String? type,
+      String? name,
+      List<String>? childIds,
+      Map<String, String>? attrs,
+      Map<String, dynamic>? state}) {
+    Control c = Control(
+        id: id ?? this.id,
+        pid: pid ?? this.pid,
+        type: type ?? this.type,
+        name: name ?? this.name,
+        childIds: childIds ?? this.childIds,
+        attrs: attrs ?? this.attrs);
+    for (var element in this.state.entries) {
+      c.state[element.key] = element.value;
+    }
+    c.onRemove.addAll(onRemove);
+    return c;
+  }
 
   @override
   List<Object?> get props => [id, pid, type, name, childIds, attrs];

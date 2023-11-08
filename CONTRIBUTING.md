@@ -105,4 +105,17 @@ It should work now.
 
 ## Flutter client
 
-TBD
+Add the following to `~/.zprofile` (or other profile scripts for your OS):
+
+```
+# Flet
+export FLET_VIEW_PATH="$HOME/Projects/flet-dev/flet/client/build/macos/Build/Products/Release"
+export FLET_WEB_PATH="$HOME/Projects/flet-dev/flet/client/build/web"
+```
+
+If you have Microsoft Edge installed and want to use it for debugging Flutter apps:
+
+```
+# Flutter
+export CHROME_EXECUTABLE="/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
+```

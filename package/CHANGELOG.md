@@ -1,3 +1,12 @@
+# 0.11.0
+
+* `DatePicker` control ([docs](https://flet.dev/docs/controls/datepicker)).
+* `Chip` control ([docs](https://flet.dev/docs/controls/chip)).
+* Pyodide v0.24.1.
+* Python 3.12 support.
+* Added `AlertDialog.inset_padding` property ([#1899](https://github.com/flet-dev/flet/issues/1899).
+* Embedded mode to work with [`serious_python`](https://pub.dev/packages/serious_python).
+
 # 0.10.3
 
 * Add proxy_path parameter to flet_fastapi.app() ([#1882](https://github.com/flet-dev/flet/issues/1882)).

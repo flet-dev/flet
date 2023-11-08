@@ -78,6 +78,7 @@ class AlertDialog(Control):
         actions_padding: PaddingValue = None,
         actions_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
         shape: Optional[OutlinedBorder] = None,
+        inset_padding: PaddingValue = None,
         on_dismiss=None,
     ):
 
@@ -103,6 +104,7 @@ class AlertDialog(Control):
         self.actions_padding = actions_padding
         self.actions_alignment = actions_alignment
         self.shape = shape
+        self.inset_padding = inset_padding
         self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
@@ -114,6 +116,7 @@ class AlertDialog(Control):
         self._set_attr_json("contentPadding", self.__content_padding)
         self._set_attr_json("titlePadding", self.__title_padding)
         self._set_attr_json("shape", self.__shape)
+        self._set_attr_json("insetPadding", self.__inset_padding)
 
     def _get_children(self):
         children = []
@@ -224,6 +227,15 @@ class AlertDialog(Control):
     @shape.setter
     def shape(self, value: Optional[OutlinedBorder]):
         self.__shape = value
+
+    # inset_padding
+    @property
+    def inset_padding(self) -> PaddingValue:
+        return self.__inset_padding
+
+    @inset_padding.setter
+    def inset_padding(self, value: PaddingValue):
+        self.__inset_padding = value
 
     # on_dismiss
     @property
