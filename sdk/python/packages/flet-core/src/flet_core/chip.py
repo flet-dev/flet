@@ -64,6 +64,7 @@ class Chip(ConstrainedControl):
 
     def __init__(
         self,
+        label: Control,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -94,7 +95,6 @@ class Chip(ConstrainedControl):
         # Specific
         #
         autofocus: Optional[bool] = None,
-        label: Control = None,
         leading: Optional[Control] = None,
         bgcolor: Optional[str] = None,
         selected: Optional[bool] = False,
