@@ -76,17 +76,22 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
                 .map((c) => c.id)),
         builder: (content, viewModel) {
           List<Widget> children = viewModel.controlViews.map((destView) {
-            var icon =
-                getMaterialIcon(destView.control.attrString("icon", "")!);
-            var iconContentCtrls =
-                destView.children.where((c) => c.name == "icon_content");
-            return NavigationDrawerDestination(
-              icon: iconContentCtrls.isNotEmpty
-                  ? createControl(
-                      destView.control, iconContentCtrls.first.id, disabled)
-                  : Icon(icon),
-              label: Text('Text'),
-            );
+            if (destView.control.type == "navigationdrawerdestination") {
+              var icon =
+                  getMaterialIcon(destView.control.attrString("icon", "")!);
+              var iconContentCtrls =
+                  destView.children.where((c) => c.name == "icon_content");
+              return NavigationDrawerDestination(
+                icon: iconContentCtrls.isNotEmpty
+                    ? createControl(
+                        destView.control, iconContentCtrls.first.id, disabled)
+                    : Icon(icon),
+                label: Text('Text'),
+              );
+            } else {
+              return createControl(
+                  widget.control, destView.control.id, disabled);
+            }
           }).toList();
           return NavigationDrawer(
             //labelBehavior: labelBehavior,

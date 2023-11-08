@@ -212,7 +212,7 @@ class NavigationDrawer(Control):
         #
         # NavigationDrawer-specific
         open: bool = False,
-        destinations: Optional[List[NavigationDrawerDestination]] = None,
+        controls: Optional[List[Control]] = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
         # label_behavior: Optional[NavigationBarLabelBehavior] = None,
@@ -248,7 +248,7 @@ class NavigationDrawer(Control):
         )
 
         self.open = open
-        self.destinations = destinations
+        self.controls = controls
         self.selected_index = selected_index
         # self.label_behavior = label_behavior
         self.bgcolor = bgcolor
@@ -260,7 +260,7 @@ class NavigationDrawer(Control):
 
     def _get_children(self):
         children = []
-        children.extend(self.__destinations)
+        children.extend(self.__controls)
         return children
 
     # open
@@ -272,14 +272,14 @@ class NavigationDrawer(Control):
     def open(self, value: Optional[bool]):
         self._set_attr("open", value)
 
-    # destinations
+    # controls
     @property
-    def destinations(self) -> Optional[List[NavigationDrawerDestination]]:
-        return self.__destinations
+    def controls(self) -> Optional[List[Control]]:
+        return self.__controls
 
-    @destinations.setter
-    def destinations(self, value: Optional[List[NavigationDrawerDestination]]):
-        self.__destinations = value if value is not None else []
+    @controls.setter
+    def controls(self, value: Optional[List[Control]]):
+        self.__controls = value if value is not None else []
 
     # on_change
     @property
