@@ -47,6 +47,13 @@ class Command(BaseCommand):
             help="custom TCP port to run Flet app on",
         )
         parser.add_argument(
+            "--host",
+            dest="host",
+            type=str,
+            default=None,
+            help='host to run Flet web app on. Use "*" to listen on all IPs.',
+        )
+        parser.add_argument(
             "--name",
             dest="app_name",
             type=str,
@@ -158,6 +165,7 @@ class Command(BaseCommand):
             + [options.script if options.module else script_path],
             None if options.directory or options.recursive else script_path,
             port,
+            options.host,
             options.app_name,
             uds_path,
             options.web,
@@ -189,6 +197,7 @@ class Handler(FileSystemEventHandler):
         args,
         script_path,
         port,
+        host,
         page_name,
         uds_path,
         web,
@@ -201,6 +210,7 @@ class Handler(FileSystemEventHandler):
         self.args = args
         self.script_path = script_path
         self.port = port
+        self.host = host
         self.page_name = page_name
         self.uds_path = uds_path
         self.web = web
@@ -228,6 +238,8 @@ class Handler(FileSystemEventHandler):
                 p_env["FLET_PAGE_NAME"] = "/".join(Path(self.script_path).parts[-2:])
         if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
+        if self.host is not None:
+            p_env["FLET_SERVER_IP"] = str(self.host)
         if self.page_name:
             p_env["FLET_PAGE_NAME"] = self.page_name
         if self.uds_path is not None:

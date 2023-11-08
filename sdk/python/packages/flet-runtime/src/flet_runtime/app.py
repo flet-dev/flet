@@ -318,6 +318,10 @@ def __connect_internal_sync(
     if env_port is not None and env_port:
         port = int(env_port)
 
+    env_host = os.getenv("FLET_SERVER_IP")
+    if env_host is not None and env_host:
+        host = env_host
+
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
     env_assets_dir = os.getenv("FLET_ASSETS_PATH")
@@ -406,6 +410,10 @@ async def __connect_internal_async(
     if env_port is not None and env_port:
         port = int(env_port)
 
+    env_host = os.getenv("FLET_SERVER_IP")
+    if env_host is not None and env_host:
+        host = env_host
+
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
     env_assets_dir = os.getenv("FLET_ASSETS_PATH")
@@ -485,7 +493,7 @@ def __start_flet_server(
     use_color_emoji,
     route_url_strategy,
 ):
-    server_ip = host if host not in [None, "", "*"] else "127.0.0.1"
+    server_ip = "127.0.0.1" if host in [None, "", "*"] else host
 
     if port == 0:
         port = get_free_tcp_port()
@@ -517,9 +525,9 @@ def __start_flet_server(
         logger.info(f"Upload path configured: {upload_dir}")
         fletd_env["FLET_UPLOAD_ROOT_DIR"] = upload_dir
 
-    if host not in [None, "", "*"]:
+    if host not in [None, ""]:
         logger.info(f"Host binding configured: {host}")
-        fletd_env["FLET_SERVER_IP"] = host
+        fletd_env["FLET_SERVER_IP"] = host if host != "*" else ""
 
         if host != "127.0.0.1":
             fletd_env["FLET_ALLOW_REMOTE_HOST_CLIENTS"] = "true"
