@@ -81,6 +81,10 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
                   getMaterialIcon(destView.control.attrString("icon", "")!);
               var iconContentCtrls =
                   destView.children.where((c) => c.name == "icon_content");
+              var selectedIcon = getMaterialIcon(
+                  destView.control.attrString("selectedIcon", "")!);
+              var selectedIconContentCtrls = destView.children
+                  .where((c) => c.name == "selected_icon_content");
               return NavigationDrawerDestination(
                 // backgroundColor: HexColor.fromString(Theme.of(context),
                 //     destView.control.attrString("bgColor", "")!),
@@ -89,7 +93,13 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
                     ? createControl(
                         destView.control, iconContentCtrls.first.id, disabled)
                     : Icon(icon),
-                label: Text('Text2'),
+                label: Text(destView.control.attrString("label", "")!),
+                selectedIcon: selectedIconContentCtrls.isNotEmpty
+                    ? createControl(destView.control,
+                        selectedIconContentCtrls.first.id, disabled)
+                    : selectedIcon != null
+                        ? Icon(selectedIcon)
+                        : null,
               );
             } else {
               return createControl(
