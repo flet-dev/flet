@@ -8,6 +8,7 @@ import '../models/control.dart';
 import '../models/controls_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
+import '../utils/icons.dart';
 
 class NavigationDrawerControl extends StatefulWidget {
   final Control? parent;
@@ -73,6 +74,14 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
                 .where((c) => c.isVisible && c.name == null)
                 .map((c) => c.id)),
         builder: (content, viewModel) {
+          List<Widget> children = viewModel.controlViews.map((destView) {
+            var icon =
+                getMaterialIcon(destView.control.attrString("icon", "")!);
+            return NavigationDrawerDestination(
+              icon: Icon(icon),
+              label: Text('Text'),
+            );
+          }).toList();
           return NavigationDrawer(
             //labelBehavior: labelBehavior,
             //height: widget.control.attrDouble("height"),
@@ -82,7 +91,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
                 Theme.of(context), widget.control.attrString("bgColor", "")!),
             selectedIndex: _selectedIndex,
             onDestinationSelected: _destinationChanged,
-            children: const [Icon(Icons.add)],
+            children: children,
             // destinations: viewModel.controlViews.map((destView) {
             //   var label = destView.control.attrString("label", "")!;
 
