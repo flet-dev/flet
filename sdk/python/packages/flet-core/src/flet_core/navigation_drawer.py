@@ -12,6 +12,8 @@ from flet_core.types import (
     ScaleValue,
 )
 
+from flet_core.buttons import OutlinedBorder
+
 
 class NavigationDrawerDestination(Control):
     """
@@ -177,6 +179,7 @@ class NavigationDrawer(Control):
         bgcolor: Optional[str] = None,
         elevation: OptionalNumber = None,
         indicator_color: Optional[str] = None,
+        indicator_shape: Optional[OutlinedBorder] = None,
         on_change=None,
     ):
         Control.__init__(
@@ -193,10 +196,16 @@ class NavigationDrawer(Control):
         self.bgcolor = bgcolor
         self.elevation = elevation
         self.indicator_color = indicator_color
+        self.indicator_shape = indicator_shape
+
         self.on_change = on_change
 
     def _get_control_name(self):
         return "navigationdrawer"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("indicatorShape", self.__indicator_shape)
 
     def _get_children(self):
         children = []
@@ -265,3 +274,12 @@ class NavigationDrawer(Control):
     @indicator_color.setter
     def indicator_color(self, value):
         self._set_attr("indicatorColor", value)
+
+    # indicator_shape
+    @property
+    def indicator_shape(self) -> Optional[OutlinedBorder]:
+        return self.__indicator_shape
+
+    @indicator_shape.setter
+    def indicator_shape(self, value: Optional[OutlinedBorder]):
+        self.__indicator_shape = value
