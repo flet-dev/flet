@@ -107,11 +107,9 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
             }
           }).toList();
           return NavigationDrawer(
-            //labelBehavior: labelBehavior,
-            //height: widget.control.attrDouble("height"),
-
             elevation: widget.control.attrDouble("elevation"),
-            //elevation: 40,
+            indicatorColor: HexColor.fromString(Theme.of(context),
+                widget.control.attrString("indicatorColor", "")!),
 
             shadowColor: Colors.red,
             backgroundColor: HexColor.fromString(

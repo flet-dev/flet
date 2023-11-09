@@ -176,6 +176,7 @@ class NavigationDrawer(Control):
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
         elevation: OptionalNumber = None,
+        indicator_color: Optional[str] = None,
         on_change=None,
     ):
         Control.__init__(
@@ -191,6 +192,7 @@ class NavigationDrawer(Control):
         self.selected_index = selected_index
         self.bgcolor = bgcolor
         self.elevation = elevation
+        self.indicator_color = indicator_color
         self.on_change = on_change
 
     def _get_control_name(self):
@@ -254,3 +256,12 @@ class NavigationDrawer(Control):
     @elevation.setter
     def elevation(self, value: OptionalNumber):
         self._set_attr("elevation", value)
+
+    # indicator_color
+    @property
+    def indicator_color(self):
+        return self._get_attr("indicatorColor")
+
+    @indicator_color.setter
+    def indicator_color(self, value):
+        self._set_attr("indicatorColor", value)
