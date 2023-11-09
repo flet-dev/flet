@@ -5,11 +5,7 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
+    PaddingValue,
 )
 
 from flet_core.buttons import OutlinedBorder
@@ -19,42 +15,6 @@ class NavigationDrawerDestination(Control):
     """
     Displays an icon with a label, for use in NavigationDrawer destinations.
 
-    import time
-
-    import flet as ft
-
-
-    def main(page: ft.Page):
-        page.drawer = ft.NavigationDrawer(
-            destinations=[ft.NavigationDrawerDestination(icon=ft.icons.ABC, label="Item 1")]
-        )
-        page.end_drawer = ft.NavigationDrawer(
-            destinations=[
-                ft.NavigationDrawerDestination(icon=ft.icons.ABC, label="End drawer")
-            ]
-        )
-
-        def show_drawer(e):
-            page.drawer.open = True
-            page.drawer.update()
-            time.sleep(2)
-            page.drawer.open = False
-            page.drawer.update()
-
-        def show_end_drawer(e):
-            page.end_drawer.open = True
-            page.end_drawer.update()
-            time.sleep(3)
-            page.drawer.open = True
-            page.drawer.update()
-
-        page.add(
-            ft.ElevatedButton("Show drawer", on_click=show_drawer),
-            ft.ElevatedButton("Show end drawer", on_click=show_end_drawer),
-        )
-
-
-    ft.app(main)
     """
 
     def __init__(
@@ -149,19 +109,83 @@ class NavigationDrawerDestination(Control):
 
 class NavigationDrawer(Control):
     """
-    Material Design Navigation Drawer component.
+        Material Design Navigation Drawer component.
 
-    Navigation drawers offer a persistent and convenient way to switch between primary destinations in an app.
+        Navigation drawers offer a persistent and convenient way to switch between primary destinations in an app.
 
-        Example:
+            Example:
 
-        ```
+            ```
+    import flet as ft
 
-        ```
 
-        -----
+    def main(page: ft.Page):
+        def item_selected_left(e):
+            print(e.control.selected_index)
 
-        Online docs: https://flet.dev/docs/controls/navigationdrawer
+        page.drawer = ft.NavigationDrawer(
+            elevation=40,
+            indicator_color=ft.colors.GREEN_200,
+            indicator_shape=ft.StadiumBorder(),
+            shadow_color=ft.colors.GREEN_900,
+            surface_tint_color=ft.colors.GREEN,
+            selected_index=-1,
+            on_change=item_selected_left,
+            controls=[
+                ft.Container(height=12),
+                ft.NavigationDrawerDestination(
+                    label="Item 1",
+                    icon=ft.icons.ABC,
+                    selected_icon_content=ft.Icon(ft.icons.ACCESS_ALARM),
+                ),
+                ft.Divider(thickness=2),
+                ft.NavigationDrawerDestination(
+                    icon_content=ft.Icon(ft.icons.MAIL),
+                    label="Item 2",
+                    selected_icon=ft.icons.PHISHING,
+                ),
+                ft.NavigationDrawerDestination(
+                    icon_content=ft.Icon(ft.icons.PHONE),
+                    label="Item 3",
+                    selected_icon=ft.icons.PHISHING,
+                ),
+            ],
+        )
+        page.end_drawer = ft.NavigationDrawer(
+            controls=[
+                ft.NavigationDrawerDestination(
+                    icon=ft.icons.ADD_TO_HOME_SCREEN_SHARP, label="Item 1"
+                ),
+                ft.NavigationDrawerDestination(icon=ft.icons.ADD_COMMENT, label="Item 2"),
+            ],
+        )
+
+        def show_drawer(e):
+            page.drawer.open = True
+            page.drawer.update()
+
+        def show_end_drawer(e):
+            page.end_drawer.open = True
+            page.end_drawer.update()
+
+        page.add(
+            ft.Row(
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                controls=[
+                    ft.ElevatedButton("Show drawer", on_click=show_drawer),
+                    ft.ElevatedButton("Show end drawer", on_click=show_end_drawer),
+                ],
+            )
+        )
+
+
+    ft.app(main)
+
+            ```
+
+            -----
+
+            Online docs: https://flet.dev/docs/controls/navigationdrawer
     """
 
     def __init__(
@@ -182,6 +206,7 @@ class NavigationDrawer(Control):
         indicator_shape: Optional[OutlinedBorder] = None,
         shadow_color: Optional[str] = None,
         surface_tint_color: Optional[str] = None,
+        tile_padding: PaddingValue = None,
         on_change=None,
     ):
         Control.__init__(
@@ -201,6 +226,7 @@ class NavigationDrawer(Control):
         self.indicator_shape = indicator_shape
         self.shadow_color = shadow_color
         self.surface_tint_color = surface_tint_color
+        self.tile_padding = tile_padding
 
         self.on_change = on_change
 
@@ -210,6 +236,7 @@ class NavigationDrawer(Control):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("indicatorShape", self.__indicator_shape)
+        self._set_attr_json("tilePadding", self.__tile_padding)
 
     def _get_children(self):
         children = []
@@ -233,15 +260,6 @@ class NavigationDrawer(Control):
     @controls.setter
     def controls(self, value: Optional[List[Control]]):
         self.__controls = value if value is not None else []
-
-    # on_change
-    @property
-    def on_change(self):
-        return self._get_event_handler("change")
-
-    @on_change.setter
-    def on_change(self, handler):
-        self._add_event_handler("change", handler)
 
     # selected_index
     @property
@@ -305,3 +323,21 @@ class NavigationDrawer(Control):
     @surface_tint_color.setter
     def surface_tint_color(self, value):
         self._set_attr("surfaceTintColor", value)
+
+    # tile_padding
+    @property
+    def tile_padding(self) -> PaddingValue:
+        return self.__tile_padding
+
+    @tile_padding.setter
+    def tile_padding(self, value: PaddingValue):
+        self.__tile_padding = value
+
+    # on_change
+    @property
+    def on_change(self):
+        return self._get_event_handler("change")
+
+    @on_change.setter
+    def on_change(self, handler):
+        self._add_event_handler("change", handler)
