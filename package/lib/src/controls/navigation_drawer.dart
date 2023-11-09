@@ -114,11 +114,12 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
             indicatorShape:
                 parseOutlinedBorder(widget.control, "indicatorShape"),
 
-            shadowColor: Colors.red,
             backgroundColor: HexColor.fromString(
                 Theme.of(context), widget.control.attrString("bgColor", "")!),
             surfaceTintColor: Colors.blue,
             selectedIndex: _selectedIndex,
+            shadowColor: HexColor.fromString(Theme.of(context),
+                widget.control.attrString("shadowColor", "")!),
             onDestinationSelected: _destinationChanged,
             children: children,
             // destinations: viewModel.controlViews.map((destView) {

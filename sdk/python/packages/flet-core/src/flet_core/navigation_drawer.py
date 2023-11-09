@@ -180,6 +180,7 @@ class NavigationDrawer(Control):
         elevation: OptionalNumber = None,
         indicator_color: Optional[str] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
+        shadow_color: Optional[str] = None,
         on_change=None,
     ):
         Control.__init__(
@@ -197,6 +198,7 @@ class NavigationDrawer(Control):
         self.elevation = elevation
         self.indicator_color = indicator_color
         self.indicator_shape = indicator_shape
+        self.shadow_color = shadow_color
 
         self.on_change = on_change
 
@@ -283,3 +285,12 @@ class NavigationDrawer(Control):
     @indicator_shape.setter
     def indicator_shape(self, value: Optional[OutlinedBorder]):
         self.__indicator_shape = value
+
+    # shadow_color
+    @property
+    def shadow_color(self):
+        return self._get_attr("shadowColor")
+
+    @shadow_color.setter
+    def shadow_color(self, value):
+        self._set_attr("shadowColor", value)
