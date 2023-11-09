@@ -116,10 +116,12 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
 
             backgroundColor: HexColor.fromString(
                 Theme.of(context), widget.control.attrString("bgColor", "")!),
-            surfaceTintColor: Colors.blue,
+
             selectedIndex: _selectedIndex,
             shadowColor: HexColor.fromString(Theme.of(context),
                 widget.control.attrString("shadowColor", "")!),
+            surfaceTintColor: HexColor.fromString(Theme.of(context),
+                widget.control.attrString("surfaceTintColor", "")!),
             onDestinationSelected: _destinationChanged,
             children: children,
             // destinations: viewModel.controlViews.map((destView) {

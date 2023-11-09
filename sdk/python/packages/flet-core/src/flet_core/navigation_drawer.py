@@ -181,6 +181,7 @@ class NavigationDrawer(Control):
         indicator_color: Optional[str] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
         shadow_color: Optional[str] = None,
+        surface_tint_color: Optional[str] = None,
         on_change=None,
     ):
         Control.__init__(
@@ -199,6 +200,7 @@ class NavigationDrawer(Control):
         self.indicator_color = indicator_color
         self.indicator_shape = indicator_shape
         self.shadow_color = shadow_color
+        self.surface_tint_color = surface_tint_color
 
         self.on_change = on_change
 
@@ -294,3 +296,12 @@ class NavigationDrawer(Control):
     @shadow_color.setter
     def shadow_color(self, value):
         self._set_attr("shadowColor", value)
+
+    # surface_tint_color
+    @property
+    def surface_tint_color(self):
+        return self._get_attr("surfaceTintColor")
+
+    @surface_tint_color.setter
+    def surface_tint_color(self, value):
+        self._set_attr("surfaceTintColor", value)
