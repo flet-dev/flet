@@ -12,23 +12,6 @@ from flet_core.types import (
     ScaleValue,
 )
 
-# try:
-#     from typing import Literal
-# except ImportError:
-#     from typing_extensions import Literal
-
-# NavigationBarLabelBehaviorString = Literal[
-#     None, "alwaysShow", "alwaysHide", "onlyShowSelected"
-# ]
-
-
-# class NavigationBarLabelBehavior(Enum):
-#     """Defines how the destinations' labels will be laid out and when they'll be displayed."""
-
-#     ALWAYS_SHOW = "alwaysShow"
-#     ALWAYS_HIDE = "alwaysHide"
-#     ONLY_SHOW_SELECTED = "onlyShowSelected"
-
 
 class NavigationDrawerDestination(Control):
     """
@@ -185,63 +168,19 @@ class NavigationDrawer(Control):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
-        # ref: Optional[Ref] = None,
-        # width: OptionalNumber = None,
-        # height: OptionalNumber = None,
-        # left: OptionalNumber = None,
-        # top: OptionalNumber = None,
-        # right: OptionalNumber = None,
-        # bottom: OptionalNumber = None,
-        # expand: Union[None, bool, int] = None,
-        # col: Optional[ResponsiveNumber] = None,
-        # opacity: OptionalNumber = None,
-        # rotate: RotateValue = None,
-        # scale: ScaleValue = None,
-        # offset: OffsetValue = None,
-        # aspect_ratio: OptionalNumber = None,
-        # animate_opacity: AnimationValue = None,
-        # animate_size: AnimationValue = None,
-        # animate_position: AnimationValue = None,
-        # animate_rotation: AnimationValue = None,
-        # animate_scale: AnimationValue = None,
-        # animate_offset: AnimationValue = None,
-        # on_animation_end=None,
-        # visible: Optional[bool] = None,
-        # disabled: Optional[bool] = None,
-        # data: Any = None,
         #
         # NavigationDrawer-specific
+        #
         open: bool = False,
         controls: Optional[List[Control]] = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
-        # label_behavior: Optional[NavigationBarLabelBehavior] = None,
         elevation: OptionalNumber = None,
         on_change=None,
     ):
         Control.__init__(
             self,
             ref=ref,
-            # width=width,
-            # height=height,
-            # left=left,
-            # top=top,
-            # right=right,
-            # bottom=bottom,
-            # expand=expand,
-            # col=col,
-            # opacity=opacity,
-            # rotate=rotate,
-            # scale=scale,
-            # offset=offset,
-            # aspect_ratio=aspect_ratio,
-            # animate_opacity=animate_opacity,
-            # animate_size=animate_size,
-            # animate_position=animate_position,
-            # animate_rotation=animate_rotation,
-            # animate_scale=animate_scale,
-            # animate_offset=animate_offset,
-            # on_animation_end=on_animation_end,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -250,7 +189,6 @@ class NavigationDrawer(Control):
         self.open = open
         self.controls = controls
         self.selected_index = selected_index
-        # self.label_behavior = label_behavior
         self.bgcolor = bgcolor
         self.elevation = elevation
         self.on_change = on_change
@@ -299,22 +237,6 @@ class NavigationDrawer(Control):
     def selected_index(self, value: Optional[int]):
         self._set_attr("selectedIndex", value)
 
-    # # label_behavior
-    # @property
-    # def label_behavior(self) -> Optional[NavigationBarLabelBehavior]:
-    #     return self.__label_behavior
-
-    # @label_behavior.setter
-    # def label_behavior(self, value: Optional[NavigationBarLabelBehavior]):
-    #     self.__label_behavior = value
-    #     if isinstance(value, NavigationBarLabelBehavior):
-    #         self._set_attr("labelType", value.value)
-    #     else:
-    #         self.__set_label_behavior(value)
-
-    # def __set_label_behavior(self, value: NavigationBarLabelBehaviorString):
-    #     self._set_attr("labelType", value)
-
     # bgcolor
     @property
     def bgcolor(self):
@@ -323,3 +245,12 @@ class NavigationDrawer(Control):
     @bgcolor.setter
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation")
+
+    @elevation.setter
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)

@@ -111,8 +111,12 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
             //height: widget.control.attrDouble("height"),
 
             elevation: widget.control.attrDouble("elevation"),
+            //elevation: 40,
+
+            shadowColor: Colors.red,
             backgroundColor: HexColor.fromString(
                 Theme.of(context), widget.control.attrString("bgColor", "")!),
+            surfaceTintColor: Colors.blue,
             selectedIndex: _selectedIndex,
             onDestinationSelected: _destinationChanged,
             children: children,
