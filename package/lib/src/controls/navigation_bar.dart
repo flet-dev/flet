@@ -79,6 +79,8 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
               labelBehavior: labelBehavior,
               height: widget.control.attrDouble("height"),
               elevation: widget.control.attrDouble("elevation"),
+              shadowColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("shadowColor", "")!),
               backgroundColor: HexColor.fromString(
                   Theme.of(context), widget.control.attrString("bgColor", "")!),
               selectedIndex: _selectedIndex,

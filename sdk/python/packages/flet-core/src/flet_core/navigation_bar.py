@@ -182,6 +182,7 @@ class NavigationBar(ConstrainedControl):
         bgcolor: Optional[str] = None,
         label_behavior: Optional[NavigationBarLabelBehavior] = None,
         elevation: OptionalNumber = None,
+        shadow_color: Optional[str] = None,
         on_change=None,
     ):
         ConstrainedControl.__init__(
@@ -217,6 +218,7 @@ class NavigationBar(ConstrainedControl):
         self.label_behavior = label_behavior
         self.bgcolor = bgcolor
         self.elevation = elevation
+        self.shadow_color = shadow_color
         self.on_change = on_change
 
     def _get_control_name(self):
@@ -235,15 +237,6 @@ class NavigationBar(ConstrainedControl):
     @destinations.setter
     def destinations(self, value: Optional[List[NavigationDestination]]):
         self.__destinations = value if value is not None else []
-
-    # on_change
-    @property
-    def on_change(self):
-        return self._get_event_handler("change")
-
-    @on_change.setter
-    def on_change(self, handler):
-        self._add_event_handler("change", handler)
 
     # selected_index
     @property
@@ -278,3 +271,30 @@ class NavigationBar(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation")
+
+    @elevation.setter
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
+
+    # shadow_color
+    @property
+    def shadow_color(self):
+        return self._get_attr("shadowColor")
+
+    @shadow_color.setter
+    def shadow_color(self, value):
+        self._set_attr("shadowColor", value)
+
+    # on_change
+    @property
+    def on_change(self):
+        return self._get_event_handler("change")
+
+    @on_change.setter
+    def on_change(self, handler):
+        self._add_event_handler("change", handler)
