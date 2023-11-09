@@ -12,6 +12,8 @@ from flet_core.types import (
     ScaleValue,
 )
 
+from flet_core.buttons import OutlinedBorder
+
 try:
     from typing import Literal
 except ImportError:
@@ -183,6 +185,9 @@ class NavigationBar(ConstrainedControl):
         label_behavior: Optional[NavigationBarLabelBehavior] = None,
         elevation: OptionalNumber = None,
         shadow_color: Optional[str] = None,
+        indicator_color: Optional[str] = None,
+        indicator_shape: Optional[OutlinedBorder] = None,
+        surface_tint_color: Optional[str] = None,
         on_change=None,
     ):
         ConstrainedControl.__init__(
@@ -219,10 +224,17 @@ class NavigationBar(ConstrainedControl):
         self.bgcolor = bgcolor
         self.elevation = elevation
         self.shadow_color = shadow_color
+        self.indicator_color = indicator_color
+        self.indicator_shape = indicator_shape
+        self.surface_tint_color = surface_tint_color
         self.on_change = on_change
 
     def _get_control_name(self):
         return "navigationbar"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("indicatorShape", self.__indicator_shape)
 
     def _get_children(self):
         children = []
@@ -289,6 +301,33 @@ class NavigationBar(ConstrainedControl):
     @shadow_color.setter
     def shadow_color(self, value):
         self._set_attr("shadowColor", value)
+
+    # indicator_color
+    @property
+    def indicator_color(self):
+        return self._get_attr("indicatorColor")
+
+    @indicator_color.setter
+    def indicator_color(self, value):
+        self._set_attr("indicatorColor", value)
+
+    # indicator_shape
+    @property
+    def indicator_shape(self) -> Optional[OutlinedBorder]:
+        return self.__indicator_shape
+
+    @indicator_shape.setter
+    def indicator_shape(self, value: Optional[OutlinedBorder]):
+        self.__indicator_shape = value
+
+    # surface_tint_color
+    @property
+    def surface_tint_color(self):
+        return self._get_attr("surfaceTintColor")
+
+    @surface_tint_color.setter
+    def surface_tint_color(self, value):
+        self._set_attr("surfaceTintColor", value)
 
     # on_change
     @property
