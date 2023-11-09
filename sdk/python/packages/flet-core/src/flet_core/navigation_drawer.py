@@ -109,13 +109,13 @@ class NavigationDrawerDestination(Control):
 
 class NavigationDrawer(Control):
     """
-        Material Design Navigation Drawer component.
+            Material Design Navigation Drawer component.
 
-        Navigation drawers offer a persistent and convenient way to switch between primary destinations in an app.
+            Navigation drawers offer a persistent and convenient way to switch between primary destinations in an app.
 
-            Example:
+                Example:
 
-            ```
+                ```
     import flet as ft
 
 
@@ -151,7 +151,8 @@ class NavigationDrawer(Control):
                 ),
             ],
         )
-        page.end_drawer = ft.NavigationDrawer(
+
+        end_drawer = ft.NavigationDrawer(
             controls=[
                 ft.NavigationDrawerDestination(
                     icon=ft.icons.ADD_TO_HOME_SCREEN_SHARP, label="Item 1"
@@ -165,8 +166,7 @@ class NavigationDrawer(Control):
             page.drawer.update()
 
         def show_end_drawer(e):
-            page.end_drawer.open = True
-            page.end_drawer.update()
+            page.show_end_drawer(end_drawer)
 
         page.add(
             ft.Row(
@@ -181,11 +181,11 @@ class NavigationDrawer(Control):
 
     ft.app(main)
 
-            ```
+                ```
 
-            -----
+                -----
 
-            Online docs: https://flet.dev/docs/controls/navigationdrawer
+                Online docs: https://flet.dev/docs/controls/navigationdrawer
     """
 
     def __init__(
