@@ -14,6 +14,7 @@
 * Fixed: cannot get height and width for page ([#1960](https://github.com/flet-dev/flet/issues/1960)).
 * Fixed: Put it the right version of flet ([#1997](https://github.com/flet-dev/flet/issues/1997)).
 * Fixed: `Chip.selected` property type changed to bool ([#2048](https://github.com/flet-dev/flet/issues/2048)).
+* Fixed: Unreliable detection of SVG images ([#2053](https://github.com/flet-dev/flet/issues/2053)).
 
 # 0.11.0
 
