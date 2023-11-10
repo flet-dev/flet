@@ -25,6 +25,7 @@ from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
+from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.protocol import Command
 from flet_core.querystring import QueryString
 from flet_core.session_storage import SessionStorage
@@ -1052,6 +1053,50 @@ class Page(Control):
             self.__offstage.bottom_sheet.open = False
             await self.__offstage.update_async()
 
+    # Drawer
+    #
+    def show_drawer(self, drawer: NavigationDrawer):
+        self.drawer = drawer
+        self.drawer.open = True
+        self.update()
+
+    async def show_drawer_async(self, drawer: NavigationDrawer):
+        self.drawer = drawer
+        self.drawer.open = True
+        await self.update_async()
+
+    def close_drawer(self):
+        if self.drawer is not None:
+            self.drawer.open = False
+            self.update()
+
+    async def close_drawer_async(self):
+        if self.drawer is not None:
+            self.drawer.open = False
+            await self.drawer.update_async()
+
+    # End_drawer
+    #
+    def show_end_drawer(self, end_drawer: NavigationDrawer):
+        self.end_drawer = end_drawer
+        self.end_drawer.open = True
+        self.update()
+
+    async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
+        self.end_drawer = end_drawer
+        self.end_drawer.open = True
+        await self.update_async()
+
+    def close_end_drawer(self):
+        if self.end_drawer is not None:
+            self.end_drawer.open = False
+            self.update()
+
+    async def close_end_drawer_async(self):
+        if self.end_drawer is not None:
+            self.end_drawer.open = False
+            await self.end_drawer.update_async()
+
     def window_destroy(self):
         self._set_attr("windowDestroy", "true")
         self.update()
@@ -1242,6 +1287,24 @@ class Page(Control):
     @navigation_bar.setter
     def navigation_bar(self, value: Optional[NavigationBar]):
         self.__default_view.navigation_bar = value
+
+    # drawer
+    @property
+    def drawer(self) -> Optional[NavigationDrawer]:
+        return self.__default_view.drawer
+
+    @drawer.setter
+    def drawer(self, value: Optional[NavigationDrawer]):
+        self.__default_view.drawer = value
+
+    # end_drawer
+    @property
+    def end_drawer(self) -> Optional[NavigationDrawer]:
+        return self.__default_view.end_drawer
+
+    @end_drawer.setter
+    def end_drawer(self, value: Optional[NavigationDrawer]):
+        self.__default_view.end_drawer = value
 
     # floating_action_button
     @property

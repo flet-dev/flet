@@ -5,49 +5,31 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
+    PaddingValue,
 )
 
 from flet_core.buttons import OutlinedBorder
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
-NavigationBarLabelBehaviorString = Literal[
-    None, "alwaysShow", "alwaysHide", "onlyShowSelected"
-]
+class NavigationDrawerDestination(Control):
+    """
+    Displays an icon with a label, for use in NavigationDrawer destinations.
 
-
-class NavigationBarLabelBehavior(Enum):
-    """Defines how the destinations' labels will be laid out and when they'll be displayed."""
-
-    ALWAYS_SHOW = "alwaysShow"
-    ALWAYS_HIDE = "alwaysHide"
-    ONLY_SHOW_SELECTED = "onlyShowSelected"
-
-
-class NavigationDestination(Control):
-    """Defines the appearance of the button items that are arrayed within the navigation bar.
-
-    The value must be a list of two or more NavigationDestination instances."""
+    """
 
     def __init__(
         self,
         ref: Optional[Ref] = None,
+        # bgcolor: Optional[str] = None,
         icon: Optional[str] = None,
         icon_content: Optional[Control] = None,
+        label: Optional[str] = None,
         selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
-        label: Optional[str] = None,
     ):
         Control.__init__(self, ref=ref)
         self.label = label
+        # self.bgcolor = bgcolor
         self.icon = icon
         self.__icon_content: Optional[Control] = None
         self.icon_content = icon_content
@@ -56,7 +38,7 @@ class NavigationDestination(Control):
         self.selected_icon_content = selected_icon_content
 
     def _get_control_name(self):
-        return "navigationdestination"
+        return "navigationdrawerdestination"
 
     def _get_children(self):
         children = []
@@ -69,6 +51,15 @@ class NavigationDestination(Control):
             )
             children.append(self.__selected_icon_content)
         return children
+
+    # # bgcolor
+    # @property
+    # def bgcolor(self):
+    #     return self._get_attr("bgColor")
+
+    # @bgcolor.setter
+    # def bgcolor(self, value):
+    #     self._set_attr("bgColor", value)
 
     # icon
     @property
@@ -116,139 +107,161 @@ class NavigationDestination(Control):
         self._set_attr("label", value)
 
 
-class NavigationBar(ConstrainedControl):
+class NavigationDrawer(Control):
     """
-    Material 3 Navigation Bar component.
+    Material Design Navigation Drawer component.
 
-    Navigation bars offer a persistent and convenient way to switch between primary destinations in an app.
+    Navigation Drawer is a panel slides in horizontally from the left or right edge of a page to show primary destinations in an app.
 
     Example:
 
     ```
     import flet as ft
 
+
     def main(page: ft.Page):
+        def item_selected_left(e):
+            print(e.control.selected_index)
 
-        page.title = "NavigationBar Example"
-        page.navigation_bar = ft.NavigationBar(
-            destinations=[
-                ft.NavigationDestination(icon=ft.icons.EXPLORE, label="Explore"),
-                ft.NavigationDestination(icon=ft.icons.COMMUTE, label="Commute"),
-                ft.NavigationDestination(
-                    icon=ft.icons.BOOKMARK_BORDER,
-                    selected_icon=ft.icons.BOOKMARK,
-                    label="Explore",
+        page.drawer = ft.NavigationDrawer(
+            elevation=40,
+            indicator_color=ft.colors.GREEN_200,
+            indicator_shape=ft.StadiumBorder(),
+            shadow_color=ft.colors.GREEN_900,
+            surface_tint_color=ft.colors.GREEN,
+            selected_index=-1,
+            on_change=item_selected_left,
+            controls=[
+                ft.Container(height=12),
+                ft.NavigationDrawerDestination(
+                    label="Item 1",
+                    icon=ft.icons.ABC,
+                    selected_icon_content=ft.Icon(ft.icons.ACCESS_ALARM),
                 ),
-            ]
+                ft.Divider(thickness=2),
+                ft.NavigationDrawerDestination(
+                    icon_content=ft.Icon(ft.icons.MAIL),
+                    label="Item 2",
+                    selected_icon=ft.icons.PHISHING,
+                ),
+                ft.NavigationDrawerDestination(
+                    icon_content=ft.Icon(ft.icons.PHONE),
+                    label="Item 3",
+                    selected_icon=ft.icons.PHISHING,
+                ),
+            ],
         )
-        page.add(ft.Text("Body!"))
 
-    ft.app(target=main)
+        end_drawer = ft.NavigationDrawer(
+            controls=[
+                ft.NavigationDrawerDestination(
+                    icon=ft.icons.ADD_TO_HOME_SCREEN_SHARP, label="Item 1"
+                ),
+                ft.NavigationDrawerDestination(icon=ft.icons.ADD_COMMENT, label="Item 2"),
+            ],
+        )
+
+        def show_drawer(e):
+            page.drawer.open = True
+            page.drawer.update()
+
+        def show_end_drawer(e):
+            page.show_end_drawer(end_drawer)
+
+        page.add(
+            ft.Row(
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                controls=[
+                    ft.ElevatedButton("Show drawer", on_click=show_drawer),
+                    ft.ElevatedButton("Show end drawer", on_click=show_end_drawer),
+                ],
+            )
+        )
+
+
+    ft.app(main)
+
     ```
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/navigationbar
+    Online docs: https://flet.dev/docs/controls/navigationdrawer
     """
 
     def __init__(
         self,
         ref: Optional[Ref] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        left: OptionalNumber = None,
-        top: OptionalNumber = None,
-        right: OptionalNumber = None,
-        bottom: OptionalNumber = None,
-        expand: Union[None, bool, int] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
-        aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
         data: Any = None,
         #
-        # NavigationRail-specific
-        destinations: Optional[List[NavigationDestination]] = None,
+        # NavigationDrawer-specific
+        #
+        open: bool = False,
+        controls: Optional[List[Control]] = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
-        label_behavior: Optional[NavigationBarLabelBehavior] = None,
         elevation: OptionalNumber = None,
-        shadow_color: Optional[str] = None,
         indicator_color: Optional[str] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
+        shadow_color: Optional[str] = None,
         surface_tint_color: Optional[str] = None,
+        tile_padding: PaddingValue = None,
         on_change=None,
+        on_dismiss=None,
     ):
-        ConstrainedControl.__init__(
+        Control.__init__(
             self,
             ref=ref,
-            width=width,
-            height=height,
-            left=left,
-            top=top,
-            right=right,
-            bottom=bottom,
-            expand=expand,
-            col=col,
-            opacity=opacity,
-            rotate=rotate,
-            scale=scale,
-            offset=offset,
-            aspect_ratio=aspect_ratio,
-            animate_opacity=animate_opacity,
-            animate_size=animate_size,
-            animate_position=animate_position,
-            animate_rotation=animate_rotation,
-            animate_scale=animate_scale,
-            animate_offset=animate_offset,
-            on_animation_end=on_animation_end,
             visible=visible,
             disabled=disabled,
             data=data,
         )
 
-        self.destinations = destinations
+        self.open = open
+        self.controls = controls
         self.selected_index = selected_index
-        self.label_behavior = label_behavior
         self.bgcolor = bgcolor
         self.elevation = elevation
-        self.shadow_color = shadow_color
         self.indicator_color = indicator_color
         self.indicator_shape = indicator_shape
+        self.shadow_color = shadow_color
         self.surface_tint_color = surface_tint_color
+        self.tile_padding = tile_padding
+
         self.on_change = on_change
+        self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
-        return "navigationbar"
+        return "navigationdrawer"
 
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("indicatorShape", self.__indicator_shape)
+        self._set_attr_json("tilePadding", self.__tile_padding)
 
     def _get_children(self):
         children = []
-        children.extend(self.__destinations)
+        children.extend(self.__controls)
         return children
 
-    # destinations
+    # open
     @property
-    def destinations(self) -> Optional[List[NavigationDestination]]:
-        return self.__destinations
+    def open(self) -> Optional[bool]:
+        return self._get_attr("open", data_type="bool", def_value=False)
 
-    @destinations.setter
-    def destinations(self, value: Optional[List[NavigationDestination]]):
-        self.__destinations = value if value is not None else []
+    @open.setter
+    def open(self, value: Optional[bool]):
+        self._set_attr("open", value)
+
+    # controls
+    @property
+    def controls(self) -> Optional[List[Control]]:
+        return self.__controls
+
+    @controls.setter
+    def controls(self, value: Optional[List[Control]]):
+        self.__controls = value if value is not None else []
 
     # selected_index
     @property
@@ -258,22 +271,6 @@ class NavigationBar(ConstrainedControl):
     @selected_index.setter
     def selected_index(self, value: Optional[int]):
         self._set_attr("selectedIndex", value)
-
-    # label_behavior
-    @property
-    def label_behavior(self) -> Optional[NavigationBarLabelBehavior]:
-        return self.__label_behavior
-
-    @label_behavior.setter
-    def label_behavior(self, value: Optional[NavigationBarLabelBehavior]):
-        self.__label_behavior = value
-        if isinstance(value, NavigationBarLabelBehavior):
-            self._set_attr("labelType", value.value)
-        else:
-            self.__set_label_behavior(value)
-
-    def __set_label_behavior(self, value: NavigationBarLabelBehaviorString):
-        self._set_attr("labelType", value)
 
     # bgcolor
     @property
@@ -293,15 +290,6 @@ class NavigationBar(ConstrainedControl):
     def elevation(self, value: OptionalNumber):
         self._set_attr("elevation", value)
 
-    # shadow_color
-    @property
-    def shadow_color(self):
-        return self._get_attr("shadowColor")
-
-    @shadow_color.setter
-    def shadow_color(self, value):
-        self._set_attr("shadowColor", value)
-
     # indicator_color
     @property
     def indicator_color(self):
@@ -320,6 +308,15 @@ class NavigationBar(ConstrainedControl):
     def indicator_shape(self, value: Optional[OutlinedBorder]):
         self.__indicator_shape = value
 
+    # shadow_color
+    @property
+    def shadow_color(self):
+        return self._get_attr("shadowColor")
+
+    @shadow_color.setter
+    def shadow_color(self, value):
+        self._set_attr("shadowColor", value)
+
     # surface_tint_color
     @property
     def surface_tint_color(self):
@@ -329,6 +326,15 @@ class NavigationBar(ConstrainedControl):
     def surface_tint_color(self, value):
         self._set_attr("surfaceTintColor", value)
 
+    # tile_padding
+    @property
+    def tile_padding(self) -> PaddingValue:
+        return self.__tile_padding
+
+    @tile_padding.setter
+    def tile_padding(self, value: PaddingValue):
+        self.__tile_padding = value
+
     # on_change
     @property
     def on_change(self):
@@ -337,3 +343,12 @@ class NavigationBar(ConstrainedControl):
     @on_change.setter
     def on_change(self, handler):
         self._add_event_handler("change", handler)
+
+    # on_dismiss
+    @property
+    def on_dismiss(self):
+        return self._get_event_handler("dismiss")
+
+    @on_dismiss.setter
+    def on_dismiss(self, handler):
+        self._add_event_handler("dismiss", handler)

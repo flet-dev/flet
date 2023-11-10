@@ -207,3 +207,4 @@ from flet_core.window_drag_area import WindowDragArea
 from flet_core.webview import WebView
 from flet_core.range_slider import RangeSlider
 from flet_core.badge import Badge
+from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination

@@ -17,6 +17,7 @@ import '../models/page_args_model.dart';
 import '../models/page_media_view_model.dart';
 import '../models/routes_view_model.dart';
 import '../protocol/keyboard_event.dart';
+import '../protocol/update_control_props_payload.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
@@ -34,6 +35,7 @@ import '../widgets/page_media.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
+import 'navigation_drawer.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
@@ -90,6 +92,8 @@ class _PageControlState extends State<PageControl> {
   late final RouteParser _routeParser;
   String? _prevViewRoutes;
   bool _keyboardHandlerSubscribed = false;
+  bool? _drawerOpened;
+  bool? _endDrawerOpened;
 
   @override
   void initState() {
@@ -598,6 +602,8 @@ class _PageControlState extends State<PageControl> {
           Control? appBar;
           Control? fab;
           Control? navBar;
+          Control? drawer;
+          Control? endDrawer;
           List<Widget> controls = [];
           bool firstControl = true;
 
@@ -610,6 +616,13 @@ class _PageControlState extends State<PageControl> {
               continue;
             } else if (ctrl.type == "navigationbar") {
               navBar = ctrl;
+              continue;
+            } else if (ctrl.type == "navigationdrawer" &&
+                ctrl.name == "start") {
+              drawer = ctrl;
+              continue;
+            } else if (ctrl.type == "navigationdrawer" && ctrl.name == "end") {
+              endDrawer = ctrl;
               continue;
             }
             // spacer between displayed controls
@@ -626,10 +639,8 @@ class _PageControlState extends State<PageControl> {
             controls.add(createControl(control, ctrl.id, control.isDisabled));
           }
 
-          List<String> childIds = [];
-          if (appBar != null) {
-            childIds.add(appBar.id);
-          }
+          List<String> childIds =
+              [appBar?.id, drawer?.id, endDrawer?.id].whereNotNull().toList();
 
           final textDirection = parent.attrBool("rtl", false)!
               ? TextDirection.rtl
@@ -651,10 +662,12 @@ class _PageControlState extends State<PageControl> {
               builder: (context, childrenViews) {
                 debugPrint("Route view StoreConnector build: $viewId");
 
-                var appBarView =
-                    appBar != null && childrenViews.controlViews.isNotEmpty
-                        ? childrenViews.controlViews.last
-                        : null;
+                var appBarView = childrenViews.controlViews.firstWhereOrNull(
+                    (v) => v.control.id == (appBar?.id ?? ""));
+                var drawerView = childrenViews.controlViews.firstWhereOrNull(
+                    (v) => v.control.id == (drawer?.id ?? ""));
+                var endDrawerView = childrenViews.controlViews.firstWhereOrNull(
+                    (v) => v.control.id == (endDrawer?.id ?? ""));
 
                 var column = Column(
                     mainAxisAlignment: mainAlignment,
@@ -673,7 +686,55 @@ class _PageControlState extends State<PageControl> {
                       ScrollNotificationControl(control: control, child: child);
                 }
 
+                GlobalKey<ScaffoldState>? scaffoldKey =
+                    FletAppServices.of(context).globalKeys["_scaffold"]
+                        as GlobalKey<ScaffoldState>?;
+                if (scaffoldKey == null) {
+                  scaffoldKey = GlobalKey<ScaffoldState>();
+                  FletAppServices.of(context).globalKeys["_scaffold"] =
+                      scaffoldKey;
+                }
+
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (drawerView != null) {
+                    if (drawerView.control.attrBool("open", false)! &&
+                        _drawerOpened != true) {
+                      if (scaffoldKey?.currentState?.isEndDrawerOpen == true) {
+                        scaffoldKey?.currentState?.closeEndDrawer();
+                      }
+                      Future.delayed(const Duration(milliseconds: 1))
+                          .then((value) {
+                        scaffoldKey?.currentState?.openDrawer();
+                        _drawerOpened = true;
+                      });
+                    } else if (!drawerView.control.attrBool("open", false)! &&
+                        _drawerOpened == true) {
+                      scaffoldKey?.currentState?.closeDrawer();
+                      _drawerOpened = false;
+                    }
+                  }
+                  if (endDrawerView != null) {
+                    if (endDrawerView.control.attrBool("open", false)! &&
+                        _endDrawerOpened != true) {
+                      if (scaffoldKey?.currentState?.isDrawerOpen == true) {
+                        scaffoldKey?.currentState?.closeDrawer();
+                      }
+                      Future.delayed(const Duration(milliseconds: 1))
+                          .then((value) {
+                        scaffoldKey?.currentState?.openEndDrawer();
+                        _endDrawerOpened = true;
+                      });
+                    } else if (!endDrawerView.control
+                            .attrBool("open", false)! &&
+                        _endDrawerOpened == true) {
+                      scaffoldKey?.currentState?.closeEndDrawer();
+                      _endDrawerOpened = false;
+                    }
+                  }
+                });
+
                 var scaffold = Scaffold(
+                  key: scaffoldKey,
                   backgroundColor: HexColor.fromString(
                       Theme.of(context), control.attrString("bgcolor", "")!),
                   appBar: appBarView != null
@@ -685,6 +746,56 @@ class _PageControlState extends State<PageControl> {
                           height: appBarView.control
                               .attrDouble("toolbarHeight", kToolbarHeight)!)
                       : null,
+                  drawer: drawerView != null
+                      ? NavigationDrawerControl(
+                          control: drawerView.control,
+                          children: drawerView.children,
+                          parentDisabled: control.isDisabled,
+                          dispatch: widget.dispatch,
+                        )
+                      : null,
+                  onDrawerChanged: (opened) {
+                    if (drawerView != null && !opened) {
+                      _drawerOpened = false;
+                      List<Map<String, String>> props = [
+                        {"i": drawerView.control.id, "open": "false"}
+                      ];
+                      widget.dispatch(UpdateControlPropsAction(
+                          UpdateControlPropsPayload(props: props)));
+                      FletAppServices.of(context)
+                          .server
+                          .updateControlProps(props: props);
+                      FletAppServices.of(context).server.sendPageEvent(
+                          eventTarget: drawerView.control.id,
+                          eventName: "dismiss",
+                          eventData: "");
+                    }
+                  },
+                  endDrawer: endDrawerView != null
+                      ? NavigationDrawerControl(
+                          control: endDrawerView.control,
+                          children: endDrawerView.children,
+                          parentDisabled: control.isDisabled,
+                          dispatch: widget.dispatch,
+                        )
+                      : null,
+                  onEndDrawerChanged: (opened) {
+                    if (endDrawerView != null && !opened) {
+                      _endDrawerOpened = false;
+                      List<Map<String, String>> props = [
+                        {"i": endDrawerView.control.id, "open": "false"}
+                      ];
+                      widget.dispatch(UpdateControlPropsAction(
+                          UpdateControlPropsPayload(props: props)));
+                      FletAppServices.of(context)
+                          .server
+                          .updateControlProps(props: props);
+                      FletAppServices.of(context).server.sendPageEvent(
+                          eventTarget: endDrawerView.control.id,
+                          eventName: "dismiss",
+                          eventData: "");
+                    }
+                  },
                   body: Stack(children: [
                     SizedBox.expand(
                         child: Container(

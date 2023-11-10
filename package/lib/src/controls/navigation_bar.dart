@@ -11,6 +11,7 @@ import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
+import '../utils/borders.dart';
 
 class NavigationBarControl extends StatefulWidget {
   final Control? parent;
@@ -79,6 +80,14 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
               labelBehavior: labelBehavior,
               height: widget.control.attrDouble("height"),
               elevation: widget.control.attrDouble("elevation"),
+              shadowColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("shadowColor", "")!),
+              surfaceTintColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("surfaceTintColor", "")!),
+              indicatorColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("indicatorColor", "")!),
+              indicatorShape:
+                  parseOutlinedBorder(widget.control, "indicatorShape"),
               backgroundColor: HexColor.fromString(
                   Theme.of(context), widget.control.attrString("bgColor", "")!),
               selectedIndex: _selectedIndex,
