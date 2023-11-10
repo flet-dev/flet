@@ -1,3 +1,20 @@
+# 0.12.0
+
+* `NavigationDrawer` control ([docs](https://flet.dev/docs/controls/navigationdrawer)).
+* `Badge` control ([docs](https://flet.dev/docs/controls/badge)).
+* `RangeSlider` control ([docs](https://flet.dev/docs/controls/rangeslider)).
+* `WebView` control ([docs](https://flet.dev/docs/controls/webview)).
+* `Cookiecutter` replaces `Copier` ([#2014](https://github.com/flet-dev/flet/issues/2014)).
+* `page.go()`: ability to skip route change event ([#2039](https://github.com/flet-dev/flet/issues/2039)).
+* Fixed: Two `Datepicker` Opening Issue ([#2025](https://github.com/flet-dev/flet/issues/2025)).
+* Fixed: Using Audio and FilePicker at the same time, when click on the FilePicker, the audio automatically replays ([#1807](https://github.com/flet-dev/flet/issues/1807)).
+* Fixed: Audio issue while Route Changing ([#1236](https://github.com/flet-dev/flet/issues/1236)).
+* Fixed: Snackbar cause Audio stop playing ([#1772](https://github.com/flet-dev/flet/issues/1772)).
+* Fixed: `scroll_to()` with zero duration does nothing ([#1659](https://github.com/flet-dev/flet/issues/1659)).
+* Fixed: cannot get height and width for page ([#1960](https://github.com/flet-dev/flet/issues/1960)).
+* Fixed: Put it the right version of flet ([#1997](https://github.com/flet-dev/flet/issues/1997)).
+* Fixed: `Chip.selected` property type changed to bool ([#2048](https://github.com/flet-dev/flet/issues/2048)).
+
 # 0.11.0
 
 * `DatePicker` control ([docs](https://flet.dev/docs/controls/datepicker)).
