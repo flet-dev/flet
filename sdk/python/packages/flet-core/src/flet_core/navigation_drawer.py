@@ -208,6 +208,7 @@ class NavigationDrawer(Control):
         surface_tint_color: Optional[str] = None,
         tile_padding: PaddingValue = None,
         on_change=None,
+        on_dismiss=None,
     ):
         Control.__init__(
             self,
@@ -229,6 +230,7 @@ class NavigationDrawer(Control):
         self.tile_padding = tile_padding
 
         self.on_change = on_change
+        self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
         return "navigationdrawer"
@@ -341,3 +343,12 @@ class NavigationDrawer(Control):
     @on_change.setter
     def on_change(self, handler):
         self._add_event_handler("change", handler)
+
+    # on_dismiss
+    @property
+    def on_dismiss(self):
+        return self._get_event_handler("dismiss")
+
+    @on_dismiss.setter
+    def on_dismiss(self, handler):
+        self._add_event_handler("dismiss", handler)
