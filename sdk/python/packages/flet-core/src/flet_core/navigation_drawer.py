@@ -152,7 +152,7 @@ class NavigationDrawer(Control):
             ],
         )
 
-        end_drawer = ft.NavigationDrawer(
+        page.end_drawer = ft.NavigationDrawer(
             controls=[
                 ft.NavigationDrawerDestination(
                     icon=ft.icons.ADD_TO_HOME_SCREEN_SHARP, label="Item 1"
@@ -166,7 +166,8 @@ class NavigationDrawer(Control):
             page.drawer.update()
 
         def show_end_drawer(e):
-            page.show_end_drawer(end_drawer)
+            page.end_drawer.open = True
+            page.end_drawer.update()
 
         page.add(
             ft.Row(
@@ -180,7 +181,6 @@ class NavigationDrawer(Control):
 
 
     ft.app(main)
-
     ```
 
     -----
