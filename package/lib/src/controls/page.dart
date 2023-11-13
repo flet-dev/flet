@@ -686,13 +686,11 @@ class _PageControlState extends State<PageControl> {
                       ScrollNotificationControl(control: control, child: child);
                 }
 
-                GlobalKey<ScaffoldState>? scaffoldKey =
-                    FletAppServices.of(context).globalKeys["_scaffold"]
-                        as GlobalKey<ScaffoldState>?;
+                GlobalKey<ScaffoldState>? scaffoldKey = controlView
+                    .control.state["_scaffold"] as GlobalKey<ScaffoldState>?;
                 if (scaffoldKey == null) {
                   scaffoldKey = GlobalKey<ScaffoldState>();
-                  FletAppServices.of(context).globalKeys["_scaffold"] =
-                      scaffoldKey;
+                  controlView.control.state["_scaffold"] = scaffoldKey;
                 }
 
                 void dismissDrawer(String id) {
