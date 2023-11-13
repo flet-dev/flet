@@ -695,8 +695,26 @@ class _PageControlState extends State<PageControl> {
                       scaffoldKey;
                 }
 
+                void dismissDrawer(String id) {
+                  List<Map<String, String>> props = [
+                    {"i": id, "open": "false"}
+                  ];
+                  widget.dispatch(UpdateControlPropsAction(
+                      UpdateControlPropsPayload(props: props)));
+                  FletAppServices.of(context)
+                      .server
+                      .updateControlProps(props: props);
+                  FletAppServices.of(context).server.sendPageEvent(
+                      eventTarget: id, eventName: "dismiss", eventData: "");
+                }
+
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (drawerView != null) {
+                    if (scaffoldKey?.currentState?.isDrawerOpen == false &&
+                        _drawerOpened == true) {
+                      _drawerOpened = false;
+                      dismissDrawer(drawerView.control.id);
+                    }
                     if (drawerView.control.attrBool("open", false)! &&
                         _drawerOpened != true) {
                       if (scaffoldKey?.currentState?.isEndDrawerOpen == true) {
@@ -714,6 +732,11 @@ class _PageControlState extends State<PageControl> {
                     }
                   }
                   if (endDrawerView != null) {
+                    if (scaffoldKey?.currentState?.isEndDrawerOpen == false &&
+                        _endDrawerOpened == true) {
+                      _endDrawerOpened = false;
+                      dismissDrawer(endDrawerView.control.id);
+                    }
                     if (endDrawerView.control.attrBool("open", false)! &&
                         _endDrawerOpened != true) {
                       if (scaffoldKey?.currentState?.isDrawerOpen == true) {
@@ -757,18 +780,7 @@ class _PageControlState extends State<PageControl> {
                   onDrawerChanged: (opened) {
                     if (drawerView != null && !opened) {
                       _drawerOpened = false;
-                      List<Map<String, String>> props = [
-                        {"i": drawerView.control.id, "open": "false"}
-                      ];
-                      widget.dispatch(UpdateControlPropsAction(
-                          UpdateControlPropsPayload(props: props)));
-                      FletAppServices.of(context)
-                          .server
-                          .updateControlProps(props: props);
-                      FletAppServices.of(context).server.sendPageEvent(
-                          eventTarget: drawerView.control.id,
-                          eventName: "dismiss",
-                          eventData: "");
+                      dismissDrawer(drawerView.control.id);
                     }
                   },
                   endDrawer: endDrawerView != null
@@ -782,18 +794,7 @@ class _PageControlState extends State<PageControl> {
                   onEndDrawerChanged: (opened) {
                     if (endDrawerView != null && !opened) {
                       _endDrawerOpened = false;
-                      List<Map<String, String>> props = [
-                        {"i": endDrawerView.control.id, "open": "false"}
-                      ];
-                      widget.dispatch(UpdateControlPropsAction(
-                          UpdateControlPropsPayload(props: props)));
-                      FletAppServices.of(context)
-                          .server
-                          .updateControlProps(props: props);
-                      FletAppServices.of(context).server.sendPageEvent(
-                          eventTarget: endDrawerView.control.id,
-                          eventName: "dismiss",
-                          eventData: "");
+                      dismissDrawer(endDrawerView.control.id);
                     }
                   },
                   body: Stack(children: [
