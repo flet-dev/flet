@@ -30,8 +30,6 @@ class BottomSheetControl extends StatefulWidget {
 }
 
 class _BottomSheetControlState extends State<BottomSheetControl> {
-  bool _open = false;
-
   Widget _createBottomSheet() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var contentCtrls = widget.children.where((c) => c.name == "content");
@@ -47,6 +45,10 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
   Widget build(BuildContext context) {
     debugPrint("BottomSheet build: ${widget.control.id}");
 
+    var server = FletAppServices.of(context).server;
+
+    bool lastOpen = widget.control.state["open"] ?? false;
+
     var open = widget.control.attrBool("open", false)!;
     //var modal = widget.control.attrBool("modal", true)!;
     var dismissible = widget.control.attrBool("dismissible", true)!;
@@ -60,20 +62,16 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
       ];
       widget.dispatch(
           UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      FletAppServices.of(context).server.updateControlProps(props: props);
+      server.updateControlProps(props: props);
     }
 
-    if (!open && _open) {
-      _open = false;
-      resetOpenState();
-      Navigator.pop(context);
-    } else if (open && !_open) {
+    if (open && !lastOpen) {
       var bottomSheet = _createBottomSheet();
       if (bottomSheet is ErrorControl) {
         return bottomSheet;
       }
 
-      _open = open;
+      widget.control.state["open"] = open;
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showModalBottomSheet<void>(
@@ -86,21 +84,24 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                 showDragHandle: showDragHandle,
                 useSafeArea: useSafeArea)
             .then((value) {
-          debugPrint("BottomSheet dismissed: $_open");
-          bool shouldDismiss = _open;
-          _open = false;
+          lastOpen = widget.control.state["open"] ?? false;
+          debugPrint("BottomSheet dismissed: $lastOpen");
+          bool shouldDismiss = lastOpen;
+          widget.control.state["open"] = false;
 
           if (shouldDismiss) {
             resetOpenState();
-            FletAppServices.of(context).server.sendPageEvent(
+            server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "dismiss",
                 eventData: "");
           }
         });
       });
+    } else if (open != lastOpen && lastOpen) {
+      Navigator.pop(context);
     }
 
-    return widget.nextChild ?? const SizedBox.shrink();
+    return const SizedBox.shrink();
   }
 }
