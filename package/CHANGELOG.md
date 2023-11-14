@@ -1,3 +1,11 @@
+# 0.12.1
+
+* Fixed: `NavigationDrawer` disappears when you move the window and is not opening again ([#2062](https://github.com/flet-dev/flet/issues/2062)).
+* Fixed: alert dialog doesn't close ([#2011](https://github.com/flet-dev/flet/issues/2011)).
+* Fixed: Resizing app's window with an opened BottomSheet triggers new addition to Overlay ([#2075](https://github.com/flet-dev/flet/issues/2075)).
+* Fixed: on_window_event isnt handled after page navigation ([#2081](https://github.com/flet-dev/flet/issues/2081)).
+* Fixed: Routing is not working in 0.12.0 ([#2082](https://github.com/flet-dev/flet/issues/2082)).
+
 # 0.12.0
 
 * `NavigationDrawer` control ([docs](https://flet.dev/docs/controls/navigationdrawer)).
