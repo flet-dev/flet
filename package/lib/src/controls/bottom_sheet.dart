@@ -55,6 +55,8 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
     var enableDrag = widget.control.attrBool("enableDrag", false)!;
     var showDragHandle = widget.control.attrBool("showDragHandle", false)!;
     var useSafeArea = widget.control.attrBool("useSafeArea", true)!;
+    var isScrollControlled =
+        widget.control.attrBool("isScrollControlled", false)!;
 
     void resetOpenState() {
       List<Map<String, String>> props = [
@@ -80,6 +82,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                   return bottomSheet;
                 },
                 isDismissible: dismissible,
+                isScrollControlled: isScrollControlled,
                 enableDrag: enableDrag,
                 showDragHandle: showDragHandle,
                 useSafeArea: useSafeArea)
