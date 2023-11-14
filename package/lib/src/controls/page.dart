@@ -28,9 +28,9 @@ import '../utils/edge_insets.dart';
 import '../utils/images.dart';
 import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
+import '../widgets/animated_transition_page.dart';
 import '../widgets/fade_transition_page.dart';
 import '../widgets/loading_page.dart';
-import '../widgets/no_animation_page.dart';
 import '../widgets/page_media.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
@@ -536,15 +536,16 @@ class _PageControlState extends State<PageControl> {
                   loadingPage: loadingPage,
                   dispatch: widget.dispatch);
 
+              debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
+
               return _prevViewRoutes == null
-                  ? FadeTransitionPage(key: key, child: child)
-                  : _prevViewRoutes == viewRoutes
-                      ? NoAnimationPage(key: key, child: child)
-                      : MaterialPage(
-                          key: key,
-                          child: child,
-                          fullscreenDialog:
-                              view.attrBool("fullscreenDialog", false)!);
+                  ? AnimatedTransitionPage(
+                      key: key, child: child, fadeTransition: true)
+                  : AnimatedTransitionPage(
+                      key: key,
+                      child: child,
+                      fullscreenDialog:
+                          view.attrBool("fullscreenDialog", false)!);
             }).toList();
 
             _prevViewRoutes = viewRoutes;
