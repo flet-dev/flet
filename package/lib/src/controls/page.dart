@@ -29,7 +29,6 @@ import '../utils/images.dart';
 import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
-import '../widgets/fade_transition_page.dart';
 import '../widgets/loading_page.dart';
 import '../widgets/page_media.dart';
 import '../widgets/window_media.dart';
@@ -482,7 +481,8 @@ class _PageControlState extends State<PageControl> {
 
           List<Page<dynamic>> pages = [];
           if (routesView.views.isEmpty) {
-            pages.add(FadeTransitionPage(
+            pages.add(AnimatedTransitionPage(
+                fadeTransition: true,
                 child: hideLoadingPage
                     ? const Scaffold(
                         body: PageMedia(),
