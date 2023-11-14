@@ -94,6 +94,11 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
               return dialog;
             }
 
+            // close previous dialog
+            if (ModalRoute.of(context)?.isCurrent != true) {
+              Navigator.pop(context);
+            }
+
             widget.control.state["open"] = open;
 
             WidgetsBinding.instance.addPostFrameCallback((_) {

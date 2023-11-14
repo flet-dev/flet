@@ -536,7 +536,7 @@ class _PageControlState extends State<PageControl> {
                   loadingPage: loadingPage,
                   dispatch: widget.dispatch);
 
-              debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
+              //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
 
               return _prevViewRoutes == null
                   ? AnimatedTransitionPage(
