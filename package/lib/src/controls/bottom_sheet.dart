@@ -30,22 +30,14 @@ class BottomSheetControl extends StatefulWidget {
 }
 
 class _BottomSheetControlState extends State<BottomSheetControl> {
-  bool _open = false;
-
-  Widget _createBottomSheet() {
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    var contentCtrls = widget.children.where((c) => c.name == "content");
-
-    if (contentCtrls.isEmpty) {
-      return const ErrorControl("BottomSheet does not have a content.");
-    }
-
-    return createControl(widget.control, contentCtrls.first.id, disabled);
-  }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("BottomSheet build: ${widget.control.id}");
+
+    var server = FletAppServices.of(context).server;
+
+    bool lastOpen = widget.control.state["open"] ?? false;
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var open = widget.control.attrBool("open", false)!;
     //var modal = widget.control.attrBool("modal", true)!;
@@ -53,6 +45,10 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
     var enableDrag = widget.control.attrBool("enableDrag", false)!;
     var showDragHandle = widget.control.attrBool("showDragHandle", false)!;
     var useSafeArea = widget.control.attrBool("useSafeArea", true)!;
+    var isScrollControlled =
+        widget.control.attrBool("isScrollControlled", false)!;
+    var maintainBottomViewInsetsPadding =
+        widget.control.attrBool("maintainBottomViewInsetsPadding", true)!;
 
     void resetOpenState() {
       List<Map<String, String>> props = [
@@ -60,47 +56,68 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
       ];
       widget.dispatch(
           UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      FletAppServices.of(context).server.updateControlProps(props: props);
+      server.updateControlProps(props: props);
     }
 
-    if (!open && _open) {
-      _open = false;
-      resetOpenState();
-      Navigator.pop(context);
-    } else if (open && !_open) {
-      var bottomSheet = _createBottomSheet();
-      if (bottomSheet is ErrorControl) {
-        return bottomSheet;
-      }
-
-      _open = open;
+    if (open && !lastOpen) {
+      widget.control.state["open"] = open;
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showModalBottomSheet<void>(
                 context: context,
                 builder: (context) {
-                  return bottomSheet;
+                  var contentCtrls =
+                      widget.children.where((c) => c.name == "content");
+
+                  if (contentCtrls.isEmpty) {
+                    return const ErrorControl(
+                        "BottomSheet does not have a content.");
+                  }
+
+                  var content = createControl(
+                      widget.control, contentCtrls.first.id, disabled);
+
+                  if (content is ErrorControl) {
+                    return content;
+                  }
+
+                  if (maintainBottomViewInsetsPadding) {
+                    var bottomPadding =
+                        MediaQuery.of(context).viewInsets.bottom;
+                    debugPrint("bottomPadding: $bottomPadding");
+                    content = Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: content,
+                    );
+                  }
+
+                  return content;
                 },
                 isDismissible: dismissible,
+                isScrollControlled: isScrollControlled,
                 enableDrag: enableDrag,
                 showDragHandle: showDragHandle,
                 useSafeArea: useSafeArea)
             .then((value) {
-          debugPrint("BottomSheet dismissed: $_open");
-          bool shouldDismiss = _open;
-          _open = false;
+          lastOpen = widget.control.state["open"] ?? false;
+          debugPrint("BottomSheet dismissed: $lastOpen");
+          bool shouldDismiss = lastOpen;
+          widget.control.state["open"] = false;
 
           if (shouldDismiss) {
             resetOpenState();
-            FletAppServices.of(context).server.sendPageEvent(
+            server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "dismiss",
                 eventData: "");
           }
         });
       });
+    } else if (open != lastOpen && lastOpen) {
+      Navigator.pop(context);
     }
 
-    return widget.nextChild ?? const SizedBox.shrink();
+    return const SizedBox.shrink();
   }
 }

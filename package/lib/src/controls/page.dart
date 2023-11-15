@@ -28,9 +28,8 @@ import '../utils/edge_insets.dart';
 import '../utils/images.dart';
 import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
-import '../widgets/fade_transition_page.dart';
+import '../widgets/animated_transition_page.dart';
 import '../widgets/loading_page.dart';
-import '../widgets/no_animation_page.dart';
 import '../widgets/page_media.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
@@ -92,8 +91,6 @@ class _PageControlState extends State<PageControl> {
   late final RouteParser _routeParser;
   String? _prevViewRoutes;
   bool _keyboardHandlerSubscribed = false;
-  bool? _drawerOpened;
-  bool? _endDrawerOpened;
 
   @override
   void initState() {
@@ -484,7 +481,8 @@ class _PageControlState extends State<PageControl> {
 
           List<Page<dynamic>> pages = [];
           if (routesView.views.isEmpty) {
-            pages.add(FadeTransitionPage(
+            pages.add(AnimatedTransitionPage(
+                fadeTransition: true,
                 child: hideLoadingPage
                     ? const Scaffold(
                         body: PageMedia(),
@@ -528,19 +526,26 @@ class _PageControlState extends State<PageControl> {
             String viewRoutes = routesView.views
                 .map((v) => v.attrString("route") ?? v.id)
                 .join();
+
             pages = routesView.views.map((view) {
               var key = ValueKey(view.attrString("route") ?? view.id);
-              var child = _buildViewWidget(routesView.page, view.id,
-                  overlayWidgets(view.id), loadingPage);
+              var child = ViewControl(
+                  parent: routesView.page,
+                  viewId: view.id,
+                  overlayWidgets: overlayWidgets(view.id),
+                  loadingPage: loadingPage,
+                  dispatch: widget.dispatch);
+
+              //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
+
               return _prevViewRoutes == null
-                  ? FadeTransitionPage(key: key, child: child)
-                  : _prevViewRoutes == viewRoutes
-                      ? NoAnimationPage(key: key, child: child)
-                      : MaterialPage(
-                          key: key,
-                          child: child,
-                          fullscreenDialog:
-                              view.attrBool("fullscreenDialog", false)!);
+                  ? AnimatedTransitionPage(
+                      key: key, child: child, fadeTransition: true)
+                  : AnimatedTransitionPage(
+                      key: key,
+                      child: child,
+                      fullscreenDialog:
+                          view.attrBool("fullscreenDialog", false)!);
             }).toList();
 
             _prevViewRoutes = viewRoutes;
@@ -569,16 +574,39 @@ class _PageControlState extends State<PageControl> {
           return nextChild;
         });
   }
+}
 
-  Widget _buildViewWidget(Control parent, String viewId,
-      List<Widget> overlayWidgets, Widget? loadingPage) {
+class ViewControl extends StatefulWidget {
+  final Control parent;
+  final String viewId;
+  final List<Widget> overlayWidgets;
+  final Widget? loadingPage;
+  final dynamic dispatch;
+
+  const ViewControl(
+      {super.key,
+      required this.parent,
+      required this.viewId,
+      required this.overlayWidgets,
+      required this.loadingPage,
+      required this.dispatch});
+
+  @override
+  State<ViewControl> createState() => _ViewControlState();
+}
+
+class _ViewControlState extends State<ViewControl> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  Widget build(BuildContext context) {
     return StoreConnector<AppState, ControlViewModel?>(
         distinct: true,
         converter: (store) {
-          return ControlViewModel.fromStore(store, viewId);
+          return ControlViewModel.fromStore(store, widget.viewId);
         },
         ignoreChange: (state) {
-          return state.controls[viewId] == null;
+          return state.controls[widget.viewId] == null;
         },
         // onWillChange: (prev, next) {
         //   debugPrint("View StoreConnector.onWillChange(): $prev, $next");
@@ -642,7 +670,7 @@ class _PageControlState extends State<PageControl> {
           List<String> childIds =
               [appBar?.id, drawer?.id, endDrawer?.id].whereNotNull().toList();
 
-          final textDirection = parent.attrBool("rtl", false)!
+          final textDirection = widget.parent.attrBool("rtl", false)!
               ? TextDirection.rtl
               : TextDirection.ltr;
 
@@ -660,7 +688,7 @@ class _PageControlState extends State<PageControl> {
                 return false;
               },
               builder: (context, childrenViews) {
-                debugPrint("Route view StoreConnector build: $viewId");
+                debugPrint("Route view StoreConnector build: ${widget.viewId}");
 
                 var appBarView = childrenViews.controlViews.firstWhereOrNull(
                     (v) => v.control.id == (appBar?.id ?? ""));
@@ -686,49 +714,67 @@ class _PageControlState extends State<PageControl> {
                       ScrollNotificationControl(control: control, child: child);
                 }
 
-                GlobalKey<ScaffoldState>? scaffoldKey =
-                    FletAppServices.of(context).globalKeys["_scaffold"]
-                        as GlobalKey<ScaffoldState>?;
-                if (scaffoldKey == null) {
-                  scaffoldKey = GlobalKey<ScaffoldState>();
-                  FletAppServices.of(context).globalKeys["_scaffold"] =
-                      scaffoldKey;
+                final bool? drawerOpened = widget.parent.state["drawerOpened"];
+                final bool? endDrawerOpened =
+                    widget.parent.state["endDrawerOpened"];
+
+                void dismissDrawer(String id) {
+                  List<Map<String, String>> props = [
+                    {"i": id, "open": "false"}
+                  ];
+                  widget.dispatch(UpdateControlPropsAction(
+                      UpdateControlPropsPayload(props: props)));
+                  FletAppServices.of(context)
+                      .server
+                      .updateControlProps(props: props);
+                  FletAppServices.of(context).server.sendPageEvent(
+                      eventTarget: id, eventName: "dismiss", eventData: "");
                 }
 
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (drawerView != null) {
+                    if (scaffoldKey.currentState?.isDrawerOpen == false &&
+                        drawerOpened == true) {
+                      widget.parent.state["drawerOpened"] = false;
+                      dismissDrawer(drawerView.control.id);
+                    }
                     if (drawerView.control.attrBool("open", false)! &&
-                        _drawerOpened != true) {
-                      if (scaffoldKey?.currentState?.isEndDrawerOpen == true) {
-                        scaffoldKey?.currentState?.closeEndDrawer();
+                        drawerOpened != true) {
+                      if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
+                        scaffoldKey.currentState?.closeEndDrawer();
                       }
                       Future.delayed(const Duration(milliseconds: 1))
                           .then((value) {
-                        scaffoldKey?.currentState?.openDrawer();
-                        _drawerOpened = true;
+                        scaffoldKey.currentState?.openDrawer();
+                        widget.parent.state["drawerOpened"] = true;
                       });
                     } else if (!drawerView.control.attrBool("open", false)! &&
-                        _drawerOpened == true) {
-                      scaffoldKey?.currentState?.closeDrawer();
-                      _drawerOpened = false;
+                        drawerOpened == true) {
+                      scaffoldKey.currentState?.closeDrawer();
+                      widget.parent.state["drawerOpened"] = false;
                     }
                   }
                   if (endDrawerView != null) {
+                    if (scaffoldKey.currentState?.isEndDrawerOpen == false &&
+                        endDrawerOpened == true) {
+                      widget.parent.state["endDrawerOpened"] = false;
+                      dismissDrawer(endDrawerView.control.id);
+                    }
                     if (endDrawerView.control.attrBool("open", false)! &&
-                        _endDrawerOpened != true) {
-                      if (scaffoldKey?.currentState?.isDrawerOpen == true) {
-                        scaffoldKey?.currentState?.closeDrawer();
+                        endDrawerOpened != true) {
+                      if (scaffoldKey.currentState?.isDrawerOpen == true) {
+                        scaffoldKey.currentState?.closeDrawer();
                       }
                       Future.delayed(const Duration(milliseconds: 1))
                           .then((value) {
-                        scaffoldKey?.currentState?.openEndDrawer();
-                        _endDrawerOpened = true;
+                        scaffoldKey.currentState?.openEndDrawer();
+                        widget.parent.state["endDrawerOpened"] = true;
                       });
                     } else if (!endDrawerView.control
                             .attrBool("open", false)! &&
-                        _endDrawerOpened == true) {
-                      scaffoldKey?.currentState?.closeEndDrawer();
-                      _endDrawerOpened = false;
+                        endDrawerOpened == true) {
+                      scaffoldKey.currentState?.closeEndDrawer();
+                      widget.parent.state["endDrawerOpened"] = false;
                     }
                   }
                 });
@@ -756,19 +802,8 @@ class _PageControlState extends State<PageControl> {
                       : null,
                   onDrawerChanged: (opened) {
                     if (drawerView != null && !opened) {
-                      _drawerOpened = false;
-                      List<Map<String, String>> props = [
-                        {"i": drawerView.control.id, "open": "false"}
-                      ];
-                      widget.dispatch(UpdateControlPropsAction(
-                          UpdateControlPropsPayload(props: props)));
-                      FletAppServices.of(context)
-                          .server
-                          .updateControlProps(props: props);
-                      FletAppServices.of(context).server.sendPageEvent(
-                          eventTarget: drawerView.control.id,
-                          eventName: "dismiss",
-                          eventData: "");
+                      widget.parent.state["drawerOpened"] = false;
+                      dismissDrawer(drawerView.control.id);
                     }
                   },
                   endDrawer: endDrawerView != null
@@ -781,19 +816,8 @@ class _PageControlState extends State<PageControl> {
                       : null,
                   onEndDrawerChanged: (opened) {
                     if (endDrawerView != null && !opened) {
-                      _endDrawerOpened = false;
-                      List<Map<String, String>> props = [
-                        {"i": endDrawerView.control.id, "open": "false"}
-                      ];
-                      widget.dispatch(UpdateControlPropsAction(
-                          UpdateControlPropsPayload(props: props)));
-                      FletAppServices.of(context)
-                          .server
-                          .updateControlProps(props: props);
-                      FletAppServices.of(context).server.sendPageEvent(
-                          eventTarget: endDrawerView.control.id,
-                          eventName: "dismiss",
-                          eventData: "");
+                      widget.parent.state["endDrawerOpened"] = false;
+                      dismissDrawer(endDrawerView.control.id);
                     }
                   },
                   body: Stack(children: [
@@ -802,7 +826,7 @@ class _PageControlState extends State<PageControl> {
                             padding: parseEdgeInsets(control, "padding") ??
                                 const EdgeInsets.all(10),
                             child: child)),
-                    ...overlayWidgets
+                    ...widget.overlayWidgets
                   ]),
                   bottomNavigationBar: navBar != null
                       ? createControl(control, navBar.id, control.isDisabled)
@@ -814,9 +838,9 @@ class _PageControlState extends State<PageControl> {
 
                 return Directionality(
                     textDirection: textDirection,
-                    child: loadingPage != null
+                    child: widget.loadingPage != null
                         ? Stack(
-                            children: [scaffold, loadingPage],
+                            children: [scaffold, widget.loadingPage!],
                           )
                         : scaffold);
               });
