@@ -30,17 +30,6 @@ class BottomSheetControl extends StatefulWidget {
 }
 
 class _BottomSheetControlState extends State<BottomSheetControl> {
-  Widget _createBottomSheet() {
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    var contentCtrls = widget.children.where((c) => c.name == "content");
-
-    if (contentCtrls.isEmpty) {
-      return const ErrorControl("BottomSheet does not have a content.");
-    }
-
-    return createControl(widget.control, contentCtrls.first.id, disabled);
-  }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("BottomSheet build: ${widget.control.id}");
@@ -48,6 +37,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
     var server = FletAppServices.of(context).server;
 
     bool lastOpen = widget.control.state["open"] ?? false;
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var open = widget.control.attrBool("open", false)!;
     //var modal = widget.control.attrBool("modal", true)!;
@@ -57,6 +47,8 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
     var useSafeArea = widget.control.attrBool("useSafeArea", true)!;
     var isScrollControlled =
         widget.control.attrBool("isScrollControlled", false)!;
+    var maintainBottomViewInsetsPadding =
+        widget.control.attrBool("maintainBottomViewInsetsPadding", true)!;
 
     void resetOpenState() {
       List<Map<String, String>> props = [
@@ -68,18 +60,39 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
     }
 
     if (open && !lastOpen) {
-      var bottomSheet = _createBottomSheet();
-      if (bottomSheet is ErrorControl) {
-        return bottomSheet;
-      }
-
       widget.control.state["open"] = open;
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showModalBottomSheet<void>(
                 context: context,
                 builder: (context) {
-                  return bottomSheet;
+                  var contentCtrls =
+                      widget.children.where((c) => c.name == "content");
+
+                  if (contentCtrls.isEmpty) {
+                    return const ErrorControl(
+                        "BottomSheet does not have a content.");
+                  }
+
+                  var content = createControl(
+                      widget.control, contentCtrls.first.id, disabled);
+
+                  if (content is ErrorControl) {
+                    return content;
+                  }
+
+                  if (maintainBottomViewInsetsPadding) {
+                    var bottomPadding =
+                        MediaQuery.of(context).viewInsets.bottom;
+                    debugPrint("bottomPadding: $bottomPadding");
+                    content = Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: content,
+                    );
+                  }
+
+                  return content;
                 },
                 isDismissible: dismissible,
                 isScrollControlled: isScrollControlled,

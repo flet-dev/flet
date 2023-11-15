@@ -65,6 +65,7 @@ class BottomSheet(Control):
         show_drag_handle: Optional[bool] = None,
         use_safe_area: Optional[bool] = None,
         is_scroll_controlled: Optional[bool] = None,
+        maintain_bottom_view_insets_padding: Optional[bool] = None,
         on_dismiss=None,
     ):
         Control.__init__(
@@ -84,6 +85,7 @@ class BottomSheet(Control):
         self.use_safe_area = use_safe_area
         self.is_scroll_controlled = is_scroll_controlled
         self.content = content
+        self.maintain_bottom_view_insets_padding = maintain_bottom_view_insets_padding
         self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
@@ -149,6 +151,17 @@ class BottomSheet(Control):
     @is_scroll_controlled.setter
     def is_scroll_controlled(self, value: Optional[bool]):
         self._set_attr("isScrollControlled", value)
+
+    # maintain_bottom_view_insets_padding
+    @property
+    def maintain_bottom_view_insets_padding(self) -> Optional[bool]:
+        return self._get_attr(
+            "maintainBottomViewInsetsPadding", data_type="bool", def_value=True
+        )
+
+    @maintain_bottom_view_insets_padding.setter
+    def maintain_bottom_view_insets_padding(self, value: Optional[bool]):
+        self._set_attr("maintainBottomViewInsetsPadding", value)
 
     # content
     @property
