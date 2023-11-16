@@ -140,20 +140,20 @@ for:
     build_script:
       - cd client
       - flutter build windows --build-name=%APPVEYOR_BUILD_VERSION%
-      - set RELEASE_DIR=build\windows\runner\Release
+      - set RELEASE_DIR=build\windows\x64\runner\Release
       - copy "%WINDIR%\system32\msvcp140.dll" %RELEASE_DIR%
       - copy "%WINDIR%\system32\vcruntime140.dll" %RELEASE_DIR%
       - copy "%WINDIR%\system32\vcruntime140_1.dll" %RELEASE_DIR%
       - dir %RELEASE_DIR%
-      - ren build\windows\runner\Release flet
-      - cd build\windows\runner
+      - ren build\windows\x64\runner\Release flet
+      - cd build\windows\x64\runner
       - 7z a flet-windows.zip flet
       - cd %APPVEYOR_BUILD_FOLDER%
 
     test: off
 
     artifacts:
-      - path: client\build\windows\runner\flet-windows.zip
+      - path: client\build\windows\x64\runner\flet-windows.zip
         name: flet_windows
 
     deploy:
