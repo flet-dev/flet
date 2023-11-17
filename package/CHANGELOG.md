@@ -1,3 +1,9 @@
+# 0.12.2
+
+* Flutter 3.16.0
+* Added ´__repr__´ to `Control` class ([#2091](https://github.com/flet-dev/flet/issues/2091)).
+* Added ´skip_route_change_event´ to ´page.go_async´ ([#2092](https://github.com/flet-dev/flet/issues/2092)).
+
 # 0.12.1
 
 * Ability to expand `ButtomSheet` to the top of the screen with `BottomSheet.is_scroll_controlled` property ([#2087](https://github.com/flet-dev/flet/issues/2087)).
