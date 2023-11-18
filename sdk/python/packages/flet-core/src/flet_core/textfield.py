@@ -523,7 +523,7 @@ class TextField(FormFieldControl):
 
     # input_filter
     @property
-    def input_filter(self) -> InputFilter:
+    def input_filter(self) -> Optional[InputFilter]:
         return self.__input_filter
 
     @input_filter.setter
