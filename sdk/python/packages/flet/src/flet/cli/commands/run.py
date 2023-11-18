@@ -258,14 +258,18 @@ class Handler(FileSystemEventHandler):
         th.start()
 
     def on_any_event(self, event):
-        if (
-            self.script_path is None or event.src_path == self.script_path
-        ) and not event.is_directory:
-            current_time = time.time()
-            if (current_time - self.last_time) > 0.5 and self.is_running:
-                self.last_time = current_time
-                th = threading.Thread(target=self.restart_program, args=(), daemon=True)
-                th.start()
+        ignore_dirs = [str(Path(directory).absolute()) for directory in os.environ['IGNORE_DIRS'].split(';')]
+        ignore_files = [(directory + '\\' if not directory.endswith('\\') else directory) + file.replace('\\\\', '\\') for directory in ignore_dirs for file in os.listdir(directory)]
+
+        if event.src_path.replace('~', '') not in ignore_files:
+            if (
+                self.script_path is None or event.src_path == self.script_path
+            ) and not event.is_directory:
+                current_time = time.time()
+                if (current_time - self.last_time) > 0.5 and self.is_running:
+                    self.last_time = current_time
+                    th = threading.Thread(target=self.restart_program, args=(), daemon=True)
+                    th.start()
 
     def print_output(self, p):
         while True:
