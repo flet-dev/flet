@@ -67,8 +67,8 @@ class TextCapitalization(Enum):
 
 @dataclasses.dataclass
 class InputFilter:
+    regex_string: str
     allow: bool = field(default=True)
-    regex_string: str = field(default="[0-9]")
     replacement_string: str = field(default="")
 
 
