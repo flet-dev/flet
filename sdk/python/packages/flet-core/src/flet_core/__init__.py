@@ -169,7 +169,14 @@ from flet_core.text import Text, TextOverflow, TextThemeStyle
 from flet_core.text_button import TextButton
 from flet_core.text_span import TextSpan
 from flet_core.text_style import TextDecoration, TextDecorationStyle, TextStyle
-from flet_core.textfield import KeyboardType, InputFilter, TextCapitalization, TextField
+from flet_core.textfield import (
+    KeyboardType,
+    InputFilter,
+    NumbersOnlyInputFilter,
+    TextCapitalization,
+    TextField,
+    TextOnlyInputFilter,
+)
 from flet_core.theme import (
     ColorScheme,
     PageTransitionsTheme,

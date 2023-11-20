@@ -71,6 +71,14 @@ class InputFilter:
     allow: bool = field(default=True)
     replacement_string: str = field(default="")
 
+class NumbersOnlyInputFilter(InputFilter):
+    def __init__(self):
+        super().__init__(r"[0-9]")
+
+class TextOnlyInputFilter(InputFilter):
+    def __init__(self):
+        super().__init__(r"[a-zA-Z]")
+
 
 class TextField(FormFieldControl):
     """
