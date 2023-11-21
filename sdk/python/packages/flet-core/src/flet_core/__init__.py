@@ -68,6 +68,7 @@ from flet_core.datatable import (
     DataTable,
 )
 from flet_core.date_picker import DatePicker, DatePickerMode, DatePickerEntryMode
+from flet_core.dismissible import Dismissible
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable

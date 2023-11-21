@@ -29,6 +29,7 @@ import 'column.dart';
 import 'container.dart';
 import 'datatable.dart';
 import 'date_picker.dart';
+import 'dismissible.dart';
 import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
@@ -492,6 +493,12 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           children: controlView.children,
           parentDisabled: parentDisabled,
           nextChild: nextChild);
+    case "dismissible":
+      return DismissibleControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
     case "alertdialog":
       return AlertDialogControl(
           parent: parent,
