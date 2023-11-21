@@ -113,7 +113,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
         errorInvalidText: errorInvalidText,
         //keyboardType: keyboardType,
         //initialCalendarMode: datePickerMode,
-        initialEntryMode: TimePickerEntryMode.dial,
+        initialEntryMode: TimePickerEntryMode.input,
         //fieldHintText: fieldHintText,
         //fieldLabelText: fieldLabelText,
         //switchToCalendarEntryModeIcon: switchToCalendarEntryModeIcon != null
