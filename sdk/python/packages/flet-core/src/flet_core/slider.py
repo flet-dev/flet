@@ -135,7 +135,13 @@ class Slider(ConstrainedControl):
     # value
     @property
     def value(self) -> OptionalNumber:
-        return self._get_attr("value", data_type="float")
+        v = self._get_attr("value", data_type="float")
+        # verify limits
+        if v < self.min:
+            v = self.min
+        elif v > self.max:
+            v = self.max
+        return v
 
     @value.setter
     def value(self, value: OptionalNumber):

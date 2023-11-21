@@ -93,7 +93,14 @@ class _SliderControlState extends State<SliderControl> {
 
     double value = widget.control.attrDouble("value", 0)!;
     if (_value != value) {
-      _value = value;
+      // verify limits
+      if (value < min) {
+        _value = min;
+      } else if (value > max) {
+        _value = max;
+      } else {
+        _value = value;
+      }
     }
 
     var slider = Slider(
