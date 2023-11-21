@@ -47,19 +47,14 @@ class _TimePickerControlState extends State<TimePickerControl> {
     String? errorInvalidText = widget.control.attrString("errorInvalidText");
     TextInputType keyboardType =
         parseTextInputType(widget.control.attrString("keyboardType", "")!);
-    DatePickerMode datePickerMode = DatePickerMode.values.firstWhere(
-        (a) =>
-            a.name.toLowerCase() ==
-            widget.control.attrString("datePickerMode", "")!.toLowerCase(),
-        orElse: () => DatePickerMode.day);
-    DatePickerEntryMode datePickerEntryMode = DatePickerEntryMode.values
+    TimePickerEntryMode timePickerEntryMode = TimePickerEntryMode.values
         .firstWhere(
             (a) =>
                 a.name.toLowerCase() ==
                 widget.control
-                    .attrString("datePickerEntryMode", "")!
+                    .attrString("timePickerEntryMode", "")!
                     .toLowerCase(),
-            orElse: () => DatePickerEntryMode.calendar);
+            orElse: () => TimePickerEntryMode.dial);
     String? fieldHintText = widget.control.attrString("fieldHintText");
     String? fieldLabelText = widget.control.attrString("fieldLabelText");
     IconData? switchToCalendarEntryModeIcon = getMaterialIcon(
@@ -113,7 +108,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
         errorInvalidText: errorInvalidText,
         //keyboardType: keyboardType,
         //initialCalendarMode: datePickerMode,
-        initialEntryMode: TimePickerEntryMode.input,
+        initialEntryMode: timePickerEntryMode,
         //fieldHintText: fieldHintText,
         //fieldLabelText: fieldLabelText,
         //switchToCalendarEntryModeIcon: switchToCalendarEntryModeIcon != null

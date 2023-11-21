@@ -14,62 +14,33 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class DatePickerMode(Enum):
-    DAY = "day"
-    YEAR = "year"
+# class DatePickerMode(Enum):
+#     DAY = "day"
+#     YEAR = "year"
 
 
-class DatePickerEntryMode(Enum):
-    CALENDAR = "calendar"
+class TimePickerEntryMode(Enum):
+    DIAL = "dial"
     INPUT = "input"
-    CALENDAR_ONLY = "calendarOnly"
+    DIAL_ONLY = "dialOnly"
     INPUT_ONLY = "inputOnly"
 
 
 class TimePicker(Control):
     """
-    A Material-style date picker dialog.
+    A Material-style time picker dialog.
 
-    It is added to [`page.overlay`](page#overlay) and called using its `pick_date()` method.
+    It is added to [`page.overlay`](page#overlay) and called using its `pick_time()` method.
 
-    Depending on the `date_picker_mode`, it will show either a Calendar or an Input (TextField) for picking a date.
+    Depending on the `time_picker_mode`, it will show either a Dial or an Input (TextField) for picking a time.
 
             Example:
             ```
-        import datetime
-        import flet as ft
-
-        def main(page: ft.Page):
-            def change_date(e):
-                print(f"Date picker changed, value is {date_picker.value}")
-
-            def date_picker_dismissed(e):
-                print(f"Date picker dismissed, value is {date_picker.value}")
-
-            date_picker = ft.DatePicker(
-                on_change=change_date,
-                on_dismiss=date_picker_dismissed,
-                first_date=datetime.datetime(2023, 10, 1),
-                last_date=datetime.datetime(2024, 10, 1),
-            )
-
-            page.overlay.append(date_picker)
-
-            date_button = ft.ElevatedButton(
-                "Pick date",
-                icon=ft.icons.CALENDAR_MONTH,
-                on_click=lambda _: date_picker.pick_date(),
-            )
-
-            page.add(date_button)
-
-
-        ft.app(target=main)
             ```
 
             -----
 
-            Online docs: https://flet.dev/docs/controls/date_picker
+            Online docs: https://flet.dev/docs/controls/time_picker
     """
 
     def __init__(
@@ -89,8 +60,7 @@ class TimePicker(Control):
         last_date: Optional[datetime] = None,
         current_date: Optional[datetime] = None,
         keyboard_type: Optional[KeyboardType] = None,
-        date_picker_mode: Optional[DatePickerMode] = None,
-        date_picker_entry_mode: Optional[DatePickerEntryMode] = None,
+        time_picker_entry_mode: Optional[TimePickerEntryMode] = None,
         # locale: Optional[str] = None,
         help_text: Optional[str] = None,
         cancel_text: Optional[str] = None,
@@ -126,8 +96,7 @@ class TimePicker(Control):
         self.confirm_text = confirm_text
         self.error_format_text = error_format_text
         self.error_invalid_text = error_invalid_text
-        self.date_picker_mode = date_picker_mode
-        self.date_picker_entry_mode = date_picker_entry_mode
+        self.time_picker_entry_mode = time_picker_entry_mode
         self.text_style = text_style
         self.field_hint_text = field_hint_text
         self.field_label_text = field_label_text
@@ -217,16 +186,6 @@ class TimePicker(Control):
             value = value.isoformat()
         self._set_attr("currentDate", value)
 
-    # # locale
-    # @property
-    # def locale(self) -> Optional[str]:
-    #     return self._get_attr("locale", def_value=None)
-
-    # @locale.setter
-    # def locale(self, value: Optional[str]):
-    #     self._set_attr("locale", value)
-
-    # field_hint_text
     @property
     def field_hint_text(self) -> Optional[str]:
         return self._get_attr("fieldHintText", def_value=None)
@@ -289,36 +248,16 @@ class TimePicker(Control):
     def error_invalid_text(self, value: Optional[str]):
         self._set_attr("errorInvalidText", value)
 
-    # keyboard_type
+    # time_picker_entry_mode
     @property
-    def keyboard_type(self) -> Optional[KeyboardType]:
-        return self.__keyboard_type
+    def time_picker_entry_mode(self) -> Optional[TimePickerEntryMode]:
+        return self.__time_picker_entry_mode
 
-    @keyboard_type.setter
-    def keyboard_type(self, value: Optional[KeyboardType]):
-        self.__keyboard_type = value
-        self._set_attr("keyboardType", value.value if value is not None else None)
-
-    # date_picker_mode
-    @property
-    def date_picker_mode(self) -> Optional[DatePickerMode]:
-        return self.__date_picker_mode
-
-    @date_picker_mode.setter
-    def date_picker_mode(self, value: Optional[DatePickerMode]):
-        self.__date_picker_mode = value
-        self._set_attr("datePickerMode", value.value if value is not None else None)
-
-    # date_picker_entry_mode
-    @property
-    def date_picker_entry_mode(self) -> Optional[DatePickerEntryMode]:
-        return self.__date_picker_entry_mode
-
-    @date_picker_entry_mode.setter
-    def date_picker_entry_mode(self, value: Optional[DatePickerEntryMode]):
-        self.__date_picker_entry_mode = value
+    @time_picker_entry_mode.setter
+    def time_picker_entry_mode(self, value: Optional[TimePickerEntryMode]):
+        self.__time_picker_entry_mode = value
         self._set_attr(
-            "datePickerEntryMode", value.value if value is not None else None
+            "timePickerEntryMode", value.value if value is not None else None
         )
 
     # switch_to_calendar_icon
