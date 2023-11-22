@@ -6,7 +6,18 @@ from flet_core.ref import Ref
 
 
 class Dismissible(Control):
-    """ """
+    """
+    A control that can be dismissed by dragging in the indicated `dismiss_direction`. When dragged or flung in the
+    specified `dismiss_direction`, it's content smoothly slides out of view.
+
+    After completing the sliding animation, if a `resize_duration` is provided, this control further animates its
+    height (or width, depending on what is perpendicular to the `dismiss_direction`), gradually reducing it to zero
+    over the specified `resize_duration`.
+
+    -------
+
+    Online Docs: https://flet.dev/docs/controls/dismissible
+    """
 
     def __init__(
         self,
@@ -18,7 +29,6 @@ class Dismissible(Control):
         #
         # Specific
         #
-        key: Optional[int] = None,
         background: Optional[Control] = None,
         secondary_background: Optional[Control] = None,
         dismiss_direction: Optional[DismissDirection] = None,
@@ -39,7 +49,6 @@ class Dismissible(Control):
         )
 
         self.content = content
-        self.key = key
         self.background = background
         self.secondary_background = secondary_background
         self.dismiss_direction = dismiss_direction
