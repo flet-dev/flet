@@ -51,10 +51,8 @@ class DismissibleControl extends StatelessWidget {
             control.attrString("dismissDirection", "")!.toLowerCase(),
         orElse: () => DismissDirection.horizontal);
 
-    final key = UniqueKey();
-
     return Dismissible(
-        key: key,
+        key: ValueKey<String>(control.id),
         direction: direction,
         background: backgroundCtrls.isNotEmpty
             ? createControl(control, backgroundCtrls.first.id, disabled)
