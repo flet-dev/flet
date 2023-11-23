@@ -4,7 +4,6 @@ from typing import Any, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-
 from flet_core.types import ResponsiveNumber
 
 
@@ -21,7 +20,7 @@ class TimePicker(Control):
 
         It is added to [`page.overlay`](page#overlay) and called using its `pick_time()` method.
 
-        Depending on the `time_picker_mode`, it will show either a Dial or an Input (hour and minute text fields) for picking a time.
+        Depending on the `time_picker_entry_mode`, it will show either a Dial or an Input (hour and minute text fields) for picking a time.
 
         Example:
         ```
