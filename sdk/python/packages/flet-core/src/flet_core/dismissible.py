@@ -1,11 +1,19 @@
 from typing import Any, Optional, Dict, Union
 
+from flet_core.constrained_control import ConstrainedControl
 from flet_core.snack_bar import DismissDirection
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import (
+    ResponsiveNumber,
+    ScaleValue,
+    AnimationValue,
+    RotateValue,
+    OffsetValue,
+)
 
 
-class Dismissible(Control):
+class Dismissible(ConstrainedControl):
     """
     A control that can be dismissed by dragging in the indicated `dismiss_direction`. When dragged or flung in the
     specified `dismiss_direction`, it's content smoothly slides out of view.
@@ -23,9 +31,31 @@ class Dismissible(Control):
         self,
         content: Control,
         ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
+        tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
         data: Any = None,
+        key: Optional[str] = None,
         #
         # Specific
         #
@@ -40,11 +70,33 @@ class Dismissible(Control):
         on_dismiss=None,
         on_resize=None,
     ):
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
             ref=ref,
-            disabled=disabled,
+            key=key,
+            width=width,
+            height=height,
+            left=left,
+            top=top,
+            right=right,
+            bottom=bottom,
+            expand=expand,
+            col=col,
+            opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            aspect_ratio=aspect_ratio,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
+            tooltip=tooltip,
             visible=visible,
+            disabled=disabled,
             data=data,
         )
 

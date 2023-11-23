@@ -51,7 +51,9 @@ class DismissibleControl extends StatelessWidget {
             control.attrString("dismissDirection", "")!.toLowerCase(),
         orElse: () => DismissDirection.horizontal);
 
-    return Dismissible(
+    return constrainedControl(
+        context,
+        Dismissible(
         key: ValueKey<String>(control.id),
         direction: direction,
         background: backgroundCtrls.isNotEmpty
@@ -80,6 +82,8 @@ class DismissibleControl extends StatelessWidget {
             Duration(milliseconds: control.attrInt("resizeDuration", 300)!),
         crossAxisEndOffset: control.attrDouble("crossAxisEndOffset", 0.0)!,
         dismissThresholds: dismissThresholds ?? {},
-        child: createControl(control, contentCtrls.first.id, disabled));
+        child: createControl(control, contentCtrls.first.id, disabled)),
+        parent,
+        control);
   }
 }
