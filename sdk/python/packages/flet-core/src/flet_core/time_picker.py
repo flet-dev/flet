@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import time
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -7,16 +7,6 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.textfield import KeyboardType, KeyboardTypeString
 from flet_core.types import ResponsiveNumber
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
-
-# class DatePickerMode(Enum):
-#     DAY = "day"
-#     YEAR = "year"
 
 
 class TimePickerEntryMode(Enum):
@@ -54,11 +44,8 @@ class TimePicker(Control):
         disabled: Optional[bool] = None,
         data: Any = None,
         open: bool = False,
-        value: Optional[datetime] = None,
+        value: Optional[time] = None,
         text_style: Optional[TextStyle] = None,
-        first_date: Optional[datetime] = None,
-        last_date: Optional[datetime] = None,
-        current_date: Optional[datetime] = None,
         keyboard_type: Optional[KeyboardType] = None,
         time_picker_entry_mode: Optional[TimePickerEntryMode] = None,
         # locale: Optional[str] = None,
@@ -86,9 +73,6 @@ class TimePicker(Control):
             data=data,
         )
         self.value = value
-        self.first_date = first_date
-        self.last_date = last_date
-        self.current_date = current_date
         self.keyboard_type = keyboard_type
         # self.locale = locale
         self.help_text = help_text
@@ -112,11 +96,11 @@ class TimePicker(Control):
     def _before_build_command(self):
         super()._before_build_command()
 
-    def pick_date(self):
+    def pick_time(self):
         self.open = True
         self.update()
 
-    async def pick_date_async(self):
+    async def pick_time_async(self):
         self.open = True
         await self.update_async()
 
@@ -131,60 +115,22 @@ class TimePicker(Control):
 
     # value
     @property
-    def value(self) -> Optional[datetime]:
+    def value(self) -> Optional[time]:
         value_string = self._get_attr("value", def_value=None)
-        return datetime.fromisoformat(value_string) if value_string else None
+        splitted = value_string.split(":")
+        return (
+            time(hour=int(splitted[0]), minute=int(splitted[1]))
+            if value_string
+            else None
+        )
+        # return time.fromisoformat(value_string) if value_string else None
 
     @value.setter
-    def value(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
+    def value(self, value: Optional[Union[time, str]]):
+        if isinstance(value, (time)):
+            # value = value.isoformat()
+            value = value.strftime("%H:%M")
         self._set_attr("value", value)
-
-    # first_date
-    @property
-    def first_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("firstDate", def_value=None)
-        if value_string is None:
-            return None
-        else:
-            return datetime.fromisoformat(value_string)
-
-    @first_date.setter
-    def first_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("firstDate", value)
-
-    # last_date
-    @property
-    def last_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("lastDate", def_value=None)
-        if value_string is None:
-            return None
-        else:
-            return datetime.fromisoformat(value_string)
-
-    @last_date.setter
-    def last_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("lastDate", value)
-
-    # current_date
-    @property
-    def current_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("currentDate", def_value=None)
-        if value_string is None:
-            return None
-        else:
-            return datetime.fromisoformat(value_string)
-
-    @current_date.setter
-    def current_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("currentDate", value)
 
     @property
     def field_hint_text(self) -> Optional[str]:

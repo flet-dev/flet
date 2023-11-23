@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+//import 'package:flutter/src/material/time.dart';
 
 class Control extends Equatable {
   static const reservedProps = ['i', 'p', 't', 'c', 'n'];
@@ -94,6 +96,16 @@ class Control extends Equatable {
       return defValue;
     }
     return DateTime.parse(value);
+  }
+
+  TimeOfDay? attrTime(String name, [TimeOfDay? defValue]) {
+    var value = attrs[name.toLowerCase()];
+    if (value == null) {
+      return defValue;
+    }
+    List<String> splitted = value.split(':');
+    return TimeOfDay(
+        hour: int.parse(splitted[0]), minute: int.parse(splitted[1]));
   }
 
   Control copyWith(

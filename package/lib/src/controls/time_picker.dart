@@ -35,7 +35,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
     bool lastOpen = widget.control.state["open"] ?? false;
 
     var open = widget.control.attrBool("open", false)!;
-    DateTime? value = widget.control.attrDateTime("value");
+    TimeOfDay? value = widget.control.attrTime("value");
     DateTime? firstDate = widget.control.attrDateTime("firstDate");
     DateTime? lastDate = widget.control.attrDateTime("lastDate");
     DateTime? currentDate = widget.control.attrDateTime("currentDate");
@@ -69,15 +69,22 @@ class _TimePickerControlState extends State<TimePickerControl> {
     //   //locale = Locale(localeString);
     // }
 
-    void onClosed(DateTime? dateValue) {
+    void onClosed(TimeOfDay? timeValue) {
       String stringValue;
       String eventName;
-      if (dateValue == null) {
-        stringValue =
-            value?.toIso8601String() ?? currentDate?.toIso8601String() ?? "";
+      if (timeValue == null) {
+        // stringValue =
+        //     value?.toIso8601String() ?? currentDate?.toIso8601String() ?? "";
+        // stringValue = value?.toString() ?? TimeOfDay.now().toString();
+        String? hourString = value?.hour.toString();
+        String? minuteString = value?.minute.toString();
+        stringValue = '$hourString:$minuteString';
         eventName = "dismiss";
       } else {
-        stringValue = dateValue.toIso8601String();
+        String? hourString = timeValue.hour.toString();
+        String? minuteString = timeValue.minute.toString();
+        stringValue = '$hourString:$minuteString';
+        //stringValue = timeValue.toString();
         eventName = "change";
       }
       widget.control.state["open"] = false;
@@ -96,7 +103,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
 
     Widget createSelectDateDialog() {
       Widget dialog = TimePickerDialog(
-        initialTime: TimeOfDay.now(),
+        initialTime: value ?? TimeOfDay.now(),
         //initialDate: value ?? currentDate ?? DateTime.now(),
         //firstDate: firstDate ?? DateTime(1900),
         //lastDate: lastDate ?? DateTime(2050),
@@ -132,7 +139,8 @@ class _TimePickerControlState extends State<TimePickerControl> {
       widget.control.state["open"] = open;
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog<DateTime>(
+        //showDialog<DateTime>(
+        showDialog<TimeOfDay>(
             context: context,
             builder: (context) => createSelectDateDialog()).then((result) {
           debugPrint("pickDate() completed");
