@@ -32,7 +32,7 @@ class DatePicker(Control):
 
     It is added to [`page.overlay`](page#overlay) and called using its `pick_date()` method.
 
-    Depending on the `date_picker_mode`, it will show either a Calendar or an Input (TextField) for picking a date.
+    Depending on the `date_picker_entry_mode`, it will show either a Calendar or an Input (TextField) for picking a date.
 
             Example:
             ```
