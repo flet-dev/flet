@@ -1,3 +1,11 @@
+# 0.13.0
+
+* `Dismissible` Control ([#2124](https://github.com/flet-dev/flet/issues/2124)).
+* `TimePicker` control ([#2129](https://github.com/flet-dev/flet/issues/2129)).
+* Fixed: verify `value` limits ([#2121](https://github.com/flet-dev/flet/issues/2121)).
+* Added `thumb_icon` to `Switch` ([#2116](https://github.com/flet-dev/flet/issues/2116)).
+* Feature: `TextField` Input validation ([#2101](https://github.com/flet-dev/flet/issues/2101)).
+
 # 0.12.2
 
 * Flutter 3.16.0
