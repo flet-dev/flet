@@ -39,7 +39,8 @@ class _TimePickerControlState extends State<TimePickerControl> {
     String? helpText = widget.control.attrString("helpText");
     String? cancelText = widget.control.attrString("cancelText");
     String? confirmText = widget.control.attrString("confirmText");
-    String? errorFormatText = widget.control.attrString("errorFormatText");
+    String? hourLabelText = widget.control.attrString("hourLabelText");
+    String? minuteLabelText = widget.control.attrString("minuteLabelText");
     String? errorInvalidText = widget.control.attrString("errorInvalidText");
     TimePickerEntryMode timePickerEntryMode = TimePickerEntryMode.values
         .firstWhere(
@@ -49,8 +50,6 @@ class _TimePickerControlState extends State<TimePickerControl> {
                     .attrString("timePickerEntryMode", "")!
                     .toLowerCase(),
             orElse: () => TimePickerEntryMode.dial);
-    String? fieldHintText = widget.control.attrString("fieldHintText");
-    String? fieldLabelText = widget.control.attrString("fieldLabelText");
 
     void onClosed(TimeOfDay? timeValue) {
       String stringValue;
@@ -94,6 +93,8 @@ class _TimePickerControlState extends State<TimePickerControl> {
         helpText: helpText,
         cancelText: cancelText,
         confirmText: confirmText,
+        hourLabelText: hourLabelText,
+        minuteLabelText: minuteLabelText,
         //errorFormatText: errorFormatText,
         errorInvalidText: errorInvalidText,
         //keyboardType: keyboardType,

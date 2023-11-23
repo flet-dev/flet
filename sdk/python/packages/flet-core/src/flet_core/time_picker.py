@@ -48,7 +48,8 @@ class TimePicker(Control):
         text_style: Optional[TextStyle] = None,
         keyboard_type: Optional[KeyboardType] = None,
         time_picker_entry_mode: Optional[TimePickerEntryMode] = None,
-        # locale: Optional[str] = None,
+        hour_label_text: Optional[str] = None,
+        minute_label_text: Optional[str] = None,
         help_text: Optional[str] = None,
         cancel_text: Optional[str] = None,
         confirm_text: Optional[str] = None,
@@ -74,12 +75,13 @@ class TimePicker(Control):
         )
         self.value = value
         self.keyboard_type = keyboard_type
-        # self.locale = locale
         self.help_text = help_text
         self.cancel_text = cancel_text
         self.confirm_text = confirm_text
         self.error_format_text = error_format_text
         self.error_invalid_text = error_invalid_text
+        self.hour_label_text = hour_label_text
+        self.minute_label_text = minute_label_text
         self.time_picker_entry_mode = time_picker_entry_mode
         self.text_style = text_style
         self.field_hint_text = field_hint_text
@@ -116,38 +118,39 @@ class TimePicker(Control):
     # value
     @property
     def value(self) -> Optional[time]:
-        value_string = self._get_attr("value", def_value=None)
+        value_string = self._get_attr(
+            "value", def_value=None
+        )  # value_string in comes in format 'HH:MM'
         splitted = value_string.split(":")
         return (
             time(hour=int(splitted[0]), minute=int(splitted[1]))
             if value_string
             else None
         )
-        # return time.fromisoformat(value_string) if value_string else None
 
     @value.setter
     def value(self, value: Optional[Union[time, str]]):
         if isinstance(value, (time)):
-            # value = value.isoformat()
             value = value.strftime("%H:%M")
         self._set_attr("value", value)
 
+    # hour_label_text
     @property
-    def field_hint_text(self) -> Optional[str]:
-        return self._get_attr("fieldHintText", def_value=None)
+    def hour_label_text(self) -> Optional[str]:
+        return self._get_attr("hourLabelText", def_value=None)
 
-    @field_hint_text.setter
-    def field_hint_text(self, value: Optional[str]):
-        self._set_attr("fieldHintText", value)
+    @hour_label_text.setter
+    def hour_label_text(self, value: Optional[str]):
+        self._set_attr("hourLabelText", value)
 
-    # field_label_text
+    # minute_label_text
     @property
-    def field_label_text(self) -> Optional[str]:
-        return self._get_attr("fieldLabelText", def_value=None)
+    def minute_label_text(self) -> Optional[str]:
+        return self._get_attr("minuteLabelText", def_value=None)
 
-    @field_label_text.setter
-    def field_label_text(self, value: Optional[str]):
-        self._set_attr("fieldLabelText", value)
+    @minute_label_text.setter
+    def minute_label_text(self, value: Optional[str]):
+        self._set_attr("minuteLabelText", value)
 
     # help_text
     @property
