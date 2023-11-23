@@ -4,8 +4,6 @@ import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
-import '../utils/icons.dart';
-import 'form_field.dart';
 
 class TimePickerControl extends StatefulWidget {
   final Control? parent;
@@ -55,18 +53,14 @@ class _TimePickerControlState extends State<TimePickerControl> {
       String stringValue;
       String eventName;
       if (timeValue == null) {
-        // stringValue =
-        //     value?.toIso8601String() ?? currentDate?.toIso8601String() ?? "";
-        // stringValue = value?.toString() ?? TimeOfDay.now().toString();
-        String? hourString = value?.hour.toString();
-        String? minuteString = value?.minute.toString();
+        String hourString = value.hour.toString();
+        String minuteString = value.minute.toString();
         stringValue = '$hourString:$minuteString';
         eventName = "dismiss";
       } else {
-        String? hourString = timeValue.hour.toString();
-        String? minuteString = timeValue.minute.toString();
+        String hourString = timeValue.hour.toString();
+        String minuteString = timeValue.minute.toString();
         stringValue = '$hourString:$minuteString';
-        //stringValue = timeValue.toString();
         eventName = "change";
       }
       widget.control.state["open"] = false;
@@ -83,38 +77,17 @@ class _TimePickerControlState extends State<TimePickerControl> {
           eventData: stringValue);
     }
 
-    Widget createSelectDateDialog() {
+    Widget createSelectTimeDialog() {
       Widget dialog = TimePickerDialog(
         initialTime: value,
-        //initialDate: value ?? currentDate ?? DateTime.now(),
-        //firstDate: firstDate ?? DateTime(1900),
-        //lastDate: lastDate ?? DateTime(2050),
-        //currentDate: currentDate ?? DateTime.now(),
         helpText: helpText,
         cancelText: cancelText,
         confirmText: confirmText,
         hourLabelText: hourLabelText,
         minuteLabelText: minuteLabelText,
-        //errorFormatText: errorFormatText,
         errorInvalidText: errorInvalidText,
-        //keyboardType: keyboardType,
-        //initialCalendarMode: datePickerMode,
         initialEntryMode: timePickerEntryMode,
-        //fieldHintText: fieldHintText,
-        //fieldLabelText: fieldLabelText,
-        //switchToCalendarEntryModeIcon: switchToCalendarEntryModeIcon != null
-        //    ? Icon(switchToCalendarEntryModeIcon)
-        //    : null,
-        //switchToInputEntryModeIcon: switchToInputEntryModeIcon != null
-        //    ? Icon(switchToInputEntryModeIcon)
-        //    : null,
       );
-
-      // dialog = Localizations.override(
-      //   context: context,
-      //   locale: locale,
-      //   child: dialog,
-      // );
 
       return dialog;
     }
@@ -123,11 +96,10 @@ class _TimePickerControlState extends State<TimePickerControl> {
       widget.control.state["open"] = open;
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        //showDialog<DateTime>(
         showDialog<TimeOfDay>(
             context: context,
-            builder: (context) => createSelectDateDialog()).then((result) {
-          debugPrint("pickDate() completed");
+            builder: (context) => createSelectTimeDialog()).then((result) {
+          debugPrint("pickTime() completed");
           onClosed(result);
         });
       });
