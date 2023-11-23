@@ -35,18 +35,12 @@ class _TimePickerControlState extends State<TimePickerControl> {
     bool lastOpen = widget.control.state["open"] ?? false;
 
     var open = widget.control.attrBool("open", false)!;
-    TimeOfDay? value = widget.control.attrTime("value");
-    DateTime? firstDate = widget.control.attrDateTime("firstDate");
-    DateTime? lastDate = widget.control.attrDateTime("lastDate");
-    DateTime? currentDate = widget.control.attrDateTime("currentDate");
-    //String? localeString = widget.control.attrString("locale");
+    TimeOfDay value = widget.control.attrTime("value") ?? TimeOfDay.now();
     String? helpText = widget.control.attrString("helpText");
     String? cancelText = widget.control.attrString("cancelText");
     String? confirmText = widget.control.attrString("confirmText");
     String? errorFormatText = widget.control.attrString("errorFormatText");
     String? errorInvalidText = widget.control.attrString("errorInvalidText");
-    TextInputType keyboardType =
-        parseTextInputType(widget.control.attrString("keyboardType", "")!);
     TimePickerEntryMode timePickerEntryMode = TimePickerEntryMode.values
         .firstWhere(
             (a) =>
@@ -57,17 +51,6 @@ class _TimePickerControlState extends State<TimePickerControl> {
             orElse: () => TimePickerEntryMode.dial);
     String? fieldHintText = widget.control.attrString("fieldHintText");
     String? fieldLabelText = widget.control.attrString("fieldLabelText");
-    IconData? switchToCalendarEntryModeIcon = getMaterialIcon(
-        widget.control.attrString("switchToCalendarEntryModeIcon", "")!);
-    IconData? switchToInputEntryModeIcon = getMaterialIcon(
-        widget.control.attrString("switchToInputEntryModeIcon", "")!);
-
-    //Locale locale;
-    // if (localeString == null) {
-    //   locale = Localizations.localeOf(context);
-    // } else {
-    //   //locale = Locale(localeString);
-    // }
 
     void onClosed(TimeOfDay? timeValue) {
       String stringValue;
@@ -103,7 +86,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
 
     Widget createSelectDateDialog() {
       Widget dialog = TimePickerDialog(
-        initialTime: value ?? TimeOfDay.now(),
+        initialTime: value,
         //initialDate: value ?? currentDate ?? DateTime.now(),
         //firstDate: firstDate ?? DateTime(1900),
         //lastDate: lastDate ?? DateTime(2050),
