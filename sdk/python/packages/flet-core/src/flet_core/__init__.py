@@ -178,6 +178,7 @@ from flet_core.textfield import (
     TextField,
     TextOnlyInputFilter,
 )
+from flet_core.time_picker import TimePicker, TimePickerEntryMode
 from flet_core.theme import (
     ColorScheme,
     PageTransitionsTheme,

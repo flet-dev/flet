@@ -94,6 +94,7 @@ class Switch(ConstrainedControl):
         inactive_thumb_color: Optional[str] = None,
         inactive_track_color: Optional[str] = None,
         thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
+        thumb_icon: Union[None, str, Dict[MaterialState, str]] = None,
         track_color: Union[None, str, Dict[MaterialState, str]] = None,
         on_change=None,
         on_focus=None,
@@ -137,6 +138,7 @@ class Switch(ConstrainedControl):
         self.inactive_thumb_color = inactive_thumb_color
         self.inactive_track_color = inactive_track_color
         self.thumb_color = thumb_color
+        self.thumb_icon = thumb_icon
         self.track_color = track_color
         self.on_change = on_change
         self.on_focus = on_focus
@@ -148,6 +150,7 @@ class Switch(ConstrainedControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("thumbColor", self.__thumb_color)
+        self._set_attr_json("thumbIcon", self.__thumb_icon)
         self._set_attr_json("trackColor", self.__track_color)
 
     # value
@@ -237,6 +240,15 @@ class Switch(ConstrainedControl):
     @thumb_color.setter
     def thumb_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__thumb_color = value
+
+    # thumb_icon
+    @property
+    def thumb_icon(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__thumb_icon
+
+    @thumb_icon.setter
+    def thumb_icon(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__thumb_icon = value
 
     # track_color
     @property

@@ -74,6 +74,7 @@ import 'tabs.dart';
 import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
+import 'time_picker.dart';
 import 'tooltip.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
@@ -321,6 +322,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "datepicker":
       return DatePickerControl(
+        parent: parent,
+        control: controlView.control,
+        children: controlView.children,
+        parentDisabled: parentDisabled,
+        dispatch: controlView.dispatch,
+      );
+    case "timepicker":
+      return TimePickerControl(
         parent: parent,
         control: controlView.control,
         children: controlView.children,
