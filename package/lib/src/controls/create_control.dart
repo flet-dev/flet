@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/segmented_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -233,7 +234,6 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           children: controlView.children,
           parentDisabled: parentDisabled,
           dispatch: controlView.dispatch);
-
     case "progressring":
       return ProgressRingControl(
           key: key, parent: parent, control: controlView.control);
@@ -306,6 +306,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "segmentedbutton":
+      return SegmentedButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "stack":
       return StackControl(
           key: key,
