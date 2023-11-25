@@ -106,3 +106,33 @@ class FloatingActionButtonControl extends StatelessWidget {
     return constrainedControl(context, button, parent, control);
   }
 }
+
+FloatingActionButtonLocation parseFloatingActionButtonLocation(
+    Control control, String propName, FloatingActionButtonLocation defValue) {
+  List<FloatingActionButtonLocation> fabLocations = [
+    FloatingActionButtonLocation.centerDocked,
+    FloatingActionButtonLocation.centerFloat,
+    FloatingActionButtonLocation.centerTop,
+    FloatingActionButtonLocation.endContained,
+    FloatingActionButtonLocation.endDocked,
+    FloatingActionButtonLocation.endFloat,
+    FloatingActionButtonLocation.endTop,
+    FloatingActionButtonLocation.miniCenterDocked,
+    FloatingActionButtonLocation.miniCenterFloat,
+    FloatingActionButtonLocation.miniCenterTop,
+    FloatingActionButtonLocation.miniEndFloat,
+    FloatingActionButtonLocation.miniEndTop,
+    FloatingActionButtonLocation.miniStartDocked,
+    FloatingActionButtonLocation.miniStartFloat,
+    FloatingActionButtonLocation.miniStartTop,
+    FloatingActionButtonLocation.startDocked,
+    FloatingActionButtonLocation.startFloat,
+    FloatingActionButtonLocation.startTop
+  ];
+
+  return fabLocations.firstWhere(
+      (l) =>
+          l.toString().split('.').last.toLowerCase() ==
+          control.attrString(propName, "")!.toLowerCase(),
+      orElse: () => defValue);
+}

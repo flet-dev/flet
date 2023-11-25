@@ -22,7 +22,10 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
-from flet_core.floating_action_button import FloatingActionButton
+from flet_core.floating_action_button import (
+    FloatingActionButton,
+    FloatingActionButtonLocation,
+)
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
@@ -1324,6 +1327,17 @@ class Page(Control):
     @floating_action_button.setter
     def floating_action_button(self, value: Optional[FloatingActionButton]):
         self.__default_view.floating_action_button = value
+
+    # floating_action_button_location
+    @property
+    def floating_action_button_location(self) -> Optional[FloatingActionButtonLocation]:
+        return self.__default_view.floating_action_button_location
+
+    @floating_action_button_location.setter
+    def floating_action_button_location(
+        self, value: Optional[FloatingActionButtonLocation]
+    ):
+        self.__default_view.floating_action_button_location = value
 
     # horizontal_alignment
     @property

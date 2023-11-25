@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/floating_action_button.dart';
 import 'package:flet/src/flet_app_context.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -626,6 +627,10 @@ class _ViewControlState extends State<ViewControl> {
               control, "verticalAlignment", MainAxisAlignment.start);
           final crossAlignment = parseCrossAxisAlignment(
               control, "horizontalAlignment", CrossAxisAlignment.start);
+          final fabLocation = parseFloatingActionButtonLocation(
+              control,
+              "floatingActionButtonLocation",
+              FloatingActionButtonLocation.endFloat);
 
           Control? appBar;
           Control? bottomAppBar;
@@ -840,6 +845,7 @@ class _ViewControlState extends State<ViewControl> {
                   floatingActionButton: fab != null
                       ? createControl(control, fab.id, control.isDisabled)
                       : null,
+                  floatingActionButtonLocation: fabLocation,
                 );
 
                 return Directionality(
