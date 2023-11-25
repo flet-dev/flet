@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 import flet_core
 from flet_core.alert_dialog import AlertDialog
 from flet_core.animation import AnimationCurve
-from flet_core.app_bar import AppBar
+from flet_core.app_bar import AppBar, BottomAppBar
 from flet_core.banner import Banner
 from flet_core.bottom_sheet import BottomSheet
 from flet_core.client_storage import ClientStorage
@@ -1279,6 +1279,15 @@ class Page(Control):
     @appbar.setter
     def appbar(self, value: Optional[AppBar]):
         self.__default_view.appbar = value
+
+    # bottom_appbar
+    @property
+    def bottom_appbar(self) -> Optional[BottomAppBar]:
+        return self.__default_view.bottom_appbar
+
+    @bottom_appbar.setter
+    def bottom_appbar(self, value: Optional[BottomAppBar]):
+        self.__default_view.bottom_appbar = value
 
     # navigation_bar
     @property

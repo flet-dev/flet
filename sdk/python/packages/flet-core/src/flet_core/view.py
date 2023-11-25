@@ -1,7 +1,7 @@
 from typing import Any, List, Optional
 
 from flet_core import Control
-from flet_core.app_bar import AppBar
+from flet_core.app_bar import AppBar, BottomAppBar
 from flet_core.control import OptionalNumber
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.navigation_bar import NavigationBar
@@ -34,6 +34,7 @@ class View(ScrollableControl):
         route: Optional[str] = None,
         controls: Optional[List[Control]] = None,
         appbar: Optional[AppBar] = None,
+        bottom_appbar: Optional[BottomAppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
         navigation_bar: Optional[NavigationBar] = None,
         drawer: Optional[NavigationDrawer] = None,
@@ -65,6 +66,7 @@ class View(ScrollableControl):
         self.controls = controls if controls is not None else []
         self.route = route
         self.appbar = appbar
+        self.bottom_appbar = bottom_appbar
         self.navigation_bar = navigation_bar
         self.drawer = drawer
         self.end_drawer = end_drawer
@@ -89,6 +91,8 @@ class View(ScrollableControl):
         children = []
         if self.__appbar:
             children.append(self.__appbar)
+        if self.__bottom_appbar:
+            children.append(self.__bottom_appbar)
         if self.__fab:
             children.append(self.__fab)
         if self.__navigation_bar:
@@ -128,6 +132,15 @@ class View(ScrollableControl):
     @appbar.setter
     def appbar(self, value: Optional[AppBar]):
         self.__appbar = value
+
+    # bottom_appbar
+    @property
+    def bottom_appbar(self) -> Optional[BottomAppBar]:
+        return self.__bottom_appbar
+
+    @bottom_appbar.setter
+    def bottom_appbar(self, value: Optional[BottomAppBar]):
+        self.__bottom_appbar = value
 
     # floating_action_button
     @property
