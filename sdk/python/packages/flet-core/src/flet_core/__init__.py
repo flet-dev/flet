@@ -74,7 +74,7 @@ from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
 from flet_core.dropdown import Dropdown
 from flet_core.elevated_button import ElevatedButton
-from flet_core.expansion_tile import ExpansionTile
+from flet_core.expansion_tile import ExpansionTile, TileAffinity
 from flet_core.file_picker import (
     FilePicker,
     FilePickerFileType,
@@ -114,7 +114,7 @@ from flet_core.haptic_feedback import HapticFeedback
 from flet_core.icon import Icon
 from flet_core.icon_button import IconButton
 from flet_core.image import Image
-from flet_core.list_tile import ListTile, TileAffinity
+from flet_core.list_tile import ListTile
 from flet_core.list_view import ListView
 from flet_core.margin import Margin
 from flet_core.markdown import Markdown, MarkdownExtensionSet
