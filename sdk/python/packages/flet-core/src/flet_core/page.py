@@ -12,9 +12,10 @@ from urllib.parse import urlparse
 import flet_core
 from flet_core.alert_dialog import AlertDialog
 from flet_core.animation import AnimationCurve
-from flet_core.app_bar import AppBar, BottomAppBar
+from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
 from flet_core.bottom_sheet import BottomSheet
+from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.client_storage import ClientStorage
 from flet_core.clipboard import Clipboard
 from flet_core.connection import Connection

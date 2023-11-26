@@ -17,12 +17,13 @@ from flet_core.alert_dialog import AlertDialog
 from flet_core.alignment import Alignment
 from flet_core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
 from flet_core.animation import Animation, AnimationCurve
-from flet_core.app_bar import AppBar, BottomAppBar
+from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
 from flet_core.banner import Banner
 from flet_core.blur import Blur, BlurTileMode
 from flet_core.border import Border, BorderSide
 from flet_core.border_radius import BorderRadius
+from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
 from flet_core.buttons import (
     BeveledRectangleBorder,

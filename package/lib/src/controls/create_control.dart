@@ -14,7 +14,7 @@ import '../utils/theme.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
-import 'app_bar.dart';
+import 'bottom_app_bar.dart';
 import 'audio.dart';
 import 'badge.dart';
 import 'banner.dart';
