@@ -140,8 +140,14 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl> {
                     .where((c) => c.name == "icon" && c.isVisible);
                 var labelCtrls = segmentView.children
                     .where((c) => c.name == "label" && c.isVisible);
+                var enabled = !segmentView.control.attrBool("disabled", false)!;
+
                 return ButtonSegment(
                     value: segmentView.control.attrString("value")!,
+                    enabled: enabled,
+                    tooltip: enabled && !disabled
+                        ? segmentView.control.attrString("tooltip")
+                        : null,
                     icon: iconCtrls.isNotEmpty
                         ? createControl(
                             segmentView.control, iconCtrls.first.id, disabled)
