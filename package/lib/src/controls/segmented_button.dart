@@ -88,8 +88,8 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl> {
     debugPrint("segments: $segments");
 
     if (selected.isEmpty && !allowEmptySelection) {
-      return const ErrorControl(
-          "Selected property must contain at least one value.");
+      return const ErrorControl("When allow_empty_selection is False, "
+          "the selected property must contain at least one value.");
     }
 
     if (!allowMultipleSelection &&
@@ -117,6 +117,9 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl> {
         converter: (store) =>
             ControlsViewModel.fromStore(store, segments.map((s) => s.id)),
         builder: (content, segmentViews) {
+          debugPrint(
+            "content: $content, segmentViews: $segmentViews",
+          );
           return SegmentedButton<String>(
               emptySelectionAllowed: allowEmptySelection,
               multiSelectionEnabled: allowMultipleSelection,
