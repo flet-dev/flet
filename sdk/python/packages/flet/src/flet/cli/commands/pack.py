@@ -102,6 +102,11 @@ class Command(BaseCommand):
             dest="bundle_id",
             help="bundle identifier (macOS)",
         )
+        parser.add_argument(
+            "--debug-console",
+            dest="debug_console",
+            help="Show python console (Ensure correct DEBUG level)",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
         # delete "build" directory
@@ -118,7 +123,9 @@ class Command(BaseCommand):
             import PyInstaller.__main__
             from flet.__pyinstaller.utils import copy_flet_bin
 
-            pyi_args = [options.script, "--noconsole", "--noconfirm"]
+            pyi_args = [options.script, "--noconfirm"]
+            if not options.debug_console:
+                pyi_args.extend(["--noconsole"])
             if options.icon:
                 pyi_args.extend(["--icon", options.icon])
             if options.name:
