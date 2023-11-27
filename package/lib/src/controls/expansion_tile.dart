@@ -129,9 +129,3 @@ class ExpansionTileControl extends StatelessWidget {
     return constrainedControl(context, tile, parent, control);
   }
 }
-
-class ExpansionTileClickNotifier extends ChangeNotifier {
-  void onClick() {
-    notifyListeners();
-  }
-}

@@ -147,7 +147,7 @@ class ExpansionTile(ConstrainedControl):
         self._set_attr_json("expandedAlignment", self.__expanded_alignment)
         self._set_attr_json("controlsPadding", self.__controls_padding)
         self._set_attr_json("tilePadding", self.__tile_padding)
-        self._set_attr_json("Shape", self.__shape)
+        self._set_attr_json("shape", self.__shape)
         self._set_attr_json("collapsedShape", self.__collapsed_shape)
 
     def _get_children(self):
