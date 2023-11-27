@@ -104,7 +104,7 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             "--debug-console",
-            dest="debug-console",
+            dest="debug_console",
             help="Show python console (Ensure correct DEBUG level)",
         )
 
@@ -123,7 +123,6 @@ class Command(BaseCommand):
             import PyInstaller.__main__
             from flet.__pyinstaller.utils import copy_flet_bin
 
-            pyi_args = [options.script, "--noconfirm"]
             pyi_args = [options.script, "--noconfirm"]
             if not options.debug_console:
                 pyi_args.extend(["--noconsole"])
