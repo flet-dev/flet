@@ -80,6 +80,11 @@ class BoxShape(Enum):
     CIRCLE = "circle"
 
 
+class NotchShape(Enum):
+    AUTO = "auto"
+    CIRCULAR = "circular"
+
+
 ResponsiveNumber = Union[Dict[str, Union[int, float]], int, float]
 
 

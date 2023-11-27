@@ -15,6 +15,7 @@ from flet_core.animation import AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
 from flet_core.bottom_sheet import BottomSheet
+from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.client_storage import ClientStorage
 from flet_core.clipboard import Clipboard
 from flet_core.connection import Connection
@@ -22,7 +23,10 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
-from flet_core.floating_action_button import FloatingActionButton
+from flet_core.floating_action_button import (
+    FloatingActionButton,
+    FloatingActionButtonLocation,
+)
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
@@ -1280,6 +1284,15 @@ class Page(Control):
     def appbar(self, value: Optional[AppBar]):
         self.__default_view.appbar = value
 
+    # bottom_appbar
+    @property
+    def bottom_appbar(self) -> Optional[BottomAppBar]:
+        return self.__default_view.bottom_appbar
+
+    @bottom_appbar.setter
+    def bottom_appbar(self, value: Optional[BottomAppBar]):
+        self.__default_view.bottom_appbar = value
+
     # navigation_bar
     @property
     def navigation_bar(self) -> Optional[NavigationBar]:
@@ -1315,6 +1328,17 @@ class Page(Control):
     @floating_action_button.setter
     def floating_action_button(self, value: Optional[FloatingActionButton]):
         self.__default_view.floating_action_button = value
+
+    # floating_action_button_location
+    @property
+    def floating_action_button_location(self) -> Optional[FloatingActionButtonLocation]:
+        return self.__default_view.floating_action_button_location
+
+    @floating_action_button_location.setter
+    def floating_action_button_location(
+        self, value: Optional[FloatingActionButtonLocation]
+    ):
+        self.__default_view.floating_action_button_location = value
 
     # horizontal_alignment
     @property

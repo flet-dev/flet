@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/floating_action_button.dart';
 import 'package:flet/src/flet_app_context.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -444,7 +445,7 @@ class _PageControlState extends State<PageControl> {
               distinct: true,
               converter: (store) => PageMediaViewModel.fromStore(store),
               builder: (context, media) {
-                debugPrint("MeterialApp.router build: ${widget.control.id}");
+                debugPrint("MaterialApp.router build: ${widget.control.id}");
 
                 return FletAppContext(
                     themeMode: themeMode,
@@ -626,8 +627,13 @@ class _ViewControlState extends State<ViewControl> {
               control, "verticalAlignment", MainAxisAlignment.start);
           final crossAlignment = parseCrossAxisAlignment(
               control, "horizontalAlignment", CrossAxisAlignment.start);
+          final fabLocation = parseFloatingActionButtonLocation(
+              control,
+              "floatingActionButtonLocation",
+              FloatingActionButtonLocation.endFloat);
 
           Control? appBar;
+          Control? bottomAppBar;
           Control? fab;
           Control? navBar;
           Control? drawer;
@@ -638,6 +644,9 @@ class _ViewControlState extends State<ViewControl> {
           for (var ctrl in children.where((c) => c.isVisible)) {
             if (ctrl.type == "appbar") {
               appBar = ctrl;
+              continue;
+            } else if (ctrl.type == "bottomappbar") {
+              bottomAppBar = ctrl;
               continue;
             } else if (ctrl.type == "floatingactionbutton") {
               fab = ctrl;
@@ -779,6 +788,8 @@ class _ViewControlState extends State<ViewControl> {
                   }
                 });
 
+                var bnb = navBar ?? bottomAppBar;
+
                 var scaffold = Scaffold(
                   key: scaffoldKey,
                   backgroundColor: HexColor.fromString(
@@ -828,12 +839,13 @@ class _ViewControlState extends State<ViewControl> {
                             child: child)),
                     ...widget.overlayWidgets
                   ]),
-                  bottomNavigationBar: navBar != null
-                      ? createControl(control, navBar.id, control.isDisabled)
+                  bottomNavigationBar: bnb != null
+                      ? createControl(control, bnb.id, control.isDisabled)
                       : null,
                   floatingActionButton: fab != null
                       ? createControl(control, fab.id, control.isDisabled)
                       : null,
+                  floatingActionButtonLocation: fabLocation,
                 );
 
                 return Directionality(

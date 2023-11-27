@@ -14,6 +14,7 @@ import '../utils/theme.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
+import 'bottom_app_bar.dart';
 import 'audio.dart';
 import 'badge.dart';
 import 'banner.dart';
@@ -553,6 +554,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           children: controlView.children,
           parentDisabled: parentDisabled,
           dispatch: controlView.dispatch);
+    case "bottomappbar":
+      return BottomAppBarControl(
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled,
+          children: controlView.children,
+      );
     case "windowdragarea":
       return WindowDragAreaControl(
           parent: parent,

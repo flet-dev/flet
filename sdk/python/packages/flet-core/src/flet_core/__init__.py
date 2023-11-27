@@ -23,6 +23,7 @@ from flet_core.banner import Banner
 from flet_core.blur import Blur, BlurTileMode
 from flet_core.border import Border, BorderSide
 from flet_core.border_radius import BorderRadius
+from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
 from flet_core.buttons import (
     BeveledRectangleBorder,
@@ -84,7 +85,7 @@ from flet_core.file_picker import (
 from flet_core.filled_button import FilledButton
 from flet_core.filled_tonal_button import FilledTonalButton
 from flet_core.flet_app import FletApp
-from flet_core.floating_action_button import FloatingActionButton
+from flet_core.floating_action_button import FloatingActionButton, FloatingActionButtonLocation
 from flet_core.form_field_control import InputBorder
 from flet_core.gesture_detector import (
     DragEndEvent,
@@ -203,6 +204,7 @@ from flet_core.types import (
     LabelPosition,
     MainAxisAlignment,
     MaterialState,
+    NotchShape,
     PaddingValue,
     PageDesignLanguage,
     ScrollMode,
