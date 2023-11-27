@@ -1,5 +1,6 @@
+import json
 import time
-from typing import Any, Optional, Union, List, Set
+from typing import Any, List, Optional, Set, Union
 
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
@@ -17,6 +18,7 @@ from flet_core.types import (
 class Segment(Control):
     def __init__(
         self,
+        value: str,
         ref: Optional[Ref] = None,
         expand: Union[None, bool, int] = None,
         col: Optional[ResponsiveNumber] = None,
@@ -28,7 +30,6 @@ class Segment(Control):
         #
         # Specific
         #
-        value: str = None,
         icon: Optional[Control] = None,
         label: Optional[Control] = None,
     ):
@@ -190,7 +191,6 @@ class SegmentedButton(ConstrainedControl):
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
         self._set_attr_json("style", self.__style)
-        self._set_attr_json("selected", self.__selected)
 
     def _get_children(self):
         children = []
@@ -251,12 +251,18 @@ class SegmentedButton(ConstrainedControl):
 
     # selected
     @property
-    def selected(self) -> Set:
-        return self._get_attr("selected")
+    def selected(self) -> Optional[Set]:
+        s = self._get_attr("selected")
+        return set(json.loads(s)) if s else s
 
     @selected.setter
-    def selected(self, value: Set):
-        self.__selected = list(value) if isinstance(value, set) else []
+    def selected(self, value: Optional[Set]):
+        self._set_attr(
+            "selected",
+            json.dumps(list(value), separators=(",", ":"))
+            if value is not None
+            else None,
+        )
 
     # show_selected_icon
     @property

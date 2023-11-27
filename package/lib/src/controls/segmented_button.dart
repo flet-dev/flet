@@ -1,14 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+
 import '../actions.dart';
 import '../flet_app_services.dart';
+import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/controls_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
-import '../utils/desktop.dart';
-import 'create_control.dart';
 import '../utils/buttons.dart';
-import '../utils/debouncer.dart';
+import 'create_control.dart';
 import 'error.dart';
 
 class SegmentedButtonControl extends StatefulWidget {
@@ -32,49 +34,28 @@ class SegmentedButtonControl extends StatefulWidget {
 }
 
 class _SegmentedButtonControlState extends State<SegmentedButtonControl> {
-  final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
-  Set calendarView = {"1"};
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _debouncer.dispose();
-    super.dispose();
-  }
-
-  void onChange(var selections) {
-    List s = jsonDecode(selections.toList().toString());
-    debugPrint("onChange values: $s");
+  void onChange(Set<String> selection) {
+    var s = jsonEncode(selection.toList());
+    debugPrint("onChange selection: $s");
 
     List<Map<String, String>> props = [
       {
         "i": widget.control.id,
-        "selected": s.toString(),
+        "selected": s,
       }
     ];
     widget.dispatch(
         UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
 
-    _debouncer.run(() {
-      final server = FletAppServices.of(context).server;
-      server.updateControlProps(props: props);
-      server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: "change",
-          eventData: s.toString());
-    });
+    final server = FletAppServices.of(context).server;
+    server.updateControlProps(props: props);
+    server.sendPageEvent(
+        eventTarget: widget.control.id, eventName: "change", eventData: s);
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("SegmentedButtonControl build: ${widget.control.id}");
-    debugPrint("ATTRS: ${widget.control.attrs}");
-
-    debugPrint("CHILDREN: ${widget.children}");
 
     var theme = Theme.of(context);
     var style = parseButtonStyle(Theme.of(context), widget.control, "style",
@@ -96,19 +77,24 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl> {
     bool allowMultipleSelection =
         widget.control.attrBool("allowMultipleSelection", false)!;
 
-    Set selected = jsonDecode(widget.control.attrString("selected", "[]")!).toSet();
+    Set<String> selected =
+        (jsonDecode(widget.control.attrString("selected", "[]")!) as List)
+            .map((e) => e.toString())
+            .toSet();
     debugPrint("selected: $selected");
 
-    List<Control?> segments =
+    List<Control> segments =
         widget.children.where((c) => c.name == "segment").toList();
     debugPrint("segments: $segments");
 
-    if (selected.isEmpty) {
+    if (selected.isEmpty && !allowEmptySelection) {
       return const ErrorControl(
           "Selected property must contain at least one value.");
     }
 
-    if (!allowMultipleSelection && selected.length != 1) {
+    if (!allowMultipleSelection &&
+        selected.length != 1 &&
+        !allowEmptySelection) {
       return const ErrorControl("When allow_multiple_selection is False, "
           "the selected property must contain exactly one value.");
     }
@@ -126,28 +112,43 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl> {
     debugPrint(
         "SegmentedButtonControl StoreConnector build: ${widget.control.id}");
 
-    var sb = SegmentedButton(
-        emptySelectionAllowed: allowEmptySelection,
-        multiSelectionEnabled: allowMultipleSelection,
-        selected: selected.isNotEmpty ? selected: {},
-        showSelectedIcon: showSelectedIcon,
-        style: style,
-        selectedIcon: selectedIcon.isNotEmpty
-            ? createControl(widget.control, selectedIcon.first.id, disabled)
-            : null,
-        onSelectionChanged: !disabled
-            ? (newSelection) {
-                debugPrint("onSelectionChanged: $newSelection");
-                onChange(newSelection.toSet());
-                setState() {
-                  selected = newSelection;
-                }
-              }
-            : null,
-        segments: List.generate(segments.length, (int index) {
-          return ButtonSegment(
-              value: index.toString(), label: Text(index.toString()));
-        }));
+    var sb = StoreConnector<AppState, ControlsViewModel>(
+        distinct: true,
+        converter: (store) =>
+            ControlsViewModel.fromStore(store, segments.map((s) => s.id)),
+        builder: (content, segmentViews) {
+          return SegmentedButton<String>(
+              emptySelectionAllowed: allowEmptySelection,
+              multiSelectionEnabled: allowMultipleSelection,
+              selected: selected.isNotEmpty ? selected : {},
+              showSelectedIcon: showSelectedIcon,
+              style: style,
+              selectedIcon: selectedIcon.isNotEmpty
+                  ? createControl(
+                      widget.control, selectedIcon.first.id, disabled)
+                  : null,
+              onSelectionChanged: !disabled
+                  ? (newSelection) {
+                      onChange(newSelection.toSet());
+                    }
+                  : null,
+              segments: segmentViews.controlViews.map((segmentView) {
+                var iconCtrls = segmentView.children
+                    .where((c) => c.name == "icon" && c.isVisible);
+                var labelCtrls = segmentView.children
+                    .where((c) => c.name == "label" && c.isVisible);
+                return ButtonSegment(
+                    value: segmentView.control.attrString("value")!,
+                    icon: iconCtrls.isNotEmpty
+                        ? createControl(
+                            segmentView.control, iconCtrls.first.id, disabled)
+                        : null,
+                    label: labelCtrls.isNotEmpty
+                        ? createControl(
+                            segmentView.control, labelCtrls.first.id, disabled)
+                        : null);
+              }).toList());
+        });
 
     return constrainedControl(context, sb, widget.parent, widget.control);
   }
