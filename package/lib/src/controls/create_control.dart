@@ -37,6 +37,7 @@ import 'draggable.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
 import 'error.dart';
+import 'expansion_tile.dart';
 import 'file_picker.dart';
 import 'flet_app_control.dart';
 import 'floating_action_button.dart';
@@ -416,6 +417,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "listtile":
       return ListTileControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "expansiontile":
+      return ExpansionTileControl(
           key: key,
           parent: parent,
           control: controlView.control,
