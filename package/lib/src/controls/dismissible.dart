@@ -1,4 +1,3 @@
-//import 'package:collection/collection.dart';
 import 'package:flet/src/utils/dismissible.dart';
 import 'package:flutter/material.dart';
 
@@ -37,10 +36,6 @@ class DismissibleControl extends StatelessWidget {
 
     var secondaryBackgroundCtrls =
         children.where((c) => c.name == "secondaryBackground");
-
-    // SnackBarBehavior? behavior = SnackBarBehavior.values.firstWhereOrNull((a) =>
-    //     a.name.toLowerCase() ==
-    //     control.attrString("behavior", "")!.toLowerCase());
 
     var dismissThresholds =
         parseDismissThresholds(control, "dismissThresholds");
