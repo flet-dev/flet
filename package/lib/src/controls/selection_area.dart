@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/control.dart';
 import 'create_control.dart';
-import '../utils/transforms.dart';
-import '../utils/alignment.dart';
-import '../utils/colors.dart';
-import '../utils/edge_insets.dart';
-import '../utils/text.dart';
 
 class SelectionAreaControl extends StatelessWidget {
   final Control? parent;
@@ -24,8 +19,6 @@ class SelectionAreaControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("SelectionArea build: ${control.id}");
-
-    //String? label = control.attrString("labelText");
 
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);

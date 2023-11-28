@@ -30,7 +30,7 @@ class SelectionArea(Control):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         ref: Optional[Ref] = None,
         data: Any = None,
     ):
@@ -54,9 +54,9 @@ class SelectionArea(Control):
 
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value: Optional[Control]):
+    def content(self, value: Control):
         self.__content = value
