@@ -36,7 +36,6 @@ class SegmentedButtonControl extends StatefulWidget {
 class _SegmentedButtonControlState extends State<SegmentedButtonControl> {
   void onChange(Set<String> selection) {
     var s = jsonEncode(selection.toList());
-    debugPrint("onChange selection: $s");
 
     List<Map<String, String>> props = [
       {
@@ -81,11 +80,9 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl> {
         (jsonDecode(widget.control.attrString("selected", "[]")!) as List)
             .map((e) => e.toString())
             .toSet();
-    debugPrint("selected: $selected");
 
     List<Control> segments =
         widget.children.where((c) => c.name == "segment").toList();
-    debugPrint("segments: $segments");
 
     if (selected.isEmpty && !allowEmptySelection) {
       return const ErrorControl("When allow_empty_selection is False, "
@@ -117,9 +114,6 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl> {
         converter: (store) =>
             ControlsViewModel.fromStore(store, segments.map((s) => s.id)),
         builder: (content, segmentViews) {
-          debugPrint(
-            "content: $content, segmentViews: $segmentViews",
-          );
           return SegmentedButton<String>(
               emptySelectionAllowed: allowEmptySelection,
               multiSelectionEnabled: allowMultipleSelection,
