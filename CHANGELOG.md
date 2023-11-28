@@ -1,5 +1,14 @@
 # Flet changelog
 
+# 0.14.0
+
+* `SegmentedButton` control ([docs](https://flet.dev/docs/controls/segmentedbutton)).
+* `ExpansionTile` control ([docs](https://flet.dev/docs/controls/expansiontile)).
+* `BottomAppBar` control ([docs](https://flet.dev/docs/controls/bottomappbar)).
+* Add console as a build argument ([#2146](https://github.com/flet-dev/flet/issues/2146)).
+* `--uac-admin` flag added to `flet pack` command ([#2149](https://github.com/flet-dev/flet/issues/2149)).
+* Bump Flutter dependencies.
+
 # 0.13.0
 
 * `Dismissible` Control ([#2124](https://github.com/flet-dev/flet/issues/2124)).
