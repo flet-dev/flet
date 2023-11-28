@@ -1,5 +1,6 @@
 # 0.14.0
 
+* `SelectionArea` control ([docs](https://flet.dev/docs/controls/selectionarea)).
 * `SegmentedButton` control ([docs](https://flet.dev/docs/controls/segmentedbutton)).
 * `ExpansionTile` control ([docs](https://flet.dev/docs/controls/expansiontile)).
 * `BottomAppBar` control ([docs](https://flet.dev/docs/controls/bottomappbar)).
