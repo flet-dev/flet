@@ -10,6 +10,7 @@ import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
+import '../utils/textfield.dart';
 import 'create_control.dart';
 import 'form_field.dart';
 
@@ -162,6 +163,19 @@ class _TextFieldControlState extends State<TextFieldControl> {
                           .toLowerCase(),
                   orElse: () => TextCapitalization.none);
 
+          FilteringTextInputFormatter? inputFilter =
+              parseInputFilter(widget.control, "inputFilter");
+
+          List<TextInputFormatter>? inputFormatters = [];
+          // add non-null input formatters
+          if (inputFilter != null) {
+            inputFormatters.add(inputFilter);
+          }
+          if (textCapitalization != TextCapitalization.none) {
+            inputFormatters
+                .add(TextCapitalizationFormatter(textCapitalization));
+          }
+
           Widget? revealPasswordIcon;
           if (password && canRevealPassword) {
             revealPasswordIcon = GestureDetector(
@@ -241,11 +255,8 @@ class _TextFieldControlState extends State<TextFieldControl> {
               maxLines: maxLines,
               maxLength: maxLength,
               readOnly: readOnly,
-              inputFormatters: textCapitalization != TextCapitalization.none
-                  ? [
-                      TextCapitalizationFormatter(textCapitalization),
-                    ]
-                  : null,
+              inputFormatters:
+                  inputFormatters.isNotEmpty ? inputFormatters : null,
               obscureText: password && !_revealPassword,
               controller: _controller,
               focusNode: focusNode,

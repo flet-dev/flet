@@ -15,6 +15,7 @@ from flet_core.animation import AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
 from flet_core.bottom_sheet import BottomSheet
+from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.client_storage import ClientStorage
 from flet_core.clipboard import Clipboard
 from flet_core.connection import Connection
@@ -22,9 +23,13 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
-from flet_core.floating_action_button import FloatingActionButton
+from flet_core.floating_action_button import (
+    FloatingActionButton,
+    FloatingActionButtonLocation,
+)
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
+from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.protocol import Command
 from flet_core.querystring import QueryString
 from flet_core.session_storage import SessionStorage
@@ -535,18 +540,19 @@ class Page(Control):
         self.update()
         self.query()  # Update query url (required when using go)
 
-    async def go_async(self, route, **kwargs):
+    async def go_async(self, route, skip_route_change_event=False, **kwargs):
         self.route = route if not kwargs else route + self.query.post(kwargs)
 
-        await self.__on_route_change.get_handler()(
-            ControlEvent(
-                target="page",
-                name="route_change",
-                data=self.route,
-                page=self,
-                control=self,
+        if not skip_route_change_event:
+            await self.__on_route_change.get_handler()(
+                ControlEvent(
+                    target="page",
+                    name="route_change",
+                    data=self.route,
+                    page=self,
+                    control=self,
+                )
             )
-        )
         await self.update_async()
         self.query()
 
@@ -1052,6 +1058,50 @@ class Page(Control):
             self.__offstage.bottom_sheet.open = False
             await self.__offstage.update_async()
 
+    # Drawer
+    #
+    def show_drawer(self, drawer: NavigationDrawer):
+        self.drawer = drawer
+        self.drawer.open = True
+        self.update()
+
+    async def show_drawer_async(self, drawer: NavigationDrawer):
+        self.drawer = drawer
+        self.drawer.open = True
+        await self.update_async()
+
+    def close_drawer(self):
+        if self.drawer is not None:
+            self.drawer.open = False
+            self.update()
+
+    async def close_drawer_async(self):
+        if self.drawer is not None:
+            self.drawer.open = False
+            await self.drawer.update_async()
+
+    # End_drawer
+    #
+    def show_end_drawer(self, end_drawer: NavigationDrawer):
+        self.end_drawer = end_drawer
+        self.end_drawer.open = True
+        self.update()
+
+    async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
+        self.end_drawer = end_drawer
+        self.end_drawer.open = True
+        await self.update_async()
+
+    def close_end_drawer(self):
+        if self.end_drawer is not None:
+            self.end_drawer.open = False
+            self.update()
+
+    async def close_end_drawer_async(self):
+        if self.end_drawer is not None:
+            self.end_drawer.open = False
+            await self.end_drawer.update_async()
+
     def window_destroy(self):
         self._set_attr("windowDestroy", "true")
         self.update()
@@ -1234,6 +1284,15 @@ class Page(Control):
     def appbar(self, value: Optional[AppBar]):
         self.__default_view.appbar = value
 
+    # bottom_appbar
+    @property
+    def bottom_appbar(self) -> Optional[BottomAppBar]:
+        return self.__default_view.bottom_appbar
+
+    @bottom_appbar.setter
+    def bottom_appbar(self, value: Optional[BottomAppBar]):
+        self.__default_view.bottom_appbar = value
+
     # navigation_bar
     @property
     def navigation_bar(self) -> Optional[NavigationBar]:
@@ -1243,6 +1302,24 @@ class Page(Control):
     def navigation_bar(self, value: Optional[NavigationBar]):
         self.__default_view.navigation_bar = value
 
+    # drawer
+    @property
+    def drawer(self) -> Optional[NavigationDrawer]:
+        return self.__default_view.drawer
+
+    @drawer.setter
+    def drawer(self, value: Optional[NavigationDrawer]):
+        self.__default_view.drawer = value
+
+    # end_drawer
+    @property
+    def end_drawer(self) -> Optional[NavigationDrawer]:
+        return self.__default_view.end_drawer
+
+    @end_drawer.setter
+    def end_drawer(self, value: Optional[NavigationDrawer]):
+        self.__default_view.end_drawer = value
+
     # floating_action_button
     @property
     def floating_action_button(self) -> Optional[FloatingActionButton]:
@@ -1251,6 +1328,17 @@ class Page(Control):
     @floating_action_button.setter
     def floating_action_button(self, value: Optional[FloatingActionButton]):
         self.__default_view.floating_action_button = value
+
+    # floating_action_button_location
+    @property
+    def floating_action_button_location(self) -> Optional[FloatingActionButtonLocation]:
+        return self.__default_view.floating_action_button_location
+
+    @floating_action_button_location.setter
+    def floating_action_button_location(
+        self, value: Optional[FloatingActionButtonLocation]
+    ):
+        self.__default_view.floating_action_button_location = value
 
     # horizontal_alignment
     @property

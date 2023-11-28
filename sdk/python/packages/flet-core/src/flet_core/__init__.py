@@ -23,6 +23,7 @@ from flet_core.banner import Banner
 from flet_core.blur import Blur, BlurTileMode
 from flet_core.border import Border, BorderSide
 from flet_core.border_radius import BorderRadius
+from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
 from flet_core.buttons import (
     BeveledRectangleBorder,
@@ -68,11 +69,13 @@ from flet_core.datatable import (
     DataTable,
 )
 from flet_core.date_picker import DatePicker, DatePickerMode, DatePickerEntryMode
+from flet_core.dismissible import Dismissible
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
 from flet_core.dropdown import Dropdown
 from flet_core.elevated_button import ElevatedButton
+from flet_core.expansion_tile import ExpansionTile, TileAffinity
 from flet_core.file_picker import (
     FilePicker,
     FilePickerFileType,
@@ -83,7 +86,7 @@ from flet_core.file_picker import (
 from flet_core.filled_button import FilledButton
 from flet_core.filled_tonal_button import FilledTonalButton
 from flet_core.flet_app import FletApp
-from flet_core.floating_action_button import FloatingActionButton
+from flet_core.floating_action_button import FloatingActionButton, FloatingActionButtonLocation
 from flet_core.form_field_control import InputBorder
 from flet_core.gesture_detector import (
     DragEndEvent,
@@ -155,6 +158,7 @@ from flet_core.responsive_row import ResponsiveRow
 from flet_core.row import Row
 from flet_core.safe_area import SafeArea
 from flet_core.scrollable_control import OnScrollEvent
+from flet_core.segmented_button import Segment, SegmentedButton
 from flet_core.semantics import Semantics
 from flet_core.shader_mask import ShaderMask
 from flet_core.shadow import BoxShadow, ShadowBlurStyle
@@ -169,7 +173,15 @@ from flet_core.text import Text, TextOverflow, TextThemeStyle
 from flet_core.text_button import TextButton
 from flet_core.text_span import TextSpan
 from flet_core.text_style import TextDecoration, TextDecorationStyle, TextStyle
-from flet_core.textfield import KeyboardType, TextCapitalization, TextField
+from flet_core.textfield import (
+    KeyboardType,
+    InputFilter,
+    NumbersOnlyInputFilter,
+    TextCapitalization,
+    TextField,
+    TextOnlyInputFilter,
+)
+from flet_core.time_picker import TimePicker, TimePickerEntryMode
 from flet_core.theme import (
     ColorScheme,
     PageTransitionsTheme,
@@ -194,6 +206,7 @@ from flet_core.types import (
     LabelPosition,
     MainAxisAlignment,
     MaterialState,
+    NotchShape,
     PaddingValue,
     PageDesignLanguage,
     ScrollMode,
@@ -207,3 +220,4 @@ from flet_core.window_drag_area import WindowDragArea
 from flet_core.webview import WebView
 from flet_core.range_slider import RangeSlider
 from flet_core.badge import Badge
+from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/floating_action_button.dart';
 import 'package:flet/src/flet_app_context.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import '../models/page_args_model.dart';
 import '../models/page_media_view_model.dart';
 import '../models/routes_view_model.dart';
 import '../protocol/keyboard_event.dart';
+import '../protocol/update_control_props_payload.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
@@ -27,13 +29,13 @@ import '../utils/edge_insets.dart';
 import '../utils/images.dart';
 import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
-import '../widgets/fade_transition_page.dart';
+import '../widgets/animated_transition_page.dart';
 import '../widgets/loading_page.dart';
-import '../widgets/no_animation_page.dart';
 import '../widgets/page_media.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
+import 'navigation_drawer.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
@@ -443,7 +445,7 @@ class _PageControlState extends State<PageControl> {
               distinct: true,
               converter: (store) => PageMediaViewModel.fromStore(store),
               builder: (context, media) {
-                debugPrint("MeterialApp.router build: ${widget.control.id}");
+                debugPrint("MaterialApp.router build: ${widget.control.id}");
 
                 return FletAppContext(
                     themeMode: themeMode,
@@ -480,7 +482,8 @@ class _PageControlState extends State<PageControl> {
 
           List<Page<dynamic>> pages = [];
           if (routesView.views.isEmpty) {
-            pages.add(FadeTransitionPage(
+            pages.add(AnimatedTransitionPage(
+                fadeTransition: true,
                 child: hideLoadingPage
                     ? const Scaffold(
                         body: PageMedia(),
@@ -524,19 +527,26 @@ class _PageControlState extends State<PageControl> {
             String viewRoutes = routesView.views
                 .map((v) => v.attrString("route") ?? v.id)
                 .join();
+
             pages = routesView.views.map((view) {
               var key = ValueKey(view.attrString("route") ?? view.id);
-              var child = _buildViewWidget(routesView.page, view.id,
-                  overlayWidgets(view.id), loadingPage);
+              var child = ViewControl(
+                  parent: routesView.page,
+                  viewId: view.id,
+                  overlayWidgets: overlayWidgets(view.id),
+                  loadingPage: loadingPage,
+                  dispatch: widget.dispatch);
+
+              //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
+
               return _prevViewRoutes == null
-                  ? FadeTransitionPage(key: key, child: child)
-                  : _prevViewRoutes == viewRoutes
-                      ? NoAnimationPage(key: key, child: child)
-                      : MaterialPage(
-                          key: key,
-                          child: child,
-                          fullscreenDialog:
-                              view.attrBool("fullscreenDialog", false)!);
+                  ? AnimatedTransitionPage(
+                      key: key, child: child, fadeTransition: true)
+                  : AnimatedTransitionPage(
+                      key: key,
+                      child: child,
+                      fullscreenDialog:
+                          view.attrBool("fullscreenDialog", false)!);
             }).toList();
 
             _prevViewRoutes = viewRoutes;
@@ -565,16 +575,39 @@ class _PageControlState extends State<PageControl> {
           return nextChild;
         });
   }
+}
 
-  Widget _buildViewWidget(Control parent, String viewId,
-      List<Widget> overlayWidgets, Widget? loadingPage) {
+class ViewControl extends StatefulWidget {
+  final Control parent;
+  final String viewId;
+  final List<Widget> overlayWidgets;
+  final Widget? loadingPage;
+  final dynamic dispatch;
+
+  const ViewControl(
+      {super.key,
+      required this.parent,
+      required this.viewId,
+      required this.overlayWidgets,
+      required this.loadingPage,
+      required this.dispatch});
+
+  @override
+  State<ViewControl> createState() => _ViewControlState();
+}
+
+class _ViewControlState extends State<ViewControl> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  Widget build(BuildContext context) {
     return StoreConnector<AppState, ControlViewModel?>(
         distinct: true,
         converter: (store) {
-          return ControlViewModel.fromStore(store, viewId);
+          return ControlViewModel.fromStore(store, widget.viewId);
         },
         ignoreChange: (state) {
-          return state.controls[viewId] == null;
+          return state.controls[widget.viewId] == null;
         },
         // onWillChange: (prev, next) {
         //   debugPrint("View StoreConnector.onWillChange(): $prev, $next");
@@ -594,10 +627,17 @@ class _PageControlState extends State<PageControl> {
               control, "verticalAlignment", MainAxisAlignment.start);
           final crossAlignment = parseCrossAxisAlignment(
               control, "horizontalAlignment", CrossAxisAlignment.start);
+          final fabLocation = parseFloatingActionButtonLocation(
+              control,
+              "floatingActionButtonLocation",
+              FloatingActionButtonLocation.endFloat);
 
           Control? appBar;
+          Control? bottomAppBar;
           Control? fab;
           Control? navBar;
+          Control? drawer;
+          Control? endDrawer;
           List<Widget> controls = [];
           bool firstControl = true;
 
@@ -605,11 +645,21 @@ class _PageControlState extends State<PageControl> {
             if (ctrl.type == "appbar") {
               appBar = ctrl;
               continue;
+            } else if (ctrl.type == "bottomappbar") {
+              bottomAppBar = ctrl;
+              continue;
             } else if (ctrl.type == "floatingactionbutton") {
               fab = ctrl;
               continue;
             } else if (ctrl.type == "navigationbar") {
               navBar = ctrl;
+              continue;
+            } else if (ctrl.type == "navigationdrawer" &&
+                ctrl.name == "start") {
+              drawer = ctrl;
+              continue;
+            } else if (ctrl.type == "navigationdrawer" && ctrl.name == "end") {
+              endDrawer = ctrl;
               continue;
             }
             // spacer between displayed controls
@@ -626,12 +676,10 @@ class _PageControlState extends State<PageControl> {
             controls.add(createControl(control, ctrl.id, control.isDisabled));
           }
 
-          List<String> childIds = [];
-          if (appBar != null) {
-            childIds.add(appBar.id);
-          }
+          List<String> childIds =
+              [appBar?.id, drawer?.id, endDrawer?.id].whereNotNull().toList();
 
-          final textDirection = parent.attrBool("rtl", false)!
+          final textDirection = widget.parent.attrBool("rtl", false)!
               ? TextDirection.rtl
               : TextDirection.ltr;
 
@@ -649,12 +697,14 @@ class _PageControlState extends State<PageControl> {
                 return false;
               },
               builder: (context, childrenViews) {
-                debugPrint("Route view StoreConnector build: $viewId");
+                debugPrint("Route view StoreConnector build: ${widget.viewId}");
 
-                var appBarView =
-                    appBar != null && childrenViews.controlViews.isNotEmpty
-                        ? childrenViews.controlViews.last
-                        : null;
+                var appBarView = childrenViews.controlViews.firstWhereOrNull(
+                    (v) => v.control.id == (appBar?.id ?? ""));
+                var drawerView = childrenViews.controlViews.firstWhereOrNull(
+                    (v) => v.control.id == (drawer?.id ?? ""));
+                var endDrawerView = childrenViews.controlViews.firstWhereOrNull(
+                    (v) => v.control.id == (endDrawer?.id ?? ""));
 
                 var column = Column(
                     mainAxisAlignment: mainAlignment,
@@ -673,7 +723,75 @@ class _PageControlState extends State<PageControl> {
                       ScrollNotificationControl(control: control, child: child);
                 }
 
+                final bool? drawerOpened = widget.parent.state["drawerOpened"];
+                final bool? endDrawerOpened =
+                    widget.parent.state["endDrawerOpened"];
+
+                void dismissDrawer(String id) {
+                  List<Map<String, String>> props = [
+                    {"i": id, "open": "false"}
+                  ];
+                  widget.dispatch(UpdateControlPropsAction(
+                      UpdateControlPropsPayload(props: props)));
+                  FletAppServices.of(context)
+                      .server
+                      .updateControlProps(props: props);
+                  FletAppServices.of(context).server.sendPageEvent(
+                      eventTarget: id, eventName: "dismiss", eventData: "");
+                }
+
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (drawerView != null) {
+                    if (scaffoldKey.currentState?.isDrawerOpen == false &&
+                        drawerOpened == true) {
+                      widget.parent.state["drawerOpened"] = false;
+                      dismissDrawer(drawerView.control.id);
+                    }
+                    if (drawerView.control.attrBool("open", false)! &&
+                        drawerOpened != true) {
+                      if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
+                        scaffoldKey.currentState?.closeEndDrawer();
+                      }
+                      Future.delayed(const Duration(milliseconds: 1))
+                          .then((value) {
+                        scaffoldKey.currentState?.openDrawer();
+                        widget.parent.state["drawerOpened"] = true;
+                      });
+                    } else if (!drawerView.control.attrBool("open", false)! &&
+                        drawerOpened == true) {
+                      scaffoldKey.currentState?.closeDrawer();
+                      widget.parent.state["drawerOpened"] = false;
+                    }
+                  }
+                  if (endDrawerView != null) {
+                    if (scaffoldKey.currentState?.isEndDrawerOpen == false &&
+                        endDrawerOpened == true) {
+                      widget.parent.state["endDrawerOpened"] = false;
+                      dismissDrawer(endDrawerView.control.id);
+                    }
+                    if (endDrawerView.control.attrBool("open", false)! &&
+                        endDrawerOpened != true) {
+                      if (scaffoldKey.currentState?.isDrawerOpen == true) {
+                        scaffoldKey.currentState?.closeDrawer();
+                      }
+                      Future.delayed(const Duration(milliseconds: 1))
+                          .then((value) {
+                        scaffoldKey.currentState?.openEndDrawer();
+                        widget.parent.state["endDrawerOpened"] = true;
+                      });
+                    } else if (!endDrawerView.control
+                            .attrBool("open", false)! &&
+                        endDrawerOpened == true) {
+                      scaffoldKey.currentState?.closeEndDrawer();
+                      widget.parent.state["endDrawerOpened"] = false;
+                    }
+                  }
+                });
+
+                var bnb = navBar ?? bottomAppBar;
+
                 var scaffold = Scaffold(
+                  key: scaffoldKey,
                   backgroundColor: HexColor.fromString(
                       Theme.of(context), control.attrString("bgcolor", "")!),
                   appBar: appBarView != null
@@ -685,27 +803,56 @@ class _PageControlState extends State<PageControl> {
                           height: appBarView.control
                               .attrDouble("toolbarHeight", kToolbarHeight)!)
                       : null,
+                  drawer: drawerView != null
+                      ? NavigationDrawerControl(
+                          control: drawerView.control,
+                          children: drawerView.children,
+                          parentDisabled: control.isDisabled,
+                          dispatch: widget.dispatch,
+                        )
+                      : null,
+                  onDrawerChanged: (opened) {
+                    if (drawerView != null && !opened) {
+                      widget.parent.state["drawerOpened"] = false;
+                      dismissDrawer(drawerView.control.id);
+                    }
+                  },
+                  endDrawer: endDrawerView != null
+                      ? NavigationDrawerControl(
+                          control: endDrawerView.control,
+                          children: endDrawerView.children,
+                          parentDisabled: control.isDisabled,
+                          dispatch: widget.dispatch,
+                        )
+                      : null,
+                  onEndDrawerChanged: (opened) {
+                    if (endDrawerView != null && !opened) {
+                      widget.parent.state["endDrawerOpened"] = false;
+                      dismissDrawer(endDrawerView.control.id);
+                    }
+                  },
                   body: Stack(children: [
                     SizedBox.expand(
                         child: Container(
                             padding: parseEdgeInsets(control, "padding") ??
                                 const EdgeInsets.all(10),
                             child: child)),
-                    ...overlayWidgets
+                    ...widget.overlayWidgets
                   ]),
-                  bottomNavigationBar: navBar != null
-                      ? createControl(control, navBar.id, control.isDisabled)
+                  bottomNavigationBar: bnb != null
+                      ? createControl(control, bnb.id, control.isDisabled)
                       : null,
                   floatingActionButton: fab != null
                       ? createControl(control, fab.id, control.isDisabled)
                       : null,
+                  floatingActionButtonLocation: fabLocation,
                 );
 
                 return Directionality(
                     textDirection: textDirection,
-                    child: loadingPage != null
+                    child: widget.loadingPage != null
                         ? Stack(
-                            children: [scaffold, loadingPage],
+                            children: [scaffold, widget.loadingPage!],
                           )
                         : scaffold);
               });

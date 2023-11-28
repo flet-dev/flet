@@ -23,7 +23,7 @@ class ImageControl extends StatelessWidget {
   final Control control;
   final bool parentDisabled;
 
-  static const String svgTag = "<svg";
+  static const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
 
   const ImageControl(
       {Key? key,

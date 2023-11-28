@@ -156,6 +156,16 @@ class Control:
             attrs[k] = v[0]
         return f"{self._get_control_name()} {attrs}"
 
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}("
+            + ", ".join(
+                f"{k}={v[0]}" if not isinstance(v[0], str) else f"{k}='{v[0]}'"
+                for k, v in self.__attrs.items()
+            )
+            + ")"
+        )
+
     # event_handlers
     @property
     def event_handlers(self):

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/segmented_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -14,6 +15,7 @@ import '../utils/theme.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
+import 'bottom_app_bar.dart';
 import 'audio.dart';
 import 'badge.dart';
 import 'banner.dart';
@@ -29,12 +31,14 @@ import 'column.dart';
 import 'container.dart';
 import 'datatable.dart';
 import 'date_picker.dart';
+import 'dismissible.dart';
 import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
 import 'error.dart';
+import 'expansion_tile.dart';
 import 'file_picker.dart';
 import 'flet_app_control.dart';
 import 'floating_action_button.dart';
@@ -73,6 +77,7 @@ import 'tabs.dart';
 import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
+import 'time_picker.dart';
 import 'tooltip.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
@@ -231,7 +236,6 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           children: controlView.children,
           parentDisabled: parentDisabled,
           dispatch: controlView.dispatch);
-
     case "progressring":
       return ProgressRingControl(
           key: key, parent: parent, control: controlView.control);
@@ -304,6 +308,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "segmentedbutton":
+      return SegmentedButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "stack":
       return StackControl(
           key: key,
@@ -320,6 +332,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "datepicker":
       return DatePickerControl(
+        parent: parent,
+        control: controlView.control,
+        children: controlView.children,
+        parentDisabled: parentDisabled,
+        dispatch: controlView.dispatch,
+      );
+    case "timepicker":
+      return TimePickerControl(
         parent: parent,
         control: controlView.control,
         children: controlView.children,
@@ -410,6 +430,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "expansiontile":
+      return ExpansionTileControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
     case "listview":
       return ListViewControl(
           key: key,
@@ -492,6 +519,12 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           children: controlView.children,
           parentDisabled: parentDisabled,
           nextChild: nextChild);
+    case "dismissible":
+      return DismissibleControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
     case "alertdialog":
       return AlertDialogControl(
           parent: parent,
@@ -537,6 +570,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           children: controlView.children,
           parentDisabled: parentDisabled,
           dispatch: controlView.dispatch);
+    case "bottomappbar":
+      return BottomAppBarControl(
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled,
+          children: controlView.children,
+      );
     case "windowdragarea":
       return WindowDragAreaControl(
           parent: parent,

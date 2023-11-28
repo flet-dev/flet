@@ -1,3 +1,47 @@
+# 0.13.0
+
+* `Dismissible` Control ([#2124](https://github.com/flet-dev/flet/issues/2124)).
+* `TimePicker` control ([#2129](https://github.com/flet-dev/flet/issues/2129)).
+* Fixed: verify `value` limits ([#2121](https://github.com/flet-dev/flet/issues/2121)).
+* Added `thumb_icon` to `Switch` ([#2116](https://github.com/flet-dev/flet/issues/2116)).
+* Feature: `TextField` Input validation ([#2101](https://github.com/flet-dev/flet/issues/2101)).
+
+# 0.12.2
+
+* Flutter 3.16.0
+* Added ´__repr__´ to `Control` class ([#2091](https://github.com/flet-dev/flet/issues/2091)).
+* Added ´skip_route_change_event´ to ´page.go_async´ ([#2092](https://github.com/flet-dev/flet/issues/2092)).
+
+# 0.12.1
+
+* Ability to expand `ButtomSheet` to the top of the screen with `BottomSheet.is_scroll_controlled` property ([#2087](https://github.com/flet-dev/flet/issues/2087)).
+* `BottomSheet.maintain_bottom_view_insets_padding` to avoid obstructing controls with on-screen keyboard ([#2010](https://github.com/flet-dev/flet/issues/2010)).
+* Fixed: `NavigationDrawer` disappears when you move the window and is not opening again ([#2062](https://github.com/flet-dev/flet/issues/2062)).
+* Fixed: alert dialog doesn't close ([#2011](https://github.com/flet-dev/flet/issues/2011)).
+* Fixed: Resizing app's window with an opened BottomSheet triggers new addition to Overlay ([#2075](https://github.com/flet-dev/flet/issues/2075)).
+* Fixed: on_window_event isnt handled after page navigation ([#2081](https://github.com/flet-dev/flet/issues/2081)).
+* Fixed: Routing is not working in 0.12.0 ([#2082](https://github.com/flet-dev/flet/issues/2082)).
+* Fixed: routing regression.
+* Fixed: Multiple dialogs (AlertDialog) will create a ghost dialog ([#1670](https://github.com/flet-dev/flet/issues/1670)).
+
+# 0.12.0
+
+* `NavigationDrawer` control ([docs](https://flet.dev/docs/controls/navigationdrawer)).
+* `Badge` control ([docs](https://flet.dev/docs/controls/badge)).
+* `RangeSlider` control ([docs](https://flet.dev/docs/controls/rangeslider)).
+* `WebView` control ([docs](https://flet.dev/docs/controls/webview)).
+* `Cookiecutter` replaces `Copier` ([#2014](https://github.com/flet-dev/flet/issues/2014)).
+* `page.go()`: ability to skip route change event ([#2039](https://github.com/flet-dev/flet/issues/2039)).
+* Fixed: Two `Datepicker` Opening Issue ([#2025](https://github.com/flet-dev/flet/issues/2025)).
+* Fixed: Using Audio and FilePicker at the same time, when click on the FilePicker, the audio automatically replays ([#1807](https://github.com/flet-dev/flet/issues/1807)).
+* Fixed: Audio issue while Route Changing ([#1236](https://github.com/flet-dev/flet/issues/1236)).
+* Fixed: Snackbar cause Audio stop playing ([#1772](https://github.com/flet-dev/flet/issues/1772)).
+* Fixed: `scroll_to()` with zero duration does nothing ([#1659](https://github.com/flet-dev/flet/issues/1659)).
+* Fixed: cannot get height and width for page ([#1960](https://github.com/flet-dev/flet/issues/1960)).
+* Fixed: Put it the right version of flet ([#1997](https://github.com/flet-dev/flet/issues/1997)).
+* Fixed: `Chip.selected` property type changed to bool ([#2048](https://github.com/flet-dev/flet/issues/2048)).
+* Fixed: Unreliable detection of SVG images ([#2053](https://github.com/flet-dev/flet/issues/2053)).
+
 # 0.11.0
 
 * `DatePicker` control ([docs](https://flet.dev/docs/controls/datepicker)).

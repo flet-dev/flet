@@ -119,3 +119,42 @@ If you have Microsoft Edge installed and want to use it for debugging Flutter ap
 # Flutter
 export CHROME_EXECUTABLE="/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
 ```
+If you added these through the terminal, close that terminal session and create a new one.
+
+### Building the Flutter client
+Open an instance of your IDE (preferably VS Code) at the `flet-dev/flet/client` directory.
+
+First, run `printenv | grep FLET` in the built-in terminal to make sure everything is set. You should see the above environment variables you set (`FLET_VIEW_PATH`, `FLET_WEB_PATH`) printed out.
+
+-  To build the Flutter client for MacOS, run:
+    ```
+    flutter build macos
+    ```
+    When the build is complete, you should see the Flet.app bundle in `client/build/macos/Build/Products/Release`. (Running it will open a blank window.)
+-  To build the Flutter client for Web, run the below command:
+    ```
+    flutter build web
+    ```   
+    When the build is complete, a directory `client/build/web` will be created.
+
+### Running the Flutter client
+Now open another instance of VS Code at `flet-dev/flet/sdk/python` directory.
+
+Create a new folder preferably named `playground` (it has been added to the gitignore) in which you will test your additions.
+
+Try running the below command, where `<your-main.py>` is the file to test your additions:
+
+```bash
+poetry run flet run -w -p 8550 playground/<your-main.py>
+```
+You should see http://127.0.0.1:8550/ opened in the browser and also a desktop window with the output of your code.
+Making changes to the `<your-main.py>` will automatically trigger a hot reload.
+
+Now, switch to your flutter vscode instance and run the below command to start/connect the flet client:
+```bash
+flutter run
+```
+then choose your device from the shown options.
+You will be able to see the debugging outputs of the flet client in this terminal.
+
+**Note** that if you make changes to the dart files, you will need to recompile/rebuild the Flutter client (with `flutter run` as above) for the changes to take effect in your playground.

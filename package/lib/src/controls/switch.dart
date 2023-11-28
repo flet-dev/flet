@@ -8,6 +8,7 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
+import '../utils/icons.dart';
 import 'create_control.dart';
 import 'list_tile.dart';
 
@@ -110,6 +111,8 @@ class _SwitchControlState extends State<SwitchControl> {
                   widget.control.attrString("inactiveTrackColor", "")!),
               thumbColor: parseMaterialStateColor(
                   Theme.of(context), widget.control, "thumbColor"),
+              thumbIcon: parseMaterialStateIcon(
+                  Theme.of(context), widget.control, "thumbIcon"),
               trackColor: parseMaterialStateColor(
                   Theme.of(context), widget.control, "trackColor"),
               value: _value,

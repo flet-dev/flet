@@ -1,3 +1,5 @@
+import dataclasses
+from dataclasses import field
 import time
 from enum import Enum
 from typing import Any, Optional, Union
@@ -61,6 +63,21 @@ class TextCapitalization(Enum):
     CHARACTERS = "characters"
     WORDS = "words"
     SENTENCES = "sentences"
+
+
+@dataclasses.dataclass
+class InputFilter:
+    regex_string: str
+    allow: bool = field(default=True)
+    replacement_string: str = field(default="")
+
+class NumbersOnlyInputFilter(InputFilter):
+    def __init__(self):
+        super().__init__(r"[0-9]")
+
+class TextOnlyInputFilter(InputFilter):
+    def __init__(self):
+        super().__init__(r"[a-zA-Z]")
 
 
 class TextField(FormFieldControl):
@@ -179,6 +196,7 @@ class TextField(FormFieldControl):
         cursor_height: OptionalNumber = None,
         cursor_radius: OptionalNumber = None,
         selection_color: Optional[str] = None,
+        input_filter: Optional[InputFilter] = None,
         on_change=None,
         on_submit=None,
         on_focus=None,
@@ -269,6 +287,7 @@ class TextField(FormFieldControl):
         self.cursor_width = cursor_width
         self.cursor_radius = cursor_radius
         self.selection_color = selection_color
+        self.input_filter = input_filter
         self.on_change = on_change
         self.on_submit = on_submit
         self.on_focus = on_focus
@@ -279,6 +298,7 @@ class TextField(FormFieldControl):
 
     def _before_build_command(self):
         super()._before_build_command()
+        self._set_attr_json("inputFilter", self.__input_filter)
         if self.bgcolor is not None and self.filled is None:
             self.filled = True  # Flutter requires filled = True to display a bgcolor
 
@@ -508,6 +528,15 @@ class TextField(FormFieldControl):
     @selection_color.setter
     def selection_color(self, value):
         self._set_attr("selectionColor", value)
+
+    # input_filter
+    @property
+    def input_filter(self) -> Optional[InputFilter]:
+        return self.__input_filter
+
+    @input_filter.setter
+    def input_filter(self, value: Optional[InputFilter]):
+        self.__input_filter = value
 
     # on_change
     @property
