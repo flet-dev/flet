@@ -38,9 +38,9 @@ class DismissibleControl extends StatelessWidget {
     var secondaryBackgroundCtrls =
         children.where((c) => c.name == "secondaryBackground");
 
-    SnackBarBehavior? behavior = SnackBarBehavior.values.firstWhereOrNull((a) =>
-        a.name.toLowerCase() ==
-        control.attrString("behavior", "")!.toLowerCase());
+    // SnackBarBehavior? behavior = SnackBarBehavior.values.firstWhereOrNull((a) =>
+    //     a.name.toLowerCase() ==
+    //     control.attrString("behavior", "")!.toLowerCase());
 
     var dismissThresholds =
         parseDismissThresholds(control, "dismissThresholds");
@@ -54,35 +54,35 @@ class DismissibleControl extends StatelessWidget {
     return constrainedControl(
         context,
         Dismissible(
-        key: ValueKey<String>(control.id),
-        direction: direction,
-        background: backgroundCtrls.isNotEmpty
-            ? createControl(control, backgroundCtrls.first.id, disabled)
-            : Container(color: Colors.transparent),
-        secondaryBackground: secondaryBackgroundCtrls.isNotEmpty
-            ? createControl(
-                control, secondaryBackgroundCtrls.first.id, disabled)
-            : Container(color: Colors.transparent),
-        onDismissed: (DismissDirection d) {
-          server.sendPageEvent(
-              eventTarget: control.id, eventName: "dismiss", eventData: "");
-        },
-        onResize: () {
-          server.sendPageEvent(
-              eventTarget: control.id, eventName: "resize", eventData: "");
-        },
-        onUpdate: (DismissUpdateDetails d) {
-          server.sendPageEvent(
-              eventTarget: control.id, eventName: "update", eventData: "");
-        },
-        // confirmDismiss: // TODO: implement
-        movementDuration:
-            Duration(milliseconds: control.attrInt("duration", 200)!),
-        resizeDuration:
-            Duration(milliseconds: control.attrInt("resizeDuration", 300)!),
-        crossAxisEndOffset: control.attrDouble("crossAxisEndOffset", 0.0)!,
-        dismissThresholds: dismissThresholds ?? {},
-        child: createControl(control, contentCtrls.first.id, disabled)),
+            key: ValueKey<String>(control.id),
+            direction: direction,
+            background: backgroundCtrls.isNotEmpty
+                ? createControl(control, backgroundCtrls.first.id, disabled)
+                : Container(color: Colors.transparent),
+            secondaryBackground: secondaryBackgroundCtrls.isNotEmpty
+                ? createControl(
+                    control, secondaryBackgroundCtrls.first.id, disabled)
+                : Container(color: Colors.transparent),
+            onDismissed: (DismissDirection d) {
+              server.sendPageEvent(
+                  eventTarget: control.id, eventName: "dismiss", eventData: "");
+            },
+            onResize: () {
+              server.sendPageEvent(
+                  eventTarget: control.id, eventName: "resize", eventData: "");
+            },
+            onUpdate: (DismissUpdateDetails d) {
+              server.sendPageEvent(
+                  eventTarget: control.id, eventName: "update", eventData: "");
+            },
+            // confirmDismiss: // TODO: implement
+            movementDuration:
+                Duration(milliseconds: control.attrInt("duration", 200)!),
+            resizeDuration:
+                Duration(milliseconds: control.attrInt("resizeDuration", 300)!),
+            crossAxisEndOffset: control.attrDouble("crossAxisEndOffset", 0.0)!,
+            dismissThresholds: dismissThresholds ?? {},
+            child: createControl(control, contentCtrls.first.id, disabled)),
         parent,
         control);
   }
