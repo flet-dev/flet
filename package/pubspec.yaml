@@ -25,7 +25,7 @@ dependencies:
   equatable: ^2.0.3
   web_socket_channel: ^2.1.0
   window_manager: ^0.3.2
-  http: ^0.13.3
+  http: ^1.1.2
   collection: ^1.16.0
   url_launcher: ^6.1.5
   flutter_markdown: ^0.6.14
