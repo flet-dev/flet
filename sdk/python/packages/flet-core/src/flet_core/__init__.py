@@ -158,6 +158,7 @@ from flet_core.responsive_row import ResponsiveRow
 from flet_core.row import Row
 from flet_core.safe_area import SafeArea
 from flet_core.scrollable_control import OnScrollEvent
+from flet_core.segmented_button import Segment, SegmentedButton
 from flet_core.semantics import Semantics
 from flet_core.shader_mask import ShaderMask
 from flet_core.shadow import BoxShadow, ShadowBlurStyle
