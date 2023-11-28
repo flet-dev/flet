@@ -107,6 +107,13 @@ class Command(BaseCommand):
             dest="debug_console",
             help="Show python console (Ensure correct DEBUG level)",
         )
+        parser.add_argument(
+            "--uac-admin",
+            dest="uac_admin",
+            default=False,
+            action="store_true",
+            help="Using this option creates a Manifest that will request elevation upon application start.(Windows)",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
         # delete "build" directory
@@ -148,6 +155,11 @@ class Command(BaseCommand):
                 pyi_args.extend(["--codesign-identity", options.codesign_identity])
             if options.bundle_id:
                 pyi_args.extend(["--osx-bundle-identifier", options.bundle_id])
+            if options.uac_admin:
+                if is_macos():
+                    print("--uac-admin options is not supported on macOS.")
+                    sys.exit(1)
+                pyi_args.append("--uac-admin")
             if options.onedir:
                 if is_macos():
                     print("--onedir options is not supported on macOS.")
