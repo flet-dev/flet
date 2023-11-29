@@ -13,9 +13,24 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
-            "output_directory",
+            "platform",
             type=str,
-            help="output directory",
+            choices=["macos", "linux", "windows", "web", "apk", "aab", "ipa"],
+            help="platform to build against",
+        )
+        parser.add_argument(
+            "python_app_path",
+            type=str,
+            nargs="?",
+            default=".",
+            help="path to a directory with a Python program",
+        )
+        parser.add_argument(
+            "-o",
+            "--output_dir",
+            dest="output_dir",
+            help="where to put built app (default: ./build)",
+            required=False,
         )
         parser.add_argument(
             "--project-name",
@@ -36,11 +51,17 @@ class Command(BaseCommand):
         template_name = "flet_build"
         template_data = {"template_name": template_name}
 
-        out_dir = Path(options.output_directory).resolve()
+        python_app_path = Path(options.python_app_path).resolve()
+        out_dir = (
+            Path(options.output_dir).resolve()
+            if options.output_dir
+            else python_app_path.joinpath("build")
+        )
+
         template_data["out_dir"] = out_dir.name
 
         project_name = slugify(
-            options.project_name if options.project_name else out_dir.name
+            options.project_name if options.project_name else python_app_path.name
         )
         template_data["project_name"] = project_name
 
