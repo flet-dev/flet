@@ -86,7 +86,10 @@ from flet_core.file_picker import (
 from flet_core.filled_button import FilledButton
 from flet_core.filled_tonal_button import FilledTonalButton
 from flet_core.flet_app import FletApp
-from flet_core.floating_action_button import FloatingActionButton, FloatingActionButtonLocation
+from flet_core.floating_action_button import (
+    FloatingActionButton,
+    FloatingActionButtonLocation,
+)
 from flet_core.form_field_control import InputBorder
 from flet_core.gesture_detector import (
     DragEndEvent,
@@ -221,3 +224,4 @@ from flet_core.webview import WebView
 from flet_core.range_slider import RangeSlider
 from flet_core.badge import Badge
 from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
+from flet_core.selection_area import SelectionArea
