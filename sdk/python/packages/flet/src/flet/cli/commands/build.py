@@ -16,6 +16,54 @@ class Command(BaseCommand):
     Build an executable app or install bundle.
     """
 
+    def __init__(self, parser: argparse.ArgumentParser) -> None:
+        super().__init__(parser)
+
+        self.platforms = {
+            "windows": {
+                "build_command": "windows",
+                "status_text": "Windows app",
+                "output": "build/windows/x64/runner/Release",
+                "dist": "windows",
+            },
+            "macos": {
+                "build_command": "macos",
+                "status_text": "macOS bundle",
+                "output": "build/macos/Build/Products/Release",
+                "dist": "macos",
+            },
+            "linux": {
+                "build_command": "linux",
+                "status_text": "app for Linux",
+                "output": "build/linux/x64/release/bundle",
+                "dist": "linux",
+            },
+            "web": {
+                "build_command": "web",
+                "status_text": "web app",
+                "output": "build/web",
+                "dist": "web",
+            },
+            "apk": {
+                "build_command": "apk",
+                "status_text": ".apk for Android",
+                "output": "build/app/outputs/flutter-apk",
+                "dist": "apk",
+            },
+            "aab": {
+                "build_command": "appbundle",
+                "status_text": ".aab bundle for Android",
+                "output": "build/app/outputs/bundle/release",
+                "dist": "aab",
+            },
+            "ipa": {
+                "build_command": "ipa",
+                "status_text": ".ipa bundle for iOS",
+                "output": "build/app/outputs/bundle/release",
+                "dist": "ipa",
+            },
+        }
+
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
             "platform",
@@ -66,6 +114,7 @@ class Command(BaseCommand):
             print("`dart` command is not available in PATH. Install Flutter SDK.")
             sys.exit(1)
 
+        platform = options.platform.lower()
         verbose = options.verbose
         template_name = "flet_build"
         template_data = {"template_name": template_name}
@@ -75,10 +124,10 @@ class Command(BaseCommand):
         self.flutter_dir = Path(tempfile.gettempdir()).joinpath(
             f"flet_flutter_build_{random_string(10)}"
         )
-        self.flutter_dir.mkdir(exist_ok=True)
 
-        if verbose:
-            print("Temporary Flutter project build directory:", self.flutter_dir)
+        if verbose > 0:
+            print("Flutter bootstrap directory:", self.flutter_dir)
+        self.flutter_dir.mkdir(exist_ok=True)
 
         out_dir = (
             Path(options.output_dir).resolve()
@@ -97,6 +146,7 @@ class Command(BaseCommand):
             template_data["description"] = options.description
 
         # create Flutter project from a template
+        print("Creating Flutter bootstrap project...", end="")
         cookiecutter(
             f"gh:flet-dev/flet-app-templates",
             directory=template_name,
@@ -105,18 +155,18 @@ class Command(BaseCommand):
             overwrite_if_exists=True,
             extra_context=template_data,
         )
+        print("[spring_green3]OK[/spring_green3]")
 
         # copy icons to `flutter_dir`
 
         # convert icons
 
         # package Python app
-        # dart run serious_python:main package app/src
-        print(f"Packaging Python app...")
+        print(f"Packaging Python app...", end="")
         package_result = subprocess.run(
             [dart_exe, "run", "serious_python:main", "package", str(python_app_path)],
             cwd=str(self.flutter_dir),
-            capture_output=True,
+            capture_output=verbose < 2,
             text=True,
         )
 
@@ -126,13 +176,17 @@ class Command(BaseCommand):
             if package_result.stderr:
                 print(package_result.stderr)
             self.cleanup()
+        print("[spring_green3]OK[/spring_green3]")
 
         # run `flutter build`
-        print(f"Building app for {options.platform}...")
+        print(
+            f"Building [cyan]{self.platforms[platform]['status_text']}[/cyan]...",
+            end="",
+        )
         build_result = subprocess.run(
-            [flutter_exe, "build", options.platform],
+            [flutter_exe, "build", self.platforms[platform]["build_command"]],
             cwd=str(self.flutter_dir),
-            capture_output=True,
+            capture_output=verbose < 2,
             text=True,
         )
 
@@ -142,12 +196,14 @@ class Command(BaseCommand):
             if build_result.stderr:
                 print(build_result.stderr)
             self.cleanup()
+        print("[spring_green3]OK[/spring_green3]")
 
         # copy build results to `out_dir`
 
-        # self.cleanup()
+        self.cleanup()
 
     def cleanup(self):
-        print("Cleaning up...")
+        print("Cleaning up...", end="")
         shutil.rmtree(str(self.flutter_dir), ignore_errors=False, onerror=None)
+        print("[spring_green3]OK[/spring_green3]")
         sys.exit(1)
