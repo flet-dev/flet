@@ -1,3 +1,6 @@
+import 'package:flet/src/controls/cupertino_checkbox.dart';
+import 'package:flet/src/controls/switch.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../actions.dart';
@@ -87,6 +90,15 @@ class _CheckboxControlState extends State<CheckboxControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("Checkbox build: ${widget.control.id}");
+    bool adaptive = widget.control.attrBool("adaptive", false)!;
+    if (adaptive &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)) {
+      return CupertinoCheckboxControl(
+          control: widget.control,
+          parentDisabled: widget.parentDisabled,
+          dispatch: widget.dispatch);
+    }
 
     String label = widget.control.attrString("label", "")!;
     LabelPosition labelPosition = LabelPosition.values.firstWhere(
@@ -96,6 +108,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
         orElse: () => LabelPosition.right);
     _tristate = widget.control.attrBool("tristate", false)!;
     bool autofocus = widget.control.attrBool("autofocus", false)!;
+
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     debugPrint("Checkbox StoreConnector build: ${widget.control.id}");

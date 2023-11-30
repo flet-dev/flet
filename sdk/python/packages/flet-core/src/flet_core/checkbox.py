@@ -92,6 +92,7 @@ class Checkbox(ConstrainedControl):
         autofocus: Optional[bool] = None,
         fill_color: Union[None, str, Dict[MaterialState, str]] = None,
         check_color: Optional[str] = None,
+        adaptive: Optional[bool] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -132,6 +133,7 @@ class Checkbox(ConstrainedControl):
         self.autofocus = autofocus
         self.check_color = check_color
         self.fill_color = fill_color
+        self.adaptive = adaptive
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
@@ -162,6 +164,15 @@ class Checkbox(ConstrainedControl):
     @tristate.setter
     def tristate(self, value: Optional[bool]):
         self._set_attr("tristate", value)
+
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
 
     # label
     @property
