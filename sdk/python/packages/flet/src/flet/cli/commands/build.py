@@ -132,7 +132,9 @@ class Command(BaseCommand):
         out_dir = (
             Path(options.output_dir).resolve()
             if options.output_dir
-            else python_app_path.joinpath("build")
+            else python_app_path.joinpath("build").joinpath(
+                self.platforms[platform]["dist"]
+            )
         )
 
         template_data["out_dir"] = self.flutter_dir.name
@@ -200,7 +202,7 @@ class Command(BaseCommand):
 
         # copy build results to `out_dir`
 
-        self.cleanup()
+        # self.cleanup()
 
     def cleanup(self):
         print("Cleaning up...", end="")
