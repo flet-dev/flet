@@ -84,6 +84,7 @@ import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'webview.dart';
 import 'window_drag_area.dart';
+import 'cupertino_checkbox.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild}) {
@@ -472,6 +473,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "checkbox":
       return CheckboxControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
+    case "cupertinocheckbox":
+      return CupertinoCheckboxControl(
           key: key,
           parent: parent,
           control: controlView.control,

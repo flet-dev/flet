@@ -1,25 +1,23 @@
-import 'package:flet/src/controls/cupertino_checkbox.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
-import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
 
-class CheckboxControl extends StatefulWidget {
+class CupertinoCheckboxControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final dynamic dispatch;
 
-  const CheckboxControl(
+  const CupertinoCheckboxControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -28,10 +26,10 @@ class CheckboxControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<CheckboxControl> createState() => _CheckboxControlState();
+  State<CupertinoCheckboxControl> createState() => _CheckboxControlState();
 }
 
-class _CheckboxControlState extends State<CheckboxControl> {
+class _CheckboxControlState extends State<CupertinoCheckboxControl> {
   bool? _value;
   bool _tristate = false;
   late final FocusNode _focusNode;
@@ -87,16 +85,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Checkbox build: ${widget.control.id}");
-    bool adaptive = widget.control.attrBool("adaptive", false)!;
-    if (adaptive &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)) {
-      return CupertinoCheckboxControl(
-          control: widget.control,
-          parentDisabled: widget.parentDisabled,
-          dispatch: widget.dispatch);
-    }
+    debugPrint("CupertinoCheckBox build: ${widget.control.id}");
 
     String label = widget.control.attrString("label", "")!;
     LabelPosition labelPosition = LabelPosition.values.firstWhere(
@@ -106,32 +95,27 @@ class _CheckboxControlState extends State<CheckboxControl> {
         orElse: () => LabelPosition.right);
     _tristate = widget.control.attrBool("tristate", false)!;
     bool autofocus = widget.control.attrBool("autofocus", false)!;
-
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    debugPrint("Checkbox StoreConnector build: ${widget.control.id}");
+    debugPrint("CupertinoCheckbox StoreConnector build: ${widget.control.id}");
 
     bool? value = widget.control.attrBool("value", _tristate ? null : false);
     if (_value != value) {
       _value = value;
     }
 
-    var checkbox = Checkbox(
+    var cupertinoCheckbox = CupertinoCheckbox(
         autofocus: autofocus,
         focusNode: _focusNode,
         value: _value,
         activeColor: HexColor.fromString(
             Theme.of(context), widget.control.attrString("activeColor", "")!),
-        focusColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("focusColor", "")!),
-        hoverColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("hoverColor", "")!),
-        overlayColor: parseMaterialStateColor(
-            Theme.of(context), widget.control, "overlayColor"),
         checkColor: HexColor.fromString(
             Theme.of(context), widget.control.attrString("checkColor", "")!),
-        fillColor: parseMaterialStateColor(
-            Theme.of(context), widget.control, "fillColor"),
+        focusColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("focusColor", "")!),
+        inactiveColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("inactiveColor", "")!),
         tristate: _tristate,
         onChanged: !disabled
             ? (bool? value) {
@@ -143,7 +127,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
       _toggleValue();
     });
 
-    Widget result = checkbox;
+    Widget result = cupertinoCheckbox;
     if (label != "") {
       var labelWidget = disabled
           ? Text(label,
@@ -153,8 +137,8 @@ class _CheckboxControlState extends State<CheckboxControl> {
           child: GestureDetector(
               onTap: !disabled ? _toggleValue : null,
               child: labelPosition == LabelPosition.right
-                  ? Row(children: [checkbox, labelWidget])
-                  : Row(children: [labelWidget, checkbox])));
+                  ? Row(children: [cupertinoCheckbox, labelWidget])
+                  : Row(children: [labelWidget, cupertinoCheckbox])));
     }
 
     return constrainedControl(context, result, widget.parent, widget.control);
