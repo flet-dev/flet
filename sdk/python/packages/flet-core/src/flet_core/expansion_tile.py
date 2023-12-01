@@ -378,7 +378,4 @@ class ExpansionTile(ConstrainedControl):
     @on_change.setter
     def on_change(self, handler):
         self._add_event_handler("change", handler)
-        if handler is not None:
-            self._set_attr("onchange", True)
-        else:
-            self._set_attr("onchange", None)
+        self._set_attr("onChange", True if handler is not None else None)
