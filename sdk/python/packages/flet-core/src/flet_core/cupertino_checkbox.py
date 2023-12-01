@@ -90,8 +90,11 @@ class CupertinoCheckbox(ConstrainedControl):
         value: Optional[bool] = None,
         tristate: Optional[bool] = None,
         autofocus: Optional[bool] = None,
-        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
+        # fill_color: Union[None, str, Dict[MaterialState, str]] = None,
         check_color: Optional[str] = None,
+        active_color: Optional[str] = None,
+        inactive_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -131,7 +134,10 @@ class CupertinoCheckbox(ConstrainedControl):
         self.label_position = label_position
         self.autofocus = autofocus
         self.check_color = check_color
-        self.fill_color = fill_color
+        self.active_color = active_color
+        self.inactive_color = inactive_color
+        self.focus_color = focus_color
+        # self.fill_color = fill_color
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
@@ -139,9 +145,9 @@ class CupertinoCheckbox(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinocheckbox"
 
-    def _before_build_command(self):
-        super()._before_build_command()
-        self._set_attr_json("fillColor", self.__fill_color)
+    # def _before_build_command(self):
+    #     super()._before_build_command()
+    #     self._set_attr_json("fillColor", self.__fill_color)
 
     # value
     @property
@@ -206,14 +212,41 @@ class CupertinoCheckbox(ConstrainedControl):
     def check_color(self, value):
         self._set_attr("checkColor", value)
 
-    # fill_color
+    # active_color
     @property
-    def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
-        return self.__fill_color
+    def active_color(self):
+        return self._get_attr("activeColor")
 
-    @fill_color.setter
-    def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
-        self.__fill_color = value
+    @active_color.setter
+    def active_color(self, value):
+        self._set_attr("activeColor", value)
+
+    # inactive_color
+    @property
+    def inactive_color(self):
+        return self._get_attr("inactiveColor")
+
+    @inactive_color.setter
+    def inactive_color(self, value):
+        self._set_attr("inactiveColor", value)
+
+    # focus_color
+    @property
+    def focus_color(self):
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value):
+        self._set_attr("focusColor", value)
+
+    # # fill_color
+    # @property
+    # def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    #     return self.__fill_color
+
+    # @fill_color.setter
+    # def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    #     self.__fill_color = value
 
     # on_change
     @property

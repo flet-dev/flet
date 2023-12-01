@@ -87,7 +87,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Checkbox build: ${widget.control.id}");
+    debugPrint("CupertinoCheckBox build: ${widget.control.id}");
 
     String label = widget.control.attrString("label", "")!;
     LabelPosition labelPosition = LabelPosition.values.firstWhere(
@@ -99,7 +99,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    debugPrint("Checkbox StoreConnector build: ${widget.control.id}");
+    debugPrint("CupertinoCheckbox StoreConnector build: ${widget.control.id}");
 
     bool? value = widget.control.attrBool("value", _tristate ? null : false);
     if (_value != value) {
@@ -107,26 +107,17 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
     }
 
     var cupertinoCheckbox = CupertinoCheckbox(
-        value: _value,
-        //autofocus: true,
-        activeColor: Colors.amber,
-        checkColor: Colors.red,
-        focusColor: Colors.blue,
-        inactiveColor: Colors.green,
-        onChanged: !disabled
-            ? (bool? value) {
-                _onChange(value);
-              }
-            : null);
-
-    var checkbox_old = Checkbox(
         autofocus: autofocus,
         focusNode: _focusNode,
         value: _value,
+        activeColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("activeColor", "")!),
         checkColor: HexColor.fromString(
             Theme.of(context), widget.control.attrString("checkColor", "")!),
-        fillColor: parseMaterialStateColor(
-            Theme.of(context), widget.control, "fillColor"),
+        focusColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("focusColor", "")!),
+        inactiveColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("inactiveColor", "")!),
         tristate: _tristate,
         onChanged: !disabled
             ? (bool? value) {
@@ -134,11 +125,25 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
               }
             : null);
 
+    // var checkbox_old = Checkbox(
+    //     autofocus: autofocus,
+    //     focusNode: _focusNode,
+    //     value: _value,
+    //     checkColor: HexColor.fromString(
+    //         Theme.of(context), widget.control.attrString("checkColor", "")!),
+    //     fillColor: parseMaterialStateColor(
+    //         Theme.of(context), widget.control, "fillColor"),
+    //     tristate: _tristate,
+    //     onChanged: !disabled
+    //         ? (bool? value) {
+    //             _onChange(value);
+    //           }
+    //         : null);
+
     ListTileClicks.of(context)?.notifier.addListener(() {
       _toggleValue();
     });
 
-    //Widget result = checkbox;
     Widget result = cupertinoCheckbox;
     if (label != "") {
       var labelWidget = disabled
