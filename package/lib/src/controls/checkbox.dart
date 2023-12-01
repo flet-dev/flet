@@ -1,5 +1,4 @@
 import 'package:flet/src/controls/cupertino_checkbox.dart';
-import 'package:flet/src/controls/switch.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -122,6 +121,14 @@ class _CheckboxControlState extends State<CheckboxControl> {
         autofocus: autofocus,
         focusNode: _focusNode,
         value: _value,
+        activeColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("activeColor", "")!),
+        focusColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("focusColor", "")!),
+        hoverColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("hoverColor", "")!),
+        overlayColor: parseMaterialStateColor(
+            Theme.of(context), widget.control, "overlayColor"),
         checkColor: HexColor.fromString(
             Theme.of(context), widget.control.attrString("checkColor", "")!),
         fillColor: parseMaterialStateColor(

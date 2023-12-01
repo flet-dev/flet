@@ -91,7 +91,11 @@ class Checkbox(ConstrainedControl):
         tristate: Optional[bool] = None,
         autofocus: Optional[bool] = None,
         fill_color: Union[None, str, Dict[MaterialState, str]] = None,
+        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
         check_color: Optional[str] = None,
+        active_color: Optional[str] = None,
+        hover_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
         adaptive: Optional[bool] = None,
         on_change=None,
         on_focus=None,
@@ -133,6 +137,10 @@ class Checkbox(ConstrainedControl):
         self.autofocus = autofocus
         self.check_color = check_color
         self.fill_color = fill_color
+        self.focus_color = focus_color
+        self.hover_color = hover_color
+        self.overlay_color = overlay_color
+        self.active_color = active_color
         self.adaptive = adaptive
         self.on_change = on_change
         self.on_focus = on_focus
@@ -144,6 +152,7 @@ class Checkbox(ConstrainedControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("fillColor", self.__fill_color)
+        self._set_attr_json("overlayColor", self.__overlay_color)
 
     # value
     @property
@@ -217,6 +226,33 @@ class Checkbox(ConstrainedControl):
     def check_color(self, value):
         self._set_attr("checkColor", value)
 
+    # active_color
+    @property
+    def active_color(self):
+        return self._get_attr("activeColor")
+
+    @active_color.setter
+    def active_color(self, value):
+        self._set_attr("activeColor", value)
+
+    # focus_color
+    @property
+    def focus_color(self):
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value):
+        self._set_attr("focusColor", value)
+
+    # hover_color
+    @property
+    def hover_color(self):
+        return self._get_attr("hoverColor")
+
+    @hover_color.setter
+    def hover_color(self, value):
+        self._set_attr("hoverColor", value)
+
     # fill_color
     @property
     def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
@@ -225,6 +261,15 @@ class Checkbox(ConstrainedControl):
     @fill_color.setter
     def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__fill_color = value
+
+    # overlay_color
+    @property
+    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__overlay_color
+
+    @overlay_color.setter
+    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__overlay_color = value
 
     # on_change
     @property

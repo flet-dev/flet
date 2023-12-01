@@ -108,6 +108,11 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
 
     var cupertinoCheckbox = CupertinoCheckbox(
         value: _value,
+        //autofocus: true,
+        activeColor: Colors.amber,
+        checkColor: Colors.red,
+        focusColor: Colors.blue,
+        inactiveColor: Colors.green,
         onChanged: !disabled
             ? (bool? value) {
                 _onChange(value);
