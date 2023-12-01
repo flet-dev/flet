@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
+import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
@@ -17,13 +19,12 @@ class ExpansionPanelListControl extends StatefulWidget {
   final dynamic dispatch;
 
   const ExpansionPanelListControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<ExpansionPanelListControl> createState() =>
@@ -31,15 +32,6 @@ class ExpansionPanelListControl extends StatefulWidget {
 }
 
 class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
-  void onChange(int index, bool isExpanded) {
-    final server = FletAppServices.of(context).server;
-
-    server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: "change",
-        eventData: "$index");
-  }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("ExpansionPanelList build: ${widget.control.id}");
@@ -47,6 +39,23 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
     var panels = widget.children
         .where((c) => c.name == "expansionpanel" && c.isVisible)
         .toList();
+
+    void onChange(int index, bool isExpanded) {
+      List<Map<String, String>> props = [
+        {
+          "i": panels[index].id,
+          "isexpanded": isExpanded.toString().toLowerCase()
+        }
+      ];
+      widget.dispatch(
+          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+      var server = FletAppServices.of(context).server;
+      server.updateControlProps(props: props);
+      server.sendPageEvent(
+          eventTarget: widget.control.id,
+          eventName: "change",
+          eventData: "$index");
+    }
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
