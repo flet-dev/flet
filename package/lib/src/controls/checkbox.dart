@@ -71,7 +71,6 @@ class _CheckboxControlState extends State<CheckboxControl> {
 
   void _onChange(bool? value) {
     var svalue = value != null ? value.toString() : "";
-    //debugPrint(svalue);
     setState(() {
       _value = value;
     });
@@ -110,7 +109,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    debugPrint("Checkbox StoreConnector build: ${widget.control.id}");
+    debugPrint("CupertinoCheckbox StoreConnector build: ${widget.control.id}");
 
     bool? value = widget.control.attrBool("value", _tristate ? null : false);
     if (_value != value) {

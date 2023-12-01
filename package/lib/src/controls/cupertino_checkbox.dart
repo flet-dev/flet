@@ -5,7 +5,6 @@ import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
-import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'list_tile.dart';
@@ -70,7 +69,6 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
 
   void _onChange(bool? value) {
     var svalue = value != null ? value.toString() : "";
-    //debugPrint(svalue);
     setState(() {
       _value = value;
     });
@@ -124,21 +122,6 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
                 _onChange(value);
               }
             : null);
-
-    // var checkbox_old = Checkbox(
-    //     autofocus: autofocus,
-    //     focusNode: _focusNode,
-    //     value: _value,
-    //     checkColor: HexColor.fromString(
-    //         Theme.of(context), widget.control.attrString("checkColor", "")!),
-    //     fillColor: parseMaterialStateColor(
-    //         Theme.of(context), widget.control, "fillColor"),
-    //     tristate: _tristate,
-    //     onChanged: !disabled
-    //         ? (bool? value) {
-    //             _onChange(value);
-    //           }
-    //         : null);
 
     ListTileClicks.of(context)?.notifier.addListener(() {
       _toggleValue();
