@@ -44,7 +44,7 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
       List<Map<String, String>> props = [
         {
           "i": panels[index].id,
-          "isexpanded": isExpanded.toString().toLowerCase()
+          "expanded": isExpanded.toString().toLowerCase()
         }
       ];
       widget.dispatch(
@@ -94,7 +94,7 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
                     .where((c) => c.name == "content" && c.isVisible);
 
                 var isExpanded =
-                    panelView.control.attrBool("isExpanded", false)!;
+                    panelView.control.attrBool("expanded", false)!;
                 var canTapHeader =
                     panelView.control.attrBool("canTapHeader", false)!;
                 var bgColor = HexColor.fromString(Theme.of(context),

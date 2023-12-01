@@ -55,7 +55,7 @@ class ExpansionPanel(ConstrainedControl):
         # Specific
         #
         bgcolor: Optional[str] = None,
-        is_expanded: Optional[bool] = None,
+        expanded: Optional[bool] = None,
         can_tap_header: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -90,7 +90,7 @@ class ExpansionPanel(ConstrainedControl):
         self.header = header
         self.content = content
         self.bgcolor = bgcolor
-        self.is_expanded = is_expanded
+        self.expanded = expanded
         self.can_tap_header = can_tap_header
 
     def _get_control_name(self):
@@ -118,14 +118,14 @@ class ExpansionPanel(ConstrainedControl):
     def bgcolor(self, value):
         self._set_attr("bgColor", value)
 
-    # is_expanded
+    # expanded
     @property
-    def is_expanded(self) -> Optional[bool]:
-        return self._get_attr("isExpanded", data_type="bool", def_value=False)
+    def expanded(self) -> Optional[bool]:
+        return self._get_attr("expanded", data_type="bool", def_value=False)
 
-    @is_expanded.setter
-    def is_expanded(self, value: Optional[bool]):
-        self._set_attr("isExpanded", value)
+    @expanded.setter
+    def expanded(self, value: Optional[bool]):
+        self._set_attr("expanded", value)
 
     # can_tap_header
     @property
