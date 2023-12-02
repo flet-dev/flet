@@ -1,6 +1,6 @@
 from typing import Any, List, Optional
 
-from flet_core.control import Control
+from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
 
@@ -60,6 +60,8 @@ class BottomSheet(Control):
         # Specific
         #
         open: bool = False,
+        elevation: OptionalNumber = None,
+        bgcolor: Optional[str] = None,
         dismissible: Optional[bool] = None,
         enable_drag: Optional[bool] = None,
         show_drag_handle: Optional[bool] = None,
@@ -79,6 +81,8 @@ class BottomSheet(Control):
         self.__content: Optional[Control] = None
 
         self.open = open
+        self.elevation = elevation
+        self.bgcolor = bgcolor
         self.dismissible = dismissible
         self.enable_drag = enable_drag
         self.show_drag_handle = show_drag_handle
@@ -106,6 +110,24 @@ class BottomSheet(Control):
     @open.setter
     def open(self, value: Optional[bool]):
         self._set_attr("open", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation")
+
+    @elevation.setter
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgColor")
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgColor", value)
 
     # dismissible
     @property

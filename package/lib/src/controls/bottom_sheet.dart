@@ -4,6 +4,7 @@ import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -95,6 +96,9 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                   return content;
                 },
                 isDismissible: dismissible,
+                backgroundColor: HexColor.fromString(Theme.of(context),
+                    widget.control.attrString("bgColor", "")!),
+                elevation: widget.control.attrDouble("elevation"),
                 isScrollControlled: isScrollControlled,
                 enableDrag: enableDrag,
                 showDragHandle: showDragHandle,
