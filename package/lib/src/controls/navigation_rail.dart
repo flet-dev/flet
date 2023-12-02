@@ -7,6 +7,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
@@ -103,12 +104,16 @@ class _NavigationRailControlState extends State<NavigationRailControl> {
                   labelType:
                       extended ? NavigationRailLabelType.none : labelType,
                   extended: extended,
+                  elevation: widget.control.attrDouble("elevation", 0),
+                  indicatorShape: parseOutlinedBorder(widget.control, "indicatorShape"),
                   minWidth: widget.control.attrDouble("minWidth"),
                   minExtendedWidth:
                       widget.control.attrDouble("minExtendedWidth"),
                   groupAlignment: widget.control.attrDouble("groupAlignment"),
                   backgroundColor: HexColor.fromString(Theme.of(context),
                       widget.control.attrString("bgColor", "")!),
+                  indicatorColor: HexColor.fromString(Theme.of(context),
+                      widget.control.attrString("indicatorColor", "")!),
                   leading: leadingCtrls.isNotEmpty
                       ? createControl(
                           widget.control, leadingCtrls.first.id, disabled)

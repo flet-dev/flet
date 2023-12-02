@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet_core import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -222,10 +223,13 @@ class NavigationRail(ConstrainedControl):
         #
         # NavigationRail-specific
         destinations: Optional[List[NavigationRailDestination]] = None,
+        elevation: OptionalNumber = None,
         selected_index: Optional[int] = None,
         extended: Optional[bool] = None,
         label_type: Optional[NavigationRailLabelType] = None,
         bgcolor: Optional[str] = None,
+        indicator_color: Optional[str] = None,
+        indicator_shape: Optional[OutlinedBorder] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
         min_width: OptionalNumber = None,
@@ -263,9 +267,12 @@ class NavigationRail(ConstrainedControl):
 
         self.destinations = destinations
         self.selected_index = selected_index
+        self.elevation = elevation
         self.extended = extended
         self.label_type = label_type
         self.bgcolor = bgcolor
+        self.indicator_color = indicator_color
+        self.indicator_shape = indicator_shape
         self.__leading = None
         self.leading = leading
         self.__trailing = trailing
@@ -277,6 +284,10 @@ class NavigationRail(ConstrainedControl):
 
     def _get_control_name(self):
         return "navigationrail"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("indicatorShape", self.__shape)
 
     def _get_children(self):
         children = []
@@ -332,6 +343,24 @@ class NavigationRail(ConstrainedControl):
     def __set_label_type(self, value: NavigationRailLabelTypeString):
         self._set_attr("labelType", value)
 
+    # indicator_shape
+    @property
+    def indicator_shape(self) -> Optional[OutlinedBorder]:
+        return self.__indicator_shape
+
+    @indicator_shape.setter
+    def indicator_shape(self, value: Optional[OutlinedBorder]):
+        self.__indicator_shape = value
+
+    # indicator_color
+    @property
+    def indicator_color(self):
+        return self._get_attr("indicatorColor")
+
+    @indicator_color.setter
+    def indicator_color(self, value):
+        self._set_attr("indicatorColor", value)
+
     # bgcolor
     @property
     def bgcolor(self):
@@ -340,6 +369,15 @@ class NavigationRail(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation")
+
+    @elevation.setter
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
 
     # extended
     @property
