@@ -106,6 +106,7 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
                     .where((c) => c.name == "selected_icon_content");
 
                 return NavigationDestination(
+                    tooltip: destView.control.attrString("tooltip", "")!,
                     icon: iconContentCtrls.isNotEmpty
                         ? createControl(destView.control,
                             iconContentCtrls.first.id, disabled)

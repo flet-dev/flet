@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union
 
+from flet_core import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -93,6 +94,7 @@ class Card(ConstrainedControl):
         color: Optional[str] = None,
         shadow_color: Optional[str] = None,
         surface_tint_color: Optional[str] = None,
+        shape: Optional[OutlinedBorder] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -130,6 +132,7 @@ class Card(ConstrainedControl):
         self.color = color
         self.shadow_color = shadow_color
         self.surface_tint_color = surface_tint_color
+        self.shape = shape
 
     def _get_control_name(self):
         return "card"
@@ -137,6 +140,7 @@ class Card(ConstrainedControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("margin", self.__margin)
+        self._set_attr_json("shape", self.__shape)
 
     def _get_children(self):
         children = []
@@ -189,6 +193,15 @@ class Card(ConstrainedControl):
     @surface_tint_color.setter
     def surface_tint_color(self, value):
         self._set_attr("surfaceTintColor", value)
+
+    # shape
+    @property
+    def shape(self) -> Optional[OutlinedBorder]:
+        return self.__shape
+
+    @shape.setter
+    def shape(self, value: Optional[OutlinedBorder]):
+        self.__shape = value
 
     # content
     @property

@@ -45,8 +45,9 @@ class NavigationDestination(Control):
         selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
         label: Optional[str] = None,
+        tooltip: Optional[str] = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, tooltip=tooltip)
         self.label = label
         self.icon = icon
         self.__icon_content: Optional[Control] = None
