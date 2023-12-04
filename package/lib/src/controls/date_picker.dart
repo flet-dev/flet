@@ -15,13 +15,13 @@ class DatePickerControl extends StatefulWidget {
   final dynamic dispatch;
 
   const DatePickerControl({
-    Key? key,
+    super.key,
     this.parent,
     required this.control,
     required this.children,
     required this.parentDisabled,
     required this.dispatch,
-  }) : super(key: key);
+  });
 
   @override
   State<DatePickerControl> createState() => _DatePickerControlState();
@@ -137,6 +137,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog<DateTime>(
+            useRootNavigator: false,
             context: context,
             builder: (context) => createSelectDateDialog()).then((result) {
           debugPrint("pickDate() completed");
