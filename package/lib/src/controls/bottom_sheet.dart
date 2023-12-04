@@ -16,14 +16,13 @@ class BottomSheetControl extends StatefulWidget {
   final Widget? nextChild;
 
   const BottomSheetControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
       required this.dispatch,
-      required this.nextChild})
-      : super(key: key);
+      required this.nextChild});
 
   @override
   State<BottomSheetControl> createState() => _BottomSheetControlState();
@@ -115,7 +114,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
         });
       });
     } else if (open != lastOpen && lastOpen) {
-      Navigator.pop(context);
+      Navigator.of(context).pop();
     }
 
     return const SizedBox.shrink();
