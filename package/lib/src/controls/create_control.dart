@@ -18,6 +18,7 @@ import 'animated_switcher.dart';
 import 'bottom_app_bar.dart';
 import 'audio.dart';
 import 'badge.dart';
+import 'expansion_panel.dart';
 import 'selection_area.dart';
 import 'banner.dart';
 import 'barchart.dart';
@@ -326,6 +327,15 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           children: controlView.children,
           parentDisabled: parentDisabled,
           dispatch: controlView.dispatch);
+    case "expansionpanellist":
+      return ExpansionPanelListControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch
+      );
     case "stack":
       return StackControl(
           key: key,
