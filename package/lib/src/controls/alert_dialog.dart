@@ -93,8 +93,6 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
               return dialog;
             }
 
-            debugPrint("DIALOG BUILT!");
-
             // close previous dialog
             if (ModalRoute.of(context)?.isCurrent != true) {
               Navigator.of(context).pop();
