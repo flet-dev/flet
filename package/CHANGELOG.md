@@ -8,6 +8,7 @@
   * `NavigationRail`: `elevation`, `indicator_color`, `indicator_shape`.
   * `BottomSheet`: `bgcolor`, `elevation`.
 * Added `Dropdown.Option.visible` property.
+* Fix AlertDialog broken content when testing in Flet app ([#2192](https://github.com/flet-dev/flet/issues/2192)).
 
 # 0.14.0
 
