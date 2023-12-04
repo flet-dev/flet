@@ -1,3 +1,14 @@
+# 0.15.0
+
+* `ExpansionPanel` and `ExpansionPanelList` controls ([docs](https://flet.dev/docs/controls/expansionpanel)).
+* `CupertinoCheckBox` control, adaptive `CheckBox` ([docs](https://flet.dev/docs/controls/cupertinocheckbox)).
+* Additional control props ([#2182](https://github.com/flet-dev/flet/issues/2182)):
+  * `Card.shape`.
+  * `NavigationDestination.tooltip`.
+  * `NavigationRail`: `elevation`, `indicator_color`, `indicator_shape`.
+  * `BottomSheet`: `bgcolor`, `elevation`.
+* Added `Dropdown.Option.visible` property.
+
 # 0.14.0
 
 * `SelectionArea` control ([docs](https://flet.dev/docs/controls/selectionarea)).
