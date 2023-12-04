@@ -7,7 +7,7 @@ from pathlib import Path
 
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string, slugify
-from flet_runtime.utils import is_windows
+from flet_runtime.utils import copy_tree, is_windows
 from rich import print
 
 
@@ -160,6 +160,10 @@ class Command(BaseCommand):
         print("[spring_green3]OK[/spring_green3]")
 
         # copy icons to `flutter_dir`
+        assets_path = python_app_path.joinpath("assets")
+        if assets_path.exists():
+            # copy icons
+            copy_tree(str(assets_path), self.flutter_dir.joinpath("images"))
 
         # convert icons
 
@@ -202,7 +206,7 @@ class Command(BaseCommand):
 
         # copy build results to `out_dir`
 
-        # self.cleanup()
+        self.cleanup()
 
     def cleanup(self):
         print("Cleaning up...", end="")
