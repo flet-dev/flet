@@ -101,6 +101,9 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
           var materialThumbColor = parseMaterialStateColor(
               Theme.of(context), widget.control, "thumbColor");
 
+          var materialTrackColor = parseMaterialStateColor(
+              Theme.of(context), widget.control, "trackColor");
+
           var swtch = CupertinoSwitch(
               autofocus: autofocus,
               focusNode: _focusNode,
@@ -108,8 +111,8 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
                   widget.control.attrString("activeColor", "")!),
               // thumbColor: HexColor.fromString(Theme.of(context),
               //     widget.control.attrString("thumbColor", "")!),
-              trackColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("trackColor", "")!),
+              // trackColor: HexColor.fromString(Theme.of(context),
+              //     widget.control.attrString("trackColor", "")!),
               //activeTrackColor: HexColor.fromString(Theme.of(context),
               //    widget.control.attrString("activeTrackColor", "")!),
               //inactiveThumbColor: HexColor.fromString(Theme.of(context),
@@ -117,6 +120,7 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
               //inactiveTrackColor: HexColor.fromString(Theme.of(context),
               //    widget.control.attrString("inactiveTrackColor", "")!),
               thumbColor: materialThumbColor?.resolve({}),
+              trackColor: materialTrackColor?.resolve({}),
               //thumbIcon: parseMaterialStateIcon(
               //    Theme.of(context), widget.control, "thumbIcon"),
               //trackColor: parseMaterialStateColor(
