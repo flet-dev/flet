@@ -96,6 +96,7 @@ class Switch(ConstrainedControl):
         thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
         thumb_icon: Union[None, str, Dict[MaterialState, str]] = None,
         track_color: Union[None, str, Dict[MaterialState, str]] = None,
+        adaptive: Optional[bool] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -140,6 +141,7 @@ class Switch(ConstrainedControl):
         self.thumb_color = thumb_color
         self.thumb_icon = thumb_icon
         self.track_color = track_color
+        self.adaptive = adaptive
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
@@ -186,6 +188,15 @@ class Switch(ConstrainedControl):
 
     def __set_label_position(self, value: LabelPositionString):
         self._set_attr("labelPosition", value)
+
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
 
     # autofocus
     @property

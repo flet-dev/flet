@@ -1,3 +1,5 @@
+import 'package:flet/src/controls/cupertino_switch.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -77,6 +79,16 @@ class _SwitchControlState extends State<SwitchControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("SwitchControl build: ${widget.control.id}");
+
+    bool adaptive = widget.control.attrBool("adaptive", false)!;
+    if (adaptive &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)) {
+      return CupertinoSwitchControl(
+          control: widget.control,
+          parentDisabled: widget.parentDisabled,
+          dispatch: widget.dispatch);
+    }
 
     String label = widget.control.attrString("label", "")!;
     LabelPosition labelPosition = LabelPosition.values.firstWhere(
