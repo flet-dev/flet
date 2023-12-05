@@ -109,24 +109,10 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
               focusNode: _focusNode,
               activeColor: HexColor.fromString(Theme.of(context),
                   widget.control.attrString("activeColor", "")!),
-              // thumbColor: HexColor.fromString(Theme.of(context),
-              //     widget.control.attrString("thumbColor", "")!),
-              // trackColor: HexColor.fromString(Theme.of(context),
-              //     widget.control.attrString("trackColor", "")!),
-              //activeTrackColor: HexColor.fromString(Theme.of(context),
-              //    widget.control.attrString("activeTrackColor", "")!),
-              //inactiveThumbColor: HexColor.fromString(Theme.of(context),
-              //    widget.control.attrString("inactiveThumbColor", "")!),
-              //inactiveTrackColor: HexColor.fromString(Theme.of(context),
-              //    widget.control.attrString("inactiveTrackColor", "")!),
               thumbColor: materialThumbColor?.resolve({}),
               trackColor: materialTrackColor?.resolve({}),
               focusColor: HexColor.fromString(Theme.of(context),
                   widget.control.attrString("focusColor", "")!),
-              //thumbIcon: parseMaterialStateIcon(
-              //    Theme.of(context), widget.control, "thumbIcon"),
-              //trackColor: parseMaterialStateColor(
-              //    Theme.of(context), widget.control, "trackColor"),
               value: _value,
               onChanged: !disabled
                   ? (bool value) {
