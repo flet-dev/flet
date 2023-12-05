@@ -9,7 +9,6 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
-import '../utils/icons.dart';
 import 'create_control.dart';
 import 'list_tile.dart';
 
@@ -22,12 +21,11 @@ class CupertinoSwitchControl extends StatefulWidget {
   final dynamic dispatch;
 
   const CupertinoSwitchControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<CupertinoSwitchControl> createState() => _CupertinoSwitchControlState();
@@ -100,6 +98,9 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
             _value = value;
           }
 
+          var materialThumbColor = parseMaterialStateColor(
+              Theme.of(context), widget.control, "thumbColor");
+
           var swtch = CupertinoSwitch(
               autofocus: autofocus,
               focusNode: _focusNode,
@@ -115,8 +116,7 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
               //    widget.control.attrString("inactiveThumbColor", "")!),
               //inactiveTrackColor: HexColor.fromString(Theme.of(context),
               //    widget.control.attrString("inactiveTrackColor", "")!),
-              thumbColor: parseMaterialStateColorForCupertino(
-                  Theme.of(context), widget.control, "thumbColor"),
+              thumbColor: materialThumbColor?.resolve({}),
               //thumbIcon: parseMaterialStateIcon(
               //    Theme.of(context), widget.control, "thumbIcon"),
               //trackColor: parseMaterialStateColor(

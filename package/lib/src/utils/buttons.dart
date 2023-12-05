@@ -51,18 +51,6 @@ MaterialStateProperty<Color?>? parseMaterialStateColor(
       j1, (jv) => HexColor.fromString(theme, jv as String), null);
 }
 
-Color? parseMaterialStateColorForCupertino(
-    ThemeData theme, Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  final j1 = json.decode(v);
-  return getMaterialStateProperty<Color?>(
-      j1, (jv) => HexColor.fromString(theme, jv as String), null);
-}
-
 ButtonStyle? buttonStyleFromJSON(
     ThemeData theme,
     Map<String, dynamic> json,
