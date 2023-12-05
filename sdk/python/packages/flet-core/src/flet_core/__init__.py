@@ -227,3 +227,4 @@ from flet_core.badge import Badge
 from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
 from flet_core.selection_area import SelectionArea
 from flet_core.cupertino_checkbox import CupertinoCheckbox
+from flet_core.cupertino_switch import CupertinoSwitch

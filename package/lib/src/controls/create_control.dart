@@ -86,6 +86,7 @@ import 'vertical_divider.dart';
 import 'webview.dart';
 import 'window_drag_area.dart';
 import 'cupertino_checkbox.dart';
+import 'cupertino_switch.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild}) {
@@ -334,8 +335,7 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch
-      );
+          dispatch: controlView.dispatch);
     case "stack":
       return StackControl(
           key: key,
@@ -497,6 +497,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           dispatch: controlView.dispatch);
     case "switch":
       return SwitchControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
+    case "cupertinoswitch":
+      return CupertinoSwitchControl(
           key: key,
           parent: parent,
           control: controlView.control,
