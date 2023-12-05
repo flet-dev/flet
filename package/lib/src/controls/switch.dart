@@ -103,7 +103,7 @@ class _SwitchControlState extends State<SwitchControl> {
         distinct: true,
         converter: (store) => store.dispatch,
         builder: (context, dispatch) {
-          debugPrint("Checkbox StoreConnector build: ${widget.control.id}");
+          debugPrint("Switch StoreConnector build: ${widget.control.id}");
 
           bool value = widget.control.attrBool("value", false)!;
           if (_value != value) {
