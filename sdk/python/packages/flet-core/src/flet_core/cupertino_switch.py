@@ -22,36 +22,30 @@ except ImportError:
 
 class CupertinoSwitch(ConstrainedControl):
     """
-    A toggle represents a physical switch that allows someone to choose between two mutually exclusive options.
-
-    or example, "On/Off", "Show/Hide". Choosing an option should produce an immediate result.
+    An iOS-style switch. Used to toggle the on/off state of a single setting.
 
     Example:
     ```
     import flet as ft
 
     def main(page: ft.Page):
-        def theme_changed(e):
-            page.theme_mode = (
-                ft.ThemeMode.DARK
-                if page.theme_mode == ft.ThemeMode.LIGHT
-                else ft.ThemeMode.LIGHT
-            )
-            c.label = (
-                "Light theme" if page.theme_mode == ft.ThemeMode.LIGHT else "Dark theme"
-            )
-            page.update()
+        page.add(
+            ft.CupertinoSwitch(label="Cupertino Switch", value=True),
+            ft.Switch(label="Material Checkbox", value=True),
+            ft.Container(height=20),
+            ft.Text(
+                "Adaptive Switch shows as CupertinoSwitch on macOS and iOS and as Switch on other platforms:"
+            ),
+            ft.Switch(adaptive=True, label="Adaptive Switch", value=True),
+        )
 
-        page.theme_mode = ft.ThemeMode.LIGHT
-        c = ft.Switch(label="Light theme", on_change=theme_changed)
-        page.add(c)
 
     ft.app(target=main)
     ```
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/switch
+    Online docs: https://flet.dev/docs/controls/cupertinoswitch
     """
 
     def __init__(
@@ -90,11 +84,11 @@ class CupertinoSwitch(ConstrainedControl):
         value: Optional[bool] = None,
         autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
-        active_track_color: Optional[str] = None,
-        inactive_thumb_color: Optional[str] = None,
-        inactive_track_color: Optional[str] = None,
+        # active_track_color: Optional[str] = None,
+        # inactive_thumb_color: Optional[str] = None,
+        # inactive_track_color: Optional[str] = None,
         thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
-        thumb_icon: Union[None, str, Dict[MaterialState, str]] = None,
+        # thumb_icon: Union[None, str, Dict[MaterialState, str]] = None,
         track_color: Union[None, str, Dict[MaterialState, str]] = None,
         on_change=None,
         on_focus=None,
@@ -134,11 +128,11 @@ class CupertinoSwitch(ConstrainedControl):
         self.label_position = label_position
         self.autofocus = autofocus
         self.active_color = active_color
-        self.active_track_color = active_track_color
-        self.inactive_thumb_color = inactive_thumb_color
-        self.inactive_track_color = inactive_track_color
+        # self.active_track_color = active_track_color
+        # self.inactive_thumb_color = inactive_thumb_color
+        # self.inactive_track_color = inactive_track_color
         self.thumb_color = thumb_color
-        self.thumb_icon = thumb_icon
+        # self.thumb_icon = thumb_icon
         self.track_color = track_color
         self.on_change = on_change
         self.on_focus = on_focus
@@ -150,7 +144,7 @@ class CupertinoSwitch(ConstrainedControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("thumbColor", self.__thumb_color)
-        self._set_attr_json("thumbIcon", self.__thumb_icon)
+        # self._set_attr_json("thumbIcon", self.__thumb_icon)
         self._set_attr_json("trackColor", self.__track_color)
 
     # value
@@ -205,32 +199,32 @@ class CupertinoSwitch(ConstrainedControl):
     def active_color(self, value):
         self._set_attr("activeColor", value)
 
-    # active_track_color
-    @property
-    def active_track_color(self):
-        return self._get_attr("activeTrackColor")
+    # # active_track_color
+    # @property
+    # def active_track_color(self):
+    #     return self._get_attr("activeTrackColor")
 
-    @active_track_color.setter
-    def active_track_color(self, value):
-        self._set_attr("activeTrackColor", value)
+    # @active_track_color.setter
+    # def active_track_color(self, value):
+    #     self._set_attr("activeTrackColor", value)
 
-    # inactive_thumb_color
-    @property
-    def inactive_thumb_color(self):
-        return self._get_attr("inactiveThumbColor")
+    # # inactive_thumb_color
+    # @property
+    # def inactive_thumb_color(self):
+    #     return self._get_attr("inactiveThumbColor")
 
-    @inactive_thumb_color.setter
-    def inactive_thumb_color(self, value):
-        self._set_attr("inactiveThumbColor", value)
+    # @inactive_thumb_color.setter
+    # def inactive_thumb_color(self, value):
+    #     self._set_attr("inactiveThumbColor", value)
 
-    # inactive_track_color
-    @property
-    def inactive_track_color(self):
-        return self._get_attr("inactiveTrackColor")
+    # # inactive_track_color
+    # @property
+    # def inactive_track_color(self):
+    #     return self._get_attr("inactiveTrackColor")
 
-    @inactive_track_color.setter
-    def inactive_track_color(self, value):
-        self._set_attr("inactiveTrackColor", value)
+    # @inactive_track_color.setter
+    # def inactive_track_color(self, value):
+    #     self._set_attr("inactiveTrackColor", value)
 
     # thumb_color
     @property
@@ -241,14 +235,14 @@ class CupertinoSwitch(ConstrainedControl):
     def thumb_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__thumb_color = value
 
-    # thumb_icon
-    @property
-    def thumb_icon(self) -> Union[None, str, Dict[MaterialState, str]]:
-        return self.__thumb_icon
+    # # thumb_icon
+    # @property
+    # def thumb_icon(self) -> Union[None, str, Dict[MaterialState, str]]:
+    #     return self.__thumb_icon
 
-    @thumb_icon.setter
-    def thumb_icon(self, value: Union[None, str, Dict[MaterialState, str]]):
-        self.__thumb_icon = value
+    # @thumb_icon.setter
+    # def thumb_icon(self, value: Union[None, str, Dict[MaterialState, str]]):
+    #     self.__thumb_icon = value
 
     # track_color
     @property
