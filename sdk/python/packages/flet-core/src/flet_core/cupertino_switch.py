@@ -87,9 +87,11 @@ class CupertinoSwitch(ConstrainedControl):
         # active_track_color: Optional[str] = None,
         # inactive_thumb_color: Optional[str] = None,
         # inactive_track_color: Optional[str] = None,
-        thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
+        # thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
+        thumb_color: Optional[str] = None,
         # thumb_icon: Union[None, str, Dict[MaterialState, str]] = None,
-        track_color: Union[None, str, Dict[MaterialState, str]] = None,
+        # track_color: Union[None, str, Dict[MaterialState, str]] = None,
+        track_color: Optional[str] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -141,11 +143,11 @@ class CupertinoSwitch(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinoswitch"
 
-    def _before_build_command(self):
-        super()._before_build_command()
-        self._set_attr_json("thumbColor", self.__thumb_color)
-        # self._set_attr_json("thumbIcon", self.__thumb_icon)
-        self._set_attr_json("trackColor", self.__track_color)
+    # def _before_build_command(self):
+    #     super()._before_build_command()
+    # self._set_attr_json("thumbColor", self.__thumb_color)
+    # self._set_attr_json("thumbIcon", self.__thumb_icon)
+    # self._set_attr_json("trackColor", self.__track_color)
 
     # value
     @property
@@ -226,14 +228,23 @@ class CupertinoSwitch(ConstrainedControl):
     # def inactive_track_color(self, value):
     #     self._set_attr("inactiveTrackColor", value)
 
+    # # thumb_color
+    # @property
+    # def thumb_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    #     return self.__thumb_color
+
+    # @thumb_color.setter
+    # def thumb_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    #     self.__thumb_color = value
+
     # thumb_color
     @property
-    def thumb_color(self) -> Union[None, str, Dict[MaterialState, str]]:
-        return self.__thumb_color
+    def thumb_color(self):
+        return self._get_attr("thumbColor")
 
     @thumb_color.setter
-    def thumb_color(self, value: Union[None, str, Dict[MaterialState, str]]):
-        self.__thumb_color = value
+    def thumb_color(self, value):
+        self._set_attr("thumbColor", value)
 
     # # thumb_icon
     # @property
@@ -244,14 +255,23 @@ class CupertinoSwitch(ConstrainedControl):
     # def thumb_icon(self, value: Union[None, str, Dict[MaterialState, str]]):
     #     self.__thumb_icon = value
 
+    # # track_color
+    # @property
+    # def track_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    #     return self.__track_color
+
+    # @track_color.setter
+    # def track_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    #     self.__track_color = value
+
     # track_color
     @property
-    def track_color(self) -> Union[None, str, Dict[MaterialState, str]]:
-        return self.__track_color
+    def track_color(self):
+        return self._get_attr("trackColor")
 
     @track_color.setter
-    def track_color(self, value: Union[None, str, Dict[MaterialState, str]]):
-        self.__track_color = value
+    def track_color(self, value):
+        self._set_attr("trackColor", value)
 
     # on_change
     @property
