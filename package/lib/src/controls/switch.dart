@@ -127,6 +127,8 @@ class _SwitchControlState extends State<SwitchControl> {
                   Theme.of(context), widget.control, "thumbIcon"),
               trackColor: parseMaterialStateColor(
                   Theme.of(context), widget.control, "trackColor"),
+              focusColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("focusColor", "")!),
               value: _value,
               onChanged: !disabled
                   ? (bool value) {

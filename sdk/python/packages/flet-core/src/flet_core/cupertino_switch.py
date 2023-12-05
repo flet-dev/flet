@@ -84,6 +84,7 @@ class CupertinoSwitch(ConstrainedControl):
         value: Optional[bool] = None,
         autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
         # active_track_color: Optional[str] = None,
         # inactive_thumb_color: Optional[str] = None,
         # inactive_track_color: Optional[str] = None,
@@ -130,6 +131,7 @@ class CupertinoSwitch(ConstrainedControl):
         self.label_position = label_position
         self.autofocus = autofocus
         self.active_color = active_color
+        self.focus_color = focus_color
         # self.active_track_color = active_track_color
         # self.inactive_thumb_color = inactive_thumb_color
         # self.inactive_track_color = inactive_track_color
@@ -201,6 +203,15 @@ class CupertinoSwitch(ConstrainedControl):
     @active_color.setter
     def active_color(self, value):
         self._set_attr("activeColor", value)
+
+    # focus_color
+    @property
+    def focus_color(self):
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value):
+        self._set_attr("focusColor", value)
 
     # # active_track_color
     # @property

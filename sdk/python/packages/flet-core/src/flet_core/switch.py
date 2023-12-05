@@ -91,6 +91,7 @@ class Switch(ConstrainedControl):
         autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
         active_track_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
         inactive_thumb_color: Optional[str] = None,
         inactive_track_color: Optional[str] = None,
         thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
@@ -136,6 +137,7 @@ class Switch(ConstrainedControl):
         self.autofocus = autofocus
         self.active_color = active_color
         self.active_track_color = active_track_color
+        self.focus_color = focus_color
         self.inactive_thumb_color = inactive_thumb_color
         self.inactive_track_color = inactive_track_color
         self.thumb_color = thumb_color
@@ -224,6 +226,15 @@ class Switch(ConstrainedControl):
     @active_track_color.setter
     def active_track_color(self, value):
         self._set_attr("activeTrackColor", value)
+
+    # focus_color
+    @property
+    def focus_color(self):
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value):
+        self._set_attr("focusColor", value)
 
     # inactive_thumb_color
     @property
