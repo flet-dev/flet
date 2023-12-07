@@ -139,6 +139,14 @@ class CrossAxisAlignment(Enum):
     BASELINE = "baseline"
 
 
+class TabAlignment(Enum):
+    NONE = None
+    START = "start"
+    START_OFFSET = "startOffset"
+    FILL = "fill"
+    CENTER = "center"
+
+
 LabelPositionString = Literal[None, "right", "left"]
 
 

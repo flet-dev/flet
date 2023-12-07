@@ -214,6 +214,7 @@ from flet_core.types import (
     PaddingValue,
     PageDesignLanguage,
     ScrollMode,
+    TabAlignment,
     TextAlign,
     ThemeMode,
 )

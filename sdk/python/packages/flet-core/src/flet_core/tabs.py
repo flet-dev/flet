@@ -14,6 +14,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    TabAlignment,
 )
 
 
@@ -162,6 +163,7 @@ class Tabs(ConstrainedControl):
         tabs: Optional[List[Tab]] = None,
         selected_index: Optional[int] = None,
         scrollable: Optional[bool] = None,
+        tab_alignment: Optional[TabAlignment] = None,
         animation_duration: Optional[int] = None,
         divider_color: Optional[str] = None,
         indicator_color: Optional[str] = None,
@@ -206,6 +208,7 @@ class Tabs(ConstrainedControl):
         self.tabs = tabs
         self.selected_index = selected_index
         self.scrollable = scrollable
+        self.tab_alignment = tab_alignment
         self.animation_duration = animation_duration
         self.divider_color = divider_color
         self.label_color = label_color
@@ -227,6 +230,7 @@ class Tabs(ConstrainedControl):
         self._set_attr_json("indicatorBorderRadius", self.__indicator_border_radius)
         self._set_attr_json("indicatorBorderSide", self.__indicator_border_side)
         self._set_attr_json("indicatorPadding", self.__indicator_padding)
+        # self._set_attr_json("tabAlignment", self.__tab_alignment)
 
     def _get_children(self):
         return self.__tabs
@@ -266,6 +270,25 @@ class Tabs(ConstrainedControl):
     @scrollable.setter
     def scrollable(self, value: Optional[bool]):
         self._set_attr("scrollable", value)
+
+    # tab_alignment
+    @property
+    def tab_alignment(self) -> Optional[TabAlignment]:
+        return self.__tab_alignment
+
+    @tab_alignment.setter
+    def tab_alignment(self, value: Optional[TabAlignment]):
+        self.__tab_alignment = value
+        self._set_attr("tabAlignment", value.value if value is not None else None)
+
+    # # tab_alignment
+    # @property
+    # def tab_alignment(self) -> Optional[TabAlignment]:
+    #     return self.__tab_alignment
+
+    # @tab_alignment.setter
+    # def tab_alignment(self, value: Optional[TabAlignment]):
+    #     self.__tab_alignment = value
 
     # animation_duration
     @property

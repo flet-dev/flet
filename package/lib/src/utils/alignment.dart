@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+//import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
 import 'numbers.dart';
@@ -17,6 +18,15 @@ MainAxisAlignment parseMainAxisAlignment(
 CrossAxisAlignment parseCrossAxisAlignment(
     Control control, String propName, CrossAxisAlignment defValue) {
   return CrossAxisAlignment.values.firstWhere(
+      (e) =>
+          e.name.toLowerCase() ==
+          control.attrString(propName, "")!.toLowerCase(),
+      orElse: () => defValue);
+}
+
+TabAlignment parseTabAlignment(
+    Control control, String propName, TabAlignment defValue) {
+  return TabAlignment.values.firstWhere(
       (e) =>
           e.name.toLowerCase() ==
           control.attrString(propName, "")!.toLowerCase(),
