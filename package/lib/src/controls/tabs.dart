@@ -124,12 +124,12 @@ class _TabsControlState extends State<TabsControl>
 
           var indicatorBorderRadius =
               parseBorderRadius(widget.control, "indicatorBorderRadius");
-          var inidicatorBorderSide = parseBorderSide(
-              Theme.of(context), widget.control, "inidicatorBorderSide");
+          var indicatorBorderSide = parseBorderSide(
+              Theme.of(context), widget.control, "indicatorBorderSide");
           var indicatorPadding =
               parseEdgeInsets(widget.control, "indicatorPadding");
 
-          var inidicatorColor = HexColor.fromString(Theme.of(context),
+          var indicatorColor = HexColor.fromString(Theme.of(context),
                   widget.control.attrString("indicatorColor", "")!) ??
               TabBarTheme.of(context).indicatorColor ??
               Theme.of(context).colorScheme.primary;
@@ -151,7 +151,7 @@ class _TabsControlState extends State<TabsControl>
                       : TabBarIndicatorSize.label)
                   : TabBarTheme.of(context).indicatorSize,
               indicator: indicatorBorderRadius != null ||
-                      inidicatorBorderSide != null ||
+                      indicatorBorderSide != null ||
                       indicatorPadding != null
                   ? UnderlineTabIndicator(
                       borderRadius: indicatorBorderRadius ??
@@ -159,17 +159,17 @@ class _TabsControlState extends State<TabsControl>
                           const BorderRadius.only(
                               topLeft: Radius.circular(2),
                               topRight: Radius.circular(2)),
-                      borderSide: inidicatorBorderSide ??
+                      borderSide: indicatorBorderSide ??
                           themeIndicator?.borderSide ??
                           BorderSide(
                               width: themeIndicator?.borderSide.width ?? 2,
                               color: themeIndicator?.borderSide.color ??
-                                  inidicatorColor),
+                                  indicatorColor),
                       insets: indicatorPadding ??
                           themeIndicator?.insets ??
                           EdgeInsets.zero)
                   : TabBarTheme.of(context).indicator,
-              indicatorColor: inidicatorColor,
+              indicatorColor: indicatorColor,
               labelColor: HexColor.fromString(Theme.of(context), widget.control.attrString("labelColor", "")!) ??
                   TabBarTheme.of(context).labelColor ??
                   Theme.of(context).colorScheme.primary,
