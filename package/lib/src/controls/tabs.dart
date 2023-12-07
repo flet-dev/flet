@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet/src/utils/alignment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -139,9 +140,14 @@ class _TabsControlState extends State<TabsControl>
 
           var indicatorTabSize = widget.control.attrBool("indicatorTabSize");
 
+          var isScrollable = widget.control.attrBool("scrollable", true)!;
+          var tabAlignment = parseTabAlignment(widget.control, "tabAlignment",
+              isScrollable ? TabAlignment.start : TabAlignment.fill);
+
           var tabBar = TabBar(
+              tabAlignment: tabAlignment,
               controller: _tabController,
-              isScrollable: widget.control.attrBool("scrollable", true)!,
+              isScrollable: isScrollable,
               dividerColor:
                   HexColor.fromString(Theme.of(context), widget.control.attrString("dividerColor", "")!) ??
                       TabBarTheme.of(context).dividerColor,
