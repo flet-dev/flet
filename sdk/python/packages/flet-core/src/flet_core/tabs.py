@@ -230,7 +230,6 @@ class Tabs(ConstrainedControl):
         self._set_attr_json("indicatorBorderRadius", self.__indicator_border_radius)
         self._set_attr_json("indicatorBorderSide", self.__indicator_border_side)
         self._set_attr_json("indicatorPadding", self.__indicator_padding)
-        # self._set_attr_json("tabAlignment", self.__tab_alignment)
 
     def _get_children(self):
         return self.__tabs
@@ -280,15 +279,6 @@ class Tabs(ConstrainedControl):
     def tab_alignment(self, value: Optional[TabAlignment]):
         self.__tab_alignment = value
         self._set_attr("tabAlignment", value.value if value is not None else None)
-
-    # # tab_alignment
-    # @property
-    # def tab_alignment(self) -> Optional[TabAlignment]:
-    #     return self.__tab_alignment
-
-    # @tab_alignment.setter
-    # def tab_alignment(self, value: Optional[TabAlignment]):
-    #     self.__tab_alignment = value
 
     # animation_duration
     @property
