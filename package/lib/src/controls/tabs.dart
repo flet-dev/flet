@@ -75,6 +75,9 @@ class _TabsControlState extends State<TabsControl>
   Widget build(BuildContext context) {
     debugPrint("TabsControl build: ${widget.control.id}");
 
+    // keep only visible tabs
+    widget.children.retainWhere((c) => c.isVisible);
+
     var tabs = StoreConnector<AppState, ControlsViewModel>(
         distinct: true,
         converter: (store) => ControlsViewModel.fromStore(
