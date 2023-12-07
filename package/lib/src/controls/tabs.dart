@@ -144,7 +144,6 @@ class _TabsControlState extends State<TabsControl>
           var tabBar = TabBar(
               tabAlignment: tabAlignment,
               controller: _tabController,
-              //isScrollable: widget.control.attrBool("scrollable", true)!,
               isScrollable: isScrollable,
               dividerColor:
                   HexColor.fromString(Theme.of(context), widget.control.attrString("dividerColor", "")!) ??
