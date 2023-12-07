@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
@@ -14,13 +19,15 @@ class SearchAnchorControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final dynamic dispatch;
 
   const SearchAnchorControl(
       {Key? key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
+      required this.parentDisabled,
+      required this.dispatch})
       : super(key: key);
 
   @override
@@ -63,7 +70,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
           TextStyle? viewHintTextStyle = parseTextStyle(
               Theme.of(context), widget.control, "viewHintTextStyle");
 
-          /*var method = widget.control.attrString("method");
+          var method = widget.control.attrString("method");
 
           if (method != null) {
             debugPrint("SearchAnchor JSON method: $method");
@@ -91,10 +98,10 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                 }
               });
             }
-          }*/
+          }
 
           Widget anchor = SearchAnchor.bar(
-            // searchController: controller,
+            searchController: controller,
             barHintText: widget.control.attrString("barHintText"),
             barBackgroundColor: parseMaterialStateColor(
                 Theme.of(context), widget.control, "barBgcolor"),

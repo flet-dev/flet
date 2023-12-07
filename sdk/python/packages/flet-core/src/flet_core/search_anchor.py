@@ -1,3 +1,4 @@
+import time
 from typing import Any, Optional, Union, List, Dict
 
 from flet_core import BorderSide, OutlinedBorder
@@ -157,14 +158,14 @@ class SearchBar(ConstrainedControl):
                 children.append(i)
         return children
 
-    # def dismiss(self, text: str = ""):
-    #     m = {
-    #         "n": "dismiss",
-    #         "i": str(time.time()),
-    #         "p": {"text": text},
-    #     }
-    #     self._set_attr_json("method", m)
-    #     self.update()
+    def dismiss(self, text: str = ""):
+        m = {
+            "n": "dismiss",
+            "i": str(time.time()),
+            "p": {"text": text},
+        }
+        self._set_attr_json("method", m)
+        self.update()
 
     # bar_leading
     @property
