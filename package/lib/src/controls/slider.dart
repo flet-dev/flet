@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../actions.dart';
 import '../flet_app_services.dart';
@@ -7,6 +8,7 @@ import '../utils/colors.dart';
 import '../utils/desktop.dart';
 import '../utils/debouncer.dart';
 import 'create_control.dart';
+import 'cupertino_slider.dart';
 
 class SliderControl extends StatefulWidget {
   final Control? parent;
@@ -77,6 +79,16 @@ class _SliderControlState extends State<SliderControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("SliderControl build: ${widget.control.id}");
+
+    bool adaptive = widget.control.attrBool("adaptive", false)!;
+    if (adaptive &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)) {
+      return CupertinoSliderControl(
+          control: widget.control,
+          parentDisabled: widget.parentDisabled,
+          dispatch: widget.dispatch);
+    }
 
     String? label = widget.control.attrString("label");
     bool autofocus = widget.control.attrBool("autofocus", false)!;

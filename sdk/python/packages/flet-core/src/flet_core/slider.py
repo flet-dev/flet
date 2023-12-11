@@ -69,6 +69,7 @@ class Slider(ConstrainedControl):
         # Specific
         #
         value: OptionalNumber = None,
+        adaptive: Optional[bool] = None,
         label: Optional[str] = None,
         min: OptionalNumber = None,
         max: OptionalNumber = None,
@@ -114,6 +115,7 @@ class Slider(ConstrainedControl):
             data=data,
         )
         self.value = value
+        self.adaptive = adaptive
         self.label = label
         self.min = min
         self.max = max
@@ -137,9 +139,9 @@ class Slider(ConstrainedControl):
     def value(self) -> OptionalNumber:
         v = self._get_attr("value", data_type="float")
         # verify limits
-        if v < self.min:
+        if self.min and v < self.min:
             v = self.min
-        elif v > self.max:
+        elif self.max and v > self.max:
             v = self.max
         return v
 
@@ -227,6 +229,15 @@ class Slider(ConstrainedControl):
     @thumb_color.setter
     def thumb_color(self, value):
         self._set_attr("thumbColor", value)
+
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
 
     # on_change
     @property
