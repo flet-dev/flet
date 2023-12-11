@@ -75,6 +75,16 @@ class _RadioControlState extends State<RadioControl> {
   Widget build(BuildContext context) {
     debugPrint("Radio build: ${widget.control.id}");
 
+    bool adaptive = widget.control.attrBool("adaptive", false)!;
+    if (adaptive &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)) {
+      return CupertinoRadioControl(
+          control: widget.control,
+          parentDisabled: widget.parentDisabled,
+          dispatch: widget.dispatch);
+    }
+
     String label = widget.control.attrString("label", "")!;
     String value = widget.control.attrString("value", "")!;
     LabelPosition labelPosition = LabelPosition.values.firstWhere(
