@@ -87,6 +87,7 @@ class Radio(ConstrainedControl):
         autofocus: Optional[bool] = None,
         adaptive: Optional[bool] = None,
         fill_color: Union[None, str, Dict[MaterialState, str]] = None,
+        active_color: Optional[str] = None,
         on_focus=None,
         on_blur=None,
     ):
@@ -125,6 +126,7 @@ class Radio(ConstrainedControl):
         self.autofocus = autofocus
         self.adaptive = adaptive
         self.fill_color = fill_color
+        self.active_color = active_color
         self.on_focus = on_focus
         self.on_blur = on_blur
 
@@ -143,6 +145,15 @@ class Radio(ConstrainedControl):
     @value.setter
     def value(self, value: Optional[str]):
         self._set_attr("value", value)
+
+    # active_color
+    @property
+    def active_color(self) -> Optional[str]:
+        return self._get_attr("activeColor")
+
+    @active_color.setter
+    def active_color(self, value: Optional[str]):
+        self._set_attr("activeColor", value)
 
     # label
     @property
