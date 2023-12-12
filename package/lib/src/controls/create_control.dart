@@ -89,6 +89,7 @@ import 'webview.dart';
 import 'window_drag_area.dart';
 import 'cupertino_checkbox.dart';
 import 'cupertino_switch.dart';
+import 'cupertino_alert_dialog.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild}) {
@@ -578,6 +579,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "alertdialog":
       return AlertDialogControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          nextChild: nextChild);
+    case "cupertinoalertdialog":
+      return CupertinoAlertDialogControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,

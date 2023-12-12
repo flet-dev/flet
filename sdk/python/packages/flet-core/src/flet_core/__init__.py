@@ -231,3 +231,4 @@ from flet_core.cupertino_radio import CupertinoRadio
 from flet_core.cupertino_checkbox import CupertinoCheckbox
 from flet_core.cupertino_slider import CupertinoSlider
 from flet_core.cupertino_switch import CupertinoSwitch
+from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
