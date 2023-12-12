@@ -26,8 +26,9 @@ class Tab(Control):
         tab_content: Optional[Control] = None,
         ref: Optional[Ref] = None,
         icon: Optional[str] = None,
+        visible: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, visible=visible)
         self.text = text
         self.icon = icon
         self.__content: Optional[Control] = None
