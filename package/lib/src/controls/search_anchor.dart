@@ -22,24 +22,42 @@ class SearchAnchorControl extends StatefulWidget {
   final dynamic dispatch;
 
   const SearchAnchorControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<SearchAnchorControl> createState() => _SearchAnchorControlState();
 }
 
 class _SearchAnchorControlState extends State<SearchAnchorControl> {
+  late final SearchController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = SearchController();
+    _controller.addListener(_searchTextChanged);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_searchTextChanged);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _searchTextChanged() {
+    debugPrint("_searchTextChanged: ${_controller.text}");
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("SearchAnchor build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    SearchController controller = SearchController();
 
     debugPrint(widget.control.attrs.toString());
 
@@ -89,11 +107,11 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                 FletAppServices.of(context)
                     .server
                     .updateControlProps(props: props);
-                if (controller.isOpen) {
+                if (_controller.isOpen) {
                   var text = params["text"].toString();
                   debugPrint("SearchAnchor CLOSEVIEW: $text");
                   setState(() {
-                    controller.closeView(text);
+                    _controller.closeView(text);
                   });
                 }
               });
@@ -101,7 +119,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
           }
 
           Widget anchor = SearchAnchor.bar(
-            searchController: controller,
+            searchController: _controller,
             barHintText: widget.control.attrString("barHintText"),
             barBackgroundColor: parseMaterialStateColor(
                 Theme.of(context), widget.control, "barBgcolor"),
