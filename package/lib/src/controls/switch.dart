@@ -1,4 +1,3 @@
-import 'package:flet/src/controls/cupertino_switch.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -13,6 +12,7 @@ import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'list_tile.dart';
+import 'cupertino_switch.dart';
 
 enum LabelPosition { right, left }
 
