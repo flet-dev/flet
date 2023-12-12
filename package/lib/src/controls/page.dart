@@ -46,12 +46,11 @@ class PageControl extends StatefulWidget {
   final dynamic dispatch;
 
   const PageControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<PageControl> createState() => _PageControlState();
@@ -484,6 +483,7 @@ class _PageControlState extends State<PageControl> {
           if (routesView.views.isEmpty) {
             pages.add(AnimatedTransitionPage(
                 fadeTransition: true,
+                duration: Duration.zero,
                 child: hideLoadingPage
                     ? const Scaffold(
                         body: PageMedia(),
@@ -541,7 +541,11 @@ class _PageControlState extends State<PageControl> {
 
               return _prevViewRoutes == null
                   ? AnimatedTransitionPage(
-                      key: key, child: child, fadeTransition: true)
+                      key: key,
+                      child: child,
+                      fadeTransition: true,
+                      duration: Duration.zero,
+                    )
                   : AnimatedTransitionPage(
                       key: key,
                       child: child,

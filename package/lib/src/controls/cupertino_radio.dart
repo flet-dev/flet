@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -6,23 +6,22 @@ import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/control_ancestor_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
-import '../utils/buttons.dart';
 import '../utils/colors.dart';
-import '../utils/icons.dart';
 import 'create_control.dart';
+import 'error.dart';
 import 'list_tile.dart';
-import 'cupertino_switch.dart';
 
 enum LabelPosition { right, left }
 
-class SwitchControl extends StatefulWidget {
+class CupertinoRadioControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final dynamic dispatch;
 
-  const SwitchControl(
+  const CupertinoRadioControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -31,11 +30,10 @@ class SwitchControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<SwitchControl> createState() => _SwitchControlState();
+  State<CupertinoRadioControl> createState() => _CupertinoRadioControlState();
 }
 
-class _SwitchControlState extends State<SwitchControl> {
-  bool _value = false;
+class _CupertinoRadioControlState extends State<CupertinoRadioControl> {
   late final FocusNode _focusNode;
 
   @override
@@ -43,30 +41,6 @@ class _SwitchControlState extends State<SwitchControl> {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
-  }
-
-  @override
-  void dispose() {
-    _focusNode.removeListener(_onFocusChange);
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  void _onChange(bool value) {
-    var svalue = value.toString();
-    debugPrint(svalue);
-    setState(() {
-      _value = value;
-    });
-    List<Map<String, String>> props = [
-      {"i": widget.control.id, "value": svalue}
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-    final server = FletAppServices.of(context).server;
-    server.updateControlProps(props: props);
-    server.sendPageEvent(
-        eventTarget: widget.control.id, eventName: "change", eventData: svalue);
   }
 
   void _onFocusChange() {
@@ -77,20 +51,33 @@ class _SwitchControlState extends State<SwitchControl> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    debugPrint("SwitchControl build: ${widget.control.id}");
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    super.dispose();
+  }
 
-    bool adaptive = widget.control.attrBool("adaptive", false)!;
-    if (adaptive &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)) {
-      return CupertinoSwitchControl(
-          control: widget.control,
-          parentDisabled: widget.parentDisabled,
-          dispatch: widget.dispatch);
-    }
+  void _onChange(String ancestorId, String? value) {
+    var svalue = value ?? "";
+    debugPrint(svalue);
+    List<Map<String, String>> props = [
+      {"i": ancestorId, "value": svalue}
+    ];
+    widget.dispatch(
+        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+
+    final server = FletAppServices.of(context).server;
+    server.updateControlProps(props: props);
+    server.sendPageEvent(
+        eventTarget: ancestorId, eventName: "change", eventData: svalue);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("CupertinoRadio build: ${widget.control.id}");
 
     String label = widget.control.attrString("label", "")!;
+    String value = widget.control.attrString("value", "")!;
     LabelPosition labelPosition = LabelPosition.values.firstWhere(
         (p) =>
             p.name.toLowerCase() ==
@@ -99,48 +86,49 @@ class _SwitchControlState extends State<SwitchControl> {
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    return StoreConnector<AppState, Function>(
+    return StoreConnector<AppState, ControlAncestorViewModel>(
         distinct: true,
-        converter: (store) => store.dispatch,
-        builder: (context, dispatch) {
-          debugPrint("Switch StoreConnector build: ${widget.control.id}");
+        ignoreChange: (state) {
+          return state.controls[widget.control.id] == null;
+        },
+        converter: (store) => ControlAncestorViewModel.fromStore(
+            store, widget.control.id, "radiogroup"),
+        builder: (context, viewModel) {
+          debugPrint(
+              "CupertinoRadio StoreConnector build: ${widget.control.id}");
 
-          bool value = widget.control.attrBool("value", false)!;
-          if (_value != value) {
-            _value = value;
+          if (viewModel.ancestor == null) {
+            return const ErrorControl(
+                "CupertinoRadio control must be enclosed with RadioGroup.");
           }
 
-          var swtch = Switch(
+          String groupValue = viewModel.ancestor!.attrString("value", "")!;
+          String ancestorId = viewModel.ancestor!.id;
+
+          var cupertinoRadio = CupertinoRadio<String>(
               autofocus: autofocus,
               focusNode: _focusNode,
+              groupValue: groupValue,
+              value: value,
+              useCheckmarkStyle:
+                  widget.control.attrBool("useCheckmarkStyle", false)!,
+              fillColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("fillColor", "")!),
               activeColor: HexColor.fromString(Theme.of(context),
                   widget.control.attrString("activeColor", "")!),
-              activeTrackColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("activeTrackColor", "")!),
-              inactiveThumbColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("inactiveThumbColor", "")!),
-              inactiveTrackColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("inactiveTrackColor", "")!),
-              thumbColor: parseMaterialStateColor(
-                  Theme.of(context), widget.control, "thumbColor"),
-              thumbIcon: parseMaterialStateIcon(
-                  Theme.of(context), widget.control, "thumbIcon"),
-              trackColor: parseMaterialStateColor(
-                  Theme.of(context), widget.control, "trackColor"),
-              focusColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("focusColor", "")!),
-              value: _value,
+              inactiveColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("inactiveColor", "")!),
               onChanged: !disabled
-                  ? (bool value) {
-                      _onChange(value);
+                  ? (String? value) {
+                      _onChange(ancestorId, value);
                     }
                   : null);
 
           ListTileClicks.of(context)?.notifier.addListener(() {
-            _onChange(!_value);
+            _onChange(ancestorId, value);
           });
 
-          Widget result = swtch;
+          Widget result = cupertinoRadio;
           if (label != "") {
             var labelWidget = disabled
                 ? Text(label,
@@ -151,12 +139,12 @@ class _SwitchControlState extends State<SwitchControl> {
                 child: GestureDetector(
                     onTap: !disabled
                         ? () {
-                            _onChange(!_value);
+                            _onChange(ancestorId, value);
                           }
                         : null,
                     child: labelPosition == LabelPosition.right
-                        ? Row(children: [swtch, labelWidget])
-                        : Row(children: [labelWidget, swtch])));
+                        ? Row(children: [cupertinoRadio, labelWidget])
+                        : Row(children: [labelWidget, cupertinoRadio])));
           }
 
           return constrainedControl(

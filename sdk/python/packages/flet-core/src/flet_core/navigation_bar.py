@@ -269,12 +269,12 @@ class NavigationBar(ConstrainedControl):
     def label_behavior(self, value: Optional[NavigationBarLabelBehavior]):
         self.__label_behavior = value
         if isinstance(value, NavigationBarLabelBehavior):
-            self._set_attr("labelType", value.value)
+            self._set_attr("labelBehavior", value.value)
         else:
             self.__set_label_behavior(value)
 
     def __set_label_behavior(self, value: NavigationBarLabelBehaviorString):
-        self._set_attr("labelType", value)
+        self._set_attr("labelBehavior", value)
 
     # bgcolor
     @property

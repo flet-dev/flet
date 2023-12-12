@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -8,7 +9,9 @@ import '../models/control.dart';
 import '../models/control_ancestor_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/buttons.dart';
+import '../utils/colors.dart';
 import 'create_control.dart';
+import 'cupertino_radio.dart';
 import 'error.dart';
 import 'list_tile.dart';
 
@@ -75,6 +78,16 @@ class _RadioControlState extends State<RadioControl> {
   Widget build(BuildContext context) {
     debugPrint("Radio build: ${widget.control.id}");
 
+    bool adaptive = widget.control.attrBool("adaptive", false)!;
+    if (adaptive &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)) {
+      return CupertinoRadioControl(
+          control: widget.control,
+          parentDisabled: widget.parentDisabled,
+          dispatch: widget.dispatch);
+    }
+
     String label = widget.control.attrString("label", "")!;
     String value = widget.control.attrString("value", "")!;
     LabelPosition labelPosition = LabelPosition.values.firstWhere(
@@ -108,6 +121,8 @@ class _RadioControlState extends State<RadioControl> {
               focusNode: _focusNode,
               groupValue: groupValue,
               value: value,
+              activeColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("activeColor", "")!),
               fillColor: parseMaterialStateColor(
                   Theme.of(context), widget.control, "fillColor"),
               onChanged: !disabled

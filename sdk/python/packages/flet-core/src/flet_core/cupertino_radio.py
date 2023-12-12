@@ -20,34 +20,13 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class Radio(ConstrainedControl):
+class CupertinoRadio(ConstrainedControl):
     """
     Radio buttons let people select a single option from two or more choices.
 
-    Example:
-    ```
-    import flet as ft
-
-    def main(page):
-    def button_clicked(e):
-        t.value = f"Your favorite color is:  {cg.value}"
-        page.update()
-
-    t = ft.Text()
-    b = ft.ElevatedButton(text='Submit', on_click=button_clicked)
-    cg = ft.RadioGroup(content=ft.Column([
-        ft.Radio(value="red", label="Red"),
-        ft.Radio(value="green", label="Green"),
-        ft.Radio(value="blue", label="Blue")]))
-
-    page.add(ft.Text("Select your favorite color:"), cg, b, t)
-
-    ft.app(target=main)
-    ```
-
     -----
 
-    Online docs: https://flet.dev/docs/controls/radio
+    Online docs: https://flet.dev/docs/controls/cupertinoradio
     """
 
     def __init__(
@@ -85,9 +64,10 @@ class Radio(ConstrainedControl):
         label_position: LabelPosition = LabelPosition.NONE,
         value: Optional[str] = None,
         autofocus: Optional[bool] = None,
-        adaptive: Optional[bool] = None,
-        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
+        use_checkmark_style: Optional[bool] = None,
+        fill_color: Optional[str] = None,
         active_color: Optional[str] = None,
+        inactive_color: Optional[str] = None,
         on_focus=None,
         on_blur=None,
     ):
@@ -124,18 +104,18 @@ class Radio(ConstrainedControl):
         self.label = label
         self.label_position = label_position
         self.autofocus = autofocus
-        self.adaptive = adaptive
+        self.use_checkmark_style = use_checkmark_style
         self.fill_color = fill_color
         self.active_color = active_color
+        self.inactive_color = inactive_color
         self.on_focus = on_focus
         self.on_blur = on_blur
 
     def _get_control_name(self):
-        return "radio"
+        return "cupertinoradio"
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("fillColor", self.__fill_color)
 
     # value
     @property
@@ -145,15 +125,6 @@ class Radio(ConstrainedControl):
     @value.setter
     def value(self, value: Optional[str]):
         self._set_attr("value", value)
-
-    # active_color
-    @property
-    def active_color(self) -> Optional[str]:
-        return self._get_attr("activeColor")
-
-    @active_color.setter
-    def active_color(self, value: Optional[str]):
-        self._set_attr("activeColor", value)
 
     # label
     @property
@@ -182,12 +153,12 @@ class Radio(ConstrainedControl):
 
     # fill_color
     @property
-    def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
-        return self.__fill_color
+    def fill_color(self) -> Optional[str]:
+        return self._get_attr("fillColor")
 
     @fill_color.setter
-    def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
-        self.__fill_color = value
+    def fill_color(self, value: Optional[str]):
+        self._set_attr("fillColor", value)
 
     # on_focus
     @property
@@ -216,11 +187,29 @@ class Radio(ConstrainedControl):
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
 
-    # adaptive
+    # use_checkmark_style
     @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
+    def use_checkmark_style(self) -> Optional[bool]:
+        return self._get_attr("useCheckmarkStyle", data_type="bool", def_value=False)
 
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
+    @use_checkmark_style.setter
+    def use_checkmark_style(self, value: Optional[bool]):
+        self._set_attr("useCheckmarkStyle", value)
+
+    # active_color
+    @property
+    def active_color(self) -> Optional[str]:
+        return self._get_attr("activeColor")
+
+    @active_color.setter
+    def active_color(self, value: Optional[str]):
+        self._set_attr("activeColor", value)
+
+    # inactive_color
+    @property
+    def inactive_color(self) -> Optional[str]:
+        return self._get_attr("inactiveColor")
+
+    @inactive_color.setter
+    def inactive_color(self, value: Optional[str]):
+        self._set_attr("inactiveColor", value)

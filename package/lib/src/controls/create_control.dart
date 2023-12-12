@@ -64,6 +64,7 @@ import 'popup_menu_button.dart';
 import 'progress_bar.dart';
 import 'progress_ring.dart';
 import 'radio.dart';
+import 'cupertino_radio.dart';
 import 'radio_group.dart';
 import 'range_slider.dart';
 import 'responsive_row.dart';
@@ -87,6 +88,7 @@ import 'vertical_divider.dart';
 import 'webview.dart';
 import 'window_drag_area.dart';
 import 'cupertino_checkbox.dart';
+import 'cupertino_switch.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild}) {
@@ -502,6 +504,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           parentDisabled: parentDisabled,
           dispatch: controlView.dispatch);
+    case "cupertinoswitch":
+      return CupertinoSwitchControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "slider":
       return SliderControl(
         key: key,
@@ -535,6 +544,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "radio":
       return RadioControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
+    case "cupertinoradio":
+      return CupertinoRadioControl(
           key: key,
           parent: parent,
           control: controlView.control,
