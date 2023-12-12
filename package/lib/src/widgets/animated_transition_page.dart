@@ -11,12 +11,12 @@ class AnimatedTransitionPage<T> extends Page<T> {
   final bool fullscreenDialog;
 
   const AnimatedTransitionPage({
-    LocalKey? key,
+    super.key,
     required this.child,
     this.fadeTransition = false,
     this.fullscreenDialog = false,
     this.duration = const Duration(milliseconds: 300),
-  }) : super(key: key);
+  });
 
   @override
   Route<T> createRoute(BuildContext context) =>
@@ -46,7 +46,7 @@ class PageBasedAnimatedTransitionRoute<T> extends PageRoute<T> {
       Animation<double> secondaryAnimation) {
     final Widget child = (settings as AnimatedTransitionPage).child;
 
-    if (_page.fadeTransition) {
+    if (_page.fadeTransition && _page.duration != Duration.zero) {
       // initial page
       var curveTween = CurveTween(curve: Curves.easeIn);
       return FadeTransition(
@@ -66,7 +66,7 @@ class PageBasedAnimatedTransitionRoute<T> extends PageRoute<T> {
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
           Animation<double> secondaryAnimation, Widget child) =>
-      _page.fadeTransition
+      _page.fadeTransition || _page.duration == Duration.zero
           ? child
           : Theme.of(context).pageTransitionsTheme.buildTransitions<T>(
               this, context, animation, secondaryAnimation, child);
