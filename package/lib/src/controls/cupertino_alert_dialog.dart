@@ -59,9 +59,9 @@ class _CupertinoAlertDialogControlState
           : null,
       // contentPadding: parseEdgeInsets(widget.control, "contentPadding") ??
       //     const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
-      // actions: actionCtrls
-      //     .map((c) => createControl(widget.control, c.id, disabled))
-      //     .toList(),
+      actions: actionCtrls
+          .map((c) => createControl(widget.control, c.id, disabled))
+          .toList(),
       //actionsPadding: parseEdgeInsets(widget.control, "actionsPadding"),
       //actionsAlignment: actionsAlignment,
       //shape: parseOutlinedBorder(widget.control, "shape"),

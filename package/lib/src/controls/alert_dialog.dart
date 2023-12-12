@@ -1,3 +1,5 @@
+import 'cupertino_alert_dialog.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -70,6 +72,18 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("AlertDialog build ($hashCode): ${widget.control.id}");
+
+    bool adaptive = widget.control.attrBool("adaptive", false)!;
+    if (adaptive &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)) {
+      return CupertinoAlertDialogControl(
+        control: widget.control,
+        parentDisabled: widget.parentDisabled,
+        children: widget.children,
+        nextChild: widget.nextChild,
+      );
+    }
 
     var server = FletAppServices.of(context).server;
 
