@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -8,22 +8,20 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_ancestor_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
-import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
-import 'cupertino_radio.dart';
 import 'error.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
 
-class RadioControl extends StatefulWidget {
+class CupertinoRadioControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final dynamic dispatch;
 
-  const RadioControl(
+  const CupertinoRadioControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -32,10 +30,10 @@ class RadioControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<RadioControl> createState() => _RadioControlState();
+  State<CupertinoRadioControl> createState() => _CupertinoRadioControlState();
 }
 
-class _RadioControlState extends State<RadioControl> {
+class _CupertinoRadioControlState extends State<CupertinoRadioControl> {
   late final FocusNode _focusNode;
 
   @override
@@ -76,17 +74,7 @@ class _RadioControlState extends State<RadioControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Radio build: ${widget.control.id}");
-
-    bool adaptive = widget.control.attrBool("adaptive", false)!;
-    if (adaptive &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)) {
-      return CupertinoRadioControl(
-          control: widget.control,
-          parentDisabled: widget.parentDisabled,
-          dispatch: widget.dispatch);
-    }
+    debugPrint("CupertinoRadio build: ${widget.control.id}");
 
     String label = widget.control.attrString("label", "")!;
     String value = widget.control.attrString("value", "")!;
@@ -106,25 +94,30 @@ class _RadioControlState extends State<RadioControl> {
         converter: (store) => ControlAncestorViewModel.fromStore(
             store, widget.control.id, "radiogroup"),
         builder: (context, viewModel) {
-          debugPrint("Radio StoreConnector build: ${widget.control.id}");
+          debugPrint(
+              "CupertinoRadio StoreConnector build: ${widget.control.id}");
 
           if (viewModel.ancestor == null) {
             return const ErrorControl(
-                "Radio control must be enclosed with RadioGroup.");
+                "CupertinoRadio control must be enclosed with RadioGroup.");
           }
 
           String groupValue = viewModel.ancestor!.attrString("value", "")!;
           String ancestorId = viewModel.ancestor!.id;
 
-          var radio = Radio<String>(
+          var cupertinoRadio = CupertinoRadio<String>(
               autofocus: autofocus,
               focusNode: _focusNode,
               groupValue: groupValue,
               value: value,
+              useCheckmarkStyle:
+                  widget.control.attrBool("useCheckmarkStyle", false)!,
+              fillColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("fillColor", "")!),
               activeColor: HexColor.fromString(Theme.of(context),
                   widget.control.attrString("activeColor", "")!),
-              fillColor: parseMaterialStateColor(
-                  Theme.of(context), widget.control, "fillColor"),
+              inactiveColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("inactiveColor", "")!),
               onChanged: !disabled
                   ? (String? value) {
                       _onChange(ancestorId, value);
@@ -135,7 +128,7 @@ class _RadioControlState extends State<RadioControl> {
             _onChange(ancestorId, value);
           });
 
-          Widget result = radio;
+          Widget result = cupertinoRadio;
           if (label != "") {
             var labelWidget = disabled
                 ? Text(label,
@@ -150,8 +143,8 @@ class _RadioControlState extends State<RadioControl> {
                           }
                         : null,
                     child: labelPosition == LabelPosition.right
-                        ? Row(children: [radio, labelWidget])
-                        : Row(children: [labelWidget, radio])));
+                        ? Row(children: [cupertinoRadio, labelWidget])
+                        : Row(children: [labelWidget, cupertinoRadio])));
           }
 
           return constrainedControl(
