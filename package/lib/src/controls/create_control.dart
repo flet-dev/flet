@@ -18,6 +18,7 @@ import 'animated_switcher.dart';
 import 'bottom_app_bar.dart';
 import 'audio.dart';
 import 'badge.dart';
+import 'cupertino_slider.dart';
 import 'expansion_panel.dart';
 import 'selection_area.dart';
 import 'banner.dart';
@@ -512,6 +513,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           dispatch: controlView.dispatch);
     case "slider":
       return SliderControl(
+        key: key,
+        parent: parent,
+        control: controlView.control,
+        parentDisabled: parentDisabled,
+        dispatch: controlView.dispatch,
+      );
+    case "cupertinoslider":
+      return CupertinoSliderControl(
         key: key,
         parent: parent,
         control: controlView.control,

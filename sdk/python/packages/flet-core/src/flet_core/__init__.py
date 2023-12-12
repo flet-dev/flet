@@ -229,4 +229,5 @@ from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestin
 from flet_core.selection_area import SelectionArea
 from flet_core.cupertino_radio import CupertinoRadio
 from flet_core.cupertino_checkbox import CupertinoCheckbox
+from flet_core.cupertino_slider import CupertinoSlider
 from flet_core.cupertino_switch import CupertinoSwitch
