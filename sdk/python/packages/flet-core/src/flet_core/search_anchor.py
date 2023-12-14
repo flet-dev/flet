@@ -76,6 +76,8 @@ class SearchBar(ConstrainedControl):
         divider_color: Optional[str] = None,
         full_screen: Optional[bool] = None,
         capitalization: TextCapitalization = TextCapitalization.NONE,
+        on_tap=None,
+        on_submit=None,
         on_change=None,
     ):
         ConstrainedControl.__init__(
@@ -160,14 +162,41 @@ class SearchBar(ConstrainedControl):
                 children.append(i)
         return children
 
-    def dismiss(self, text: str = ""):
+    def open_view(self):
         m = {
-            "n": "dismiss",
+            "n": "openView",
+            "i": str(time.time()),
+            "p": {},
+        }
+        self._set_attr_json("method", m)
+        self.update()
+
+    async def open_view_async(self):
+        m = {
+            "n": "openView",
+            "i": str(time.time()),
+            "p": {},
+        }
+        self._set_attr_json("method", m)
+        await self.update()
+
+    def close_view(self, text: str = ""):
+        m = {
+            "n": "closeView",
             "i": str(time.time()),
             "p": {"text": text},
         }
         self._set_attr_json("method", m)
         self.update()
+
+    async def close_view_async(self, text: str = ""):
+        m = {
+            "n": "closeView",
+            "i": str(time.time()),
+            "p": {"text": text},
+        }
+        self._set_attr_json("method", m)
+        await self.update()
 
     # bar_leading
     @property

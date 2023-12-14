@@ -101,7 +101,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
             var name = mj["n"] as String;
             var params = Map<String, dynamic>.from(mj["p"] as Map);
 
-            if (name == "dismiss") {
+            if (name == "closeView") {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 List<Map<String, String>> props = [
                   {"i": widget.control.id, "method": ""}
@@ -113,9 +113,24 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                     .updateControlProps(props: props);
                 if (_controller.isOpen) {
                   var text = params["text"].toString();
-                  debugPrint("SearchAnchor CLOSEVIEW: $text");
                   setState(() {
                     _controller.closeView(text);
+                  });
+                }
+              });
+            } else if (name == "openView") {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                List<Map<String, String>> props = [
+                  {"i": widget.control.id, "method": ""}
+                ];
+                widget.dispatch(UpdateControlPropsAction(
+                    UpdateControlPropsPayload(props: props)));
+                FletAppServices.of(context)
+                    .server
+                    .updateControlProps(props: props);
+                if (!_controller.isOpen) {
+                  setState(() {
+                    _controller.openView();
                   });
                 }
               });
