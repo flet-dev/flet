@@ -59,6 +59,7 @@ class SearchBar(ConstrainedControl):
         #
         # SearchBar Specific
         #
+        value: Optional[str] = None,
         bar_leading: Optional[Control] = None,
         bar_trailing: Optional[List[Control]] = None,
         bar_hint_text: Optional[str] = None,
@@ -106,6 +107,7 @@ class SearchBar(ConstrainedControl):
             data=data,
         )
 
+        self.value = value
         self.controls = controls
         self.bar_leading = bar_leading
         self.bar_trailing = bar_trailing
@@ -363,6 +365,15 @@ class SearchBar(ConstrainedControl):
     @controls.setter
     def controls(self, value: Optional[List[Control]]):
         self.__controls = value if value is not None else []
+
+    # value
+    @property
+    def value(self) -> Optional[str]:
+        return self._get_attr("value")
+
+    @value.setter
+    def value(self, value: Optional[str]):
+        self._set_attr("value", value)
 
     # on_change
     @property

@@ -35,6 +35,7 @@ class SearchAnchorControl extends StatefulWidget {
 
 class _SearchAnchorControlState extends State<SearchAnchorControl> {
   late final SearchController _controller;
+  String _value = "";
 
   @override
   void initState() {
@@ -52,6 +53,12 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
 
   void _searchTextChanged() {
     debugPrint("_searchTextChanged: ${_controller.text}");
+    List<Map<String, String>> props = [
+      {"i": widget.control.id, "value": _controller.text}
+    ];
+    widget.dispatch(
+        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+    FletAppServices.of(context).server.updateControlProps(props: props);
   }
 
   @override
@@ -66,6 +73,11 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
         converter: (store) => store.dispatch,
         builder: (context, dispatch) {
           debugPrint("SearchAnchor StoreConnector build: ${widget.control.id}");
+
+          var value = widget.control.attrString("value");
+          if (value != null) {
+            _controller.text = value;
+          }
 
           bool onChange = widget.control.attrBool("onChange", false)!;
           bool onTap = widget.control.attrBool("onTap", false)!;
@@ -129,9 +141,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                     .server
                     .updateControlProps(props: props);
                 if (!_controller.isOpen) {
-                  setState(() {
                     _controller.openView();
-                  });
                 }
               });
             }
