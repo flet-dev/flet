@@ -369,7 +369,7 @@ class SearchBar(ConstrainedControl):
     # value
     @property
     def value(self) -> Optional[str]:
-        return self._get_attr("value")
+        return self._get_attr("value", def_value="")
 
     @value.setter
     def value(self, value: Optional[str]):
