@@ -1,5 +1,17 @@
 # Flet changelog
 
+# 0.16.0
+
+* `CupertinoSlider` control and `Slider.adaptive` ([#2224](https://github.com/flet-dev/flet/issues/2224)).
+* `CupertinoRadio` control and `Radio.adaptive` ([#2225](https://github.com/flet-dev/flet/issues/2225)).
+* Fix `NavigationBar.label_bahavior` ([#2229](https://github.com/flet-dev/flet/issues/2229)).
+* `CupertinoSwitch` control ([docs](https://flet.dev/docs/controls/cupertinoswitch)).
+* Disable fade-in effect on Flet app start.
+* Tab alignment bug fix ([#2208](https://github.com/flet-dev/flet/issues/2208)).
+* Tab visibility ([#2213](https://github.com/flet-dev/flet/issues/2213)).
+* Dark window title for Windows ([#2204](https://github.com/flet-dev/flet/issues/2204)).
+* Fix `ValueError` on web page resize ([#1564](https://github.com/flet-dev/flet/issues/1564)).
+
 # 0.15.0
 
 * `ExpansionPanel` and `ExpansionPanelList` controls ([docs](https://flet.dev/docs/controls/expansionpanel)).
