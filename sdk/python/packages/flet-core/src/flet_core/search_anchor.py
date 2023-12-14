@@ -122,6 +122,8 @@ class SearchBar(ConstrainedControl):
         self.divider_color = divider_color
         self.full_screen = full_screen
         self.capitalization = capitalization
+        self.on_tap = on_tap
+        self.on_submit = on_submit
         self.on_change = on_change
 
     def _get_control_name(self):
@@ -332,3 +334,42 @@ class SearchBar(ConstrainedControl):
     @controls.setter
     def controls(self, value: Optional[List[Control]]):
         self.__controls = value if value is not None else []
+
+    # on_change
+    @property
+    def on_change(self):
+        return self._get_event_handler("change")
+
+    @on_change.setter
+    def on_change(self, handler):
+        self._add_event_handler("change", handler)
+        if handler is not None:
+            self._set_attr("onchange", True)
+        else:
+            self._set_attr("onchange", None)
+
+    # on_tap
+    @property
+    def on_tap(self):
+        return self._get_event_handler("tap")
+
+    @on_tap.setter
+    def on_tap(self, handler):
+        self._add_event_handler("tap", handler)
+        if handler is not None:
+            self._set_attr("ontap", True)
+        else:
+            self._set_attr("ontap", None)
+
+    # on_submit
+    @property
+    def on_submit(self):
+        return self._get_event_handler("submit")
+
+    @on_submit.setter
+    def on_submit(self, handler):
+        self._add_event_handler("submit", handler)
+        if handler is not None:
+            self._set_attr("onsubmit", True)
+        else:
+            self._set_attr("onsubmit", None)

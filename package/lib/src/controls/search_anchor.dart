@@ -67,6 +67,10 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
         builder: (context, dispatch) {
           debugPrint("SearchAnchor StoreConnector build: ${widget.control.id}");
 
+          bool onChange = widget.control.attrBool("onChange", false)!;
+          bool onTap = widget.control.attrBool("onTap", false)!;
+          bool onSubmit = widget.control.attrBool("onSubmit", false)!;
+
           var suggestionCtrls =
               widget.children.where((c) => c.name == "controls" && c.isVisible);
           var barLeadingCtrls = widget.children
@@ -118,48 +122,78 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
             }
           }
 
-          Widget anchor = SearchAnchor.bar(
-            searchController: _controller,
-            barHintText: widget.control.attrString("barHintText"),
-            barBackgroundColor: parseMaterialStateColor(
-                Theme.of(context), widget.control, "barBgcolor"),
-            barOverlayColor: parseMaterialStateColor(
-                Theme.of(context), widget.control, "barOverlayColor"),
-            viewSide:
-                parseBorderSide(Theme.of(context), widget.control, "viewSide"),
-            isFullScreen: widget.control.attrBool("fullScreen", false),
-            viewBackgroundColor: viewBgcolor,
-            dividerColor: dividerColor,
-            viewHintText: widget.control.attrString("viewHintText"),
-            viewElevation: widget.control.attrDouble("viewElevation"),
-            viewHeaderHintStyle: viewHintTextStyle,
-            viewHeaderTextStyle: viewHeaderTextStyle,
-            viewShape: parseOutlinedBorder(widget.control, "viewShape"),
-            barLeading: barLeadingCtrls.isNotEmpty
-                ? createControl(
-                    widget.parent, barLeadingCtrls.first.id, disabled)
-                : null,
-            barTrailing: barTrailingCtrls.isNotEmpty
-                ? barTrailingCtrls.map((ctrl) {
-                    return createControl(widget.parent, ctrl.id, disabled);
-                  })
-                : null,
-            viewTrailing: viewTrailingCtrls.isNotEmpty
-                ? viewTrailingCtrls.map((ctrl) {
-                    return createControl(widget.parent, ctrl.id, disabled);
-                  })
-                : null,
-            viewLeading: viewLeadingCtrls.isNotEmpty
-                ? createControl(
-                    widget.parent, viewLeadingCtrls.first.id, disabled)
-                : null,
-            suggestionsBuilder:
-                (BuildContext context, SearchController controller) {
-              return suggestionCtrls.map((ctrl) {
-                return createControl(widget.parent, ctrl.id, disabled);
+          Widget anchor = SearchAnchor(
+              searchController: _controller,
+              headerHintStyle: viewHintTextStyle,
+              headerTextStyle: viewHeaderTextStyle,
+              viewSide: parseBorderSide(
+                  Theme.of(context), widget.control, "viewSide"),
+              isFullScreen: widget.control.attrBool("fullScreen", false),
+              viewBackgroundColor: viewBgcolor,
+              dividerColor: dividerColor,
+              viewHintText: widget.control.attrString("viewHintText"),
+              viewElevation: widget.control.attrDouble("viewElevation"),
+              viewShape: parseOutlinedBorder(widget.control, "viewShape"),
+              viewTrailing: viewTrailingCtrls.isNotEmpty
+                  ? viewTrailingCtrls.map((ctrl) {
+                      return createControl(widget.parent, ctrl.id, disabled);
+                    })
+                  : null,
+              viewLeading: viewLeadingCtrls.isNotEmpty
+                  ? createControl(
+                      widget.parent, viewLeadingCtrls.first.id, disabled)
+                  : null,
+              builder: (BuildContext context, SearchController controller) {
+                return SearchBar(
+                  controller: controller,
+                  hintText: widget.control.attrString("barHintText"),
+                  backgroundColor: parseMaterialStateColor(
+                      Theme.of(context), widget.control, "barBgcolor"),
+                  overlayColor: parseMaterialStateColor(
+                      Theme.of(context), widget.control, "barOverlayColor"),
+                  leading: barLeadingCtrls.isNotEmpty
+                      ? createControl(
+                          widget.parent, barLeadingCtrls.first.id, disabled)
+                      : null,
+                  trailing: barTrailingCtrls.isNotEmpty
+                      ? barTrailingCtrls.map((ctrl) {
+                          return createControl(
+                              widget.parent, ctrl.id, disabled);
+                        })
+                      : null,
+                  onTap: () {
+                    if (onTap) {
+                      FletAppServices.of(context).server.sendPageEvent(
+                          eventTarget: widget.control.id,
+                          eventName: "tap",
+                          eventData: "");
+                    }
+                    controller.openView();
+                  },
+                  onSubmitted: onSubmit
+                      ? (String value) {
+                          FletAppServices.of(context).server.sendPageEvent(
+                              eventTarget: widget.control.id,
+                              eventName: "submit",
+                              eventData: value);
+                        }
+                      : null,
+                  onChanged: onChange
+                      ? (String value) {
+                          FletAppServices.of(context).server.sendPageEvent(
+                              eventTarget: widget.control.id,
+                              eventName: "change",
+                              eventData: value);
+                        }
+                      : null,
+                );
+              },
+              suggestionsBuilder:
+                  (BuildContext context, SearchController controller) {
+                return suggestionCtrls.map((ctrl) {
+                  return createControl(widget.parent, ctrl.id, disabled);
+                });
               });
-            },
-          );
 
           return constrainedControl(
               context, anchor, widget.parent, widget.control);
