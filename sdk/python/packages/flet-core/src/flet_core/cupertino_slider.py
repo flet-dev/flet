@@ -12,29 +12,17 @@ from flet_core.types import (
 )
 
 
-class Slider(ConstrainedControl):
+class CupertinoSlider(ConstrainedControl):
     """
-    A slider provides a visual indication of adjustable content, as well as the current setting in the total range of content.
+    An iOS-type slider.
+
+    It provides a visual indication of adjustable content, as well as the current setting in the total range of content.
 
     Use a slider when you want people to set defined values (such as volume or brightness), or when people would benefit from instant feedback on the effect of setting changes.
 
-    Example:
-    ```
-    import flet as ft
-
-    def main(page):
-        page.add(
-            ft.Text("Slider with value:"),
-            ft.Slider(value=0.3),
-            ft.Text("Slider with a custom range and label:"),
-            ft.Slider(min=0, max=100, divisions=10, label="{value}%"))
-
-    ft.app(target=main)
-    ```
-
     -----
 
-    Online docs: https://flet.dev/docs/controls/slider
+    Online docs: https://flet.dev/docs/controls/cupertinoslider
     """
 
     def __init__(
@@ -69,15 +57,10 @@ class Slider(ConstrainedControl):
         # Specific
         #
         value: OptionalNumber = None,
-        adaptive: Optional[bool] = None,
-        label: Optional[str] = None,
         min: OptionalNumber = None,
         max: OptionalNumber = None,
         divisions: Optional[int] = None,
-        round: Optional[int] = None,
-        autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
-        inactive_color: Optional[str] = None,
         thumb_color: Optional[str] = None,
         on_change=None,
         on_change_start=None,
@@ -115,15 +98,11 @@ class Slider(ConstrainedControl):
             data=data,
         )
         self.value = value
-        self.adaptive = adaptive
-        self.label = label
         self.min = min
         self.max = max
         self.divisions = divisions
         self.round = round
-        self.autofocus = autofocus
         self.active_color = active_color
-        self.inactive_color = inactive_color
         self.thumb_color = thumb_color
         self.on_change = on_change
         self.on_change_start = on_change_start
@@ -132,7 +111,7 @@ class Slider(ConstrainedControl):
         self.on_blur = on_blur
 
     def _get_control_name(self):
-        return "slider"
+        return "cupertinoslider"
 
     # value
     @property
@@ -148,15 +127,6 @@ class Slider(ConstrainedControl):
     @value.setter
     def value(self, value: OptionalNumber):
         self._set_attr("value", value)
-
-    # label
-    @property
-    def label(self):
-        return self._get_attr("label")
-
-    @label.setter
-    def label(self, value):
-        self._set_attr("label", value)
 
     # min
     @property
@@ -194,15 +164,6 @@ class Slider(ConstrainedControl):
     def round(self, value: Optional[int]):
         self._set_attr("round", value)
 
-    # autofocus
-    @property
-    def autofocus(self) -> Optional[bool]:
-        return self._get_attr("autofocus", data_type="bool", def_value=False)
-
-    @autofocus.setter
-    def autofocus(self, value: Optional[bool]):
-        self._set_attr("autofocus", value)
-
     # active_color
     @property
     def active_color(self):
@@ -212,15 +173,6 @@ class Slider(ConstrainedControl):
     def active_color(self, value):
         self._set_attr("activeColor", value)
 
-    # inactive_color
-    @property
-    def inactive_color(self):
-        return self._get_attr("inactiveColor")
-
-    @inactive_color.setter
-    def inactive_color(self, value):
-        self._set_attr("inactiveColor", value)
-
     # thumb_color
     @property
     def thumb_color(self):
@@ -229,15 +181,6 @@ class Slider(ConstrainedControl):
     @thumb_color.setter
     def thumb_color(self, value):
         self._set_attr("thumbColor", value)
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
 
     # on_change
     @property

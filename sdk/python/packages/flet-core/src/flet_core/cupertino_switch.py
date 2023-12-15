@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
@@ -7,7 +7,6 @@ from flet_core.types import (
     AnimationValue,
     LabelPosition,
     LabelPositionString,
-    MaterialState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -15,38 +14,30 @@ from flet_core.types import (
 )
 
 
-class Switch(ConstrainedControl):
+class CupertinoSwitch(ConstrainedControl):
     """
-    A toggle represents a physical switch that allows someone to choose between two mutually exclusive options.
-
-    or example, "On/Off", "Show/Hide". Choosing an option should produce an immediate result.
+    An iOS-style switch. Used to toggle the on/off state of a single setting.
 
     Example:
     ```
     import flet as ft
 
     def main(page: ft.Page):
-        def theme_changed(e):
-            page.theme_mode = (
-                ft.ThemeMode.DARK
-                if page.theme_mode == ft.ThemeMode.LIGHT
-                else ft.ThemeMode.LIGHT
-            )
-            c.label = (
-                "Light theme" if page.theme_mode == ft.ThemeMode.LIGHT else "Dark theme"
-            )
-            page.update()
-
-        page.theme_mode = ft.ThemeMode.LIGHT
-        c = ft.Switch(label="Light theme", on_change=theme_changed)
-        page.add(c)
+        page.add(
+            ft.CupertinoSwitch(label="Cupertino Switch", value=True),
+            ft.Switch(label="Material Checkbox", value=True),
+            ft.Container(height=20),
+            ft.Text(
+                "Adaptive Switch shows as CupertinoSwitch on macOS and iOS and as Switch on other platforms:"
+            ),
+            ft.Switch(adaptive=True, label="Adaptive Switch", value=True),
+        )
 
     ft.app(target=main)
     ```
-
     -----
 
-    Online docs: https://flet.dev/docs/controls/switch
+    Online docs: https://flet.dev/docs/controls/cupertinoswitch
     """
 
     def __init__(
@@ -85,14 +76,9 @@ class Switch(ConstrainedControl):
         value: Optional[bool] = None,
         autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
-        active_track_color: Optional[str] = None,
         focus_color: Optional[str] = None,
-        inactive_thumb_color: Optional[str] = None,
-        inactive_track_color: Optional[str] = None,
-        thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
-        thumb_icon: Union[None, str, Dict[MaterialState, str]] = None,
-        track_color: Union[None, str, Dict[MaterialState, str]] = None,
-        adaptive: Optional[bool] = None,
+        thumb_color: Optional[str] = None,
+        track_color: Optional[str] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -131,25 +117,19 @@ class Switch(ConstrainedControl):
         self.label_position = label_position
         self.autofocus = autofocus
         self.active_color = active_color
-        self.active_track_color = active_track_color
         self.focus_color = focus_color
-        self.inactive_thumb_color = inactive_thumb_color
-        self.inactive_track_color = inactive_track_color
         self.thumb_color = thumb_color
-        self.thumb_icon = thumb_icon
         self.track_color = track_color
-        self.adaptive = adaptive
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
 
     def _get_control_name(self):
-        return "switch"
+        return "cupertinoswitch"
 
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("thumbColor", self.__thumb_color)
-        self._set_attr_json("thumbIcon", self.__thumb_icon)
         self._set_attr_json("trackColor", self.__track_color)
 
     # value
@@ -186,15 +166,6 @@ class Switch(ConstrainedControl):
     def __set_label_position(self, value: LabelPositionString):
         self._set_attr("labelPosition", value)
 
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
-
     # autofocus
     @property
     def autofocus(self) -> Optional[bool]:
@@ -213,15 +184,6 @@ class Switch(ConstrainedControl):
     def active_color(self, value):
         self._set_attr("activeColor", value)
 
-    # active_track_color
-    @property
-    def active_track_color(self):
-        return self._get_attr("activeTrackColor")
-
-    @active_track_color.setter
-    def active_track_color(self, value):
-        self._set_attr("activeTrackColor", value)
-
     # focus_color
     @property
     def focus_color(self):
@@ -231,49 +193,22 @@ class Switch(ConstrainedControl):
     def focus_color(self, value):
         self._set_attr("focusColor", value)
 
-    # inactive_thumb_color
-    @property
-    def inactive_thumb_color(self):
-        return self._get_attr("inactiveThumbColor")
-
-    @inactive_thumb_color.setter
-    def inactive_thumb_color(self, value):
-        self._set_attr("inactiveThumbColor", value)
-
-    # inactive_track_color
-    @property
-    def inactive_track_color(self):
-        return self._get_attr("inactiveTrackColor")
-
-    @inactive_track_color.setter
-    def inactive_track_color(self, value):
-        self._set_attr("inactiveTrackColor", value)
-
     # thumb_color
     @property
-    def thumb_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def thumb_color(self) -> Optional[str]:
         return self.__thumb_color
 
     @thumb_color.setter
-    def thumb_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def thumb_color(self, value: Optional[str]):
         self.__thumb_color = value
-
-    # thumb_icon
-    @property
-    def thumb_icon(self) -> Union[None, str, Dict[MaterialState, str]]:
-        return self.__thumb_icon
-
-    @thumb_icon.setter
-    def thumb_icon(self, value: Union[None, str, Dict[MaterialState, str]]):
-        self.__thumb_icon = value
 
     # track_color
     @property
-    def track_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def track_color(self) -> Optional[str]:
         return self.__track_color
 
     @track_color.setter
-    def track_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def track_color(self, value: Optional[str]):
         self.__track_color = value
 
     # on_change

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../actions.dart';
 import '../flet_app_services.dart';
@@ -8,15 +8,14 @@ import '../utils/colors.dart';
 import '../utils/desktop.dart';
 import '../utils/debouncer.dart';
 import 'create_control.dart';
-import 'cupertino_slider.dart';
 
-class SliderControl extends StatefulWidget {
+class CupertinoSliderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final dynamic dispatch;
 
-  const SliderControl(
+  const CupertinoSliderControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -25,34 +24,17 @@ class SliderControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<SliderControl> createState() => _SliderControlState();
+  State<CupertinoSliderControl> createState() => _CupertinoSliderControlState();
 }
 
-class _SliderControlState extends State<SliderControl> {
+class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
   double _value = 0;
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
-  late final FocusNode _focusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode = FocusNode();
-    _focusNode.addListener(_onFocusChange);
-  }
 
   @override
   void dispose() {
     _debouncer.dispose();
-    _focusNode.removeListener(_onFocusChange);
-    _focusNode.dispose();
     super.dispose();
-  }
-
-  void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
   }
 
   void onChange(double value) {
@@ -78,30 +60,18 @@ class _SliderControlState extends State<SliderControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("SliderControl build: ${widget.control.id}");
+    debugPrint("CupertinoSliderControl build: ${widget.control.id}");
 
-    bool adaptive = widget.control.attrBool("adaptive", false)!;
-    if (adaptive &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)) {
-      return CupertinoSliderControl(
-          control: widget.control,
-          parentDisabled: widget.parentDisabled,
-          dispatch: widget.dispatch);
-    }
-
-    String? label = widget.control.attrString("label");
-    bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     double min = widget.control.attrDouble("min", 0)!;
     double max = widget.control.attrDouble("max", 1)!;
     int? divisions = widget.control.attrInt("divisions");
-    int round = widget.control.attrInt("round", 0)!;
 
     final server = FletAppServices.of(context).server;
 
-    debugPrint("SliderControl StoreConnector build: ${widget.control.id}");
+    debugPrint(
+        "CupertinoSliderControl StoreConnector build: ${widget.control.id}");
 
     double value = widget.control.attrDouble("value", 0)!;
     if (_value != value) {
@@ -115,20 +85,16 @@ class _SliderControlState extends State<SliderControl> {
       }
     }
 
-    var slider = Slider(
-        autofocus: autofocus,
-        focusNode: _focusNode,
+    var cupertinoSlider = CupertinoSlider(
         value: _value,
         min: min,
         max: max,
         divisions: divisions,
-        label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
         activeColor: HexColor.fromString(
             Theme.of(context), widget.control.attrString("activeColor", "")!),
-        inactiveColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("inactiveColor", "")!),
-        thumbColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("thumbColor", "")!),
+        thumbColor: HexColor.fromString(Theme.of(context),
+                widget.control.attrString("thumbColor", "")!) ??
+            CupertinoColors.white,
         onChanged: !disabled
             ? (double value) {
                 onChange(value);
@@ -151,6 +117,7 @@ class _SliderControlState extends State<SliderControl> {
               }
             : null);
 
-    return constrainedControl(context, slider, widget.parent, widget.control);
+    return constrainedControl(
+        context, cupertinoSlider, widget.parent, widget.control);
   }
 }

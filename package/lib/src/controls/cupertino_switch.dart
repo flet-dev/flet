@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -9,32 +9,29 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
-import '../utils/icons.dart';
 import 'create_control.dart';
 import 'list_tile.dart';
-import 'cupertino_switch.dart';
 
 enum LabelPosition { right, left }
 
-class SwitchControl extends StatefulWidget {
+class CupertinoSwitchControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final dynamic dispatch;
 
-  const SwitchControl(
-      {Key? key,
+  const CupertinoSwitchControl(
+      {super.key,
       this.parent,
       required this.control,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
-  State<SwitchControl> createState() => _SwitchControlState();
+  State<CupertinoSwitchControl> createState() => _CupertinoSwitchControlState();
 }
 
-class _SwitchControlState extends State<SwitchControl> {
+class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
   bool _value = false;
   late final FocusNode _focusNode;
 
@@ -78,17 +75,7 @@ class _SwitchControlState extends State<SwitchControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("SwitchControl build: ${widget.control.id}");
-
-    bool adaptive = widget.control.attrBool("adaptive", false)!;
-    if (adaptive &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)) {
-      return CupertinoSwitchControl(
-          control: widget.control,
-          parentDisabled: widget.parentDisabled,
-          dispatch: widget.dispatch);
-    }
+    debugPrint("CupertinoSwitchControl build: ${widget.control.id}");
 
     String label = widget.control.attrString("label", "")!;
     LabelPosition labelPosition = LabelPosition.values.firstWhere(
@@ -103,30 +90,27 @@ class _SwitchControlState extends State<SwitchControl> {
         distinct: true,
         converter: (store) => store.dispatch,
         builder: (context, dispatch) {
-          debugPrint("Switch StoreConnector build: ${widget.control.id}");
+          debugPrint(
+              "CupertinoSwitch StoreConnector build: ${widget.control.id}");
 
           bool value = widget.control.attrBool("value", false)!;
           if (_value != value) {
             _value = value;
           }
 
-          var swtch = Switch(
+          var materialThumbColor = parseMaterialStateColor(
+              Theme.of(context), widget.control, "thumbColor");
+
+          var materialTrackColor = parseMaterialStateColor(
+              Theme.of(context), widget.control, "trackColor");
+
+          var swtch = CupertinoSwitch(
               autofocus: autofocus,
               focusNode: _focusNode,
               activeColor: HexColor.fromString(Theme.of(context),
                   widget.control.attrString("activeColor", "")!),
-              activeTrackColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("activeTrackColor", "")!),
-              inactiveThumbColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("inactiveThumbColor", "")!),
-              inactiveTrackColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("inactiveTrackColor", "")!),
-              thumbColor: parseMaterialStateColor(
-                  Theme.of(context), widget.control, "thumbColor"),
-              thumbIcon: parseMaterialStateIcon(
-                  Theme.of(context), widget.control, "thumbIcon"),
-              trackColor: parseMaterialStateColor(
-                  Theme.of(context), widget.control, "trackColor"),
+              thumbColor: materialThumbColor?.resolve({}),
+              trackColor: materialTrackColor?.resolve({}),
               focusColor: HexColor.fromString(Theme.of(context),
                   widget.control.attrString("focusColor", "")!),
               value: _value,
