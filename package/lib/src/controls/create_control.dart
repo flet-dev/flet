@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/search_anchor.dart';
 import 'package:flet/src/controls/segmented_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -483,6 +484,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "searchbar":
+      return SearchAnchorControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "checkbox":
       return CheckboxControl(
           key: key,
