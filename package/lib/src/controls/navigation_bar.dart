@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -12,6 +13,7 @@ import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import '../utils/borders.dart';
+import 'cupertino_navigation_bar.dart';
 
 class NavigationBarControl extends StatefulWidget {
   final Control? parent;
@@ -55,6 +57,17 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("NavigationBarControl build: ${widget.control.id}");
+
+    bool adaptive = widget.control.attrBool("adaptive", false)!;
+    if (adaptive &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)) {
+      return CupertinoNavigationBarControl(
+          control: widget.control,
+          children: widget.children,
+          parentDisabled: widget.parentDisabled,
+          dispatch: widget.dispatch);
+    }
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
