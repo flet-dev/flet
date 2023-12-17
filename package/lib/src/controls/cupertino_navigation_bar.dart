@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -13,16 +13,15 @@ import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import '../utils/borders.dart';
-import 'cupertino_navigation_bar.dart';
 
-class NavigationBarControl extends StatefulWidget {
+class CupertinoNavigationBarControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
   final dynamic dispatch;
 
-  const NavigationBarControl(
+  const CupertinoNavigationBarControl(
       {Key? key,
       this.parent,
       required this.control,
@@ -32,13 +31,15 @@ class NavigationBarControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<NavigationBarControl> createState() => _NavigationBarControlState();
+  State<CupertinoNavigationBarControl> createState() =>
+      _CupertinoNavigationBarControlState();
 }
 
-class _NavigationBarControlState extends State<NavigationBarControl> {
+class _CupertinoNavigationBarControlState
+    extends State<CupertinoNavigationBarControl> {
   int _selectedIndex = 0;
 
-  void _destinationChanged(int index) {
+  void _onTap(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
     List<Map<String, String>> props = [
@@ -56,18 +57,7 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("NavigationBarControl build: ${widget.control.id}");
-
-    bool adaptive = widget.control.attrBool("adaptive", false)!;
-    if (adaptive &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)) {
-      return CupertinoNavigationBarControl(
-          control: widget.control,
-          children: widget.children,
-          parentDisabled: widget.parentDisabled,
-          dispatch: widget.dispatch);
-    }
+    debugPrint("CupertinoNavigationBarControl build: ${widget.control.id}");
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
@@ -75,11 +65,6 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
     if (_selectedIndex != selectedIndex) {
       _selectedIndex = selectedIndex;
     }
-
-    NavigationDestinationLabelBehavior? labelBehavior =
-        NavigationDestinationLabelBehavior.values.firstWhereOrNull((a) =>
-            a.name.toLowerCase() ==
-            widget.control.attrString("labelBehavior", "")!.toLowerCase());
 
     var navBar = StoreConnector<AppState, ControlsViewModel>(
         distinct: true,
@@ -89,23 +74,18 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
                 .where((c) => c.isVisible && c.name == null)
                 .map((c) => c.id)),
         builder: (content, viewModel) {
-          return NavigationBar(
-              labelBehavior: labelBehavior,
-              height: widget.control.attrDouble("height"),
-              elevation: widget.control.attrDouble("elevation"),
-              shadowColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("shadowColor", "")!),
-              surfaceTintColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("surfaceTintColor", "")!),
-              indicatorColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("indicatorColor", "")!),
-              indicatorShape:
-                  parseOutlinedBorder(widget.control, "indicatorShape"),
+          return CupertinoTabBar(
               backgroundColor: HexColor.fromString(
                   Theme.of(context), widget.control.attrString("bgColor", "")!),
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _destinationChanged,
-              destinations: viewModel.controlViews.map((destView) {
+              activeColor: HexColor.fromString(
+                  Theme.of(context), widget.control.attrString("activeColor", "")!),
+              inactiveColor: HexColor.fromString(Theme.of(context),
+                  widget.control.attrString("inactiveColor", "")!) ?? CupertinoColors.inactiveGray,
+              iconSize: widget.control.attrDouble("iconSize", 30.0)!,
+              currentIndex: _selectedIndex,
+              border: parseBorder(Theme.of(context), widget.control, "border"),
+              onTap: _onTap,
+              items: viewModel.controlViews.map((destView) {
                 var label = destView.control.attrString("label", "")!;
 
                 var icon =
@@ -118,13 +98,13 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
                 var selectedIconContentCtrls = destView.children
                     .where((c) => c.name == "selected_icon_content");
 
-                return NavigationDestination(
+                return BottomNavigationBarItem(
                     tooltip: destView.control.attrString("tooltip", "")!,
                     icon: iconContentCtrls.isNotEmpty
                         ? createControl(destView.control,
                             iconContentCtrls.first.id, disabled)
                         : Icon(icon),
-                    selectedIcon: selectedIconContentCtrls.isNotEmpty
+                    activeIcon: selectedIconContentCtrls.isNotEmpty
                         ? createControl(destView.control,
                             selectedIconContentCtrls.first.id, disabled)
                         : selectedIcon != null

@@ -29,6 +29,7 @@ from flet_core.floating_action_button import (
 )
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
+from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.protocol import Command
 from flet_core.querystring import QueryString
@@ -1295,11 +1296,14 @@ class Page(Control):
 
     # navigation_bar
     @property
-    def navigation_bar(self) -> Optional[NavigationBar]:
+    def navigation_bar(self) -> Union[NavigationBar, CupertinoNavigationBar, None]:
         return self.__default_view.navigation_bar
 
     @navigation_bar.setter
-    def navigation_bar(self, value: Optional[NavigationBar]):
+    def navigation_bar(
+        self,
+        value: Union[NavigationBar, CupertinoNavigationBar, None],
+    ):
         self.__default_view.navigation_bar = value
 
     # drawer

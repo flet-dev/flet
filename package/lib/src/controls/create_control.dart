@@ -19,6 +19,7 @@ import 'animated_switcher.dart';
 import 'bottom_app_bar.dart';
 import 'audio.dart';
 import 'badge.dart';
+import 'cupertino_navigation_bar.dart';
 import 'cupertino_slider.dart';
 import 'expansion_panel.dart';
 import 'selection_area.dart';
@@ -625,6 +626,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           dispatch: controlView.dispatch);
     case "navigationbar":
       return NavigationBarControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
+    case "cupertinonavigationbar":
+      return CupertinoNavigationBarControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
