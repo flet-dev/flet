@@ -80,7 +80,7 @@ class _CupertinoNavigationBarControlState
               activeColor: HexColor.fromString(
                   Theme.of(context), widget.control.attrString("activeColor", "")!),
               inactiveColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("inactiveColor", "")!)!,
+                  widget.control.attrString("inactiveColor", "")!) ?? CupertinoColors.inactiveGray,
               iconSize: widget.control.attrDouble("iconSize", 30.0)!,
               currentIndex: _selectedIndex,
               border: parseBorder(Theme.of(context), widget.control, "border"),
