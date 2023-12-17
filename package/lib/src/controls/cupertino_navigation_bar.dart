@@ -93,7 +93,7 @@ class _CupertinoNavigationBarControlState
                 var iconContentCtrls =
                     destView.children.where((c) => c.name == "icon_content");
 
-                var activeIcon = getMaterialIcon(
+                var selectedIcon = getMaterialIcon(
                     destView.control.attrString("selectedIcon", "")!);
                 var selectedIconContentCtrls = destView.children
                     .where((c) => c.name == "selected_icon_content");
@@ -107,8 +107,8 @@ class _CupertinoNavigationBarControlState
                     activeIcon: selectedIconContentCtrls.isNotEmpty
                         ? createControl(destView.control,
                             selectedIconContentCtrls.first.id, disabled)
-                        : activeIcon != null
-                            ? Icon(activeIcon)
+                        : selectedIcon != null
+                            ? Icon(selectedIcon)
                             : null,
                     label: label);
               }).toList());
