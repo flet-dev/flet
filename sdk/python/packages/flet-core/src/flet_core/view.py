@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from flet_core import Control
 from flet_core.app_bar import AppBar
@@ -9,6 +9,7 @@ from flet_core.floating_action_button import (
     FloatingActionButtonLocation,
 )
 from flet_core.navigation_bar import NavigationBar
+from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
@@ -40,7 +41,7 @@ class View(ScrollableControl):
         bottom_appbar: Optional[BottomAppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
         floating_action_button_location: Optional[FloatingActionButtonLocation] = None,
-        navigation_bar: Optional[NavigationBar] = None,
+        navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None,
         drawer: Optional[NavigationDrawer] = None,
         end_drawer: Optional[NavigationDrawer] = None,
         vertical_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
@@ -171,11 +172,11 @@ class View(ScrollableControl):
 
     # navigation_bar
     @property
-    def navigation_bar(self) -> Optional[NavigationBar]:
+    def navigation_bar(self) -> Union[NavigationBar, CupertinoNavigationBar, None]:
         return self.__navigation_bar
 
     @navigation_bar.setter
-    def navigation_bar(self, value: Optional[NavigationBar]):
+    def navigation_bar(self, value: Union[NavigationBar, CupertinoNavigationBar, None]):
         self.__navigation_bar = value
 
     # drawer
