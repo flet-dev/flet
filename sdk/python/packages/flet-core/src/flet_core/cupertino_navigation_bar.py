@@ -35,7 +35,6 @@ class CupertinoNavigationBar(ConstrainedControl):
             bgcolor=ft.colors.AMBER_100,
             inactive_color=ft.colors.GREY,
             active_color=ft.colors.BLACK,
-            height=100,
             on_change=lambda e: print("Selected tab:", e.control.selected_index),
             destinations=[
                 ft.NavigationDestination(icon=ft.icons.EXPLORE, label="Explore"),
@@ -94,7 +93,6 @@ class CupertinoNavigationBar(ConstrainedControl):
         inactive_color: Optional[str] = None,
         border: Optional[Border] = None,
         icon_size: OptionalNumber = None,
-        adaptive: Optional[bool] = None,
         on_change=None,
     ):
         ConstrainedControl.__init__(
@@ -132,7 +130,6 @@ class CupertinoNavigationBar(ConstrainedControl):
         self.inactive_color = inactive_color
         self.border = border
         self.icon_size = icon_size
-        self.adaptive = adaptive
         self.on_change = on_change
 
     def _get_control_name(self):
@@ -209,15 +206,6 @@ class CupertinoNavigationBar(ConstrainedControl):
     @icon_size.setter
     def icon_size(self, value: OptionalNumber):
         self._set_attr("iconSize", value)
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
 
     # on_change
     @property

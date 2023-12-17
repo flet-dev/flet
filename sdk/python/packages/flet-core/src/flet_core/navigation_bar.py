@@ -182,6 +182,7 @@ class NavigationBar(ConstrainedControl):
         # NavigationRail-specific
         destinations: Optional[List[NavigationDestination]] = None,
         selected_index: Optional[int] = None,
+        adaptive: Optional[bool] = None,
         bgcolor: Optional[str] = None,
         label_behavior: Optional[NavigationBarLabelBehavior] = None,
         elevation: OptionalNumber = None,
@@ -223,6 +224,7 @@ class NavigationBar(ConstrainedControl):
         self.selected_index = selected_index
         self.label_behavior = label_behavior
         self.bgcolor = bgcolor
+        self.adaptive = adaptive
         self.elevation = elevation
         self.shadow_color = shadow_color
         self.indicator_color = indicator_color
@@ -259,6 +261,15 @@ class NavigationBar(ConstrainedControl):
     @selected_index.setter
     def selected_index(self, value: Optional[int]):
         self._set_attr("selectedIndex", value)
+
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
 
     # label_behavior
     @property
