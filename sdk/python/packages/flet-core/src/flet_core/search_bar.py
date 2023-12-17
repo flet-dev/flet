@@ -1,25 +1,20 @@
 import time
-from typing import Any, Optional, Union, List, Dict
+from typing import Any, Dict, List, Optional, Union
 
 from flet_core import BorderSide, OutlinedBorder
-from flet_core.textfield import TextCapitalization
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.textfield import TextCapitalization
 from flet_core.types import (
     AnimationValue,
+    MaterialState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    MaterialState,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
 
 class SearchBar(ConstrainedControl):
@@ -180,7 +175,7 @@ class SearchBar(ConstrainedControl):
             "p": {},
         }
         self._set_attr_json("method", m)
-        await self.update()
+        await self.update_async()
 
     def close_view(self, text: str = ""):
         m = {
@@ -188,6 +183,7 @@ class SearchBar(ConstrainedControl):
             "i": str(time.time()),
             "p": {"text": text},
         }
+        self.value = text
         self._set_attr_json("method", m)
         self.update()
 
@@ -197,8 +193,9 @@ class SearchBar(ConstrainedControl):
             "i": str(time.time()),
             "p": {"text": text},
         }
+        self.value = text
         self._set_attr_json("method", m)
-        await self.update()
+        await self.update_async()
 
     # bar_leading
     @property
@@ -383,10 +380,7 @@ class SearchBar(ConstrainedControl):
     @on_change.setter
     def on_change(self, handler):
         self._add_event_handler("change", handler)
-        if handler is not None:
-            self._set_attr("onchange", True)
-        else:
-            self._set_attr("onchange", None)
+        self._set_attr("onchange", True if handler is not None else None)
 
     # on_tap
     @property
@@ -396,10 +390,7 @@ class SearchBar(ConstrainedControl):
     @on_tap.setter
     def on_tap(self, handler):
         self._add_event_handler("tap", handler)
-        if handler is not None:
-            self._set_attr("ontap", True)
-        else:
-            self._set_attr("ontap", None)
+        self._set_attr("ontap", True if handler is not None else None)
 
     # on_submit
     @property
@@ -409,7 +400,4 @@ class SearchBar(ConstrainedControl):
     @on_submit.setter
     def on_submit(self, handler):
         self._add_event_handler("submit", handler)
-        if handler is not None:
-            self._set_attr("onsubmit", True)
-        else:
-            self._set_attr("onsubmit", None)
+        self._set_attr("onsubmit", True if handler is not None else None)
