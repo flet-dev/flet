@@ -128,6 +128,7 @@ from flet_core.navigation_bar import (
     NavigationBarLabelBehavior,
     NavigationDestination,
 )
+from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.navigation_rail import (
     NavigationRail,
     NavigationRailDestination,
