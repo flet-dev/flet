@@ -40,12 +40,29 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
   void initState() {
     super.initState();
     _controller = SearchController();
+    _controller.addListener(_searchTextChanged);
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_searchTextChanged);
     _controller.dispose();
     super.dispose();
+  }
+
+  void _searchTextChanged() {
+    debugPrint("_searchTextChanged: ${_controller.text}");
+    _updateValue(_controller.text);
+  }
+
+  void _updateValue(String value) {
+    debugPrint("SearchBar.changeValue: $value");
+    List<Map<String, String>> props = [
+      {"i": widget.control.id, "value": value}
+    ];
+    widget.dispatch(
+        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+    FletAppServices.of(context).server.updateControlProps(props: props);
   }
 
   @override
@@ -93,20 +110,21 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
           TextStyle? viewHintTextStyle = parseTextStyle(
               Theme.of(context), widget.control, "viewHintTextStyle");
 
-          void updateValue(String value) {
-            debugPrint("SearchBar.changeValue: $value");
-            List<Map<String, String>> props = [
-              {"i": widget.control.id, "value": value}
-            ];
-            widget.dispatch(UpdateControlPropsAction(
-                UpdateControlPropsPayload(props: props)));
-            FletAppServices.of(context).server.updateControlProps(props: props);
-          }
-
           var method = widget.control.attrString("method");
 
           if (method != null) {
             debugPrint("SearchAnchor JSON method: $method");
+
+            void resetMethod() {
+              List<Map<String, String>> props = [
+                {"i": widget.control.id, "method": ""}
+              ];
+              widget.dispatch(UpdateControlPropsAction(
+                  UpdateControlPropsPayload(props: props)));
+              FletAppServices.of(context)
+                  .server
+                  .updateControlProps(props: props);
+            }
 
             var mj = json.decode(method);
             var name = mj["n"] as String;
@@ -114,14 +132,16 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
 
             if (name == "closeView") {
               WidgetsBinding.instance.addPostFrameCallback((_) {
+                resetMethod();
                 if (_controller.isOpen) {
                   var text = params["text"].toString();
-                  updateValue(text);
+                  _updateValue(text);
                   _controller.closeView(text);
                 }
               });
             } else if (name == "openView") {
               WidgetsBinding.instance.addPostFrameCallback((_) {
+                resetMethod();
                 if (!_controller.isOpen) {
                   _controller.openView();
                 }
@@ -180,7 +200,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                   onSubmitted: onSubmit
                       ? (String value) {
                           debugPrint("SearchBar.onSubmit: $value");
-                          updateValue(value);
+                          _updateValue(value);
                           FletAppServices.of(context).server.sendPageEvent(
                               eventTarget: widget.control.id,
                               eventName: "submit",
@@ -190,7 +210,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                   onChanged: onChange
                       ? (String value) {
                           debugPrint("SearchBar.onChange: $value");
-                          updateValue(value);
+                          _updateValue(value);
                           FletAppServices.of(context).server.sendPageEvent(
                               eventTarget: widget.control.id,
                               eventName: "change",
