@@ -38,6 +38,7 @@ dependencies:
   window_to_front: ^0.0.3
   audioplayers: ^5.2.1
   shake: ^2.2.0
+  easy_image_viewer: ^1.3.2
   path: ^1.8.2
   js: ^0.6.5
   fl_chart: ^0.65.0
