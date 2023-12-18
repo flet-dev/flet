@@ -655,7 +655,7 @@ class _ViewControlState extends State<ViewControl> {
             } else if (ctrl.type == "floatingactionbutton") {
               fab = ctrl;
               continue;
-            } else if (ctrl.type == "navigationbar") {
+            } else if (ctrl.type == "navigationbar" || ctrl.type == "cupertinonavigationbar" ) {
               navBar = ctrl;
               continue;
             } else if (ctrl.type == "navigationdrawer" &&

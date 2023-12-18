@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/search_anchor.dart';
 import 'package:flet/src/controls/segmented_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -15,14 +16,11 @@ import '../utils/theme.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
-import 'bottom_app_bar.dart';
 import 'audio.dart';
 import 'badge.dart';
-import 'cupertino_slider.dart';
-import 'expansion_panel.dart';
-import 'selection_area.dart';
 import 'banner.dart';
 import 'barchart.dart';
+import 'bottom_app_bar.dart';
 import 'bottom_sheet.dart';
 import 'canvas.dart';
 import 'card.dart';
@@ -32,6 +30,11 @@ import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
+import 'cupertino_checkbox.dart';
+import 'cupertino_navigation_bar.dart';
+import 'cupertino_radio.dart';
+import 'cupertino_slider.dart';
+import 'cupertino_switch.dart';
 import 'datatable.dart';
 import 'date_picker.dart';
 import 'dismissible.dart';
@@ -41,6 +44,7 @@ import 'draggable.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
 import 'error.dart';
+import 'expansion_panel.dart';
 import 'expansion_tile.dart';
 import 'file_picker.dart';
 import 'flet_app_control.dart';
@@ -64,12 +68,12 @@ import 'popup_menu_button.dart';
 import 'progress_bar.dart';
 import 'progress_ring.dart';
 import 'radio.dart';
-import 'cupertino_radio.dart';
 import 'radio_group.dart';
 import 'range_slider.dart';
 import 'responsive_row.dart';
 import 'row.dart';
 import 'safe_area.dart';
+import 'selection_area.dart';
 import 'semantics.dart';
 import 'shader_mask.dart';
 import 'shake_detector.dart';
@@ -87,8 +91,6 @@ import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'webview.dart';
 import 'window_drag_area.dart';
-import 'cupertino_checkbox.dart';
-import 'cupertino_switch.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild}) {
@@ -483,6 +485,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "searchbar":
+      return SearchAnchorControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "checkbox":
       return CheckboxControl(
           key: key,
@@ -616,6 +626,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           dispatch: controlView.dispatch);
     case "navigationbar":
       return NavigationBarControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
+    case "cupertinonavigationbar":
+      return CupertinoNavigationBarControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
