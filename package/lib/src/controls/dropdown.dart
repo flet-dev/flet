@@ -101,7 +101,7 @@ class _DropdownControlState extends State<DropdownControl> {
           var alignment = parseAlignment(widget.control, "alignment");
 
           var items = itemsView.children
-              .where((c) => c.name == null)
+              .where((c) => c.name == null && c.isVisible)
               .map<DropdownMenuItem<String>>((Control itemCtrl) {
             Widget itemChild = Text(
               itemCtrl.attrs["text"] ?? itemCtrl.attrs["key"] ?? itemCtrl.id,

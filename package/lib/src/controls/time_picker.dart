@@ -13,13 +13,13 @@ class TimePickerControl extends StatefulWidget {
   final dynamic dispatch;
 
   const TimePickerControl({
-    Key? key,
+    super.key,
     this.parent,
     required this.control,
     required this.children,
     required this.parentDisabled,
     required this.dispatch,
-  }) : super(key: key);
+  });
 
   @override
   State<TimePickerControl> createState() => _TimePickerControlState();
@@ -97,6 +97,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog<TimeOfDay>(
+            useRootNavigator: false,
             context: context,
             builder: (context) => createSelectTimeDialog()).then((result) {
           debugPrint("pickTime() completed");

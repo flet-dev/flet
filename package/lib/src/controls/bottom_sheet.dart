@@ -4,6 +4,7 @@ import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -16,14 +17,13 @@ class BottomSheetControl extends StatefulWidget {
   final Widget? nextChild;
 
   const BottomSheetControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
       required this.dispatch,
-      required this.nextChild})
-      : super(key: key);
+      required this.nextChild});
 
   @override
   State<BottomSheetControl> createState() => _BottomSheetControlState();
@@ -95,6 +95,9 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                   return content;
                 },
                 isDismissible: dismissible,
+                backgroundColor: HexColor.fromString(Theme.of(context),
+                    widget.control.attrString("bgColor", "")!),
+                elevation: widget.control.attrDouble("elevation"),
                 isScrollControlled: isScrollControlled,
                 enableDrag: enableDrag,
                 showDragHandle: showDragHandle,
@@ -115,7 +118,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
         });
       });
     } else if (open != lastOpen && lastOpen) {
-      Navigator.pop(context);
+      Navigator.of(context).pop();
     }
 
     return const SizedBox.shrink();

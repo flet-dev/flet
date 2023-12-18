@@ -20,13 +20,12 @@ class AlertDialogControl extends StatefulWidget {
   final Widget? nextChild;
 
   const AlertDialogControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.nextChild})
-      : super(key: key);
+      required this.nextChild});
 
   @override
   State<AlertDialogControl> createState() => _AlertDialogControlState();
@@ -96,7 +95,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
 
             // close previous dialog
             if (ModalRoute.of(context)?.isCurrent != true) {
-              Navigator.pop(context);
+              Navigator.of(context).pop();
             }
 
             widget.control.state["open"] = open;
@@ -104,8 +103,9 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               showDialog(
                   barrierDismissible: !modal,
+                  useRootNavigator: false,
                   context: context,
-                  builder: (context) => _createAlertDialog()).then((value) {
+                  builder: (context) => dialog).then((value) {
                 lastOpen = widget.control.state["open"] ?? false;
                 debugPrint("Dialog should be dismissed ($hashCode): $lastOpen");
                 bool shouldDismiss = lastOpen;
@@ -126,7 +126,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
               });
             });
           } else if (open != lastOpen && lastOpen) {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           }
 
           return widget.nextChild ?? const SizedBox.shrink();

@@ -14,11 +14,6 @@ from flet_core.types import (
     ScaleValue,
 )
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 
 class Switch(ConstrainedControl):
     """
@@ -91,11 +86,13 @@ class Switch(ConstrainedControl):
         autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
         active_track_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
         inactive_thumb_color: Optional[str] = None,
         inactive_track_color: Optional[str] = None,
         thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
         thumb_icon: Union[None, str, Dict[MaterialState, str]] = None,
         track_color: Union[None, str, Dict[MaterialState, str]] = None,
+        adaptive: Optional[bool] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -135,11 +132,13 @@ class Switch(ConstrainedControl):
         self.autofocus = autofocus
         self.active_color = active_color
         self.active_track_color = active_track_color
+        self.focus_color = focus_color
         self.inactive_thumb_color = inactive_thumb_color
         self.inactive_track_color = inactive_track_color
         self.thumb_color = thumb_color
         self.thumb_icon = thumb_icon
         self.track_color = track_color
+        self.adaptive = adaptive
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
@@ -187,6 +186,15 @@ class Switch(ConstrainedControl):
     def __set_label_position(self, value: LabelPositionString):
         self._set_attr("labelPosition", value)
 
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
+
     # autofocus
     @property
     def autofocus(self) -> Optional[bool]:
@@ -213,6 +221,15 @@ class Switch(ConstrainedControl):
     @active_track_color.setter
     def active_track_color(self, value):
         self._set_attr("activeTrackColor", value)
+
+    # focus_color
+    @property
+    def focus_color(self):
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value):
+        self._set_attr("focusColor", value)
 
     # inactive_thumb_color
     @property

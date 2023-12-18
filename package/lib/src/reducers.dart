@@ -355,24 +355,46 @@ AppState appReducer(AppState state, dynamic action) {
 
 addWindowMediaEventProps(WindowMediaData wmd, Map<String, String> pageAttrs,
     List<Map<String, String>> props) {
-  pageAttrs["windowwidth"] = wmd.width.toString();
-  pageAttrs["windowheight"] = wmd.height.toString();
-  pageAttrs["windowtop"] = wmd.top.toString();
-  pageAttrs["windowleft"] = wmd.left.toString();
-  pageAttrs["windowminimized"] = wmd.isMinimized.toString();
-  pageAttrs["windowmaximized"] = wmd.isMaximized.toString();
-  pageAttrs["windowfocused"] = wmd.isFocused.toString();
-  pageAttrs["windowfullscreen"] = wmd.isFullScreen.toString();
+  pageAttrs["windowwidth"] = wmd.width != null ? wmd.width.toString() : "";
+  pageAttrs["windowheight"] = wmd.height != null ? wmd.height.toString() : "";
+  pageAttrs["windowtop"] = wmd.top != null ? wmd.top.toString() : "";
+  pageAttrs["windowleft"] = wmd.left != null ? wmd.left.toString() : "";
+  pageAttrs["windowminimized"] =
+      wmd.isMinimized != null ? wmd.isMinimized.toString() : "";
+  pageAttrs["windowmaximized"] =
+      wmd.isMaximized != null ? wmd.isMaximized.toString() : "";
+  pageAttrs["windowfocused"] =
+      wmd.isFocused != null ? wmd.isFocused.toString() : "";
+  pageAttrs["windowfullscreen"] =
+      wmd.isFullScreen != null ? wmd.isFullScreen.toString() : "";
 
   props.addAll([
-    {"i": "page", "windowwidth": wmd.width.toString()},
-    {"i": "page", "windowheight": wmd.height.toString()},
-    {"i": "page", "windowtop": wmd.top.toString()},
-    {"i": "page", "windowleft": wmd.left.toString()},
-    {"i": "page", "windowminimized": wmd.isMinimized.toString()},
-    {"i": "page", "windowmaximized": wmd.isMaximized.toString()},
-    {"i": "page", "windowfocused": wmd.isFocused.toString()},
-    {"i": "page", "windowfullscreen": wmd.isFullScreen.toString()},
+    {"i": "page", "windowwidth": wmd.width != null ? wmd.width.toString() : ""},
+    {
+      "i": "page",
+      "windowheight": wmd.height != null ? wmd.height.toString() : ""
+    },
+    {"i": "page", "windowtop": wmd.top != null ? wmd.top.toString() : ""},
+    {"i": "page", "windowleft": wmd.left != null ? wmd.left.toString() : ""},
+    {
+      "i": "page",
+      "windowminimized":
+          wmd.isMinimized != null ? wmd.isMinimized.toString() : ""
+    },
+    {
+      "i": "page",
+      "windowmaximized":
+          wmd.isMaximized != null ? wmd.isMaximized.toString() : ""
+    },
+    {
+      "i": "page",
+      "windowfocused": wmd.isFocused != null ? wmd.isFocused.toString() : ""
+    },
+    {
+      "i": "page",
+      "windowfullscreen":
+          wmd.isFullScreen != null ? wmd.isFullScreen.toString() : ""
+    },
   ]);
 }
 

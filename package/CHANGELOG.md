@@ -1,3 +1,32 @@
+# 0.17.0
+
+* `SearchBar` control ([#2212](https://github.com/flet-dev/flet/issues/2212)).
+* `CupertinoNavigationBar` control ([#2241](https://github.com/flet-dev/flet/issues/2241)).
+
+# 0.16.0
+
+* `CupertinoSlider` control and `Slider.adaptive` ([#2224](https://github.com/flet-dev/flet/issues/2224)).
+* `CupertinoRadio` control and `Radio.adaptive` ([#2225](https://github.com/flet-dev/flet/issues/2225)).
+* Fix `NavigationBar.label_bahavior` ([#2229](https://github.com/flet-dev/flet/issues/2229)).
+* `CupertinoSwitch` control ([docs](https://flet.dev/docs/controls/cupertinoswitch)).
+* Disable fade-in effect on Flet app start.
+* Tab alignment bug fix ([#2208](https://github.com/flet-dev/flet/issues/2208)).
+* Tab visibility ([#2213](https://github.com/flet-dev/flet/issues/2213)).
+* Dark window title for Windows ([#2204](https://github.com/flet-dev/flet/issues/2204)).
+* Fix `ValueError` on web page resize ([#1564](https://github.com/flet-dev/flet/issues/1564)).
+
+# 0.15.0
+
+* `ExpansionPanel` and `ExpansionPanelList` controls ([docs](https://flet.dev/docs/controls/expansionpanel)).
+* `CupertinoCheckBox` control, adaptive `CheckBox` ([docs](https://flet.dev/docs/controls/cupertinocheckbox)).
+* Additional control props ([#2182](https://github.com/flet-dev/flet/issues/2182)):
+  * `Card.shape`.
+  * `NavigationDestination.tooltip`.
+  * `NavigationRail`: `elevation`, `indicator_color`, `indicator_shape`.
+  * `BottomSheet`: `bgcolor`, `elevation`.
+* Added `Dropdown.Option.visible` property.
+* Fix AlertDialog broken content when testing in Flet app ([#2192](https://github.com/flet-dev/flet/issues/2192)).
+
 # 0.14.0
 
 * `SelectionArea` control ([docs](https://flet.dev/docs/controls/selectionarea)).

@@ -19,6 +19,7 @@ from flet_core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransi
 from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
+from flet_core.badge import Badge
 from flet_core.banner import Banner
 from flet_core.blur import Blur, BlurTileMode
 from flet_core.border import Border, BorderSide
@@ -35,7 +36,6 @@ from flet_core.buttons import (
     StadiumBorder,
 )
 from flet_core.card import Card
-from flet_core.chip import Chip
 from flet_core.charts.bar_chart import BarChart, BarChartEvent
 from flet_core.charts.bar_chart_group import BarChartGroup
 from flet_core.charts.bar_chart_rod import BarChartRod
@@ -56,11 +56,17 @@ from flet_core.charts.line_chart_data_point import LineChartDataPoint
 from flet_core.charts.pie_chart import PieChart, PieChartEvent
 from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.checkbox import Checkbox
+from flet_core.chip import Chip
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
 from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_checkbox import CupertinoCheckbox
+from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
+from flet_core.cupertino_radio import CupertinoRadio
+from flet_core.cupertino_slider import CupertinoSlider
+from flet_core.cupertino_switch import CupertinoSwitch
 from flet_core.datatable import (
     DataCell,
     DataColumn,
@@ -68,13 +74,14 @@ from flet_core.datatable import (
     DataRow,
     DataTable,
 )
-from flet_core.date_picker import DatePicker, DatePickerMode, DatePickerEntryMode
+from flet_core.date_picker import DatePicker, DatePickerEntryMode, DatePickerMode
 from flet_core.dismissible import Dismissible
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
 from flet_core.dropdown import Dropdown
 from flet_core.elevated_button import ElevatedButton
+from flet_core.expansion_panel import ExpansionPanel, ExpansionPanelList
 from flet_core.expansion_tile import ExpansionTile, TileAffinity
 from flet_core.file_picker import (
     FilePicker,
@@ -127,6 +134,7 @@ from flet_core.navigation_bar import (
     NavigationBarLabelBehavior,
     NavigationDestination,
 )
+from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
 from flet_core.navigation_rail import (
     NavigationRail,
     NavigationRailDestination,
@@ -156,12 +164,15 @@ from flet_core.progress_ring import ProgressRing
 from flet_core.querystring import QueryString
 from flet_core.radio import Radio
 from flet_core.radio_group import RadioGroup
+from flet_core.range_slider import RangeSlider
 from flet_core.ref import Ref
 from flet_core.responsive_row import ResponsiveRow
 from flet_core.row import Row
 from flet_core.safe_area import SafeArea
 from flet_core.scrollable_control import OnScrollEvent
+from flet_core.search_bar import SearchBar
 from flet_core.segmented_button import Segment, SegmentedButton
+from flet_core.selection_area import SelectionArea
 from flet_core.semantics import Semantics
 from flet_core.shader_mask import ShaderMask
 from flet_core.shadow import BoxShadow, ShadowBlurStyle
@@ -177,14 +188,13 @@ from flet_core.text_button import TextButton
 from flet_core.text_span import TextSpan
 from flet_core.text_style import TextDecoration, TextDecorationStyle, TextStyle
 from flet_core.textfield import (
-    KeyboardType,
     InputFilter,
+    KeyboardType,
     NumbersOnlyInputFilter,
     TextCapitalization,
     TextField,
     TextOnlyInputFilter,
 )
-from flet_core.time_picker import TimePicker, TimePickerEntryMode
 from flet_core.theme import (
     ColorScheme,
     PageTransitionsTheme,
@@ -195,6 +205,7 @@ from flet_core.theme import (
     Theme,
     ThemeVisualDensity,
 )
+from flet_core.time_picker import TimePicker, TimePickerEntryMode
 from flet_core.tooltip import Tooltip
 from flet_core.transform import Offset, Rotate, Scale
 from flet_core.transparent_pointer import TransparentPointer
@@ -213,15 +224,12 @@ from flet_core.types import (
     PaddingValue,
     PageDesignLanguage,
     ScrollMode,
+    TabAlignment,
     TextAlign,
     ThemeMode,
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
 from flet_core.view import View
-from flet_core.window_drag_area import WindowDragArea
 from flet_core.webview import WebView
-from flet_core.range_slider import RangeSlider
-from flet_core.badge import Badge
-from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
-from flet_core.selection_area import SelectionArea
+from flet_core.window_drag_area import WindowDragArea

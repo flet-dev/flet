@@ -45,8 +45,9 @@ class NavigationDestination(Control):
         selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
         label: Optional[str] = None,
+        tooltip: Optional[str] = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, tooltip=tooltip)
         self.label = label
         self.icon = icon
         self.__icon_content: Optional[Control] = None
@@ -181,6 +182,7 @@ class NavigationBar(ConstrainedControl):
         # NavigationRail-specific
         destinations: Optional[List[NavigationDestination]] = None,
         selected_index: Optional[int] = None,
+        adaptive: Optional[bool] = None,
         bgcolor: Optional[str] = None,
         label_behavior: Optional[NavigationBarLabelBehavior] = None,
         elevation: OptionalNumber = None,
@@ -222,6 +224,7 @@ class NavigationBar(ConstrainedControl):
         self.selected_index = selected_index
         self.label_behavior = label_behavior
         self.bgcolor = bgcolor
+        self.adaptive = adaptive
         self.elevation = elevation
         self.shadow_color = shadow_color
         self.indicator_color = indicator_color
@@ -259,6 +262,15 @@ class NavigationBar(ConstrainedControl):
     def selected_index(self, value: Optional[int]):
         self._set_attr("selectedIndex", value)
 
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
+
     # label_behavior
     @property
     def label_behavior(self) -> Optional[NavigationBarLabelBehavior]:
@@ -268,12 +280,12 @@ class NavigationBar(ConstrainedControl):
     def label_behavior(self, value: Optional[NavigationBarLabelBehavior]):
         self.__label_behavior = value
         if isinstance(value, NavigationBarLabelBehavior):
-            self._set_attr("labelType", value.value)
+            self._set_attr("labelBehavior", value.value)
         else:
             self.__set_label_behavior(value)
 
     def __set_label_behavior(self, value: NavigationBarLabelBehaviorString):
-        self._set_attr("labelType", value)
+        self._set_attr("labelBehavior", value)
 
     # bgcolor
     @property

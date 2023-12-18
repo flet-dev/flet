@@ -7,7 +7,6 @@ from flet_core.types import (
     AnimationValue,
     LabelPosition,
     LabelPositionString,
-    MaterialState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -15,38 +14,28 @@ from flet_core.types import (
 )
 
 
-class Checkbox(ConstrainedControl):
+class CupertinoCheckbox(ConstrainedControl):
     """
-    Checkbox allows to select one or more items from a group, or switch between two mutually exclusive options (checked or unchecked, on or off).
+    A macOS style checkbox. Checkbox allows to select one or more items from a group, or switch between two mutually exclusive options (checked or unchecked, on or off).
 
     Example:
     ```
     import flet as ft
 
     def main(page):
-        def button_clicked(e):
-            t.value = (
-                f"Checkboxes values are:  {c1.value}, {c2.value}, {c3.value}, {c4.value}, {c5.value}."
-            )
-            page.update()
-
-        t = ft.Text()
-        c1 = ft.Checkbox(label="Unchecked by default checkbox", value=False)
-        c2 = ft.Checkbox(label="Undefined by default tristate checkbox", tristate=True)
-        c3 = ft.Checkbox(label="Checked by default checkbox", value=True)
-        c4 = ft.Checkbox(label="Disabled checkbox", disabled=True)
-        c5 = ft.Checkbox(
-            label="Checkbox with rendered label_position='left'", label_position=ft.LabelPosition.LEFT
-        )
-        b = ft.ElevatedButton(text="Submit", on_click=button_clicked)
-        page.add(c1, c2, c3, c4, c5, b, t)
+        c = ft.CupertinoCheckbox(
+            label="Cupertino Checkbox",
+            active_color=ft.colors.GREEN,
+            inactive_color=ft.colors.RED,
+            check_color=ft.colors.BLUE,
+        ),
+        page.add(c)
 
     ft.app(target=main)
     ```
 
     -----
-
-    Online docs: https://flet.dev/docs/controls/checkbox
+    Online docs: https://flet.dev/docs/controls/cupertinocheckbox
     """
 
     def __init__(
@@ -85,13 +74,10 @@ class Checkbox(ConstrainedControl):
         value: Optional[bool] = None,
         tristate: Optional[bool] = None,
         autofocus: Optional[bool] = None,
-        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
         check_color: Optional[str] = None,
         active_color: Optional[str] = None,
-        hover_color: Optional[str] = None,
+        inactive_color: Optional[str] = None,
         focus_color: Optional[str] = None,
-        adaptive: Optional[bool] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -131,23 +117,15 @@ class Checkbox(ConstrainedControl):
         self.label_position = label_position
         self.autofocus = autofocus
         self.check_color = check_color
-        self.fill_color = fill_color
-        self.focus_color = focus_color
-        self.hover_color = hover_color
-        self.overlay_color = overlay_color
         self.active_color = active_color
-        self.adaptive = adaptive
+        self.inactive_color = inactive_color
+        self.focus_color = focus_color
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
 
     def _get_control_name(self):
-        return "checkbox"
-
-    def _before_build_command(self):
-        super()._before_build_command()
-        self._set_attr_json("fillColor", self.__fill_color)
-        self._set_attr_json("overlayColor", self.__overlay_color)
+        return "cupertinocheckbox"
 
     # value
     @property
@@ -168,15 +146,6 @@ class Checkbox(ConstrainedControl):
     @tristate.setter
     def tristate(self, value: Optional[bool]):
         self._set_attr("tristate", value)
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
 
     # label
     @property
@@ -230,6 +199,15 @@ class Checkbox(ConstrainedControl):
     def active_color(self, value):
         self._set_attr("activeColor", value)
 
+    # inactive_color
+    @property
+    def inactive_color(self):
+        return self._get_attr("inactiveColor")
+
+    @inactive_color.setter
+    def inactive_color(self, value):
+        self._set_attr("inactiveColor", value)
+
     # focus_color
     @property
     def focus_color(self):
@@ -238,33 +216,6 @@ class Checkbox(ConstrainedControl):
     @focus_color.setter
     def focus_color(self, value):
         self._set_attr("focusColor", value)
-
-    # hover_color
-    @property
-    def hover_color(self):
-        return self._get_attr("hoverColor")
-
-    @hover_color.setter
-    def hover_color(self, value):
-        self._set_attr("hoverColor", value)
-
-    # fill_color
-    @property
-    def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
-        return self.__fill_color
-
-    @fill_color.setter
-    def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
-        self.__fill_color = value
-
-    # overlay_color
-    @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
-        return self.__overlay_color
-
-    @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
-        self.__overlay_color = value
 
     # on_change
     @property
