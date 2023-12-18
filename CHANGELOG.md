@@ -1,5 +1,10 @@
 # Flet changelog
 
+# 0.17.0
+
+* `SearchBar` control ([#2212](https://github.com/flet-dev/flet/issues/2212)).
+* `CupertinoNavigationBar` control ([#2241](https://github.com/flet-dev/flet/issues/2241)).
+
 # 0.16.0
 
 * `CupertinoSlider` control and `Slider.adaptive` ([#2224](https://github.com/flet-dev/flet/issues/2224)).
