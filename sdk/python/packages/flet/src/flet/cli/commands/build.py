@@ -365,13 +365,44 @@ class Command(BaseCommand):
 
         print("[spring_green3]OK[/spring_green3]")
 
-        print(self.flutter_dir)
-        return
-
         # package Python app
         print(f"Packaging Python app...", end="")
+        package_args = [
+            dart_exe,
+            "run",
+            "serious_python:main",
+            "package",
+            str(python_app_path),
+        ]
+        if platform == "web":
+            package_args.extend(
+                [
+                    "--web",
+                    "--dep-mappings",
+                    "flet=flet-pyodide",
+                    "--req-deps",
+                    "flet-pyodide",
+                    "--platform",
+                    "emscripten_3_1_45_wasm32",
+                ]
+            )
+        else:
+            if platform in ["apk", "aab", "ipa"]:
+                package_args.extend(
+                    [
+                        "--mobile",
+                    ]
+                )
+            package_args.extend(
+                [
+                    "--dep-mappings",
+                    "flet=flet-embed",
+                    "--req-deps",
+                    "flet-embed",
+                ]
+            )
         package_result = subprocess.run(
-            [dart_exe, "run", "serious_python:main", "package", str(python_app_path)],
+            package_args,
             cwd=str(self.flutter_dir),
             capture_output=self.verbose < 2,
             text=True,
@@ -404,6 +435,9 @@ class Command(BaseCommand):
                 print(build_result.stderr)
             self.cleanup()
         print("[spring_green3]OK[/spring_green3]")
+
+        print(self.flutter_dir)
+        return
 
         # copy build results to `out_dir`
 
