@@ -1,9 +1,11 @@
 import argparse
 import glob
+import json
 import shutil
 import subprocess
 import sys
 import tempfile
+import urllib.request
 from pathlib import Path
 
 import yaml
@@ -11,6 +13,8 @@ from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string, slugify
 from flet_runtime.utils import copy_tree, is_windows
 from rich import print
+
+PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full"
 
 
 class Command(BaseCommand):
@@ -344,7 +348,7 @@ class Command(BaseCommand):
                 print(icons_result.stdout)
             if icons_result.stderr:
                 print(icons_result.stderr)
-            self.cleanup()
+            self.cleanup(icons_result.returncode)
 
         print("[spring_green3]OK[/spring_green3]")
 
@@ -361,7 +365,7 @@ class Command(BaseCommand):
                 print(splash_result.stdout)
             if splash_result.stderr:
                 print(splash_result.stderr)
-            self.cleanup()
+            self.cleanup(splash_result.returncode)
 
         print("[spring_green3]OK[/spring_green3]")
 
@@ -375,15 +379,18 @@ class Command(BaseCommand):
             str(python_app_path),
         ]
         if platform == "web":
+            pip_platform, find_links_path = self.create_pyodide_find_links()
             package_args.extend(
                 [
                     "--web",
                     "--dep-mappings",
                     "flet=flet-pyodide",
                     "--req-deps",
-                    "flet-pyodide",
+                    "flet-pyodide,micropip",
                     "--platform",
-                    "emscripten_3_1_45_wasm32",
+                    pip_platform,
+                    "--find-links",
+                    find_links_path,
                 ]
             )
         else:
@@ -401,6 +408,7 @@ class Command(BaseCommand):
                     "flet-embed",
                 ]
             )
+
         package_result = subprocess.run(
             package_args,
             cwd=str(self.flutter_dir),
@@ -413,7 +421,7 @@ class Command(BaseCommand):
                 print(package_result.stdout)
             if package_result.stderr:
                 print(package_result.stderr)
-            self.cleanup()
+            self.cleanup(package_result.returncode)
         print("[spring_green3]OK[/spring_green3]")
 
         # run `flutter build`
@@ -433,7 +441,7 @@ class Command(BaseCommand):
                 print(build_result.stdout)
             if build_result.stderr:
                 print(build_result.stderr)
-            self.cleanup()
+            self.cleanup(build_result.returncode)
         print("[spring_green3]OK[/spring_green3]")
 
         print(self.flutter_dir)
@@ -441,7 +449,17 @@ class Command(BaseCommand):
 
         # copy build results to `out_dir`
 
-        self.cleanup()
+        self.cleanup(0)
+
+    def create_pyodide_find_links(self):
+        with urllib.request.urlopen(f"{PYODIDE_ROOT_URL}/pyodide-lock.json") as j:
+            data = json.load(j)
+        find_links_path = str(self.flutter_dir.joinpath("find-links.html"))
+        with open(find_links_path, "w") as f:
+            for package in data["packages"].values():
+                file_name = package["file_name"]
+                f.write(f'<a href="{PYODIDE_ROOT_URL}/{file_name}">{file_name}</a>\n')
+        return f"{data['info']['platform']}_{data['info']['arch']}", find_links_path
 
     def copy_icon_image(self, src_path: Path, dest_path: Path, image_name: str):
         images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
@@ -452,8 +470,8 @@ class Command(BaseCommand):
             return Path(images[0]).name
         return None
 
-    def cleanup(self):
+    def cleanup(self, exit_code: int):
         print("Cleaning up...", end="")
         shutil.rmtree(str(self.flutter_dir), ignore_errors=False, onerror=None)
         print("[spring_green3]OK[/spring_green3]")
-        sys.exit(1)
+        sys.exit(exit_code)
