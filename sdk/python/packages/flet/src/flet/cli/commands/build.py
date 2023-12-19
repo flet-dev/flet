@@ -115,6 +115,27 @@ class Command(BaseCommand):
             help="background color in dark mode of app splash screen on iOS, Android and web",
             required=False,
         )
+        parser.add_argument(
+            "--no-web-splash",
+            dest="no_web_splash",
+            action="store_true",
+            default=False,
+            help="disable web app splash screen",
+        )
+        parser.add_argument(
+            "--no-ios-splash",
+            dest="no_ios_splash",
+            action="store_true",
+            default=False,
+            help="disable iOS app splash screen",
+        )
+        parser.add_argument(
+            "--no-android-splash",
+            dest="no_android_splash",
+            action="store_true",
+            default=False,
+            help="disable Android app splash screen",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
@@ -328,6 +349,11 @@ class Command(BaseCommand):
                 pubspec["flutter_native_splash"]["android_12"][
                     "color_dark"
                 ] = options.splash_dark_color
+
+        # enable/disable splashes
+        pubspec["flutter_native_splash"]["web"] = not options.no_web_splash
+        pubspec["flutter_native_splash"]["ios"] = not options.no_ios_splash
+        pubspec["flutter_native_splash"]["android"] = not options.no_android_splash
 
         print("[spring_green3]OK[/spring_green3]")
 
