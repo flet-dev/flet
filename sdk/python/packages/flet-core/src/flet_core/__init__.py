@@ -21,6 +21,9 @@ from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
 from flet_core.badge import Badge
 from flet_core.banner import Banner
+from flet_core.menu_bar import MenuBar, MenuStyle
+from flet_core.submenu_button import SubmenuButton
+from flet_core.menu_item_button import MenuItemButton
 from flet_core.blur import Blur, BlurTileMode
 from flet_core.border import Border, BorderSide
 from flet_core.border_radius import BorderRadius
