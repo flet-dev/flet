@@ -1,8 +1,11 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/menu_bar.dart';
 import 'package:flet/src/controls/search_anchor.dart';
+import 'package:flet/src/controls/menu_item_button.dart';
 import 'package:flet/src/controls/segmented_button.dart';
+import 'package:flet/src/controls/submenu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -319,6 +322,27 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           dispatch: controlView.dispatch);
     case "responsiverow":
       return ResponsiveRowControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "menubar":
+      return MenuBarControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "submenubutton":
+      return SubMenuButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "menuitembutton":
+      return MenuItemButtonControl(
           key: key,
           parent: parent,
           control: controlView.control,
