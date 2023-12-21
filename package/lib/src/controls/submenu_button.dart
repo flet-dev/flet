@@ -4,6 +4,7 @@ import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/menu.dart';
+import '../utils/transforms.dart';
 import 'create_control.dart';
 
 class SubMenuButtonControl extends StatefulWidget {
@@ -68,6 +69,8 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
             widget.control.attrString("clipBehavior", "")!.toLowerCase(),
         orElse: () => Clip.hardEdge);
 
+    var offsetDetails = parseOffset(widget.control, "alignmentOffset");
+
     var theme = Theme.of(context);
     var style = parseButtonStyle(Theme.of(context), widget.control, "style",
         defaultForegroundColor: theme.colorScheme.primary,
@@ -96,6 +99,9 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
       clipBehavior: clipBehavior,
       style: style,
       menuStyle: menuStyle,
+      alignmentOffset: offsetDetails != null
+          ? Offset(offsetDetails.x, offsetDetails.y)
+          : null,
       onClose: onClose && !disabled
           ? () {
               server.sendPageEvent(

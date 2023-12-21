@@ -62,6 +62,7 @@ class SubmenuButton(ConstrainedControl):
             clip_behavior: Optional[ClipBehavior] = None,
             menu_style: Optional[MenuStyle] = None,
             style: Optional[ButtonStyle] = None,
+            alignment_offset: OffsetValue = None,
             on_open=None,
             on_close=None,
             on_hover=None,
@@ -105,6 +106,7 @@ class SubmenuButton(ConstrainedControl):
         self.clip_behavior = clip_behavior
         self.style = style
         self.menu_style = menu_style
+        self.alignment_offset = alignment_offset
         self.on_open = on_open
         self.on_close = on_close
         self.on_hover = on_hover
@@ -215,6 +217,15 @@ class SubmenuButton(ConstrainedControl):
         self._set_attr(
             "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
         )
+
+    # alignment_offset
+    @property
+    def alignment_offset(self) -> OffsetValue:
+        return self.__alignment_offset
+
+    @alignment_offset.setter
+    def alignment_offset(self, value: OffsetValue):
+        self.__alignment_offset = value
 
     # on_open
     @property
