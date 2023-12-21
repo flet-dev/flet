@@ -41,7 +41,7 @@ class _MenuBarControlState extends State<MenuBarControl> {
             widget.control.attrString("clipBehavior", "")!.toLowerCase(),
         orElse: () => Clip.none);
 
-    var theme = Theme.of(context);
+    // var theme = Theme.of(context);
 
     var style = parseMenuStyle(Theme.of(context), widget.control, "style");
 

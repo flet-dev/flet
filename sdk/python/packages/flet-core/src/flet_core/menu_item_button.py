@@ -1,10 +1,9 @@
 import time
-from typing import Any, Optional, Union, List
+from typing import Any, Optional, Union
 
+from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
-from flet_core.menu_bar import MenuStyle
-from flet_core.buttons import ButtonStyle
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -18,6 +17,7 @@ from flet_core.types import (
 
 class MenuItemButton(ConstrainedControl):
     """
+    A button for use in a MenuBar or on its own, that can be activated by click or keyboard navigation.
 
     -----
 
@@ -25,47 +25,47 @@ class MenuItemButton(ConstrainedControl):
     """
 
     def __init__(
-            self,
-            content: Optional[Control] = None,
-            ref: Optional[Ref] = None,
-            key: Optional[str] = None,
-            width: OptionalNumber = None,
-            height: OptionalNumber = None,
-            left: OptionalNumber = None,
-            top: OptionalNumber = None,
-            right: OptionalNumber = None,
-            bottom: OptionalNumber = None,
-            expand: Union[None, bool, int] = None,
-            col: Optional[ResponsiveNumber] = None,
-            opacity: OptionalNumber = None,
-            rotate: RotateValue = None,
-            scale: ScaleValue = None,
-            offset: OffsetValue = None,
-            aspect_ratio: OptionalNumber = None,
-            animate_opacity: AnimationValue = None,
-            animate_size: AnimationValue = None,
-            animate_position: AnimationValue = None,
-            animate_rotation: AnimationValue = None,
-            animate_scale: AnimationValue = None,
-            animate_offset: AnimationValue = None,
-            on_animation_end=None,
-            tooltip: Optional[str] = None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-            #
-            # Specific
-            #
-            close_on_click: Optional[bool] = None,
-            focus_on_hover: Optional[bool] = None,
-            leading: Optional[Control] = None,
-            trailing: Optional[Control] = None,
-            clip_behavior: Optional[ClipBehavior] = None,
-            style: Optional[ButtonStyle] = None,
-            on_click=None,
-            on_hover=None,
-            on_focus=None,
-            on_blur=None,
+        self,
+        content: Optional[Control] = None,
+        ref: Optional[Ref] = None,
+        key: Optional[str] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        #
+        # Specific
+        #
+        close_on_click: Optional[bool] = None,
+        focus_on_hover: Optional[bool] = None,
+        leading: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        style: Optional[ButtonStyle] = None,
+        on_click=None,
+        on_hover=None,
+        on_focus=None,
+        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,

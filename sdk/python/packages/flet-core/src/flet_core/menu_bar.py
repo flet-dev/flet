@@ -11,7 +11,8 @@ from flet_core.ref import Ref
 from flet_core.types import (
     PaddingValue,
     ResponsiveNumber,
-    ClipBehavior, MaterialState,
+    ClipBehavior,
+    MaterialState,
 )
 
 
@@ -30,15 +31,6 @@ class MenuStyle:
     elevation: Union[
         None, float, int, Dict[Union[str, MaterialState], Union[float, int]]
     ] = field(default=None)
-    # fixed_size: Union[
-    #     None, float, int, Dict[Union[str, MaterialState], Union[float, int]]
-    # ] = field(default=None)
-    # max_size: Union[
-    #     None, float, int, Dict[Union[str, MaterialState], Union[float, int]]
-    # ] = field(default=None)
-    # min_size: Union[
-    #     None, float, int, Dict[Union[str, MaterialState], Union[float, int]]
-    # ] = field(default=None)
     padding: Union[PaddingValue, Dict[Union[str, MaterialState], PaddingValue]] = field(
         default=None
     )
@@ -55,11 +47,10 @@ class MenuStyle:
 
 class MenuBar(Control):
     """
+    A menu bar that manages cascading child menus.
 
-
-    ```
-
-    ```
+    It could be placed anywhere but typically resides above the main body of the application 
+    and defines a menu system for invoking callbacks in response to user selection of a menu item.
 
     -----
 
@@ -67,20 +58,20 @@ class MenuBar(Control):
     """
 
     def __init__(
-            self,
-            controls: Optional[List[Control]] = None,
-            ref: Optional[Ref] = None,
-            expand: Union[None, bool, int] = None,
-            col: Optional[ResponsiveNumber] = None,
-            opacity: OptionalNumber = None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-            #
-            # Specific
-            #
-            clip_behavior: Optional[ClipBehavior] = None,
-            style: Optional[MenuStyle] = None,
+        self,
+        controls: Optional[List[Control]] = None,
+        ref: Optional[Ref] = None,
+        expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        #
+        # Specific
+        #
+        clip_behavior: Optional[ClipBehavior] = None,
+        style: Optional[MenuStyle] = None,
     ):
         Control.__init__(
             self,
@@ -109,7 +100,9 @@ class MenuBar(Control):
             self.__style.mouse_cursor = self._wrap_attr_dict(self.__style.mouse_cursor)
             if self.__style.mouse_cursor:
                 for k, v in self.__style.mouse_cursor.items():
-                    self.__style.mouse_cursor[k] = v.value if isinstance(v, MouseCursor) else str(v)
+                    self.__style.mouse_cursor[k] = (
+                        v.value if isinstance(v, MouseCursor) else str(v)
+                    )
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
@@ -132,7 +125,9 @@ class MenuBar(Control):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_attr("clipBehavior", value.value if isinstance(value, ClipBehavior) else value)
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
 
     # style
     @property

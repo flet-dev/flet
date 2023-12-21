@@ -18,9 +18,6 @@ MenuStyle? parseMenuStyle(ThemeData theme, Control control, String propName,
     double? defaultElevation,
     Alignment? defaultAlignment,
     MouseCursor? defaultMouseCursor,
-    // required double? defaultFixedSize,
-    // required double? defaultMaxSize,
-    // required double? defaultMinSize,
     EdgeInsets? defaultPadding,
     BorderSide? defaultBorderSide,
     OutlinedBorder? defaultShape}) {
@@ -39,9 +36,6 @@ MenuStyle? parseMenuStyle(ThemeData theme, Control control, String propName,
       defaultElevation,
       defaultAlignment,
       defaultMouseCursor,
-      // defaultFixedSize,
-      // defaultMaxSize,
-      // defaultMinSize,
       defaultPadding,
       defaultBorderSide,
       defaultShape);
@@ -68,9 +62,6 @@ MenuStyle? menuStyleFromJSON(
     double? defaultElevation,
     Alignment? defaultAlignment,
     MouseCursor? defaultMouseCursor,
-    // double? defaultFixedSize,
-    // double? defaultMaxSize,
-    // double? defaultMinSize,
     EdgeInsets? defaultPadding,
     BorderSide? defaultBorderSide,
     OutlinedBorder? defaultShape) {
@@ -90,12 +81,6 @@ MenuStyle? menuStyleFromJSON(
         defaultSurfaceTintColor),
     elevation: getMaterialStateProperty<double?>(
         json["elevation"], (jv) => parseDouble(jv), defaultElevation),
-    // fixedSize: getMaterialStateProperty<double?>(
-    //     json["fixed_size"], (jv) => parseDouble(jv), defaultFixedSize),
-    // minimumSize: getMaterialStateProperty<double?>(
-    //     json["min_size"], (jv) => parseDouble(jv), defaultMinimumSize),
-    // maximumSize: getMaterialStateProperty<double?>(
-    //     json["max_size"], (jv) => parseDouble(jv), defaultMaximumSize),
     padding: getMaterialStateProperty<EdgeInsetsGeometry?>(
         json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
     side: getMaterialStateProperty<BorderSide?>(

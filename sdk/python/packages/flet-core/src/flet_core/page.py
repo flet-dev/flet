@@ -23,10 +23,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
-from flet_core.floating_action_button import (
-    FloatingActionButton,
-    FloatingActionButtonLocation,
-)
+from flet_core.floating_action_button import FloatingActionButton
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
@@ -38,6 +35,7 @@ from flet_core.snack_bar import SnackBar
 from flet_core.theme import Theme
 from flet_core.types import (
     CrossAxisAlignment,
+    FloatingActionButtonLocation,
     MainAxisAlignment,
     PaddingValue,
     PageDesignLanguage,

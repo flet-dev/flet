@@ -18,6 +18,7 @@ from flet_core.types import (
 
 class SubmenuButton(ConstrainedControl):
     """
+    A menu button that displays a cascading menu. It can be used as part of a MenuBar, or as a standalone control.
 
     -----
 
@@ -25,49 +26,49 @@ class SubmenuButton(ConstrainedControl):
     """
 
     def __init__(
-            self,
-            content: Optional[Control] = None,
-            controls: Optional[List[Control]] = None,
-            ref: Optional[Ref] = None,
-            key: Optional[str] = None,
-            width: OptionalNumber = None,
-            height: OptionalNumber = None,
-            left: OptionalNumber = None,
-            top: OptionalNumber = None,
-            right: OptionalNumber = None,
-            bottom: OptionalNumber = None,
-            expand: Union[None, bool, int] = None,
-            col: Optional[ResponsiveNumber] = None,
-            opacity: OptionalNumber = None,
-            rotate: RotateValue = None,
-            scale: ScaleValue = None,
-            offset: OffsetValue = None,
-            aspect_ratio: OptionalNumber = None,
-            animate_opacity: AnimationValue = None,
-            animate_size: AnimationValue = None,
-            animate_position: AnimationValue = None,
-            animate_rotation: AnimationValue = None,
-            animate_scale: AnimationValue = None,
-            animate_offset: AnimationValue = None,
-            on_animation_end=None,
-            tooltip: Optional[str] = None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-            #
-            # Specific
-            #
-            leading: Optional[Control] = None,
-            trailing: Optional[Control] = None,
-            clip_behavior: Optional[ClipBehavior] = None,
-            menu_style: Optional[MenuStyle] = None,
-            style: Optional[ButtonStyle] = None,
-            alignment_offset: OffsetValue = None,
-            on_open=None,
-            on_close=None,
-            on_hover=None,
-            on_focus=None,
-            on_blur=None,
+        self,
+        content: Optional[Control] = None,
+        controls: Optional[List[Control]] = None,
+        ref: Optional[Ref] = None,
+        key: Optional[str] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        #
+        # Specific
+        #
+        leading: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        menu_style: Optional[MenuStyle] = None,
+        style: Optional[ButtonStyle] = None,
+        alignment_offset: OffsetValue = None,
+        on_open=None,
+        on_close=None,
+        on_hover=None,
+        on_focus=None,
+        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,
