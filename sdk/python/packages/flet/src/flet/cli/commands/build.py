@@ -136,6 +136,34 @@ class Command(BaseCommand):
             default=False,
             help="disable Android app splash screen",
         )
+        parser.add_argument(
+            "--base-url",
+            dest="base_url",
+            type=str,
+            default="/",
+            help="base URL for the app (web only)",
+        )
+        parser.add_argument(
+            "--web-renderer",
+            dest="web_renderer",
+            choices=["canvaskit", "html"],
+            default="canvaskit",
+            help="renderer to use (web only)",
+        )
+        parser.add_argument(
+            "--use-color-emoji",
+            dest="use_color_emoji",
+            action="store_true",
+            default=False,
+            help="enables color emojis with CanvasKit renderer (web only)",
+        )
+        parser.add_argument(
+            "--route-url-strategy",
+            dest="route_url_strategy",
+            choices=["path", "hash"],
+            default="path",
+            help="URL routing strategy (web only)",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
@@ -185,6 +213,13 @@ class Command(BaseCommand):
 
         if options.description is not None:
             template_data["description"] = options.description
+
+        template_data["base_url"] = options.base_url
+        template_data["route_url_strategy"] = options.route_url_strategy
+        template_data["web_renderer"] = options.web_renderer
+        template_data["use_color_emoji"] = (
+            "true" if options.use_color_emoji else "false"
+        )
 
         # create Flutter project from a template
         print("Creating Flutter bootstrap project...", end="")
