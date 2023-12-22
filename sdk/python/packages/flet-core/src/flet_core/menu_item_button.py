@@ -7,11 +7,11 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    ClipBehavior,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
 )
 
 

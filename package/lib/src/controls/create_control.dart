@@ -1,12 +1,8 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
-import 'package:flet/src/controls/menu_bar.dart';
-import 'package:flet/src/controls/search_anchor.dart';
-import 'package:flet/src/controls/menu_item_button.dart';
-import 'package:flet/src/controls/segmented_button.dart';
-import 'package:flet/src/controls/submenu_button.dart';
 import 'package:flutter/material.dart';
+
+import 'package:collection/collection.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../flet_app_services.dart';
@@ -17,6 +13,7 @@ import '../models/page_media_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/theme.dart';
 import '../utils/transforms.dart';
+
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
@@ -62,6 +59,8 @@ import 'linechart.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
 import 'markdown.dart';
+import 'menu_bar.dart';
+import 'menu_item_button.dart';
 import 'navigation_bar.dart';
 import 'navigation_rail.dart';
 import 'outlined_button.dart';
@@ -76,6 +75,8 @@ import 'range_slider.dart';
 import 'responsive_row.dart';
 import 'row.dart';
 import 'safe_area.dart';
+import 'search_anchor.dart';
+import 'segmented_button.dart';
 import 'selection_area.dart';
 import 'semantics.dart';
 import 'shader_mask.dart';
@@ -83,6 +84,7 @@ import 'shake_detector.dart';
 import 'slider.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
+import 'submenu_button.dart';
 import 'switch.dart';
 import 'tabs.dart';
 import 'text.dart';

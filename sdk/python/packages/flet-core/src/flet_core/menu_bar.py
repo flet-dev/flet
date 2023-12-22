@@ -1,19 +1,14 @@
 import dataclasses
 from dataclasses import field
-from typing import Any, List, Optional, Union, Dict
+from typing import Any, Dict, List, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
-from flet_core.gesture_detector import MouseCursor
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control, OptionalNumber
+from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
-from flet_core.types import (
-    PaddingValue,
-    ResponsiveNumber,
-    ClipBehavior,
-    MaterialState,
-)
+from flet_core.types import ClipBehavior, MaterialState, PaddingValue, ResponsiveNumber
 
 
 @dataclasses.dataclass
@@ -49,7 +44,7 @@ class MenuBar(Control):
     """
     A menu bar that manages cascading child menus.
 
-    It could be placed anywhere but typically resides above the main body of the application 
+    It could be placed anywhere but typically resides above the main body of the application
     and defines a menu system for invoking callbacks in response to user selection of a menu item.
 
     -----
