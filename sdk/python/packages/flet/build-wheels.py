@@ -7,7 +7,6 @@ import pathlib
 import shutil
 import stat
 import sys
-import tarfile
 import urllib.request
 import zipfile
 from base64 import urlsafe_b64encode

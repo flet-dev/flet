@@ -1,7 +1,6 @@
 from typing import Any, Dict, List, Optional, Union
 
 from flet_core.border import BorderSide
-from flet_core.border_radius import BorderRadius
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref

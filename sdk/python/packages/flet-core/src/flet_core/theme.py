@@ -6,7 +6,8 @@ from typing import Dict, Optional, Union
 from flet_core.border import BorderSide
 from flet_core.border_radius import BorderRadius
 from flet_core.text_style import TextStyle
-from flet_core.types import MaterialState, PaddingValue, ThemeMode
+from flet_core.types import MaterialState, PaddingValue
+from flet_core.utils import DeprecatedEnumMeta
 
 try:
     from typing import Literal
@@ -18,12 +19,13 @@ VisualDensityString = Literal[
 ]
 
 
-class ThemeVisualDensity(Enum):
+class ThemeVisualDensity(Enum, metaclass=DeprecatedEnumMeta):
     NONE = None
     STANDARD = "standard"
     COMPACT = "compact"
     COMFORTABLE = "comfortable"
     ADAPTIVEPLATFORMDENSITY = "adaptivePlatformDensity"
+    ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
 
 
 PageTransitionString = Literal["fadeUpwards", "openUpwards", "zoom", "cupertino"]

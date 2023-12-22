@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from flet_core.border import Border
 from flet_core.control import Control, OptionalNumber
