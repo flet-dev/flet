@@ -8,8 +8,7 @@ class DividerControl extends StatelessWidget {
   final Control? parent;
   final Control control;
 
-  const DividerControl({Key? key, required this.parent, required this.control})
-      : super(key: key);
+  const DividerControl({super.key, required this.parent, required this.control});
 
   @override
   Widget build(BuildContext context) {

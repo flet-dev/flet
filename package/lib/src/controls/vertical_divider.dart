@@ -9,8 +9,7 @@ class VerticalDividerControl extends StatelessWidget {
   final Control control;
 
   const VerticalDividerControl(
-      {Key? key, required this.parent, required this.control})
-      : super(key: key);
+      {super.key, required this.parent, required this.control});
 
   @override
   Widget build(BuildContext context) {

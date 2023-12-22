@@ -22,12 +22,11 @@ class CupertinoRadioControl extends StatefulWidget {
   final dynamic dispatch;
 
   const CupertinoRadioControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<CupertinoRadioControl> createState() => _CupertinoRadioControlState();

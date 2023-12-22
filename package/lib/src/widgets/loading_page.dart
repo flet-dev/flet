@@ -4,8 +4,7 @@ class LoadingPage extends StatelessWidget {
   final bool isLoading;
   final String message;
 
-  const LoadingPage({Key? key, required this.isLoading, required this.message})
-      : super(key: key);
+  const LoadingPage({super.key, required this.isLoading, required this.message});
 
   @override
   Widget build(BuildContext context) {

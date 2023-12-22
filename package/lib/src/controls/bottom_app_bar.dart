@@ -16,12 +16,11 @@ class BottomAppBarControl extends StatefulWidget {
   final bool parentDisabled;
 
   const BottomAppBarControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   State<BottomAppBarControl> createState() => _BottomAppBarControlState();

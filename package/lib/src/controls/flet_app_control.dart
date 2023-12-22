@@ -8,8 +8,7 @@ class FletAppControl extends StatefulWidget {
   final Control? parent;
   final Control control;
 
-  const FletAppControl({Key? key, required this.parent, required this.control})
-      : super(key: key);
+  const FletAppControl({super.key, required this.parent, required this.control});
 
   @override
   State<FletAppControl> createState() => _FletAppControlState();

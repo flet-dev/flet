@@ -29,12 +29,11 @@ class BarChartControl extends StatefulWidget {
   final bool parentDisabled;
 
   const BarChartControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   State<BarChartControl> createState() => _BarChartControlState();

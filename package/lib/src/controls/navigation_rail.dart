@@ -22,13 +22,12 @@ class NavigationRailControl extends StatefulWidget {
   final dynamic dispatch;
 
   const NavigationRailControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<NavigationRailControl> createState() => _NavigationRailControlState();

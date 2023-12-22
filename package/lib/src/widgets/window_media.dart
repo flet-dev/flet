@@ -8,7 +8,7 @@ import '../models/app_state.dart';
 import '../utils/desktop.dart';
 
 class WindowMedia extends StatefulWidget {
-  const WindowMedia({Key? key}) : super(key: key);
+  const WindowMedia({super.key});
 
   @override
   // ignore: library_private_types_in_public_api

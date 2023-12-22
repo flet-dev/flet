@@ -10,11 +10,10 @@ class ShakeDetectorControl extends StatefulWidget {
   final Widget? nextChild;
 
   const ShakeDetectorControl(
-      {Key? key,
+      {super.key,
       required this.parent,
       required this.control,
-      required this.nextChild})
-      : super(key: key);
+      required this.nextChild});
 
   @override
   State<ShakeDetectorControl> createState() => _ShakeDetectorControlState();

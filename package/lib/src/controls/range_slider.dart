@@ -16,12 +16,12 @@ class RangeSliderControl extends StatefulWidget {
   final dynamic dispatch;
 
   const RangeSliderControl({
-    Key? key,
+    super.key,
     this.parent,
     required this.control,
     required this.parentDisabled,
     required this.dispatch,
-  }) : super(key: key);
+  });
 
   @override
   State<RangeSliderControl> createState() => _SliderControlState();

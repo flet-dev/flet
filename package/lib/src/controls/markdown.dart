@@ -18,8 +18,7 @@ class MarkdownControl extends StatelessWidget {
   final Control? parent;
   final Control control;
 
-  const MarkdownControl({Key? key, required this.parent, required this.control})
-      : super(key: key);
+  const MarkdownControl({super.key, required this.parent, required this.control});
 
   @override
   Widget build(BuildContext context) {
