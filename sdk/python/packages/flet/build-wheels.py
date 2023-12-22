@@ -155,7 +155,7 @@ def rehash(path, blocksize=1 << 20):
             h.update(block)
     digest = "sha256=" + urlsafe_b64encode(h.digest()).decode("latin1").rstrip("=")
     # unicode/str python2 issues
-    return (digest, str(length))  # type: ignore
+    return digest, str(length)  # type: ignore
 
 
 def rehash_record_lines(root_dir):
