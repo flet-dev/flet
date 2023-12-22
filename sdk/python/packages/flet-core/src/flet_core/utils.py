@@ -6,10 +6,12 @@ import re
 import string
 import sys
 import unicodedata
+from enum import EnumMeta
+from warnings import warn
 
 
 def random_string(length):
-    return "".join(random.choice(string.ascii_letters) for i in range(length))
+    return "".join(random.choice(string.ascii_letters) for _ in range(length))
 
 
 def is_asyncio():
@@ -159,3 +161,15 @@ class Vector(complex):
         radians = math.radians(value)
         magnitude = abs(self)
         return type(self).polar(radians, magnitude)
+
+
+class DeprecatedEnumMeta(EnumMeta):
+
+    def __getattribute__(self, item):
+        if item == 'ADAPTIVEPLATFORMDENSITY':
+            warn(
+                'ADAPTIVEPLATFORMDENSITY is deprecated, use ADAPTIVE_PLATFORM_DENSITY instead.',
+                DeprecationWarning,
+                stacklevel=2
+            )
+        return EnumMeta.__getattribute__(self, item)
