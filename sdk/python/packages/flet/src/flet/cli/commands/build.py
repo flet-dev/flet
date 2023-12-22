@@ -452,6 +452,8 @@ class Command(BaseCommand):
                     pip_platform,
                     "--find-links",
                     find_links_path,
+                    "--exclude",
+                    "assets,build",
                 ]
             )
         else:
@@ -467,6 +469,8 @@ class Command(BaseCommand):
                     "flet=flet-embed",
                     "--req-deps",
                     "flet-embed",
+                    "--exclude",
+                    "build",
                 ]
             )
 
@@ -505,10 +509,22 @@ class Command(BaseCommand):
             self.cleanup(build_result.returncode)
         print("[spring_green3]OK[/spring_green3]")
 
+        # copy build results to `out_dir`
+        print(
+            f"Copying build to the output directory...",
+            end="",
+        )
+        if out_dir.exists():
+            shutil.rmtree(str(out_dir), ignore_errors=False, onerror=None)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        copy_tree(
+            str(self.flutter_dir.joinpath(self.platforms[platform]["output"])),
+            str(out_dir),
+        )
+        print("[spring_green3]OK[/spring_green3]")
+
         print(self.flutter_dir)
         return
-
-        # copy build results to `out_dir`
 
         self.cleanup(0)
 

@@ -271,7 +271,7 @@ def copy_tree(src, dst):
     Return a list of files that were copied or might have been copied.
     """
     if not os.path.isdir(src):
-        raise OSError("Source is not a directory")
+        raise OSError(f"Source is not a directory: {src}")
 
     os.makedirs(dst, exist_ok=True)
     for item in os.listdir(src):
