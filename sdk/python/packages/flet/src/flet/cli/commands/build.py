@@ -201,16 +201,15 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
 
-        flutter_exe = "flutter.exe" if is_windows() else "flutter"
-        dart_exe = "dart.exe" if is_windows() else "dart"
-
         # check if `flutter` executable is available in the path
-        if not shutil.which(flutter_exe):
+        flutter_exe = shutil.which("flutter")
+        if not flutter_exe:
             print("`flutter` command is not available in PATH. Install Flutter SDK.")
             sys.exit(1)
 
         # check if `dart` executable is available in the path
-        if not shutil.which(dart_exe):
+        dart_exe = shutil.which("dart")
+        if not dart_exe:
             print("`dart` command is not available in PATH. Install Flutter SDK.")
             sys.exit(1)
 
