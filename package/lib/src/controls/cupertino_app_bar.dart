@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import 'create_control.dart';
 
 class CupertinoAppBarControl extends StatelessWidget
@@ -50,7 +51,7 @@ class CupertinoAppBarControl extends StatelessWidget
       transitionBetweenRoutes: transitionBetweenRoutes,
       border: parseBorder(Theme.of(context), control, "border"),
       previousPageTitle: control.attrString("previousPageTitle"),
-      // padding: parseEdgeInsets(control, "padding"),
+      padding: parseEdgeInsetsDirectional(control, "padding"),
       middle: middleCtrls.isNotEmpty
           ? createControl(control, middleCtrls.first.id, control.isDisabled)
           : null,
