@@ -4,10 +4,7 @@ from flet_core import Control
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.control import OptionalNumber
-from flet_core.floating_action_button import (
-    FloatingActionButton,
-    FloatingActionButtonLocation,
-)
+from flet_core.floating_action_button import FloatingActionButton
 from flet_core.navigation_bar import NavigationBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
@@ -15,6 +12,7 @@ from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     CrossAxisAlignment,
     CrossAxisAlignmentString,
+    FloatingActionButtonLocation,
     MainAxisAlignment,
     MainAxisAlignmentString,
     PaddingValue,

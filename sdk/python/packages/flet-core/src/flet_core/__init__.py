@@ -21,6 +21,9 @@ from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
 from flet_core.badge import Badge
 from flet_core.banner import Banner
+from flet_core.menu_bar import MenuBar, MenuStyle
+from flet_core.submenu_button import SubmenuButton
+from flet_core.menu_item_button import MenuItemButton
 from flet_core.blur import Blur, BlurTileMode
 from flet_core.border import Border, BorderSide
 from flet_core.border_radius import BorderRadius
@@ -93,10 +96,7 @@ from flet_core.file_picker import (
 from flet_core.filled_button import FilledButton
 from flet_core.filled_tonal_button import FilledTonalButton
 from flet_core.flet_app import FletApp
-from flet_core.floating_action_button import (
-    FloatingActionButton,
-    FloatingActionButtonLocation,
-)
+from flet_core.floating_action_button import FloatingActionButton
 from flet_core.form_field_control import InputBorder
 from flet_core.gesture_detector import (
     DragEndEvent,
@@ -214,6 +214,7 @@ from flet_core.types import (
     BoxShape,
     ClipBehavior,
     CrossAxisAlignment,
+    FloatingActionButtonLocation,
     FontWeight,
     ImageFit,
     ImageRepeat,

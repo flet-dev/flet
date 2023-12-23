@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -22,13 +21,12 @@ class CupertinoNavigationBarControl extends StatefulWidget {
   final dynamic dispatch;
 
   const CupertinoNavigationBarControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<CupertinoNavigationBarControl> createState() =>
