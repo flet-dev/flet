@@ -14,13 +14,15 @@ from flet_core.alert_dialog import AlertDialog
 from flet_core.animation import AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
-from flet_core.bottom_sheet import BottomSheet
 from flet_core.bottom_app_bar import BottomAppBar
+from flet_core.bottom_sheet import BottomSheet
 from flet_core.client_storage import ClientStorage
 from flet_core.clipboard import Clipboard
 from flet_core.connection import Connection
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_app_bar import CupertinoAppBar
+from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import (
@@ -29,7 +31,6 @@ from flet_core.floating_action_button import (
 )
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
-from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.protocol import Command
 from flet_core.querystring import QueryString
@@ -1278,11 +1279,11 @@ class Page(Control):
 
     # appbar
     @property
-    def appbar(self) -> Optional[AppBar]:
+    def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
         return self.__default_view.appbar
 
     @appbar.setter
-    def appbar(self, value: Optional[AppBar]):
+    def appbar(self, value: Union[AppBar, CupertinoAppBar, None]):
         self.__default_view.appbar = value
 
     # bottom_appbar
