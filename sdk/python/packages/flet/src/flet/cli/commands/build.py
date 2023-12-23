@@ -1,6 +1,8 @@
 import argparse
 import glob
 import json
+import os
+import platform
 import shutil
 import subprocess
 import sys
@@ -29,43 +31,43 @@ class Command(BaseCommand):
             "windows": {
                 "build_command": "windows",
                 "status_text": "Windows app",
-                "output": "build/windows/x64/runner/Release",
+                "output": "build/windows/x64/runner/Release/*",
                 "dist": "windows",
             },
             "macos": {
                 "build_command": "macos",
                 "status_text": "macOS bundle",
-                "output": "build/macos/Build/Products/Release",
+                "output": "build/macos/Build/Products/Release/{project_name}.app",
                 "dist": "macos",
             },
             "linux": {
                 "build_command": "linux",
                 "status_text": "app for Linux",
-                "output": "build/linux/x64/release/bundle",
+                "output": "build/linux/{arch}/release/bundle/*",
                 "dist": "linux",
             },
             "web": {
                 "build_command": "web",
                 "status_text": "web app",
-                "output": "build/web",
+                "output": "build/web/*",
                 "dist": "web",
             },
             "apk": {
                 "build_command": "apk",
                 "status_text": ".apk for Android",
-                "output": "build/app/outputs/flutter-apk",
+                "output": "build/app/outputs/flutter-apk/*",
                 "dist": "apk",
             },
             "aab": {
                 "build_command": "appbundle",
                 "status_text": ".aab bundle for Android",
-                "output": "build/app/outputs/bundle/release",
+                "output": "build/app/outputs/bundle/release/*",
                 "dist": "aab",
             },
             "ipa": {
                 "build_command": "ipa",
                 "status_text": ".ipa bundle for iOS",
-                "output": "build/app/outputs/bundle/release",
+                "output": "build/app/outputs/bundle/release/*",
                 "dist": "ipa",
             },
         }
@@ -101,6 +103,30 @@ class Command(BaseCommand):
             "--description",
             dest="description",
             help="the description to use for executable or bundle",
+            required=False,
+        )
+        parser.add_argument(
+            "--product",
+            dest="product_name",
+            help="project display name that is shown in window titles and about app dialogs",
+            required=False,
+        )
+        parser.add_argument(
+            "--org",
+            dest="org_name",
+            help='org name in reverse domain name notation, e.g. "com.mycompany" - combined with project name and used as an iOS and Android bundle ID',
+            required=False,
+        )
+        parser.add_argument(
+            "--company",
+            dest="company_name",
+            help="company name to display in about app dialogs",
+            required=False,
+        )
+        parser.add_argument(
+            "--copyright",
+            dest="copyright",
+            help="copyright text to display in about app dialogs",
             required=False,
         )
         parser.add_argument(
@@ -164,6 +190,13 @@ class Command(BaseCommand):
             default="path",
             help="URL routing strategy (web only)",
         )
+        parser.add_argument(
+            "--windows-tcp-port",
+            dest="windows_tcp_port",
+            type=int,
+            default=63777,
+            help="TCP port for Windows app",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
@@ -181,7 +214,7 @@ class Command(BaseCommand):
             print("`dart` command is not available in PATH. Install Flutter SDK.")
             sys.exit(1)
 
-        platform = options.platform.lower()
+        build_platform = options.platform.lower()
         self.verbose = options.verbose
         template_name = "flet_build"
         template_data = {"template_name": template_name}
@@ -200,7 +233,7 @@ class Command(BaseCommand):
             Path(options.output_dir).resolve()
             if options.output_dir
             else python_app_path.joinpath("build").joinpath(
-                self.platforms[platform]["dist"]
+                self.platforms[build_platform]["dist"]
             )
         )
 
@@ -214,12 +247,22 @@ class Command(BaseCommand):
         if options.description is not None:
             template_data["description"] = options.description
 
+        template_data["sep"] = os.sep
+        if options.product_name:
+            template_data["product_name"] = options.product_name
+        if options.org_name:
+            template_data["org_name"] = options.org_name
+        if options.company_name:
+            template_data["company_name"] = options.company_name
+        if options.copyright:
+            template_data["copyright"] = options.copyright
         template_data["base_url"] = options.base_url
         template_data["route_url_strategy"] = options.route_url_strategy
         template_data["web_renderer"] = options.web_renderer
         template_data["use_color_emoji"] = (
             "true" if options.use_color_emoji else "false"
         )
+        template_data["windows_tcp_port"] = options.windows_tcp_port
 
         # create Flutter project from a template
         print("Creating Flutter bootstrap project...", end="")
@@ -439,7 +482,7 @@ class Command(BaseCommand):
             "package",
             str(python_app_path),
         ]
-        if platform == "web":
+        if build_platform == "web":
             pip_platform, find_links_path = self.create_pyodide_find_links()
             package_args.extend(
                 [
@@ -457,7 +500,7 @@ class Command(BaseCommand):
                 ]
             )
         else:
-            if platform in ["apk", "aab", "ipa"]:
+            if build_platform in ["apk", "aab", "ipa"]:
                 package_args.extend(
                     [
                         "--mobile",
@@ -491,11 +534,11 @@ class Command(BaseCommand):
 
         # run `flutter build`
         print(
-            f"Building [cyan]{self.platforms[platform]['status_text']}[/cyan]...",
+            f"Building [cyan]{self.platforms[build_platform]['status_text']}[/cyan]...",
             end="",
         )
         build_result = subprocess.run(
-            [flutter_exe, "build", self.platforms[platform]["build_command"]],
+            [flutter_exe, "build", self.platforms[build_platform]["build_command"]],
             cwd=str(self.flutter_dir),
             capture_output=self.verbose < 2,
             text=True,
@@ -514,17 +557,33 @@ class Command(BaseCommand):
             f"Copying build to the output directory...",
             end="",
         )
+        arch = platform.machine().lower()
+        if arch == "x86_64" or arch == "amd64":
+            arch = "x64"
+        elif arch == "arm64" or arch == "aarch64":
+            arch = "arm64"
+
+        build_output_dir = (
+            str(self.flutter_dir.joinpath(self.platforms[build_platform]["output"]))
+            .replace("{arch}", arch)
+            .replace("{project_name}", project_name)
+        )
+        build_output_glob = os.path.basename(build_output_dir)
+        build_output_dir = os.path.dirname(build_output_dir)
         if out_dir.exists():
             shutil.rmtree(str(out_dir), ignore_errors=False, onerror=None)
         out_dir.mkdir(parents=True, exist_ok=True)
-        copy_tree(
-            str(self.flutter_dir.joinpath(self.platforms[platform]["output"])),
-            str(out_dir),
-        )
+
+        def ignore_build_output(path, files):
+            if path == build_output_dir and build_output_glob != "*":
+                return [f for f in os.listdir(path) if f != build_output_glob]
+            return []
+
+        copy_tree(build_output_dir, str(out_dir), ignore=ignore_build_output)
         print("[spring_green3]OK[/spring_green3]")
 
-        print(self.flutter_dir)
-        return
+        # print(self.flutter_dir)
+        # return
 
         self.cleanup(0)
 
