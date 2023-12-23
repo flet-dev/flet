@@ -16,12 +16,11 @@ class ElevatedButtonControl extends StatefulWidget {
   final bool parentDisabled;
 
   const ElevatedButtonControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   State<ElevatedButtonControl> createState() => _ElevatedButtonControlState();

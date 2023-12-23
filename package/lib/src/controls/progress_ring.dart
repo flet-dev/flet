@@ -9,8 +9,7 @@ class ProgressRingControl extends StatelessWidget {
   final Control control;
 
   const ProgressRingControl(
-      {Key? key, required this.parent, required this.control})
-      : super(key: key);
+      {super.key, required this.parent, required this.control});
 
   @override
   Widget build(BuildContext context) {

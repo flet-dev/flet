@@ -26,12 +26,11 @@ class ImageControl extends StatelessWidget {
   static const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
 
   const ImageControl(
-      {Key? key,
+      {super.key,
       required this.parent,
       required this.children,
       required this.control,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   Widget build(BuildContext context) {

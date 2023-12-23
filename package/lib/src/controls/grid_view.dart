@@ -16,13 +16,12 @@ class GridViewControl extends StatefulWidget {
   final dynamic dispatch;
 
   const GridViewControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<GridViewControl> createState() => _GridViewControlState();

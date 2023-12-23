@@ -22,13 +22,12 @@ class ScrollableControl extends StatefulWidget {
   final dynamic dispatch;
 
   const ScrollableControl(
-      {Key? key,
+      {super.key,
       required this.control,
       required this.child,
       required this.scrollDirection,
       this.scrollController,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<ScrollableControl> createState() => _ScrollableControlState();

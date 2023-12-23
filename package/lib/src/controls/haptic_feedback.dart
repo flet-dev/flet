@@ -11,11 +11,10 @@ class HapticFeedbackControl extends StatefulWidget {
   final Widget? nextChild;
 
   const HapticFeedbackControl(
-      {Key? key,
+      {super.key,
       required this.parent,
       required this.control,
-      required this.nextChild})
-      : super(key: key);
+      required this.nextChild});
 
   @override
   State<HapticFeedbackControl> createState() => _HapticFeedbackControlState();
