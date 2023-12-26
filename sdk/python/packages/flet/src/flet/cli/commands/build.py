@@ -456,21 +456,22 @@ class Command(BaseCommand):
         print("[spring_green3]OK[/spring_green3]")
 
         # generate splash
-        print("Generating splash screens...", end="")
-        splash_result = subprocess.run(
-            [dart_exe, "run", "flutter_native_splash:create"],
-            cwd=str(self.flutter_dir),
-            capture_output=self.verbose < 2,
-            text=True,
-        )
-        if splash_result.returncode != 0:
-            if splash_result.stdout:
-                print(splash_result.stdout)
-            if splash_result.stderr:
-                print(splash_result.stderr)
-            self.cleanup(splash_result.returncode)
+        if build_platform in ["web", "ipa", "apk", "aab"]:
+            print("Generating splash screens...", end="")
+            splash_result = subprocess.run(
+                [dart_exe, "run", "flutter_native_splash:create"],
+                cwd=str(self.flutter_dir),
+                capture_output=self.verbose < 2,
+                text=True,
+            )
+            if splash_result.returncode != 0:
+                if splash_result.stdout:
+                    print(splash_result.stdout)
+                if splash_result.stderr:
+                    print(splash_result.stderr)
+                self.cleanup(splash_result.returncode)
 
-        print("[spring_green3]OK[/spring_green3]")
+            print("[spring_green3]OK[/spring_green3]")
 
         # package Python app
         print(f"Packaging Python app...", end="")
