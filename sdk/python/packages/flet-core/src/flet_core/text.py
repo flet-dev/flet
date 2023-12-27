@@ -138,7 +138,7 @@ class Text(ConstrainedControl):
         size: OptionalNumber = None,
         weight: Optional[FontWeight] = None,
         italic: Optional[bool] = None,
-        style: Optional[TextThemeStyle | TextStyle] = None,
+        style: Optional[Union[TextThemeStyle, TextStyle]] = None,
         max_lines: Optional[int] = None,
         overflow: TextOverflow = TextOverflow.NONE,
         selectable: Optional[bool] = None,
