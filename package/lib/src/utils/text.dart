@@ -173,6 +173,11 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
     decorations.add(TextDecoration.lineThrough);
   }
 
+  var height = json["height"];
+  if (height != null && !(height is double)) {
+    height = double.tryParse(height.toString());
+  }
+
   return TextStyle(
       fontSize: json["size"] != null ? parseDouble(json["size"]) : null,
       fontWeight: fontWeight != null ? getFontWeight(fontWeight) : null,
@@ -181,6 +186,7 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
           : null,
       fontFamily: json["font_family"],
       fontVariations: variations,
+      height: height,
       decoration:
           decorations.isNotEmpty ? TextDecoration.combine(decorations) : null,
       decorationStyle: json["decoration_style"] != null

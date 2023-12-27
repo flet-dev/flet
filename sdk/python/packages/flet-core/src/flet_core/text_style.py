@@ -27,6 +27,7 @@ class TextDecorationStyle(Enum):
 @dataclasses.dataclass
 class TextStyle:
     size: Union[None, int, float] = field(default=None)
+    height: Union[None, int, float] = field(default=None)
     weight: Optional[FontWeight] = field(default=None)
     italic: Optional[bool] = field(default=None)
     decoration: Optional[TextDecoration] = field(default=None)
