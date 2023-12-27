@@ -228,12 +228,15 @@ class Command(BaseCommand):
             print("Flutter bootstrap directory:", self.flutter_dir)
         self.flutter_dir.mkdir(exist_ok=True)
 
+        rel_out_dir = (
+            options.output_dir
+            if options.output_dir
+            else os.path.join("build", self.platforms[build_platform]["dist"])
+        )
         out_dir = (
             Path(options.output_dir).resolve()
             if options.output_dir
-            else python_app_path.joinpath("build").joinpath(
-                self.platforms[build_platform]["dist"]
-            )
+            else python_app_path.joinpath(rel_out_dir)
         )
 
         template_data["out_dir"] = self.flutter_dir.name
@@ -554,7 +557,7 @@ class Command(BaseCommand):
 
         # copy build results to `out_dir`
         print(
-            f"Copying build to the output directory...",
+            f"Copying build to [cyan]{rel_out_dir}[/cyan] directory...",
             end="",
         )
         arch = platform.machine().lower()
