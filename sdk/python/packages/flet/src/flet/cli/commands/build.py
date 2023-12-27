@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string, slugify
-from flet_runtime.utils import copy_tree, is_windows
+from flet_runtime.utils import copy_tree
 from rich import print
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full"
@@ -67,7 +67,7 @@ class Command(BaseCommand):
             "ipa": {
                 "build_command": "ipa",
                 "status_text": ".ipa bundle for iOS",
-                "output": "build/app/outputs/bundle/release/*",
+                "output": "build/ios/archive/*",
                 "dist": "ipa",
             },
         }
@@ -163,6 +163,13 @@ class Command(BaseCommand):
             help="disable Android app splash screen",
         )
         parser.add_argument(
+            "--team",
+            dest="team_id",
+            type=str,
+            help="Team ID to sign iOS bundle (ipa only)",
+            required=False,
+        )
+        parser.add_argument(
             "--base-url",
             dest="base_url",
             type=str,
@@ -196,6 +203,13 @@ class Command(BaseCommand):
             type=int,
             default=63777,
             help="TCP port for Windows app",
+        )
+        parser.add_argument(
+            "--flutter-build-args",
+            dest="flutter_build_args",
+            action="append",
+            nargs="*",
+            help="additional arguments for flutter build command",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -258,6 +272,8 @@ class Command(BaseCommand):
             template_data["company_name"] = options.company_name
         if options.copyright:
             template_data["copyright"] = options.copyright
+        if options.team_id:
+            template_data["team_id"] = options.team_id
         template_data["base_url"] = options.base_url
         template_data["route_url_strategy"] = options.route_url_strategy
         template_data["web_renderer"] = options.web_renderer
@@ -540,8 +556,25 @@ class Command(BaseCommand):
             f"Building [cyan]{self.platforms[build_platform]['status_text']}[/cyan]...",
             end="",
         )
+        build_args = [
+            flutter_exe,
+            "build",
+            self.platforms[build_platform]["build_command"],
+        ]
+
+        if build_platform in ["ipa"] and not options.team_id:
+            build_args.extend(["--no-codesign"])
+
+        if options.flutter_build_args:
+            for flutter_build_arg_arr in options.flutter_build_args:
+                for flutter_build_arg in flutter_build_arg_arr:
+                    build_args.append(flutter_build_arg)
+
+        if self.verbose > 0:
+            print(build_args)
+
         build_result = subprocess.run(
-            [flutter_exe, "build", self.platforms[build_platform]["build_command"]],
+            build_args,
             cwd=str(self.flutter_dir),
             capture_output=self.verbose < 2,
             text=True,
@@ -610,7 +643,13 @@ class Command(BaseCommand):
         return None
 
     def cleanup(self, exit_code: int):
-        print("Cleaning up...", end="")
+        if self.verbose > 0:
+            print(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
         shutil.rmtree(str(self.flutter_dir), ignore_errors=False, onerror=None)
-        print("[spring_green3]OK[/spring_green3]")
+        if exit_code == 0:
+            print("[spring_green3]Success![/spring_green3]")
+        else:
+            print(
+                "[red]Error building Flet app - see the log of failed command above.[/red]"
+            )
         sys.exit(exit_code)
