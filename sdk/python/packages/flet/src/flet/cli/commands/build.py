@@ -27,7 +27,7 @@ class Command(BaseCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
 
-        self.platforms = {
+        self.packages = {
             "windows": {
                 "build_command": "windows",
                 "status_text": "Windows app",
@@ -74,10 +74,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
-            "platform",
+            "package",
             type=str,
             choices=["macos", "linux", "windows", "web", "apk", "aab", "ipa"],
-            help="platform to build against",
+            help="the type of package to build",
         )
         parser.add_argument(
             "python_app_path",
@@ -88,9 +88,9 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             "-o",
-            "--output_dir",
+            "--output-dir",
             dest="output_dir",
-            help="where to put built app (default: ./build)",
+            help="where to put resulting executable or bundle (default is ./build/{package})",
             required=False,
         )
         parser.add_argument(
@@ -263,7 +263,7 @@ class Command(BaseCommand):
             print("`dart` command is not available in PATH. Install Flutter SDK.")
             sys.exit(1)
 
-        build_platform = options.platform.lower()
+        package_type = options.package.lower()
         self.verbose = options.verbose
 
         python_app_path = Path(options.python_app_path).resolve()
@@ -279,7 +279,7 @@ class Command(BaseCommand):
         rel_out_dir = (
             options.output_dir
             if options.output_dir
-            else os.path.join("build", self.platforms[build_platform]["dist"])
+            else os.path.join("build", self.packages[package_type]["dist"])
         )
         out_dir = (
             Path(options.output_dir).resolve()
@@ -512,7 +512,7 @@ class Command(BaseCommand):
         print("[spring_green3]OK[/spring_green3]")
 
         # generate splash
-        if build_platform in ["web", "ipa", "apk", "aab"]:
+        if package_type in ["web", "ipa", "apk", "aab"]:
             print("Generating splash screens...", end="")
             splash_result = subprocess.run(
                 [dart_exe, "run", "flutter_native_splash:create"],
@@ -538,7 +538,7 @@ class Command(BaseCommand):
             "package",
             str(python_app_path),
         ]
-        if build_platform == "web":
+        if package_type == "web":
             pip_platform, find_links_path = self.create_pyodide_find_links()
             package_args.extend(
                 [
@@ -556,7 +556,7 @@ class Command(BaseCommand):
                 ]
             )
         else:
-            if build_platform in ["apk", "aab", "ipa"]:
+            if package_type in ["apk", "aab", "ipa"]:
                 package_args.extend(
                     [
                         "--mobile",
@@ -590,16 +590,16 @@ class Command(BaseCommand):
 
         # run `flutter build`
         print(
-            f"Building [cyan]{self.platforms[build_platform]['status_text']}[/cyan]...",
+            f"Building [cyan]{self.packages[package_type]['status_text']}[/cyan]...",
             end="",
         )
         build_args = [
             flutter_exe,
             "build",
-            self.platforms[build_platform]["build_command"],
+            self.packages[package_type]["build_command"],
         ]
 
-        if build_platform in ["ipa"] and not options.team_id:
+        if package_type in ["ipa"] and not options.team_id:
             build_args.extend(["--no-codesign"])
 
         if options.build_number:
@@ -643,7 +643,7 @@ class Command(BaseCommand):
             arch = "arm64"
 
         build_output_dir = (
-            str(self.flutter_dir.joinpath(self.platforms[build_platform]["output"]))
+            str(self.flutter_dir.joinpath(self.packages[package_type]["output"]))
             .replace("{arch}", arch)
             .replace("{project_name}", project_name)
         )
@@ -660,7 +660,7 @@ class Command(BaseCommand):
 
         copy_tree(build_output_dir, str(out_dir), ignore=ignore_build_output)
 
-        if build_platform == "web" and assets_path.exists():
+        if package_type == "web" and assets_path.exists():
             # copy `assets` directory contents to the output directory
             copy_tree(str(assets_path), str(out_dir))
 
