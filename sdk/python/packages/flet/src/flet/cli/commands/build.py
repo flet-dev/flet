@@ -659,6 +659,11 @@ class Command(BaseCommand):
             return []
 
         copy_tree(build_output_dir, str(out_dir), ignore=ignore_build_output)
+
+        if build_platform == "web" and assets_path.exists():
+            # copy `assets` directory contents to the output directory
+            copy_tree(str(assets_path), str(out_dir))
+
         print("[spring_green3]OK[/spring_green3]")
 
         # print(self.flutter_dir)
