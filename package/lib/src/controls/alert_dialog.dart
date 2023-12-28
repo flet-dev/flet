@@ -105,7 +105,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
                   barrierDismissible: !modal,
                   useRootNavigator: false,
                   context: context,
-                  builder: (context) => dialog).then((value) {
+                  builder: (context) => _createAlertDialog()).then((value) {
                 lastOpen = widget.control.state["open"] ?? false;
                 debugPrint("Dialog should be dismissed ($hashCode): $lastOpen");
                 bool shouldDismiss = lastOpen;
