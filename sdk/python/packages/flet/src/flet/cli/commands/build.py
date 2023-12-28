@@ -211,6 +211,42 @@ class Command(BaseCommand):
             nargs="*",
             help="additional arguments for flutter build command",
         )
+        parser.add_argument(
+            "--build-number",
+            dest="build_number",
+            type=int,
+            help="build number - an identifier used as an internal version number",
+        )
+        parser.add_argument(
+            "--build-version",
+            dest="build_version",
+            help='build version - a "x.y.z" string used as the version number shown to users',
+        )
+        parser.add_argument(
+            "--module-name",
+            dest="module_name",
+            default="main",
+            help="python module name with an app entry point",
+        )
+        parser.add_argument(
+            "--template",
+            dest="template",
+            type=str,
+            default="gh:flet-dev/flet-build-template",
+            help="a directory containing Flutter bootstrap template, or a URL to a git repository template",
+        )
+        parser.add_argument(
+            "--template-dir",
+            dest="template_dir",
+            type=str,
+            help="relative path to a Flutter bootstrap template in a repository",
+        )
+        parser.add_argument(
+            "--template-ref",
+            dest="template_ref",
+            type=str,
+            help="the branch, tag or commit ID to checkout after cloning the repository with Flutter bootstrap template",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
@@ -229,8 +265,6 @@ class Command(BaseCommand):
 
         build_platform = options.platform.lower()
         self.verbose = options.verbose
-        template_name = "flet_build"
-        template_data = {"template_name": template_name}
 
         python_app_path = Path(options.python_app_path).resolve()
 
@@ -253,6 +287,7 @@ class Command(BaseCommand):
             else python_app_path.joinpath(rel_out_dir)
         )
 
+        template_data = {}
         template_data["out_dir"] = self.flutter_dir.name
 
         project_name = slugify(
@@ -264,6 +299,7 @@ class Command(BaseCommand):
             template_data["description"] = options.description
 
         template_data["sep"] = os.sep
+        template_data["python_module_name"] = options.module_name
         if options.product_name:
             template_data["product_name"] = options.product_name
         if options.org_name:
@@ -285,8 +321,9 @@ class Command(BaseCommand):
         # create Flutter project from a template
         print("Creating Flutter bootstrap project...", end="")
         cookiecutter(
-            f"gh:flet-dev/flet-app-templates",
-            directory=template_name,
+            template=options.template,
+            checkout=options.template_ref,
+            directory=options.template_dir,
             output_dir=str(self.flutter_dir.parent),
             no_input=True,
             overwrite_if_exists=True,
@@ -564,6 +601,12 @@ class Command(BaseCommand):
 
         if build_platform in ["ipa"] and not options.team_id:
             build_args.extend(["--no-codesign"])
+
+        if options.build_number:
+            build_args.extend(["--build-number", str(options.build_number)])
+
+        if options.build_version:
+            build_args.extend(["--build-name", options.build_version])
 
         if options.flutter_build_args:
             for flutter_build_arg_arr in options.flutter_build_args:
