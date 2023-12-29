@@ -1,20 +1,14 @@
-from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
-from flet_core.text_span import TextSpan
 from flet_core.types import (
     AnimationValue,
-    FontWeight,
-    FontWeightString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    TextAlign,
-    TextAlignString,
 )
 
 try:

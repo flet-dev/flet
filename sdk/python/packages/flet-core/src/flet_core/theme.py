@@ -1,12 +1,13 @@
 import dataclasses
 from dataclasses import field
-from enum import Enum
+from enum import Enum, EnumMeta
 from typing import Dict, Optional, Union
+from warnings import warn
 
 from flet_core.border import BorderSide
 from flet_core.border_radius import BorderRadius
 from flet_core.text_style import TextStyle
-from flet_core.types import MaterialState, PaddingValue, ThemeMode
+from flet_core.types import MaterialState, PaddingValue
 
 try:
     from typing import Literal
@@ -18,12 +19,24 @@ VisualDensityString = Literal[
 ]
 
 
-class ThemeVisualDensity(Enum):
+class ThemeVisualDensityDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        if item == "ADAPTIVEPLATFORMDENSITY":
+            warn(
+                "ADAPTIVEPLATFORMDENSITY is deprecated, use ADAPTIVE_PLATFORM_DENSITY instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class ThemeVisualDensity(Enum, metaclass=ThemeVisualDensityDeprecated):
     NONE = None
     STANDARD = "standard"
     COMPACT = "compact"
     COMFORTABLE = "comfortable"
     ADAPTIVEPLATFORMDENSITY = "adaptivePlatformDensity"
+    ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
 
 
 PageTransitionString = Literal["fadeUpwards", "openUpwards", "zoom", "cupertino"]

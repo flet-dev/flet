@@ -9,7 +9,7 @@ import unicodedata
 
 
 def random_string(length):
-    return "".join(random.choice(string.ascii_letters) for i in range(length))
+    return "".join(random.choice(string.ascii_letters) for _ in range(length))
 
 
 def is_asyncio():

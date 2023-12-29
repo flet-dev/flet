@@ -4,7 +4,6 @@ from flet_core.alignment import Alignment
 from flet_core.canvas.shape import Shape
 from flet_core.control import OptionalNumber
 from flet_core.inline_span import InlineSpan
-from flet_core.text_span import TextSpan
 from flet_core.text_style import TextStyle
 from flet_core.types import TextAlign
 
