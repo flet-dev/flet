@@ -1,3 +1,4 @@
+import dataclasses
 from enum import Enum
 from typing import Any, List, Optional, Union
 
@@ -202,6 +203,11 @@ class Text(ConstrainedControl):
         children = []
         children.extend(self.__spans)
         return children
+    
+    def _before_build_command(self):
+        super()._before_build_command()
+        if dataclasses.is_dataclass(self.__style):
+            self._set_attr_json("style", self.__style)
 
     # value
     @property

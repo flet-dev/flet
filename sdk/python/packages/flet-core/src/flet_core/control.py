@@ -1,4 +1,3 @@
-import dataclasses
 import datetime as dt
 import json
 from difflib import SequenceMatcher
@@ -482,9 +481,6 @@ class Control:
                 sval = str(val).lower()
             elif isinstance(val, dt.datetime) or isinstance(val, dt.date):
                 sval = val.isoformat()
-            elif dataclasses.is_dataclass(val):
-                sval = dataclasses.asdict(val)
-                sval = json.dumps(sval)
             else:
                 sval = str(val)
             command.attrs[attrName] = sval
