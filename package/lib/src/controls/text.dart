@@ -46,16 +46,28 @@ class TextControl extends StatelessWidget {
           int? maxLines = control.attrInt("maxLines");
 
           TextStyle? style;
-          var styleName = control.attrString("style", null);
-          if (styleName != null) {
-            style = getTextStyle(context, styleName);
+          var styleNameOrData = control.attrString("style", null);
+          if (styleNameOrData != null) {
+            style = getTextStyle(context, styleNameOrData);
           }
-          if (style == null && styleName != null) {
+          if (style == null && styleNameOrData != null) {
             try {
               style = parseTextStyle(Theme.of(context), control, "style");
             } on FormatException catch (_) {
               style = null;
             }
+          }
+
+          TextStyle? themeStyle;
+          var styleName = control.attrString("theme_style", null);
+          if (styleName != null) {
+            themeStyle = getTextStyle(context, styleName);
+          }
+
+          if (style == null && themeStyle != null) {
+            style = themeStyle;
+          } else if (style != null && themeStyle != null) {
+            style = themeStyle.merge(style);
           }
 
           var fontWeight = control.attrString("weight", "")!;

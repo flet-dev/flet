@@ -139,6 +139,7 @@ class Text(ConstrainedControl):
         weight: Optional[FontWeight] = None,
         italic: Optional[bool] = None,
         style: Optional[Union[TextThemeStyle, TextStyle]] = None,
+        theme_style: Optional[TextThemeStyle] = None,
         max_lines: Optional[int] = None,
         overflow: TextOverflow = TextOverflow.NONE,
         selectable: Optional[bool] = None,
@@ -186,6 +187,7 @@ class Text(ConstrainedControl):
         self.italic = italic
         self.no_wrap = no_wrap
         self.style = style
+        self.theme_style = theme_style
         self.max_lines = max_lines
         self.overflow = overflow
         self.selectable = selectable
@@ -282,8 +284,24 @@ class Text(ConstrainedControl):
         else:
             self.__set_style(value)
 
-    def __set_style(self, value: Optional[TextThemeStyleString]):
+    def __set_style(self, value: Optional[TextThemeStyleString | TextStyle]):
         self._set_attr("style", value)
+
+    # theme_style
+    @property
+    def theme_style(self) -> Optional[TextThemeStyle]:
+        return self.__theme_style
+
+    @theme_style.setter
+    def theme_style(self, value: Optional[TextThemeStyle]):
+        self.__theme_style = value
+        if isinstance(value, TextThemeStyle):
+            self._set_attr("theme_style", value.value)
+        else:
+            self.__set_theme_style(value)
+
+    def __set_theme_style(self, value: Optional[TextThemeStyleString]):
+        self._set_attr("theme_style", value)
 
     # italic
     @property
