@@ -273,27 +273,27 @@ class Text(ConstrainedControl):
 
     # style
     @property
-    def style(self) -> Optional[TextThemeStyle]:
+    def style(self) -> Optional[Union[TextThemeStyle, TextStyle, TextThemeStyleString]]:
         return self.__style
 
     @style.setter
-    def style(self, value: Optional[TextThemeStyle]):
+    def style(self, value: Optional[Union[TextThemeStyle, TextStyle, TextThemeStyleString]]):
         self.__style = value
         if isinstance(value, TextThemeStyle):
             self._set_attr("style", value.value)
         else:
             self.__set_style(value)
 
-    def __set_style(self, value: Optional[TextThemeStyleString | TextStyle]):
+    def __set_style(self, value: Optional[Union[TextThemeStyleString, TextStyle, TextThemeStyleString]]):
         self._set_attr("style", value)
 
     # theme_style
     @property
-    def theme_style(self) -> Optional[TextThemeStyle]:
+    def theme_style(self) -> Optional[Union[TextThemeStyle, TextThemeStyleString]]:
         return self.__theme_style
 
     @theme_style.setter
-    def theme_style(self, value: Optional[TextThemeStyle]):
+    def theme_style(self, value: Optional[Union[TextThemeStyle, TextThemeStyleString]]):
         self.__theme_style = value
         if isinstance(value, TextThemeStyle):
             self._set_attr("theme_style", value.value)
