@@ -284,7 +284,7 @@ class Text(ConstrainedControl):
         else:
             self.__set_style(value)
 
-    def __set_style(self, value: Optional[Union[TextThemeStyleString, TextStyle, TextThemeStyleString]]):
+    def __set_style(self, value: Optional[Union[TextStyle, TextThemeStyleString]]):
         self._set_attr("style", value)
 
     # theme_style
