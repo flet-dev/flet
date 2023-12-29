@@ -4,8 +4,7 @@ class ErrorControl extends StatelessWidget {
   final String message;
   final String? description;
 
-  const ErrorControl(this.message, {Key? key, this.description})
-      : super(key: key);
+  const ErrorControl(this.message, {super.key, this.description});
 
   @override
   Widget build(BuildContext context) {

@@ -25,11 +25,10 @@ class FilePickerControl extends StatefulWidget {
   final Widget? nextChild;
 
   const FilePickerControl(
-      {Key? key,
+      {super.key,
       required this.parent,
       required this.control,
-      required this.nextChild})
-      : super(key: key);
+      required this.nextChild});
 
   @override
   State<FilePickerControl> createState() => _FilePickerControlState();

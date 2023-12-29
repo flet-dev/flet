@@ -22,12 +22,11 @@ class AudioControl extends StatefulWidget {
   final Widget? nextChild;
 
   const AudioControl(
-      {Key? key,
+      {super.key,
       required this.parent,
       required this.control,
       required this.dispatch,
-      required this.nextChild})
-      : super(key: key);
+      required this.nextChild});
 
   @override
   State<AudioControl> createState() => _AudioControlState();

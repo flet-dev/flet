@@ -23,13 +23,12 @@ class NavigationBarControl extends StatefulWidget {
   final dynamic dispatch;
 
   const NavigationBarControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<NavigationBarControl> createState() => _NavigationBarControlState();

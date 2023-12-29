@@ -14,13 +14,12 @@ class RowControl extends StatelessWidget {
   final dynamic dispatch;
 
   const RowControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   Widget build(BuildContext context) {

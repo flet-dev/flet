@@ -4,8 +4,7 @@ class FletAppContext extends InheritedWidget {
   final ThemeMode? themeMode;
 
   const FletAppContext(
-      {Key? key, required this.themeMode, required Widget child})
-      : super(key: key, child: child);
+      {super.key, required this.themeMode, required super.child});
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) {

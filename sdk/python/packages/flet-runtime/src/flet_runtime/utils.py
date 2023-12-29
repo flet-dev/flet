@@ -158,7 +158,7 @@ def get_local_ip():
             s.connect(("8.8.8.8", 80))
             local_ip = s.getsockname()[0]
         return local_ip
-    except Exception as e:
+    except Exception:
         hostname = socket.gethostname()
         return socket.gethostbyname(hostname)
 

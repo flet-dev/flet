@@ -12,12 +12,11 @@ class WindowDragAreaControl extends StatelessWidget {
   final bool parentDisabled;
 
   const WindowDragAreaControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +46,7 @@ class WindowDragArea extends StatelessWidget {
   final bool maximizable;
 
   const WindowDragArea(
-      {Key? key, required this.child, required this.maximizable})
-      : super(key: key);
+      {super.key, required this.child, required this.maximizable});
 
   @override
   Widget build(BuildContext context) {

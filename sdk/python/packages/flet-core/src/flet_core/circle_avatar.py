@@ -70,7 +70,6 @@ class CircleAvatar(ConstrainedControl):
 
     def __init__(
         self,
-        icon: Optional[str] = None,
         key: Optional[str] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
@@ -174,15 +173,6 @@ class CircleAvatar(ConstrainedControl):
     @background_image_url.setter
     def background_image_url(self, value):
         self._set_attr("backgroundImageUrl", value)
-
-    # icon
-    @property
-    def icon(self):
-        return self._get_attr("icon")
-
-    @icon.setter
-    def icon(self, value):
-        self._set_attr("icon", value)
 
     # radius
     @property

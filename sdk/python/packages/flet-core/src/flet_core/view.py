@@ -4,17 +4,16 @@ from flet_core import Control
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.control import OptionalNumber
-from flet_core.floating_action_button import (
-    FloatingActionButton,
-    FloatingActionButtonLocation,
-)
-from flet_core.navigation_bar import NavigationBar
+from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
+from flet_core.floating_action_button import FloatingActionButton
+from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     CrossAxisAlignment,
     CrossAxisAlignmentString,
+    FloatingActionButtonLocation,
     MainAxisAlignment,
     MainAxisAlignmentString,
     PaddingValue,
@@ -37,7 +36,7 @@ class View(ScrollableControl):
         self,
         route: Optional[str] = None,
         controls: Optional[List[Control]] = None,
-        appbar: Optional[AppBar] = None,
+        appbar: Union[AppBar, CupertinoAppBar, None] = None,
         bottom_appbar: Optional[BottomAppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
         floating_action_button_location: Optional[FloatingActionButtonLocation] = None,
@@ -132,11 +131,11 @@ class View(ScrollableControl):
 
     # appbar
     @property
-    def appbar(self) -> Optional[AppBar]:
+    def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
         return self.__appbar
 
     @appbar.setter
-    def appbar(self, value: Optional[AppBar]):
+    def appbar(self, value: Union[AppBar, CupertinoAppBar, None]):
         self.__appbar = value
 
     # bottom_appbar

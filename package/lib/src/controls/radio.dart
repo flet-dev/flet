@@ -24,12 +24,11 @@ class RadioControl extends StatefulWidget {
   final dynamic dispatch;
 
   const RadioControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<RadioControl> createState() => _RadioControlState();

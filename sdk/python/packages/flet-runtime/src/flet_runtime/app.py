@@ -12,18 +12,12 @@ import zipfile
 from pathlib import Path
 from typing import Optional
 
-import flet_runtime
 from flet_core.event import Event
 from flet_core.page import Page
-from flet_core.types import (
-    FLET_APP,
-    FLET_APP_HIDDEN,
-    FLET_APP_WEB,
-    WEB_BROWSER,
-    AppView,
-    WebRenderer,
-)
+from flet_core.types import AppView, WebRenderer
 from flet_core.utils import is_coroutine, random_string
+
+import flet_runtime
 from flet_runtime.async_local_socket_connection import AsyncLocalSocketConnection
 from flet_runtime.sync_local_socket_connection import SyncLocalSocketConnection
 from flet_runtime.utils import (
@@ -688,22 +682,30 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         # build version-specific path to flet folder
         temp_flet_dir = Path.home().joinpath(".flet", "bin", f"flet-{version.version}")
 
-        # check if flet_view.app exists in a temp directory
-        if not temp_flet_dir.exists():
-            # check if flet.tar.gz exists
-            gz_filename = f"flet-linux-{get_arch()}.tar.gz"
-            tar_file = os.path.join(get_package_bin_dir(), gz_filename)
-            if not os.path.exists(tar_file):
-                tar_file = __download_flet_client(gz_filename)
-
-            logger.info(f"Extracting Flet from archive to {temp_flet_dir}")
-            temp_flet_dir.mkdir(parents=True, exist_ok=True)
-            with tarfile.open(str(tar_file), "r:gz") as tar_arch:
-                safe_tar_extractall(tar_arch, str(temp_flet_dir))
+        app_path = None
+        # check if flet.exe is in FLET_VIEW_PATH (flet developer mode)
+        flet_path = os.environ.get("FLET_VIEW_PATH")
+        if flet_path:
+            logger.info(f"Flet View is set via FLET_VIEW_PATH: {flet_path}")
+            temp_flet_dir = Path(flet_path)
+            app_path = temp_flet_dir.joinpath("flet")
         else:
-            logger.info(f"Flet View found in: {temp_flet_dir}")
+            # check if flet_view.app exists in a temp directory
+            if not temp_flet_dir.exists():
+                # check if flet.tar.gz exists
+                gz_filename = f"flet-linux-{get_arch()}.tar.gz"
+                tar_file = os.path.join(get_package_bin_dir(), gz_filename)
+                if not os.path.exists(tar_file):
+                    tar_file = __download_flet_client(gz_filename)
 
-        app_path = temp_flet_dir.joinpath("flet", "flet")
+                logger.info(f"Extracting Flet from archive to {temp_flet_dir}")
+                temp_flet_dir.mkdir(parents=True, exist_ok=True)
+                with tarfile.open(str(tar_file), "r:gz") as tar_arch:
+                    safe_tar_extractall(tar_arch, str(temp_flet_dir))
+            else:
+                logger.info(f"Flet View found in: {temp_flet_dir}")
+
+            app_path = temp_flet_dir.joinpath("flet", "flet")
         args = [str(app_path), page_url, pid_file]
 
     flet_env = {**os.environ}

@@ -11,12 +11,11 @@ class TransparentPointerControl extends StatelessWidget {
   final bool parentDisabled;
 
   const TransparentPointerControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +40,10 @@ class TransparentPointerControl extends StatelessWidget {
 // https://stackoverflow.com/questions/65269190/pass-trough-all-gestures-between-two-widgets-in-stack
 class TransparentPointer extends SingleChildRenderObjectWidget {
   const TransparentPointer({
-    Key? key,
+    super.key,
     this.transparent = true,
-    Widget? child,
-  }) : super(key: key, child: child);
+    super.child,
+  });
 
   final bool transparent;
 
