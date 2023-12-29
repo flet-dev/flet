@@ -225,7 +225,6 @@ class Command(BaseCommand):
         parser.add_argument(
             "--module-name",
             dest="module_name",
-            default="main",
             help="python module name with an app entry point",
         )
         parser.add_argument(
@@ -299,7 +298,8 @@ class Command(BaseCommand):
             template_data["description"] = options.description
 
         template_data["sep"] = os.sep
-        template_data["python_module_name"] = options.module_name
+        if options.module_name:
+            template_data["python_module_name"] = Path(options.module_name).stem
         if options.product_name:
             template_data["product_name"] = options.product_name
         if options.org_name:
