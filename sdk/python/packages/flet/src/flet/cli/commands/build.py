@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string, slugify
-from flet_runtime.utils import copy_tree
+from flet_runtime.utils import copy_tree, is_windows
 from rich import print
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full"
@@ -250,6 +250,9 @@ class Command(BaseCommand):
 
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
+
+        if is_windows():
+            from ctypes import windll
 
         # check if `flutter` executable is available in the path
         flutter_exe = shutil.which("flutter")
@@ -509,11 +512,8 @@ class Command(BaseCommand):
 
         # generate icons
         print("Generating app icons...", end="")
-        icons_result = subprocess.run(
-            [dart_exe, "run", "flutter_launcher_icons"],
-            cwd=str(self.flutter_dir),
-            capture_output=self.verbose < 2,
-            text=True,
+        icons_result = self.run(
+            [dart_exe, "run", "flutter_launcher_icons"], cwd=str(self.flutter_dir)
         )
         if icons_result.returncode != 0:
             if icons_result.stdout:
@@ -527,11 +527,9 @@ class Command(BaseCommand):
         # generate splash
         if target_platform in ["web", "ipa", "apk", "aab"]:
             print("Generating splash screens...", end="")
-            splash_result = subprocess.run(
+            splash_result = self.run(
                 [dart_exe, "run", "flutter_native_splash:create"],
                 cwd=str(self.flutter_dir),
-                capture_output=self.verbose < 2,
-                text=True,
             )
             if splash_result.returncode != 0:
                 if splash_result.stdout:
@@ -586,12 +584,7 @@ class Command(BaseCommand):
                 ]
             )
 
-        package_result = subprocess.run(
-            package_args,
-            cwd=str(self.flutter_dir),
-            capture_output=self.verbose < 2,
-            text=True,
-        )
+        package_result = self.run(package_args, cwd=str(self.flutter_dir))
 
         if package_result.returncode != 0:
             if package_result.stdout:
@@ -629,12 +622,7 @@ class Command(BaseCommand):
         if self.verbose > 0:
             print(build_args)
 
-        build_result = subprocess.run(
-            build_args,
-            cwd=str(self.flutter_dir),
-            capture_output=self.verbose < 2,
-            text=True,
-        )
+        build_result = self.run(build_args, cwd=str(self.flutter_dir))
 
         if build_result.returncode != 0:
             if build_result.stdout:
@@ -702,6 +690,27 @@ class Command(BaseCommand):
             shutil.copy(images[0], dest_path)
             return Path(images[0]).name
         return None
+
+    def run(self, args, cwd):
+        if is_windows():
+            # Source: https://stackoverflow.com/a/77374899/1435891
+            # Save the current console output code page and switch to 65001 (UTF-8)
+            previousCp = windll.kernel32.GetConsoleOutputCP()
+            windll.kernel32.SetConsoleOutputCP(65001)
+
+        r = subprocess.run(
+            args,
+            cwd=cwd,
+            capture_output=self.verbose < 2,
+            text=True,
+            encoding="utf8",
+        )
+
+        if is_windows():
+            # Restore the previous output console code page.
+            windll.kernel32.SetConsoleOutputCP(previousCp)
+
+        return r
 
     def cleanup(self, exit_code: int):
         if self.verbose > 0:
