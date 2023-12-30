@@ -181,6 +181,7 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
           : null,
       fontFamily: json["font_family"],
       fontVariations: variations,
+      height: json["height"] != null ? parseDouble(json["height"]) : null,
       decoration:
           decorations.isNotEmpty ? TextDecoration.combine(decorations) : null,
       decorationStyle: json["decoration_style"] != null
