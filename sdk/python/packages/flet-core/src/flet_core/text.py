@@ -1,3 +1,4 @@
+import dataclasses
 from enum import Enum
 from typing import Any, List, Optional, Union
 
@@ -5,6 +6,7 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_span import TextSpan
+from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     FontWeight,
@@ -137,7 +139,8 @@ class Text(ConstrainedControl):
         size: OptionalNumber = None,
         weight: Optional[FontWeight] = None,
         italic: Optional[bool] = None,
-        style: Optional[TextThemeStyle] = None,
+        style: Optional[Union[TextThemeStyle, TextStyle]] = None,
+        theme_style: Optional[TextThemeStyle] = None,
         max_lines: Optional[int] = None,
         overflow: TextOverflow = TextOverflow.NONE,
         selectable: Optional[bool] = None,
@@ -185,6 +188,7 @@ class Text(ConstrainedControl):
         self.italic = italic
         self.no_wrap = no_wrap
         self.style = style
+        self.theme_style = theme_style
         self.max_lines = max_lines
         self.overflow = overflow
         self.selectable = selectable
@@ -199,6 +203,11 @@ class Text(ConstrainedControl):
         children = []
         children.extend(self.__spans)
         return children
+    
+    def _before_build_command(self):
+        super()._before_build_command()
+        if dataclasses.is_dataclass(self.__style):
+            self._set_attr_json("style", self.__style)
 
     # value
     @property
@@ -270,19 +279,35 @@ class Text(ConstrainedControl):
 
     # style
     @property
-    def style(self) -> Optional[TextThemeStyle]:
+    def style(self) -> Optional[Union[TextThemeStyle, TextStyle, TextThemeStyleString]]:
         return self.__style
 
     @style.setter
-    def style(self, value: Optional[TextThemeStyle]):
+    def style(self, value: Optional[Union[TextThemeStyle, TextStyle, TextThemeStyleString]]):
         self.__style = value
         if isinstance(value, TextThemeStyle):
             self._set_attr("style", value.value)
         else:
             self.__set_style(value)
 
-    def __set_style(self, value: Optional[TextThemeStyleString]):
+    def __set_style(self, value: Optional[Union[TextStyle, TextThemeStyleString]]):
         self._set_attr("style", value)
+
+    # theme_style
+    @property
+    def theme_style(self) -> Optional[Union[TextThemeStyle, TextThemeStyleString]]:
+        return self.__theme_style
+
+    @theme_style.setter
+    def theme_style(self, value: Optional[Union[TextThemeStyle, TextThemeStyleString]]):
+        self.__theme_style = value
+        if isinstance(value, TextThemeStyle):
+            self._set_attr("theme_style", value.value)
+        else:
+            self.__set_theme_style(value)
+
+    def __set_theme_style(self, value: Optional[TextThemeStyleString]):
+        self._set_attr("theme_style", value)
 
     # italic
     @property
