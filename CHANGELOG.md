@@ -2,7 +2,7 @@
 
 # 0.18.0
 
-* `flet build` command to package Flet app for any platform ([#2271](https://github.com/flet-dev/flet/issues/2271)).
+* `flet build` command to package Flet app for any platform ([docs](https://flet.dev/docs/guides/python/packaging-app-for-distribution)).
 * Added TextStyle for the Text control ([#2270](https://github.com/flet-dev/flet/issues/2270)).
 * Refactor code, add Enum deprecation utils ([#2259](https://github.com/flet-dev/flet/issues/2259)).
 * `CupertinoAppBar` control ([#2278](https://github.com/flet-dev/flet/issues/2278)).
