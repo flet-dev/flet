@@ -1,5 +1,16 @@
 # Flet changelog
 
+# 0.18.0
+
+* `flet build` command to package Flet app for any platform ([#2271](https://github.com/flet-dev/flet/issues/2271)).
+* Added TextStyle for the Text control ([#2270](https://github.com/flet-dev/flet/issues/2270)).
+* Refactor code, add Enum deprecation utils ([#2259](https://github.com/flet-dev/flet/issues/2259)).
+* `CupertinoAppBar` control ([#2278](https://github.com/flet-dev/flet/issues/2278)).
+* Fix AlertDialog content updating ([#2277](https://github.com/flet-dev/flet/issues/2277)).
+* Fix FLET_VIEW_PATH ignored on linux ([#2244](https://github.com/flet-dev/flet/issues/2244)).
+* `MenuBar`, `SubMenuButton` and `MenuItemButton` controls ([#2252](https://github.com/flet-dev/flet/issues/2252)).
+* convert 'key' to a super parameter ([#2258](https://github.com/flet-dev/flet/issues/2258)).
+
 # 0.17.0
 
 * `SearchBar` control ([#2212](https://github.com/flet-dev/flet/issues/2212)).

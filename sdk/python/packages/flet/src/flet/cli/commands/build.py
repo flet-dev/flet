@@ -225,6 +225,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--module-name",
             dest="module_name",
+            default="main",
             help="python module name with an app entry point",
         )
         parser.add_argument(
@@ -266,6 +267,19 @@ class Command(BaseCommand):
         self.verbose = options.verbose
 
         python_app_path = Path(options.python_app_path).resolve()
+        if not os.path.exists(python_app_path) or not os.path.isdir(python_app_path):
+            print(
+                f"Path to Flet app does not exist or is not a directory: {python_app_path}"
+            )
+            sys.exit(1)
+
+        python_module_name = Path(options.module_name).stem
+        python_module_filename = f"{python_module_name}.py"
+        if not os.path.exists(os.path.join(python_app_path, python_module_filename)):
+            print(
+                f"{python_module_filename} not found in the root of Flet app directory. Use --module-name option to specify an entry point for your Flet app."
+            )
+            sys.exit(1)
 
         self.flutter_dir = Path(tempfile.gettempdir()).joinpath(
             f"flet_flutter_build_{random_string(10)}"
@@ -298,8 +312,7 @@ class Command(BaseCommand):
             template_data["description"] = options.description
 
         template_data["sep"] = os.sep
-        if options.module_name:
-            template_data["python_module_name"] = Path(options.module_name).stem
+        template_data["python_module_name"] = python_module_name
         if options.product_name:
             template_data["product_name"] = options.product_name
         if options.org_name:
