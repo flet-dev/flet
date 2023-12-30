@@ -1,6 +1,7 @@
 import argparse
 import sys
 
+import flet.cli.commands.build
 import flet.cli.commands.create
 import flet.cli.commands.pack
 import flet.cli.commands.publish
@@ -67,6 +68,7 @@ def main():
     flet.cli.commands.run.Command.register_to(sp, "run")
     flet.cli.commands.pack.Command.register_to(sp, "pack")
     flet.cli.commands.publish.Command.register_to(sp, "publish")
+    flet.cli.commands.build.Command.register_to(sp, "build")
     parser.set_default_subparser("run", positional_args=1)
 
     # print usage if called without args

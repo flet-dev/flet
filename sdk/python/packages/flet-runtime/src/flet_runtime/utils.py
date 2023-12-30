@@ -261,23 +261,5 @@ def patch_manifest_json(
         f.write(json.dumps(manifest, indent=2))
 
 
-def copy_tree(src, dst):
-    """Recursively copy a directory tree using shutil.copy2().
-
-    Arguments:
-    src -- source directory path
-    dst -- destination directory path
-
-    Return a list of files that were copied or might have been copied.
-    """
-    if not os.path.isdir(src):
-        raise OSError("Source is not a directory")
-
-    os.makedirs(dst, exist_ok=True)
-    for item in os.listdir(src):
-        s = os.path.join(src, item)
-        d = os.path.join(dst, item)
-        if os.path.isdir(s):
-            copy_tree(s, d)
-        else:
-            shutil.copy2(s, d)
+def copy_tree(src, dst, ignore=None):
+    return shutil.copytree(src, dst, ignore=ignore, symlinks=True, dirs_exist_ok=True)

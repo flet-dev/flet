@@ -35,25 +35,6 @@ class TextOverflow(Enum):
     VISIBLE = "visible"
 
 
-TextThemeStyleString = Literal[
-    "displayLarge",
-    "displayMedium",
-    "displaySmall",
-    "headlineLarge",
-    "headlineMedium",
-    "headlineSmall",
-    "titleLarge",
-    "titleMedium",
-    "titleSmall",
-    "labelLarge",
-    "labelMedium",
-    "labelSmall",
-    "bodyLarge",
-    "bodyMedium",
-    "bodySmall",
-]
-
-
 class TextThemeStyle(Enum):
     DISPLAY_LARGE = "displayLarge"
     DISPLAY_MEDIUM = "displayMedium"
@@ -203,7 +184,7 @@ class Text(ConstrainedControl):
         children = []
         children.extend(self.__spans)
         return children
-    
+
     def _before_build_command(self):
         super()._before_build_command()
         if dataclasses.is_dataclass(self.__style):
@@ -279,35 +260,25 @@ class Text(ConstrainedControl):
 
     # style
     @property
-    def style(self) -> Optional[Union[TextThemeStyle, TextStyle, TextThemeStyleString]]:
+    def style(self) -> Optional[Union[TextThemeStyle, TextStyle]]:
         return self.__style
 
     @style.setter
-    def style(self, value: Optional[Union[TextThemeStyle, TextStyle, TextThemeStyleString]]):
+    def style(self, value: Optional[Union[TextThemeStyle, TextStyle]]):
         self.__style = value
-        if isinstance(value, TextThemeStyle):
-            self._set_attr("style", value.value)
-        else:
-            self.__set_style(value)
-
-    def __set_style(self, value: Optional[Union[TextStyle, TextThemeStyleString]]):
-        self._set_attr("style", value)
+        if isinstance(value, (TextThemeStyle, str)) or value is None:
+            self._set_attr(
+                "style", value.value if isinstance(value, TextThemeStyle) else value
+            )
 
     # theme_style
     @property
-    def theme_style(self) -> Optional[Union[TextThemeStyle, TextThemeStyleString]]:
-        return self.__theme_style
+    def theme_style(self):
+        return self._get_attr("theme_style")
 
     @theme_style.setter
-    def theme_style(self, value: Optional[Union[TextThemeStyle, TextThemeStyleString]]):
-        self.__theme_style = value
-        if isinstance(value, TextThemeStyle):
-            self._set_attr("theme_style", value.value)
-        else:
-            self.__set_theme_style(value)
-
-    def __set_theme_style(self, value: Optional[TextThemeStyleString]):
-        self._set_attr("theme_style", value)
+    def theme_style(self, value: Optional[TextThemeStyle]):
+        self._set_attr("theme_style", value.value if value is not None else None)
 
     # italic
     @property
