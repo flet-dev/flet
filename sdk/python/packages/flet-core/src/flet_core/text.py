@@ -266,8 +266,10 @@ class Text(ConstrainedControl):
     @style.setter
     def style(self, value: Optional[Union[TextThemeStyle, TextStyle]]):
         self.__style = value
-        if isinstance(value, TextThemeStyle) or value is None:
-            self._set_attr("style", value.value if value is not None else None)
+        if isinstance(value, (TextThemeStyle, str)) or value is None:
+            self._set_attr(
+                "style", value.value if isinstance(value, TextThemeStyle) else value
+            )
 
     # theme_style
     @property
