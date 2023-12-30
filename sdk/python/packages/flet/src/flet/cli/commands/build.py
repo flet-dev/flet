@@ -16,6 +16,9 @@ from flet_core.utils import random_string, slugify
 from flet_runtime.utils import copy_tree, is_windows
 from rich import print
 
+if is_windows():
+    from ctypes import windll
+
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full"
 
 
@@ -250,9 +253,6 @@ class Command(BaseCommand):
 
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
-
-        if is_windows():
-            from ctypes import windll
 
         # check if `flutter` executable is available in the path
         flutter_exe = shutil.which("flutter")
