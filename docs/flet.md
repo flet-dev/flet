@@ -47,3 +47,62 @@ With Flet we are switching to monorepo storing Flet server, Flutter client and a
 
 * All sizes are float numbers. Not "px", "pt", "rem", "%" or something else from CSS, but just numbers meaning "virtual pixels".
 * All percentage values are rational numbers between 0 and 1, i.e. 0.5 means 50%.
+
+# Using OpenCV Real-time Image Display on Fleet
+
+## Introduction
+
+This guide demonstrates how to integrate OpenCV's real-time image display functionality with Fleet, enabling developers to showcase images dynamically in their multi-platform apps. Follow the steps below to implement this functionality in your Fleet project.
+
+## Prerequisites
+
+Make sure you have Flet and OpenCV installed in your development environment.
+
+## Steps
+
+## 1. Import Required Libraries
+
+In your Python script or application file, import the necessary libraries:
+
+```python
+import cv2
+from flet import Flet, Page, Text, Image
+```
+
+## 2. Connect to Flet
+
+Establish a connection with Flet using the following code snippet:
+
+```python
+flet = Flet()
+page = Page("Real-time Image Display Example")
+```
+
+## 3. OpenCV Real-time Image Display
+
+Implement the real-time image display using OpenCV. Here's a basic example:
+
+```python
+cap = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = cap.read()
+
+    # Process the frame as needed (e.g., resizing, color adjustments)
+
+    # Display the frame on Fleet
+    page.clean()
+    page.add(Image.from_file-like_object(cv2.imencode('.jpg', frame)[1].tobytes()))
+    flet.update(page)
+```
+
+In this example, we capture frames from the default camera (0). You can adjust the OpenCV code based on your specific requirements.
+
+## 4. Cleanup and Disconnect
+
+Don't forget to release the OpenCV capture object and disconnect from Flet when done:
+
+```python
+cap.release()
+flet.disconnect()
+```
