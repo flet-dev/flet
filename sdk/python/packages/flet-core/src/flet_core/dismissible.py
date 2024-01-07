@@ -1,9 +1,9 @@
 from typing import Any, Optional, Dict, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.snack_bar import DismissDirection
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.snack_bar import DismissDirection
 from flet_core.types import (
     ResponsiveNumber,
     ScaleValue,
@@ -213,7 +213,7 @@ class Dismissible(ConstrainedControl):
     # on_dismiss
     @property
     def on_dismiss(self):
-        return self._get_event_handler("action")
+        return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
     def on_dismiss(self, handler):
