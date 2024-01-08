@@ -251,6 +251,22 @@ class Command(BaseCommand):
             help="the branch, tag or commit ID to checkout after cloning the repository with Flutter bootstrap template",
         )
 
+    # according to build matrix given at: 
+    # https://flet.dev/docs/guides/python/packaging-app-for-distribution/#build-platform-matrix
+    @staticmethod
+    def _can_build_target_platform(target_platform: str) -> bool:
+        current_platform = platform.system()
+
+        allowed_builds = {
+            'Darwin': ['ipa', 'apk', 'aab', 'macos', 'web'],  # macos
+            'Windows': ['apk', 'aab', 'linux', 'windows', 'web'],
+            'Linux': ['apk', 'aab', 'linux', 'web']
+        }
+        
+        if not target_platform in allowed_builds[current_platform]:
+            return False
+        return True
+
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
 
@@ -267,6 +283,11 @@ class Command(BaseCommand):
             sys.exit(1)
 
         target_platform = options.target_platform.lower()
+        if not self._can_build_target_platform(target_platform):
+            current_platform = platform.system()
+            print(f'Can\'t build {target_platform} on {current_platform}')
+            sys.exit(1)
+
         self.verbose = options.verbose
 
         python_app_path = Path(options.python_app_path).resolve()
