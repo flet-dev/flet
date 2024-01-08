@@ -56,6 +56,7 @@ class _ListViewControlState extends State<ListViewControl> {
     final firstItemPrototype =
         widget.control.attrBool("firstItemPrototype", false)!;
     final padding = parseEdgeInsets(widget.control, "padding");
+    final reverse = widget.control.attrBool("reverse", false)!;
 
     List<Control> visibleControls =
         widget.children.where((c) => c.isVisible).toList();
@@ -72,6 +73,7 @@ class _ListViewControlState extends State<ListViewControl> {
         Widget child = spacing > 0
             ? ListView.separated(
                 controller: _controller,
+                reverse: reverse,
                 scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
@@ -94,6 +96,7 @@ class _ListViewControlState extends State<ListViewControl> {
               )
             : ListView.builder(
                 controller: _controller,
+                reverse: reverse,
                 scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
