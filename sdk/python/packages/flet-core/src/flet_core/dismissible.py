@@ -2,6 +2,8 @@ from typing import Any, Optional, Dict, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
+from flet_core.control_event import ControlEvent
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.snack_bar import DismissDirection
 from flet_core.types import (
@@ -99,6 +101,9 @@ class Dismissible(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+
+        self.__on_dismiss = EventHandler(lambda e: DismissibleDismissEvent(e.data))
+        self._add_event_handler("dismiss", self.__on_dismiss.get_handler())
 
         self.content = content
         self.background = background
@@ -217,7 +222,8 @@ class Dismissible(ConstrainedControl):
 
     @on_dismiss.setter
     def on_dismiss(self, handler):
-        self._add_event_handler("dismiss", handler)
+        self.__on_dismiss.subscribe(handler)
+        self._set_attr("dismiss", True if handler is not None else None)
 
     # on_update
     @property
@@ -236,3 +242,8 @@ class Dismissible(ConstrainedControl):
     @on_resize.setter
     def on_resize(self, handler):
         self._add_event_handler("resize", handler)
+
+
+class DismissibleDismissEvent(ControlEvent):
+    def __init__(self, d: str) -> None:
+        self.direction: DismissDirection = DismissDirection(d)
