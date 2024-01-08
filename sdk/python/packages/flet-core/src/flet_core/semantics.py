@@ -1,6 +1,6 @@
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 
 

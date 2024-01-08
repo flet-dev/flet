@@ -23,8 +23,8 @@ class FletAppServices extends InheritedWidget {
   final Map<String, ControlInvokeMethodCallback> controlInvokeMethods = {};
 
   FletAppServices(
-      {Key? key,
-      required Widget child,
+      {super.key,
+      required super.child,
       required this.pageUrl,
       required this.assetsDir,
       this.errorsHandler,
@@ -32,8 +32,7 @@ class FletAppServices extends InheritedWidget {
       this.hideLoadingPage,
       this.controlId,
       this.reconnectIntervalMs,
-      this.reconnectTimeoutMs})
-      : super(key: key, child: child) {
+      this.reconnectTimeoutMs}) {
     store = Store<AppState>(appReducer, initialState: AppState.initial());
     server = FletServer(store, controlInvokeMethods,
         reconnectIntervalMs: reconnectIntervalMs,

@@ -14,6 +14,7 @@ class ScrollableControl(Control):
         self,
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
+        reverse: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Any = None,
     ):
@@ -26,6 +27,7 @@ class ScrollableControl(Control):
 
         self.scroll = scroll
         self.auto_scroll = auto_scroll
+        self.reverse = reverse
         self.on_scroll_interval = on_scroll_interval
         self.on_scroll = on_scroll
 
@@ -95,12 +97,21 @@ class ScrollableControl(Control):
 
     # auto_scroll
     @property
-    def auto_scroll(self) -> Optional[bool]:
-        return self._get_attr("autoScroll")
+    def auto_scroll(self) -> Optional[str]:
+        return self._get_attr("autoScroll", data_type="bool", def_value=False)
 
     @auto_scroll.setter
     def auto_scroll(self, value: Optional[bool]):
         self._set_attr("autoScroll", value)
+
+    # reverse
+    @property
+    def reverse(self) -> Optional[bool]:
+        return self._get_attr("reverse", data_type="bool", def_value=False)
+
+    @reverse.setter
+    def reverse(self, value: Optional[bool]):
+        self._set_attr("reverse", value)
 
     # on_scroll_interval
     @property
@@ -137,5 +148,4 @@ class OnScrollEvent(ControlEvent):
         self.velocity: Optional[float] = v
 
     def __str__(self):
-        attrs = {}
         return f"{self.event_type}: pixels={self.pixels}, min_scroll_extent={self.min_scroll_extent}, max_scroll_extent={self.max_scroll_extent}, viewport_dimension={self.viewport_dimension}, scroll_delta={self.scroll_delta}, direction={self.direction}, overscroll={self.overscroll}, velocity={self.velocity}"

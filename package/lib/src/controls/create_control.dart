@@ -1,9 +1,8 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
-import 'cupertino_dialog_action.dart';
-import 'segmented_button.dart';
 import 'package:flutter/material.dart';
+
+import 'package:collection/collection.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../flet_app_services.dart';
@@ -14,16 +13,14 @@ import '../models/page_media_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/theme.dart';
 import '../utils/transforms.dart';
+
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
-import 'bottom_app_bar.dart';
 import 'audio.dart';
 import 'badge.dart';
-import 'cupertino_slider.dart';
-import 'expansion_panel.dart';
-import 'selection_area.dart';
 import 'banner.dart';
 import 'barchart.dart';
+import 'bottom_app_bar.dart';
 import 'bottom_sheet.dart';
 import 'canvas.dart';
 import 'card.dart';
@@ -33,6 +30,11 @@ import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
+import 'cupertino_checkbox.dart';
+import 'cupertino_navigation_bar.dart';
+import 'cupertino_radio.dart';
+import 'cupertino_slider.dart';
+import 'cupertino_switch.dart';
 import 'datatable.dart';
 import 'date_picker.dart';
 import 'dismissible.dart';
@@ -42,6 +44,7 @@ import 'draggable.dart';
 import 'dropdown.dart';
 import 'elevated_button.dart';
 import 'error.dart';
+import 'expansion_panel.dart';
 import 'expansion_tile.dart';
 import 'file_picker.dart';
 import 'flet_app_control.dart';
@@ -56,6 +59,8 @@ import 'linechart.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
 import 'markdown.dart';
+import 'menu_bar.dart';
+import 'menu_item_button.dart';
 import 'navigation_bar.dart';
 import 'navigation_rail.dart';
 import 'outlined_button.dart';
@@ -65,18 +70,21 @@ import 'popup_menu_button.dart';
 import 'progress_bar.dart';
 import 'progress_ring.dart';
 import 'radio.dart';
-import 'cupertino_radio.dart';
 import 'radio_group.dart';
 import 'range_slider.dart';
 import 'responsive_row.dart';
 import 'row.dart';
 import 'safe_area.dart';
+import 'search_anchor.dart';
+import 'segmented_button.dart';
+import 'selection_area.dart';
 import 'semantics.dart';
 import 'shader_mask.dart';
 import 'shake_detector.dart';
 import 'slider.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
+import 'submenu_button.dart';
 import 'switch.dart';
 import 'tabs.dart';
 import 'text.dart';
@@ -331,6 +339,27 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "menubar":
+      return MenuBarControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "submenubutton":
+      return SubMenuButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "menuitembutton":
+      return MenuItemButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
     case "segmentedbutton":
       return SegmentedButtonControl(
           key: key,
@@ -492,6 +521,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled);
+    case "searchbar":
+      return SearchAnchorControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "checkbox":
       return CheckboxControl(
           key: key,
@@ -632,6 +669,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           dispatch: controlView.dispatch);
     case "navigationbar":
       return NavigationBarControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
+    case "cupertinonavigationbar":
+      return CupertinoNavigationBarControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,

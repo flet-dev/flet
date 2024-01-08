@@ -2,7 +2,6 @@ import hashlib
 import hmac
 import logging
 import os
-import sys
 import urllib.parse
 from datetime import datetime, timedelta
 from typing import Optional

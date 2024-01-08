@@ -17,12 +17,11 @@ class SliderControl extends StatefulWidget {
   final dynamic dispatch;
 
   const SliderControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<SliderControl> createState() => _SliderControlState();

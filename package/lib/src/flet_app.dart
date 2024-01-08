@@ -15,7 +15,7 @@ class FletApp extends StatefulWidget {
   final int? reconnectTimeoutMs;
 
   const FletApp(
-      {Key? key,
+      {super.key,
       required this.pageUrl,
       required this.assetsDir,
       this.hideLoadingPage,
@@ -23,8 +23,7 @@ class FletApp extends StatefulWidget {
       this.title,
       this.errorsHandler,
       this.reconnectIntervalMs,
-      this.reconnectTimeoutMs})
-      : super(key: key);
+      this.reconnectTimeoutMs});
 
   @override
   State<FletApp> createState() => _FletAppState();

@@ -1,4 +1,3 @@
-import dataclasses
 from typing import Any, List, Optional
 
 from flet_core.canvas.path import Path

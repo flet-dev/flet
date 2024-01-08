@@ -7,8 +7,9 @@ import traceback
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
+from fastapi import WebSocket
+
 import flet_fastapi
-from fastapi import WebSocket, WebSocketDisconnect
 from flet_core.event import Event
 from flet_core.local_connection import LocalConnection
 from flet_core.page import Page

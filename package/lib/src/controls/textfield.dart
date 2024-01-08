@@ -21,12 +21,11 @@ class TextFieldControl extends StatefulWidget {
   final bool parentDisabled;
 
   const TextFieldControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   State<TextFieldControl> createState() => _TextFieldControlState();

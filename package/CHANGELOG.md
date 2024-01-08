@@ -1,3 +1,31 @@
+# 0.18.0
+
+* `flet build` command to package Flet app for any platform ([docs](https://flet.dev/docs/guides/python/packaging-app-for-distribution)).
+* Added TextStyle for the Text control ([#2270](https://github.com/flet-dev/flet/issues/2270)).
+* Refactor code, add Enum deprecation utils ([#2259](https://github.com/flet-dev/flet/issues/2259)).
+* `CupertinoAppBar` control ([#2278](https://github.com/flet-dev/flet/issues/2278)).
+* Fix AlertDialog content updating ([#2277](https://github.com/flet-dev/flet/issues/2277)).
+* Fix FLET_VIEW_PATH ignored on linux ([#2244](https://github.com/flet-dev/flet/issues/2244)).
+* `MenuBar`, `SubMenuButton` and `MenuItemButton` controls ([#2252](https://github.com/flet-dev/flet/issues/2252)).
+* convert 'key' to a super parameter ([#2258](https://github.com/flet-dev/flet/issues/2258)).
+
+# 0.17.0
+
+* `SearchBar` control ([#2212](https://github.com/flet-dev/flet/issues/2212)).
+* `CupertinoNavigationBar` control ([#2241](https://github.com/flet-dev/flet/issues/2241)).
+
+# 0.16.0
+
+* `CupertinoSlider` control and `Slider.adaptive` ([#2224](https://github.com/flet-dev/flet/issues/2224)).
+* `CupertinoRadio` control and `Radio.adaptive` ([#2225](https://github.com/flet-dev/flet/issues/2225)).
+* Fix `NavigationBar.label_bahavior` ([#2229](https://github.com/flet-dev/flet/issues/2229)).
+* `CupertinoSwitch` control ([docs](https://flet.dev/docs/controls/cupertinoswitch)).
+* Disable fade-in effect on Flet app start.
+* Tab alignment bug fix ([#2208](https://github.com/flet-dev/flet/issues/2208)).
+* Tab visibility ([#2213](https://github.com/flet-dev/flet/issues/2213)).
+* Dark window title for Windows ([#2204](https://github.com/flet-dev/flet/issues/2204)).
+* Fix `ValueError` on web page resize ([#1564](https://github.com/flet-dev/flet/issues/1564)).
+
 # 0.15.0
 
 * `ExpansionPanel` and `ExpansionPanelList` controls ([docs](https://flet.dev/docs/controls/expansionpanel)).

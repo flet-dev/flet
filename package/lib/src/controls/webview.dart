@@ -19,11 +19,10 @@ class WebViewControl extends StatelessWidget {
   final bool parentDisabled;
 
   const WebViewControl(
-      {Key? key,
+      {super.key,
       required this.parent,
       required this.control,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   Widget build(BuildContext context) {

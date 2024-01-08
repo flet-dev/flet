@@ -183,7 +183,7 @@ packages:
       path: "../package"
       relative: true
     source: path
-    version: "0.15.0"
+    version: "0.18.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -318,6 +318,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  logging:
+    dependency: transitive
+    description:
+      name: logging
+      sha256: "623a88c9594aa774443aa3eb2d41807a48486b5613e67599fb4c41c0ad47c340"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   markdown:
     dependency: transitive
     description:
@@ -474,34 +482,18 @@ packages:
     dependency: transitive
     description:
       name: sensors_plus
-      sha256: "362c8f4f001838b90dd5206b898bbad941bc0142479eab9a3415f0f79e622908"
+      sha256: "8e7fa79b4940442bb595bfc0ee9da4af5a22a0fe6ebacc74998245ee9496a82d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.1"
+    version: "4.0.2"
   sensors_plus_platform_interface:
     dependency: transitive
     description:
       name: sensors_plus_platform_interface
-      sha256: "95f0cc08791b8bf0c41c5fa99c84be2a7d5bf60a811ddc17e1438b1e68caf0d3"
+      sha256: bc472d6cfd622acb4f020e726433ee31788b038056691ba433fec80e448a094f
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.3"
-  sensors_plus_web:
-    dependency: transitive
-    description:
-      name: sensors_plus_web
-      sha256: fca8d7d9ab6233b2a059952666415508e252420be1ef54f092d07884da53ec5e
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.2"
-  shake:
-    dependency: transitive
-    description:
-      name: shake
-      sha256: "107546951c6b8f5e4c2dca66dfb3aa27dd1a853b4e9a26c9aea224b167045023"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.0"
+    version: "1.2.0"
   shared_preferences:
     dependency: transitive
     description:

@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pycqa/isort
-    rev: 5.11.4
+    rev: 5.13.2
     hooks:
       - id: isort
   - repo: https://github.com/ambv/black

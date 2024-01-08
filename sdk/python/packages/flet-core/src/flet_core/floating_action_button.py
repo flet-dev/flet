@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.buttons import OutlinedBorder
@@ -12,28 +11,6 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
-
-
-class FloatingActionButtonLocation(Enum):
-    CENTER_DOCKED = "centerDocked"
-    CENTER_FLOAT = "centerFloat"
-    CENTER_TOP = "centerTop"
-    END_CONTAINED = "endContained"
-    END_DOCKED = "endDocked"
-    END_FLOAT = "endFloat"
-    END_TOP = "endTop"
-    MINI_CENTER_DOCKED = "miniCenterDocked"
-    MINI_CENTER_FLOAT = "miniCenterFloat"
-    MINI_CENTER_TOP = "miniCenterTop"
-    MINI_END_DOCKED = "miniEndDocked"
-    MINI_END_FLOAT = "miniEndFloat"
-    MINI_END_TOP = "miniEndTop"
-    MINI_START_DOCKED = "miniStartDocked"
-    MINI_START_FLOAT = "miniStartFloat"
-    MINI_START_TOP = "miniStartTop"
-    START_DOCKED = "startDocked"
-    START_FLOAT = "startFloat"
-    START_TOP = "startTop"
 
 
 class FloatingActionButton(ConstrainedControl):

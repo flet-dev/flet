@@ -11,11 +11,10 @@ class ClipboardControl extends StatefulWidget {
   final Widget? nextChild;
 
   const ClipboardControl(
-      {Key? key,
+      {super.key,
       required this.parent,
       required this.control,
-      required this.nextChild})
-      : super(key: key);
+      required this.nextChild});
 
   @override
   State<ClipboardControl> createState() => _ClipboardControlState();

@@ -16,13 +16,12 @@ class GridViewControl extends StatefulWidget {
   final dynamic dispatch;
 
   const GridViewControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<GridViewControl> createState() => _GridViewControlState();
@@ -57,6 +56,7 @@ class _GridViewControlState extends State<GridViewControl> {
     final runSpacing = widget.control.attrDouble("runSpacing", 10)!;
     final padding = parseEdgeInsets(widget.control, "padding");
     final childAspectRatio = widget.control.attrDouble("childAspectRatio", 1)!;
+    final reverse = widget.control.attrBool("reverse", false)!;
 
     List<Control> visibleControls =
         widget.children.where((c) => c.isVisible).toList();
@@ -85,6 +85,7 @@ class _GridViewControlState extends State<GridViewControl> {
         Widget child = GridView.builder(
           scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
           controller: _controller,
+          reverse: reverse,
           shrinkWrap: shrinkWrap,
           padding: padding,
           gridDelegate: gridDelegate,

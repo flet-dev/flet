@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flet/src/controls/floating_action_button.dart';
 import 'package:flet/src/flet_app_context.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,6 +36,7 @@ import '../widgets/page_media.dart';
 import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
+import 'cupertino_app_bar.dart';
 import 'navigation_drawer.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
@@ -637,6 +639,7 @@ class _ViewControlState extends State<ViewControl> {
               FloatingActionButtonLocation.endFloat);
 
           Control? appBar;
+          Control? cupertinoAppBar;
           Control? bottomAppBar;
           Control? fab;
           Control? navBar;
@@ -649,13 +652,17 @@ class _ViewControlState extends State<ViewControl> {
             if (ctrl.type == "appbar") {
               appBar = ctrl;
               continue;
+            } else if (ctrl.type == "cupertinoappbar") {
+              cupertinoAppBar = ctrl;
+              continue;
             } else if (ctrl.type == "bottomappbar") {
               bottomAppBar = ctrl;
               continue;
             } else if (ctrl.type == "floatingactionbutton") {
               fab = ctrl;
               continue;
-            } else if (ctrl.type == "navigationbar") {
+            } else if (ctrl.type == "navigationbar" ||
+                ctrl.type == "cupertinonavigationbar") {
               navBar = ctrl;
               continue;
             } else if (ctrl.type == "navigationdrawer" &&
@@ -680,8 +687,12 @@ class _ViewControlState extends State<ViewControl> {
             controls.add(createControl(control, ctrl.id, control.isDisabled));
           }
 
-          List<String> childIds =
-              [appBar?.id, drawer?.id, endDrawer?.id].whereNotNull().toList();
+          List<String> childIds = [
+            appBar?.id,
+            cupertinoAppBar?.id,
+            drawer?.id,
+            endDrawer?.id
+          ].whereNotNull().toList();
 
           final textDirection = widget.parent.attrBool("rtl", false)!
               ? TextDirection.rtl
@@ -705,6 +716,9 @@ class _ViewControlState extends State<ViewControl> {
 
                 var appBarView = childrenViews.controlViews.firstWhereOrNull(
                     (v) => v.control.id == (appBar?.id ?? ""));
+                var cupertinoAppBarView = childrenViews.controlViews
+                    .firstWhereOrNull(
+                        (v) => v.control.id == (cupertinoAppBar?.id ?? ""));
                 var drawerView = childrenViews.controlViews.firstWhereOrNull(
                     (v) => v.control.id == (drawer?.id ?? ""));
                 var endDrawerView = childrenViews.controlViews.firstWhereOrNull(
@@ -794,19 +808,32 @@ class _ViewControlState extends State<ViewControl> {
 
                 var bnb = navBar ?? bottomAppBar;
 
+                var bar = appBarView != null
+                    ? AppBarControl(
+                        parent: control,
+                        control: appBarView.control,
+                        children: appBarView.children,
+                        parentDisabled: control.isDisabled,
+                        height: appBarView.control
+                            .attrDouble("toolbarHeight", kToolbarHeight)!)
+                    : cupertinoAppBarView != null
+                        ? CupertinoAppBarControl(
+                            parent: control,
+                            control: cupertinoAppBarView.control,
+                            children: cupertinoAppBarView.children,
+                            parentDisabled: control.isDisabled,
+                            bgcolor: HexColor.fromString(
+                                Theme.of(context),
+                                cupertinoAppBarView.control
+                                    .attrString("bgcolor", "")!),
+                          ) as ObstructingPreferredSizeWidget
+                        : null;
+
                 var scaffold = Scaffold(
                   key: scaffoldKey,
                   backgroundColor: HexColor.fromString(
                       Theme.of(context), control.attrString("bgcolor", "")!),
-                  appBar: appBarView != null
-                      ? AppBarControl(
-                          parent: control,
-                          control: appBarView.control,
-                          children: appBarView.children,
-                          parentDisabled: control.isDisabled,
-                          height: appBarView.control
-                              .attrDouble("toolbarHeight", kToolbarHeight)!)
-                      : null,
+                  appBar: bar,
                   drawer: drawerView != null
                       ? NavigationDrawerControl(
                           control: drawerView.control,

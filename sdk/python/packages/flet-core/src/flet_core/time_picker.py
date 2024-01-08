@@ -141,7 +141,7 @@ class TimePicker(Control):
 
     @value.setter
     def value(self, value: Optional[Union[time, str]]):
-        if isinstance(value, (time)):
+        if isinstance(value, time):
             value = value.strftime("%H:%M")
         self._set_attr("value", value)
 

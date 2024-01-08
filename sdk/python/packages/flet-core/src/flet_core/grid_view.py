@@ -93,6 +93,7 @@ class GridView(ConstrainedControl, ScrollableControl):
         # ScrollableControl specific
         #
         auto_scroll: Optional[bool] = None,
+        reverse: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Any = None,
         #
@@ -138,6 +139,7 @@ class GridView(ConstrainedControl, ScrollableControl):
         ScrollableControl.__init__(
             self,
             auto_scroll=auto_scroll,
+            reverse=reverse,
             on_scroll_interval=on_scroll_interval,
             on_scroll=on_scroll,
         )

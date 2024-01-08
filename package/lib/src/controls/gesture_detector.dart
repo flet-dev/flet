@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
 import '../models/control.dart';
+import '../utils/mouse.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -16,12 +17,11 @@ class GestureDetectorControl extends StatefulWidget {
   final bool parentDisabled;
 
   const GestureDetectorControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   State<GestureDetectorControl> createState() => _GestureDetectorControlState();
@@ -583,85 +583,6 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     }
 
     return constrainedControl(context, result, widget.parent, widget.control);
-  }
-
-  MouseCursor parseMouseCursor(String? cursor) {
-    switch (cursor) {
-      case "alias":
-        return SystemMouseCursors.alias;
-      case "allScroll":
-        return SystemMouseCursors.allScroll;
-      case "basic":
-        return SystemMouseCursors.basic;
-      case "cell":
-        return SystemMouseCursors.cell;
-      case "click":
-        return SystemMouseCursors.click;
-      case "contextMenu":
-        return SystemMouseCursors.contextMenu;
-      case "copy":
-        return SystemMouseCursors.copy;
-      case "disappearing":
-        return SystemMouseCursors.disappearing;
-      case "forbidden":
-        return SystemMouseCursors.forbidden;
-      case "grab":
-        return SystemMouseCursors.grab;
-      case "grabbing":
-        return SystemMouseCursors.grabbing;
-      case "help":
-        return SystemMouseCursors.help;
-      case "move":
-        return SystemMouseCursors.move;
-      case "noDrop":
-        return SystemMouseCursors.noDrop;
-      case "none":
-        return SystemMouseCursors.none;
-      case "precise":
-        return SystemMouseCursors.precise;
-      case "progress":
-        return SystemMouseCursors.progress;
-      case "resizeColumn":
-        return SystemMouseCursors.resizeColumn;
-      case "resizeDown":
-        return SystemMouseCursors.resizeDown;
-      case "resizeDownLeft":
-        return SystemMouseCursors.resizeDownLeft;
-      case "resizeDownRight":
-        return SystemMouseCursors.resizeDownRight;
-      case "resizeLeft":
-        return SystemMouseCursors.resizeLeft;
-      case "resizeLeftRight":
-        return SystemMouseCursors.resizeLeftRight;
-      case "resizeRight":
-        return SystemMouseCursors.resizeRight;
-      case "resizeRow":
-        return SystemMouseCursors.resizeRow;
-      case "resizeUp":
-        return SystemMouseCursors.resizeUp;
-      case "resizeUpDown":
-        return SystemMouseCursors.resizeUpDown;
-      case "resizeUpLeft":
-        return SystemMouseCursors.resizeUpLeft;
-      case "resizeUpLeftDownRight":
-        return SystemMouseCursors.resizeUpLeftDownRight;
-      case "resizeUpRight":
-        return SystemMouseCursors.resizeUpRight;
-      case "resizeUpRightDownLeft":
-        return SystemMouseCursors.resizeUpRightDownLeft;
-      case "text":
-        return SystemMouseCursors.text;
-      case "verticalText":
-        return SystemMouseCursors.verticalText;
-      case "wait":
-        return SystemMouseCursors.wait;
-      case "zoomIn":
-        return SystemMouseCursors.zoomIn;
-      case "zoomOut":
-        return SystemMouseCursors.zoomOut;
-      default:
-        return MouseCursor.defer;
-    }
   }
 }
 

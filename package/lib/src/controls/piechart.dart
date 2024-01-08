@@ -23,12 +23,11 @@ class PieChartControl extends StatefulWidget {
   final bool parentDisabled;
 
   const PieChartControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   State<PieChartControl> createState() => _PieChartControlState();
