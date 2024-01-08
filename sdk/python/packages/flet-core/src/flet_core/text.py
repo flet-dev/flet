@@ -274,7 +274,6 @@ class Text(ConstrainedControl):
             warn(
                 "If you wish to set the TextThemeStyle, use `Text.theme_style` instead. "
                 "The `Text.style` property should be used to set the TextStyle only.",
-                DeprecationWarning,
                 stacklevel=2,
             )
 
