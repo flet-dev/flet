@@ -234,14 +234,6 @@ from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
 from flet_core.view import View
 from flet_core.webview import WebView
-from flet_core.range_slider import RangeSlider
-from flet_core.badge import Badge
-from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
-from flet_core.selection_area import SelectionArea
-from flet_core.cupertino_radio import CupertinoRadio
-from flet_core.cupertino_checkbox import CupertinoCheckbox
-from flet_core.cupertino_slider import CupertinoSlider
-from flet_core.cupertino_switch import CupertinoSwitch
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_dialog_action import CupertinoDialogAction
 from flet_core.window_drag_area import WindowDragArea
