@@ -62,7 +62,7 @@ class _CupertinoDialogActionControlState
     String? urlTarget = widget.control.attrString("urlTarget");
     bool isDefaultAction = widget.control.attrBool("isDefaultAction", false)!;
     bool isDestructiveAction =
-        widget.control.attrBool("isDefaultAction", false)!;
+        widget.control.attrBool("isDestructiveAction", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     Function()? onPressed = !disabled

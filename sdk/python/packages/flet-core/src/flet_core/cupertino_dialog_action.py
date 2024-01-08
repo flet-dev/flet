@@ -97,6 +97,8 @@ class CupertinoDialogAction(ConstrainedControl):
         self.text = text
         self.content = content
         self.on_click = on_click
+        self.is_default_action = is_default_action
+        self.is_destructive_action = is_destructive_action
 
     def _get_control_name(self):
         return "cupertinodialogaction"
