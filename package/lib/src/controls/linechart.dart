@@ -301,6 +301,8 @@ class _LineChartControlState extends State<LineChartControl> {
       for (var e in dataViewModel.dataPoints) FlSpot(e.x, e.y): e
     };
     return LineChartBarData(
+      preventCurveOverShooting: dataViewModel.control.attrBool("preventCurveOverShooting", false)!,
+      preventCurveOvershootingThreshold: dataViewModel.control.attrDouble("preventCurveOverShootingThreshold", 10.0)!,
         spots: dataViewModel.dataPoints.map((p) => FlSpot(p.x, p.y)).toList(),
         showingIndicators: dataViewModel.dataPoints
             .asMap()
