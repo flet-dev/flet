@@ -285,6 +285,10 @@ class Command(BaseCommand):
         target_platform = options.target_platform.lower()
         if not self._can_build_target_platform(target_platform):
             current_platform = platform.system()
+            
+            # make the platform name more user friendly
+            if current_platform == 'Darwin':
+                current_patform = 'MacOS'
             print(f'Can\'t build {target_platform} on {current_platform}')
             sys.exit(1)
 
