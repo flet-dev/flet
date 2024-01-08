@@ -1,6 +1,7 @@
 import dataclasses
 from enum import Enum
 from typing import Any, List, Optional, Union
+from warnings import warn
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
@@ -120,7 +121,7 @@ class Text(ConstrainedControl):
         size: OptionalNumber = None,
         weight: Optional[FontWeight] = None,
         italic: Optional[bool] = None,
-        style: Optional[Union[TextThemeStyle, TextStyle]] = None,
+        style: Union[TextThemeStyle, TextStyle, None] = None,
         theme_style: Optional[TextThemeStyle] = None,
         max_lines: Optional[int] = None,
         overflow: TextOverflow = TextOverflow.NONE,
@@ -260,15 +261,20 @@ class Text(ConstrainedControl):
 
     # style
     @property
-    def style(self) -> Optional[Union[TextThemeStyle, TextStyle]]:
+    def style(self) -> Union[TextThemeStyle, TextStyle, None]:
         return self.__style
 
     @style.setter
-    def style(self, value: Optional[Union[TextThemeStyle, TextStyle]]):
+    def style(self, value: Union[TextThemeStyle, TextStyle, None]):
         self.__style = value
         if isinstance(value, (TextThemeStyle, str)) or value is None:
             self._set_attr(
                 "style", value.value if isinstance(value, TextThemeStyle) else value
+            )
+            warn(
+                "If you wish to set the TextThemeStyle, use `Text.theme_style` instead. "
+                "The `Text.style` property should be used to set the TextStyle only.",
+                stacklevel=2,
             )
 
     # theme_style
@@ -278,7 +284,7 @@ class Text(ConstrainedControl):
 
     @theme_style.setter
     def theme_style(self, value: Optional[TextThemeStyle]):
-        self._set_attr("theme_style", value.value if value is not None else None)
+        self._set_attr("theme_style", value.value if isinstance(value, TextThemeStyle) else value)
 
     # italic
     @property
