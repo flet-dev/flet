@@ -57,15 +57,12 @@ class _CupertinoDialogActionControlState
     final server = FletAppServices.of(context).server;
 
     String text = widget.control.attrString("text", "")!;
-    //IconData? icon = getMaterialIcon(widget.control.attrString("icon", "")!);
-    // Color? iconColor = HexColor.fromString(
-    //     Theme.of(context), widget.control.attrString("iconColor", "")!);
     var contentCtrls = widget.children.where((c) => c.name == "content");
-    //bool onHover = widget.control.attrBool("onHover", false)!;
-    //bool onLongPress = widget.control.attrBool("onLongPress", false)!;
     String url = widget.control.attrString("url", "")!;
     String? urlTarget = widget.control.attrString("urlTarget");
-    //bool autofocus = widget.control.attrBool("autofocus", false)!;
+    bool isDefaultAction = widget.control.attrBool("isDefaultAction", false)!;
+    bool isDestructiveAction =
+        widget.control.attrBool("isDefaultAction", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     Function()? onPressed = !disabled
@@ -81,87 +78,20 @@ class _CupertinoDialogActionControlState
           }
         : null;
 
-    // Function()? onLongPressHandler = onLongPress && !disabled
-    //     ? () {
-    //         debugPrint("Button ${widget.control.id} long pressed!");
-    //         server.sendPageEvent(
-    //             eventTarget: widget.control.id,
-    //             eventName: "long_press",
-    //             eventData: "");
-    //       }
-    //     : null;
-
-    // Function(bool)? onHoverHandler = onHover && !disabled
-    //     ? (state) {
-    //         debugPrint("Button ${widget.control.id} hovered!");
-    //         server.sendPageEvent(
-    //             eventTarget: widget.control.id,
-    //             eventName: "hover",
-    //             eventData: state.toString());
-    //       }
-    //     : null;
-
-    //TextButton? button;
     CupertinoDialogAction? button;
 
-    // var theme = Theme.of(context);
-
-    // var style = parseButtonStyle(Theme.of(context), widget.control, "style",
-    //     defaultForegroundColor: theme.colorScheme.primary,
-    //     defaultBackgroundColor: Colors.transparent,
-    //     defaultOverlayColor: Colors.transparent,
-    //     defaultShadowColor: Colors.transparent,
-    //     defaultSurfaceTintColor: Colors.transparent,
-    //     defaultElevation: 0,
-    //     defaultPadding: const EdgeInsets.all(8),
-    //     defaultBorderSide: BorderSide.none,
-    //     defaultShape: theme.useMaterial3
-    //         ? const StadiumBorder()
-    //         : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
-
-    // if (icon != null) {
-    //   button = TextButton.icon(
-    //       autofocus: autofocus,
-    //       focusNode: _focusNode,
-    //       onPressed: onPressed,
-    //       onLongPress: onLongPressHandler,
-    //       onHover: onHoverHandler,
-    //       style: style,
-    //       icon: Icon(
-    //         icon,
-    //         color: iconColor,
-    //       ),
-    //       label: Text(text));
-    // } else
     if (contentCtrls.isNotEmpty) {
-      // button = TextButton(
-      //     autofocus: autofocus,
-      //     focusNode: _focusNode,
-      //     onPressed: onPressed,
-      //     onLongPress: onLongPressHandler,
-      //     onHover: onHoverHandler,
-      //     style: style,
-      //     child:
-      //         createControl(widget.control, contentCtrls.first.id, disabled));
       button = CupertinoDialogAction(
-          //autofocus: autofocus,
-          //  focusNode: _focusNode,
           onPressed: onPressed,
-          //     onLongPress: onLongPressHandler,
-          //     onHover: onHoverHandler,
-          //     style: style,
+          isDefaultAction: isDefaultAction,
+          isDestructiveAction: isDestructiveAction,
           child:
               createControl(widget.control, contentCtrls.first.id, disabled));
     } else {
       button = CupertinoDialogAction(
-          //autofocus: autofocus,
-          //focusNode: _focusNode,
-          //style: style,
           onPressed: onPressed,
-          //onLongPress: onLongPressHandler,
-          //onHover: onHoverHandler,
-          isDefaultAction: true,
-          isDestructiveAction: true,
+          isDefaultAction: isDefaultAction,
+          isDestructiveAction: isDestructiveAction,
           child: Text(text));
     }
 

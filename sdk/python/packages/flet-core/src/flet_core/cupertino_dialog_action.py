@@ -59,18 +59,10 @@ class CupertinoDialogAction(ConstrainedControl):
         #
         # Specific
         #
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
-        style: Optional[ButtonStyle] = None,
         content: Optional[Control] = None,
-        autofocus: Optional[bool] = None,
-        url: Optional[str] = None,
-        url_target: Optional[str] = None,
+        is_default_action: Optional[bool] = None,
+        is_destructive_action: Optional[bool] = None,
         on_click=None,
-        on_long_press=None,
-        on_hover=None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -103,42 +95,17 @@ class CupertinoDialogAction(ConstrainedControl):
         )
 
         self.text = text
-        self.icon = icon
-        self.icon_color = icon_color
-        self.style = style
         self.content = content
-        self.autofocus = autofocus
-        self.url = url
-        self.url_target = url_target
         self.on_click = on_click
-        self.on_long_press = on_long_press
-        self.on_hover = on_hover
-        self.on_focus = on_focus
-        self.on_blur = on_blur
 
     def _get_control_name(self):
         return "cupertinodialogaction"
-
-    def _before_build_command(self):
-        super()._before_build_command()
-        if self.__style is not None:
-            self.__style.side = self._wrap_attr_dict(self.__style.side)
-            self.__style.shape = self._wrap_attr_dict(self.__style.shape)
-        self._set_attr_json("style", self.__style)
 
     def _get_children(self):
         if self.__content is None:
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
-
-    def focus(self):
-        self._set_attr_json("focus", str(time.time()))
-        self.update()
-
-    async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
 
     # text
     @property
@@ -149,50 +116,23 @@ class CupertinoDialogAction(ConstrainedControl):
     def text(self, value):
         self._set_attr("text", value)
 
-    # icon
+    # is_default_action
     @property
-    def icon(self):
-        return self._get_attr("icon")
+    def is_default_action(self) -> Optional[bool]:
+        return self._get_attr("isDefaultAction")
 
-    @icon.setter
-    def icon(self, value):
-        self._set_attr("icon", value)
+    @is_default_action.setter
+    def is_default_action(self, value: Optional[bool]):
+        self._set_attr("isDefaultAction", value)
 
-    # icon_color
+    # is_destructive_action
     @property
-    def icon_color(self):
-        return self._get_attr("iconColor")
+    def is_destructive_action(self) -> Optional[bool]:
+        return self._get_attr("isDestructiveAction")
 
-    @icon_color.setter
-    def icon_color(self, value):
-        self._set_attr("iconColor", value)
-
-    # style
-    @property
-    def style(self) -> Optional[ButtonStyle]:
-        return self.__style
-
-    @style.setter
-    def style(self, value: Optional[ButtonStyle]):
-        self.__style = value
-
-    # url
-    @property
-    def url(self):
-        return self._get_attr("url")
-
-    @url.setter
-    def url(self, value):
-        self._set_attr("url", value)
-
-    # url_target
-    @property
-    def url_target(self):
-        return self._get_attr("urlTarget")
-
-    @url_target.setter
-    def url_target(self, value):
-        self._set_attr("urlTarget", value)
+    @is_destructive_action.setter
+    def is_destructive_action(self, value: Optional[bool]):
+        self._set_attr("isDestructiveAction", value)
 
     # on_click
     @property
@@ -203,16 +143,6 @@ class CupertinoDialogAction(ConstrainedControl):
     def on_click(self, handler):
         self._add_event_handler("click", handler)
 
-    # on_long_press
-    @property
-    def on_long_press(self):
-        return self._get_event_handler("long_press")
-
-    @on_long_press.setter
-    def on_long_press(self, handler):
-        self._add_event_handler("long_press", handler)
-        self._set_attr("onLongPress", True if handler is not None else None)
-
     # content
     @property
     def content(self) -> Optional[Control]:
@@ -221,43 +151,3 @@ class CupertinoDialogAction(ConstrainedControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
-
-    # autofocus
-    @property
-    def autofocus(self) -> Optional[bool]:
-        return self._get_attr("autofocus", data_type="bool", def_value=False)
-
-    @autofocus.setter
-    def autofocus(self, value: Optional[bool]):
-        self._set_attr("autofocus", value)
-
-    # on_hover
-    @property
-    def on_hover(self):
-        return self._get_event_handler("hover")
-
-    @on_hover.setter
-    def on_hover(self, handler):
-        self._add_event_handler("hover", handler)
-        if handler is not None:
-            self._set_attr("onHover", True)
-        else:
-            self._set_attr("onHover", None)
-
-    # on_focus
-    @property
-    def on_focus(self):
-        return self._get_event_handler("focus")
-
-    @on_focus.setter
-    def on_focus(self, handler):
-        self._add_event_handler("focus", handler)
-
-    # on_blur
-    @property
-    def on_blur(self):
-        return self._get_event_handler("blur")
-
-    @on_blur.setter
-    def on_blur(self, handler):
-        self._add_event_handler("blur", handler)
