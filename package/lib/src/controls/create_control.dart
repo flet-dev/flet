@@ -31,6 +31,7 @@ import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'cupertino_checkbox.dart';
+import 'cupertino_dialog_action.dart';
 import 'cupertino_navigation_bar.dart';
 import 'cupertino_radio.dart';
 import 'cupertino_slider.dart';
@@ -96,8 +97,6 @@ import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'webview.dart';
 import 'window_drag_area.dart';
-import 'cupertino_checkbox.dart';
-import 'cupertino_switch.dart';
 import 'cupertino_alert_dialog.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,

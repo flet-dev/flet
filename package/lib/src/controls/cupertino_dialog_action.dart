@@ -1,11 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../utils/buttons.dart';
-import '../utils/colors.dart';
-import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 
@@ -164,6 +160,8 @@ class _CupertinoDialogActionControlState
           onPressed: onPressed,
           //onLongPress: onLongPressHandler,
           //onHover: onHoverHandler,
+          isDefaultAction: true,
+          isDestructiveAction: true,
           child: Text(text));
     }
 
