@@ -40,30 +40,21 @@ class _CupertinoAlertDialogControlState
         widget.children.where((c) => c.name == "content" && c.isVisible);
     var actionCtrls =
         widget.children.where((c) => c.name == "action" && c.isVisible);
-    // final actionsAlignment = parseMainAxisAlignment(
-    //     widget.control, "actionsAlignment", MainAxisAlignment.start);
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
-      return const ErrorControl("AlertDialog does not have any content.");
+      return const ErrorControl(
+          "CupertinoAlertDialog does not have any content.");
     }
 
     return CupertinoAlertDialog(
       title: titleCtrls.isNotEmpty
           ? createControl(widget.control, titleCtrls.first.id, disabled)
           : null,
-      //titlePadding: parseEdgeInsets(widget.control, "titlePadding"),
       content: contentCtrls.isNotEmpty
           ? createControl(widget.control, contentCtrls.first.id, disabled)
           : null,
-      // contentPadding: parseEdgeInsets(widget.control, "contentPadding") ??
-      //     const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
       actions: actionCtrls
           .map((c) => createControl(widget.control, c.id, disabled))
           .toList(),
-      //actionsPadding: parseEdgeInsets(widget.control, "actionsPadding"),
-      //actionsAlignment: actionsAlignment,
-      //shape: parseOutlinedBorder(widget.control, "shape"),
-      // insetPadding: parseEdgeInsets(widget.control, "insetPadding") ??
-      //     const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
     );
   }
 
