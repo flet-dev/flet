@@ -21,6 +21,35 @@ class CupertinoDialogAction(ConstrainedControl):
 
     Example:
     ```
+    import flet as ft
+
+
+    def main(page: ft.Page):
+        cupertino_alert_dialog = ft.CupertinoAlertDialog(
+            title=ft.Text("Cupertino Alert Dialog"),
+            content=ft.Text("body"),
+            on_dismiss=lambda e: print("Dismissed!"),
+            actions=[
+                ft.CupertinoDialogAction(
+                    "OK",
+                    text_style=ft.TextStyle(italic=True),
+                    is_destructive_action=True,
+                ),
+                ft.CupertinoDialogAction(text="Cancel", is_default_action=False),
+            ],
+        )
+
+        def open_cupertino_dialog(e):
+            page.dialog = cupertino_alert_dialog
+            cupertino_alert_dialog.open = True
+            page.update()
+
+        page.add(
+            ft.OutlinedButton("Open Cupertino Dialog", on_click=open_cupertino_dialog),
+        )
+
+
+    ft.app(target=main)
     ```
 
     -----
