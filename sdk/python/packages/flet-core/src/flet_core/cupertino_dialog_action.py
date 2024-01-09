@@ -12,6 +12,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.text_style import TextStyle
 
 
 class CupertinoDialogAction(ConstrainedControl):
@@ -62,6 +63,7 @@ class CupertinoDialogAction(ConstrainedControl):
         content: Optional[Control] = None,
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
+        text_style: Optional[TextStyle] = None,
         on_click=None,
     ):
         ConstrainedControl.__init__(
@@ -95,6 +97,7 @@ class CupertinoDialogAction(ConstrainedControl):
         )
 
         self.text = text
+        self.text_style = text_style
         self.content = content
         self.on_click = on_click
         self.is_default_action = is_default_action
@@ -102,6 +105,10 @@ class CupertinoDialogAction(ConstrainedControl):
 
     def _get_control_name(self):
         return "cupertinodialogaction"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("textStyle", self.__text_style)
 
     def _get_children(self):
         if self.__content is None:
@@ -117,6 +124,15 @@ class CupertinoDialogAction(ConstrainedControl):
     @text.setter
     def text(self, value):
         self._set_attr("text", value)
+
+    # text_style
+    @property
+    def text_style(self):
+        return self.__text_style
+
+    @text_style.setter
+    def text_style(self, value: Optional[TextStyle]):
+        self.__text_style = value
 
     # is_default_action
     @property
