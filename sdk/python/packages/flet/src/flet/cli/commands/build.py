@@ -50,7 +50,7 @@ class Command(BaseCommand):
                 "status_text": "app for Linux",
                 "output": "build/linux/{arch}/release/bundle/*",
                 "dist": "linux",
-                "can_be_run_on": ["Windows", "Linux"],
+                "can_be_run_on": ["Linux"],
             },
             "web": {
                 "build_command": "web",
@@ -279,7 +279,7 @@ class Command(BaseCommand):
         if current_platform not in self.platforms[target_platform]["can_be_run_on"]:
             # make the platform name more user friendly
             if current_platform == "Darwin":
-                current_patform = "MacOS"
+                current_patform = "macOS"
 
             print(f"Can't build {target_platform} on {current_platform}")
             sys.exit(1)
