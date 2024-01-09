@@ -36,42 +36,49 @@ class Command(BaseCommand):
                 "status_text": "Windows app",
                 "output": "build/windows/x64/runner/Release/*",
                 "dist": "windows",
+                "can_be_run_on": ["Windows"],
             },
             "macos": {
                 "build_command": "macos",
                 "status_text": "macOS bundle",
                 "output": "build/macos/Build/Products/Release/{project_name}.app",
                 "dist": "macos",
+                "can_be_run_on": ["Darwin"],
             },
             "linux": {
                 "build_command": "linux",
                 "status_text": "app for Linux",
                 "output": "build/linux/{arch}/release/bundle/*",
                 "dist": "linux",
+                "can_be_run_on": ["Linux"],
             },
             "web": {
                 "build_command": "web",
                 "status_text": "web app",
                 "output": "build/web/*",
                 "dist": "web",
+                "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "apk": {
                 "build_command": "apk",
                 "status_text": ".apk for Android",
                 "output": "build/app/outputs/flutter-apk/*",
                 "dist": "apk",
+                "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "aab": {
                 "build_command": "appbundle",
                 "status_text": ".aab bundle for Android",
                 "output": "build/app/outputs/bundle/release/*",
                 "dist": "aab",
+                "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "ipa": {
                 "build_command": "ipa",
                 "status_text": ".ipa bundle for iOS",
                 "output": "build/ios/archive/*",
                 "dist": "ipa",
+                "can_be_run_on": ["Darwin"],
             },
         }
 
@@ -267,6 +274,16 @@ class Command(BaseCommand):
             sys.exit(1)
 
         target_platform = options.target_platform.lower()
+        # platform check
+        current_platform = platform.system()
+        if current_platform not in self.platforms[target_platform]["can_be_run_on"]:
+            # make the platform name more user friendly
+            if current_platform == "Darwin":
+                current_platform = "macOS"
+
+            print(f"Can't build {target_platform} on {current_platform}")
+            sys.exit(1)
+
         self.verbose = options.verbose
 
         python_app_path = Path(options.python_app_path).resolve()
