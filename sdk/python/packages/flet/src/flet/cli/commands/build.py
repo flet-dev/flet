@@ -36,42 +36,49 @@ class Command(BaseCommand):
                 "status_text": "Windows app",
                 "output": "build/windows/x64/runner/Release/*",
                 "dist": "windows",
+                "can_be_run_on": ["Windows"],
             },
             "macos": {
                 "build_command": "macos",
                 "status_text": "macOS bundle",
                 "output": "build/macos/Build/Products/Release/{project_name}.app",
                 "dist": "macos",
+                "can_be_run_on": ["Darwin"],
             },
             "linux": {
                 "build_command": "linux",
                 "status_text": "app for Linux",
                 "output": "build/linux/{arch}/release/bundle/*",
                 "dist": "linux",
+                "can_be_run_on": ["Windows", "Linux"],
             },
             "web": {
                 "build_command": "web",
                 "status_text": "web app",
                 "output": "build/web/*",
                 "dist": "web",
+                "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "apk": {
                 "build_command": "apk",
                 "status_text": ".apk for Android",
                 "output": "build/app/outputs/flutter-apk/*",
                 "dist": "apk",
+                "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "aab": {
                 "build_command": "appbundle",
                 "status_text": ".aab bundle for Android",
                 "output": "build/app/outputs/bundle/release/*",
                 "dist": "aab",
+                "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "ipa": {
                 "build_command": "ipa",
                 "status_text": ".ipa bundle for iOS",
                 "output": "build/ios/archive/*",
                 "dist": "ipa",
+                "can_be_run_on": ["Darwin"],
             },
         }
 
@@ -251,22 +258,6 @@ class Command(BaseCommand):
             help="the branch, tag or commit ID to checkout after cloning the repository with Flutter bootstrap template",
         )
 
-    # according to build matrix given at: 
-    # https://flet.dev/docs/guides/python/packaging-app-for-distribution/#build-platform-matrix
-    @staticmethod
-    def _can_build_target_platform(target_platform: str) -> bool:
-        current_platform = platform.system()
-
-        allowed_builds = {
-            'Darwin': ['ipa', 'apk', 'aab', 'macos', 'web'],  # macos
-            'Windows': ['apk', 'aab', 'linux', 'windows', 'web'],
-            'Linux': ['apk', 'aab', 'linux', 'web']
-        }
-        
-        if not target_platform in allowed_builds[current_platform]:
-            return False
-        return True
-
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
 
@@ -283,12 +274,13 @@ class Command(BaseCommand):
             sys.exit(1)
 
         target_platform = options.target_platform.lower()
-        if not self._can_build_target_platform(target_platform):
-            current_platform = platform.system()
-            
+        # platform check
+        current_platform = platform.system()
+        if current_platform not in self.platforms[target_platform]['can_be_run_on']:
             # make the platform name more user friendly
             if current_platform == 'Darwin':
                 current_patform = 'MacOS'
+            
             print(f'Can\'t build {target_platform} on {current_platform}')
             sys.exit(1)
 
