@@ -47,21 +47,17 @@ class _CupertinoDialogActionControlState
           }
         : null;
 
-    CupertinoDialogAction? button;
-    Widget child;
+    CupertinoDialogAction? cupertinoDialogAction;
 
-    if (contentCtrls.isNotEmpty) {
-      child = createControl(widget.control, contentCtrls.first.id, disabled);
-    } else {
-      child = Text(text);
-    }
-
-    button = CupertinoDialogAction(
+    cupertinoDialogAction = CupertinoDialogAction(
         onPressed: onPressed,
         isDefaultAction: isDefaultAction,
         isDestructiveAction: isDestructiveAction,
-        child: child);
+        child: contentCtrls.isNotEmpty
+            ? createControl(widget.control, contentCtrls.first.id, disabled)
+            : Text(text));
 
-    return constrainedControl(context, button, widget.parent, widget.control);
+    return constrainedControl(
+        context, cupertinoDialogAction, widget.parent, widget.control);
   }
 }
