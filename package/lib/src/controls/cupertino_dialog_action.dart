@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
-
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../utils/launch_url.dart';
 import 'create_control.dart';
 
 class CupertinoDialogActionControl extends StatefulWidget {
@@ -26,30 +24,6 @@ class CupertinoDialogActionControl extends StatefulWidget {
 
 class _CupertinoDialogActionControlState
     extends State<CupertinoDialogActionControl> {
-  late final FocusNode _focusNode;
-  String? _lastFocusValue;
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode = FocusNode();
-    _focusNode.addListener(_onFocusChange);
-  }
-
-  @override
-  void dispose() {
-    _focusNode.removeListener(_onFocusChange);
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
-  }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoDialogAction build: ${widget.control.id}");
@@ -58,8 +32,6 @@ class _CupertinoDialogActionControlState
 
     String text = widget.control.attrString("text", "")!;
     var contentCtrls = widget.children.where((c) => c.name == "content");
-    String url = widget.control.attrString("url", "")!;
-    String? urlTarget = widget.control.attrString("urlTarget");
     bool isDefaultAction = widget.control.attrBool("isDefaultAction", false)!;
     bool isDestructiveAction =
         widget.control.attrBool("isDestructiveAction", false)!;
@@ -67,10 +39,7 @@ class _CupertinoDialogActionControlState
 
     Function()? onPressed = !disabled
         ? () {
-            debugPrint("Button ${widget.control.id} clicked!");
-            if (url != "") {
-              openWebBrowser(url, webWindowName: urlTarget);
-            }
+            debugPrint("CupertinoDialogAction ${widget.control.id} clicked!");
             server.sendPageEvent(
                 eventTarget: widget.control.id,
                 eventName: "click",
@@ -79,27 +48,19 @@ class _CupertinoDialogActionControlState
         : null;
 
     CupertinoDialogAction? button;
+    Widget child;
 
     if (contentCtrls.isNotEmpty) {
-      button = CupertinoDialogAction(
-          onPressed: onPressed,
-          isDefaultAction: isDefaultAction,
-          isDestructiveAction: isDestructiveAction,
-          child:
-              createControl(widget.control, contentCtrls.first.id, disabled));
+      child = createControl(widget.control, contentCtrls.first.id, disabled);
     } else {
-      button = CupertinoDialogAction(
-          onPressed: onPressed,
-          isDefaultAction: isDefaultAction,
-          isDestructiveAction: isDestructiveAction,
-          child: Text(text));
+      child = Text(text);
     }
 
-    var focusValue = widget.control.attrString("focus");
-    if (focusValue != null && focusValue != _lastFocusValue) {
-      _lastFocusValue = focusValue;
-      _focusNode.requestFocus();
-    }
+    button = CupertinoDialogAction(
+        onPressed: onPressed,
+        isDefaultAction: isDefaultAction,
+        isDestructiveAction: isDestructiveAction,
+        child: child);
 
     return constrainedControl(context, button, widget.parent, widget.control);
   }
