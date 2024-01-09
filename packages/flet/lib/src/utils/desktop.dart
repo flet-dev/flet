@@ -102,6 +102,13 @@ Future setWindowAlwaysOnTop(bool alwaysOnTop) async {
   }
 }
 
+Future setWindowAlwaysOnBottom(bool alwaysOnBottom) async {
+  if (isDesktop()) {
+    debugPrint("setWindowAlwaysOnBottom()");
+    await windowManager.setAlwaysOnBottom(alwaysOnBottom);
+  }
+}
+
 Future setWindowPreventClose(bool preventClose) async {
   if (isDesktop()) {
     debugPrint("setWindowPreventClose()");

@@ -1919,6 +1919,15 @@ class Page(AdaptiveControl):
     def window_always_on_top(self, value: Optional[bool]):
         self._set_attr("windowAlwaysOnTop", value)
 
+    # window_always_on_bottom
+    @property
+    def window_always_on_bottom(self) -> Optional[bool]:
+        return self._get_attr("windowAlwaysOnBottom", data_type="bool", def_value=False)
+
+    @window_always_on_bottom.setter
+    def window_always_on_bottom(self, value: Optional[bool]):
+        self._set_attr("windowAlwaysOnBottom", value)
+
     # window_prevent_close
     @property
     def window_prevent_close(self) -> Optional[bool]:
