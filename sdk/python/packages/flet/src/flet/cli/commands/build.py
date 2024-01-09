@@ -276,12 +276,12 @@ class Command(BaseCommand):
         target_platform = options.target_platform.lower()
         # platform check
         current_platform = platform.system()
-        if current_platform not in self.platforms[target_platform]['can_be_run_on']:
+        if current_platform not in self.platforms[target_platform]["can_be_run_on"]:
             # make the platform name more user friendly
-            if current_platform == 'Darwin':
-                current_patform = 'MacOS'
-            
-            print(f'Can\'t build {target_platform} on {current_platform}')
+            if current_platform == "Darwin":
+                current_patform = "MacOS"
+
+            print(f"Can't build {target_platform} on {current_platform}")
             sys.exit(1)
 
         self.verbose = options.verbose
