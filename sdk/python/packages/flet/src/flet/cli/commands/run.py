@@ -2,7 +2,6 @@ import argparse
 import os
 import platform
 import signal
-import socket
 import subprocess
 import sys
 import tempfile
@@ -12,6 +11,9 @@ from pathlib import Path
 from urllib.parse import quote, urlparse, urlunparse
 
 import qrcode
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
+
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string
 from flet_runtime.app import close_flet_view, open_flet_view
@@ -21,8 +23,6 @@ from flet_runtime.utils import (
     is_windows,
     open_in_browser,
 )
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
 
 
 class Command(BaseCommand):
@@ -122,6 +122,13 @@ class Command(BaseCommand):
             default="assets",
             help="path to assets directory",
         )
+        parser.add_argument(
+            "--ignore",
+            dest="ignore_dirs",
+            type=str,
+            default=None,
+            help="directories to ignore during watch. If more than one, separate with a semicolon.",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
         if options.module:
@@ -173,6 +180,7 @@ class Command(BaseCommand):
             options.android,
             options.hidden,
             assets_dir,
+            options.ignore_dirs,
         )
 
         my_observer = Observer()
@@ -205,6 +213,7 @@ class Handler(FileSystemEventHandler):
         android,
         hidden,
         assets_dir,
+        ignore_dirs,
     ) -> None:
         super().__init__()
         self.args = args
@@ -218,6 +227,7 @@ class Handler(FileSystemEventHandler):
         self.android = android
         self.hidden = hidden
         self.assets_dir = assets_dir
+        self.ignore_dirs = ignore_dirs
         self.last_time = time.time()
         self.is_running = False
         self.fvp = None
@@ -258,18 +268,26 @@ class Handler(FileSystemEventHandler):
         th.start()
 
     def on_any_event(self, event):
-        ignore_dirs = [str(Path(directory).absolute()) for directory in os.environ['IGNORE_DIRS'].split(';')]
-        ignore_files = [(directory + '\\' if not directory.endswith('\\') else directory) + file.replace('\\\\', '\\') for directory in ignore_dirs for file in os.listdir(directory)]
+        ignore_dirs = [
+            str(Path(directory).absolute()) for directory in self.ignore_dirs.split(";")
+        ]
+        ignore_files = [
+            (directory + "\\" if not directory.endswith("\\") else directory)
+            + file.replace("\\\\", "\\")
+            for directory in ignore_dirs
+            for file in os.listdir(directory)
+        ]
 
-        if event.src_path.replace('~', '') not in ignore_files:
-            if (
-                self.script_path is None or event.src_path == self.script_path
-            ) and not event.is_directory:
-                current_time = time.time()
-                if (current_time - self.last_time) > 0.5 and self.is_running:
-                    self.last_time = current_time
-                    th = threading.Thread(target=self.restart_program, args=(), daemon=True)
-                    th.start()
+        if (
+            event.src_path.replace("~", "") not in ignore_files
+            and (self.script_path is None or event.src_path == self.script_path)
+            and not event.is_directory
+        ):
+            current_time = time.time()
+            if (current_time - self.last_time) > 0.5 and self.is_running:
+                self.last_time = current_time
+                th = threading.Thread(target=self.restart_program, args=(), daemon=True)
+                th.start()
 
     def print_output(self, p):
         while True:
