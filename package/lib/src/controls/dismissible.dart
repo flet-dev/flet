@@ -59,7 +59,7 @@ class DismissibleControl extends StatelessWidget {
                 : Container(color: Colors.transparent),
             onDismissed: (DismissDirection d) {
               server.sendPageEvent(
-                  eventTarget: control.id, eventName: "dismiss", eventData: "");
+                  eventTarget: control.id, eventName: "dismiss", eventData: d.name);
             },
             onResize: () {
               server.sendPageEvent(

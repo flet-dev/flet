@@ -25,6 +25,8 @@ class LineChartData(Control):
         gradient: Optional[Gradient] = None,
         stroke_width: OptionalNumber = None,
         stroke_cap_round: Optional[bool] = None,
+        prevent_curve_over_shooting: Optional[bool] = None,
+        prevent_curve_over_shooting_threshold: OptionalNumber = None,
         dash_pattern: Optional[List[int]] = None,
         shadow: Optional[BoxShadow] = None,
         above_line_bgcolor: Optional[str] = None,
@@ -54,6 +56,8 @@ class LineChartData(Control):
         self.gradient = gradient
         self.stroke_width = stroke_width
         self.stroke_cap_round = stroke_cap_round
+        self.prevent_curve_over_shooting = prevent_curve_over_shooting
+        self.prevent_curve_over_shooting_threshold = prevent_curve_over_shooting_threshold
         self.shadow = shadow
         self.dash_pattern = dash_pattern
         self.above_line_bgcolor = above_line_bgcolor
@@ -140,6 +144,26 @@ class LineChartData(Control):
     @stroke_cap_round.setter
     def stroke_cap_round(self, value: Optional[bool]):
         self._set_attr("strokeCapRound", value)
+
+    # prevent_curve_over_shooting
+    @property
+    def prevent_curve_over_shooting(self) -> Optional[bool]:
+        return self._get_attr(
+            "preventCurveOverShooting", data_type="bool", def_value=False
+        )
+
+    @prevent_curve_over_shooting.setter
+    def prevent_curve_over_shooting(self, value: Optional[bool]):
+        self._set_attr("preventCurveOverShooting", value)
+
+    # prevent_curve_over_shooting_threshold
+    @property
+    def prevent_curve_over_shooting_threshold(self) -> OptionalNumber:
+        return self._get_attr("preventCurveOverShootingThreshold", data_type="float")
+
+    @prevent_curve_over_shooting_threshold.setter
+    def prevent_curve_over_shooting_threshold(self, value: OptionalNumber):
+        self._set_attr("preventCurveOverShootingThreshold", value)
 
     # dash_pattern
     @property
