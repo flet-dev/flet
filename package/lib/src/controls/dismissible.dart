@@ -19,6 +19,10 @@ class DismissibleControl extends StatelessWidget {
       required this.children,
       required this.parentDisabled});
 
+  Future<bool?> confirmDismiss(DismissDirection direction) async {
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     var server = FletAppServices.of(context).server;
@@ -59,7 +63,9 @@ class DismissibleControl extends StatelessWidget {
                 : Container(color: Colors.transparent),
             onDismissed: (DismissDirection d) {
               server.sendPageEvent(
-                  eventTarget: control.id, eventName: "dismiss", eventData: d.name);
+                  eventTarget: control.id,
+                  eventName: "dismiss",
+                  eventData: d.name);
             },
             onResize: () {
               server.sendPageEvent(
@@ -69,7 +75,7 @@ class DismissibleControl extends StatelessWidget {
               server.sendPageEvent(
                   eventTarget: control.id, eventName: "update", eventData: "");
             },
-            // confirmDismiss: // TODO: implement
+            confirmDismiss: confirmDismiss,
             movementDuration:
                 Duration(milliseconds: control.attrInt("duration", 200)!),
             resizeDuration:
