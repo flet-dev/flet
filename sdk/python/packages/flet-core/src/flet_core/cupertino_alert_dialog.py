@@ -71,14 +71,8 @@ class CupertinoAlertDialog(Control):
         open: bool = False,
         modal: bool = False,
         title: Optional[Control] = None,
-        title_padding: PaddingValue = None,
         content: Optional[Control] = None,
-        content_padding: PaddingValue = None,
         actions: Optional[List[Control]] = None,
-        actions_padding: PaddingValue = None,
-        actions_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        shape: Optional[OutlinedBorder] = None,
-        inset_padding: PaddingValue = None,
         on_dismiss=None,
     ):
         Control.__init__(
@@ -96,26 +90,12 @@ class CupertinoAlertDialog(Control):
         self.open = open
         self.modal = modal
         self.title = title
-        self.title_padding = title_padding
         self.content = content
-        self.content_padding = content_padding
         self.actions = actions
-        self.actions_padding = actions_padding
-        self.actions_alignment = actions_alignment
-        self.shape = shape
-        self.inset_padding = inset_padding
         self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
         return "cupertinoalertdialog"
-
-    def _before_build_command(self):
-        super()._before_build_command()
-        self._set_attr_json("actionsPadding", self.__actions_padding)
-        self._set_attr_json("contentPadding", self.__content_padding)
-        self._set_attr_json("titlePadding", self.__title_padding)
-        self._set_attr_json("shape", self.__shape)
-        self._set_attr_json("insetPadding", self.__inset_padding)
 
     def _get_children(self):
         children = []
@@ -157,15 +137,6 @@ class CupertinoAlertDialog(Control):
     def title(self, value):
         self.__title = value
 
-    # title_padding
-    @property
-    def title_padding(self) -> PaddingValue:
-        return self.__title_padding
-
-    @title_padding.setter
-    def title_padding(self, value: PaddingValue):
-        self.__title_padding = value
-
     # content
     @property
     def content(self):
@@ -175,15 +146,6 @@ class CupertinoAlertDialog(Control):
     def content(self, value):
         self.__content = value
 
-    # content_padding
-    @property
-    def content_padding(self) -> PaddingValue:
-        return self.__content_padding
-
-    @content_padding.setter
-    def content_padding(self, value: PaddingValue):
-        self.__content_padding = value
-
     # actions
     @property
     def actions(self):
@@ -192,49 +154,6 @@ class CupertinoAlertDialog(Control):
     @actions.setter
     def actions(self, value):
         self.__actions = value if value is not None else []
-
-    # actions_padding
-    @property
-    def actions_padding(self) -> PaddingValue:
-        return self.__actions_padding
-
-    @actions_padding.setter
-    def actions_padding(self, value: PaddingValue):
-        self.__actions_padding = value
-
-    # actions_alignment
-    @property
-    def actions_alignment(self) -> MainAxisAlignment:
-        return self.__actions_alignment
-
-    @actions_alignment.setter
-    def actions_alignment(self, value: MainAxisAlignment):
-        self.__actions_alignment = value
-        if isinstance(value, MainAxisAlignment):
-            self._set_attr("actionsAlignment", value.value)
-        else:
-            self.__set_actions_alignment(value)
-
-    def __set_actions_alignment(self, value: MainAxisAlignmentString):
-        self._set_attr("actionsAlignment", value)
-
-    # shape
-    @property
-    def shape(self) -> Optional[OutlinedBorder]:
-        return self.__shape
-
-    @shape.setter
-    def shape(self, value: Optional[OutlinedBorder]):
-        self.__shape = value
-
-    # inset_padding
-    @property
-    def inset_padding(self) -> PaddingValue:
-        return self.__inset_padding
-
-    @inset_padding.setter
-    def inset_padding(self, value: PaddingValue):
-        self.__inset_padding = value
 
     # on_dismiss
     @property
