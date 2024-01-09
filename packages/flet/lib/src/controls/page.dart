@@ -148,6 +148,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   bool? _windowMovable;
   bool? _windowResizable;
   bool? _windowAlwaysOnTop;
+  bool? _windowAlwaysOnBottom;
   bool? _windowPreventClose;
   bool? _windowMinimized;
   bool? _windowMaximized;
@@ -311,6 +312,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     var windowMinimizable = widget.control.attrBool("windowMinimizable");
     var windowMaximizable = widget.control.attrBool("windowMaximizable");
     var windowAlwaysOnTop = widget.control.attrBool("windowAlwaysOnTop");
+    var windowAlwaysOnBottom = widget.control.attrBool("windowAlwaysOnBottom");
     var windowResizable = widget.control.attrBool("windowResizable");
     var windowMovable = widget.control.attrBool("windowMovable");
     var windowPreventClose = widget.control.attrBool("windowPreventClose");
@@ -449,6 +451,13 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
           windowAlwaysOnTop != _windowAlwaysOnTop) {
         await setWindowAlwaysOnTop(windowAlwaysOnTop);
         _windowAlwaysOnTop = windowAlwaysOnTop;
+      }
+
+      // window alwaysOnBottom
+      if (windowAlwaysOnBottom != null &&
+          windowAlwaysOnBottom != _windowAlwaysOnBottom) {
+        await setWindowAlwaysOnBottom(windowAlwaysOnBottom);
+        _windowAlwaysOnBottom = windowAlwaysOnBottom;
       }
 
       // window preventClose
