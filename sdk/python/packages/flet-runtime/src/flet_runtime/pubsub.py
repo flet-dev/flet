@@ -12,6 +12,7 @@ logger = logging.getLogger(flet_runtime.__name__)
 
 class PubSubHub:
     def __init__(self):
+        logger.debug("Creating new PubSubHub instance")
         self.__lock = threading.Lock() if not is_asyncio() else NopeLock()
         self.__async_lock = asyncio.Lock() if is_asyncio() else AsyncNopeLock()
         self.__subscribers: Dict[str, Callable] = {}  # key: session_id, value: handler
