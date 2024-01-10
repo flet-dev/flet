@@ -343,7 +343,9 @@ class Command(BaseCommand):
             template_data["copyright"] = options.copyright
         if options.team_id:
             template_data["team_id"] = options.team_id
-        template_data["base_url"] = options.base_url
+
+        base_url = options.base_url.strip("/").strip()
+        template_data["base_url"] = "/" if base_url == "" else f"/{base_url}/"
         template_data["route_url_strategy"] = options.route_url_strategy
         template_data["web_renderer"] = options.web_renderer
         template_data["use_color_emoji"] = (
