@@ -6,7 +6,7 @@ import '../models/control.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
-class CupertinoDialogActionControl extends StatefulWidget {
+class CupertinoDialogActionControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -21,32 +21,22 @@ class CupertinoDialogActionControl extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<CupertinoDialogActionControl> createState() =>
-      _CupertinoDialogActionControlState();
-}
-
-class _CupertinoDialogActionControlState
-    extends State<CupertinoDialogActionControl> {
-  @override
   Widget build(BuildContext context) {
-    debugPrint("CupertinoDialogAction build: ${widget.control.id}");
+    debugPrint("CupertinoDialogAction build: ${control.id}");
 
     final server = FletAppServices.of(context).server;
 
-    String text = widget.control.attrString("text", "")!;
-    var contentCtrls = widget.children.where((c) => c.name == "content");
-    bool isDefaultAction = widget.control.attrBool("isDefaultAction", false)!;
-    bool isDestructiveAction =
-        widget.control.attrBool("isDestructiveAction", false)!;
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    String text = control.attrString("text", "")!;
+    var contentCtrls = children.where((c) => c.name == "content");
+    bool isDefaultAction = control.attrBool("isDefaultAction", false)!;
+    bool isDestructiveAction = control.attrBool("isDestructiveAction", false)!;
+    bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = !disabled
         ? () {
-            debugPrint("CupertinoDialogAction ${widget.control.id} clicked!");
+            debugPrint("CupertinoDialogAction ${control.id} clicked!");
             server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "click",
-                eventData: "");
+                eventTarget: control.id, eventName: "click", eventData: "");
           }
         : null;
 
@@ -56,13 +46,11 @@ class _CupertinoDialogActionControlState
         onPressed: onPressed,
         isDefaultAction: isDefaultAction,
         isDestructiveAction: isDestructiveAction,
-        textStyle:
-            parseTextStyle(Theme.of(context), widget.control, "textStyle"),
+        textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
         child: contentCtrls.isNotEmpty
-            ? createControl(widget.control, contentCtrls.first.id, disabled)
+            ? createControl(control, contentCtrls.first.id, disabled)
             : Text(text));
 
-    return baseControl(
-        context, cupertinoDialogAction, widget.parent, widget.control);
+    return baseControl(context, cupertinoDialogAction, parent, control);
   }
 }
