@@ -13,7 +13,6 @@ class CupertinoDialogAction(Control):
     ```
     import flet as ft
 
-
     def main(page: ft.Page):
         cupertino_alert_dialog = ft.CupertinoAlertDialog(
             title=ft.Text("Cupertino Alert Dialog"),
@@ -28,15 +27,9 @@ class CupertinoDialogAction(Control):
             ],
         )
 
-        def open_cupertino_dialog(e):
-            page.dialog = cupertino_alert_dialog
-            cupertino_alert_dialog.open = True
-            page.update()
-
         page.add(
-            ft.OutlinedButton("Open Cupertino Dialog", on_click=open_cupertino_dialog),
+            ft.OutlinedButton("Open Cupertino Dialog", on_click=lambda e: page.show_dialog(cupertino_alert_dialog)),
         )
-
 
     ft.app(target=main)
     ```
