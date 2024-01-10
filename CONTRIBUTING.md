@@ -105,12 +105,24 @@ It should work now.
 
 ## Flutter client
 
-Add the following to `~/.zprofile` (or other profile scripts for your OS):
+Add the `FLET_VIEW_PATH` and `FLET_WEB_PATH` variables to the environment variables or profile scripts for your respective OS, making sure to modify the path accordingly:
 
+- On macOS (in `~/.zprofile` or any other profile script):
 ```
 # Flet
-export FLET_VIEW_PATH="$HOME/Projects/flet-dev/flet/client/build/macos/Build/Products/Release"
-export FLET_WEB_PATH="$HOME/Projects/flet-dev/flet/client/build/web"
+export FLET_VIEW_PATH="$HOME/{path-to-flet}/flet/client/build/macos/Build/Products/Release"
+export FLET_WEB_PATH="$HOME/{path-to-flet}/flet/client/build/web"
+```
+
+- On Windows (open "System Properties" > "Environment Variables", then add a new environment variable):
+  - as "Variable name", enter `FLET_VIEW_PATH`, and as "Value", `%USERPROFILE%\{path-to-flet}\flet\client\build\windows\x64\runner\Release`
+  - as "Variable name", enter `FLET_WEB_PATH`, and as "Value", `%USERPROFILE%\{path-to-flet}\flet\client\build\web`
+
+- On Linux (in `~/.bash_profile` or any other profile script):
+```
+# Flet
+export FLET_VIEW_PATH="$HOME/{path-to-flet}/flet/client/build/linux/{arch}/release/bundle"
+export FLET_WEB_PATH="$HOME/{path-to-flet}/flet/client/build/web"
 ```
 
 If you have Microsoft Edge installed and want to use it for debugging Flutter apps:
@@ -119,6 +131,7 @@ If you have Microsoft Edge installed and want to use it for debugging Flutter ap
 # Flutter
 export CHROME_EXECUTABLE="/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
 ```
+
 If you added these through the terminal, close that terminal session and create a new one.
 
 ### Building the Flutter client
@@ -130,7 +143,7 @@ First, run `printenv | grep FLET` in the built-in terminal to make sure everythi
     ```
     flutter build macos
     ```
-    When the build is complete, you should see the Flet.app bundle in `client/build/macos/Build/Products/Release`. (Running it will open a blank window.)
+    When the build is complete, you should see the Flet bundle in the `FLET_VIEW_PATH`. (Running it will open a blank window.)
 -  To build the Flutter client for Web, run the below command:
     ```
     flutter build web
@@ -157,4 +170,13 @@ flutter run
 then choose your device from the shown options.
 You will be able to see the debugging outputs of the flet client in this terminal.
 
-**Note** that if you make changes to the dart files, you will need to recompile/rebuild the Flutter client (with `flutter run` as above) for the changes to take effect in your playground.
+### Restarting/Rebuilding
+
+- When you make changes to the flet **dart** files, you will need to restart/rerun the Flutter client for the changes to take effect in your playground. There are two ways to do this:
+  - fastest: press the keyboard button `R` while in the client's terminal (press `h` to see all other possible options);
+  - slowest: use `flutter run` as seen previously.
+
+- When you make changes to the flet **python** files, you will need to restart/rerun the Python client for the changes to take effect in the opened flutter applications. This is done with the same command:
+    ```bash
+    poetry run flet run -w -p 8550 playground/<your-main.py>
+    ```
