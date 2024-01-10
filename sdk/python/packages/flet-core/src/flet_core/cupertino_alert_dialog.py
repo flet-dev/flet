@@ -1,10 +1,6 @@
 from typing import Any, List, Optional
-
-# from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control
 from flet_core.ref import Ref
-
-# from flet_core.types import MainAxisAlignment, MainAxisAlignmentString, PaddingValue
 
 
 class CupertinoAlertDialog(Control):

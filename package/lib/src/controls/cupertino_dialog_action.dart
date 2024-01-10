@@ -62,8 +62,6 @@ class _CupertinoDialogActionControlState
             ? createControl(widget.control, contentCtrls.first.id, disabled)
             : Text(text));
 
-    // return constrainedControl(
-    //     context, cupertinoDialogAction, widget.parent, widget.control);
     return baseControl(
         context, cupertinoDialogAction, widget.parent, widget.control);
   }
