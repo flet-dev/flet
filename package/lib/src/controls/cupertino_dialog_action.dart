@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+
 import '../flet_app_services.dart';
 import '../models/control.dart';
 import 'create_control.dart';
-import '../utils/text.dart';
 
 class CupertinoDialogActionControl extends StatefulWidget {
   final Control? parent;
@@ -55,13 +54,13 @@ class _CupertinoDialogActionControlState
         onPressed: onPressed,
         isDefaultAction: isDefaultAction,
         isDestructiveAction: isDestructiveAction,
-        textStyle:
-            parseTextStyle(Theme.of(context), widget.control, "textStyle"),
         child: contentCtrls.isNotEmpty
             ? createControl(widget.control, contentCtrls.first.id, disabled)
             : Text(text));
 
-    return constrainedControl(
+    // return constrainedControl(
+    //     context, cupertinoDialogAction, widget.parent, widget.control);
+    return baseControl(
         context, cupertinoDialogAction, widget.parent, widget.control);
   }
 }
