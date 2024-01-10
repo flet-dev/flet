@@ -2,6 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
 
 
 class CupertinoDialogAction(Control):
@@ -58,6 +59,7 @@ class CupertinoDialogAction(Control):
         content: Optional[Control] = None,
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
+        text_style: Optional[TextStyle] = None,
         on_click=None,
     ):
         Control.__init__(
@@ -73,9 +75,14 @@ class CupertinoDialogAction(Control):
         self.on_click = on_click
         self.is_default_action = is_default_action
         self.is_destructive_action = is_destructive_action
+        self.text_style = text_style
 
     def _get_control_name(self):
         return "cupertinodialogaction"
+
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("textStyle", self.__text_style)
 
     def _get_children(self):
         if self.__content is None:
@@ -127,3 +134,12 @@ class CupertinoDialogAction(Control):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # text_style
+    @property
+    def text_style(self):
+        return self.__text_style
+
+    @text_style.setter
+    def text_style(self, value: Optional[TextStyle]):
+        self.__text_style = value
