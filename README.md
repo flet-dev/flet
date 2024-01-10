@@ -47,11 +47,11 @@ def main(page: Page):
     txt_number = TextField(value="0", text_align="right", width=100)
 
     def minus_click(e):
-        txt_number.value = int(txt_number.value) - 1
+        txt_number.value = str(int(txt_number.value) - 1)
         page.update()
 
     def plus_click(e):
-        txt_number.value = int(txt_number.value) + 1
+        txt_number.value = str(int(txt_number.value) + 1)
         page.update()
 
     page.add(
@@ -88,7 +88,7 @@ The app will be started in a native OS window - what a nice alternative to Elect
 Now, if you want to run the app as a web app, just replace the last line with:
 
 ```python
-flet.app(target=main, view=flet.WEB_BROWSER)
+flet.app(target=main, view=flet.AppView.WEB_BROWSER)
 ```
 
 run again and now you instantly get a web app:
