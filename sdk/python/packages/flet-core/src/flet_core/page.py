@@ -390,6 +390,7 @@ class Page(Control):
                 await c.will_unmount_async()
 
     def _close(self):
+        self.__pubsub.unsubscribe_all()
         removed_controls = self._remove_control_recursively(self.index, self)
         for c in removed_controls:
             c.will_unmount()
@@ -397,6 +398,7 @@ class Page(Control):
         self.__close_internal()
 
     async def _close_async(self):
+        await self.__pubsub.unsubscribe_all_async()
         removed_controls = self._remove_control_recursively(self.index, self)
         for c in removed_controls:
             await c.will_unmount_async()
@@ -413,6 +415,9 @@ class Page(Control):
         self.__query = None
 
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
+        if self.__conn is None:
+            logger.warning(f"Page is disconnected: {self._session_id}")
+            return [], []
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
         self.__validate_controls_page(added_controls)
         results = self.__conn.send_commands(self._session_id, commands).results
@@ -420,6 +425,9 @@ class Page(Control):
         return added_controls, removed_controls
 
     async def __update_async(self, *controls) -> Tuple[List[Control], List[Control]]:
+        if self.__conn is None:
+            logger.warning(f"Page is disconnected: {self._session_id}")
+            return [], []
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
         self.__validate_controls_page(added_controls)
         results = (
