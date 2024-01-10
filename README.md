@@ -88,7 +88,7 @@ The app will be started in a native OS window - what a nice alternative to Elect
 Now, if you want to run the app as a web app, just replace the last line with:
 
 ```python
-flet.app(target=main, view=flet.WEB_BROWSER)
+flet.app(target=main, view=flet.AppView.WEB_BROWSER)
 ```
 
 run again and now you instantly get a web app:
