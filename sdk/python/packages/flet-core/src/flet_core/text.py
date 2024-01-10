@@ -271,11 +271,12 @@ class Text(ConstrainedControl):
             self._set_attr(
                 "style", value.value if isinstance(value, TextThemeStyle) else value
             )
-            warn(
-                "If you wish to set the TextThemeStyle, use `Text.theme_style` instead. "
-                "The `Text.style` property should be used to set the TextStyle only.",
-                stacklevel=2,
-            )
+            if value is not None:
+                warn(
+                    "If you wish to set the TextThemeStyle, use `Text.theme_style` instead. "
+                    "The `Text.style` property should be used to set the TextStyle only.",
+                    stacklevel=2,
+                )
 
     # theme_style
     @property
@@ -284,7 +285,9 @@ class Text(ConstrainedControl):
 
     @theme_style.setter
     def theme_style(self, value: Optional[TextThemeStyle]):
-        self._set_attr("theme_style", value.value if isinstance(value, TextThemeStyle) else value)
+        self._set_attr(
+            "theme_style", value.value if isinstance(value, TextThemeStyle) else value
+        )
 
     # italic
     @property
