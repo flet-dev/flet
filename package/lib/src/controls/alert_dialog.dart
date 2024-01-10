@@ -1,4 +1,3 @@
-import 'cupertino_alert_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -12,6 +11,7 @@ import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
+import 'cupertino_alert_dialog.dart';
 import 'error.dart';
 
 class AlertDialogControl extends StatefulWidget {
