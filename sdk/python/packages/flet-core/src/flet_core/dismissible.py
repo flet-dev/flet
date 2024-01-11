@@ -1,4 +1,4 @@
-from typing import Any, Optional, Dict, Union
+from typing import Any, Dict, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -7,11 +7,11 @@ from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.snack_bar import DismissDirection
 from flet_core.types import (
-    ResponsiveNumber,
-    ScaleValue,
     AnimationValue,
-    RotateValue,
     OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
 )
 
 
@@ -70,6 +70,7 @@ class Dismissible(ConstrainedControl):
         cross_axis_end_offset: OptionalNumber = None,
         on_update=None,
         on_dismiss=None,
+        on_confirm_dismiss=None,
         on_resize=None,
     ):
         ConstrainedControl.__init__(
@@ -105,6 +106,13 @@ class Dismissible(ConstrainedControl):
         self.__on_dismiss = EventHandler(lambda e: DismissibleDismissEvent(e.data))
         self._add_event_handler("dismiss", self.__on_dismiss.get_handler())
 
+        self.__on_confirm_dismiss = EventHandler(
+            lambda e: DismissibleDismissEvent(e.data)
+        )
+        self._add_event_handler(
+            "confirm_dismiss", self.__on_confirm_dismiss.get_handler()
+        )
+
         self.content = content
         self.background = background
         self.secondary_background = secondary_background
@@ -115,6 +123,7 @@ class Dismissible(ConstrainedControl):
         self.cross_axis_end_offset = cross_axis_end_offset
         self.on_update = on_update
         self.on_dismiss = on_dismiss
+        self.on_confirm_dismiss = on_confirm_dismiss
         self.on_resize = on_resize
 
     def _get_control_name(self):
@@ -136,6 +145,16 @@ class Dismissible(ConstrainedControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("dismissThresholds", self.__dismiss_thresholds)
+
+    def confirm_dismiss(self, dismiss: bool):
+        self.page.invoke_method(
+            "confirm_dismiss", {"dismiss": str(dismiss).lower()}, control_id=self.uid
+        )
+
+    async def confirm_dismiss_async(self, dismiss: bool):
+        await self.page.invoke_method_async(
+            "confirm_dismiss", {"dismiss": str(dismiss).lower()}, control_id=self.uid
+        )
 
     # content
     @property
@@ -223,7 +242,17 @@ class Dismissible(ConstrainedControl):
     @on_dismiss.setter
     def on_dismiss(self, handler):
         self.__on_dismiss.subscribe(handler)
-        self._set_attr("dismiss", True if handler is not None else None)
+        self._set_attr("onDismiss", True if handler is not None else None)
+
+    # on_confirm_dismiss
+    @property
+    def on_confirm_dismiss(self):
+        return self._get_event_handler("confirm_dismiss")
+
+    @on_confirm_dismiss.setter
+    def on_confirm_dismiss(self, handler):
+        self.__on_confirm_dismiss.subscribe(handler)
+        self._set_attr("onConfirmDismiss", True if handler is not None else None)
 
     # on_update
     @property
@@ -233,6 +262,7 @@ class Dismissible(ConstrainedControl):
     @on_update.setter
     def on_update(self, handler):
         self._add_event_handler("update", handler)
+        self._set_attr("onUpdate", True if handler is not None else None)
 
     # on_resize
     @property
@@ -242,6 +272,7 @@ class Dismissible(ConstrainedControl):
     @on_resize.setter
     def on_resize(self, handler):
         self._add_event_handler("resize", handler)
+        self._set_attr("onResize", True if handler is not None else None)
 
 
 class DismissibleDismissEvent(ControlEvent):

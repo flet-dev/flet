@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
-
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../flet_app_services.dart';
+import '../flet_server.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
@@ -13,7 +13,6 @@ import '../models/page_media_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/theme.dart';
 import '../utils/transforms.dart';
-
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
@@ -131,8 +130,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
       }
 
       // create control widget
-      var widget = createWidget(
-          controlKey, controlView, parent, parentDisabled, nextChild);
+      var widget = createWidget(controlKey, controlView, parent, parentDisabled,
+          nextChild, FletAppServices.of(context).server);
 
       // no theme defined? return widget!
       if (id == "page" || controlView.control.attrString("theme") == null) {
@@ -170,7 +169,7 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
 }
 
 Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
-    bool parentDisabled, Widget? nextChild) {
+    bool parentDisabled, Widget? nextChild, FletServer server) {
   switch (controlView.control.type) {
     case "page":
       return PageControl(
@@ -611,7 +610,8 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          server: server);
     case "alertdialog":
       return AlertDialogControl(
           parent: parent,
