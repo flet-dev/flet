@@ -47,7 +47,7 @@ def is_linux_server():
             with open(p, "r") as file:
                 if "microsoft" in file.read():
                     return False  # it's WSL, not a server
-        return os.environ.get("XDG_CURRENT_DESKTOP") is None
+        return os.environ.get("DISPLAY") is None
     return False
 
 
