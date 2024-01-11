@@ -21,13 +21,13 @@ class SegmentedButtonControl extends StatefulWidget {
   final dynamic dispatch;
 
   const SegmentedButtonControl({
-    Key? key,
+    super.key,
     this.parent,
     required this.control,
     required this.children,
     required this.parentDisabled,
     required this.dispatch,
-  }) : super(key: key);
+  });
 
   @override
   State<SegmentedButtonControl> createState() => _SegmentedButtonControlState();

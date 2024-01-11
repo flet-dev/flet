@@ -13,12 +13,11 @@ class DismissibleControl extends StatelessWidget {
   final bool parentDisabled;
 
   const DismissibleControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +59,7 @@ class DismissibleControl extends StatelessWidget {
                 : Container(color: Colors.transparent),
             onDismissed: (DismissDirection d) {
               server.sendPageEvent(
-                  eventTarget: control.id, eventName: "dismiss", eventData: "");
+                  eventTarget: control.id, eventName: "dismiss", eventData: d.name);
             },
             onResize: () {
               server.sendPageEvent(

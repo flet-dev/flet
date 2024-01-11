@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
@@ -7,7 +7,6 @@ from flet_core.types import (
     AnimationValue,
     LabelPosition,
     LabelPositionString,
-    MaterialState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,

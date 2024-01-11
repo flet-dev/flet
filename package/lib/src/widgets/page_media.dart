@@ -10,7 +10,7 @@ import '../models/page_media_view_model.dart';
 import '../utils/desktop.dart';
 
 class PageMedia extends StatefulWidget {
-  const PageMedia({Key? key}) : super(key: key);
+  const PageMedia({super.key});
 
   @override
   State<PageMedia> createState() => _PageMediaState();

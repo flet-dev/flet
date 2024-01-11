@@ -5,8 +5,10 @@ import tempfile
 from pathlib import Path
 from typing import Optional, Tuple
 
-import flet_fastapi
 from fastapi.staticfiles import StaticFiles
+from starlette.types import Receive, Scope, Send
+
+import flet_fastapi
 from flet_core.types import WebRenderer
 from flet_fastapi.flet_app_manager import app_manager
 from flet_fastapi.once import Once
@@ -15,7 +17,6 @@ from flet_runtime.utils import (
     patch_index_html,
     patch_manifest_json,
 )
-from starlette.types import Receive, Scope, Send
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -82,7 +83,7 @@ class FletStaticFiles(StaticFiles):
         if stat_result is None:
             return super().lookup_path(self.index)
 
-        return (full_path, stat_result)
+        return full_path, stat_result
 
     async def __config(self, root_path: str):
         if self.__proxy_path:

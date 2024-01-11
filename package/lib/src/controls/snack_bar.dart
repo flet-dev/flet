@@ -20,13 +20,12 @@ class SnackBarControl extends StatefulWidget {
   final Widget? nextChild;
 
   const SnackBarControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.nextChild})
-      : super(key: key);
+      required this.nextChild});
 
   @override
   State<SnackBarControl> createState() => _SnackBarControlState();

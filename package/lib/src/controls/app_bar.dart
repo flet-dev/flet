@@ -12,13 +12,12 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
   final double height;
 
   const AppBarControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.height})
-      : super(key: key);
+      required this.height});
 
   @override
   Widget build(BuildContext context) {

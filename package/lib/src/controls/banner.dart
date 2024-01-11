@@ -16,13 +16,12 @@ class BannerControl extends StatefulWidget {
   final Widget? nextChild;
 
   const BannerControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.nextChild})
-      : super(key: key);
+      required this.nextChild});
 
   @override
   State<BannerControl> createState() => _BannerControlState();

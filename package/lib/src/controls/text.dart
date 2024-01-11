@@ -17,12 +17,12 @@ class TextControl extends StatelessWidget {
   final Control control;
   final bool parentDisabled;
 
-  const TextControl(
-      {Key? key,
-      required this.parent,
-      required this.control,
-      required this.parentDisabled})
-      : super(key: key);
+  const TextControl({
+    super.key,
+    required this.parent,
+    required this.control,
+    required this.parentDisabled,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +35,39 @@ class TextControl extends StatelessWidget {
           bool disabled = control.isDisabled || parentDisabled;
 
           String text = control.attrString("value", "")!;
-          List<InlineSpan>? spans = parseTextSpans(Theme.of(context), viewModel,
-              disabled, FletAppServices.of(context).server);
+          List<InlineSpan>? spans = parseTextSpans(
+            Theme.of(context),
+            viewModel,
+            disabled,
+            FletAppServices.of(context).server,
+          );
           String? semanticsLabel = control.attrString("semanticsLabel");
           bool noWrap = control.attrBool("noWrap", false)!;
           int? maxLines = control.attrInt("maxLines");
 
           TextStyle? style;
-          var styleName = control.attrString("style", null);
+          var styleNameOrData = control.attrString("style", null);
+          if (styleNameOrData != null) {
+            style = getTextStyle(context, styleNameOrData);
+          }
+          if (style == null && styleNameOrData != null) {
+            try {
+              style = parseTextStyle(Theme.of(context), control, "style");
+            } on FormatException catch (_) {
+              style = null;
+            }
+          }
+
+          TextStyle? themeStyle;
+          var styleName = control.attrString("theme_style", null);
           if (styleName != null) {
-            style = getTextStyle(context, styleName);
+            themeStyle = getTextStyle(context, styleName);
+          }
+
+          if (style == null && themeStyle != null) {
+            style = themeStyle;
+          } else if (style != null && themeStyle != null) {
+            style = themeStyle.merge(style);
           }
 
           var fontWeight = control.attrString("weight", "")!;
@@ -58,8 +81,12 @@ class TextControl extends StatelessWidget {
           style = (style ?? const TextStyle()).copyWith(
               fontSize: control.attrDouble("size", null),
               fontWeight: getFontWeight(fontWeight),
-              fontStyle:
-                  control.attrBool("italic", false)! ? FontStyle.italic : null,
+              fontStyle: control.attrBool(
+                "italic",
+                false,
+              )!
+                  ? FontStyle.italic
+                  : null,
               fontFamily: control.attrString("fontFamily"),
               fontVariations: variations,
               color: HexColor.fromString(

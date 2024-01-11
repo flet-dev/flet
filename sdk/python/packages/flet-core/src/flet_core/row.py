@@ -15,7 +15,6 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ScrollMode,
-    ScrollModeString,
 )
 
 

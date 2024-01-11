@@ -1,5 +1,4 @@
 import dataclasses
-import time
 from typing import Any, Optional
 
 from flet_core.control import Control

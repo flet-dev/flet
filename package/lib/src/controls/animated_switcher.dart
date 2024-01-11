@@ -12,12 +12,11 @@ class AnimatedSwitcherControl extends StatelessWidget {
   final bool parentDisabled;
 
   const AnimatedSwitcherControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   Widget build(BuildContext context) {

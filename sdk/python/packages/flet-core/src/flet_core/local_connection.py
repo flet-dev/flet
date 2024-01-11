@@ -1,5 +1,4 @@
 import logging
-from typing import List
 
 import flet_core
 from flet_core.connection import Connection

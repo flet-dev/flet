@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
 import flet_fastapi
-from fastapi import WebSocket, WebSocketDisconnect
+from fastapi import WebSocket
 from flet_core.event import Event
 from flet_core.local_connection import LocalConnection
 from flet_core.page import Page
@@ -24,12 +24,16 @@ from flet_core.protocol import (
 from flet_core.utils import is_coroutine, random_string
 from flet_fastapi.flet_app_manager import app_manager
 from flet_fastapi.oauth_state import OAuthState
+from flet_runtime.pubsub import PubSubHub
 from flet_runtime.uploads import build_upload_url
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
 DEFAULT_FLET_SESSION_TIMEOUT = 3600
 DEFAULT_FLET_OAUTH_STATE_TIMEOUT = 600
+
+_pubsubhubs_lock = asyncio.Lock()
+_pubsubhubs = {}
 
 
 class FletApp(LocalConnection):
@@ -80,6 +84,14 @@ class FletApp(LocalConnection):
         * `websocket` (WebSocket) - Websocket instance.
         """
         self.__websocket = websocket
+
+        async with _pubsubhubs_lock:
+            psh = _pubsubhubs.get(self.__session_handler, None)
+            if psh is None:
+                psh = PubSubHub()
+                _pubsubhubs[self.__session_handler] = psh
+            self.pubsubhub = psh
+
         self.page_url = str(websocket.url).rsplit("/", 1)[0]
         self.page_name = websocket.url.path.rsplit("/", 1)[0].lstrip("/")
 

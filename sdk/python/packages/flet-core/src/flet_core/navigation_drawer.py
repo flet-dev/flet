@@ -1,14 +1,9 @@
-from enum import Enum
-from typing import Any, List, Optional, Union
-
-from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
-from flet_core.ref import Ref
-from flet_core.types import (
-    PaddingValue,
-)
+from typing import Any, List, Optional
 
 from flet_core.buttons import OutlinedBorder
+from flet_core.control import Control, OptionalNumber
+from flet_core.ref import Ref
+from flet_core.types import PaddingValue
 
 
 class NavigationDrawerDestination(Control):

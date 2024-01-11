@@ -2,7 +2,6 @@ import argparse
 import os
 import platform
 import signal
-import socket
 import subprocess
 import sys
 import tempfile
@@ -12,6 +11,9 @@ from pathlib import Path
 from urllib.parse import quote, urlparse, urlunparse
 
 import qrcode
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
+
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string
 from flet_runtime.app import close_flet_view, open_flet_view
@@ -21,8 +23,6 @@ from flet_runtime.utils import (
     is_windows,
     open_in_browser,
 )
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
 
 
 class Command(BaseCommand):

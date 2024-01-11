@@ -21,12 +21,11 @@ class DropdownControl extends StatefulWidget {
   final dynamic dispatch;
 
   const DropdownControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<DropdownControl> createState() => _DropdownControlState();

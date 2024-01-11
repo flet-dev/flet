@@ -16,12 +16,11 @@ class CupertinoSliderControl extends StatefulWidget {
   final dynamic dispatch;
 
   const CupertinoSliderControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.parentDisabled,
-      required this.dispatch})
-      : super(key: key);
+      required this.dispatch});
 
   @override
   State<CupertinoSliderControl> createState() => _CupertinoSliderControlState();

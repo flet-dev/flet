@@ -62,6 +62,7 @@ from flet_core.column import Column
 from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_checkbox import CupertinoCheckbox
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.cupertino_radio import CupertinoRadio
@@ -75,7 +76,7 @@ from flet_core.datatable import (
     DataTable,
 )
 from flet_core.date_picker import DatePicker, DatePickerEntryMode, DatePickerMode
-from flet_core.dismissible import Dismissible
+from flet_core.dismissible import Dismissible, DismissibleDismissEvent
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
@@ -93,10 +94,7 @@ from flet_core.file_picker import (
 from flet_core.filled_button import FilledButton
 from flet_core.filled_tonal_button import FilledTonalButton
 from flet_core.flet_app import FletApp
-from flet_core.floating_action_button import (
-    FloatingActionButton,
-    FloatingActionButtonLocation,
-)
+from flet_core.floating_action_button import FloatingActionButton
 from flet_core.form_field_control import InputBorder
 from flet_core.gesture_detector import (
     DragEndEvent,
@@ -130,6 +128,8 @@ from flet_core.list_tile import ListTile
 from flet_core.list_view import ListView
 from flet_core.margin import Margin
 from flet_core.markdown import Markdown, MarkdownExtensionSet
+from flet_core.menu_bar import MenuBar, MenuStyle
+from flet_core.menu_item_button import MenuItemButton
 from flet_core.navigation_bar import (
     NavigationBar,
     NavigationBarLabelBehavior,
@@ -181,6 +181,7 @@ from flet_core.shake_detector import ShakeDetector
 from flet_core.slider import Slider
 from flet_core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
 from flet_core.stack import Stack
+from flet_core.submenu_button import SubmenuButton
 from flet_core.switch import Switch
 from flet_core.tabs import Tab, Tabs
 from flet_core.template_route import TemplateRoute
@@ -215,6 +216,7 @@ from flet_core.types import (
     BoxShape,
     ClipBehavior,
     CrossAxisAlignment,
+    FloatingActionButtonLocation,
     FontWeight,
     ImageFit,
     ImageRepeat,

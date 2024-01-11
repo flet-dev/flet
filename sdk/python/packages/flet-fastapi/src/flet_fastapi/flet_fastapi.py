@@ -2,8 +2,6 @@ from contextlib import asynccontextmanager
 from typing import Any, Callable, Coroutine, Dict, List, Optional, Sequence, Type, Union
 
 import fastapi
-import flet_fastapi
-from fastapi.applications import AppType
 from fastapi.datastructures import Default
 from fastapi.params import Depends
 from fastapi.utils import generate_unique_id
@@ -11,7 +9,8 @@ from starlette.middleware import Middleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.routing import BaseRoute
-from starlette.types import Lifespan
+
+import flet_fastapi
 
 
 class FastAPI(fastapi.FastAPI):

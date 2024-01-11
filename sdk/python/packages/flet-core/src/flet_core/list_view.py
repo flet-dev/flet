@@ -11,7 +11,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ScrollMode,
 )
 
 
@@ -86,6 +85,7 @@ class ListView(ConstrainedControl, ScrollableControl):
         # ScrollableControl specific
         #
         auto_scroll: Optional[bool] = None,
+        reverse: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Any = None,
         #
@@ -130,6 +130,7 @@ class ListView(ConstrainedControl, ScrollableControl):
         ScrollableControl.__init__(
             self,
             auto_scroll=auto_scroll,
+            reverse=reverse,
             on_scroll_interval=on_scroll_interval,
             on_scroll=on_scroll,
         )
