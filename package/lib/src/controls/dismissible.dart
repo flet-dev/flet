@@ -72,11 +72,11 @@ class DismissibleControl extends StatelessWidget {
                     control, secondaryBackgroundCtrls.first.id, disabled)
                 : Container(color: Colors.transparent),
             onDismissed: control.attrBool("onDismiss", false)!
-                ? (DismissDirection d) {
+                ? (DismissDirection direction) {
                     server.sendPageEvent(
                         eventTarget: control.id,
                         eventName: "dismiss",
-                        eventData: d.name);
+                        eventData: direction.name);
                   }
                 : null,
             onResize: control.attrBool("onResize", false)!
