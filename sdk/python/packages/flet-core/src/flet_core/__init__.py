@@ -234,4 +234,6 @@ from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
 from flet_core.view import View
 from flet_core.webview import WebView
+from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
+from flet_core.cupertino_dialog_action import CupertinoDialogAction
 from flet_core.window_drag_area import WindowDragArea

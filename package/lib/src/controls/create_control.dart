@@ -1,8 +1,7 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
-
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../flet_app_services.dart';
@@ -13,7 +12,6 @@ import '../models/page_media_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/theme.dart';
 import '../utils/transforms.dart';
-
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
@@ -30,7 +28,9 @@ import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
+import 'cupertino_alert_dialog.dart';
 import 'cupertino_checkbox.dart';
+import 'cupertino_dialog_action.dart';
 import 'cupertino_navigation_bar.dart';
 import 'cupertino_radio.dart';
 import 'cupertino_slider.dart';
@@ -279,6 +279,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "textbutton":
       return TextButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "cupertinodialogaction":
+      return CupertinoDialogActionControl(
           key: key,
           parent: parent,
           control: controlView.control,
@@ -614,6 +621,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "alertdialog":
       return AlertDialogControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          nextChild: nextChild);
+    case "cupertinoalertdialog":
+      return CupertinoAlertDialogControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,

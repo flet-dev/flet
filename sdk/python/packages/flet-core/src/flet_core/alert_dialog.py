@@ -79,9 +79,9 @@ class AlertDialog(Control):
         actions_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
         shape: Optional[OutlinedBorder] = None,
         inset_padding: PaddingValue = None,
+        adaptive: Optional[bool] = None,
         on_dismiss=None,
     ):
-
         Control.__init__(
             self,
             ref=ref,
@@ -105,6 +105,7 @@ class AlertDialog(Control):
         self.actions_alignment = actions_alignment
         self.shape = shape
         self.inset_padding = inset_padding
+        self.adaptive = adaptive
         self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
@@ -148,6 +149,15 @@ class AlertDialog(Control):
     @modal.setter
     def modal(self, value: Optional[bool]):
         self._set_attr("modal", value)
+
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
 
     # title
     @property

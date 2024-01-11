@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -7,21 +7,17 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
-import '../utils/alignment.dart';
-import '../utils/borders.dart';
-import '../utils/edge_insets.dart';
 import 'create_control.dart';
-import 'cupertino_alert_dialog.dart';
 import 'error.dart';
 
-class AlertDialogControl extends StatefulWidget {
+class CupertinoAlertDialogControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
   final Widget? nextChild;
 
-  const AlertDialogControl(
+  const CupertinoAlertDialogControl(
       {super.key,
       this.parent,
       required this.control,
@@ -30,11 +26,13 @@ class AlertDialogControl extends StatefulWidget {
       required this.nextChild});
 
   @override
-  State<AlertDialogControl> createState() => _AlertDialogControlState();
+  State<CupertinoAlertDialogControl> createState() =>
+      _CupertinoAlertDialogControlState();
 }
 
-class _AlertDialogControlState extends State<AlertDialogControl> {
-  Widget _createAlertDialog() {
+class _CupertinoAlertDialogControlState
+    extends State<CupertinoAlertDialogControl> {
+  Widget _createCupertinoAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var titleCtrls =
         widget.children.where((c) => c.name == "title" && c.isVisible);
@@ -42,48 +40,27 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
         widget.children.where((c) => c.name == "content" && c.isVisible);
     var actionCtrls =
         widget.children.where((c) => c.name == "action" && c.isVisible);
-    final actionsAlignment = parseMainAxisAlignment(
-        widget.control, "actionsAlignment", MainAxisAlignment.start);
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
-      return const ErrorControl("AlertDialog does not have any content.");
+      return const ErrorControl(
+          "CupertinoAlertDialog does not have any content.");
     }
 
-    return AlertDialog(
+    return CupertinoAlertDialog(
       title: titleCtrls.isNotEmpty
           ? createControl(widget.control, titleCtrls.first.id, disabled)
           : null,
-      titlePadding: parseEdgeInsets(widget.control, "titlePadding"),
       content: contentCtrls.isNotEmpty
           ? createControl(widget.control, contentCtrls.first.id, disabled)
           : null,
-      contentPadding: parseEdgeInsets(widget.control, "contentPadding") ??
-          const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
       actions: actionCtrls
           .map((c) => createControl(widget.control, c.id, disabled))
           .toList(),
-      actionsPadding: parseEdgeInsets(widget.control, "actionsPadding"),
-      actionsAlignment: actionsAlignment,
-      shape: parseOutlinedBorder(widget.control, "shape"),
-      insetPadding: parseEdgeInsets(widget.control, "insetPadding") ??
-          const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("AlertDialog build ($hashCode): ${widget.control.id}");
-
-    bool adaptive = widget.control.attrBool("adaptive", false)!;
-    if (adaptive &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)) {
-      return CupertinoAlertDialogControl(
-        control: widget.control,
-        parentDisabled: widget.parentDisabled,
-        children: widget.children,
-        nextChild: widget.nextChild,
-      );
-    }
+    debugPrint("CupertinoAlertDialog build ($hashCode): ${widget.control.id}");
 
     var server = FletAppServices.of(context).server;
 
@@ -93,7 +70,8 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
         distinct: true,
         converter: (store) => store.dispatch,
         builder: (context, dispatch) {
-          debugPrint("AlertDialog StoreConnector build: ${widget.control.id}");
+          debugPrint(
+              "CupertinoAlertDialog StoreConnector build: ${widget.control.id}");
 
           var open = widget.control.attrBool("open", false)!;
           var modal = widget.control.attrBool("modal", false)!;
@@ -102,7 +80,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
           debugPrint("New open state: $open");
 
           if (open && (open != lastOpen)) {
-            var dialog = _createAlertDialog();
+            var dialog = _createCupertinoAlertDialog();
             if (dialog is ErrorControl) {
               return dialog;
             }
@@ -119,7 +97,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
                   barrierDismissible: !modal,
                   useRootNavigator: false,
                   context: context,
-                  builder: (context) => _createAlertDialog()).then((value) {
+                  builder: (context) => dialog).then((value) {
                 lastOpen = widget.control.state["open"] ?? false;
                 debugPrint("Dialog should be dismissed ($hashCode): $lastOpen");
                 bool shouldDismiss = lastOpen;
