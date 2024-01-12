@@ -1,3 +1,4 @@
+import json
 from typing import Any, Dict, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
@@ -104,11 +105,13 @@ class Dismissible(ConstrainedControl):
         )
 
         self.__on_dismiss = EventHandler(lambda e: DismissibleDismissEvent(e.data))
-        self._add_event_handler("dismiss", self.__on_dismiss.get_handler())
-
+        self.__on_update = EventHandler(lambda e: DismissibleUpdateEvent(**json.loads(e.data)))
         self.__on_confirm_dismiss = EventHandler(
             lambda e: DismissibleDismissEvent(e.data)
         )
+
+        self._add_event_handler("dismiss", self.__on_dismiss.get_handler())
+        self._add_event_handler("update", self.__on_update.get_handler())
         self._add_event_handler(
             "confirm_dismiss", self.__on_confirm_dismiss.get_handler()
         )
@@ -261,7 +264,7 @@ class Dismissible(ConstrainedControl):
 
     @on_update.setter
     def on_update(self, handler):
-        self._add_event_handler("update", handler)
+        self.__on_update.subscribe(handler)
         self._set_attr("onUpdate", True if handler is not None else None)
 
     # on_resize
@@ -276,5 +279,15 @@ class Dismissible(ConstrainedControl):
 
 
 class DismissibleDismissEvent(ControlEvent):
-    def __init__(self, d: str) -> None:
-        self.direction: DismissDirection = DismissDirection(d)
+    def __init__(self, direction: str) -> None:
+        self.direction: DismissDirection = DismissDirection(direction)
+
+
+class DismissibleUpdateEvent(ControlEvent):
+    def __init__(
+        self, direction: str, progress: float, reached: bool, previous_reached: bool
+    ) -> None:
+        self.direction: DismissDirection = DismissDirection(direction)
+        self.progress = progress
+        self.reached = reached
+        self.previous_reached = previous_reached

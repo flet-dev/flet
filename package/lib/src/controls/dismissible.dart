@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
@@ -88,11 +89,16 @@ class DismissibleControl extends StatelessWidget {
                   }
                 : null,
             onUpdate: control.attrBool("onUpdate", false)!
-                ? (DismissUpdateDetails d) {
+                ? (DismissUpdateDetails details) {
                     server.sendPageEvent(
                         eventTarget: control.id,
                         eventName: "update",
-                        eventData: "");
+                        eventData: json.encode(DismissibleUpdateEvent(
+                                direction: details.direction.name,
+                                previousReached: details.previousReached,
+                                progress: details.progress,
+                                reached: details.reached)
+                            .toJson()));
                   }
                 : null,
             confirmDismiss: control.attrBool("onConfirmDismiss", false)!
@@ -117,4 +123,24 @@ class DismissibleControl extends StatelessWidget {
         parent,
         control);
   }
+}
+
+class DismissibleUpdateEvent {
+  final String direction;
+  final bool previousReached;
+  final double progress;
+  final bool reached;
+
+  DismissibleUpdateEvent(
+      {required this.direction,
+      required this.progress,
+      required this.previousReached,
+      required this.reached});
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'direction': direction,
+        'progress': progress,
+        'reached': reached,
+        'previous_reached': previousReached
+      };
 }
