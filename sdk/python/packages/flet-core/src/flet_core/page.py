@@ -21,6 +21,7 @@ from flet_core.clipboard import Clipboard
 from flet_core.connection import Connection
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.event import Event
@@ -998,14 +999,14 @@ class Page(Control):
         await self.__offstage.update_async()
 
     #
-    # Dialog
+    # Dialogs
     #
-    def show_dialog(self, dialog: AlertDialog):
+    def show_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog]):
         self.__offstage.dialog = dialog
         self.__offstage.dialog.open = True
         self.__offstage.update()
 
-    async def show_dialog_async(self, dialog: AlertDialog):
+    async def show_dialog_async(self, dialog: Union[AlertDialog, CupertinoAlertDialog]):
         self.__offstage.dialog = dialog
         self.__offstage.dialog.open = True
         await self.__offstage.update_async()
@@ -1993,11 +1994,11 @@ class Offstage(Control):
 
     # dialog
     @property
-    def dialog(self) -> Optional[AlertDialog]:
+    def dialog(self) -> Union[AlertDialog, CupertinoAlertDialog, None]:
         return self.__dialog
 
     @dialog.setter
-    def dialog(self, value: Optional[AlertDialog]):
+    def dialog(self, value: Union[AlertDialog, CupertinoAlertDialog, None]):
         self.__dialog = value
 
     # bottom_sheet

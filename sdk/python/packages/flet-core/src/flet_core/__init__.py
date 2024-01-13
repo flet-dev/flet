@@ -76,7 +76,7 @@ from flet_core.datatable import (
     DataTable,
 )
 from flet_core.date_picker import DatePicker, DatePickerEntryMode, DatePickerMode
-from flet_core.dismissible import Dismissible, DismissibleDismissEvent
+from flet_core.dismissible import Dismissible, DismissibleDismissEvent, DismissibleUpdateEvent
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
@@ -235,4 +235,6 @@ from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
 from flet_core.view import View
 from flet_core.webview import WebView
+from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
+from flet_core.cupertino_dialog_action import CupertinoDialogAction
 from flet_core.window_drag_area import WindowDragArea
