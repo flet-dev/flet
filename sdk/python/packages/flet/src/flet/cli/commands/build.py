@@ -603,6 +603,9 @@ class Command(BaseCommand):
                 ]
             )
 
+        if self.verbose > 1:
+            package_args.append("--verbose")
+
         package_result = self.run(package_args, cwd=str(self.flutter_dir))
 
         if package_result.returncode != 0:
