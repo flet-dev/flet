@@ -590,6 +590,8 @@ class Command(BaseCommand):
                 package_args.extend(
                     [
                         "--mobile",
+                        "--platform",
+                        "mobile",
                     ]
                 )
             package_args.extend(
