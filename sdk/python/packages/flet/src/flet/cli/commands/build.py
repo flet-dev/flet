@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string, slugify
-from flet_runtime.utils import copy_tree, is_windows
+from flet_runtime.utils import calculate_file_hash, copy_tree, is_windows
 from rich import print
 
 if is_windows():
@@ -208,13 +208,6 @@ class Command(BaseCommand):
             help="URL routing strategy (web only)",
         )
         parser.add_argument(
-            "--windows-tcp-port",
-            dest="windows_tcp_port",
-            type=int,
-            default=63777,
-            help="TCP port for Windows app",
-        )
-        parser.add_argument(
             "--flutter-build-args",
             dest="flutter_build_args",
             action="append",
@@ -261,17 +254,9 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
 
-        # check if `flutter` executable is available in the path
-        flutter_exe = shutil.which("flutter")
-        if not flutter_exe:
-            print("`flutter` command is not available in PATH. Install Flutter SDK.")
-            sys.exit(1)
-
-        # check if `dart` executable is available in the path
-        dart_exe = shutil.which("dart")
-        if not dart_exe:
-            print("`dart` command is not available in PATH. Install Flutter SDK.")
-            sys.exit(1)
+        # get `flutter` and `dart` executables from PATH
+        flutter_exe = self.find_flutter_batch("flutter")
+        dart_exe = self.find_flutter_batch("dart")
 
         target_platform = options.target_platform.lower()
         # platform check
@@ -351,7 +336,6 @@ class Command(BaseCommand):
         template_data["use_color_emoji"] = (
             "true" if options.use_color_emoji else "false"
         )
-        template_data["windows_tcp_port"] = options.windows_tcp_port
 
         # create Flutter project from a template
         print("Creating Flutter bootstrap project...", end="")
@@ -590,6 +574,8 @@ class Command(BaseCommand):
                 package_args.extend(
                     [
                         "--mobile",
+                        "--platform",
+                        "mobile",
                     ]
                 )
             package_args.extend(
@@ -603,6 +589,9 @@ class Command(BaseCommand):
                 ]
             )
 
+        if self.verbose > 1:
+            package_args.append("--verbose")
+
         package_result = self.run(package_args, cwd=str(self.flutter_dir))
 
         if package_result.returncode != 0:
@@ -611,6 +600,17 @@ class Command(BaseCommand):
             if package_result.stderr:
                 print(package_result.stderr)
             self.cleanup(package_result.returncode)
+
+        # make sure app/app.zip exists
+        app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
+        if not os.path.exists(app_zip_path):
+            print("Flet app package app/app.zip was not created.")
+            self.cleanup(1)
+
+        # create {flutter_dir}/app/app.hash
+        app_hash_path = self.flutter_dir.joinpath("app", "app.zip.hash")
+        with open(app_hash_path, "w") as hf:
+            hf.write(calculate_file_hash(app_zip_path))
         print("[spring_green3]OK[/spring_green3]")
 
         # run `flutter build`
@@ -709,6 +709,17 @@ class Command(BaseCommand):
             shutil.copy(images[0], dest_path)
             return Path(images[0]).name
         return None
+
+    def find_flutter_batch(self, exe_filename: str):
+        batch_path = shutil.which(exe_filename)
+        if not batch_path:
+            print(
+                f"`{exe_filename}` command is not available in PATH. Install Flutter SDK."
+            )
+            sys.exit(1)
+        if is_windows() and batch_path.endswith(".file"):
+            return batch_path.replace(".file", ".bat")
+        return batch_path
 
     def run(self, args, cwd):
         if is_windows():

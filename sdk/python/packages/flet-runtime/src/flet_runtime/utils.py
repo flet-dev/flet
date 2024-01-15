@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import re
@@ -166,6 +167,17 @@ def get_local_ip():
 def get_current_script_dir():
     pathname = os.path.dirname(sys.argv[0])
     return os.path.abspath(pathname)
+
+
+def calculate_file_hash(path, blocksize=65536):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        while True:
+            data = f.read(blocksize)
+            if not data:
+                break
+            h.update(data)
+    return h.hexdigest()
 
 
 def patch_index_html(
