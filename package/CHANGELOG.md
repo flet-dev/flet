@@ -1,3 +1,24 @@
+# 0.19.0
+
+* `flet build` to apply Python SSL fix when packaging for iOS and Android ([#2349](https://github.com/flet-dev/flet/issues/2349)).
+* Upgrade Android Gradle in flet `build app` template ([#2350](https://github.com/flet-dev/flet/issues/2350)).
+* `flet build -vv` should run pip install with verbose output ([#2351](https://github.com/flet-dev/flet/issues/2351)).
+* Add Python output/logging to troubleshoot empty screens on startup of built app ([#2352](https://github.com/flet-dev/flet/issues/2352)).
+* `flet build` should raise an error when trying to package an app with native modules for iOS or Android ([#2356](https://github.com/flet-dev/flet/issues/2356)).
+* `flet build` to add timestamp (hash) asset with Flet Python app to re-extract when code changes ([#2289](https://github.com/flet-dev/flet/issues/2289)).
+* Handle/bypass `if __name__ == "__main__"` check on Android.
+* Support reading dependencies from `pyproject.toml`.
+* `flet build` to fix `--base-url` with surrounding slashes ([#2369](https://github.com/flet-dev/flet/issues/2369)).
+* `CupertinoAlertDialog`, `CupertinoDialogAction`, adaptive property for `AlertDialog` ([#2365](https://github.com/flet-dev/flet/issues/2365)).
+* `Dismissible.confirmDismiss` prop ([#2359](https://github.com/flet-dev/flet/issues/2359)).
+* `ListView.reverse` and `GridView.reverse` props ([#2335](https://github.com/flet-dev/flet/issues/2335)).
+* `Text.style` type Deprecation warning ([#2286](https://github.com/flet-dev/flet/issues/2286)).
+* Add `LineChartData.prevent_curve_over_shooting` and `LineChartData.prevent_curve_over_shooting_threshold` props ([#2354](https://github.com/flet-dev/flet/issues/2354)).
+* `flet build` to add checks to allow certain build commands according to "build_on" platform ([#2343](https://github.com/flet-dev/flet/issues/2343)).
+* Fixed: `flet build` gives "OSError: [WinError 193] %1 is not a valid Win32 application" for some users ([#2318](https://github.com/flet-dev/flet/issues/2318)).
+* Fixed: PubSub is not shared between pages in the same FastAPI app ([#2368](https://github.com/flet-dev/flet/issues/2368)).
+* Fixed: check for `DISPLAY` instead of `XDG_CURRENT_DESKTOP` to check if linux machine is GUIless or not ([#2373](https://github.com/flet-dev/flet/issues/2373)).
+
 # 0.18.0
 
 * `flet build` command to package Flet app for any platform ([docs](https://flet.dev/docs/guides/python/packaging-app-for-distribution)).
