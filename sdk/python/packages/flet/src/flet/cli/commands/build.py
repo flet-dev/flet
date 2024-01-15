@@ -261,17 +261,9 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
 
-        # check if `flutter` executable is available in the path
-        flutter_exe = shutil.which("flutter")
-        if not flutter_exe:
-            print("`flutter` command is not available in PATH. Install Flutter SDK.")
-            sys.exit(1)
-
-        # check if `dart` executable is available in the path
-        dart_exe = shutil.which("dart")
-        if not dart_exe:
-            print("`dart` command is not available in PATH. Install Flutter SDK.")
-            sys.exit(1)
+        # get `flutter` and `dart` executables from PATH
+        flutter_exe = self.find_flutter_batch("flutter")
+        dart_exe = self.find_flutter_batch("dart")
 
         target_platform = options.target_platform.lower()
         # platform check
@@ -725,6 +717,17 @@ class Command(BaseCommand):
             shutil.copy(images[0], dest_path)
             return Path(images[0]).name
         return None
+
+    def find_flutter_batch(self, exe_filename: str):
+        batch_path = shutil.which(exe_filename)
+        if not batch_path:
+            print(
+                f"`{exe_filename}` command is not available in PATH. Install Flutter SDK."
+            )
+            sys.exit(1)
+        if is_windows() and batch_path.endswith(".file"):
+            return batch_path.replace(".file", ".bat")
+        return batch_path
 
     def run(self, args, cwd):
         if is_windows():
