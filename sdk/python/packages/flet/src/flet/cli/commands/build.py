@@ -208,13 +208,6 @@ class Command(BaseCommand):
             help="URL routing strategy (web only)",
         )
         parser.add_argument(
-            "--windows-tcp-port",
-            dest="windows_tcp_port",
-            type=int,
-            default=63777,
-            help="TCP port for Windows app",
-        )
-        parser.add_argument(
             "--flutter-build-args",
             dest="flutter_build_args",
             action="append",
@@ -343,7 +336,6 @@ class Command(BaseCommand):
         template_data["use_color_emoji"] = (
             "true" if options.use_color_emoji else "false"
         )
-        template_data["windows_tcp_port"] = options.windows_tcp_port
 
         # create Flutter project from a template
         print("Creating Flutter bootstrap project...", end="")
