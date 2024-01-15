@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string, slugify
-from flet_runtime.utils import copy_tree, is_windows
+from flet_runtime.utils import calculate_file_hash, copy_tree, is_windows
 from rich import print
 
 if is_windows():
@@ -616,6 +616,17 @@ class Command(BaseCommand):
             if package_result.stderr:
                 print(package_result.stderr)
             self.cleanup(package_result.returncode)
+
+        # make sure app/app.zip exists
+        app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
+        if not os.path.exists(app_zip_path):
+            print("Flet app package app/app.zip was not created.")
+            self.cleanup(1)
+
+        # create {flutter_dir}/app/app.hash
+        app_hash_path = self.flutter_dir.joinpath("app", "app.zip.hash")
+        with open(app_hash_path, "w") as hf:
+            hf.write(calculate_file_hash(app_zip_path))
         print("[spring_green3]OK[/spring_green3]")
 
         # run `flutter build`
