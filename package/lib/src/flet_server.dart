@@ -66,7 +66,6 @@ class FletServer {
       registerWebClientInternal();
     } catch (e) {
       debugPrint("Error connecting to Flet server: $e");
-      errorsHandler?.onError("Error connecting to Flet server: $e");
       _onDisconnect();
     }
   }

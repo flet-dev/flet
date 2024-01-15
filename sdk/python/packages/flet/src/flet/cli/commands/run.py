@@ -11,9 +11,6 @@ from pathlib import Path
 from urllib.parse import quote, urlparse, urlunparse
 
 import qrcode
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
-
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string
 from flet_runtime.app import close_flet_view, open_flet_view
@@ -23,6 +20,8 @@ from flet_runtime.utils import (
     is_windows,
     open_in_browser,
 )
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 
 class Command(BaseCommand):
@@ -127,7 +126,7 @@ class Command(BaseCommand):
             dest="ignore_dirs",
             type=str,
             default=None,
-            help="directories to ignore during watch. If more than one, separate with a semicolon.",
+            help="directories to ignore during watch. If more than one, separate with a comma.",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -166,28 +165,31 @@ class Command(BaseCommand):
                 Path(os.path.dirname(script_path)).joinpath(assets_dir).resolve()
             )
 
-        ignore_dirs = options.ignore_dirs
-        if ignore_dirs:
-            ignore_dirs = [
+        ignore_dirs = (
+            [
                 str(Path(os.path.dirname(script_path)).joinpath(directory).resolve())
-                for directory in ignore_dirs.split(";")
+                for directory in options.ignore_dirs.split(",")
             ]
+            if options.ignore_dirs
+            else []
+        )
 
         my_event_handler = Handler(
-            [sys.executable, "-u"]
+            args=[sys.executable, "-u"]
             + ["-m"] * options.module
             + [options.script if options.module else script_path],
-            None if options.directory or options.recursive else script_path,
-            port,
-            options.host,
-            options.app_name,
-            uds_path,
-            options.web,
-            options.ios,
-            options.android,
-            options.hidden,
-            assets_dir,
-            ignore_dirs if options.directory or options.recursive else None,
+            watch_directory=options.directory or options.recursive,
+            script_path=script_path,
+            port=port,
+            host=options.host,
+            page_name=options.app_name,
+            uds_path=uds_path,
+            web=options.web,
+            ios=options.ios,
+            android=options.android,
+            hidden=options.hidden,
+            assets_dir=assets_dir,
+            ignore_dirs=ignore_dirs,
         )
 
         my_observer = Observer()
@@ -210,6 +212,7 @@ class Handler(FileSystemEventHandler):
     def __init__(
         self,
         args,
+        watch_directory,
         script_path,
         port,
         host,
@@ -224,6 +227,7 @@ class Handler(FileSystemEventHandler):
     ) -> None:
         super().__init__()
         self.args = args
+        self.watch_directory = watch_directory
         self.script_path = script_path
         self.port = port
         self.host = host
@@ -234,7 +238,7 @@ class Handler(FileSystemEventHandler):
         self.android = android
         self.hidden = hidden
         self.assets_dir = assets_dir
-        self.ignore_dirs = ignore_dirs or []
+        self.ignore_dirs = ignore_dirs
         self.last_time = time.time()
         self.is_running = False
         self.fvp = None
@@ -275,21 +279,15 @@ class Handler(FileSystemEventHandler):
         th.start()
 
     def on_any_event(self, event):
-        is_in_ignore_dirs = False
         for directory in self.ignore_dirs:
             child = os.path.abspath(event.src_path)
             # check if the file which triggered the reload is in the (ignored) directory
-            is_in_ignore_dirs = os.path.commonpath([directory]) == os.path.commonpath(
+            if os.path.commonpath([directory]) == os.path.commonpath(
                 [directory, child]
-            )
-            if is_in_ignore_dirs:
-                break
+            ):
+                return
 
-        if (
-            not is_in_ignore_dirs
-            and (self.script_path is None or event.src_path == self.script_path)
-            and not event.is_directory
-        ):
+        if self.watch_directory or event.src_path == self.script_path:
             current_time = time.time()
             if (current_time - self.last_time) > 0.5 and self.is_running:
                 self.last_time = current_time
