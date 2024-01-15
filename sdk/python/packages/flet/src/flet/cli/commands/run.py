@@ -123,7 +123,7 @@ class Command(BaseCommand):
             help="path to assets directory",
         )
         parser.add_argument(
-            "--ignore",
+            "--ignore-dirs",
             dest="ignore_dirs",
             type=str,
             default=None,
@@ -166,6 +166,13 @@ class Command(BaseCommand):
                 Path(os.path.dirname(script_path)).joinpath(assets_dir).resolve()
             )
 
+        ignore_dirs = options.ignore_dirs
+        if ignore_dirs:
+            ignore_dirs = [
+                str(Path(os.path.dirname(script_path)).joinpath(directory).resolve())
+                for directory in ignore_dirs.split(";")
+            ]
+
         my_event_handler = Handler(
             [sys.executable, "-u"]
             + ["-m"] * options.module
@@ -180,7 +187,7 @@ class Command(BaseCommand):
             options.android,
             options.hidden,
             assets_dir,
-            options.ignore_dirs,
+            ignore_dirs if options.directory or options.recursive else None,
         )
 
         my_observer = Observer()
@@ -227,16 +234,7 @@ class Handler(FileSystemEventHandler):
         self.android = android
         self.hidden = hidden
         self.assets_dir = assets_dir
-        self.ignore_dirs = ignore_dirs
-        ignore_dirs = [
-            str(Path(os.path.dirname(self.script_path)).joinpath(directory).resolve())
-            for directory in self.ignore_dirs.split(";")
-        ]
-        self.ignore_files = [
-            os.path.join(directory, file)
-            for directory in ignore_dirs
-            for file in os.listdir(directory)
-        ]
+        self.ignore_dirs = ignore_dirs or []
         self.last_time = time.time()
         self.is_running = False
         self.fvp = None
@@ -277,8 +275,19 @@ class Handler(FileSystemEventHandler):
         th.start()
 
     def on_any_event(self, event):
+        is_in_ignore_dirs = False
+        for directory in self.ignore_dirs:
+            child = os.path.abspath(event.src_path)
+            # check if the file which triggered the reload is in the (ignored) directory
+            is_in_dir = os.path.commonpath([directory]) == os.path.commonpath(
+                [directory, child]
+            )
+            is_in_ignore_dirs = is_in_dir
+            if is_in_ignore_dirs:
+                break
+
         if (
-            event.src_path.replace("~", "") not in self.ignore_files
+            not is_in_ignore_dirs
             and (self.script_path is None or event.src_path == self.script_path)
             and not event.is_directory
         ):
