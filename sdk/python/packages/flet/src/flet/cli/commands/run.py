@@ -228,6 +228,15 @@ class Handler(FileSystemEventHandler):
         self.hidden = hidden
         self.assets_dir = assets_dir
         self.ignore_dirs = ignore_dirs
+        ignore_dirs = [
+            str(Path(os.path.dirname(self.script_path)).joinpath(directory).resolve())
+            for directory in self.ignore_dirs.split(";")
+        ]
+        self.ignore_files = [
+            os.path.join(directory, file)
+            for directory in ignore_dirs
+            for file in os.listdir(directory)
+        ]
         self.last_time = time.time()
         self.is_running = False
         self.fvp = None
@@ -268,18 +277,8 @@ class Handler(FileSystemEventHandler):
         th.start()
 
     def on_any_event(self, event):
-        ignore_dirs = [
-            str(Path(directory).absolute()) for directory in self.ignore_dirs.split(";")
-        ]
-        ignore_files = [
-            (directory + "\\" if not directory.endswith("\\") else directory)
-            + file.replace("\\\\", "\\")
-            for directory in ignore_dirs
-            for file in os.listdir(directory)
-        ]
-
         if (
-            event.src_path.replace("~", "") not in ignore_files
+            event.src_path.replace("~", "") not in self.ignore_files
             and (self.script_path is None or event.src_path == self.script_path)
             and not event.is_directory
         ):
