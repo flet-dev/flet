@@ -279,10 +279,9 @@ class Handler(FileSystemEventHandler):
         for directory in self.ignore_dirs:
             child = os.path.abspath(event.src_path)
             # check if the file which triggered the reload is in the (ignored) directory
-            is_in_dir = os.path.commonpath([directory]) == os.path.commonpath(
+            is_in_ignore_dirs = os.path.commonpath([directory]) == os.path.commonpath(
                 [directory, child]
             )
-            is_in_ignore_dirs = is_in_dir
             if is_in_ignore_dirs:
                 break
 
