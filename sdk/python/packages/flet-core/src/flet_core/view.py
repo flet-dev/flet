@@ -18,6 +18,7 @@ from flet_core.types import (
     MainAxisAlignmentString,
     PaddingValue,
     ScrollMode,
+    OffsetValue,
 )
 
 
@@ -39,7 +40,9 @@ class View(ScrollableControl):
         appbar: Union[AppBar, CupertinoAppBar, None] = None,
         bottom_appbar: Optional[BottomAppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
-        floating_action_button_location: Optional[FloatingActionButtonLocation] = None,
+        floating_action_button_location: Union[
+            FloatingActionButtonLocation, OffsetValue
+        ] = None,
         navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None,
         drawer: Optional[NavigationDrawer] = None,
         end_drawer: Optional[NavigationDrawer] = None,
@@ -91,6 +94,10 @@ class View(ScrollableControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("padding", self.__padding)
+        if not isinstance(self.__floating_action_button_location, (FloatingActionButtonLocation, str)):
+            self._set_attr_json(
+                "floatingActionButtonLocation", self.__floating_action_button_location
+            )
 
     def _get_children(self):
         children = []
@@ -158,11 +165,15 @@ class View(ScrollableControl):
 
     # floating_action_button_location
     @property
-    def floating_action_button_location(self) -> FloatingActionButtonLocation:
+    def floating_action_button_location(
+        self,
+    ) -> Union[FloatingActionButtonLocation, OffsetValue]:
         return self.__floating_action_button_location
 
     @floating_action_button_location.setter
-    def floating_action_button_location(self, value: FloatingActionButtonLocation):
+    def floating_action_button_location(
+        self, value: Union[FloatingActionButtonLocation, OffsetValue]
+    ):
         self.__floating_action_button_location = value
         self._set_attr(
             "floatingActionButtonLocation",

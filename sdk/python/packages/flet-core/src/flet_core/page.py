@@ -39,6 +39,7 @@ from flet_core.types import (
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,
+    OffsetValue,
     PaddingValue,
     PageDesignLanguage,
     PageDesignString,
@@ -1343,12 +1344,14 @@ class Page(Control):
 
     # floating_action_button_location
     @property
-    def floating_action_button_location(self) -> Optional[FloatingActionButtonLocation]:
+    def floating_action_button_location(
+        self,
+    ) -> Union[FloatingActionButtonLocation, OffsetValue]:
         return self.__default_view.floating_action_button_location
 
     @floating_action_button_location.setter
     def floating_action_button_location(
-        self, value: Optional[FloatingActionButtonLocation]
+        self, value: Union[FloatingActionButtonLocation, OffsetValue]
     ):
         self.__default_view.floating_action_button_location = value
 
