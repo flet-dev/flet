@@ -6,6 +6,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
+import '../utils/transforms.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -129,9 +130,39 @@ FloatingActionButtonLocation parseFloatingActionButtonLocation(
     FloatingActionButtonLocation.startTop
   ];
 
-  return fabLocations.firstWhere(
-      (l) =>
-          l.toString().split('.').last.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+  try {
+    // throw Exception("to stop the constant rebuild/blinking uncomment this line");
+    OffsetDetails? fabLocationOffsetDetails = parseOffset(control, propName);
+    if (fabLocationOffsetDetails != null) {
+      return CustomFloatingActionButtonLocation(
+          dx: fabLocationOffsetDetails.x, dy: fabLocationOffsetDetails.y);
+    } else {
+      return defValue;
+    }
+  } catch (e) {
+    return fabLocations.firstWhere(
+        (l) =>
+            l.toString().split('.').last.toLowerCase() ==
+            control.attrString(propName, "")!.toLowerCase(),
+        orElse: () => defValue);
+  }
+}
+
+class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
+  final double dx;
+  final double dy;
+
+  CustomFloatingActionButtonLocation({required this.dx, required this.dy});
+
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    double x = scaffoldGeometry.scaffoldSize.width - dx;
+    double y = scaffoldGeometry.scaffoldSize.height - dy;
+    debugPrint(
+        "CUSTOM_FLOATING_ACTION_BUTTON_LOCATION - x: $x - y: $y - width: ${scaffoldGeometry.scaffoldSize.width} - height: ${scaffoldGeometry.scaffoldSize.height}");
+    return Offset(x, y);
+  }
+
+  @override
+  String toString() => 'CustomFloatingActionButtonLocation';
 }
