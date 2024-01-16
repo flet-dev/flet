@@ -131,7 +131,6 @@ FloatingActionButtonLocation parseFloatingActionButtonLocation(
   ];
 
   try {
-    // throw Exception("to stop the constant rebuild/blinking uncomment this line");
     OffsetDetails? fabLocationOffsetDetails = parseOffset(control, propName);
     if (fabLocationOffsetDetails != null) {
       return CustomFloatingActionButtonLocation(
@@ -156,12 +155,18 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
 
   @override
   Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
-    double x = scaffoldGeometry.scaffoldSize.width - dx;
-    double y = scaffoldGeometry.scaffoldSize.height - dy;
-    debugPrint(
-        "CUSTOM_FLOATING_ACTION_BUTTON_LOCATION - x: $x - y: $y - width: ${scaffoldGeometry.scaffoldSize.width} - height: ${scaffoldGeometry.scaffoldSize.height}");
-    return Offset(x, y);
+    return Offset(scaffoldGeometry.scaffoldSize.width - dx,
+        scaffoldGeometry.scaffoldSize.height - dy);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is CustomFloatingActionButtonLocation &&
+      other.dx == dx &&
+      other.dy == dy;
+
+  @override
+  int get hashCode => dx.hashCode + dy.hashCode;
 
   @override
   String toString() => 'CustomFloatingActionButtonLocation';
