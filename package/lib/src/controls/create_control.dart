@@ -36,6 +36,7 @@ import 'cupertino_navigation_bar.dart';
 import 'cupertino_radio.dart';
 import 'cupertino_slider.dart';
 import 'cupertino_switch.dart';
+import 'cupertino_textfield.dart';
 import 'datatable.dart';
 import 'date_picker.dart';
 import 'dismissible.dart';
@@ -514,6 +515,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
       );
     case "textfield":
       return TextFieldControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "cupertinotextfield":
+      return CupertinoTextFieldControl(
           key: key,
           parent: parent,
           control: controlView.control,

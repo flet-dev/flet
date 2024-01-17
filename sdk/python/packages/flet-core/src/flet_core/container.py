@@ -273,10 +273,9 @@ class Container(ConstrainedControl):
     @blend_mode.setter
     def blend_mode(self, value: BlendMode):
         self.__blend_mode = value
-        if isinstance(value, BlendMode):
-            self._set_attr("blendMode", value.value)
-        else:
-            self.__set_blend_mode(value)
+        self._set_attr(
+            "blendMode", value.value if isinstance(value, BlendMode) else value
+        )
 
     def __set_blend_mode(self, value: BlendModeString):
         self._set_attr("blendMode", value)

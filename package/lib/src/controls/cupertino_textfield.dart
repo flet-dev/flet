@@ -1,4 +1,6 @@
-import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart';
+import 'package:flet/src/controls/textfield.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -10,19 +12,20 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/gradient.dart';
+import '../utils/shadows.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
-import 'cupertino_textfield.dart';
 import 'form_field.dart';
 
-class TextFieldControl extends StatefulWidget {
+class CupertinoTextFieldControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
 
-  const TextFieldControl(
+  const CupertinoTextFieldControl(
       {super.key,
       this.parent,
       required this.control,
@@ -30,10 +33,11 @@ class TextFieldControl extends StatefulWidget {
       required this.parentDisabled});
 
   @override
-  State<TextFieldControl> createState() => _TextFieldControlState();
+  State<CupertinoTextFieldControl> createState() =>
+      _CupertinoTextFieldControlState();
 }
 
-class _TextFieldControlState extends State<TextFieldControl> {
+class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
   String _value = "";
   bool _revealPassword = false;
   bool _focused = false;
@@ -98,27 +102,17 @@ class _TextFieldControlState extends State<TextFieldControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("TextField build: ${widget.control.id}");
+    debugPrint("CupertinoTextField build: ${widget.control.id}");
 
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    bool adaptive = widget.control.attrBool("adaptive", false)!;
-    if (adaptive &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)) {
-      return CupertinoTextFieldControl(
-          control: widget.control,
-          children: widget.children,
-          parent: widget.parent,
-          parentDisabled: widget.parentDisabled);
-    }
 
     return StoreConnector<AppState, Function>(
         distinct: true,
         converter: (store) => store.dispatch,
         builder: (context, dispatch) {
-          debugPrint("TextField StoreConnector build: ${widget.control.id}");
+          debugPrint(
+              "CupertinoTextField StoreConnector build: ${widget.control.id}");
 
           String value = widget.control.attrs["value"] ?? "";
           if (_value != value) {
@@ -140,8 +134,6 @@ class _TextFieldControlState extends State<TextFieldControl> {
 
           bool readOnly = widget.control.attrBool("readOnly", false)!;
           bool password = widget.control.attrBool("password", false)!;
-          bool canRevealPassword =
-              widget.control.attrBool("canRevealPassword", false)!;
           bool onChange = widget.control.attrBool("onChange", false)!;
 
           var cursorColor = HexColor.fromString(
@@ -188,19 +180,6 @@ class _TextFieldControlState extends State<TextFieldControl> {
                 .add(TextCapitalizationFormatter(textCapitalization));
           }
 
-          Widget? revealPasswordIcon;
-          if (password && canRevealPassword) {
-            revealPasswordIcon = GestureDetector(
-                child: Icon(
-                  _revealPassword ? Icons.visibility_off : Icons.visibility,
-                ),
-                onTap: () {
-                  setState(() {
-                    _revealPassword = !_revealPassword;
-                  });
-                });
-          }
-
           TextInputType keyboardType = parseTextInputType(
               widget.control.attrString("keyboardType", "")!);
 
@@ -231,11 +210,26 @@ class _TextFieldControlState extends State<TextFieldControl> {
             focusNode.requestFocus();
           }
 
-          Widget textField = TextFormField(
+          BoxDecoration? defaultDecoration =
+              const CupertinoTextField().decoration;
+          var gradient =
+              parseGradient(Theme.of(context), widget.control, "gradient");
+          var blendMode = BlendMode.values.firstWhereOrNull((e) =>
+              e.name.toLowerCase() ==
+              widget.control.attrString("blendMode", "")!.toLowerCase());
+
+          var borderRadius = parseBorderRadius(widget.control, "borderRadius");
+          var bgColor = HexColor.fromString(
+              Theme.of(context), widget.control.attrString("bgColor", "")!);
+
+          Widget textField = CupertinoTextField(
               style: textStyle,
+              placeholder: widget.control.attrString("placeholderText"),
+              placeholderStyle: parseTextStyle(
+                  Theme.of(context), widget.control, "placeholderStyle"),
               autofocus: autofocus,
               enabled: !disabled,
-              onFieldSubmitted: !multiline
+              onSubmitted: !multiline
                   ? (_) {
                       FletAppServices.of(context).server.sendPageEvent(
                           eventTarget: widget.control.id,
@@ -243,17 +237,21 @@ class _TextFieldControlState extends State<TextFieldControl> {
                           eventData: "");
                     }
                   : null,
-              decoration: buildInputDecoration(
-                  context,
-                  widget.control,
-                  prefixControls.isNotEmpty ? prefixControls.first : null,
-                  suffixControls.isNotEmpty ? suffixControls.first : null,
-                  revealPasswordIcon,
-                  _focused),
-              showCursor: widget.control.attrBool("showCursor"),
+              decoration: defaultDecoration?.copyWith(
+                  color: bgColor,
+                  gradient: gradient,
+                  backgroundBlendMode:
+                      bgColor != null || gradient != null ? blendMode : null,
+                  border:
+                      parseBorder(Theme.of(context), widget.control, "border"),
+                  borderRadius: borderRadius,
+                  boxShadow: parseBoxShadow(
+                      Theme.of(context), widget.control, "shadow")),
               cursorHeight: widget.control.attrDouble("cursorHeight"),
+              showCursor: widget.control.attrBool("showCursor"),
               cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
-              cursorRadius: parseRadius(widget.control, "cursorRadius"),
+              cursorRadius: parseRadius(widget.control, "cursorRadius") ??
+                  const Radius.circular(2.0),
               keyboardType: keyboardType,
               autocorrect: autocorrect,
               enableSuggestions: enableSuggestions,
@@ -263,10 +261,22 @@ class _TextFieldControlState extends State<TextFieldControl> {
               smartQuotesType: smartQuotesType
                   ? SmartQuotesType.enabled
                   : SmartQuotesType.disabled,
+              suffixMode: parseVisibilityMode(
+                  widget.control.attrString("suffixVisibilityMode", "")!),
+              prefixMode: parseVisibilityMode(
+                  widget.control.attrString("prefixVisibilityMode", "")!),
               textAlign: textAlign,
               minLines: minLines,
               maxLines: maxLines,
               maxLength: maxLength,
+              prefix: prefixControls.isNotEmpty
+                  ? createControl(
+                      widget.control, prefixControls.first.id, disabled)
+                  : null,
+              suffix: suffixControls.isNotEmpty
+                  ? createControl(
+                      widget.control, suffixControls.first.id, disabled)
+                  : null,
               readOnly: readOnly,
               inputFormatters:
                   inputFormatters.isNotEmpty ? inputFormatters : null,
@@ -322,67 +332,4 @@ class _TextFieldControlState extends State<TextFieldControl> {
           }
         });
   }
-}
-
-class TextCapitalizationFormatter extends TextInputFormatter {
-  final TextCapitalization capitalization;
-
-  TextCapitalizationFormatter(this.capitalization);
-
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    String text = '';
-
-    switch (capitalization) {
-      case TextCapitalization.words:
-        text = capitalizeFirstofEach(newValue.text);
-        break;
-      case TextCapitalization.sentences:
-        List<String> sentences = newValue.text.split('.');
-        for (int i = 0; i < sentences.length; i++) {
-          sentences[i] = inCaps(sentences[i]);
-        }
-        text = sentences.join('.');
-        break;
-      case TextCapitalization.characters:
-        text = allInCaps(newValue.text);
-        break;
-      case TextCapitalization.none:
-        text = newValue.text;
-        break;
-    }
-
-    return TextEditingValue(
-      text: text,
-      selection: newValue.selection,
-    );
-  }
-
-  /// 'Hello world'
-  static String inCaps(String text) {
-    if (text.isEmpty) {
-      return text;
-    }
-    String result = '';
-    for (int i = 0; i < text.length; i++) {
-      if (text[i] != ' ') {
-        result += '${text[i].toUpperCase()}${text.substring(i + 1)}';
-        break;
-      } else {
-        result += text[i];
-      }
-    }
-    return result;
-  }
-
-  /// 'HELLO WORLD'
-  static String allInCaps(String text) => text.toUpperCase();
-
-  /// 'Hello World'
-  static String capitalizeFirstofEach(String text) => text
-      .replaceAll(RegExp(' +'), ' ')
-      .split(" ")
-      .map((str) => inCaps(str))
-      .join(" ");
 }

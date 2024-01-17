@@ -1,6 +1,6 @@
 import dataclasses
-from dataclasses import field
 import time
+from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -71,9 +71,11 @@ class InputFilter:
     allow: bool = field(default=True)
     replacement_string: str = field(default="")
 
+
 class NumbersOnlyInputFilter(InputFilter):
     def __init__(self):
         super().__init__(r"[0-9]")
+
 
 class TextOnlyInputFilter(InputFilter):
     def __init__(self):
@@ -174,6 +176,7 @@ class TextField(FormFieldControl):
         #
         # TextField Specific
         #
+        adaptive: Optional[bool] = None,
         value: Optional[str] = None,
         keyboard_type: Optional[KeyboardType] = None,
         multiline: Optional[bool] = None,
@@ -191,6 +194,7 @@ class TextField(FormFieldControl):
         enable_suggestions: Optional[bool] = None,
         smart_dashes_type: Optional[bool] = None,
         smart_quotes_type: Optional[bool] = None,
+        show_cursor: Optional[bool] = None,
         cursor_color: Optional[str] = None,
         cursor_width: OptionalNumber = None,
         cursor_height: OptionalNumber = None,
@@ -277,8 +281,10 @@ class TextField(FormFieldControl):
         self.password = password
         self.can_reveal_password = can_reveal_password
         self.autofocus = autofocus
+        self.adaptive = adaptive
         self.capitalization = capitalization
         self.autocorrect = autocorrect
+        self.show_cursor = show_cursor
         self.enable_suggestions = enable_suggestions
         self.smart_dashes_type = smart_dashes_type
         self.smart_quotes_type = smart_quotes_type
@@ -432,6 +438,15 @@ class TextField(FormFieldControl):
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
 
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
+
     # capitalization
     @property
     def capitalization(self) -> TextCapitalization:
@@ -456,6 +471,15 @@ class TextField(FormFieldControl):
     @autocorrect.setter
     def autocorrect(self, value: Optional[bool]):
         self._set_attr("autocorrect", value)
+
+    # show_cursor
+    @property
+    def show_cursor(self) -> Optional[bool]:
+        return self._get_attr("showCursor", data_type="bool", def_value=True)
+
+    @show_cursor.setter
+    def show_cursor(self, value: Optional[bool]):
+        self._set_attr("showCursor", value)
 
     # enable_suggestions
     @property

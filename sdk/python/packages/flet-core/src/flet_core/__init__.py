@@ -62,12 +62,15 @@ from flet_core.column import Column
 from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_checkbox import CupertinoCheckbox
+from flet_core.cupertino_dialog_action import CupertinoDialogAction
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.cupertino_radio import CupertinoRadio
 from flet_core.cupertino_slider import CupertinoSlider
 from flet_core.cupertino_switch import CupertinoSwitch
+from flet_core.cupertino_textfield import CupertinoTextField, VisibilityMode
 from flet_core.datatable import (
     DataCell,
     DataColumn,
@@ -234,6 +237,4 @@ from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
 from flet_core.view import View
 from flet_core.webview import WebView
-from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
-from flet_core.cupertino_dialog_action import CupertinoDialogAction
 from flet_core.window_drag_area import WindowDragArea
