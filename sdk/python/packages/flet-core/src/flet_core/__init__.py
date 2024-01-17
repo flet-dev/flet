@@ -70,7 +70,7 @@ from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.cupertino_radio import CupertinoRadio
 from flet_core.cupertino_slider import CupertinoSlider
 from flet_core.cupertino_switch import CupertinoSwitch
-from flet_core.cupertino_textfield import CupertinoTextField
+from flet_core.cupertino_textfield import CupertinoTextField, VisibilityMode
 from flet_core.datatable import (
     DataCell,
     DataColumn,

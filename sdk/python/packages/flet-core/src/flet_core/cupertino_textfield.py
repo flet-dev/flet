@@ -32,7 +32,7 @@ except ImportError:
 
 
 class VisibilityMode(Enum):
-    NONE = "never"
+    NEVER = "never"
     EDITING = "editing"
     NOT_EDITING = "notEditing"
     ALWAYS = "always"
