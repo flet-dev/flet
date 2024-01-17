@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:flet/src/controls/textfield.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,12 +13,10 @@ import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
-import '../utils/images.dart';
 import '../utils/shadows.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
-import 'error.dart';
 import 'form_field.dart';
 
 class CupertinoTextFieldControl extends StatefulWidget {
@@ -226,37 +222,6 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
           var bgColor = HexColor.fromString(
               Theme.of(context), widget.control.attrString("bgColor", "")!);
 
-          DecorationImage? image;
-          var imageSrc = widget.control.attrString("imageSrc", "")!;
-          var imageSrcBase64 = widget.control.attrString("imageSrcBase64", "")!;
-          var imageRepeat = parseImageRepeat(widget.control, "imageRepeat");
-          var imageFit = parseBoxFit(widget.control, "imageFit");
-          var imageOpacity = widget.control.attrDouble("imageOpacity", 1)!;
-
-          if (imageSrcBase64 != "") {
-            try {
-              Uint8List bytes = base64Decode(imageSrcBase64);
-              image = DecorationImage(
-                  image: MemoryImage(bytes),
-                  repeat: imageRepeat,
-                  fit: imageFit,
-                  opacity: imageOpacity);
-            } catch (ex) {
-              return ErrorControl("Error decoding base64: ${ex.toString()}");
-            }
-          } else if (imageSrc != "") {
-            // var assetSrc =
-            //     getAssetSrc(imageSrc, pageArgs.pageUri!, pageArgs.assetsDir);
-            //
-            // image = DecorationImage(
-            //     image: assetSrc.isFile
-            //         ? getFileImageProvider(assetSrc.path)
-            //         : NetworkImage(assetSrc.path),
-            //     repeat: imageRepeat,
-            //     fit: imageFit,
-            //     opacity: imageOpacity);
-          }
-
           Widget textField = CupertinoTextField(
               style: textStyle,
               placeholder: widget.control.attrString("placeholderText"),
@@ -275,7 +240,6 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
               decoration: defaultDecoration?.copyWith(
                   color: bgColor,
                   gradient: gradient,
-                  image: image,
                   backgroundBlendMode:
                       bgColor != null || gradient != null ? blendMode : null,
                   border:
@@ -297,6 +261,10 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
               smartQuotesType: smartQuotesType
                   ? SmartQuotesType.enabled
                   : SmartQuotesType.disabled,
+              suffixMode: parseVisibilityMode(
+                  widget.control.attrString("suffixVisibilityMode", "")!),
+              prefixMode: parseVisibilityMode(
+                  widget.control.attrString("prefixVisibilityMode", "")!),
               textAlign: textAlign,
               minLines: minLines,
               maxLines: maxLines,

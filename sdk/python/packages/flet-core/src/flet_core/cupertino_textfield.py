@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, Optional, Union, List
 
 from flet_core.control import Control, OptionalNumber
@@ -30,6 +31,13 @@ except ImportError:
     from typing_extensions import Literal
 
 
+class VisibilityMode(Enum):
+    NONE = "never"
+    EDITING = "editing"
+    NOT_EDITING = "notEditing"
+    ALWAYS = "always"
+
+
 class CupertinoTextField(TextField):
     """
     An iOS-style text field.
@@ -49,6 +57,8 @@ class CupertinoTextField(TextField):
         gradient: Optional[Gradient] = None,
         blend_mode: BlendMode = BlendMode.NONE,
         shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
+        prefix_visibility_mode: Optional[VisibilityMode] = None,
+        suffix_visibility_mode: Optional[VisibilityMode] = None,
         #
         # TextField Specific
         #
@@ -234,6 +244,8 @@ class CupertinoTextField(TextField):
         self.gradient = gradient
         self.blend_mode = blend_mode
         self.shadow = shadow
+        self.suffix_visibility_mode = suffix_visibility_mode
+        self.prefix_visibility_mode = prefix_visibility_mode
 
     def _get_control_name(self):
         return "cupertinotextfield"
@@ -291,3 +303,29 @@ class CupertinoTextField(TextField):
     @shadow.setter
     def shadow(self, value: Union[None, BoxShadow, List[BoxShadow]]):
         self.__shadow = value if value is not None else []
+
+    # suffix_visibility_mode
+    @property
+    def suffix_visibility_mode(self) -> Optional[VisibilityMode]:
+        return self.__suffix_visibility_mode
+
+    @suffix_visibility_mode.setter
+    def suffix_visibility_mode(self, value: Optional[VisibilityMode]):
+        self.__suffix_visibility_mode = value
+        self._set_attr(
+            "suffixVisibilityMode",
+            value.value if isinstance(value, VisibilityMode) else value,
+        )
+
+    # prefix_visibility_mode
+    @property
+    def prefix_visibility_mode(self) -> Optional[VisibilityMode]:
+        return self.__prefix_visibility_mode
+
+    @prefix_visibility_mode.setter
+    def prefix_visibility_mode(self, value: Optional[VisibilityMode]):
+        self.__prefix_visibility_mode = value
+        self._set_attr(
+            "prefixVisibilityMode",
+            value.value if isinstance(value, VisibilityMode) else value,
+        )

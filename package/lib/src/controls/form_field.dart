@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -136,4 +137,18 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
       suffixText: suffixText,
       suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"));
+}
+
+OverlayVisibilityMode parseVisibilityMode(String type) {
+  switch (type.toLowerCase()) {
+    case "never":
+      return OverlayVisibilityMode.never;
+    case "notediting":
+      return OverlayVisibilityMode.notEditing;
+    case "editing":
+      return OverlayVisibilityMode.editing;
+    case "always":
+      return OverlayVisibilityMode.always;
+  }
+  return OverlayVisibilityMode.always;
 }
