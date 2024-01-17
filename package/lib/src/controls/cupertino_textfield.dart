@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:collection/collection.dart';
 import 'package:flet/src/controls/textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +14,13 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/gradient.dart';
+import '../utils/images.dart';
+import '../utils/shadows.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
+import 'error.dart';
 import 'form_field.dart';
 
 class CupertinoTextFieldControl extends StatefulWidget {
@@ -30,7 +37,8 @@ class CupertinoTextFieldControl extends StatefulWidget {
       required this.parentDisabled});
 
   @override
-  State<CupertinoTextFieldControl> createState() => _CupertinoTextFieldControlState();
+  State<CupertinoTextFieldControl> createState() =>
+      _CupertinoTextFieldControlState();
 }
 
 class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
@@ -107,7 +115,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         distinct: true,
         converter: (store) => store.dispatch,
         builder: (context, dispatch) {
-          debugPrint("CupertinoTextField StoreConnector build: ${widget.control.id}");
+          debugPrint(
+              "CupertinoTextField StoreConnector build: ${widget.control.id}");
 
           String value = widget.control.attrs["value"] ?? "";
           if (_value != value) {
@@ -129,8 +138,6 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
           bool readOnly = widget.control.attrBool("readOnly", false)!;
           bool password = widget.control.attrBool("password", false)!;
-          bool canRevealPassword =
-              widget.control.attrBool("canRevealPassword", false)!;
           bool onChange = widget.control.attrBool("onChange", false)!;
 
           var cursorColor = HexColor.fromString(
@@ -177,19 +184,6 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
                 .add(TextCapitalizationFormatter(textCapitalization));
           }
 
-          Widget? revealPasswordIcon;
-          if (password && canRevealPassword) {
-            revealPasswordIcon = GestureDetector(
-                child: Icon(
-                  _revealPassword ? Icons.visibility_off : Icons.visibility,
-                ),
-                onTap: () {
-                  setState(() {
-                    _revealPassword = !_revealPassword;
-                  });
-                });
-          }
-
           TextInputType keyboardType = parseTextInputType(
               widget.control.attrString("keyboardType", "")!);
 
@@ -220,10 +214,54 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             focusNode.requestFocus();
           }
 
+          BoxDecoration? defaultDecoration =
+              const CupertinoTextField().decoration;
+          var gradient =
+              parseGradient(Theme.of(context), widget.control, "gradient");
+          var blendMode = BlendMode.values.firstWhereOrNull((e) =>
+              e.name.toLowerCase() ==
+              widget.control.attrString("blendMode", "")!.toLowerCase());
+
+          var borderRadius = parseBorderRadius(widget.control, "borderRadius");
+          var bgColor = HexColor.fromString(
+              Theme.of(context), widget.control.attrString("bgColor", "")!);
+
+          DecorationImage? image;
+          var imageSrc = widget.control.attrString("imageSrc", "")!;
+          var imageSrcBase64 = widget.control.attrString("imageSrcBase64", "")!;
+          var imageRepeat = parseImageRepeat(widget.control, "imageRepeat");
+          var imageFit = parseBoxFit(widget.control, "imageFit");
+          var imageOpacity = widget.control.attrDouble("imageOpacity", 1)!;
+
+          if (imageSrcBase64 != "") {
+            try {
+              Uint8List bytes = base64Decode(imageSrcBase64);
+              image = DecorationImage(
+                  image: MemoryImage(bytes),
+                  repeat: imageRepeat,
+                  fit: imageFit,
+                  opacity: imageOpacity);
+            } catch (ex) {
+              return ErrorControl("Error decoding base64: ${ex.toString()}");
+            }
+          } else if (imageSrc != "") {
+            // var assetSrc =
+            //     getAssetSrc(imageSrc, pageArgs.pageUri!, pageArgs.assetsDir);
+            //
+            // image = DecorationImage(
+            //     image: assetSrc.isFile
+            //         ? getFileImageProvider(assetSrc.path)
+            //         : NetworkImage(assetSrc.path),
+            //     repeat: imageRepeat,
+            //     fit: imageFit,
+            //     opacity: imageOpacity);
+          }
+
           Widget textField = CupertinoTextField(
               style: textStyle,
               placeholder: widget.control.attrString("placeholderText"),
-              placeholderStyle: parseTextStyle(Theme.of(context), widget.control, "placeholderStyle"),
+              placeholderStyle: parseTextStyle(
+                  Theme.of(context), widget.control, "placeholderStyle"),
               autofocus: autofocus,
               enabled: !disabled,
               onSubmitted: !multiline
@@ -234,16 +272,22 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
                           eventData: "");
                     }
                   : null,
-              // decoration: buildInputDecoration(
-              //     context,
-              //     widget.control,
-              //     prefixControls.isNotEmpty ? prefixControls.first : null,
-              //     suffixControls.isNotEmpty ? suffixControls.first : null,
-              //     revealPasswordIcon,
-              //     _focused),
+              decoration: defaultDecoration?.copyWith(
+                  color: bgColor,
+                  gradient: gradient,
+                  image: image,
+                  backgroundBlendMode:
+                      bgColor != null || gradient != null ? blendMode : null,
+                  border:
+                      parseBorder(Theme.of(context), widget.control, "border"),
+                  borderRadius: borderRadius,
+                  boxShadow: parseBoxShadow(
+                      Theme.of(context), widget.control, "shadow")),
               cursorHeight: widget.control.attrDouble("cursorHeight"),
+              showCursor: widget.control.attrBool("showCursor"),
               cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
-              cursorRadius: parseRadius(widget.control, "cursorRadius") ?? const Radius.circular(2.0),
+              cursorRadius: parseRadius(widget.control, "cursorRadius") ??
+                  const Radius.circular(2.0),
               keyboardType: keyboardType,
               autocorrect: autocorrect,
               enableSuggestions: enableSuggestions,
@@ -257,6 +301,14 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
               minLines: minLines,
               maxLines: maxLines,
               maxLength: maxLength,
+              prefix: prefixControls.isNotEmpty
+                  ? createControl(
+                      widget.control, prefixControls.first.id, disabled)
+                  : null,
+              suffix: suffixControls.isNotEmpty
+                  ? createControl(
+                      widget.control, suffixControls.first.id, disabled)
+                  : null,
               readOnly: readOnly,
               inputFormatters:
                   inputFormatters.isNotEmpty ? inputFormatters : null,
@@ -313,4 +365,3 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         });
   }
 }
-

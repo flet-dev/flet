@@ -1,8 +1,10 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, List
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import InputBorder
+from flet_core.gradients import Gradient
 from flet_core.ref import Ref
+from flet_core.shadow import BoxShadow
 from flet_core.text_style import TextStyle
 from flet_core.textfield import (
     InputFilter,
@@ -19,6 +21,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
+    BlendMode,
 )
 
 try:
@@ -43,6 +46,9 @@ class CupertinoTextField(TextField):
         #
         placeholder_text: Optional[str] = None,
         placeholder_style: Optional[TextStyle] = None,
+        gradient: Optional[Gradient] = None,
+        blend_mode: BlendMode = BlendMode.NONE,
+        shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
         #
         # TextField Specific
         #
@@ -67,6 +73,7 @@ class CupertinoTextField(TextField):
         cursor_width: OptionalNumber = None,
         cursor_height: OptionalNumber = None,
         cursor_radius: OptionalNumber = None,
+        show_cursor: Optional[bool] = None,
         selection_color: Optional[str] = None,
         input_filter: Optional[InputFilter] = None,
         on_change=None,
@@ -103,12 +110,8 @@ class CupertinoTextField(TextField):
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
-        prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
-        suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         #
         # Control specific
@@ -190,12 +193,8 @@ class CupertinoTextField(TextField):
             error_text=error_text,
             error_style=error_style,
             prefix=prefix,
-            prefix_icon=prefix_icon,
-            prefix_text=prefix_text,
             prefix_style=prefix_style,
             suffix=suffix,
-            suffix_icon=suffix_icon,
-            suffix_text=suffix_text,
             suffix_style=suffix_style,
             #
             # TextField
@@ -221,6 +220,7 @@ class CupertinoTextField(TextField):
             cursor_width=cursor_width,
             cursor_height=cursor_height,
             cursor_radius=cursor_radius,
+            show_cursor=show_cursor,
             selection_color=selection_color,
             input_filter=input_filter,
             on_change=on_change,
@@ -231,12 +231,17 @@ class CupertinoTextField(TextField):
 
         self.placeholder_text = placeholder_text
         self.placeholder_style = placeholder_style
+        self.gradient = gradient
+        self.blend_mode = blend_mode
+        self.shadow = shadow
 
     def _get_control_name(self):
         return "cupertinotextfield"
 
     def _before_build_command(self):
         super()._before_build_command()
+        self._set_attr_json("gradient", self.__gradient)
+        self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
         self._set_attr_json("placeholderStyle", self.__placeholder_style)
 
     # placeholder_text
@@ -256,3 +261,33 @@ class CupertinoTextField(TextField):
     @placeholder_style.setter
     def placeholder_style(self, value: Optional[TextStyle]):
         self.__placeholder_style = value
+
+    # gradient
+    @property
+    def gradient(self) -> Optional[Gradient]:
+        return self.__gradient
+
+    @gradient.setter
+    def gradient(self, value: Optional[Gradient]):
+        self.__gradient = value
+
+    # blend_mode
+    @property
+    def blend_mode(self) -> BlendMode:
+        return self.__blend_mode
+
+    @blend_mode.setter
+    def blend_mode(self, value: BlendMode):
+        self.__blend_mode = value
+        self._set_attr(
+            "blendMode", value.value if isinstance(value, BlendMode) else value
+        )
+
+    # shadow
+    @property
+    def shadow(self):
+        return self.__shadow
+
+    @shadow.setter
+    def shadow(self, value: Union[None, BoxShadow, List[BoxShadow]]):
+        self.__shadow = value if value is not None else []
