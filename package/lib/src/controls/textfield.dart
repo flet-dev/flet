@@ -250,6 +250,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
                   suffixControls.isNotEmpty ? suffixControls.first : null,
                   revealPasswordIcon,
                   _focused),
+              showCursor: widget.control.attrBool("showCursor"),
               cursorHeight: widget.control.attrDouble("cursorHeight"),
               cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
               cursorRadius: parseRadius(widget.control, "cursorRadius"),

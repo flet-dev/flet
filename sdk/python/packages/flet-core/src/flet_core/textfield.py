@@ -194,6 +194,7 @@ class TextField(FormFieldControl):
         enable_suggestions: Optional[bool] = None,
         smart_dashes_type: Optional[bool] = None,
         smart_quotes_type: Optional[bool] = None,
+        show_cursor: Optional[bool] = None,
         cursor_color: Optional[str] = None,
         cursor_width: OptionalNumber = None,
         cursor_height: OptionalNumber = None,
@@ -283,6 +284,7 @@ class TextField(FormFieldControl):
         self.adaptive = adaptive
         self.capitalization = capitalization
         self.autocorrect = autocorrect
+        self.show_cursor = show_cursor
         self.enable_suggestions = enable_suggestions
         self.smart_dashes_type = smart_dashes_type
         self.smart_quotes_type = smart_quotes_type
@@ -469,6 +471,15 @@ class TextField(FormFieldControl):
     @autocorrect.setter
     def autocorrect(self, value: Optional[bool]):
         self._set_attr("autocorrect", value)
+
+    # show_cursor
+    @property
+    def show_cursor(self) -> Optional[bool]:
+        return self._get_attr("showCursor", data_type="bool", def_value=True)
+
+    @show_cursor.setter
+    def show_cursor(self, value: Optional[bool]):
+        self._set_attr("showCursor", value)
 
     # enable_suggestions
     @property
