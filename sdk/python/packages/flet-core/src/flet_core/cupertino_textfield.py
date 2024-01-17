@@ -1,12 +1,15 @@
-import time
 from typing import Any, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
-from flet_core.form_field_control import FormFieldControl, InputBorder
+from flet_core.form_field_control import InputBorder
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.textfield import KeyboardTypeString, TextCapitalizationString, InputFilter, KeyboardType, \
-    TextCapitalization
+from flet_core.textfield import (
+    InputFilter,
+    KeyboardType,
+    TextField,
+    TextCapitalization,
+)
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
@@ -16,7 +19,6 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
-    TextAlignString,
 )
 
 try:
@@ -25,8 +27,9 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class CupertinoTextField(FormFieldControl):
+class CupertinoTextField(TextField):
     """
+    An iOS-style text field.
 
     -----
 
@@ -35,67 +38,11 @@ class CupertinoTextField(FormFieldControl):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        key: Optional[str] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        expand: Union[None, bool, int] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
-        aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
         #
-        # FormField specific
+        # CupertinoTextField specific
         #
-        text_size: OptionalNumber = None,
-        text_style: Optional[TextStyle] = None,
-        label: Optional[str] = None,
-        label_style: Optional[TextStyle] = None,
-        icon: Optional[str] = None,
-        border: Optional[InputBorder] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
-        border_radius: BorderRadiusValue = None,
-        border_width: OptionalNumber = None,
-        border_color: Optional[str] = None,
-        focused_color: Optional[str] = None,
-        focused_bgcolor: Optional[str] = None,
-        focused_border_width: OptionalNumber = None,
-        focused_border_color: Optional[str] = None,
-        content_padding: PaddingValue = None,
-        dense: Optional[bool] = None,
-        filled: Optional[bool] = None,
         placeholder_text: Optional[str] = None,
         placeholder_style: Optional[TextStyle] = None,
-        hint_text: Optional[str] = None,
-        hint_style: Optional[TextStyle] = None,
-        helper_text: Optional[str] = None,
-        helper_style: Optional[TextStyle] = None,
-        counter_text: Optional[str] = None,
-        counter_style: Optional[TextStyle] = None,
-        error_text: Optional[str] = None,
-        error_style: Optional[TextStyle] = None,
-        prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
-        prefix_text: Optional[str] = None,
-        prefix_style: Optional[TextStyle] = None,
-        suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
-        suffix_text: Optional[str] = None,
-        suffix_style: Optional[TextStyle] = None,
         #
         # TextField Specific
         #
@@ -126,8 +73,70 @@ class CupertinoTextField(FormFieldControl):
         on_submit=None,
         on_focus=None,
         on_blur=None,
+        #
+        # FormField specific
+        #
+        text_size: OptionalNumber = None,
+        text_style: Optional[TextStyle] = None,
+        label: Optional[str] = None,
+        label_style: Optional[TextStyle] = None,
+        icon: Optional[str] = None,
+        border: Optional[InputBorder] = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        border_radius: BorderRadiusValue = None,
+        border_width: OptionalNumber = None,
+        border_color: Optional[str] = None,
+        focused_color: Optional[str] = None,
+        focused_bgcolor: Optional[str] = None,
+        focused_border_width: OptionalNumber = None,
+        focused_border_color: Optional[str] = None,
+        content_padding: PaddingValue = None,
+        dense: Optional[bool] = None,
+        filled: Optional[bool] = None,
+        hint_text: Optional[str] = None,
+        hint_style: Optional[TextStyle] = None,
+        helper_text: Optional[str] = None,
+        helper_style: Optional[TextStyle] = None,
+        counter_text: Optional[str] = None,
+        counter_style: Optional[TextStyle] = None,
+        error_text: Optional[str] = None,
+        error_style: Optional[TextStyle] = None,
+        prefix: Optional[Control] = None,
+        prefix_icon: Optional[str] = None,
+        prefix_text: Optional[str] = None,
+        prefix_style: Optional[TextStyle] = None,
+        suffix: Optional[Control] = None,
+        suffix_icon: Optional[str] = None,
+        suffix_text: Optional[str] = None,
+        suffix_style: Optional[TextStyle] = None,
+        #
+        # Control specific
+        #
+        ref: Optional[Ref] = None,
+        key: Optional[str] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
-        FormFieldControl.__init__(
+        TextField.__init__(
             self,
             ref=ref,
             key=key,
@@ -188,105 +197,47 @@ class CupertinoTextField(FormFieldControl):
             suffix_icon=suffix_icon,
             suffix_text=suffix_text,
             suffix_style=suffix_style,
+            #
+            # TextField
+            #
+            value=value,
+            keyboard_type=keyboard_type,
+            multiline=multiline,
+            min_lines=min_lines,
+            max_lines=max_lines,
+            max_length=max_length,
+            password=password,
+            can_reveal_password=can_reveal_password,
+            read_only=read_only,
+            shift_enter=shift_enter,
+            text_align=text_align,
+            autofocus=autofocus,
+            capitalization=capitalization,
+            autocorrect=autocorrect,
+            enable_suggestions=enable_suggestions,
+            smart_dashes_type=smart_dashes_type,
+            smart_quotes_type=smart_quotes_type,
+            cursor_color=cursor_color,
+            cursor_width=cursor_width,
+            cursor_height=cursor_height,
+            cursor_radius=cursor_radius,
+            selection_color=selection_color,
+            input_filter=input_filter,
+            on_change=on_change,
+            on_submit=on_submit,
+            on_focus=on_focus,
+            on_blur=on_blur,
         )
-        self.value = value
-        self.text_style = text_style
-        self.keyboard_type = keyboard_type
-        self.text_align = text_align
-        self.multiline = multiline
-        self.min_lines = min_lines
-        self.max_lines = max_lines
-        self.max_length = max_length
-        self.read_only = read_only
-        self.shift_enter = shift_enter
+
         self.placeholder_text = placeholder_text
         self.placeholder_style = placeholder_style
-        self.password = password
-        self.can_reveal_password = can_reveal_password
-        self.autofocus = autofocus
-        self.capitalization = capitalization
-        self.autocorrect = autocorrect
-        self.enable_suggestions = enable_suggestions
-        self.smart_dashes_type = smart_dashes_type
-        self.smart_quotes_type = smart_quotes_type
-        self.cursor_color = cursor_color
-        self.cursor_height = cursor_height
-        self.cursor_width = cursor_width
-        self.cursor_radius = cursor_radius
-        self.selection_color = selection_color
-        self.input_filter = input_filter
-        self.on_change = on_change
-        self.on_submit = on_submit
-        self.on_focus = on_focus
-        self.on_blur = on_blur
 
     def _get_control_name(self):
         return "cupertinotextfield"
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("inputFilter", self.__input_filter)
         self._set_attr_json("placeholderStyle", self.__placeholder_style)
-        if self.bgcolor is not None and self.filled is None:
-            self.filled = True  # Flutter requires filled = True to display a bgcolor
-
-    def focus(self):
-        self._set_attr_json("focus", str(time.time()))
-        self.update()
-
-    async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
-
-    # value
-    @property
-    def value(self) -> Optional[str]:
-        return self._get_attr("value", def_value="")
-
-    @value.setter
-    def value(self, value: Optional[str]):
-        self._set_attr("value", value)
-
-    # keyboard_type
-    @property
-    def keyboard_type(self) -> Optional[KeyboardType]:
-        return self.__keyboard_type
-
-    @keyboard_type.setter
-    def keyboard_type(self, value: Optional[KeyboardType]):
-        self.__keyboard_type = value
-        if isinstance(value, KeyboardType):
-            self._set_attr("keyboardType", value.value)
-        else:
-            self.__set_keyboard_type(value)
-
-    def __set_keyboard_type(self, value: KeyboardTypeString):
-        self._set_attr("keyboardType", value)
-
-    # text_align
-    @property
-    def text_align(self) -> TextAlign:
-        return self.__text_align
-
-    @text_align.setter
-    def text_align(self, value: TextAlign):
-        self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
-
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
-
-    # multiline
-    @property
-    def multiline(self) -> Optional[bool]:
-        return self._get_attr("multiline", data_type="bool", def_value=False)
-
-    @multiline.setter
-    def multiline(self, value: Optional[bool]):
-        self._set_attr("multiline", value)
 
     # placeholder_text
     @property
@@ -305,221 +256,3 @@ class CupertinoTextField(FormFieldControl):
     @placeholder_style.setter
     def placeholder_style(self, value: Optional[TextStyle]):
         self.__placeholder_style = value
-
-    # min_lines
-    @property
-    def min_lines(self) -> Optional[int]:
-        return self._get_attr("minLines")
-
-    @min_lines.setter
-    def min_lines(self, value: Optional[int]):
-        self._set_attr("minLines", value)
-
-    # max_lines
-    @property
-    def max_lines(self) -> Optional[int]:
-        return self._get_attr("maxLines")
-
-    @max_lines.setter
-    def max_lines(self, value: Optional[int]):
-        self._set_attr("maxLines", value)
-
-    # max_length
-    @property
-    def max_length(self) -> Optional[int]:
-        return self._get_attr("maxLength")
-
-    @max_length.setter
-    def max_length(self, value: Optional[int]):
-        self._set_attr("maxLength", value)
-
-    # read_only
-    @property
-    def read_only(self) -> Optional[bool]:
-        return self._get_attr("readOnly", data_type="bool", def_value=False)
-
-    @read_only.setter
-    def read_only(self, value: Optional[bool]):
-        self._set_attr("readOnly", value)
-
-    # shift_enter
-    @property
-    def shift_enter(self) -> Optional[bool]:
-        return self._get_attr("shiftEnter", data_type="bool", def_value=False)
-
-    @shift_enter.setter
-    def shift_enter(self, value: Optional[bool]):
-        self._set_attr("shiftEnter", value)
-
-    # password
-    @property
-    def password(self) -> Optional[bool]:
-        return self._get_attr("password", data_type="bool", def_value=False)
-
-    @password.setter
-    def password(self, value: Optional[bool]):
-        self._set_attr("password", value)
-
-    # can_reveal_password
-    @property
-    def can_reveal_password(self) -> Optional[bool]:
-        return self._get_attr("canRevealPassword", data_type="bool", def_value=False)
-
-    @can_reveal_password.setter
-    def can_reveal_password(self, value: Optional[bool]):
-        self._set_attr("canRevealPassword", value)
-
-    # autofocus
-    @property
-    def autofocus(self) -> Optional[bool]:
-        return self._get_attr("autofocus", data_type="bool", def_value=False)
-
-    @autofocus.setter
-    def autofocus(self, value: Optional[bool]):
-        self._set_attr("autofocus", value)
-
-    # capitalization
-    @property
-    def capitalization(self) -> TextCapitalization:
-        return self.__capitalization
-
-    @capitalization.setter
-    def capitalization(self, value: TextCapitalization):
-        self.__capitalization = value
-        if isinstance(value, TextCapitalization):
-            self._set_attr("capitalization", value.value)
-        else:
-            self.__set_capitalization(value)
-
-    def __set_capitalization(self, value: TextCapitalizationString):
-        self._set_attr("capitalization", value)
-
-    # autocorrect
-    @property
-    def autocorrect(self) -> Optional[bool]:
-        return self._get_attr("autocorrect", data_type="bool", def_value=True)
-
-    @autocorrect.setter
-    def autocorrect(self, value: Optional[bool]):
-        self._set_attr("autocorrect", value)
-
-    # enable_suggestions
-    @property
-    def enable_suggestions(self) -> Optional[bool]:
-        return self._get_attr("enableSuggestions", data_type="bool", def_value=True)
-
-    @enable_suggestions.setter
-    def enable_suggestions(self, value: Optional[bool]):
-        self._set_attr("enableSuggestions", value)
-
-    # smart_dashes_type
-    @property
-    def smart_dashes_type(self) -> Optional[bool]:
-        return self._get_attr("smartDashesType", data_type="bool", def_value=True)
-
-    @smart_dashes_type.setter
-    def smart_dashes_type(self, value: Optional[bool]):
-        self._set_attr("smartDashesType", value)
-
-    # smart_quotes_type
-    @property
-    def smart_quotes_type(self) -> Optional[bool]:
-        return self._get_attr("smartQuotesType", data_type="bool", def_value=True)
-
-    @smart_quotes_type.setter
-    def smart_quotes_type(self, value: Optional[bool]):
-        self._set_attr("smartQuotesType", value)
-
-    # cursor_color
-    @property
-    def cursor_color(self):
-        return self._get_attr("cursorColor")
-
-    @cursor_color.setter
-    def cursor_color(self, value):
-        self._set_attr("cursorColor", value)
-
-    # cursor_height
-    @property
-    def cursor_height(self) -> OptionalNumber:
-        return self._get_attr("cursorHeight")
-
-    @cursor_height.setter
-    def cursor_height(self, value: OptionalNumber):
-        self._set_attr("cursorHeight", value)
-
-    # cursor_width
-    @property
-    def cursor_width(self) -> OptionalNumber:
-        return self._get_attr("cursorWidth")
-
-    @cursor_width.setter
-    def cursor_width(self, value: OptionalNumber):
-        self._set_attr("cursorWidth", value)
-
-    # cursor_radius
-    @property
-    def cursor_radius(self) -> OptionalNumber:
-        return self._get_attr("cursorRadius")
-
-    @cursor_radius.setter
-    def cursor_radius(self, value: OptionalNumber):
-        self._set_attr("cursorRadius", value)
-
-    # selection_color
-    @property
-    def selection_color(self):
-        return self._get_attr("selectionColor")
-
-    @selection_color.setter
-    def selection_color(self, value):
-        self._set_attr("selectionColor", value)
-
-    # input_filter
-    @property
-    def input_filter(self) -> Optional[InputFilter]:
-        return self.__input_filter
-
-    @input_filter.setter
-    def input_filter(self, value: Optional[InputFilter]):
-        self.__input_filter = value
-
-    # on_change
-    @property
-    def on_change(self):
-        return self._get_event_handler("change")
-
-    @on_change.setter
-    def on_change(self, handler):
-        self._add_event_handler("change", handler)
-        if handler is not None:
-            self._set_attr("onchange", True)
-        else:
-            self._set_attr("onchange", None)
-
-    # on_submit
-    @property
-    def on_submit(self):
-        return self._get_event_handler("submit")
-
-    @on_submit.setter
-    def on_submit(self, handler):
-        self._add_event_handler("submit", handler)
-
-    # on_focus
-    @property
-    def on_focus(self):
-        return self._get_event_handler("focus")
-
-    @on_focus.setter
-    def on_focus(self, handler):
-        self._add_event_handler("focus", handler)
-
-    # on_blur
-    @property
-    def on_blur(self):
-        return self._get_event_handler("blur")
-
-    @on_blur.setter
-    def on_blur(self, handler):
-        self._add_event_handler("blur", handler)
