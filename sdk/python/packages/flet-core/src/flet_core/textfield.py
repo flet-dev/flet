@@ -1,6 +1,6 @@
 import dataclasses
-from dataclasses import field
 import time
+from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -71,9 +71,11 @@ class InputFilter:
     allow: bool = field(default=True)
     replacement_string: str = field(default="")
 
+
 class NumbersOnlyInputFilter(InputFilter):
     def __init__(self):
         super().__init__(r"[0-9]")
+
 
 class TextOnlyInputFilter(InputFilter):
     def __init__(self):
@@ -174,6 +176,7 @@ class TextField(FormFieldControl):
         #
         # TextField Specific
         #
+        adaptive: Optional[bool] = None,
         value: Optional[str] = None,
         keyboard_type: Optional[KeyboardType] = None,
         multiline: Optional[bool] = None,
@@ -277,6 +280,7 @@ class TextField(FormFieldControl):
         self.password = password
         self.can_reveal_password = can_reveal_password
         self.autofocus = autofocus
+        self.adaptive = adaptive
         self.capitalization = capitalization
         self.autocorrect = autocorrect
         self.enable_suggestions = enable_suggestions
@@ -431,6 +435,15 @@ class TextField(FormFieldControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
 
     # capitalization
     @property

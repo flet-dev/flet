@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -12,6 +13,7 @@ import '../utils/colors.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
+import 'cupertino_textfield.dart';
 import 'form_field.dart';
 
 class TextFieldControl extends StatefulWidget {
@@ -100,6 +102,17 @@ class _TextFieldControlState extends State<TextFieldControl> {
 
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+
+    bool adaptive = widget.control.attrBool("adaptive", false)!;
+    if (adaptive &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)) {
+      return CupertinoTextFieldControl(
+          control: widget.control,
+          children: widget.children,
+          parent: widget.parent,
+          parentDisabled: widget.parentDisabled);
+    }
 
     return StoreConnector<AppState, Function>(
         distinct: true,
