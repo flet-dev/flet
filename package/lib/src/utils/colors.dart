@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'cupertino_colors.dart';
 import 'numbers.dart';
 
 Color? _getThemeColor(ThemeData theme, String colorName) {
@@ -182,6 +183,12 @@ extension HexColor on Color {
     if (primaryColor != null) {
       var shadedColor = primaryColor[shade];
       return shadedColor ?? primaryColor;
+    }
+
+    // find cupertino color
+    Color? cupertinoColor = cupertinoColors[name.toLowerCase()];
+    if (cupertinoColor != null) {
+      return cupertinoColor;
     }
 
     // accent color
