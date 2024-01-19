@@ -188,7 +188,7 @@ class _TabsControlState extends State<TabsControl>
               tabs: viewModel.controlViews.map((tabView) {
                 var text = tabView.control.attrString("text");
                 var icon =
-                    getMaterialIcon(tabView.control.attrString("icon", "")!);
+                    parseIcon(tabView.control.attrString("icon", "")!);
                 var tabContentCtrls = tabView.children
                     .where((c) => c.name == "tab_content" && c.isVisible);
 

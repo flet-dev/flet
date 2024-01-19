@@ -46,11 +46,11 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
     ((b) => b.name == control.attrString("border", "")!.toLowerCase()),
     orElse: () => FormFieldInputBorder.outline,
   );
-  var icon = getMaterialIcon(control.attrString("icon", "")!);
+  var icon = parseIcon(control.attrString("icon", "")!);
 
-  var prefixIcon = getMaterialIcon(control.attrString("prefixIcon", "")!);
+  var prefixIcon = parseIcon(control.attrString("prefixIcon", "")!);
   var prefixText = control.attrString("prefixText");
-  var suffixIcon = getMaterialIcon(control.attrString("suffixIcon", "")!);
+  var suffixIcon = parseIcon(control.attrString("suffixIcon", "")!);
   var suffixText = control.attrString("suffixText");
 
   var bgcolor = HexColor.fromString(

@@ -128,12 +128,12 @@ class _NavigationRailControlState extends State<NavigationRailControl> {
                     var labelContentCtrls = destView.children
                         .where((c) => c.name == "label_content");
 
-                    var icon = getMaterialIcon(
+                    var icon = parseIcon(
                         destView.control.attrString("icon", "")!);
                     var iconContentCtrls = destView.children
                         .where((c) => c.name == "icon_content");
 
-                    var selectedIcon = getMaterialIcon(
+                    var selectedIcon = parseIcon(
                         destView.control.attrString("selectedIcon", "")!);
                     var selectedIconContentCtrls = destView.children
                         .where((c) => c.name == "selected_icon_content");

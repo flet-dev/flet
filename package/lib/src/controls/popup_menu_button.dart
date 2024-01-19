@@ -27,7 +27,7 @@ class PopupMenuButtonControl extends StatelessWidget {
 
     final server = FletAppServices.of(context).server;
 
-    var icon = getMaterialIcon(control.attrString("icon", "")!);
+    var icon = parseIcon(control.attrString("icon", "")!);
     var tooltip = control.attrString("tooltip");
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
@@ -63,7 +63,7 @@ class PopupMenuButtonControl extends StatelessWidget {
               itemBuilder: (BuildContext context) =>
                   viewModel.controlViews.map((cv) {
                     var itemIcon =
-                        getMaterialIcon(cv.control.attrString("icon", "")!);
+                        parseIcon(cv.control.attrString("icon", "")!);
                     var text = cv.control.attrString("text", "")!;
                     var checked = cv.control.attrBool("checked");
                     var contentCtrls =
