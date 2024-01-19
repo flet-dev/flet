@@ -79,7 +79,11 @@ from flet_core.datatable import (
     DataTable,
 )
 from flet_core.date_picker import DatePicker, DatePickerEntryMode, DatePickerMode
-from flet_core.dismissible import Dismissible, DismissibleDismissEvent, DismissibleUpdateEvent
+from flet_core.dismissible import (
+    Dismissible,
+    DismissibleDismissEvent,
+    DismissibleUpdateEvent,
+)
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
@@ -152,6 +156,7 @@ from flet_core.page import (
     RouteChangeEvent,
     ViewPopEvent,
 )
+from flet_core.pagelet import Pagelet
 from flet_core.painting import (
     Paint,
     PaintingStyle,
