@@ -1,11 +1,18 @@
+import 'package:collection/collection.dart';
 import 'package:flet/src/flet_app_services.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../models/app_state.dart';
 import '../models/control.dart';
+import '../models/controls_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
+import 'app_bar.dart';
 import 'create_control.dart';
+import 'cupertino_app_bar.dart';
 import 'error.dart';
 
 class PageletControl extends StatefulWidget {
@@ -141,68 +148,95 @@ class _PageletControlState extends State<PageletControl> {
                 eventData: "");
           }
         : null;
-    var bar = appBarView != null
-        ? AppBarControl(
-            parent: control,
-            control: appBarView.control,
-            children: appBarView.children,
-            parentDisabled: control.isDisabled,
-            height:
-                appBarView.control.attrDouble("toolbarHeight", kToolbarHeight)!)
-        : cupertinoAppBarView != null
-            ? CupertinoAppBarControl(
-                parent: control,
-                control: cupertinoAppBarView.control,
-                children: cupertinoAppBarView.children,
-                parentDisabled: control.isDisabled,
-                bgcolor: HexColor.fromString(Theme.of(context),
-                    cupertinoAppBarView.control.attrString("bgcolor", "")!),
-              ) as ObstructingPreferredSizeWidget
-            : null;
-    return constrainedControl(
-        context,
-        Scaffold(
-          // autofocus: autofocus,
-          // focusNode: _focusNode,
-          appBar: bar,
-          // avatar: leadingCtrls.isNotEmpty
-          //     ? createControl(widget.control, leadingCtrls.first.id, disabled)
-          //     : null,
-          backgroundColor: bgcolor,
-          body: createControl(widget.control, contentCtrls.first.id, disabled),
-          // checkmarkColor: HexColor.fromString(
-          //     Theme.of(context), widget.control.attrString("checkColor", "")!),
-          // selected: _selected,
-          // showCheckmark: showCheckmark,
-          // deleteButtonTooltipMessage: deleteButtonTooltipMessage,
-          // onPressed: onClickHandler,
-          // onDeleted: onDeleteHandler,
-          // onSelected: onSelect && !disabled
-          //     ? (bool selected) {
-          //         _onSelect(selected);
-          //       }
-          //     : null,
-          // deleteIcon: deleteIconCtrls.isNotEmpty
-          //     ? createControl(
-          //         widget.control, deleteIconCtrls.first.id, disabled)
-          //     : null,
-          // deleteIconColor: deleteIconColor,
-          // disabledColor: disabledColor,
-          // elevation: elevation,
-          // isEnabled: !disabled,
-          // padding: parseEdgeInsets(widget.control, "padding"),
-          // labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
-          // labelStyle:
-          //     parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
-          // selectedColor: HexColor.fromString(Theme.of(context),
-          //     widget.control.attrString("selectedColor", "")!),
-          // selectedShadowColor: HexColor.fromString(Theme.of(context),
-          //     widget.control.attrString("selectedShadowColor", "")!),
-          // shadowColor: HexColor.fromString(
-          //     Theme.of(context), widget.control.attrString("shadowColor", "")!),
-          // shape: parseOutlinedBorder(widget.control, "shape"),
-        ),
-        widget.parent,
-        widget.control);
+
+    List<String> childIds = [
+      appBarCtrls.firstOrNull?.id,
+      // drawer?.id,
+      // endDrawer?.id
+    ].whereNotNull().toList();
+
+    return StoreConnector<AppState, ControlsViewModel>(
+        distinct: true,
+        converter: (store) => ControlsViewModel.fromStore(store, childIds),
+        ignoreChange: (state) {
+          //debugPrint("ignoreChange: $id");
+          for (var id in childIds) {
+            if (state.controls[id] == null) {
+              return true;
+            }
+          }
+          return false;
+        },
+        builder: (context, childrenViews) {
+          var appBarView = childrenViews.controlViews.firstWhereOrNull(
+              (v) => v.control.id == (appBarCtrls.firstOrNull?.id ?? ""));
+
+          var bar = appBarView != null
+              ? appBarView.control.type == "appbar"
+                  ? AppBarControl(
+                      parent: widget.control,
+                      control: appBarView.control,
+                      children: appBarView.children,
+                      parentDisabled: widget.control.isDisabled,
+                      height: appBarView.control
+                          .attrDouble("toolbarHeight", kToolbarHeight)!)
+                  : appBarView.control.type == "cupertinoappbar"
+                      ? CupertinoAppBarControl(
+                          parent: widget.control,
+                          control: appBarView.control,
+                          children: appBarView.children,
+                          parentDisabled: widget.control.isDisabled,
+                          bgcolor: HexColor.fromString(Theme.of(context),
+                              appBarView.control.attrString("bgcolor", "")!),
+                        ) as ObstructingPreferredSizeWidget
+                      : null
+              : null;
+          return constrainedControl(
+              context,
+              Scaffold(
+                // autofocus: autofocus,
+                // focusNode: _focusNode,
+                appBar: bar,
+                // avatar: leadingCtrls.isNotEmpty
+                //     ? createControl(widget.control, leadingCtrls.first.id, disabled)
+                //     : null,
+                backgroundColor: bgcolor,
+                body: createControl(
+                    widget.control, contentCtrls.first.id, disabled),
+                // checkmarkColor: HexColor.fromString(
+                //     Theme.of(context), widget.control.attrString("checkColor", "")!),
+                // selected: _selected,
+                // showCheckmark: showCheckmark,
+                // deleteButtonTooltipMessage: deleteButtonTooltipMessage,
+                // onPressed: onClickHandler,
+                // onDeleted: onDeleteHandler,
+                // onSelected: onSelect && !disabled
+                //     ? (bool selected) {
+                //         _onSelect(selected);
+                //       }
+                //     : null,
+                // deleteIcon: deleteIconCtrls.isNotEmpty
+                //     ? createControl(
+                //         widget.control, deleteIconCtrls.first.id, disabled)
+                //     : null,
+                // deleteIconColor: deleteIconColor,
+                // disabledColor: disabledColor,
+                // elevation: elevation,
+                // isEnabled: !disabled,
+                // padding: parseEdgeInsets(widget.control, "padding"),
+                // labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
+                // labelStyle:
+                //     parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
+                // selectedColor: HexColor.fromString(Theme.of(context),
+                //     widget.control.attrString("selectedColor", "")!),
+                // selectedShadowColor: HexColor.fromString(Theme.of(context),
+                //     widget.control.attrString("selectedShadowColor", "")!),
+                // shadowColor: HexColor.fromString(
+                //     Theme.of(context), widget.control.attrString("shadowColor", "")!),
+                // shape: parseOutlinedBorder(widget.control, "shape"),
+              ),
+              widget.parent,
+              widget.control);
+        });
   }
 }
