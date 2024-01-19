@@ -1,38 +1,39 @@
-# $lines = Get-Content "colors.dart"
+"""
+$lines = Get-Content "colors.dart"
 
-# $section = ''
+$section = ''
 
-# foreach($line in $lines) {
+foreach($line in $lines) {
 
-#     if ($line.Contains("case `"")) {
-#         $color = $line.Replace('case "', "").replace('":', "").trim()
-#         $ucolor = $color.toUpper()
-#         "$ucolor = `"$color`""
-#     } elseif ($line.Contains('Map<String, Color> _plainColors')) {
-#         $section = 'plain'
-#     } elseif ($line.Contains('Map<String, MaterialColor> _materialColors')) {
-#         $section = 'primary'
-#     } elseif ($line.Contains('Map<String, MaterialAccentColor> _materialAccentColors')) {
-#         $section = 'accent'
-#     } elseif ($line.startswith('  "')) {
-#         $color = $line.split('"')[1]
-#         $ucolor = $color.replace('deep', 'deep_').replace('light', 'light_').replace('grey', '_grey').replace('accent', '_accent').toUpper()
+    if ($line.Contains("case `"")) {
+        $color = $line.Replace('case "', "").replace('":', "").trim()
+        $ucolor = $color.toUpper()
+        "$ucolor = `"$color`""
+    } elseif ($line.Contains('Map<String, Color> _plainColors')) {
+        $section = 'plain'
+    } elseif ($line.Contains('Map<String, MaterialColor> _materialColors')) {
+        $section = 'primary'
+    } elseif ($line.Contains('Map<String, MaterialAccentColor> _materialAccentColors')) {
+        $section = 'accent'
+    } elseif ($line.startswith('  "')) {
+        $color = $line.split('"')[1]
+        $ucolor = $color.replace('deep', 'deep_').replace('light', 'light_').replace('grey', '_grey').replace('accent', '_accent').toUpper()
 
-#         "$ucolor = `"$color`""
-#         if ($section -eq 'primary') {
-#             $shades = @(50, 100, 200, 300, 400, 500, 600, 700, 800, 900)
-#             foreach($shade in $shades) {
-#                 "$($ucolor)_$shade = `"$($color)$shade`""
-#             }
-#         } elseif ($section -eq 'accent') {
-#             $shades = @(100, 200, 400, 700)
-#             foreach($shade in $shades) {
-#                 "$($ucolor)_$shade = `"$($color)$shade`""
-#             }
-#         }
-#     }
-
-# }
+        "$ucolor = `"$color`""
+        if ($section -eq 'primary') {
+            $shades = @(50, 100, 200, 300, 400, 500, 600, 700, 800, 900)
+            foreach($shade in $shades) {
+                "$($ucolor)_$shade = `"$($color)$shade`""
+            }
+        } elseif ($section -eq 'accent') {
+            $shades = @(100, 200, 400, 700)
+            foreach($shade in $shades) {
+                "$($ucolor)_$shade = `"$($color)$shade`""
+            }
+        }
+    }
+}
+"""
 
 
 def with_opacity(opacity: float, color: str):
