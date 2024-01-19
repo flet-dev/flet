@@ -95,6 +95,7 @@ class Pagelet(ConstrainedControl):
         #
         autofocus: Optional[bool] = None,
         content: Optional[Control] = None,
+        appbar: Optional[Control] = None,
         bgcolor: Optional[str] = None,
         selected: Optional[bool] = False,
         check_color: Optional[str] = None,
@@ -150,6 +151,7 @@ class Pagelet(ConstrainedControl):
         self.autofocus = autofocus
         # self.label = label
         self.content = content
+        self.appbar = appbar
         self.bgcolor = bgcolor
         self.check_color = check_color
         self.selected = selected
@@ -184,9 +186,9 @@ class Pagelet(ConstrainedControl):
 
     def _get_children(self):
         children = []
-        # if self.__appbar:
-        #     self.__appbar._set_attr_internal("n", "appbar")
-        #     children.append(self.__appbar)
+        if self.__appbar:
+            self.__appbar._set_attr_internal("n", "appbar")
+            children.append(self.__appbar)
         if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
@@ -231,14 +233,14 @@ class Pagelet(ConstrainedControl):
     def delete_icon_tooltip(self, value):
         self._set_attr("deleteButtonTooltipMessage", value)
 
-    # # appbar
-    # @property
-    # def appbar(self) -> Control:
-    #     return self.__appbar
+    # appbar
+    @property
+    def appbar(self) -> Control:
+        return self.__appbar
 
-    # @appbar.setter
-    # def label(self, value: Control):
-    #     self.__appbar = value
+    @appbar.setter
+    def appbar(self, value: Control):
+        self.__appbar = value
 
     # label_padding
     @property

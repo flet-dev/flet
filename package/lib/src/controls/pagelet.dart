@@ -117,6 +117,11 @@ class _PageletControlState extends State<PageletControl> {
 
     var elevation = widget.control.attrDouble("elevation");
 
+    // var appBarView = childrenViews.controlViews
+    //     .firstWhereOrNull((v) => v.control.id == (appBar?.id ?? ""));
+    // var cupertinoAppBarView = childrenViews.controlViews
+    //     .firstWhereOrNull((v) => v.control.id == (cupertinoAppBar?.id ?? ""));
+
     Function()? onClickHandler = onClick && !disabled
         ? () {
             debugPrint("Chip ${widget.control.id} clicked!");
@@ -136,13 +141,30 @@ class _PageletControlState extends State<PageletControl> {
                 eventData: "");
           }
         : null;
-
+    var bar = appBarView != null
+        ? AppBarControl(
+            parent: control,
+            control: appBarView.control,
+            children: appBarView.children,
+            parentDisabled: control.isDisabled,
+            height:
+                appBarView.control.attrDouble("toolbarHeight", kToolbarHeight)!)
+        : cupertinoAppBarView != null
+            ? CupertinoAppBarControl(
+                parent: control,
+                control: cupertinoAppBarView.control,
+                children: cupertinoAppBarView.children,
+                parentDisabled: control.isDisabled,
+                bgcolor: HexColor.fromString(Theme.of(context),
+                    cupertinoAppBarView.control.attrString("bgcolor", "")!),
+              ) as ObstructingPreferredSizeWidget
+            : null;
     return constrainedControl(
         context,
         Scaffold(
           // autofocus: autofocus,
           // focusNode: _focusNode,
-          //appBar: createControl(widget.control, appBarCtrls.first.id, disabled),
+          appBar: bar,
           // avatar: leadingCtrls.isNotEmpty
           //     ? createControl(widget.control, leadingCtrls.first.id, disabled)
           //     : null,
