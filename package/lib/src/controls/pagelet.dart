@@ -88,6 +88,8 @@ class _PageletControlState extends State<PageletControl> {
         widget.children.where((c) => c.name == "navigationbar" && c.isVisible);
     var bottomAppBarCtrls =
         widget.children.where((c) => c.name == "bottomappbar" && c.isVisible);
+    var bottomSheetCtrls =
+        widget.children.where((c) => c.name == "bottomsheet" && c.isVisible);
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl("Pagelet must have content specified.");
@@ -161,6 +163,10 @@ class _PageletControlState extends State<PageletControl> {
                         widget.control, contentCtrls.first.id, disabled)
                     : null,
                 bottomNavigationBar: bnb,
+                bottomSheet: bottomSheetCtrls.isNotEmpty
+                    ? createControl(
+                        widget.control, bottomSheetCtrls.first.id, disabled)
+                    : null,
               ),
               widget.parent,
               widget.control);

@@ -1,8 +1,10 @@
 from typing import Any, Optional, Union
 
+from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
+from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.navigation_bar import NavigationBar
 from flet_core.ref import Ref
@@ -75,9 +77,10 @@ class Pagelet(ConstrainedControl):
         # Specific
         #
         content: Optional[Control] = None,
-        appbar: Optional[Control] = None,
+        appbar: Union[AppBar, CupertinoAppBar, None] = None,
         navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None,
         bottom_app_bar: Optional[BottomAppBar] = None,
+        bottom_sheet: Optional[Control] = None,
         bgcolor: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
@@ -115,6 +118,7 @@ class Pagelet(ConstrainedControl):
         self.bgcolor = bgcolor
         self.navigation_bar = navigation_bar
         self.bottom_appbar = bottom_app_bar
+        self.bottom_sheet = bottom_sheet
 
     def _get_control_name(self):
         return "pagelet"
@@ -133,15 +137,18 @@ class Pagelet(ConstrainedControl):
         if self.__bottom_appbar:
             self.__bottom_appbar._set_attr_internal("n", "bottomappbar")
             children.append(self.__bottom_appbar)
+        if self.__bottom_sheet:
+            self.__bottom_sheet._set_attr_internal("n", "bottomsheet")
+            children.append(self.__bottom_sheet)
         return children
 
     # appbar
     @property
-    def appbar(self) -> Control:
+    def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
         return self.__appbar
 
     @appbar.setter
-    def appbar(self, value: Control):
+    def appbar(self, value: Union[AppBar, CupertinoAppBar, None]):
         self.__appbar = value
 
     # content
@@ -182,3 +189,15 @@ class Pagelet(ConstrainedControl):
         value: Union[NavigationBar, CupertinoNavigationBar, None],
     ):
         self.__navigation_bar = value
+
+    # bottom_sheet
+    @property
+    def bottom_sheet(self) -> Optional[Control]:
+        return self.__bottom_sheet
+
+    @bottom_sheet.setter
+    def bottom_sheet(
+        self,
+        value: Optional[Control],
+    ):
+        self.__bottom_sheet = value
