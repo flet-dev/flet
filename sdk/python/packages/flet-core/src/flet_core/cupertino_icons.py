@@ -1,5 +1,5 @@
 """
-url='https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/src/cupertino/icons.dart'
+url='https://raw.githubusercontent.com/flutter/flutter/stable/packages/flutter/lib/src/cupertino/icons.dart'
 output_file="$HOME/cupertino_icons_python.txt"
 
 curl -s $url | python -c '

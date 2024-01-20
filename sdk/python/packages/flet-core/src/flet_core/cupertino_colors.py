@@ -1,5 +1,5 @@
 """
-url='https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/src/cupertino/colors.dart'
+url='https://raw.githubusercontent.com/flutter/flutter/stable/packages/flutter/lib/src/cupertino/colors.dart'
 output_file="$HOME/cupertino_python_colors.txt"
 curl -s $url | python -c '
 import re

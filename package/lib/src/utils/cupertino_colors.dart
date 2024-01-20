@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 //
 /*
 
-url='https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/src/cupertino/colors.dart'
+url='https://raw.githubusercontent.com/flutter/flutter/stable/packages/flutter/lib/src/cupertino/colors.dart'
 output_file="$HOME/cupertino_colors.txt"
 
 echo "Map<String, Color> cupertinoColors = {" > "$output_file"

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 //
 /*
 
-url='https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/src/cupertino/icons.dart'
+url='https://raw.githubusercontent.com/flutter/flutter/stable/packages/flutter/lib/src/cupertino/icons.dart'
 output_file="$HOME/cupertino_icons.txt"
 
 echo "Map<String, IconData> cupertinoIcons = {" > "$output_file"
