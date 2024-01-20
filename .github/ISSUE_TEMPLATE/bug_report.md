@@ -4,6 +4,19 @@ about: Create a report to help us improve Flet
 ---
 
 <!--
+=============================================================================
+============================== IMPORTANT NOTE ===============================
+=============================================================================
+
+DO NOT PASTE SCREENSHOTS OF LOGS OR ERRORS INSTEAD OF A TEXT PLEASE!
+
+When you paste screenshots into issue instead of text a) it's impossible to copy/paste to google - everything has to be re-typed by hands and b) the contents of the issue is not indexed by search engines, so other users won't find the issue and solution.
+
+Thank you!
+
+-->
+
+<!--
 If you are reporting a new issue, make sure that we do not have any duplicates
 already open. You can ensure this by searching the issue list for this
 repository. If there is a duplicate, please close your issue and add a comment
