@@ -55,9 +55,9 @@ class _IconButtonControlState extends State<IconButtonControl> {
   Widget build(BuildContext context) {
     debugPrint("Button build: ${widget.control.id}");
 
-    IconData? icon = getMaterialIcon(widget.control.attrString("icon", "")!);
+    IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
     IconData? selectedIcon =
-        getMaterialIcon(widget.control.attrString("selectedIcon", "")!);
+        parseIcon(widget.control.attrString("selectedIcon", "")!);
     Color? iconColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("iconColor", "")!);
     Color? selectedIconColor = HexColor.fromString(

@@ -62,9 +62,9 @@ class _DatePickerControlState extends State<DatePickerControl> {
             orElse: () => DatePickerEntryMode.calendar);
     String? fieldHintText = widget.control.attrString("fieldHintText");
     String? fieldLabelText = widget.control.attrString("fieldLabelText");
-    IconData? switchToCalendarEntryModeIcon = getMaterialIcon(
+    IconData? switchToCalendarEntryModeIcon = parseIcon(
         widget.control.attrString("switchToCalendarEntryModeIcon", "")!);
-    IconData? switchToInputEntryModeIcon = getMaterialIcon(
+    IconData? switchToInputEntryModeIcon = parseIcon(
         widget.control.attrString("switchToInputEntryModeIcon", "")!);
 
     //Locale locale;

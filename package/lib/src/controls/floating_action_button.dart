@@ -28,7 +28,7 @@ class FloatingActionButtonControl extends StatelessWidget {
     debugPrint("FloatingActionButtonControl build: ${control.id}");
 
     String? text = control.attrString("text");
-    IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
+    IconData? icon = parseIcon(control.attrString("icon", "")!);
     String url = control.attrString("url", "")!;
     String? urlTarget = control.attrString("urlTarget");
     Color? bgColor = HexColor.fromString(

@@ -9,10 +9,10 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
-import '../utils/borders.dart';
 import 'cupertino_navigation_bar.dart';
 
 class NavigationBarControl extends StatefulWidget {
@@ -108,11 +108,11 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
                 var label = destView.control.attrString("label", "")!;
 
                 var icon =
-                    getMaterialIcon(destView.control.attrString("icon", "")!);
+                    parseIcon(destView.control.attrString("icon", "")!);
                 var iconContentCtrls =
                     destView.children.where((c) => c.name == "icon_content");
 
-                var selectedIcon = getMaterialIcon(
+                var selectedIcon = parseIcon(
                     destView.control.attrString("selectedIcon", "")!);
                 var selectedIconContentCtrls = destView.children
                     .where((c) => c.name == "selected_icon_content");

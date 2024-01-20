@@ -23,7 +23,7 @@ class IconControl extends StatelessWidget {
     return constrainedControl(
         context,
         Icon(
-          getMaterialIcon(name),
+          parseIcon(name),
           size: size,
           color: color,
         ),

@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import 'cupertino_icons.dart';
 import 'material_icons.dart';
 import 'material_state.dart';
 
-IconData? getMaterialIcon(String iconName) {
-  return materialIcons[iconName.toLowerCase()];
+IconData? parseIcon(String iconName) {
+  return materialIcons[iconName.toLowerCase()] ?? cupertinoIcons[iconName.toLowerCase()];
 }
 
 MaterialStateProperty<Icon?>? parseMaterialStateIcon(
@@ -20,5 +21,5 @@ MaterialStateProperty<Icon?>? parseMaterialStateIcon(
   final j1 = json.decode(v);
 
   return getMaterialStateProperty<Icon?>(
-      j1, (jv) => Icon(getMaterialIcon(jv as String)), null);
+      j1, (jv) => Icon(parseIcon(jv as String)), null);
 }

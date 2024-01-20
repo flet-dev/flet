@@ -1,10 +1,16 @@
-# $url = 'https://raw.githubusercontent.com/flutter/flutter/3.7.0/packages/flutter/lib/src/material/icons.dart'
-# (Invoke-WebRequest $url).Content.Split("`n") | ForEach-Object {
-#     $found = $_ -match ' const IconData ([a-z0-9_]+) '
-#     if ($found) {
-#         "$($matches[1].ToUpperInvariant()) = `"$($matches[1])`""
-#     }
-# } | Set-Content "$HOME/icons_python.txt"
+"""
+url='https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/src/material/icons.dart'
+output_file="$HOME/icons_python.txt"
+
+curl -s $url | python -c '
+import re
+
+for line in __import__("sys").stdin:
+    match = re.search(r"const IconData ([a-z0-9_]+)", line)
+    if match:
+        print("{} = \"{}\"".format(match.group(1).upper(), match.group(1)))
+' >> "$output_file"
+"""
 
 TEN_K = "ten_k"
 TEN_K_SHARP = "ten_k_sharp"

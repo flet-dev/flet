@@ -57,7 +57,7 @@ class _TextButtonControlState extends State<TextButtonControl> {
     final server = FletAppServices.of(context).server;
 
     String text = widget.control.attrString("text", "")!;
-    IconData? icon = getMaterialIcon(widget.control.attrString("icon", "")!);
+    IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
     Color? iconColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("iconColor", "")!);
     var contentCtrls = widget.children.where((c) => c.name == "content");
