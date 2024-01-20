@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 //
 /*
 
-url='https://raw.githubusercontent.com/flutter/flutter/3.10.0/packages/flutter/lib/src/material/icons.dart'
+url='https://raw.githubusercontent.com/flutter/flutter/stable/packages/flutter/lib/src/material/icons.dart'
 output_file="$HOME/icons.txt"
 
 echo "Map<String, IconData> materialIcons = {" > "$output_file"
