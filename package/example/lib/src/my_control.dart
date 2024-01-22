@@ -1,13 +1,13 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-class CardControl extends StatelessWidget {
+class MyControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
 
-  const CardControl(
+  const MyControl(
       {super.key,
       this.parent,
       required this.control,
