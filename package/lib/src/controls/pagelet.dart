@@ -90,6 +90,10 @@ class _PageletControlState extends State<PageletControl> {
         widget.children.where((c) => c.name == "bottomappbar" && c.isVisible);
     var bottomSheetCtrls =
         widget.children.where((c) => c.name == "bottomsheet" && c.isVisible);
+    var drawerCtrls =
+        widget.children.where((c) => c.name == "drawer" && c.isVisible);
+    var endDrawerCtrls =
+        widget.children.where((c) => c.name == "enddrawer" && c.isVisible);
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl("Pagelet must have content specified.");
@@ -129,8 +133,21 @@ class _PageletControlState extends State<PageletControl> {
               : null;
           var bnb = navBar ?? bottomAppBar;
 
+          // var drawer = drawerCtrls.isNotEmpty
+          //     ? createControl(widget.control, drawerCtrls.first.id, disabled)
+          //     : null;
+
+          // var endDrawer = endDrawerCtrls.isNotEmpty
+          //     ? createControl(widget.control, endDrawerCtrls.first.id, disabled)
+          //     : null;
+
           var appBarView = childrenViews.controlViews.firstWhereOrNull(
               (v) => v.control.id == (appBarCtrls.firstOrNull?.id ?? ""));
+
+          var drawerView = childrenViews.controlViews.firstWhereOrNull(
+              (v) => v.control.id == (drawerCtrls.firstOrNull?.id ?? ""));
+          var endDrawerView = childrenViews.controlViews.firstWhereOrNull(
+              (v) => v.control.id == (endDrawerCtrls.firstOrNull?.id ?? ""));
 
           var bar = appBarView != null
               ? appBarView.control.type == "appbar"
