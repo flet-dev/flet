@@ -236,6 +236,7 @@ class _PageletControlState extends State<PageletControl> {
           return constrainedControl(
               context,
               Scaffold(
+                key: scaffoldKey,
                 appBar: bar,
                 backgroundColor: bgcolor,
                 //backgroundColor: Colors.red,
