@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
+import 'cupertino_app_bar.dart';
 
 class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
   final Control? parent;
@@ -22,6 +24,18 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("AppBar build: ${control.id}");
+
+    bool adaptive = control.attrBool("adaptive", false)!;
+    if (adaptive &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)) {
+      return CupertinoAppBarControl(
+        control: control,
+        parentDisabled: parentDisabled,
+        children: children,
+        bgcolor: HexColor.fromString(
+            Theme.of(context), control.attrString("bgcolor", "")!));
+    }
 
     var leadingCtrls =
         children.where((c) => c.name == "leading" && c.isVisible);
