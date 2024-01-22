@@ -29,9 +29,14 @@ class CupertinoAppBarControl extends StatelessWidget
 
     var leadingCtrls =
         children.where((c) => c.name == "leading" && c.isVisible);
-    var middleCtrls = children.where((c) => c.name == "middle" && c.isVisible);
-    var trailingCtrls =
-        children.where((c) => c.name == "trailing" && c.isVisible);
+
+    // if the material AppBar was used with adaptive=True, AppBar.title will be used as middle control
+    var middleCtrls = children
+        .where((c) => (c.name == "middle" || c.name == "title") && c.isVisible);
+
+    // if the material AppBar was used with adaptive=True, AppBar.actions[0] will be used as trailing control
+    var trailingCtrls = children.where(
+        (c) => (c.name == "trailing" || c.name == "action") && c.isVisible);
 
     var automaticallyImplyLeading =
         control.attrBool("automaticallyImplyLeading", true)!;
