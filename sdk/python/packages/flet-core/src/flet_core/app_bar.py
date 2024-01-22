@@ -61,6 +61,7 @@ class AppBar(Control):
         bgcolor: Optional[str] = None,
         elevation: OptionalNumber = None,
         actions: Optional[List[Control]] = None,
+        adaptive: Optional[bool] = None,
     ):
         Control.__init__(self, ref=ref)
 
@@ -78,6 +79,7 @@ class AppBar(Control):
         self.bgcolor = bgcolor
         self.elevation = elevation
         self.actions = actions
+        self.adaptive = adaptive
 
     def _get_control_name(self):
         return "appbar"
@@ -191,3 +193,12 @@ class AppBar(Control):
     @actions.setter
     def actions(self, value):
         self.__actions = value if value is not None else []
+
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
