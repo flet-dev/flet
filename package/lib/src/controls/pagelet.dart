@@ -3,14 +3,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
+import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
 import 'error.dart';
+import 'navigation_drawer.dart';
 
 class PageletControl extends StatefulWidget {
   final Control? parent;
@@ -32,6 +36,7 @@ class PageletControl extends StatefulWidget {
 }
 
 class _PageletControlState extends State<PageletControl> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   // bool _selected = false;
 
   // late final FocusNode _focusNode;
@@ -149,6 +154,65 @@ class _PageletControlState extends State<PageletControl> {
           var endDrawerView = childrenViews.controlViews.firstWhereOrNull(
               (v) => v.control.id == (endDrawerCtrls.firstOrNull?.id ?? ""));
 
+          final bool? drawerOpened = widget.control.state["drawerOpened"];
+          final bool? endDrawerOpened = widget.control.state["endDrawerOpened"];
+
+          void dismissDrawer(String id) {
+            List<Map<String, String>> props = [
+              {"i": id, "open": "false"}
+            ];
+            widget.dispatch(UpdateControlPropsAction(
+                UpdateControlPropsPayload(props: props)));
+            FletAppServices.of(context).server.updateControlProps(props: props);
+            FletAppServices.of(context).server.sendPageEvent(
+                eventTarget: id, eventName: "dismiss", eventData: "");
+          }
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (drawerView != null) {
+              if (scaffoldKey.currentState?.isDrawerOpen == false &&
+                  drawerOpened == true) {
+                widget.control.state["drawerOpened"] = false;
+                dismissDrawer(drawerView.control.id);
+              }
+              if (drawerView.control.attrBool("open", false)! &&
+                  drawerOpened != true) {
+                if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
+                  scaffoldKey.currentState?.closeEndDrawer();
+                }
+                Future.delayed(const Duration(milliseconds: 1)).then((value) {
+                  scaffoldKey.currentState?.openDrawer();
+                  widget.control.state["drawerOpened"] = true;
+                });
+              } else if (!drawerView.control.attrBool("open", false)! &&
+                  drawerOpened == true) {
+                scaffoldKey.currentState?.closeDrawer();
+                widget.control.state["drawerOpened"] = false;
+              }
+            }
+            if (endDrawerView != null) {
+              if (scaffoldKey.currentState?.isEndDrawerOpen == false &&
+                  endDrawerOpened == true) {
+                widget.control.state["endDrawerOpened"] = false;
+                dismissDrawer(endDrawerView.control.id);
+              }
+              if (endDrawerView.control.attrBool("open", false)! &&
+                  endDrawerOpened != true) {
+                if (scaffoldKey.currentState?.isDrawerOpen == true) {
+                  scaffoldKey.currentState?.closeDrawer();
+                }
+                Future.delayed(const Duration(milliseconds: 1)).then((value) {
+                  scaffoldKey.currentState?.openEndDrawer();
+                  widget.control.state["endDrawerOpened"] = true;
+                });
+              } else if (!endDrawerView.control.attrBool("open", false)! &&
+                  endDrawerOpened == true) {
+                scaffoldKey.currentState?.closeEndDrawer();
+                widget.control.state["endDrawerOpened"] = false;
+              }
+            }
+          });
+
           var bar = appBarView != null
               ? appBarView.control.type == "appbar"
                   ? AppBarControl(
@@ -175,6 +239,34 @@ class _PageletControlState extends State<PageletControl> {
                 appBar: bar,
                 backgroundColor: bgcolor,
                 //backgroundColor: Colors.red,
+                drawer: drawerView != null
+                    ? NavigationDrawerControl(
+                        control: drawerView.control,
+                        children: drawerView.children,
+                        parentDisabled: widget.control.isDisabled,
+                        dispatch: widget.dispatch,
+                      )
+                    : null,
+                onDrawerChanged: (opened) {
+                  if (drawerView != null && !opened) {
+                    widget.control.state["drawerOpened"] = false;
+                    dismissDrawer(drawerView.control.id);
+                  }
+                },
+                endDrawer: endDrawerView != null
+                    ? NavigationDrawerControl(
+                        control: endDrawerView.control,
+                        children: endDrawerView.children,
+                        parentDisabled: widget.control.isDisabled,
+                        dispatch: widget.dispatch,
+                      )
+                    : null,
+                onEndDrawerChanged: (opened) {
+                  if (endDrawerView != null && !opened) {
+                    widget.control.state["endDrawerOpened"] = false;
+                    dismissDrawer(endDrawerView.control.id);
+                  }
+                },
                 body: contentCtrls.isNotEmpty
                     ? createControl(
                         widget.control, contentCtrls.first.id, disabled)
