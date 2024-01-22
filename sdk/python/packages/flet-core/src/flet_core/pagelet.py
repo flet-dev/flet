@@ -7,6 +7,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.navigation_bar import NavigationBar
+from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -81,6 +82,8 @@ class Pagelet(ConstrainedControl):
         navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None,
         bottom_app_bar: Optional[BottomAppBar] = None,
         bottom_sheet: Optional[Control] = None,
+        drawer: Optional[NavigationDrawer] = None,
+        end_drawer: Optional[NavigationDrawer] = None,
         bgcolor: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
@@ -119,6 +122,8 @@ class Pagelet(ConstrainedControl):
         self.navigation_bar = navigation_bar
         self.bottom_appbar = bottom_app_bar
         self.bottom_sheet = bottom_sheet
+        self.drawer = drawer
+        self.end_drawer = end_drawer
 
     def _get_control_name(self):
         return "pagelet"
@@ -140,7 +145,57 @@ class Pagelet(ConstrainedControl):
         if self.__bottom_sheet:
             self.__bottom_sheet._set_attr_internal("n", "bottomsheet")
             children.append(self.__bottom_sheet)
+        if self.__drawer:
+            self.__drawer._set_attr_internal("n", "drawer")
+            children.append(self.__drawer)
+        if self.__end_drawer:
+            self.__end_drawer._set_attr_internal("n", "enddrawer")
+            children.append(self.__end_drawer)
         return children
+
+    # Drawer
+    #
+    def show_drawer(self, drawer: NavigationDrawer):
+        self.drawer = drawer
+        self.drawer.open = True
+        self.update()
+
+    async def show_drawer_async(self, drawer: NavigationDrawer):
+        self.drawer = drawer
+        self.drawer.open = True
+        await self.update_async()
+
+    def close_drawer(self):
+        if self.drawer is not None:
+            self.drawer.open = False
+            self.update()
+
+    async def close_drawer_async(self):
+        if self.drawer is not None:
+            self.drawer.open = False
+            await self.drawer.update_async()
+
+    # End_drawer
+    #
+    def show_end_drawer(self, end_drawer: NavigationDrawer):
+        self.end_drawer = end_drawer
+        self.end_drawer.open = True
+        self.update()
+
+    async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
+        self.end_drawer = end_drawer
+        self.end_drawer.open = True
+        await self.update_async()
+
+    def close_end_drawer(self):
+        if self.end_drawer is not None:
+            self.end_drawer.open = False
+            self.update()
+
+    async def close_end_drawer_async(self):
+        if self.end_drawer is not None:
+            self.end_drawer.open = False
+            await self.end_drawer.update_async()
 
     # appbar
     @property
@@ -201,3 +256,21 @@ class Pagelet(ConstrainedControl):
         value: Optional[Control],
     ):
         self.__bottom_sheet = value
+
+    # drawer
+    @property
+    def drawer(self) -> Optional[NavigationDrawer]:
+        return self.__drawer
+
+    @drawer.setter
+    def drawer(self, value: Optional[NavigationDrawer]):
+        self.__drawer = value
+
+    # end_drawer
+    @property
+    def end_drawer(self) -> Optional[NavigationDrawer]:
+        return self.__end_drawer
+
+    @end_drawer.setter
+    def end_drawer(self, value: Optional[NavigationDrawer]):
+        self.__end_drawer = value

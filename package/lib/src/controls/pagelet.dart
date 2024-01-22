@@ -111,8 +111,8 @@ class _PageletControlState extends State<PageletControl> {
 
     List<String> childIds = [
       appBarCtrls.firstOrNull?.id,
-      // drawer?.id,
-      // endDrawer?.id
+      drawerCtrls.firstOrNull?.id,
+      endDrawerCtrls.firstOrNull?.id
     ].whereNotNull().toList();
 
     return StoreConnector<AppState, ControlsViewModel>(
