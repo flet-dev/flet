@@ -41,18 +41,6 @@ MenuStyle? parseMenuStyle(ThemeData theme, Control control, String propName,
       defaultShape);
 }
 
-MaterialStateProperty<Color?>? parseMaterialStateColor(
-    ThemeData theme, Control control, String propName) {
-  var v = control.attrString(propName, null);
-  if (v == null) {
-    return null;
-  }
-
-  final j1 = json.decode(v);
-  return getMaterialStateProperty<Color?>(
-      j1, (jv) => HexColor.fromString(theme, jv as String), null);
-}
-
 MenuStyle? menuStyleFromJSON(
     ThemeData theme,
     Map<String, dynamic> json,
