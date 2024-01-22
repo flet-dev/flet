@@ -1,20 +1,81 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
-import '../models/piechart_event_data.dart';
-import '../models/piechart_section_view_model.dart';
-import '../models/piechart_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
+
+class PieChartEventData extends Equatable {
+  final String eventType;
+  final int? sectionIndex;
+  // final double? angle;
+  // final double? radius;
+
+  const PieChartEventData(
+      {required this.eventType, required this.sectionIndex});
+
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'type': eventType, 'section_index': sectionIndex};
+
+  @override
+  List<Object?> get props => [eventType, sectionIndex];
+}
+
+class PieChartSectionViewModel extends Equatable {
+  final Control control;
+  final Control? badge;
+
+  const PieChartSectionViewModel({required this.control, required this.badge});
+
+  static PieChartSectionViewModel fromStore(
+      Store<AppState> store, Control control) {
+    var children = store.state.controls[control.id]!.childIds
+        .map((childId) => store.state.controls[childId])
+        .whereNotNull()
+        .where((c) => c.isVisible);
+
+    return PieChartSectionViewModel(
+        control: control,
+        badge: children.firstWhereOrNull((c) => c.name == "badge"));
+  }
+
+  @override
+  List<Object?> get props => [control, badge];
+}
+
+class PieChartViewModel extends Equatable {
+  final Control control;
+  final List<PieChartSectionViewModel> sections;
+  final dynamic dispatch;
+
+  const PieChartViewModel(
+      {required this.control, required this.sections, required this.dispatch});
+
+  static PieChartViewModel fromStore(
+      Store<AppState> store, Control control, List<Control> children) {
+    return PieChartViewModel(
+        control: control,
+        sections: children
+            .where((c) => c.type == "section" && c.isVisible)
+            .map((c) => PieChartSectionViewModel.fromStore(store, c))
+            .toList(),
+        dispatch: store.dispatch);
+  }
+
+  @override
+  List<Object?> get props => [control, sections, dispatch];
+}
 
 class PieChartControl extends StatefulWidget {
   final Control? parent;

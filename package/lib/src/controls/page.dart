@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flet/src/controls/floating_action_button.dart';
 import 'package:flet/src/flet_app_context.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
 import '../actions.dart';
 import '../flet_app_services.dart';
@@ -17,8 +19,6 @@ import '../models/control_view_model.dart';
 import '../models/controls_view_model.dart';
 import '../models/page_args_model.dart';
 import '../models/page_media_view_model.dart';
-import '../models/routes_view_model.dart';
-import '../protocol/keyboard_event.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
@@ -40,6 +40,68 @@ import 'cupertino_app_bar.dart';
 import 'navigation_drawer.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
+
+class RoutesViewModel extends Equatable {
+  final Control page;
+  final bool isLoading;
+  final String error;
+  final List<Control> offstageControls;
+  final List<Control> views;
+
+  const RoutesViewModel(
+      {required this.page,
+      required this.isLoading,
+      required this.error,
+      required this.offstageControls,
+      required this.views});
+
+  static RoutesViewModel fromStore(Store<AppState> store) {
+    Control? offstageControl = store.state.controls["page"]!.childIds
+        .map((childId) => store.state.controls[childId]!)
+        .firstWhereOrNull((c) => c.type == "offstage");
+
+    return RoutesViewModel(
+        page: store.state.controls["page"]!,
+        isLoading: store.state.isLoading,
+        error: store.state.error,
+        offstageControls: offstageControl != null
+            ? store.state.controls[offstageControl.id]!.childIds
+                .map((childId) => store.state.controls[childId]!)
+                .where((c) => c.isVisible)
+                .toList()
+            : [],
+        views: store.state.controls["page"]!.childIds
+            .map((childId) => store.state.controls[childId]!)
+            .where((c) => c.type != "offstage" && c.isVisible)
+            .toList());
+  }
+
+  @override
+  List<Object?> get props => [page, isLoading, error, offstageControls, views];
+}
+
+class KeyboardEvent {
+  final String key;
+  final bool isShiftPressed;
+  final bool isControlPressed;
+  final bool isAltPressed;
+  final bool isMetaPressed;
+
+  KeyboardEvent(
+      {required this.key,
+      required this.isShiftPressed,
+      required this.isControlPressed,
+      required this.isAltPressed,
+      required this.isMetaPressed});
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'key': key,
+        'shift': isShiftPressed,
+        'ctrl': isControlPressed,
+        'alt': isAltPressed,
+        'meta': isMetaPressed
+      };
+}
 
 class PageControl extends StatefulWidget {
   final Control? parent;

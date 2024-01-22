@@ -12,6 +12,7 @@ export 'src/models/control_tree_view_model.dart';
 export 'src/models/control_view_model.dart';
 export 'src/models/controls_view_model.dart';
 export 'src/models/page_args_model.dart';
+export 'src/models/page_size_view_model.dart';
 export 'src/utils.dart';
 export 'src/utils/alignment.dart';
 export 'src/utils/animations.dart';

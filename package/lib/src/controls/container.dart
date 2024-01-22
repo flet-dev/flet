@@ -10,7 +10,6 @@ import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/page_args_model.dart';
-import '../protocol/container_tap_event.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
@@ -21,6 +20,26 @@ import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
+
+class ContainerTapEvent {
+  final double localX;
+  final double localY;
+  final double globalX;
+  final double globalY;
+
+  ContainerTapEvent(
+      {required this.localX,
+      required this.localY,
+      required this.globalX,
+      required this.globalY});
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'lx': localX,
+        'ly': localY,
+        'gx': globalX,
+        'gy': globalY
+      };
+}
 
 class ContainerControl extends StatelessWidget {
   final Control? parent;

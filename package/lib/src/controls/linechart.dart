@@ -1,18 +1,15 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
-import '../models/chart_axis_view_model.dart';
 import '../models/control.dart';
-import '../models/linechart_data_point_view_model.dart';
-import '../models/linechart_data_view_model.dart';
-import '../models/linechart_event_data.dart';
-import '../models/linechart_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/charts.dart';
@@ -21,7 +18,141 @@ import '../utils/gradient.dart';
 import '../utils/numbers.dart';
 import '../utils/shadows.dart';
 import '../utils/text.dart';
+import 'charts.dart';
 import 'create_control.dart';
+
+class LineChartDataPointViewModel extends Equatable {
+  final Control control;
+  final double x;
+  final double y;
+  final String? tooltip;
+
+  const LineChartDataPointViewModel(
+      {required this.control,
+      required this.x,
+      required this.y,
+      required this.tooltip});
+
+  static LineChartDataPointViewModel fromStore(
+      Store<AppState> store, Control control) {
+    return LineChartDataPointViewModel(
+        control: control,
+        x: control.attrDouble("x")!,
+        y: control.attrDouble("y")!,
+        tooltip: control.attrString("tooltip"));
+  }
+
+  @override
+  List<Object?> get props => [control];
+}
+
+class LineChartDataViewModel extends Equatable {
+  final Control control;
+  final List<LineChartDataPointViewModel> dataPoints;
+
+  const LineChartDataViewModel(
+      {required this.control, required this.dataPoints});
+
+  static LineChartDataViewModel fromStore(
+      Store<AppState> store, Control control) {
+    return LineChartDataViewModel(
+        control: control,
+        dataPoints: store.state.controls[control.id]!.childIds
+            .map((childId) => store.state.controls[childId])
+            .whereNotNull()
+            .where((c) => c.isVisible)
+            .map((c) => LineChartDataPointViewModel.fromStore(store, c))
+            .toList());
+  }
+
+  @override
+  List<Object?> get props => [control, dataPoints];
+}
+
+class LineChartEventData extends Equatable {
+  final String eventType;
+  final List<LineChartEventDataSpot> barSpots;
+
+  const LineChartEventData({required this.eventType, required this.barSpots});
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'type': eventType,
+        'spots': barSpots,
+      };
+
+  @override
+  List<Object?> get props => [eventType, barSpots];
+}
+
+class LineChartEventDataSpot extends Equatable {
+  final int barIndex;
+  final int spotIndex;
+
+  const LineChartEventDataSpot(
+      {required this.barIndex, required this.spotIndex});
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'bar_index': barIndex,
+        'spot_index': spotIndex,
+      };
+
+  @override
+  List<Object?> get props => [barIndex, spotIndex];
+}
+
+class LineChartViewModel extends Equatable {
+  final Control control;
+  final ChartAxisViewModel? leftAxis;
+  final ChartAxisViewModel? topAxis;
+  final ChartAxisViewModel? rightAxis;
+  final ChartAxisViewModel? bottomAxis;
+  final List<LineChartDataViewModel> dataSeries;
+  final dynamic dispatch;
+
+  const LineChartViewModel(
+      {required this.control,
+      required this.leftAxis,
+      required this.topAxis,
+      required this.rightAxis,
+      required this.bottomAxis,
+      required this.dataSeries,
+      required this.dispatch});
+
+  static LineChartViewModel fromStore(
+      Store<AppState> store, Control control, List<Control> children) {
+    var leftAxisCtrls =
+        children.where((c) => c.type == "axis" && c.name == "l" && c.isVisible);
+    var topAxisCtrls =
+        children.where((c) => c.type == "axis" && c.name == "t" && c.isVisible);
+    var rightAxisCtrls =
+        children.where((c) => c.type == "axis" && c.name == "r" && c.isVisible);
+    var bottomAxisCtrls =
+        children.where((c) => c.type == "axis" && c.name == "b" && c.isVisible);
+    return LineChartViewModel(
+        control: control,
+        leftAxis: leftAxisCtrls.isNotEmpty
+            ? ChartAxisViewModel.fromStore(store, leftAxisCtrls.first)
+            : null,
+        topAxis: topAxisCtrls.isNotEmpty
+            ? ChartAxisViewModel.fromStore(store, topAxisCtrls.first)
+            : null,
+        rightAxis: rightAxisCtrls.isNotEmpty
+            ? ChartAxisViewModel.fromStore(store, rightAxisCtrls.first)
+            : null,
+        bottomAxis: bottomAxisCtrls.isNotEmpty
+            ? ChartAxisViewModel.fromStore(store, bottomAxisCtrls.first)
+            : null,
+        dataSeries: children
+            .where((c) => c.type == "data" && c.isVisible)
+            .map((c) => LineChartDataViewModel.fromStore(store, c))
+            .toList(),
+        dispatch: store.dispatch);
+  }
+
+  @override
+  List<Object?> get props =>
+      [control, leftAxis, rightAxis, topAxis, bottomAxis, dataSeries, dispatch];
+}
 
 class LineChartControl extends StatefulWidget {
   final Control? parent;

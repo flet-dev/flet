@@ -12,12 +12,56 @@ import '../flet_app_services.dart';
 import '../flet_server.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
-import '../protocol/file_picker_result_event.dart';
-import '../protocol/file_picker_upload_file.dart';
-import '../protocol/file_picker_upload_progress_event.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/desktop.dart';
 import '../utils/strings.dart';
+
+class FilePickerResultEvent {
+  final String? path;
+  final List<FilePickerFile>? files;
+
+  FilePickerResultEvent({required this.path, required this.files});
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'path': path,
+        'files': files?.map((f) => f.toJson()).toList()
+      };
+}
+
+class FilePickerFile {
+  final String name;
+  final String? path;
+  final int size;
+
+  FilePickerFile({required this.name, required this.path, required this.size});
+
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'name': name, 'path': path, 'size': size};
+}
+
+class FilePickerUploadFile {
+  final String name;
+  final String uploadUrl;
+  final String method;
+
+  FilePickerUploadFile(
+      {required this.name, required this.uploadUrl, required this.method});
+}
+
+class FilePickerUploadProgressEvent {
+  final String name;
+  final double? progress;
+  final String? error;
+
+  FilePickerUploadProgressEvent(
+      {required this.name, required this.progress, required this.error});
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'file_name': name,
+        'progress': progress,
+        'error': error
+      };
+}
 
 class FilePickerControl extends StatefulWidget {
   final Control? parent;

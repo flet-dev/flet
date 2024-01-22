@@ -4,9 +4,26 @@ import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/drag_target_accept_event.dart';
 import 'create_control.dart';
 import 'error.dart';
+
+class DragTargetAcceptEvent {
+  final String srcId;
+  final double x;
+  final double y;
+
+  DragTargetAcceptEvent({
+    required this.srcId,
+    required this.x,
+    required this.y,
+  });
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'src_id': srcId,
+        'x': x,
+        'y': y,
+      };
+}
 
 class DragTargetControl extends StatelessWidget {
   final Control? parent;
