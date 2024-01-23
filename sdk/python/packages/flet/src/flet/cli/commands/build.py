@@ -337,10 +337,18 @@ class Command(BaseCommand):
             "true" if options.use_color_emoji else "false"
         )
 
+        src_pubspec = None
         src_pubspec_path = python_app_path.joinpath("pubspec.yaml")
         if src_pubspec_path.exists():
             with open(src_pubspec_path) as f:
                 src_pubspec = pubspec = yaml.safe_load(f)
+
+        flutter_dependencies = []
+        if src_pubspec and src_pubspec["dependencies"]:
+            for dep in src_pubspec["dependencies"].keys():
+                flutter_dependencies.append(dep)
+
+        template_data["flutter"] = {"dependencies": flutter_dependencies}
 
         # create Flutter project from a template
         print("Creating Flutter bootstrap project...", end="")
@@ -359,6 +367,10 @@ class Command(BaseCommand):
         pubspec_path = str(self.flutter_dir.joinpath("pubspec.yaml"))
         with open(pubspec_path) as f:
             pubspec = yaml.safe_load(f)
+
+        if src_pubspec and src_pubspec["dependencies"]:
+            for k, v in src_pubspec["dependencies"].items():
+                pubspec["dependencies"][k] = v
 
         # copy icons to `flutter_dir`
         print("Customizing app icons and splash images...", end="")
