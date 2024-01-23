@@ -6,11 +6,13 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
+from flet_core.floating_action_button import FloatingActionButton
 from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    FloatingActionButtonLocation,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -84,6 +86,10 @@ class Pagelet(ConstrainedControl):
         bottom_sheet: Optional[Control] = None,
         drawer: Optional[NavigationDrawer] = None,
         end_drawer: Optional[NavigationDrawer] = None,
+        floating_action_button: Optional[FloatingActionButton] = None,
+        floating_action_button_location: Union[
+            FloatingActionButtonLocation, OffsetValue
+        ] = None,
         bgcolor: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
@@ -124,6 +130,8 @@ class Pagelet(ConstrainedControl):
         self.bottom_sheet = bottom_sheet
         self.drawer = drawer
         self.end_drawer = end_drawer
+        self.floating_action_button = floating_action_button
+        self.floating_action_button_location = floating_action_button_location
 
     def _get_control_name(self):
         return "pagelet"
@@ -151,6 +159,11 @@ class Pagelet(ConstrainedControl):
         if self.__end_drawer:
             self.__end_drawer._set_attr_internal("n", "enddrawer")
             children.append(self.__end_drawer)
+        if self.__floating_action_button:
+            self.__floating_action_button._set_attr_internal(
+                "n", "floatingactionbutton"
+            )
+            children.append(self.__floating_action_button)
         return children
 
     # Drawer
@@ -274,3 +287,29 @@ class Pagelet(ConstrainedControl):
     @end_drawer.setter
     def end_drawer(self, value: Optional[NavigationDrawer]):
         self.__end_drawer = value
+
+    # floating_action_button
+    @property
+    def floating_action_button(self) -> Optional[FloatingActionButton]:
+        return self.__floating_action_button
+
+    @floating_action_button.setter
+    def floating_action_button(self, value: Optional[FloatingActionButton]):
+        self.__floating_action_button = value
+
+    # floating_action_button_location
+    @property
+    def floating_action_button_location(
+        self,
+    ) -> Union[FloatingActionButtonLocation, OffsetValue]:
+        return self.__floating_action_button_location
+
+    @floating_action_button_location.setter
+    def floating_action_button_location(
+        self, value: Union[FloatingActionButtonLocation, OffsetValue]
+    ):
+        self.__floating_action_button_location = value
+        self._set_attr(
+            "floatingActionButtonLocation",
+            value.value if isinstance(value, FloatingActionButtonLocation) else value,
+        )

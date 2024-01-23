@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/floating_action_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -99,6 +100,8 @@ class _PageletControlState extends State<PageletControl> {
         widget.children.where((c) => c.name == "drawer" && c.isVisible);
     var endDrawerCtrls =
         widget.children.where((c) => c.name == "enddrawer" && c.isVisible);
+    var fabCtrls = widget.children
+        .where((c) => c.name == "floatingactionbutton" && c.isVisible);
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl("Pagelet must have content specified.");
@@ -138,14 +141,6 @@ class _PageletControlState extends State<PageletControl> {
               : null;
           var bnb = navBar ?? bottomAppBar;
 
-          // var drawer = drawerCtrls.isNotEmpty
-          //     ? createControl(widget.control, drawerCtrls.first.id, disabled)
-          //     : null;
-
-          // var endDrawer = endDrawerCtrls.isNotEmpty
-          //     ? createControl(widget.control, endDrawerCtrls.first.id, disabled)
-          //     : null;
-
           var appBarView = childrenViews.controlViews.firstWhereOrNull(
               (v) => v.control.id == (appBarCtrls.firstOrNull?.id ?? ""));
 
@@ -156,6 +151,11 @@ class _PageletControlState extends State<PageletControl> {
 
           final bool? drawerOpened = widget.control.state["drawerOpened"];
           final bool? endDrawerOpened = widget.control.state["endDrawerOpened"];
+
+          final fabLocation = parseFloatingActionButtonLocation(
+              widget.control,
+              "floatingActionButtonLocation",
+              FloatingActionButtonLocation.endFloat);
 
           void dismissDrawer(String id) {
             List<Map<String, String>> props = [
@@ -236,48 +236,52 @@ class _PageletControlState extends State<PageletControl> {
           return constrainedControl(
               context,
               Scaffold(
-                key: scaffoldKey,
-                appBar: bar,
-                backgroundColor: bgcolor,
-                //backgroundColor: Colors.red,
-                drawer: drawerView != null
-                    ? NavigationDrawerControl(
-                        control: drawerView.control,
-                        children: drawerView.children,
-                        parentDisabled: widget.control.isDisabled,
-                        dispatch: widget.dispatch,
-                      )
-                    : null,
-                onDrawerChanged: (opened) {
-                  if (drawerView != null && !opened) {
-                    widget.control.state["drawerOpened"] = false;
-                    dismissDrawer(drawerView.control.id);
-                  }
-                },
-                endDrawer: endDrawerView != null
-                    ? NavigationDrawerControl(
-                        control: endDrawerView.control,
-                        children: endDrawerView.children,
-                        parentDisabled: widget.control.isDisabled,
-                        dispatch: widget.dispatch,
-                      )
-                    : null,
-                onEndDrawerChanged: (opened) {
-                  if (endDrawerView != null && !opened) {
-                    widget.control.state["endDrawerOpened"] = false;
-                    dismissDrawer(endDrawerView.control.id);
-                  }
-                },
-                body: contentCtrls.isNotEmpty
-                    ? createControl(
-                        widget.control, contentCtrls.first.id, disabled)
-                    : null,
-                bottomNavigationBar: bnb,
-                bottomSheet: bottomSheetCtrls.isNotEmpty
-                    ? createControl(
-                        widget.control, bottomSheetCtrls.first.id, disabled)
-                    : null,
-              ),
+                  key: scaffoldKey,
+                  appBar: bar,
+                  backgroundColor: bgcolor,
+                  //backgroundColor: Colors.red,
+                  drawer: drawerView != null
+                      ? NavigationDrawerControl(
+                          control: drawerView.control,
+                          children: drawerView.children,
+                          parentDisabled: widget.control.isDisabled,
+                          dispatch: widget.dispatch,
+                        )
+                      : null,
+                  onDrawerChanged: (opened) {
+                    if (drawerView != null && !opened) {
+                      widget.control.state["drawerOpened"] = false;
+                      dismissDrawer(drawerView.control.id);
+                    }
+                  },
+                  endDrawer: endDrawerView != null
+                      ? NavigationDrawerControl(
+                          control: endDrawerView.control,
+                          children: endDrawerView.children,
+                          parentDisabled: widget.control.isDisabled,
+                          dispatch: widget.dispatch,
+                        )
+                      : null,
+                  onEndDrawerChanged: (opened) {
+                    if (endDrawerView != null && !opened) {
+                      widget.control.state["endDrawerOpened"] = false;
+                      dismissDrawer(endDrawerView.control.id);
+                    }
+                  },
+                  body: contentCtrls.isNotEmpty
+                      ? createControl(
+                          widget.control, contentCtrls.first.id, disabled)
+                      : null,
+                  bottomNavigationBar: bnb,
+                  bottomSheet: bottomSheetCtrls.isNotEmpty
+                      ? createControl(
+                          widget.control, bottomSheetCtrls.first.id, disabled)
+                      : null,
+                  floatingActionButton: fabCtrls.isNotEmpty
+                      ? createControl(
+                          widget.control, fabCtrls.first.id, disabled)
+                      : null,
+                  floatingActionButtonLocation: fabLocation),
               widget.parent,
               widget.control);
         });
