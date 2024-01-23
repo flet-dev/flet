@@ -1,16 +1,12 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../flet_app_services.dart';
-import '../flet_server.dart';
-import '../models/app_state.dart';
-import '../models/control.dart';
-import '../models/control_view_model.dart';
 import '../models/page_media_view_model.dart';
-import '../utils/animations.dart';
 import '../utils/theme.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
@@ -132,8 +128,26 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
         }
       }
 
-      // create control widget
-      var widget = createWidget(controlKey, controlView, parent, parentDisabled,
+      Widget? widget;
+
+      for (var createControlFactory
+          in FletAppServices.of(context).createControlFactories) {
+        widget = createControlFactory(CreateControlArgs(
+            controlView.control.type,
+            controlKey,
+            parent,
+            controlView.control,
+            controlView.children,
+            parentDisabled,
+            controlView.dispatch,
+            FletAppServices.of(context).server));
+        if (widget != null) {
+          break;
+        }
+      }
+
+      // try creating Flet built-in widget
+      widget ??= createWidget(controlKey, controlView, parent, parentDisabled,
           nextChild, FletAppServices.of(context).server);
 
       // no theme defined? return widget!
@@ -152,7 +166,7 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
         return Theme(
             data: parseTheme(controlView.control, "theme", brightness,
                 parentTheme: parentTheme),
-            child: widget);
+            child: widget!);
       }
 
       if (themeMode == ThemeMode.system) {
