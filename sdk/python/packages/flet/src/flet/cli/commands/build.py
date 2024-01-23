@@ -346,7 +346,7 @@ class Command(BaseCommand):
         src_pubspec = None
         src_pubspec_path = python_app_path.joinpath("pubspec.yaml")
         if src_pubspec_path.exists():
-            with open(src_pubspec_path) as f:
+            with open(src_pubspec_path, encoding="utf8") as f:
                 src_pubspec = pubspec = yaml.safe_load(f)
 
         flutter_dependencies = []
@@ -371,7 +371,7 @@ class Command(BaseCommand):
 
         # load pubspec.yaml
         pubspec_path = str(self.flutter_dir.joinpath("pubspec.yaml"))
-        with open(pubspec_path) as f:
+        with open(pubspec_path, encoding="utf8") as f:
             pubspec = yaml.safe_load(f)
 
         # merge dependencies to a dest pubspec.yaml
@@ -547,7 +547,7 @@ class Command(BaseCommand):
         print("[spring_green3]OK[/spring_green3]")
 
         # save pubspec.yaml
-        with open(pubspec_path, "w") as f:
+        with open(pubspec_path, "w", encoding="utf8") as f:
             yaml.dump(pubspec, f)
 
         # generate icons
@@ -645,7 +645,7 @@ class Command(BaseCommand):
 
         # create {flutter_dir}/app/app.hash
         app_hash_path = self.flutter_dir.joinpath("app", "app.zip.hash")
-        with open(app_hash_path, "w") as hf:
+        with open(app_hash_path, "w", encoding="utf8") as hf:
             hf.write(calculate_file_hash(app_zip_path))
         print("[spring_green3]OK[/spring_green3]")
 
@@ -728,7 +728,7 @@ class Command(BaseCommand):
         with urllib.request.urlopen(f"{PYODIDE_ROOT_URL}/pyodide-lock.json") as j:
             data = json.load(j)
         find_links_path = str(self.flutter_dir.joinpath("find-links.html"))
-        with open(find_links_path, "w") as f:
+        with open(find_links_path, "w", encoding="utf8") as f:
             for package in data["packages"].values():
                 file_name = package["file_name"]
                 f.write(f'<a href="{PYODIDE_ROOT_URL}/{file_name}">{file_name}</a>\n')
