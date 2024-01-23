@@ -2,11 +2,12 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:my_controls/my_controls.dart' as my_controls;
 
-var factories = [my_controls.createControl];
+void main() async {
+  await setupDesktop();
 
-void main() {
-  runApp(const FletApp(
+  runApp(FletApp(
     pageUrl: 'http://localhost:8550',
     assetsDir: '',
+    createControlFactories: [my_controls.createControl],
   ));
 }
