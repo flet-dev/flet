@@ -337,6 +337,11 @@ class Command(BaseCommand):
             "true" if options.use_color_emoji else "false"
         )
 
+        src_pubspec_path = python_app_path.joinpath("pubspec.yaml")
+        if src_pubspec_path.exists():
+            with open(src_pubspec_path) as f:
+                src_pubspec = pubspec = yaml.safe_load(f)
+
         # create Flutter project from a template
         print("Creating Flutter bootstrap project...", end="")
         cookiecutter(
