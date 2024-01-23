@@ -16,6 +16,7 @@ import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'audio.dart';
+import 'audio_recorder.dart';
 import 'badge.dart';
 import 'banner.dart';
 import 'barchart.dart';
@@ -209,6 +210,12 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "audio":
       return AudioControl(
+          parent: parent,
+          control: controlView.control,
+          dispatch: controlView.dispatch,
+          nextChild: nextChild);
+      case "audiorecorder":
+      return AudioRecorderControl(
           parent: parent,
           control: controlView.control,
           dispatch: controlView.dispatch,
