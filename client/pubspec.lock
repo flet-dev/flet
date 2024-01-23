@@ -479,7 +479,7 @@ packages:
     source: hosted
     version: "1.0.4"
   record_darwin:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: record_darwin
       sha256: ee8cb1bb1712d7ce38140ecabe70e5c286c02f05296d66043bee865ace7eb1b9
