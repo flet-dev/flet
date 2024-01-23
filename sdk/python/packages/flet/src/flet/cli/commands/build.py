@@ -368,9 +368,15 @@ class Command(BaseCommand):
         with open(pubspec_path) as f:
             pubspec = yaml.safe_load(f)
 
+        # move dependencies to a dest pubspec.yaml
         if src_pubspec and src_pubspec["dependencies"]:
             for k, v in src_pubspec["dependencies"].items():
-                pubspec["dependencies"][k] = v
+                pubspec["dependencies"][k] = "any"
+
+        if src_pubspec and src_pubspec["dependency_overrides"]:
+            pubspec["dependency_overrides"] = {}
+            for k, v in src_pubspec["dependency_overrides"].items():
+                pubspec["dependency_overrides"][k] = v
 
         # copy icons to `flutter_dir`
         print("Customizing app icons and splash images...", end="")
