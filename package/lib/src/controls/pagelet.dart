@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:flet/src/controls/floating_action_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -15,6 +14,7 @@ import 'app_bar.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
 import 'error.dart';
+import 'floating_action_button.dart';
 import 'navigation_drawer.dart';
 
 class PageletControl extends StatefulWidget {
