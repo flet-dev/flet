@@ -9,6 +9,7 @@ import sys
 import tempfile
 import urllib.request
 from pathlib import Path
+from typing import Optional
 
 import yaml
 from flet.cli.commands.base import BaseCommand
@@ -254,9 +255,16 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
 
+        self.verbose = options.verbose
+        self.flutter_dir = None
+
         # get `flutter` and `dart` executables from PATH
         flutter_exe = self.find_flutter_batch("flutter")
         dart_exe = self.find_flutter_batch("dart")
+
+        if self.verbose > 1:
+            print("Flutter executable:", flutter_exe)
+            print("Dart executable:", dart_exe)
 
         target_platform = options.target_platform.lower()
         # platform check
@@ -266,25 +274,22 @@ class Command(BaseCommand):
             if current_platform == "Darwin":
                 current_platform = "macOS"
 
-            print(f"Can't build {target_platform} on {current_platform}")
-            sys.exit(1)
-
-        self.verbose = options.verbose
+            self.cleanup(1, f"Can't build {target_platform} on {current_platform}")
 
         python_app_path = Path(options.python_app_path).resolve()
         if not os.path.exists(python_app_path) or not os.path.isdir(python_app_path):
-            print(
-                f"Path to Flet app does not exist or is not a directory: {python_app_path}"
+            self.cleanup(
+                1,
+                f"Path to Flet app does not exist or is not a directory: {python_app_path}",
             )
-            sys.exit(1)
 
         python_module_name = Path(options.module_name).stem
         python_module_filename = f"{python_module_name}.py"
         if not os.path.exists(os.path.join(python_app_path, python_module_filename)):
-            print(
-                f"{python_module_filename} not found in the root of Flet app directory. Use --module-name option to specify an entry point for your Flet app."
+            self.cleanup(
+                1,
+                f"{python_module_filename} not found in the root of Flet app directory. Use --module-name option to specify an entry point for your Flet app.",
             )
-            sys.exit(1)
 
         self.flutter_dir = Path(tempfile.gettempdir()).joinpath(
             f"flet_flutter_build_{random_string(10)}"
@@ -311,6 +316,7 @@ class Command(BaseCommand):
         project_name = slugify(
             options.project_name if options.project_name else python_app_path.name
         ).replace("-", "_")
+
         template_data["project_name"] = project_name
 
         if options.description is not None:
@@ -368,7 +374,7 @@ class Command(BaseCommand):
         with open(pubspec_path) as f:
             pubspec = yaml.safe_load(f)
 
-        # move dependencies to a dest pubspec.yaml
+        # merge dependencies to a dest pubspec.yaml
         if src_pubspec and src_pubspec["dependencies"]:
             for k, v in src_pubspec["dependencies"].items():
                 pubspec["dependencies"][k] = "any"
@@ -377,6 +383,14 @@ class Command(BaseCommand):
             pubspec["dependency_overrides"] = {}
             for k, v in src_pubspec["dependency_overrides"].items():
                 pubspec["dependency_overrides"][k] = v
+
+        # make sure project name is not named as any of dependencies
+        for dep in pubspec["dependencies"].keys():
+            if dep == project_name:
+                self.cleanup(
+                    1,
+                    f"Project name cannot have the same name as one of its dependencies: {dep}. Use --project option to specify a different project name.",
+                )
 
         # copy icons to `flutter_dir`
         print("Customizing app icons and splash images...", end="")
@@ -627,8 +641,7 @@ class Command(BaseCommand):
         # make sure app/app.zip exists
         app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
         if not os.path.exists(app_zip_path):
-            print("Flet app package app/app.zip was not created.")
-            self.cleanup(1)
+            self.cleanup(1, "Flet app package app/app.zip was not created.")
 
         # create {flutter_dir}/app/app.hash
         app_hash_path = self.flutter_dir.joinpath("app", "app.zip.hash")
@@ -709,9 +722,6 @@ class Command(BaseCommand):
 
         print("[spring_green3]OK[/spring_green3]")
 
-        # print(self.flutter_dir)
-        # return
-
         self.cleanup(0)
 
     def create_pyodide_find_links(self):
@@ -736,10 +746,10 @@ class Command(BaseCommand):
     def find_flutter_batch(self, exe_filename: str):
         batch_path = shutil.which(exe_filename)
         if not batch_path:
-            print(
-                f"`{exe_filename}` command is not available in PATH. Install Flutter SDK."
+            self.cleanup(
+                1,
+                f"`{exe_filename}` command is not available in PATH. Install Flutter SDK.",
             )
-            sys.exit(1)
         if is_windows() and batch_path.endswith(".file"):
             return batch_path.replace(".file", ".bat")
         return batch_path
@@ -765,14 +775,19 @@ class Command(BaseCommand):
 
         return r
 
-    def cleanup(self, exit_code: int):
-        if self.verbose > 0:
-            print(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
-        shutil.rmtree(str(self.flutter_dir), ignore_errors=False, onerror=None)
+    def cleanup(self, exit_code: int, message: Optional[str] = None):
+        if self.flutter_dir and os.path.exists(self.flutter_dir):
+            if self.verbose > 0:
+                print(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
+            shutil.rmtree(str(self.flutter_dir), ignore_errors=True, onerror=None)
         if exit_code == 0:
-            print("[spring_green3]Success![/spring_green3]")
+            msg = message if message else "Success!"
+            print(f"[spring_green3]{msg}[/spring_green3]")
         else:
-            print(
-                "[red]Error building Flet app - see the log of failed command above.[/red]"
+            msg = (
+                message
+                if message
+                else "Error building Flet app - see the log of failed command above."
             )
+            print(f"[red]{msg}[/red]")
         sys.exit(exit_code)
