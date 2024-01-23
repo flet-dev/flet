@@ -38,49 +38,6 @@ class PageletControl extends StatefulWidget {
 
 class _PageletControlState extends State<PageletControl> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  // bool _selected = false;
-
-  // late final FocusNode _focusNode;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _focusNode = FocusNode();
-  //   _focusNode.addListener(_onFocusChange);
-  // }
-
-  // @override
-  // void dispose() {
-  //   _focusNode.removeListener(_onFocusChange);
-  //   _focusNode.dispose();
-  //   super.dispose();
-  // }
-
-  // void _onSelect(bool selected) {
-  //   var strSelected = selected.toString();
-  //   debugPrint(strSelected);
-  //   setState(() {
-  //     _selected = selected;
-  //   });
-  //   List<Map<String, String>> props = [
-  //     {"i": widget.control.id, "selected": strSelected}
-  //   ];
-  //   widget.dispatch(
-  //       UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-  //   final server = FletAppServices.of(context).server;
-  //   server.updateControlProps(props: props);
-  //   server.sendPageEvent(
-  //       eventTarget: widget.control.id,
-  //       eventName: "select",
-  //       eventData: strSelected);
-  // }
-
-  // void _onFocusChange() {
-  //   FletAppServices.of(context).server.sendPageEvent(
-  //       eventTarget: widget.control.id,
-  //       eventName: _focusNode.hasFocus ? "focus" : "blur",
-  //       eventData: "");
-  //}
 
   @override
   Widget build(BuildContext context) {
