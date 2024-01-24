@@ -97,6 +97,7 @@ class CupertinoListTile(ConstrainedControl):
         toggle_inputs: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
+        additional_info: Optional[Control] = None,
         on_click=None,
         on_long_press=None,
     ):
@@ -142,6 +143,7 @@ class CupertinoListTile(ConstrainedControl):
         self.toggle_inputs = toggle_inputs
         self.url = url
         self.url_target = url_target
+        self.additional_info = additional_info
         self.on_click = on_click
         self.on_long_press = on_long_press
 
@@ -166,6 +168,9 @@ class CupertinoListTile(ConstrainedControl):
         if self.__trailing:
             self.__trailing._set_attr_internal("n", "trailing")
             children.append(self.__trailing)
+        if self.__additional_info:
+            self.__additional_info._set_attr_internal("n", "additionalinfo")
+            children.append(self.__additional_info)
         return children
 
     # content_padding
@@ -212,6 +217,15 @@ class CupertinoListTile(ConstrainedControl):
     @trailing.setter
     def trailing(self, value: Optional[Control]):
         self.__trailing = value
+
+    # additional_info
+    @property
+    def additional_info(self) -> Optional[Control]:
+        return self.__additional_info
+
+    @additional_info.setter
+    def additional_info(self, value: Optional[Control]):
+        self.__additional_info = value
 
     # is_three_line
     @property

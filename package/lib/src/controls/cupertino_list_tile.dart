@@ -49,6 +49,8 @@ class CupertinoListTileControl extends StatelessWidget {
         children.where((c) => c.name == "subtitle" && c.isVisible);
     var trailingCtrls =
         children.where((c) => c.name == "trailing" && c.isVisible);
+    var additionalInfoCtrls =
+        children.where((c) => c.name == "additionalinfo" && c.isVisible);
 
     bool selected = control.attrBool("selected", false)!;
     bool dense = control.attrBool("dense", false)!;
@@ -89,6 +91,9 @@ class CupertinoListTileControl extends StatelessWidget {
 
     Widget tile = CupertinoListTile(
       onTap: onPressed,
+      additionalInfo: additionalInfoCtrls.isNotEmpty
+          ? createControl(control, additionalInfoCtrls.first.id, disabled)
+          : null,
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled)
           : null,
