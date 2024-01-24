@@ -100,6 +100,8 @@ class CupertinoListTile(ConstrainedControl):
         url: Optional[str] = None,
         url_target: Optional[str] = None,
         additional_info: Optional[Control] = None,
+        leading_size: OptionalNumber = None,
+        leading_to_title: OptionalNumber = None,
         on_click=None,
         # on_long_press=None,
     ):
@@ -148,6 +150,8 @@ class CupertinoListTile(ConstrainedControl):
         self.url = url
         self.url_target = url_target
         self.additional_info = additional_info
+        self.leading_size = leading_size
+        self.leading_to_title = leading_to_title
         self.on_click = on_click
         # self.on_long_press = on_long_press
 
@@ -173,7 +177,7 @@ class CupertinoListTile(ConstrainedControl):
             self.__trailing._set_attr_internal("n", "trailing")
             children.append(self.__trailing)
         if self.__additional_info:
-            self.__additional_info._set_attr_internal("n", "additionalinfo")
+            self.__additional_info._set_attr_internal("n", "additionalInfo")
             children.append(self.__additional_info)
         return children
 
@@ -243,11 +247,29 @@ class CupertinoListTile(ConstrainedControl):
     # bgcolor_activated
     @property
     def bgcolor_activated(self):
-        return self._get_attr("bgcoloractivated")
+        return self._get_attr("bgcolorActivated")
 
     @bgcolor_activated.setter
     def bgcolor_activated(self, value):
-        self._set_attr("bgcoloractivated", value)
+        self._set_attr("bgcolorActivated", value)
+
+    # leading_size
+    @property
+    def leading_size(self):
+        return self._get_attr("leadingSize")
+
+    @leading_size.setter
+    def leading_size(self, value):
+        self._set_attr("leadingSize", value)
+
+    # leading_to_title
+    @property
+    def leading_to_title(self):
+        return self._get_attr("leadingToTitle")
+
+    @leading_to_title.setter
+    def leading_to_title(self, value):
+        self._set_attr("leadingToTitle", value)
 
     # # is_three_line
     # @property

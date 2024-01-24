@@ -52,7 +52,7 @@ class CupertinoListTileControl extends StatelessWidget {
     var trailingCtrls =
         children.where((c) => c.name == "trailing" && c.isVisible);
     var additionalInfoCtrls =
-        children.where((c) => c.name == "additionalinfo" && c.isVisible);
+        children.where((c) => c.name == "additionalInfo" && c.isVisible);
 
     bool selected = control.attrBool("selected", false)!;
     bool dense = control.attrBool("dense", false)!;
@@ -99,10 +99,12 @@ class CupertinoListTileControl extends StatelessWidget {
       backgroundColor: HexColor.fromString(
           Theme.of(context), control.attrString("bgcolor", "")!),
       backgroundColorActivated: HexColor.fromString(
-          Theme.of(context), control.attrString("bgcoloractivated", "")!),
+          Theme.of(context), control.attrString("bgcolorActivated", "")!),
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled)
           : null,
+      leadingSize: control.attrDouble("leadingSize", 28.0)!,
+      leadingToTitle: control.attrDouble("leadingToTitle", 16.0)!,
       title: titleCtrls.isNotEmpty
           ? createControl(control, titleCtrls.first.id, disabled)
           : const Text(""),
