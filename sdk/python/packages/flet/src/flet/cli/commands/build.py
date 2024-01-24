@@ -11,6 +11,7 @@ import urllib.request
 from pathlib import Path
 from typing import Optional
 
+import flet.version
 import yaml
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string, slugify
@@ -21,6 +22,7 @@ if is_windows():
     from ctypes import windll
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full"
+DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
 
 class Command(BaseCommand):
@@ -236,7 +238,6 @@ class Command(BaseCommand):
             "--template",
             dest="template",
             type=str,
-            default="gh:flet-dev/flet-build-template",
             help="a directory containing Flutter bootstrap template, or a URL to a git repository template",
         )
         parser.add_argument(
@@ -356,17 +357,27 @@ class Command(BaseCommand):
 
         template_data["flutter"] = {"dependencies": flutter_dependencies}
 
+        template_url = options.template
+        template_ref = options.template_ref
+        if not template_url:
+            template_url = DEFAULT_TEMPLATE_URL
+            if flet.version.version and not template_ref:
+                template_ref = flet.version.version
+
         # create Flutter project from a template
         print("Creating Flutter bootstrap project...", end="")
-        cookiecutter(
-            template=options.template,
-            checkout=options.template_ref,
-            directory=options.template_dir,
-            output_dir=str(self.flutter_dir.parent),
-            no_input=True,
-            overwrite_if_exists=True,
-            extra_context=template_data,
-        )
+        try:
+            cookiecutter(
+                template=template_url,
+                checkout=template_ref,
+                directory=options.template_dir,
+                output_dir=str(self.flutter_dir.parent),
+                no_input=True,
+                overwrite_if_exists=True,
+                extra_context=template_data,
+            )
+        except Exception as e:
+            self.cleanup(1, f"{e}")
         print("[spring_green3]OK[/spring_green3]")
 
         # load pubspec.yaml
