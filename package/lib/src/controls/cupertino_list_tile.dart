@@ -63,7 +63,7 @@ class CupertinoListTileControl extends StatelessWidget {
 
     Function()? onPressed = (onclick || toggleInputs || url != "") && !disabled
         ? () {
-            debugPrint("ListTile ${control.id} clicked!");
+            debugPrint("CupertinoListTile ${control.id} clicked!");
             if (toggleInputs) {
               _clickNotifier.onClick();
             }
@@ -88,18 +88,13 @@ class CupertinoListTileControl extends StatelessWidget {
         : null;
 
     Widget tile = CupertinoListTile(
-      //autofocus: autofocus,
-      //contentPadding: parseEdgeInsets(control, "contentPadding"),
-      //isThreeLine: isThreeLine,
-      //selected: selected,
-      //dense: dense,
       onTap: onPressed,
-      //onLongPress: onLongPress,
-      //enabled: !disabled,
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled)
           : null,
-      title: const Text("CupertinoListTile"),
+      title: titleCtrls.isNotEmpty
+          ? createControl(control, titleCtrls.first.id, disabled)
+          : const Text(""),
       subtitle: subtitleCtrls.isNotEmpty
           ? createControl(control, subtitleCtrls.first.id, disabled)
           : null,
