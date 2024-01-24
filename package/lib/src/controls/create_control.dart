@@ -533,14 +533,16 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "cupertinotextfield":
       return CupertinoTextFieldControl(
           key: key,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          dispatch: controlView.dispatch);
     case "searchbar":
       return SearchAnchorControl(
           key: key,
@@ -635,7 +637,8 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          nextChild: nextChild);
+          nextChild: nextChild,
+          dispatch: controlView.dispatch);
     case "dismissible":
       return DismissibleControl(
           parent: parent,
@@ -649,14 +652,16 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          nextChild: nextChild);
+          nextChild: nextChild,
+          dispatch: controlView.dispatch);
     case "cupertinoalertdialog":
       return CupertinoAlertDialogControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          nextChild: nextChild);
+          nextChild: nextChild,
+          dispatch: controlView.dispatch);
     case "bottomsheet":
       return BottomSheetControl(
           parent: parent,
@@ -671,7 +676,8 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          nextChild: nextChild);
+          nextChild: nextChild,
+          dispatch: controlView.dispatch);
     case "tabs":
       return TabsControl(
           key: key,

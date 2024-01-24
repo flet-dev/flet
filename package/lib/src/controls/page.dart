@@ -574,7 +574,7 @@ class _PageControlState extends State<PageControl> {
               }
 
               if (viewId == routesView.views.first.id && isDesktop()) {
-                overlayWidgets.add(const WindowMedia());
+                overlayWidgets.add(WindowMedia(dispatch: widget.dispatch));
               }
 
               return overlayWidgets;

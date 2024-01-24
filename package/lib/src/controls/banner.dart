@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
-import '../models/app_state.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
@@ -14,6 +12,7 @@ class BannerControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final Widget? nextChild;
+  final dynamic dispatch;
 
   const BannerControl(
       {super.key,
@@ -21,7 +20,8 @@ class BannerControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.nextChild});
+      required this.nextChild,
+      required this.dispatch});
 
   @override
   State<BannerControl> createState() => _BannerControlState();
@@ -65,38 +65,33 @@ class _BannerControlState extends State<BannerControl> {
   Widget build(BuildContext context) {
     debugPrint("Banner build: ${widget.control.id}");
 
-    return StoreConnector<AppState, Function>(
-        distinct: true,
-        converter: (store) => store.dispatch,
-        builder: (context, dispatch) {
-          debugPrint("Banner StoreConnector build: ${widget.control.id}");
+    debugPrint("Banner StoreConnector build: ${widget.control.id}");
 
-          var open = widget.control.attrBool("open", false)!;
+    var open = widget.control.attrBool("open", false)!;
 
-          debugPrint("Current open state: $_open");
-          debugPrint("New open state: $open");
+    debugPrint("Current open state: $_open");
+    debugPrint("New open state: $open");
 
-          if (open && (open != _open)) {
-            var banner = _createBanner();
-            if (banner is ErrorControl) {
-              return banner;
-            }
+    if (open && (open != _open)) {
+      var banner = _createBanner();
+      if (banner is ErrorControl) {
+        return banner;
+      }
 
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
 
-              ScaffoldMessenger.of(context)
-                  .showMaterialBanner(banner as MaterialBanner);
-            });
-          } else if (open != _open && _open) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
-            });
-          }
+        ScaffoldMessenger.of(context)
+            .showMaterialBanner(banner as MaterialBanner);
+      });
+    } else if (open != _open && _open) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+      });
+    }
 
-          _open = open;
+    _open = open;
 
-          return widget.nextChild ?? const SizedBox.shrink();
-        });
+    return widget.nextChild ?? const SizedBox.shrink();
   }
 }
