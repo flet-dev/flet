@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 
@@ -94,6 +96,10 @@ class CupertinoListTileControl extends StatelessWidget {
       additionalInfo: additionalInfoCtrls.isNotEmpty
           ? createControl(control, additionalInfoCtrls.first.id, disabled)
           : null,
+      backgroundColor: HexColor.fromString(
+          Theme.of(context), control.attrString("bgcolor", "")!),
+      backgroundColorActivated: HexColor.fromString(
+          Theme.of(context), control.attrString("bgcoloractivated", "")!),
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled)
           : null,

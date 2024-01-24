@@ -85,21 +85,23 @@ class CupertinoListTile(ConstrainedControl):
         #
         # Specific
         #
-        content_padding: PaddingValue = None,
+        # content_padding: PaddingValue = None,
+        bgcolor: Optional[str] = None,
+        bgcolor_activated: Optional[str] = None,
         leading: Optional[Control] = None,
         title: Optional[Control] = None,
         subtitle: Optional[Control] = None,
         trailing: Optional[Control] = None,
-        is_three_line: Optional[bool] = None,
-        selected: Optional[bool] = None,
-        dense: Optional[bool] = None,
-        autofocus: Optional[bool] = None,
-        toggle_inputs: Optional[bool] = None,
+        # is_three_line: Optional[bool] = None,
+        # selected: Optional[bool] = None,
+        # dense: Optional[bool] = None,
+        # autofocus: Optional[bool] = None,
+        # toggle_inputs: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
         additional_info: Optional[Control] = None,
         on_click=None,
-        on_long_press=None,
+        # on_long_press=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -131,28 +133,30 @@ class CupertinoListTile(ConstrainedControl):
             data=data,
         )
 
-        self.content_padding = content_padding
+        # self.content_padding = content_padding
         self.leading = leading
         self.title = title
         self.subtitle = subtitle
         self.trailing = trailing
-        self.is_three_line = is_three_line
-        self.selected = selected
-        self.dense = dense
-        self.autofocus = autofocus
-        self.toggle_inputs = toggle_inputs
+        self.bgcolor = bgcolor
+        self.bgcolor_activated = bgcolor_activated
+        # self.is_three_line = is_three_line
+        # self.selected = selected
+        # self.dense = dense
+        # self.autofocus = autofocus
+        # self.toggle_inputs = toggle_inputs
         self.url = url
         self.url_target = url_target
         self.additional_info = additional_info
         self.on_click = on_click
-        self.on_long_press = on_long_press
+        # self.on_long_press = on_long_press
 
     def _get_control_name(self):
         return "cupertinolisttile"
 
-    def _before_build_command(self):
-        super()._before_build_command()
-        self._set_attr_json("contentPadding", self.__content_padding)
+    # def _before_build_command(self):
+    #     super()._before_build_command()
+    #     self._set_attr_json("contentPadding", self.__content_padding)
 
     def _get_children(self):
         children = []
@@ -173,14 +177,14 @@ class CupertinoListTile(ConstrainedControl):
             children.append(self.__additional_info)
         return children
 
-    # content_padding
-    @property
-    def content_padding(self) -> PaddingValue:
-        return self.__content_padding
+    # # content_padding
+    # @property
+    # def content_padding(self) -> PaddingValue:
+    #     return self.__content_padding
 
-    @content_padding.setter
-    def content_padding(self, value: PaddingValue):
-        self.__content_padding = value
+    # @content_padding.setter
+    # def content_padding(self, value: PaddingValue):
+    #     self.__content_padding = value
 
     # leading
     @property
@@ -227,50 +231,32 @@ class CupertinoListTile(ConstrainedControl):
     def additional_info(self, value: Optional[Control]):
         self.__additional_info = value
 
-    # is_three_line
+    # bgcolor
     @property
-    def is_three_line(self) -> Optional[bool]:
-        return self._get_attr("isThreeLine", data_type="bool", def_value=False)
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
 
-    @is_three_line.setter
-    def is_three_line(self, value: Optional[bool]):
-        self._set_attr("isThreeLine", value)
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
 
-    # selected
+    # bgcolor_activated
     @property
-    def selected(self) -> Optional[bool]:
-        return self._get_attr("selected", data_type="bool", def_value=False)
+    def bgcolor_activated(self):
+        return self._get_attr("bgcoloractivated")
 
-    @selected.setter
-    def selected(self, value: Optional[bool]):
-        self._set_attr("selected", value)
+    @bgcolor_activated.setter
+    def bgcolor_activated(self, value):
+        self._set_attr("bgcoloractivated", value)
 
-    # dense
-    @property
-    def dense(self) -> Optional[bool]:
-        return self._get_attr("dense", data_type="bool", def_value=False)
+    # # is_three_line
+    # @property
+    # def is_three_line(self) -> Optional[bool]:
+    #     return self._get_attr("isThreeLine", data_type="bool", def_value=False)
 
-    @dense.setter
-    def dense(self, value: Optional[bool]):
-        self._set_attr("dense", value)
-
-    # autofocus
-    @property
-    def autofocus(self) -> Optional[bool]:
-        return self._get_attr("autofocus", data_type="bool", def_value=False)
-
-    @autofocus.setter
-    def autofocus(self, value: Optional[bool]):
-        self._set_attr("autofocus", value)
-
-    # toggle_inputs
-    @property
-    def toggle_inputs(self) -> Optional[bool]:
-        return self._get_attr("toggleInputs", data_type="bool", def_value=False)
-
-    @toggle_inputs.setter
-    def toggle_inputs(self, value: Optional[bool]):
-        self._set_attr("toggleInputs", value)
+    # @is_three_line.setter
+    # def is_three_line(self, value: Optional[bool]):
+    #     self._set_attr("isThreeLine", value)
 
     # url
     @property
@@ -303,12 +289,12 @@ class CupertinoListTile(ConstrainedControl):
         else:
             self._set_attr("onclick", None)
 
-    # on_long_press
-    @property
-    def on_long_press(self):
-        return self._get_event_handler("long_press")
+    # # on_long_press
+    # @property
+    # def on_long_press(self):
+    #     return self._get_event_handler("long_press")
 
-    @on_long_press.setter
-    def on_long_press(self, handler):
-        self._add_event_handler("long_press", handler)
-        self._set_attr("onLongPress", True if handler is not None else None)
+    # @on_long_press.setter
+    # def on_long_press(self, handler):
+    #     self._add_event_handler("long_press", handler)
+    #     self._set_attr("onLongPress", True if handler is not None else None)
