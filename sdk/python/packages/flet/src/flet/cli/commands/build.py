@@ -674,8 +674,8 @@ class Command(BaseCommand):
                 for flutter_build_arg in flutter_build_arg_arr:
                     build_args.append(flutter_build_arg)
 
-        if self.verbose > 0:
-            print(build_args)
+        if self.verbose > 1:
+            build_args.append("--verbose")
 
         build_result = self.run(build_args, cwd=str(self.flutter_dir))
 
@@ -761,10 +761,13 @@ class Command(BaseCommand):
             previousCp = windll.kernel32.GetConsoleOutputCP()
             windll.kernel32.SetConsoleOutputCP(65001)
 
+        if self.verbose > 0:
+            print(f"\nRun subprocess: {args}")
+
         r = subprocess.run(
             args,
             cwd=cwd,
-            capture_output=self.verbose < 2,
+            capture_output=self.verbose < 1,
             text=True,
             encoding="utf8",
         )
