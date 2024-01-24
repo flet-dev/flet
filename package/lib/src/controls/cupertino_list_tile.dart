@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 
@@ -105,6 +106,7 @@ class CupertinoListTileControl extends StatelessWidget {
           : null,
       leadingSize: control.attrDouble("leadingSize", 28.0)!,
       leadingToTitle: control.attrDouble("leadingToTitle", 16.0)!,
+      padding: parseEdgeInsets(control, "padding"),
       title: titleCtrls.isNotEmpty
           ? createControl(control, titleCtrls.first.id, disabled)
           : const Text(""),

@@ -89,6 +89,7 @@ class CupertinoListTile(ConstrainedControl):
         bgcolor: Optional[str] = None,
         bgcolor_activated: Optional[str] = None,
         leading: Optional[Control] = None,
+        padding: PaddingValue = None,
         title: Optional[Control] = None,
         subtitle: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -152,15 +153,16 @@ class CupertinoListTile(ConstrainedControl):
         self.additional_info = additional_info
         self.leading_size = leading_size
         self.leading_to_title = leading_to_title
+        self.padding = padding
         self.on_click = on_click
         # self.on_long_press = on_long_press
 
     def _get_control_name(self):
         return "cupertinolisttile"
 
-    # def _before_build_command(self):
-    #     super()._before_build_command()
-    #     self._set_attr_json("contentPadding", self.__content_padding)
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
         children = []
@@ -207,6 +209,15 @@ class CupertinoListTile(ConstrainedControl):
     @title.setter
     def title(self, value: Optional[Control]):
         self.__title = value
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
 
     # subtitle
     @property
