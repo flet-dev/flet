@@ -66,6 +66,9 @@ class CupertinoListTileControl extends StatelessWidget {
     String? urlTarget = control.attrString("urlTarget");
     bool disabled = control.isDisabled || parentDisabled;
 
+    // if the material ListTile was used with adaptive=True, ListTile.content_padding will be used as padding
+    var padding = parseEdgeInsets(control, "contentPadding");
+
     Function()? onPressed = (onclick || toggleInputs || url != "") && !disabled
         ? () {
             debugPrint("CupertinoListTile ${control.id} clicked!");
@@ -106,7 +109,7 @@ class CupertinoListTileControl extends StatelessWidget {
           : null,
       leadingSize: control.attrDouble("leadingSize", 28.0)!,
       leadingToTitle: control.attrDouble("leadingToTitle", 16.0)!,
-      padding: parseEdgeInsets(control, "padding"),
+      padding: padding,
       title: titleCtrls.isNotEmpty
           ? createControl(control, titleCtrls.first.id, disabled)
           : const Text(""),

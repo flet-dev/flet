@@ -162,7 +162,7 @@ class CupertinoListTile(ConstrainedControl):
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("padding", self.__padding)
+        self._set_attr_json("contentPadding", self.__padding)
 
     def _get_children(self):
         children = []

@@ -97,6 +97,8 @@ class ListTileControl extends StatelessWidget {
       onTap: onPressed,
       onLongPress: onLongPress,
       enabled: !disabled,
+      //splashColor: Colors.blueGrey,
+      tileColor: Colors.grey,
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled)
           : null,
