@@ -3,12 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -16,27 +13,33 @@ import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/material_state.dart';
 import 'create_control.dart';
+import 'flet_control_state.dart';
 
 class TabsControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const TabsControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<TabsControl> createState() => _TabsControlState();
 }
 
-class _TabsControlState extends State<TabsControl>
+class _TabsControlStateWithControlState extends FletControlState<TabsControl> {
+  @override
+  Widget build(BuildContext context) {
+    throw UnimplementedError();
+  }
+}
+
+class _TabsControlState extends _TabsControlStateWithControlState
     with TickerProviderStateMixin {
   String? _tabsSnapshot;
   TabController? _tabController;
@@ -56,17 +59,9 @@ class _TabsControlState extends State<TabsControl>
     var index = _tabController!.index;
     if (_selectedIndex != index) {
       debugPrint("Selected index: $index");
-      List<Map<String, String>> props = [
-        {"i": widget.control.id, "selectedindex": index.toString()}
-      ];
-      widget.dispatch(
-          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      final server = FletAppServices.of(context).server;
-      server.updateControlProps(props: props);
-      server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: "change",
-          eventData: index.toString());
+      updateControlProps(
+          widget.control.id, {"selectedindex": index.toString()});
+      sendControlEvent(widget.control.id, "change", index.toString());
       _selectedIndex = index;
     }
   }

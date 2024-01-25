@@ -2,10 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/buttons.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -16,7 +13,6 @@ class SegmentedButtonControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const SegmentedButtonControl({
     super.key,
@@ -24,7 +20,6 @@ class SegmentedButtonControl extends StatefulWidget {
     required this.control,
     required this.children,
     required this.parentDisabled,
-    required this.dispatch,
   });
 
   @override
@@ -35,20 +30,8 @@ class _SegmentedButtonControlState
     extends FletControlState<SegmentedButtonControl> {
   void onChange(Set<String> selection) {
     var s = jsonEncode(selection.toList());
-
-    List<Map<String, String>> props = [
-      {
-        "i": widget.control.id,
-        "selected": s,
-      }
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-
-    final server = FletAppServices.of(context).server;
-    server.updateControlProps(props: props);
-    server.sendPageEvent(
-        eventTarget: widget.control.id, eventName: "change", eventData: s);
+    updateControlProps(widget.control.id, {"selected": s});
+    sendControlEvent(widget.control.id, "change", s);
   }
 
   @override

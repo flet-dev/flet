@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_control_state.dart';
 
 class ChipControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const ChipControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<ChipControl> createState() => _ChipControlState();
 }
 
-class _ChipControlState extends State<ChipControl> {
+class _ChipControlState extends FletControlState<ChipControl> {
   bool _selected = false;
 
   late final FocusNode _focusNode;
@@ -52,20 +49,9 @@ class _ChipControlState extends State<ChipControl> {
   void _onSelect(bool selected) {
     var strSelected = selected.toString();
     debugPrint(strSelected);
-    setState(() {
-      _selected = selected;
-    });
-    List<Map<String, String>> props = [
-      {"i": widget.control.id, "selected": strSelected}
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-    final server = FletAppServices.of(context).server;
-    server.updateControlProps(props: props);
-    server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: "select",
-        eventData: strSelected);
+    _selected = selected;
+    updateControlProps(widget.control.id, {"selected": strSelected});
+    sendControlEvent(widget.control.id, "select", strSelected);
   }
 
   void _onFocusChange() {

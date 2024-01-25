@@ -107,7 +107,6 @@ class LineChartViewModel extends Equatable {
   final ChartAxisViewModel? rightAxis;
   final ChartAxisViewModel? bottomAxis;
   final List<LineChartDataViewModel> dataSeries;
-  final dynamic dispatch;
 
   const LineChartViewModel(
       {required this.control,
@@ -115,8 +114,7 @@ class LineChartViewModel extends Equatable {
       required this.topAxis,
       required this.rightAxis,
       required this.bottomAxis,
-      required this.dataSeries,
-      required this.dispatch});
+      required this.dataSeries});
 
   static LineChartViewModel fromStore(
       Store<AppState> store, Control control, List<Control> children) {
@@ -145,13 +143,12 @@ class LineChartViewModel extends Equatable {
         dataSeries: children
             .where((c) => c.type == "data" && c.isVisible)
             .map((c) => LineChartDataViewModel.fromStore(store, c))
-            .toList(),
-        dispatch: store.dispatch);
+            .toList());
   }
 
   @override
   List<Object?> get props =>
-      [control, leftAxis, rightAxis, topAxis, bottomAxis, dataSeries, dispatch];
+      [control, leftAxis, rightAxis, topAxis, bottomAxis, dataSeries];
 }
 
 class LineChartControl extends StatefulWidget {

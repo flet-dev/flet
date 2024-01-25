@@ -3,10 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
@@ -14,6 +12,7 @@ import '../utils/shadows.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
+import 'flet_control_state.dart';
 import 'form_field.dart';
 import 'textfield.dart';
 
@@ -22,22 +21,21 @@ class CupertinoTextFieldControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const CupertinoTextFieldControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<CupertinoTextFieldControl> createState() =>
       _CupertinoTextFieldControlState();
 }
 
-class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
+class _CupertinoTextFieldControlState
+    extends FletControlState<CupertinoTextFieldControl> {
   String _value = "";
   final bool _revealPassword = false;
   bool _focused = false;
@@ -265,20 +263,10 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         focusNode: focusNode,
         onChanged: (String value) {
           //debugPrint(value);
-          setState(() {
-            _value = value;
-          });
-          List<Map<String, String>> props = [
-            {"i": widget.control.id, "value": value}
-          ];
-          widget.dispatch(UpdateControlPropsAction(
-              UpdateControlPropsPayload(props: props)));
-          FletAppServices.of(context).server.updateControlProps(props: props);
+          _value = value;
+          updateControlProps(widget.control.id, {"value": value});
           if (onChange) {
-            FletAppServices.of(context).server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "change",
-                eventData: value);
+            sendControlEvent(widget.control.id, "change", value);
           }
         });
 

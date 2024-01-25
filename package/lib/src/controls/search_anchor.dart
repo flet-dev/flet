@@ -2,10 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
@@ -17,15 +15,13 @@ class SearchAnchorControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const SearchAnchorControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<SearchAnchorControl> createState() => _SearchAnchorControlState();
@@ -55,12 +51,7 @@ class _SearchAnchorControlState extends FletControlState<SearchAnchorControl> {
 
   void _updateValue(String value) {
     debugPrint("SearchBar.changeValue: $value");
-    List<Map<String, String>> props = [
-      {"i": widget.control.id, "value": value}
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-    FletAppServices.of(context).server.updateControlProps(props: props);
+    updateControlProps(widget.control.id, {"value": value});
   }
 
   @override
@@ -110,12 +101,7 @@ class _SearchAnchorControlState extends FletControlState<SearchAnchorControl> {
       debugPrint("SearchAnchor JSON method: $method");
 
       void resetMethod() {
-        List<Map<String, String>> props = [
-          {"i": widget.control.id, "method": ""}
-        ];
-        widget.dispatch(
-            UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-        FletAppServices.of(context).server.updateControlProps(props: props);
+        updateControlProps(widget.control.id, {"method": ""});
       }
 
       var mj = json.decode(method);

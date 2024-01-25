@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
@@ -14,15 +11,13 @@ class ExpansionPanelListControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const ExpansionPanelListControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<ExpansionPanelListControl> createState() =>
@@ -40,17 +35,9 @@ class _ExpansionPanelListControlState
         .toList();
 
     void onChange(int index, bool isExpanded) {
-      List<Map<String, String>> props = [
-        {"i": panels[index].id, "expanded": isExpanded.toString().toLowerCase()}
-      ];
-      widget.dispatch(
-          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      var server = FletAppServices.of(context).server;
-      server.updateControlProps(props: props);
-      server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: "change",
-          eventData: "$index");
+      updateControlProps(
+          panels[index].id, {"expanded": isExpanded.toString().toLowerCase()});
+      sendControlEvent(widget.control.id, "change", "$index");
     }
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;

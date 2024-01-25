@@ -137,15 +137,8 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
 
       for (var createControlFactory
           in FletAppServices.of(context).createControlFactories) {
-        widget = createControlFactory(CreateControlArgs(
-            controlView.control.type,
-            controlKey,
-            parent,
-            controlView.control,
-            controlView.children,
-            parentDisabled,
-            controlView.dispatch,
-            FletAppServices.of(context).server));
+        widget = createControlFactory(CreateControlArgs(controlKey, parent,
+            controlView.control, controlView.children, parentDisabled));
         if (widget != null) {
           break;
         }
@@ -228,10 +221,7 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "audio":
       return AudioControl(
-          parent: parent,
-          control: controlView.control,
-          dispatch: controlView.dispatch,
-          nextChild: nextChild);
+          parent: parent, control: controlView.control, nextChild: nextChild);
     case "divider":
       return DividerControl(
           key: key, parent: parent, control: controlView.control);
@@ -276,8 +266,7 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "progressring":
       return ProgressRingControl(
           key: key, parent: parent, control: controlView.control);
@@ -335,21 +324,18 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "column":
       return ColumnControl(
-        key: key,
-        parent: parent,
-        control: controlView.control,
-        children: controlView.children,
-        parentDisabled: parentDisabled,
-        dispatch: controlView.dispatch,
-      );
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
     case "row":
       return RowControl(
           key: key,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "responsiverow":
       return ResponsiveRowControl(
           key: key,
@@ -384,16 +370,14 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "expansionpanellist":
       return ExpansionPanelListControl(
           key: key,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "stack":
       return StackControl(
           key: key,
@@ -414,7 +398,6 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
         control: controlView.control,
         children: controlView.children,
         parentDisabled: parentDisabled,
-        dispatch: controlView.dispatch,
       );
     case "timepicker":
       return TimePickerControl(
@@ -422,7 +405,6 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
         control: controlView.control,
         children: controlView.children,
         parentDisabled: parentDisabled,
-        dispatch: controlView.dispatch,
       );
     case "draggable":
       return DraggableControl(
@@ -521,93 +503,77 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "gridview":
       return GridViewControl(
-        key: key,
-        parent: parent,
-        control: controlView.control,
-        children: controlView.children,
-        parentDisabled: parentDisabled,
-        dispatch: controlView.dispatch,
-      );
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
     case "textfield":
       return TextFieldControl(
           key: key,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "cupertinotextfield":
       return CupertinoTextFieldControl(
           key: key,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "searchbar":
       return SearchAnchorControl(
           key: key,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "checkbox":
       return CheckboxControl(
           key: key,
           parent: parent,
           control: controlView.control,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "cupertinocheckbox":
       return CupertinoCheckboxControl(
           key: key,
           parent: parent,
           control: controlView.control,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "switch":
       return SwitchControl(
           key: key,
           parent: parent,
           control: controlView.control,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "cupertinoswitch":
       return CupertinoSwitchControl(
           key: key,
           parent: parent,
           control: controlView.control,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "slider":
       return SliderControl(
-        key: key,
-        parent: parent,
-        control: controlView.control,
-        parentDisabled: parentDisabled,
-        dispatch: controlView.dispatch,
-      );
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled);
     case "cupertinoslider":
       return CupertinoSliderControl(
-        key: key,
-        parent: parent,
-        control: controlView.control,
-        parentDisabled: parentDisabled,
-        dispatch: controlView.dispatch,
-      );
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled);
     case "rangeslider":
       return RangeSliderControl(
-        key: key,
-        parent: parent,
-        control: controlView.control,
-        parentDisabled: parentDisabled,
-        dispatch: controlView.dispatch,
-      );
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled);
     case "radiogroup":
       return RadioGroupControl(
           key: key,
@@ -620,30 +586,26 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           key: key,
           parent: parent,
           control: controlView.control,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "cupertinoradio":
       return CupertinoRadioControl(
           key: key,
           parent: parent,
           control: controlView.control,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "dropdown":
       return DropdownControl(
           key: key,
           parent: parent,
           control: controlView.control,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "snackbar":
       return SnackBarControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          nextChild: nextChild,
-          dispatch: controlView.dispatch);
+          nextChild: nextChild);
     case "dismissible":
       return DismissibleControl(
           parent: parent,
@@ -657,23 +619,20 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          nextChild: nextChild,
-          dispatch: controlView.dispatch);
+          nextChild: nextChild);
     case "cupertinoalertdialog":
       return CupertinoAlertDialogControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          nextChild: nextChild,
-          dispatch: controlView.dispatch);
+          nextChild: nextChild);
     case "bottomsheet":
       return BottomSheetControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch,
           nextChild: nextChild);
     case "banner":
       return BannerControl(
@@ -681,38 +640,33 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          nextChild: nextChild,
-          dispatch: controlView.dispatch);
+          nextChild: nextChild);
     case "tabs":
       return TabsControl(
           key: key,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "navigationrail":
       return NavigationRailControl(
           key: key,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "navigationbar":
       return NavigationBarControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "cupertinonavigationbar":
       return CupertinoNavigationBarControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled,
-          dispatch: controlView.dispatch);
+          parentDisabled: parentDisabled);
     case "bottomappbar":
       return BottomAppBarControl(
         parent: parent,

@@ -1,10 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
@@ -17,15 +14,13 @@ class NavigationBarControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const NavigationBarControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<NavigationBarControl> createState() => _NavigationBarControlState();
@@ -38,17 +33,9 @@ class _NavigationBarControlState
   void _destinationChanged(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
-    List<Map<String, String>> props = [
-      {"i": widget.control.id, "selectedindex": _selectedIndex.toString()}
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-    final server = FletAppServices.of(context).server;
-    server.updateControlProps(props: props);
-    server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: "change",
-        eventData: _selectedIndex.toString());
+    updateControlProps(
+        widget.control.id, {"selectedindex": _selectedIndex.toString()});
+    sendControlEvent(widget.control.id, "change", _selectedIndex.toString());
   }
 
   @override
@@ -63,8 +50,7 @@ class _NavigationBarControlState
         return CupertinoNavigationBarControl(
             control: widget.control,
             children: widget.children,
-            parentDisabled: widget.parentDisabled,
-            dispatch: widget.dispatch);
+            parentDisabled: widget.parentDisabled);
       }
 
       bool disabled = widget.control.isDisabled || widget.parentDisabled;

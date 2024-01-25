@@ -13,15 +13,13 @@ class GridViewControl extends StatefulWidget {
   final Control control;
   final bool parentDisabled;
   final List<Control> children;
-  final dynamic dispatch;
 
   const GridViewControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<GridViewControl> createState() => _GridViewControlState();
@@ -99,7 +97,6 @@ class _GridViewControlState extends State<GridViewControl> {
         child = ScrollableControl(
           control: widget.control,
           scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
-          dispatch: widget.dispatch,
           scrollController: _controller,
           child: child,
         );

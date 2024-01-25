@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_control_state.dart';
 
 class BottomSheetControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
   final Widget? nextChild;
 
   const BottomSheetControl(
@@ -22,14 +20,13 @@ class BottomSheetControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch,
       required this.nextChild});
 
   @override
   State<BottomSheetControl> createState() => _BottomSheetControlState();
 }
 
-class _BottomSheetControlState extends State<BottomSheetControl> {
+class _BottomSheetControlState extends FletControlState<BottomSheetControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("BottomSheet build: ${widget.control.id}");
@@ -51,12 +48,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
         widget.control.attrBool("maintainBottomViewInsetsPadding", true)!;
 
     void resetOpenState() {
-      List<Map<String, String>> props = [
-        {"i": widget.control.id, "open": "false"}
-      ];
-      widget.dispatch(
-          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      server.updateControlProps(props: props);
+      updateControlProps(widget.control.id, {"open": "false"});
     }
 
     if (open && !lastOpen) {

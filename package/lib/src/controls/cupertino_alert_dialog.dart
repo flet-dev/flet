@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_control_state.dart';
 
 class CupertinoAlertDialogControl extends StatefulWidget {
   final Control? parent;
@@ -14,7 +12,6 @@ class CupertinoAlertDialogControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final Widget? nextChild;
-  final dynamic dispatch;
 
   const CupertinoAlertDialogControl(
       {super.key,
@@ -22,8 +19,7 @@ class CupertinoAlertDialogControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.nextChild,
-      required this.dispatch});
+      required this.nextChild});
 
   @override
   State<CupertinoAlertDialogControl> createState() =>
@@ -31,7 +27,7 @@ class CupertinoAlertDialogControl extends StatefulWidget {
 }
 
 class _CupertinoAlertDialogControlState
-    extends State<CupertinoAlertDialogControl> {
+    extends FletControlState<CupertinoAlertDialogControl> {
   Widget _createCupertinoAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var titleCtrls =
@@ -61,8 +57,6 @@ class _CupertinoAlertDialogControlState
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoAlertDialog build ($hashCode): ${widget.control.id}");
-
-    var server = FletAppServices.of(context).server;
 
     bool lastOpen = widget.control.state["open"] ?? false;
 
@@ -99,16 +93,8 @@ class _CupertinoAlertDialogControlState
           widget.control.state["open"] = false;
 
           if (shouldDismiss) {
-            List<Map<String, String>> props = [
-              {"i": widget.control.id, "open": "false"}
-            ];
-            widget.dispatch(UpdateControlPropsAction(
-                UpdateControlPropsPayload(props: props)));
-            server.updateControlProps(props: props);
-            server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "dismiss",
-                eventData: "");
+            updateControlProps(widget.control.id, {"open": "false"});
+            sendControlEvent(widget.control.id, "dismiss", "");
           }
         });
       });

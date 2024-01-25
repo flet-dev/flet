@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -16,14 +14,12 @@ class DropdownControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const DropdownControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<DropdownControl> createState() => _DropdownControlState();
@@ -62,8 +58,6 @@ class _DropdownControlState extends FletControlState<DropdownControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("Dropdown build: ${widget.control.id}");
-
-    final server = FletAppServices.of(context).server;
 
     return withControls(widget.control.childIds, (context, itemsView) {
       debugPrint("DropdownFletControlState build: ${widget.control.id}");
@@ -148,19 +142,9 @@ class _DropdownControlState extends FletControlState<DropdownControl> {
             ? null
             : (String? value) {
                 debugPrint("Dropdown selected value: $value");
-                setState(() {
-                  _value = value!;
-                });
-                List<Map<String, String>> props = [
-                  {"i": widget.control.id, "value": value!}
-                ];
-                widget.dispatch(UpdateControlPropsAction(
-                    UpdateControlPropsPayload(props: props)));
-                server.updateControlProps(props: props);
-                server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "change",
-                    eventData: value);
+                _value = value!;
+                updateControlProps(widget.control.id, {"value": value});
+                sendControlEvent(widget.control.id, "change", value);
               },
         items: items,
       );

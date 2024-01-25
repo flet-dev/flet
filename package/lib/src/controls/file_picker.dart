@@ -6,11 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../flet_server.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/desktop.dart';
 import '../utils/strings.dart';
 import 'flet_control_state.dart';
@@ -109,13 +107,7 @@ class _FilePickerControlState extends FletControlState<FilePickerControl> {
 
       resetDialogState() {
         _state = null;
-        var fletServices = FletAppServices.of(context);
-        List<Map<String, String>> props = [
-          {"i": widget.control.id, "state": ""}
-        ];
-        fletServices.store.dispatch(
-            UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-        fletServices.server.updateControlProps(props: props);
+        updateControlProps(widget.control.id, {"state": ""});
       }
 
       sendEvent() {

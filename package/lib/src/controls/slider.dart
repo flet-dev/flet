@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/desktop.dart';
@@ -15,14 +13,12 @@ class SliderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const SliderControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<SliderControl> createState() => _SliderControlState();
@@ -58,21 +54,12 @@ class _SliderControlState extends FletControlState<SliderControl> {
   void onChange(double value) {
     var svalue = value.toString();
     debugPrint(svalue);
-    setState(() {
-      _value = value;
-    });
-
-    List<Map<String, String>> props = [
-      {"i": widget.control.id, "value": svalue}
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-
+    _value = value;
+    var props = {"value": svalue};
+    updateControlProps(widget.control.id, props, clientOnly: true);
     _debouncer.run(() {
-      final server = FletAppServices.of(context).server;
-      server.updateControlProps(props: props);
-      server.sendPageEvent(
-          eventTarget: widget.control.id, eventName: "change", eventData: '');
+      updateControlProps(widget.control.id, props);
+      sendControlEvent(widget.control.id, "change", '');
     });
   }
 
@@ -86,9 +73,7 @@ class _SliderControlState extends FletControlState<SliderControl> {
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoSliderControl(
-            control: widget.control,
-            parentDisabled: widget.parentDisabled,
-            dispatch: widget.dispatch);
+            control: widget.control, parentDisabled: widget.parentDisabled);
       }
 
       String? label = widget.control.attrString("label");

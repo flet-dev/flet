@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:flet/src/flet_server.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'actions.dart';
+import 'flet_server.dart';
 import 'models/app_state.dart';
 import 'models/control.dart';
 import 'models/window_media_data.dart';

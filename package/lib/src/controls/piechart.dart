@@ -57,10 +57,8 @@ class PieChartSectionViewModel extends Equatable {
 class PieChartViewModel extends Equatable {
   final Control control;
   final List<PieChartSectionViewModel> sections;
-  final dynamic dispatch;
 
-  const PieChartViewModel(
-      {required this.control, required this.sections, required this.dispatch});
+  const PieChartViewModel({required this.control, required this.sections});
 
   static PieChartViewModel fromStore(
       Store<AppState> store, Control control, List<Control> children) {
@@ -69,12 +67,11 @@ class PieChartViewModel extends Equatable {
         sections: children
             .where((c) => c.type == "section" && c.isVisible)
             .map((c) => PieChartSectionViewModel.fromStore(store, c))
-            .toList(),
-        dispatch: store.dispatch);
+            .toList());
   }
 
   @override
-  List<Object?> get props => [control, sections, dispatch];
+  List<Object?> get props => [control, sections];
 }
 
 class PieChartControl extends StatefulWidget {

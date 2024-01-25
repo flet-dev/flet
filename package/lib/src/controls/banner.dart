@@ -12,7 +12,6 @@ class BannerControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final Widget? nextChild;
-  final dynamic dispatch;
 
   const BannerControl(
       {super.key,
@@ -20,8 +19,7 @@ class BannerControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.nextChild,
-      required this.dispatch});
+      required this.nextChild});
 
   @override
   State<BannerControl> createState() => _BannerControlState();

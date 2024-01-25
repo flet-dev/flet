@@ -16,7 +16,6 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
 import '../models/page_media_view_model.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
@@ -594,8 +593,7 @@ class _PageControlState extends FletControlState<PageControl> {
                   parent: routesView.page,
                   viewId: view.id,
                   overlayWidgets: overlayWidgets(view.id),
-                  loadingPage: loadingPage,
-                  dispatch: widget.dispatch);
+                  loadingPage: loadingPage);
 
               //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
 
@@ -646,15 +644,13 @@ class ViewControl extends StatefulWidget {
   final String viewId;
   final List<Widget> overlayWidgets;
   final Widget? loadingPage;
-  final dynamic dispatch;
 
   const ViewControl(
       {super.key,
       required this.parent,
       required this.viewId,
       required this.overlayWidgets,
-      required this.loadingPage,
-      required this.dispatch});
+      required this.loadingPage});
 
   @override
   State<ViewControl> createState() => _ViewControlState();
@@ -777,7 +773,6 @@ class _ViewControlState extends FletControlState<ViewControl> {
             Widget child = ScrollableControl(
               control: control,
               scrollDirection: Axis.vertical,
-              dispatch: widget.dispatch,
               child: column,
             );
 
@@ -790,16 +785,8 @@ class _ViewControlState extends FletControlState<ViewControl> {
                 widget.parent.state["endDrawerOpened"];
 
             void dismissDrawer(String id) {
-              List<Map<String, String>> props = [
-                {"i": id, "open": "false"}
-              ];
-              widget.dispatch(UpdateControlPropsAction(
-                  UpdateControlPropsPayload(props: props)));
-              FletAppServices.of(context)
-                  .server
-                  .updateControlProps(props: props);
-              FletAppServices.of(context).server.sendPageEvent(
-                  eventTarget: id, eventName: "dismiss", eventData: "");
+              updateControlProps(id, {"open": "false"});
+              sendControlEvent(id, "dismiss", "");
             }
 
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -880,7 +867,6 @@ class _ViewControlState extends FletControlState<ViewControl> {
                       control: drawerView.control,
                       children: drawerView.children,
                       parentDisabled: control.isDisabled,
-                      dispatch: widget.dispatch,
                     )
                   : null,
               onDrawerChanged: (opened) {
@@ -894,7 +880,6 @@ class _ViewControlState extends FletControlState<ViewControl> {
                       control: endDrawerView.control,
                       children: endDrawerView.children,
                       parentDisabled: control.isDisabled,
-                      dispatch: widget.dispatch,
                     )
                   : null,
               onEndDrawerChanged: (opened) {

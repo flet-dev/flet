@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/desktop.dart';
 import 'create_control.dart';
+import 'flet_control_state.dart';
 
 class RangeSliderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const RangeSliderControl({
     super.key,
     this.parent,
     required this.control,
     required this.parentDisabled,
-    required this.dispatch,
   });
 
   @override
   State<RangeSliderControl> createState() => _SliderControlState();
 }
 
-class _SliderControlState extends State<RangeSliderControl> {
+class _SliderControlState extends FletControlState<RangeSliderControl> {
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
 
   @override
@@ -42,24 +39,14 @@ class _SliderControlState extends State<RangeSliderControl> {
   }
 
   void onChange(double startValue, double endValue) {
-    var strStartValue = startValue.toString();
-    var strEndValue = endValue.toString();
-
-    List<Map<String, String>> props = [
-      {
-        "i": widget.control.id,
-        "startvalue": strStartValue,
-        "endvalue": strEndValue
-      }
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-
+    var props = {
+      "startvalue": startValue.toString(),
+      "endvalue": endValue.toString()
+    };
+    updateControlProps(widget.control.id, props, clientOnly: true);
     _debouncer.run(() {
-      final server = FletAppServices.of(context).server;
-      server.updateControlProps(props: props);
-      server.sendPageEvent(
-          eventTarget: widget.control.id, eventName: "change", eventData: '');
+      updateControlProps(widget.control.id, props);
+      sendControlEvent(widget.control.id, "change", "");
     });
   }
 

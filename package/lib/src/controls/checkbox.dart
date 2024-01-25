@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'cupertino_checkbox.dart';
@@ -16,14 +14,12 @@ class CheckboxControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const CheckboxControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<CheckboxControl> createState() => _CheckboxControlState();
@@ -69,18 +65,9 @@ class _CheckboxControlState extends FletControlState<CheckboxControl> {
 
   void _onChange(bool? value) {
     var svalue = value != null ? value.toString() : "";
-    setState(() {
-      _value = value;
-    });
-    List<Map<String, String>> props = [
-      {"i": widget.control.id, "value": svalue}
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-    var server = FletAppServices.of(context).server;
-    server.updateControlProps(props: props);
-    server.sendPageEvent(
-        eventTarget: widget.control.id, eventName: "change", eventData: svalue);
+    _value = value;
+    updateControlProps(widget.control.id, {"value": svalue});
+    sendControlEvent(widget.control.id, "change", svalue);
   }
 
   @override
@@ -93,9 +80,7 @@ class _CheckboxControlState extends FletControlState<CheckboxControl> {
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoCheckboxControl(
-            control: widget.control,
-            parentDisabled: widget.parentDisabled,
-            dispatch: widget.dispatch);
+            control: widget.control, parentDisabled: widget.parentDisabled);
       }
 
       String label = widget.control.attrString("label", "")!;

@@ -16,14 +16,12 @@ import 'flet_control_state.dart';
 class AudioControl extends StatefulWidget {
   final Control? parent;
   final Control control;
-  final dynamic dispatch;
   final Widget? nextChild;
 
   const AudioControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.dispatch,
       required this.nextChild});
 
   @override

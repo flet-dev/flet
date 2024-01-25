@@ -1,9 +1,9 @@
-import 'package:flet/src/flet_app_services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_ancestor_view_model.dart';
@@ -96,7 +96,8 @@ abstract class FletControlState<T extends StatefulWidget> extends State<T> {
         builder: build);
   }
 
-  void updateControlProps(String id, Map<String, String> props) {
+  void updateControlProps(String id, Map<String, String> props,
+      {bool clientOnly = false}) {
     var appServices = FletAppServices.of(context);
     var dispatch = appServices.store.dispatch;
     Map<String, String> allProps = {"i": id};
@@ -105,7 +106,9 @@ abstract class FletControlState<T extends StatefulWidget> extends State<T> {
     }
     dispatch(
         UpdateControlPropsAction(UpdateControlPropsPayload(props: [allProps])));
-    appServices.server.updateControlProps(props: [allProps]);
+    if (!clientOnly) {
+      appServices.server.updateControlProps(props: [allProps]);
+    }
   }
 
   void sendControlEvent(String controlId, String eventName, String eventData) {

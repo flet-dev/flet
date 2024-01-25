@@ -17,15 +17,13 @@ class TextFieldControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const TextFieldControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<TextFieldControl> createState() => _TextFieldControlState();
@@ -110,8 +108,7 @@ class _TextFieldControlState extends FletControlState<TextFieldControl> {
             control: widget.control,
             children: widget.children,
             parent: widget.parent,
-            parentDisabled: widget.parentDisabled,
-            dispatch: widget.dispatch);
+            parentDisabled: widget.parentDisabled);
       }
 
       debugPrint("TextField build: ${widget.control.id}");

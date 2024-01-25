@@ -14,14 +14,12 @@ class SwitchControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const SwitchControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<SwitchControl> createState() => _SwitchControlState();
@@ -68,9 +66,7 @@ class _SwitchControlState extends FletControlState<SwitchControl> {
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoSwitchControl(
-            control: widget.control,
-            parentDisabled: widget.parentDisabled,
-            dispatch: widget.dispatch);
+            control: widget.control, parentDisabled: widget.parentDisabled);
       }
 
       String label = widget.control.attrString("label", "")!;

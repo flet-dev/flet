@@ -108,7 +108,6 @@ class BarChartViewModel extends Equatable {
   final ChartAxisViewModel? rightAxis;
   final ChartAxisViewModel? bottomAxis;
   final List<BarChartGroupViewModel> barGroups;
-  final dynamic dispatch;
 
   const BarChartViewModel(
       {required this.control,
@@ -116,8 +115,7 @@ class BarChartViewModel extends Equatable {
       required this.topAxis,
       required this.rightAxis,
       required this.bottomAxis,
-      required this.barGroups,
-      required this.dispatch});
+      required this.barGroups});
 
   static BarChartViewModel fromStore(
       Store<AppState> store, Control control, List<Control> children) {
@@ -146,13 +144,12 @@ class BarChartViewModel extends Equatable {
         barGroups: children
             .where((c) => c.type == "group" && c.isVisible)
             .map((c) => BarChartGroupViewModel.fromStore(store, c))
-            .toList(),
-        dispatch: store.dispatch);
+            .toList());
   }
 
   @override
   List<Object?> get props =>
-      [control, leftAxis, rightAxis, topAxis, bottomAxis, barGroups, dispatch];
+      [control, leftAxis, rightAxis, topAxis, bottomAxis, barGroups];
 }
 
 class BarChartControl extends StatefulWidget {

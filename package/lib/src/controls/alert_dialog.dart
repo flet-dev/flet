@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
@@ -18,16 +15,15 @@ class AlertDialogControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final Widget? nextChild;
-  final dynamic dispatch;
 
-  const AlertDialogControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.nextChild,
-      required this.dispatch});
+  const AlertDialogControl({
+    super.key,
+    this.parent,
+    required this.control,
+    required this.children,
+    required this.parentDisabled,
+    required this.nextChild,
+  });
 
   @override
   State<AlertDialogControl> createState() => _AlertDialogControlState();
@@ -83,11 +79,8 @@ class _AlertDialogControlState extends FletControlState<AlertDialogControl> {
           parentDisabled: widget.parentDisabled,
           children: widget.children,
           nextChild: widget.nextChild,
-          dispatch: widget.dispatch,
         );
       }
-
-      var server = FletAppServices.of(context).server;
 
       bool lastOpen = widget.control.state["open"] ?? false;
 
@@ -124,16 +117,8 @@ class _AlertDialogControlState extends FletControlState<AlertDialogControl> {
             widget.control.state["open"] = false;
 
             if (shouldDismiss) {
-              List<Map<String, String>> props = [
-                {"i": widget.control.id, "open": "false"}
-              ];
-              widget.dispatch(UpdateControlPropsAction(
-                  UpdateControlPropsPayload(props: props)));
-              server.updateControlProps(props: props);
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "dismiss",
-                  eventData: "");
+              updateControlProps(widget.control.id, {"open": "false"});
+              sendControlEvent(widget.control.id, "dismiss", "");
             }
           });
         });

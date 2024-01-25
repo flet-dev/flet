@@ -1,14 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_control_state.dart';
 
 class SnackBarControl extends StatefulWidget {
   final Control? parent;
@@ -16,7 +15,6 @@ class SnackBarControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final Widget? nextChild;
-  final dynamic dispatch;
 
   const SnackBarControl(
       {super.key,
@@ -24,14 +22,13 @@ class SnackBarControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.nextChild,
-      required this.dispatch});
+      required this.nextChild});
 
   @override
   State<SnackBarControl> createState() => _SnackBarControlState();
 }
 
-class _SnackBarControlState extends State<SnackBarControl> {
+class _SnackBarControlState extends FletControlState<SnackBarControl> {
   bool _open = false;
 
   Widget _createSnackBar() {
@@ -109,15 +106,9 @@ class _SnackBarControlState extends State<SnackBarControl> {
         if (removeCurrentSnackbar) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
         }
-
         ScaffoldMessenger.of(context).showSnackBar(snackBar as SnackBar);
 
-        List<Map<String, String>> props = [
-          {"i": widget.control.id, "open": "false"}
-        ];
-        widget.dispatch(
-            UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-        FletAppServices.of(context).server.updateControlProps(props: props);
+        updateControlProps(widget.control.id, {"open": "false"});
       });
     }
 

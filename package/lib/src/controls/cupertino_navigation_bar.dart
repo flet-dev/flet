@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
@@ -16,15 +13,13 @@ class CupertinoNavigationBarControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const CupertinoNavigationBarControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<CupertinoNavigationBarControl> createState() =>
@@ -38,17 +33,9 @@ class _CupertinoNavigationBarControlState
   void _onTap(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
-    List<Map<String, String>> props = [
-      {"i": widget.control.id, "selectedindex": _selectedIndex.toString()}
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-    final server = FletAppServices.of(context).server;
-    server.updateControlProps(props: props);
-    server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: "change",
-        eventData: _selectedIndex.toString());
+    updateControlProps(
+        widget.control.id, {"selectedindex": _selectedIndex.toString()});
+    sendControlEvent(widget.control.id, "change", _selectedIndex.toString());
   }
 
   @override
