@@ -3,17 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
 import 'error.dart';
+import 'flet_control_stateful_mixin.dart';
 import 'floating_action_button.dart';
 import 'navigation_drawer.dart';
 
@@ -22,21 +20,20 @@ class PageletControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const PageletControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<PageletControl> createState() => _PageletControlState();
 }
 
-class _PageletControlState extends State<PageletControl> {
+class _PageletControlState extends State<PageletControl>
+    with FletControlStatefulMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -115,14 +112,8 @@ class _PageletControlState extends State<PageletControl> {
               FloatingActionButtonLocation.endFloat);
 
           void dismissDrawer(String id) {
-            List<Map<String, String>> props = [
-              {"i": id, "open": "false"}
-            ];
-            widget.dispatch(UpdateControlPropsAction(
-                UpdateControlPropsPayload(props: props)));
-            FletAppServices.of(context).server.updateControlProps(props: props);
-            FletAppServices.of(context).server.sendPageEvent(
-                eventTarget: id, eventName: "dismiss", eventData: "");
+            updateControlProps(id, {"open": "false"});
+            sendControlEvent(id, "dismiss", "");
           }
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -202,7 +193,6 @@ class _PageletControlState extends State<PageletControl> {
                           control: drawerView.control,
                           children: drawerView.children,
                           parentDisabled: widget.control.isDisabled,
-                          dispatch: widget.dispatch,
                         )
                       : null,
                   onDrawerChanged: (opened) {
@@ -216,7 +206,6 @@ class _PageletControlState extends State<PageletControl> {
                           control: endDrawerView.control,
                           children: endDrawerView.children,
                           parentDisabled: widget.control.isDisabled,
-                          dispatch: widget.dispatch,
                         )
                       : null,
                   onEndDrawerChanged: (opened) {
