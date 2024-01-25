@@ -1,4 +1,5 @@
 import 'package:flet/src/flet_app_services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -26,17 +27,23 @@ abstract class FletControlState<T extends StatefulWidget> extends State<T> {
         builder: build);
   }
 
-  Widget withPageUri(Widget Function(BuildContext, Uri?) build) {
-    return StoreConnector<AppState, Uri?>(
-        distinct: true,
-        converter: (store) => store.state.pageUri,
-        builder: build);
-  }
-
   Widget withPageSize(Widget Function(BuildContext, PageSizeViewModel) build) {
     return StoreConnector<AppState, PageSizeViewModel>(
         distinct: true,
         converter: (store) => PageSizeViewModel.fromStore(store),
+        builder: build);
+  }
+
+  Widget withPagePlatform(Widget Function(BuildContext, TargetPlatform) build) {
+    return StoreConnector<AppState, TargetPlatform>(
+        distinct: true,
+        converter: (store) => TargetPlatform.values.firstWhere(
+            (a) =>
+                a.name.toLowerCase() ==
+                store.state.controls["page"]!
+                    .attrString("platform", "")!
+                    .toLowerCase(),
+            orElse: () => defaultTargetPlatform),
         builder: build);
   }
 

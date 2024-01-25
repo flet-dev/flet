@@ -87,7 +87,7 @@ class _FilePickerControlState extends FletControlState<FilePickerControl> {
   Widget build(BuildContext context) {
     debugPrint("FilePicker build: ${widget.control.id}");
 
-    return withPageUri((context, pageUri) {
+    return withPageArgs((context, pageArgs) {
       var state = widget.control.attrString("state");
       var upload = widget.control.attrString("upload");
       var dialogTitle = widget.control.attrString("dialogTitle");
@@ -199,7 +199,8 @@ class _FilePickerControlState extends FletControlState<FilePickerControl> {
       // upload files
       if (_upload != upload && upload != null && _files != null) {
         _upload = upload;
-        uploadFiles(upload, FletAppServices.of(context).server, pageUri!);
+        uploadFiles(
+            upload, FletAppServices.of(context).server, pageArgs.pageUri!);
       }
 
       return widget.nextChild ?? const SizedBox.shrink();

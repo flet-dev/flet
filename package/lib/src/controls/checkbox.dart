@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../actions.dart';
@@ -8,6 +7,7 @@ import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'cupertino_checkbox.dart';
+import 'flet_control_state.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
@@ -29,7 +29,7 @@ class CheckboxControl extends StatefulWidget {
   State<CheckboxControl> createState() => _CheckboxControlState();
 }
 
-class _CheckboxControlState extends State<CheckboxControl> {
+class _CheckboxControlState extends FletControlState<CheckboxControl> {
   bool? _value;
   bool _tristate = false;
   late final FocusNode _focusNode;
@@ -86,75 +86,78 @@ class _CheckboxControlState extends State<CheckboxControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("Checkbox build: ${widget.control.id}");
-    bool adaptive = widget.control.attrBool("adaptive", false)!;
-    if (adaptive &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)) {
-      return CupertinoCheckboxControl(
-          control: widget.control,
-          parentDisabled: widget.parentDisabled,
-          dispatch: widget.dispatch);
-    }
 
-    String label = widget.control.attrString("label", "")!;
-    LabelPosition labelPosition = LabelPosition.values.firstWhere(
-        (p) =>
-            p.name.toLowerCase() ==
-            widget.control.attrString("labelPosition", "")!.toLowerCase(),
-        orElse: () => LabelPosition.right);
-    _tristate = widget.control.attrBool("tristate", false)!;
-    bool autofocus = widget.control.attrBool("autofocus", false)!;
+    return withPagePlatform((context, platform) {
+      bool adaptive = widget.control.attrBool("adaptive", false)!;
+      if (adaptive &&
+          (platform == TargetPlatform.iOS ||
+              platform == TargetPlatform.macOS)) {
+        return CupertinoCheckboxControl(
+            control: widget.control,
+            parentDisabled: widget.parentDisabled,
+            dispatch: widget.dispatch);
+      }
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+      String label = widget.control.attrString("label", "")!;
+      LabelPosition labelPosition = LabelPosition.values.firstWhere(
+          (p) =>
+              p.name.toLowerCase() ==
+              widget.control.attrString("labelPosition", "")!.toLowerCase(),
+          orElse: () => LabelPosition.right);
+      _tristate = widget.control.attrBool("tristate", false)!;
+      bool autofocus = widget.control.attrBool("autofocus", false)!;
 
-    debugPrint("Checkbox build: ${widget.control.id}");
+      bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    bool? value = widget.control.attrBool("value", _tristate ? null : false);
-    if (_value != value) {
-      _value = value;
-    }
+      debugPrint("Checkbox build: ${widget.control.id}");
 
-    var checkbox = Checkbox(
-        autofocus: autofocus,
-        focusNode: _focusNode,
-        value: _value,
-        activeColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("activeColor", "")!),
-        focusColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("focusColor", "")!),
-        hoverColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("hoverColor", "")!),
-        overlayColor: parseMaterialStateColor(
-            Theme.of(context), widget.control, "overlayColor"),
-        checkColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("checkColor", "")!),
-        fillColor: parseMaterialStateColor(
-            Theme.of(context), widget.control, "fillColor"),
-        tristate: _tristate,
-        onChanged: !disabled
-            ? (bool? value) {
-                _onChange(value);
-              }
-            : null);
+      bool? value = widget.control.attrBool("value", _tristate ? null : false);
+      if (_value != value) {
+        _value = value;
+      }
 
-    ListTileClicks.of(context)?.notifier.addListener(() {
-      _toggleValue();
+      var checkbox = Checkbox(
+          autofocus: autofocus,
+          focusNode: _focusNode,
+          value: _value,
+          activeColor: HexColor.fromString(
+              Theme.of(context), widget.control.attrString("activeColor", "")!),
+          focusColor: HexColor.fromString(
+              Theme.of(context), widget.control.attrString("focusColor", "")!),
+          hoverColor: HexColor.fromString(
+              Theme.of(context), widget.control.attrString("hoverColor", "")!),
+          overlayColor: parseMaterialStateColor(
+              Theme.of(context), widget.control, "overlayColor"),
+          checkColor: HexColor.fromString(
+              Theme.of(context), widget.control.attrString("checkColor", "")!),
+          fillColor: parseMaterialStateColor(
+              Theme.of(context), widget.control, "fillColor"),
+          tristate: _tristate,
+          onChanged: !disabled
+              ? (bool? value) {
+                  _onChange(value);
+                }
+              : null);
+
+      ListTileClicks.of(context)?.notifier.addListener(() {
+        _toggleValue();
+      });
+
+      Widget result = checkbox;
+      if (label != "") {
+        var labelWidget = disabled
+            ? Text(label,
+                style: TextStyle(color: Theme.of(context).disabledColor))
+            : MouseRegion(cursor: SystemMouseCursors.click, child: Text(label));
+        result = MergeSemantics(
+            child: GestureDetector(
+                onTap: !disabled ? _toggleValue : null,
+                child: labelPosition == LabelPosition.right
+                    ? Row(children: [checkbox, labelWidget])
+                    : Row(children: [labelWidget, checkbox])));
+      }
+
+      return constrainedControl(context, result, widget.parent, widget.control);
     });
-
-    Widget result = checkbox;
-    if (label != "") {
-      var labelWidget = disabled
-          ? Text(label,
-              style: TextStyle(color: Theme.of(context).disabledColor))
-          : MouseRegion(cursor: SystemMouseCursors.click, child: Text(label));
-      result = MergeSemantics(
-          child: GestureDetector(
-              onTap: !disabled ? _toggleValue : null,
-              child: labelPosition == LabelPosition.right
-                  ? Row(children: [checkbox, labelWidget])
-                  : Row(children: [labelWidget, checkbox])));
-    }
-
-    return constrainedControl(context, result, widget.parent, widget.control);
   }
 }

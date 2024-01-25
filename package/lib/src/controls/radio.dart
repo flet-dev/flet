@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../actions.dart';
@@ -74,76 +73,80 @@ class _RadioControlState extends FletControlState<RadioControl> {
   Widget build(BuildContext context) {
     debugPrint("Radio build: ${widget.control.id}");
 
-    bool adaptive = widget.control.attrBool("adaptive", false)!;
-    if (adaptive &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)) {
-      return CupertinoRadioControl(
-          control: widget.control,
-          parentDisabled: widget.parentDisabled,
-          dispatch: widget.dispatch);
-    }
-
-    String label = widget.control.attrString("label", "")!;
-    String value = widget.control.attrString("value", "")!;
-    LabelPosition labelPosition = LabelPosition.values.firstWhere(
-        (p) =>
-            p.name.toLowerCase() ==
-            widget.control.attrString("labelPosition", "")!.toLowerCase(),
-        orElse: () => LabelPosition.right);
-    bool autofocus = widget.control.attrBool("autofocus", false)!;
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    return withControlAncestor(widget.control.id, "radiogroup",
-        (context, viewModel) {
-      debugPrint("Radio StoreConnector build: ${widget.control.id}");
-
-      if (viewModel.ancestor == null) {
-        return const ErrorControl(
-            "Radio control must be enclosed with RadioGroup.");
+    return withPagePlatform((context, platform) {
+      bool adaptive = widget.control.attrBool("adaptive", false)!;
+      if (adaptive &&
+          (platform == TargetPlatform.iOS ||
+              platform == TargetPlatform.macOS)) {
+        return CupertinoRadioControl(
+            control: widget.control,
+            parentDisabled: widget.parentDisabled,
+            dispatch: widget.dispatch);
       }
 
-      String groupValue = viewModel.ancestor!.attrString("value", "")!;
-      String ancestorId = viewModel.ancestor!.id;
+      String label = widget.control.attrString("label", "")!;
+      String value = widget.control.attrString("value", "")!;
+      LabelPosition labelPosition = LabelPosition.values.firstWhere(
+          (p) =>
+              p.name.toLowerCase() ==
+              widget.control.attrString("labelPosition", "")!.toLowerCase(),
+          orElse: () => LabelPosition.right);
+      bool autofocus = widget.control.attrBool("autofocus", false)!;
+      bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-      var radio = Radio<String>(
-          autofocus: autofocus,
-          focusNode: _focusNode,
-          groupValue: groupValue,
-          value: value,
-          activeColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("activeColor", "")!),
-          fillColor: parseMaterialStateColor(
-              Theme.of(context), widget.control, "fillColor"),
-          onChanged: !disabled
-              ? (String? value) {
-                  _onChange(ancestorId, value);
-                }
-              : null);
+      return withControlAncestor(widget.control.id, "radiogroup",
+          (context, viewModel) {
+        debugPrint("Radio StoreConnector build: ${widget.control.id}");
 
-      ListTileClicks.of(context)?.notifier.addListener(() {
-        _onChange(ancestorId, value);
+        if (viewModel.ancestor == null) {
+          return const ErrorControl(
+              "Radio control must be enclosed with RadioGroup.");
+        }
+
+        String groupValue = viewModel.ancestor!.attrString("value", "")!;
+        String ancestorId = viewModel.ancestor!.id;
+
+        var radio = Radio<String>(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            groupValue: groupValue,
+            value: value,
+            activeColor: HexColor.fromString(Theme.of(context),
+                widget.control.attrString("activeColor", "")!),
+            fillColor: parseMaterialStateColor(
+                Theme.of(context), widget.control, "fillColor"),
+            onChanged: !disabled
+                ? (String? value) {
+                    _onChange(ancestorId, value);
+                  }
+                : null);
+
+        ListTileClicks.of(context)?.notifier.addListener(() {
+          _onChange(ancestorId, value);
+        });
+
+        Widget result = radio;
+        if (label != "") {
+          var labelWidget = disabled
+              ? Text(label,
+                  style: TextStyle(color: Theme.of(context).disabledColor))
+              : MouseRegion(
+                  cursor: SystemMouseCursors.click, child: Text(label));
+          result = MergeSemantics(
+              child: GestureDetector(
+                  onTap: !disabled
+                      ? () {
+                          _onChange(ancestorId, value);
+                        }
+                      : null,
+                  child: labelPosition == LabelPosition.right
+                      ? Row(children: [radio, labelWidget])
+                      : Row(children: [labelWidget, radio])));
+        }
+
+        return constrainedControl(
+            context, result, widget.parent, widget.control);
       });
-
-      Widget result = radio;
-      if (label != "") {
-        var labelWidget = disabled
-            ? Text(label,
-                style: TextStyle(color: Theme.of(context).disabledColor))
-            : MouseRegion(cursor: SystemMouseCursors.click, child: Text(label));
-        result = MergeSemantics(
-            child: GestureDetector(
-                onTap: !disabled
-                    ? () {
-                        _onChange(ancestorId, value);
-                      }
-                    : null,
-                child: labelPosition == LabelPosition.right
-                    ? Row(children: [radio, labelWidget])
-                    : Row(children: [labelWidget, radio])));
-      }
-
-      return constrainedControl(context, result, widget.parent, widget.control);
     });
   }
 }
