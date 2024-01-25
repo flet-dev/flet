@@ -94,9 +94,11 @@ class CupertinoListTile(ConstrainedControl):
         trailing: Optional[Control] = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
+        toggle_inputs: Optional[bool] = None,
         additional_info: Optional[Control] = None,
         leading_size: OptionalNumber = None,
         leading_to_title: OptionalNumber = None,
+        notched: Optional[bool] = None,
         on_click=None,
     ):
         ConstrainedControl.__init__(
@@ -137,10 +139,12 @@ class CupertinoListTile(ConstrainedControl):
         self.bgcolor_activated = bgcolor_activated
         self.url = url
         self.url_target = url_target
+        self.toggle_inputs = toggle_inputs
         self.additional_info = additional_info
         self.leading_size = leading_size
         self.leading_to_title = leading_to_title
         self.padding = padding
+        self.notched = notched
         self.on_click = on_click
 
     def _get_control_name(self):
@@ -195,6 +199,15 @@ class CupertinoListTile(ConstrainedControl):
     @padding.setter
     def padding(self, value: PaddingValue):
         self.__padding = value
+
+    # notched
+    @property
+    def notched(self) -> Optional[bool]:
+        return self._get_attr("notched", data_type="bool", def_value=False)
+
+    @notched.setter
+    def notched(self, value: Optional[bool]):
+        self._set_attr("notched", value)
 
     # subtitle
     @property
@@ -276,6 +289,15 @@ class CupertinoListTile(ConstrainedControl):
     @url_target.setter
     def url_target(self, value):
         self._set_attr("urlTarget", value)
+
+    # toggle_inputs
+    @property
+    def toggle_inputs(self) -> Optional[bool]:
+        return self._get_attr("toggleInputs", data_type="bool", def_value=False)
+
+    @toggle_inputs.setter
+    def toggle_inputs(self, value: Optional[bool]):
+        self._set_attr("toggleInputs", value)
 
     # on_click
     @property

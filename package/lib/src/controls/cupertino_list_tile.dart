@@ -43,6 +43,8 @@ class CupertinoListTileControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("CupertinoListTile build: ${control.id}");
 
+    bool notched = control.attrBool("notched", false)!;
+
     final server = FletAppServices.of(context).server;
 
     var leadingCtrls =
@@ -57,10 +59,33 @@ class CupertinoListTileControl extends StatelessWidget {
 
     bool onclick = control.attrBool("onclick", false)!;
     bool toggleInputs = control.attrBool("toggleInputs", false)!;
-    bool onLongPressDefined = control.attrBool("onLongPress", false)!;
     String url = control.attrString("url", "")!;
     String? urlTarget = control.attrString("urlTarget");
     bool disabled = control.isDisabled || parentDisabled;
+
+    Widget? additionalInfo = additionalInfoCtrls.isNotEmpty
+        ? createControl(control, additionalInfoCtrls.first.id, disabled)
+        : null;
+    Widget? leading = leadingCtrls.isNotEmpty
+        ? createControl(control, leadingCtrls.first.id, disabled)
+        : null;
+
+    Widget? title = titleCtrls.isNotEmpty
+        ? createControl(control, titleCtrls.first.id, disabled)
+        : const Text("");
+
+    Widget? subtitle = subtitleCtrls.isNotEmpty
+        ? createControl(control, subtitleCtrls.first.id, disabled)
+        : null;
+
+    Widget? trailing = trailingCtrls.isNotEmpty
+        ? createControl(control, trailingCtrls.first.id, disabled)
+        : null;
+
+    Color? backgroundColor = HexColor.fromString(
+        Theme.of(context), control.attrString("bgcolor", "")!);
+    Color? bgcolorActivated = HexColor.fromString(
+        Theme.of(context), control.attrString("bgcolorActivated", "")!);
 
     var padding = parseEdgeInsets(control, "contentPadding");
 
@@ -80,31 +105,32 @@ class CupertinoListTileControl extends StatelessWidget {
           }
         : null;
 
-    Widget tile = CupertinoListTile(
-      onTap: onPressed,
-      additionalInfo: additionalInfoCtrls.isNotEmpty
-          ? createControl(control, additionalInfoCtrls.first.id, disabled)
-          : null,
-      backgroundColor: HexColor.fromString(
-          Theme.of(context), control.attrString("bgcolor", "")!),
-      backgroundColorActivated: HexColor.fromString(
-          Theme.of(context), control.attrString("bgcolorActivated", "")!),
-      leading: leadingCtrls.isNotEmpty
-          ? createControl(control, leadingCtrls.first.id, disabled)
-          : null,
-      leadingSize: control.attrDouble("leadingSize", 28.0)!,
-      leadingToTitle: control.attrDouble("leadingToTitle", 16.0)!,
-      padding: padding,
-      title: titleCtrls.isNotEmpty
-          ? createControl(control, titleCtrls.first.id, disabled)
-          : const Text(""),
-      subtitle: subtitleCtrls.isNotEmpty
-          ? createControl(control, subtitleCtrls.first.id, disabled)
-          : null,
-      trailing: trailingCtrls.isNotEmpty
-          ? createControl(control, trailingCtrls.first.id, disabled)
-          : null,
-    );
+    Widget tile;
+    !notched
+        ? tile = CupertinoListTile(
+            onTap: onPressed,
+            additionalInfo: additionalInfo,
+            backgroundColor: backgroundColor,
+            backgroundColorActivated: bgcolorActivated,
+            leading: leading,
+            leadingSize: control.attrDouble("leadingSize", 28.0)!,
+            leadingToTitle: control.attrDouble("leadingToTitle", 16.0)!,
+            padding: padding,
+            title: title,
+            subtitle: subtitle,
+            trailing: trailing,
+          )
+        : tile = CupertinoListTile.notched(
+            onTap: onPressed,
+            additionalInfo: additionalInfo,
+            backgroundColor: backgroundColor,
+            backgroundColorActivated: bgcolorActivated,
+            leading: leading,
+            padding: padding,
+            title: title,
+            subtitle: subtitle,
+            trailing: trailing,
+          );
 
     if (toggleInputs) {
       tile = ListTileClicks(notifier: _clickNotifier, child: tile);
