@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
-import '../utils/desktop.dart';
 import '../utils/debouncer.dart';
+import '../utils/desktop.dart';
 import 'create_control.dart';
 
 class CupertinoSliderControl extends StatefulWidget {
@@ -69,8 +70,7 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
 
     final server = FletAppServices.of(context).server;
 
-    debugPrint(
-        "CupertinoSliderControl StoreConnector build: ${widget.control.id}");
+    debugPrint("CupertinoSliderControl build: ${widget.control.id}");
 
     double value = widget.control.attrDouble("value", 0)!;
     if (_value != value) {

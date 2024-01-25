@@ -90,7 +90,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
 
     bool lastOpen = widget.control.state["open"] ?? false;
 
-    debugPrint("AlertDialog StoreConnector build: ${widget.control.id}");
+    debugPrint("AlertDialog build: ${widget.control.id}");
 
     var open = widget.control.attrBool("open", false)!;
     var modal = widget.control.attrBool("modal", false)!;

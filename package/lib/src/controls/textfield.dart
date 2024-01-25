@@ -115,7 +115,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
           dispatch: widget.dispatch);
     }
 
-    debugPrint("TextField StoreConnector build: ${widget.control.id}");
+    debugPrint("TextField build: ${widget.control.id}");
 
     String value = widget.control.attrs["value"] ?? "";
     if (_value != value) {

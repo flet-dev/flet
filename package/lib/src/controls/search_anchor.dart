@@ -69,7 +69,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
 
     debugPrint(widget.control.attrs.toString());
 
-    debugPrint("SearchAnchor StoreConnector build: ${widget.control.id}");
+    debugPrint("SearchAnchor build: ${widget.control.id}");
 
     var value = widget.control.attrString("value");
     if (value != null && value != _controller.text) {

@@ -89,7 +89,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
   Widget build(BuildContext context) {
     debugPrint("SnackBar build: ${widget.control.id}");
 
-    debugPrint("SnackBar StoreConnector build: ${widget.control.id}");
+    debugPrint("SnackBar build: ${widget.control.id}");
 
     var open = widget.control.attrBool("open", false)!;
     var removeCurrentSnackbar = true;

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/alignment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -10,6 +9,7 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
@@ -187,8 +187,7 @@ class _TabsControlState extends State<TabsControl>
                   TabBarTheme.of(context).overlayColor,
               tabs: viewModel.controlViews.map((tabView) {
                 var text = tabView.control.attrString("text");
-                var icon =
-                    parseIcon(tabView.control.attrString("icon", "")!);
+                var icon = parseIcon(tabView.control.attrString("icon", "")!);
                 var tabContentCtrls = tabView.children
                     .where((c) => c.name == "tab_content" && c.isVisible);
 

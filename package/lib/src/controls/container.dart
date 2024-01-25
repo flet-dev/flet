@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/shadows.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
@@ -15,6 +14,7 @@ import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
+import '../utils/shadows.dart';
 import 'create_control.dart';
 import 'error.dart';
 import 'flet_stateless_control.dart';

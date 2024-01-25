@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
 import '../flet_app_services.dart';
-import '../models/app_state.dart';
 import '../models/control.dart';
-import '../models/controls_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
+import 'flet_control_state.dart';
 
 class NavigationDrawerControl extends StatefulWidget {
   final Control? parent;
@@ -33,7 +31,8 @@ class NavigationDrawerControl extends StatefulWidget {
       _NavigationDrawerControlState();
 }
 
-class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
+class _NavigationDrawerControlState
+    extends FletControlState<NavigationDrawerControl> {
   int _selectedIndex = 0;
 
   void _destinationChanged(int index) {
@@ -63,64 +62,57 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
       _selectedIndex = selectedIndex;
     }
 
-    var navDrawer = StoreConnector<AppState, ControlsViewModel>(
-        distinct: true,
-        converter: (store) => ControlsViewModel.fromStore(
-            store,
-            widget.children
-                .where((c) => c.isVisible && c.name == null)
-                .map((c) => c.id)),
-        builder: (content, viewModel) {
-          List<Widget> children = viewModel.controlViews.map((destView) {
-            if (destView.control.type == "navigationdrawerdestination") {
-              var icon =
-                  parseIcon(destView.control.attrString("icon", "")!);
-              var iconContentCtrls =
-                  destView.children.where((c) => c.name == "icon_content");
-              var selectedIcon = parseIcon(
-                  destView.control.attrString("selectedIcon", "")!);
-              var selectedIconContentCtrls = destView.children
-                  .where((c) => c.name == "selected_icon_content");
-              return NavigationDrawerDestination(
-                // backgroundColor: HexColor.fromString(Theme.of(context),
-                //     destView.control.attrString("bgColor", "")!),
-                // flutter issue https://github.com/flutter/flutter/issues/138105
-                icon: iconContentCtrls.isNotEmpty
-                    ? createControl(
-                        destView.control, iconContentCtrls.first.id, disabled)
-                    : Icon(icon),
-                label: Text(destView.control.attrString("label", "")!),
-                selectedIcon: selectedIconContentCtrls.isNotEmpty
-                    ? createControl(destView.control,
-                        selectedIconContentCtrls.first.id, disabled)
-                    : selectedIcon != null
-                        ? Icon(selectedIcon)
-                        : null,
-              );
-            } else {
-              return createControl(
-                  widget.control, destView.control.id, disabled);
-            }
-          }).toList();
-          return NavigationDrawer(
-            elevation: widget.control.attrDouble("elevation"),
-            indicatorColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("indicatorColor", "")!),
-            indicatorShape:
-                parseOutlinedBorder(widget.control, "indicatorShape"),
-            backgroundColor: HexColor.fromString(
-                Theme.of(context), widget.control.attrString("bgColor", "")!),
-            selectedIndex: _selectedIndex,
-            shadowColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("shadowColor", "")!),
-            surfaceTintColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("surfaceTintColor", "")!),
-            tilePadding: parseEdgeInsets(widget.control, "tilePadding") ??
-                const EdgeInsets.symmetric(horizontal: 12.0),
-            onDestinationSelected: _destinationChanged,
-            children: children,
+    var navDrawer = withControls(
+        widget.children
+            .where((c) => c.isVisible && c.name == null)
+            .map((c) => c.id), (content, viewModel) {
+      List<Widget> children = viewModel.controlViews.map((destView) {
+        if (destView.control.type == "navigationdrawerdestination") {
+          var icon = parseIcon(destView.control.attrString("icon", "")!);
+          var iconContentCtrls =
+              destView.children.where((c) => c.name == "icon_content");
+          var selectedIcon =
+              parseIcon(destView.control.attrString("selectedIcon", "")!);
+          var selectedIconContentCtrls =
+              destView.children.where((c) => c.name == "selected_icon_content");
+          return NavigationDrawerDestination(
+            // backgroundColor: HexColor.fromString(Theme.of(context),
+            //     destView.control.attrString("bgColor", "")!),
+            // flutter issue https://github.com/flutter/flutter/issues/138105
+            icon: iconContentCtrls.isNotEmpty
+                ? createControl(
+                    destView.control, iconContentCtrls.first.id, disabled)
+                : Icon(icon),
+            label: Text(destView.control.attrString("label", "")!),
+            selectedIcon: selectedIconContentCtrls.isNotEmpty
+                ? createControl(destView.control,
+                    selectedIconContentCtrls.first.id, disabled)
+                : selectedIcon != null
+                    ? Icon(selectedIcon)
+                    : null,
           );
-        });
+        } else {
+          return createControl(widget.control, destView.control.id, disabled);
+        }
+      }).toList();
+      return NavigationDrawer(
+        elevation: widget.control.attrDouble("elevation"),
+        indicatorColor: HexColor.fromString(Theme.of(context),
+            widget.control.attrString("indicatorColor", "")!),
+        indicatorShape: parseOutlinedBorder(widget.control, "indicatorShape"),
+        backgroundColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("bgColor", "")!),
+        selectedIndex: _selectedIndex,
+        shadowColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("shadowColor", "")!),
+        surfaceTintColor: HexColor.fromString(Theme.of(context),
+            widget.control.attrString("surfaceTintColor", "")!),
+        tilePadding: parseEdgeInsets(widget.control, "tilePadding") ??
+            const EdgeInsets.symmetric(horizontal: 12.0),
+        onDestinationSelected: _destinationChanged,
+        children: children,
+      );
+    });
 
     return navDrawer;
   }

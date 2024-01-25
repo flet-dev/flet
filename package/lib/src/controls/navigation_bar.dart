@@ -1,19 +1,17 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
 import '../actions.dart';
 import '../flet_app_services.dart';
-import '../models/app_state.dart';
 import '../models/control.dart';
-import '../models/controls_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'cupertino_navigation_bar.dart';
+import 'flet_control_state.dart';
 
 class NavigationBarControl extends StatefulWidget {
   final Control? parent;
@@ -34,7 +32,8 @@ class NavigationBarControl extends StatefulWidget {
   State<NavigationBarControl> createState() => _NavigationBarControlState();
 }
 
-class _NavigationBarControlState extends State<NavigationBarControl> {
+class _NavigationBarControlState
+    extends FletControlState<NavigationBarControl> {
   int _selectedIndex = 0;
 
   void _destinationChanged(int index) {
@@ -80,58 +79,52 @@ class _NavigationBarControlState extends State<NavigationBarControl> {
             a.name.toLowerCase() ==
             widget.control.attrString("labelBehavior", "")!.toLowerCase());
 
-    var navBar = StoreConnector<AppState, ControlsViewModel>(
-        distinct: true,
-        converter: (store) => ControlsViewModel.fromStore(
-            store,
-            widget.children
-                .where((c) => c.isVisible && c.name == null)
-                .map((c) => c.id)),
-        builder: (content, viewModel) {
-          return NavigationBar(
-              labelBehavior: labelBehavior,
-              height: widget.control.attrDouble("height"),
-              elevation: widget.control.attrDouble("elevation"),
-              shadowColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("shadowColor", "")!),
-              surfaceTintColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("surfaceTintColor", "")!),
-              indicatorColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("indicatorColor", "")!),
-              indicatorShape:
-                  parseOutlinedBorder(widget.control, "indicatorShape"),
-              backgroundColor: HexColor.fromString(
-                  Theme.of(context), widget.control.attrString("bgColor", "")!),
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _destinationChanged,
-              destinations: viewModel.controlViews.map((destView) {
-                var label = destView.control.attrString("label", "")!;
+    var navBar = withControls(
+        widget.children
+            .where((c) => c.isVisible && c.name == null)
+            .map((c) => c.id), (content, viewModel) {
+      return NavigationBar(
+          labelBehavior: labelBehavior,
+          height: widget.control.attrDouble("height"),
+          elevation: widget.control.attrDouble("elevation"),
+          shadowColor: HexColor.fromString(
+              Theme.of(context), widget.control.attrString("shadowColor", "")!),
+          surfaceTintColor: HexColor.fromString(Theme.of(context),
+              widget.control.attrString("surfaceTintColor", "")!),
+          indicatorColor: HexColor.fromString(Theme.of(context),
+              widget.control.attrString("indicatorColor", "")!),
+          indicatorShape: parseOutlinedBorder(widget.control, "indicatorShape"),
+          backgroundColor: HexColor.fromString(
+              Theme.of(context), widget.control.attrString("bgColor", "")!),
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: _destinationChanged,
+          destinations: viewModel.controlViews.map((destView) {
+            var label = destView.control.attrString("label", "")!;
 
-                var icon =
-                    parseIcon(destView.control.attrString("icon", "")!);
-                var iconContentCtrls =
-                    destView.children.where((c) => c.name == "icon_content");
+            var icon = parseIcon(destView.control.attrString("icon", "")!);
+            var iconContentCtrls =
+                destView.children.where((c) => c.name == "icon_content");
 
-                var selectedIcon = parseIcon(
-                    destView.control.attrString("selectedIcon", "")!);
-                var selectedIconContentCtrls = destView.children
-                    .where((c) => c.name == "selected_icon_content");
+            var selectedIcon =
+                parseIcon(destView.control.attrString("selectedIcon", "")!);
+            var selectedIconContentCtrls = destView.children
+                .where((c) => c.name == "selected_icon_content");
 
-                return NavigationDestination(
-                    tooltip: destView.control.attrString("tooltip", "")!,
-                    icon: iconContentCtrls.isNotEmpty
-                        ? createControl(destView.control,
-                            iconContentCtrls.first.id, disabled)
-                        : Icon(icon),
-                    selectedIcon: selectedIconContentCtrls.isNotEmpty
-                        ? createControl(destView.control,
-                            selectedIconContentCtrls.first.id, disabled)
-                        : selectedIcon != null
-                            ? Icon(selectedIcon)
-                            : null,
-                    label: label);
-              }).toList());
-        });
+            return NavigationDestination(
+                tooltip: destView.control.attrString("tooltip", "")!,
+                icon: iconContentCtrls.isNotEmpty
+                    ? createControl(
+                        destView.control, iconContentCtrls.first.id, disabled)
+                    : Icon(icon),
+                selectedIcon: selectedIconContentCtrls.isNotEmpty
+                    ? createControl(destView.control,
+                        selectedIconContentCtrls.first.id, disabled)
+                    : selectedIcon != null
+                        ? Icon(selectedIcon)
+                        : null,
+                label: label);
+          }).toList());
+    });
 
     return constrainedControl(context, navBar, widget.parent, widget.control);
   }

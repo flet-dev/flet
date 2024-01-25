@@ -83,7 +83,7 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    debugPrint("CupertinoSwitch StoreConnector build: ${widget.control.id}");
+    debugPrint("CupertinoSwitch build: ${widget.control.id}");
 
     bool value = widget.control.attrBool("value", false)!;
     if (_value != value) {

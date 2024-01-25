@@ -95,7 +95,7 @@ class _SwitchControlState extends State<SwitchControl> {
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    debugPrint("Switch StoreConnector build: ${widget.control.id}");
+    debugPrint("Switch build: ${widget.control.id}");
 
     bool value = widget.control.attrBool("value", false)!;
     if (_value != value) {

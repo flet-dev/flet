@@ -66,8 +66,7 @@ class _CupertinoAlertDialogControlState
 
     bool lastOpen = widget.control.state["open"] ?? false;
 
-    debugPrint(
-        "CupertinoAlertDialog StoreConnector build: ${widget.control.id}");
+    debugPrint("CupertinoAlertDialog build: ${widget.control.id}");
 
     var open = widget.control.attrBool("open", false)!;
     var modal = widget.control.attrBool("modal", false)!;

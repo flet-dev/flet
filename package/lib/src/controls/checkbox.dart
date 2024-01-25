@@ -1,4 +1,3 @@
-import 'package:flet/src/controls/cupertino_checkbox.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +7,7 @@ import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
+import 'cupertino_checkbox.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
@@ -107,7 +107,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    debugPrint("Checkbox StoreConnector build: ${widget.control.id}");
+    debugPrint("Checkbox build: ${widget.control.id}");
 
     bool? value = widget.control.attrBool("value", _tristate ? null : false);
     if (_value != value) {

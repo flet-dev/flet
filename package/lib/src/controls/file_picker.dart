@@ -4,17 +4,16 @@ import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:http/http.dart' as http;
 
 import '../actions.dart';
 import '../flet_app_services.dart';
 import '../flet_server.dart';
-import '../models/app_state.dart';
 import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
 import '../utils/desktop.dart';
 import '../utils/strings.dart';
+import 'flet_control_state.dart';
 
 class FilePickerResultEvent {
   final String? path;
@@ -78,7 +77,7 @@ class FilePickerControl extends StatefulWidget {
   State<FilePickerControl> createState() => _FilePickerControlState();
 }
 
-class _FilePickerControlState extends State<FilePickerControl> {
+class _FilePickerControlState extends FletControlState<FilePickerControl> {
   String? _state;
   String? _upload;
   String? _path;
@@ -88,128 +87,123 @@ class _FilePickerControlState extends State<FilePickerControl> {
   Widget build(BuildContext context) {
     debugPrint("FilePicker build: ${widget.control.id}");
 
-    return StoreConnector<AppState, Uri?>(
-        distinct: true,
-        converter: (store) => store.state.pageUri,
-        builder: (context, pageUri) {
-          var state = widget.control.attrString("state");
-          var upload = widget.control.attrString("upload");
-          var dialogTitle = widget.control.attrString("dialogTitle");
-          var fileName = widget.control.attrString("fileName");
-          var initialDirectory = widget.control.attrString("initialDirectory");
-          var allowMultiple = widget.control.attrBool("allowMultiple", false)!;
-          var allowedExtensions =
-              parseStringList(widget.control, "allowedExtensions");
-          FileType fileType = FileType.values.firstWhere(
-              (m) =>
-                  m.name.toLowerCase() ==
-                  widget.control.attrString("fileType", "")!.toLowerCase(),
-              orElse: () => FileType.any);
-          if (allowedExtensions != null && allowedExtensions.isNotEmpty) {
-            fileType = FileType.custom;
-          }
+    return withPageUri((context, pageUri) {
+      var state = widget.control.attrString("state");
+      var upload = widget.control.attrString("upload");
+      var dialogTitle = widget.control.attrString("dialogTitle");
+      var fileName = widget.control.attrString("fileName");
+      var initialDirectory = widget.control.attrString("initialDirectory");
+      var allowMultiple = widget.control.attrBool("allowMultiple", false)!;
+      var allowedExtensions =
+          parseStringList(widget.control, "allowedExtensions");
+      FileType fileType = FileType.values.firstWhere(
+          (m) =>
+              m.name.toLowerCase() ==
+              widget.control.attrString("fileType", "")!.toLowerCase(),
+          orElse: () => FileType.any);
+      if (allowedExtensions != null && allowedExtensions.isNotEmpty) {
+        fileType = FileType.custom;
+      }
 
-          debugPrint("FilePicker _state: $_state, state: $state");
+      debugPrint("FilePicker _state: $_state, state: $state");
 
-          resetDialogState() {
-            _state = null;
-            var fletServices = FletAppServices.of(context);
-            List<Map<String, String>> props = [
-              {"i": widget.control.id, "state": ""}
-            ];
-            fletServices.store.dispatch(UpdateControlPropsAction(
-                UpdateControlPropsPayload(props: props)));
-            fletServices.server.updateControlProps(props: props);
-          }
+      resetDialogState() {
+        _state = null;
+        var fletServices = FletAppServices.of(context);
+        List<Map<String, String>> props = [
+          {"i": widget.control.id, "state": ""}
+        ];
+        fletServices.store.dispatch(
+            UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
+        fletServices.server.updateControlProps(props: props);
+      }
 
-          sendEvent() {
-            if (defaultTargetPlatform != TargetPlatform.windows ||
-                !isDesktop()) {
-              resetDialogState();
-            }
-            var fletServices = FletAppServices.of(context);
-            fletServices.server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "result",
-                eventData: json.encode(FilePickerResultEvent(
-                    path: _path,
-                    files: _files
-                        ?.map((f) => FilePickerFile(
-                            name: f.name,
-                            path: kIsWeb ? null : f.path,
-                            size: f.size))
-                        .toList())));
-          }
+      sendEvent() {
+        if (defaultTargetPlatform != TargetPlatform.windows || !isDesktop()) {
+          resetDialogState();
+        }
+        var fletServices = FletAppServices.of(context);
+        fletServices.server.sendPageEvent(
+            eventTarget: widget.control.id,
+            eventName: "result",
+            eventData: json.encode(FilePickerResultEvent(
+                path: _path,
+                files: _files
+                    ?.map((f) => FilePickerFile(
+                        name: f.name,
+                        path: kIsWeb ? null : f.path,
+                        size: f.size))
+                    .toList())));
+      }
 
-          if (_state != state) {
-            _path = null;
-            _files = null;
-            _state = state;
+      if (_state != state) {
+        _path = null;
+        _files = null;
+        _state = state;
 
-            if (isDesktop() &&
-                defaultTargetPlatform == TargetPlatform.windows) {
-              resetDialogState();
-            }
+        if (isDesktop() && defaultTargetPlatform == TargetPlatform.windows) {
+          resetDialogState();
+        }
 
-            // pickFiles
-            if (state?.toLowerCase() == "pickfiles") {
-              FilePicker.platform
-                  .pickFiles(
-                      dialogTitle: dialogTitle,
-                      initialDirectory: initialDirectory,
-                      lockParentWindow: true,
-                      type: fileType,
-                      allowedExtensions: allowedExtensions,
-                      allowMultiple: allowMultiple,
-                      withData: false,
-                      withReadStream: true)
-                  .then((result) {
-                debugPrint("pickFiles() completed");
-                _files = result?.files;
-                sendEvent();
-              });
-            }
-            // saveFile
-            else if (state?.toLowerCase() == "savefile" && !kIsWeb) {
-              FilePicker.platform
-                  .saveFile(
-                dialogTitle: dialogTitle,
-                fileName: fileName,
-                initialDirectory: initialDirectory,
-                lockParentWindow: true,
-                type: fileType,
-                allowedExtensions: allowedExtensions,
-              )
-                  .then((result) {
-                debugPrint("saveFile() completed");
-                _path = result;
-                sendEvent();
-              });
-            }
-            // saveFile
-            else if (state?.toLowerCase() == "getdirectorypath" && !kIsWeb) {
-              FilePicker.platform
-                  .getDirectoryPath(
-                dialogTitle: dialogTitle,
-                initialDirectory: initialDirectory,
-                lockParentWindow: true,
-              )
-                  .then((result) {
-                debugPrint("getDirectoryPath() completed");
-                _path = result;
-                sendEvent();
-              });
-            }
-          }
+        // pickFiles
+        if (state?.toLowerCase() == "pickfiles") {
+          FilePicker.platform
+              .pickFiles(
+                  dialogTitle: dialogTitle,
+                  initialDirectory: initialDirectory,
+                  lockParentWindow: true,
+                  type: fileType,
+                  allowedExtensions: allowedExtensions,
+                  allowMultiple: allowMultiple,
+                  withData: false,
+                  withReadStream: true)
+              .then((result) {
+            debugPrint("pickFiles() completed");
+            _files = result?.files;
+            sendEvent();
+          });
+        }
+        // saveFile
+        else if (state?.toLowerCase() == "savefile" && !kIsWeb) {
+          FilePicker.platform
+              .saveFile(
+            dialogTitle: dialogTitle,
+            fileName: fileName,
+            initialDirectory: initialDirectory,
+            lockParentWindow: true,
+            type: fileType,
+            allowedExtensions: allowedExtensions,
+          )
+              .then((result) {
+            debugPrint("saveFile() completed");
+            _path = result;
+            sendEvent();
+          });
+        }
+        // saveFile
+        else if (state?.toLowerCase() == "getdirectorypath" && !kIsWeb) {
+          FilePicker.platform
+              .getDirectoryPath(
+            dialogTitle: dialogTitle,
+            initialDirectory: initialDirectory,
+            lockParentWindow: true,
+          )
+              .then((result) {
+            debugPrint("getDirectoryPath() completed");
+            _path = result;
+            sendEvent();
+          });
+        }
+      }
 
-          // upload files
-          if (_upload != upload && upload != null && _files != null) {
-            _upload = upload;
-            uploadFiles(upload, FletAppServices.of(context).server, pageUri!);
-          }
+      // upload files
+      if (_upload != upload && upload != null && _files != null) {
+        _upload = upload;
+        uploadFiles(upload, FletAppServices.of(context).server, pageUri!);
+      }
 
-          return widget.nextChild ?? const SizedBox.shrink();
-        });
+      return widget.nextChild ?? const SizedBox.shrink();
+    });
   }
 
   Future uploadFiles(String filesJson, FletServer server, Uri pageUri) async {

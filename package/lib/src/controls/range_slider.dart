@@ -80,7 +80,7 @@ class _SliderControlState extends State<RangeSliderControl> {
 
     final server = FletAppServices.of(context).server;
 
-    debugPrint("SliderControl StoreConnector build: ${widget.control.id}");
+    debugPrint("SliderControl build: ${widget.control.id}");
 
     var rangeSlider = RangeSlider(
         values: RangeValues(startValue, endValue),

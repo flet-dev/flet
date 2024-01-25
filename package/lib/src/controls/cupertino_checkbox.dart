@@ -96,7 +96,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    debugPrint("CupertinoCheckbox StoreConnector build: ${widget.control.id}");
+    debugPrint("CupertinoCheckbox build: ${widget.control.id}");
 
     bool? value = widget.control.attrBool("value", _tristate ? null : false);
     if (_value != value) {

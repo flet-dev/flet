@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:flet/src/controls/textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +15,7 @@ import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
 import 'form_field.dart';
+import 'textfield.dart';
 
 class CupertinoTextFieldControl extends StatefulWidget {
   final Control? parent;

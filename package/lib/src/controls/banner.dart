@@ -65,7 +65,7 @@ class _BannerControlState extends State<BannerControl> {
   Widget build(BuildContext context) {
     debugPrint("Banner build: ${widget.control.id}");
 
-    debugPrint("Banner StoreConnector build: ${widget.control.id}");
+    debugPrint("Banner build: ${widget.control.id}");
 
     var open = widget.control.attrBool("open", false)!;
 

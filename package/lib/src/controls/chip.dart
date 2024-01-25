@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../models/control.dart';
-import '../utils/colors.dart';
-import 'create_control.dart';
-import 'error.dart';
-import 'package:flet/src/flet_app_services.dart';
 import '../actions.dart';
+import '../flet_app_services.dart';
+import '../models/control.dart';
 import '../protocol/update_control_props_payload.dart';
+import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/text.dart';
-import '../utils/borders.dart';
+import 'create_control.dart';
+import 'error.dart';
 
 class ChipControl extends StatefulWidget {
   final Control? parent;

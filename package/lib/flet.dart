@@ -2,6 +2,8 @@ library flet;
 
 export 'src/control_factory.dart';
 export 'src/controls/create_control.dart';
+export 'src/controls/flet_control_state.dart';
+export 'src/controls/flet_stateless_control.dart';
 export 'src/flet_app.dart';
 export 'src/flet_app_errors_handler.dart';
 export 'src/flet_server.dart';
@@ -9,7 +11,6 @@ export 'src/models/app_state.dart';
 export 'src/models/asset_src.dart';
 export 'src/models/control.dart';
 export 'src/models/control_ancestor_view_model.dart';
-export 'src/models/control_children_view_model.dart';
 export 'src/models/control_tree_view_model.dart';
 export 'src/models/control_view_model.dart';
 export 'src/models/controls_view_model.dart';
