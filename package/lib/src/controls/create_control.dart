@@ -68,6 +68,7 @@ import 'navigation_bar.dart';
 import 'navigation_rail.dart';
 import 'outlined_button.dart';
 import 'page.dart';
+import 'pagelet.dart';
 import 'piechart.dart';
 import 'popup_menu_button.dart';
 import 'progress_bar.dart';
@@ -262,6 +263,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "chip":
       return ChipControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "pagelet":
+      return PageletControl(
           key: key,
           parent: parent,
           control: controlView.control,

@@ -158,6 +158,7 @@ from flet_core.page import (
     RouteChangeEvent,
     ViewPopEvent,
 )
+from flet_core.pagelet import Pagelet
 from flet_core.painting import (
     Paint,
     PaintingStyle,
