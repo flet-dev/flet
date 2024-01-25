@@ -2,16 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
 import 'cupertino_textfield.dart';
+import 'flet_control_state.dart';
 import 'form_field.dart';
 
 class TextFieldControl extends StatefulWidget {
@@ -33,7 +32,7 @@ class TextFieldControl extends StatefulWidget {
   State<TextFieldControl> createState() => _TextFieldControlState();
 }
 
-class _TextFieldControlState extends State<TextFieldControl> {
+class _TextFieldControlState extends FletControlState<TextFieldControl> {
   String _value = "";
   bool _revealPassword = false;
   bool _focused = false;
@@ -262,20 +261,10 @@ class _TextFieldControlState extends State<TextFieldControl> {
         focusNode: focusNode,
         onChanged: (String value) {
           //debugPrint(value);
-          setState(() {
-            _value = value;
-          });
-          List<Map<String, String>> props = [
-            {"i": widget.control.id, "value": value}
-          ];
-          widget.dispatch(UpdateControlPropsAction(
-              UpdateControlPropsPayload(props: props)));
-          FletAppServices.of(context).server.updateControlProps(props: props);
+          _value = value;
+          updateControlProps(widget.control.id, {"value": value});
           if (onChange) {
-            FletAppServices.of(context).server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "change",
-                eventData: value);
+            sendControlEvent(widget.control.id, "change", value);
           }
         });
 

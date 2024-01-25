@@ -10,6 +10,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
+import 'flet_control_state.dart';
 
 class SearchAnchorControl extends StatefulWidget {
   final Control? parent;
@@ -30,7 +31,7 @@ class SearchAnchorControl extends StatefulWidget {
   State<SearchAnchorControl> createState() => _SearchAnchorControlState();
 }
 
-class _SearchAnchorControlState extends State<SearchAnchorControl> {
+class _SearchAnchorControlState extends FletControlState<SearchAnchorControl> {
   late final SearchController _controller;
 
   @override

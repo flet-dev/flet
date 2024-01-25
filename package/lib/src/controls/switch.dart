@@ -1,14 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'cupertino_switch.dart';
+import 'flet_control_state.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
@@ -30,7 +28,7 @@ class SwitchControl extends StatefulWidget {
   State<SwitchControl> createState() => _SwitchControlState();
 }
 
-class _SwitchControlState extends State<SwitchControl> {
+class _SwitchControlState extends FletControlState<SwitchControl> {
   bool _value = false;
   late final FocusNode _focusNode;
 
@@ -51,25 +49,14 @@ class _SwitchControlState extends State<SwitchControl> {
   void _onChange(bool value) {
     var svalue = value.toString();
     debugPrint(svalue);
-    setState(() {
-      _value = value;
-    });
-    List<Map<String, String>> props = [
-      {"i": widget.control.id, "value": svalue}
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-    final server = FletAppServices.of(context).server;
-    server.updateControlProps(props: props);
-    server.sendPageEvent(
-        eventTarget: widget.control.id, eventName: "change", eventData: svalue);
+    _value = value;
+    updateControlProps(widget.control.id, {"value": svalue});
+    sendControlEvent(widget.control.id, "change", svalue);
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
