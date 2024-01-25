@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/numbers.dart';
@@ -30,11 +29,17 @@ class TextControl extends FletStatelessControl {
       bool disabled = control.isDisabled || parentDisabled;
 
       String text = control.attrString("value", "")!;
+
+      void sendControlEventWithContext(
+          String controlId, String eventName, String eventData) {
+        sendControlEvent(context, controlId, eventName, eventData);
+      }
+
       List<InlineSpan>? spans = parseTextSpans(
         Theme.of(context),
         viewModel,
         disabled,
-        FletAppServices.of(context).server,
+        sendControlEventWithContext,
       );
       String? semanticsLabel = control.attrString("semanticsLabel");
       bool noWrap = control.attrBool("noWrap", false)!;

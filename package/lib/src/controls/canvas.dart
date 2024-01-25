@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_tree_view_model.dart';
@@ -20,6 +19,7 @@ import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
+import 'flet_control_state.dart';
 
 class CanvasViewModel extends Equatable {
   final Control control;
@@ -67,7 +67,7 @@ class CanvasControl extends StatefulWidget {
   State<CanvasControl> createState() => _CanvasControlState();
 }
 
-class _CanvasControlState extends State<CanvasControl> {
+class _CanvasControlState extends FletControlState<CanvasControl> {
   int _lastResize = DateTime.now().millisecondsSinceEpoch;
   Size? _lastSize;
 
@@ -99,11 +99,8 @@ class _CanvasControlState extends State<CanvasControl> {
                       _lastSize == null) {
                     _lastResize = now;
                     _lastSize = size;
-                    FletAppServices.of(context).server.sendPageEvent(
-                        eventTarget: viewModel.control.id,
-                        eventName: "resize",
-                        eventData:
-                            json.encode({"w": size.width, "h": size.height}));
+                    sendControlEvent(viewModel.control.id, "resize",
+                        json.encode({"w": size.width, "h": size.height}));
                   }
                 }
               },

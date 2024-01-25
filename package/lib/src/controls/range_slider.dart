@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
@@ -65,8 +64,6 @@ class _SliderControlState extends FletControlState<RangeSliderControl> {
     int? divisions = widget.control.attrInt("divisions");
     int round = widget.control.attrInt("round", 0)!;
 
-    final server = FletAppServices.of(context).server;
-
     debugPrint("SliderControl build: ${widget.control.id}");
 
     var rangeSlider = RangeSlider(
@@ -92,18 +89,12 @@ class _SliderControlState extends FletControlState<RangeSliderControl> {
             : null,
         onChangeStart: !disabled
             ? (RangeValues newValues) {
-                server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "change_start",
-                    eventData: '');
+                sendControlEvent(widget.control.id, "change_start", '');
               }
             : null,
         onChangeEnd: !disabled
             ? (RangeValues newValues) {
-                server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "change_end",
-                    eventData: '');
+                sendControlEvent(widget.control.id, "change_end", '');
               }
             : null);
 

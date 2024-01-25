@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
@@ -42,10 +41,8 @@ class _DropdownControlState extends FletControlState<DropdownControl> {
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override

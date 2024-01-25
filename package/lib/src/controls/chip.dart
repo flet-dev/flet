@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -55,10 +54,8 @@ class _ChipControlState extends FletControlState<ChipControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
@@ -85,7 +82,6 @@ class _ChipControlState extends FletControlState<ChipControl> {
     var disabledColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("disabledColor", "")!);
 
-    final server = FletAppServices.of(context).server;
     bool onClick = widget.control.attrBool("onclick", false)!;
     bool onDelete = widget.control.attrBool("onDelete", false)!;
     bool onSelect = widget.control.attrBool("onSelect", false)!;
@@ -109,20 +105,14 @@ class _ChipControlState extends FletControlState<ChipControl> {
     Function()? onClickHandler = onClick && !disabled
         ? () {
             debugPrint("Chip ${widget.control.id} clicked!");
-            server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "click",
-                eventData: "");
+            sendControlEvent(widget.control.id, "click", "");
           }
         : null;
 
     Function()? onDeleteHandler = onDelete && !disabled
         ? () {
             debugPrint("Chip ${widget.control.id} deleted!");
-            server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "delete",
-                eventData: "");
+            sendControlEvent(widget.control.id, "delete", "");
           }
         : null;
 

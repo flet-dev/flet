@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
+import 'flet_control_state.dart';
 
 class ScrollNotificationControl extends StatefulWidget {
   final Widget child;
@@ -17,7 +17,8 @@ class ScrollNotificationControl extends StatefulWidget {
       _ScrollNotificationControlState();
 }
 
-class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
+class _ScrollNotificationControlState
+    extends FletControlState<ScrollNotificationControl> {
   int _onScrollInterval = 0;
   final Map<String, int> _lastEventTimestamps = {};
 
@@ -41,8 +42,7 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
       }
 
       debugPrint("ScrollNotification ${widget.control.id} event");
-      FletAppServices.of(context).server.sendPageEvent(
-          eventTarget: widget.control.id, eventName: "onScroll", eventData: d);
+      sendControlEvent(widget.control.id, "onScroll", d);
     }
 
     if (notification.depth == 0) {

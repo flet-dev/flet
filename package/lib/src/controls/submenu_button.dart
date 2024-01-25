@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/menu.dart';
 import '../utils/transforms.dart';
-
 import 'create_control.dart';
-
+import 'flet_control_state.dart';
 
 class SubMenuButtonControl extends StatefulWidget {
   final Control? parent;
@@ -26,7 +24,8 @@ class SubMenuButtonControl extends StatefulWidget {
   State<SubMenuButtonControl> createState() => _SubMenuButtonControlState();
 }
 
-class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
+class _SubMenuButtonControlState
+    extends FletControlState<SubMenuButtonControl> {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -45,10 +44,8 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
@@ -94,8 +91,6 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
     bool onClose = widget.control.attrBool("onClose", false)!;
     bool onHover = widget.control.attrBool("onHover", false)!;
 
-    var server = FletAppServices.of(context).server;
-
     var subMenu = SubmenuButton(
       focusNode: _focusNode,
       clipBehavior: clipBehavior,
@@ -106,26 +101,17 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
           : null,
       onClose: onClose && !disabled
           ? () {
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "close",
-                  eventData: "");
+              sendControlEvent(widget.control.id, "close", "");
             }
           : null,
       onHover: onHover && !disabled
           ? (bool value) {
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "hover",
-                  eventData: "$value");
+              sendControlEvent(widget.control.id, "hover", "$value");
             }
           : null,
       onOpen: onOpen && !disabled
           ? () {
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "open",
-                  eventData: "");
+              sendControlEvent(widget.control.id, "open", "");
             }
           : null,
       leadingIcon: leading.isNotEmpty

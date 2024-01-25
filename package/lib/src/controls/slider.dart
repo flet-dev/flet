@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
@@ -45,10 +44,8 @@ class _SliderControlState extends FletControlState<SliderControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   void onChange(double value) {
@@ -85,8 +82,6 @@ class _SliderControlState extends FletControlState<SliderControl> {
       int? divisions = widget.control.attrInt("divisions");
       int round = widget.control.attrInt("round", 0)!;
 
-      final server = FletAppServices.of(context).server;
-
       debugPrint("SliderControl build: ${widget.control.id}");
 
       double value = widget.control.attrDouble("value", 0)!;
@@ -122,18 +117,14 @@ class _SliderControlState extends FletControlState<SliderControl> {
               : null,
           onChangeStart: !disabled
               ? (double value) {
-                  server.sendPageEvent(
-                      eventTarget: widget.control.id,
-                      eventName: "change_start",
-                      eventData: value.toString());
+                  sendControlEvent(
+                      widget.control.id, "change_start", value.toString());
                 }
               : null,
           onChangeEnd: !disabled
               ? (double value) {
-                  server.sendPageEvent(
-                      eventTarget: widget.control.id,
-                      eventName: "change_end",
-                      eventData: value.toString());
+                  sendControlEvent(
+                      widget.control.id, "change_end", value.toString());
                 }
               : null);
 

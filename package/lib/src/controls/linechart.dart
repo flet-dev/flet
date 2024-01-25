@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
@@ -20,6 +19,7 @@ import '../utils/shadows.dart';
 import '../utils/text.dart';
 import 'charts.dart';
 import 'create_control.dart';
+import 'flet_control_state.dart';
 
 class LineChartDataPointViewModel extends Equatable {
   final Control control;
@@ -168,7 +168,7 @@ class LineChartControl extends StatefulWidget {
   State<LineChartControl> createState() => _LineChartControlState();
 }
 
-class _LineChartControlState extends State<LineChartControl> {
+class _LineChartControlState extends FletControlState<LineChartControl> {
   LineChartEventData? _eventData;
 
   @override
@@ -370,10 +370,8 @@ class _LineChartControlState extends State<LineChartControl> {
                             _eventData = eventData;
                             debugPrint(
                                 "LineChart ${widget.control.id} ${eventData.eventType}");
-                            FletAppServices.of(context).server.sendPageEvent(
-                                eventTarget: widget.control.id,
-                                eventName: "chart_event",
-                                eventData: json.encode(eventData));
+                            sendControlEvent(widget.control.id, "chart_event",
+                                json.encode(eventData));
                           }
                         }
                       : null,

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_ancestor_view_model.dart';
@@ -88,5 +89,11 @@ abstract class FletStatelessControl extends StatelessWidget {
           return false;
         },
         builder: build);
+  }
+
+  void sendControlEvent(BuildContext context, String controlId,
+      String eventName, String eventData) {
+    FletAppServices.of(context).server.sendPageEvent(
+        eventTarget: controlId, eventName: eventName, eventData: eventData);
   }
 }

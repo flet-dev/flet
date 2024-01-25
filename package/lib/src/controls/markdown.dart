@@ -3,7 +3,6 @@ import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/launch_url.dart';
 import '../utils/text.dart';
@@ -68,10 +67,8 @@ class MarkdownControl extends FletStatelessControl {
             if (autoFollowLinks && href != null) {
               openWebBrowser(href, webWindowName: autoFollowLinksTarget);
             }
-            FletAppServices.of(context).server.sendPageEvent(
-                eventTarget: control.id,
-                eventName: "tap_link",
-                eventData: href?.toString() ?? "");
+            sendControlEvent(
+                context, control.id, "tap_link", href?.toString() ?? "");
           });
 
       return constrainedControl(context, markdown, parent, control);

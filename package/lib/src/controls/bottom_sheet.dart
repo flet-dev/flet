@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
@@ -30,8 +29,6 @@ class _BottomSheetControlState extends FletControlState<BottomSheetControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("BottomSheet build: ${widget.control.id}");
-
-    var server = FletAppServices.of(context).server;
 
     bool lastOpen = widget.control.state["open"] ?? false;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
@@ -102,10 +99,7 @@ class _BottomSheetControlState extends FletControlState<BottomSheetControl> {
 
           if (shouldDismiss) {
             resetOpenState();
-            server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "dismiss",
-                eventData: "");
+            sendControlEvent(widget.control.id, "dismiss", "");
           }
         });
       });

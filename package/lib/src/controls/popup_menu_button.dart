@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
@@ -23,8 +22,6 @@ class PopupMenuButtonControl extends FletStatelessControl {
   Widget build(BuildContext context) {
     debugPrint("PopupMenuButton build: ${control.id}");
 
-    final server = FletAppServices.of(context).server;
-
     var icon = parseIcon(control.attrString("icon", "")!);
     var tooltip = control.attrString("tooltip");
     var contentCtrls =
@@ -46,12 +43,10 @@ class PopupMenuButtonControl extends FletStatelessControl {
               ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
               : null,
           onCanceled: () {
-            server.sendPageEvent(
-                eventTarget: control.id, eventName: "cancelled", eventData: "");
+            sendControlEvent(context, control.id, "cancelled", "");
           },
           onSelected: (itemId) {
-            server.sendPageEvent(
-                eventTarget: itemId, eventName: "click", eventData: "");
+            sendControlEvent(context, itemId, "click", "");
           },
           itemBuilder: (BuildContext context) =>
               viewModel.controlViews.map((cv) {

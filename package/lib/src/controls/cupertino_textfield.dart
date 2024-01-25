@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -52,10 +51,7 @@ class _CupertinoTextFieldControlState
       onKey: (FocusNode node, RawKeyEvent evt) {
         if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
           if (evt is RawKeyDownEvent) {
-            FletAppServices.of(context).server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "submit",
-                eventData: "");
+            sendControlEvent(widget.control.id, "submit", "");
           }
           return KeyEventResult.handled;
         } else {
@@ -82,20 +78,16 @@ class _CupertinoTextFieldControlState
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _shiftEnterfocusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(widget.control.id,
+        _shiftEnterfocusNode.hasFocus ? "focus" : "blur", "");
   }
 
   void _onFocusChange() {
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
@@ -213,10 +205,7 @@ class _CupertinoTextFieldControlState
         enabled: !disabled,
         onSubmitted: !multiline
             ? (_) {
-                FletAppServices.of(context).server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "submit",
-                    eventData: "");
+                sendControlEvent(widget.control.id, "submit", "");
               }
             : null,
         decoration: defaultDecoration?.copyWith(

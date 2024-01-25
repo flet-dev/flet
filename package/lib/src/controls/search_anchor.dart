@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -166,10 +165,7 @@ class _SearchAnchorControlState extends FletControlState<SearchAnchorControl> {
                 : null,
             onTap: () {
               if (onTap) {
-                FletAppServices.of(context).server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "tap",
-                    eventData: "");
+                sendControlEvent(widget.control.id, "tap", "");
               }
               controller.openView();
             },
@@ -177,20 +173,14 @@ class _SearchAnchorControlState extends FletControlState<SearchAnchorControl> {
                 ? (String value) {
                     debugPrint("SearchBar.onSubmit: $value");
                     _updateValue(value);
-                    FletAppServices.of(context).server.sendPageEvent(
-                        eventTarget: widget.control.id,
-                        eventName: "submit",
-                        eventData: value);
+                    sendControlEvent(widget.control.id, "submit", value);
                   }
                 : null,
             onChanged: onChange
                 ? (String value) {
                     debugPrint("SearchBar.onChange: $value");
                     _updateValue(value);
-                    FletAppServices.of(context).server.sendPageEvent(
-                        eventTarget: widget.control.id,
-                        eventName: "change",
-                        eventData: value);
+                    sendControlEvent(widget.control.id, "change", value);
                   }
                 : null,
           );

@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
@@ -81,8 +80,6 @@ class ContainerControl extends FletStatelessControl {
     var animation = parseAnimation(control, "animate");
     var blur = parseBlur(control, "blur");
 
-    final server = FletAppServices.of(context).server;
-
     return withPageArgs((context, pageArgs) {
       DecorationImage? image;
 
@@ -158,10 +155,11 @@ class ContainerControl extends FletStatelessControl {
                         openWebBrowser(url, webWindowName: urlTarget);
                       }
                       if (onClick) {
-                        server.sendPageEvent(
-                            eventTarget: control.id,
-                            eventName: "click",
-                            eventData: json.encode(ContainerTapEvent(
+                        sendControlEvent(
+                            context,
+                            control.id,
+                            "click",
+                            json.encode(ContainerTapEvent(
                                     localX: details.localPosition.dx,
                                     localY: details.localPosition.dy,
                                     globalX: details.globalPosition.dx,
@@ -173,19 +171,14 @@ class ContainerControl extends FletStatelessControl {
               onLongPress: onLongPress
                   ? () {
                       debugPrint("Container ${control.id} long pressed!");
-                      server.sendPageEvent(
-                          eventTarget: control.id,
-                          eventName: "long_press",
-                          eventData: "");
+                      sendControlEvent(context, control.id, "long_press", "");
                     }
                   : null,
               onHover: onHover
                   ? (value) {
                       debugPrint("Container ${control.id} hovered!");
-                      server.sendPageEvent(
-                          eventTarget: control.id,
-                          eventName: "hover",
-                          eventData: value.toString());
+                      sendControlEvent(
+                          context, control.id, "hover", value.toString());
                     }
                   : null,
               borderRadius: borderRadius,
@@ -214,10 +207,8 @@ class ContainerControl extends FletStatelessControl {
                 clipBehavior: clipBehavior,
                 onEnd: control.attrBool("onAnimationEnd", false)!
                     ? () {
-                        server.sendPageEvent(
-                            eventTarget: control.id,
-                            eventName: "animation_end",
-                            eventData: "container");
+                        sendControlEvent(
+                            context, control.id, "animation_end", "container");
                       }
                     : null,
                 child: ink);
@@ -244,10 +235,8 @@ class ContainerControl extends FletStatelessControl {
                 clipBehavior: clipBehavior,
                 onEnd: control.attrBool("onAnimationEnd", false)!
                     ? () {
-                        server.sendPageEvent(
-                            eventTarget: control.id,
-                            eventName: "animation_end",
-                            eventData: "container");
+                        sendControlEvent(
+                            context, control.id, "animation_end", "container");
                       }
                     : null,
                 child: child);
@@ -261,20 +250,14 @@ class ContainerControl extends FletStatelessControl {
                 ? (value) {
                     debugPrint(
                         "Container's mouse region ${control.id} entered!");
-                    server.sendPageEvent(
-                        eventTarget: control.id,
-                        eventName: "hover",
-                        eventData: "true");
+                    sendControlEvent(context, control.id, "hover", "true");
                   }
                 : null,
             onExit: onHover
                 ? (value) {
                     debugPrint(
                         "Container's mouse region ${control.id} exited!");
-                    server.sendPageEvent(
-                        eventTarget: control.id,
-                        eventName: "hover",
-                        eventData: "false");
+                    sendControlEvent(context, control.id, "hover", "false");
                   }
                 : null,
             child: GestureDetector(
@@ -285,10 +268,11 @@ class ContainerControl extends FletStatelessControl {
                         openWebBrowser(url, webWindowName: urlTarget);
                       }
                       if (onClick) {
-                        server.sendPageEvent(
-                            eventTarget: control.id,
-                            eventName: "click",
-                            eventData: json.encode(ContainerTapEvent(
+                        sendControlEvent(
+                            context,
+                            control.id,
+                            "click",
+                            json.encode(ContainerTapEvent(
                                     localX: details.localPosition.dx,
                                     localY: details.localPosition.dy,
                                     globalX: details.globalPosition.dx,
@@ -300,10 +284,7 @@ class ContainerControl extends FletStatelessControl {
               onLongPress: onLongPress
                   ? () {
                       debugPrint("Container ${control.id} clicked!");
-                      server.sendPageEvent(
-                          eventTarget: control.id,
-                          eventName: "long_press",
-                          eventData: "");
+                      sendControlEvent(context, control.id, "long_press", "");
                     }
                   : null,
               child: result,

@@ -8,8 +8,9 @@ import '../models/control.dart';
 import '../utils/dismissible.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_stateless_control.dart';
 
-class DismissibleControl extends StatelessWidget {
+class DismissibleControl extends FletStatelessControl {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -74,26 +75,22 @@ class DismissibleControl extends StatelessWidget {
                 : Container(color: Colors.transparent),
             onDismissed: control.attrBool("onDismiss", false)!
                 ? (DismissDirection direction) {
-                    server.sendPageEvent(
-                        eventTarget: control.id,
-                        eventName: "dismiss",
-                        eventData: direction.name);
+                    sendControlEvent(
+                        context, control.id, "dismiss", direction.name);
                   }
                 : null,
             onResize: control.attrBool("onResize", false)!
                 ? () {
-                    server.sendPageEvent(
-                        eventTarget: control.id,
-                        eventName: "resize",
-                        eventData: "");
+                    sendControlEvent(context, control.id, "resize", "");
                   }
                 : null,
             onUpdate: control.attrBool("onUpdate", false)!
                 ? (DismissUpdateDetails details) {
-                    server.sendPageEvent(
-                        eventTarget: control.id,
-                        eventName: "update",
-                        eventData: json.encode(DismissibleUpdateEvent(
+                    sendControlEvent(
+                        context,
+                        control.id,
+                        "update",
+                        json.encode(DismissibleUpdateEvent(
                                 direction: details.direction.name,
                                 previousReached: details.previousReached,
                                 progress: details.progress,
@@ -106,10 +103,8 @@ class DismissibleControl extends StatelessWidget {
                     debugPrint("Dismissible.confirmDismiss(${control.id})");
                     var completer = Completer<bool?>();
                     control.state["confirm_dismiss"] = completer;
-                    server.sendPageEvent(
-                        eventTarget: control.id,
-                        eventName: "confirm_dismiss",
-                        eventData: direction.name);
+                    sendControlEvent(
+                        context, control.id, "confirm_dismiss", direction.name);
                     return completer.future;
                   }
                 : null,

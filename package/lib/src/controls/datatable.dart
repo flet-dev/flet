@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -34,8 +33,6 @@ class _DataTableControlState extends FletControlState<DataTableControl> {
     debugPrint("DataTableControl build: ${widget.control.id}");
 
     bool tableDisabled = widget.control.isDisabled || widget.parentDisabled;
-
-    var server = FletAppServices.of(context).server;
 
     var datatable =
         withControls(widget.children.where((c) => c.isVisible).map((c) => c.id),
@@ -97,10 +94,8 @@ class _DataTableControlState extends FletControlState<DataTableControl> {
           sortColumnIndex: widget.control.attrInt("sortColumnIndex"),
           onSelectAll: widget.control.attrBool("onSelectAll", false)!
               ? (selected) {
-                  server.sendPageEvent(
-                      eventTarget: widget.control.id,
-                      eventName: "select_all",
-                      eventData: selected != null ? selected.toString() : "");
+                  sendControlEvent(widget.control.id, "select_all",
+                      selected != null ? selected.toString() : "");
                 }
               : null,
           columns: viewModel.controlViews
@@ -112,11 +107,8 @@ class _DataTableControlState extends FletControlState<DataTableControl> {
                 tooltip: column.control.attrString("tooltip"),
                 onSort: column.control.attrBool("onSort", false)!
                     ? (columnIndex, ascending) {
-                        server.sendPageEvent(
-                            eventTarget: column.control.id,
-                            eventName: "sort",
-                            eventData: json
-                                .encode({"i": columnIndex, "a": ascending}));
+                        sendControlEvent(column.control.id, "sort",
+                            json.encode({"i": columnIndex, "a": ascending}));
                       }
                     : null,
                 label: createControl(column.control, labelCtrls.first.id,
@@ -132,19 +124,13 @@ class _DataTableControlState extends FletControlState<DataTableControl> {
                     Theme.of(context), row.control, "color"),
                 onSelectChanged: row.control.attrBool("onSelectChanged", false)!
                     ? (selected) {
-                        server.sendPageEvent(
-                            eventTarget: row.control.id,
-                            eventName: "select_changed",
-                            eventData:
-                                selected != null ? selected.toString() : "");
+                        sendControlEvent(row.control.id, "select_changed",
+                            selected != null ? selected.toString() : "");
                       }
                     : null,
                 onLongPress: row.control.attrBool("onLongPress", false)!
                     ? () {
-                        server.sendPageEvent(
-                            eventTarget: row.control.id,
-                            eventName: "long_press",
-                            eventData: "");
+                        sendControlEvent(row.control.id, "long_press", "");
                       }
                     : null,
                 cells: row.children
@@ -155,42 +141,30 @@ class _DataTableControlState extends FletControlState<DataTableControl> {
                           showEditIcon: cell.attrBool("showEditIcon", false)!,
                           onDoubleTap: cell.attrBool("onDoubleTap", false)!
                               ? () {
-                                  server.sendPageEvent(
-                                      eventTarget: cell.id,
-                                      eventName: "double_tap",
-                                      eventData: "");
+                                  sendControlEvent(cell.id, "double_tap", "");
                                 }
                               : null,
                           onLongPress: cell.attrBool("onLongPress", false)!
                               ? () {
-                                  server.sendPageEvent(
-                                      eventTarget: cell.id,
-                                      eventName: "long_press",
-                                      eventData: "");
+                                  sendControlEvent(cell.id, "long_press", "");
                                 }
                               : null,
                           onTap: cell.attrBool("onTap", false)!
                               ? () {
-                                  server.sendPageEvent(
-                                      eventTarget: cell.id,
-                                      eventName: "tap",
-                                      eventData: "");
+                                  sendControlEvent(cell.id, "tap", "");
                                 }
                               : null,
                           onTapCancel: cell.attrBool("onTapCancel", false)!
                               ? () {
-                                  server.sendPageEvent(
-                                      eventTarget: cell.id,
-                                      eventName: "tap_cancel",
-                                      eventData: "");
+                                  sendControlEvent(cell.id, "tap_cancel", "");
                                 }
                               : null,
                           onTapDown: cell.attrBool("onTapDown", false)!
                               ? (details) {
-                                  server.sendPageEvent(
-                                      eventTarget: cell.id,
-                                      eventName: "tap_down",
-                                      eventData: json.encode({
+                                  sendControlEvent(
+                                      cell.id,
+                                      "tap_down",
+                                      json.encode({
                                         "kind": details.kind?.name,
                                         "lx": details.localPosition.dx,
                                         "ly": details.localPosition.dy,

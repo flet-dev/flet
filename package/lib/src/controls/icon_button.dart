@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
@@ -8,6 +7,7 @@ import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_control_state.dart';
 
 class IconButtonControl extends StatefulWidget {
   final Control? parent;
@@ -26,7 +26,7 @@ class IconButtonControl extends StatefulWidget {
   State<IconButtonControl> createState() => _IconButtonControlState();
 }
 
-class _IconButtonControlState extends State<IconButtonControl> {
+class _IconButtonControlState extends FletControlState<IconButtonControl> {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -45,10 +45,8 @@ class _IconButtonControlState extends State<IconButtonControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
@@ -80,10 +78,7 @@ class _IconButtonControlState extends State<IconButtonControl> {
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            FletAppServices.of(context).server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "click",
-                eventData: "");
+            sendControlEvent(widget.control.id, "click", "");
           };
 
     Widget? button;

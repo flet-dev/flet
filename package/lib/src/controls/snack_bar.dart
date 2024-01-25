@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
@@ -47,10 +46,7 @@ class _SnackBarControlState extends FletControlState<SnackBarControl> {
                 widget.control.attrString("actionColor", "")!),
             onPressed: () {
               debugPrint("SnackBar ${widget.control.id} clicked!");
-              FletAppServices.of(context).server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "action",
-                  eventData: "");
+              sendControlEvent(widget.control.id, "action", "");
             })
         : null;
 

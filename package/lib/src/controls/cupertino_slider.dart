@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
@@ -57,8 +56,6 @@ class _CupertinoSliderControlState
     double max = widget.control.attrDouble("max", 1)!;
     int? divisions = widget.control.attrInt("divisions");
 
-    final server = FletAppServices.of(context).server;
-
     debugPrint("CupertinoSliderControl build: ${widget.control.id}");
 
     double value = widget.control.attrDouble("value", 0)!;
@@ -90,18 +87,14 @@ class _CupertinoSliderControlState
             : null,
         onChangeStart: !disabled
             ? (double value) {
-                server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "change_start",
-                    eventData: value.toString());
+                sendControlEvent(
+                    widget.control.id, "change_start", value.toString());
               }
             : null,
         onChangeEnd: !disabled
             ? (double value) {
-                server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "change_end",
-                    eventData: value.toString());
+                sendControlEvent(
+                    widget.control.id, "change_end", value.toString());
               }
             : null);
 

@@ -1,30 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
+import 'flet_stateless_control.dart';
 
-class CupertinoDialogActionControl extends StatelessWidget {
+class CupertinoDialogActionControl extends FletStatelessControl {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
 
   const CupertinoDialogActionControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoDialogAction build: ${control.id}");
-
-    final server = FletAppServices.of(context).server;
 
     String text = control.attrString("text", "")!;
     var contentCtrls = children.where((c) => c.name == "content");
@@ -35,8 +32,7 @@ class CupertinoDialogActionControl extends StatelessWidget {
     Function()? onPressed = !disabled
         ? () {
             debugPrint("CupertinoDialogAction ${control.id} clicked!");
-            server.sendPageEvent(
-                eventTarget: control.id, eventName: "click", eventData: "");
+            sendControlEvent(context, control.id, "click", "");
           }
         : null;
 

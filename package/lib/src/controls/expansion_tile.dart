@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
@@ -8,8 +7,9 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_stateless_control.dart';
 
-class ExpansionTileControl extends StatelessWidget {
+class ExpansionTileControl extends FletStatelessControl {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -25,8 +25,6 @@ class ExpansionTileControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("ExpansionTile build: ${control.id}");
-
-    final server = FletAppServices.of(context).server;
 
     var ctrls = children.where((c) => c.name == "controls" && c.isVisible);
     var leadingCtrls =
@@ -77,17 +75,14 @@ class ExpansionTileControl extends StatelessWidget {
       return const ErrorControl(
           'CrossAxisAlignment.baseline is not supported since the expanded '
           'controls are aligned in a column, not a row. '
-              'Try aligning the controls differently.');
+          'Try aligning the controls differently.');
     }
 
     Function(bool)? onChange = (onchange) && !disabled
         ? (expanded) {
             debugPrint(
                 "ExpansionTile ${control.id} was ${expanded ? "expanded" : "collapsed"}");
-            server.sendPageEvent(
-                eventTarget: control.id,
-                eventName: "change",
-                eventData: "$expanded");
+            sendControlEvent(context, control.id, "change", "$expanded");
           }
         : null;
 

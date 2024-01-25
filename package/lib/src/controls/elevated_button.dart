@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
@@ -8,6 +7,7 @@ import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_control_state.dart';
 
 class ElevatedButtonControl extends StatefulWidget {
   final Control? parent;
@@ -26,7 +26,8 @@ class ElevatedButtonControl extends StatefulWidget {
   State<ElevatedButtonControl> createState() => _ElevatedButtonControlState();
 }
 
-class _ElevatedButtonControlState extends State<ElevatedButtonControl> {
+class _ElevatedButtonControlState
+    extends FletControlState<ElevatedButtonControl> {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -45,17 +46,13 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Button build: ${widget.control.id}");
-
-    final server = FletAppServices.of(context).server;
 
     String text = widget.control.attrString("text", "")!;
     String url = widget.control.attrString("url", "")!;
@@ -75,30 +72,21 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl> {
               openWebBrowser(url,
                   webWindowName: widget.control.attrString("urlTarget"));
             }
-            server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "click",
-                eventData: "");
+            sendControlEvent(widget.control.id, "click", "");
           }
         : null;
 
     Function()? onLongPressHandler = onLongPress && !disabled
         ? () {
             debugPrint("Button ${widget.control.id} long pressed!");
-            server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "long_press",
-                eventData: "");
+            sendControlEvent(widget.control.id, "long_press", "");
           }
         : null;
 
     Function(bool)? onHoverHandler = onHover && !disabled
         ? (state) {
             debugPrint("Button ${widget.control.id} hovered!");
-            server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "hover",
-                eventData: state.toString());
+            sendControlEvent(widget.control.id, "hover", state.toString());
           }
         : null;
 

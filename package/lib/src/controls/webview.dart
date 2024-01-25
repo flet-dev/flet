@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_stateless_control.dart';
 
-class WebViewControl extends StatelessWidget {
+class WebViewControl extends FletStatelessControl {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
@@ -46,22 +46,14 @@ class WebViewControl extends StatelessWidget {
           NavigationDelegate(
             onProgress: (int progress) {},
             onPageStarted: (String url) {
-              FletAppServices.of(context).server.sendPageEvent(
-                  eventTarget: control.id,
-                  eventName: "page_started",
-                  eventData: url);
+              sendControlEvent(context, control.id, "page_started", url);
             },
             onPageFinished: (String url) {
-              FletAppServices.of(context).server.sendPageEvent(
-                  eventTarget: control.id,
-                  eventName: "page_ended",
-                  eventData: url);
+              sendControlEvent(context, control.id, "page_ended", url);
             },
             onWebResourceError: (WebResourceError error) {
-              FletAppServices.of(context).server.sendPageEvent(
-                  eventTarget: control.id,
-                  eventName: "web_resource_error",
-                  eventData: error.toString());
+              sendControlEvent(
+                  context, control.id, "web_resource_error", error.toString());
             },
             onNavigationRequest: (NavigationRequest request) {
               if (preventLink != "" && request.url.startsWith(preventLink)) {

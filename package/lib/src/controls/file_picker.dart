@@ -114,11 +114,10 @@ class _FilePickerControlState extends FletControlState<FilePickerControl> {
         if (defaultTargetPlatform != TargetPlatform.windows || !isDesktop()) {
           resetDialogState();
         }
-        var fletServices = FletAppServices.of(context);
-        fletServices.server.sendPageEvent(
-            eventTarget: widget.control.id,
-            eventName: "result",
-            eventData: json.encode(FilePickerResultEvent(
+        sendControlEvent(
+            widget.control.id,
+            "result",
+            json.encode(FilePickerResultEvent(
                 path: _path,
                 files: _files
                     ?.map((f) => FilePickerFile(
@@ -264,10 +263,10 @@ class _FilePickerControlState extends FletControlState<FilePickerControl> {
 
   void sendProgress(
       FletServer server, String name, double? progress, String? error) {
-    server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: "upload",
-        eventData: json.encode(FilePickerUploadProgressEvent(
+    sendControlEvent(
+        widget.control.id,
+        "upload",
+        json.encode(FilePickerUploadProgressEvent(
             name: name, progress: progress, error: error)));
   }
 

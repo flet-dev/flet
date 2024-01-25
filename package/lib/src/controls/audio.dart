@@ -127,34 +127,25 @@ class _AudioControlState extends FletControlState<AudioControl> {
 
     return withPageArgs((context, pageArgs) {
       _onDurationChanged = (duration) {
-        server.sendPageEvent(
-            eventTarget: widget.control.id,
-            eventName: "duration_changed",
-            eventData: duration.inMilliseconds.toString());
+        sendControlEvent(widget.control.id, "duration_changed",
+            duration.inMilliseconds.toString());
       };
 
       _onStateChanged = (state) {
         debugPrint("Audio($hashCode) - state_changed: ${state.name}");
-        server.sendPageEvent(
-            eventTarget: widget.control.id,
-            eventName: "state_changed",
-            eventData: state.name.toString());
+        sendControlEvent(
+            widget.control.id, "state_changed", state.name.toString());
       };
 
       if (onPositionChanged) {
         _onPositionChanged = (duration) {
-          server.sendPageEvent(
-              eventTarget: widget.control.id,
-              eventName: "position_changed",
-              eventData: duration.toString());
+          sendControlEvent(
+              widget.control.id, "position_changed", duration.toString());
         };
       }
 
       _onSeekComplete = () {
-        server.sendPageEvent(
-            eventTarget: widget.control.id,
-            eventName: "seek_complete",
-            eventData: "");
+        sendControlEvent(widget.control.id, "seek_complete", "");
       };
 
       () async {
@@ -183,10 +174,7 @@ class _AudioControlState extends FletControlState<AudioControl> {
 
         if (srcChanged) {
           debugPrint("Audio.srcChanged!");
-          server.sendPageEvent(
-              eventTarget: widget.control.id,
-              eventName: "loaded",
-              eventData: "");
+          sendControlEvent(widget.control.id, "loaded", "");
         }
 
         if (releaseMode != null && releaseMode != prevReleaseMode) {

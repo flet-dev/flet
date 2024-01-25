@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
@@ -15,6 +14,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
+import 'flet_control_state.dart';
 
 class PieChartEventData extends Equatable {
   final String eventType;
@@ -91,7 +91,7 @@ class PieChartControl extends StatefulWidget {
   State<PieChartControl> createState() => _PieChartControlState();
 }
 
-class _PieChartControlState extends State<PieChartControl> {
+class _PieChartControlState extends FletControlState<PieChartControl> {
   PieChartEventData? _eventData;
 
   @override
@@ -137,10 +137,8 @@ class _PieChartControlState extends State<PieChartControl> {
                           _eventData = eventData;
                           debugPrint(
                               "PieChart ${widget.control.id} ${eventData.eventType}");
-                          FletAppServices.of(context).server.sendPageEvent(
-                              eventTarget: widget.control.id,
-                              eventName: "chart_event",
-                              eventData: json.encode(eventData));
+                          sendControlEvent(widget.control.id, "chart_event",
+                              json.encode(eventData));
                         }
                       }
                     : null,

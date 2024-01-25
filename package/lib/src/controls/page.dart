@@ -201,10 +201,10 @@ class _PageControlState extends FletControlState<PageControl> {
         LogicalKeyboardKey.shiftLeft,
         LogicalKeyboardKey.shiftRight
       ].contains(k)) {
-        FletAppServices.of(context).server.sendPageEvent(
-            eventTarget: "page",
-            eventName: "keyboard_event",
-            eventData: json.encode(KeyboardEvent(
+        sendControlEvent(
+            "page",
+            "keyboard_event",
+            json.encode(KeyboardEvent(
                     key: k.keyLabel,
                     isAltPressed: e.isAltPressed,
                     isControlPressed: e.isControlPressed,
@@ -618,11 +618,8 @@ class _PageControlState extends FletControlState<PageControl> {
               key: navigatorKey,
               pages: pages,
               onPopPage: (route, dynamic result) {
-                FletAppServices.of(context).server.sendPageEvent(
-                    eventTarget: "page",
-                    eventName: "view_pop",
-                    eventData:
-                        ((route.settings as Page).key as ValueKey).value);
+                sendControlEvent("page", "view_pop",
+                    ((route.settings as Page).key as ValueKey).value);
                 return false;
               });
 
