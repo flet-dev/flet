@@ -86,6 +86,7 @@ class ListTile(ConstrainedControl):
         # Specific
         #
         content_padding: PaddingValue = None,
+        bgcolor: Optional[str] = None,
         leading: Optional[Control] = None,
         title: Optional[Control] = None,
         subtitle: Optional[Control] = None,
@@ -142,6 +143,7 @@ class ListTile(ConstrainedControl):
         self.toggle_inputs = toggle_inputs
         self.url = url
         self.url_target = url_target
+        self.bgcolor = bgcolor
         self.on_click = on_click
         self.on_long_press = on_long_press
 
@@ -176,6 +178,15 @@ class ListTile(ConstrainedControl):
     @content_padding.setter
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
 
     # leading
     @property

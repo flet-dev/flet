@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
@@ -97,8 +98,8 @@ class ListTileControl extends StatelessWidget {
       onTap: onPressed,
       onLongPress: onLongPress,
       enabled: !disabled,
-      //splashColor: Colors.blueGrey,
-      tileColor: Colors.grey,
+      tileColor: HexColor.fromString(
+          Theme.of(context), control.attrString("bgcolor", "")!),
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled)
           : null,
