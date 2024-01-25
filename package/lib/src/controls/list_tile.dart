@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
@@ -6,6 +7,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
+import 'cupertino_list_tile.dart';
 
 class ListTileClicks extends InheritedWidget {
   const ListTileClicks({
@@ -41,6 +43,16 @@ class ListTileControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
+    bool adaptive = control.attrBool("adaptive", false)!;
+    if (adaptive &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)) {
+      return CupertinoListTileControl(
+          control: control,
+          parent: parent,
+          parentDisabled: parentDisabled,
+          children: children);
+    }
 
     final server = FletAppServices.of(context).server;
 

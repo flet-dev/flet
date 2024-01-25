@@ -85,6 +85,7 @@ class ListTile(ConstrainedControl):
         #
         # Specific
         #
+        adaptive: Optional[bool] = None,
         content_padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
         leading: Optional[Control] = None,
@@ -131,6 +132,7 @@ class ListTile(ConstrainedControl):
             data=data,
         )
 
+        self.adaptive = adaptive
         self.content_padding = content_padding
         self.leading = leading
         self.title = title
@@ -169,6 +171,15 @@ class ListTile(ConstrainedControl):
             self.__trailing._set_attr_internal("n", "trailing")
             children.append(self.__trailing)
         return children
+
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
 
     # content_padding
     @property
