@@ -27,8 +27,6 @@ class CupertinoListTileControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("CupertinoListTile build: ${control.id}");
 
-    bool notched = control.attrBool("notched", false)!;
-
     final server = FletAppServices.of(context).server;
 
     var leadingCtrls =
@@ -41,6 +39,7 @@ class CupertinoListTileControl extends StatelessWidget {
     var additionalInfoCtrls =
         children.where((c) => c.name == "additionalInfo" && c.isVisible);
 
+    bool notched = control.attrBool("notched", false)!;
     bool onclick = control.attrBool("onclick", false)!;
     bool toggleInputs = control.attrBool("toggleInputs", false)!;
     String url = control.attrString("url", "")!;

@@ -112,6 +112,8 @@ class ListTileControl extends StatelessWidget {
       enabled: !disabled,
       tileColor: HexColor.fromString(
           Theme.of(context), control.attrString("bgcolor", "")!),
+      splashColor: HexColor.fromString(
+          Theme.of(context), control.attrString("bgcolorActivated", "")!),
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled)
           : null,

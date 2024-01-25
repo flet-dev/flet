@@ -15,43 +15,38 @@ from flet_core.types import (
 
 class CupertinoListTile(ConstrainedControl):
     """
-    A single fixed-height row that typically contains some text as well as a leading or trailing icon.
+        An iOS-style list tile. The CupertinoListTile is a Cupertino equivalent of Material ListTile.
 
-    Example:
+        Example:
 
-    ```
+        ```
     import flet as ft
 
-    def main(page):
-        page.title = "ListTile Example"
+
+    def main(page: ft.Page):
+        def tile_clicked(e):
+            print("Tile Clicked!")
+
         page.add(
-            ft.Card(
-                content=ft.Container(
-                    width=500,
-                    content=ft.Column(
-                        [
-                            ft.ListTile(
-                                title=ft.Text("One-line list tile"),
-                            ),
-                            ft.ListTile(
-                                leading=ft.Icon(ft.icons.SETTINGS),
-                                title=ft.Text("One-line selected list tile"),
-                                selected=True,
-                            ),
-                        ],
-                        spacing=0,
-                    ),
-                    padding=ft.padding.symmetric(vertical=10),
-                )
-            )
+            ft.CupertinoListTile(
+                notched=True,
+                additional_info=ft.Text("Wed Jan 25"),
+                bgcolor_activated=ft.colors.AMBER_ACCENT,
+                leading=ft.Icon(name=ft.cupertino_icons.GAME_CONTROLLER),
+                title=ft.Text("CupertinoListTile not notched"),
+                subtitle=ft.Text("Subtitle"),
+                trailing=ft.Icon(name=ft.cupertino_icons.ALARM),
+                on_click=tile_clicked,
+            ),
+
         )
 
     ft.app(target=main)
-    ```
+        ```
 
-    -----
+        -----
 
-    Online docs: https://flet.dev/docs/controls/listtile
+        Online docs: https://flet.dev/docs/controls/cupertinolisttile
     """
 
     def __init__(
@@ -182,6 +177,24 @@ class CupertinoListTile(ConstrainedControl):
     def leading(self, value: Optional[Control]):
         self.__leading = value
 
+    # leading_size
+    @property
+    def leading_size(self):
+        return self._get_attr("leadingSize")
+
+    @leading_size.setter
+    def leading_size(self, value):
+        self._set_attr("leadingSize", value)
+
+    # leading_to_title
+    @property
+    def leading_to_title(self):
+        return self._get_attr("leadingToTitle")
+
+    @leading_to_title.setter
+    def leading_to_title(self, value):
+        self._set_attr("leadingToTitle", value)
+
     # title
     @property
     def title(self) -> Optional[Control]:
@@ -190,24 +203,6 @@ class CupertinoListTile(ConstrainedControl):
     @title.setter
     def title(self, value: Optional[Control]):
         self.__title = value
-
-    # padding
-    @property
-    def padding(self) -> PaddingValue:
-        return self.__padding
-
-    @padding.setter
-    def padding(self, value: PaddingValue):
-        self.__padding = value
-
-    # notched
-    @property
-    def notched(self) -> Optional[bool]:
-        return self._get_attr("notched", data_type="bool", def_value=False)
-
-    @notched.setter
-    def notched(self, value: Optional[bool]):
-        self._set_attr("notched", value)
 
     # subtitle
     @property
@@ -236,6 +231,24 @@ class CupertinoListTile(ConstrainedControl):
     def additional_info(self, value: Optional[Control]):
         self.__additional_info = value
 
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+
+    # notched
+    @property
+    def notched(self) -> Optional[bool]:
+        return self._get_attr("notched", data_type="bool", def_value=False)
+
+    @notched.setter
+    def notched(self, value: Optional[bool]):
+        self._set_attr("notched", value)
+
     # bgcolor
     @property
     def bgcolor(self):
@@ -253,24 +266,6 @@ class CupertinoListTile(ConstrainedControl):
     @bgcolor_activated.setter
     def bgcolor_activated(self, value):
         self._set_attr("bgcolorActivated", value)
-
-    # leading_size
-    @property
-    def leading_size(self):
-        return self._get_attr("leadingSize")
-
-    @leading_size.setter
-    def leading_size(self, value):
-        self._set_attr("leadingSize", value)
-
-    # leading_to_title
-    @property
-    def leading_to_title(self):
-        return self._get_attr("leadingToTitle")
-
-    @leading_to_title.setter
-    def leading_to_title(self, value):
-        self._set_attr("leadingToTitle", value)
 
     # url
     @property

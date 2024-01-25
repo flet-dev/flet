@@ -88,6 +88,7 @@ class ListTile(ConstrainedControl):
         adaptive: Optional[bool] = None,
         content_padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
+        bgcolor_activated: Optional[str] = None,
         leading: Optional[Control] = None,
         title: Optional[Control] = None,
         subtitle: Optional[Control] = None,
@@ -146,6 +147,7 @@ class ListTile(ConstrainedControl):
         self.url = url
         self.url_target = url_target
         self.bgcolor = bgcolor
+        self.bgcolor_activated = bgcolor_activated
         self.on_click = on_click
         self.on_long_press = on_long_press
 
@@ -198,6 +200,15 @@ class ListTile(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
+
+    # bgcolor_activated
+    @property
+    def bgcolor_activated(self):
+        return self._get_attr("bgcolorActivated")
+
+    @bgcolor_activated.setter
+    def bgcolor_activated(self, value):
+        self._set_attr("bgcolorActivated", value)
 
     # leading
     @property
