@@ -17,8 +17,8 @@ class ScrollNotificationControl extends StatefulWidget {
       _ScrollNotificationControlState();
 }
 
-class _ScrollNotificationControlState
-    extends FletControlState<ScrollNotificationControl> {
+class _ScrollNotificationControlState extends State<ScrollNotificationControl>
+    with FletControlState {
   int _onScrollInterval = 0;
   final Map<String, int> _lastEventTimestamps = {};
 

@@ -23,7 +23,8 @@ class RangeSliderControl extends StatefulWidget {
   State<RangeSliderControl> createState() => _SliderControlState();
 }
 
-class _SliderControlState extends FletControlState<RangeSliderControl> {
+class _SliderControlState extends State<RangeSliderControl>
+    with FletControlState {
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
 
   @override

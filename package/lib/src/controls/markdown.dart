@@ -11,7 +11,7 @@ import 'create_control.dart';
 import 'flet_stateless_control.dart';
 import 'highlight_view.dart';
 
-class MarkdownControl extends FletStatelessControl {
+class MarkdownControl extends StatelessWidget with FletStatelessControl {
   final Control? parent;
   final Control control;
 

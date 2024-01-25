@@ -26,7 +26,8 @@ class SearchAnchorControl extends StatefulWidget {
   State<SearchAnchorControl> createState() => _SearchAnchorControlState();
 }
 
-class _SearchAnchorControlState extends FletControlState<SearchAnchorControl> {
+class _SearchAnchorControlState extends State<SearchAnchorControl>
+    with FletControlState {
   late final SearchController _controller;
 
   @override

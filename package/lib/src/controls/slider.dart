@@ -23,7 +23,7 @@ class SliderControl extends StatefulWidget {
   State<SliderControl> createState() => _SliderControlState();
 }
 
-class _SliderControlState extends FletControlState<SliderControl> {
+class _SliderControlState extends State<SliderControl> with FletControlState {
   double _value = 0;
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
   late final FocusNode _focusNode;

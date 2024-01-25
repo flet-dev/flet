@@ -27,7 +27,7 @@ class CupertinoNavigationBarControl extends StatefulWidget {
 }
 
 class _CupertinoNavigationBarControlState
-    extends FletControlState<CupertinoNavigationBarControl> {
+    extends State<CupertinoNavigationBarControl> with FletControlState {
   int _selectedIndex = 0;
 
   void _onTap(int index) {

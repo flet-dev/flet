@@ -22,8 +22,8 @@ class ShakeDetectorControl extends StatefulWidget {
   State<ShakeDetectorControl> createState() => _ShakeDetectorControlState();
 }
 
-class _ShakeDetectorControlState
-    extends FletControlState<ShakeDetectorControl> {
+class _ShakeDetectorControlState extends State<ShakeDetectorControl>
+    with FletControlState {
   ShakeDetector? _shakeDetector;
   int? _minimumShakeCount;
   int? _shakeSlopTimeMs;

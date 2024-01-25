@@ -15,7 +15,7 @@ import 'create_control.dart';
 import 'error.dart';
 import 'flet_stateless_control.dart';
 
-class ImageControl extends FletStatelessControl {
+class ImageControl extends StatelessWidget with FletStatelessControl {
   final Control? parent;
   final List<Control> children;
   final Control control;

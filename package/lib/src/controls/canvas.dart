@@ -67,7 +67,7 @@ class CanvasControl extends StatefulWidget {
   State<CanvasControl> createState() => _CanvasControlState();
 }
 
-class _CanvasControlState extends FletControlState<CanvasControl> {
+class _CanvasControlState extends State<CanvasControl> with FletControlState {
   int _lastResize = DateTime.now().millisecondsSinceEpoch;
   Size? _lastSize;
 

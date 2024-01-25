@@ -75,7 +75,8 @@ class FilePickerControl extends StatefulWidget {
   State<FilePickerControl> createState() => _FilePickerControlState();
 }
 
-class _FilePickerControlState extends FletControlState<FilePickerControl> {
+class _FilePickerControlState extends State<FilePickerControl>
+    with FletControlState {
   String? _state;
   String? _upload;
   String? _path;

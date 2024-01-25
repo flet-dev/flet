@@ -7,7 +7,7 @@ import 'create_control.dart';
 import 'error.dart';
 import 'flet_stateless_control.dart';
 
-class ResponsiveRowControl extends FletStatelessControl {
+class ResponsiveRowControl extends StatelessWidget with FletStatelessControl {
   final Control? parent;
   final Control control;
   final bool parentDisabled;

@@ -26,8 +26,8 @@ class ElevatedButtonControl extends StatefulWidget {
   State<ElevatedButtonControl> createState() => _ElevatedButtonControlState();
 }
 
-class _ElevatedButtonControlState
-    extends FletControlState<ElevatedButtonControl> {
+class _ElevatedButtonControlState extends State<ElevatedButtonControl>
+    with FletControlState {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 

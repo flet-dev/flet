@@ -31,7 +31,8 @@ class ScrollableControl extends StatefulWidget {
   State<ScrollableControl> createState() => _ScrollableControlState();
 }
 
-class _ScrollableControlState extends FletControlState<ScrollableControl> {
+class _ScrollableControlState extends State<ScrollableControl>
+    with FletControlState {
   late final ScrollController _controller;
   late bool _ownController = false;
   String? _method;

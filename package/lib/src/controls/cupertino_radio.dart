@@ -25,8 +25,8 @@ class CupertinoRadioControl extends StatefulWidget {
   State<CupertinoRadioControl> createState() => _CupertinoRadioControlState();
 }
 
-class _CupertinoRadioControlState
-    extends FletControlState<CupertinoRadioControl> {
+class _CupertinoRadioControlState extends State<CupertinoRadioControl>
+    with FletControlState {
   late final FocusNode _focusNode;
 
   @override

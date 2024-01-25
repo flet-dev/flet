@@ -24,7 +24,8 @@ class DropdownControl extends StatefulWidget {
   State<DropdownControl> createState() => _DropdownControlState();
 }
 
-class _DropdownControlState extends FletControlState<DropdownControl> {
+class _DropdownControlState extends State<DropdownControl>
+    with FletControlState {
   String? _value;
   bool _focused = false;
   late final FocusNode _focusNode;

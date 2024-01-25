@@ -27,7 +27,8 @@ class SnackBarControl extends StatefulWidget {
   State<SnackBarControl> createState() => _SnackBarControlState();
 }
 
-class _SnackBarControlState extends FletControlState<SnackBarControl> {
+class _SnackBarControlState extends State<SnackBarControl>
+    with FletControlState {
   bool _open = false;
 
   Widget _createSnackBar() {

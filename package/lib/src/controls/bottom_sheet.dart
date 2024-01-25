@@ -25,7 +25,8 @@ class BottomSheetControl extends StatefulWidget {
   State<BottomSheetControl> createState() => _BottomSheetControlState();
 }
 
-class _BottomSheetControlState extends FletControlState<BottomSheetControl> {
+class _BottomSheetControlState extends State<BottomSheetControl>
+    with FletControlState {
   @override
   Widget build(BuildContext context) {
     debugPrint("BottomSheet build: ${widget.control.id}");

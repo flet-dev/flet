@@ -24,8 +24,8 @@ class CupertinoSwitchControl extends StatefulWidget {
   State<CupertinoSwitchControl> createState() => _CupertinoSwitchControlState();
 }
 
-class _CupertinoSwitchControlState
-    extends FletControlState<CupertinoSwitchControl> {
+class _CupertinoSwitchControlState extends State<CupertinoSwitchControl>
+    with FletControlState {
   bool _value = false;
   late final FocusNode _focusNode;
 

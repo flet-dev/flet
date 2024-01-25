@@ -27,8 +27,8 @@ class GestureDetectorControl extends StatefulWidget {
   State<GestureDetectorControl> createState() => _GestureDetectorControlState();
 }
 
-class _GestureDetectorControlState
-    extends FletControlState<GestureDetectorControl> {
+class _GestureDetectorControlState extends State<GestureDetectorControl>
+    with FletControlState {
   int _panTimestamp = DateTime.now().millisecondsSinceEpoch;
   double _panX = 0;
   double _panY = 0;

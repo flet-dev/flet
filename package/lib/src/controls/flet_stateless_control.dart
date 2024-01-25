@@ -12,8 +12,8 @@ import '../models/controls_view_model.dart';
 import '../models/page_args_model.dart';
 import '../models/page_size_view_model.dart';
 
-abstract class FletStatelessControl extends StatelessWidget {
-  const FletStatelessControl({super.key});
+mixin FletStatelessControl on StatelessWidget {
+  //const FletStatelessControl({super.key});
 
   Widget withPageArgs(Widget Function(BuildContext, PageArgsModel) build) {
     return StoreConnector<AppState, PageArgsModel>(

@@ -24,7 +24,8 @@ class CupertinoCheckboxControl extends StatefulWidget {
   State<CupertinoCheckboxControl> createState() => _CheckboxControlState();
 }
 
-class _CheckboxControlState extends FletControlState<CupertinoCheckboxControl> {
+class _CheckboxControlState extends State<CupertinoCheckboxControl>
+    with FletControlState {
   bool? _value;
   bool _tristate = false;
   late final FocusNode _focusNode;

@@ -23,7 +23,7 @@ class ListTileClicks extends InheritedWidget {
   bool updateShouldNotify(ListTileClicks oldWidget) => true;
 }
 
-class ListTileControl extends FletStatelessControl {
+class ListTileControl extends StatelessWidget with FletStatelessControl {
   final Control? parent;
   final Control control;
   final List<Control> children;

@@ -27,7 +27,8 @@ class DataTableControl extends StatefulWidget {
   State<DataTableControl> createState() => _DataTableControlState();
 }
 
-class _DataTableControlState extends FletControlState<DataTableControl> {
+class _DataTableControlState extends State<DataTableControl>
+    with FletControlState {
   @override
   Widget build(BuildContext context) {
     debugPrint("DataTableControl build: ${widget.control.id}");

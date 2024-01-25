@@ -6,7 +6,8 @@ import 'create_control.dart';
 import 'cupertino_app_bar.dart';
 import 'flet_stateless_control.dart';
 
-class AppBarControl extends FletStatelessControl
+class AppBarControl extends StatelessWidget
+    with FletStatelessControl
     implements PreferredSizeWidget {
   final Control? parent;
   final Control control;

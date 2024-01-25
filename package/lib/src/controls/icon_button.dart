@@ -26,7 +26,8 @@ class IconButtonControl extends StatefulWidget {
   State<IconButtonControl> createState() => _IconButtonControlState();
 }
 
-class _IconButtonControlState extends FletControlState<IconButtonControl> {
+class _IconButtonControlState extends State<IconButtonControl>
+    with FletControlState {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 

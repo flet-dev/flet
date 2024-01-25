@@ -32,7 +32,8 @@ class TabsControl extends StatefulWidget {
   State<TabsControl> createState() => _TabsControlState();
 }
 
-class _TabsControlStateWithControlState extends FletControlState<TabsControl> {
+class _TabsControlStateWithControlState extends State<TabsControl>
+    with FletControlState {
   @override
   Widget build(BuildContext context) {
     throw UnimplementedError();

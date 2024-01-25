@@ -24,7 +24,8 @@ class CheckboxControl extends StatefulWidget {
   State<CheckboxControl> createState() => _CheckboxControlState();
 }
 
-class _CheckboxControlState extends FletControlState<CheckboxControl> {
+class _CheckboxControlState extends State<CheckboxControl>
+    with FletControlState {
   bool? _value;
   bool _tristate = false;
   late final FocusNode _focusNode;

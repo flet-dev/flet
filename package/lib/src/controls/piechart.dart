@@ -91,7 +91,8 @@ class PieChartControl extends StatefulWidget {
   State<PieChartControl> createState() => _PieChartControlState();
 }
 
-class _PieChartControlState extends FletControlState<PieChartControl> {
+class _PieChartControlState extends State<PieChartControl>
+    with FletControlState {
   PieChartEventData? _eventData;
 
   @override

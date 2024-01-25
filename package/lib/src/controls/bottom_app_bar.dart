@@ -24,7 +24,8 @@ class BottomAppBarControl extends StatefulWidget {
   State<BottomAppBarControl> createState() => _BottomAppBarControlState();
 }
 
-class _BottomAppBarControlState extends FletControlState<BottomAppBarControl> {
+class _BottomAppBarControlState extends State<BottomAppBarControl>
+    with FletControlState {
   @override
   Widget build(BuildContext context) {
     debugPrint("BottomAppBarControl build: ${widget.control.id}");

@@ -26,7 +26,7 @@ class ChipControl extends StatefulWidget {
   State<ChipControl> createState() => _ChipControlState();
 }
 
-class _ChipControlState extends FletControlState<ChipControl> {
+class _ChipControlState extends State<ChipControl> with FletControlState {
   bool _selected = false;
 
   late final FocusNode _focusNode;

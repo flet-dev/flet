@@ -28,7 +28,7 @@ class AudioControl extends StatefulWidget {
   State<AudioControl> createState() => _AudioControlState();
 }
 
-class _AudioControlState extends FletControlState<AudioControl> {
+class _AudioControlState extends State<AudioControl> with FletControlState {
   AudioPlayer? player;
   void Function(Duration)? _onDurationChanged;
   void Function(PlayerState)? _onStateChanged;

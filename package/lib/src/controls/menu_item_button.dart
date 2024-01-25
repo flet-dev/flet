@@ -22,8 +22,8 @@ class MenuItemButtonControl extends StatefulWidget {
   State<MenuItemButtonControl> createState() => _MenuItemButtonControlState();
 }
 
-class _MenuItemButtonControlState
-    extends FletControlState<MenuItemButtonControl> {
+class _MenuItemButtonControlState extends State<MenuItemButtonControl>
+    with FletControlState {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 

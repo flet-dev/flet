@@ -33,8 +33,8 @@ class CupertinoTextFieldControl extends StatefulWidget {
       _CupertinoTextFieldControlState();
 }
 
-class _CupertinoTextFieldControlState
-    extends FletControlState<CupertinoTextFieldControl> {
+class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
+    with FletControlState {
   String _value = "";
   final bool _revealPassword = false;
   bool _focused = false;

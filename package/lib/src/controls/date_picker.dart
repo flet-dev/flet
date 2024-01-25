@@ -23,7 +23,8 @@ class DatePickerControl extends StatefulWidget {
   State<DatePickerControl> createState() => _DatePickerControlState();
 }
 
-class _DatePickerControlState extends FletControlState<DatePickerControl> {
+class _DatePickerControlState extends State<DatePickerControl>
+    with FletControlState {
   @override
   Widget build(BuildContext context) {
     debugPrint("DatePicker build: ${widget.control.id}");

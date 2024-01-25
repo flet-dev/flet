@@ -5,7 +5,7 @@ import '../utils/icons.dart';
 import 'create_control.dart';
 import 'flet_stateless_control.dart';
 
-class PopupMenuButtonControl extends FletStatelessControl {
+class PopupMenuButtonControl extends StatelessWidget with FletStatelessControl {
   final Control? parent;
   final Control control;
   final bool parentDisabled;

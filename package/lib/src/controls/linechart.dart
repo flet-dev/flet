@@ -168,7 +168,8 @@ class LineChartControl extends StatefulWidget {
   State<LineChartControl> createState() => _LineChartControlState();
 }
 
-class _LineChartControlState extends FletControlState<LineChartControl> {
+class _LineChartControlState extends State<LineChartControl>
+    with FletControlState {
   LineChartEventData? _eventData;
 
   @override

@@ -27,7 +27,7 @@ class CupertinoAlertDialogControl extends StatefulWidget {
 }
 
 class _CupertinoAlertDialogControlState
-    extends FletControlState<CupertinoAlertDialogControl> {
+    extends State<CupertinoAlertDialogControl> with FletControlState {
   Widget _createCupertinoAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var titleCtrls =

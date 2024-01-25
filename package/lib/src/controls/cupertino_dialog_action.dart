@@ -6,7 +6,8 @@ import '../utils/text.dart';
 import 'create_control.dart';
 import 'flet_stateless_control.dart';
 
-class CupertinoDialogActionControl extends FletStatelessControl {
+class CupertinoDialogActionControl extends StatelessWidget
+    with FletStatelessControl {
   final Control? parent;
   final Control control;
   final List<Control> children;

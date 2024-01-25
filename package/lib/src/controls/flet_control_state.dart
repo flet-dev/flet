@@ -14,7 +14,7 @@ import '../models/page_args_model.dart';
 import '../models/page_size_view_model.dart';
 import '../protocol/update_control_props_payload.dart';
 
-abstract class FletControlState<T extends StatefulWidget> extends State<T> {
+mixin FletControlState<T extends StatefulWidget> on State<T> {
   // @override
   // void initState() {
   //   super.initState();

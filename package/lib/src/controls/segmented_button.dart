@@ -26,8 +26,8 @@ class SegmentedButtonControl extends StatefulWidget {
   State<SegmentedButtonControl> createState() => _SegmentedButtonControlState();
 }
 
-class _SegmentedButtonControlState
-    extends FletControlState<SegmentedButtonControl> {
+class _SegmentedButtonControlState extends State<SegmentedButtonControl>
+    with FletControlState {
   void onChange(Set<String> selection) {
     var s = jsonEncode(selection.toList());
     updateControlProps(widget.control.id, {"selected": s});

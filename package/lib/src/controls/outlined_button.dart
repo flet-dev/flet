@@ -25,8 +25,8 @@ class OutlinedButtonControl extends StatefulWidget {
   State<OutlinedButtonControl> createState() => _OutlinedButtonControlState();
 }
 
-class _OutlinedButtonControlState
-    extends FletControlState<OutlinedButtonControl> {
+class _OutlinedButtonControlState extends State<OutlinedButtonControl>
+    with FletControlState {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 

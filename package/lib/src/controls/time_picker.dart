@@ -21,7 +21,8 @@ class TimePickerControl extends StatefulWidget {
   State<TimePickerControl> createState() => _TimePickerControlState();
 }
 
-class _TimePickerControlState extends FletControlState<TimePickerControl> {
+class _TimePickerControlState extends State<TimePickerControl>
+    with FletControlState {
   @override
   Widget build(BuildContext context) {
     debugPrint("TimePicker build: ${widget.control.id}");

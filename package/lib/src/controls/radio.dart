@@ -25,7 +25,7 @@ class RadioControl extends StatefulWidget {
   State<RadioControl> createState() => _RadioControlState();
 }
 
-class _RadioControlState extends FletControlState<RadioControl> {
+class _RadioControlState extends State<RadioControl> with FletControlState {
   late final FocusNode _focusNode;
 
   @override

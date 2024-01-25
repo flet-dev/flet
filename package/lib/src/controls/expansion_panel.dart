@@ -24,8 +24,8 @@ class ExpansionPanelListControl extends StatefulWidget {
       _ExpansionPanelListControlState();
 }
 
-class _ExpansionPanelListControlState
-    extends FletControlState<ExpansionPanelListControl> {
+class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
+    with FletControlState {
   @override
   Widget build(BuildContext context) {
     debugPrint("ExpansionPanelList build: ${widget.control.id}");

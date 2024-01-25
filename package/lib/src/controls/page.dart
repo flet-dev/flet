@@ -118,7 +118,7 @@ class PageControl extends StatefulWidget {
   State<PageControl> createState() => _PageControlState();
 }
 
-class _PageControlState extends FletControlState<PageControl> {
+class _PageControlState extends State<PageControl> with FletControlState {
   String? _windowTitle;
   Color? _windowBgcolor;
   double? _windowWidth;
@@ -653,7 +653,7 @@ class ViewControl extends StatefulWidget {
   State<ViewControl> createState() => _ViewControlState();
 }
 
-class _ViewControlState extends FletControlState<ViewControl> {
+class _ViewControlState extends State<ViewControl> with FletControlState {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override

@@ -25,7 +25,8 @@ class TextButtonControl extends StatefulWidget {
   State<TextButtonControl> createState() => _TextButtonControlState();
 }
 
-class _TextButtonControlState extends FletControlState<TextButtonControl> {
+class _TextButtonControlState extends State<TextButtonControl>
+    with FletControlState {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 

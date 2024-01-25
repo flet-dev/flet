@@ -26,8 +26,8 @@ class NavigationDrawerControl extends StatefulWidget {
       _NavigationDrawerControlState();
 }
 
-class _NavigationDrawerControlState
-    extends FletControlState<NavigationDrawerControl> {
+class _NavigationDrawerControlState extends State<NavigationDrawerControl>
+    with FletControlState {
   int _selectedIndex = 0;
 
   void _destinationChanged(int index) {

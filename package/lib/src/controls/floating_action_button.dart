@@ -10,7 +10,8 @@ import 'create_control.dart';
 import 'error.dart';
 import 'flet_stateless_control.dart';
 
-class FloatingActionButtonControl extends FletStatelessControl {
+class FloatingActionButtonControl extends StatelessWidget
+    with FletStatelessControl {
   final Control? parent;
   final Control control;
   final List<Control> children;

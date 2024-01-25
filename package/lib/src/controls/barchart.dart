@@ -169,7 +169,8 @@ class BarChartControl extends StatefulWidget {
   State<BarChartControl> createState() => _BarChartControlState();
 }
 
-class _BarChartControlState extends FletControlState<BarChartControl> {
+class _BarChartControlState extends State<BarChartControl>
+    with FletControlState {
   BarChartEventData? _eventData;
 
   @override

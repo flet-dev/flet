@@ -10,7 +10,7 @@ import 'create_control.dart';
 import 'error.dart';
 import 'flet_stateless_control.dart';
 
-class DismissibleControl extends FletStatelessControl {
+class DismissibleControl extends StatelessWidget with FletStatelessControl {
   final Control? parent;
   final Control control;
   final List<Control> children;

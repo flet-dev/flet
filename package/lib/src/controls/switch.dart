@@ -25,7 +25,7 @@ class SwitchControl extends StatefulWidget {
   State<SwitchControl> createState() => _SwitchControlState();
 }
 
-class _SwitchControlState extends FletControlState<SwitchControl> {
+class _SwitchControlState extends State<SwitchControl> with FletControlState {
   bool _value = false;
   late final FocusNode _focusNode;
 

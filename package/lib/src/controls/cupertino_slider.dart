@@ -23,8 +23,8 @@ class CupertinoSliderControl extends StatefulWidget {
   State<CupertinoSliderControl> createState() => _CupertinoSliderControlState();
 }
 
-class _CupertinoSliderControlState
-    extends FletControlState<CupertinoSliderControl> {
+class _CupertinoSliderControlState extends State<CupertinoSliderControl>
+    with FletControlState {
   double _value = 0;
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
 

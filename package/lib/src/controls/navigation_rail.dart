@@ -26,8 +26,8 @@ class NavigationRailControl extends StatefulWidget {
   State<NavigationRailControl> createState() => _NavigationRailControlState();
 }
 
-class _NavigationRailControlState
-    extends FletControlState<NavigationRailControl> {
+class _NavigationRailControlState extends State<NavigationRailControl>
+    with FletControlState {
   int? _selectedIndex;
 
   void _destinationChanged(int index) {

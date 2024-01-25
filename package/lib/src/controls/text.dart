@@ -9,7 +9,7 @@ import '../utils/text.dart';
 import 'create_control.dart';
 import 'flet_stateless_control.dart';
 
-class TextControl extends FletStatelessControl {
+class TextControl extends StatelessWidget with FletStatelessControl {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
@@ -30,16 +30,13 @@ class TextControl extends FletStatelessControl {
 
       String text = control.attrString("value", "")!;
 
-      void sendControlEventWithContext(
-          String controlId, String eventName, String eventData) {
-        sendControlEvent(context, controlId, eventName, eventData);
-      }
-
       List<InlineSpan>? spans = parseTextSpans(
         Theme.of(context),
         viewModel,
         disabled,
-        sendControlEventWithContext,
+        (String controlId, String eventName, String eventData) {
+          sendControlEvent(context, controlId, eventName, eventData);
+        },
       );
       String? semanticsLabel = control.attrString("semanticsLabel");
       bool noWrap = control.attrBool("noWrap", false)!;

@@ -29,7 +29,8 @@ class AlertDialogControl extends StatefulWidget {
   State<AlertDialogControl> createState() => _AlertDialogControlState();
 }
 
-class _AlertDialogControlState extends FletControlState<AlertDialogControl> {
+class _AlertDialogControlState extends State<AlertDialogControl>
+    with FletControlState {
   Widget _createAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var titleCtrls =

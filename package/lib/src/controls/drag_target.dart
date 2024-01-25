@@ -25,7 +25,7 @@ class DragTargetAcceptEvent {
       };
 }
 
-class DragTargetControl extends FletStatelessControl {
+class DragTargetControl extends StatelessWidget with FletStatelessControl {
   final Control? parent;
   final Control control;
   final List<Control> children;

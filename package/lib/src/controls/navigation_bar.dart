@@ -26,8 +26,8 @@ class NavigationBarControl extends StatefulWidget {
   State<NavigationBarControl> createState() => _NavigationBarControlState();
 }
 
-class _NavigationBarControlState
-    extends FletControlState<NavigationBarControl> {
+class _NavigationBarControlState extends State<NavigationBarControl>
+    with FletControlState {
   int _selectedIndex = 0;
 
   void _destinationChanged(int index) {

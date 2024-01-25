@@ -28,7 +28,8 @@ class TextFieldControl extends StatefulWidget {
   State<TextFieldControl> createState() => _TextFieldControlState();
 }
 
-class _TextFieldControlState extends FletControlState<TextFieldControl> {
+class _TextFieldControlState extends State<TextFieldControl>
+    with FletControlState {
   String _value = "";
   bool _revealPassword = false;
   bool _focused = false;
