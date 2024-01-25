@@ -11,7 +11,7 @@ import '../flet_server.dart';
 import '../models/control.dart';
 import '../utils/desktop.dart';
 import '../utils/strings.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class FilePickerResultEvent {
   final String? path;
@@ -76,7 +76,7 @@ class FilePickerControl extends StatefulWidget {
 }
 
 class _FilePickerControlState extends State<FilePickerControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   String? _state;
   String? _upload;
   String? _path;

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class CupertinoAlertDialogControl extends StatefulWidget {
   final Control? parent;
@@ -27,7 +27,7 @@ class CupertinoAlertDialogControl extends StatefulWidget {
 }
 
 class _CupertinoAlertDialogControlState
-    extends State<CupertinoAlertDialogControl> with FletControlState {
+    extends State<CupertinoAlertDialogControl> with FletControlStatefulMixin {
   Widget _createCupertinoAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var titleCtrls =

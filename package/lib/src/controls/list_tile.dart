@@ -4,7 +4,7 @@ import '../models/control.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
-import 'flet_stateless_control.dart';
+import 'flet_control_stateless_mixin.dart';
 
 class ListTileClicks extends InheritedWidget {
   const ListTileClicks({
@@ -23,7 +23,7 @@ class ListTileClicks extends InheritedWidget {
   bool updateShouldNotify(ListTileClicks oldWidget) => true;
 }
 
-class ListTileControl extends StatelessWidget with FletStatelessControl {
+class ListTileControl extends StatelessWidget with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;

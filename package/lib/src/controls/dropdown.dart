@@ -6,7 +6,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 import 'form_field.dart';
 
 class DropdownControl extends StatefulWidget {
@@ -25,7 +25,7 @@ class DropdownControl extends StatefulWidget {
 }
 
 class _DropdownControlState extends State<DropdownControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   String? _value;
   bool _focused = false;
   late final FocusNode _focusNode;

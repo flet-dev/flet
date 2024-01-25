@@ -14,7 +14,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class PieChartEventData extends Equatable {
   final String eventType;
@@ -92,7 +92,7 @@ class PieChartControl extends StatefulWidget {
 }
 
 class _PieChartControlState extends State<PieChartControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   PieChartEventData? _eventData;
 
   @override

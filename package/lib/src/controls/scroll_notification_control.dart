@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class ScrollNotificationControl extends StatefulWidget {
   final Widget child;
@@ -18,7 +18,7 @@ class ScrollNotificationControl extends StatefulWidget {
 }
 
 class _ScrollNotificationControlState extends State<ScrollNotificationControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   int _onScrollInterval = 0;
   final Map<String, int> _lastEventTimestamps = {};
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/icons.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 import 'form_field.dart';
 
 class DatePickerControl extends StatefulWidget {
@@ -24,7 +24,7 @@ class DatePickerControl extends StatefulWidget {
 }
 
 class _DatePickerControlState extends State<DatePickerControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("DatePicker build: ${widget.control.id}");

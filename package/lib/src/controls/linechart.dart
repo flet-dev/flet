@@ -19,7 +19,7 @@ import '../utils/shadows.dart';
 import '../utils/text.dart';
 import 'charts.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class LineChartDataPointViewModel extends Equatable {
   final Control control;
@@ -169,7 +169,7 @@ class LineChartControl extends StatefulWidget {
 }
 
 class _LineChartControlState extends State<LineChartControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   LineChartEventData? _eventData;
 
   @override

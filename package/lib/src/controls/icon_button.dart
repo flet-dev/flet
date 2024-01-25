@@ -7,7 +7,7 @@ import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class IconButtonControl extends StatefulWidget {
   final Control? parent;
@@ -27,7 +27,7 @@ class IconButtonControl extends StatefulWidget {
 }
 
 class _IconButtonControlState extends State<IconButtonControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 

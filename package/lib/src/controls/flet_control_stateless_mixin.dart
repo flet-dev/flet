@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
@@ -12,14 +11,8 @@ import '../models/control_view_model.dart';
 import '../models/controls_view_model.dart';
 import '../models/page_args_model.dart';
 import '../models/page_size_view_model.dart';
-import '../protocol/update_control_props_payload.dart';
 
-mixin FletControlState<T extends StatefulWidget> on State<T> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
-
+mixin FletControlStatelessMixin on StatelessWidget {
   Widget withPageArgs(Widget Function(BuildContext, PageArgsModel) build) {
     return StoreConnector<AppState, PageArgsModel>(
         distinct: true,
@@ -96,22 +89,8 @@ mixin FletControlState<T extends StatefulWidget> on State<T> {
         builder: build);
   }
 
-  void updateControlProps(String id, Map<String, String> props,
-      {bool clientOnly = false}) {
-    var appServices = FletAppServices.of(context);
-    var dispatch = appServices.store.dispatch;
-    Map<String, String> allProps = {"i": id};
-    for (var entry in props.entries) {
-      allProps[entry.key] = entry.value;
-    }
-    dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: [allProps])));
-    if (!clientOnly) {
-      appServices.server.updateControlProps(props: [allProps]);
-    }
-  }
-
-  void sendControlEvent(String controlId, String eventName, String eventData) {
+  void sendControlEvent(BuildContext context, String controlId,
+      String eventName, String eventData) {
     FletAppServices.of(context).server.sendPageEvent(
         eventTarget: controlId, eventName: eventName, eventData: eventData);
   }

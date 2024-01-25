@@ -5,9 +5,10 @@ import '../utils/alignment.dart';
 import '../utils/responsive.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_stateless_control.dart';
+import 'flet_control_stateless_mixin.dart';
 
-class ResponsiveRowControl extends StatelessWidget with FletStatelessControl {
+class ResponsiveRowControl extends StatelessWidget
+    with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final bool parentDisabled;

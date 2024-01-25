@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_stateless_control.dart';
+import 'flet_control_stateless_mixin.dart';
 
 class DragTargetAcceptEvent {
   final String srcId;
@@ -25,7 +25,7 @@ class DragTargetAcceptEvent {
       };
 }
 
-class DragTargetControl extends StatelessWidget with FletStatelessControl {
+class DragTargetControl extends StatelessWidget with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;

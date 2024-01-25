@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class MenuItemButtonControl extends StatefulWidget {
   final Control? parent;
@@ -23,7 +23,7 @@ class MenuItemButtonControl extends StatefulWidget {
 }
 
 class _MenuItemButtonControlState extends State<MenuItemButtonControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 

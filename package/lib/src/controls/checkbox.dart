@@ -4,7 +4,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'cupertino_checkbox.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
@@ -25,7 +25,7 @@ class CheckboxControl extends StatefulWidget {
 }
 
 class _CheckboxControlState extends State<CheckboxControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   bool? _value;
   bool _tristate = false;
   late final FocusNode _focusNode;

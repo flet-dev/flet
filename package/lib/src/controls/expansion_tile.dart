@@ -7,9 +7,10 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_stateless_control.dart';
+import 'flet_control_stateless_mixin.dart';
 
-class ExpansionTileControl extends StatelessWidget with FletStatelessControl {
+class ExpansionTileControl extends StatelessWidget
+    with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;

@@ -8,9 +8,10 @@ import '../models/control.dart';
 import '../utils/dismissible.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_stateless_control.dart';
+import 'flet_control_stateless_mixin.dart';
 
-class DismissibleControl extends StatelessWidget with FletStatelessControl {
+class DismissibleControl extends StatelessWidget
+    with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;

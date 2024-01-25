@@ -7,7 +7,7 @@ import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class NavigationRailControl extends StatefulWidget {
   final Control? parent;
@@ -27,7 +27,7 @@ class NavigationRailControl extends StatefulWidget {
 }
 
 class _NavigationRailControlState extends State<NavigationRailControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   int? _selectedIndex;
 
   void _destinationChanged(int index) {

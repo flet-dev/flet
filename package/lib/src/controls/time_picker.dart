@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class TimePickerControl extends StatefulWidget {
   final Control? parent;
@@ -22,7 +22,7 @@ class TimePickerControl extends StatefulWidget {
 }
 
 class _TimePickerControlState extends State<TimePickerControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("TimePicker build: ${widget.control.id}");

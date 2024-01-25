@@ -6,7 +6,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class NavigationDrawerControl extends StatefulWidget {
   final Control? parent;
@@ -27,7 +27,7 @@ class NavigationDrawerControl extends StatefulWidget {
 }
 
 class _NavigationDrawerControlState extends State<NavigationDrawerControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   int _selectedIndex = 0;
 
   void _destinationChanged(int index) {

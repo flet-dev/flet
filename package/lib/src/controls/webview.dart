@@ -8,9 +8,9 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_stateless_control.dart';
+import 'flet_control_stateless_mixin.dart';
 
-class WebViewControl extends StatelessWidget with FletStatelessControl {
+class WebViewControl extends StatelessWidget with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final bool parentDisabled;

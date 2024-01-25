@@ -5,7 +5,7 @@ import '../utils/buttons.dart';
 import '../utils/menu.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class SubMenuButtonControl extends StatefulWidget {
   final Control? parent;
@@ -25,7 +25,7 @@ class SubMenuButtonControl extends StatefulWidget {
 }
 
 class _SubMenuButtonControlState extends State<SubMenuButtonControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 

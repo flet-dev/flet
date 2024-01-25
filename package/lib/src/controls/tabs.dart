@@ -13,7 +13,7 @@ import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/material_state.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class TabsControl extends StatefulWidget {
   final Control? parent;
@@ -33,7 +33,7 @@ class TabsControl extends StatefulWidget {
 }
 
 class _TabsControlStateWithControlState extends State<TabsControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   @override
   Widget build(BuildContext context) {
     throw UnimplementedError();

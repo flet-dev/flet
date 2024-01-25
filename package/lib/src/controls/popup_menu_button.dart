@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
-import 'flet_stateless_control.dart';
+import 'flet_control_stateless_mixin.dart';
 
-class PopupMenuButtonControl extends StatelessWidget with FletStatelessControl {
+class PopupMenuButtonControl extends StatelessWidget
+    with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final bool parentDisabled;

@@ -13,9 +13,9 @@ import '../utils/colors.dart';
 import '../utils/images.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_stateless_control.dart';
+import 'flet_control_stateless_mixin.dart';
 
-class ImageControl extends StatelessWidget with FletStatelessControl {
+class ImageControl extends StatelessWidget with FletControlStatelessMixin {
   final Control? parent;
   final List<Control> children;
   final Control control;

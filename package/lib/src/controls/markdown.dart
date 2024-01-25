@@ -8,10 +8,10 @@ import '../utils/launch_url.dart';
 import '../utils/text.dart';
 import '../utils/uri.dart';
 import 'create_control.dart';
-import 'flet_stateless_control.dart';
+import 'flet_control_stateless_mixin.dart';
 import 'highlight_view.dart';
 
-class MarkdownControl extends StatelessWidget with FletStatelessControl {
+class MarkdownControl extends StatelessWidget with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
 

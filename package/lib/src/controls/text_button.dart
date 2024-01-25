@@ -6,7 +6,7 @@ import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class TextButtonControl extends StatefulWidget {
   final Control? parent;
@@ -26,7 +26,7 @@ class TextButtonControl extends StatefulWidget {
 }
 
 class _TextButtonControlState extends State<TextButtonControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 

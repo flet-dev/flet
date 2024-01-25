@@ -4,7 +4,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class BottomSheetControl extends StatefulWidget {
   final Control? parent;
@@ -26,7 +26,7 @@ class BottomSheetControl extends StatefulWidget {
 }
 
 class _BottomSheetControlState extends State<BottomSheetControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("BottomSheet build: ${widget.control.id}");

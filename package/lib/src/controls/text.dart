@@ -7,9 +7,9 @@ import '../utils/colors.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
-import 'flet_stateless_control.dart';
+import 'flet_control_stateless_mixin.dart';
 
-class TextControl extends StatelessWidget with FletStatelessControl {
+class TextControl extends StatelessWidget with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final bool parentDisabled;

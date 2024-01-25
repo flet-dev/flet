@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 import '../models/control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class ShakeDetectorControl extends StatefulWidget {
   final Control? parent;
@@ -23,7 +23,7 @@ class ShakeDetectorControl extends StatefulWidget {
 }
 
 class _ShakeDetectorControlState extends State<ShakeDetectorControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   ShakeDetector? _shakeDetector;
   int? _minimumShakeCount;
   int? _shakeSlopTimeMs;

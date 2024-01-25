@@ -7,7 +7,7 @@ import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'cupertino_alert_dialog.dart';
 import 'error.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class AlertDialogControl extends StatefulWidget {
   final Control? parent;
@@ -30,7 +30,7 @@ class AlertDialogControl extends StatefulWidget {
 }
 
 class _AlertDialogControlState extends State<AlertDialogControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   Widget _createAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var titleCtrls =

@@ -33,7 +33,7 @@ import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 import 'floating_action_button.dart';
 import 'navigation_drawer.dart';
 import 'scroll_notification_control.dart';
@@ -118,7 +118,8 @@ class PageControl extends StatefulWidget {
   State<PageControl> createState() => _PageControlState();
 }
 
-class _PageControlState extends State<PageControl> with FletControlState {
+class _PageControlState extends State<PageControl>
+    with FletControlStatefulMixin {
   String? _windowTitle;
   Color? _windowBgcolor;
   double? _windowWidth;
@@ -653,7 +654,8 @@ class ViewControl extends StatefulWidget {
   State<ViewControl> createState() => _ViewControlState();
 }
 
-class _ViewControlState extends State<ViewControl> with FletControlState {
+class _ViewControlState extends State<ViewControl>
+    with FletControlStatefulMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override

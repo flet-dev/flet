@@ -9,7 +9,7 @@ import '../utils/animations.dart';
 import '../utils/desktop.dart';
 import '../utils/numbers.dart';
 import '../widgets/adjustable_scroll_controller.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 enum ScrollMode { none, auto, adaptive, always, hidden }
 
@@ -32,7 +32,7 @@ class ScrollableControl extends StatefulWidget {
 }
 
 class _ScrollableControlState extends State<ScrollableControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   late final ScrollController _controller;
   late bool _ownController = false;
   String? _method;

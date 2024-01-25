@@ -8,7 +8,7 @@ import '../models/control.dart';
 import '../utils/mouse.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class GestureDetectorControl extends StatefulWidget {
   final Control? parent;
@@ -28,7 +28,7 @@ class GestureDetectorControl extends StatefulWidget {
 }
 
 class _GestureDetectorControlState extends State<GestureDetectorControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   int _panTimestamp = DateTime.now().millisecondsSinceEpoch;
   double _panX = 0;
   double _panY = 0;

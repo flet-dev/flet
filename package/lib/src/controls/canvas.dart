@@ -19,7 +19,7 @@ import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class CanvasViewModel extends Equatable {
   final Control control;
@@ -67,7 +67,8 @@ class CanvasControl extends StatefulWidget {
   State<CanvasControl> createState() => _CanvasControlState();
 }
 
-class _CanvasControlState extends State<CanvasControl> with FletControlState {
+class _CanvasControlState extends State<CanvasControl>
+    with FletControlStatefulMixin {
   int _lastResize = DateTime.now().millisecondsSinceEpoch;
   Size? _lastSize;
 

@@ -7,7 +7,7 @@ import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class ElevatedButtonControl extends StatefulWidget {
   final Control? parent;
@@ -27,7 +27,7 @@ class ElevatedButtonControl extends StatefulWidget {
 }
 
 class _ElevatedButtonControlState extends State<ElevatedButtonControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 

@@ -4,10 +4,10 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
-import 'flet_stateless_control.dart';
+import 'flet_control_stateless_mixin.dart';
 
 class AppBarControl extends StatelessWidget
-    with FletStatelessControl
+    with FletControlStatelessMixin
     implements PreferredSizeWidget {
   final Control? parent;
   final Control control;

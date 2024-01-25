@@ -8,7 +8,7 @@ import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
 import 'cupertino_textfield.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 import 'form_field.dart';
 
 class TextFieldControl extends StatefulWidget {
@@ -29,7 +29,7 @@ class TextFieldControl extends StatefulWidget {
 }
 
 class _TextFieldControlState extends State<TextFieldControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   String _value = "";
   bool _revealPassword = false;
   bool _focused = false;

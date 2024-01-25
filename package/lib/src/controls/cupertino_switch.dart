@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
@@ -25,7 +25,7 @@ class CupertinoSwitchControl extends StatefulWidget {
 }
 
 class _CupertinoSwitchControlState extends State<CupertinoSwitchControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   bool _value = false;
   late final FocusNode _focusNode;
 

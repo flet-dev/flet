@@ -5,7 +5,7 @@ import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/desktop.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class RangeSliderControl extends StatefulWidget {
   final Control? parent;
@@ -24,7 +24,7 @@ class RangeSliderControl extends StatefulWidget {
 }
 
 class _SliderControlState extends State<RangeSliderControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
 
   @override

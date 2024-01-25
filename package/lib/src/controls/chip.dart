@@ -7,7 +7,7 @@ import '../utils/edge_insets.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class ChipControl extends StatefulWidget {
   final Control? parent;
@@ -26,7 +26,8 @@ class ChipControl extends StatefulWidget {
   State<ChipControl> createState() => _ChipControlState();
 }
 
-class _ChipControlState extends State<ChipControl> with FletControlState {
+class _ChipControlState extends State<ChipControl>
+    with FletControlStatefulMixin {
   bool _selected = false;
 
   late final FocusNode _focusNode;

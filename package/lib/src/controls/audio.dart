@@ -11,7 +11,7 @@ import '../flet_server.dart';
 import '../models/control.dart';
 import '../utils/images.dart';
 import 'error.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class AudioControl extends StatefulWidget {
   final Control? parent;
@@ -28,7 +28,8 @@ class AudioControl extends StatefulWidget {
   State<AudioControl> createState() => _AudioControlState();
 }
 
-class _AudioControlState extends State<AudioControl> with FletControlState {
+class _AudioControlState extends State<AudioControl>
+    with FletControlStatefulMixin {
   AudioPlayer? player;
   void Function(Duration)? _onDurationChanged;
   void Function(PlayerState)? _onStateChanged;

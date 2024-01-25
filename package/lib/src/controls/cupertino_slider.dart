@@ -6,7 +6,7 @@ import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/desktop.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class CupertinoSliderControl extends StatefulWidget {
   final Control? parent;
@@ -24,7 +24,7 @@ class CupertinoSliderControl extends StatefulWidget {
 }
 
 class _CupertinoSliderControlState extends State<CupertinoSliderControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   double _value = 0;
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
 

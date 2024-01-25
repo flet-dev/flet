@@ -17,7 +17,7 @@ import '../utils/gradient.dart';
 import '../utils/text.dart';
 import 'charts.dart';
 import 'create_control.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class BarChartEventData extends Equatable {
   final String eventType;
@@ -170,7 +170,7 @@ class BarChartControl extends StatefulWidget {
 }
 
 class _BarChartControlState extends State<BarChartControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   BarChartEventData? _eventData;
 
   @override

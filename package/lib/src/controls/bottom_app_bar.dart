@@ -5,7 +5,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_state.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class BottomAppBarControl extends StatefulWidget {
   final Control? parent;
@@ -25,7 +25,7 @@ class BottomAppBarControl extends StatefulWidget {
 }
 
 class _BottomAppBarControlState extends State<BottomAppBarControl>
-    with FletControlState {
+    with FletControlStatefulMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("BottomAppBarControl build: ${widget.control.id}");
