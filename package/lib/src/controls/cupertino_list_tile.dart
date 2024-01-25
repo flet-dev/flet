@@ -55,10 +55,6 @@ class CupertinoListTileControl extends StatelessWidget {
     var additionalInfoCtrls =
         children.where((c) => c.name == "additionalInfo" && c.isVisible);
 
-    bool selected = control.attrBool("selected", false)!;
-    bool dense = control.attrBool("dense", false)!;
-    bool isThreeLine = control.attrBool("isThreeLine", false)!;
-    bool autofocus = control.attrBool("autofocus", false)!;
     bool onclick = control.attrBool("onclick", false)!;
     bool toggleInputs = control.attrBool("toggleInputs", false)!;
     bool onLongPressDefined = control.attrBool("onLongPress", false)!;
@@ -66,7 +62,6 @@ class CupertinoListTileControl extends StatelessWidget {
     String? urlTarget = control.attrString("urlTarget");
     bool disabled = control.isDisabled || parentDisabled;
 
-    // if the material ListTile was used with adaptive=True, ListTile.content_padding will be used as padding
     var padding = parseEdgeInsets(control, "contentPadding");
 
     Function()? onPressed = (onclick || toggleInputs || url != "") && !disabled
@@ -82,16 +77,6 @@ class CupertinoListTileControl extends StatelessWidget {
               server.sendPageEvent(
                   eventTarget: control.id, eventName: "click", eventData: "");
             }
-          }
-        : null;
-
-    Function()? onLongPress = onLongPressDefined && !disabled
-        ? () {
-            debugPrint("Button ${control.id} clicked!");
-            server.sendPageEvent(
-                eventTarget: control.id,
-                eventName: "long_press",
-                eventData: "");
           }
         : null;
 

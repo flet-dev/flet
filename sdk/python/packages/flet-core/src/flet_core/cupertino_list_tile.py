@@ -85,7 +85,6 @@ class CupertinoListTile(ConstrainedControl):
         #
         # Specific
         #
-        # content_padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
         bgcolor_activated: Optional[str] = None,
         leading: Optional[Control] = None,
@@ -93,18 +92,12 @@ class CupertinoListTile(ConstrainedControl):
         title: Optional[Control] = None,
         subtitle: Optional[Control] = None,
         trailing: Optional[Control] = None,
-        # is_three_line: Optional[bool] = None,
-        # selected: Optional[bool] = None,
-        # dense: Optional[bool] = None,
-        # autofocus: Optional[bool] = None,
-        # toggle_inputs: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
         additional_info: Optional[Control] = None,
         leading_size: OptionalNumber = None,
         leading_to_title: OptionalNumber = None,
         on_click=None,
-        # on_long_press=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -136,18 +129,12 @@ class CupertinoListTile(ConstrainedControl):
             data=data,
         )
 
-        # self.content_padding = content_padding
         self.leading = leading
         self.title = title
         self.subtitle = subtitle
         self.trailing = trailing
         self.bgcolor = bgcolor
         self.bgcolor_activated = bgcolor_activated
-        # self.is_three_line = is_three_line
-        # self.selected = selected
-        # self.dense = dense
-        # self.autofocus = autofocus
-        # self.toggle_inputs = toggle_inputs
         self.url = url
         self.url_target = url_target
         self.additional_info = additional_info
@@ -155,7 +142,6 @@ class CupertinoListTile(ConstrainedControl):
         self.leading_to_title = leading_to_title
         self.padding = padding
         self.on_click = on_click
-        # self.on_long_press = on_long_press
 
     def _get_control_name(self):
         return "cupertinolisttile"
@@ -182,15 +168,6 @@ class CupertinoListTile(ConstrainedControl):
             self.__additional_info._set_attr_internal("n", "additionalInfo")
             children.append(self.__additional_info)
         return children
-
-    # # content_padding
-    # @property
-    # def content_padding(self) -> PaddingValue:
-    #     return self.__content_padding
-
-    # @content_padding.setter
-    # def content_padding(self, value: PaddingValue):
-    #     self.__content_padding = value
 
     # leading
     @property
@@ -282,15 +259,6 @@ class CupertinoListTile(ConstrainedControl):
     def leading_to_title(self, value):
         self._set_attr("leadingToTitle", value)
 
-    # # is_three_line
-    # @property
-    # def is_three_line(self) -> Optional[bool]:
-    #     return self._get_attr("isThreeLine", data_type="bool", def_value=False)
-
-    # @is_three_line.setter
-    # def is_three_line(self, value: Optional[bool]):
-    #     self._set_attr("isThreeLine", value)
-
     # url
     @property
     def url(self):
@@ -321,13 +289,3 @@ class CupertinoListTile(ConstrainedControl):
             self._set_attr("onclick", True)
         else:
             self._set_attr("onclick", None)
-
-    # # on_long_press
-    # @property
-    # def on_long_press(self):
-    #     return self._get_event_handler("long_press")
-
-    # @on_long_press.setter
-    # def on_long_press(self, handler):
-    #     self._add_event_handler("long_press", handler)
-    #     self._set_attr("onLongPress", True if handler is not None else None)
