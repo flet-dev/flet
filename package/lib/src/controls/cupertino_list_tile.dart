@@ -7,23 +7,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
-
-class ListTileClicks extends InheritedWidget {
-  const ListTileClicks({
-    super.key,
-    required this.notifier,
-    required super.child,
-  });
-
-  final ListTileClickNotifier notifier;
-
-  static ListTileClicks? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<ListTileClicks>();
-  }
-
-  @override
-  bool updateShouldNotify(ListTileClicks oldWidget) => true;
-}
+import 'list_tile.dart';
 
 class CupertinoListTileControl extends StatelessWidget {
   final Control? parent;
@@ -137,11 +121,5 @@ class CupertinoListTileControl extends StatelessWidget {
     }
 
     return constrainedControl(context, tile, parent, control);
-  }
-}
-
-class ListTileClickNotifier extends ChangeNotifier {
-  void onClick() {
-    notifyListeners();
   }
 }
