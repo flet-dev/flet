@@ -41,8 +41,7 @@ from flet_core.types import (
     MainAxisAlignment,
     OffsetValue,
     PaddingValue,
-    PageDesignLanguage,
-    PageDesignString,
+    PagePlatform,
     ScrollMode,
     ThemeMode,
     ThemeModeString,
@@ -1227,7 +1226,13 @@ class Page(Control):
     # platform
     @property
     def platform(self):
-        return self._get_attr("platform")
+        return PagePlatform(self._get_attr("platform"))
+
+    @platform.setter
+    def platform(self, value: PagePlatform):
+        self._set_attr(
+            "platform", value.value if isinstance(value, PagePlatform) else value
+        )
 
     # platform_brightness
     @property
@@ -1245,22 +1250,6 @@ class Page(Control):
     @property
     def client_user_agent(self):
         return self._get_attr("clientUserAgent")
-
-    # design
-    @property
-    def design(self) -> Optional[PageDesignLanguage]:
-        return self.__design
-
-    @design.setter
-    def design(self, value: Optional[PageDesignLanguage]):
-        self.__design = value
-        if isinstance(value, PageDesignLanguage):
-            self._set_attr("design", value.value)
-        else:
-            self.__set_design(value)
-
-    def __set_design(self, value: PageDesignString):
-        self._set_attr("design", value)
 
     # fonts
     @property

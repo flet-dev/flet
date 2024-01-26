@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/numbers.dart';
 
 Map<DismissDirection, double>? parseDismissThresholds(
     Control control, String propName) {

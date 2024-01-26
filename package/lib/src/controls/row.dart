@@ -11,15 +11,13 @@ class RowControl extends StatelessWidget {
   final Control control;
   final bool parentDisabled;
   final List<Control> children;
-  final dynamic dispatch;
 
   const RowControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +71,6 @@ class RowControl extends StatelessWidget {
     child = ScrollableControl(
       control: control,
       scrollDirection: wrap ? Axis.vertical : Axis.horizontal,
-      dispatch: dispatch,
       child: child,
     );
 

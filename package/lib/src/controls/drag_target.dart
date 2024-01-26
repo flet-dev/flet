@@ -2,13 +2,30 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/drag_target_accept_event.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_control_stateless_mixin.dart';
 
-class DragTargetControl extends StatelessWidget {
+class DragTargetAcceptEvent {
+  final String srcId;
+  final double x;
+  final double y;
+
+  DragTargetAcceptEvent({
+    required this.srcId,
+    required this.x,
+    required this.y,
+  });
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'src_id': srcId,
+        'x': x,
+        'y': y,
+      };
+}
+
+class DragTargetControl extends StatelessWidget with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -38,8 +55,6 @@ class DragTargetControl extends StatelessWidget {
       return const ErrorControl("DragTarget should have content.");
     }
 
-    final server = FletAppServices.of(context).server;
-
     return DragTarget<String>(
       builder: (
         BuildContext context,
@@ -58,10 +73,8 @@ class DragTargetControl extends StatelessWidget {
           srcGroup = jd["group"] as String;
         }
         var groupsEqual = srcGroup == group;
-        server.sendPageEvent(
-            eventTarget: control.id,
-            eventName: "will_accept",
-            eventData: groupsEqual.toString());
+        sendControlEvent(
+            context, control.id, "will_accept", groupsEqual.toString());
         return groupsEqual;
       },
       onAcceptWithDetails: (details) {
@@ -69,10 +82,11 @@ class DragTargetControl extends StatelessWidget {
         debugPrint("DragTarget.onAcceptWithDetails ${control.id}: $data");
         var jd = json.decode(data);
         var srcId = jd["id"] as String;
-        server.sendPageEvent(
-            eventTarget: control.id,
-            eventName: "accept",
-            eventData: json.encode(DragTargetAcceptEvent(
+        sendControlEvent(
+            context,
+            control.id,
+            "accept",
+            json.encode(DragTargetAcceptEvent(
                     srcId: srcId, x: details.offset.dx, y: details.offset.dy)
                 .toJson()));
       },
@@ -83,8 +97,7 @@ class DragTargetControl extends StatelessWidget {
           var jd = json.decode(data);
           srcId = jd["id"] as String;
         }
-        server.sendPageEvent(
-            eventTarget: control.id, eventName: "leave", eventData: srcId);
+        sendControlEvent(context, control.id, "leave", srcId);
       },
     );
   }

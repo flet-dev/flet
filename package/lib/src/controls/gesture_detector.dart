@@ -4,11 +4,11 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/mouse.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class GestureDetectorControl extends StatefulWidget {
   final Control? parent;
@@ -27,7 +27,8 @@ class GestureDetectorControl extends StatefulWidget {
   State<GestureDetectorControl> createState() => _GestureDetectorControlState();
 }
 
-class _GestureDetectorControlState extends State<GestureDetectorControl> {
+class _GestureDetectorControlState extends State<GestureDetectorControl>
+    with FletControlStatefulMixin {
   int _panTimestamp = DateTime.now().millisecondsSinceEpoch;
   double _panX = 0;
   double _panY = 0;
@@ -61,8 +62,6 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
         widget.children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    var server = FletAppServices.of(context).server;
-
     void sendEvent(String eventName, dynamic eventData) {
       var d = "";
       if (eventData is String) {
@@ -72,8 +71,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       }
 
       debugPrint("GestureDetector ${widget.control.id} $eventName");
-      server.sendPageEvent(
-          eventTarget: widget.control.id, eventName: eventName, eventData: d);
+      sendControlEvent(widget.control.id, eventName, d);
     }
 
     var onHover = widget.control.attrBool("onHover", false)!;

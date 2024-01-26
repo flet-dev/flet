@@ -9,7 +9,9 @@ import sys
 import tempfile
 import urllib.request
 from pathlib import Path
+from typing import Optional
 
+import flet.version
 import yaml
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string, slugify
@@ -20,6 +22,7 @@ if is_windows():
     from ctypes import windll
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full"
+DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
 
 class Command(BaseCommand):
@@ -235,7 +238,6 @@ class Command(BaseCommand):
             "--template",
             dest="template",
             type=str,
-            default="gh:flet-dev/flet-build-template",
             help="a directory containing Flutter bootstrap template, or a URL to a git repository template",
         )
         parser.add_argument(
@@ -254,9 +256,16 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
 
+        self.verbose = options.verbose
+        self.flutter_dir = None
+
         # get `flutter` and `dart` executables from PATH
         flutter_exe = self.find_flutter_batch("flutter")
         dart_exe = self.find_flutter_batch("dart")
+
+        if self.verbose > 1:
+            print("Flutter executable:", flutter_exe)
+            print("Dart executable:", dart_exe)
 
         target_platform = options.target_platform.lower()
         # platform check
@@ -266,25 +275,22 @@ class Command(BaseCommand):
             if current_platform == "Darwin":
                 current_platform = "macOS"
 
-            print(f"Can't build {target_platform} on {current_platform}")
-            sys.exit(1)
-
-        self.verbose = options.verbose
+            self.cleanup(1, f"Can't build {target_platform} on {current_platform}")
 
         python_app_path = Path(options.python_app_path).resolve()
         if not os.path.exists(python_app_path) or not os.path.isdir(python_app_path):
-            print(
-                f"Path to Flet app does not exist or is not a directory: {python_app_path}"
+            self.cleanup(
+                1,
+                f"Path to Flet app does not exist or is not a directory: {python_app_path}",
             )
-            sys.exit(1)
 
         python_module_name = Path(options.module_name).stem
         python_module_filename = f"{python_module_name}.py"
         if not os.path.exists(os.path.join(python_app_path, python_module_filename)):
-            print(
-                f"{python_module_filename} not found in the root of Flet app directory. Use --module-name option to specify an entry point for your Flet app."
+            self.cleanup(
+                1,
+                f"{python_module_filename} not found in the root of Flet app directory. Use --module-name option to specify an entry point for your Flet app.",
             )
-            sys.exit(1)
 
         self.flutter_dir = Path(tempfile.gettempdir()).joinpath(
             f"flet_flutter_build_{random_string(10)}"
@@ -311,6 +317,7 @@ class Command(BaseCommand):
         project_name = slugify(
             options.project_name if options.project_name else python_app_path.name
         ).replace("-", "_")
+
         template_data["project_name"] = project_name
 
         if options.description is not None:
@@ -337,23 +344,64 @@ class Command(BaseCommand):
             "true" if options.use_color_emoji else "false"
         )
 
+        src_pubspec = None
+        src_pubspec_path = python_app_path.joinpath("pubspec.yaml")
+        if src_pubspec_path.exists():
+            with open(src_pubspec_path, encoding="utf8") as f:
+                src_pubspec = pubspec = yaml.safe_load(f)
+
+        flutter_dependencies = []
+        if src_pubspec and src_pubspec["dependencies"]:
+            for dep in src_pubspec["dependencies"].keys():
+                flutter_dependencies.append(dep)
+
+        template_data["flutter"] = {"dependencies": flutter_dependencies}
+
+        template_url = options.template
+        template_ref = options.template_ref
+        if not template_url:
+            template_url = DEFAULT_TEMPLATE_URL
+            if flet.version.version and not template_ref:
+                template_ref = flet.version.version
+
         # create Flutter project from a template
         print("Creating Flutter bootstrap project...", end="")
-        cookiecutter(
-            template=options.template,
-            checkout=options.template_ref,
-            directory=options.template_dir,
-            output_dir=str(self.flutter_dir.parent),
-            no_input=True,
-            overwrite_if_exists=True,
-            extra_context=template_data,
-        )
+        try:
+            cookiecutter(
+                template=template_url,
+                checkout=template_ref,
+                directory=options.template_dir,
+                output_dir=str(self.flutter_dir.parent),
+                no_input=True,
+                overwrite_if_exists=True,
+                extra_context=template_data,
+            )
+        except Exception as e:
+            self.cleanup(1, f"{e}")
         print("[spring_green3]OK[/spring_green3]")
 
         # load pubspec.yaml
         pubspec_path = str(self.flutter_dir.joinpath("pubspec.yaml"))
-        with open(pubspec_path) as f:
+        with open(pubspec_path, encoding="utf8") as f:
             pubspec = yaml.safe_load(f)
+
+        # merge dependencies to a dest pubspec.yaml
+        if src_pubspec and src_pubspec["dependencies"]:
+            for k, v in src_pubspec["dependencies"].items():
+                pubspec["dependencies"][k] = "any"
+
+        if src_pubspec and src_pubspec["dependency_overrides"]:
+            pubspec["dependency_overrides"] = {}
+            for k, v in src_pubspec["dependency_overrides"].items():
+                pubspec["dependency_overrides"][k] = v
+
+        # make sure project name is not named as any of dependencies
+        for dep in pubspec["dependencies"].keys():
+            if dep == project_name:
+                self.cleanup(
+                    1,
+                    f"Project name cannot have the same name as one of its dependencies: {dep}. Use --project option to specify a different project name.",
+                )
 
         # copy icons to `flutter_dir`
         print("Customizing app icons and splash images...", end="")
@@ -510,7 +558,7 @@ class Command(BaseCommand):
         print("[spring_green3]OK[/spring_green3]")
 
         # save pubspec.yaml
-        with open(pubspec_path, "w") as f:
+        with open(pubspec_path, "w", encoding="utf8") as f:
             yaml.dump(pubspec, f)
 
         # generate icons
@@ -604,12 +652,11 @@ class Command(BaseCommand):
         # make sure app/app.zip exists
         app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
         if not os.path.exists(app_zip_path):
-            print("Flet app package app/app.zip was not created.")
-            self.cleanup(1)
+            self.cleanup(1, "Flet app package app/app.zip was not created.")
 
         # create {flutter_dir}/app/app.hash
         app_hash_path = self.flutter_dir.joinpath("app", "app.zip.hash")
-        with open(app_hash_path, "w") as hf:
+        with open(app_hash_path, "w", encoding="utf8") as hf:
             hf.write(calculate_file_hash(app_zip_path))
         print("[spring_green3]OK[/spring_green3]")
 
@@ -638,8 +685,8 @@ class Command(BaseCommand):
                 for flutter_build_arg in flutter_build_arg_arr:
                     build_args.append(flutter_build_arg)
 
-        if self.verbose > 0:
-            print(build_args)
+        if self.verbose > 1:
+            build_args.append("--verbose")
 
         build_result = self.run(build_args, cwd=str(self.flutter_dir))
 
@@ -686,16 +733,13 @@ class Command(BaseCommand):
 
         print("[spring_green3]OK[/spring_green3]")
 
-        # print(self.flutter_dir)
-        # return
-
         self.cleanup(0)
 
     def create_pyodide_find_links(self):
         with urllib.request.urlopen(f"{PYODIDE_ROOT_URL}/pyodide-lock.json") as j:
             data = json.load(j)
         find_links_path = str(self.flutter_dir.joinpath("find-links.html"))
-        with open(find_links_path, "w") as f:
+        with open(find_links_path, "w", encoding="utf8") as f:
             for package in data["packages"].values():
                 file_name = package["file_name"]
                 f.write(f'<a href="{PYODIDE_ROOT_URL}/{file_name}">{file_name}</a>\n')
@@ -713,10 +757,10 @@ class Command(BaseCommand):
     def find_flutter_batch(self, exe_filename: str):
         batch_path = shutil.which(exe_filename)
         if not batch_path:
-            print(
-                f"`{exe_filename}` command is not available in PATH. Install Flutter SDK."
+            self.cleanup(
+                1,
+                f"`{exe_filename}` command is not available in PATH. Install Flutter SDK.",
             )
-            sys.exit(1)
         if is_windows() and batch_path.endswith(".file"):
             return batch_path.replace(".file", ".bat")
         return batch_path
@@ -728,10 +772,13 @@ class Command(BaseCommand):
             previousCp = windll.kernel32.GetConsoleOutputCP()
             windll.kernel32.SetConsoleOutputCP(65001)
 
+        if self.verbose > 0:
+            print(f"\nRun subprocess: {args}")
+
         r = subprocess.run(
             args,
             cwd=cwd,
-            capture_output=self.verbose < 2,
+            capture_output=self.verbose < 1,
             text=True,
             encoding="utf8",
         )
@@ -742,14 +789,19 @@ class Command(BaseCommand):
 
         return r
 
-    def cleanup(self, exit_code: int):
-        if self.verbose > 0:
-            print(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
-        shutil.rmtree(str(self.flutter_dir), ignore_errors=False, onerror=None)
+    def cleanup(self, exit_code: int, message: Optional[str] = None):
+        if self.flutter_dir and os.path.exists(self.flutter_dir):
+            if self.verbose > 0:
+                print(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
+            shutil.rmtree(str(self.flutter_dir), ignore_errors=True, onerror=None)
         if exit_code == 0:
-            print("[spring_green3]Success![/spring_green3]")
+            msg = message if message else "Success!"
+            print(f"[spring_green3]{msg}[/spring_green3]")
         else:
-            print(
-                "[red]Error building Flet app - see the log of failed command above.[/red]"
+            msg = (
+                message
+                if message
+                else "Error building Flet app - see the log of failed command above."
             )
+            print(f"[red]{msg}[/red]")
         sys.exit(exit_code)

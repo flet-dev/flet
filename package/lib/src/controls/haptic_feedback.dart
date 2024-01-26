@@ -1,9 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import '../flet_app_services.dart';
-import '../flet_server.dart';
 import '../models/control.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class HapticFeedbackControl extends StatefulWidget {
   final Control? parent;
@@ -20,12 +19,11 @@ class HapticFeedbackControl extends StatefulWidget {
   State<HapticFeedbackControl> createState() => _HapticFeedbackControlState();
 }
 
-class _HapticFeedbackControlState extends State<HapticFeedbackControl> {
-  FletServer? _server;
-
+class _HapticFeedbackControlState extends State<HapticFeedbackControl>
+    with FletControlStatefulMixin {
   @override
   void deactivate() {
-    _server?.controlInvokeMethods.remove(widget.control.id);
+    unsubscribeMethods(widget.control.id);
     super.deactivate();
   }
 
@@ -33,9 +31,7 @@ class _HapticFeedbackControlState extends State<HapticFeedbackControl> {
   Widget build(BuildContext context) {
     debugPrint("HapticFeedback build: ${widget.control.id}");
 
-    _server = FletAppServices.of(context).server;
-    _server?.controlInvokeMethods[widget.control.id] =
-        (methodName, args) async {
+    subscribeMethods(widget.control.id, (methodName, args) async {
       switch (methodName) {
         case "heavy_impact":
           HapticFeedback.heavyImpact();
@@ -51,7 +47,7 @@ class _HapticFeedbackControlState extends State<HapticFeedbackControl> {
           break;
       }
       return null;
-    };
+    });
 
     return widget.nextChild ?? const SizedBox.shrink();
   }
