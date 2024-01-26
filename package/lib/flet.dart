@@ -4,6 +4,7 @@ export 'src/control_factory.dart';
 export 'src/controls/create_control.dart';
 export 'src/controls/flet_control_stateful_mixin.dart';
 export 'src/controls/flet_control_stateless_mixin.dart';
+export 'src/controls/flet_store_mixin.dart';
 export 'src/flet_app.dart';
 export 'src/flet_app_errors_handler.dart';
 export 'src/flet_server.dart';
