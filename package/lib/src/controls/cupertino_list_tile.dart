@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
+import 'flet_control_stateless_mixin.dart';
 import 'list_tile.dart';
 
-class CupertinoListTileControl extends StatelessWidget {
+class CupertinoListTileControl extends StatelessWidget
+    with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -26,8 +27,6 @@ class CupertinoListTileControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoListTile build: ${control.id}");
-
-    final server = FletAppServices.of(context).server;
 
     var leadingCtrls =
         children.where((c) => c.name == "leading" && c.isVisible);
@@ -82,8 +81,7 @@ class CupertinoListTileControl extends StatelessWidget {
               openWebBrowser(url, webWindowName: urlTarget);
             }
             if (onclick) {
-              server.sendPageEvent(
-                  eventTarget: control.id, eventName: "click", eventData: "");
+              sendControlEvent(context, control.id, "click", "");
             }
           }
         : null;
