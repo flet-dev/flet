@@ -722,7 +722,7 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           control: controlView.control,
           parentDisabled: parentDisabled);
     default:
-      throw Exception("Unknown control type: ${controlView.control.type}");
+      return ErrorControl("Unknown control: ${controlView.control.type}");
   }
 }
 
