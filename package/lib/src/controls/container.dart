@@ -17,6 +17,7 @@ import '../utils/shadows.dart';
 import 'create_control.dart';
 import 'error.dart';
 import 'flet_control_stateless_mixin.dart';
+import 'flet_store_mixin.dart';
 
 class ContainerTapEvent {
   final double localX;
@@ -38,7 +39,8 @@ class ContainerTapEvent {
       };
 }
 
-class ContainerControl extends StatelessWidget with FletControlStatelessMixin {
+class ContainerControl extends StatelessWidget
+    with FletControlStatelessMixin, FletStoreMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;

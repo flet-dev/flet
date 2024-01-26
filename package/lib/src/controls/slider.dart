@@ -7,6 +7,7 @@ import '../utils/desktop.dart';
 import 'create_control.dart';
 import 'cupertino_slider.dart';
 import 'flet_control_stateful_mixin.dart';
+import 'flet_store_mixin.dart';
 
 class SliderControl extends StatefulWidget {
   final Control? parent;
@@ -24,7 +25,7 @@ class SliderControl extends StatefulWidget {
 }
 
 class _SliderControlState extends State<SliderControl>
-    with FletControlStatefulMixin {
+    with FletControlStatefulMixin, FletStoreMixin {
   double _value = 0;
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
   late final FocusNode _focusNode;

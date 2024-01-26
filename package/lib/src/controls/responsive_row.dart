@@ -6,9 +6,10 @@ import '../utils/responsive.dart';
 import 'create_control.dart';
 import 'error.dart';
 import 'flet_control_stateless_mixin.dart';
+import 'flet_store_mixin.dart';
 
 class ResponsiveRowControl extends StatelessWidget
-    with FletControlStatelessMixin {
+    with FletControlStatelessMixin, FletStoreMixin {
   final Control? parent;
   final Control control;
   final bool parentDisabled;

@@ -6,6 +6,7 @@ import 'create_control.dart';
 import 'cupertino_radio.dart';
 import 'error.dart';
 import 'flet_control_stateful_mixin.dart';
+import 'flet_store_mixin.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
@@ -26,7 +27,7 @@ class RadioControl extends StatefulWidget {
 }
 
 class _RadioControlState extends State<RadioControl>
-    with FletControlStatefulMixin {
+    with FletControlStatefulMixin, FletStoreMixin {
   late final FocusNode _focusNode;
 
   @override

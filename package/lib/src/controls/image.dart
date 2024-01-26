@@ -14,8 +14,10 @@ import '../utils/images.dart';
 import 'create_control.dart';
 import 'error.dart';
 import 'flet_control_stateless_mixin.dart';
+import 'flet_store_mixin.dart';
 
-class ImageControl extends StatelessWidget with FletControlStatelessMixin {
+class ImageControl extends StatelessWidget
+    with FletControlStatelessMixin, FletStoreMixin {
   final Control? parent;
   final List<Control> children;
   final Control control;

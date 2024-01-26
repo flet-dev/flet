@@ -8,8 +8,10 @@ import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'flet_control_stateless_mixin.dart';
+import 'flet_store_mixin.dart';
 
-class TextControl extends StatelessWidget with FletControlStatelessMixin {
+class TextControl extends StatelessWidget
+    with FletControlStatelessMixin, FletStoreMixin {
   final Control? parent;
   final Control control;
   final bool parentDisabled;

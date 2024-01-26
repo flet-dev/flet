@@ -7,6 +7,7 @@ import '../utils/buttons.dart';
 import 'create_control.dart';
 import 'error.dart';
 import 'flet_control_stateful_mixin.dart';
+import 'flet_store_mixin.dart';
 
 class SegmentedButtonControl extends StatefulWidget {
   final Control? parent;
@@ -27,7 +28,7 @@ class SegmentedButtonControl extends StatefulWidget {
 }
 
 class _SegmentedButtonControlState extends State<SegmentedButtonControl>
-    with FletControlStatefulMixin {
+    with FletControlStatefulMixin, FletStoreMixin {
   void onChange(Set<String> selection) {
     var s = jsonEncode(selection.toList());
     updateControlProps(widget.control.id, {"selected": s});

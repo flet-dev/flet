@@ -5,6 +5,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'flet_control_stateful_mixin.dart';
+import 'flet_store_mixin.dart';
 
 class ExpansionPanelListControl extends StatefulWidget {
   final Control? parent;
@@ -25,7 +26,7 @@ class ExpansionPanelListControl extends StatefulWidget {
 }
 
 class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
-    with FletControlStatefulMixin {
+    with FletControlStatefulMixin, FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("ExpansionPanelList build: ${widget.control.id}");

@@ -6,6 +6,7 @@ import '../utils/icons.dart';
 import 'create_control.dart';
 import 'cupertino_switch.dart';
 import 'flet_control_stateful_mixin.dart';
+import 'flet_store_mixin.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
@@ -26,7 +27,7 @@ class SwitchControl extends StatefulWidget {
 }
 
 class _SwitchControlState extends State<SwitchControl>
-    with FletControlStatefulMixin {
+    with FletControlStatefulMixin, FletStoreMixin {
   bool _value = false;
   late final FocusNode _focusNode;
 

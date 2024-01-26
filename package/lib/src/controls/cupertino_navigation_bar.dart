@@ -7,6 +7,7 @@ import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'flet_control_stateful_mixin.dart';
+import 'flet_store_mixin.dart';
 
 class CupertinoNavigationBarControl extends StatefulWidget {
   final Control? parent;
@@ -27,7 +28,8 @@ class CupertinoNavigationBarControl extends StatefulWidget {
 }
 
 class _CupertinoNavigationBarControlState
-    extends State<CupertinoNavigationBarControl> with FletControlStatefulMixin {
+    extends State<CupertinoNavigationBarControl>
+    with FletControlStatefulMixin, FletStoreMixin {
   int _selectedIndex = 0;
 
   void _onTap(int index) {

@@ -9,6 +9,7 @@ import '../utils/gradient.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'flet_control_stateful_mixin.dart';
+import 'flet_store_mixin.dart';
 
 class DataTableControl extends StatefulWidget {
   final Control? parent;
@@ -28,7 +29,7 @@ class DataTableControl extends StatefulWidget {
 }
 
 class _DataTableControlState extends State<DataTableControl>
-    with FletControlStatefulMixin {
+    with FletControlStatefulMixin, FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("DataTableControl build: ${widget.control.id}");
