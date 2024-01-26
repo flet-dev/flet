@@ -4,31 +4,29 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:record/record.dart';
 
-import '../flet_app_services.dart';
-import '../flet_server.dart';
 import '../models/control.dart';
 import '../utils/audio_recorder.dart';
+import 'flet_control_stateful_mixin.dart';
+import 'flet_store_mixin.dart';
 
 class AudioRecorderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
-  final dynamic dispatch;
   final Widget? nextChild;
 
   const AudioRecorderControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.dispatch,
       required this.nextChild});
 
   @override
   State<AudioRecorderControl> createState() => _AudioRecorderControlState();
 }
 
-class _AudioRecorderControlState extends State<AudioRecorderControl> {
+class _AudioRecorderControlState extends State<AudioRecorderControl>
+    with FletControlStatefulMixin, FletStoreMixin {
   AudioRecorder? recorder;
-  FletServer? _server;
 
   @override
   void initState() {
@@ -47,7 +45,7 @@ class _AudioRecorderControlState extends State<AudioRecorderControl> {
   void _onRemove() {
     debugPrint("AudioRecorder.remove($hashCode)");
     widget.control.state["player"]?.dispose();
-    _server?.controlInvokeMethods.remove(widget.control.id);
+    unsubscribeMethods(widget.control.id);
   }
 
   @override
@@ -76,12 +74,8 @@ class _AudioRecorderControlState extends State<AudioRecorderControl> {
     AudioEncoder audioEncoder =
         parseAudioEncoder(widget.control.attrString("audioEncoder", "wav"))!;
 
-    var server = FletAppServices.of(context).server;
-
     () async {
-      _server = server;
-      _server?.controlInvokeMethods[widget.control.id] =
-          (methodName, args) async {
+      subscribeMethods(widget.control.id, (methodName, args) async {
         switch (methodName) {
           case "start_recording":
             if (await recorder!.hasPermission()) {
@@ -137,7 +131,7 @@ class _AudioRecorderControlState extends State<AudioRecorderControl> {
             return devicesJson;
         }
         return null;
-      };
+      });
     }();
 
     return const SizedBox.shrink();
