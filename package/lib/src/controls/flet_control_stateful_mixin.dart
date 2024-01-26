@@ -24,4 +24,14 @@ mixin FletControlStatefulMixin<T extends StatefulWidget> on State<T> {
     FletAppServices.of(context).server.sendPageEvent(
         eventTarget: controlId, eventName: eventName, eventData: eventData);
   }
+
+  void subscribeMethods(String controlId,
+      Future<String?> Function(String, Map<String, String>) methodHandler) {
+    FletAppServices.of(context).server.controlInvokeMethods[controlId] =
+        methodHandler;
+  }
+
+  void unsubscribeMethods(String controlId) {
+    FletAppServices.of(context).server.controlInvokeMethods.remove(controlId);
+  }
 }

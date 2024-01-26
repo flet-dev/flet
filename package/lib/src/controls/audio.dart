@@ -6,8 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '../flet_app_services.dart';
-import '../flet_server.dart';
 import '../models/control.dart';
 import '../utils/images.dart';
 import 'error.dart';
@@ -42,7 +40,6 @@ class _AudioControlState extends State<AudioControl>
   StreamSubscription? _onStateChangedSubscription;
   StreamSubscription? _onPositionChangedSubscription;
   StreamSubscription? _onSeekCompleteSubscription;
-  FletServer? _server;
 
   @override
   void initState() {
@@ -84,7 +81,7 @@ class _AudioControlState extends State<AudioControl>
   void _onRemove() {
     debugPrint("Audio.remove($hashCode)");
     widget.control.state["player"]?.dispose();
-    _server?.controlInvokeMethods.remove(widget.control.id);
+    unsubscribeMethods(widget.control.id);
   }
 
   @override
@@ -117,8 +114,6 @@ class _AudioControlState extends State<AudioControl>
         widget.control.attrString("releaseMode", "")!.toLowerCase());
     bool onPositionChanged =
         widget.control.attrBool("onPositionChanged", false)!;
-
-    var server = FletAppServices.of(context).server;
 
     final String prevSrc = widget.control.state["src"] ?? "";
     final String prevSrcBase64 = widget.control.state["srcBase64"] ?? "";
@@ -218,9 +213,7 @@ class _AudioControlState extends State<AudioControl>
           await player?.resume();
         }
 
-        _server = server;
-        _server?.controlInvokeMethods[widget.control.id] =
-            (methodName, args) async {
+        subscribeMethods(widget.control.id, (methodName, args) async {
           switch (methodName) {
             case "play":
               await player?.seek(const Duration(milliseconds: 0));
@@ -247,7 +240,7 @@ class _AudioControlState extends State<AudioControl>
                   .toString();
           }
           return null;
-        };
+        });
       }();
 
       return const SizedBox.shrink();
