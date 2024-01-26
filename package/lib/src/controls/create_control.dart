@@ -34,6 +34,7 @@ import 'container.dart';
 import 'cupertino_alert_dialog.dart';
 import 'cupertino_checkbox.dart';
 import 'cupertino_dialog_action.dart';
+import 'cupertino_list_tile.dart';
 import 'cupertino_navigation_bar.dart';
 import 'cupertino_radio.dart';
 import 'cupertino_slider.dart';
@@ -500,6 +501,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           parentDisabled: parentDisabled);
     case "listtile":
       return ListTileControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "cupertinolisttile":
+      return CupertinoListTileControl(
           key: key,
           parent: parent,
           control: controlView.control,

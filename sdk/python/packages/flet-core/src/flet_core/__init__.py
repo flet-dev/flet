@@ -69,6 +69,7 @@ from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_checkbox import CupertinoCheckbox
 from flet_core.cupertino_dialog_action import CupertinoDialogAction
+from flet_core.cupertino_list_tile import CupertinoListTile
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.cupertino_radio import CupertinoRadio
 from flet_core.cupertino_slider import CupertinoSlider
