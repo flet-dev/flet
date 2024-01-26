@@ -1,6 +1,8 @@
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
+from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -11,8 +13,6 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
-
-from flet_core.buttons import OutlinedBorder
 
 try:
     from typing import Literal
@@ -117,7 +117,7 @@ class NavigationDestination(Control):
         self._set_attr("label", value)
 
 
-class NavigationBar(ConstrainedControl):
+class NavigationBar(ConstrainedControl, AdaptiveControl):
     """
     Material 3 Navigation Bar component.
 
@@ -220,11 +220,12 @@ class NavigationBar(ConstrainedControl):
             data=data,
         )
 
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.destinations = destinations
         self.selected_index = selected_index
         self.label_behavior = label_behavior
         self.bgcolor = bgcolor
-        self.adaptive = adaptive
         self.elevation = elevation
         self.shadow_color = shadow_color
         self.indicator_color = indicator_color
@@ -261,15 +262,6 @@ class NavigationBar(ConstrainedControl):
     @selected_index.setter
     def selected_index(self, value: Optional[int]):
         self._set_attr("selectedIndex", value)
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
 
     # label_behavior
     @property
