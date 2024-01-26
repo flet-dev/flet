@@ -1,16 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
-import '../models/app_state.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class SnackBarControl extends StatefulWidget {
   final Control? parent;
@@ -31,7 +27,8 @@ class SnackBarControl extends StatefulWidget {
   State<SnackBarControl> createState() => _SnackBarControlState();
 }
 
-class _SnackBarControlState extends State<SnackBarControl> {
+class _SnackBarControlState extends State<SnackBarControl>
+    with FletControlStatefulMixin {
   bool _open = false;
 
   Widget _createSnackBar() {
@@ -50,10 +47,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
                 widget.control.attrString("actionColor", "")!),
             onPressed: () {
               debugPrint("SnackBar ${widget.control.id} clicked!");
-              FletAppServices.of(context).server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "action",
-                  eventData: "");
+              sendControlEvent(widget.control.id, "action", "");
             })
         : null;
 
@@ -89,47 +83,34 @@ class _SnackBarControlState extends State<SnackBarControl> {
   Widget build(BuildContext context) {
     debugPrint("SnackBar build: ${widget.control.id}");
 
-    return StoreConnector<AppState, Function>(
-        distinct: true,
-        converter: (store) => store.dispatch,
-        builder: (context, dispatch) {
-          debugPrint("SnackBar StoreConnector build: ${widget.control.id}");
+    debugPrint("SnackBar build: ${widget.control.id}");
 
-          var open = widget.control.attrBool("open", false)!;
-          var removeCurrentSnackbar = true;
+    var open = widget.control.attrBool("open", false)!;
+    var removeCurrentSnackbar = true;
 
-          //widget.control.attrBool("removeCurrentSnackBar", false)!;
+    //widget.control.attrBool("removeCurrentSnackBar", false)!;
 
-          debugPrint("Current open state: $_open");
-          debugPrint("New open state: $open");
+    debugPrint("Current open state: $_open");
+    debugPrint("New open state: $open");
 
-          if (open && (open != _open)) {
-            var snackBar = _createSnackBar();
-            if (snackBar is ErrorControl) {
-              return snackBar;
-            }
+    if (open && (open != _open)) {
+      var snackBar = _createSnackBar();
+      if (snackBar is ErrorControl) {
+        return snackBar;
+      }
 
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (removeCurrentSnackbar) {
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (removeCurrentSnackbar) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        }
+        ScaffoldMessenger.of(context).showSnackBar(snackBar as SnackBar);
 
-              ScaffoldMessenger.of(context).showSnackBar(snackBar as SnackBar);
+        updateControlProps(widget.control.id, {"open": "false"});
+      });
+    }
 
-              List<Map<String, String>> props = [
-                {"i": widget.control.id, "open": "false"}
-              ];
-              dispatch(UpdateControlPropsAction(
-                  UpdateControlPropsPayload(props: props)));
-              FletAppServices.of(context)
-                  .server
-                  .updateControlProps(props: props);
-            });
-          }
+    _open = open;
 
-          _open = open;
-
-          return widget.nextChild ?? const SizedBox.shrink();
-        });
+    return widget.nextChild ?? const SizedBox.shrink();
   }
 }

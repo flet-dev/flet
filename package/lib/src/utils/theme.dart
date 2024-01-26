@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/borders.dart';
-import 'package:flet/src/utils/edge_insets.dart';
-import 'package:flet/src/utils/numbers.dart';
-import 'package:flet/src/utils/text.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import 'borders.dart';
 import 'colors.dart';
+import 'edge_insets.dart';
 import 'material_state.dart';
+import 'numbers.dart';
+import 'text.dart';
 
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
@@ -47,7 +47,6 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       useMaterial3: json?["use_material3"] ?? primarySwatch == null);
 
   return theme.copyWith(
-      useMaterial3: json?["use_material3"] ?? theme.useMaterial3,
       visualDensity: json?["visual_density"] != null
           ? parseVisualDensity(json?["visual_density"])
           : theme.visualDensity,

@@ -1,14 +1,13 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../actions.dart';
 import '../flet_app_services.dart';
-import '../models/app_state.dart';
 import '../utils/desktop.dart';
 
 class WindowMedia extends StatefulWidget {
-  const WindowMedia({super.key});
+  final dynamic dispatch;
+  const WindowMedia({super.key, required this.dispatch});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -16,8 +15,6 @@ class WindowMedia extends StatefulWidget {
 }
 
 class WindowMediaState extends State<WindowMedia> with WindowListener {
-  Function? _dispatch;
-
   @override
   void initState() {
     super.initState();
@@ -32,13 +29,7 @@ class WindowMediaState extends State<WindowMedia> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, Function>(
-        distinct: true,
-        converter: (store) => store.dispatch,
-        builder: (context, dispatch) {
-          _dispatch = dispatch;
-          return const SizedBox.shrink();
-        });
+    return const SizedBox.shrink();
   }
 
   @override
@@ -52,7 +43,7 @@ class WindowMediaState extends State<WindowMedia> with WindowListener {
     debugPrint('[WindowManager] onWindowEvent: $eventName');
     getWindowMediaData().then((wmd) {
       debugPrint("WindowMediaData: $wmd");
-      _dispatch!(WindowEventAction(
+      widget.dispatch!(WindowEventAction(
           eventName, wmd, FletAppServices.of(context).server));
     });
   }

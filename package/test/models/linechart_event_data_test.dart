@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flet/src/models/linechart_event_data.dart';
+import 'package:flet/src/controls/linechart.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
