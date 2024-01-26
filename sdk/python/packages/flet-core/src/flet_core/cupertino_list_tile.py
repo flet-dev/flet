@@ -13,45 +13,40 @@ from flet_core.types import (
 )
 
 
-class ListTile(ConstrainedControl):
+class CupertinoListTile(ConstrainedControl):
     """
-    A single fixed-height row that typically contains some text as well as a leading or trailing icon.
+        An iOS-style list tile. The CupertinoListTile is a Cupertino equivalent of Material ListTile.
 
-    Example:
+        Example:
 
-    ```
+        ```
     import flet as ft
 
-    def main(page):
-        page.title = "ListTile Example"
+
+    def main(page: ft.Page):
+        def tile_clicked(e):
+            print("Tile Clicked!")
+
         page.add(
-            ft.Card(
-                content=ft.Container(
-                    width=500,
-                    content=ft.Column(
-                        [
-                            ft.ListTile(
-                                title=ft.Text("One-line list tile"),
-                            ),
-                            ft.ListTile(
-                                leading=ft.Icon(ft.icons.SETTINGS),
-                                title=ft.Text("One-line selected list tile"),
-                                selected=True,
-                            ),
-                        ],
-                        spacing=0,
-                    ),
-                    padding=ft.padding.symmetric(vertical=10),
-                )
-            )
+            ft.CupertinoListTile(
+                notched=True,
+                additional_info=ft.Text("Wed Jan 25"),
+                bgcolor_activated=ft.colors.AMBER_ACCENT,
+                leading=ft.Icon(name=ft.cupertino_icons.GAME_CONTROLLER),
+                title=ft.Text("CupertinoListTile not notched"),
+                subtitle=ft.Text("Subtitle"),
+                trailing=ft.Icon(name=ft.cupertino_icons.ALARM),
+                on_click=tile_clicked,
+            ),
+
         )
 
     ft.app(target=main)
-    ```
+        ```
 
-    -----
+        -----
 
-    Online docs: https://flet.dev/docs/controls/listtile
+        Online docs: https://flet.dev/docs/controls/cupertinolisttile
     """
 
     def __init__(
@@ -85,23 +80,21 @@ class ListTile(ConstrainedControl):
         #
         # Specific
         #
-        adaptive: Optional[bool] = None,
-        content_padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
         bgcolor_activated: Optional[str] = None,
         leading: Optional[Control] = None,
+        padding: PaddingValue = None,
         title: Optional[Control] = None,
         subtitle: Optional[Control] = None,
         trailing: Optional[Control] = None,
-        is_three_line: Optional[bool] = None,
-        selected: Optional[bool] = None,
-        dense: Optional[bool] = None,
-        autofocus: Optional[bool] = None,
-        toggle_inputs: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
+        toggle_inputs: Optional[bool] = None,
+        additional_info: Optional[Control] = None,
+        leading_size: OptionalNumber = None,
+        leading_to_title: OptionalNumber = None,
+        notched: Optional[bool] = None,
         on_click=None,
-        on_long_press=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -133,30 +126,28 @@ class ListTile(ConstrainedControl):
             data=data,
         )
 
-        self.adaptive = adaptive
-        self.content_padding = content_padding
         self.leading = leading
         self.title = title
         self.subtitle = subtitle
         self.trailing = trailing
-        self.is_three_line = is_three_line
-        self.selected = selected
-        self.dense = dense
-        self.autofocus = autofocus
-        self.toggle_inputs = toggle_inputs
-        self.url = url
-        self.url_target = url_target
         self.bgcolor = bgcolor
         self.bgcolor_activated = bgcolor_activated
+        self.url = url
+        self.url_target = url_target
+        self.toggle_inputs = toggle_inputs
+        self.additional_info = additional_info
+        self.leading_size = leading_size
+        self.leading_to_title = leading_to_title
+        self.padding = padding
+        self.notched = notched
         self.on_click = on_click
-        self.on_long_press = on_long_press
 
     def _get_control_name(self):
-        return "listtile"
+        return "cupertinolisttile"
 
     def _before_build_command(self):
         super()._before_build_command()
-        self._set_attr_json("contentPadding", self.__content_padding)
+        self._set_attr_json("contentPadding", self.__padding)
 
     def _get_children(self):
         children = []
@@ -172,43 +163,10 @@ class ListTile(ConstrainedControl):
         if self.__trailing:
             self.__trailing._set_attr_internal("n", "trailing")
             children.append(self.__trailing)
+        if self.__additional_info:
+            self.__additional_info._set_attr_internal("n", "additionalInfo")
+            children.append(self.__additional_info)
         return children
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
-
-    # content_padding
-    @property
-    def content_padding(self) -> PaddingValue:
-        return self.__content_padding
-
-    @content_padding.setter
-    def content_padding(self, value: PaddingValue):
-        self.__content_padding = value
-
-    # bgcolor
-    @property
-    def bgcolor(self):
-        return self._get_attr("bgcolor")
-
-    @bgcolor.setter
-    def bgcolor(self, value):
-        self._set_attr("bgcolor", value)
-
-    # bgcolor_activated
-    @property
-    def bgcolor_activated(self):
-        return self._get_attr("bgcolorActivated")
-
-    @bgcolor_activated.setter
-    def bgcolor_activated(self, value):
-        self._set_attr("bgcolorActivated", value)
 
     # leading
     @property
@@ -218,6 +176,24 @@ class ListTile(ConstrainedControl):
     @leading.setter
     def leading(self, value: Optional[Control]):
         self.__leading = value
+
+    # leading_size
+    @property
+    def leading_size(self):
+        return self._get_attr("leadingSize")
+
+    @leading_size.setter
+    def leading_size(self, value):
+        self._set_attr("leadingSize", value)
+
+    # leading_to_title
+    @property
+    def leading_to_title(self):
+        return self._get_attr("leadingToTitle")
+
+    @leading_to_title.setter
+    def leading_to_title(self, value):
+        self._set_attr("leadingToTitle", value)
 
     # title
     @property
@@ -246,50 +222,50 @@ class ListTile(ConstrainedControl):
     def trailing(self, value: Optional[Control]):
         self.__trailing = value
 
-    # is_three_line
+    # additional_info
     @property
-    def is_three_line(self) -> Optional[bool]:
-        return self._get_attr("isThreeLine", data_type="bool", def_value=False)
+    def additional_info(self) -> Optional[Control]:
+        return self.__additional_info
 
-    @is_three_line.setter
-    def is_three_line(self, value: Optional[bool]):
-        self._set_attr("isThreeLine", value)
+    @additional_info.setter
+    def additional_info(self, value: Optional[Control]):
+        self.__additional_info = value
 
-    # selected
+    # padding
     @property
-    def selected(self) -> Optional[bool]:
-        return self._get_attr("selected", data_type="bool", def_value=False)
+    def padding(self) -> PaddingValue:
+        return self.__padding
 
-    @selected.setter
-    def selected(self, value: Optional[bool]):
-        self._set_attr("selected", value)
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
 
-    # dense
+    # notched
     @property
-    def dense(self) -> Optional[bool]:
-        return self._get_attr("dense", data_type="bool", def_value=False)
+    def notched(self) -> Optional[bool]:
+        return self._get_attr("notched", data_type="bool", def_value=False)
 
-    @dense.setter
-    def dense(self, value: Optional[bool]):
-        self._set_attr("dense", value)
+    @notched.setter
+    def notched(self, value: Optional[bool]):
+        self._set_attr("notched", value)
 
-    # autofocus
+    # bgcolor
     @property
-    def autofocus(self) -> Optional[bool]:
-        return self._get_attr("autofocus", data_type="bool", def_value=False)
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
 
-    @autofocus.setter
-    def autofocus(self, value: Optional[bool]):
-        self._set_attr("autofocus", value)
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
 
-    # toggle_inputs
+    # bgcolor_activated
     @property
-    def toggle_inputs(self) -> Optional[bool]:
-        return self._get_attr("toggleInputs", data_type="bool", def_value=False)
+    def bgcolor_activated(self):
+        return self._get_attr("bgcolorActivated")
 
-    @toggle_inputs.setter
-    def toggle_inputs(self, value: Optional[bool]):
-        self._set_attr("toggleInputs", value)
+    @bgcolor_activated.setter
+    def bgcolor_activated(self, value):
+        self._set_attr("bgcolorActivated", value)
 
     # url
     @property
@@ -309,6 +285,15 @@ class ListTile(ConstrainedControl):
     def url_target(self, value):
         self._set_attr("urlTarget", value)
 
+    # toggle_inputs
+    @property
+    def toggle_inputs(self) -> Optional[bool]:
+        return self._get_attr("toggleInputs", data_type="bool", def_value=False)
+
+    @toggle_inputs.setter
+    def toggle_inputs(self, value: Optional[bool]):
+        self._set_attr("toggleInputs", value)
+
     # on_click
     @property
     def on_click(self):
@@ -321,13 +306,3 @@ class ListTile(ConstrainedControl):
             self._set_attr("onclick", True)
         else:
             self._set_attr("onclick", None)
-
-    # on_long_press
-    @property
-    def on_long_press(self):
-        return self._get_event_handler("long_press")
-
-    @on_long_press.setter
-    def on_long_press(self, handler):
-        self._add_event_handler("long_press", handler)
-        self._set_attr("onLongPress", True if handler is not None else None)
