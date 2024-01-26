@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
-import 'create_control.dart';
-import 'error.dart';
-import 'package:flet/src/flet_app_services.dart';
-import '../actions.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/edge_insets.dart';
 import '../utils/text.dart';
-import '../utils/borders.dart';
+import 'create_control.dart';
+import 'error.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class ChipControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const ChipControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<ChipControl> createState() => _ChipControlState();
 }
 
-class _ChipControlState extends State<ChipControl> {
+class _ChipControlState extends State<ChipControl>
+    with FletControlStatefulMixin {
   bool _selected = false;
 
   late final FocusNode _focusNode;
@@ -52,27 +49,14 @@ class _ChipControlState extends State<ChipControl> {
   void _onSelect(bool selected) {
     var strSelected = selected.toString();
     debugPrint(strSelected);
-    setState(() {
-      _selected = selected;
-    });
-    List<Map<String, String>> props = [
-      {"i": widget.control.id, "selected": strSelected}
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-    final server = FletAppServices.of(context).server;
-    server.updateControlProps(props: props);
-    server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: "select",
-        eventData: strSelected);
+    _selected = selected;
+    updateControlProps(widget.control.id, {"selected": strSelected});
+    sendControlEvent(widget.control.id, "select", strSelected);
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
@@ -99,7 +83,6 @@ class _ChipControlState extends State<ChipControl> {
     var disabledColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("disabledColor", "")!);
 
-    final server = FletAppServices.of(context).server;
     bool onClick = widget.control.attrBool("onclick", false)!;
     bool onDelete = widget.control.attrBool("onDelete", false)!;
     bool onSelect = widget.control.attrBool("onSelect", false)!;
@@ -123,20 +106,14 @@ class _ChipControlState extends State<ChipControl> {
     Function()? onClickHandler = onClick && !disabled
         ? () {
             debugPrint("Chip ${widget.control.id} clicked!");
-            server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "click",
-                eventData: "");
+            sendControlEvent(widget.control.id, "click", "");
           }
         : null;
 
     Function()? onDeleteHandler = onDelete && !disabled
         ? () {
             debugPrint("Chip ${widget.control.id} deleted!");
-            server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "delete",
-                eventData: "");
+            sendControlEvent(widget.control.id, "delete", "");
           }
         : null;
 

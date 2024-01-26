@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import 'create_control.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class MenuItemButtonControl extends StatefulWidget {
   final Control? parent;
@@ -22,7 +22,8 @@ class MenuItemButtonControl extends StatefulWidget {
   State<MenuItemButtonControl> createState() => _MenuItemButtonControlState();
 }
 
-class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
+class _MenuItemButtonControlState extends State<MenuItemButtonControl>
+    with FletControlStatefulMixin {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -41,10 +42,8 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
@@ -82,8 +81,6 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
     bool onClick = widget.control.attrBool("onClick", false)!;
     bool onHover = widget.control.attrBool("onHover", false)!;
 
-    var server = FletAppServices.of(context).server;
-
     var menuItem = MenuItemButton(
       focusNode: _focusNode,
       clipBehavior: clipBehavior,
@@ -92,18 +89,12 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
       requestFocusOnHover: widget.control.attrBool("focusOnHover", true)!,
       onHover: onHover && !disabled
           ? (bool value) {
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "hover",
-                  eventData: "$value");
+              sendControlEvent(widget.control.id, "hover", "$value");
             }
           : null,
       onPressed: onClick && !disabled
           ? () {
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "click",
-                  eventData: "");
+              sendControlEvent(widget.control.id, "click", "");
             }
           : null,
       leadingIcon: leading.isNotEmpty

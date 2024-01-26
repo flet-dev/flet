@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../models/control.dart';
+import '../utils/numbers.dart';
 
 FilteringTextInputFormatter? parseInputFilter(
     Control control, String propName) {

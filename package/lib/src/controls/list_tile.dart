@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
+import 'flet_control_stateless_mixin.dart';
 
 class ListTileClicks extends InheritedWidget {
   const ListTileClicks({
@@ -23,7 +23,7 @@ class ListTileClicks extends InheritedWidget {
   bool updateShouldNotify(ListTileClicks oldWidget) => true;
 }
 
-class ListTileControl extends StatelessWidget {
+class ListTileControl extends StatelessWidget with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -40,8 +40,6 @@ class ListTileControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
-
-    final server = FletAppServices.of(context).server;
 
     var leadingCtrls =
         children.where((c) => c.name == "leading" && c.isVisible);
@@ -72,8 +70,7 @@ class ListTileControl extends StatelessWidget {
               openWebBrowser(url, webWindowName: urlTarget);
             }
             if (onclick) {
-              server.sendPageEvent(
-                  eventTarget: control.id, eventName: "click", eventData: "");
+              sendControlEvent(context, control.id, "click", "");
             }
           }
         : null;
@@ -81,10 +78,7 @@ class ListTileControl extends StatelessWidget {
     Function()? onLongPress = onLongPressDefined && !disabled
         ? () {
             debugPrint("Button ${control.id} clicked!");
-            server.sendPageEvent(
-                eventTarget: control.id,
-                eventName: "long_press",
-                eventData: "");
+            sendControlEvent(context, control.id, "long_press", "");
           }
         : null;
 

@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
+import 'flet_control_stateful_mixin.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
@@ -15,20 +13,19 @@ class CupertinoCheckboxControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
-  final dynamic dispatch;
 
   const CupertinoCheckboxControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<CupertinoCheckboxControl> createState() => _CheckboxControlState();
 }
 
-class _CheckboxControlState extends State<CupertinoCheckboxControl> {
+class _CheckboxControlState extends State<CupertinoCheckboxControl>
+    with FletControlStatefulMixin {
   bool? _value;
   bool _tristate = false;
   late final FocusNode _focusNode;
@@ -41,10 +38,8 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    sendControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
@@ -68,18 +63,9 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
 
   void _onChange(bool? value) {
     var svalue = value != null ? value.toString() : "";
-    setState(() {
-      _value = value;
-    });
-    List<Map<String, String>> props = [
-      {"i": widget.control.id, "value": svalue}
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-    var server = FletAppServices.of(context).server;
-    server.updateControlProps(props: props);
-    server.sendPageEvent(
-        eventTarget: widget.control.id, eventName: "change", eventData: svalue);
+    _value = value;
+    updateControlProps(widget.control.id, {"value": svalue});
+    sendControlEvent(widget.control.id, "change", svalue);
   }
 
   @override
@@ -96,7 +82,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    debugPrint("CupertinoCheckbox StoreConnector build: ${widget.control.id}");
+    debugPrint("CupertinoCheckbox build: ${widget.control.id}");
 
     bool? value = widget.control.attrBool("value", _tristate ? null : false);
     if (_value != value) {

@@ -286,15 +286,12 @@ class ImageRepeat(Enum):
     REPEAT_Y = "repeatY"
 
 
-PageDesignString = Literal[None, "material", "cupertino", "fluent", "macos", "adaptive"]
-
-
-class PageDesignLanguage(Enum):
-    MATERIAL = "material"
-    CUPERTINO = "cupertino"
-    FLUENT = "fluent"
+class PagePlatform(Enum):
+    IOS = "ios"
+    ANDROID = "android"
     MACOS = "macos"
-    ADAPTIVE = "adaptive"
+    WINDOWS = "windows"
+    LINUX = "linux"
 
 
 ThemeModeString = Literal[None, "system", "light", "dark"]

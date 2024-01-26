@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -9,8 +8,10 @@ import '../utils/launch_url.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
 import 'error.dart';
+import 'flet_control_stateless_mixin.dart';
 
-class FloatingActionButtonControl extends StatelessWidget {
+class FloatingActionButtonControl extends StatelessWidget
+    with FletControlStatelessMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -47,8 +48,7 @@ class FloatingActionButtonControl extends StatelessWidget {
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            FletAppServices.of(context).server.sendPageEvent(
-                eventTarget: control.id, eventName: "click", eventData: "");
+            sendControlEvent(context, control.id, "click", "");
           };
 
     if (text == null && icon == null && contentCtrls.isEmpty) {

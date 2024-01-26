@@ -4,8 +4,8 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
-import '../flet_app_services.dart';
 import '../models/control.dart';
+import 'flet_control_stateful_mixin.dart';
 
 class ShakeDetectorControl extends StatefulWidget {
   final Control? parent;
@@ -22,7 +22,8 @@ class ShakeDetectorControl extends StatefulWidget {
   State<ShakeDetectorControl> createState() => _ShakeDetectorControlState();
 }
 
-class _ShakeDetectorControlState extends State<ShakeDetectorControl> {
+class _ShakeDetectorControlState extends State<ShakeDetectorControl>
+    with FletControlStatefulMixin {
   ShakeDetector? _shakeDetector;
   int? _minimumShakeCount;
   int? _shakeSlopTimeMs;
@@ -58,10 +59,7 @@ class _ShakeDetectorControlState extends State<ShakeDetectorControl> {
       _shakeDetector?.stopListening();
       _shakeDetector = ShakeDetector.autoStart(
         onPhoneShake: () {
-          FletAppServices.of(context).server.sendPageEvent(
-              eventTarget: widget.control.id,
-              eventName: "shake",
-              eventData: "");
+          sendControlEvent(widget.control.id, "shake", "");
         },
         minimumShakeCount: minimumShakeCount,
         shakeSlopTimeMS: shakeSlopTimeMs,

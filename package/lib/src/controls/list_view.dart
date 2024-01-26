@@ -13,15 +13,13 @@ class ListViewControl extends StatefulWidget {
   final Control control;
   final bool parentDisabled;
   final List<Control> children;
-  final dynamic dispatch;
 
   const ListViewControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.dispatch});
+      required this.parentDisabled});
 
   @override
   State<ListViewControl> createState() => _ListViewControlState();
@@ -115,7 +113,6 @@ class _ListViewControlState extends State<ListViewControl> {
         child = ScrollableControl(
           control: widget.control,
           scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
-          dispatch: widget.dispatch,
           scrollController: _controller,
           child: child,
         );

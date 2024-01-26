@@ -1,13 +1,12 @@
-import 'package:flet/src/controls/error.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
-import '../models/app_state.dart';
 import '../models/control.dart';
-import '../models/controls_view_model.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
+import 'error.dart';
+import 'flet_control_stateful_mixin.dart';
+import 'flet_store_mixin.dart';
 
 class BottomAppBarControl extends StatefulWidget {
   final Control? parent;
@@ -26,7 +25,8 @@ class BottomAppBarControl extends StatefulWidget {
   State<BottomAppBarControl> createState() => _BottomAppBarControlState();
 }
 
-class _BottomAppBarControlState extends State<BottomAppBarControl> {
+class _BottomAppBarControlState extends State<BottomAppBarControl>
+    with FletControlStatefulMixin, FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("BottomAppBarControl build: ${widget.control.id}");
@@ -54,32 +54,28 @@ class _BottomAppBarControlState extends State<BottomAppBarControl> {
             e.name.toLowerCase() ==
             widget.control.attrString("clipBehavior", "")!.toLowerCase(),
         orElse: () => Clip.none);
-    var bottomAppBar = StoreConnector<AppState, ControlsViewModel>(
-        distinct: true,
-        converter: (store) => ControlsViewModel.fromStore(
-            store,
-            widget.children
-                .where((c) => c.isVisible && c.name == null)
-                .map((c) => c.id)),
-        builder: (content, viewModel) {
-          return BottomAppBar(
-            clipBehavior: clipBehavior,
-            padding: parseEdgeInsets(widget.control, "padding"),
-            height: widget.control.attrDouble("height"),
-            elevation: elevation,
-            shape: shape,
-            shadowColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("shadowColor", "")!),
-            surfaceTintColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("surfaceTintColor", "")!),
-            color: HexColor.fromString(
-                Theme.of(context), widget.control.attrString("bgColor", "")!),
-            notchMargin: widget.control.attrDouble("notchMargin", 4.0)!,
-            child: contentCtrls.isNotEmpty
-                ? createControl(widget.control, contentCtrls.first.id, disabled)
-                : null,
-          );
-        });
+    var bottomAppBar = withControls(
+        widget.children
+            .where((c) => c.isVisible && c.name == null)
+            .map((c) => c.id), (content, viewModel) {
+      return BottomAppBar(
+        clipBehavior: clipBehavior,
+        padding: parseEdgeInsets(widget.control, "padding"),
+        height: widget.control.attrDouble("height"),
+        elevation: elevation,
+        shape: shape,
+        shadowColor: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("shadowColor", "")!),
+        surfaceTintColor: HexColor.fromString(Theme.of(context),
+            widget.control.attrString("surfaceTintColor", "")!),
+        color: HexColor.fromString(
+            Theme.of(context), widget.control.attrString("bgColor", "")!),
+        notchMargin: widget.control.attrDouble("notchMargin", 4.0)!,
+        child: contentCtrls.isNotEmpty
+            ? createControl(widget.control, contentCtrls.first.id, disabled)
+            : null,
+      );
+    });
 
     return constrainedControl(
         context, bottomAppBar, widget.parent, widget.control);
