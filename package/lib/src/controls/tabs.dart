@@ -32,16 +32,8 @@ class TabsControl extends StatefulWidget {
   State<TabsControl> createState() => _TabsControlState();
 }
 
-class _TabsControlStateWithControlState extends State<TabsControl>
-    with FletControlStatefulMixin {
-  @override
-  Widget build(BuildContext context) {
-    throw UnimplementedError();
-  }
-}
-
-class _TabsControlState extends _TabsControlStateWithControlState
-    with TickerProviderStateMixin {
+class _TabsControlState extends State<TabsControl>
+    with FletControlStatefulMixin, TickerProviderStateMixin {
   String? _tabsSnapshot;
   TabController? _tabController;
   int _selectedIndex = 0;
