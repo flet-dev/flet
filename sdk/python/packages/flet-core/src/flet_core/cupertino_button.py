@@ -6,12 +6,12 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    BorderRadiusValue,
     OffsetValue,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    PaddingValue,
-    BorderRadiusValue,
 )
 
 
