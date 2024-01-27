@@ -33,18 +33,29 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var contentCtrls = widget.children.where((c) => c.name == "content");
     if (contentCtrls.isEmpty) {
       return const ErrorControl(
           "CupertinoButton has no content control. Please specify one.");
     }
+
+    bool filled = widget.control.attrBool("filled", false)!;
+    double pressedOpacity = widget.control.attrDouble("opacityOnClick", 0.4)!;
+    double minSize = widget.control.attrDouble("minSize", 44.0)!;
     String url = widget.control.attrString("url", "")!;
-    Color? disabledColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("disabledColor", "")!);
+    EdgeInsets? padding = parseEdgeInsets(widget.control, "padding");
+    Color disabledColor = HexColor.fromString(Theme.of(context),
+            widget.control.attrString("disabledColor", "")!) ??
+        CupertinoColors.quaternarySystemFill;
     Color? bgColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("bgColor", "")!);
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    AlignmentGeometry alignment =
+        parseAlignment(widget.control, "alignment") ?? Alignment.center;
+    BorderRadius borderRadius =
+        parseBorderRadius(widget.control, "borderRadius") ??
+            const BorderRadius.all(Radius.circular(8.0));
 
     Function()? onPressed = !disabled
         ? () {
@@ -59,18 +70,30 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl>
 
     CupertinoButton? button;
 
-    button = CupertinoButton(
-      onPressed: onPressed,
-      disabledColor: disabledColor ?? CupertinoColors.quaternarySystemFill,
-      color: bgColor,
-      padding: parseEdgeInsets(widget.control, "padding"),
-      borderRadius: parseBorderRadius(widget.control, "borderRadius") ?? const BorderRadius.all(Radius.circular(8.0)),
-      pressedOpacity: widget.control.attrDouble("opacityOnClick", 0.4),
-      alignment:
-          parseAlignment(widget.control, "alignment") ?? Alignment.center,
-      minSize: widget.control.attrDouble("minSize", 44.0),
-      child: createControl(widget.control, contentCtrls.first.id, disabled),
-    );
+    button = !filled
+        ? CupertinoButton(
+            onPressed: onPressed,
+            disabledColor: disabledColor,
+            color: bgColor,
+            padding: padding,
+            borderRadius: borderRadius,
+            pressedOpacity: pressedOpacity,
+            alignment: alignment,
+            minSize: minSize,
+            child:
+                createControl(widget.control, contentCtrls.first.id, disabled),
+          )
+        : CupertinoButton.filled(
+            onPressed: onPressed,
+            disabledColor: disabledColor,
+            padding: padding,
+            borderRadius: borderRadius,
+            pressedOpacity: pressedOpacity,
+            alignment: alignment,
+            minSize: minSize,
+            child:
+                createControl(widget.control, contentCtrls.first.id, disabled),
+          );
 
     return constrainedControl(context, button, widget.parent, widget.control);
   }

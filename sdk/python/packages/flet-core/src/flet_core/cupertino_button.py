@@ -29,6 +29,7 @@ class CupertinoButton(ConstrainedControl):
         content: Optional[Control] = None,
         bgcolor: Optional[str] = None,
         disabled_color: Optional[str] = None,
+        filled: Optional[bool] = None,
         opacity_on_click: OptionalNumber = None,
         padding: PaddingValue = None,
         alignment: Optional[Alignment] = None,
@@ -99,6 +100,7 @@ class CupertinoButton(ConstrainedControl):
         self.disabled_color = disabled_color
         self.bgcolor = bgcolor
         self.border_radius = border_radius
+        self.filled = filled
         self.opacity_on_click = opacity_on_click
         self.padding = padding
         self.alignment = alignment
@@ -133,12 +135,21 @@ class CupertinoButton(ConstrainedControl):
 
     # disabled_color
     @property
-    def disabled_color(self):
+    def disabled_color(self) -> Optional[str]:
         return self._get_attr("disabledColor")
 
     @disabled_color.setter
-    def disabled_color(self, value):
+    def disabled_color(self, value: Optional[str]):
         self._set_attr("disabledColor", value)
+
+    # filled
+    @property
+    def filled(self) -> bool:
+        return self._get_attr("filled", data_type="bool", def_value=False)
+
+    @filled.setter
+    def filled(self, value: bool):
+        self._set_attr("filled", value)
 
     # opacity_on_click
     @property
@@ -180,11 +191,11 @@ class CupertinoButton(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
 
     # url
