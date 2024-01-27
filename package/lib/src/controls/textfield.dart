@@ -201,6 +201,9 @@ class _TextFieldControlState extends State<TextFieldControl>
         orElse: () => TextAlign.start,
       );
 
+      double? textVerticalAlign =
+          widget.control.attrDouble("textVerticalAlign");
+
       TextDirection? textDirection = TextDirection.values.firstWhereOrNull(
           ((b) =>
               b.name ==
@@ -237,8 +240,9 @@ class _TextFieldControlState extends State<TextFieldControl>
               revealPasswordIcon,
               _focused),
           showCursor: widget.control.attrBool("showCursor"),
-          textAlignVertical: TextAlignVertical(
-              y: widget.control.attrDouble("textVerticalAlign") ?? 0.0),
+          textAlignVertical: textVerticalAlign != null
+              ? TextAlignVertical(y: textVerticalAlign)
+              : null,
           textDirection: textDirection,
           cursorHeight: widget.control.attrDouble("cursorHeight"),
           cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
