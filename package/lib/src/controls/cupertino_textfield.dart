@@ -172,6 +172,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
       orElse: () => TextAlign.start,
     );
 
+    double? textVerticalAlign = widget.control.attrDouble("textVerticalAlign");
+
     bool autocorrect = widget.control.attrBool("autocorrect", true)!;
     bool enableSuggestions =
         widget.control.attrBool("enableSuggestions", true)!;
@@ -198,6 +200,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
 
     Widget textField = CupertinoTextField(
         style: textStyle,
+        textAlignVertical: textVerticalAlign != null
+            ? TextAlignVertical(y: textVerticalAlign)
+            : null,
         placeholder: widget.control.attrString("placeholderText"),
         placeholderStyle: parseTextStyle(
             Theme.of(context), widget.control, "placeholderStyle"),
