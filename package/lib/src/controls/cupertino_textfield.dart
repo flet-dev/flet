@@ -36,7 +36,6 @@ class CupertinoTextFieldControl extends StatefulWidget {
 class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
     with FletControlStatefulMixin {
   String _value = "";
-  final bool _revealPassword = false;
   bool _focused = false;
   late TextEditingController _controller;
   late final FocusNode _focusNode;
@@ -252,7 +251,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
             : null,
         readOnly: readOnly,
         inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
-        obscureText: password && !_revealPassword,
+        obscureText: password,
         controller: _controller,
         focusNode: focusNode,
         onChanged: (String value) {
