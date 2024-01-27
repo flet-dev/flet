@@ -240,6 +240,7 @@ from flet_core.types import (
     TabAlignment,
     TextAlign,
     ThemeMode,
+    VerticalAlignment,
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider

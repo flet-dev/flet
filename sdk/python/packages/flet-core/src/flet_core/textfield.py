@@ -1,8 +1,9 @@
 import dataclasses
-import time
 from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union
+
+import time
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
@@ -18,6 +19,7 @@ from flet_core.types import (
     ScaleValue,
     TextAlign,
     TextAlignString,
+    VerticalAlignment,
 )
 
 try:
@@ -141,6 +143,7 @@ class TextField(FormFieldControl):
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
+        text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
@@ -235,6 +238,7 @@ class TextField(FormFieldControl):
             #
             text_size=text_size,
             text_style=text_style,
+            text_vertical_align=text_vertical_align,
             label=label,
             label_style=label_style,
             icon=icon,

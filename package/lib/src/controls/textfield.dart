@@ -231,6 +231,7 @@ class _TextFieldControlState extends State<TextFieldControl>
               revealPasswordIcon,
               _focused),
           showCursor: widget.control.attrBool("showCursor"),
+          textAlignVertical: TextAlignVertical(y: widget.control.attrDouble("textVerticalAlign") ?? 0.0),
           cursorHeight: widget.control.attrDouble("cursorHeight"),
           cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
           cursorRadius: parseRadius(widget.control, "cursorRadius"),
