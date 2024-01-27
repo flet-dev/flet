@@ -26,6 +26,19 @@ class CupertinoButton(ConstrainedControl):
 
     def __init__(
         self,
+        content: Optional[Control] = None,
+        bgcolor: Optional[str] = None,
+        disabled_color: Optional[str] = None,
+        opacity_on_click: OptionalNumber = None,
+        padding: PaddingValue = None,
+        alignment: Optional[Alignment] = None,
+        border_radius: BorderRadiusValue = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
+        on_click=None,
+        #
+        # Common
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -52,19 +65,6 @@ class CupertinoButton(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        content: Optional[Control] = None,
-        bgcolor: Optional[str] = None,
-        disabled_color: Optional[str] = None,
-        opacity_on_click: OptionalNumber = None,
-        padding: PaddingValue = None,
-        alignment: Optional[Alignment] = None,
-        border_radius: BorderRadiusValue = None,
-        url: Optional[str] = None,
-        url_target: Optional[str] = None,
-        on_click=None,
     ):
         ConstrainedControl.__init__(
             self,
