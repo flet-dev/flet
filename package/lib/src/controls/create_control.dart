@@ -31,6 +31,7 @@ import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'cupertino_alert_dialog.dart';
+import 'cupertino_button.dart';
 import 'cupertino_checkbox.dart';
 import 'cupertino_dialog_action.dart';
 import 'cupertino_list_tile.dart';
@@ -284,6 +285,13 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
           key: key, parent: parent, control: controlView.control);
     case "elevatedbutton":
       return ElevatedButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled);
+    case "cupertinobutton":
+      return CupertinoButtonControl(
           key: key,
           parent: parent,
           control: controlView.control,
