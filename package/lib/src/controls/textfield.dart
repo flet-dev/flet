@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -200,6 +201,11 @@ class _TextFieldControlState extends State<TextFieldControl>
         orElse: () => TextAlign.start,
       );
 
+      TextDirection? textDirection = TextDirection.values.firstWhereOrNull(
+          ((b) =>
+              b.name ==
+              widget.control.attrString("textDirection", "")!.toLowerCase()));
+
       bool autocorrect = widget.control.attrBool("autocorrect", true)!;
       bool enableSuggestions =
           widget.control.attrBool("enableSuggestions", true)!;
@@ -231,7 +237,9 @@ class _TextFieldControlState extends State<TextFieldControl>
               revealPasswordIcon,
               _focused),
           showCursor: widget.control.attrBool("showCursor"),
-          textAlignVertical: TextAlignVertical(y: widget.control.attrDouble("textVerticalAlign") ?? 0.0),
+          textAlignVertical: TextAlignVertical(
+              y: widget.control.attrDouble("textVerticalAlign") ?? 0.0),
+          textDirection: textDirection,
           cursorHeight: widget.control.attrDouble("cursorHeight"),
           cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
           cursorRadius: parseRadius(widget.control, "cursorRadius"),

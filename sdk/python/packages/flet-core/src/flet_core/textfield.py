@@ -20,6 +20,7 @@ from flet_core.types import (
     TextAlign,
     TextAlignString,
     VerticalAlignment,
+    TextDirection,
 )
 
 try:
@@ -182,6 +183,7 @@ class TextField(FormFieldControl):
         adaptive: Optional[bool] = None,
         value: Optional[str] = None,
         keyboard_type: Optional[KeyboardType] = None,
+        text_direction: Optional[TextDirection] = None,
         multiline: Optional[bool] = None,
         min_lines: Optional[int] = None,
         max_lines: Optional[int] = None,
@@ -276,6 +278,7 @@ class TextField(FormFieldControl):
         self.text_style = text_style
         self.keyboard_type = keyboard_type
         self.text_align = text_align
+        self.text_direction = text_direction
         self.multiline = multiline
         self.min_lines = min_lines
         self.max_lines = max_lines
@@ -357,6 +360,18 @@ class TextField(FormFieldControl):
             self._set_attr("textAlign", value.value)
         else:
             self.__set_text_align(value)
+
+    # text_direction
+    @property
+    def text_direction(self) -> Optional[TextDirection]:
+        return self.__text_direction
+
+    @text_direction.setter
+    def text_direction(self, value: Optional[TextDirection]):
+        self.__text_direction = value
+        self._set_attr(
+            "textDirection", value.value if isinstance(value, TextDirection) else value
+        )
 
     def __set_text_align(self, value: TextAlignString):
         self._set_attr("textAlign", value)
