@@ -147,7 +147,8 @@ class CupertinoButton(ConstrainedControl):
 
     @opacity_on_click.setter
     def opacity_on_click(self, value: OptionalNumber):
-        value = max(0.0, min(value, 1.0))  # make sure 0.0 <= value <= 1.0
+        if value is not None:
+            value = max(0.0, min(value, 1.0))  # make sure 0.0 <= value <= 1.0
         self._set_attr("opacityOnClick", value)
 
     # border_radius
