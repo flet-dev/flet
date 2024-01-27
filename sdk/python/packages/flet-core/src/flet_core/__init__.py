@@ -239,6 +239,7 @@ from flet_core.types import (
     ScrollMode,
     TabAlignment,
     TextAlign,
+    TextDirection,
     ThemeMode,
     VerticalAlignment,
 )

@@ -256,6 +256,11 @@ class ScrollMode(Enum):
     HIDDEN = "hidden"
 
 
+class TextDirection(Enum):
+    LTR = "ltr"
+    RTL = "rtl"
+
+
 ClipBehaviorString = Literal[
     None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"
 ]
