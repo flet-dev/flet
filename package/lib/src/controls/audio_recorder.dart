@@ -92,10 +92,11 @@ class _AudioRecorderControlState extends State<AudioRecorderControl>
                   path: args["outputPath"] ??
                       ""); // FIX: a better default value just in case
             }
-            break;
+            return null;
           case "stop_recording":
             debugPrint("AudioRecorder.stopRecording($hashCode)");
-            return await recorder!.stop();
+            String? out = await recorder!.stop();
+            return out;
           case "resume_recording":
             debugPrint("AudioRecorder.resumeRecording($hashCode)");
             await recorder!.resume();
