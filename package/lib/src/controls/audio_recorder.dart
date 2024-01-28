@@ -31,10 +31,10 @@ class _AudioRecorderControlState extends State<AudioRecorderControl>
   @override
   void initState() {
     debugPrint("AudioRecorder.initState($hashCode)");
-    recorder = widget.control.state["player"];
+    recorder = widget.control.state["recorder"];
     if (recorder == null) {
       recorder = AudioRecorder();
-      recorder = widget.control.state["player"] = recorder;
+      recorder = widget.control.state["recorder"] = recorder;
     }
 
     widget.control.onRemove.clear();
@@ -44,7 +44,7 @@ class _AudioRecorderControlState extends State<AudioRecorderControl>
 
   void _onRemove() {
     debugPrint("AudioRecorder.remove($hashCode)");
-    widget.control.state["player"]?.dispose();
+    widget.control.state["recorder"]?.dispose();
     unsubscribeMethods(widget.control.id);
   }
 
