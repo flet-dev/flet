@@ -173,6 +173,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
 
     double? textVerticalAlign = widget.control.attrDouble("textVerticalAlign");
 
+    bool rtl = widget.control.attrBool("rtl", false)!;
     bool autocorrect = widget.control.attrBool("autocorrect", true)!;
     bool enableSuggestions =
         widget.control.attrBool("enableSuggestions", true)!;
@@ -250,6 +251,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
             ? createControl(widget.control, suffixControls.first.id, disabled)
             : null,
         readOnly: readOnly,
+        textDirection: rtl ? TextDirection.rtl : null,
         inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
         obscureText: password,
         controller: _controller,
