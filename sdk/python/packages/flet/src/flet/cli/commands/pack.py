@@ -116,15 +116,36 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        is_dir_not_empty = lambda dir: os.path.isdir(dir) and len(os.listdir(dir)) != 0
+
         # delete "build" directory
         build_dir = os.path.join(os.getcwd(), "build")
-        if os.path.exists(build_dir):
-            shutil.rmtree(build_dir, ignore_errors=True)
+        if is_dir_not_empty(build_dir):
+            ask_to_delete = input('Do you want to delete "build" directory? (y/n) ')
+            if not ask_to_delete.lower() == "n":
+                shutil.rmtree(build_dir, ignore_errors=True)
+            else:
+                print('Failing... "build" directory must be empty to proceed.')
+                exit(1)
 
-        # delete "dist" directory
-        dist_dir = os.path.join(os.getcwd(), "dist")
-        if os.path.exists(dist_dir):
-            shutil.rmtree(dist_dir, ignore_errors=True)
+        # delete "dist" directory or DISTPATH directory
+        # if --distpath cli option is specified
+        if options.distpath:
+            dist_dir = os.path.join(os.getcwd(), options.distpath)
+        else:
+            dist_dir = os.path.join(os.getcwd(), "dist")
+
+        if is_dir_not_empty(dist_dir):
+            ask_to_delete = input(
+                f'Do you want to delete "{os.path.basename(dist_dir)}" directory? (y/n) '
+            )
+            if not ask_to_delete.lower() == "n":
+                shutil.rmtree(dist_dir, ignore_errors=True)
+            else:
+                print(
+                    f"Failing... DISTPATH {os.path.basename(dist_dir)} directory must be empty to proceed."
+                )
+                exit(1)
 
         try:
             import PyInstaller.__main__
