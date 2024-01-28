@@ -59,11 +59,15 @@ class AudioRecorder(Control):
         return "audiorecorder"
 
     def start_recording(self, output_path: str):
+        if not self.page.web and not output_path:
+            raise ValueError("output_path must be provided when not on web!")
         self.page.invoke_method(
             "start_recording", {"outputPath": output_path}, control_id=self.uid
         )
 
     async def start_recording_async(self, output_path: str):
+        if not self.page.web and not output_path:
+            raise ValueError("output_path must be provided when not on web!")
         await self.page.invoke_method_async(
             "start_recording", {"outputPath": output_path}, control_id=self.uid
         )
