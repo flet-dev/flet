@@ -72,6 +72,14 @@ Describe in text or paste a screenshot.
 (paste your output here)
 ```
 
+
+**Give your `requirements.txt` file (don't `pip freeze`, instead give direct packages): **
+
+```
+(The requirements)
+```
+
+
 **Operating system**:
 
 <!--
