@@ -228,8 +228,7 @@ Widget createWidget(Key? key, ControlViewModel controlView, Control? parent,
     case "audiorecorder":
       return AudioRecorderControl(
           parent: parent,
-          control: controlView.control,
-          nextChild: nextChild);
+          control: controlView.control);
     case "divider":
       return DividerControl(
           key: key, parent: parent, control: controlView.control);

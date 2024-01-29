@@ -12,13 +12,11 @@ import 'flet_store_mixin.dart';
 class AudioRecorderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
-  final Widget? nextChild;
 
   const AudioRecorderControl(
       {super.key,
       required this.parent,
-      required this.control,
-      required this.nextChild});
+      required this.control});
 
   @override
   State<AudioRecorderControl> createState() => _AudioRecorderControlState();
