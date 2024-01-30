@@ -114,6 +114,14 @@ class Command(BaseCommand):
             action="store_true",
             help="Using this option creates a Manifest that will request elevation upon application start.(Windows)",
         )
+        parser.add_argument(
+            "-y",
+            "--yes",
+            dest="non_interactive",
+            default=False,
+            action="store_true",
+            help="Non-interactive mode.",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
         is_dir_not_empty = lambda dir: os.path.isdir(dir) and len(os.listdir(dir)) != 0
@@ -121,12 +129,17 @@ class Command(BaseCommand):
         # delete "build" directory
         build_dir = os.path.join(os.getcwd(), "build")
         if is_dir_not_empty(build_dir):
-            ask_to_delete = input('Do you want to delete "build" directory? (y/n) ')
-            if not ask_to_delete.lower() == "n":
+            if options.non_interactive:
                 shutil.rmtree(build_dir, ignore_errors=True)
             else:
-                print('Failing... "build" directory must be empty to proceed.')
-                exit(1)
+                delete_dir_prompt = input(
+                    f'Do you want to delete "build" directory? (y/n) '
+                )
+                if not delete_dir_prompt.lower() == "n":
+                    shutil.rmtree(build_dir, ignore_errors=True)
+                else:
+                    print('Failing... "build" directory must be empty to proceed.')
+                    exit(1)
 
         # delete "dist" directory or DISTPATH directory
         # if --distpath cli option is specified
@@ -136,16 +149,19 @@ class Command(BaseCommand):
             dist_dir = os.path.join(os.getcwd(), "dist")
 
         if is_dir_not_empty(dist_dir):
-            ask_to_delete = input(
-                f'Do you want to delete "{os.path.basename(dist_dir)}" directory? (y/n) '
-            )
-            if not ask_to_delete.lower() == "n":
+            if options.non_interactive:
                 shutil.rmtree(dist_dir, ignore_errors=True)
             else:
-                print(
-                    f"Failing... DISTPATH {os.path.basename(dist_dir)} directory must be empty to proceed."
+                delete_dir_prompt = input(
+                    f'Do you want to delete "{os.path.basename(dist_dir)}" directory? (y/n) '
                 )
-                exit(1)
+                if not delete_dir_prompt.lower() == "n":
+                    shutil.rmtree(dist_dir, ignore_errors=True)
+                else:
+                    print(
+                        f'Failing... DISTPATH "{os.path.basename(dist_dir)}" directory must be empty to proceed.'
+                    )
+                    exit(1)
 
         try:
             import PyInstaller.__main__
