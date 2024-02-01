@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -24,14 +25,20 @@ class VideoControl extends StatefulWidget {
 
 class _VideoControlState extends State<VideoControl>
     with FletControlStatefulMixin, FletStoreMixin {
+  late final playerConfig = PlayerConfiguration(
+    title: widget.control.attrString("title", "Flet Video")!,
+    muted: widget.control.attrBool("muted", false)!,
+    pitch: widget.control.attrDouble("pitch") != null ? true : false,
+    ready: () {
+      if (widget.control.attrBool("onLoaded", false)!) {
+        FletAppServices.of(context).server.sendPageEvent(
+            eventTarget: widget.control.id, eventName: "loaded", eventData: "");
+      }
+    },
+  );
+
   late final Player player = Player(
-    configuration: PlayerConfiguration(
-      // Supply your options:
-      title: 'My awesome package:media_kit application',
-      ready: () {
-        debugPrint('VIDEO: The initialization is complete.');
-      },
-    ),
+    configuration: playerConfig,
   );
   late final controller = VideoController(player);
 
@@ -62,47 +69,86 @@ class _VideoControlState extends State<VideoControl>
         e.name.toLowerCase() ==
         widget.control.attrString("filterQuality", "low")!.toLowerCase());
 
-    Future<void> onEnterFullscreen() async {
-      FletAppServices.of(context).server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: "enterFullscreen",
-          eventData: "");
-    }
+    double? volume = widget.control.attrDouble("volume");
+    double? pitch = widget.control.attrDouble("pitch");
+    double? playbackRate = widget.control.attrDouble("playbackRate");
+    bool? shufflePlaylist = widget.control.attrBool("shufflePlaylist");
+    PlaylistMode? playlistMode = PlaylistMode.values.firstWhereOrNull((e) =>
+        e.name.toLowerCase() ==
+        widget.control.attrString("playlistMode")!.toLowerCase());
 
-    return withPageArgs((context, pageArgs) {
-      Video? video = Video(
-        controller: controller,
-        wakelock: widget.control.attrBool("wakelock", true)!,
-        pauseUponEnteringBackgroundMode:
-            widget.control.attrBool("pauseUponEnteringBackgroundMode", true)!,
-        resumeUponEnteringForegroundMode:
-            widget.control.attrBool("resumeUponEnteringForegroundMode", false)!,
-        alignment:
-            parseAlignment(widget.control, "alignment") ?? Alignment.center,
-        fit: parseBoxFit(widget.control, "fit") ?? BoxFit.contain,
-        filterQuality: filterQuality,
-        fill: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("fillColor", "")!) ??
-            const Color(0xFF000000),
-        onEnterFullscreen: widget.control.attrBool("onEnterFullscreen", false)!
-            ? () async {
-                FletAppServices.of(context).server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "enter_fullscreen",
-                    eventData: "");
-              }
-            : defaultEnterNativeFullscreen,
-        onExitFullscreen: widget.control.attrBool("onExitFullscreen", false)!
-            ? () async {
-                FletAppServices.of(context).server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "exit_fullscreen",
-                    eventData: "");
-              }
-            : defaultExitNativeFullscreen,
-      );
+    final double? prevVolume = widget.control.state["volume"];
+    final double? prevPitch = widget.control.state["pitch"];
+    final double? prevPlaybackRate = widget.control.state["playbackRate"];
+    final bool? prevShufflePlaylist = widget.control.state["shufflePlaylist"];
+    final PlaylistMode? prevPlaylistMode = widget.control.state["playlistMode"];
+
+    Video? video = Video(
+      controller: controller,
+      wakelock: widget.control.attrBool("wakelock", true)!,
+      pauseUponEnteringBackgroundMode:
+          widget.control.attrBool("pauseUponEnteringBackgroundMode", true)!,
+      resumeUponEnteringForegroundMode:
+          widget.control.attrBool("resumeUponEnteringForegroundMode", false)!,
+      alignment:
+          parseAlignment(widget.control, "alignment") ?? Alignment.center,
+      fit: parseBoxFit(widget.control, "fit") ?? BoxFit.contain,
+      filterQuality: filterQuality,
+      fill: HexColor.fromString(
+              Theme.of(context), widget.control.attrString("fillColor", "")!) ??
+          const Color(0xFF000000),
+      onEnterFullscreen: widget.control.attrBool("onEnterFullscreen", false)!
+          ? () async {
+              FletAppServices.of(context).server.sendPageEvent(
+                  eventTarget: widget.control.id,
+                  eventName: "enter_fullscreen",
+                  eventData: "");
+            }
+          : defaultEnterNativeFullscreen,
+      onExitFullscreen: widget.control.attrBool("onExitFullscreen", false)!
+          ? () async {
+              FletAppServices.of(context).server.sendPageEvent(
+                  eventTarget: widget.control.id,
+                  eventName: "exit_fullscreen",
+                  eventData: "");
+            }
+          : defaultExitNativeFullscreen,
+    );
 
     () async {
+      if (volume != null &&
+          volume != prevVolume &&
+          volume >= 0 &&
+          volume <= 1) {
+        widget.control.state["volume"] = volume;
+        debugPrint("Video.setVolume($volume)");
+        await player.setVolume(volume);
+      }
+
+      if (pitch != null && pitch != prevPitch) {
+        widget.control.state["pitch"] = pitch;
+        debugPrint("Video.setPitch($pitch)");
+        await player.setPitch(pitch);
+      }
+
+      if (playbackRate != null && playbackRate != prevPlaybackRate) {
+        widget.control.state["playbackRate"] = playbackRate;
+        debugPrint("Video.setPlaybackRate($playbackRate)");
+        await player.setRate(playbackRate);
+      }
+
+      if (shufflePlaylist != null && shufflePlaylist != prevShufflePlaylist) {
+        widget.control.state["shufflePlaylist"] = shufflePlaylist;
+        debugPrint("Video.setShufflePlaylist($shufflePlaylist)");
+        await player.setShuffle(shufflePlaylist);
+      }
+
+      if (playlistMode != null && playlistMode != prevPlaylistMode) {
+        widget.control.state["playlistMode"] = playlistMode;
+        debugPrint("Video.setPlaylistMode($playlistMode)");
+        await player.setPlaylistMode(playlistMode);
+      }
+
       subscribeMethods(widget.control.id, (methodName, args) async {
         switch (methodName) {
           case "play":
@@ -140,7 +186,6 @@ class _VideoControlState extends State<VideoControl>
       });
     }();
 
-      return constrainedControl(context, video, widget.parent, widget.control);
-    });
+    return constrainedControl(context, video, widget.parent, widget.control);
   }
 }

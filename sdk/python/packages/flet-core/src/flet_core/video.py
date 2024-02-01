@@ -27,6 +27,12 @@ class FilterQuality(Enum):
     HIGH = "high"
 
 
+class PlaylistMode(Enum):
+    NONE = "none"
+    SINGLE = "single"
+    LOOP = "loop"
+
+
 class Video(ConstrainedControl):
     """
     A video widget.
@@ -39,15 +45,23 @@ class Video(ConstrainedControl):
     def __init__(
         self,
         sources: Optional[List[str]] = None,  # TODO
+        title: Optional[str] = None,
         fit: Optional[ImageFit] = None,
         fill_color: Optional[str] = None,
         wakelock: Optional[bool] = None,
         autoplay: Optional[bool] = None,
+        muted: Optional[bool] = None,
+        playlist_mode: Optional[PlaylistMode] = None,
+        shuffle_playlist: Optional[bool] = None,
+        volume: OptionalNumber = None,
+        playback_rate: OptionalNumber = None,
         alignment: Optional[Alignment] = None,
         filter_quality: Optional[FilterQuality] = None,
         pause_upon_entering_background_mode: Optional[bool] = None,
         resume_upon_entering_foreground_mode: Optional[bool] = None,
         aspect_ratio: OptionalNumber = None,
+        pitch: OptionalNumber = None,
+        on_loaded=None,
         on_enter_fullscreen=None,
         on_exit_fullscreen=None,
         #
@@ -112,15 +126,23 @@ class Video(ConstrainedControl):
 
         self.src = src
         self.fit = fit
+        self.pitch = pitch
         self.fill_color = fill_color
+        self.volume = volume
+        self.playback_rate = playback_rate
         self.alignment = alignment
         self.wakelock = wakelock
         self.autoplay = autoplay
+        self.shuffle_playlist = shuffle_playlist
+        self.muted = muted
+        self.title = title
+        self.filter_quality = filter_quality
+        self.playlist_mode = playlist_mode
         self.pause_upon_entering_background_mode = pause_upon_entering_background_mode
         self.resume_upon_entering_foreground_mode = resume_upon_entering_foreground_mode
         self.on_enter_fullscreen = on_enter_fullscreen
         self.on_exit_fullscreen = on_exit_fullscreen
-        self.filter_quality = filter_quality
+        self.on_loaded = on_loaded
 
     def _get_control_name(self):
         return "video"
@@ -212,6 +234,60 @@ class Video(ConstrainedControl):
     def autoplay(self, value: Optional[bool]):
         self._set_attr("autoplay", value)
 
+    # muted
+    @property
+    def muted(self) -> Optional[bool]:
+        return self._get_attr("muted", data_type="bool", def_value=False)
+
+    @muted.setter
+    def muted(self, value: Optional[bool]):
+        self._set_attr("muted", value)
+
+    # shuffle_playlist
+    @property
+    def shuffle_playlist(self) -> Optional[bool]:
+        return self._get_attr("shufflePlaylist", data_type="bool", def_value=False)
+
+    @shuffle_playlist.setter
+    def shuffle_playlist(self, value: Optional[bool]):
+        self._set_attr("shufflePlaylist", value)
+
+    # pitch
+    @property
+    def pitch(self) -> OptionalNumber:
+        return self._get_attr("pitch")
+
+    @pitch.setter
+    def pitch(self, value: OptionalNumber):
+        self._set_attr("pitch", value)
+
+    # volume
+    @property
+    def volume(self) -> OptionalNumber:
+        return self._get_attr("volume")
+
+    @volume.setter
+    def volume(self, value: OptionalNumber):
+        self._set_attr("volume", value)
+
+    # playback_rate
+    @property
+    def playback_rate(self) -> OptionalNumber:
+        return self._get_attr("playbackRate")
+
+    @playback_rate.setter
+    def playback_rate(self, value: OptionalNumber):
+        self._set_attr("playbackRate", value)
+
+    # title
+    @property
+    def title(self) -> Optional[str]:
+        return self._get_attr("title")
+
+    @title.setter
+    def title(self, value: Optional[str]):
+        self._set_attr("title", value)
+
     # pause_upon_entering_background_mode
     @property
     def pause_upon_entering_background_mode(self) -> Optional[bool]:
@@ -255,6 +331,19 @@ class Video(ConstrainedControl):
             "filterQuality", value.value if isinstance(value, FilterQuality) else value
         )
 
+    # playlist_mode
+    @property
+    def playlist_mode(self) -> Optional[PlaylistMode]:
+        return self.__playlist_mode
+
+    @playlist_mode.setter
+    def playlist_mode(self, value: Optional[PlaylistMode]):
+        self.__playlist_mode = value
+        self._set_attr(
+            "playlistMode",
+            value.value if isinstance(value, PlaylistMode) else value,
+        )
+
     # on_enter_fullscreen
     @property
     def on_enter_fullscreen(self):
@@ -274,3 +363,13 @@ class Video(ConstrainedControl):
     def on_exit_fullscreen(self, handler):
         self._add_event_handler("exit_fullscreen", handler)
         self._set_attr("onExitFullscreen", True if handler is not None else None)
+
+    # on_loaded
+    @property
+    def on_loaded(self):
+        return self._get_event_handler("loaded")
+
+    @on_loaded.setter
+    def on_loaded(self, handler):
+        self._set_attr("onLoaded", True if handler is not None else None)
+        self._add_event_handler("loaded", handler)
