@@ -129,6 +129,52 @@ class Video(ConstrainedControl):
         super()._before_build_command()
         self._set_attr_json("alignment", self.__alignment)
 
+    def play(self):
+        self.page.invoke_method("play", control_id=self.uid)
+
+    async def play_async(self):
+        await self.page.invoke_method_async("play", control_id=self.uid)
+
+    def pause(self):
+        self.page.invoke_method("pause", control_id=self.uid)
+
+    async def pause_async(self):
+        await self.page.invoke_method_async("pause", control_id=self.uid)
+
+    def play_or_pause(self):
+        self.page.invoke_method("play_or_pause", control_id=self.uid)
+
+    async def play_or_pause_async(self):
+        await self.page.invoke_method_async("play_or_pause", control_id=self.uid)
+
+    def stop(self):
+        self.page.invoke_method("stop", control_id=self.uid)
+
+    async def stop_async(self):
+        await self.page.invoke_method_async("stop", control_id=self.uid)
+
+    def next(self):
+        self.page.invoke_method("next", control_id=self.uid)
+
+    async def next_async(self):
+        await self.page.invoke_method_async("next", control_id=self.uid)
+
+    def previous(self):
+        self.page.invoke_method("previous", control_id=self.uid)
+
+    async def previous_async(self):
+        await self.page.invoke_method_async("previous", control_id=self.uid)
+
+    def seek(self, position_milliseconds: int):
+        self.page.invoke_method(
+            "seek", {"position": str(position_milliseconds)}, control_id=self.uid
+        )
+
+    async def seek_async(self, position_milliseconds: int):
+        await self.page.invoke_method_async(
+            "seek", {"position": str(position_milliseconds)}, control_id=self.uid
+        )
+
     # fit
     @property
     def fit(self) -> Optional[ImageFit]:

@@ -57,12 +57,7 @@ class _VideoControlState extends State<VideoControl>
     debugPrint("Video build: ${widget.control.id}");
 
     var src = widget.control.attrString("src", "")!;
-    double? width = widget.control.attrDouble("width", null);
-    double? height = widget.control.attrDouble("height", null);
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    var errorContentCtrls =
-        widget.children.where((c) => c.name == "error_content" && c.isVisible);
-
     FilterQuality filterQuality = FilterQuality.values.firstWhere((e) =>
         e.name.toLowerCase() ==
         widget.control.attrString("filterQuality", "low")!.toLowerCase());
@@ -107,7 +102,43 @@ class _VideoControlState extends State<VideoControl>
             : defaultExitNativeFullscreen,
       );
 
-      // var assetSrc = getAssetSrc(src, pageArgs.pageUri!, pageArgs.assetsDir);
+    () async {
+      subscribeMethods(widget.control.id, (methodName, args) async {
+        switch (methodName) {
+          case "play":
+            debugPrint("Video.play($hashCode)");
+            await player.play();
+            break;
+          case "pause":
+            debugPrint("Video.pause($hashCode)");
+            await player.pause();
+            break;
+          case "play_or_pause":
+            debugPrint("Video.playOrPause($hashCode)");
+            await player.playOrPause();
+            break;
+          case "stop":
+            debugPrint("Video.stop($hashCode)");
+            await player.stop();
+            break;
+          case "seek":
+            await player.seek(Duration(
+                milliseconds: int.tryParse(args["position"] ?? "") ?? 0));
+            break;
+          case "next":
+            await player.next();
+            break;
+          case "previous":
+            await player.previous();
+            break;
+          case "add_media":
+            debugPrint("Video.addMedia(${args['media']}");
+            // await player.add(); TODO
+            break;
+        }
+        return null;
+      });
+    }();
 
       return constrainedControl(context, video, widget.parent, widget.control);
     });
