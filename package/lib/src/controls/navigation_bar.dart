@@ -15,13 +15,15 @@ class NavigationBarControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const NavigationBarControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<NavigationBarControl> createState() => _NavigationBarControlState();
@@ -44,14 +46,16 @@ class _NavigationBarControlState extends State<NavigationBarControl>
     debugPrint("NavigationBarControl build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool adaptive = widget.control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoNavigationBarControl(
             control: widget.control,
             children: widget.children,
-            parentDisabled: widget.parentDisabled);
+            parentDisabled: widget.parentDisabled,
+            parentAdaptive: adaptive);
       }
 
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
@@ -102,11 +106,13 @@ class _NavigationBarControlState extends State<NavigationBarControl>
                   tooltip: destView.control.attrString("tooltip", "")!,
                   icon: iconContentCtrls.isNotEmpty
                       ? createControl(
-                          destView.control, iconContentCtrls.first.id, disabled)
+                          destView.control, iconContentCtrls.first.id, disabled,
+                          parentAdaptive: adaptive)
                       : Icon(icon),
                   selectedIcon: selectedIconContentCtrls.isNotEmpty
                       ? createControl(destView.control,
-                          selectedIconContentCtrls.first.id, disabled)
+                          selectedIconContentCtrls.first.id, disabled,
+                          parentAdaptive: adaptive)
                       : selectedIcon != null
                           ? Icon(selectedIcon)
                           : null,

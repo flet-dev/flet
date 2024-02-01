@@ -10,13 +10,15 @@ class SafeAreaControl extends StatelessWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const SafeAreaControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class SafeAreaControl extends StatelessWidget {
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = control.isDisabled || parentDisabled;
+    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
     return constrainedControl(
         context,
@@ -37,7 +40,8 @@ class SafeAreaControl extends StatelessWidget {
                 control.attrBool("maintainBottomViewPadding", false)!,
             minimum: parseEdgeInsets(control, "minimum") ?? EdgeInsets.zero,
             child: contentCtrls.isNotEmpty
-                ? createControl(control, contentCtrls.first.id, disabled)
+                ? createControl(control, contentCtrls.first.id, disabled,
+                    parentAdaptive: adaptive)
                 : const ErrorControl("SafeArea has no content.")),
         parent,
         control);

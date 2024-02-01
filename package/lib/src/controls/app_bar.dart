@@ -13,6 +13,7 @@ class AppBarControl extends StatelessWidget
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final List<Control> children;
   final double height;
 
@@ -22,6 +23,7 @@ class AppBarControl extends StatelessWidget
       required this.control,
       required this.children,
       required this.parentDisabled,
+      required this.parentAdaptive,
       required this.height});
 
   @override
@@ -29,13 +31,14 @@ class AppBarControl extends StatelessWidget
     debugPrint("AppBar build: ${control.id}");
 
     return withPagePlatform((context, platform) {
-      bool adaptive = control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoAppBarControl(
             control: control,
             parentDisabled: parentDisabled,
+            parentAdaptive: adaptive,
             children: children,
             bgcolor: HexColor.fromString(
                 Theme.of(context), control.attrString("bgcolor", "")!));
@@ -59,12 +62,14 @@ class AppBarControl extends StatelessWidget
 
       return AppBar(
         leading: leadingCtrls.isNotEmpty
-            ? createControl(control, leadingCtrls.first.id, control.isDisabled)
+            ? createControl(control, leadingCtrls.first.id, control.isDisabled,
+                parentAdaptive: adaptive)
             : null,
         leadingWidth: leadingWidth,
         automaticallyImplyLeading: automaticallyImplyLeading,
         title: titleCtrls.isNotEmpty
-            ? createControl(control, titleCtrls.first.id, control.isDisabled)
+            ? createControl(control, titleCtrls.first.id, control.isDisabled,
+                parentAdaptive: adaptive)
             : null,
         centerTitle: centerTitle,
         toolbarHeight: preferredSize.height,
@@ -72,7 +77,8 @@ class AppBarControl extends StatelessWidget
         backgroundColor: bgcolor,
         elevation: elevation,
         actions: actionCtrls
-            .map((c) => createControl(control, c.id, control.isDisabled))
+            .map((c) => createControl(control, c.id, control.isDisabled,
+                parentAdaptive: adaptive))
             .toList(),
       );
     });

@@ -12,13 +12,15 @@ class CupertinoDialogActionControl extends StatelessWidget
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const CupertinoDialogActionControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,8 @@ class CupertinoDialogActionControl extends StatelessWidget
         isDestructiveAction: isDestructiveAction,
         textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
         child: contentCtrls.isNotEmpty
-            ? createControl(control, contentCtrls.first.id, disabled)
+            ? createControl(control, contentCtrls.first.id, disabled,
+                parentAdaptive: parentAdaptive)
             : Text(text));
 
     return baseControl(context, cupertinoDialogAction, parent, control);

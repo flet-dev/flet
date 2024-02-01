@@ -12,6 +12,7 @@ class GridViewControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final List<Control> children;
 
   const GridViewControl(
@@ -19,7 +20,8 @@ class GridViewControl extends StatefulWidget {
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<GridViewControl> createState() => _GridViewControlState();
@@ -46,6 +48,8 @@ class _GridViewControlState extends State<GridViewControl> {
     debugPrint("GridViewControl build: ${widget.control.id}");
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool? adaptive =
+        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
     final horizontal = widget.control.attrBool("horizontal", false)!;
     final runsCount = widget.control.attrInt("runsCount", 1)!;
@@ -90,7 +94,8 @@ class _GridViewControlState extends State<GridViewControl> {
           itemCount: visibleControls.length,
           itemBuilder: (context, index) {
             return createControl(
-                widget.control, visibleControls[index].id, disabled);
+                widget.control, visibleControls[index].id, disabled,
+                parentAdaptive: adaptive);
           },
         );
 

@@ -10,6 +10,7 @@ class ColumnControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final List<Control> children;
 
   const ColumnControl(
@@ -17,7 +18,8 @@ class ColumnControl extends StatelessWidget {
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class ColumnControl extends StatelessWidget {
     bool tight = control.attrBool("tight", false)!;
     bool wrap = control.attrBool("wrap", false)!;
     bool disabled = control.isDisabled || parentDisabled;
+    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
     List<Widget> controls = [];
 
@@ -46,7 +49,8 @@ class ColumnControl extends StatelessWidget {
       firstControl = false;
 
       // displayed control
-      controls.add(createControl(control, ctrl.id, disabled));
+      controls.add(
+          createControl(control, ctrl.id, disabled, parentAdaptive: adaptive));
     }
 
     Widget child = wrap

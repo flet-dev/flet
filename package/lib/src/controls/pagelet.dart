@@ -20,13 +20,15 @@ class PageletControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const PageletControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<PageletControl> createState() => _PageletControlState();
@@ -62,6 +64,8 @@ class _PageletControlState extends State<PageletControl>
     }
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool? adaptive =
+        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
     var bgcolor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("bgcolor", "")!);
@@ -87,11 +91,13 @@ class _PageletControlState extends State<PageletControl>
         builder: (context, childrenViews) {
           var navBar = navigationBarCtrls.isNotEmpty
               ? createControl(
-                  widget.control, navigationBarCtrls.first.id, disabled)
+                  widget.control, navigationBarCtrls.first.id, disabled,
+                  parentAdaptive: adaptive)
               : null;
           var bottomAppBar = bottomAppBarCtrls.isNotEmpty
               ? createControl(
-                  widget.control, bottomAppBarCtrls.first.id, disabled)
+                  widget.control, bottomAppBarCtrls.first.id, disabled,
+                  parentAdaptive: adaptive)
               : null;
           var bnb = navBar ?? bottomAppBar;
 
@@ -168,6 +174,7 @@ class _PageletControlState extends State<PageletControl>
                       control: appBarView.control,
                       children: appBarView.children,
                       parentDisabled: widget.control.isDisabled,
+                      parentAdaptive: adaptive,
                       height: appBarView.control
                           .attrDouble("toolbarHeight", kToolbarHeight)!)
                   : appBarView.control.type == "cupertinoappbar"
@@ -176,6 +183,7 @@ class _PageletControlState extends State<PageletControl>
                           control: appBarView.control,
                           children: appBarView.children,
                           parentDisabled: widget.control.isDisabled,
+                          parentAdaptive: adaptive,
                           bgcolor: HexColor.fromString(Theme.of(context),
                               appBarView.control.attrString("bgcolor", "")!),
                         ) as ObstructingPreferredSizeWidget
@@ -216,16 +224,19 @@ class _PageletControlState extends State<PageletControl>
                   },
                   body: contentCtrls.isNotEmpty
                       ? createControl(
-                          widget.control, contentCtrls.first.id, disabled)
+                          widget.control, contentCtrls.first.id, disabled,
+                          parentAdaptive: adaptive)
                       : null,
                   bottomNavigationBar: bnb,
                   bottomSheet: bottomSheetCtrls.isNotEmpty
                       ? createControl(
-                          widget.control, bottomSheetCtrls.first.id, disabled)
+                          widget.control, bottomSheetCtrls.first.id, disabled,
+                          parentAdaptive: adaptive)
                       : null,
                   floatingActionButton: fabCtrls.isNotEmpty
                       ? createControl(
-                          widget.control, fabCtrls.first.id, disabled)
+                          widget.control, fabCtrls.first.id, disabled,
+                          parentAdaptive: adaptive)
                       : null,
                   floatingActionButtonLocation: fabLocation),
               widget.parent,

@@ -16,13 +16,15 @@ class CupertinoButtonControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const CupertinoButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<CupertinoButtonControl> createState() => _CupertinoButtonControlState();
@@ -80,8 +82,9 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl>
             pressedOpacity: pressedOpacity,
             alignment: alignment,
             minSize: minSize,
-            child:
-                createControl(widget.control, contentCtrls.first.id, disabled),
+            child: createControl(
+                widget.control, contentCtrls.first.id, disabled,
+                parentAdaptive: widget.parentAdaptive),
           )
         : CupertinoButton.filled(
             onPressed: onPressed,
@@ -91,8 +94,9 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl>
             pressedOpacity: pressedOpacity,
             alignment: alignment,
             minSize: minSize,
-            child:
-                createControl(widget.control, contentCtrls.first.id, disabled),
+            child: createControl(
+                widget.control, contentCtrls.first.id, disabled,
+                parentAdaptive: widget.parentAdaptive),
           );
 
     return constrainedControl(context, button, widget.parent, widget.control);

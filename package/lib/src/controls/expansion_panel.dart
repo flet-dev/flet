@@ -12,13 +12,15 @@ class ExpansionPanelListControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const ExpansionPanelListControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<ExpansionPanelListControl> createState() =>
@@ -42,6 +44,8 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
     }
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool? adaptive =
+        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
     var dividerColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("dividerColor", "")!);
@@ -87,11 +91,13 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
               headerBuilder: (BuildContext context, bool isExpanded) {
                 return headerCtrls.isNotEmpty
                     ? createControl(
-                        widget.control, headerCtrls.first.id, disabled)
+                        widget.control, headerCtrls.first.id, disabled,
+                        parentAdaptive: adaptive)
                     : const ListTile(title: Text("Header Placeholder"));
               },
               body: bodyCtrls.isNotEmpty
-                  ? createControl(widget.control, bodyCtrls.first.id, disabled)
+                  ? createControl(widget.control, bodyCtrls.first.id, disabled,
+                      parentAdaptive: adaptive)
                   : const ListTile(title: Text("Body Placeholder")),
             );
           }).toList());

@@ -1,7 +1,7 @@
+import time
 from typing import Any, Optional, Union
 
-import time
-
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -15,7 +15,7 @@ from flet_core.types import (
 )
 
 
-class ElevatedButton(ConstrainedControl):
+class ElevatedButton(ConstrainedControl, AdaptiveControl):
     """
     Elevated buttons are essentially filled tonal buttons with a shadow. To prevent shadow creep, only use them when absolutely necessary, such as when the button requires visual separation from a patterned background.
 
@@ -117,6 +117,8 @@ class ElevatedButton(ConstrainedControl):
             data=data,
         )
 
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.__color = None
         self.__bgcolor = None
         self.__elevation = None
@@ -130,7 +132,6 @@ class ElevatedButton(ConstrainedControl):
         self.icon_color = icon_color
         self.content = content
         self.autofocus = autofocus
-        self.adaptive = adaptive
         self.url = url
         self.url_target = url_target
         self.on_click = on_click
@@ -306,15 +307,6 @@ class ElevatedButton(ConstrainedControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
 
     # on_hover
     @property

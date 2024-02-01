@@ -15,13 +15,15 @@ class ExpansionTileControl extends StatelessWidget
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const ExpansionTileControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class ExpansionTileControl extends StatelessWidget
     }
 
     bool disabled = control.isDisabled || parentDisabled;
+    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
     bool onchange = control.attrBool("onchange", false)!;
     bool maintainState = control.attrBool("maintainState", false)!;
     bool initiallyExpanded = control.attrBool("maintainState", false)!;
@@ -107,17 +110,24 @@ class ExpansionTileControl extends StatelessWidget
       collapsedShape: parseOutlinedBorder(control, "collapsedShape"),
       onExpansionChanged: onChange,
       leading: leadingCtrls.isNotEmpty
-          ? createControl(control, leadingCtrls.first.id, disabled)
+          ? createControl(control, leadingCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
-      title: createControl(control, titleCtrls.first.id, disabled),
+      title: createControl(control, titleCtrls.first.id, disabled,
+          parentAdaptive: adaptive),
       subtitle: subtitleCtrls.isNotEmpty
-          ? createControl(control, subtitleCtrls.first.id, disabled)
+          ? createControl(control, subtitleCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
       trailing: trailingCtrls.isNotEmpty
-          ? createControl(control, trailingCtrls.first.id, disabled)
+          ? createControl(control, trailingCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
       children: ctrls.isNotEmpty
-          ? ctrls.map((c) => createControl(control, c.id, disabled)).toList()
+          ? ctrls
+              .map((c) => createControl(control, c.id, disabled,
+                  parentAdaptive: adaptive))
+              .toList()
           : [],
     );
 

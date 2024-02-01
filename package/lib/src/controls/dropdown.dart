@@ -14,12 +14,14 @@ class DropdownControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const DropdownControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<DropdownControl> createState() => _DropdownControlState();
@@ -136,7 +138,8 @@ class _DropdownControlState extends State<DropdownControl>
             prefixControls.isNotEmpty ? prefixControls.first.control : null,
             suffixControls.isNotEmpty ? suffixControls.first.control : null,
             null,
-            _focused),
+            _focused,
+            widget.parentAdaptive),
         onChanged: disabled
             ? null
             : (String? value) {

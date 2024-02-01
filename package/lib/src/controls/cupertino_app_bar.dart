@@ -12,6 +12,7 @@ class CupertinoAppBarControl extends StatelessWidget
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final List<Control> children;
   final Color? bgcolor;
 
@@ -21,6 +22,7 @@ class CupertinoAppBarControl extends StatelessWidget
       required this.control,
       required this.children,
       required this.parentDisabled,
+      required this.parentAdaptive,
       required this.bgcolor});
 
   @override
@@ -49,7 +51,8 @@ class CupertinoAppBarControl extends StatelessWidget
 
     return CupertinoNavigationBar(
       leading: leadingCtrls.isNotEmpty
-          ? createControl(control, leadingCtrls.first.id, control.isDisabled)
+          ? createControl(control, leadingCtrls.first.id, control.isDisabled,
+              parentAdaptive: parentAdaptive)
           : null,
       automaticallyImplyLeading: automaticallyImplyLeading,
       automaticallyImplyMiddle: automaticallyImplyMiddle,
@@ -58,10 +61,12 @@ class CupertinoAppBarControl extends StatelessWidget
       previousPageTitle: control.attrString("previousPageTitle"),
       padding: parseEdgeInsetsDirectional(control, "padding"),
       middle: middleCtrls.isNotEmpty
-          ? createControl(control, middleCtrls.first.id, control.isDisabled)
+          ? createControl(control, middleCtrls.first.id, control.isDisabled,
+              parentAdaptive: parentAdaptive)
           : null,
       trailing: trailingCtrls.isNotEmpty
-          ? createControl(control, trailingCtrls.first.id, control.isDisabled)
+          ? createControl(control, trailingCtrls.first.id, control.isDisabled,
+              parentAdaptive: parentAdaptive)
           : null,
       backgroundColor: bgcolor,
     );

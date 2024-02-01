@@ -14,13 +14,15 @@ class CupertinoNavigationBarControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const CupertinoNavigationBarControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<CupertinoNavigationBarControl> createState() =>
@@ -83,11 +85,13 @@ class _CupertinoNavigationBarControlState
                 tooltip: destView.control.attrString("tooltip", "")!,
                 icon: iconContentCtrls.isNotEmpty
                     ? createControl(
-                        destView.control, iconContentCtrls.first.id, disabled)
+                        destView.control, iconContentCtrls.first.id, disabled,
+                        parentAdaptive: widget.parentAdaptive)
                     : Icon(icon),
                 activeIcon: selectedIconContentCtrls.isNotEmpty
                     ? createControl(destView.control,
-                        selectedIconContentCtrls.first.id, disabled)
+                        selectedIconContentCtrls.first.id, disabled,
+                        parentAdaptive: widget.parentAdaptive)
                     : selectedIcon != null
                         ? Icon(selectedIcon)
                         : null,
