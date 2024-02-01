@@ -1,5 +1,7 @@
-from typing import Any, Optional, Union
+from enum import Enum
+from typing import Any, Optional, Union, List
 
+from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -9,12 +11,20 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ImageFit,
 )
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
+
+
+class FilterQuality(Enum):
+    NONE = "none"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
 
 
 class Video(ConstrainedControl):
@@ -28,6 +38,21 @@ class Video(ConstrainedControl):
 
     def __init__(
         self,
+        sources: Optional[List[str]] = None,  # TODO
+        fit: Optional[ImageFit] = None,
+        fill_color: Optional[str] = None,
+        wakelock: Optional[bool] = None,
+        autoplay: Optional[bool] = None,
+        alignment: Optional[Alignment] = None,
+        filter_quality: Optional[FilterQuality] = None,
+        pause_upon_entering_background_mode: Optional[bool] = None,
+        resume_upon_entering_foreground_mode: Optional[bool] = None,
+        aspect_ratio: OptionalNumber = None,
+        on_enter_fullscreen=None,
+        on_exit_fullscreen=None,
+        #
+        # Common
+        #
         src: Optional[str] = None,
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -43,7 +68,6 @@ class Video(ConstrainedControl):
         rotate: RotateValue = None,
         scale: ScaleValue = None,
         offset: OffsetValue = None,
-        aspect_ratio: OptionalNumber = None,
         animate_opacity: AnimationValue = None,
         animate_size: AnimationValue = None,
         animate_position: AnimationValue = None,
@@ -55,10 +79,6 @@ class Video(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-
     ):
         ConstrainedControl.__init__(
             self,
@@ -91,7 +111,120 @@ class Video(ConstrainedControl):
         )
 
         self.src = src
+        self.fit = fit
+        self.fill_color = fill_color
+        self.alignment = alignment
+        self.wakelock = wakelock
+        self.autoplay = autoplay
+        self.pause_upon_entering_background_mode = pause_upon_entering_background_mode
+        self.resume_upon_entering_foreground_mode = resume_upon_entering_foreground_mode
+        self.on_enter_fullscreen = on_enter_fullscreen
+        self.on_exit_fullscreen = on_exit_fullscreen
+        self.filter_quality = filter_quality
 
     def _get_control_name(self):
         return "video"
 
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("alignment", self.__alignment)
+
+    # fit
+    @property
+    def fit(self) -> Optional[ImageFit]:
+        return self.__fit
+
+    @fit.setter
+    def fit(self, value: Optional[ImageFit]):
+        self.__fit = value
+        self._set_attr("fit", value.value if isinstance(value, ImageFit) else value)
+
+    # fill_color
+    @property
+    def fill_color(self):
+        return self._get_attr("fillColor")
+
+    @fill_color.setter
+    def fill_color(self, value):
+        self._set_attr("fillColor", value)
+
+    # wakelock
+    @property
+    def wakelock(self) -> Optional[bool]:
+        return self._get_attr("wakelock", data_type="bool", def_value=True)
+
+    @wakelock.setter
+    def wakelock(self, value: Optional[bool]):
+        self._set_attr("wakelock", value)
+
+    # autoplay
+    @property
+    def autoplay(self) -> Optional[bool]:
+        return self._get_attr("autoplay", data_type="bool", def_value=False)
+
+    @autoplay.setter
+    def autoplay(self, value: Optional[bool]):
+        self._set_attr("autoplay", value)
+
+    # pause_upon_entering_background_mode
+    @property
+    def pause_upon_entering_background_mode(self) -> Optional[bool]:
+        return self._get_attr(
+            "pauseUponEnteringBackgroundMode", data_type="bool", def_value=True
+        )
+
+    @pause_upon_entering_background_mode.setter
+    def pause_upon_entering_background_mode(self, value: Optional[bool]):
+        self._set_attr("pauseUponEnteringBackgroundMode", value)
+
+    # resume_upon_entering_foreground_mode
+    @property
+    def resume_upon_entering_foreground_mode(self) -> Optional[bool]:
+        return self._get_attr(
+            "resumeUponEnteringForegroundMode", data_type="bool", def_value=False
+        )
+
+    @resume_upon_entering_foreground_mode.setter
+    def resume_upon_entering_foreground_mode(self, value: Optional[bool]):
+        self._set_attr("resumeUponEnteringForegroundMode", value)
+
+    # alignment
+    @property
+    def alignment(self) -> Optional[Alignment]:
+        return self.__alignment
+
+    @alignment.setter
+    def alignment(self, value: Optional[Alignment]):
+        self.__alignment = value
+
+    # filter_quality
+    @property
+    def filter_quality(self) -> Optional[FilterQuality]:
+        return self.__filter_quality
+
+    @filter_quality.setter
+    def filter_quality(self, value: Optional[FilterQuality]):
+        self.__filter_quality = value
+        self._set_attr(
+            "filterQuality", value.value if isinstance(value, FilterQuality) else value
+        )
+
+    # on_enter_fullscreen
+    @property
+    def on_enter_fullscreen(self):
+        return self._get_event_handler("enter_fullscreen")
+
+    @on_enter_fullscreen.setter
+    def on_enter_fullscreen(self, handler):
+        self._add_event_handler("enter_fullscreen", handler)
+        self._set_attr("onEnterFullscreen", True if handler is not None else None)
+
+    # on_exit_fullscreen
+    @property
+    def on_exit_fullscreen(self):
+        return self._get_event_handler("exit_fullscreen")
+
+    @on_exit_fullscreen.setter
+    def on_exit_fullscreen(self, handler):
+        self._add_event_handler("exit_fullscreen", handler)
+        self._set_attr("onExitFullscreen", True if handler is not None else None)

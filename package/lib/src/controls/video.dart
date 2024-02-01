@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
+import '../flet_app_services.dart';
+
 class VideoControl extends StatefulWidget {
   final Control? parent;
   final List<Control> children;
@@ -36,9 +38,12 @@ class _VideoControlState extends State<VideoControl>
   @override
   void initState() {
     super.initState();
-    // Play a [Media] or [Playlist].
-    player.open(Media(
-        'https://user-images.githubusercontent.com/28951144/229373695-22f88f13-d18f-4288-9bf1-c3e078d83722.mp4'));
+    player.open(
+        Playlist([
+          Media(
+              'https://user-images.githubusercontent.com/28951144/229373695-22f88f13-d18f-4288-9bf1-c3e078d83722.mp4')
+        ]),
+        play: widget.control.attrBool("autoPlay", false)!);
   }
 
   @override
@@ -58,8 +63,49 @@ class _VideoControlState extends State<VideoControl>
     var errorContentCtrls =
         widget.children.where((c) => c.name == "error_content" && c.isVisible);
 
+    FilterQuality filterQuality = FilterQuality.values.firstWhere((e) =>
+        e.name.toLowerCase() ==
+        widget.control.attrString("filterQuality", "low")!.toLowerCase());
+
+    Future<void> onEnterFullscreen() async {
+      FletAppServices.of(context).server.sendPageEvent(
+          eventTarget: widget.control.id,
+          eventName: "enterFullscreen",
+          eventData: "");
+    }
+
     return withPageArgs((context, pageArgs) {
-      Video? video = Video(controller: controller);
+      Video? video = Video(
+        controller: controller,
+        wakelock: widget.control.attrBool("wakelock", true)!,
+        pauseUponEnteringBackgroundMode:
+            widget.control.attrBool("pauseUponEnteringBackgroundMode", true)!,
+        resumeUponEnteringForegroundMode:
+            widget.control.attrBool("resumeUponEnteringForegroundMode", false)!,
+        alignment:
+            parseAlignment(widget.control, "alignment") ?? Alignment.center,
+        fit: parseBoxFit(widget.control, "fit") ?? BoxFit.contain,
+        filterQuality: filterQuality,
+        fill: HexColor.fromString(Theme.of(context),
+                widget.control.attrString("fillColor", "")!) ??
+            const Color(0xFF000000),
+        onEnterFullscreen: widget.control.attrBool("onEnterFullscreen", false)!
+            ? () async {
+                FletAppServices.of(context).server.sendPageEvent(
+                    eventTarget: widget.control.id,
+                    eventName: "enter_fullscreen",
+                    eventData: "");
+              }
+            : defaultEnterNativeFullscreen,
+        onExitFullscreen: widget.control.attrBool("onExitFullscreen", false)!
+            ? () async {
+                FletAppServices.of(context).server.sendPageEvent(
+                    eventTarget: widget.control.id,
+                    eventName: "exit_fullscreen",
+                    eventData: "");
+              }
+            : defaultExitNativeFullscreen,
+      );
 
       // var assetSrc = getAssetSrc(src, pageArgs.pageUri!, pageArgs.assetsDir);
 
