@@ -36,7 +36,6 @@ class CupertinoTextFieldControl extends StatefulWidget {
 class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
     with FletControlStatefulMixin {
   String _value = "";
-  final bool _revealPassword = false;
   bool _focused = false;
   late TextEditingController _controller;
   late final FocusNode _focusNode;
@@ -172,6 +171,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
       orElse: () => TextAlign.start,
     );
 
+    double? textVerticalAlign = widget.control.attrDouble("textVerticalAlign");
+
+    bool rtl = widget.control.attrBool("rtl", false)!;
     bool autocorrect = widget.control.attrBool("autocorrect", true)!;
     bool enableSuggestions =
         widget.control.attrBool("enableSuggestions", true)!;
@@ -198,6 +200,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
 
     Widget textField = CupertinoTextField(
         style: textStyle,
+        textAlignVertical: textVerticalAlign != null
+            ? TextAlignVertical(y: textVerticalAlign)
+            : null,
         placeholder: widget.control.attrString("placeholderText"),
         placeholderStyle: parseTextStyle(
             Theme.of(context), widget.control, "placeholderStyle"),
@@ -246,8 +251,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
             ? createControl(widget.control, suffixControls.first.id, disabled)
             : null,
         readOnly: readOnly,
+        textDirection: rtl ? TextDirection.rtl : null,
         inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
-        obscureText: password && !_revealPassword,
+        obscureText: password,
         controller: _controller,
         focusNode: focusNode,
         onChanged: (String value) {

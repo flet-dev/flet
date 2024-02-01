@@ -18,6 +18,9 @@
 # VS Code
 .vscode/
 
+# Pycharm Files
+.idea/
+
 # mac specific
 .DS_Store
 *.bkp

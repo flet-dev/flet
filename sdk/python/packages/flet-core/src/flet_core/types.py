@@ -139,6 +139,13 @@ class CrossAxisAlignment(Enum):
     BASELINE = "baseline"
 
 
+class VerticalAlignment(Enum):
+    NONE = None
+    START = -1.0
+    END = 1.0
+    CENTER = 0.0
+
+
 class TabAlignment(Enum):
     NONE = None
     START = "start"

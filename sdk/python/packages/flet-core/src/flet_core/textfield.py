@@ -18,7 +18,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
-    TextAlignString,
+    VerticalAlignment,
 )
 
 try:
@@ -142,6 +142,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
+        text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
@@ -180,6 +181,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         value: Optional[str] = None,
         adaptive: Optional[bool] = None,
         keyboard_type: Optional[KeyboardType] = None,
+        rtl: Optional[bool] = None,
         multiline: Optional[bool] = None,
         min_lines: Optional[int] = None,
         max_lines: Optional[int] = None,
@@ -236,6 +238,7 @@ class TextField(FormFieldControl, AdaptiveControl):
             #
             text_size=text_size,
             text_style=text_style,
+            text_vertical_align=text_vertical_align,
             label=label,
             label_style=label_style,
             icon=icon,
@@ -276,6 +279,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self.text_style = text_style
         self.keyboard_type = keyboard_type
         self.text_align = text_align
+        self.rtl = rtl
         self.multiline = multiline
         self.min_lines = min_lines
         self.max_lines = max_lines
@@ -352,13 +356,18 @@ class TextField(FormFieldControl, AdaptiveControl):
     @text_align.setter
     def text_align(self, value: TextAlign):
         self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
+        self._set_attr(
+            "textAlign", value.value if isinstance(value, TextAlign) else value
+        )
 
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
+    # rtl
+    @property
+    def rtl(self) -> Optional[bool]:
+        return self._get_attr("rtl", data_type="bool", def_value=False)
+
+    @rtl.setter
+    def rtl(self, value: Optional[bool]):
+        self._set_attr("rtl", value)
 
     # multiline
     @property

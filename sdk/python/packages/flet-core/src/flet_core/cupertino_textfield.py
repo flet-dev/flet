@@ -54,6 +54,7 @@ class CupertinoTextField(TextField):
         #
         value: Optional[str] = None,
         keyboard_type: Optional[KeyboardType] = None,
+        rtl: Optional[bool] = None,
         multiline: Optional[bool] = None,
         min_lines: Optional[int] = None,
         max_lines: Optional[int] = None,
@@ -201,6 +202,7 @@ class CupertinoTextField(TextField):
             #
             value=value,
             keyboard_type=keyboard_type,
+            rtl=rtl,
             multiline=multiline,
             min_lines=min_lines,
             max_lines=max_lines,

@@ -1,5 +1,6 @@
-import time
 from typing import Any, Optional, Union
+
+import time
 
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
@@ -77,6 +78,7 @@ class ElevatedButton(ConstrainedControl):
         icon_color: Optional[str] = None,
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
         on_click=None,
@@ -128,6 +130,7 @@ class ElevatedButton(ConstrainedControl):
         self.icon_color = icon_color
         self.content = content
         self.autofocus = autofocus
+        self.adaptive = adaptive
         self.url = url
         self.url_target = url_target
         self.on_click = on_click
@@ -211,6 +214,7 @@ class ElevatedButton(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value):
         self.__bgcolor = value
+        self._set_attr("bgColor", value)
 
     # elevation
     @property
@@ -302,6 +306,15 @@ class ElevatedButton(ConstrainedControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
 
     # on_hover
     @property
