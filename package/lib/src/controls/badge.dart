@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
+
 import '../models/control.dart';
-import 'create_control.dart';
-import '../utils/transforms.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/text.dart';
+import '../utils/transforms.dart';
+import 'create_control.dart';
 
 class BadgeControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const BadgeControl(
       {super.key,
       required this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,8 @@ class BadgeControl extends StatelessWidget {
     bool disabled = control.isDisabled || parentDisabled;
 
     Widget? child = contentCtrls.isNotEmpty
-        ? createControl(control, contentCtrls.first.id, disabled)
+        ? createControl(control, contentCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     var offsetDetails = parseOffset(control, "offset");

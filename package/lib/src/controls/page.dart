@@ -872,6 +872,7 @@ class _ViewControlState extends State<ViewControl>
                       control: drawerView.control,
                       children: drawerView.children,
                       parentDisabled: control.isDisabled,
+                      parentAdaptive: adaptive,
                     )
                   : null,
               onDrawerChanged: (opened) {
@@ -885,6 +886,7 @@ class _ViewControlState extends State<ViewControl>
                       control: endDrawerView.control,
                       children: endDrawerView.children,
                       parentDisabled: control.isDisabled,
+                      parentAdaptive: adaptive,
                     )
                   : null,
               onEndDrawerChanged: (opened) {

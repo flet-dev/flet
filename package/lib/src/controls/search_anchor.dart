@@ -14,13 +14,15 @@ class SearchAnchorControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const SearchAnchorControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<SearchAnchorControl> createState() => _SearchAnchorControlState();
@@ -141,11 +143,13 @@ class _SearchAnchorControlState extends State<SearchAnchorControl>
         viewShape: parseOutlinedBorder(widget.control, "viewShape"),
         viewTrailing: viewTrailingCtrls.isNotEmpty
             ? viewTrailingCtrls.map((ctrl) {
-                return createControl(widget.parent, ctrl.id, disabled);
+                return createControl(widget.parent, ctrl.id, disabled,
+                    parentAdaptive: widget.parentAdaptive);
               })
             : null,
         viewLeading: viewLeadingCtrls.isNotEmpty
-            ? createControl(widget.parent, viewLeadingCtrls.first.id, disabled)
+            ? createControl(widget.parent, viewLeadingCtrls.first.id, disabled,
+                parentAdaptive: widget.parentAdaptive)
             : null,
         builder: (BuildContext context, SearchController controller) {
           return SearchBar(
@@ -157,11 +161,13 @@ class _SearchAnchorControlState extends State<SearchAnchorControl>
                 Theme.of(context), widget.control, "barOverlayColor"),
             leading: barLeadingCtrls.isNotEmpty
                 ? createControl(
-                    widget.parent, barLeadingCtrls.first.id, disabled)
+                    widget.parent, barLeadingCtrls.first.id, disabled,
+                    parentAdaptive: widget.parentAdaptive)
                 : null,
             trailing: barTrailingCtrls.isNotEmpty
                 ? barTrailingCtrls.map((ctrl) {
-                    return createControl(widget.parent, ctrl.id, disabled);
+                    return createControl(widget.parent, ctrl.id, disabled,
+                        parentAdaptive: widget.parentAdaptive);
                   })
                 : null,
             onTap: () {
@@ -189,7 +195,8 @@ class _SearchAnchorControlState extends State<SearchAnchorControl>
         suggestionsBuilder:
             (BuildContext context, SearchController controller) {
           return suggestionCtrls.map((ctrl) {
-            return createControl(widget.parent, ctrl.id, disabled);
+            return createControl(widget.parent, ctrl.id, disabled,
+                parentAdaptive: widget.parentAdaptive);
           });
         });
 

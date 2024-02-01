@@ -14,13 +14,15 @@ class IconButtonControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const IconButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<IconButtonControl> createState() => _IconButtonControlState();
@@ -127,7 +129,8 @@ class _IconButtonControlState extends State<IconButtonControl>
           selectedIcon: selectedIcon != null
               ? Icon(selectedIcon, color: selectedIconColor)
               : null,
-          icon: createControl(widget.control, contentCtrls.first.id, disabled));
+          icon: createControl(widget.control, contentCtrls.first.id, disabled,
+              parentAdaptive: widget.parentAdaptive));
     } else {
       return const ErrorControl(
           "Icon button does not have an icon neither content specified.");

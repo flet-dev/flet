@@ -6,9 +6,11 @@ CreateControlFactory createControl = (CreateControlArgs args) {
   switch (args.control.type) {
     case "my_org:my_control":
       return MyControl(
-          control: args.control,
-          children: args.children,
-          parentDisabled: args.parentDisabled);
+        control: args.control,
+        children: args.children,
+        parentDisabled: args.parentDisabled,
+        parentAdaptive: args.parentAdaptive,
+      );
     default:
       return null;
   }

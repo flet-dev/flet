@@ -201,6 +201,7 @@ class _PageletControlState extends State<PageletControl>
                           control: drawerView.control,
                           children: drawerView.children,
                           parentDisabled: widget.control.isDisabled,
+                          parentAdaptive: adaptive,
                         )
                       : null,
                   onDrawerChanged: (opened) {
@@ -214,6 +215,7 @@ class _PageletControlState extends State<PageletControl>
                           control: endDrawerView.control,
                           children: endDrawerView.children,
                           parentDisabled: widget.control.isDisabled,
+                          parentAdaptive: adaptive,
                         )
                       : null,
                   onEndDrawerChanged: (opened) {

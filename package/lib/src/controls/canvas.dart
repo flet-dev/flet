@@ -55,13 +55,15 @@ class CanvasControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const CanvasControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<CanvasControl> createState() => _CanvasControlState();
@@ -108,7 +110,8 @@ class _CanvasControlState extends State<CanvasControl>
             ),
             child: viewModel.child != null
                 ? createControl(viewModel.control, viewModel.child!.id,
-                    viewModel.control.isDisabled)
+                    viewModel.control.isDisabled,
+                    parentAdaptive: widget.parentAdaptive)
                 : null,
           );
 

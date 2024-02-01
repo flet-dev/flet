@@ -14,13 +14,15 @@ class NavigationDrawerControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const NavigationDrawerControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<NavigationDrawerControl> createState() =>
@@ -69,18 +71,21 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
             // flutter issue https://github.com/flutter/flutter/issues/138105
             icon: iconContentCtrls.isNotEmpty
                 ? createControl(
-                    destView.control, iconContentCtrls.first.id, disabled)
+                    destView.control, iconContentCtrls.first.id, disabled,
+                    parentAdaptive: widget.parentAdaptive)
                 : Icon(icon),
             label: Text(destView.control.attrString("label", "")!),
             selectedIcon: selectedIconContentCtrls.isNotEmpty
                 ? createControl(destView.control,
-                    selectedIconContentCtrls.first.id, disabled)
+                    selectedIconContentCtrls.first.id, disabled,
+                    parentAdaptive: widget.parentAdaptive)
                 : selectedIcon != null
                     ? Icon(selectedIcon)
                     : null,
           );
         } else {
-          return createControl(widget.control, destView.control.id, disabled);
+          return createControl(widget.control, destView.control.id, disabled,
+              parentAdaptive: widget.parentAdaptive);
         }
       }).toList();
       return NavigationDrawer(

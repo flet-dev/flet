@@ -10,13 +10,15 @@ class MenuBarControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const MenuBarControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<MenuBarControl> createState() => _MenuBarControlState();
@@ -48,7 +50,10 @@ class _MenuBarControlState extends State<MenuBarControl> {
     MenuBar? menuBar = MenuBar(
       style: style,
       clipBehavior: clipBehavior,
-      children: ctrls.map((c) => createControl(widget.control, c.id, disabled)).toList(),
+      children: ctrls
+          .map((c) => createControl(widget.control, c.id, disabled,
+              parentAdaptive: widget.parentAdaptive))
+          .toList(),
     );
 
     return constrainedControl(context, menuBar, widget.parent, widget.control);

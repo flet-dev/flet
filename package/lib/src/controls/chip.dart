@@ -14,13 +14,15 @@ class ChipControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const ChipControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<ChipControl> createState() => _ChipControlState();
@@ -122,9 +124,11 @@ class _ChipControlState extends State<ChipControl>
         InputChip(
           autofocus: autofocus,
           focusNode: _focusNode,
-          label: createControl(widget.control, labelCtrls.first.id, disabled),
+          label: createControl(widget.control, labelCtrls.first.id, disabled,
+              parentAdaptive: widget.parentAdaptive),
           avatar: leadingCtrls.isNotEmpty
-              ? createControl(widget.control, leadingCtrls.first.id, disabled)
+              ? createControl(widget.control, leadingCtrls.first.id, disabled,
+                  parentAdaptive: widget.parentAdaptive)
               : null,
           backgroundColor: bgcolor,
           checkmarkColor: HexColor.fromString(
@@ -141,7 +145,8 @@ class _ChipControlState extends State<ChipControl>
               : null,
           deleteIcon: deleteIconCtrls.isNotEmpty
               ? createControl(
-                  widget.control, deleteIconCtrls.first.id, disabled)
+                  widget.control, deleteIconCtrls.first.id, disabled,
+                  parentAdaptive: widget.parentAdaptive)
               : null,
           deleteIconColor: deleteIconColor,
           disabledColor: disabledColor,

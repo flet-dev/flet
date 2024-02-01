@@ -150,8 +150,9 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onPressed: onPressed,
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
-            child:
-                createControl(widget.control, contentCtrls.first.id, disabled));
+            child: createControl(
+                widget.control, contentCtrls.first.id, disabled,
+                parentAdaptive: adaptive));
       } else {
         button = ElevatedButton(
             style: style,
