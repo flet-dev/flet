@@ -103,7 +103,7 @@ import 'webview.dart';
 import 'window_drag_area.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
-    {Widget? nextChild}) {
+    {Widget? nextChild, bool? parentAdaptive}) {
   //debugPrint("createControl(): $id");
   return StoreConnector<AppState, ControlViewModel?>(
     key: ValueKey<String>(id),

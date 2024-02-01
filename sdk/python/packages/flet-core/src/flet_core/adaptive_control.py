@@ -10,7 +10,7 @@ class AdaptiveControl(Control):
     # adaptive
     @property
     def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
+        return self._get_attr("adaptive", data_type="bool")
 
     @adaptive.setter
     def adaptive(self, value: Optional[bool]):
