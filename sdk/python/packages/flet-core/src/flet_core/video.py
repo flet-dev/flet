@@ -1,5 +1,6 @@
+import dataclasses
 from enum import Enum
-from typing import Any, Optional, Union, List
+from typing import Any, Optional, Union, List, Dict
 
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
@@ -33,6 +34,13 @@ class PlaylistMode(Enum):
     LOOP = "loop"
 
 
+@dataclasses.dataclass
+class VideoMedia:
+    resource: Optional[str] = dataclasses.field(default=None)
+    http_headers: Optional[Dict[str, str]] = dataclasses.field(default=None)
+    extras: Optional[Dict[str, str]] = dataclasses.field(default=None)
+
+
 class Video(ConstrainedControl):
     """
     A video widget.
@@ -44,7 +52,7 @@ class Video(ConstrainedControl):
 
     def __init__(
         self,
-        sources: Optional[List[str]] = None,  # TODO
+        playlist: Union[VideoMedia, List[VideoMedia], None] = None,
         title: Optional[str] = None,
         fit: Optional[ImageFit] = None,
         fill_color: Optional[str] = None,
@@ -67,7 +75,6 @@ class Video(ConstrainedControl):
         #
         # Common
         #
-        src: Optional[str] = None,
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -124,7 +131,7 @@ class Video(ConstrainedControl):
             data=data,
         )
 
-        self.src = src
+        self.playlist = playlist
         self.fit = fit
         self.pitch = pitch
         self.fill_color = fill_color
@@ -150,6 +157,7 @@ class Video(ConstrainedControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("alignment", self.__alignment)
+        self._set_attr_json("playlist", self.__playlist if self.__playlist else None)
 
     def play(self):
         self.page.invoke_method("play", control_id=self.uid)
@@ -197,6 +205,15 @@ class Video(ConstrainedControl):
             "seek", {"position": str(position_milliseconds)}, control_id=self.uid
         )
 
+    # playlist
+    @property
+    def playlist(self) -> Optional[List[VideoMedia]]:
+        return self.__playlist
+
+    @playlist.setter
+    def playlist(self, value: Union[VideoMedia, List[VideoMedia], None]):
+        self.__playlist = value if value is not None else []
+
     # fit
     @property
     def fit(self) -> Optional[ImageFit]:
@@ -209,7 +226,7 @@ class Video(ConstrainedControl):
 
     # fill_color
     @property
-    def fill_color(self):
+    def fill_color(self) -> Optional[str]:
         return self._get_attr("fillColor")
 
     @fill_color.setter
@@ -228,11 +245,11 @@ class Video(ConstrainedControl):
     # autoplay
     @property
     def autoplay(self) -> Optional[bool]:
-        return self._get_attr("autoplay", data_type="bool", def_value=False)
+        return self._get_attr("autoPlay", data_type="bool", def_value=False)
 
     @autoplay.setter
     def autoplay(self, value: Optional[bool]):
-        self._set_attr("autoplay", value)
+        self._set_attr("autoPlay", value)
 
     # muted
     @property
