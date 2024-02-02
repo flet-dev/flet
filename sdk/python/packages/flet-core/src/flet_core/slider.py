@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -12,7 +13,7 @@ from flet_core.types import (
 )
 
 
-class Slider(ConstrainedControl):
+class Slider(ConstrainedControl, AdaptiveControl):
     """
     A slider provides a visual indication of adjustable content, as well as the current setting in the total range of content.
 
@@ -114,8 +115,10 @@ class Slider(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.value = value
-        self.adaptive = adaptive
         self.label = label
         self.min = min
         self.max = max
@@ -229,15 +232,6 @@ class Slider(ConstrainedControl):
     @thumb_color.setter
     def thumb_color(self, value):
         self._set_attr("thumbColor", value)
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
 
     # on_change
     @property

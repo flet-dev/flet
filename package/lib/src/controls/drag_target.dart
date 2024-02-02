@@ -30,13 +30,15 @@ class DragTargetControl extends StatelessWidget with FletControlStatelessMixin {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const DragTargetControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,8 @@ class DragTargetControl extends StatelessWidget with FletControlStatelessMixin {
     bool disabled = control.isDisabled || parentDisabled;
 
     Widget? child = contentCtrls.isNotEmpty
-        ? createControl(control, contentCtrls.first.id, disabled)
+        ? createControl(control, contentCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     if (child == null) {

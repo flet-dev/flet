@@ -13,12 +13,14 @@ class SliderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const SliderControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<SliderControl> createState() => _SliderControlState();
@@ -67,8 +69,9 @@ class _SliderControlState extends State<SliderControl>
     debugPrint("SliderControl build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool adaptive = widget.control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoSliderControl(

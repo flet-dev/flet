@@ -1,23 +1,25 @@
 import 'dart:convert';
 
-import 'error.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'create_control.dart';
+import 'error.dart';
 
 class DraggableControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const DraggableControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +35,18 @@ class DraggableControl extends StatelessWidget {
     bool disabled = control.isDisabled || parentDisabled;
 
     Widget? child = contentCtrls.isNotEmpty
-        ? createControl(control, contentCtrls.first.id, disabled)
+        ? createControl(control, contentCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     Widget? childWhenDragging = contentWhenDraggingCtrls.isNotEmpty
-        ? createControl(control, contentWhenDraggingCtrls.first.id, disabled)
+        ? createControl(control, contentWhenDraggingCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     Widget? childFeedback = contentFeedbackCtrls.isNotEmpty
-        ? createControl(control, contentFeedbackCtrls.first.id, disabled)
+        ? createControl(control, contentFeedbackCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     if (child == null) {

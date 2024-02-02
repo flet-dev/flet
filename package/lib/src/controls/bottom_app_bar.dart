@@ -13,13 +13,15 @@ class BottomAppBarControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const BottomAppBarControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<BottomAppBarControl> createState() => _BottomAppBarControlState();
@@ -72,7 +74,8 @@ class _BottomAppBarControlState extends State<BottomAppBarControl>
             Theme.of(context), widget.control.attrString("bgColor", "")!),
         notchMargin: widget.control.attrDouble("notchMargin", 4.0)!,
         child: contentCtrls.isNotEmpty
-            ? createControl(widget.control, contentCtrls.first.id, disabled)
+            ? createControl(widget.control, contentCtrls.first.id, disabled,
+                parentAdaptive: widget.parentAdaptive)
             : null,
       );
     });

@@ -9,13 +9,15 @@ class RadioGroupControl extends StatelessWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const RadioGroupControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class RadioGroupControl extends StatelessWidget {
           "RadioGroup control does not have any content.");
     }
 
-    return createControl(control, contentCtrls.first.id, disabled);
+    return createControl(control, contentCtrls.first.id, disabled,
+        parentAdaptive: parentAdaptive);
   }
 }

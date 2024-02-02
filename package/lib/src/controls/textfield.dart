@@ -17,13 +17,15 @@ class TextFieldControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const TextFieldControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<TextFieldControl> createState() => _TextFieldControlState();
@@ -94,15 +96,18 @@ class _TextFieldControlState extends State<TextFieldControl>
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-      bool adaptive = widget.control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoTextFieldControl(
-            control: widget.control,
-            children: widget.children,
-            parent: widget.parent,
-            parentDisabled: widget.parentDisabled);
+          control: widget.control,
+          children: widget.children,
+          parent: widget.parent,
+          parentDisabled: widget.parentDisabled,
+          parentAdaptive: adaptive,
+        );
       }
 
       debugPrint("TextField build: ${widget.control.id}");
@@ -233,7 +238,8 @@ class _TextFieldControlState extends State<TextFieldControl>
               prefixControls.isNotEmpty ? prefixControls.first : null,
               suffixControls.isNotEmpty ? suffixControls.first : null,
               revealPasswordIcon,
-              _focused),
+              _focused,
+              adaptive),
           showCursor: widget.control.attrBool("showCursor"),
           textAlignVertical: textVerticalAlign != null
               ? TextAlignVertical(y: textVerticalAlign)

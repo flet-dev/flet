@@ -5,11 +5,6 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 
 class FletApp(ConstrainedControl):
     def __init__(

@@ -11,6 +11,7 @@ class CupertinoAlertDialogControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final Widget? nextChild;
 
   const CupertinoAlertDialogControl(
@@ -19,6 +20,7 @@ class CupertinoAlertDialogControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
+      required this.parentAdaptive,
       required this.nextChild});
 
   @override
@@ -43,13 +45,16 @@ class _CupertinoAlertDialogControlState
 
     return CupertinoAlertDialog(
       title: titleCtrls.isNotEmpty
-          ? createControl(widget.control, titleCtrls.first.id, disabled)
+          ? createControl(widget.control, titleCtrls.first.id, disabled,
+              parentAdaptive: widget.parentAdaptive)
           : null,
       content: contentCtrls.isNotEmpty
-          ? createControl(widget.control, contentCtrls.first.id, disabled)
+          ? createControl(widget.control, contentCtrls.first.id, disabled,
+              parentAdaptive: widget.parentAdaptive)
           : null,
       actions: actionCtrls
-          .map((c) => createControl(widget.control, c.id, disabled))
+          .map((c) => createControl(widget.control, c.id, disabled,
+              parentAdaptive: widget.parentAdaptive))
           .toList(),
     );
   }

@@ -8,9 +8,10 @@ class CreateControlArgs {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
-  CreateControlArgs(
-      this.key, this.parent, this.control, this.children, this.parentDisabled);
+  CreateControlArgs(this.key, this.parent, this.control, this.children,
+      this.parentDisabled, this.parentAdaptive);
 }
 
 typedef CreateControlFactory = Widget? Function(CreateControlArgs args);

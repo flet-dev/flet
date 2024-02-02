@@ -15,6 +15,7 @@ class AlertDialogControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final Widget? nextChild;
 
   const AlertDialogControl({
@@ -23,6 +24,7 @@ class AlertDialogControl extends StatefulWidget {
     required this.control,
     required this.children,
     required this.parentDisabled,
+    required this.parentAdaptive,
     required this.nextChild,
   });
 
@@ -34,6 +36,8 @@ class _AlertDialogControlState extends State<AlertDialogControl>
     with FletControlStatefulMixin, FletStoreMixin {
   Widget _createAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool? adaptive =
+        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
     var titleCtrls =
         widget.children.where((c) => c.name == "title" && c.isVisible);
     var contentCtrls =
@@ -48,16 +52,19 @@ class _AlertDialogControlState extends State<AlertDialogControl>
 
     return AlertDialog(
       title: titleCtrls.isNotEmpty
-          ? createControl(widget.control, titleCtrls.first.id, disabled)
+          ? createControl(widget.control, titleCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
       titlePadding: parseEdgeInsets(widget.control, "titlePadding"),
       content: contentCtrls.isNotEmpty
-          ? createControl(widget.control, contentCtrls.first.id, disabled)
+          ? createControl(widget.control, contentCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
       contentPadding: parseEdgeInsets(widget.control, "contentPadding") ??
           const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
       actions: actionCtrls
-          .map((c) => createControl(widget.control, c.id, disabled))
+          .map((c) => createControl(widget.control, c.id, disabled,
+              parentAdaptive: adaptive))
           .toList(),
       actionsPadding: parseEdgeInsets(widget.control, "actionsPadding"),
       actionsAlignment: actionsAlignment,
@@ -72,8 +79,9 @@ class _AlertDialogControlState extends State<AlertDialogControl>
     debugPrint("AlertDialog build ($hashCode): ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool adaptive = widget.control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoAlertDialogControl(
@@ -81,6 +89,7 @@ class _AlertDialogControlState extends State<AlertDialogControl>
           parentDisabled: widget.parentDisabled,
           children: widget.children,
           nextChild: widget.nextChild,
+          parentAdaptive: adaptive,
         );
       }
 

@@ -14,13 +14,15 @@ class DismissibleControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const DismissibleControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<DismissibleControl> createState() => _DismissibleControlState();
@@ -33,6 +35,8 @@ class _DismissibleControlState extends State<DismissibleControl>
     debugPrint("Dismissible build: ${widget.control.id}");
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool? adaptive =
+        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
     var contentCtrls = widget.children.where((c) => c.name == "content");
 
     if (contentCtrls.isEmpty) {
@@ -71,11 +75,13 @@ class _DismissibleControlState extends State<DismissibleControl>
             direction: direction,
             background: backgroundCtrls.isNotEmpty
                 ? createControl(
-                    widget.control, backgroundCtrls.first.id, disabled)
+                    widget.control, backgroundCtrls.first.id, disabled,
+                    parentAdaptive: adaptive)
                 : Container(color: Colors.transparent),
             secondaryBackground: secondaryBackgroundCtrls.isNotEmpty
                 ? createControl(
-                    widget.control, secondaryBackgroundCtrls.first.id, disabled)
+                    widget.control, secondaryBackgroundCtrls.first.id, disabled,
+                    parentAdaptive: adaptive)
                 : Container(color: Colors.transparent),
             onDismissed: widget.control.attrBool("onDismiss", false)!
                 ? (DismissDirection direction) {
@@ -119,8 +125,9 @@ class _DismissibleControlState extends State<DismissibleControl>
             crossAxisEndOffset:
                 widget.control.attrDouble("crossAxisEndOffset", 0.0)!,
             dismissThresholds: dismissThresholds ?? {},
-            child:
-                createControl(widget.control, contentCtrls.first.id, disabled)),
+            child: createControl(
+                widget.control, contentCtrls.first.id, disabled,
+                parentAdaptive: adaptive)),
         widget.parent,
         widget.control);
   }

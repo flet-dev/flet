@@ -16,13 +16,15 @@ class ElevatedButtonControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const ElevatedButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<ElevatedButtonControl> createState() => _ElevatedButtonControlState();
@@ -57,13 +59,15 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
     debugPrint("Button build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool adaptive = widget.control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoButtonControl(
             control: widget.control,
             parentDisabled: widget.parentDisabled,
+            parentAdaptive: adaptive,
             children: widget.children);
       }
 
@@ -146,8 +150,9 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onPressed: onPressed,
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
-            child:
-                createControl(widget.control, contentCtrls.first.id, disabled));
+            child: createControl(
+                widget.control, contentCtrls.first.id, disabled,
+                parentAdaptive: adaptive));
       } else {
         button = ElevatedButton(
             style: style,

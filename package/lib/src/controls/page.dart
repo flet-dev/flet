@@ -682,6 +682,8 @@ class _ViewControlState extends State<ViewControl>
           var control = controlView.control;
           var children = controlView.children;
 
+          bool? adaptive = controlView.control.attrBool("adaptive");
+
           final spacing = control.attrDouble("spacing", 10)!;
           final mainAlignment = parseMainAxisAlignment(
               control, "verticalAlignment", MainAxisAlignment.start);
@@ -738,7 +740,8 @@ class _ViewControlState extends State<ViewControl>
             firstControl = false;
 
             // displayed control
-            controls.add(createControl(control, ctrl.id, control.isDisabled));
+            controls.add(createControl(control, ctrl.id, control.isDisabled,
+                parentAdaptive: adaptive));
           }
 
           List<String> childIds = [
@@ -842,6 +845,7 @@ class _ViewControlState extends State<ViewControl>
                     control: appBarView.control,
                     children: appBarView.children,
                     parentDisabled: control.isDisabled,
+                    parentAdaptive: adaptive,
                     height: appBarView.control
                         .attrDouble("toolbarHeight", kToolbarHeight)!)
                 : cupertinoAppBarView != null
@@ -850,6 +854,7 @@ class _ViewControlState extends State<ViewControl>
                         control: cupertinoAppBarView.control,
                         children: cupertinoAppBarView.children,
                         parentDisabled: control.isDisabled,
+                        parentAdaptive: adaptive,
                         bgcolor: HexColor.fromString(
                             Theme.of(context),
                             cupertinoAppBarView.control
@@ -867,6 +872,7 @@ class _ViewControlState extends State<ViewControl>
                       control: drawerView.control,
                       children: drawerView.children,
                       parentDisabled: control.isDisabled,
+                      parentAdaptive: adaptive,
                     )
                   : null,
               onDrawerChanged: (opened) {
@@ -880,6 +886,7 @@ class _ViewControlState extends State<ViewControl>
                       control: endDrawerView.control,
                       children: endDrawerView.children,
                       parentDisabled: control.isDisabled,
+                      parentAdaptive: adaptive,
                     )
                   : null,
               onEndDrawerChanged: (opened) {
@@ -897,10 +904,12 @@ class _ViewControlState extends State<ViewControl>
                 ...widget.overlayWidgets
               ]),
               bottomNavigationBar: bnb != null
-                  ? createControl(control, bnb.id, control.isDisabled)
+                  ? createControl(control, bnb.id, control.isDisabled,
+                      parentAdaptive: adaptive)
                   : null,
               floatingActionButton: fab != null
-                  ? createControl(control, fab.id, control.isDisabled)
+                  ? createControl(control, fab.id, control.isDisabled,
+                      parentAdaptive: adaptive)
                   : null,
               floatingActionButtonLocation: fabLocation,
             );

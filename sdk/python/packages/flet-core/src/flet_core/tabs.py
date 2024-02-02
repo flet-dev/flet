@@ -1,5 +1,6 @@
 from typing import Any, Dict, List, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.border import BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -17,7 +18,7 @@ from flet_core.types import (
 )
 
 
-class Tab(Control):
+class Tab(AdaptiveControl):
     def __init__(
         self,
         text: Optional[str] = None,
@@ -26,6 +27,10 @@ class Tab(Control):
         ref: Optional[Ref] = None,
         icon: Optional[str] = None,
         visible: Optional[bool] = None,
+        #
+        # Adaptive
+        #
+        adaptive: Optional[bool] = None,
     ):
         Control.__init__(self, ref=ref, visible=visible)
         self.text = text
@@ -85,7 +90,7 @@ class Tab(Control):
         self.__content = value
 
 
-class Tabs(ConstrainedControl):
+class Tabs(ConstrainedControl, AdaptiveControl):
     """
     The Tabs control is used for navigating frequently accessed, distinct content categories. Tabs allow for navigation between two or more content views and relies on text headers to articulate the different sections of content.
 
@@ -175,6 +180,10 @@ class Tabs(ConstrainedControl):
         unselected_label_color: Optional[str] = None,
         overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
         on_change=None,
+        #
+        # Adaptive
+        #
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -204,6 +213,8 @@ class Tabs(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.tabs = tabs
         self.selected_index = selected_index

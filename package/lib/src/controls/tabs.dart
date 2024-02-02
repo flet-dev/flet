@@ -20,28 +20,22 @@ class TabsControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const TabsControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<TabsControl> createState() => _TabsControlState();
 }
 
-class _TabsControlStateWithControlState extends State<TabsControl>
-    with FletControlStatefulMixin {
-  @override
-  Widget build(BuildContext context) {
-    throw UnimplementedError();
-  }
-}
-
-class _TabsControlState extends _TabsControlStateWithControlState
-    with TickerProviderStateMixin {
+class _TabsControlState extends State<TabsControl>
+    with FletControlStatefulMixin, TickerProviderStateMixin {
   String? _tabsSnapshot;
   TabController? _tabController;
   int _selectedIndex = 0;
@@ -139,6 +133,9 @@ class _TabsControlState extends _TabsControlStateWithControlState
           var tabAlignment = parseTabAlignment(widget.control, "tabAlignment",
               isScrollable ? TabAlignment.start : TabAlignment.fill);
 
+          bool? adaptive =
+              widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+
           var tabBar = TabBar(
               tabAlignment: tabAlignment,
               controller: _tabController,
@@ -191,7 +188,8 @@ class _TabsControlState extends _TabsControlStateWithControlState
                 List<Widget> widgets = [];
                 if (tabContentCtrls.isNotEmpty) {
                   tabChild = createControl(
-                      widget.control, tabContentCtrls.first.id, disabled);
+                      widget.control, tabContentCtrls.first.id, disabled,
+                      parentAdaptive: adaptive);
                 } else {
                   if (icon != null) {
                     widgets.add(Icon(icon));
@@ -229,7 +227,8 @@ class _TabsControlState extends _TabsControlStateWithControlState
                           return const SizedBox.shrink();
                         }
                         return createControl(
-                            widget.control, contentCtrls.first.id, disabled);
+                            widget.control, contentCtrls.first.id, disabled,
+                            parentAdaptive: adaptive);
                       }).toList()))
             ],
           );

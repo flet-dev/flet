@@ -1,10 +1,10 @@
 import dataclasses
+import time
 from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union
 
-import time
-
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
@@ -83,7 +83,7 @@ class TextOnlyInputFilter(InputFilter):
         super().__init__(r"[a-zA-Z]")
 
 
-class TextField(FormFieldControl):
+class TextField(FormFieldControl, AdaptiveControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an onscreen keyboard.
 
@@ -178,8 +178,8 @@ class TextField(FormFieldControl):
         #
         # TextField Specific
         #
-        adaptive: Optional[bool] = None,
         value: Optional[str] = None,
+        adaptive: Optional[bool] = None,
         keyboard_type: Optional[KeyboardType] = None,
         rtl: Optional[bool] = None,
         multiline: Optional[bool] = None,
@@ -272,6 +272,9 @@ class TextField(FormFieldControl):
             suffix_text=suffix_text,
             suffix_style=suffix_style,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.value = value
         self.text_style = text_style
         self.keyboard_type = keyboard_type
@@ -286,7 +289,6 @@ class TextField(FormFieldControl):
         self.password = password
         self.can_reveal_password = can_reveal_password
         self.autofocus = autofocus
-        self.adaptive = adaptive
         self.capitalization = capitalization
         self.autocorrect = autocorrect
         self.show_cursor = show_cursor
@@ -354,7 +356,9 @@ class TextField(FormFieldControl):
     @text_align.setter
     def text_align(self, value: TextAlign):
         self.__text_align = value
-        self._set_attr("textAlign", value.value if isinstance(value, TextAlign) else value)
+        self._set_attr(
+            "textAlign", value.value if isinstance(value, TextAlign) else value
+        )
 
     # rtl
     @property
@@ -445,15 +449,6 @@ class TextField(FormFieldControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
 
     # capitalization
     @property

@@ -6,13 +6,15 @@ class MyControl extends StatelessWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const MyControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,8 @@ class MyControl extends StatelessWidget {
             surfaceTintColor: HexColor.fromString(
                 Theme.of(context), control.attrString("surfaceTintColor", "")!),
             child: contentCtrls.isNotEmpty
-                ? createControl(control, contentCtrls.first.id, disabled)
+                ? createControl(control, contentCtrls.first.id, disabled,
+                    parentAdaptive: parentAdaptive)
                 : null),
         parent,
         control);

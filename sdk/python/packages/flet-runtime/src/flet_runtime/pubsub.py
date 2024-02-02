@@ -155,20 +155,20 @@ class PubSubHub:
 
     def __unsubscribe(self, session_id: str):
         logger.debug(f"pubsub.__unsubscribe({session_id})")
-        self.__subscribers.pop(session_id)
+        self.__subscribers.pop(session_id, None)
 
     def __unsubscribe_topic(self, session_id: str, topic: str):
         logger.debug(f"pubsub.__unsubscribe_topic({session_id}, {topic})")
         topic_subscribers = self.__topic_subscribers.get(topic)
         if topic_subscribers is not None:
-            topic_subscribers.pop(session_id)
+            topic_subscribers.pop(session_id, None)
             if len(topic_subscribers) == 0:
-                self.__topic_subscribers.pop(topic)
+                self.__topic_subscribers.pop(topic, None)
         subscriber_topics = self.__subscriber_topics.get(session_id)
         if subscriber_topics is not None:
-            subscriber_topics.pop(topic)
+            subscriber_topics.pop(topic, None)
             if len(subscriber_topics) == 0:
-                self.__subscriber_topics.pop(session_id)
+                self.__subscriber_topics.pop(session_id, None)
 
     def __send(self, handler: Callable, args: Iterable):
         th = threading.Thread(

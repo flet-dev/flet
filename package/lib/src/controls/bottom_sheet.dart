@@ -11,6 +11,7 @@ class BottomSheetControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final Widget? nextChild;
 
   const BottomSheetControl(
@@ -19,6 +20,7 @@ class BottomSheetControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
+      required this.parentAdaptive,
       required this.nextChild});
 
   @override
@@ -65,7 +67,8 @@ class _BottomSheetControlState extends State<BottomSheetControl>
                   }
 
                   var content = createControl(
-                      widget.control, contentCtrls.first.id, disabled);
+                      widget.control, contentCtrls.first.id, disabled,
+                      parentAdaptive: widget.parentAdaptive);
 
                   if (content is ErrorControl) {
                     return content;

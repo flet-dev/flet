@@ -15,13 +15,15 @@ class NavigationRailControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const NavigationRailControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<NavigationRailControl> createState() => _NavigationRailControlState();
@@ -97,11 +99,13 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                   widget.control.attrString("indicatorColor", "")!),
               leading: leadingCtrls.isNotEmpty
                   ? createControl(
-                      widget.control, leadingCtrls.first.id, disabled)
+                      widget.control, leadingCtrls.first.id, disabled,
+                      parentAdaptive: widget.parentAdaptive)
                   : null,
               trailing: trailingCtrls.isNotEmpty
                   ? createControl(
-                      widget.control, trailingCtrls.first.id, disabled)
+                      widget.control, trailingCtrls.first.id, disabled,
+                      parentAdaptive: widget.parentAdaptive)
                   : null,
               selectedIndex: _selectedIndex,
               onDestinationSelected: _destinationChanged,
@@ -123,17 +127,20 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                     padding: parseEdgeInsets(destView.control, "padding"),
                     icon: iconContentCtrls.isNotEmpty
                         ? createControl(destView.control,
-                            iconContentCtrls.first.id, disabled)
+                            iconContentCtrls.first.id, disabled,
+                            parentAdaptive: widget.parentAdaptive)
                         : Icon(icon),
                     selectedIcon: selectedIconContentCtrls.isNotEmpty
                         ? createControl(destView.control,
-                            selectedIconContentCtrls.first.id, disabled)
+                            selectedIconContentCtrls.first.id, disabled,
+                            parentAdaptive: widget.parentAdaptive)
                         : selectedIcon != null
                             ? Icon(selectedIcon)
                             : null,
                     label: labelContentCtrls.isNotEmpty
                         ? createControl(destView.control,
-                            labelContentCtrls.first.id, disabled)
+                            labelContentCtrls.first.id, disabled,
+                            parentAdaptive: widget.parentAdaptive)
                         : Text(label));
               }).toList());
         },

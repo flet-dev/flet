@@ -13,6 +13,7 @@ class SnackBarControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final Widget? nextChild;
 
   const SnackBarControl(
@@ -21,6 +22,7 @@ class SnackBarControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
+      required this.parentAdaptive,
       required this.nextChild});
 
   @override
@@ -67,7 +69,8 @@ class _SnackBarControlState extends State<SnackBarControl>
         showCloseIcon: widget.control.attrBool("showCloseIcon"),
         closeIconColor: HexColor.fromString(Theme.of(context),
             widget.control.attrString("closeIconColor", "")!),
-        content: createControl(widget.control, contentCtrls.first.id, disabled),
+        content: createControl(widget.control, contentCtrls.first.id, disabled,
+            parentAdaptive: widget.parentAdaptive),
         backgroundColor: HexColor.fromString(
             Theme.of(context), widget.control.attrString("bgColor", "")!),
         action: action,

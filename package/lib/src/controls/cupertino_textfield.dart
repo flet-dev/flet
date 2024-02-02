@@ -20,13 +20,15 @@ class CupertinoTextFieldControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const CupertinoTextFieldControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<CupertinoTextFieldControl> createState() =>
@@ -245,10 +247,12 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
         maxLines: maxLines,
         maxLength: maxLength,
         prefix: prefixControls.isNotEmpty
-            ? createControl(widget.control, prefixControls.first.id, disabled)
+            ? createControl(widget.control, prefixControls.first.id, disabled,
+                parentAdaptive: widget.parentAdaptive)
             : null,
         suffix: suffixControls.isNotEmpty
-            ? createControl(widget.control, suffixControls.first.id, disabled)
+            ? createControl(widget.control, suffixControls.first.id, disabled,
+                parentAdaptive: widget.parentAdaptive)
             : null,
         readOnly: readOnly,
         textDirection: rtl ? TextDirection.rtl : null,

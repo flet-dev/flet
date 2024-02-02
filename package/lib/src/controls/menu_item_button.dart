@@ -10,13 +10,15 @@ class MenuItemButtonControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const MenuItemButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<MenuItemButtonControl> createState() => _MenuItemButtonControlState();
@@ -99,17 +101,20 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl>
           : null,
       leadingIcon: leading.isNotEmpty
           ? leading
-              .map((c) => createControl(widget.control, c.id, disabled))
+              .map((c) => createControl(widget.control, c.id, disabled,
+                  parentAdaptive: widget.parentAdaptive))
               .first
           : null,
       trailingIcon: trailing.isNotEmpty
           ? trailing
-              .map((c) => createControl(widget.control, c.id, disabled))
+              .map((c) => createControl(widget.control, c.id, disabled,
+                  parentAdaptive: widget.parentAdaptive))
               .first
           : null,
       child: content.isNotEmpty
           ? content
-              .map((c) => createControl(widget.control, c.id, disabled))
+              .map((c) => createControl(widget.control, c.id, disabled,
+                  parentAdaptive: widget.parentAdaptive))
               .first
           : null,
     );

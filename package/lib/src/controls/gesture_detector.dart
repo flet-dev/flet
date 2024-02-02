@@ -15,13 +15,15 @@ class GestureDetectorControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const GestureDetectorControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<GestureDetectorControl> createState() => _GestureDetectorControlState();
@@ -116,7 +118,9 @@ class _GestureDetectorControlState extends State<GestureDetectorControl>
     var onScroll = widget.control.attrBool("onScroll", false)!;
 
     var content = contentCtrls.isNotEmpty
-        ? createControl(widget.control, contentCtrls.first.id, disabled)
+        ? createControl(widget.control, contentCtrls.first.id, disabled,
+            parentAdaptive:
+                widget.control.attrBool("adaptive") ?? widget.parentAdaptive)
         : null;
 
     Widget? result = content;

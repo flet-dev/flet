@@ -1,10 +1,11 @@
 from typing import List, Optional
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
 
-class AppBar(Control):
+class AppBar(AdaptiveControl):
     """
     A material design app bar.
 
@@ -65,6 +66,8 @@ class AppBar(Control):
     ):
         Control.__init__(self, ref=ref)
 
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.__leading: Optional[Control] = None
         self.__title: Optional[Control] = None
         self.__actions: List[Control] = []
@@ -79,7 +82,6 @@ class AppBar(Control):
         self.bgcolor = bgcolor
         self.elevation = elevation
         self.actions = actions
-        self.adaptive = adaptive
 
     def _get_control_name(self):
         return "appbar"
@@ -193,12 +195,3 @@ class AppBar(Control):
     @actions.setter
     def actions(self, value):
         self.__actions = value if value is not None else []
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)

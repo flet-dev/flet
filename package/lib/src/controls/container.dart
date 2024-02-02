@@ -45,13 +45,15 @@ class ContainerControl extends StatelessWidget
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const ContainerControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +70,7 @@ class ContainerControl extends StatelessWidget
     bool onLongPress = control.attrBool("onLongPress", false)!;
     bool onHover = control.attrBool("onHover", false)!;
     bool disabled = control.isDisabled || parentDisabled;
+    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
     var imageSrc = control.attrString("imageSrc", "")!;
     var imageSrcBase64 = control.attrString("imageSrcBase64", "")!;
@@ -76,7 +79,8 @@ class ContainerControl extends StatelessWidget
     var imageOpacity = control.attrDouble("imageOpacity", 1)!;
 
     Widget? child = contentCtrls.isNotEmpty
-        ? createControl(control, contentCtrls.first.id, disabled)
+        ? createControl(control, contentCtrls.first.id, disabled,
+            parentAdaptive: adaptive)
         : null;
 
     var animation = parseAnimation(control, "animate");

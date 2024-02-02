@@ -13,6 +13,7 @@ class ResponsiveRowControl extends StatelessWidget
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final List<Control> children;
 
   const ResponsiveRowControl(
@@ -20,7 +21,8 @@ class ResponsiveRowControl extends StatelessWidget
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class ResponsiveRowControl extends StatelessWidget
     final spacing = parseResponsiveNumber(control, "spacing", 10);
     final runSpacing = parseResponsiveNumber(control, "runSpacing", 10);
     bool disabled = control.isDisabled || parentDisabled;
-
+    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
     return withPageSize((context, view) {
       var w = LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -63,7 +65,8 @@ class ResponsiveRowControl extends StatelessWidget
               minWidth: childWidth,
               maxWidth: childWidth,
             ),
-            child: createControl(control, ctrl.id, disabled),
+            child: createControl(control, ctrl.id, disabled,
+                parentAdaptive: adaptive),
           ));
         }
 

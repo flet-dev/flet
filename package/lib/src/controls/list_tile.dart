@@ -32,6 +32,7 @@ class ListTileControl extends StatelessWidget
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final ListTileClickNotifier _clickNotifier = ListTileClickNotifier();
 
   ListTileControl(
@@ -39,20 +40,22 @@ class ListTileControl extends StatelessWidget
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
     return withPagePlatform((context, platform) {
-      bool adaptive = control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoListTileControl(
             control: control,
             parent: parent,
             parentDisabled: parentDisabled,
+            parentAdaptive: adaptive,
             children: children);
       }
 
@@ -112,16 +115,20 @@ class ListTileControl extends StatelessWidget
         splashColor: HexColor.fromString(
             Theme.of(context), control.attrString("bgcolorActivated", "")!),
         leading: leadingCtrls.isNotEmpty
-            ? createControl(control, leadingCtrls.first.id, disabled)
+            ? createControl(control, leadingCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
             : null,
         title: titleCtrls.isNotEmpty
-            ? createControl(control, titleCtrls.first.id, disabled)
+            ? createControl(control, titleCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
             : null,
         subtitle: subtitleCtrls.isNotEmpty
-            ? createControl(control, subtitleCtrls.first.id, disabled)
+            ? createControl(control, subtitleCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
             : null,
         trailing: trailingCtrls.isNotEmpty
-            ? createControl(control, trailingCtrls.first.id, disabled)
+            ? createControl(control, trailingCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
             : null,
       );
 

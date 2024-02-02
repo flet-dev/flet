@@ -15,12 +15,14 @@ class SwitchControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const SwitchControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   State<SwitchControl> createState() => _SwitchControlState();
@@ -63,8 +65,9 @@ class _SwitchControlState extends State<SwitchControl>
     debugPrint("SwitchControl build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool adaptive = widget.control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoSwitchControl(

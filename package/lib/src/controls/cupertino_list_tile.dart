@@ -15,6 +15,7 @@ class CupertinoListTileControl extends StatelessWidget
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final ListTileClickNotifier _clickNotifier = ListTileClickNotifier();
 
   CupertinoListTileControl(
@@ -22,7 +23,8 @@ class CupertinoListTileControl extends StatelessWidget
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -46,22 +48,27 @@ class CupertinoListTileControl extends StatelessWidget
     bool disabled = control.isDisabled || parentDisabled;
 
     Widget? additionalInfo = additionalInfoCtrls.isNotEmpty
-        ? createControl(control, additionalInfoCtrls.first.id, disabled)
+        ? createControl(control, additionalInfoCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
     Widget? leading = leadingCtrls.isNotEmpty
-        ? createControl(control, leadingCtrls.first.id, disabled)
+        ? createControl(control, leadingCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     Widget? title = titleCtrls.isNotEmpty
-        ? createControl(control, titleCtrls.first.id, disabled)
+        ? createControl(control, titleCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : const Text("");
 
     Widget? subtitle = subtitleCtrls.isNotEmpty
-        ? createControl(control, subtitleCtrls.first.id, disabled)
+        ? createControl(control, subtitleCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     Widget? trailing = trailingCtrls.isNotEmpty
-        ? createControl(control, trailingCtrls.first.id, disabled)
+        ? createControl(control, trailingCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     Color? backgroundColor = HexColor.fromString(
