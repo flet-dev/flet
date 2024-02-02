@@ -5,6 +5,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
 import '../flet_app_services.dart';
+import '../utils/video.dart';
 
 class VideoControl extends StatefulWidget {
   final Control? parent;
@@ -45,11 +46,7 @@ class _VideoControlState extends State<VideoControl>
   @override
   void initState() {
     super.initState();
-    player.open(
-        Playlist([
-          Media(
-              'https://user-images.githubusercontent.com/28951144/229373695-22f88f13-d18f-4288-9bf1-c3e078d83722.mp4')
-        ]),
+    player.open(Playlist(parseVideoMedia(widget.control, "playlist")),
         play: widget.control.attrBool("autoPlay", false)!);
   }
 
@@ -63,20 +60,21 @@ class _VideoControlState extends State<VideoControl>
   Widget build(BuildContext context) {
     debugPrint("Video build: ${widget.control.id}");
 
-    var src = widget.control.attrString("src", "")!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     FilterQuality filterQuality = FilterQuality.values.firstWhere((e) =>
         e.name.toLowerCase() ==
         widget.control.attrString("filterQuality", "low")!.toLowerCase());
 
+    List<Media> playlist = parseVideoMedia(widget.control, "playlist");
     double? volume = widget.control.attrDouble("volume");
     double? pitch = widget.control.attrDouble("pitch");
     double? playbackRate = widget.control.attrDouble("playbackRate");
     bool? shufflePlaylist = widget.control.attrBool("shufflePlaylist");
     PlaylistMode? playlistMode = PlaylistMode.values.firstWhereOrNull((e) =>
         e.name.toLowerCase() ==
-        widget.control.attrString("playlistMode")!.toLowerCase());
+        widget.control.attrString("playlistMode")?.toLowerCase());
 
+    final List<Media>? prevPlaylist = widget.control.state["playlist"];
     final double? prevVolume = widget.control.state["volume"];
     final double? prevPitch = widget.control.state["pitch"];
     final double? prevPlaybackRate = widget.control.state["playbackRate"];
@@ -119,7 +117,7 @@ class _VideoControlState extends State<VideoControl>
       if (volume != null &&
           volume != prevVolume &&
           volume >= 0 &&
-          volume <= 1) {
+          volume <= 100) {
         widget.control.state["volume"] = volume;
         debugPrint("Video.setVolume($volume)");
         await player.setVolume(volume);
@@ -168,13 +166,16 @@ class _VideoControlState extends State<VideoControl>
             await player.stop();
             break;
           case "seek":
+            debugPrint("Video.jump($hashCode)");
             await player.seek(Duration(
                 milliseconds: int.tryParse(args["position"] ?? "") ?? 0));
             break;
           case "next":
+            debugPrint("Video.next($hashCode)");
             await player.next();
             break;
           case "previous":
+            debugPrint("Video.previous($hashCode)");
             await player.previous();
             break;
           case "add_media":
