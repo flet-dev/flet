@@ -1,20 +1,20 @@
 import 'package:flutter/widgets.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/responsive.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateless_mixin.dart';
 import 'flet_store_mixin.dart';
 
-class ResponsiveRowControl extends StatelessWidget
-    with FletControlStatelessMixin, FletStoreMixin {
+class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final bool? parentAdaptive;
   final List<Control> children;
+  final FletControlBackend backend;
 
   const ResponsiveRowControl(
       {super.key,
@@ -22,7 +22,8 @@ class ResponsiveRowControl extends StatelessWidget
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
@@ -14,6 +15,7 @@ class ListViewControl extends StatefulWidget {
   final bool parentDisabled;
   final List<Control> children;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const ListViewControl(
       {super.key,
@@ -21,7 +23,8 @@ class ListViewControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<ListViewControl> createState() => _ListViewControlState();
@@ -118,15 +121,15 @@ class _ListViewControlState extends State<ListViewControl> {
               );
 
         child = ScrollableControl(
-          control: widget.control,
-          scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
-          scrollController: _controller,
-          child: child,
-        );
+            control: widget.control,
+            scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+            scrollController: _controller,
+            backend: widget.backend,
+            child: child);
 
         if (widget.control.attrBool("onScroll", false)!) {
-          child =
-              ScrollNotificationControl(control: widget.control, child: child);
+          child = ScrollNotificationControl(
+              control: widget.control, backend: widget.backend, child: child);
         }
 
         return child;

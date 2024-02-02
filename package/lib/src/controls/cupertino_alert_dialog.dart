@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class CupertinoAlertDialogControl extends StatefulWidget {
   final Control? parent;
@@ -13,6 +13,7 @@ class CupertinoAlertDialogControl extends StatefulWidget {
   final bool parentDisabled;
   final bool? parentAdaptive;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
   const CupertinoAlertDialogControl(
       {super.key,
@@ -21,7 +22,8 @@ class CupertinoAlertDialogControl extends StatefulWidget {
       required this.children,
       required this.parentDisabled,
       required this.parentAdaptive,
-      required this.nextChild});
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<CupertinoAlertDialogControl> createState() =>
@@ -29,7 +31,7 @@ class CupertinoAlertDialogControl extends StatefulWidget {
 }
 
 class _CupertinoAlertDialogControlState
-    extends State<CupertinoAlertDialogControl> with FletControlStatefulMixin {
+    extends State<CupertinoAlertDialogControl> {
   Widget _createCupertinoAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var titleCtrls =
@@ -98,8 +100,10 @@ class _CupertinoAlertDialogControlState
           widget.control.state["open"] = false;
 
           if (shouldDismiss) {
-            updateControlProps(widget.control.id, {"open": "false"});
-            sendControlEvent(widget.control.id, "dismiss", "");
+            widget.backend
+                .updateControlState(widget.control.id, {"open": "false"});
+            widget.backend
+                .triggerControlEvent(widget.control.id, "dismiss", "");
           }
         });
       });

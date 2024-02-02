@@ -46,19 +46,14 @@ class FletAppServices extends InheritedWidget {
         // root error handler
         errorsHandler!.addListener(() {
           if (store.state.isRegistered) {
-            server.sendPageEvent(
-                eventTarget: "page",
-                eventName: "error",
-                eventData: errorsHandler!.error!);
+            server.triggerControlEvent("page", "error", errorsHandler!.error!);
           }
         });
       } else if (controlId != null && parentAppServices != null) {
         // parent error handler
         errorsHandler?.addListener(() {
-          parentAppServices?.server.sendPageEvent(
-              eventTarget: controlId!,
-              eventName: "error",
-              eventData: errorsHandler!.error!);
+          parentAppServices?.server
+              .triggerControlEvent(controlId!, "error", errorsHandler!.error!);
         });
       }
     }

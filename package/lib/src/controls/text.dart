@@ -2,26 +2,26 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
-import 'flet_control_stateless_mixin.dart';
 import 'flet_store_mixin.dart';
 
-class TextControl extends StatelessWidget
-    with FletControlStatelessMixin, FletStoreMixin {
+class TextControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
-  const TextControl({
-    super.key,
-    required this.parent,
-    required this.control,
-    required this.parentDisabled,
-  });
+  const TextControl(
+      {super.key,
+      required this.parent,
+      required this.control,
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class TextControl extends StatelessWidget
         viewModel,
         disabled,
         (String controlId, String eventName, String eventData) {
-          sendControlEvent(context, controlId, eventName, eventData);
+          backend.triggerControlEvent(controlId, eventName, eventData);
         },
       );
       String? semanticsLabel = control.attrString("semanticsLabel");

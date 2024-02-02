@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
@@ -11,7 +12,6 @@ import 'app_bar.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'floating_action_button.dart';
 import 'navigation_drawer.dart';
 
@@ -21,6 +21,7 @@ class PageletControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const PageletControl(
       {super.key,
@@ -28,14 +29,14 @@ class PageletControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<PageletControl> createState() => _PageletControlState();
 }
 
-class _PageletControlState extends State<PageletControl>
-    with FletControlStatefulMixin {
+class _PageletControlState extends State<PageletControl> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -118,8 +119,8 @@ class _PageletControlState extends State<PageletControl>
               FloatingActionButtonLocation.endFloat);
 
           void dismissDrawer(String id) {
-            updateControlProps(id, {"open": "false"});
-            sendControlEvent(id, "dismiss", "");
+            widget.backend.updateControlState(id, {"open": "false"});
+            widget.backend.triggerControlEvent(id, "dismiss", "");
           }
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -202,7 +203,7 @@ class _PageletControlState extends State<PageletControl>
                           children: drawerView.children,
                           parentDisabled: widget.control.isDisabled,
                           parentAdaptive: adaptive,
-                        )
+                          backend: widget.backend)
                       : null,
                   onDrawerChanged: (opened) {
                     if (drawerView != null && !opened) {
@@ -216,7 +217,7 @@ class _PageletControlState extends State<PageletControl>
                           children: endDrawerView.children,
                           parentDisabled: widget.control.isDisabled,
                           parentAdaptive: adaptive,
-                        )
+                          backend: widget.backend)
                       : null,
                   onEndDrawerChanged: (opened) {
                     if (endDrawerView != null && !opened) {

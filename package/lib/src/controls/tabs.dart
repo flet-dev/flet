@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
@@ -13,7 +14,6 @@ import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/material_state.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class TabsControl extends StatefulWidget {
   final Control? parent;
@@ -21,6 +21,7 @@ class TabsControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const TabsControl(
       {super.key,
@@ -28,14 +29,15 @@ class TabsControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<TabsControl> createState() => _TabsControlState();
 }
 
 class _TabsControlState extends State<TabsControl>
-    with FletControlStatefulMixin, TickerProviderStateMixin {
+    with TickerProviderStateMixin {
   String? _tabsSnapshot;
   TabController? _tabController;
   int _selectedIndex = 0;
@@ -54,9 +56,10 @@ class _TabsControlState extends State<TabsControl>
     var index = _tabController!.index;
     if (_selectedIndex != index) {
       debugPrint("Selected index: $index");
-      updateControlProps(
+      widget.backend.updateControlState(
           widget.control.id, {"selectedindex": index.toString()});
-      sendControlEvent(widget.control.id, "change", index.toString());
+      widget.backend
+          .triggerControlEvent(widget.control.id, "change", index.toString());
       _selectedIndex = index;
     }
   }

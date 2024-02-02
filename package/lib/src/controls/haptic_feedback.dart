@@ -1,29 +1,30 @@
+import 'package:flet/src/flet_control_backend.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class HapticFeedbackControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
   const HapticFeedbackControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.nextChild});
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<HapticFeedbackControl> createState() => _HapticFeedbackControlState();
 }
 
-class _HapticFeedbackControlState extends State<HapticFeedbackControl>
-    with FletControlStatefulMixin {
+class _HapticFeedbackControlState extends State<HapticFeedbackControl> {
   @override
   void deactivate() {
-    unsubscribeMethods(widget.control.id);
+    widget.backend.unsubscribeMethods(widget.control.id);
     super.deactivate();
   }
 
@@ -31,7 +32,8 @@ class _HapticFeedbackControlState extends State<HapticFeedbackControl>
   Widget build(BuildContext context) {
     debugPrint("HapticFeedback build: ${widget.control.id}");
 
-    subscribeMethods(widget.control.id, (methodName, args) async {
+    widget.backend.subscribeMethods(widget.control.id,
+        (methodName, args) async {
       switch (methodName) {
         case "heavy_impact":
           HapticFeedback.heavyImpact();

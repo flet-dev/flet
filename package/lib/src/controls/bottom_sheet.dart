@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class BottomSheetControl extends StatefulWidget {
   final Control? parent;
@@ -13,6 +13,7 @@ class BottomSheetControl extends StatefulWidget {
   final bool parentDisabled;
   final bool? parentAdaptive;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
   const BottomSheetControl(
       {super.key,
@@ -21,14 +22,14 @@ class BottomSheetControl extends StatefulWidget {
       required this.children,
       required this.parentDisabled,
       required this.parentAdaptive,
-      required this.nextChild});
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<BottomSheetControl> createState() => _BottomSheetControlState();
 }
 
-class _BottomSheetControlState extends State<BottomSheetControl>
-    with FletControlStatefulMixin {
+class _BottomSheetControlState extends State<BottomSheetControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("BottomSheet build: ${widget.control.id}");
@@ -48,7 +49,7 @@ class _BottomSheetControlState extends State<BottomSheetControl>
         widget.control.attrBool("maintainBottomViewInsetsPadding", true)!;
 
     void resetOpenState() {
-      updateControlProps(widget.control.id, {"open": "false"});
+      widget.backend.updateControlState(widget.control.id, {"open": "false"});
     }
 
     if (open && !lastOpen) {
@@ -103,7 +104,8 @@ class _BottomSheetControlState extends State<BottomSheetControl>
 
           if (shouldDismiss) {
             resetOpenState();
-            sendControlEvent(widget.control.id, "dismiss", "");
+            widget.backend
+                .triggerControlEvent(widget.control.id, "dismiss", "");
           }
         });
       });

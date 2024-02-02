@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
@@ -13,19 +13,20 @@ class CupertinoCheckboxControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   const CupertinoCheckboxControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<CupertinoCheckboxControl> createState() => _CheckboxControlState();
 }
 
-class _CheckboxControlState extends State<CupertinoCheckboxControl>
-    with FletControlStatefulMixin {
+class _CheckboxControlState extends State<CupertinoCheckboxControl> {
   bool? _value;
   bool _tristate = false;
   late final FocusNode _focusNode;
@@ -38,7 +39,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl>
   }
 
   void _onFocusChange() {
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -64,8 +65,8 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl>
   void _onChange(bool? value) {
     var svalue = value != null ? value.toString() : "";
     _value = value;
-    updateControlProps(widget.control.id, {"value": svalue});
-    sendControlEvent(widget.control.id, "change", svalue);
+    widget.backend.updateControlState(widget.control.id, {"value": svalue});
+    widget.backend.triggerControlEvent(widget.control.id, "change", svalue);
   }
 
   @override

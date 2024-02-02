@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/desktop.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class RangeSliderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
-  const RangeSliderControl({
-    super.key,
-    this.parent,
-    required this.control,
-    required this.parentDisabled,
-  });
+  const RangeSliderControl(
+      {super.key,
+      this.parent,
+      required this.control,
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<RangeSliderControl> createState() => _SliderControlState();
 }
 
-class _SliderControlState extends State<RangeSliderControl>
-    with FletControlStatefulMixin {
+class _SliderControlState extends State<RangeSliderControl> {
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
 
   @override
@@ -43,10 +43,10 @@ class _SliderControlState extends State<RangeSliderControl>
       "startvalue": startValue.toString(),
       "endvalue": endValue.toString()
     };
-    updateControlProps(widget.control.id, props, clientOnly: true);
+    widget.backend.updateControlState(widget.control.id, props, server: false);
     _debouncer.run(() {
-      updateControlProps(widget.control.id, props);
-      sendControlEvent(widget.control.id, "change", "");
+      widget.backend.updateControlState(widget.control.id, props);
+      widget.backend.triggerControlEvent(widget.control.id, "change", "");
     });
   }
 
@@ -90,12 +90,14 @@ class _SliderControlState extends State<RangeSliderControl>
             : null,
         onChangeStart: !disabled
             ? (RangeValues newValues) {
-                sendControlEvent(widget.control.id, "change_start", '');
+                widget.backend
+                    .triggerControlEvent(widget.control.id, "change_start", '');
               }
             : null,
         onChangeEnd: !disabled
             ? (RangeValues newValues) {
-                sendControlEvent(widget.control.id, "change_end", '');
+                widget.backend
+                    .triggerControlEvent(widget.control.id, "change_end", '');
               }
             : null);
 

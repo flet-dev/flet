@@ -3,22 +3,25 @@ import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/launch_url.dart';
 import '../utils/text.dart';
 import '../utils/uri.dart';
 import 'create_control.dart';
-import 'flet_control_stateless_mixin.dart';
 import 'flet_store_mixin.dart';
 import 'highlight_view.dart';
 
-class MarkdownControl extends StatelessWidget
-    with FletControlStatelessMixin, FletStoreMixin {
+class MarkdownControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
+  final FletControlBackend backend;
 
   const MarkdownControl(
-      {super.key, required this.parent, required this.control});
+      {super.key,
+      required this.parent,
+      required this.control,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +72,8 @@ class MarkdownControl extends StatelessWidget
             if (autoFollowLinks && href != null) {
               openWebBrowser(href, webWindowName: autoFollowLinksTarget);
             }
-            sendControlEvent(
-                context, control.id, "tap_link", href?.toString() ?? "");
+            backend.triggerControlEvent(
+                control.id, "tap_link", href?.toString() ?? "");
           });
 
       return constrainedControl(context, markdown, parent, control);

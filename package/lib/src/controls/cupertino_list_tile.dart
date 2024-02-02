@@ -1,21 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
-import 'flet_control_stateless_mixin.dart';
 import 'list_tile.dart';
 
-class CupertinoListTileControl extends StatelessWidget
-    with FletControlStatelessMixin {
+class CupertinoListTileControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
   final ListTileClickNotifier _clickNotifier = ListTileClickNotifier();
 
   CupertinoListTileControl(
@@ -24,7 +24,8 @@ class CupertinoListTileControl extends StatelessWidget
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +89,7 @@ class CupertinoListTileControl extends StatelessWidget
               openWebBrowser(url, webWindowName: urlTarget);
             }
             if (onclick) {
-              sendControlEvent(context, control.id, "click", "");
+              backend.triggerControlEvent(control.id, "click", "");
             }
           }
         : null;

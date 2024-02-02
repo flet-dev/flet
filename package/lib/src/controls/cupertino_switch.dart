@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'list_tile.dart';
 
 enum LabelPosition { right, left }
@@ -13,19 +13,20 @@ class CupertinoSwitchControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   const CupertinoSwitchControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<CupertinoSwitchControl> createState() => _CupertinoSwitchControlState();
 }
 
-class _CupertinoSwitchControlState extends State<CupertinoSwitchControl>
-    with FletControlStatefulMixin {
+class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
   bool _value = false;
   late final FocusNode _focusNode;
 
@@ -47,12 +48,12 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl>
     var svalue = value.toString();
     debugPrint(svalue);
     _value = value;
-    updateControlProps(widget.control.id, {"value": svalue});
-    sendControlEvent(widget.control.id, "change", svalue);
+    widget.backend.updateControlState(widget.control.id, {"value": svalue});
+    widget.backend.triggerControlEvent(widget.control.id, "change", svalue);
   }
 
   void _onFocusChange() {
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 

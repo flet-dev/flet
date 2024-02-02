@@ -3,11 +3,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/dismissible.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class DismissibleControl extends StatefulWidget {
   final Control? parent;
@@ -15,6 +15,7 @@ class DismissibleControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const DismissibleControl(
       {super.key,
@@ -22,14 +23,14 @@ class DismissibleControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<DismissibleControl> createState() => _DismissibleControlState();
 }
 
-class _DismissibleControlState extends State<DismissibleControl>
-    with FletControlStatefulMixin {
+class _DismissibleControlState extends State<DismissibleControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("Dismissible build: ${widget.control.id}");
@@ -57,12 +58,13 @@ class _DismissibleControlState extends State<DismissibleControl>
             widget.control.attrString("dismissDirection", "")!.toLowerCase(),
         orElse: () => DismissDirection.horizontal);
 
-    subscribeMethods(widget.control.id, (methodName, args) async {
+    widget.backend.subscribeMethods(widget.control.id,
+        (methodName, args) async {
       debugPrint("Dismissible.onMethod(${widget.control.id})");
       if (methodName == "confirm_dismiss") {
         widget.control.state["confirm_dismiss"]
             ?.complete(bool.tryParse(args["dismiss"] ?? ""));
-        unsubscribeMethods(widget.control.id);
+        widget.backend.unsubscribeMethods(widget.control.id);
       }
 
       return null;
@@ -85,18 +87,19 @@ class _DismissibleControlState extends State<DismissibleControl>
                 : Container(color: Colors.transparent),
             onDismissed: widget.control.attrBool("onDismiss", false)!
                 ? (DismissDirection direction) {
-                    sendControlEvent(
+                    widget.backend.triggerControlEvent(
                         widget.control.id, "dismiss", direction.name);
                   }
                 : null,
             onResize: widget.control.attrBool("onResize", false)!
                 ? () {
-                    sendControlEvent(widget.control.id, "resize", "");
+                    widget.backend
+                        .triggerControlEvent(widget.control.id, "resize", "");
                   }
                 : null,
             onUpdate: widget.control.attrBool("onUpdate", false)!
                 ? (DismissUpdateDetails details) {
-                    sendControlEvent(
+                    widget.backend.triggerControlEvent(
                         widget.control.id,
                         "update",
                         json.encode(DismissibleUpdateEvent(
@@ -113,7 +116,7 @@ class _DismissibleControlState extends State<DismissibleControl>
                         "Dismissible.confirmDismiss(${widget.control.id})");
                     var completer = Completer<bool?>();
                     widget.control.state["confirm_dismiss"] = completer;
-                    sendControlEvent(
+                    widget.backend.triggerControlEvent(
                         widget.control.id, "confirm_dismiss", direction.name);
                     return completer.future;
                   }

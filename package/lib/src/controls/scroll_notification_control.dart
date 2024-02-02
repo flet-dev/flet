@@ -2,23 +2,26 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class ScrollNotificationControl extends StatefulWidget {
   final Widget child;
   final Control control;
+  final FletControlBackend backend;
 
   const ScrollNotificationControl(
-      {super.key, required this.child, required this.control});
+      {super.key,
+      required this.child,
+      required this.control,
+      required this.backend});
 
   @override
   State<ScrollNotificationControl> createState() =>
       _ScrollNotificationControlState();
 }
 
-class _ScrollNotificationControlState extends State<ScrollNotificationControl>
-    with FletControlStatefulMixin {
+class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
   int _onScrollInterval = 0;
   final Map<String, int> _lastEventTimestamps = {};
 
@@ -42,7 +45,7 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl>
       }
 
       debugPrint("ScrollNotification ${widget.control.id} event");
-      sendControlEvent(widget.control.id, "onScroll", d);
+      widget.backend.triggerControlEvent(widget.control.id, "onScroll", d);
     }
 
     if (notification.depth == 0) {

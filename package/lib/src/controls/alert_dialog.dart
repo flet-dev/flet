@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
@@ -7,7 +8,6 @@ import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'cupertino_alert_dialog.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class AlertDialogControl extends StatefulWidget {
@@ -17,23 +17,24 @@ class AlertDialogControl extends StatefulWidget {
   final bool parentDisabled;
   final bool? parentAdaptive;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
-  const AlertDialogControl({
-    super.key,
-    this.parent,
-    required this.control,
-    required this.children,
-    required this.parentDisabled,
-    required this.parentAdaptive,
-    required this.nextChild,
-  });
+  const AlertDialogControl(
+      {super.key,
+      this.parent,
+      required this.control,
+      required this.children,
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<AlertDialogControl> createState() => _AlertDialogControlState();
 }
 
 class _AlertDialogControlState extends State<AlertDialogControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+    with FletStoreMixin {
   Widget _createAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     bool? adaptive =
@@ -85,12 +86,12 @@ class _AlertDialogControlState extends State<AlertDialogControl>
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoAlertDialogControl(
-          control: widget.control,
-          parentDisabled: widget.parentDisabled,
-          children: widget.children,
-          nextChild: widget.nextChild,
-          parentAdaptive: adaptive,
-        );
+            control: widget.control,
+            parentDisabled: widget.parentDisabled,
+            children: widget.children,
+            nextChild: widget.nextChild,
+            parentAdaptive: adaptive,
+            backend: widget.backend);
       }
 
       bool lastOpen = widget.control.state["open"] ?? false;
@@ -128,8 +129,10 @@ class _AlertDialogControlState extends State<AlertDialogControl>
             widget.control.state["open"] = false;
 
             if (shouldDismiss) {
-              updateControlProps(widget.control.id, {"open": "false"});
-              sendControlEvent(widget.control.id, "dismiss", "");
+              widget.backend
+                  .updateControlState(widget.control.id, {"open": "false"});
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "dismiss", "");
             }
           });
         });
