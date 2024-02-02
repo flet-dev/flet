@@ -178,9 +178,9 @@ class _VideoControlState extends State<VideoControl>
             debugPrint("Video.previous($hashCode)");
             await player.previous();
             break;
-          case "add_media":
-            debugPrint("Video.addMedia(${args['media']}");
-            // await player.add(); TODO
+          case "jump_to":
+            debugPrint("Video.jump($hashCode)");
+            await player.jump(parseInt(args["media_index"], 0));
             break;
         }
         return null;

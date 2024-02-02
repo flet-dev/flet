@@ -205,6 +205,16 @@ class Video(ConstrainedControl):
             "seek", {"position": str(position_milliseconds)}, control_id=self.uid
         )
 
+    def jump_to(self, media_index: int):
+        self.page.invoke_method(
+            "jump_to", {"media_index": str(media_index)}, control_id=self.uid
+        )
+
+    async def jump_to_async(self, media_index: int):
+        await self.page.invoke_method_async(
+            "jump_to", {"media_index": str(media_index)}, control_id=self.uid
+        )
+
     # playlist
     @property
     def playlist(self) -> Optional[List[VideoMedia]]:
