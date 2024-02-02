@@ -1,7 +1,7 @@
-import 'package:flet/src/flet_control_backend.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 
 class ClipboardControl extends StatefulWidget {
