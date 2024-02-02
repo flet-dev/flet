@@ -147,6 +147,32 @@ class _VideoControlState extends State<VideoControl>
         await player.setPlaylistMode(playlistMode);
       }
 
+
+      if (playlist != prevPlaylist) {
+        widget.control.state["playlist"] = playlist;
+        // add new media
+        // FIXME: incomplete implementation of the add-comparison - an already existing (duplicate) media fails to be added again
+        for (var media in playlist) {
+          if (prevPlaylist != null && !prevPlaylist.contains(media)) {
+            debugPrint("Video.ADD(${media.uri})");
+            await player.add(media);
+          }
+        }
+
+        // remove old media
+        var indexToRemove = [];
+        prevPlaylist?.forEachIndexed((index, media) {
+          if (!playlist.contains(media)) {
+            debugPrint("Video.REMOVE(${media.uri})");
+            indexToRemove.add(index);
+          }
+        });
+        indexToRemove.forEachIndexed((i, indexOfMediaToRemove) async {
+          // subtract i to account for any previously removed media
+          await player.remove(indexOfMediaToRemove - i);
+        });
+      }
+
       subscribeMethods(widget.control.id, (methodName, args) async {
         switch (methodName) {
           case "play":
