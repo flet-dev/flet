@@ -38,7 +38,6 @@ dependencies:
   window_to_front: ^0.0.3
   audioplayers: ^5.2.1
   media_kit: ^1.1.10
-  # media_kit_libs_audio: ^1.0.4
   media_kit_video: ^1.2.4
   media_kit_libs_video: ^1.0.4
   sensors_plus: ^4.0.2
