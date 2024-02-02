@@ -1,6 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.appveyor.flet">
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Media access permissions.
+      Android 13 or higher.
+      https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <!-- Storage access permissions.
+      Android 12 or lower. -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
    <application
         android:label="Flet"
         android:name="${applicationName}"
