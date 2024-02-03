@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -11,7 +12,6 @@ import '../utils/shadows.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'form_field.dart';
 import 'textfield.dart';
 
@@ -21,6 +21,7 @@ class CupertinoTextFieldControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const CupertinoTextFieldControl(
       {super.key,
@@ -28,15 +29,15 @@ class CupertinoTextFieldControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<CupertinoTextFieldControl> createState() =>
       _CupertinoTextFieldControlState();
 }
 
-class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
-    with FletControlStatefulMixin {
+class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
   String _value = "";
   bool _focused = false;
   late TextEditingController _controller;
@@ -52,7 +53,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
       onKey: (FocusNode node, RawKeyEvent evt) {
         if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
           if (evt is RawKeyDownEvent) {
-            sendControlEvent(widget.control.id, "submit", "");
+            widget.backend.triggerControlEvent(widget.control.id, "submit", "");
           }
           return KeyEventResult.handled;
         } else {
@@ -79,7 +80,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    sendControlEvent(widget.control.id,
+    widget.backend.triggerControlEvent(widget.control.id,
         _shiftEnterfocusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -87,7 +88,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -212,7 +213,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
         enabled: !disabled,
         onSubmitted: !multiline
             ? (_) {
-                sendControlEvent(widget.control.id, "submit", "");
+                widget.backend
+                    .triggerControlEvent(widget.control.id, "submit", "");
               }
             : null,
         decoration: defaultDecoration?.copyWith(
@@ -263,9 +265,11 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
         onChanged: (String value) {
           //debugPrint(value);
           _value = value;
-          updateControlProps(widget.control.id, {"value": value});
+          widget.backend
+              .updateControlState(widget.control.id, {"value": value});
           if (onChange) {
-            sendControlEvent(widget.control.id, "change", value);
+            widget.backend
+                .triggerControlEvent(widget.control.id, "change", value);
           }
         });
 

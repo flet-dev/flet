@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
@@ -9,7 +10,6 @@ import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class CupertinoButtonControl extends StatefulWidget {
   final Control? parent;
@@ -17,6 +17,7 @@ class CupertinoButtonControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const CupertinoButtonControl(
       {super.key,
@@ -24,14 +25,14 @@ class CupertinoButtonControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<CupertinoButtonControl> createState() => _CupertinoButtonControlState();
 }
 
-class _CupertinoButtonControlState extends State<CupertinoButtonControl>
-    with FletControlStatefulMixin {
+class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
@@ -66,7 +67,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl>
               openWebBrowser(url,
                   webWindowName: widget.control.attrString("urlTarget"));
             }
-            sendControlEvent(widget.control.id, "click", "");
+            widget.backend.triggerControlEvent(widget.control.id, "click", "");
           }
         : null;
 

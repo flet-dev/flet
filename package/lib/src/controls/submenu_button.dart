@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/menu.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class SubMenuButtonControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   const SubMenuButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<SubMenuButtonControl> createState() => _SubMenuButtonControlState();
 }
 
-class _SubMenuButtonControlState extends State<SubMenuButtonControl>
-    with FletControlStatefulMixin {
+class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -44,7 +45,7 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl>
   }
 
   void _onFocusChange() {
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -101,17 +102,19 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl>
           : null,
       onClose: onClose && !disabled
           ? () {
-              sendControlEvent(widget.control.id, "close", "");
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "close", "");
             }
           : null,
       onHover: onHover && !disabled
           ? (bool value) {
-              sendControlEvent(widget.control.id, "hover", "$value");
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "hover", "$value");
             }
           : null,
       onOpen: onOpen && !disabled
           ? () {
-              sendControlEvent(widget.control.id, "open", "");
+              widget.backend.triggerControlEvent(widget.control.id, "open", "");
             }
           : null,
       leadingIcon: leading.isNotEmpty

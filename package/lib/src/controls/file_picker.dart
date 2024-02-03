@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../flet_server.dart';
 import '../models/control.dart';
 import '../utils/desktop.dart';
 import '../utils/strings.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class FilePickerResultEvent {
@@ -65,19 +65,21 @@ class FilePickerControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
   const FilePickerControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.nextChild});
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<FilePickerControl> createState() => _FilePickerControlState();
 }
 
 class _FilePickerControlState extends State<FilePickerControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+    with FletStoreMixin {
   String? _state;
   String? _upload;
   String? _path;
@@ -109,14 +111,14 @@ class _FilePickerControlState extends State<FilePickerControl>
 
       resetDialogState() {
         _state = null;
-        updateControlProps(widget.control.id, {"state": ""});
+        widget.backend.updateControlState(widget.control.id, {"state": ""});
       }
 
       sendEvent() {
         if (defaultTargetPlatform != TargetPlatform.windows || !isDesktop()) {
           resetDialogState();
         }
-        sendControlEvent(
+        widget.backend.triggerControlEvent(
             widget.control.id,
             "result",
             json.encode(FilePickerResultEvent(
@@ -265,7 +267,7 @@ class _FilePickerControlState extends State<FilePickerControl>
 
   void sendProgress(
       FletServer server, String name, double? progress, String? error) {
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id,
         "upload",
         json.encode(FilePickerUploadProgressEvent(

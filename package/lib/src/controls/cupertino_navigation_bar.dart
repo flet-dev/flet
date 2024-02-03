@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class CupertinoNavigationBarControl extends StatefulWidget {
@@ -15,6 +15,7 @@ class CupertinoNavigationBarControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const CupertinoNavigationBarControl(
       {super.key,
@@ -22,7 +23,8 @@ class CupertinoNavigationBarControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<CupertinoNavigationBarControl> createState() =>
@@ -30,16 +32,16 @@ class CupertinoNavigationBarControl extends StatefulWidget {
 }
 
 class _CupertinoNavigationBarControlState
-    extends State<CupertinoNavigationBarControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+    extends State<CupertinoNavigationBarControl> with FletStoreMixin {
   int _selectedIndex = 0;
 
   void _onTap(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
-    updateControlProps(
+    widget.backend.updateControlState(
         widget.control.id, {"selectedindex": _selectedIndex.toString()});
-    sendControlEvent(widget.control.id, "change", _selectedIndex.toString());
+    widget.backend.triggerControlEvent(
+        widget.control.id, "change", _selectedIndex.toString());
   }
 
   @override

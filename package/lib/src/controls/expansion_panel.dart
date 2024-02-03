@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class ExpansionPanelListControl extends StatefulWidget {
@@ -13,6 +13,7 @@ class ExpansionPanelListControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const ExpansionPanelListControl(
       {super.key,
@@ -20,7 +21,8 @@ class ExpansionPanelListControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<ExpansionPanelListControl> createState() =>
@@ -28,7 +30,7 @@ class ExpansionPanelListControl extends StatefulWidget {
 }
 
 class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+    with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("ExpansionPanelList build: ${widget.control.id}");
@@ -38,9 +40,9 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
         .toList();
 
     void onChange(int index, bool isExpanded) {
-      updateControlProps(
+      widget.backend.updateControlState(
           panels[index].id, {"expanded": isExpanded.toString().toLowerCase()});
-      sendControlEvent(widget.control.id, "change", "$index");
+      widget.backend.triggerControlEvent(widget.control.id, "change", "$index");
     }
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -8,15 +9,14 @@ import '../utils/launch_url.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateless_mixin.dart';
 
-class FloatingActionButtonControl extends StatelessWidget
-    with FletControlStatelessMixin {
+class FloatingActionButtonControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const FloatingActionButtonControl(
       {super.key,
@@ -24,7 +24,8 @@ class FloatingActionButtonControl extends StatelessWidget
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,7 @@ class FloatingActionButtonControl extends StatelessWidget
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            sendControlEvent(context, control.id, "click", "");
+            backend.triggerControlEvent(control.id, "click", "");
           };
 
     if (text == null && icon == null && contentCtrls.isEmpty) {

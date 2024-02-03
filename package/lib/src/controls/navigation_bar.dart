@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'cupertino_navigation_bar.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class NavigationBarControl extends StatefulWidget {
@@ -16,6 +16,7 @@ class NavigationBarControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const NavigationBarControl(
       {super.key,
@@ -23,22 +24,24 @@ class NavigationBarControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<NavigationBarControl> createState() => _NavigationBarControlState();
 }
 
 class _NavigationBarControlState extends State<NavigationBarControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+    with FletStoreMixin {
   int _selectedIndex = 0;
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
-    updateControlProps(
+    widget.backend.updateControlState(
         widget.control.id, {"selectedindex": _selectedIndex.toString()});
-    sendControlEvent(widget.control.id, "change", _selectedIndex.toString());
+    widget.backend.triggerControlEvent(
+        widget.control.id, "change", _selectedIndex.toString());
   }
 
   @override
@@ -55,7 +58,8 @@ class _NavigationBarControlState extends State<NavigationBarControl>
             control: widget.control,
             children: widget.children,
             parentDisabled: widget.parentDisabled,
-            parentAdaptive: adaptive);
+            parentAdaptive: adaptive,
+            backend: widget.backend);
       }
 
       bool disabled = widget.control.isDisabled || widget.parentDisabled;

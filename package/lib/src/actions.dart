@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'flet_control_backend.dart';
 import 'flet_server.dart';
 import 'models/window_media_data.dart';
 import 'protocol/add_page_controls_payload.dart';
@@ -18,8 +19,8 @@ import 'protocol/update_control_props_payload.dart';
 class PageLoadAction {
   final Uri pageUri;
   final String assetsDir;
-  final FletServer server;
-  PageLoadAction(this.pageUri, this.assetsDir, this.server);
+  final FletControlBackend backend;
+  PageLoadAction(this.pageUri, this.assetsDir, this.backend);
 }
 
 class PageReconnectingAction {
@@ -31,8 +32,8 @@ class PageReconnectingAction {
 class PageSizeChangeAction {
   final Size newPageSize;
   final WindowMediaData? wmd;
-  final FletServer server;
-  PageSizeChangeAction(this.newPageSize, this.wmd, this.server);
+  final FletControlBackend backend;
+  PageSizeChangeAction(this.newPageSize, this.wmd, this.backend);
 }
 
 class SetPageRouteAction {
@@ -44,20 +45,20 @@ class SetPageRouteAction {
 class WindowEventAction {
   final String eventName;
   final WindowMediaData wmd;
-  final FletServer server;
-  WindowEventAction(this.eventName, this.wmd, this.server);
+  final FletControlBackend backend;
+  WindowEventAction(this.eventName, this.wmd, this.backend);
 }
 
 class PageBrightnessChangeAction {
   final Brightness brightness;
-  final FletServer server;
-  PageBrightnessChangeAction(this.brightness, this.server);
+  final FletControlBackend backend;
+  PageBrightnessChangeAction(this.brightness, this.backend);
 }
 
 class RegisterWebClientAction {
   final RegisterWebClientResponse payload;
-  final FletServer server;
-  RegisterWebClientAction(this.payload, this.server);
+  final FletControlBackend backend;
+  RegisterWebClientAction(this.payload, this.backend);
 }
 
 class AppBecomeActiveAction {

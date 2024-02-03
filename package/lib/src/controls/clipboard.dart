@@ -1,29 +1,30 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class ClipboardControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
   const ClipboardControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.nextChild});
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<ClipboardControl> createState() => _ClipboardControlState();
 }
 
-class _ClipboardControlState extends State<ClipboardControl>
-    with FletControlStatefulMixin {
+class _ClipboardControlState extends State<ClipboardControl> {
   @override
   void deactivate() {
-    unsubscribeMethods(widget.control.id);
+    widget.backend.unsubscribeMethods(widget.control.id);
     super.deactivate();
   }
 
@@ -31,7 +32,8 @@ class _ClipboardControlState extends State<ClipboardControl>
   Widget build(BuildContext context) {
     debugPrint("Clipboard build: ${widget.control.id}");
 
-    subscribeMethods(widget.control.id, (methodName, args) async {
+    widget.backend.subscribeMethods(widget.control.id,
+        (methodName, args) async {
       switch (methodName) {
         case "set_data":
           await Clipboard.setData(ClipboardData(text: args["data"]!));

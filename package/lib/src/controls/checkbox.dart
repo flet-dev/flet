@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'cupertino_checkbox.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 import 'list_tile.dart';
 
@@ -15,20 +15,21 @@ class CheckboxControl extends StatefulWidget {
   final Control control;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const CheckboxControl(
       {super.key,
       this.parent,
       required this.control,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<CheckboxControl> createState() => _CheckboxControlState();
 }
 
-class _CheckboxControlState extends State<CheckboxControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
   bool? _value;
   bool _tristate = false;
   late final FocusNode _focusNode;
@@ -41,7 +42,7 @@ class _CheckboxControlState extends State<CheckboxControl>
   }
 
   void _onFocusChange() {
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -67,8 +68,8 @@ class _CheckboxControlState extends State<CheckboxControl>
   void _onChange(bool? value) {
     var svalue = value != null ? value.toString() : "";
     _value = value;
-    updateControlProps(widget.control.id, {"value": svalue});
-    sendControlEvent(widget.control.id, "change", svalue);
+    widget.backend.updateControlState(widget.control.id, {"value": svalue});
+    widget.backend.triggerControlEvent(widget.control.id, "change", svalue);
   }
 
   @override
@@ -82,7 +83,9 @@ class _CheckboxControlState extends State<CheckboxControl>
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoCheckboxControl(
-            control: widget.control, parentDisabled: widget.parentDisabled);
+            control: widget.control,
+            parentDisabled: widget.parentDisabled,
+            backend: widget.backend);
       }
 
       String label = widget.control.attrString("label", "")!;

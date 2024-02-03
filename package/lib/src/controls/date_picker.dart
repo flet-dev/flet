@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/icons.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'form_field.dart';
 
 class DatePickerControl extends StatefulWidget {
@@ -10,21 +10,21 @@ class DatePickerControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
-  const DatePickerControl({
-    super.key,
-    this.parent,
-    required this.control,
-    required this.children,
-    required this.parentDisabled,
-  });
+  const DatePickerControl(
+      {super.key,
+      this.parent,
+      required this.control,
+      required this.children,
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<DatePickerControl> createState() => _DatePickerControlState();
 }
 
-class _DatePickerControlState extends State<DatePickerControl>
-    with FletControlStatefulMixin {
+class _DatePickerControlState extends State<DatePickerControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("DatePicker build: ${widget.control.id}");
@@ -83,9 +83,10 @@ class _DatePickerControlState extends State<DatePickerControl>
         eventName = "change";
       }
       widget.control.state["open"] = false;
-      updateControlProps(
+      widget.backend.updateControlState(
           widget.control.id, {"value": stringValue, "open": "false"});
-      sendControlEvent(widget.control.id, eventName, stringValue);
+      widget.backend
+          .triggerControlEvent(widget.control.id, eventName, stringValue);
     }
 
     Widget createSelectDateDialog() {

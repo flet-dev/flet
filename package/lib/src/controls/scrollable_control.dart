@@ -4,12 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/desktop.dart';
 import '../utils/numbers.dart';
 import '../widgets/adjustable_scroll_controller.dart';
-import 'flet_control_stateful_mixin.dart';
 
 enum ScrollMode { none, auto, adaptive, always, hidden }
 
@@ -18,21 +18,21 @@ class ScrollableControl extends StatefulWidget {
   final Widget child;
   final Axis scrollDirection;
   final ScrollController? scrollController;
+  final FletControlBackend backend;
 
-  const ScrollableControl({
-    super.key,
-    required this.control,
-    required this.child,
-    required this.scrollDirection,
-    this.scrollController,
-  });
+  const ScrollableControl(
+      {super.key,
+      required this.control,
+      required this.child,
+      required this.scrollDirection,
+      this.scrollController,
+      required this.backend});
 
   @override
   State<ScrollableControl> createState() => _ScrollableControlState();
 }
 
-class _ScrollableControlState extends State<ScrollableControl>
-    with FletControlStatefulMixin {
+class _ScrollableControlState extends State<ScrollableControl> {
   late final ScrollController _controller;
   late bool _ownController = false;
   String? _method;
@@ -87,7 +87,7 @@ class _ScrollableControlState extends State<ScrollableControl>
     } else if (method != null && method != _method) {
       _method = method;
       debugPrint("ScrollableControl JSON method: $method");
-      updateControlProps(widget.control.id, {"method": ""});
+      widget.backend.updateControlState(widget.control.id, {"method": ""});
 
       var mj = json.decode(method);
       var name = mj["n"] as String;
