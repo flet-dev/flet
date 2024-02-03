@@ -248,7 +248,8 @@ Widget createWidget(
           nextChild: nextChild,
           backend: backend);
     case "audiorecorder":
-      return AudioRecorderControl(parent: parent, control: controlView.control);
+      return AudioRecorderControl(
+          parent: parent, control: controlView.control, backend: backend);
     case "divider":
       return DividerControl(
           key: key, parent: parent, control: controlView.control);

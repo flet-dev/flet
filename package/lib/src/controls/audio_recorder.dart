@@ -4,26 +4,28 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:record/record.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/audio_recorder.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class AudioRecorderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
+  final FletControlBackend backend;
 
   const AudioRecorderControl(
       {super.key,
       required this.parent,
-      required this.control});
+      required this.control,
+      required this.backend});
 
   @override
   State<AudioRecorderControl> createState() => _AudioRecorderControlState();
 }
 
 class _AudioRecorderControlState extends State<AudioRecorderControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+    with FletStoreMixin {
   AudioRecorder? recorder;
 
   @override
@@ -43,7 +45,7 @@ class _AudioRecorderControlState extends State<AudioRecorderControl>
   void _onRemove() {
     debugPrint("AudioRecorder.remove($hashCode)");
     widget.control.state["recorder"]?.dispose();
-    unsubscribeMethods(widget.control.id);
+    widget.backend.unsubscribeMethods(widget.control.id);
   }
 
   @override
@@ -73,7 +75,8 @@ class _AudioRecorderControlState extends State<AudioRecorderControl>
         parseAudioEncoder(widget.control.attrString("audioEncoder", "wav"))!;
 
     () async {
-      subscribeMethods(widget.control.id, (methodName, args) async {
+      widget.backend.subscribeMethods(widget.control.id,
+          (methodName, args) async {
         switch (methodName) {
           case "start_recording":
             if (await recorder!.hasPermission()) {
