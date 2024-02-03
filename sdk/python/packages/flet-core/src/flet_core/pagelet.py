@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.constrained_control import ConstrainedControl
@@ -20,7 +21,7 @@ from flet_core.types import (
 )
 
 
-class Pagelet(ConstrainedControl):
+class Pagelet(ConstrainedControl, AdaptiveControl):
     """
         Pagelet implements the basic Material Design visual layout structure.
 
@@ -91,6 +92,10 @@ class Pagelet(ConstrainedControl):
             FloatingActionButtonLocation, OffsetValue
         ] = None,
         bgcolor: Optional[str] = None,
+        #
+        # Adaptive
+        #
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -121,6 +126,8 @@ class Pagelet(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.content = content
         self.appbar = appbar

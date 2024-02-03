@@ -4,6 +4,7 @@ from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
@@ -17,7 +18,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
-    TextAlignString,
+    VerticalAlignment,
 )
 
 try:
@@ -82,7 +83,7 @@ class TextOnlyInputFilter(InputFilter):
         super().__init__(r"[a-zA-Z]")
 
 
-class TextField(FormFieldControl):
+class TextField(FormFieldControl, AdaptiveControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an onscreen keyboard.
 
@@ -141,6 +142,7 @@ class TextField(FormFieldControl):
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
+        text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
@@ -176,9 +178,10 @@ class TextField(FormFieldControl):
         #
         # TextField Specific
         #
-        adaptive: Optional[bool] = None,
         value: Optional[str] = None,
+        adaptive: Optional[bool] = None,
         keyboard_type: Optional[KeyboardType] = None,
+        rtl: Optional[bool] = None,
         multiline: Optional[bool] = None,
         min_lines: Optional[int] = None,
         max_lines: Optional[int] = None,
@@ -235,6 +238,7 @@ class TextField(FormFieldControl):
             #
             text_size=text_size,
             text_style=text_style,
+            text_vertical_align=text_vertical_align,
             label=label,
             label_style=label_style,
             icon=icon,
@@ -268,10 +272,14 @@ class TextField(FormFieldControl):
             suffix_text=suffix_text,
             suffix_style=suffix_style,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.value = value
         self.text_style = text_style
         self.keyboard_type = keyboard_type
         self.text_align = text_align
+        self.rtl = rtl
         self.multiline = multiline
         self.min_lines = min_lines
         self.max_lines = max_lines
@@ -281,7 +289,6 @@ class TextField(FormFieldControl):
         self.password = password
         self.can_reveal_password = can_reveal_password
         self.autofocus = autofocus
-        self.adaptive = adaptive
         self.capitalization = capitalization
         self.autocorrect = autocorrect
         self.show_cursor = show_cursor
@@ -349,13 +356,18 @@ class TextField(FormFieldControl):
     @text_align.setter
     def text_align(self, value: TextAlign):
         self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
+        self._set_attr(
+            "textAlign", value.value if isinstance(value, TextAlign) else value
+        )
 
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
+    # rtl
+    @property
+    def rtl(self) -> Optional[bool]:
+        return self._get_attr("rtl", data_type="bool", def_value=False)
+
+    @rtl.setter
+    def rtl(self, value: Optional[bool]):
+        self._set_attr("rtl", value)
 
     # multiline
     @property
@@ -437,15 +449,6 @@ class TextField(FormFieldControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
 
     # capitalization
     @property

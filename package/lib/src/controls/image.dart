@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/collections.dart';
@@ -13,15 +14,14 @@ import '../utils/colors.dart';
 import '../utils/images.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateless_mixin.dart';
 import 'flet_store_mixin.dart';
 
-class ImageControl extends StatelessWidget
-    with FletControlStatelessMixin, FletStoreMixin {
+class ImageControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final List<Control> children;
   final Control control;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   static const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
 
@@ -30,7 +30,8 @@ class ImageControl extends StatelessWidget
       required this.parent,
       required this.children,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {

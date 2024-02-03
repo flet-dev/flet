@@ -1,5 +1,6 @@
 from typing import Any, List, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -13,13 +14,8 @@ from flet_core.types import (
     ScaleValue,
 )
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
-
-class Stack(ConstrainedControl):
+class Stack(ConstrainedControl, AdaptiveControl):
     """
     A control that positions its children on top of each other.
 
@@ -100,6 +96,10 @@ class Stack(ConstrainedControl):
         # Stack-specific
         #
         clip_behavior: Optional[ClipBehavior] = None,
+        #
+        # Adaptive
+        #
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -129,6 +129,8 @@ class Stack(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__controls: List[Control] = []
         self.controls = controls

@@ -70,12 +70,6 @@ except ImportError as e:
             pass
 
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
-
 class Page(Control):
     """
     Page is a container for `View` (https://flet.dev/docs/controls/view) controls.
@@ -1406,6 +1400,15 @@ class Page(Control):
     @auto_scroll.setter
     def auto_scroll(self, value: Optional[bool]):
         self.__default_view.auto_scroll = value
+
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self.__default_view.adaptive
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self.__default_view.adaptive = value
 
     # client_storage
     @property

@@ -12,6 +12,7 @@ import 'package:redux/redux.dart';
 import '../actions.dart';
 import '../flet_app_context.dart';
 import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
@@ -33,7 +34,6 @@ import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 import 'floating_action_button.dart';
 import 'navigation_drawer.dart';
@@ -107,20 +107,21 @@ class PageControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final dynamic dispatch;
+  final FletControlBackend backend;
 
   const PageControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.dispatch});
+      required this.dispatch,
+      required this.backend});
 
   @override
   State<PageControl> createState() => _PageControlState();
 }
 
-class _PageControlState extends State<PageControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+class _PageControlState extends State<PageControl> with FletStoreMixin {
   String? _windowTitle;
   Color? _windowBgcolor;
   double? _windowWidth;
@@ -203,7 +204,7 @@ class _PageControlState extends State<PageControl>
         LogicalKeyboardKey.shiftLeft,
         LogicalKeyboardKey.shiftRight
       ].contains(k)) {
-        sendControlEvent(
+        widget.backend.triggerControlEvent(
             "page",
             "keyboard_event",
             json.encode(KeyboardEvent(
@@ -595,7 +596,8 @@ class _PageControlState extends State<PageControl>
                   parent: routesView.page,
                   viewId: view.id,
                   overlayWidgets: overlayWidgets(view.id),
-                  loadingPage: loadingPage);
+                  loadingPage: loadingPage,
+                  backend: widget.backend);
 
               //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
 
@@ -620,7 +622,7 @@ class _PageControlState extends State<PageControl>
               key: navigatorKey,
               pages: pages,
               onPopPage: (route, dynamic result) {
-                sendControlEvent("page", "view_pop",
+                widget.backend.triggerControlEvent("page", "view_pop",
                     ((route.settings as Page).key as ValueKey).value);
                 return false;
               });
@@ -643,20 +645,21 @@ class ViewControl extends StatefulWidget {
   final String viewId;
   final List<Widget> overlayWidgets;
   final Widget? loadingPage;
+  final FletControlBackend backend;
 
   const ViewControl(
       {super.key,
       required this.parent,
       required this.viewId,
       required this.overlayWidgets,
-      required this.loadingPage});
+      required this.loadingPage,
+      required this.backend});
 
   @override
   State<ViewControl> createState() => _ViewControlState();
 }
 
-class _ViewControlState extends State<ViewControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+class _ViewControlState extends State<ViewControl> with FletStoreMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -681,6 +684,8 @@ class _ViewControlState extends State<ViewControl>
 
           var control = controlView.control;
           var children = controlView.children;
+
+          bool? adaptive = controlView.control.attrBool("adaptive");
 
           final spacing = control.attrDouble("spacing", 10)!;
           final mainAlignment = parseMainAxisAlignment(
@@ -738,7 +743,8 @@ class _ViewControlState extends State<ViewControl>
             firstControl = false;
 
             // displayed control
-            controls.add(createControl(control, ctrl.id, control.isDisabled));
+            controls.add(createControl(control, ctrl.id, control.isDisabled,
+                parentAdaptive: adaptive));
           }
 
           List<String> childIds = [
@@ -771,13 +777,14 @@ class _ViewControlState extends State<ViewControl>
                 children: controls);
 
             Widget child = ScrollableControl(
-              control: control,
-              scrollDirection: Axis.vertical,
-              child: column,
-            );
+                control: control,
+                scrollDirection: Axis.vertical,
+                backend: widget.backend,
+                child: column);
 
             if (control.attrBool("onScroll", false)!) {
-              child = ScrollNotificationControl(control: control, child: child);
+              child = ScrollNotificationControl(
+                  control: control, backend: widget.backend, child: child);
             }
 
             final bool? drawerOpened = widget.parent.state["drawerOpened"];
@@ -785,8 +792,8 @@ class _ViewControlState extends State<ViewControl>
                 widget.parent.state["endDrawerOpened"];
 
             void dismissDrawer(String id) {
-              updateControlProps(id, {"open": "false"});
-              sendControlEvent(id, "dismiss", "");
+              widget.backend.updateControlState(id, {"open": "false"});
+              widget.backend.triggerControlEvent(id, "dismiss", "");
             }
 
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -842,6 +849,7 @@ class _ViewControlState extends State<ViewControl>
                     control: appBarView.control,
                     children: appBarView.children,
                     parentDisabled: control.isDisabled,
+                    parentAdaptive: adaptive,
                     height: appBarView.control
                         .attrDouble("toolbarHeight", kToolbarHeight)!)
                 : cupertinoAppBarView != null
@@ -850,6 +858,7 @@ class _ViewControlState extends State<ViewControl>
                         control: cupertinoAppBarView.control,
                         children: cupertinoAppBarView.children,
                         parentDisabled: control.isDisabled,
+                        parentAdaptive: adaptive,
                         bgcolor: HexColor.fromString(
                             Theme.of(context),
                             cupertinoAppBarView.control
@@ -867,7 +876,8 @@ class _ViewControlState extends State<ViewControl>
                       control: drawerView.control,
                       children: drawerView.children,
                       parentDisabled: control.isDisabled,
-                    )
+                      parentAdaptive: adaptive,
+                      backend: widget.backend)
                   : null,
               onDrawerChanged: (opened) {
                 if (drawerView != null && !opened) {
@@ -880,7 +890,8 @@ class _ViewControlState extends State<ViewControl>
                       control: endDrawerView.control,
                       children: endDrawerView.children,
                       parentDisabled: control.isDisabled,
-                    )
+                      parentAdaptive: adaptive,
+                      backend: widget.backend)
                   : null,
               onEndDrawerChanged: (opened) {
                 if (endDrawerView != null && !opened) {
@@ -897,10 +908,12 @@ class _ViewControlState extends State<ViewControl>
                 ...widget.overlayWidgets
               ]),
               bottomNavigationBar: bnb != null
-                  ? createControl(control, bnb.id, control.isDisabled)
+                  ? createControl(control, bnb.id, control.isDisabled,
+                      parentAdaptive: adaptive)
                   : null,
               floatingActionButton: fab != null
-                  ? createControl(control, fab.id, control.isDisabled)
+                  ? createControl(control, fab.id, control.isDisabled,
+                      parentAdaptive: adaptive)
                   : null,
               floatingActionButtonLocation: fabLocation,
             );

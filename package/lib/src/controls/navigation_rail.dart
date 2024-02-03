@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -7,7 +8,6 @@ import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class NavigationRailControl extends StatefulWidget {
@@ -15,28 +15,33 @@ class NavigationRailControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const NavigationRailControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<NavigationRailControl> createState() => _NavigationRailControlState();
 }
 
 class _NavigationRailControlState extends State<NavigationRailControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+    with FletStoreMixin {
   int? _selectedIndex;
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
-    updateControlProps(
+    widget.backend.updateControlState(
         widget.control.id, {"selectedindex": _selectedIndex.toString()});
-    sendControlEvent(widget.control.id, "change", _selectedIndex.toString());
+    widget.backend.triggerControlEvent(
+        widget.control.id, "change", _selectedIndex.toString());
   }
 
   @override
@@ -97,11 +102,13 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                   widget.control.attrString("indicatorColor", "")!),
               leading: leadingCtrls.isNotEmpty
                   ? createControl(
-                      widget.control, leadingCtrls.first.id, disabled)
+                      widget.control, leadingCtrls.first.id, disabled,
+                      parentAdaptive: widget.parentAdaptive)
                   : null,
               trailing: trailingCtrls.isNotEmpty
                   ? createControl(
-                      widget.control, trailingCtrls.first.id, disabled)
+                      widget.control, trailingCtrls.first.id, disabled,
+                      parentAdaptive: widget.parentAdaptive)
                   : null,
               selectedIndex: _selectedIndex,
               onDestinationSelected: _destinationChanged,
@@ -123,17 +130,20 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                     padding: parseEdgeInsets(destView.control, "padding"),
                     icon: iconContentCtrls.isNotEmpty
                         ? createControl(destView.control,
-                            iconContentCtrls.first.id, disabled)
+                            iconContentCtrls.first.id, disabled,
+                            parentAdaptive: widget.parentAdaptive)
                         : Icon(icon),
                     selectedIcon: selectedIconContentCtrls.isNotEmpty
                         ? createControl(destView.control,
-                            selectedIconContentCtrls.first.id, disabled)
+                            selectedIconContentCtrls.first.id, disabled,
+                            parentAdaptive: widget.parentAdaptive)
                         : selectedIcon != null
                             ? Icon(selectedIcon)
                             : null,
                     label: labelContentCtrls.isNotEmpty
                         ? createControl(destView.control,
-                            labelContentCtrls.first.id, disabled)
+                            labelContentCtrls.first.id, disabled,
+                            parentAdaptive: widget.parentAdaptive)
                         : Text(label));
               }).toList());
         },

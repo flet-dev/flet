@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
@@ -11,7 +12,6 @@ import 'app_bar.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'floating_action_button.dart';
 import 'navigation_drawer.dart';
 
@@ -20,20 +20,23 @@ class PageletControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const PageletControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<PageletControl> createState() => _PageletControlState();
 }
 
-class _PageletControlState extends State<PageletControl>
-    with FletControlStatefulMixin {
+class _PageletControlState extends State<PageletControl> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -62,6 +65,8 @@ class _PageletControlState extends State<PageletControl>
     }
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool? adaptive =
+        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
     var bgcolor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("bgcolor", "")!);
@@ -87,11 +92,13 @@ class _PageletControlState extends State<PageletControl>
         builder: (context, childrenViews) {
           var navBar = navigationBarCtrls.isNotEmpty
               ? createControl(
-                  widget.control, navigationBarCtrls.first.id, disabled)
+                  widget.control, navigationBarCtrls.first.id, disabled,
+                  parentAdaptive: adaptive)
               : null;
           var bottomAppBar = bottomAppBarCtrls.isNotEmpty
               ? createControl(
-                  widget.control, bottomAppBarCtrls.first.id, disabled)
+                  widget.control, bottomAppBarCtrls.first.id, disabled,
+                  parentAdaptive: adaptive)
               : null;
           var bnb = navBar ?? bottomAppBar;
 
@@ -112,8 +119,8 @@ class _PageletControlState extends State<PageletControl>
               FloatingActionButtonLocation.endFloat);
 
           void dismissDrawer(String id) {
-            updateControlProps(id, {"open": "false"});
-            sendControlEvent(id, "dismiss", "");
+            widget.backend.updateControlState(id, {"open": "false"});
+            widget.backend.triggerControlEvent(id, "dismiss", "");
           }
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -168,6 +175,7 @@ class _PageletControlState extends State<PageletControl>
                       control: appBarView.control,
                       children: appBarView.children,
                       parentDisabled: widget.control.isDisabled,
+                      parentAdaptive: adaptive,
                       height: appBarView.control
                           .attrDouble("toolbarHeight", kToolbarHeight)!)
                   : appBarView.control.type == "cupertinoappbar"
@@ -176,6 +184,7 @@ class _PageletControlState extends State<PageletControl>
                           control: appBarView.control,
                           children: appBarView.children,
                           parentDisabled: widget.control.isDisabled,
+                          parentAdaptive: adaptive,
                           bgcolor: HexColor.fromString(Theme.of(context),
                               appBarView.control.attrString("bgcolor", "")!),
                         ) as ObstructingPreferredSizeWidget
@@ -193,7 +202,8 @@ class _PageletControlState extends State<PageletControl>
                           control: drawerView.control,
                           children: drawerView.children,
                           parentDisabled: widget.control.isDisabled,
-                        )
+                          parentAdaptive: adaptive,
+                          backend: widget.backend)
                       : null,
                   onDrawerChanged: (opened) {
                     if (drawerView != null && !opened) {
@@ -206,7 +216,8 @@ class _PageletControlState extends State<PageletControl>
                           control: endDrawerView.control,
                           children: endDrawerView.children,
                           parentDisabled: widget.control.isDisabled,
-                        )
+                          parentAdaptive: adaptive,
+                          backend: widget.backend)
                       : null,
                   onEndDrawerChanged: (opened) {
                     if (endDrawerView != null && !opened) {
@@ -216,16 +227,19 @@ class _PageletControlState extends State<PageletControl>
                   },
                   body: contentCtrls.isNotEmpty
                       ? createControl(
-                          widget.control, contentCtrls.first.id, disabled)
+                          widget.control, contentCtrls.first.id, disabled,
+                          parentAdaptive: adaptive)
                       : null,
                   bottomNavigationBar: bnb,
                   bottomSheet: bottomSheetCtrls.isNotEmpty
                       ? createControl(
-                          widget.control, bottomSheetCtrls.first.id, disabled)
+                          widget.control, bottomSheetCtrls.first.id, disabled,
+                          parentAdaptive: adaptive)
                       : null,
                   floatingActionButton: fabCtrls.isNotEmpty
                       ? createControl(
-                          widget.control, fabCtrls.first.id, disabled)
+                          widget.control, fabCtrls.first.id, disabled,
+                          parentAdaptive: adaptive)
                       : null,
                   floatingActionButtonLocation: fabLocation),
               widget.parent,

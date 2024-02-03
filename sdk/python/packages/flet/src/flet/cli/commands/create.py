@@ -1,8 +1,10 @@
 import argparse
 from pathlib import Path
 
+import flet.version
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import slugify
+from packaging import version
 from rich import print
 
 
@@ -43,6 +45,10 @@ class Command(BaseCommand):
 
         template_data = {"template_name": options.template}
 
+        template_ref = None
+        if flet.version.version:
+            template_ref = version.Version(flet.version.version).base_version
+
         out_dir = Path(options.output_directory).resolve()
         template_data["out_dir"] = out_dir.name
 
@@ -57,6 +63,7 @@ class Command(BaseCommand):
         # print("Template data:", template_data)
         cookiecutter(
             f"gh:flet-dev/flet-app-templates",
+            checkout=template_ref,
             directory=options.template,
             output_dir=str(out_dir.parent),
             no_input=True,

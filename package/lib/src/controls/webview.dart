@@ -4,22 +4,24 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateless_mixin.dart';
 
-class WebViewControl extends StatelessWidget with FletControlStatelessMixin {
+class WebViewControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   const WebViewControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +48,14 @@ class WebViewControl extends StatelessWidget with FletControlStatelessMixin {
           NavigationDelegate(
             onProgress: (int progress) {},
             onPageStarted: (String url) {
-              sendControlEvent(context, control.id, "page_started", url);
+              backend.triggerControlEvent(control.id, "page_started", url);
             },
             onPageFinished: (String url) {
-              sendControlEvent(context, control.id, "page_ended", url);
+              backend.triggerControlEvent(control.id, "page_ended", url);
             },
             onWebResourceError: (WebResourceError error) {
-              sendControlEvent(
-                  context, control.id, "web_resource_error", error.toString());
+              backend.triggerControlEvent(
+                  control.id, "web_resource_error", error.toString());
             },
             onNavigationRequest: (NavigationRequest request) {
               if (preventLink != "" && request.url.startsWith(preventLink)) {

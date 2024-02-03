@@ -1,6 +1,7 @@
 import time
 from typing import Any, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -14,7 +15,7 @@ from flet_core.types import (
 )
 
 
-class ElevatedButton(ConstrainedControl):
+class ElevatedButton(ConstrainedControl, AdaptiveControl):
     """
     Elevated buttons are essentially filled tonal buttons with a shadow. To prevent shadow creep, only use them when absolutely necessary, such as when the button requires visual separation from a patterned background.
 
@@ -77,6 +78,7 @@ class ElevatedButton(ConstrainedControl):
         icon_color: Optional[str] = None,
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
         on_click=None,
@@ -114,6 +116,8 @@ class ElevatedButton(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__color = None
         self.__bgcolor = None
@@ -211,6 +215,7 @@ class ElevatedButton(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value):
         self.__bgcolor = value
+        self._set_attr("bgColor", value)
 
     # elevation
     @property

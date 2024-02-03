@@ -1,12 +1,13 @@
 from typing import Any, List, Optional
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import MainAxisAlignment, MainAxisAlignmentString, PaddingValue
 
 
-class AlertDialog(Control):
+class AlertDialog(AdaptiveControl):
     """
     An alert dialog informs the user about situations that require acknowledgement. An alert dialog has an optional title and an optional list of actions. The title is displayed above the content and the actions are displayed below the content.
 
@@ -90,6 +91,8 @@ class AlertDialog(Control):
             data=data,
         )
 
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.__title: Optional[Control] = None
         self.__content: Optional[Control] = None
         self.__actions: List[Control] = []
@@ -105,7 +108,6 @@ class AlertDialog(Control):
         self.actions_alignment = actions_alignment
         self.shape = shape
         self.inset_padding = inset_padding
-        self.adaptive = adaptive
         self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
@@ -149,15 +151,6 @@ class AlertDialog(Control):
     @modal.setter
     def modal(self, value: Optional[bool]):
         self._set_attr("modal", value)
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
 
     # title
     @property

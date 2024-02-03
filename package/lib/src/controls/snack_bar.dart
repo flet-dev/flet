@@ -1,19 +1,21 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class SnackBarControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
   const SnackBarControl(
       {super.key,
@@ -21,14 +23,15 @@ class SnackBarControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.nextChild});
+      required this.parentAdaptive,
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<SnackBarControl> createState() => _SnackBarControlState();
 }
 
-class _SnackBarControlState extends State<SnackBarControl>
-    with FletControlStatefulMixin {
+class _SnackBarControlState extends State<SnackBarControl> {
   bool _open = false;
 
   Widget _createSnackBar() {
@@ -47,7 +50,8 @@ class _SnackBarControlState extends State<SnackBarControl>
                 widget.control.attrString("actionColor", "")!),
             onPressed: () {
               debugPrint("SnackBar ${widget.control.id} clicked!");
-              sendControlEvent(widget.control.id, "action", "");
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "action", "");
             })
         : null;
 
@@ -67,7 +71,8 @@ class _SnackBarControlState extends State<SnackBarControl>
         showCloseIcon: widget.control.attrBool("showCloseIcon"),
         closeIconColor: HexColor.fromString(Theme.of(context),
             widget.control.attrString("closeIconColor", "")!),
-        content: createControl(widget.control, contentCtrls.first.id, disabled),
+        content: createControl(widget.control, contentCtrls.first.id, disabled,
+            parentAdaptive: widget.parentAdaptive),
         backgroundColor: HexColor.fromString(
             Theme.of(context), widget.control.attrString("bgColor", "")!),
         action: action,
@@ -105,7 +110,7 @@ class _SnackBarControlState extends State<SnackBarControl>
         }
         ScaffoldMessenger.of(context).showSnackBar(snackBar as SnackBar);
 
-        updateControlProps(widget.control.id, {"open": "false"});
+        widget.backend.updateControlState(widget.control.id, {"open": "false"});
       });
     }
 

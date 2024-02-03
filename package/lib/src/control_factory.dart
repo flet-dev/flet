@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import 'flet_control_backend.dart';
 import 'models/control.dart';
 
 class CreateControlArgs {
@@ -8,9 +9,11 @@ class CreateControlArgs {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
-  CreateControlArgs(
-      this.key, this.parent, this.control, this.children, this.parentDisabled);
+  CreateControlArgs(this.key, this.parent, this.control, this.children,
+      this.parentDisabled, this.parentAdaptive, this.backend);
 }
 
 typedef CreateControlFactory = Widget? Function(CreateControlArgs args);

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
@@ -13,34 +14,29 @@ import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/material_state.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class TabsControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const TabsControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<TabsControl> createState() => _TabsControlState();
 }
 
-class _TabsControlStateWithControlState extends State<TabsControl>
-    with FletControlStatefulMixin {
-  @override
-  Widget build(BuildContext context) {
-    throw UnimplementedError();
-  }
-}
-
-class _TabsControlState extends _TabsControlStateWithControlState
+class _TabsControlState extends State<TabsControl>
     with TickerProviderStateMixin {
   String? _tabsSnapshot;
   TabController? _tabController;
@@ -60,9 +56,10 @@ class _TabsControlState extends _TabsControlStateWithControlState
     var index = _tabController!.index;
     if (_selectedIndex != index) {
       debugPrint("Selected index: $index");
-      updateControlProps(
+      widget.backend.updateControlState(
           widget.control.id, {"selectedindex": index.toString()});
-      sendControlEvent(widget.control.id, "change", index.toString());
+      widget.backend
+          .triggerControlEvent(widget.control.id, "change", index.toString());
       _selectedIndex = index;
     }
   }
@@ -139,6 +136,9 @@ class _TabsControlState extends _TabsControlStateWithControlState
           var tabAlignment = parseTabAlignment(widget.control, "tabAlignment",
               isScrollable ? TabAlignment.start : TabAlignment.fill);
 
+          bool? adaptive =
+              widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+
           var tabBar = TabBar(
               tabAlignment: tabAlignment,
               controller: _tabController,
@@ -191,7 +191,8 @@ class _TabsControlState extends _TabsControlStateWithControlState
                 List<Widget> widgets = [];
                 if (tabContentCtrls.isNotEmpty) {
                   tabChild = createControl(
-                      widget.control, tabContentCtrls.first.id, disabled);
+                      widget.control, tabContentCtrls.first.id, disabled,
+                      parentAdaptive: adaptive);
                 } else {
                   if (icon != null) {
                     widgets.add(Icon(icon));
@@ -229,7 +230,8 @@ class _TabsControlState extends _TabsControlStateWithControlState
                           return const SizedBox.shrink();
                         }
                         return createControl(
-                            widget.control, contentCtrls.first.id, disabled);
+                            widget.control, contentCtrls.first.id, disabled,
+                            parentAdaptive: adaptive);
                       }).toList()))
             ],
           );

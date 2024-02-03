@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'cupertino_switch.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 import 'list_tile.dart';
 
@@ -15,19 +15,22 @@ class SwitchControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const SwitchControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<SwitchControl> createState() => _SwitchControlState();
 }
 
-class _SwitchControlState extends State<SwitchControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
   bool _value = false;
   late final FocusNode _focusNode;
 
@@ -49,12 +52,12 @@ class _SwitchControlState extends State<SwitchControl>
     var svalue = value.toString();
     debugPrint(svalue);
     _value = value;
-    updateControlProps(widget.control.id, {"value": svalue});
-    sendControlEvent(widget.control.id, "change", svalue);
+    widget.backend.updateControlState(widget.control.id, {"value": svalue});
+    widget.backend.triggerControlEvent(widget.control.id, "change", svalue);
   }
 
   void _onFocusChange() {
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -63,12 +66,15 @@ class _SwitchControlState extends State<SwitchControl>
     debugPrint("SwitchControl build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool adaptive = widget.control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoSwitchControl(
-            control: widget.control, parentDisabled: widget.parentDisabled);
+            control: widget.control,
+            parentDisabled: widget.parentDisabled,
+            backend: widget.backend);
       }
 
       String label = widget.control.attrString("label", "")!;

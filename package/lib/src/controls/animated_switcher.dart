@@ -10,13 +10,15 @@ class AnimatedSwitcherControl extends StatelessWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const AnimatedSwitcherControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,8 @@ class AnimatedSwitcherControl extends StatelessWidget {
       return const ErrorControl("Content is not set.");
     }
 
-    var child = createControl(control, contentCtrls.first.id, disabled);
+    var child = createControl(control, contentCtrls.first.id, disabled,
+        parentAdaptive: parentAdaptive);
 
     return constrainedControl(
         context,

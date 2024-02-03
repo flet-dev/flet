@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -8,7 +9,6 @@ import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
 import 'cupertino_textfield.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 import 'form_field.dart';
 
@@ -17,20 +17,24 @@ class TextFieldControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const TextFieldControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<TextFieldControl> createState() => _TextFieldControlState();
 }
 
 class _TextFieldControlState extends State<TextFieldControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+    with FletStoreMixin {
   String _value = "";
   bool _revealPassword = false;
   bool _focused = false;
@@ -47,7 +51,7 @@ class _TextFieldControlState extends State<TextFieldControl>
       onKey: (FocusNode node, RawKeyEvent evt) {
         if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
           if (evt is RawKeyDownEvent) {
-            sendControlEvent(widget.control.id, "submit", "");
+            widget.backend.triggerControlEvent(widget.control.id, "submit", "");
           }
           return KeyEventResult.handled;
         } else {
@@ -74,7 +78,7 @@ class _TextFieldControlState extends State<TextFieldControl>
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    sendControlEvent(widget.control.id,
+    widget.backend.triggerControlEvent(widget.control.id,
         _shiftEnterfocusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -82,7 +86,7 @@ class _TextFieldControlState extends State<TextFieldControl>
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -94,15 +98,18 @@ class _TextFieldControlState extends State<TextFieldControl>
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-      bool adaptive = widget.control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoTextFieldControl(
             control: widget.control,
             children: widget.children,
             parent: widget.parent,
-            parentDisabled: widget.parentDisabled);
+            parentDisabled: widget.parentDisabled,
+            parentAdaptive: adaptive,
+            backend: widget.backend);
       }
 
       debugPrint("TextField build: ${widget.control.id}");
@@ -200,6 +207,10 @@ class _TextFieldControlState extends State<TextFieldControl>
         orElse: () => TextAlign.start,
       );
 
+      double? textVerticalAlign =
+          widget.control.attrDouble("textVerticalAlign");
+
+      bool rtl = widget.control.attrBool("rtl", false)!;
       bool autocorrect = widget.control.attrBool("autocorrect", true)!;
       bool enableSuggestions =
           widget.control.attrBool("enableSuggestions", true)!;
@@ -220,7 +231,8 @@ class _TextFieldControlState extends State<TextFieldControl>
           enabled: !disabled,
           onFieldSubmitted: !multiline
               ? (_) {
-                  sendControlEvent(widget.control.id, "submit", "");
+                  widget.backend
+                      .triggerControlEvent(widget.control.id, "submit", "");
                 }
               : null,
           decoration: buildInputDecoration(
@@ -229,8 +241,13 @@ class _TextFieldControlState extends State<TextFieldControl>
               prefixControls.isNotEmpty ? prefixControls.first : null,
               suffixControls.isNotEmpty ? suffixControls.first : null,
               revealPasswordIcon,
-              _focused),
+              _focused,
+              adaptive),
           showCursor: widget.control.attrBool("showCursor"),
+          textAlignVertical: textVerticalAlign != null
+              ? TextAlignVertical(y: textVerticalAlign)
+              : null,
+          textDirection: rtl ? TextDirection.rtl : null,
           cursorHeight: widget.control.attrDouble("cursorHeight"),
           cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
           cursorRadius: parseRadius(widget.control, "cursorRadius"),
@@ -255,9 +272,11 @@ class _TextFieldControlState extends State<TextFieldControl>
           onChanged: (String value) {
             //debugPrint(value);
             _value = value;
-            updateControlProps(widget.control.id, {"value": value});
+            widget.backend
+                .updateControlState(widget.control.id, {"value": value});
             if (onChange) {
-              sendControlEvent(widget.control.id, "change", value);
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "change", value);
             }
           });
 

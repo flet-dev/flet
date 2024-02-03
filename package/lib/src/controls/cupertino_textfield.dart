@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -11,7 +12,6 @@ import '../utils/shadows.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'form_field.dart';
 import 'textfield.dart';
 
@@ -20,23 +20,25 @@ class CupertinoTextFieldControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const CupertinoTextFieldControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<CupertinoTextFieldControl> createState() =>
       _CupertinoTextFieldControlState();
 }
 
-class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
-    with FletControlStatefulMixin {
+class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
   String _value = "";
-  final bool _revealPassword = false;
   bool _focused = false;
   late TextEditingController _controller;
   late final FocusNode _focusNode;
@@ -51,7 +53,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
       onKey: (FocusNode node, RawKeyEvent evt) {
         if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
           if (evt is RawKeyDownEvent) {
-            sendControlEvent(widget.control.id, "submit", "");
+            widget.backend.triggerControlEvent(widget.control.id, "submit", "");
           }
           return KeyEventResult.handled;
         } else {
@@ -78,7 +80,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    sendControlEvent(widget.control.id,
+    widget.backend.triggerControlEvent(widget.control.id,
         _shiftEnterfocusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -86,7 +88,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -172,6 +174,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
       orElse: () => TextAlign.start,
     );
 
+    double? textVerticalAlign = widget.control.attrDouble("textVerticalAlign");
+
+    bool rtl = widget.control.attrBool("rtl", false)!;
     bool autocorrect = widget.control.attrBool("autocorrect", true)!;
     bool enableSuggestions =
         widget.control.attrBool("enableSuggestions", true)!;
@@ -198,6 +203,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
 
     Widget textField = CupertinoTextField(
         style: textStyle,
+        textAlignVertical: textVerticalAlign != null
+            ? TextAlignVertical(y: textVerticalAlign)
+            : null,
         placeholder: widget.control.attrString("placeholderText"),
         placeholderStyle: parseTextStyle(
             Theme.of(context), widget.control, "placeholderStyle"),
@@ -205,7 +213,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
         enabled: !disabled,
         onSubmitted: !multiline
             ? (_) {
-                sendControlEvent(widget.control.id, "submit", "");
+                widget.backend
+                    .triggerControlEvent(widget.control.id, "submit", "");
               }
             : null,
         decoration: defaultDecoration?.copyWith(
@@ -240,22 +249,27 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
         maxLines: maxLines,
         maxLength: maxLength,
         prefix: prefixControls.isNotEmpty
-            ? createControl(widget.control, prefixControls.first.id, disabled)
+            ? createControl(widget.control, prefixControls.first.id, disabled,
+                parentAdaptive: widget.parentAdaptive)
             : null,
         suffix: suffixControls.isNotEmpty
-            ? createControl(widget.control, suffixControls.first.id, disabled)
+            ? createControl(widget.control, suffixControls.first.id, disabled,
+                parentAdaptive: widget.parentAdaptive)
             : null,
         readOnly: readOnly,
+        textDirection: rtl ? TextDirection.rtl : null,
         inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
-        obscureText: password && !_revealPassword,
+        obscureText: password,
         controller: _controller,
         focusNode: focusNode,
         onChanged: (String value) {
           //debugPrint(value);
           _value = value;
-          updateControlProps(widget.control.id, {"value": value});
+          widget.backend
+              .updateControlState(widget.control.id, {"value": value});
           if (onChange) {
-            sendControlEvent(widget.control.id, "change", value);
+            widget.backend
+                .triggerControlEvent(widget.control.id, "change", value);
           }
         });
 

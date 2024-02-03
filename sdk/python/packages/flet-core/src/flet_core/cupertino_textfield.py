@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Optional, Union, List
+from typing import Any, List, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import InputBorder
@@ -7,14 +7,10 @@ from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.shadow import BoxShadow
 from flet_core.text_style import TextStyle
-from flet_core.textfield import (
-    InputFilter,
-    KeyboardType,
-    TextField,
-    TextCapitalization,
-)
+from flet_core.textfield import InputFilter, KeyboardType, TextCapitalization, TextField
 from flet_core.types import (
     AnimationValue,
+    BlendMode,
     BorderRadiusValue,
     OffsetValue,
     PaddingValue,
@@ -22,13 +18,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
-    BlendMode,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
 
 class VisibilityMode(Enum):
@@ -64,6 +54,7 @@ class CupertinoTextField(TextField):
         #
         value: Optional[str] = None,
         keyboard_type: Optional[KeyboardType] = None,
+        rtl: Optional[bool] = None,
         multiline: Optional[bool] = None,
         min_lines: Optional[int] = None,
         max_lines: Optional[int] = None,
@@ -211,6 +202,7 @@ class CupertinoTextField(TextField):
             #
             value=value,
             keyboard_type=keyboard_type,
+            rtl=rtl,
             multiline=multiline,
             min_lines=min_lines,
             max_lines=max_lines,

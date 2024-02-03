@@ -6,29 +6,30 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/images.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class AudioControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
   const AudioControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.nextChild});
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<AudioControl> createState() => _AudioControlState();
 }
 
-class _AudioControlState extends State<AudioControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+class _AudioControlState extends State<AudioControl> with FletStoreMixin {
   AudioPlayer? player;
   void Function(Duration)? _onDurationChanged;
   void Function(PlayerState)? _onStateChanged;
@@ -81,7 +82,7 @@ class _AudioControlState extends State<AudioControl>
   void _onRemove() {
     debugPrint("Audio.remove($hashCode)");
     widget.control.state["player"]?.dispose();
-    unsubscribeMethods(widget.control.id);
+    widget.backend.unsubscribeMethods(widget.control.id);
   }
 
   @override
@@ -124,25 +125,26 @@ class _AudioControlState extends State<AudioControl>
 
     return withPageArgs((context, pageArgs) {
       _onDurationChanged = (duration) {
-        sendControlEvent(widget.control.id, "duration_changed",
-            duration.inMilliseconds.toString());
+        widget.backend.triggerControlEvent(widget.control.id,
+            "duration_changed", duration.inMilliseconds.toString());
       };
 
       _onStateChanged = (state) {
         debugPrint("Audio($hashCode) - state_changed: ${state.name}");
-        sendControlEvent(
+        widget.backend.triggerControlEvent(
             widget.control.id, "state_changed", state.name.toString());
       };
 
       if (onPositionChanged) {
         _onPositionChanged = (duration) {
-          sendControlEvent(
+          widget.backend.triggerControlEvent(
               widget.control.id, "position_changed", duration.toString());
         };
       }
 
       _onSeekComplete = () {
-        sendControlEvent(widget.control.id, "seek_complete", "");
+        widget.backend
+            .triggerControlEvent(widget.control.id, "seek_complete", "");
       };
 
       () async {
@@ -171,7 +173,7 @@ class _AudioControlState extends State<AudioControl>
 
         if (srcChanged) {
           debugPrint("Audio.srcChanged!");
-          sendControlEvent(widget.control.id, "loaded", "");
+          widget.backend.triggerControlEvent(widget.control.id, "loaded", "");
         }
 
         if (releaseMode != null && releaseMode != prevReleaseMode) {
@@ -213,7 +215,8 @@ class _AudioControlState extends State<AudioControl>
           await player?.resume();
         }
 
-        subscribeMethods(widget.control.id, (methodName, args) async {
+        widget.backend.subscribeMethods(widget.control.id,
+            (methodName, args) async {
           switch (methodName) {
             case "play":
               await player?.seek(const Duration(milliseconds: 0));

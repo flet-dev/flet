@@ -5,10 +5,7 @@ import 'my_control.dart';
 CreateControlFactory createControl = (CreateControlArgs args) {
   switch (args.control.type) {
     case "my_org:my_control":
-      return MyControl(
-          control: args.control,
-          children: args.children,
-          parentDisabled: args.parentDisabled);
+      return MyControl(args, key: args.key);
     default:
       return null;
   }

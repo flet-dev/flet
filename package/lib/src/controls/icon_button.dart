@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
@@ -7,27 +8,29 @@ import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class IconButtonControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const IconButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<IconButtonControl> createState() => _IconButtonControlState();
 }
 
-class _IconButtonControlState extends State<IconButtonControl>
-    with FletControlStatefulMixin {
+class _IconButtonControlState extends State<IconButtonControl> {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -46,7 +49,7 @@ class _IconButtonControlState extends State<IconButtonControl>
   }
 
   void _onFocusChange() {
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -79,7 +82,7 @@ class _IconButtonControlState extends State<IconButtonControl>
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            sendControlEvent(widget.control.id, "click", "");
+            widget.backend.triggerControlEvent(widget.control.id, "click", "");
           };
 
     Widget? button;
@@ -127,7 +130,8 @@ class _IconButtonControlState extends State<IconButtonControl>
           selectedIcon: selectedIcon != null
               ? Icon(selectedIcon, color: selectedIconColor)
               : null,
-          icon: createControl(widget.control, contentCtrls.first.id, disabled));
+          icon: createControl(widget.control, contentCtrls.first.id, disabled,
+              parentAdaptive: widget.parentAdaptive));
     } else {
       return const ErrorControl(
           "Icon button does not have an icon neither content specified.");

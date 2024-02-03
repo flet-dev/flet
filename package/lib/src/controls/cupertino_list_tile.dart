@@ -1,20 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
-import 'flet_control_stateless_mixin.dart';
 import 'list_tile.dart';
 
-class CupertinoListTileControl extends StatelessWidget
-    with FletControlStatelessMixin {
+class CupertinoListTileControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
   final ListTileClickNotifier _clickNotifier = ListTileClickNotifier();
 
   CupertinoListTileControl(
@@ -22,7 +23,9 @@ class CupertinoListTileControl extends StatelessWidget
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -46,22 +49,27 @@ class CupertinoListTileControl extends StatelessWidget
     bool disabled = control.isDisabled || parentDisabled;
 
     Widget? additionalInfo = additionalInfoCtrls.isNotEmpty
-        ? createControl(control, additionalInfoCtrls.first.id, disabled)
+        ? createControl(control, additionalInfoCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
     Widget? leading = leadingCtrls.isNotEmpty
-        ? createControl(control, leadingCtrls.first.id, disabled)
+        ? createControl(control, leadingCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     Widget? title = titleCtrls.isNotEmpty
-        ? createControl(control, titleCtrls.first.id, disabled)
+        ? createControl(control, titleCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : const Text("");
 
     Widget? subtitle = subtitleCtrls.isNotEmpty
-        ? createControl(control, subtitleCtrls.first.id, disabled)
+        ? createControl(control, subtitleCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     Widget? trailing = trailingCtrls.isNotEmpty
-        ? createControl(control, trailingCtrls.first.id, disabled)
+        ? createControl(control, trailingCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     Color? backgroundColor = HexColor.fromString(
@@ -81,7 +89,7 @@ class CupertinoListTileControl extends StatelessWidget
               openWebBrowser(url, webWindowName: urlTarget);
             }
             if (onclick) {
-              sendControlEvent(context, control.id, "click", "");
+              backend.triggerControlEvent(control.id, "click", "");
             }
           }
         : null;

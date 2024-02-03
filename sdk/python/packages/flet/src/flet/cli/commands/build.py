@@ -16,6 +16,7 @@ import yaml
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string, slugify
 from flet_runtime.utils import calculate_file_hash, copy_tree, is_windows
+from packaging import version
 from rich import print
 
 if is_windows():
@@ -362,7 +363,7 @@ class Command(BaseCommand):
         if not template_url:
             template_url = DEFAULT_TEMPLATE_URL
             if flet.version.version and not template_ref:
-                template_ref = flet.version.version
+                template_ref = version.Version(flet.version.version).base_version
 
         # create Flutter project from a template
         print("Creating Flutter bootstrap project...", end="")

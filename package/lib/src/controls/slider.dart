@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/desktop.dart';
 import 'create_control.dart';
 import 'cupertino_slider.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class SliderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const SliderControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<SliderControl> createState() => _SliderControlState();
 }
 
-class _SliderControlState extends State<SliderControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+class _SliderControlState extends State<SliderControl> with FletStoreMixin {
   double _value = 0;
   final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
   late final FocusNode _focusNode;
@@ -46,7 +49,7 @@ class _SliderControlState extends State<SliderControl>
   }
 
   void _onFocusChange() {
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -55,10 +58,10 @@ class _SliderControlState extends State<SliderControl>
     debugPrint(svalue);
     _value = value;
     var props = {"value": svalue};
-    updateControlProps(widget.control.id, props, clientOnly: true);
+    widget.backend.updateControlState(widget.control.id, props, server: false);
     _debouncer.run(() {
-      updateControlProps(widget.control.id, props);
-      sendControlEvent(widget.control.id, "change", '');
+      widget.backend.updateControlState(widget.control.id, props);
+      widget.backend.triggerControlEvent(widget.control.id, "change", '');
     });
   }
 
@@ -67,12 +70,15 @@ class _SliderControlState extends State<SliderControl>
     debugPrint("SliderControl build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool adaptive = widget.control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoSliderControl(
-            control: widget.control, parentDisabled: widget.parentDisabled);
+            control: widget.control,
+            parentDisabled: widget.parentDisabled,
+            backend: widget.backend);
       }
 
       String? label = widget.control.attrString("label");
@@ -119,13 +125,13 @@ class _SliderControlState extends State<SliderControl>
               : null,
           onChangeStart: !disabled
               ? (double value) {
-                  sendControlEvent(
+                  widget.backend.triggerControlEvent(
                       widget.control.id, "change_start", value.toString());
                 }
               : null,
           onChangeEnd: !disabled
               ? (double value) {
-                  sendControlEvent(
+                  widget.backend.triggerControlEvent(
                       widget.control.id, "change_end", value.toString());
                 }
               : null);

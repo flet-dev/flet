@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
@@ -19,7 +20,6 @@ import '../utils/shadows.dart';
 import '../utils/text.dart';
 import 'charts.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class LineChartDataPointViewModel extends Equatable {
   final Control control;
@@ -156,20 +156,21 @@ class LineChartControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   const LineChartControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<LineChartControl> createState() => _LineChartControlState();
 }
 
-class _LineChartControlState extends State<LineChartControl>
-    with FletControlStatefulMixin {
+class _LineChartControlState extends State<LineChartControl> {
   LineChartEventData? _eventData;
 
   @override
@@ -371,7 +372,9 @@ class _LineChartControlState extends State<LineChartControl>
                             _eventData = eventData;
                             debugPrint(
                                 "LineChart ${widget.control.id} ${eventData.eventType}");
-                            sendControlEvent(widget.control.id, "chart_event",
+                            widget.backend.triggerControlEvent(
+                                widget.control.id,
+                                "chart_event",
                                 json.encode(eventData));
                           }
                         }

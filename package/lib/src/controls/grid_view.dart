@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
@@ -12,14 +13,18 @@ class GridViewControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final List<Control> children;
+  final FletControlBackend backend;
 
   const GridViewControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<GridViewControl> createState() => _GridViewControlState();
@@ -46,6 +51,8 @@ class _GridViewControlState extends State<GridViewControl> {
     debugPrint("GridViewControl build: ${widget.control.id}");
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool? adaptive =
+        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
     final horizontal = widget.control.attrBool("horizontal", false)!;
     final runsCount = widget.control.attrInt("runsCount", 1)!;
@@ -90,20 +97,21 @@ class _GridViewControlState extends State<GridViewControl> {
           itemCount: visibleControls.length,
           itemBuilder: (context, index) {
             return createControl(
-                widget.control, visibleControls[index].id, disabled);
+                widget.control, visibleControls[index].id, disabled,
+                parentAdaptive: adaptive);
           },
         );
 
         child = ScrollableControl(
-          control: widget.control,
-          scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
-          scrollController: _controller,
-          child: child,
-        );
+            control: widget.control,
+            scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+            scrollController: _controller,
+            backend: widget.backend,
+            child: child);
 
         if (widget.control.attrBool("onScroll", false)!) {
-          child =
-              ScrollNotificationControl(control: widget.control, child: child);
+          child = ScrollNotificationControl(
+              control: widget.control, backend: widget.backend, child: child);
         }
 
         return child;
