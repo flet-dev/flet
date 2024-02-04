@@ -8,13 +8,15 @@ class SemanticsControl extends StatelessWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
 
   const SemanticsControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,8 @@ class SemanticsControl extends StatelessWidget {
         Semantics(
             label: label,
             child: contentCtrls.isNotEmpty
-                ? createControl(control, contentCtrls.first.id, disabled)
+                ? createControl(control, contentCtrls.first.id, disabled,
+                    parentAdaptive: parentAdaptive)
                 : null),
         parent,
         control);

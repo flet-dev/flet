@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'cupertino_radio.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 import 'list_tile.dart';
 
@@ -15,19 +15,22 @@ class RadioControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const RadioControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<RadioControl> createState() => _RadioControlState();
 }
 
-class _RadioControlState extends State<RadioControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+class _RadioControlState extends State<RadioControl> with FletStoreMixin {
   late final FocusNode _focusNode;
 
   @override
@@ -38,7 +41,7 @@ class _RadioControlState extends State<RadioControl>
   }
 
   void _onFocusChange() {
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -52,8 +55,8 @@ class _RadioControlState extends State<RadioControl>
   void _onChange(String ancestorId, String? value) {
     var svalue = value ?? "";
     debugPrint(svalue);
-    updateControlProps(ancestorId, {"value": svalue});
-    sendControlEvent(ancestorId, "change", svalue);
+    widget.backend.updateControlState(ancestorId, {"value": svalue});
+    widget.backend.triggerControlEvent(ancestorId, "change", svalue);
   }
 
   @override
@@ -61,12 +64,15 @@ class _RadioControlState extends State<RadioControl>
     debugPrint("Radio build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool adaptive = widget.control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoRadioControl(
-            control: widget.control, parentDisabled: widget.parentDisabled);
+            control: widget.control,
+            parentDisabled: widget.parentDisabled,
+            backend: widget.backend);
       }
 
       String label = widget.control.attrString("label", "")!;

@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class DataTableControl extends StatefulWidget {
@@ -16,20 +16,22 @@ class DataTableControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   const DataTableControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<DataTableControl> createState() => _DataTableControlState();
 }
 
 class _DataTableControlState extends State<DataTableControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+    with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("DataTableControl build: ${widget.control.id}");
@@ -96,7 +98,9 @@ class _DataTableControlState extends State<DataTableControl>
           sortColumnIndex: widget.control.attrInt("sortColumnIndex"),
           onSelectAll: widget.control.attrBool("onSelectAll", false)!
               ? (selected) {
-                  sendControlEvent(widget.control.id, "select_all",
+                  widget.backend.triggerControlEvent(
+                      widget.control.id,
+                      "select_all",
                       selected != null ? selected.toString() : "");
                 }
               : null,
@@ -109,7 +113,9 @@ class _DataTableControlState extends State<DataTableControl>
                 tooltip: column.control.attrString("tooltip"),
                 onSort: column.control.attrBool("onSort", false)!
                     ? (columnIndex, ascending) {
-                        sendControlEvent(column.control.id, "sort",
+                        widget.backend.triggerControlEvent(
+                            column.control.id,
+                            "sort",
                             json.encode({"i": columnIndex, "a": ascending}));
                       }
                     : null,
@@ -126,13 +132,16 @@ class _DataTableControlState extends State<DataTableControl>
                     Theme.of(context), row.control, "color"),
                 onSelectChanged: row.control.attrBool("onSelectChanged", false)!
                     ? (selected) {
-                        sendControlEvent(row.control.id, "select_changed",
+                        widget.backend.triggerControlEvent(
+                            row.control.id,
+                            "select_changed",
                             selected != null ? selected.toString() : "");
                       }
                     : null,
                 onLongPress: row.control.attrBool("onLongPress", false)!
                     ? () {
-                        sendControlEvent(row.control.id, "long_press", "");
+                        widget.backend.triggerControlEvent(
+                            row.control.id, "long_press", "");
                       }
                     : null,
                 cells: row.children
@@ -143,27 +152,31 @@ class _DataTableControlState extends State<DataTableControl>
                           showEditIcon: cell.attrBool("showEditIcon", false)!,
                           onDoubleTap: cell.attrBool("onDoubleTap", false)!
                               ? () {
-                                  sendControlEvent(cell.id, "double_tap", "");
+                                  widget.backend.triggerControlEvent(
+                                      cell.id, "double_tap", "");
                                 }
                               : null,
                           onLongPress: cell.attrBool("onLongPress", false)!
                               ? () {
-                                  sendControlEvent(cell.id, "long_press", "");
+                                  widget.backend.triggerControlEvent(
+                                      cell.id, "long_press", "");
                                 }
                               : null,
                           onTap: cell.attrBool("onTap", false)!
                               ? () {
-                                  sendControlEvent(cell.id, "tap", "");
+                                  widget.backend
+                                      .triggerControlEvent(cell.id, "tap", "");
                                 }
                               : null,
                           onTapCancel: cell.attrBool("onTapCancel", false)!
                               ? () {
-                                  sendControlEvent(cell.id, "tap_cancel", "");
+                                  widget.backend.triggerControlEvent(
+                                      cell.id, "tap_cancel", "");
                                 }
                               : null,
                           onTapDown: cell.attrBool("onTapDown", false)!
                               ? (details) {
-                                  sendControlEvent(
+                                  widget.backend.triggerControlEvent(
                                       cell.id,
                                       "tap_down",
                                       json.encode({

@@ -5,6 +5,7 @@ import 'package:redux/redux.dart';
 
 import 'actions.dart';
 import 'flet_app_errors_handler.dart';
+import 'flet_control_backend.dart';
 import 'flet_server_protocol.dart';
 import 'models/app_state.dart';
 import 'protocol/add_page_controls_payload.dart';
@@ -25,7 +26,7 @@ import 'protocol/update_control_props_payload.dart';
 import 'protocol/update_control_props_request.dart';
 import 'utils/uri.dart';
 
-class FletServer {
+class FletServer implements FletControlBackend {
   final Store<AppState> _store;
   final int? reconnectIntervalMs;
   final int? reconnectTimeoutMs;
@@ -157,7 +158,41 @@ class FletServer {
     _pageHash = "";
   }
 
-  sendPageEvent(
+  @override
+  void updateControlState(String id, Map<String, String> props,
+      {bool client = true, bool server = true}) {
+    Map<String, String> allProps = {"i": id};
+    for (var entry in props.entries) {
+      allProps[entry.key] = entry.value;
+    }
+    if (client) {
+      _store.dispatch(UpdateControlPropsAction(
+          UpdateControlPropsPayload(props: [allProps])));
+    }
+    if (server) {
+      _updateControlProps(props: [allProps]);
+    }
+  }
+
+  @override
+  void triggerControlEvent(
+      String controlId, String eventName, String eventData) {
+    _sendPageEvent(
+        eventTarget: controlId, eventName: eventName, eventData: eventData);
+  }
+
+  @override
+  void subscribeMethods(String controlId,
+      Future<String?> Function(String, Map<String, String>) methodHandler) {
+    controlInvokeMethods[controlId] = methodHandler;
+  }
+
+  @override
+  void unsubscribeMethods(String controlId) {
+    controlInvokeMethods.remove(controlId);
+  }
+
+  _sendPageEvent(
       {required String eventTarget,
       required String eventName,
       required String eventData}) {
@@ -169,7 +204,7 @@ class FletServer {
             eventData: eventData)));
   }
 
-  updateControlProps({required List<Map<String, String>> props}) {
+  _updateControlProps({required List<Map<String, String>> props}) {
     send(Message(
         action: MessageAction.updateControlProps,
         payload: UpdateControlPropsRequest(props: props)));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -7,27 +8,29 @@ import '../utils/edge_insets.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class ChipControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const ChipControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<ChipControl> createState() => _ChipControlState();
 }
 
-class _ChipControlState extends State<ChipControl>
-    with FletControlStatefulMixin {
+class _ChipControlState extends State<ChipControl> {
   bool _selected = false;
 
   late final FocusNode _focusNode;
@@ -50,12 +53,14 @@ class _ChipControlState extends State<ChipControl>
     var strSelected = selected.toString();
     debugPrint(strSelected);
     _selected = selected;
-    updateControlProps(widget.control.id, {"selected": strSelected});
-    sendControlEvent(widget.control.id, "select", strSelected);
+    widget.backend
+        .updateControlState(widget.control.id, {"selected": strSelected});
+    widget.backend
+        .triggerControlEvent(widget.control.id, "select", strSelected);
   }
 
   void _onFocusChange() {
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -106,14 +111,14 @@ class _ChipControlState extends State<ChipControl>
     Function()? onClickHandler = onClick && !disabled
         ? () {
             debugPrint("Chip ${widget.control.id} clicked!");
-            sendControlEvent(widget.control.id, "click", "");
+            widget.backend.triggerControlEvent(widget.control.id, "click", "");
           }
         : null;
 
     Function()? onDeleteHandler = onDelete && !disabled
         ? () {
             debugPrint("Chip ${widget.control.id} deleted!");
-            sendControlEvent(widget.control.id, "delete", "");
+            widget.backend.triggerControlEvent(widget.control.id, "delete", "");
           }
         : null;
 
@@ -122,9 +127,11 @@ class _ChipControlState extends State<ChipControl>
         InputChip(
           autofocus: autofocus,
           focusNode: _focusNode,
-          label: createControl(widget.control, labelCtrls.first.id, disabled),
+          label: createControl(widget.control, labelCtrls.first.id, disabled,
+              parentAdaptive: widget.parentAdaptive),
           avatar: leadingCtrls.isNotEmpty
-              ? createControl(widget.control, leadingCtrls.first.id, disabled)
+              ? createControl(widget.control, leadingCtrls.first.id, disabled,
+                  parentAdaptive: widget.parentAdaptive)
               : null,
           backgroundColor: bgcolor,
           checkmarkColor: HexColor.fromString(
@@ -141,7 +148,8 @@ class _ChipControlState extends State<ChipControl>
               : null,
           deleteIcon: deleteIconCtrls.isNotEmpty
               ? createControl(
-                  widget.control, deleteIconCtrls.first.id, disabled)
+                  widget.control, deleteIconCtrls.first.id, disabled,
+                  parentAdaptive: widget.parentAdaptive)
               : null,
           deleteIconColor: deleteIconColor,
           disabledColor: disabledColor,

@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class SegmentedButtonControl extends StatefulWidget {
@@ -14,25 +14,26 @@ class SegmentedButtonControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
-  const SegmentedButtonControl({
-    super.key,
-    this.parent,
-    required this.control,
-    required this.children,
-    required this.parentDisabled,
-  });
+  const SegmentedButtonControl(
+      {super.key,
+      this.parent,
+      required this.control,
+      required this.children,
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<SegmentedButtonControl> createState() => _SegmentedButtonControlState();
 }
 
 class _SegmentedButtonControlState extends State<SegmentedButtonControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+    with FletStoreMixin {
   void onChange(Set<String> selection) {
     var s = jsonEncode(selection.toList());
-    updateControlProps(widget.control.id, {"selected": s});
-    sendControlEvent(widget.control.id, "change", s);
+    widget.backend.updateControlState(widget.control.id, {"selected": s});
+    widget.backend.triggerControlEvent(widget.control.id, "change", s);
   }
 
   @override

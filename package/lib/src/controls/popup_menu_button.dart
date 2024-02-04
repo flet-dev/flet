@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
-import 'flet_control_stateless_mixin.dart';
 import 'flet_store_mixin.dart';
 
-class PopupMenuButtonControl extends StatelessWidget
-    with FletControlStatelessMixin, FletStoreMixin {
+class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
   final List<Control> children;
+  final FletControlBackend backend;
 
   const PopupMenuButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +46,10 @@ class PopupMenuButtonControl extends StatelessWidget
               ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
               : null,
           onCanceled: () {
-            sendControlEvent(context, control.id, "cancelled", "");
+            backend.triggerControlEvent(control.id, "cancelled", "");
           },
           onSelected: (itemId) {
-            sendControlEvent(context, itemId, "click", "");
+            backend.triggerControlEvent(itemId, "click", "");
           },
           itemBuilder: (BuildContext context) =>
               viewModel.controlViews.map((cv) {

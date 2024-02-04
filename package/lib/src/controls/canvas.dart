@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_tree_view_model.dart';
@@ -19,7 +20,6 @@ import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class CanvasViewModel extends Equatable {
   final Control control;
@@ -55,20 +55,23 @@ class CanvasControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const CanvasControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<CanvasControl> createState() => _CanvasControlState();
 }
 
-class _CanvasControlState extends State<CanvasControl>
-    with FletControlStatefulMixin {
+class _CanvasControlState extends State<CanvasControl> {
   int _lastResize = DateTime.now().millisecondsSinceEpoch;
   Size? _lastSize;
 
@@ -100,7 +103,9 @@ class _CanvasControlState extends State<CanvasControl>
                       _lastSize == null) {
                     _lastResize = now;
                     _lastSize = size;
-                    sendControlEvent(viewModel.control.id, "resize",
+                    widget.backend.triggerControlEvent(
+                        viewModel.control.id,
+                        "resize",
                         json.encode({"w": size.width, "h": size.height}));
                   }
                 }
@@ -108,7 +113,8 @@ class _CanvasControlState extends State<CanvasControl>
             ),
             child: viewModel.child != null
                 ? createControl(viewModel.control, viewModel.child!.id,
-                    viewModel.control.isDisabled)
+                    viewModel.control.isDisabled,
+                    parentAdaptive: widget.parentAdaptive)
                 : null,
           );
 

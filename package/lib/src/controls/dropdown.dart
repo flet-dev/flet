@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 import 'flet_store_mixin.dart';
 import 'form_field.dart';
 
@@ -14,19 +14,22 @@ class DropdownControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const DropdownControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<DropdownControl> createState() => _DropdownControlState();
 }
 
-class _DropdownControlState extends State<DropdownControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
   String? _value;
   bool _focused = false;
   late final FocusNode _focusNode;
@@ -43,7 +46,7 @@ class _DropdownControlState extends State<DropdownControl>
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -136,14 +139,17 @@ class _DropdownControlState extends State<DropdownControl>
             prefixControls.isNotEmpty ? prefixControls.first.control : null,
             suffixControls.isNotEmpty ? suffixControls.first.control : null,
             null,
-            _focused),
+            _focused,
+            widget.parentAdaptive),
         onChanged: disabled
             ? null
             : (String? value) {
                 debugPrint("Dropdown selected value: $value");
                 _value = value!;
-                updateControlProps(widget.control.id, {"value": value});
-                sendControlEvent(widget.control.id, "change", value);
+                widget.backend
+                    .updateControlState(widget.control.id, {"value": value});
+                widget.backend
+                    .triggerControlEvent(widget.control.id, "change", value);
               },
         items: items,
       );

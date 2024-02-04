@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class TimePickerControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
-  const TimePickerControl({
-    super.key,
-    this.parent,
-    required this.control,
-    required this.children,
-    required this.parentDisabled,
-  });
+  const TimePickerControl(
+      {super.key,
+      this.parent,
+      required this.control,
+      required this.children,
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<TimePickerControl> createState() => _TimePickerControlState();
 }
 
-class _TimePickerControlState extends State<TimePickerControl>
-    with FletControlStatefulMixin {
+class _TimePickerControlState extends State<TimePickerControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("TimePicker build: ${widget.control.id}");
@@ -61,9 +61,10 @@ class _TimePickerControlState extends State<TimePickerControl>
         eventName = "change";
       }
       widget.control.state["open"] = false;
-      updateControlProps(
+      widget.backend.updateControlState(
           widget.control.id, {"value": stringValue, "open": "false"});
-      sendControlEvent(widget.control.id, eventName, stringValue);
+      widget.backend
+          .triggerControlEvent(widget.control.id, eventName, stringValue);
     }
 
     Widget createSelectTimeDialog() {

@@ -15,12 +15,14 @@ from flet_core import (
     painting,
     transform,
 )
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
 from flet_core.alignment import Alignment
 from flet_core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
 from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
+from flet_core.audio_recorder import AudioEncoder, AudioRecorder
 from flet_core.badge import Badge
 from flet_core.banner import Banner
 from flet_core.blur import Blur, BlurTileMode

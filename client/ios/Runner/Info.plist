@@ -53,8 +53,10 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
     <dict>
-    <key>NSAllowsArbitraryLoads</key>
-    <true/>
-</dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>Audio Recording</string>
 </dict>
 </plist>

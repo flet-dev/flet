@@ -217,7 +217,7 @@ class Audio(Control):
 
     @release_mode.setter
     def release_mode(self, value: Optional[ReleaseMode]):
-        self._set_attr("releaseMode", value.value if value is not None else None)
+        self._set_attr("releaseMode", value.value if isinstance(value, ReleaseMode) else value)
 
     # on_loaded
     @property

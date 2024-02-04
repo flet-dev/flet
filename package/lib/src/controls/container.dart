@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
@@ -16,7 +17,6 @@ import '../utils/launch_url.dart';
 import '../utils/shadows.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateless_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class ContainerTapEvent {
@@ -39,19 +39,22 @@ class ContainerTapEvent {
       };
 }
 
-class ContainerControl extends StatelessWidget
-    with FletControlStatelessMixin, FletStoreMixin {
+class ContainerControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const ContainerControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +71,7 @@ class ContainerControl extends StatelessWidget
     bool onLongPress = control.attrBool("onLongPress", false)!;
     bool onHover = control.attrBool("onHover", false)!;
     bool disabled = control.isDisabled || parentDisabled;
+    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
     var imageSrc = control.attrString("imageSrc", "")!;
     var imageSrcBase64 = control.attrString("imageSrcBase64", "")!;
@@ -76,7 +80,8 @@ class ContainerControl extends StatelessWidget
     var imageOpacity = control.attrDouble("imageOpacity", 1)!;
 
     Widget? child = contentCtrls.isNotEmpty
-        ? createControl(control, contentCtrls.first.id, disabled)
+        ? createControl(control, contentCtrls.first.id, disabled,
+            parentAdaptive: adaptive)
         : null;
 
     var animation = parseAnimation(control, "animate");
@@ -157,8 +162,7 @@ class ContainerControl extends StatelessWidget
                         openWebBrowser(url, webWindowName: urlTarget);
                       }
                       if (onClick) {
-                        sendControlEvent(
-                            context,
+                        backend.triggerControlEvent(
                             control.id,
                             "click",
                             json.encode(ContainerTapEvent(
@@ -173,14 +177,14 @@ class ContainerControl extends StatelessWidget
               onLongPress: onLongPress
                   ? () {
                       debugPrint("Container ${control.id} long pressed!");
-                      sendControlEvent(context, control.id, "long_press", "");
+                      backend.triggerControlEvent(control.id, "long_press", "");
                     }
                   : null,
               onHover: onHover
                   ? (value) {
                       debugPrint("Container ${control.id} hovered!");
-                      sendControlEvent(
-                          context, control.id, "hover", value.toString());
+                      backend.triggerControlEvent(
+                          control.id, "hover", value.toString());
                     }
                   : null,
               borderRadius: borderRadius,
@@ -209,8 +213,8 @@ class ContainerControl extends StatelessWidget
                 clipBehavior: clipBehavior,
                 onEnd: control.attrBool("onAnimationEnd", false)!
                     ? () {
-                        sendControlEvent(
-                            context, control.id, "animation_end", "container");
+                        backend.triggerControlEvent(
+                            control.id, "animation_end", "container");
                       }
                     : null,
                 child: ink);
@@ -237,8 +241,8 @@ class ContainerControl extends StatelessWidget
                 clipBehavior: clipBehavior,
                 onEnd: control.attrBool("onAnimationEnd", false)!
                     ? () {
-                        sendControlEvent(
-                            context, control.id, "animation_end", "container");
+                        backend.triggerControlEvent(
+                            control.id, "animation_end", "container");
                       }
                     : null,
                 child: child);
@@ -252,14 +256,14 @@ class ContainerControl extends StatelessWidget
                 ? (value) {
                     debugPrint(
                         "Container's mouse region ${control.id} entered!");
-                    sendControlEvent(context, control.id, "hover", "true");
+                    backend.triggerControlEvent(control.id, "hover", "true");
                   }
                 : null,
             onExit: onHover
                 ? (value) {
                     debugPrint(
                         "Container's mouse region ${control.id} exited!");
-                    sendControlEvent(context, control.id, "hover", "false");
+                    backend.triggerControlEvent(control.id, "hover", "false");
                   }
                 : null,
             child: GestureDetector(
@@ -270,8 +274,7 @@ class ContainerControl extends StatelessWidget
                         openWebBrowser(url, webWindowName: urlTarget);
                       }
                       if (onClick) {
-                        sendControlEvent(
-                            context,
+                        backend.triggerControlEvent(
                             control.id,
                             "click",
                             json.encode(ContainerTapEvent(
@@ -286,7 +289,7 @@ class ContainerControl extends StatelessWidget
               onLongPress: onLongPress
                   ? () {
                       debugPrint("Container ${control.id} clicked!");
-                      sendControlEvent(context, control.id, "long_press", "");
+                      backend.triggerControlEvent(control.id, "long_press", "");
                     }
                   : null,
               child: result,

@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -13,7 +14,7 @@ from flet_core.types import (
 )
 
 
-class ListTile(ConstrainedControl):
+class ListTile(ConstrainedControl, AdaptiveControl):
     """
     A single fixed-height row that typically contains some text as well as a leading or trailing icon.
 
@@ -133,7 +134,8 @@ class ListTile(ConstrainedControl):
             data=data,
         )
 
-        self.adaptive = adaptive
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.content_padding = content_padding
         self.leading = leading
         self.title = title
@@ -173,15 +175,6 @@ class ListTile(ConstrainedControl):
             self.__trailing._set_attr_internal("n", "trailing")
             children.append(self.__trailing)
         return children
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
 
     # content_padding
     @property

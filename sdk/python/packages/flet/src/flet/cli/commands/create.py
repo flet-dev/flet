@@ -1,8 +1,11 @@
 import argparse
+import os
 from pathlib import Path
 
+import flet.version
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import slugify
+from packaging import version
 from rich import print
 
 
@@ -41,7 +44,13 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
 
+        self.verbose = options.verbose
+
         template_data = {"template_name": options.template}
+
+        template_ref = None
+        if flet.version.version:
+            template_ref = version.Version(flet.version.version).base_version
 
         out_dir = Path(options.output_directory).resolve()
         template_data["out_dir"] = out_dir.name
@@ -57,6 +66,7 @@ class Command(BaseCommand):
         # print("Template data:", template_data)
         cookiecutter(
             f"gh:flet-dev/flet-app-templates",
+            checkout=template_ref,
             directory=options.template,
             output_dir=str(out_dir.parent),
             no_input=True,
@@ -64,8 +74,21 @@ class Command(BaseCommand):
             extra_context=template_data,
         )
 
+        print("[spring_green3]Done![/spring_green3]\n")
+
+        if self.verbose > 0:
+            print(f"[cyan]Files created at[/cyan] {out_dir}:\n")
+            for root, dirs, files in os.walk(out_dir):
+                for file in files:
+                    rel_path = os.path.relpath(os.path.join(root, file), out_dir)
+                    print(rel_path)
+            print("")
+
         # print next steps
-        print("[spring_green3]Done.[/spring_green3] Now run:\n")
-        if options.output_directory != ".":
-            print(f"[cyan]cd[/cyan] [white]{out_dir.name}[/white]")
-        print("[cyan]flet run[/cyan]\n")
+        print("[cyan]Run the app:[/cyan]\n")
+        app_dir = (
+            os.path.relpath(out_dir, os.getcwd())
+            if options.output_directory != "."
+            else ""
+        )
+        print(f"flet run {app_dir}\n")

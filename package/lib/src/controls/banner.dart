@@ -11,6 +11,7 @@ class BannerControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final Widget? nextChild;
 
   const BannerControl(
@@ -19,6 +20,7 @@ class BannerControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
+      required this.parentAdaptive,
       required this.nextChild});
 
   @override
@@ -45,13 +47,16 @@ class _BannerControlState extends State<BannerControl> {
 
     return MaterialBanner(
       leading: leadingCtrls.isNotEmpty
-          ? createControl(widget.control, leadingCtrls.first.id, disabled)
+          ? createControl(widget.control, leadingCtrls.first.id, disabled,
+              parentAdaptive: widget.parentAdaptive)
           : null,
       leadingPadding: parseEdgeInsets(widget.control, "leadingPadding"),
-      content: createControl(widget.control, contentCtrls.first.id, disabled),
+      content: createControl(widget.control, contentCtrls.first.id, disabled,
+          parentAdaptive: widget.parentAdaptive),
       padding: parseEdgeInsets(widget.control, "contentPadding"),
       actions: actionCtrls
-          .map((c) => createControl(widget.control, c.id, disabled))
+          .map((c) => createControl(widget.control, c.id, disabled,
+              parentAdaptive: widget.parentAdaptive))
           .toList(),
       forceActionsBelow: widget.control.attrBool("forceActionsBelow", false)!,
       backgroundColor: HexColor.fromString(

@@ -2,32 +2,35 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class SearchAnchorControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const SearchAnchorControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<SearchAnchorControl> createState() => _SearchAnchorControlState();
 }
 
-class _SearchAnchorControlState extends State<SearchAnchorControl>
-    with FletControlStatefulMixin {
+class _SearchAnchorControlState extends State<SearchAnchorControl> {
   late final SearchController _controller;
 
   @override
@@ -51,7 +54,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl>
 
   void _updateValue(String value) {
     debugPrint("SearchBar.changeValue: $value");
-    updateControlProps(widget.control.id, {"value": value});
+    widget.backend.updateControlState(widget.control.id, {"value": value});
   }
 
   @override
@@ -101,7 +104,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl>
       debugPrint("SearchAnchor JSON method: $method");
 
       void resetMethod() {
-        updateControlProps(widget.control.id, {"method": ""});
+        widget.backend.updateControlState(widget.control.id, {"method": ""});
       }
 
       var mj = json.decode(method);
@@ -141,11 +144,13 @@ class _SearchAnchorControlState extends State<SearchAnchorControl>
         viewShape: parseOutlinedBorder(widget.control, "viewShape"),
         viewTrailing: viewTrailingCtrls.isNotEmpty
             ? viewTrailingCtrls.map((ctrl) {
-                return createControl(widget.parent, ctrl.id, disabled);
+                return createControl(widget.parent, ctrl.id, disabled,
+                    parentAdaptive: widget.parentAdaptive);
               })
             : null,
         viewLeading: viewLeadingCtrls.isNotEmpty
-            ? createControl(widget.parent, viewLeadingCtrls.first.id, disabled)
+            ? createControl(widget.parent, viewLeadingCtrls.first.id, disabled,
+                parentAdaptive: widget.parentAdaptive)
             : null,
         builder: (BuildContext context, SearchController controller) {
           return SearchBar(
@@ -157,16 +162,19 @@ class _SearchAnchorControlState extends State<SearchAnchorControl>
                 Theme.of(context), widget.control, "barOverlayColor"),
             leading: barLeadingCtrls.isNotEmpty
                 ? createControl(
-                    widget.parent, barLeadingCtrls.first.id, disabled)
+                    widget.parent, barLeadingCtrls.first.id, disabled,
+                    parentAdaptive: widget.parentAdaptive)
                 : null,
             trailing: barTrailingCtrls.isNotEmpty
                 ? barTrailingCtrls.map((ctrl) {
-                    return createControl(widget.parent, ctrl.id, disabled);
+                    return createControl(widget.parent, ctrl.id, disabled,
+                        parentAdaptive: widget.parentAdaptive);
                   })
                 : null,
             onTap: () {
               if (onTap) {
-                sendControlEvent(widget.control.id, "tap", "");
+                widget.backend
+                    .triggerControlEvent(widget.control.id, "tap", "");
               }
               controller.openView();
             },
@@ -174,14 +182,16 @@ class _SearchAnchorControlState extends State<SearchAnchorControl>
                 ? (String value) {
                     debugPrint("SearchBar.onSubmit: $value");
                     _updateValue(value);
-                    sendControlEvent(widget.control.id, "submit", value);
+                    widget.backend.triggerControlEvent(
+                        widget.control.id, "submit", value);
                   }
                 : null,
             onChanged: onChange
                 ? (String value) {
                     debugPrint("SearchBar.onChange: $value");
                     _updateValue(value);
-                    sendControlEvent(widget.control.id, "change", value);
+                    widget.backend.triggerControlEvent(
+                        widget.control.id, "change", value);
                   }
                 : null,
           );
@@ -189,7 +199,8 @@ class _SearchAnchorControlState extends State<SearchAnchorControl>
         suggestionsBuilder:
             (BuildContext context, SearchController controller) {
           return suggestionCtrls.map((ctrl) {
-            return createControl(widget.parent, ctrl.id, disabled);
+            return createControl(widget.parent, ctrl.id, disabled,
+                parentAdaptive: widget.parentAdaptive);
           });
         });
 

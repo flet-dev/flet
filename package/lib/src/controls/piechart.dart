@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
@@ -14,7 +15,6 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class PieChartEventData extends Equatable {
   final String eventType;
@@ -79,20 +79,21 @@ class PieChartControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   const PieChartControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<PieChartControl> createState() => _PieChartControlState();
 }
 
-class _PieChartControlState extends State<PieChartControl>
-    with FletControlStatefulMixin {
+class _PieChartControlState extends State<PieChartControl> {
   PieChartEventData? _eventData;
 
   @override
@@ -138,8 +139,8 @@ class _PieChartControlState extends State<PieChartControl>
                           _eventData = eventData;
                           debugPrint(
                               "PieChart ${widget.control.id} ${eventData.eventType}");
-                          sendControlEvent(widget.control.id, "chart_event",
-                              json.encode(eventData));
+                          widget.backend.triggerControlEvent(widget.control.id,
+                              "chart_event", json.encode(eventData));
                         }
                       }
                     : null,

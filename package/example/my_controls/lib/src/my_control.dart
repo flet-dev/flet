@@ -2,17 +2,19 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
 class MyControl extends StatelessWidget {
-  final Control? parent;
-  final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
+  late final Control? parent;
+  late final Control control;
+  late final List<Control> children;
+  late final bool parentDisabled;
+  late final bool? parentAdaptive;
 
-  const MyControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled});
+  MyControl(CreateControlArgs args, {super.key}) {
+    parent = args.parent;
+    control = args.control;
+    children = args.children;
+    parentDisabled = args.parentDisabled;
+    parentAdaptive = args.parentAdaptive;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,8 @@ class MyControl extends StatelessWidget {
             surfaceTintColor: HexColor.fromString(
                 Theme.of(context), control.attrString("surfaceTintColor", "")!),
             child: contentCtrls.isNotEmpty
-                ? createControl(control, contentCtrls.first.id, disabled)
+                ? createControl(control, contentCtrls.first.id, disabled,
+                    parentAdaptive: parentAdaptive)
                 : null),
         parent,
         control);

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
@@ -9,27 +10,29 @@ import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class CupertinoButtonControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const CupertinoButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<CupertinoButtonControl> createState() => _CupertinoButtonControlState();
 }
 
-class _CupertinoButtonControlState extends State<CupertinoButtonControl>
-    with FletControlStatefulMixin {
+class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
@@ -64,7 +67,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl>
               openWebBrowser(url,
                   webWindowName: widget.control.attrString("urlTarget"));
             }
-            sendControlEvent(widget.control.id, "click", "");
+            widget.backend.triggerControlEvent(widget.control.id, "click", "");
           }
         : null;
 
@@ -80,8 +83,9 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl>
             pressedOpacity: pressedOpacity,
             alignment: alignment,
             minSize: minSize,
-            child:
-                createControl(widget.control, contentCtrls.first.id, disabled),
+            child: createControl(
+                widget.control, contentCtrls.first.id, disabled,
+                parentAdaptive: widget.parentAdaptive),
           )
         : CupertinoButton.filled(
             onPressed: onPressed,
@@ -91,8 +95,9 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl>
             pressedOpacity: pressedOpacity,
             alignment: alignment,
             minSize: minSize,
-            child:
-                createControl(widget.control, contentCtrls.first.id, disabled),
+            child: createControl(
+                widget.control, contentCtrls.first.id, disabled,
+                parentAdaptive: widget.parentAdaptive),
           );
 
     return constrainedControl(context, button, widget.parent, widget.control);

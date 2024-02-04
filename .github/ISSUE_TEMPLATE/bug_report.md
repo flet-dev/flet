@@ -73,7 +73,7 @@ Describe in text or paste a screenshot.
 ```
 
 
-**Give your `requirements.txt` file (don't `pip freeze`, instead give direct packages): **
+**Give your `requirements.txt` file (don't `pip freeze`, instead give direct packages):**
 
 ```
 (The requirements)

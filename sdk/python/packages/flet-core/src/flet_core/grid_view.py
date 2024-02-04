@@ -1,5 +1,6 @@
 from typing import Any, List, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -14,7 +15,7 @@ from flet_core.types import (
 )
 
 
-class GridView(ConstrainedControl, ScrollableControl):
+class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
     A scrollable, 2D array of controls.
 
@@ -106,6 +107,10 @@ class GridView(ConstrainedControl, ScrollableControl):
         run_spacing: OptionalNumber = None,
         child_aspect_ratio: OptionalNumber = None,
         padding: PaddingValue = None,
+        #
+        # Adaptive
+        #
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -143,6 +148,8 @@ class GridView(ConstrainedControl, ScrollableControl):
             on_scroll_interval=on_scroll_interval,
             on_scroll=on_scroll,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__controls: List[Control] = []
         self.controls = controls

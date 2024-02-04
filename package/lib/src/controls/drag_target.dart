@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import 'create_control.dart';
 import 'error.dart';
-import 'flet_control_stateless_mixin.dart';
 
 class DragTargetAcceptEvent {
   final String srcId;
@@ -25,18 +25,22 @@ class DragTargetAcceptEvent {
       };
 }
 
-class DragTargetControl extends StatelessWidget with FletControlStatelessMixin {
+class DragTargetControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const DragTargetControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +52,8 @@ class DragTargetControl extends StatelessWidget with FletControlStatelessMixin {
     bool disabled = control.isDisabled || parentDisabled;
 
     Widget? child = contentCtrls.isNotEmpty
-        ? createControl(control, contentCtrls.first.id, disabled)
+        ? createControl(control, contentCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     if (child == null) {
@@ -73,8 +78,8 @@ class DragTargetControl extends StatelessWidget with FletControlStatelessMixin {
           srcGroup = jd["group"] as String;
         }
         var groupsEqual = srcGroup == group;
-        sendControlEvent(
-            context, control.id, "will_accept", groupsEqual.toString());
+        backend.triggerControlEvent(
+            control.id, "will_accept", groupsEqual.toString());
         return groupsEqual;
       },
       onAcceptWithDetails: (details) {
@@ -82,8 +87,7 @@ class DragTargetControl extends StatelessWidget with FletControlStatelessMixin {
         debugPrint("DragTarget.onAcceptWithDetails ${control.id}: $data");
         var jd = json.decode(data);
         var srcId = jd["id"] as String;
-        sendControlEvent(
-            context,
+        backend.triggerControlEvent(
             control.id,
             "accept",
             json.encode(DragTargetAcceptEvent(
@@ -97,7 +101,7 @@ class DragTargetControl extends StatelessWidget with FletControlStatelessMixin {
           var jd = json.decode(data);
           srcId = jd["id"] as String;
         }
-        sendControlEvent(context, control.id, "leave", srcId);
+        backend.triggerControlEvent(control.id, "leave", srcId);
       },
     );
   }

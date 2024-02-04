@@ -7,11 +7,6 @@ from typing import List, Optional, Union
 from flet_core import alignment
 from flet_core.alignment import Alignment
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 
 class GradientTileMode(Enum):
     CLAMP = "clamp"

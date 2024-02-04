@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'cupertino_list_tile.dart';
-import 'flet_control_stateless_mixin.dart';
 import 'flet_store_mixin.dart';
 
 class ListTileClicks extends InheritedWidget {
@@ -26,12 +26,13 @@ class ListTileClicks extends InheritedWidget {
   bool updateShouldNotify(ListTileClicks oldWidget) => true;
 }
 
-class ListTileControl extends StatelessWidget
-    with FletControlStatelessMixin, FletStoreMixin {
+class ListTileControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
   final ListTileClickNotifier _clickNotifier = ListTileClickNotifier();
 
   ListTileControl(
@@ -39,21 +40,25 @@ class ListTileControl extends StatelessWidget
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
     return withPagePlatform((context, platform) {
-      bool adaptive = control.attrBool("adaptive", false)!;
-      if (adaptive &&
+      bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+      if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return CupertinoListTileControl(
             control: control,
             parent: parent,
             parentDisabled: parentDisabled,
-            children: children);
+            parentAdaptive: adaptive,
+            children: children,
+            backend: backend);
       }
 
       var leadingCtrls =
@@ -86,7 +91,7 @@ class ListTileControl extends StatelessWidget
                     openWebBrowser(url, webWindowName: urlTarget);
                   }
                   if (onclick) {
-                    sendControlEvent(context, control.id, "click", "");
+                    backend.triggerControlEvent(control.id, "click", "");
                   }
                 }
               : null;
@@ -94,7 +99,7 @@ class ListTileControl extends StatelessWidget
       Function()? onLongPress = onLongPressDefined && !disabled
           ? () {
               debugPrint("Button ${control.id} clicked!");
-              sendControlEvent(context, control.id, "long_press", "");
+              backend.triggerControlEvent(control.id, "long_press", "");
             }
           : null;
 
@@ -112,16 +117,20 @@ class ListTileControl extends StatelessWidget
         splashColor: HexColor.fromString(
             Theme.of(context), control.attrString("bgcolorActivated", "")!),
         leading: leadingCtrls.isNotEmpty
-            ? createControl(control, leadingCtrls.first.id, disabled)
+            ? createControl(control, leadingCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
             : null,
         title: titleCtrls.isNotEmpty
-            ? createControl(control, titleCtrls.first.id, disabled)
+            ? createControl(control, titleCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
             : null,
         subtitle: subtitleCtrls.isNotEmpty
-            ? createControl(control, subtitleCtrls.first.id, disabled)
+            ? createControl(control, subtitleCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
             : null,
         trailing: trailingCtrls.isNotEmpty
-            ? createControl(control, trailingCtrls.first.id, disabled)
+            ? createControl(control, trailingCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
             : null,
       );
 

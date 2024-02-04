@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import 'create_control.dart';
-import 'flet_control_stateful_mixin.dart';
 
 class MenuItemButtonControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const MenuItemButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<MenuItemButtonControl> createState() => _MenuItemButtonControlState();
 }
 
-class _MenuItemButtonControlState extends State<MenuItemButtonControl>
-    with FletControlStatefulMixin {
+class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -42,7 +45,7 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl>
   }
 
   void _onFocusChange() {
-    sendControlEvent(
+    widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
@@ -89,27 +92,32 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl>
       requestFocusOnHover: widget.control.attrBool("focusOnHover", true)!,
       onHover: onHover && !disabled
           ? (bool value) {
-              sendControlEvent(widget.control.id, "hover", "$value");
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "hover", "$value");
             }
           : null,
       onPressed: onClick && !disabled
           ? () {
-              sendControlEvent(widget.control.id, "click", "");
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "click", "");
             }
           : null,
       leadingIcon: leading.isNotEmpty
           ? leading
-              .map((c) => createControl(widget.control, c.id, disabled))
+              .map((c) => createControl(widget.control, c.id, disabled,
+                  parentAdaptive: widget.parentAdaptive))
               .first
           : null,
       trailingIcon: trailing.isNotEmpty
           ? trailing
-              .map((c) => createControl(widget.control, c.id, disabled))
+              .map((c) => createControl(widget.control, c.id, disabled,
+                  parentAdaptive: widget.parentAdaptive))
               .first
           : null,
       child: content.isNotEmpty
           ? content
-              .map((c) => createControl(widget.control, c.id, disabled))
+              .map((c) => createControl(widget.control, c.id, disabled,
+                  parentAdaptive: widget.parentAdaptive))
               .first
           : null,
     );
