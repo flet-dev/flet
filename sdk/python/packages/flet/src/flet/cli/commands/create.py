@@ -74,7 +74,7 @@ class Command(BaseCommand):
             extra_context=template_data,
         )
 
-        print("[spring_green3]Done.[/spring_green3]\n")
+        print("[spring_green3]Done![/spring_green3]\n")
 
         if self.verbose > 0:
             print(f"[cyan]Files created at[/cyan] {out_dir}:\n")
