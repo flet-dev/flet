@@ -1,39 +1,44 @@
 import 'package:collection/collection.dart';
-import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
+import '../models/control.dart';
+import '../utils/alignment.dart';
+import '../utils/colors.dart';
+import '../utils/images.dart';
+import '../utils/numbers.dart';
 import '../utils/video.dart';
+import 'create_control.dart';
 
 class VideoControl extends StatefulWidget {
   final Control? parent;
   final List<Control> children;
   final Control control;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   const VideoControl(
       {super.key,
       required this.parent,
       required this.children,
       required this.control,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<VideoControl> createState() => _VideoControlState();
 }
 
-class _VideoControlState extends State<VideoControl>
-    with FletControlStatefulMixin, FletStoreMixin {
+class _VideoControlState extends State<VideoControl> {
   late final playerConfig = PlayerConfiguration(
     title: widget.control.attrString("title", "Flet Video")!,
     muted: widget.control.attrBool("muted", false)!,
     pitch: widget.control.attrDouble("pitch") != null ? true : false,
     ready: () {
       if (widget.control.attrBool("onLoaded", false)!) {
-        FletAppServices.of(context).server.sendPageEvent(
-            eventTarget: widget.control.id, eventName: "loaded", eventData: "");
+        widget.backend.triggerControlEvent(widget.control.id, "loaded", "");
       }
     },
   );
@@ -97,18 +102,14 @@ class _VideoControlState extends State<VideoControl>
           const Color(0xFF000000),
       onEnterFullscreen: widget.control.attrBool("onEnterFullscreen", false)!
           ? () async {
-              FletAppServices.of(context).server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "enter_fullscreen",
-                  eventData: "");
+              widget.backend.triggerControlEvent(
+                  widget.control.id, "enter_fullscreen", "");
             }
           : defaultEnterNativeFullscreen,
       onExitFullscreen: widget.control.attrBool("onExitFullscreen", false)!
           ? () async {
-              FletAppServices.of(context).server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "exit_fullscreen",
-                  eventData: "");
+              widget.backend.triggerControlEvent(
+                  widget.control.id, "exit_fullscreen", "");
             }
           : defaultExitNativeFullscreen,
     );
@@ -147,7 +148,6 @@ class _VideoControlState extends State<VideoControl>
         await player.setPlaylistMode(playlistMode);
       }
 
-
       if (playlist != prevPlaylist) {
         widget.control.state["playlist"] = playlist;
         // add new media
@@ -173,7 +173,8 @@ class _VideoControlState extends State<VideoControl>
         });
       }
 
-      subscribeMethods(widget.control.id, (methodName, args) async {
+      widget.backend.subscribeMethods(widget.control.id,
+          (methodName, args) async {
         switch (methodName) {
           case "play":
             debugPrint("Video.play($hashCode)");

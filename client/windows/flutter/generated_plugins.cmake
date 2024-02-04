@@ -6,8 +6,8 @@ list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
   media_kit_libs_windows_video
   media_kit_video
-  screen_brightness_windows
   record_windows
+  screen_brightness_windows
   screen_retriever
   url_launcher_windows
   window_manager

@@ -248,7 +248,8 @@ Widget createWidget(
           parent: parent,
           children: controlView.children,
           control: controlView.control,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          backend: backend);
     case "audio":
       return AudioControl(
           parent: parent,
