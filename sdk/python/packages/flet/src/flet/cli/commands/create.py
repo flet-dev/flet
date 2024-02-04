@@ -1,4 +1,5 @@
 import argparse
+import os
 from pathlib import Path
 
 import flet.version
@@ -43,6 +44,8 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
         from cookiecutter.main import cookiecutter
 
+        self.verbose = options.verbose
+
         template_data = {"template_name": options.template}
 
         template_ref = None
@@ -71,8 +74,21 @@ class Command(BaseCommand):
             extra_context=template_data,
         )
 
+        print("[spring_green3]Done![/spring_green3]\n")
+
+        if self.verbose > 0:
+            print(f"[cyan]Files created at[/cyan] {out_dir}:\n")
+            for root, dirs, files in os.walk(out_dir):
+                for file in files:
+                    rel_path = os.path.relpath(os.path.join(root, file), out_dir)
+                    print(rel_path)
+            print("")
+
         # print next steps
-        print("[spring_green3]Done.[/spring_green3] Now run:\n")
-        if options.output_directory != ".":
-            print(f"[cyan]cd[/cyan] [white]{out_dir.name}[/white]")
-        print("[cyan]flet run[/cyan]\n")
+        print("[cyan]Run the app:[/cyan]\n")
+        app_dir = (
+            os.path.relpath(out_dir, os.getcwd())
+            if options.output_directory != "."
+            else ""
+        )
+        print(f"flet run {app_dir}\n")

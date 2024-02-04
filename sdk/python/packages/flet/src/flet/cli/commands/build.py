@@ -45,7 +45,7 @@ class Command(BaseCommand):
             "macos": {
                 "build_command": "macos",
                 "status_text": "macOS bundle",
-                "output": "build/macos/Build/Products/Release/{project_name}.app",
+                "output": "build/macos/Build/Products/Release/{product_name}.app",
                 "dist": "macos",
                 "can_be_run_on": ["Darwin"],
             },
@@ -319,6 +319,8 @@ class Command(BaseCommand):
             options.project_name if options.project_name else python_app_path.name
         ).replace("-", "_")
 
+        product_name = options.product_name if options.product_name else project_name
+
         template_data["project_name"] = project_name
 
         if options.description is not None:
@@ -326,8 +328,7 @@ class Command(BaseCommand):
 
         template_data["sep"] = os.sep
         template_data["python_module_name"] = python_module_name
-        if options.product_name:
-            template_data["product_name"] = options.product_name
+        template_data["product_name"] = product_name
         if options.org_name:
             template_data["org_name"] = options.org_name
         if options.company_name:
@@ -714,6 +715,7 @@ class Command(BaseCommand):
             str(self.flutter_dir.joinpath(self.platforms[target_platform]["output"]))
             .replace("{arch}", arch)
             .replace("{project_name}", project_name)
+            .replace("{product_name}", product_name)
         )
         build_output_glob = os.path.basename(build_output_dir)
         build_output_dir = os.path.dirname(build_output_dir)
