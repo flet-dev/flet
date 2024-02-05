@@ -1,6 +1,7 @@
 from typing import Any, Optional, Union
 
 from flet_core import OutlinedBorder
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -14,7 +15,7 @@ from flet_core.types import (
 )
 
 
-class Card(ConstrainedControl):
+class Card(ConstrainedControl, AdaptiveControl):
     """
     A material design card: a panel with slightly rounded corners and an elevation shadow.
 
@@ -95,6 +96,10 @@ class Card(ConstrainedControl):
         shadow_color: Optional[str] = None,
         surface_tint_color: Optional[str] = None,
         shape: Optional[OutlinedBorder] = None,
+        #
+        # Adaptive
+        #
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -125,6 +130,8 @@ class Card(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.content = content
         self.margin = margin

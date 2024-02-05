@@ -13,6 +13,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    VerticalAlignment,
 )
 
 try:
@@ -63,6 +64,7 @@ class FormFieldControl(ConstrainedControl):
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
+        text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
@@ -128,6 +130,7 @@ class FormFieldControl(ConstrainedControl):
 
         self.text_size = text_size
         self.text_style = text_style
+        self.text_vertical_align = text_vertical_align
         self.label = label
         self.label_style = label_style
         self.icon = icon
@@ -289,6 +292,18 @@ class FormFieldControl(ConstrainedControl):
     @border_color.setter
     def border_color(self, value):
         self._set_attr("borderColor", value)
+
+    # text_vertical_align
+    @property
+    def text_vertical_align(self) -> Union[VerticalAlignment, OptionalNumber]:
+        return self._get_attr("textVerticalAlign")
+
+    @text_vertical_align.setter
+    def text_vertical_align(self, value: Union[VerticalAlignment, OptionalNumber]):
+        v = value.value if isinstance(value, VerticalAlignment) else value
+        if v is not None:
+            v = max(-1.0, min(v, 1.0))  # make sure 0.0 <= value <= 1.0
+        self._set_attr("textVerticalAlign", v)
 
     # focused_color
     @property

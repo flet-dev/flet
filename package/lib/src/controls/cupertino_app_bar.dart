@@ -12,6 +12,7 @@ class CupertinoAppBarControl extends StatelessWidget
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final List<Control> children;
   final Color? bgcolor;
 
@@ -21,6 +22,7 @@ class CupertinoAppBarControl extends StatelessWidget
       required this.control,
       required this.children,
       required this.parentDisabled,
+      required this.parentAdaptive,
       required this.bgcolor});
 
   @override
@@ -29,9 +31,14 @@ class CupertinoAppBarControl extends StatelessWidget
 
     var leadingCtrls =
         children.where((c) => c.name == "leading" && c.isVisible);
-    var middleCtrls = children.where((c) => c.name == "middle" && c.isVisible);
-    var trailingCtrls =
-        children.where((c) => c.name == "trailing" && c.isVisible);
+
+    // if the material AppBar was used with adaptive=True, AppBar.title will be used as middle control
+    var middleCtrls = children
+        .where((c) => (c.name == "middle" || c.name == "title") && c.isVisible);
+
+    // if the material AppBar was used with adaptive=True, AppBar.actions[0] will be used as trailing control
+    var trailingCtrls = children.where(
+        (c) => (c.name == "trailing" || c.name == "action") && c.isVisible);
 
     var automaticallyImplyLeading =
         control.attrBool("automaticallyImplyLeading", true)!;
@@ -44,7 +51,8 @@ class CupertinoAppBarControl extends StatelessWidget
 
     return CupertinoNavigationBar(
       leading: leadingCtrls.isNotEmpty
-          ? createControl(control, leadingCtrls.first.id, control.isDisabled)
+          ? createControl(control, leadingCtrls.first.id, control.isDisabled,
+              parentAdaptive: parentAdaptive)
           : null,
       automaticallyImplyLeading: automaticallyImplyLeading,
       automaticallyImplyMiddle: automaticallyImplyMiddle,
@@ -53,10 +61,12 @@ class CupertinoAppBarControl extends StatelessWidget
       previousPageTitle: control.attrString("previousPageTitle"),
       padding: parseEdgeInsetsDirectional(control, "padding"),
       middle: middleCtrls.isNotEmpty
-          ? createControl(control, middleCtrls.first.id, control.isDisabled)
+          ? createControl(control, middleCtrls.first.id, control.isDisabled,
+              parentAdaptive: parentAdaptive)
           : null,
       trailing: trailingCtrls.isNotEmpty
-          ? createControl(control, trailingCtrls.first.id, control.isDisabled)
+          ? createControl(control, trailingCtrls.first.id, control.isDisabled,
+              parentAdaptive: parentAdaptive)
           : null,
       backgroundColor: bgcolor,
     );

@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
-import '../models/canvas_view_model.dart';
 import '../models/control.dart';
 import '../models/control_tree_view_model.dart';
 import '../utils/alignment.dart';
@@ -20,6 +21,33 @@ import '../utils/text.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
 
+class CanvasViewModel extends Equatable {
+  final Control control;
+  final Control? child;
+  final List<ControlTreeViewModel> shapes;
+
+  const CanvasViewModel(
+      {required this.control, required this.child, required this.shapes});
+
+  static CanvasViewModel fromStore(
+      Store<AppState> store, Control control, List<Control> children) {
+    return CanvasViewModel(
+        control: control,
+        child: store.state.controls[control.id]!.childIds
+            .map((childId) => store.state.controls[childId])
+            .whereNotNull()
+            .where((c) => c.name == "content" && c.isVisible)
+            .firstOrNull,
+        shapes: children
+            .where((c) => c.name != "content" && c.isVisible)
+            .map((c) => ControlTreeViewModel.fromStore(store, c))
+            .toList());
+  }
+
+  @override
+  List<Object?> get props => [control, shapes];
+}
+
 typedef CanvasControlOnPaintCallback = void Function(Size size);
 
 class CanvasControl extends StatefulWidget {
@@ -27,13 +55,17 @@ class CanvasControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const CanvasControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<CanvasControl> createState() => _CanvasControlState();
@@ -71,18 +103,18 @@ class _CanvasControlState extends State<CanvasControl> {
                       _lastSize == null) {
                     _lastResize = now;
                     _lastSize = size;
-                    FletAppServices.of(context).server.sendPageEvent(
-                        eventTarget: viewModel.control.id,
-                        eventName: "resize",
-                        eventData:
-                            json.encode({"w": size.width, "h": size.height}));
+                    widget.backend.triggerControlEvent(
+                        viewModel.control.id,
+                        "resize",
+                        json.encode({"w": size.width, "h": size.height}));
                   }
                 }
               },
             ),
             child: viewModel.child != null
                 ? createControl(viewModel.control, viewModel.child!.id,
-                    viewModel.control.isDisabled)
+                    viewModel.control.isDisabled,
+                    parentAdaptive: widget.parentAdaptive)
                 : null,
           );
 

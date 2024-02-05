@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
@@ -14,13 +14,17 @@ class IconButtonControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const IconButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<IconButtonControl> createState() => _IconButtonControlState();
@@ -45,19 +49,17 @@ class _IconButtonControlState extends State<IconButtonControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    widget.backend.triggerControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Button build: ${widget.control.id}");
 
-    IconData? icon = getMaterialIcon(widget.control.attrString("icon", "")!);
+    IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
     IconData? selectedIcon =
-        getMaterialIcon(widget.control.attrString("selectedIcon", "")!);
+        parseIcon(widget.control.attrString("selectedIcon", "")!);
     Color? iconColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("iconColor", "")!);
     Color? selectedIconColor = HexColor.fromString(
@@ -80,10 +82,7 @@ class _IconButtonControlState extends State<IconButtonControl> {
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            FletAppServices.of(context).server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "click",
-                eventData: "");
+            widget.backend.triggerControlEvent(widget.control.id, "click", "");
           };
 
     Widget? button;
@@ -131,7 +130,8 @@ class _IconButtonControlState extends State<IconButtonControl> {
           selectedIcon: selectedIcon != null
               ? Icon(selectedIcon, color: selectedIconColor)
               : null,
-          icon: createControl(widget.control, contentCtrls.first.id, disabled));
+          icon: createControl(widget.control, contentCtrls.first.id, disabled,
+              parentAdaptive: widget.parentAdaptive));
     } else {
       return const ErrorControl(
           "Icon button does not have an icon neither content specified.");

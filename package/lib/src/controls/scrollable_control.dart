@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
 import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/animations.dart';
 import '../utils/desktop.dart';
 import '../utils/numbers.dart';
@@ -19,7 +18,7 @@ class ScrollableControl extends StatefulWidget {
   final Widget child;
   final Axis scrollDirection;
   final ScrollController? scrollController;
-  final dynamic dispatch;
+  final FletControlBackend backend;
 
   const ScrollableControl(
       {super.key,
@@ -27,7 +26,7 @@ class ScrollableControl extends StatefulWidget {
       required this.child,
       required this.scrollDirection,
       this.scrollController,
-      required this.dispatch});
+      required this.backend});
 
   @override
   State<ScrollableControl> createState() => _ScrollableControlState();
@@ -88,13 +87,7 @@ class _ScrollableControlState extends State<ScrollableControl> {
     } else if (method != null && method != _method) {
       _method = method;
       debugPrint("ScrollableControl JSON method: $method");
-
-      List<Map<String, String>> props = [
-        {"i": widget.control.id, "method": ""}
-      ];
-      widget.dispatch(
-          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      FletAppServices.of(context).server.updateControlProps(props: props);
+      widget.backend.updateControlState(widget.control.id, {"method": ""});
 
       var mj = json.decode(method);
       var name = mj["n"] as String;

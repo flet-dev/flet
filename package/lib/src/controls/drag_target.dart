@@ -2,24 +2,45 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../protocol/drag_target_accept_event.dart';
 import 'create_control.dart';
 import 'error.dart';
+
+class DragTargetAcceptEvent {
+  final String srcId;
+  final double x;
+  final double y;
+
+  DragTargetAcceptEvent({
+    required this.srcId,
+    required this.x,
+    required this.y,
+  });
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'src_id': srcId,
+        'x': x,
+        'y': y,
+      };
+}
 
 class DragTargetControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const DragTargetControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +52,13 @@ class DragTargetControl extends StatelessWidget {
     bool disabled = control.isDisabled || parentDisabled;
 
     Widget? child = contentCtrls.isNotEmpty
-        ? createControl(control, contentCtrls.first.id, disabled)
+        ? createControl(control, contentCtrls.first.id, disabled,
+            parentAdaptive: parentAdaptive)
         : null;
 
     if (child == null) {
       return const ErrorControl("DragTarget should have content.");
     }
-
-    final server = FletAppServices.of(context).server;
 
     return DragTarget<String>(
       builder: (
@@ -58,10 +78,8 @@ class DragTargetControl extends StatelessWidget {
           srcGroup = jd["group"] as String;
         }
         var groupsEqual = srcGroup == group;
-        server.sendPageEvent(
-            eventTarget: control.id,
-            eventName: "will_accept",
-            eventData: groupsEqual.toString());
+        backend.triggerControlEvent(
+            control.id, "will_accept", groupsEqual.toString());
         return groupsEqual;
       },
       onAcceptWithDetails: (details) {
@@ -69,10 +87,10 @@ class DragTargetControl extends StatelessWidget {
         debugPrint("DragTarget.onAcceptWithDetails ${control.id}: $data");
         var jd = json.decode(data);
         var srcId = jd["id"] as String;
-        server.sendPageEvent(
-            eventTarget: control.id,
-            eventName: "accept",
-            eventData: json.encode(DragTargetAcceptEvent(
+        backend.triggerControlEvent(
+            control.id,
+            "accept",
+            json.encode(DragTargetAcceptEvent(
                     srcId: srcId, x: details.offset.dx, y: details.offset.dy)
                 .toJson()));
       },
@@ -83,8 +101,7 @@ class DragTargetControl extends StatelessWidget {
           var jd = json.decode(data);
           srcId = jd["id"] as String;
         }
-        server.sendPageEvent(
-            eventTarget: control.id, eventName: "leave", eventData: srcId);
+        backend.triggerControlEvent(control.id, "leave", srcId);
       },
     );
   }

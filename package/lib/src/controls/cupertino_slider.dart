@@ -1,26 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../actions.dart';
-import '../flet_app_services.dart';
+
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
-import '../utils/desktop.dart';
 import '../utils/debouncer.dart';
+import '../utils/desktop.dart';
 import 'create_control.dart';
 
 class CupertinoSliderControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
-  final dynamic dispatch;
+  final FletControlBackend backend;
 
   const CupertinoSliderControl(
       {super.key,
       this.parent,
       required this.control,
       required this.parentDisabled,
-      required this.dispatch});
+      required this.backend});
 
   @override
   State<CupertinoSliderControl> createState() => _CupertinoSliderControlState();
@@ -39,21 +38,12 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
   void onChange(double value) {
     var svalue = value.toString();
     debugPrint(svalue);
-    setState(() {
-      _value = value;
-    });
-
-    List<Map<String, String>> props = [
-      {"i": widget.control.id, "value": svalue}
-    ];
-    widget.dispatch(
-        UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-
+    _value = value;
+    var props = {"value": svalue};
+    widget.backend.updateControlState(widget.control.id, props, server: false);
     _debouncer.run(() {
-      final server = FletAppServices.of(context).server;
-      server.updateControlProps(props: props);
-      server.sendPageEvent(
-          eventTarget: widget.control.id, eventName: "change", eventData: '');
+      widget.backend.updateControlState(widget.control.id, props);
+      widget.backend.triggerControlEvent(widget.control.id, "change", '');
     });
   }
 
@@ -67,10 +57,7 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
     double max = widget.control.attrDouble("max", 1)!;
     int? divisions = widget.control.attrInt("divisions");
 
-    final server = FletAppServices.of(context).server;
-
-    debugPrint(
-        "CupertinoSliderControl StoreConnector build: ${widget.control.id}");
+    debugPrint("CupertinoSliderControl build: ${widget.control.id}");
 
     double value = widget.control.attrDouble("value", 0)!;
     if (_value != value) {
@@ -101,18 +88,14 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
             : null,
         onChangeStart: !disabled
             ? (double value) {
-                server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "change_start",
-                    eventData: value.toString());
+                widget.backend.triggerControlEvent(
+                    widget.control.id, "change_start", value.toString());
               }
             : null,
         onChangeEnd: !disabled
             ? (double value) {
-                server.sendPageEvent(
-                    eventTarget: widget.control.id,
-                    eventName: "change_end",
-                    eventData: value.toString());
+                widget.backend.triggerControlEvent(
+                    widget.control.id, "change_end", value.toString());
               }
             : null);
 

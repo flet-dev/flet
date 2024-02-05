@@ -103,6 +103,7 @@ class FletTcpSocketServerProtocol implements FletServerProtocol {
       onError: (error) {
         debugPrint("Error: $error");
         _socket?.destroy();
+        onDisconnect();
       },
 
       // handle server ending connection

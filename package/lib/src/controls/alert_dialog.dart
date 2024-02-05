@@ -1,25 +1,23 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
-import '../models/app_state.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'cupertino_alert_dialog.dart';
 import 'error.dart';
+import 'flet_store_mixin.dart';
 
 class AlertDialogControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
   const AlertDialogControl(
       {super.key,
@@ -27,15 +25,20 @@ class AlertDialogControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.nextChild});
+      required this.parentAdaptive,
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<AlertDialogControl> createState() => _AlertDialogControlState();
 }
 
-class _AlertDialogControlState extends State<AlertDialogControl> {
+class _AlertDialogControlState extends State<AlertDialogControl>
+    with FletStoreMixin {
   Widget _createAlertDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool? adaptive =
+        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
     var titleCtrls =
         widget.children.where((c) => c.name == "title" && c.isVisible);
     var contentCtrls =
@@ -50,16 +53,19 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
 
     return AlertDialog(
       title: titleCtrls.isNotEmpty
-          ? createControl(widget.control, titleCtrls.first.id, disabled)
+          ? createControl(widget.control, titleCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
       titlePadding: parseEdgeInsets(widget.control, "titlePadding"),
       content: contentCtrls.isNotEmpty
-          ? createControl(widget.control, contentCtrls.first.id, disabled)
+          ? createControl(widget.control, contentCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
       contentPadding: parseEdgeInsets(widget.control, "contentPadding") ??
           const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
       actions: actionCtrls
-          .map((c) => createControl(widget.control, c.id, disabled))
+          .map((c) => createControl(widget.control, c.id, disabled,
+              parentAdaptive: adaptive))
           .toList(),
       actionsPadding: parseEdgeInsets(widget.control, "actionsPadding"),
       actionsAlignment: actionsAlignment,
@@ -73,77 +79,68 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
   Widget build(BuildContext context) {
     debugPrint("AlertDialog build ($hashCode): ${widget.control.id}");
 
-    bool adaptive = widget.control.attrBool("adaptive", false)!;
-    if (adaptive &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)) {
-      return CupertinoAlertDialogControl(
-        control: widget.control,
-        parentDisabled: widget.parentDisabled,
-        children: widget.children,
-        nextChild: widget.nextChild,
-      );
-    }
+    return withPagePlatform((context, platform) {
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
+          (platform == TargetPlatform.iOS ||
+              platform == TargetPlatform.macOS)) {
+        return CupertinoAlertDialogControl(
+            control: widget.control,
+            parentDisabled: widget.parentDisabled,
+            children: widget.children,
+            nextChild: widget.nextChild,
+            parentAdaptive: adaptive,
+            backend: widget.backend);
+      }
 
-    var server = FletAppServices.of(context).server;
+      bool lastOpen = widget.control.state["open"] ?? false;
 
-    bool lastOpen = widget.control.state["open"] ?? false;
+      debugPrint("AlertDialog build: ${widget.control.id}");
 
-    return StoreConnector<AppState, Function>(
-        distinct: true,
-        converter: (store) => store.dispatch,
-        builder: (context, dispatch) {
-          debugPrint("AlertDialog StoreConnector build: ${widget.control.id}");
+      var open = widget.control.attrBool("open", false)!;
+      var modal = widget.control.attrBool("modal", false)!;
 
-          var open = widget.control.attrBool("open", false)!;
-          var modal = widget.control.attrBool("modal", false)!;
+      debugPrint("Current open state: $lastOpen");
+      debugPrint("New open state: $open");
 
-          debugPrint("Current open state: $lastOpen");
-          debugPrint("New open state: $open");
+      if (open && (open != lastOpen)) {
+        var dialog = _createAlertDialog();
+        if (dialog is ErrorControl) {
+          return dialog;
+        }
 
-          if (open && (open != lastOpen)) {
-            var dialog = _createAlertDialog();
-            if (dialog is ErrorControl) {
-              return dialog;
+        // close previous dialog
+        if (ModalRoute.of(context)?.isCurrent != true) {
+          Navigator.of(context).pop();
+        }
+
+        widget.control.state["open"] = open;
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showDialog(
+              barrierDismissible: !modal,
+              useRootNavigator: false,
+              context: context,
+              builder: (context) => _createAlertDialog()).then((value) {
+            lastOpen = widget.control.state["open"] ?? false;
+            debugPrint("Dialog should be dismissed ($hashCode): $lastOpen");
+            bool shouldDismiss = lastOpen;
+            widget.control.state["open"] = false;
+
+            if (shouldDismiss) {
+              widget.backend
+                  .updateControlState(widget.control.id, {"open": "false"});
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "dismiss", "");
             }
-
-            // close previous dialog
-            if (ModalRoute.of(context)?.isCurrent != true) {
-              Navigator.of(context).pop();
-            }
-
-            widget.control.state["open"] = open;
-
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              showDialog(
-                  barrierDismissible: !modal,
-                  useRootNavigator: false,
-                  context: context,
-                  builder: (context) => _createAlertDialog()).then((value) {
-                lastOpen = widget.control.state["open"] ?? false;
-                debugPrint("Dialog should be dismissed ($hashCode): $lastOpen");
-                bool shouldDismiss = lastOpen;
-                widget.control.state["open"] = false;
-
-                if (shouldDismiss) {
-                  List<Map<String, String>> props = [
-                    {"i": widget.control.id, "open": "false"}
-                  ];
-                  dispatch(UpdateControlPropsAction(
-                      UpdateControlPropsPayload(props: props)));
-                  server.updateControlProps(props: props);
-                  server.sendPageEvent(
-                      eventTarget: widget.control.id,
-                      eventName: "dismiss",
-                      eventData: "");
-                }
-              });
-            });
-          } else if (open != lastOpen && lastOpen) {
-            Navigator.of(context).pop();
-          }
-
-          return widget.nextChild ?? const SizedBox.shrink();
+          });
         });
+      } else if (open != lastOpen && lastOpen) {
+        Navigator.of(context).pop();
+      }
+
+      return widget.nextChild ?? const SizedBox.shrink();
+    });
   }
 }

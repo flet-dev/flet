@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
+import 'cupertino_colors.dart';
+import 'material_state.dart';
 import 'numbers.dart';
 
 Color? _getThemeColor(ThemeData theme, String colorName) {
@@ -184,6 +189,12 @@ extension HexColor on Color {
       return shadedColor ?? primaryColor;
     }
 
+    // find cupertino color
+    Color? cupertinoColor = cupertinoColors[name.toLowerCase()];
+    if (cupertinoColor != null) {
+      return cupertinoColor;
+    }
+
     // accent color
     MaterialAccentColor? accentColor =
         _materialAccentColors[name.toLowerCase()];
@@ -223,4 +234,16 @@ extension ColorExtension on Color {
       (blue * value).round(),
     );
   }
+}
+
+MaterialStateProperty<Color?>? parseMaterialStateColor(
+    ThemeData theme, Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return getMaterialStateProperty<Color?>(
+      j1, (jv) => HexColor.fromString(theme, jv as String), null);
 }

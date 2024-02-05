@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import 'create_control.dart';
@@ -10,13 +10,17 @@ class MenuItemButtonControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const MenuItemButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<MenuItemButtonControl> createState() => _MenuItemButtonControlState();
@@ -41,10 +45,8 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    widget.backend.triggerControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
@@ -82,8 +84,6 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
     bool onClick = widget.control.attrBool("onClick", false)!;
     bool onHover = widget.control.attrBool("onHover", false)!;
 
-    var server = FletAppServices.of(context).server;
-
     var menuItem = MenuItemButton(
       focusNode: _focusNode,
       clipBehavior: clipBehavior,
@@ -92,33 +92,32 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
       requestFocusOnHover: widget.control.attrBool("focusOnHover", true)!,
       onHover: onHover && !disabled
           ? (bool value) {
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "hover",
-                  eventData: "$value");
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "hover", "$value");
             }
           : null,
       onPressed: onClick && !disabled
           ? () {
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "click",
-                  eventData: "");
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "click", "");
             }
           : null,
       leadingIcon: leading.isNotEmpty
           ? leading
-              .map((c) => createControl(widget.control, c.id, disabled))
+              .map((c) => createControl(widget.control, c.id, disabled,
+                  parentAdaptive: widget.parentAdaptive))
               .first
           : null,
       trailingIcon: trailing.isNotEmpty
           ? trailing
-              .map((c) => createControl(widget.control, c.id, disabled))
+              .map((c) => createControl(widget.control, c.id, disabled,
+                  parentAdaptive: widget.parentAdaptive))
               .first
           : null,
       child: content.isNotEmpty
           ? content
-              .map((c) => createControl(widget.control, c.id, disabled))
+              .map((c) => createControl(widget.control, c.id, disabled,
+                  parentAdaptive: widget.parentAdaptive))
               .first
           : null,
     );

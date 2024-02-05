@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import 'create_control.dart';
@@ -10,8 +11,9 @@ class ColumnControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final List<Control> children;
-  final dynamic dispatch;
+  final FletControlBackend backend;
 
   const ColumnControl(
       {super.key,
@@ -19,7 +21,8 @@ class ColumnControl extends StatelessWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +34,7 @@ class ColumnControl extends StatelessWidget {
     bool tight = control.attrBool("tight", false)!;
     bool wrap = control.attrBool("wrap", false)!;
     bool disabled = control.isDisabled || parentDisabled;
+    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
     List<Widget> controls = [];
 
@@ -48,7 +52,8 @@ class ColumnControl extends StatelessWidget {
       firstControl = false;
 
       // displayed control
-      controls.add(createControl(control, ctrl.id, disabled));
+      controls.add(
+          createControl(control, ctrl.id, disabled, parentAdaptive: adaptive));
     }
 
     Widget child = wrap
@@ -73,12 +78,13 @@ class ColumnControl extends StatelessWidget {
     child = ScrollableControl(
       control: control,
       scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
-      dispatch: dispatch,
+      backend: backend,
       child: child,
     );
 
     if (control.attrBool("onScroll", false)!) {
-      child = ScrollNotificationControl(control: control, child: child);
+      child = ScrollNotificationControl(
+          control: control, backend: backend, child: child);
     }
 
     return constrainedControl(context, child, parent, control);

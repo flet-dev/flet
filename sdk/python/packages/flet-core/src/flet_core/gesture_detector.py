@@ -2,6 +2,7 @@ import json
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
@@ -55,7 +56,7 @@ class MouseCursor(Enum):
     ZOOM_OUT = "zoomOut"
 
 
-class GestureDetector(ConstrainedControl):
+class GestureDetector(ConstrainedControl, AdaptiveControl):
     """
     A control that detects gestures.
 
@@ -170,6 +171,10 @@ class GestureDetector(ConstrainedControl):
         on_enter=None,
         on_exit=None,
         on_scroll=None,
+        #
+        # Adaptive
+        #
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -199,6 +204,8 @@ class GestureDetector(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__on_tap_down = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
         self._add_event_handler("tap_down", self.__on_tap_down.get_handler())

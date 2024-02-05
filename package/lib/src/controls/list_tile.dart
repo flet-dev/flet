@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
+import 'cupertino_list_tile.dart';
+import 'flet_store_mixin.dart';
 
 class ListTileClicks extends InheritedWidget {
   const ListTileClicks({
@@ -23,11 +26,13 @@ class ListTileClicks extends InheritedWidget {
   bool updateShouldNotify(ListTileClicks oldWidget) => true;
 }
 
-class ListTileControl extends StatelessWidget {
+class ListTileControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
   final ListTileClickNotifier _clickNotifier = ListTileClickNotifier();
 
   ListTileControl(
@@ -35,87 +40,106 @@ class ListTileControl extends StatelessWidget {
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
+    return withPagePlatform((context, platform) {
+      bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+      if (adaptive == true &&
+          (platform == TargetPlatform.iOS ||
+              platform == TargetPlatform.macOS)) {
+        return CupertinoListTileControl(
+            control: control,
+            parent: parent,
+            parentDisabled: parentDisabled,
+            parentAdaptive: adaptive,
+            children: children,
+            backend: backend);
+      }
 
-    final server = FletAppServices.of(context).server;
+      var leadingCtrls =
+          children.where((c) => c.name == "leading" && c.isVisible);
+      var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
+      var subtitleCtrls =
+          children.where((c) => c.name == "subtitle" && c.isVisible);
+      var trailingCtrls =
+          children.where((c) => c.name == "trailing" && c.isVisible);
 
-    var leadingCtrls =
-        children.where((c) => c.name == "leading" && c.isVisible);
-    var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
-    var subtitleCtrls =
-        children.where((c) => c.name == "subtitle" && c.isVisible);
-    var trailingCtrls =
-        children.where((c) => c.name == "trailing" && c.isVisible);
+      bool selected = control.attrBool("selected", false)!;
+      bool dense = control.attrBool("dense", false)!;
+      bool isThreeLine = control.attrBool("isThreeLine", false)!;
+      bool autofocus = control.attrBool("autofocus", false)!;
+      bool onclick = control.attrBool("onclick", false)!;
+      bool toggleInputs = control.attrBool("toggleInputs", false)!;
+      bool onLongPressDefined = control.attrBool("onLongPress", false)!;
+      String url = control.attrString("url", "")!;
+      String? urlTarget = control.attrString("urlTarget");
+      bool disabled = control.isDisabled || parentDisabled;
 
-    bool selected = control.attrBool("selected", false)!;
-    bool dense = control.attrBool("dense", false)!;
-    bool isThreeLine = control.attrBool("isThreeLine", false)!;
-    bool autofocus = control.attrBool("autofocus", false)!;
-    bool onclick = control.attrBool("onclick", false)!;
-    bool toggleInputs = control.attrBool("toggleInputs", false)!;
-    bool onLongPressDefined = control.attrBool("onLongPress", false)!;
-    String url = control.attrString("url", "")!;
-    String? urlTarget = control.attrString("urlTarget");
-    bool disabled = control.isDisabled || parentDisabled;
+      Function()? onPressed =
+          (onclick || toggleInputs || url != "") && !disabled
+              ? () {
+                  debugPrint("ListTile ${control.id} clicked!");
+                  if (toggleInputs) {
+                    _clickNotifier.onClick();
+                  }
+                  if (url != "") {
+                    openWebBrowser(url, webWindowName: urlTarget);
+                  }
+                  if (onclick) {
+                    backend.triggerControlEvent(control.id, "click", "");
+                  }
+                }
+              : null;
 
-    Function()? onPressed = (onclick || toggleInputs || url != "") && !disabled
-        ? () {
-            debugPrint("ListTile ${control.id} clicked!");
-            if (toggleInputs) {
-              _clickNotifier.onClick();
+      Function()? onLongPress = onLongPressDefined && !disabled
+          ? () {
+              debugPrint("Button ${control.id} clicked!");
+              backend.triggerControlEvent(control.id, "long_press", "");
             }
-            if (url != "") {
-              openWebBrowser(url, webWindowName: urlTarget);
-            }
-            if (onclick) {
-              server.sendPageEvent(
-                  eventTarget: control.id, eventName: "click", eventData: "");
-            }
-          }
-        : null;
+          : null;
 
-    Function()? onLongPress = onLongPressDefined && !disabled
-        ? () {
-            debugPrint("Button ${control.id} clicked!");
-            server.sendPageEvent(
-                eventTarget: control.id,
-                eventName: "long_press",
-                eventData: "");
-          }
-        : null;
+      Widget tile = ListTile(
+        autofocus: autofocus,
+        contentPadding: parseEdgeInsets(control, "contentPadding"),
+        isThreeLine: isThreeLine,
+        selected: selected,
+        dense: dense,
+        onTap: onPressed,
+        onLongPress: onLongPress,
+        enabled: !disabled,
+        tileColor: HexColor.fromString(
+            Theme.of(context), control.attrString("bgcolor", "")!),
+        splashColor: HexColor.fromString(
+            Theme.of(context), control.attrString("bgcolorActivated", "")!),
+        leading: leadingCtrls.isNotEmpty
+            ? createControl(control, leadingCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
+            : null,
+        title: titleCtrls.isNotEmpty
+            ? createControl(control, titleCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
+            : null,
+        subtitle: subtitleCtrls.isNotEmpty
+            ? createControl(control, subtitleCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
+            : null,
+        trailing: trailingCtrls.isNotEmpty
+            ? createControl(control, trailingCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
+            : null,
+      );
 
-    Widget tile = ListTile(
-      autofocus: autofocus,
-      contentPadding: parseEdgeInsets(control, "contentPadding"),
-      isThreeLine: isThreeLine,
-      selected: selected,
-      dense: dense,
-      onTap: onPressed,
-      onLongPress: onLongPress,
-      enabled: !disabled,
-      leading: leadingCtrls.isNotEmpty
-          ? createControl(control, leadingCtrls.first.id, disabled)
-          : null,
-      title: titleCtrls.isNotEmpty
-          ? createControl(control, titleCtrls.first.id, disabled)
-          : null,
-      subtitle: subtitleCtrls.isNotEmpty
-          ? createControl(control, subtitleCtrls.first.id, disabled)
-          : null,
-      trailing: trailingCtrls.isNotEmpty
-          ? createControl(control, trailingCtrls.first.id, disabled)
-          : null,
-    );
+      if (toggleInputs) {
+        tile = ListTileClicks(notifier: _clickNotifier, child: tile);
+      }
 
-    if (toggleInputs) {
-      tile = ListTileClicks(notifier: _clickNotifier, child: tile);
-    }
-
-    return constrainedControl(context, tile, parent, control);
+      return constrainedControl(context, tile, parent, control);
+    });
   }
 }
 

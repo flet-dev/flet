@@ -1,33 +1,93 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
-import '../models/piechart_event_data.dart';
-import '../models/piechart_section_view_model.dart';
-import '../models/piechart_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
+class PieChartEventData extends Equatable {
+  final String eventType;
+  final int? sectionIndex;
+  // final double? angle;
+  // final double? radius;
+
+  const PieChartEventData(
+      {required this.eventType, required this.sectionIndex});
+
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'type': eventType, 'section_index': sectionIndex};
+
+  @override
+  List<Object?> get props => [eventType, sectionIndex];
+}
+
+class PieChartSectionViewModel extends Equatable {
+  final Control control;
+  final Control? badge;
+
+  const PieChartSectionViewModel({required this.control, required this.badge});
+
+  static PieChartSectionViewModel fromStore(
+      Store<AppState> store, Control control) {
+    var children = store.state.controls[control.id]!.childIds
+        .map((childId) => store.state.controls[childId])
+        .whereNotNull()
+        .where((c) => c.isVisible);
+
+    return PieChartSectionViewModel(
+        control: control,
+        badge: children.firstWhereOrNull((c) => c.name == "badge"));
+  }
+
+  @override
+  List<Object?> get props => [control, badge];
+}
+
+class PieChartViewModel extends Equatable {
+  final Control control;
+  final List<PieChartSectionViewModel> sections;
+
+  const PieChartViewModel({required this.control, required this.sections});
+
+  static PieChartViewModel fromStore(
+      Store<AppState> store, Control control, List<Control> children) {
+    return PieChartViewModel(
+        control: control,
+        sections: children
+            .where((c) => c.type == "section" && c.isVisible)
+            .map((c) => PieChartSectionViewModel.fromStore(store, c))
+            .toList());
+  }
+
+  @override
+  List<Object?> get props => [control, sections];
+}
+
 class PieChartControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   const PieChartControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<PieChartControl> createState() => _PieChartControlState();
@@ -79,10 +139,8 @@ class _PieChartControlState extends State<PieChartControl> {
                           _eventData = eventData;
                           debugPrint(
                               "PieChart ${widget.control.id} ${eventData.eventType}");
-                          FletAppServices.of(context).server.sendPageEvent(
-                              eventTarget: widget.control.id,
-                              eventName: "chart_event",
-                              eventData: json.encode(eventData));
+                          widget.backend.triggerControlEvent(widget.control.id,
+                              "chart_event", json.encode(eventData));
                         }
                       }
                     : null,

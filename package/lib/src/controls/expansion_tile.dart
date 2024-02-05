@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
@@ -14,19 +14,21 @@ class ExpansionTileControl extends StatelessWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const ExpansionTileControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("ExpansionTile build: ${control.id}");
-
-    final server = FletAppServices.of(context).server;
 
     var ctrls = children.where((c) => c.name == "controls" && c.isVisible);
     var leadingCtrls =
@@ -42,6 +44,7 @@ class ExpansionTileControl extends StatelessWidget {
     }
 
     bool disabled = control.isDisabled || parentDisabled;
+    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
     bool onchange = control.attrBool("onchange", false)!;
     bool maintainState = control.attrBool("maintainState", false)!;
     bool initiallyExpanded = control.attrBool("maintainState", false)!;
@@ -77,17 +80,14 @@ class ExpansionTileControl extends StatelessWidget {
       return const ErrorControl(
           'CrossAxisAlignment.baseline is not supported since the expanded '
           'controls are aligned in a column, not a row. '
-              'Try aligning the controls differently.');
+          'Try aligning the controls differently.');
     }
 
     Function(bool)? onChange = (onchange) && !disabled
         ? (expanded) {
             debugPrint(
                 "ExpansionTile ${control.id} was ${expanded ? "expanded" : "collapsed"}");
-            server.sendPageEvent(
-                eventTarget: control.id,
-                eventName: "change",
-                eventData: "$expanded");
+            backend.triggerControlEvent(control.id, "change", "$expanded");
           }
         : null;
 
@@ -111,17 +111,24 @@ class ExpansionTileControl extends StatelessWidget {
       collapsedShape: parseOutlinedBorder(control, "collapsedShape"),
       onExpansionChanged: onChange,
       leading: leadingCtrls.isNotEmpty
-          ? createControl(control, leadingCtrls.first.id, disabled)
+          ? createControl(control, leadingCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
-      title: createControl(control, titleCtrls.first.id, disabled),
+      title: createControl(control, titleCtrls.first.id, disabled,
+          parentAdaptive: adaptive),
       subtitle: subtitleCtrls.isNotEmpty
-          ? createControl(control, subtitleCtrls.first.id, disabled)
+          ? createControl(control, subtitleCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
       trailing: trailingCtrls.isNotEmpty
-          ? createControl(control, trailingCtrls.first.id, disabled)
+          ? createControl(control, trailingCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
       children: ctrls.isNotEmpty
-          ? ctrls.map((c) => createControl(control, c.id, disabled)).toList()
+          ? ctrls
+              .map((c) => createControl(control, c.id, disabled,
+                  parentAdaptive: adaptive))
+              .toList()
           : [],
     );
 

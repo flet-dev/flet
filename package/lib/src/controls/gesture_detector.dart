@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/mouse.dart';
 import 'create_control.dart';
@@ -15,13 +15,17 @@ class GestureDetectorControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const GestureDetectorControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<GestureDetectorControl> createState() => _GestureDetectorControlState();
@@ -61,8 +65,6 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
         widget.children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    var server = FletAppServices.of(context).server;
-
     void sendEvent(String eventName, dynamic eventData) {
       var d = "";
       if (eventData is String) {
@@ -72,8 +74,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       }
 
       debugPrint("GestureDetector ${widget.control.id} $eventName");
-      server.sendPageEvent(
-          eventTarget: widget.control.id, eventName: eventName, eventData: d);
+      widget.backend.triggerControlEvent(widget.control.id, eventName, d);
     }
 
     var onHover = widget.control.attrBool("onHover", false)!;
@@ -118,7 +119,9 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     var onScroll = widget.control.attrBool("onScroll", false)!;
 
     var content = contentCtrls.isNotEmpty
-        ? createControl(widget.control, contentCtrls.first.id, disabled)
+        ? createControl(widget.control, contentCtrls.first.id, disabled,
+            parentAdaptive:
+                widget.control.attrBool("adaptive") ?? widget.parentAdaptive)
         : null;
 
     Widget? result = content;

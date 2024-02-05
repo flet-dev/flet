@@ -1,9 +1,10 @@
 import dataclasses
-from dataclasses import field
 import time
+from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
@@ -17,7 +18,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
-    TextAlignString,
+    VerticalAlignment,
 )
 
 try:
@@ -71,16 +72,18 @@ class InputFilter:
     allow: bool = field(default=True)
     replacement_string: str = field(default="")
 
+
 class NumbersOnlyInputFilter(InputFilter):
     def __init__(self):
         super().__init__(r"[0-9]")
+
 
 class TextOnlyInputFilter(InputFilter):
     def __init__(self):
         super().__init__(r"[a-zA-Z]")
 
 
-class TextField(FormFieldControl):
+class TextField(FormFieldControl, AdaptiveControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an onscreen keyboard.
 
@@ -139,6 +142,7 @@ class TextField(FormFieldControl):
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
+        text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
@@ -175,7 +179,9 @@ class TextField(FormFieldControl):
         # TextField Specific
         #
         value: Optional[str] = None,
+        adaptive: Optional[bool] = None,
         keyboard_type: Optional[KeyboardType] = None,
+        rtl: Optional[bool] = None,
         multiline: Optional[bool] = None,
         min_lines: Optional[int] = None,
         max_lines: Optional[int] = None,
@@ -191,6 +197,7 @@ class TextField(FormFieldControl):
         enable_suggestions: Optional[bool] = None,
         smart_dashes_type: Optional[bool] = None,
         smart_quotes_type: Optional[bool] = None,
+        show_cursor: Optional[bool] = None,
         cursor_color: Optional[str] = None,
         cursor_width: OptionalNumber = None,
         cursor_height: OptionalNumber = None,
@@ -231,6 +238,7 @@ class TextField(FormFieldControl):
             #
             text_size=text_size,
             text_style=text_style,
+            text_vertical_align=text_vertical_align,
             label=label,
             label_style=label_style,
             icon=icon,
@@ -264,10 +272,14 @@ class TextField(FormFieldControl):
             suffix_text=suffix_text,
             suffix_style=suffix_style,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.value = value
         self.text_style = text_style
         self.keyboard_type = keyboard_type
         self.text_align = text_align
+        self.rtl = rtl
         self.multiline = multiline
         self.min_lines = min_lines
         self.max_lines = max_lines
@@ -279,6 +291,7 @@ class TextField(FormFieldControl):
         self.autofocus = autofocus
         self.capitalization = capitalization
         self.autocorrect = autocorrect
+        self.show_cursor = show_cursor
         self.enable_suggestions = enable_suggestions
         self.smart_dashes_type = smart_dashes_type
         self.smart_quotes_type = smart_quotes_type
@@ -343,13 +356,18 @@ class TextField(FormFieldControl):
     @text_align.setter
     def text_align(self, value: TextAlign):
         self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
+        self._set_attr(
+            "textAlign", value.value if isinstance(value, TextAlign) else value
+        )
 
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
+    # rtl
+    @property
+    def rtl(self) -> Optional[bool]:
+        return self._get_attr("rtl", data_type="bool", def_value=False)
+
+    @rtl.setter
+    def rtl(self, value: Optional[bool]):
+        self._set_attr("rtl", value)
 
     # multiline
     @property
@@ -456,6 +474,15 @@ class TextField(FormFieldControl):
     @autocorrect.setter
     def autocorrect(self, value: Optional[bool]):
         self._set_attr("autocorrect", value)
+
+    # show_cursor
+    @property
+    def show_cursor(self) -> Optional[bool]:
+        return self._get_attr("showCursor", data_type="bool", def_value=True)
+
+    @show_cursor.setter
+    def show_cursor(self, value: Optional[bool]):
+        self._set_attr("showCursor", value)
 
     # enable_suggestions
     @property

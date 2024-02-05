@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_server.dart';
 import '../models/control.dart';
 import '../models/control_tree_view_model.dart';
 import '../utils/drawing.dart';
@@ -79,16 +78,22 @@ FontWeight? getFontWeight(String weightName) {
   return null;
 }
 
-List<InlineSpan> parseTextSpans(ThemeData theme, ControlTreeViewModel viewModel,
-    bool parentDisabled, FletServer? server) {
+List<InlineSpan> parseTextSpans(
+    ThemeData theme,
+    ControlTreeViewModel viewModel,
+    bool parentDisabled,
+    void Function(String, String, String)? sendControlEvent) {
   return viewModel.children
-      .map((c) => parseInlineSpan(theme, c, parentDisabled, server))
+      .map((c) => parseInlineSpan(theme, c, parentDisabled, sendControlEvent))
       .whereNotNull()
       .toList();
 }
 
-InlineSpan? parseInlineSpan(ThemeData theme, ControlTreeViewModel spanViewModel,
-    bool parentDisabled, FletServer? server) {
+InlineSpan? parseInlineSpan(
+    ThemeData theme,
+    ControlTreeViewModel spanViewModel,
+    bool parentDisabled,
+    void Function(String, String, String)? sendControlEvent) {
   if (spanViewModel.control.type == "textspan") {
     bool disabled = spanViewModel.control.isDisabled || parentDisabled;
     var onClick = spanViewModel.control.attrBool("onClick", false)!;
@@ -97,45 +102,38 @@ InlineSpan? parseInlineSpan(ThemeData theme, ControlTreeViewModel spanViewModel,
     return TextSpan(
       text: spanViewModel.control.attrString("text"),
       style: parseTextStyle(theme, spanViewModel.control, "style"),
-      children: parseTextSpans(theme, spanViewModel, parentDisabled, server),
-      mouseCursor: onClick && !disabled && server != null
+      children: parseTextSpans(
+          theme, spanViewModel, parentDisabled, sendControlEvent),
+      mouseCursor: onClick && !disabled && sendControlEvent != null
           ? SystemMouseCursors.click
           : null,
-      recognizer: (onClick || url != "") && !disabled && server != null
-          ? (TapGestureRecognizer()
-            ..onTap = () {
-              debugPrint("TextSpan ${spanViewModel.control.id} clicked!");
-              if (url != "") {
-                openWebBrowser(url, webWindowName: urlTarget);
-              }
-              if (onClick) {
-                server.sendPageEvent(
-                    eventTarget: spanViewModel.control.id,
-                    eventName: "click",
-                    eventData: "");
-              }
-            })
-          : null,
+      recognizer:
+          (onClick || url != "") && !disabled && sendControlEvent != null
+              ? (TapGestureRecognizer()
+                ..onTap = () {
+                  debugPrint("TextSpan ${spanViewModel.control.id} clicked!");
+                  if (url != "") {
+                    openWebBrowser(url, webWindowName: urlTarget);
+                  }
+                  if (onClick) {
+                    sendControlEvent(spanViewModel.control.id, "click", "");
+                  }
+                })
+              : null,
       onEnter: spanViewModel.control.attrBool("onEnter", false)! &&
               !disabled &&
-              server != null
+              sendControlEvent != null
           ? (event) {
               debugPrint("TextSpan ${spanViewModel.control.id} entered!");
-              server.sendPageEvent(
-                  eventTarget: spanViewModel.control.id,
-                  eventName: "enter",
-                  eventData: "");
+              sendControlEvent(spanViewModel.control.id, "enter", "");
             }
           : null,
       onExit: spanViewModel.control.attrBool("onExit", false)! &&
               !disabled &&
-              server != null
+              sendControlEvent != null
           ? (event) {
               debugPrint("TextSpan ${spanViewModel.control.id} exited!");
-              server.sendPageEvent(
-                  eventTarget: spanViewModel.control.id,
-                  eventName: "exit",
-                  eventData: "");
+              sendControlEvent(spanViewModel.control.id, "exit", "");
             }
           : null,
     );

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/icons.dart';
 import 'form_field.dart';
 
@@ -12,16 +10,15 @@ class DatePickerControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
+  final FletControlBackend backend;
 
-  const DatePickerControl({
-    super.key,
-    this.parent,
-    required this.control,
-    required this.children,
-    required this.parentDisabled,
-    required this.dispatch,
-  });
+  const DatePickerControl(
+      {super.key,
+      this.parent,
+      required this.control,
+      required this.children,
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<DatePickerControl> createState() => _DatePickerControlState();
@@ -62,10 +59,10 @@ class _DatePickerControlState extends State<DatePickerControl> {
             orElse: () => DatePickerEntryMode.calendar);
     String? fieldHintText = widget.control.attrString("fieldHintText");
     String? fieldLabelText = widget.control.attrString("fieldLabelText");
-    IconData? switchToCalendarEntryModeIcon = getMaterialIcon(
+    IconData? switchToCalendarEntryModeIcon = parseIcon(
         widget.control.attrString("switchToCalendarEntryModeIcon", "")!);
-    IconData? switchToInputEntryModeIcon = getMaterialIcon(
-        widget.control.attrString("switchToInputEntryModeIcon", "")!);
+    IconData? switchToInputEntryModeIcon =
+        parseIcon(widget.control.attrString("switchToInputEntryModeIcon", "")!);
 
     //Locale locale;
     // if (localeString == null) {
@@ -86,17 +83,10 @@ class _DatePickerControlState extends State<DatePickerControl> {
         eventName = "change";
       }
       widget.control.state["open"] = false;
-      List<Map<String, String>> props = [
-        {"i": widget.control.id, "value": stringValue, "open": "false"}
-      ];
-      widget.dispatch(
-          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      FletAppServices.of(context).server.updateControlProps(props: props);
-
-      FletAppServices.of(context).server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: eventName,
-          eventData: stringValue);
+      widget.backend.updateControlState(
+          widget.control.id, {"value": stringValue, "open": "false"});
+      widget.backend
+          .triggerControlEvent(widget.control.id, eventName, stringValue);
     }
 
     Widget createSelectDateDialog() {

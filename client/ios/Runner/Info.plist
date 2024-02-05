@@ -51,5 +51,7 @@
 	<string>The app needs access to photo library, so that photos can be selected.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>Audio Recording</string>
 </dict>
 </plist>

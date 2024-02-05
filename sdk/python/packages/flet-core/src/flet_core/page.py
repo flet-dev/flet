@@ -39,9 +39,9 @@ from flet_core.types import (
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,
+    OffsetValue,
     PaddingValue,
-    PageDesignLanguage,
-    PageDesignString,
+    PagePlatform,
     ScrollMode,
     ThemeMode,
     ThemeModeString,
@@ -68,12 +68,6 @@ except ImportError as e:
     class PubSub:
         def __init__(self, pubsubhub, session_id) -> None:
             pass
-
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
 
 class Page(Control):
@@ -1226,7 +1220,13 @@ class Page(Control):
     # platform
     @property
     def platform(self):
-        return self._get_attr("platform")
+        return PagePlatform(self._get_attr("platform"))
+
+    @platform.setter
+    def platform(self, value: PagePlatform):
+        self._set_attr(
+            "platform", value.value if isinstance(value, PagePlatform) else value
+        )
 
     # platform_brightness
     @property
@@ -1244,22 +1244,6 @@ class Page(Control):
     @property
     def client_user_agent(self):
         return self._get_attr("clientUserAgent")
-
-    # design
-    @property
-    def design(self) -> Optional[PageDesignLanguage]:
-        return self.__design
-
-    @design.setter
-    def design(self, value: Optional[PageDesignLanguage]):
-        self.__design = value
-        if isinstance(value, PageDesignLanguage):
-            self._set_attr("design", value.value)
-        else:
-            self.__set_design(value)
-
-    def __set_design(self, value: PageDesignString):
-        self._set_attr("design", value)
 
     # fonts
     @property
@@ -1343,12 +1327,14 @@ class Page(Control):
 
     # floating_action_button_location
     @property
-    def floating_action_button_location(self) -> Optional[FloatingActionButtonLocation]:
+    def floating_action_button_location(
+        self,
+    ) -> Union[FloatingActionButtonLocation, OffsetValue]:
         return self.__default_view.floating_action_button_location
 
     @floating_action_button_location.setter
     def floating_action_button_location(
-        self, value: Optional[FloatingActionButtonLocation]
+        self, value: Union[FloatingActionButtonLocation, OffsetValue]
     ):
         self.__default_view.floating_action_button_location = value
 
@@ -1414,6 +1400,15 @@ class Page(Control):
     @auto_scroll.setter
     def auto_scroll(self, value: Optional[bool]):
         self.__default_view.auto_scroll = value
+
+    # adaptive
+    @property
+    def adaptive(self) -> Optional[bool]:
+        return self.__default_view.adaptive
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self.__default_view.adaptive = value
 
     # client_storage
     @property

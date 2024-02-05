@@ -11,11 +11,6 @@ from flet_core.types import (
     ScaleValue,
 )
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 
 class WebView(ConstrainedControl):
     """

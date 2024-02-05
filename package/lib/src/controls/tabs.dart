@@ -1,15 +1,13 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/alignment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
-import '../protocol/update_control_props_payload.dart';
+import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
@@ -22,7 +20,8 @@ class TabsControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const TabsControl(
       {super.key,
@@ -30,7 +29,8 @@ class TabsControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<TabsControl> createState() => _TabsControlState();
@@ -56,17 +56,10 @@ class _TabsControlState extends State<TabsControl>
     var index = _tabController!.index;
     if (_selectedIndex != index) {
       debugPrint("Selected index: $index");
-      List<Map<String, String>> props = [
-        {"i": widget.control.id, "selectedindex": index.toString()}
-      ];
-      widget.dispatch(
-          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      final server = FletAppServices.of(context).server;
-      server.updateControlProps(props: props);
-      server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: "change",
-          eventData: index.toString());
+      widget.backend.updateControlState(
+          widget.control.id, {"selectedindex": index.toString()});
+      widget.backend
+          .triggerControlEvent(widget.control.id, "change", index.toString());
       _selectedIndex = index;
     }
   }
@@ -143,6 +136,9 @@ class _TabsControlState extends State<TabsControl>
           var tabAlignment = parseTabAlignment(widget.control, "tabAlignment",
               isScrollable ? TabAlignment.start : TabAlignment.fill);
 
+          bool? adaptive =
+              widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+
           var tabBar = TabBar(
               tabAlignment: tabAlignment,
               controller: _tabController,
@@ -187,8 +183,7 @@ class _TabsControlState extends State<TabsControl>
                   TabBarTheme.of(context).overlayColor,
               tabs: viewModel.controlViews.map((tabView) {
                 var text = tabView.control.attrString("text");
-                var icon =
-                    getMaterialIcon(tabView.control.attrString("icon", "")!);
+                var icon = parseIcon(tabView.control.attrString("icon", "")!);
                 var tabContentCtrls = tabView.children
                     .where((c) => c.name == "tab_content" && c.isVisible);
 
@@ -196,7 +191,8 @@ class _TabsControlState extends State<TabsControl>
                 List<Widget> widgets = [];
                 if (tabContentCtrls.isNotEmpty) {
                   tabChild = createControl(
-                      widget.control, tabContentCtrls.first.id, disabled);
+                      widget.control, tabContentCtrls.first.id, disabled,
+                      parentAdaptive: adaptive);
                 } else {
                   if (icon != null) {
                     widgets.add(Icon(icon));
@@ -234,7 +230,8 @@ class _TabsControlState extends State<TabsControl>
                           return const SizedBox.shrink();
                         }
                         return createControl(
-                            widget.control, contentCtrls.first.id, disabled);
+                            widget.control, contentCtrls.first.id, disabled,
+                            parentAdaptive: adaptive);
                       }).toList()))
             ],
           );

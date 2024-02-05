@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/menu.dart';
 import '../utils/transforms.dart';
-
 import 'create_control.dart';
-
 
 class SubMenuButtonControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   const SubMenuButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<SubMenuButtonControl> createState() => _SubMenuButtonControlState();
@@ -45,10 +45,8 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
   }
 
   void _onFocusChange() {
-    FletAppServices.of(context).server.sendPageEvent(
-        eventTarget: widget.control.id,
-        eventName: _focusNode.hasFocus ? "focus" : "blur",
-        eventData: "");
+    widget.backend.triggerControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
   }
 
   @override
@@ -94,8 +92,6 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
     bool onClose = widget.control.attrBool("onClose", false)!;
     bool onHover = widget.control.attrBool("onHover", false)!;
 
-    var server = FletAppServices.of(context).server;
-
     var subMenu = SubmenuButton(
       focusNode: _focusNode,
       clipBehavior: clipBehavior,
@@ -106,26 +102,19 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
           : null,
       onClose: onClose && !disabled
           ? () {
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "close",
-                  eventData: "");
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "close", "");
             }
           : null,
       onHover: onHover && !disabled
           ? (bool value) {
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "hover",
-                  eventData: "$value");
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "hover", "$value");
             }
           : null,
       onOpen: onOpen && !disabled
           ? () {
-              server.sendPageEvent(
-                  eventTarget: widget.control.id,
-                  eventName: "open",
-                  eventData: "");
+              widget.backend.triggerControlEvent(widget.control.id, "open", "");
             }
           : null,
       leadingIcon: leading.isNotEmpty

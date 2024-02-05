@@ -1,6 +1,7 @@
 import json
 from typing import Any, List, Optional, Tuple, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.blur import Blur
 from flet_core.border import Border
@@ -33,13 +34,8 @@ from flet_core.types import (
     ThemeMode,
 )
 
-try:
-    from typing import Literal
-except Exception:
-    from typing_extensions import Literal
 
-
-class Container(ConstrainedControl):
+class Container(ConstrainedControl, AdaptiveControl):
     """
     Container allows to decorate a control with background color and border and position it with padding, margin and alignment.
 
@@ -126,6 +122,10 @@ class Container(ConstrainedControl):
         on_click=None,
         on_long_press=None,
         on_hover=None,
+        #
+        # Adaptive
+        #
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -156,6 +156,8 @@ class Container(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         def convert_container_tap_event_data(e):
             d = json.loads(e.data)
@@ -273,10 +275,9 @@ class Container(ConstrainedControl):
     @blend_mode.setter
     def blend_mode(self, value: BlendMode):
         self.__blend_mode = value
-        if isinstance(value, BlendMode):
-            self._set_attr("blendMode", value.value)
-        else:
-            self.__set_blend_mode(value)
+        self._set_attr(
+            "blendMode", value.value if isinstance(value, BlendMode) else value
+        )
 
     def __set_blend_mode(self, value: BlendModeString):
         self._set_attr("blendMode", value)

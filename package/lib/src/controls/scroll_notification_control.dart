@@ -2,15 +2,19 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 
 class ScrollNotificationControl extends StatefulWidget {
   final Widget child;
   final Control control;
+  final FletControlBackend backend;
 
   const ScrollNotificationControl(
-      {super.key, required this.child, required this.control});
+      {super.key,
+      required this.child,
+      required this.control,
+      required this.backend});
 
   @override
   State<ScrollNotificationControl> createState() =>
@@ -41,8 +45,7 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
       }
 
       debugPrint("ScrollNotification ${widget.control.id} event");
-      FletAppServices.of(context).server.sendPageEvent(
-          eventTarget: widget.control.id, eventName: "onScroll", eventData: d);
+      widget.backend.triggerControlEvent(widget.control.id, "onScroll", d);
     }
 
     if (notification.depth == 0) {

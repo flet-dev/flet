@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -13,7 +14,7 @@ from flet_core.types import (
 )
 
 
-class ListTile(ConstrainedControl):
+class ListTile(ConstrainedControl, AdaptiveControl):
     """
     A single fixed-height row that typically contains some text as well as a leading or trailing icon.
 
@@ -85,7 +86,10 @@ class ListTile(ConstrainedControl):
         #
         # Specific
         #
+        adaptive: Optional[bool] = None,
         content_padding: PaddingValue = None,
+        bgcolor: Optional[str] = None,
+        bgcolor_activated: Optional[str] = None,
         leading: Optional[Control] = None,
         title: Optional[Control] = None,
         subtitle: Optional[Control] = None,
@@ -130,6 +134,8 @@ class ListTile(ConstrainedControl):
             data=data,
         )
 
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.content_padding = content_padding
         self.leading = leading
         self.title = title
@@ -142,6 +148,8 @@ class ListTile(ConstrainedControl):
         self.toggle_inputs = toggle_inputs
         self.url = url
         self.url_target = url_target
+        self.bgcolor = bgcolor
+        self.bgcolor_activated = bgcolor_activated
         self.on_click = on_click
         self.on_long_press = on_long_press
 
@@ -176,6 +184,24 @@ class ListTile(ConstrainedControl):
     @content_padding.setter
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
+
+    # bgcolor_activated
+    @property
+    def bgcolor_activated(self):
+        return self._get_attr("bgcolorActivated")
+
+    @bgcolor_activated.setter
+    def bgcolor_activated(self, value):
+        self._set_attr("bgcolorActivated", value)
 
     # leading
     @property

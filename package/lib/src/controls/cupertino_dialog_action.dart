@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
@@ -11,20 +11,21 @@ class CupertinoDialogActionControl extends StatelessWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const CupertinoDialogActionControl(
-      {Key? key,
+      {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled})
-      : super(key: key);
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoDialogAction build: ${control.id}");
-
-    final server = FletAppServices.of(context).server;
 
     String text = control.attrString("text", "")!;
     var contentCtrls = children.where((c) => c.name == "content");
@@ -35,8 +36,7 @@ class CupertinoDialogActionControl extends StatelessWidget {
     Function()? onPressed = !disabled
         ? () {
             debugPrint("CupertinoDialogAction ${control.id} clicked!");
-            server.sendPageEvent(
-                eventTarget: control.id, eventName: "click", eventData: "");
+            backend.triggerControlEvent(control.id, "click", "");
           }
         : null;
 
@@ -48,7 +48,8 @@ class CupertinoDialogActionControl extends StatelessWidget {
         isDestructiveAction: isDestructiveAction,
         textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
         child: contentCtrls.isNotEmpty
-            ? createControl(control, contentCtrls.first.id, disabled)
+            ? createControl(control, contentCtrls.first.id, disabled,
+                parentAdaptive: parentAdaptive)
             : Text(text));
 
     return baseControl(context, cupertinoDialogAction, parent, control);

@@ -1,31 +1,30 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import '../flet_app_services.dart';
-import '../flet_server.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 
 class HapticFeedbackControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
   const HapticFeedbackControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.nextChild});
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<HapticFeedbackControl> createState() => _HapticFeedbackControlState();
 }
 
 class _HapticFeedbackControlState extends State<HapticFeedbackControl> {
-  FletServer? _server;
-
   @override
   void deactivate() {
-    _server?.controlInvokeMethods.remove(widget.control.id);
+    widget.backend.unsubscribeMethods(widget.control.id);
     super.deactivate();
   }
 
@@ -33,8 +32,7 @@ class _HapticFeedbackControlState extends State<HapticFeedbackControl> {
   Widget build(BuildContext context) {
     debugPrint("HapticFeedback build: ${widget.control.id}");
 
-    _server = FletAppServices.of(context).server;
-    _server?.controlInvokeMethods[widget.control.id] =
+    widget.backend.subscribeMethods(widget.control.id,
         (methodName, args) async {
       switch (methodName) {
         case "heavy_impact":
@@ -51,7 +49,7 @@ class _HapticFeedbackControlState extends State<HapticFeedbackControl> {
           break;
       }
       return null;
-    };
+    });
 
     return widget.nextChild ?? const SizedBox.shrink();
   }

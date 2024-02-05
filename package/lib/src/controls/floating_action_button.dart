@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
+import '../utils/transforms.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -14,20 +15,24 @@ class FloatingActionButtonControl extends StatelessWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const FloatingActionButtonControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("FloatingActionButtonControl build: ${control.id}");
 
     String? text = control.attrString("text");
-    IconData? icon = getMaterialIcon(control.attrString("icon", "")!);
+    IconData? icon = parseIcon(control.attrString("icon", "")!);
     String url = control.attrString("url", "")!;
     String? urlTarget = control.attrString("urlTarget");
     Color? bgColor = HexColor.fromString(
@@ -46,8 +51,7 @@ class FloatingActionButtonControl extends StatelessWidget {
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            FletAppServices.of(context).server.sendPageEvent(
-                eventTarget: control.id, eventName: "click", eventData: "");
+            backend.triggerControlEvent(control.id, "click", "");
           };
 
     if (text == null && icon == null && contentCtrls.isEmpty) {
@@ -65,7 +69,8 @@ class FloatingActionButtonControl extends StatelessWidget {
           tooltip: tooltip,
           shape: shape,
           mini: mini,
-          child: createControl(control, contentCtrls.first.id, disabled));
+          child: createControl(control, contentCtrls.first.id, disabled,
+              parentAdaptive: parentAdaptive));
     } else if (icon != null && text == null) {
       button = FloatingActionButton(
           heroTag: control.id,
@@ -129,9 +134,44 @@ FloatingActionButtonLocation parseFloatingActionButtonLocation(
     FloatingActionButtonLocation.startTop
   ];
 
-  return fabLocations.firstWhere(
-      (l) =>
-          l.toString().split('.').last.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+  try {
+    OffsetDetails? fabLocationOffsetDetails = parseOffset(control, propName);
+    if (fabLocationOffsetDetails != null) {
+      return CustomFloatingActionButtonLocation(
+          dx: fabLocationOffsetDetails.x, dy: fabLocationOffsetDetails.y);
+    } else {
+      return defValue;
+    }
+  } catch (e) {
+    return fabLocations.firstWhere(
+        (l) =>
+            l.toString().split('.').last.toLowerCase() ==
+            control.attrString(propName, "")!.toLowerCase(),
+        orElse: () => defValue);
+  }
+}
+
+class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
+  final double dx;
+  final double dy;
+
+  CustomFloatingActionButtonLocation({required this.dx, required this.dy});
+
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    return Offset(scaffoldGeometry.scaffoldSize.width - dx,
+        scaffoldGeometry.scaffoldSize.height - dy);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is CustomFloatingActionButtonLocation &&
+      other.dx == dx &&
+      other.dy == dy;
+
+  @override
+  int get hashCode => dx.hashCode + dy.hashCode;
+
+  @override
+  String toString() => 'CustomFloatingActionButtonLocation';
 }

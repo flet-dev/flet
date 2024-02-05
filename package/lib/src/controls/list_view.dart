@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
@@ -13,7 +14,8 @@ class ListViewControl extends StatefulWidget {
   final Control control;
   final bool parentDisabled;
   final List<Control> children;
-  final dynamic dispatch;
+  final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const ListViewControl(
       {super.key,
@@ -21,7 +23,8 @@ class ListViewControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   State<ListViewControl> createState() => _ListViewControlState();
@@ -48,6 +51,8 @@ class _ListViewControlState extends State<ListViewControl> {
     debugPrint("ListViewControl build: ${widget.control.id}");
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool? adaptive =
+        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
     final horizontal = widget.control.attrBool("horizontal", false)!;
     final spacing = widget.control.attrDouble("spacing", 0)!;
@@ -80,7 +85,8 @@ class _ListViewControlState extends State<ListViewControl> {
                 itemCount: widget.children.length,
                 itemBuilder: (context, index) {
                   return createControl(
-                      widget.control, visibleControls[index].id, disabled);
+                      widget.control, visibleControls[index].id, disabled,
+                      parentAdaptive: adaptive);
                 },
                 separatorBuilder: (context, index) {
                   return horizontal
@@ -104,25 +110,26 @@ class _ListViewControlState extends State<ListViewControl> {
                 itemExtent: itemExtent,
                 itemBuilder: (context, index) {
                   return createControl(
-                      widget.control, visibleControls[index].id, disabled);
+                      widget.control, visibleControls[index].id, disabled,
+                      parentAdaptive: adaptive);
                 },
                 prototypeItem: firstItemPrototype && widget.children.isNotEmpty
                     ? createControl(
-                        widget.control, visibleControls[0].id, disabled)
+                        widget.control, visibleControls[0].id, disabled,
+                        parentAdaptive: adaptive)
                     : null,
               );
 
         child = ScrollableControl(
-          control: widget.control,
-          scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
-          dispatch: widget.dispatch,
-          scrollController: _controller,
-          child: child,
-        );
+            control: widget.control,
+            scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+            scrollController: _controller,
+            backend: widget.backend,
+            child: child);
 
         if (widget.control.attrBool("onScroll", false)!) {
-          child =
-              ScrollNotificationControl(control: widget.control, child: child);
+          child = ScrollNotificationControl(
+              control: widget.control, backend: widget.backend, child: child);
         }
 
         return child;

@@ -1,6 +1,7 @@
 from typing import Any, List, Optional, Union
 
 from flet_core import Control
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.control import OptionalNumber
@@ -16,12 +17,13 @@ from flet_core.types import (
     FloatingActionButtonLocation,
     MainAxisAlignment,
     MainAxisAlignmentString,
+    OffsetValue,
     PaddingValue,
     ScrollMode,
 )
 
 
-class View(ScrollableControl):
+class View(ScrollableControl, AdaptiveControl):
     """
     View is the top most container for all other controls.
 
@@ -39,7 +41,9 @@ class View(ScrollableControl):
         appbar: Union[AppBar, CupertinoAppBar, None] = None,
         bottom_appbar: Optional[BottomAppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
-        floating_action_button_location: Optional[FloatingActionButtonLocation] = None,
+        floating_action_button_location: Union[
+            FloatingActionButtonLocation, OffsetValue
+        ] = None,
         navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None,
         drawer: Optional[NavigationDrawer] = None,
         end_drawer: Optional[NavigationDrawer] = None,
@@ -56,6 +60,10 @@ class View(ScrollableControl):
         fullscreen_dialog: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Any = None,
+        #
+        # Adaptive
+        #
+        adaptive: Optional[bool] = None,
     ):
         Control.__init__(self)
 
@@ -66,6 +74,8 @@ class View(ScrollableControl):
             on_scroll_interval=on_scroll_interval,
             on_scroll=on_scroll,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.controls = controls if controls is not None else []
         self.route = route
@@ -91,6 +101,12 @@ class View(ScrollableControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("padding", self.__padding)
+        if not isinstance(
+            self.__floating_action_button_location, (FloatingActionButtonLocation, str)
+        ):
+            self._set_attr_json(
+                "floatingActionButtonLocation", self.__floating_action_button_location
+            )
 
     def _get_children(self):
         children = []
@@ -158,11 +174,15 @@ class View(ScrollableControl):
 
     # floating_action_button_location
     @property
-    def floating_action_button_location(self) -> FloatingActionButtonLocation:
+    def floating_action_button_location(
+        self,
+    ) -> Union[FloatingActionButtonLocation, OffsetValue]:
         return self.__floating_action_button_location
 
     @floating_action_button_location.setter
-    def floating_action_button_location(self, value: FloatingActionButtonLocation):
+    def floating_action_button_location(
+        self, value: Union[FloatingActionButtonLocation, OffsetValue]
+    ):
         self.__floating_action_button_location = value
         self._set_attr(
             "floatingActionButtonLocation",

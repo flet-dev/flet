@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 
 class TimePickerControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
+  final FletControlBackend backend;
 
-  const TimePickerControl({
-    super.key,
-    this.parent,
-    required this.control,
-    required this.children,
-    required this.parentDisabled,
-    required this.dispatch,
-  });
+  const TimePickerControl(
+      {super.key,
+      this.parent,
+      required this.control,
+      required this.children,
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   State<TimePickerControl> createState() => _TimePickerControlState();
@@ -64,17 +61,10 @@ class _TimePickerControlState extends State<TimePickerControl> {
         eventName = "change";
       }
       widget.control.state["open"] = false;
-      List<Map<String, String>> props = [
-        {"i": widget.control.id, "value": stringValue, "open": "false"}
-      ];
-      widget.dispatch(
-          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      FletAppServices.of(context).server.updateControlProps(props: props);
-
-      FletAppServices.of(context).server.sendPageEvent(
-          eventTarget: widget.control.id,
-          eventName: eventName,
-          eventData: stringValue);
+      widget.backend.updateControlState(
+          widget.control.id, {"value": stringValue, "open": "false"});
+      widget.backend
+          .triggerControlEvent(widget.control.id, eventName, stringValue);
     }
 
     Widget createSelectTimeDialog() {

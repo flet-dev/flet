@@ -6,6 +6,8 @@ from flet_core import (
     border_radius,
     canvas,
     colors,
+    cupertino_colors,
+    cupertino_icons,
     dropdown,
     icons,
     margin,
@@ -13,12 +15,14 @@ from flet_core import (
     painting,
     transform,
 )
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
 from flet_core.alignment import Alignment
 from flet_core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
 from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
+from flet_core.audio_recorder import AudioEncoder, AudioRecorder
 from flet_core.badge import Badge
 from flet_core.banner import Banner
 from flet_core.blur import Blur, BlurTileMode
@@ -62,12 +66,17 @@ from flet_core.column import Column
 from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
+from flet_core.cupertino_button import CupertinoButton
 from flet_core.cupertino_checkbox import CupertinoCheckbox
+from flet_core.cupertino_dialog_action import CupertinoDialogAction
+from flet_core.cupertino_list_tile import CupertinoListTile
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.cupertino_radio import CupertinoRadio
 from flet_core.cupertino_slider import CupertinoSlider
 from flet_core.cupertino_switch import CupertinoSwitch
+from flet_core.cupertino_textfield import CupertinoTextField, VisibilityMode
 from flet_core.datatable import (
     DataCell,
     DataColumn,
@@ -76,7 +85,11 @@ from flet_core.datatable import (
     DataTable,
 )
 from flet_core.date_picker import DatePicker, DatePickerEntryMode, DatePickerMode
-from flet_core.dismissible import Dismissible, DismissibleDismissEvent, DismissibleUpdateEvent
+from flet_core.dismissible import (
+    Dismissible,
+    DismissibleDismissEvent,
+    DismissibleUpdateEvent,
+)
 from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
@@ -150,6 +163,7 @@ from flet_core.page import (
     RouteChangeEvent,
     ViewPopEvent,
 )
+from flet_core.pagelet import Pagelet
 from flet_core.painting import (
     Paint,
     PaintingStyle,
@@ -225,16 +239,15 @@ from flet_core.types import (
     MaterialState,
     NotchShape,
     PaddingValue,
-    PageDesignLanguage,
+    PagePlatform,
     ScrollMode,
     TabAlignment,
     TextAlign,
     ThemeMode,
+    VerticalAlignment,
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
 from flet_core.view import View
 from flet_core.webview import WebView
-from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
-from flet_core.cupertino_dialog_action import CupertinoDialogAction
 from flet_core.window_drag_area import WindowDragArea

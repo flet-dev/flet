@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'gradient.dart';
+import 'numbers.dart';
 
 export 'images_io.dart' if (dart.library.js) "images_web.dart";
 

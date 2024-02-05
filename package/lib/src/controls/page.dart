@@ -1,25 +1,22 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:flet/src/controls/floating_action_button.dart';
-import 'package:flet/src/flet_app_context.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
 import '../actions.dart';
+import '../flet_app_context.dart';
 import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
-import '../models/controls_view_model.dart';
-import '../models/page_args_model.dart';
 import '../models/page_media_view_model.dart';
-import '../models/routes_view_model.dart';
-import '../protocol/keyboard_event.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
@@ -37,28 +34,94 @@ import '../widgets/window_media.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
+import 'flet_store_mixin.dart';
+import 'floating_action_button.dart';
 import 'navigation_drawer.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
+
+class RoutesViewModel extends Equatable {
+  final Control page;
+  final bool isLoading;
+  final String error;
+  final List<Control> offstageControls;
+  final List<Control> views;
+
+  const RoutesViewModel(
+      {required this.page,
+      required this.isLoading,
+      required this.error,
+      required this.offstageControls,
+      required this.views});
+
+  static RoutesViewModel fromStore(Store<AppState> store) {
+    Control? offstageControl = store.state.controls["page"]!.childIds
+        .map((childId) => store.state.controls[childId]!)
+        .firstWhereOrNull((c) => c.type == "offstage");
+
+    return RoutesViewModel(
+        page: store.state.controls["page"]!,
+        isLoading: store.state.isLoading,
+        error: store.state.error,
+        offstageControls: offstageControl != null
+            ? store.state.controls[offstageControl.id]!.childIds
+                .map((childId) => store.state.controls[childId]!)
+                .where((c) => c.isVisible)
+                .toList()
+            : [],
+        views: store.state.controls["page"]!.childIds
+            .map((childId) => store.state.controls[childId]!)
+            .where((c) => c.type != "offstage" && c.isVisible)
+            .toList());
+  }
+
+  @override
+  List<Object?> get props => [page, isLoading, error, offstageControls, views];
+}
+
+class KeyboardEvent {
+  final String key;
+  final bool isShiftPressed;
+  final bool isControlPressed;
+  final bool isAltPressed;
+  final bool isMetaPressed;
+
+  KeyboardEvent(
+      {required this.key,
+      required this.isShiftPressed,
+      required this.isControlPressed,
+      required this.isAltPressed,
+      required this.isMetaPressed});
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'key': key,
+        'shift': isShiftPressed,
+        'ctrl': isControlPressed,
+        'alt': isAltPressed,
+        'meta': isMetaPressed
+      };
+}
 
 class PageControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final dynamic dispatch;
+  final FletControlBackend backend;
 
   const PageControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.dispatch});
+      required this.dispatch,
+      required this.backend});
 
   @override
   State<PageControl> createState() => _PageControlState();
 }
 
-class _PageControlState extends State<PageControl> {
+class _PageControlState extends State<PageControl> with FletStoreMixin {
   String? _windowTitle;
   Color? _windowBgcolor;
   double? _windowWidth;
@@ -141,10 +204,10 @@ class _PageControlState extends State<PageControl> {
         LogicalKeyboardKey.shiftLeft,
         LogicalKeyboardKey.shiftRight
       ].contains(k)) {
-        FletAppServices.of(context).server.sendPageEvent(
-            eventTarget: "page",
-            eventName: "keyboard_event",
-            eventData: json.encode(KeyboardEvent(
+        widget.backend.triggerControlEvent(
+            "page",
+            "keyboard_event",
+            json.encode(KeyboardEvent(
                     key: k.keyLabel,
                     isAltPressed: e.isAltPressed,
                     isControlPressed: e.isControlPressed,
@@ -424,45 +487,42 @@ class _PageControlState extends State<PageControl> {
 
     updateWindow();
 
-    return StoreConnector<AppState, PageArgsModel>(
-        distinct: true,
-        converter: (store) => PageArgsModel.fromStore(store),
-        builder: (context, pageArgs) {
-          debugPrint("Page fonts build: ${widget.control.id}");
+    return withPageArgs((context, pageArgs) {
+      debugPrint("Page fonts build: ${widget.control.id}");
 
-          // load custom fonts
-          parseFonts(widget.control, "fonts").forEach((fontFamily, fontUrl) {
-            var assetSrc =
-                getAssetSrc(fontUrl, pageArgs.pageUri!, pageArgs.assetsDir);
+      // load custom fonts
+      parseFonts(widget.control, "fonts").forEach((fontFamily, fontUrl) {
+        var assetSrc =
+            getAssetSrc(fontUrl, pageArgs.pageUri!, pageArgs.assetsDir);
 
-            if (assetSrc.isFile) {
-              UserFonts.loadFontFromFile(fontFamily, assetSrc.path);
-            } else {
-              UserFonts.loadFontFromUrl(fontFamily, assetSrc.path);
-            }
+        if (assetSrc.isFile) {
+          UserFonts.loadFontFromFile(fontFamily, assetSrc.path);
+        } else {
+          UserFonts.loadFontFromUrl(fontFamily, assetSrc.path);
+        }
+      });
+
+      return StoreConnector<AppState, PageMediaViewModel>(
+          distinct: true,
+          converter: (store) => PageMediaViewModel.fromStore(store),
+          builder: (context, media) {
+            debugPrint("MaterialApp.router build: ${widget.control.id}");
+
+            return FletAppContext(
+                themeMode: themeMode,
+                child: MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  showSemanticsDebugger:
+                      widget.control.attrBool("showSemanticsDebugger", false)!,
+                  routerDelegate: _routerDelegate,
+                  routeInformationParser: _routeParser,
+                  title: windowTitle,
+                  theme: theme,
+                  darkTheme: darkTheme,
+                  themeMode: themeMode,
+                ));
           });
-
-          return StoreConnector<AppState, PageMediaViewModel>(
-              distinct: true,
-              converter: (store) => PageMediaViewModel.fromStore(store),
-              builder: (context, media) {
-                debugPrint("MaterialApp.router build: ${widget.control.id}");
-
-                return FletAppContext(
-                    themeMode: themeMode,
-                    child: MaterialApp.router(
-                      debugShowCheckedModeBanner: false,
-                      showSemanticsDebugger: widget.control
-                          .attrBool("showSemanticsDebugger", false)!,
-                      routerDelegate: _routerDelegate,
-                      routeInformationParser: _routeParser,
-                      title: windowTitle,
-                      theme: theme,
-                      darkTheme: darkTheme,
-                      themeMode: themeMode,
-                    ));
-              });
-        });
+    });
   }
 
   Widget _buildNavigator(
@@ -512,7 +572,7 @@ class _PageControlState extends State<PageControl> {
               }
 
               if (viewId == routesView.views.first.id && isDesktop()) {
-                overlayWidgets.add(const WindowMedia());
+                overlayWidgets.add(WindowMedia(dispatch: widget.dispatch));
               }
 
               return overlayWidgets;
@@ -537,7 +597,7 @@ class _PageControlState extends State<PageControl> {
                   viewId: view.id,
                   overlayWidgets: overlayWidgets(view.id),
                   loadingPage: loadingPage,
-                  dispatch: widget.dispatch);
+                  backend: widget.backend);
 
               //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
 
@@ -562,11 +622,8 @@ class _PageControlState extends State<PageControl> {
               key: navigatorKey,
               pages: pages,
               onPopPage: (route, dynamic result) {
-                FletAppServices.of(context).server.sendPageEvent(
-                    eventTarget: "page",
-                    eventName: "view_pop",
-                    eventData:
-                        ((route.settings as Page).key as ValueKey).value);
+                widget.backend.triggerControlEvent("page", "view_pop",
+                    ((route.settings as Page).key as ValueKey).value);
                 return false;
               });
 
@@ -588,7 +645,7 @@ class ViewControl extends StatefulWidget {
   final String viewId;
   final List<Widget> overlayWidgets;
   final Widget? loadingPage;
-  final dynamic dispatch;
+  final FletControlBackend backend;
 
   const ViewControl(
       {super.key,
@@ -596,13 +653,13 @@ class ViewControl extends StatefulWidget {
       required this.viewId,
       required this.overlayWidgets,
       required this.loadingPage,
-      required this.dispatch});
+      required this.backend});
 
   @override
   State<ViewControl> createState() => _ViewControlState();
 }
 
-class _ViewControlState extends State<ViewControl> {
+class _ViewControlState extends State<ViewControl> with FletStoreMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -619,7 +676,7 @@ class _ViewControlState extends State<ViewControl> {
         //   debugPrint("View StoreConnector.onWillChange(): $prev, $next");
         // },
         builder: (context, controlView) {
-          debugPrint("View StoreConnector");
+          debugPrint("View build");
 
           if (controlView == null) {
             return const SizedBox.shrink();
@@ -627,6 +684,8 @@ class _ViewControlState extends State<ViewControl> {
 
           var control = controlView.control;
           var children = controlView.children;
+
+          bool? adaptive = controlView.control.attrBool("adaptive");
 
           final spacing = control.attrDouble("spacing", 10)!;
           final mainAlignment = parseMainAxisAlignment(
@@ -684,7 +743,8 @@ class _ViewControlState extends State<ViewControl> {
             firstControl = false;
 
             // displayed control
-            controls.add(createControl(control, ctrl.id, control.isDisabled));
+            controls.add(createControl(control, ctrl.id, control.isDisabled,
+                parentAdaptive: adaptive));
           }
 
           List<String> childIds = [
@@ -698,195 +758,174 @@ class _ViewControlState extends State<ViewControl> {
               ? TextDirection.rtl
               : TextDirection.ltr;
 
-          return StoreConnector<AppState, ControlsViewModel>(
-              distinct: true,
-              converter: (store) =>
-                  ControlsViewModel.fromStore(store, childIds),
-              ignoreChange: (state) {
-                //debugPrint("ignoreChange: $id");
-                for (var id in childIds) {
-                  if (state.controls[id] == null) {
-                    return true;
-                  }
+          return withControls(childIds, (context, childrenViews) {
+            debugPrint("Route view build: ${widget.viewId}");
+
+            var appBarView = childrenViews.controlViews
+                .firstWhereOrNull((v) => v.control.id == (appBar?.id ?? ""));
+            var cupertinoAppBarView = childrenViews.controlViews
+                .firstWhereOrNull(
+                    (v) => v.control.id == (cupertinoAppBar?.id ?? ""));
+            var drawerView = childrenViews.controlViews
+                .firstWhereOrNull((v) => v.control.id == (drawer?.id ?? ""));
+            var endDrawerView = childrenViews.controlViews
+                .firstWhereOrNull((v) => v.control.id == (endDrawer?.id ?? ""));
+
+            var column = Column(
+                mainAxisAlignment: mainAlignment,
+                crossAxisAlignment: crossAlignment,
+                children: controls);
+
+            Widget child = ScrollableControl(
+                control: control,
+                scrollDirection: Axis.vertical,
+                backend: widget.backend,
+                child: column);
+
+            if (control.attrBool("onScroll", false)!) {
+              child = ScrollNotificationControl(
+                  control: control, backend: widget.backend, child: child);
+            }
+
+            final bool? drawerOpened = widget.parent.state["drawerOpened"];
+            final bool? endDrawerOpened =
+                widget.parent.state["endDrawerOpened"];
+
+            void dismissDrawer(String id) {
+              widget.backend.updateControlState(id, {"open": "false"});
+              widget.backend.triggerControlEvent(id, "dismiss", "");
+            }
+
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (drawerView != null) {
+                if (scaffoldKey.currentState?.isDrawerOpen == false &&
+                    drawerOpened == true) {
+                  widget.parent.state["drawerOpened"] = false;
+                  dismissDrawer(drawerView.control.id);
                 }
-                return false;
-              },
-              builder: (context, childrenViews) {
-                debugPrint("Route view StoreConnector build: ${widget.viewId}");
-
-                var appBarView = childrenViews.controlViews.firstWhereOrNull(
-                    (v) => v.control.id == (appBar?.id ?? ""));
-                var cupertinoAppBarView = childrenViews.controlViews
-                    .firstWhereOrNull(
-                        (v) => v.control.id == (cupertinoAppBar?.id ?? ""));
-                var drawerView = childrenViews.controlViews.firstWhereOrNull(
-                    (v) => v.control.id == (drawer?.id ?? ""));
-                var endDrawerView = childrenViews.controlViews.firstWhereOrNull(
-                    (v) => v.control.id == (endDrawer?.id ?? ""));
-
-                var column = Column(
-                    mainAxisAlignment: mainAlignment,
-                    crossAxisAlignment: crossAlignment,
-                    children: controls);
-
-                Widget child = ScrollableControl(
-                  control: control,
-                  scrollDirection: Axis.vertical,
-                  dispatch: widget.dispatch,
-                  child: column,
-                );
-
-                if (control.attrBool("onScroll", false)!) {
-                  child =
-                      ScrollNotificationControl(control: control, child: child);
-                }
-
-                final bool? drawerOpened = widget.parent.state["drawerOpened"];
-                final bool? endDrawerOpened =
-                    widget.parent.state["endDrawerOpened"];
-
-                void dismissDrawer(String id) {
-                  List<Map<String, String>> props = [
-                    {"i": id, "open": "false"}
-                  ];
-                  widget.dispatch(UpdateControlPropsAction(
-                      UpdateControlPropsPayload(props: props)));
-                  FletAppServices.of(context)
-                      .server
-                      .updateControlProps(props: props);
-                  FletAppServices.of(context).server.sendPageEvent(
-                      eventTarget: id, eventName: "dismiss", eventData: "");
-                }
-
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (drawerView != null) {
-                    if (scaffoldKey.currentState?.isDrawerOpen == false &&
-                        drawerOpened == true) {
-                      widget.parent.state["drawerOpened"] = false;
-                      dismissDrawer(drawerView.control.id);
-                    }
-                    if (drawerView.control.attrBool("open", false)! &&
-                        drawerOpened != true) {
-                      if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
-                        scaffoldKey.currentState?.closeEndDrawer();
-                      }
-                      Future.delayed(const Duration(milliseconds: 1))
-                          .then((value) {
-                        scaffoldKey.currentState?.openDrawer();
-                        widget.parent.state["drawerOpened"] = true;
-                      });
-                    } else if (!drawerView.control.attrBool("open", false)! &&
-                        drawerOpened == true) {
-                      scaffoldKey.currentState?.closeDrawer();
-                      widget.parent.state["drawerOpened"] = false;
-                    }
+                if (drawerView.control.attrBool("open", false)! &&
+                    drawerOpened != true) {
+                  if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
+                    scaffoldKey.currentState?.closeEndDrawer();
                   }
-                  if (endDrawerView != null) {
-                    if (scaffoldKey.currentState?.isEndDrawerOpen == false &&
-                        endDrawerOpened == true) {
-                      widget.parent.state["endDrawerOpened"] = false;
-                      dismissDrawer(endDrawerView.control.id);
-                    }
-                    if (endDrawerView.control.attrBool("open", false)! &&
-                        endDrawerOpened != true) {
-                      if (scaffoldKey.currentState?.isDrawerOpen == true) {
-                        scaffoldKey.currentState?.closeDrawer();
-                      }
-                      Future.delayed(const Duration(milliseconds: 1))
-                          .then((value) {
-                        scaffoldKey.currentState?.openEndDrawer();
-                        widget.parent.state["endDrawerOpened"] = true;
-                      });
-                    } else if (!endDrawerView.control
-                            .attrBool("open", false)! &&
-                        endDrawerOpened == true) {
-                      scaffoldKey.currentState?.closeEndDrawer();
-                      widget.parent.state["endDrawerOpened"] = false;
-                    }
+                  Future.delayed(const Duration(milliseconds: 1)).then((value) {
+                    scaffoldKey.currentState?.openDrawer();
+                    widget.parent.state["drawerOpened"] = true;
+                  });
+                } else if (!drawerView.control.attrBool("open", false)! &&
+                    drawerOpened == true) {
+                  scaffoldKey.currentState?.closeDrawer();
+                  widget.parent.state["drawerOpened"] = false;
+                }
+              }
+              if (endDrawerView != null) {
+                if (scaffoldKey.currentState?.isEndDrawerOpen == false &&
+                    endDrawerOpened == true) {
+                  widget.parent.state["endDrawerOpened"] = false;
+                  dismissDrawer(endDrawerView.control.id);
+                }
+                if (endDrawerView.control.attrBool("open", false)! &&
+                    endDrawerOpened != true) {
+                  if (scaffoldKey.currentState?.isDrawerOpen == true) {
+                    scaffoldKey.currentState?.closeDrawer();
                   }
-                });
+                  Future.delayed(const Duration(milliseconds: 1)).then((value) {
+                    scaffoldKey.currentState?.openEndDrawer();
+                    widget.parent.state["endDrawerOpened"] = true;
+                  });
+                } else if (!endDrawerView.control.attrBool("open", false)! &&
+                    endDrawerOpened == true) {
+                  scaffoldKey.currentState?.closeEndDrawer();
+                  widget.parent.state["endDrawerOpened"] = false;
+                }
+              }
+            });
 
-                var bnb = navBar ?? bottomAppBar;
+            var bnb = navBar ?? bottomAppBar;
 
-                var bar = appBarView != null
-                    ? AppBarControl(
+            var bar = appBarView != null
+                ? AppBarControl(
+                    parent: control,
+                    control: appBarView.control,
+                    children: appBarView.children,
+                    parentDisabled: control.isDisabled,
+                    parentAdaptive: adaptive,
+                    height: appBarView.control
+                        .attrDouble("toolbarHeight", kToolbarHeight)!)
+                : cupertinoAppBarView != null
+                    ? CupertinoAppBarControl(
                         parent: control,
-                        control: appBarView.control,
-                        children: appBarView.children,
+                        control: cupertinoAppBarView.control,
+                        children: cupertinoAppBarView.children,
                         parentDisabled: control.isDisabled,
-                        height: appBarView.control
-                            .attrDouble("toolbarHeight", kToolbarHeight)!)
-                    : cupertinoAppBarView != null
-                        ? CupertinoAppBarControl(
-                            parent: control,
-                            control: cupertinoAppBarView.control,
-                            children: cupertinoAppBarView.children,
-                            parentDisabled: control.isDisabled,
-                            bgcolor: HexColor.fromString(
-                                Theme.of(context),
-                                cupertinoAppBarView.control
-                                    .attrString("bgcolor", "")!),
-                          ) as ObstructingPreferredSizeWidget
-                        : null;
+                        parentAdaptive: adaptive,
+                        bgcolor: HexColor.fromString(
+                            Theme.of(context),
+                            cupertinoAppBarView.control
+                                .attrString("bgcolor", "")!),
+                      ) as ObstructingPreferredSizeWidget
+                    : null;
 
-                var scaffold = Scaffold(
-                  key: scaffoldKey,
-                  backgroundColor: HexColor.fromString(
-                      Theme.of(context), control.attrString("bgcolor", "")!),
-                  appBar: bar,
-                  drawer: drawerView != null
-                      ? NavigationDrawerControl(
-                          control: drawerView.control,
-                          children: drawerView.children,
-                          parentDisabled: control.isDisabled,
-                          dispatch: widget.dispatch,
-                        )
-                      : null,
-                  onDrawerChanged: (opened) {
-                    if (drawerView != null && !opened) {
-                      widget.parent.state["drawerOpened"] = false;
-                      dismissDrawer(drawerView.control.id);
-                    }
-                  },
-                  endDrawer: endDrawerView != null
-                      ? NavigationDrawerControl(
-                          control: endDrawerView.control,
-                          children: endDrawerView.children,
-                          parentDisabled: control.isDisabled,
-                          dispatch: widget.dispatch,
-                        )
-                      : null,
-                  onEndDrawerChanged: (opened) {
-                    if (endDrawerView != null && !opened) {
-                      widget.parent.state["endDrawerOpened"] = false;
-                      dismissDrawer(endDrawerView.control.id);
-                    }
-                  },
-                  body: Stack(children: [
-                    SizedBox.expand(
-                        child: Container(
-                            padding: parseEdgeInsets(control, "padding") ??
-                                const EdgeInsets.all(10),
-                            child: child)),
-                    ...widget.overlayWidgets
-                  ]),
-                  bottomNavigationBar: bnb != null
-                      ? createControl(control, bnb.id, control.isDisabled)
-                      : null,
-                  floatingActionButton: fab != null
-                      ? createControl(control, fab.id, control.isDisabled)
-                      : null,
-                  floatingActionButtonLocation: fabLocation,
-                );
+            var scaffold = Scaffold(
+              key: scaffoldKey,
+              backgroundColor: HexColor.fromString(
+                  Theme.of(context), control.attrString("bgcolor", "")!),
+              appBar: bar,
+              drawer: drawerView != null
+                  ? NavigationDrawerControl(
+                      control: drawerView.control,
+                      children: drawerView.children,
+                      parentDisabled: control.isDisabled,
+                      parentAdaptive: adaptive,
+                      backend: widget.backend)
+                  : null,
+              onDrawerChanged: (opened) {
+                if (drawerView != null && !opened) {
+                  widget.parent.state["drawerOpened"] = false;
+                  dismissDrawer(drawerView.control.id);
+                }
+              },
+              endDrawer: endDrawerView != null
+                  ? NavigationDrawerControl(
+                      control: endDrawerView.control,
+                      children: endDrawerView.children,
+                      parentDisabled: control.isDisabled,
+                      parentAdaptive: adaptive,
+                      backend: widget.backend)
+                  : null,
+              onEndDrawerChanged: (opened) {
+                if (endDrawerView != null && !opened) {
+                  widget.parent.state["endDrawerOpened"] = false;
+                  dismissDrawer(endDrawerView.control.id);
+                }
+              },
+              body: Stack(children: [
+                SizedBox.expand(
+                    child: Container(
+                        padding: parseEdgeInsets(control, "padding") ??
+                            const EdgeInsets.all(10),
+                        child: child)),
+                ...widget.overlayWidgets
+              ]),
+              bottomNavigationBar: bnb != null
+                  ? createControl(control, bnb.id, control.isDisabled,
+                      parentAdaptive: adaptive)
+                  : null,
+              floatingActionButton: fab != null
+                  ? createControl(control, fab.id, control.isDisabled,
+                      parentAdaptive: adaptive)
+                  : null,
+              floatingActionButtonLocation: fabLocation,
+            );
 
-                return Directionality(
-                    textDirection: textDirection,
-                    child: widget.loadingPage != null
-                        ? Stack(
-                            children: [scaffold, widget.loadingPage!],
-                          )
-                        : scaffold);
-              });
+            return Directionality(
+                textDirection: textDirection,
+                child: widget.loadingPage != null
+                    ? Stack(
+                        children: [scaffold, widget.loadingPage!],
+                      )
+                    : scaffold);
+          });
         });
   }
 }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../actions.dart';
-import '../flet_app_services.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../protocol/update_control_props_payload.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -13,8 +11,9 @@ class BottomSheetControl extends StatefulWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final dynamic dispatch;
+  final bool? parentAdaptive;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
   const BottomSheetControl(
       {super.key,
@@ -22,8 +21,9 @@ class BottomSheetControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.dispatch,
-      required this.nextChild});
+      required this.parentAdaptive,
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<BottomSheetControl> createState() => _BottomSheetControlState();
@@ -33,8 +33,6 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("BottomSheet build: ${widget.control.id}");
-
-    var server = FletAppServices.of(context).server;
 
     bool lastOpen = widget.control.state["open"] ?? false;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
@@ -51,12 +49,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
         widget.control.attrBool("maintainBottomViewInsetsPadding", true)!;
 
     void resetOpenState() {
-      List<Map<String, String>> props = [
-        {"i": widget.control.id, "open": "false"}
-      ];
-      widget.dispatch(
-          UpdateControlPropsAction(UpdateControlPropsPayload(props: props)));
-      server.updateControlProps(props: props);
+      widget.backend.updateControlState(widget.control.id, {"open": "false"});
     }
 
     if (open && !lastOpen) {
@@ -75,7 +68,8 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                   }
 
                   var content = createControl(
-                      widget.control, contentCtrls.first.id, disabled);
+                      widget.control, contentCtrls.first.id, disabled,
+                      parentAdaptive: widget.parentAdaptive);
 
                   if (content is ErrorControl) {
                     return content;
@@ -110,10 +104,8 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
           if (shouldDismiss) {
             resetOpenState();
-            server.sendPageEvent(
-                eventTarget: widget.control.id,
-                eventName: "dismiss",
-                eventData: "");
+            widget.backend
+                .triggerControlEvent(widget.control.id, "dismiss", "");
           }
         });
       });

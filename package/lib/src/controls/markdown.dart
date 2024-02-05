@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:markdown/markdown.dart' as md;
 
-import '../flet_app_services.dart';
-import '../models/app_state.dart';
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../models/page_args_model.dart';
 import '../utils/launch_url.dart';
 import '../utils/text.dart';
 import '../utils/uri.dart';
 import 'create_control.dart';
+import 'flet_store_mixin.dart';
 import 'highlight_view.dart';
 
-class MarkdownControl extends StatelessWidget {
+class MarkdownControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
+  final FletControlBackend backend;
 
-  const MarkdownControl({super.key, required this.parent, required this.control});
+  const MarkdownControl(
+      {super.key,
+      required this.parent,
+      required this.control,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -52,35 +55,29 @@ class MarkdownControl extends StatelessWidget {
     var autoFollowLinks = control.attrBool("autoFollowLinks", false)!;
     var autoFollowLinksTarget = control.attrString("autoFollowLinksTarget");
 
-    return StoreConnector<AppState, PageArgsModel>(
-        distinct: true,
-        converter: (store) => PageArgsModel.fromStore(store),
-        builder: (context, pageArgs) {
-          Widget markdown = MarkdownBody(
-              data: value,
-              selectable: control.attrBool("selectable", false)!,
-              imageDirectory: pageArgs.assetsDir != ""
-                  ? pageArgs.assetsDir
-                  : getBaseUri(pageArgs.pageUri!).toString(),
-              extensionSet: extensionSet,
-              builders: {
-                'code':
-                    CodeElementBuilder(codeTheme.toLowerCase(), mdStyleSheet),
-              },
-              styleSheet: mdStyleSheet,
-              onTapLink: (String text, String? href, String title) {
-                debugPrint("Markdown link tapped ${control.id} clicked: $href");
-                if (autoFollowLinks && href != null) {
-                  openWebBrowser(href, webWindowName: autoFollowLinksTarget);
-                }
-                FletAppServices.of(context).server.sendPageEvent(
-                    eventTarget: control.id,
-                    eventName: "tap_link",
-                    eventData: href?.toString() ?? "");
-              });
+    return withPageArgs((context, pageArgs) {
+      Widget markdown = MarkdownBody(
+          data: value,
+          selectable: control.attrBool("selectable", false)!,
+          imageDirectory: pageArgs.assetsDir != ""
+              ? pageArgs.assetsDir
+              : getBaseUri(pageArgs.pageUri!).toString(),
+          extensionSet: extensionSet,
+          builders: {
+            'code': CodeElementBuilder(codeTheme.toLowerCase(), mdStyleSheet),
+          },
+          styleSheet: mdStyleSheet,
+          onTapLink: (String text, String? href, String title) {
+            debugPrint("Markdown link tapped ${control.id} clicked: $href");
+            if (autoFollowLinks && href != null) {
+              openWebBrowser(href, webWindowName: autoFollowLinksTarget);
+            }
+            backend.triggerControlEvent(
+                control.id, "tap_link", href?.toString() ?? "");
+          });
 
-          return constrainedControl(context, markdown, parent, control);
-        });
+      return constrainedControl(context, markdown, parent, control);
+    });
   }
 }
 

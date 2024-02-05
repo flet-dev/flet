@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../flet_server.dart';
+import '../flet_control_backend.dart';
 import '../protocol/invoke_method_result.dart';
 
 void invokeClientStorage(String methodId, String methodName,
-    Map<String, String> args, FletServer server) async {
+    Map<String, String> args, FletControlBackend backend) async {
   sendResult(Object? result, String? error) {
-    server.sendPageEvent(
-        eventTarget: "page",
-        eventName: "invoke_method_result",
-        eventData: json.encode(InvokeMethodResult(
+    backend.triggerControlEvent(
+        "page",
+        "invoke_method_result",
+        json.encode(InvokeMethodResult(
             methodId: methodId,
             result: result != null ? json.encode(result) : null,
             error: error)));

@@ -1,5 +1,6 @@
 from typing import Any, Dict, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -15,7 +16,7 @@ from flet_core.types import (
 )
 
 
-class Checkbox(ConstrainedControl):
+class Checkbox(ConstrainedControl, AdaptiveControl):
     """
     Checkbox allows to select one or more items from a group, or switch between two mutually exclusive options (checked or unchecked, on or off).
 
@@ -125,6 +126,9 @@ class Checkbox(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.value = value
         self.tristate = tristate
         self.label = label
@@ -136,7 +140,6 @@ class Checkbox(ConstrainedControl):
         self.hover_color = hover_color
         self.overlay_color = overlay_color
         self.active_color = active_color
-        self.adaptive = adaptive
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
@@ -168,15 +171,6 @@ class Checkbox(ConstrainedControl):
     @tristate.setter
     def tristate(self, value: Optional[bool]):
         self._set_attr("tristate", value)
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self._get_attr("adaptive", data_type="bool", def_value=False)
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self._set_attr("adaptive", value)
 
     # label
     @property

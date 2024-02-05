@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -38,18 +39,24 @@ TextInputType parseTextInputType(String type) {
   return TextInputType.text;
 }
 
-InputDecoration buildInputDecoration(BuildContext context, Control control,
-    Control? prefix, Control? suffix, Widget? customSuffix, bool focused) {
+InputDecoration buildInputDecoration(
+    BuildContext context,
+    Control control,
+    Control? prefix,
+    Control? suffix,
+    Widget? customSuffix,
+    bool focused,
+    bool? adaptive) {
   String? label = control.attrString("label", "")!;
   FormFieldInputBorder inputBorder = FormFieldInputBorder.values.firstWhere(
     ((b) => b.name == control.attrString("border", "")!.toLowerCase()),
     orElse: () => FormFieldInputBorder.outline,
   );
-  var icon = getMaterialIcon(control.attrString("icon", "")!);
+  var icon = parseIcon(control.attrString("icon", "")!);
 
-  var prefixIcon = getMaterialIcon(control.attrString("prefixIcon", "")!);
+  var prefixIcon = parseIcon(control.attrString("prefixIcon", "")!);
   var prefixText = control.attrString("prefixText");
-  var suffixIcon = getMaterialIcon(control.attrString("suffixIcon", "")!);
+  var suffixIcon = parseIcon(control.attrString("suffixIcon", "")!);
   var suffixText = control.attrString("suffixText");
 
   var bgcolor = HexColor.fromString(
@@ -128,12 +135,28 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       prefixText: prefixText,
       prefixStyle: parseTextStyle(Theme.of(context), control, "prefixStyle"),
       prefix: prefix != null
-          ? createControl(control, prefix.id, control.isDisabled)
+          ? createControl(control, prefix.id, control.isDisabled,
+              parentAdaptive: adaptive)
           : null,
       suffix: suffix != null
-          ? createControl(control, suffix.id, control.isDisabled)
+          ? createControl(control, suffix.id, control.isDisabled,
+              parentAdaptive: adaptive)
           : null,
       suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
       suffixText: suffixText,
       suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"));
+}
+
+OverlayVisibilityMode parseVisibilityMode(String type) {
+  switch (type.toLowerCase()) {
+    case "never":
+      return OverlayVisibilityMode.never;
+    case "notediting":
+      return OverlayVisibilityMode.notEditing;
+    case "editing":
+      return OverlayVisibilityMode.editing;
+    case "always":
+      return OverlayVisibilityMode.always;
+  }
+  return OverlayVisibilityMode.always;
 }

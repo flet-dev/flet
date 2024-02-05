@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 
 import 'actions.dart';
+import 'control_factory.dart';
 import 'flet_app_errors_handler.dart';
 import 'flet_server.dart';
 import 'flet_server_protocol.dart';
@@ -21,6 +22,7 @@ class FletAppServices extends InheritedWidget {
   late final Store<AppState> store;
   final Map<String, GlobalKey> globalKeys = {};
   final Map<String, ControlInvokeMethodCallback> controlInvokeMethods = {};
+  final List<CreateControlFactory> createControlFactories;
 
   FletAppServices(
       {super.key,
@@ -32,7 +34,8 @@ class FletAppServices extends InheritedWidget {
       this.hideLoadingPage,
       this.controlId,
       this.reconnectIntervalMs,
-      this.reconnectTimeoutMs}) {
+      this.reconnectTimeoutMs,
+      required this.createControlFactories}) {
     store = Store<AppState>(appReducer, initialState: AppState.initial());
     server = FletServer(store, controlInvokeMethods,
         reconnectIntervalMs: reconnectIntervalMs,
@@ -43,19 +46,14 @@ class FletAppServices extends InheritedWidget {
         // root error handler
         errorsHandler!.addListener(() {
           if (store.state.isRegistered) {
-            server.sendPageEvent(
-                eventTarget: "page",
-                eventName: "error",
-                eventData: errorsHandler!.error!);
+            server.triggerControlEvent("page", "error", errorsHandler!.error!);
           }
         });
       } else if (controlId != null && parentAppServices != null) {
         // parent error handler
         errorsHandler?.addListener(() {
-          parentAppServices?.server.sendPageEvent(
-              eventTarget: controlId!,
-              eventName: "error",
-              eventData: errorsHandler!.error!);
+          parentAppServices?.server
+              .triggerControlEvent(controlId!, "error", errorsHandler!.error!);
         });
       }
     }

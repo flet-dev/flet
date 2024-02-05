@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:flet/src/flet_server.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'actions.dart';
+import 'flet_control_backend.dart';
 import 'models/app_state.dart';
 import 'models/control.dart';
 import 'models/window_media_data.dart';
@@ -46,21 +46,19 @@ AppState appReducer(AppState state, dynamic action) {
       pageAttrs["width"] = action.newPageSize.width.toString();
       pageAttrs["height"] = action.newPageSize.height.toString();
 
-      List<Map<String, String>> props = [
-        {"i": "page", "width": action.newPageSize.width.toString()},
-        {"i": "page", "height": action.newPageSize.height.toString()},
-      ];
+      Map<String, String> props = {
+        "width": action.newPageSize.width.toString(),
+        "height": action.newPageSize.height.toString()
+      };
 
       if (action.wmd != null) {
-        addWindowMediaEventProps(action.wmd!, pageAttrs, props);
+        addWindowMediaEventProps(action.wmd!, pageAttrs);
+        addWindowMediaEventProps(action.wmd!, props);
       }
       controls[page.id] = page.copyWith(attrs: pageAttrs);
-      action.server.updateControlProps(props: props);
-      action.server.sendPageEvent(
-          eventTarget: "page",
-          eventName: "resize",
-          eventData:
-              "${action.newPageSize.width},${action.newPageSize.height}");
+      action.backend.updateControlState("page", props, client: false);
+      action.backend.triggerControlEvent("page", "resize",
+          "${action.newPageSize.width},${action.newPageSize.height}");
     }
 
     return state.copyWith(
@@ -126,15 +124,14 @@ AppState appReducer(AppState state, dynamic action) {
     var controls = Map.of(state.controls);
     if (page != null && !state.isLoading) {
       var pageAttrs = Map.of(page.attrs);
-      List<Map<String, String>> props = [];
-      addWindowMediaEventProps(action.wmd, pageAttrs, props);
+      Map<String, String> props = {};
+      addWindowMediaEventProps(action.wmd, pageAttrs);
+      addWindowMediaEventProps(action.wmd, props);
 
       controls[page.id] = page.copyWith(attrs: pageAttrs);
-      action.server.updateControlProps(props: props);
-      action.server.sendPageEvent(
-          eventTarget: "page",
-          eventName: "window_event",
-          eventData: action.eventName);
+      action.backend.updateControlState("page", props, client: false);
+      action.backend
+          .triggerControlEvent("page", "window_event", action.eventName);
     }
 
     return state.copyWith(controls: controls);
@@ -150,16 +147,12 @@ AppState appReducer(AppState state, dynamic action) {
       var pageAttrs = Map.of(page.attrs);
       pageAttrs["platformBrightness"] = action.brightness.name.toString();
 
-      List<Map<String, String>> props = [
-        {"i": "page", "platformBrightness": action.brightness.name.toString()},
-      ];
-
       controls[page.id] = page.copyWith(attrs: pageAttrs);
-      action.server.updateControlProps(props: props);
-      action.server.sendPageEvent(
-          eventTarget: "page",
-          eventName: "platformBrightnessChange",
-          eventData: action.brightness.name.toString());
+      action.backend.updateControlState(
+          "page", {"platformBrightness": action.brightness.name.toString()},
+          client: false);
+      action.backend.triggerControlEvent("page", "platformBrightnessChange",
+          action.brightness.name.toString());
     }
     return state.copyWith(displayBrightness: action.brightness);
   } else if (action is RegisterWebClientAction) {
@@ -181,7 +174,7 @@ AppState appReducer(AppState state, dynamic action) {
       if (state.deepLinkingRoute != "") {
         debugPrint(
             "Sending buffered deep link route: ${state.deepLinkingRoute}");
-        sendRouteChangeEvent(action.server, state.deepLinkingRoute);
+        sendRouteChangeEvent(action.backend, state.deepLinkingRoute);
       }
 
       // connected to the session
@@ -226,16 +219,16 @@ AppState appReducer(AppState state, dynamic action) {
           action.server.controlInvokeMethods[action.payload.controlId];
       if (handler != null) {
         handler(action.payload.methodName, action.payload.args)
-            .then((result) => action.server.sendPageEvent(
-                eventTarget: "page",
-                eventName: "invoke_method_result",
-                eventData: json.encode(InvokeMethodResult(
+            .then((result) => action.server.triggerControlEvent(
+                "page",
+                "invoke_method_result",
+                json.encode(InvokeMethodResult(
                     methodId: action.payload.methodId,
                     result: result.toString()))))
-            .onError((error, stackTrace) => action.server.sendPageEvent(
-                eventTarget: "page",
-                eventName: "invoke_method_result",
-                eventData: json.encode(InvokeMethodResult(
+            .onError((error, stackTrace) => action.server.triggerControlEvent(
+                "page",
+                "invoke_method_result",
+                json.encode(InvokeMethodResult(
                     methodId: action.payload.methodId,
                     error: error.toString()))));
       }
@@ -258,10 +251,10 @@ AppState appReducer(AppState state, dynamic action) {
           break;
         case "canLaunchUrl":
           canLaunchUrl(Uri.parse(action.payload.args["url"]!)).then((value) =>
-              action.server.sendPageEvent(
-                  eventTarget: "page",
-                  eventName: "invoke_method_result",
-                  eventData: json.encode(InvokeMethodResult(
+              action.server.triggerControlEvent(
+                  "page",
+                  "invoke_method_result",
+                  json.encode(InvokeMethodResult(
                       methodId: action.payload.methodId,
                       result: value.toString()))));
           break;
@@ -353,49 +346,19 @@ AppState appReducer(AppState state, dynamic action) {
   return state;
 }
 
-addWindowMediaEventProps(WindowMediaData wmd, Map<String, String> pageAttrs,
-    List<Map<String, String>> props) {
-  pageAttrs["windowwidth"] = wmd.width != null ? wmd.width.toString() : "";
-  pageAttrs["windowheight"] = wmd.height != null ? wmd.height.toString() : "";
-  pageAttrs["windowtop"] = wmd.top != null ? wmd.top.toString() : "";
-  pageAttrs["windowleft"] = wmd.left != null ? wmd.left.toString() : "";
-  pageAttrs["windowminimized"] =
+addWindowMediaEventProps(WindowMediaData wmd, Map<String, String> props) {
+  props["windowwidth"] = wmd.width != null ? wmd.width.toString() : "";
+  props["windowheight"] = wmd.height != null ? wmd.height.toString() : "";
+  props["windowtop"] = wmd.top != null ? wmd.top.toString() : "";
+  props["windowleft"] = wmd.left != null ? wmd.left.toString() : "";
+  props["windowminimized"] =
       wmd.isMinimized != null ? wmd.isMinimized.toString() : "";
-  pageAttrs["windowmaximized"] =
+  props["windowmaximized"] =
       wmd.isMaximized != null ? wmd.isMaximized.toString() : "";
-  pageAttrs["windowfocused"] =
+  props["windowfocused"] =
       wmd.isFocused != null ? wmd.isFocused.toString() : "";
-  pageAttrs["windowfullscreen"] =
+  props["windowfullscreen"] =
       wmd.isFullScreen != null ? wmd.isFullScreen.toString() : "";
-
-  props.addAll([
-    {"i": "page", "windowwidth": wmd.width != null ? wmd.width.toString() : ""},
-    {
-      "i": "page",
-      "windowheight": wmd.height != null ? wmd.height.toString() : ""
-    },
-    {"i": "page", "windowtop": wmd.top != null ? wmd.top.toString() : ""},
-    {"i": "page", "windowleft": wmd.left != null ? wmd.left.toString() : ""},
-    {
-      "i": "page",
-      "windowminimized":
-          wmd.isMinimized != null ? wmd.isMinimized.toString() : ""
-    },
-    {
-      "i": "page",
-      "windowmaximized":
-          wmd.isMaximized != null ? wmd.isMaximized.toString() : ""
-    },
-    {
-      "i": "page",
-      "windowfocused": wmd.isFocused != null ? wmd.isFocused.toString() : ""
-    },
-    {
-      "i": "page",
-      "windowfullscreen":
-          wmd.isFullScreen != null ? wmd.isFullScreen.toString() : ""
-    },
-  ]);
 }
 
 addControls(Map<String, Control> controls, List<Control> newControls) {
@@ -519,11 +482,7 @@ List<String> getAllDescendantIds(Map<String, Control> controls, String id) {
   return [];
 }
 
-void sendRouteChangeEvent(FletServer server, String route) {
-  List<Map<String, String>> props = [
-    {"i": "page", "route": route},
-  ];
-  server.updateControlProps(props: props);
-  server.sendPageEvent(
-      eventTarget: "page", eventName: "route_change", eventData: route);
+void sendRouteChangeEvent(FletControlBackend backend, String route) {
+  backend.updateControlState("page", {"route": route}, client: false);
+  backend.triggerControlEvent("page", "route_change", route);
 }
