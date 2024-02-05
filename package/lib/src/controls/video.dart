@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -68,7 +70,6 @@ class _VideoControlState extends State<VideoControl> {
         e.name.toLowerCase() ==
         widget.control.attrString("filterQuality", "low")!.toLowerCase());
 
-    List<Media> playlist = parseVideoMedia(widget.control, "playlist");
     double? volume = widget.control.attrDouble("volume");
     double? pitch = widget.control.attrDouble("pitch");
     double? playbackRate = widget.control.attrDouble("playbackRate");
@@ -77,7 +78,6 @@ class _VideoControlState extends State<VideoControl> {
         e.name.toLowerCase() ==
         widget.control.attrString("playlistMode")?.toLowerCase());
 
-    final List<Media>? prevPlaylist = widget.control.state["playlist"];
     final double? prevVolume = widget.control.state["volume"];
     final double? prevPitch = widget.control.state["pitch"];
     final double? prevPlaybackRate = widget.control.state["playbackRate"];
@@ -146,29 +146,6 @@ class _VideoControlState extends State<VideoControl> {
         await player.setPlaylistMode(playlistMode);
       }
 
-      if (playlist != prevPlaylist) {
-        widget.control.state["playlist"] = playlist;
-        // add new media
-        // FIXME: incomplete implementation of the add-comparison - an already existing (duplicate) media fails to be added again
-        for (var media in playlist) {
-          if (prevPlaylist != null && !prevPlaylist.contains(media)) {
-            await player.add(media);
-          }
-        }
-
-        // remove old media
-        var indexToRemove = [];
-        prevPlaylist?.forEachIndexed((index, media) {
-          if (!playlist.contains(media)) {
-            indexToRemove.add(index);
-          }
-        });
-        indexToRemove.forEachIndexed((i, indexOfMediaToRemove) async {
-          // subtract i to account for any previously removed media
-          await player.remove(indexOfMediaToRemove - i);
-        });
-      }
-
       widget.backend.subscribeMethods(widget.control.id,
           (methodName, args) async {
         switch (methodName) {
@@ -206,6 +183,22 @@ class _VideoControlState extends State<VideoControl> {
           case "jump_to":
             debugPrint("Video.jump($hashCode)");
             await player.jump(parseInt(args["media_index"], 0));
+            break;
+          case "playlist_add":
+            debugPrint("Video.add($hashCode)");
+            Map<String, dynamic> extras =
+                json.decode(args["extras"]!.replaceAll("'", "\""));
+            Map<String, String> httpHeaders = (json
+                    .decode(args["http_headers"]!.replaceAll("'", "\"")) as Map)
+                .map(
+                    (key, value) => MapEntry(key.toString(), value.toString()));
+            await player.add(Media(args["resource"]!,
+                extras: extras.isNotEmpty ? extras : null,
+                httpHeaders: httpHeaders.isNotEmpty ? httpHeaders : null));
+            break;
+          case "playlist_remove":
+            debugPrint("Video.remove($hashCode)");
+            await player.remove(parseInt(args["media_index"], 0));
             break;
         }
         return null;
