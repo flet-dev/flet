@@ -1,18 +1,18 @@
-from typing import List, Optional, Union, Any
+from typing import Any, List, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
+    AnimationValue,
     ClipBehavior,
     ClipBehaviorString,
+    NotchShape,
+    OffsetValue,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OffsetValue,
-    PaddingValue,
-    AnimationValue,
-    NotchShape,
 )
 
 
@@ -36,6 +36,7 @@ class BottomAppBar(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
@@ -74,6 +75,7 @@ class BottomAppBar(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            expand_loose=expand_loose,
             col=col,
             opacity=opacity,
             rotate=rotate,

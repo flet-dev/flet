@@ -1,19 +1,18 @@
 from typing import Any, Optional, Union
 
+from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    PaddingValue,
 )
-
-from flet_core.text_style import TextStyle
-from flet_core.buttons import OutlinedBorder
 
 
 class Chip(ConstrainedControl):
@@ -73,6 +72,7 @@ class Chip(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
@@ -129,6 +129,7 @@ class Chip(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            expand_loose=expand_loose,
             col=col,
             opacity=opacity,
             rotate=rotate,

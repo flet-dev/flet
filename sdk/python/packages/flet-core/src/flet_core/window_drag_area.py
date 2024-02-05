@@ -54,6 +54,7 @@ class WindowDragArea(ConstrainedControl):
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
+        expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
@@ -73,7 +74,6 @@ class WindowDragArea(ConstrainedControl):
         data: Any = None,
         maximizable: Optional[bool] = None,
     ):
-
         ConstrainedControl.__init__(
             self,
             ref=ref,
@@ -84,6 +84,7 @@ class WindowDragArea(ConstrainedControl):
             right=right,
             bottom=bottom,
             expand=expand,
+            expand_loose=expand_loose,
             col=col,
             opacity=opacity,
             rotate=rotate,
