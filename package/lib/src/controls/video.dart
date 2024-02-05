@@ -154,7 +154,6 @@ class _VideoControlState extends State<VideoControl> {
         // FIXME: incomplete implementation of the add-comparison - an already existing (duplicate) media fails to be added again
         for (var media in playlist) {
           if (prevPlaylist != null && !prevPlaylist.contains(media)) {
-            debugPrint("Video.ADD(${media.uri})");
             await player.add(media);
           }
         }
@@ -163,7 +162,6 @@ class _VideoControlState extends State<VideoControl> {
         var indexToRemove = [];
         prevPlaylist?.forEachIndexed((index, media) {
           if (!playlist.contains(media)) {
-            debugPrint("Video.REMOVE(${media.uri})");
             indexToRemove.add(index);
           }
         });
@@ -191,6 +189,8 @@ class _VideoControlState extends State<VideoControl> {
           case "stop":
             debugPrint("Video.stop($hashCode)");
             await player.stop();
+            player.open(Playlist(parseVideoMedia(widget.control, "playlist")),
+                play: false);
             break;
           case "seek":
             debugPrint("Video.jump($hashCode)");
