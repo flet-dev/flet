@@ -1054,7 +1054,6 @@ Widget _expandable(Widget widget, Control? parent, Control control) {
   if (parent != null &&
       (parent.type == "view" ||
           parent.type == "column" ||
-          //parent.type == "container" ||
           parent.type == "row")) {
     //debugPrint("Expandable ${control.id}");
     int? expand = control.attrInt("expand");
