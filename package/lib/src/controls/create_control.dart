@@ -246,7 +246,6 @@ Widget createWidget(
       return VideoControl(
           key: key,
           parent: parent,
-          children: controlView.children,
           control: controlView.control,
           parentDisabled: parentDisabled,
           backend: backend);

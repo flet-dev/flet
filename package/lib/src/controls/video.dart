@@ -14,7 +14,6 @@ import 'create_control.dart';
 
 class VideoControl extends StatefulWidget {
   final Control? parent;
-  final List<Control> children;
   final Control control;
   final bool parentDisabled;
   final FletControlBackend backend;
@@ -22,7 +21,6 @@ class VideoControl extends StatefulWidget {
   const VideoControl(
       {super.key,
       required this.parent,
-      required this.children,
       required this.control,
       required this.parentDisabled,
       required this.backend});
