@@ -43,7 +43,7 @@ class VideoMedia:
 
 class Video(ConstrainedControl):
     """
-    A video widget.
+    A control that displays a video from a playlist.
 
     -----
 
