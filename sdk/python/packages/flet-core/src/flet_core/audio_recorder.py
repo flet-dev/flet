@@ -20,7 +20,7 @@ class AudioEncoder(Enum):
 
 class AudioRecorder(Control):
     """
-
+    A control that allows you to record audio from your device.
 
     -----
 
@@ -29,7 +29,7 @@ class AudioRecorder(Control):
 
     def __init__(
         self,
-        audio_encoding: Optional[AudioEncoder] = None,
+        audio_encoder: Optional[AudioEncoder] = None,
         suppress_noise: Optional[bool] = None,
         cancel_echo: Optional[bool] = None,
         auto_gain: Optional[bool] = None,
@@ -47,7 +47,7 @@ class AudioRecorder(Control):
             ref=ref,
             data=data,
         )
-        self.audio_encoding = audio_encoding
+        self.audio_encoder = audio_encoder
         self.suppress_noise = suppress_noise
         self.cancel_echo = cancel_echo
         self.auto_gain = auto_gain
@@ -58,7 +58,7 @@ class AudioRecorder(Control):
     def _get_control_name(self):
         return "audiorecorder"
 
-    def start_recording(self, output_path: str):
+    def start_recording(self, output_path: str = None):
         if not self.page.web and not output_path:
             raise ValueError("output_path must be provided when not on web!")
         self.page.invoke_method(
@@ -208,13 +208,13 @@ class AudioRecorder(Control):
         )
         return p == "true"
 
-    # audio_encoding
+    # audio_encoder
     @property
-    def audio_encoding(self):
+    def audio_encoder(self):
         return self._get_attr("audioEncoder")
 
-    @audio_encoding.setter
-    def audio_encoding(self, value: Optional[AudioEncoder]):
+    @audio_encoder.setter
+    def audio_encoder(self, value: Optional[AudioEncoder]):
         self._set_attr(
             "audioEncoder", value.value if isinstance(value, AudioEncoder) else value
         )
