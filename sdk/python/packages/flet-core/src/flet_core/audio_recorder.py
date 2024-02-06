@@ -36,6 +36,7 @@ class AudioRecorder(Control):
         channels_num: OptionalNumber = None,
         sample_rate: OptionalNumber = None,
         bit_rate: OptionalNumber = None,
+        on_state_changed=None,
         #
         # common
         #
@@ -54,6 +55,7 @@ class AudioRecorder(Control):
         self.channels_num = channels_num
         self.sample_rate = sample_rate
         self.bit_rate = bit_rate
+        self.on_state_changed = on_state_changed
 
     def _get_control_name(self):
         return "audiorecorder"
@@ -273,3 +275,12 @@ class AudioRecorder(Control):
     def channels_num(self, value: OptionalNumber):
         if value is None or value in (1, 2):
             self._set_attr("channels", value)
+
+    # on_state_changed
+    @property
+    def on_state_changed(self):
+        return self._get_event_handler("state_changed")
+
+    @on_state_changed.setter
+    def on_state_changed(self, handler):
+        self._add_event_handler("state_changed", handler)
