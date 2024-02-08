@@ -43,7 +43,7 @@ class VideoMedia:
 
 class Video(ConstrainedControl):
     """
-    A video widget.
+    A control that displays a video from a playlist.
 
     -----
 
@@ -52,7 +52,7 @@ class Video(ConstrainedControl):
 
     def __init__(
         self,
-        playlist: Union[VideoMedia, List[VideoMedia], None] = None,
+        playlist: Union[List[VideoMedia], None] = None,
         title: Optional[str] = None,
         fit: Optional[ImageFit] = None,
         fill_color: Optional[str] = None,
@@ -131,7 +131,7 @@ class Video(ConstrainedControl):
             data=data,
         )
 
-        self.playlist = playlist
+        self.__playlist = playlist
         self.fit = fit
         self.pitch = pitch
         self.fill_color = fill_color
@@ -206,23 +206,65 @@ class Video(ConstrainedControl):
         )
 
     def jump_to(self, media_index: int):
+        assert self.__playlist[media_index], "index out of range"
         self.page.invoke_method(
             "jump_to", {"media_index": str(media_index)}, control_id=self.uid
         )
 
     async def jump_to_async(self, media_index: int):
+        assert self.__playlist[media_index], "index out of range"
         await self.page.invoke_method_async(
             "jump_to", {"media_index": str(media_index)}, control_id=self.uid
         )
+
+    def playlist_add(self, media: VideoMedia):
+        assert media.resource, "media has no resource"
+        self.page.invoke_method(
+            "playlist_add",
+            {
+                "resource": media.resource,
+                "http_headers": str(media.http_headers or {}),
+                "extras": str(media.extras or {}),
+            },
+            control_id=self.uid,
+        )
+        self.__playlist.append(media)
+
+    async def playlist_add_async(self, media: VideoMedia):
+        assert media.resource, "media has no resource"
+        await self.page.invoke_method_async(
+            "playlist_add",
+            {
+                "resource": media.resource,
+                "http_headers": str(media.http_headers),
+                "extras": str(media.extras),
+            },
+            control_id=self.uid,
+        )
+        self.__playlist.append(media)
+
+    def playlist_remove(self, media_index: int):
+        assert self.__playlist[media_index], "index out of range"
+        self.page.invoke_method(
+            "playlist_remove",
+            {"media_index": str(media_index)},
+            control_id=self.uid,
+        )
+        self.__playlist.pop(media_index)
+
+    async def playlist_remove_async(self, media_index: int):
+        assert self.__playlist[media_index], "index out of range"
+        await self.page.invoke_method_async(
+            "playlist_remove",
+            {"media_index": str(media_index)},
+            control_id=self.uid,
+        )
+        self.__playlist.pop(media_index)
 
     # playlist
     @property
     def playlist(self) -> Optional[List[VideoMedia]]:
         return self.__playlist
-
-    @playlist.setter
-    def playlist(self, value: Union[VideoMedia, List[VideoMedia], None]):
-        self.__playlist = value if value is not None else []
 
     # fit
     @property
