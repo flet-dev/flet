@@ -203,5 +203,8 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
           : null,
       foreground: json["foreground"] != null
           ? paintFromJSON(theme, json["foreground"])
+          : null,
+      letterSpacing: json['letter_spacing'] != null
+          ? parseDouble(json['letter_spacing'])
           : null);
 }
