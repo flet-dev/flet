@@ -132,7 +132,7 @@ for:
             dart pub publish --force || exit 1
             cd -
 
-          elif [[ "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
+          else
 
             cd packages/flet
             flutter test
