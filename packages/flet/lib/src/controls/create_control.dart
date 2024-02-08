@@ -16,7 +16,6 @@ import '../utils/theme.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
-import 'audio.dart';
 import 'audio_recorder.dart';
 import 'badge.dart';
 import 'banner.dart';
@@ -146,6 +145,7 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
             parent,
             controlView.control,
             controlView.children,
+            nextChild,
             parentDisabled,
             parentAdaptive,
             FletAppServices.of(context).server));
@@ -240,12 +240,6 @@ Widget createWidget(
           children: controlView.children,
           control: controlView.control,
           parentDisabled: parentDisabled,
-          backend: backend);
-    case "audio":
-      return AudioControl(
-          parent: parent,
-          control: controlView.control,
-          nextChild: nextChild,
           backend: backend);
     case "audiorecorder":
       return AudioRecorderControl(

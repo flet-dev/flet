@@ -114,7 +114,7 @@ for:
       - flutter upgrade --force
 
     build_script:
-      - cd package
+      - cd packages/flet
       - flutter test
 
     deploy_script:
@@ -123,7 +123,13 @@ for:
           if [[ "$APPVEYOR_REPO_TAG_NAME" != "" ]]; then
               mkdir -p $HOME/.config/dart
               echo $PUB_DEV_TOKEN | base64 --decode > $HOME/.config/dart/pub-credentials.json
+
               dart pub publish --force
+              cd -
+
+              cd packages/flet_audio
+              dart pub publish --force
+              cd -
           fi
 
   # ======================================

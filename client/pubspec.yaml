@@ -31,7 +31,9 @@ dependencies:
     sdk: flutter
 
   flet:
-    path: ../package/
+    path: ../packages/flet
+  flet_audio:
+    path: ../packages/flet_audio
 
   url_strategy: ^0.2.0
   record: ^5.0.4

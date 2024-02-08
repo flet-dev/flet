@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flet/flet.dart';
+import 'package:flet_audio/flet_audio.dart' as flet_audio;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -14,6 +15,8 @@ void main([List<String>? args]) async {
   }
 
   await setupDesktop();
+
+  flet_audio.ensureInitialized();
 
   var pageUrl = Uri.base.toString();
   var assetsDir = "";
@@ -70,5 +73,6 @@ void main([List<String>? args]) async {
     pageUrl: pageUrl,
     assetsDir: assetsDir,
     errorsHandler: errorsHandler,
+    createControlFactories: [flet_audio.createControl],
   ));
 }
