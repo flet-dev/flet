@@ -460,7 +460,6 @@ class Page(Control):
             for line in results:
                 for id in line.split(" "):
                     added_controls[n]._Control__uid = id
-                    added_controls[n].page = self
 
                     # add to index
                     self._index[id] = added_controls[n]

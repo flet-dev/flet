@@ -58,6 +58,9 @@ class Control:
     def _build(self):
         pass
 
+    def on_update(self):
+        pass
+
     def _before_build_command(self):
         self._set_attr_json("col", self.__col)
 
@@ -441,6 +444,8 @@ class Control:
 
     # private methods
     def _build_add_commands(self, indent=0, index=None, added_controls=None):
+        if index:
+            self.page = index["page"]
         self._build()
 
         # remove control from index
@@ -478,6 +483,7 @@ class Control:
             return command
 
         self._before_build_command()
+        self.on_update()
 
         for attrName in sorted(self.__attrs):
             attrName = attrName.lower()
