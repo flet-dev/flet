@@ -126,22 +126,22 @@ for:
             cd packages/flet
             flutter test
             dart pub publish --force || exit 1
-            cd -
+            cd $APPVEYOR_BUILD_FOLDER
 
             cd packages/flet_audio
             dart pub publish --force || exit 1
-            cd -
+            cd $APPVEYOR_BUILD_FOLDER
 
           else
 
             cd packages/flet
             flutter test
             dart pub publish --dry-run
-            cd -
+            cd $APPVEYOR_BUILD_FOLDER
 
             cd packages/flet_audio
             dart pub publish --dry-run
-            cd -
+            cd $APPVEYOR_BUILD_FOLDER
           fi
 
   # ======================================
