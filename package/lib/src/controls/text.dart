@@ -95,7 +95,6 @@ class TextControl extends StatelessWidget with FletStoreMixin {
                 : null),
         backgroundColor: HexColor.fromString(
             Theme.of(context), control.attrString("bgcolor", "")!),
-        letterSpacing: control.attrDouble('letterSpacing', null),
       );
 
       TextAlign textAlign = TextAlign.values.firstWhere(
