@@ -78,23 +78,26 @@ class TextControl extends StatelessWidget with FletStoreMixin {
       }
 
       style = (style ?? const TextStyle()).copyWith(
-          fontSize: control.attrDouble("size", null),
-          fontWeight: getFontWeight(fontWeight),
-          fontStyle: control.attrBool(
-            "italic",
-            false,
-          )!
-              ? FontStyle.italic
-              : null,
-          fontFamily: control.attrString("fontFamily"),
-          fontVariations: variations,
-          color: HexColor.fromString(
-                  Theme.of(context), control.attrString("color", "")!) ??
-              (spans.isNotEmpty
-                  ? DefaultTextStyle.of(context).style.color
-                  : null),
-          backgroundColor: HexColor.fromString(
-              Theme.of(context), control.attrString("bgcolor", "")!));
+        fontSize: control.attrDouble("size", null),
+        fontWeight: getFontWeight(fontWeight),
+        fontStyle: control.attrBool(
+          "italic",
+          false,
+        )!
+            ? FontStyle.italic
+            : null,
+        fontFamily: control.attrString("fontFamily"),
+        fontVariations: variations,
+        color: HexColor.fromString(
+                Theme.of(context), control.attrString("color", "")!) ??
+            (spans.isNotEmpty
+                ? DefaultTextStyle.of(context).style.color
+                : null),
+        backgroundColor: HexColor.fromString(
+            Theme.of(context), control.attrString("bgcolor", "")!),
+        letterSpacing: control.attrDouble('letterSpacing', null),
+        height: control.attrDouble('lineHeight', null),
+      );
 
       TextAlign textAlign = TextAlign.values.firstWhere(
           (a) =>

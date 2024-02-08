@@ -131,6 +131,8 @@ class Text(ConstrainedControl):
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         semantics_label: Optional[str] = None,
+        letter_spacing: OptionalNumber = None,
+        line_height: OptionalNumber = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -179,6 +181,8 @@ class Text(ConstrainedControl):
         self.color = color
         self.bgcolor = bgcolor
         self.semantics_label = semantics_label
+        self.letter_spacing = letter_spacing
+        self.line_height = line_height
 
     def _get_control_name(self):
         return "text"
@@ -369,3 +373,19 @@ class Text(ConstrainedControl):
     @semantics_label.setter
     def semantics_label(self, value):
         self._set_attr("semanticsLabel", value)
+
+    @property
+    def letter_spacing(self):
+        return self._get_attr("letterSpacing")
+
+    @letter_spacing.setter
+    def letter_spacing(self, value):
+        self._set_attr("letterSpacing", value)
+
+    @property
+    def line_height(self):
+        return self._get_attr("lineHeight")
+
+    @line_height.setter
+    def line_height(self, value):
+        return self._set_attr("lineHeight", value)
