@@ -2,7 +2,7 @@ from typing import Any, List, Optional
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import OutlinedBorder
-from flet_core.control import Control
+from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import MainAxisAlignment, MainAxisAlignmentString, PaddingValue
 
@@ -62,26 +62,29 @@ class AlertDialog(AdaptiveControl):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
-        open: bool = False,
         modal: bool = False,
         title: Optional[Control] = None,
-        title_padding: PaddingValue = None,
         content: Optional[Control] = None,
-        content_padding: PaddingValue = None,
         actions: Optional[List[Control]] = None,
+        bgcolor: Optional[str] = None,
+        elevation: OptionalNumber = None,
+        icon: Optional[Control] = None,
+        open: bool = False,
+        title_padding: PaddingValue = None,
+        content_padding: PaddingValue = None,
         actions_padding: PaddingValue = None,
         actions_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
         shape: Optional[OutlinedBorder] = None,
         inset_padding: PaddingValue = None,
         adaptive: Optional[bool] = None,
         on_dismiss=None,
+        #
+        # Common
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,
@@ -94,10 +97,14 @@ class AlertDialog(AdaptiveControl):
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__title: Optional[Control] = None
+        self.__icon: Optional[Control] = None
         self.__content: Optional[Control] = None
         self.__actions: List[Control] = []
 
         self.open = open
+        self.bgcolor = bgcolor
+        self.elevation = elevation
+        self.icon = icon
         self.modal = modal
         self.title = title
         self.title_padding = title_padding
@@ -126,6 +133,9 @@ class AlertDialog(AdaptiveControl):
         if self.__title:
             self.__title._set_attr_internal("n", "title")
             children.append(self.__title)
+        if self.__icon:
+            self.__icon._set_attr_internal("n", "icon")
+            children.append(self.__icon)
         if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
@@ -142,6 +152,24 @@ class AlertDialog(AdaptiveControl):
     @open.setter
     def open(self, value: Optional[bool]):
         self._set_attr("open", value)
+
+    # bgcolor
+    @property
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
+
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation")
+
+    @elevation.setter
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
 
     # modal
     @property
@@ -160,6 +188,15 @@ class AlertDialog(AdaptiveControl):
     @title.setter
     def title(self, value):
         self.__title = value
+
+    # icon
+    @property
+    def icon(self):
+        return self.__icon
+
+    @icon.setter
+    def icon(self, value):
+        self.__icon = value
 
     # title_padding
     @property
