@@ -42,7 +42,6 @@ class TextControl extends StatelessWidget with FletStoreMixin {
       );
       String? semanticsLabel = control.attrString("semanticsLabel");
       bool noWrap = control.attrBool("noWrap", false)!;
-      bool rtl = control.attrBool("rtl", false)!;
       int? maxLines = control.attrInt("maxLines");
 
       TextStyle? style;
@@ -114,14 +113,12 @@ class TextControl extends StatelessWidget with FletStoreMixin {
               ? SelectableText.rich(
                   TextSpan(text: text, style: style, children: spans),
                   maxLines: maxLines,
-                  textDirection: rtl ? TextDirection.rtl : null,
                   textAlign: textAlign,
                 )
               : SelectableText(
                   text,
                   semanticsLabel: semanticsLabel,
                   maxLines: maxLines,
-                  textDirection: rtl ? TextDirection.rtl : null,
                   style: style,
                   textAlign: textAlign,
                 )
@@ -129,7 +126,6 @@ class TextControl extends StatelessWidget with FletStoreMixin {
               ? RichText(
                   text: TextSpan(text: text, style: style, children: spans),
                   maxLines: maxLines,
-                  textDirection: rtl ? TextDirection.rtl : null,
                   softWrap: !noWrap,
                   textAlign: textAlign,
                   overflow: overflow,
@@ -137,7 +133,6 @@ class TextControl extends StatelessWidget with FletStoreMixin {
               : Text(
                   text,
                   semanticsLabel: semanticsLabel,
-                  textDirection: rtl ? TextDirection.rtl : null,
                   maxLines: maxLines,
                   softWrap: !noWrap,
                   style: style,

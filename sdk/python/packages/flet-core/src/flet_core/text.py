@@ -86,25 +86,6 @@ class Text(ConstrainedControl):
     def __init__(
         self,
         value: Optional[str] = None,
-        style: Union[TextThemeStyle, TextStyle, None] = None,
-        spans: Optional[List[TextSpan]] = None,
-        size: OptionalNumber = None,
-        color: Optional[str] = None,
-        text_align: TextAlign = TextAlign.NONE,
-        font_family: Optional[str] = None,
-        weight: Optional[FontWeight] = None,
-        italic: Optional[bool] = None,
-        theme_style: Optional[TextThemeStyle] = None,
-        max_lines: Optional[int] = None,
-        overflow: TextOverflow = TextOverflow.NONE,
-        selectable: Optional[bool] = None,
-        no_wrap: Optional[bool] = None,
-        bgcolor: Optional[str] = None,
-        semantics_label: Optional[str] = None,
-        rtl: Optional[bool] = None,
-        #
-        # Common
-        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -132,6 +113,24 @@ class Text(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        #
+        # text-specific
+        #
+        spans: Optional[List[TextSpan]] = None,
+        text_align: TextAlign = TextAlign.NONE,
+        font_family: Optional[str] = None,
+        size: OptionalNumber = None,
+        weight: Optional[FontWeight] = None,
+        italic: Optional[bool] = None,
+        style: Union[TextThemeStyle, TextStyle, None] = None,
+        theme_style: Optional[TextThemeStyle] = None,
+        max_lines: Optional[int] = None,
+        overflow: TextOverflow = TextOverflow.NONE,
+        selectable: Optional[bool] = None,
+        no_wrap: Optional[bool] = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        semantics_label: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -180,7 +179,6 @@ class Text(ConstrainedControl):
         self.color = color
         self.bgcolor = bgcolor
         self.semantics_label = semantics_label
-        self.rtl = rtl
 
     def _get_control_name(self):
         return "text"
@@ -237,15 +235,6 @@ class Text(ConstrainedControl):
     @font_family.setter
     def font_family(self, value):
         self._set_attr("fontFamily", value)
-
-    # rtl
-    @property
-    def rtl(self) -> Optional[bool]:
-        return self._get_attr("rtl", data_type="bool", def_value=False)
-
-    @rtl.setter
-    def rtl(self, value: Optional[bool]):
-        self._set_attr("rtl", value)
 
     # size
     @property
