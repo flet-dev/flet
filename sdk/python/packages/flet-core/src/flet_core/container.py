@@ -95,6 +95,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         #
         # Specific
         #
+        rtl: Optional[bool] = None,
         padding: PaddingValue = None,
         margin: MarginValue = None,
         alignment: Optional[Alignment] = None,
@@ -169,6 +170,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("click", self.__on_click.get_handler())
 
         self.content = content
+        self.rtl = rtl
         self.padding = padding
         self.margin = margin
         self.alignment = alignment
@@ -333,6 +335,15 @@ class Container(ConstrainedControl, AdaptiveControl):
     @image_src.setter
     def image_src(self, value):
         self._set_attr("imageSrc", value)
+
+    # rtl
+    @property
+    def rtl(self) -> Optional[bool]:
+        return self._get_attr("rtl", data_type="bool", def_value=False)
+
+    @rtl.setter
+    def rtl(self, value: Optional[bool]):
+        self._set_attr("rtl", value)
 
     # image_src_base64
     @property
