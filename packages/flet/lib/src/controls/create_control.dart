@@ -100,7 +100,6 @@ import 'time_picker.dart';
 import 'tooltip.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
-import 'video.dart';
 import 'webview.dart';
 import 'window_drag_area.dart';
 
@@ -239,13 +238,6 @@ Widget createWidget(
           key: key,
           parent: parent,
           children: controlView.children,
-          control: controlView.control,
-          parentDisabled: parentDisabled,
-          backend: backend);
-    case "video":
-      return VideoControl(
-          key: key,
-          parent: parent,
           control: controlView.control,
           parentDisabled: parentDisabled,
           backend: backend);

@@ -1,30 +1,22 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-import '../flet_control_backend.dart';
-import '../models/control.dart';
-import '../utils/alignment.dart';
-import '../utils/colors.dart';
-import '../utils/images.dart';
-import '../utils/numbers.dart';
-import '../utils/video.dart';
-import 'create_control.dart';
+import 'utils/video.dart';
 
 class VideoControl extends StatefulWidget {
   final Control? parent;
   final Control control;
-  final bool parentDisabled;
   final FletControlBackend backend;
 
   const VideoControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.parentDisabled,
       required this.backend});
 
   @override

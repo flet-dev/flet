@@ -1,8 +1,7 @@
 import 'dart:convert';
 
+import 'package:flet/flet.dart';
 import 'package:media_kit/media_kit.dart';
-
-import '../models/control.dart';
 
 List<Media> parseVideoMedia(Control control, String propName) {
   var v = control.attrString(propName, null);

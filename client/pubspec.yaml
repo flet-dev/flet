@@ -35,6 +35,8 @@ dependencies:
     path: ../packages/flet
   flet_audio:
     path: ../packages/flet_audio
+  flet_video:
+    path: ../packages/flet_video
 
   url_strategy: ^0.2.0
   record: ^5.0.4
