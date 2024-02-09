@@ -131,6 +131,7 @@ class Text(ConstrainedControl):
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         semantics_label: Optional[str] = None,
+        rtl: Optional[bool] = None
     ):
         ConstrainedControl.__init__(
             self,
@@ -179,6 +180,7 @@ class Text(ConstrainedControl):
         self.color = color
         self.bgcolor = bgcolor
         self.semantics_label = semantics_label
+        self.rtl = rtl
 
     def _get_control_name(self):
         return "text"
@@ -244,6 +246,15 @@ class Text(ConstrainedControl):
     @size.setter
     def size(self, value: OptionalNumber):
         self._set_attr("size", value)
+
+    # rtl
+    @property
+    def rtl(self) -> Optional[bool]:
+        return self._get_attr("rtl", data_type="bool", def_value=False)
+
+    @rtl.setter
+    def rtl(self, value: Optional[bool]):
+        self._set_attr("rtl", value)
 
     # weight
     @property
