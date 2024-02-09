@@ -78,6 +78,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         #
         # Row specific
         #
@@ -119,6 +120,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         AdaptiveControl.__init__(self, adaptive=adaptive)

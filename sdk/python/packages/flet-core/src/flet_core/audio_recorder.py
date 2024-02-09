@@ -20,7 +20,7 @@ class AudioEncoder(Enum):
 
 class AudioRecorder(Control):
     """
-
+    A control that allows you to record audio from your device.
 
     -----
 
@@ -29,13 +29,14 @@ class AudioRecorder(Control):
 
     def __init__(
         self,
-        audio_encoding: Optional[AudioEncoder] = None,
+        audio_encoder: Optional[AudioEncoder] = None,
         suppress_noise: Optional[bool] = None,
         cancel_echo: Optional[bool] = None,
         auto_gain: Optional[bool] = None,
         channels_num: OptionalNumber = None,
         sample_rate: OptionalNumber = None,
         bit_rate: OptionalNumber = None,
+        on_state_changed=None,
         #
         # common
         #
@@ -47,18 +48,19 @@ class AudioRecorder(Control):
             ref=ref,
             data=data,
         )
-        self.audio_encoding = audio_encoding
+        self.audio_encoder = audio_encoder
         self.suppress_noise = suppress_noise
         self.cancel_echo = cancel_echo
         self.auto_gain = auto_gain
         self.channels_num = channels_num
         self.sample_rate = sample_rate
         self.bit_rate = bit_rate
+        self.on_state_changed = on_state_changed
 
     def _get_control_name(self):
         return "audiorecorder"
 
-    def start_recording(self, output_path: str):
+    def start_recording(self, output_path: str = None):
         if not self.page.web and not output_path:
             raise ValueError("output_path must be provided when not on web!")
         self.page.invoke_method(
@@ -208,13 +210,13 @@ class AudioRecorder(Control):
         )
         return p == "true"
 
-    # audio_encoding
+    # audio_encoder
     @property
-    def audio_encoding(self):
+    def audio_encoder(self):
         return self._get_attr("audioEncoder")
 
-    @audio_encoding.setter
-    def audio_encoding(self, value: Optional[AudioEncoder]):
+    @audio_encoder.setter
+    def audio_encoder(self, value: Optional[AudioEncoder]):
         self._set_attr(
             "audioEncoder", value.value if isinstance(value, AudioEncoder) else value
         )
@@ -273,3 +275,12 @@ class AudioRecorder(Control):
     def channels_num(self, value: OptionalNumber):
         if value is None or value in (1, 2):
             self._set_attr("channels", value)
+
+    # on_state_changed
+    @property
+    def on_state_changed(self):
+        return self._get_event_handler("state_changed")
+
+    @on_state_changed.setter
+    def on_state_changed(self, handler):
+        self._add_event_handler("state_changed", handler)

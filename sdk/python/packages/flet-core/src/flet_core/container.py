@@ -92,6 +92,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         #
         # Specific
         #
@@ -157,6 +158,7 @@ class Container(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         AdaptiveControl.__init__(self, adaptive=adaptive)

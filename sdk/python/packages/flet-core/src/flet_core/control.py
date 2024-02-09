@@ -32,6 +32,7 @@ class Control:
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
     ):
         super().__init__()
         self.__page: Optional[Page] = None
@@ -45,6 +46,7 @@ class Control:
         self.opacity = opacity
         self.tooltip = tooltip
         self.visible = visible
+        self.rtl = rtl
         self.disabled = disabled
         self.__data: Any = None
         self.data = data
@@ -56,6 +58,9 @@ class Control:
         return False
 
     def _build(self):
+        pass
+
+    def on_update(self):
         pass
 
     def _before_build_command(self):
@@ -221,6 +226,15 @@ class Control:
     @expand_loose.setter
     def expand_loose(self, value: Optional[bool]):
         self._set_attr("expandLoose", value)
+
+    # rtl
+    @property
+    def rtl(self) -> Optional[bool]:
+        return self._get_attr("rtl", data_type="bool", def_value=False)
+
+    @rtl.setter
+    def rtl(self, value: Optional[bool]):
+        self._set_attr("rtl", value)
 
     # col
     @property
@@ -441,6 +455,8 @@ class Control:
 
     # private methods
     def _build_add_commands(self, indent=0, index=None, added_controls=None):
+        if index:
+            self.page = index["page"]
         self._build()
 
         # remove control from index
@@ -478,6 +494,7 @@ class Control:
             return command
 
         self._before_build_command()
+        self.on_update()
 
         for attrName in sorted(self.__attrs):
             attrName = attrName.lower()

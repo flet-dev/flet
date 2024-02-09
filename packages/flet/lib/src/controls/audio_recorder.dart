@@ -27,6 +27,8 @@ class AudioRecorderControl extends StatefulWidget {
 class _AudioRecorderControlState extends State<AudioRecorderControl>
     with FletStoreMixin {
   AudioRecorder? recorder;
+  void Function(RecordState)? _onStateChanged;
+  StreamSubscription? _onStateChangedSubscription;
 
   @override
   void initState() {
@@ -36,6 +38,10 @@ class _AudioRecorderControlState extends State<AudioRecorderControl>
       recorder = AudioRecorder();
       recorder = widget.control.state["recorder"] = recorder;
     }
+
+    _onStateChangedSubscription = recorder?.onStateChanged().listen((state) {
+      _onStateChanged?.call(state);
+    });
 
     widget.control.onRemove.clear();
     widget.control.onRemove.add(_onRemove);
@@ -51,6 +57,7 @@ class _AudioRecorderControlState extends State<AudioRecorderControl>
   @override
   void deactivate() {
     debugPrint("AudioRecorder.deactivate($hashCode)");
+    _onStateChangedSubscription?.cancel();
     super.deactivate();
   }
 
@@ -73,6 +80,19 @@ class _AudioRecorderControlState extends State<AudioRecorderControl>
     bool suppressNoise = widget.control.attrBool("suppressNoise", false)!;
     AudioEncoder audioEncoder =
         parseAudioEncoder(widget.control.attrString("audioEncoder", "wav"))!;
+
+    _onStateChanged = (state) {
+      debugPrint("AudioRecorder($hashCode) - state_changed: ${state.name}");
+      var s = state.name.toString();
+      if (s == "record") {
+        s = "recording";
+      } else if (s == "pause") {
+        s = "paused";
+      } else if (s == "stop") {
+        s = "stopped";
+      }
+      widget.backend.triggerControlEvent(widget.control.id, "state_changed", s);
+    };
 
     () async {
       widget.backend.subscribeMethods(widget.control.id,

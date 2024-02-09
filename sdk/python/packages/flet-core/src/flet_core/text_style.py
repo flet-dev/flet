@@ -39,3 +39,4 @@ class TextStyle:
     bgcolor: Optional[str] = field(default=None)
     shadow: Union[None, BoxShadow, List[BoxShadow]] = field(default=None)
     foreground: Optional[Paint] = field(default=None)
+    letter_spacing: OptionalNumber = field(default=None)
