@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flet/flet.dart';
 import 'package:flet_audio/flet_audio.dart' as flet_audio;
+import 'package:flet_audio_recorder/flet_audio_recorder.dart'
+    as flet_audio_recorder;
 import 'package:flet_video/flet_video.dart' as flet_video;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ void main([List<String>? args]) async {
 
   WidgetsFlutterBinding.ensureInitialized();
   flet_audio.ensureInitialized();
+  flet_audio_recorder.ensureInitialized();
   flet_video.ensureInitialized();
 
   var pageUrl = Uri.base.toString();
@@ -78,6 +81,7 @@ void main([List<String>? args]) async {
     errorsHandler: errorsHandler,
     createControlFactories: [
       flet_audio.createControl,
+      flet_audio_recorder.createControl,
       flet_video.createControl
     ],
   ));

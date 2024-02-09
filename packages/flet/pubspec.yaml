@@ -40,7 +40,6 @@ dependencies:
   path: ^1.8.2
   js: ^0.6.5
   fl_chart: ^0.65.0
-  record: ^5.0.4
   webview_flutter: ^4.2.4
 
 dev_dependencies:
