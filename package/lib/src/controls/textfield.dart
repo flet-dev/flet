@@ -210,7 +210,6 @@ class _TextFieldControlState extends State<TextFieldControl>
       double? textVerticalAlign =
           widget.control.attrDouble("textVerticalAlign");
 
-      bool rtl = widget.control.attrBool("rtl", false)!;
       bool autocorrect = widget.control.attrBool("autocorrect", true)!;
       bool enableSuggestions =
           widget.control.attrBool("enableSuggestions", true)!;
@@ -247,7 +246,6 @@ class _TextFieldControlState extends State<TextFieldControl>
           textAlignVertical: textVerticalAlign != null
               ? TextAlignVertical(y: textVerticalAlign)
               : null,
-          textDirection: rtl ? TextDirection.rtl : null,
           cursorHeight: widget.control.attrDouble("cursorHeight"),
           cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
           cursorRadius: parseRadius(widget.control, "cursorRadius"),

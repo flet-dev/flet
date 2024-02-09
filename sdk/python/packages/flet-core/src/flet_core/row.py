@@ -87,6 +87,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         #
         # ScrollableControl specific
         #
@@ -136,6 +137,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         ScrollableControl.__init__(

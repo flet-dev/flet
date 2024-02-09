@@ -1,8 +1,9 @@
 import dataclasses
-import time
 from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union
+
+import time
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
@@ -138,6 +139,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         #
         # FormField specific
         #
@@ -182,7 +184,6 @@ class TextField(FormFieldControl, AdaptiveControl):
         value: Optional[str] = None,
         adaptive: Optional[bool] = None,
         keyboard_type: Optional[KeyboardType] = None,
-        rtl: Optional[bool] = None,
         multiline: Optional[bool] = None,
         min_lines: Optional[int] = None,
         max_lines: Optional[int] = None,
@@ -235,6 +236,7 @@ class TextField(FormFieldControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
             #
             # FormField
             #
@@ -281,7 +283,6 @@ class TextField(FormFieldControl, AdaptiveControl):
         self.text_style = text_style
         self.keyboard_type = keyboard_type
         self.text_align = text_align
-        self.rtl = rtl
         self.multiline = multiline
         self.min_lines = min_lines
         self.max_lines = max_lines
@@ -361,15 +362,6 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr(
             "textAlign", value.value if isinstance(value, TextAlign) else value
         )
-
-    # rtl
-    @property
-    def rtl(self) -> Optional[bool]:
-        return self._get_attr("rtl", data_type="bool", def_value=False)
-
-    @rtl.setter
-    def rtl(self, value: Optional[bool]):
-        self._set_attr("rtl", value)
 
     # multiline
     @property

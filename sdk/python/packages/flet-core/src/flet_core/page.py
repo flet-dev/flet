@@ -2,12 +2,13 @@ import asyncio
 import json
 import logging
 import threading
-import time
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
+
+import time
 
 import flet_core
 from flet_core.alert_dialog import AlertDialog
@@ -912,7 +913,7 @@ class Page(Control):
 
         if not evt.wait(wait_timeout):
             del self.__method_calls[method_id]
-            raise Exception(
+            raise TimeoutError(
                 f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
             )
 

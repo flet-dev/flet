@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
@@ -64,6 +65,9 @@ void main([List<String>? args]) async {
       return true;
     };
   }
+
+  WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
 
   runApp(FletApp(
     title: 'Flet',

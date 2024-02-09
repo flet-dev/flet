@@ -37,6 +37,9 @@ dependencies:
   flutter_svg: ^2.0.9
   window_to_front: ^0.0.3
   audioplayers: ^5.2.1
+  media_kit: ^1.1.10
+  media_kit_video: ^1.2.4
+  media_kit_libs_video: ^1.0.4
   sensors_plus: ^4.0.2
   path: ^1.8.2
   js: ^0.6.5
