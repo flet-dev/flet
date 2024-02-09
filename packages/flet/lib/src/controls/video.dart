@@ -65,7 +65,6 @@ class _VideoControlState extends State<VideoControl> {
   Widget build(BuildContext context) {
     debugPrint("Video build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
     FilterQuality filterQuality = FilterQuality.values.firstWhere((e) =>
         e.name.toLowerCase() ==
         widget.control.attrString("filterQuality", "low")!.toLowerCase());

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../flet.dart';
+import '../flet_app.dart';
+import '../flet_app_errors_handler.dart';
 import '../models/control.dart';
 import 'create_control.dart';
 
@@ -8,7 +9,8 @@ class FletAppControl extends StatefulWidget {
   final Control? parent;
   final Control control;
 
-  const FletAppControl({super.key, required this.parent, required this.control});
+  const FletAppControl(
+      {super.key, required this.parent, required this.control});
 
   @override
   State<FletAppControl> createState() => _FletAppControlState();
