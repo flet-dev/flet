@@ -32,6 +32,7 @@ class Control:
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
     ):
         super().__init__()
         self.__page: Optional[Page] = None
@@ -45,6 +46,7 @@ class Control:
         self.opacity = opacity
         self.tooltip = tooltip
         self.visible = visible
+        self.rtl = rtl
         self.disabled = disabled
         self.__data: Any = None
         self.data = data
@@ -224,6 +226,15 @@ class Control:
     @expand_loose.setter
     def expand_loose(self, value: Optional[bool]):
         self._set_attr("expandLoose", value)
+
+    # rtl
+    @property
+    def rtl(self) -> Optional[bool]:
+        return self._get_attr("rtl", data_type="bool", def_value=False)
+
+    @rtl.setter
+    def rtl(self, value: Optional[bool]):
+        self._set_attr("rtl", value)
 
     # col
     @property
