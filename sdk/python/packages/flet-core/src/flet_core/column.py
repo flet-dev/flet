@@ -100,6 +100,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         tight: Optional[bool] = None,
         wrap: Optional[bool] = None,
         run_spacing: OptionalNumber = None,
+        rtl: Optional[bool] = None,
         #
         # Adaptive
         #
@@ -152,6 +153,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.tight = tight
         self.wrap = wrap
         self.run_spacing = run_spacing
+        self.rtl = rtl
 
     def _get_control_name(self):
         return "column"
@@ -166,6 +168,15 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     async def clean_async(self):
         await super().clean_async()
         self.__controls.clear()
+
+    # rtl
+    @property
+    def rtl(self) -> Optional[bool]:
+        return self._get_attr("rtl", data_type="bool", def_value=False)
+
+    @rtl.setter
+    def rtl(self, value: Optional[bool]):
+        self._set_attr("rtl", value)
 
     # tight
     @property
