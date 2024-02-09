@@ -1,6 +1,8 @@
-import time
 from typing import Any, Optional, Union
 
+import time
+
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -14,7 +16,7 @@ from flet_core.types import (
 )
 
 
-class TextButton(ConstrainedControl):
+class TextButton(ConstrainedControl, AdaptiveControl):
     """
     Text buttons are used for the lowest priority actions, especially when presenting multiple options. Text buttons can be placed on a variety of backgrounds. Until the button is interacted with, its container isn’t visible.
 
@@ -70,6 +72,7 @@ class TextButton(ConstrainedControl):
         #
         # Specific
         #
+        adaptive: Optional[bool] = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
         style: Optional[ButtonStyle] = None,
@@ -113,6 +116,7 @@ class TextButton(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.text = text
         self.icon = icon
