@@ -39,6 +39,8 @@ dependencies:
     path: ../packages/flet_audio_recorder
   flet_video:
     path: ../packages/flet_video
+  flet_webview:
+    path: ../packages/flet_webview
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6

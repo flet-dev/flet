@@ -1,14 +1,9 @@
 import 'dart:io' show Platform;
 import 'dart:io';
 
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-import '../flet_control_backend.dart';
-import '../models/control.dart';
-import '../utils/colors.dart';
-import 'create_control.dart';
-import 'error.dart';
 
 class WebViewControl extends StatelessWidget {
   final Control? parent;

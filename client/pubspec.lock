@@ -245,6 +245,13 @@ packages:
       relative: true
     source: path
     version: "0.19.0"
+  flet_webview:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_webview"
+      relative: true
+    source: path
+    version: "0.19.0"
   flutter:
     dependency: "direct main"
     description: flutter

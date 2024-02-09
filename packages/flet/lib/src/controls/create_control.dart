@@ -99,7 +99,6 @@ import 'time_picker.dart';
 import 'tooltip.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
-import 'webview.dart';
 import 'window_drag_area.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
@@ -858,13 +857,6 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
-          backend: backend);
-    case "webview":
-      return WebViewControl(
-          key: key,
-          parent: parent,
-          control: controlView.control,
-          parentDisabled: parentDisabled,
           backend: backend);
     default:
       return ErrorControl("Unknown control: ${controlView.control.type}");
