@@ -230,7 +230,7 @@ packages:
       path: "../packages/flet_audio"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "0.19.0"
   flutter:
     dependency: "direct main"
     description: flutter
