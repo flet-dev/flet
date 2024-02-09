@@ -1133,7 +1133,12 @@ Widget _expandable(Widget widget, Control? parent, Control control) {
           parent.type == "row")) {
     //debugPrint("Expandable ${control.id}");
     int? expand = control.attrInt("expand");
-    return expand != null ? Expanded(flex: expand, child: widget) : widget;
+    var expandLoose = control.attrBool("expandLoose");
+    return expand != null
+        ? (expandLoose == true)
+            ? Flexible(flex: expand, child: widget)
+            : Expanded(flex: expand, child: widget)
+        : widget;
   }
   return widget;
 }

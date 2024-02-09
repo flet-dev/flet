@@ -4,6 +4,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'cupertino_alert_dialog.dart';
@@ -41,6 +42,8 @@ class _AlertDialogControlState extends State<AlertDialogControl>
         widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
     var titleCtrls =
         widget.children.where((c) => c.name == "title" && c.isVisible);
+    var iconCtrls =
+        widget.children.where((c) => c.name == "icon" && c.isVisible);
     var contentCtrls =
         widget.children.where((c) => c.name == "content" && c.isVisible);
     var actionCtrls =
@@ -72,6 +75,13 @@ class _AlertDialogControlState extends State<AlertDialogControl>
       shape: parseOutlinedBorder(widget.control, "shape"),
       insetPadding: parseEdgeInsets(widget.control, "insetPadding") ??
           const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
+      backgroundColor: HexColor.fromString(
+          Theme.of(context), widget.control.attrString("bgcolor", "")!),
+      elevation: widget.control.attrDouble("elevation"),
+      icon: iconCtrls.isNotEmpty
+          ? createControl(widget.control, iconCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
+          : null,
     );
   }
 

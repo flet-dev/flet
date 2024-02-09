@@ -36,6 +36,8 @@ dependencies:
 
   url_strategy: ^0.2.0
   record: ^5.0.4
+  cupertino_icons: ^1.0.6
+  
   integration_test:
     sdk: flutter
 

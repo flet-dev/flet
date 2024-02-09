@@ -25,6 +25,7 @@ class Control:
         self,
         ref: Optional[Ref] = None,
         expand: Union[None, bool, int] = None,
+        expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: Optional[str] = None,
@@ -39,6 +40,7 @@ class Control:
         self._id = None
         self.__uid: Optional[str] = None
         self.expand = expand
+        self.expand_loose = expand_loose
         self.col = col
         self.opacity = opacity
         self.tooltip = tooltip
@@ -54,6 +56,9 @@ class Control:
         return False
 
     def _build(self):
+        pass
+
+    def on_update(self):
         pass
 
     def _before_build_command(self):
@@ -210,6 +215,15 @@ class Control:
         if value and isinstance(value, bool):
             value = 1
         self._set_attr("expand", value if value else None)
+
+    # expand_loose
+    @property
+    def expand_loose(self) -> Optional[bool]:
+        return self._get_attr("expandLoose", data_type="bool", def_value=False)
+
+    @expand_loose.setter
+    def expand_loose(self, value: Optional[bool]):
+        self._set_attr("expandLoose", value)
 
     # col
     @property
@@ -430,6 +444,8 @@ class Control:
 
     # private methods
     def _build_add_commands(self, indent=0, index=None, added_controls=None):
+        if index:
+            self.page = index["page"]
         self._build()
 
         # remove control from index
@@ -467,6 +483,7 @@ class Control:
             return command
 
         self._before_build_command()
+        self.on_update()
 
         for attrName in sorted(self.__attrs):
             attrName = attrName.lower()
