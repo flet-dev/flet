@@ -902,8 +902,12 @@ Widget constrainedControl(
                       _rotatedControl(
                           context,
                           _sizedControl(
-                              _tooltip(
-                                  _opacity(context, widget, parent, control),
+                              _directionality(
+                                  _tooltip(
+                                      _opacity(
+                                          context, widget, parent, control),
+                                      parent,
+                                      control),
                                   parent,
                                   control),
                               parent,
@@ -1123,7 +1127,6 @@ Widget _expandable(Widget widget, Control? parent, Control control) {
       (parent.type == "view" ||
           parent.type == "column" ||
           parent.type == "row")) {
-    //debugPrint("Expandable ${control.id}");
     int? expand = control.attrInt("expand");
     var expandLoose = control.attrBool("expandLoose");
     return expand != null
@@ -1133,4 +1136,11 @@ Widget _expandable(Widget widget, Control? parent, Control control) {
         : widget;
   }
   return widget;
+}
+
+Widget _directionality(Widget widget, Control? parent, Control control) {
+  bool rtl = control.attrBool("rtl", false)!;
+  return rtl
+      ? Directionality(textDirection: TextDirection.rtl, child: widget)
+      : widget;
 }
