@@ -61,6 +61,7 @@ import 'haptic_feedback.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
+import 'image_viewer.dart';
 import 'linechart.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
@@ -795,6 +796,11 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           nextChild: nextChild);
+    case "imageviewer":
+      return ImageViewerControl(
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled);
     case "tabs":
       return TabsControl(
           key: key,
