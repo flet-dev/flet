@@ -87,6 +87,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         #
         # ScrollableControl specific
         #
@@ -103,7 +104,6 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         tight: Optional[bool] = None,
         wrap: Optional[bool] = None,
         run_spacing: OptionalNumber = None,
-        rtl: Optional[bool] = None,
         #
         # Adaptive
         #
@@ -137,6 +137,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         ScrollableControl.__init__(
@@ -156,7 +157,6 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.tight = tight
         self.wrap = wrap
         self.run_spacing = run_spacing
-        self.rtl = rtl
 
     def _get_control_name(self):
         return "row"
@@ -221,15 +221,6 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @spacing.setter
     def spacing(self, value: OptionalNumber):
         self._set_attr("spacing", value)
-
-    # rtl
-    @property
-    def rtl(self) -> Optional[bool]:
-        return self._get_attr("rtl", data_type="bool", def_value=False)
-
-    @rtl.setter
-    def rtl(self, value: Optional[bool]):
-        self._set_attr("rtl", value)
 
     # wrap
     @property

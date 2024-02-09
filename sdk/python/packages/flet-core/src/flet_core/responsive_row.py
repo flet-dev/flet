@@ -78,10 +78,10 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         #
         # Row specific
         #
-        rtl: Optional[bool] = None,
         columns: Optional[ResponsiveNumber] = None,
         alignment: MainAxisAlignment = MainAxisAlignment.NONE,
         vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
@@ -120,6 +120,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
@@ -130,7 +131,6 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         self.spacing = spacing
         self.run_spacing = run_spacing
         self.columns = columns
-        self.rtl = rtl
 
     def _get_control_name(self):
         return "responsiverow"
@@ -192,15 +192,6 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     @columns.setter
     def columns(self, value: Optional[ResponsiveNumber]):
         self.__columns = value
-
-    # rtl
-    @property
-    def rtl(self) -> Optional[bool]:
-        return self._get_attr("rtl", data_type="bool", def_value=False)
-
-    @rtl.setter
-    def rtl(self, value: Optional[bool]):
-        self._set_attr("rtl", value)
 
     # spacing
     @property

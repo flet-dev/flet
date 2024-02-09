@@ -60,6 +60,7 @@ class FormFieldControl(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         #
         # FormField specific
         #
@@ -128,6 +129,7 @@ class FormFieldControl(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         self.text_size = text_size
