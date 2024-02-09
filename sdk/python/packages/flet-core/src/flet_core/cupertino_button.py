@@ -26,6 +26,9 @@ class CupertinoButton(ConstrainedControl):
 
     def __init__(
         self,
+        text: Optional[str] = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
         content: Optional[Control] = None,
         bgcolor: Optional[str] = None,
         disabled_color: Optional[str] = None,
@@ -101,6 +104,9 @@ class CupertinoButton(ConstrainedControl):
         )
 
         self.disabled_color = disabled_color
+        self.text = text
+        self.icon = icon
+        self.icon_color = icon_color
         self.bgcolor = bgcolor
         self.border_radius = border_radius
         self.min_size = min_size
@@ -127,6 +133,33 @@ class CupertinoButton(ConstrainedControl):
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
+
+    # text
+    @property
+    def text(self):
+        return self._get_attr("text")
+
+    @text.setter
+    def text(self, value):
+        self._set_attr("text", value)
+
+    # icon
+    @property
+    def icon(self):
+        return self._get_attr("icon")
+
+    @icon.setter
+    def icon(self, value):
+        self._set_attr("icon", value)
+
+    # icon_color
+    @property
+    def icon_color(self):
+        return self._get_attr("iconColor")
+
+    @icon_color.setter
+    def icon_color(self, value):
+        self._set_attr("iconColor", value)
 
     # alignment
     @property
