@@ -1,3 +1,3 @@
-## 0.19.0
+## 0.20.0
 
-Initial version of the package.
+Initial release of the package.

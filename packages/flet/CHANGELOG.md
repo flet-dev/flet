@@ -1,3 +1,28 @@
+# 0.20.0
+
+* `--include-packages` option and support for `pubspec.yaml` for custom Flutter packages plus API for adding custom Flutter packages.
+* Add `rtl` property to multiple controls ([#2582](https://github.com/flet-dev/flet/issues/2582)).
+* Fix: Material icon is shown instead of Cupertino icon if its name is thesame ([#2581](https://github.com/flet-dev/flet/issues/2581)).
+* `TextStyle.letter_spacing`property ([#2574](https://github.com/flet-dev/flet/issues/2574)).
+* `Audio`, `AudioRecorder`, `Video` and `WebView` controls moved into separate Flutter packages ([#2579](https://github.com/flet-dev/flet/issues/2579)).
+* Introduced `Control.on_update()` overridable method ([#2578](https://github.com/flet-dev/flet/issues/2578)).
+* New `AlertDialog` properties: `icon`, `bgcolor`, `elevation`.
+* `expand_loose` property for Control and all controls that have `expand` property ([#2561](https://github.com/flet-dev/flet/issues/2561)).
+* Pyodide v0.25.0.
+* `flet create` command to show verbose output ([#2544](https://github.com/flet-dev/flet/issues/2544)).
+* `AudioRecorder` control ([#2494](https://github.com/flet-dev/flet/issues/2494)).
+* Bugfix: `flet pack --distpath` deletes `dist` directory ([#2500](https://github.com/flet-dev/flet/issues/2500)).
+* Added recursive `adaptive` property to all container-alike controls.
+* `TextField.text_vertical_align` property ([#2496](https://github.com/flet-dev/flet/issues/2496)).
+* `CupertinoButton` Control ([#2495](https://github.com/flet-dev/flet/issues/2495)).
+* `CupertinoListTile` control ([#2487](https://github.com/flet-dev/flet/issues/2487)).
+* Support for custom Flutter controls ([#2482](https://github.com/flet-dev/flet/issues/2482)).
+* `Pagelet` control ([#2469](https://github.com/flet-dev/flet/issues/2469)).
+* Add `AppBar.adaptive` ([#2458](https://github.com/flet-dev/flet/issues/2458)).
+* Cupertino Icons and Colors ([#2433](https://github.com/flet-dev/flet/issues/2433)).
+* `CupertinoTextfield` control ([#2417](https://github.com/flet-dev/flet/issues/2417)).
+* `FloatingActionButtonLocation` offset ([#2411](https://github.com/flet-dev/flet/issues/2411)).
+
 # 0.19.0
 
 * `flet build` to apply Python SSL fix when packaging for iOS and Android ([#2349](https://github.com/flet-dev/flet/issues/2349)).
