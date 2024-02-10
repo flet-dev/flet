@@ -220,10 +220,38 @@ packages:
   flet:
     dependency: "direct main"
     description:
-      path: "../package"
+      path: "../packages/flet"
       relative: true
     source: path
-    version: "0.19.0"
+    version: "0.20.0"
+  flet_audio:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_audio"
+      relative: true
+    source: path
+    version: "0.20.0"
+  flet_audio_recorder:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_audio_recorder"
+      relative: true
+    source: path
+    version: "0.20.0"
+  flet_video:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_video"
+      relative: true
+    source: path
+    version: "0.20.0"
+  flet_webview:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_webview"
+      relative: true
+    source: path
+    version: "0.20.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -599,7 +627,7 @@ packages:
     source: hosted
     version: "4.2.4"
   record:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: record
       sha256: "5c8e12c692a4800b33f5f8b6c821ea083b12bfdbd031b36ba9322c40a4eeecc9"
@@ -1148,5 +1176,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
+  dart: ">=3.2.3 <4.0.0"
   flutter: ">=3.16.0"

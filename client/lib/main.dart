@@ -1,9 +1,13 @@
 import 'dart:io';
 
 import 'package:flet/flet.dart';
+import 'package:flet_audio/flet_audio.dart' as flet_audio;
+import 'package:flet_audio_recorder/flet_audio_recorder.dart'
+    as flet_audio_recorder;
+import 'package:flet_video/flet_video.dart' as flet_video;
+import 'package:flet_webview/flet_webview.dart' as flet_webview;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
@@ -15,6 +19,12 @@ void main([List<String>? args]) async {
   }
 
   await setupDesktop();
+
+  WidgetsFlutterBinding.ensureInitialized();
+  flet_audio.ensureInitialized();
+  flet_audio_recorder.ensureInitialized();
+  flet_video.ensureInitialized();
+  flet_webview.ensureInitialized();
 
   var pageUrl = Uri.base.toString();
   var assetsDir = "";
@@ -66,13 +76,16 @@ void main([List<String>? args]) async {
     };
   }
 
-  WidgetsFlutterBinding.ensureInitialized();
-  MediaKit.ensureInitialized();
-
   runApp(FletApp(
     title: 'Flet',
     pageUrl: pageUrl,
     assetsDir: assetsDir,
     errorsHandler: errorsHandler,
+    createControlFactories: [
+      flet_audio.createControl,
+      flet_audio_recorder.createControl,
+      flet_video.createControl,
+      flet_webview.createControl
+    ],
   ));
 }
