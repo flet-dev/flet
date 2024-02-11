@@ -185,8 +185,6 @@ class _PageletControlState extends State<PageletControl> {
                           children: appBarView.children,
                           parentDisabled: widget.control.isDisabled,
                           parentAdaptive: adaptive,
-                          bgcolor: HexColor.fromString(Theme.of(context),
-                              appBarView.control.attrString("bgcolor", "")!),
                         ) as ObstructingPreferredSizeWidget
                       : null
               : null;

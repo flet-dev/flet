@@ -2,13 +2,12 @@ import asyncio
 import json
 import logging
 import threading
+import time
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
-
-import time
 
 import flet_core
 from flet_core.alert_dialog import AlertDialog
@@ -42,6 +41,7 @@ from flet_core.types import (
     MainAxisAlignment,
     OffsetValue,
     PaddingValue,
+    PageDesign,
     PagePlatform,
     ScrollMode,
     ThemeMode,
@@ -1228,6 +1228,18 @@ class Page(Control):
             "platform", value.value if isinstance(value, PagePlatform) else value
         )
 
+    # design
+    @property
+    def design(self):
+        av = self._get_attr("design")
+        return PageDesign(av) if av else PageDesign.MATERIAL
+
+    @design.setter
+    def design(self, value: PageDesign):
+        self._set_attr(
+            "design", value.value if isinstance(value, PageDesign) else value
+        )
+
     # platform_brightness
     @property
     def platform_brightness(self) -> ThemeMode:
@@ -1400,15 +1412,6 @@ class Page(Control):
     @auto_scroll.setter
     def auto_scroll(self, value: Optional[bool]):
         self.__default_view.auto_scroll = value
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self.__default_view.adaptive
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self.__default_view.adaptive = value
 
     # client_storage
     @property

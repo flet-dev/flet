@@ -14,7 +14,6 @@ class CupertinoAppBarControl extends StatelessWidget
   final bool parentDisabled;
   final bool? parentAdaptive;
   final List<Control> children;
-  final Color? bgcolor;
 
   const CupertinoAppBarControl(
       {super.key,
@@ -22,8 +21,7 @@ class CupertinoAppBarControl extends StatelessWidget
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.bgcolor});
+      required this.parentAdaptive});
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +77,11 @@ class CupertinoAppBarControl extends StatelessWidget
 
   @override
   bool shouldFullyObstruct(BuildContext context) {
-    final Color backgroundColor =
-        CupertinoDynamicColor.maybeResolve(bgcolor, context) ??
-            CupertinoTheme.of(context).barBackgroundColor;
+    final Color backgroundColor = CupertinoDynamicColor.maybeResolve(
+            HexColor.fromString(
+                Theme.of(context), control.attrString("bgcolor", "")!),
+            context) ??
+        CupertinoTheme.of(context).barBackgroundColor;
     return backgroundColor.alpha == 0xFF;
   }
 }
