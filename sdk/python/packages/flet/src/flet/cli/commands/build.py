@@ -219,6 +219,13 @@ class Command(BaseCommand):
             help="additional arguments for flutter build command",
         )
         parser.add_argument(
+            "--packages",
+            dest="flutter_packages",
+            nargs="+",
+            default=[],
+            help="extra Flutter Flet packages, such as flet_video, flet_audio, etc.",
+        )
+        parser.add_argument(
             "--build-number",
             dest="build_number",
             type=int,
@@ -352,12 +359,18 @@ class Command(BaseCommand):
             with open(src_pubspec_path, encoding="utf8") as f:
                 src_pubspec = pubspec = yaml.safe_load(f)
 
-        flutter_dependencies = []
-        if src_pubspec and src_pubspec["dependencies"]:
-            for dep in src_pubspec["dependencies"].keys():
-                flutter_dependencies.append(dep)
+        flutter_dependencies = (
+            src_pubspec["dependencies"]
+            if src_pubspec and src_pubspec["dependencies"]
+            else {}
+        )
 
-        template_data["flutter"] = {"dependencies": flutter_dependencies}
+        if options.flutter_packages:
+            for package in options.flutter_packages:
+                pspec = package.split(":")
+                flutter_dependencies[pspec[0]] = pspec[1] if len(pspec) > 1 else "any"
+
+        template_data["flutter"] = {"dependencies": list(flutter_dependencies.keys())}
 
         template_url = options.template
         template_ref = options.template_ref
@@ -388,9 +401,8 @@ class Command(BaseCommand):
             pubspec = yaml.safe_load(f)
 
         # merge dependencies to a dest pubspec.yaml
-        if src_pubspec and src_pubspec["dependencies"]:
-            for k, v in src_pubspec["dependencies"].items():
-                pubspec["dependencies"][k] = "any"
+        for k, v in flutter_dependencies.items():
+            pubspec["dependencies"][k] = v
 
         if src_pubspec and src_pubspec["dependency_overrides"]:
             pubspec["dependency_overrides"] = {}
