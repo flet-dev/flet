@@ -15,8 +15,7 @@ CupertinoThemeData parseCupertinoTheme(
     Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
   var materialTheme = parseTheme(control, propName, brightness);
-  var theme = MaterialBasedCupertinoThemeData(
-      materialTheme: parseTheme(control, propName, brightness));
+  var theme = MaterialBasedCupertinoThemeData(materialTheme: materialTheme);
 
   // fix AppBar styling for cupertino
   return theme.copyWith(
