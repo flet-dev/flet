@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -9,6 +10,22 @@ import 'edge_insets.dart';
 import 'material_state.dart';
 import 'numbers.dart';
 import 'text.dart';
+
+CupertinoThemeData parseCupertinoTheme(
+    Control control, String propName, Brightness? brightness,
+    {ThemeData? parentTheme}) {
+  var materialTheme = parseTheme(control, propName, brightness);
+  var theme = MaterialBasedCupertinoThemeData(
+      materialTheme: parseTheme(control, propName, brightness));
+
+  // fix AppBar styling for cupertino
+  return theme.copyWith(
+      applyThemeToAll: true,
+      barBackgroundColor: materialTheme.colorScheme.background,
+      textTheme: theme.textTheme.copyWith(
+          navTitleTextStyle: theme.textTheme.navTitleTextStyle
+              .copyWith(color: materialTheme.colorScheme.onBackground)));
+}
 
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
