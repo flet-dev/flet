@@ -38,6 +38,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool isIconButton = widget.control.type == "iconbutton";
 
     var contentCtrls = widget.children.where((c) => c.name == "content");
 
@@ -46,10 +47,22 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     Color? iconColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("iconColor", "")!);
 
+    // IconButton props below
+    double? iconSize = widget.control.attrDouble("iconSize");
+    bool selected = widget.control.attrBool("selected", false)!;
+    IconData? selectedIcon =
+        parseIcon(widget.control.attrString("selectedIcon", "")!);
+    Color? selectedIconColor = HexColor.fromString(
+        Theme.of(context), widget.control.attrString("selectedIconColor", "")!);
+
     Widget? content;
     List<Widget> children = [];
     if (icon != null) {
-      children.add(Icon(icon, color: iconColor));
+      children.add(Icon(
+        selected ? selectedIcon : icon,
+        color: selected ? selectedIconColor : iconColor,
+        size: iconSize,
+      ));
     }
     if (text != null) {
       children.add(Text(text));
@@ -74,13 +87,11 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       return const ErrorControl(
           "CupertinoButton has no content control. Please specify one.");
     }
-    debugPrint("CupertinoButton TYPE: ${widget.control.type}");
 
     bool filled = widget.control.attrBool("filled", false)!;
     double pressedOpacity = widget.control.attrDouble("opacityOnClick", 0.4)!;
     double minSize = widget.control.attrDouble("minSize", 44.0)!;
     String url = widget.control.attrString("url", "")!;
-    EdgeInsets? padding = parseEdgeInsets(widget.control, "padding");
     Color disabledColor = HexColor.fromString(Theme.of(context),
             widget.control.attrString("disabledColor", "")!) ??
         CupertinoColors.quaternarySystemFill;
@@ -92,12 +103,23 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         parseBorderRadius(widget.control, "borderRadius") ??
             const BorderRadius.all(Radius.circular(8.0));
 
+    EdgeInsets? padding = parseEdgeInsets(widget.control, "padding");
+    // set padding to zero when from a material IconButton
+    if (padding == null && isIconButton) {
+      padding = const EdgeInsets.all(0);
+    }
+
     Function()? onPressed = !disabled
         ? () {
             debugPrint("CupertinoButton ${widget.control.id} clicked!");
             if (url != "") {
               openWebBrowser(url,
                   webWindowName: widget.control.attrString("urlTarget"));
+            }
+            if (isIconButton && icon != null) {
+              setState(() {
+                selected = !selected;
+              });
             }
             widget.backend.triggerControlEvent(widget.control.id, "click", "");
           }
