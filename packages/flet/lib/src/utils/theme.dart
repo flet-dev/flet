@@ -14,16 +14,19 @@ import 'text.dart';
 CupertinoThemeData parseCupertinoTheme(
     Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
-  var materialTheme = parseTheme(control, propName, brightness);
-  var theme = MaterialBasedCupertinoThemeData(materialTheme: materialTheme);
+  var theme = parseTheme(control, propName, brightness);
+  var cupertinoTheme = MaterialBasedCupertinoThemeData(materialTheme: theme);
+  return fixCupertinoTheme(cupertinoTheme, theme);
+}
 
-  // fix AppBar styling for cupertino
-  return theme.copyWith(
+CupertinoThemeData fixCupertinoTheme(
+    CupertinoThemeData cupertinoTheme, ThemeData theme) {
+  return cupertinoTheme.copyWith(
       applyThemeToAll: true,
-      barBackgroundColor: materialTheme.colorScheme.background,
-      textTheme: theme.textTheme.copyWith(
-          navTitleTextStyle: theme.textTheme.navTitleTextStyle
-              .copyWith(color: materialTheme.colorScheme.onBackground)));
+      barBackgroundColor: theme.colorScheme.background,
+      textTheme: cupertinoTheme.textTheme.copyWith(
+          navTitleTextStyle: cupertinoTheme.textTheme.navTitleTextStyle
+              .copyWith(color: theme.colorScheme.onBackground)));
 }
 
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
@@ -62,7 +65,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       brightness: brightness,
       useMaterial3: json?["use_material3"] ?? primarySwatch == null);
 
-  return theme.copyWith(
+  theme = theme.copyWith(
       visualDensity: json?["visual_density"] != null
           ? parseVisualDensity(json?["visual_density"])
           : theme.visualDensity,
@@ -75,6 +78,10 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
           theme, theme.primaryTextTheme, json?["primary_text_theme"]),
       scrollbarTheme: parseScrollBarTheme(theme, json?["scrollbar_theme"]),
       tabBarTheme: parseTabBarTheme(theme, json?["tabs_theme"]));
+
+  return theme.copyWith(
+      cupertinoOverrideTheme: fixCupertinoTheme(
+          MaterialBasedCupertinoThemeData(materialTheme: theme), theme));
 }
 
 ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {

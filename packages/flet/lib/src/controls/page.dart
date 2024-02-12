@@ -534,20 +534,43 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
 
             return FletAppContext(
                 themeMode: _themeMode,
-                child: MaterialApp.router(
-                  debugShowCheckedModeBanner: false,
-                  showSemanticsDebugger:
-                      widget.control.attrBool("showSemanticsDebugger", false)!,
-                  routerDelegate: _routerDelegate,
-                  routeInformationParser: _routeParser,
-                  title: windowTitle,
-                  theme: parseTheme(widget.control, "theme", Brightness.light),
-                  darkTheme: widget.control.attrString("darkTheme") == null
-                      ? parseTheme(widget.control, "theme", Brightness.dark)
-                      : parseTheme(
-                          widget.control, "darkTheme", Brightness.dark),
-                  themeMode: _themeMode,
-                ));
+                child: _widgetsDesign == PageDesign.cupertino
+                    ? CupertinoApp.router(
+                        debugShowCheckedModeBanner: false,
+                        showSemanticsDebugger: widget.control
+                            .attrBool("showSemanticsDebugger", false)!,
+                        routerDelegate: _routerDelegate,
+                        routeInformationParser: _routeParser,
+                        title: windowTitle,
+                        theme: _themeMode == ThemeMode.light ||
+                                ((_themeMode == null ||
+                                        _themeMode == ThemeMode.system) &&
+                                    _brightness == Brightness.light)
+                            ? parseCupertinoTheme(
+                                widget.control, "theme", Brightness.light)
+                            : widget.control.attrString("darkTheme") != null
+                                ? parseCupertinoTheme(widget.control,
+                                    "darkTheme", Brightness.dark)
+                                : parseCupertinoTheme(
+                                    widget.control, "theme", Brightness.dark),
+                      )
+                    : MaterialApp.router(
+                        debugShowCheckedModeBanner: false,
+                        showSemanticsDebugger: widget.control
+                            .attrBool("showSemanticsDebugger", false)!,
+                        routerDelegate: _routerDelegate,
+                        routeInformationParser: _routeParser,
+                        title: windowTitle,
+                        theme: parseTheme(
+                            widget.control, "theme", Brightness.light),
+                        darkTheme: widget.control.attrString("darkTheme") ==
+                                null
+                            ? parseTheme(
+                                widget.control, "theme", Brightness.dark)
+                            : parseTheme(
+                                widget.control, "darkTheme", Brightness.dark),
+                        themeMode: _themeMode,
+                      ));
           });
     });
   }
@@ -969,20 +992,35 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                   child: scaffold);
             }
 
-            scaffold = CupertinoTheme(
-              data: widget.themeMode == ThemeMode.light ||
-                      ((widget.themeMode == null ||
-                              widget.themeMode == ThemeMode.system) &&
-                          widget.brightness == Brightness.light)
-                  ? parseCupertinoTheme(
-                      widget.parent, "theme", Brightness.light)
-                  : widget.parent.attrString("darkTheme") != null
-                      ? parseCupertinoTheme(
-                          widget.parent, "darkTheme", Brightness.dark)
-                      : parseCupertinoTheme(
-                          widget.parent, "theme", Brightness.dark),
-              child: scaffold,
-            );
+            if (widget.widgetsDesign == PageDesign.material) {
+              scaffold = CupertinoTheme(
+                data: widget.themeMode == ThemeMode.light ||
+                        ((widget.themeMode == null ||
+                                widget.themeMode == ThemeMode.system) &&
+                            widget.brightness == Brightness.light)
+                    ? parseCupertinoTheme(
+                        widget.parent, "theme", Brightness.light)
+                    : widget.parent.attrString("darkTheme") != null
+                        ? parseCupertinoTheme(
+                            widget.parent, "darkTheme", Brightness.dark)
+                        : parseCupertinoTheme(
+                            widget.parent, "theme", Brightness.dark),
+                child: scaffold,
+              );
+            } else if (widget.widgetsDesign == PageDesign.cupertino) {
+              scaffold = Theme(
+                data: widget.themeMode == ThemeMode.light ||
+                        ((widget.themeMode == null ||
+                                widget.themeMode == ThemeMode.system) &&
+                            widget.brightness == Brightness.light)
+                    ? parseTheme(widget.parent, "theme", Brightness.light)
+                    : widget.parent.attrString("darkTheme") != null
+                        ? parseTheme(
+                            widget.parent, "darkTheme", Brightness.dark)
+                        : parseTheme(widget.parent, "theme", Brightness.dark),
+                child: scaffold,
+              );
+            }
 
             return Directionality(
                 textDirection: textDirection,
