@@ -22,28 +22,31 @@ class LocalConnection(Connection):
             RegisterWebClientResponsePayload(
                 session=SessionPayload(
                     id=self._client_details.sessionId,
-                    controls=controls
-                    if controls is not None
-                    else {
-                        "page": {
-                            "i": "page",
-                            "t": "page",
-                            "p": "",
-                            "c": [],
-                            "route": self._client_details.pageRoute,
-                            "width": self._client_details.pageWidth,
-                            "height": self._client_details.pageHeight,
-                            "windowwidth": self._client_details.windowWidth,
-                            "windowheight": self._client_details.windowHeight,
-                            "windowtop": self._client_details.windowTop,
-                            "windowleft": self._client_details.windowLeft,
-                            "pwa": self._client_details.isPWA,
-                            "web": self._client_details.isWeb,
-                            "debug": self._client_details.isDebug,
-                            "platform": self._client_details.platform,
-                            "platformBrightness": self._client_details.platformBrightness,
+                    controls=(
+                        controls
+                        if controls is not None
+                        else {
+                            "page": {
+                                "i": "page",
+                                "t": "page",
+                                "p": "",
+                                "c": [],
+                                "route": self._client_details.pageRoute,
+                                "width": self._client_details.pageWidth,
+                                "height": self._client_details.pageHeight,
+                                "windowwidth": self._client_details.windowWidth,
+                                "windowheight": self._client_details.windowHeight,
+                                "windowtop": self._client_details.windowTop,
+                                "windowleft": self._client_details.windowLeft,
+                                "pwa": self._client_details.isPWA,
+                                "web": self._client_details.isWeb,
+                                "debug": self._client_details.isDebug,
+                                "platform": self._client_details.platform,
+                                "platformBrightness": self._client_details.platformBrightness,
+                                "media": self._client_details.media,
+                            }
                         }
-                    },
+                    ),
                 ),
                 appInactive=False,
                 error="",
@@ -236,6 +239,8 @@ class LocalConnection(Connection):
                 r = self._client_details.platform
             elif prop_name == "platformBrightness":
                 r = self._client_details.platformBrightness
+            elif prop_name == "media":
+                r = self._client_details.media
             elif prop_name == "width":
                 r = self._client_details.pageWidth
             elif prop_name == "height":

@@ -95,7 +95,8 @@ AppState appReducer(AppState state, dynamic action) {
               isWeb: kIsWeb.toString(),
               isDebug: kDebugMode.toString(),
               platform: defaultTargetPlatform.name.toLowerCase(),
-              platformBrightness: state.displayBrightness.name.toString());
+              platformBrightness: state.displayBrightness.name.toString(),
+              media: json.encode(state.media));
 
           action.server.connect(address: state.pageUri!.toString());
         });
@@ -155,6 +156,24 @@ AppState appReducer(AppState state, dynamic action) {
           action.brightness.name.toString());
     }
     return state.copyWith(displayBrightness: action.brightness);
+  } else if (action is PageMediaChangeAction) {
+    //
+    // page media changed
+    //
+    debugPrint("New page media: ${action.media}");
+
+    var page = state.controls["page"];
+    var controls = Map.of(state.controls);
+    if (page != null && !state.isLoading) {
+      var pageAttrs = Map.of(page.attrs);
+      var mj = json.encode(action.media);
+      pageAttrs["media"] = mj;
+
+      controls[page.id] = page.copyWith(attrs: pageAttrs);
+      action.backend.updateControlState("page", {"media": mj}, client: false);
+      action.backend.triggerControlEvent("page", "mediaChange", mj);
+    }
+    return state.copyWith(media: action.media);
   } else if (action is RegisterWebClientAction) {
     //
     // register web client

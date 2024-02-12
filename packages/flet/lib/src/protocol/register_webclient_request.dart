@@ -12,6 +12,7 @@ class RegisterWebClientRequest {
   final String? isDebug;
   final String? platform;
   final String? platformBrightness;
+  final String? media;
   final String? sessionId;
 
   RegisterWebClientRequest(
@@ -28,6 +29,7 @@ class RegisterWebClientRequest {
       this.isDebug,
       this.platform,
       this.platformBrightness,
+      this.media,
       this.sessionId});
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -44,6 +46,7 @@ class RegisterWebClientRequest {
         'isDebug': isDebug,
         'platform': platform,
         'platformBrightness': platformBrightness,
+        'media': media,
         'sessionId': sessionId
       };
 }

@@ -173,6 +173,17 @@ class Page(Control):
             "keyboard_event", self.__on_keyboard_event.get_handler()
         )
 
+        def convert_page_media_change_event(e):
+            d = json.loads(e.data)
+            return PageMediaChangeEvent(**d)
+
+        self.__on_page_media_change_event = EventHandler(
+            convert_page_media_change_event
+        )
+        self._add_event_handler(
+            "mediaChange", self.__on_page_media_change_event.get_handler()
+        )
+
         self.__method_calls: Dict[str, Union[threading.Event, asyncio.Event]] = {}
         self.__method_call_results: Dict[
             Union[threading.Event, asyncio.Event], tuple[Optional[str], Optional[str]]
@@ -241,6 +252,7 @@ class Page(Control):
             Command(0, "get", ["page", "debug"]),
             Command(0, "get", ["page", "platform"]),
             Command(0, "get", ["page", "platformBrightness"]),
+            Command(0, "get", ["page", "media"]),
             Command(0, "get", ["page", "width"]),
             Command(0, "get", ["page", "height"]),
             Command(0, "get", ["page", "windowWidth"]),
@@ -258,14 +270,15 @@ class Page(Control):
         self._set_attr("debug", values[3], False)
         self._set_attr("platform", values[4], False)
         self._set_attr("platformBrightness", values[5], False)
-        self._set_attr("width", values[6], False)
-        self._set_attr("height", values[7], False)
-        self._set_attr("windowWidth", values[8], False)
-        self._set_attr("windowHeight", values[9], False)
-        self._set_attr("windowTop", values[10], False)
-        self._set_attr("windowLeft", values[11], False)
-        self._set_attr("clientIP", values[12], False)
-        self._set_attr("clientUserAgent", values[13], False)
+        self._set_attr("media", values[6], False)
+        self._set_attr("width", values[7], False)
+        self._set_attr("height", values[8], False)
+        self._set_attr("windowWidth", values[9], False)
+        self._set_attr("windowHeight", values[10], False)
+        self._set_attr("windowTop", values[11], False)
+        self._set_attr("windowLeft", values[12], False)
+        self._set_attr("clientIP", values[13], False)
+        self._set_attr("clientUserAgent", values[14], False)
 
     async def _connect(self, conn: Connection):
         self.__conn = conn
@@ -1247,6 +1260,15 @@ class Page(Control):
         assert brightness is not None
         return ThemeMode(brightness)
 
+    # media
+    @property
+    def media(self):
+        m = self._get_attr("media")
+        if not isinstance(m, str):
+            return None
+        d = json.loads(m)
+        return PageMediaChangeEvent(**d)
+
     # client_ip
     @property
     def client_ip(self):
@@ -1856,6 +1878,15 @@ class Page(Control):
     def on_window_event(self, handler):
         self.__on_window_event.subscribe(handler)
 
+    # on_media_change
+    @property
+    def on_media_change(self):
+        return self.__on_page_media_change_event
+
+    @on_media_change.setter
+    def on_media_change(self, handler):
+        self.__on_page_media_change_event.subscribe(handler)
+
     # on_connect
     @property
     def on_connect(self):
@@ -2039,3 +2070,21 @@ class InvokeMethodResults:
     method_id: str
     result: Optional[str]
     error: Optional[str]
+
+
+class PageMediaChangeEvent(ControlEvent):
+    def __init__(self, padding, view_padding, view_insets) -> None:
+        self.padding: PageMediaInsetsData = padding
+        self.view_padding: PageMediaInsetsData = view_padding
+        self.view_insets: PageMediaInsetsData = view_insets
+
+    def __str__(self) -> str:
+        return f"PageMediaChangeEvent(padding={self.padding}, view_padding={self.view_padding}, view_insets={self.view_insets})"
+
+
+class PageMediaInsetsData:
+    def __init__(self, t, r, b, l) -> None:
+        self.top: float = t
+        self.right: float = r
+        self.bottom: float = b
+        self.left: float = l

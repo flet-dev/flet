@@ -150,6 +150,7 @@ class RegisterWebClientRequestPayload:
     isDebug: str
     platform: str
     platformBrightness: str
+    media: str
     sessionId: str
 
 
