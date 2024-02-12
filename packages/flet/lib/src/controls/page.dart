@@ -903,7 +903,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                       ) as ObstructingPreferredSizeWidget
                     : null;
 
-            var body = Stack(children: [
+            Widget body = Stack(children: [
               SizedBox.expand(
                   child: Container(
                       padding: parseEdgeInsets(control, "padding") ??
@@ -971,7 +971,8 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
 
             scaffold = CupertinoTheme(
               data: widget.themeMode == ThemeMode.light ||
-                      (widget.themeMode == ThemeMode.system &&
+                      ((widget.themeMode == null ||
+                              widget.themeMode == ThemeMode.system) &&
                           widget.brightness == Brightness.light)
                   ? parseCupertinoTheme(
                       widget.parent, "theme", Brightness.light)
