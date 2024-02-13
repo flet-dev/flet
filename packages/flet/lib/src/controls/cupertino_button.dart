@@ -39,7 +39,6 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    bool isIconButton = widget.control.type == "iconbutton";
 
     var contentCtrls = widget.children.where((c) => c.name == "content");
 
@@ -105,25 +104,28 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
             const BorderRadius.all(Radius.circular(8.0));
 
     EdgeInsets? padding = parseEdgeInsets(widget.control, "padding");
-    if (padding == null) {
-      var theme = Theme.of(context);
-      var style = parseButtonStyle(Theme.of(context), widget.control, "style",
-          defaultForegroundColor: theme.colorScheme.primary,
-          defaultBackgroundColor: Colors.transparent,
-          defaultOverlayColor: Colors.transparent,
-          defaultShadowColor: Colors.transparent,
-          defaultSurfaceTintColor: Colors.transparent,
-          defaultElevation: 0,
-          defaultPadding: const EdgeInsets.all(8),
-          defaultBorderSide: BorderSide.none,
-          defaultShape: theme.useMaterial3
-              ? const StadiumBorder()
-              : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-      if (style != null) {
-        padding = style.padding?.resolve({MaterialState.scrolledUnder})
-            as EdgeInsets?;
-      }
+    var theme = Theme.of(context);
+    var style = parseButtonStyle(Theme.of(context), widget.control, "style",
+        defaultForegroundColor: theme.colorScheme.primary,
+        defaultBackgroundColor: Colors.transparent,
+        defaultOverlayColor: Colors.transparent,
+        defaultShadowColor: Colors.transparent,
+        defaultSurfaceTintColor: Colors.transparent,
+        defaultElevation: 0,
+        defaultPadding: const EdgeInsets.all(8),
+        defaultBorderSide: BorderSide.none,
+        defaultShape: theme.useMaterial3
+            ? const StadiumBorder()
+            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
+
+    if (padding == null && style != null) {
+      padding = style.padding?.resolve({}) as EdgeInsets?;
+    }
+
+    if (bgColor == null && style != null) {
+      bgColor = style.backgroundColor
+          ?.resolve(selected ? {MaterialState.selected} : {});
     }
 
     Function()? onPressed = !disabled
@@ -132,11 +134,6 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
             if (url != "") {
               openWebBrowser(url,
                   webWindowName: widget.control.attrString("urlTarget"));
-            }
-            if (isIconButton && icon != null) {
-              setState(() {
-                selected = !selected;
-              });
             }
             widget.backend.triggerControlEvent(widget.control.id, "click", "");
           }
