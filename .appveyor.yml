@@ -105,25 +105,70 @@ for:
     install:
       - ps: |
           if ($env:APPVEYOR_REPO_TAG_NAME) {
-            $v = $env:APPVEYOR_REPO_TAG_NAME.replace("v", "")
+            $env:PKG_VER = $env:APPVEYOR_REPO_TAG_NAME.replace("v", "")
           } else {
             $cv = [version](git describe --abbrev=0).substring(1)
-            $v = "$($cv.major).$($cv.minor+1).0+$($env:APPVEYOR_BUILD_NUMBER)"
+            $env:PKG_VER = "$($cv.major).$($cv.minor+1).0+$($env:APPVEYOR_BUILD_NUMBER)"
           }
-          Update-AppveyorBuild -Version $v
+          Update-AppveyorBuild -Version $env:PKG_VER
       - flutter upgrade --force
 
     build_script:
-      - cd package
-      - flutter test
-
-    deploy_script:
-      # publish package
       - sh: |
           if [[ "$APPVEYOR_REPO_TAG_NAME" != "" ]]; then
-              mkdir -p $HOME/.config/dart
-              echo $PUB_DEV_TOKEN | base64 --decode > $HOME/.config/dart/pub-credentials.json
-              dart pub publish --force
+            mkdir -p $HOME/.config/dart
+            echo $PUB_DEV_TOKEN | base64 --decode > $HOME/.config/dart/pub-credentials.json
+
+            # patch pubspecs
+            python3 ci/patch_pubspec.py packages/flet/pubspec.yaml $PKG_VER
+            python3 ci/patch_pubspec.py packages/flet_audio/pubspec.yaml $PKG_VER
+            python3 ci/patch_pubspec.py packages/flet_audio_recorder/pubspec.yaml $PKG_VER
+            python3 ci/patch_pubspec.py packages/flet_video/pubspec.yaml $PKG_VER
+            python3 ci/patch_pubspec.py packages/flet_webview/pubspec.yaml $PKG_VER
+
+            cd packages/flet
+            flutter test
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
+
+            cd packages/flet_audio
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
+
+            cd packages/flet_audio_recorder
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
+
+            cd packages/flet_video
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
+
+            cd packages/flet_webview
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
+
+          else
+
+            cd packages/flet
+            flutter test
+            dart pub publish --dry-run
+            cd $APPVEYOR_BUILD_FOLDER
+
+            cd packages/flet_audio
+            dart pub publish --dry-run
+            cd $APPVEYOR_BUILD_FOLDER
+
+            cd packages/flet_audio_recorder
+            dart pub publish --dry-run
+            cd $APPVEYOR_BUILD_FOLDER
+
+            cd packages/flet_video
+            dart pub publish --dry-run
+            cd $APPVEYOR_BUILD_FOLDER
+
+            cd packages/flet_webview
+            dart pub publish --dry-run
+            cd $APPVEYOR_BUILD_FOLDER
           fi
 
   # ======================================

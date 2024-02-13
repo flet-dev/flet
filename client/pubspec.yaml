@@ -32,10 +32,17 @@ dependencies:
     sdk: flutter
 
   flet:
-    path: ../package/
+    path: ../packages/flet
+  flet_audio:
+    path: ../packages/flet_audio
+  flet_audio_recorder:
+    path: ../packages/flet_audio_recorder
+  flet_video:
+    path: ../packages/flet_video
+  flet_webview:
+    path: ../packages/flet_webview
 
   url_strategy: ^0.2.0
-  record: ^5.0.4
   cupertino_icons: ^1.0.6
   
   integration_test:

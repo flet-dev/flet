@@ -2,13 +2,12 @@ import asyncio
 import json
 import logging
 import threading
+import time
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
-
-import time
 
 import flet_core
 from flet_core.alert_dialog import AlertDialog
@@ -31,6 +30,7 @@ from flet_core.floating_action_button import FloatingActionButton
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
+from flet_core.padding import Padding
 from flet_core.protocol import Command
 from flet_core.querystring import QueryString
 from flet_core.session_storage import SessionStorage
@@ -42,6 +42,7 @@ from flet_core.types import (
     MainAxisAlignment,
     OffsetValue,
     PaddingValue,
+    PageDesign,
     PagePlatform,
     ScrollMode,
     ThemeMode,
@@ -173,6 +174,17 @@ class Page(Control):
             "keyboard_event", self.__on_keyboard_event.get_handler()
         )
 
+        def convert_page_media_change_event(e):
+            d = json.loads(e.data)
+            return PageMediaChangeEvent(**d)
+
+        self.__on_page_media_change_event = EventHandler(
+            convert_page_media_change_event
+        )
+        self._add_event_handler(
+            "mediaChange", self.__on_page_media_change_event.get_handler()
+        )
+
         self.__method_calls: Dict[str, Union[threading.Event, asyncio.Event]] = {}
         self.__method_call_results: Dict[
             Union[threading.Event, asyncio.Event], tuple[Optional[str], Optional[str]]
@@ -241,6 +253,7 @@ class Page(Control):
             Command(0, "get", ["page", "debug"]),
             Command(0, "get", ["page", "platform"]),
             Command(0, "get", ["page", "platformBrightness"]),
+            Command(0, "get", ["page", "media"]),
             Command(0, "get", ["page", "width"]),
             Command(0, "get", ["page", "height"]),
             Command(0, "get", ["page", "windowWidth"]),
@@ -258,14 +271,15 @@ class Page(Control):
         self._set_attr("debug", values[3], False)
         self._set_attr("platform", values[4], False)
         self._set_attr("platformBrightness", values[5], False)
-        self._set_attr("width", values[6], False)
-        self._set_attr("height", values[7], False)
-        self._set_attr("windowWidth", values[8], False)
-        self._set_attr("windowHeight", values[9], False)
-        self._set_attr("windowTop", values[10], False)
-        self._set_attr("windowLeft", values[11], False)
-        self._set_attr("clientIP", values[12], False)
-        self._set_attr("clientUserAgent", values[13], False)
+        self._set_attr("media", values[6], False)
+        self._set_attr("width", values[7], False)
+        self._set_attr("height", values[8], False)
+        self._set_attr("windowWidth", values[9], False)
+        self._set_attr("windowHeight", values[10], False)
+        self._set_attr("windowTop", values[11], False)
+        self._set_attr("windowLeft", values[12], False)
+        self._set_attr("clientIP", values[13], False)
+        self._set_attr("clientUserAgent", values[14], False)
 
     async def _connect(self, conn: Connection):
         self.__conn = conn
@@ -1228,12 +1242,33 @@ class Page(Control):
             "platform", value.value if isinstance(value, PagePlatform) else value
         )
 
+    # design
+    @property
+    def design(self):
+        av = self._get_attr("design")
+        return PageDesign(av) if av else PageDesign.MATERIAL
+
+    @design.setter
+    def design(self, value: PageDesign):
+        self._set_attr(
+            "design", value.value if isinstance(value, PageDesign) else value
+        )
+
     # platform_brightness
     @property
     def platform_brightness(self) -> ThemeMode:
         brightness = self._get_attr("platformBrightness")
         assert brightness is not None
         return ThemeMode(brightness)
+
+    # media
+    @property
+    def media(self):
+        m = self._get_attr("media")
+        if not isinstance(m, str):
+            return None
+        d = json.loads(m)
+        return PageMediaChangeEvent(**d)
 
     # client_ip
     @property
@@ -1400,15 +1435,6 @@ class Page(Control):
     @auto_scroll.setter
     def auto_scroll(self, value: Optional[bool]):
         self.__default_view.auto_scroll = value
-
-    # adaptive
-    @property
-    def adaptive(self) -> Optional[bool]:
-        return self.__default_view.adaptive
-
-    @adaptive.setter
-    def adaptive(self, value: Optional[bool]):
-        self.__default_view.adaptive = value
 
     # client_storage
     @property
@@ -1853,6 +1879,15 @@ class Page(Control):
     def on_window_event(self, handler):
         self.__on_window_event.subscribe(handler)
 
+    # on_media_change
+    @property
+    def on_media_change(self):
+        return self.__on_page_media_change_event
+
+    @on_media_change.setter
+    def on_media_change(self, handler):
+        self.__on_page_media_change_event.subscribe(handler)
+
     # on_connect
     @property
     def on_connect(self):
@@ -2036,3 +2071,28 @@ class InvokeMethodResults:
     method_id: str
     result: Optional[str]
     error: Optional[str]
+
+
+class PageMediaChangeEvent(ControlEvent):
+    def __init__(self, padding, view_padding, view_insets) -> None:
+        self.padding = Padding(
+            left=padding["left"],
+            top=padding["top"],
+            right=padding["right"],
+            bottom=padding["bottom"],
+        )
+        self.view_padding = Padding(
+            left=view_padding["left"],
+            top=view_padding["top"],
+            right=view_padding["right"],
+            bottom=view_padding["bottom"],
+        )
+        self.view_insets = Padding(
+            left=view_insets["left"],
+            top=view_insets["top"],
+            right=view_insets["right"],
+            bottom=view_insets["bottom"],
+        )
+
+    def __str__(self) -> str:
+        return f"PageMediaChangeEvent(padding={self.padding}, view_padding={self.view_padding}, view_insets={self.view_insets})"

@@ -270,7 +270,7 @@ func (c *Client) registerWebClientCore(request *RegisterWebClientRequestPayload)
 		session = newSession(page, uuid.New().String(), c.clientIP, c.clientUserAgent,
 			request.PageRoute, request.PageWidth, request.PageHeight,
 			request.WindowWidth, request.WindowHeight, request.WindowTop, request.WindowLeft,
-			request.IsPWA, request.IsWeb, request.IsDebug, request.Platform, request.PlatformBrightness)
+			request.IsPWA, request.IsWeb, request.IsDebug, request.Platform, request.PlatformBrightness, request.Media)
 		sessionCreated = true
 	} else {
 		log.Debugf("Existing session %s found for %s page\n", session.ID, page.Name)
