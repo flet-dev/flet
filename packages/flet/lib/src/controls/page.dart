@@ -908,8 +908,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             var bnb = navBar ?? bottomAppBar;
 
             var bar = appBarView != null
-                ? adaptive == true &&
-                        widget.widgetsDesign == PageDesign.cupertino
+                ? widget.widgetsDesign == PageDesign.cupertino
                     ? CupertinoAppBarControl(
                         parent: control,
                         control: appBarView.control,
