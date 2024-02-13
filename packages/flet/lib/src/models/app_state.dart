@@ -62,9 +62,9 @@ class AppState extends Equatable {
       },
       displayBrightness: Brightness.light,
       media: PageMediaData(
-          padding: EdgeInsetsData(EdgeInsets.zero),
-          viewPadding: EdgeInsetsData(EdgeInsets.zero),
-          viewInsets: EdgeInsetsData(EdgeInsets.zero)),
+          padding: PaddingData(EdgeInsets.zero),
+          viewPadding: PaddingData(EdgeInsets.zero),
+          viewInsets: PaddingData(EdgeInsets.zero)),
       controls: {
         "page": Control(
             id: "page",

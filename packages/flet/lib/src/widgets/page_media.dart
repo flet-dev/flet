@@ -80,9 +80,9 @@ class _PageMediaState extends State<PageMedia> {
           }
 
           var newMdeia = PageMediaData(
-              padding: EdgeInsetsData(media.padding),
-              viewPadding: EdgeInsetsData(media.viewPadding),
-              viewInsets: EdgeInsetsData(media.viewInsets));
+              padding: PaddingData(media.padding),
+              viewPadding: PaddingData(media.viewPadding),
+              viewInsets: PaddingData(media.viewInsets));
 
           if (newMdeia != viewModel.media) {
             _onMediaChanged(newMdeia, viewModel.dispatch);

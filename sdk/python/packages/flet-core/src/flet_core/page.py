@@ -30,6 +30,7 @@ from flet_core.floating_action_button import FloatingActionButton
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
+from flet_core.padding import Padding
 from flet_core.protocol import Command
 from flet_core.querystring import QueryString
 from flet_core.session_storage import SessionStorage
@@ -2074,17 +2075,24 @@ class InvokeMethodResults:
 
 class PageMediaChangeEvent(ControlEvent):
     def __init__(self, padding, view_padding, view_insets) -> None:
-        self.padding: PageMediaInsetsData = padding
-        self.view_padding: PageMediaInsetsData = view_padding
-        self.view_insets: PageMediaInsetsData = view_insets
+        self.padding = Padding(
+            left=padding["left"],
+            top=padding["top"],
+            right=padding["right"],
+            bottom=padding["bottom"],
+        )
+        self.view_padding = Padding(
+            left=view_padding["left"],
+            top=view_padding["top"],
+            right=view_padding["right"],
+            bottom=view_padding["bottom"],
+        )
+        self.view_insets = Padding(
+            left=view_insets["left"],
+            top=view_insets["top"],
+            right=view_insets["right"],
+            bottom=view_insets["bottom"],
+        )
 
     def __str__(self) -> str:
         return f"PageMediaChangeEvent(padding={self.padding}, view_padding={self.view_padding}, view_insets={self.view_insets})"
-
-
-class PageMediaInsetsData:
-    def __init__(self, t, r, b, l) -> None:
-        self.top: float = t
-        self.right: float = r
-        self.bottom: float = b
-        self.left: float = l
