@@ -38,9 +38,7 @@ class AppBarControl extends StatelessWidget
             control: control,
             parentDisabled: parentDisabled,
             parentAdaptive: adaptive,
-            children: children,
-            bgcolor: HexColor.fromString(
-                Theme.of(context), control.attrString("bgcolor", "")!));
+            children: children);
       }
 
       var leadingCtrls =

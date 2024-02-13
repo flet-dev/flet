@@ -159,6 +159,7 @@ from flet_core.page import (
     KeyboardEvent,
     LoginEvent,
     Page,
+    PageMediaChangeEvent,
     RouteChangeEvent,
     ViewPopEvent,
 )
@@ -238,6 +239,7 @@ from flet_core.types import (
     MaterialState,
     NotchShape,
     PaddingValue,
+    PageDesign,
     PagePlatform,
     ScrollMode,
     TabAlignment,

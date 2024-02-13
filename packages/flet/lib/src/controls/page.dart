@@ -40,6 +40,8 @@ import 'navigation_drawer.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
+enum PageDesign { adaptive, material, cupertino }
+
 class RoutesViewModel extends Equatable {
   final Control page;
   final bool isLoading;
@@ -122,6 +124,11 @@ class PageControl extends StatefulWidget {
 }
 
 class _PageControlState extends State<PageControl> with FletStoreMixin {
+  PageDesign _pageDesign = PageDesign.material;
+  PageDesign _widgetsDesign = PageDesign.material;
+  TargetPlatform _platform = defaultTargetPlatform;
+  Brightness? _brightness;
+  ThemeMode? _themeMode;
   String? _windowTitle;
   Color? _windowBgcolor;
   double? _windowWidth;
@@ -234,17 +241,32 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
       _routeState.route = route;
     }
 
+    _platform = TargetPlatform.values.firstWhere(
+        (a) =>
+            a.name.toLowerCase() ==
+            widget.control.attrString("platform", "")!.toLowerCase(),
+        orElse: () => defaultTargetPlatform);
+
+    _pageDesign = PageDesign.values.firstWhere(
+        (a) =>
+            a.name.toLowerCase() ==
+            widget.control.attrString("design", "")!.toLowerCase(),
+        orElse: () => PageDesign.material);
+
+    if ((_pageDesign == PageDesign.adaptive &&
+            (_platform == TargetPlatform.iOS ||
+                _platform == TargetPlatform.macOS)) ||
+        _pageDesign == PageDesign.cupertino) {
+      _widgetsDesign = PageDesign.cupertino;
+    } else {
+      _widgetsDesign = PageDesign.material;
+    }
+
     // theme
-    var theme = parseTheme(widget.control, "theme", Brightness.light);
-    var darkTheme = widget.control.attrString("darkTheme") == null
-        ? parseTheme(widget.control, "theme", Brightness.dark)
-        : parseTheme(widget.control, "darkTheme", Brightness.dark);
-    var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
+    _themeMode = ThemeMode.values.firstWhereOrNull((t) =>
             t.name.toLowerCase() ==
             widget.control.attrString("themeMode", "")!.toLowerCase()) ??
         FletAppContext.of(context)?.themeMode;
-
-    debugPrint("Page theme: $themeMode");
 
     // keyboard handler
     var onKeyboardEvent = widget.control.attrBool("onKeyboardEvent", false)!;
@@ -508,19 +530,47 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
           builder: (context, media) {
             debugPrint("MaterialApp.router build: ${widget.control.id}");
 
+            _brightness = media.displayBrightness;
+
             return FletAppContext(
-                themeMode: themeMode,
-                child: MaterialApp.router(
-                  debugShowCheckedModeBanner: false,
-                  showSemanticsDebugger:
-                      widget.control.attrBool("showSemanticsDebugger", false)!,
-                  routerDelegate: _routerDelegate,
-                  routeInformationParser: _routeParser,
-                  title: windowTitle,
-                  theme: theme,
-                  darkTheme: darkTheme,
-                  themeMode: themeMode,
-                ));
+                themeMode: _themeMode,
+                child: _widgetsDesign == PageDesign.cupertino
+                    ? CupertinoApp.router(
+                        debugShowCheckedModeBanner: false,
+                        showSemanticsDebugger: widget.control
+                            .attrBool("showSemanticsDebugger", false)!,
+                        routerDelegate: _routerDelegate,
+                        routeInformationParser: _routeParser,
+                        title: windowTitle,
+                        theme: _themeMode == ThemeMode.light ||
+                                ((_themeMode == null ||
+                                        _themeMode == ThemeMode.system) &&
+                                    _brightness == Brightness.light)
+                            ? parseCupertinoTheme(
+                                widget.control, "theme", Brightness.light)
+                            : widget.control.attrString("darkTheme") != null
+                                ? parseCupertinoTheme(widget.control,
+                                    "darkTheme", Brightness.dark)
+                                : parseCupertinoTheme(
+                                    widget.control, "theme", Brightness.dark),
+                      )
+                    : MaterialApp.router(
+                        debugShowCheckedModeBanner: false,
+                        showSemanticsDebugger: widget.control
+                            .attrBool("showSemanticsDebugger", false)!,
+                        routerDelegate: _routerDelegate,
+                        routeInformationParser: _routeParser,
+                        title: windowTitle,
+                        theme: parseTheme(
+                            widget.control, "theme", Brightness.light),
+                        darkTheme: widget.control.attrString("darkTheme") ==
+                                null
+                            ? parseTheme(
+                                widget.control, "theme", Brightness.dark)
+                            : parseTheme(
+                                widget.control, "darkTheme", Brightness.dark),
+                        themeMode: _themeMode,
+                      ));
           });
     });
   }
@@ -593,11 +643,16 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             pages = routesView.views.map((view) {
               var key = ValueKey(view.attrString("route") ?? view.id);
               var child = ViewControl(
-                  parent: routesView.page,
-                  viewId: view.id,
-                  overlayWidgets: overlayWidgets(view.id),
-                  loadingPage: loadingPage,
-                  backend: widget.backend);
+                parent: routesView.page,
+                viewId: view.id,
+                overlayWidgets: overlayWidgets(view.id),
+                loadingPage: loadingPage,
+                backend: widget.backend,
+                parentAdaptive: _pageDesign == PageDesign.adaptive,
+                widgetsDesign: _widgetsDesign,
+                brightness: _brightness,
+                themeMode: _themeMode,
+              );
 
               //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
 
@@ -646,6 +701,10 @@ class ViewControl extends StatefulWidget {
   final List<Widget> overlayWidgets;
   final Widget? loadingPage;
   final FletControlBackend backend;
+  final bool parentAdaptive;
+  final PageDesign widgetsDesign;
+  final Brightness? brightness;
+  final ThemeMode? themeMode;
 
   const ViewControl(
       {super.key,
@@ -653,7 +712,11 @@ class ViewControl extends StatefulWidget {
       required this.viewId,
       required this.overlayWidgets,
       required this.loadingPage,
-      required this.backend});
+      required this.backend,
+      required this.parentAdaptive,
+      required this.widgetsDesign,
+      required this.brightness,
+      required this.themeMode});
 
   @override
   State<ViewControl> createState() => _ViewControlState();
@@ -685,7 +748,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
           var control = controlView.control;
           var children = controlView.children;
 
-          bool? adaptive = controlView.control.attrBool("adaptive");
+          var adaptive = control.attrBool("adaptive") ?? widget.parentAdaptive;
 
           final spacing = control.attrDouble("spacing", 10)!;
           final mainAlignment = parseMainAxisAlignment(
@@ -780,6 +843,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                 control: control,
                 scrollDirection: Axis.vertical,
                 backend: widget.backend,
+                parentAdaptive: adaptive,
                 child: column);
 
             if (control.attrBool("onScroll", false)!) {
@@ -859,18 +923,26 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                         children: cupertinoAppBarView.children,
                         parentDisabled: control.isDisabled,
                         parentAdaptive: adaptive,
-                        bgcolor: HexColor.fromString(
-                            Theme.of(context),
-                            cupertinoAppBarView.control
-                                .attrString("bgcolor", "")!),
                       ) as ObstructingPreferredSizeWidget
                     : null;
 
-            var scaffold = Scaffold(
-              key: scaffoldKey,
+            Widget body = Stack(children: [
+              SizedBox.expand(
+                  child: Container(
+                      padding: parseEdgeInsets(control, "padding") ??
+                          const EdgeInsets.all(10),
+                      child: child)),
+              ...widget.overlayWidgets
+            ]);
+
+            Widget scaffold = Scaffold(
+              key: widget.widgetsDesign != PageDesign.cupertino
+                  ? scaffoldKey
+                  : null,
               backgroundColor: HexColor.fromString(
-                  Theme.of(context), control.attrString("bgcolor", "")!),
-              appBar: bar,
+                      Theme.of(context), control.attrString("bgcolor", "")!) ??
+                  CupertinoTheme.of(context).scaffoldBackgroundColor,
+              appBar: widget.widgetsDesign != PageDesign.cupertino ? bar : null,
               drawer: drawerView != null
                   ? NavigationDrawerControl(
                       control: drawerView.control,
@@ -899,14 +971,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                   dismissDrawer(endDrawerView.control.id);
                 }
               },
-              body: Stack(children: [
-                SizedBox.expand(
-                    child: Container(
-                        padding: parseEdgeInsets(control, "padding") ??
-                            const EdgeInsets.all(10),
-                        child: child)),
-                ...widget.overlayWidgets
-              ]),
+              body: body,
               bottomNavigationBar: bnb != null
                   ? createControl(control, bnb.id, control.isDisabled,
                       parentAdaptive: adaptive)
@@ -917,6 +982,45 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                   : null,
               floatingActionButtonLocation: fabLocation,
             );
+
+            if (widget.widgetsDesign == PageDesign.cupertino) {
+              scaffold = CupertinoPageScaffold(
+                  key: scaffoldKey,
+                  backgroundColor: HexColor.fromString(
+                      Theme.of(context), control.attrString("bgcolor", "")!),
+                  navigationBar: bar as ObstructingPreferredSizeWidget,
+                  child: scaffold);
+            }
+
+            if (widget.widgetsDesign == PageDesign.material) {
+              scaffold = CupertinoTheme(
+                data: widget.themeMode == ThemeMode.light ||
+                        ((widget.themeMode == null ||
+                                widget.themeMode == ThemeMode.system) &&
+                            widget.brightness == Brightness.light)
+                    ? parseCupertinoTheme(
+                        widget.parent, "theme", Brightness.light)
+                    : widget.parent.attrString("darkTheme") != null
+                        ? parseCupertinoTheme(
+                            widget.parent, "darkTheme", Brightness.dark)
+                        : parseCupertinoTheme(
+                            widget.parent, "theme", Brightness.dark),
+                child: scaffold,
+              );
+            } else if (widget.widgetsDesign == PageDesign.cupertino) {
+              scaffold = Theme(
+                data: widget.themeMode == ThemeMode.light ||
+                        ((widget.themeMode == null ||
+                                widget.themeMode == ThemeMode.system) &&
+                            widget.brightness == Brightness.light)
+                    ? parseTheme(widget.parent, "theme", Brightness.light)
+                    : widget.parent.attrString("darkTheme") != null
+                        ? parseTheme(
+                            widget.parent, "darkTheme", Brightness.dark)
+                        : parseTheme(widget.parent, "theme", Brightness.dark),
+                child: scaffold,
+              );
+            }
 
             return Directionality(
                 textDirection: textDirection,

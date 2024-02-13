@@ -79,6 +79,7 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
     return withPagePlatform((context, platform) {
       bool? adaptive =
           widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {

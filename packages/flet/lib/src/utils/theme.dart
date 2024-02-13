@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -9,6 +10,24 @@ import 'edge_insets.dart';
 import 'material_state.dart';
 import 'numbers.dart';
 import 'text.dart';
+
+CupertinoThemeData parseCupertinoTheme(
+    Control control, String propName, Brightness? brightness,
+    {ThemeData? parentTheme}) {
+  var theme = parseTheme(control, propName, brightness);
+  var cupertinoTheme = MaterialBasedCupertinoThemeData(materialTheme: theme);
+  return fixCupertinoTheme(cupertinoTheme, theme);
+}
+
+CupertinoThemeData fixCupertinoTheme(
+    CupertinoThemeData cupertinoTheme, ThemeData theme) {
+  return cupertinoTheme.copyWith(
+      applyThemeToAll: true,
+      barBackgroundColor: theme.colorScheme.background,
+      textTheme: cupertinoTheme.textTheme.copyWith(
+          navTitleTextStyle: cupertinoTheme.textTheme.navTitleTextStyle
+              .copyWith(color: theme.colorScheme.onBackground)));
+}
 
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
@@ -46,7 +65,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       brightness: brightness,
       useMaterial3: json?["use_material3"] ?? primarySwatch == null);
 
-  return theme.copyWith(
+  theme = theme.copyWith(
       visualDensity: json?["visual_density"] != null
           ? parseVisualDensity(json?["visual_density"])
           : theme.visualDensity,
@@ -59,6 +78,10 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
           theme, theme.primaryTextTheme, json?["primary_text_theme"]),
       scrollbarTheme: parseScrollBarTheme(theme, json?["scrollbar_theme"]),
       tabBarTheme: parseTabBarTheme(theme, json?["tabs_theme"]));
+
+  return theme.copyWith(
+      cupertinoOverrideTheme: fixCupertinoTheme(
+          MaterialBasedCupertinoThemeData(materialTheme: theme), theme));
 }
 
 ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {

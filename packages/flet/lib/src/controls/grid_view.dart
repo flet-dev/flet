@@ -107,6 +107,7 @@ class _GridViewControlState extends State<GridViewControl> {
             scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
             scrollController: _controller,
             backend: widget.backend,
+            parentAdaptive: adaptive,
             child: child);
 
         if (widget.control.attrBool("onScroll", false)!) {
