@@ -10,6 +10,7 @@ import 'protocol/append_control_props_request.dart';
 import 'protocol/clean_control_payload.dart';
 import 'protocol/invoke_method_payload.dart';
 import 'protocol/page_controls_batch_payload.dart';
+import 'protocol/page_media_data.dart';
 import 'protocol/register_webclient_response.dart';
 import 'protocol/remove_control_payload.dart';
 import 'protocol/replace_page_controls_payload.dart';
@@ -53,6 +54,12 @@ class PageBrightnessChangeAction {
   final Brightness brightness;
   final FletControlBackend backend;
   PageBrightnessChangeAction(this.brightness, this.backend);
+}
+
+class PageMediaChangeAction {
+  final PageMediaData media;
+  final FletControlBackend backend;
+  PageMediaChangeAction(this.media, this.backend);
 }
 
 class RegisterWebClientAction {

@@ -1,7 +1,7 @@
-import 'dart:ui';
-
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
+import '../protocol/page_media_data.dart';
 import 'control.dart';
 
 class Counter {
@@ -21,6 +21,7 @@ class AppState extends Equatable {
   final String error;
   final Size size;
   final Brightness displayBrightness;
+  final PageMediaData media;
   final Map<String, double> sizeBreakpoints;
   final Map<String, Control> controls;
 
@@ -37,6 +38,7 @@ class AppState extends Equatable {
       required this.size,
       required this.sizeBreakpoints,
       required this.displayBrightness,
+      required this.media,
       required this.controls});
 
   factory AppState.initial() => AppState(
@@ -59,6 +61,10 @@ class AppState extends Equatable {
         "xxl": 1400
       },
       displayBrightness: Brightness.light,
+      media: PageMediaData(
+          padding: EdgeInsetsData(EdgeInsets.zero),
+          viewPadding: EdgeInsetsData(EdgeInsets.zero),
+          viewInsets: EdgeInsetsData(EdgeInsets.zero)),
       controls: {
         "page": Control(
             id: "page",
@@ -82,6 +88,7 @@ class AppState extends Equatable {
           Size? size,
           Map<String, double>? sizeBreakpoints,
           Brightness? displayBrightness,
+          PageMediaData? media,
           Map<String, Control>? controls}) =>
       AppState(
           pageUri: pageUri ?? this.pageUri,
@@ -96,6 +103,7 @@ class AppState extends Equatable {
           size: size ?? this.size,
           sizeBreakpoints: sizeBreakpoints ?? this.sizeBreakpoints,
           displayBrightness: displayBrightness ?? this.displayBrightness,
+          media: media ?? this.media,
           controls: controls ?? this.controls);
 
   @override

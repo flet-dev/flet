@@ -159,6 +159,8 @@ from flet_core.page import (
     KeyboardEvent,
     LoginEvent,
     Page,
+    PageMediaChangeEvent,
+    PageMediaInsetsData,
     RouteChangeEvent,
     ViewPopEvent,
 )

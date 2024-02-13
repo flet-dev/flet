@@ -48,6 +48,7 @@ class FletServer implements FletControlBackend {
   String _isDebug = "";
   String _platform = "";
   String _platformBrightness = "";
+  String _media = "";
   int reconnectStarted = 0;
   final Map<String, ControlInvokeMethodCallback> controlInvokeMethods;
 
@@ -105,21 +106,21 @@ class FletServer implements FletControlBackend {
     }
   }
 
-  registerWebClient({
-    required String pageName,
-    required String pageRoute,
-    required String pageWidth,
-    required String pageHeight,
-    required String windowWidth,
-    required String windowHeight,
-    required String windowTop,
-    required String windowLeft,
-    required String isPWA,
-    required String isWeb,
-    required String isDebug,
-    required String platform,
-    required String platformBrightness,
-  }) {
+  registerWebClient(
+      {required String pageName,
+      required String pageRoute,
+      required String pageWidth,
+      required String pageHeight,
+      required String windowWidth,
+      required String windowHeight,
+      required String windowTop,
+      required String windowLeft,
+      required String isPWA,
+      required String isWeb,
+      required String isDebug,
+      required String platform,
+      required String platformBrightness,
+      required String media}) {
     _pageName = pageName;
     _pageHash = pageRoute;
     _pageWidth = pageWidth;
@@ -133,6 +134,7 @@ class FletServer implements FletControlBackend {
     _isDebug = isDebug;
     _platform = platform;
     _platformBrightness = platformBrightness;
+    _media = media;
   }
 
   registerWebClientInternal() {
@@ -154,6 +156,7 @@ class FletServer implements FletControlBackend {
             isDebug: _isDebug,
             platform: _platform,
             platformBrightness: _platformBrightness,
+            media: _media,
             sessionId: _store.state.sessionId)));
     _pageHash = "";
   }
