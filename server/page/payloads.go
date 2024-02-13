@@ -60,6 +60,7 @@ type RegisterWebClientRequestPayload struct {
 	IsDebug            string `json:"isDebug"`
 	Platform           string `json:"platform"`
 	PlatformBrightness string `json:"platformBrightness"`
+	Media              string `json:"media"`
 	SessionID          string `json:"sessionID"`
 }
 

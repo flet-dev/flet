@@ -2,6 +2,9 @@
 
 # 0.20.0
 
+* `Page.design` property to force Material, Cupertino or Adaptive design language on entire app ([#2607](https://github.com/flet-dev/flet/issues/2607)).
+* `Page.media` property with the data about obstructed spaces on the device ([#2613](https://github.com/flet-dev/flet/issues/2613)).
+* Adaptive buttons ([#2591](https://github.com/flet-dev/flet/issues/2591)).
 * `--include-packages` option and support for `pubspec.yaml` for custom Flutter packages plus API for adding custom Flutter packages.
 * Add `rtl` property to multiple controls ([#2582](https://github.com/flet-dev/flet/issues/2582)).
 * Fix: Material icon is shown instead of Cupertino icon if its name is thesame ([#2581](https://github.com/flet-dev/flet/issues/2581)).

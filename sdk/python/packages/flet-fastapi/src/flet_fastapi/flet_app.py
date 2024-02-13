@@ -204,6 +204,7 @@ class FletApp(LocalConnection):
             self.__page._set_attr(
                 "platformBrightness", self._client_details.platformBrightness, False
             )
+            self.__page._set_attr("media", self._client_details.media, False)
             self.__page._set_attr("width", self._client_details.pageWidth, False)
             self.__page._set_attr("height", self._client_details.pageHeight, False)
             self.__page._set_attr(
@@ -222,9 +223,11 @@ class FletApp(LocalConnection):
             )
             self.__page._set_attr(
                 "clientUserAgent",
-                self.__websocket.headers["user-agent"]
-                if "user-agent" in self.__websocket.headers
-                else "",
+                (
+                    self.__websocket.headers["user-agent"]
+                    if "user-agent" in self.__websocket.headers
+                    else ""
+                ),
                 False,
             )
 

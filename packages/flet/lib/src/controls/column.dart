@@ -79,6 +79,7 @@ class ColumnControl extends StatelessWidget {
       control: control,
       scrollDirection: wrap ? Axis.horizontal : Axis.vertical,
       backend: backend,
+      parentAdaptive: adaptive,
       child: child,
     );
 

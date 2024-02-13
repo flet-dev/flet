@@ -18,6 +18,7 @@ class ScrollableControl extends StatefulWidget {
   final Widget child;
   final Axis scrollDirection;
   final ScrollController? scrollController;
+  final bool? parentAdaptive;
   final FletControlBackend backend;
 
   const ScrollableControl(
@@ -26,6 +27,7 @@ class ScrollableControl extends StatefulWidget {
       required this.child,
       required this.scrollDirection,
       this.scrollController,
+      required this.parentAdaptive,
       required this.backend});
 
   @override

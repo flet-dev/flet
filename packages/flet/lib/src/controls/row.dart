@@ -79,6 +79,7 @@ class RowControl extends StatelessWidget {
         control: control,
         scrollDirection: wrap ? Axis.vertical : Axis.horizontal,
         backend: backend,
+        parentAdaptive: adaptive,
         child: child);
 
     if (control.attrBool("onScroll", false)!) {
