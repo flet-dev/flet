@@ -5,6 +5,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
+import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
@@ -104,9 +105,25 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
             const BorderRadius.all(Radius.circular(8.0));
 
     EdgeInsets? padding = parseEdgeInsets(widget.control, "padding");
-    // set padding to zero when from a material IconButton
-    if (padding == null && isIconButton) {
-      padding = const EdgeInsets.all(0);
+    if (padding == null) {
+      var theme = Theme.of(context);
+      var style = parseButtonStyle(Theme.of(context), widget.control, "style",
+          defaultForegroundColor: theme.colorScheme.primary,
+          defaultBackgroundColor: Colors.transparent,
+          defaultOverlayColor: Colors.transparent,
+          defaultShadowColor: Colors.transparent,
+          defaultSurfaceTintColor: Colors.transparent,
+          defaultElevation: 0,
+          defaultPadding: const EdgeInsets.all(8),
+          defaultBorderSide: BorderSide.none,
+          defaultShape: theme.useMaterial3
+              ? const StadiumBorder()
+              : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
+
+      if (style != null) {
+        padding = style.padding?.resolve({MaterialState.scrolledUnder})
+            as EdgeInsets?;
+      }
     }
 
     Function()? onPressed = !disabled

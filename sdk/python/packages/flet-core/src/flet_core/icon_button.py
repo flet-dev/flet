@@ -1,6 +1,5 @@
-from typing import Any, Optional, Union
-
 import time
+from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import ButtonStyle
@@ -160,6 +159,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         if self.__style is not None:
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
+            self.__style.padding = self._wrap_attr_dict(self.__style.padding)
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
