@@ -10,7 +10,7 @@ class PageMediaViewModel extends Equatable {
   final bool isRegistered;
   final Size size;
   final Brightness displayBrightness;
-  final PageMediaData? media;
+  final PageMediaData media;
   final Function dispatch;
 
   const PageMediaViewModel(
