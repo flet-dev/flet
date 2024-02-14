@@ -908,14 +908,21 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             var bnb = navBar ?? bottomAppBar;
 
             var bar = appBarView != null
-                ? AppBarControl(
-                    parent: control,
-                    control: appBarView.control,
-                    children: appBarView.children,
-                    parentDisabled: control.isDisabled,
-                    parentAdaptive: adaptive,
-                    height: appBarView.control
-                        .attrDouble("toolbarHeight", kToolbarHeight)!)
+                ? widget.widgetsDesign == PageDesign.cupertino
+                    ? CupertinoAppBarControl(
+                        parent: control,
+                        control: appBarView.control,
+                        children: appBarView.children,
+                        parentDisabled: control.isDisabled,
+                        parentAdaptive: adaptive)
+                    : AppBarControl(
+                        parent: control,
+                        control: appBarView.control,
+                        children: appBarView.children,
+                        parentDisabled: control.isDisabled,
+                        parentAdaptive: adaptive,
+                        height: appBarView.control
+                            .attrDouble("toolbarHeight", kToolbarHeight)!)
                 : cupertinoAppBarView != null
                     ? CupertinoAppBarControl(
                         parent: control,
@@ -942,7 +949,9 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               backgroundColor: HexColor.fromString(
                       Theme.of(context), control.attrString("bgcolor", "")!) ??
                   CupertinoTheme.of(context).scaffoldBackgroundColor,
-              appBar: widget.widgetsDesign != PageDesign.cupertino ? bar : null,
+              appBar: widget.widgetsDesign != PageDesign.cupertino
+                  ? bar as PreferredSizeWidget?
+                  : null,
               drawer: drawerView != null
                   ? NavigationDrawerControl(
                       control: drawerView.control,
@@ -983,7 +992,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               floatingActionButtonLocation: fabLocation,
             );
 
-            if (widget.widgetsDesign == PageDesign.cupertino) {
+            if (widget.widgetsDesign == PageDesign.cupertino && bar != null) {
               scaffold = CupertinoPageScaffold(
                   key: scaffoldKey,
                   backgroundColor: HexColor.fromString(

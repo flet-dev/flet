@@ -190,14 +190,21 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
 
             var bar = appBarView != null
                 ? appBarView.control.type == "appbar"
-                    ? AppBarControl(
-                        parent: widget.control,
-                        control: appBarView.control,
-                        children: appBarView.children,
-                        parentDisabled: widget.control.isDisabled,
-                        parentAdaptive: adaptive,
-                        height: appBarView.control
-                            .attrDouble("toolbarHeight", kToolbarHeight)!)
+                    ? widgetsDesign == PageDesign.cupertino
+                        ? CupertinoAppBarControl(
+                            parent: widget.control,
+                            control: appBarView.control,
+                            children: appBarView.children,
+                            parentDisabled: widget.control.isDisabled,
+                            parentAdaptive: adaptive)
+                        : AppBarControl(
+                            parent: widget.control,
+                            control: appBarView.control,
+                            children: appBarView.children,
+                            parentDisabled: widget.control.isDisabled,
+                            parentAdaptive: adaptive,
+                            height: appBarView.control
+                                .attrDouble("toolbarHeight", kToolbarHeight)!)
                     : appBarView.control.type == "cupertinoappbar"
                         ? CupertinoAppBarControl(
                             parent: widget.control,
@@ -214,7 +221,9 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
                 backgroundColor: HexColor.fromString(Theme.of(context),
                         widget.control.attrString("bgcolor", "")!) ??
                     CupertinoTheme.of(context).scaffoldBackgroundColor,
-                appBar: widgetsDesign != PageDesign.cupertino ? bar : null,
+                appBar: widgetsDesign != PageDesign.cupertino
+                    ? bar as PreferredSizeWidget?
+                    : null,
                 drawer: drawerView != null
                     ? NavigationDrawerControl(
                         control: drawerView.control,

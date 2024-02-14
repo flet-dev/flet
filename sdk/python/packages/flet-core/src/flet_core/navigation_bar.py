@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.border import Border
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -191,6 +192,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         indicator_color: Optional[str] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
         surface_tint_color: Optional[str] = None,
+        border: Optional[Border] = None,
         on_change=None,
     ):
         ConstrainedControl.__init__(
@@ -233,6 +235,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         self.indicator_color = indicator_color
         self.indicator_shape = indicator_shape
         self.surface_tint_color = surface_tint_color
+        self.border = border
         self.on_change = on_change
 
     def _get_control_name(self):
@@ -241,6 +244,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("indicatorShape", self.__indicator_shape)
+        self._set_attr_json("border", self.__border)
 
     def _get_children(self):
         children = []
@@ -334,6 +338,15 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     @surface_tint_color.setter
     def surface_tint_color(self, value):
         self._set_attr("surfaceTintColor", value)
+
+    # border
+    @property
+    def border(self) -> Optional[Border]:
+        return self.__border
+
+    @border.setter
+    def border(self, value: Optional[Border]):
+        self.__border = value
 
     # on_change
     @property
