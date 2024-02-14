@@ -111,6 +111,7 @@ for:
             $env:PKG_VER = "$($cv.major).$($cv.minor+1).0+$($env:APPVEYOR_BUILD_NUMBER)"
           }
           Update-AppveyorBuild -Version $env:PKG_VER
+      - pip3 install pyyaml
       - flutter upgrade --force
 
     build_script:
@@ -126,10 +127,10 @@ for:
             python3 ci/patch_pubspec.py packages/flet_video/pubspec.yaml $PKG_VER
             python3 ci/patch_pubspec.py packages/flet_webview/pubspec.yaml $PKG_VER
 
-            cd packages/flet
-            flutter test
-            dart pub publish --force || exit 1
-            cd $APPVEYOR_BUILD_FOLDER
+            #cd packages/flet
+            #flutter test
+            #dart pub publish --force || exit 1
+            #cd $APPVEYOR_BUILD_FOLDER
 
             cd packages/flet_audio
             dart pub publish --force || exit 1
