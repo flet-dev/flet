@@ -20,7 +20,7 @@ from flet_core.alert_dialog import AlertDialog
 from flet_core.alignment import Alignment
 from flet_core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
 from flet_core.animation import Animation, AnimationCurve
-from flet_core.app_bar import AppBar
+from flet_core.app_bar import AppBar, SystemOverlayStyle
 from flet_core.audio import Audio
 from flet_core.audio_recorder import AudioEncoder, AudioRecorder
 from flet_core.badge import Badge
@@ -249,7 +249,7 @@ from flet_core.types import (
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
-from flet_core.video import FilterQuality, Video, VideoMedia
+from flet_core.video import FilterQuality, PlaylistMode, Video, VideoMedia
 from flet_core.view import View
 from flet_core.webview import WebView
 from flet_core.window_drag_area import WindowDragArea

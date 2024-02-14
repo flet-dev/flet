@@ -50,6 +50,7 @@ class FilledButton(ElevatedButton):
         #
         # Specific
         #
+        adaptive: Optional[bool] = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
         style: Optional[ButtonStyle] = None,
@@ -92,4 +93,5 @@ class FilledButton(ElevatedButton):
             on_click=on_click,
             on_long_press=on_long_press,
             on_hover=on_hover,
+            adaptive=adaptive,
         )

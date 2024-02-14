@@ -344,6 +344,7 @@ Widget createWidget(
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
           backend: backend);
     case "cupertinodialogaction":
       return CupertinoDialogActionControl(
