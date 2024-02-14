@@ -219,11 +219,11 @@ class Command(BaseCommand):
             help="additional arguments for flutter build command",
         )
         parser.add_argument(
-            "--packages",
+            "--include-packages",
             dest="flutter_packages",
             nargs="+",
             default=[],
-            help="extra Flutter Flet packages, such as flet_video, flet_audio, etc.",
+            help="include extra Flutter Flet packages, such as flet_video, flet_audio, etc.",
         )
         parser.add_argument(
             "--build-number",
