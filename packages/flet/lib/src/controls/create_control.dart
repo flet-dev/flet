@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/align.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -851,6 +852,16 @@ Widget createWidget(
           backend: backend);
     case "canvas":
       return CanvasControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+
+    case 'align':
+      return AlignControl(
           key: key,
           parent: parent,
           control: controlView.control,
