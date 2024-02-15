@@ -553,7 +553,8 @@ Widget createWidget(
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
+          parentAdaptive: parentAdaptive,
+          backend: backend);
     case "shadermask":
       return ShaderMaskControl(
           key: key,
