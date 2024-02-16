@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
 import flet_core
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
 from flet_core.animation import AnimationCurve
 from flet_core.app_bar import AppBar
@@ -42,7 +43,6 @@ from flet_core.types import (
     MainAxisAlignment,
     OffsetValue,
     PaddingValue,
-    PageDesign,
     PagePlatform,
     ScrollMode,
     ThemeMode,
@@ -72,7 +72,7 @@ except ImportError as e:
             pass
 
 
-class Page(Control):
+class Page(AdaptiveControl):
     """
     Page is a container for `View` (https://flet.dev/docs/controls/view) controls.
 
@@ -1240,18 +1240,6 @@ class Page(Control):
     def platform(self, value: PagePlatform):
         self._set_attr(
             "platform", value.value if isinstance(value, PagePlatform) else value
-        )
-
-    # design
-    @property
-    def design(self):
-        av = self._get_attr("design")
-        return PageDesign(av) if av else PageDesign.MATERIAL
-
-    @design.setter
-    def design(self, value: PageDesign):
-        self._set_attr(
-            "design", value.value if isinstance(value, PageDesign) else value
         )
 
     # platform_brightness

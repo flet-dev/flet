@@ -67,28 +67,15 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
     }
 
     return withPagePlatform((context, platform) {
-      PageDesign widgetsDesign = PageDesign.material;
-
-      var pageDesign = PageDesign.values.firstWhereOrNull((a) =>
-          a.name.toLowerCase() ==
-          widget.control.attrString("design", "")!.toLowerCase());
-
-      if ((pageDesign == PageDesign.adaptive &&
-              (platform == TargetPlatform.iOS ||
-                  platform == TargetPlatform.macOS)) ||
-          pageDesign == PageDesign.cupertino) {
-        widgetsDesign = PageDesign.cupertino;
-      } else {
-        widgetsDesign = PageDesign.material;
-      }
-
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
-      bool? adaptive = pageDesign != null
-          ? pageDesign == PageDesign.adaptive
-          : widget.parentAdaptive;
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
-      var bgcolor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("bgcolor", "")!);
+      var widgetsDesign = adaptive == true &&
+              (platform == TargetPlatform.iOS ||
+                  platform == TargetPlatform.macOS)
+          ? PageDesign.cupertino
+          : PageDesign.material;
 
       List<String> childIds = [
         appBarCtrls.firstOrNull?.id,

@@ -15,14 +15,13 @@ from flet_core.types import (
     AnimationValue,
     FloatingActionButtonLocation,
     OffsetValue,
-    PageDesign,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
 
 
-class Pagelet(ConstrainedControl):
+class Pagelet(ConstrainedControl, AdaptiveControl):
     """
         Pagelet implements the basic Material Design visual layout structure.
 
@@ -94,7 +93,10 @@ class Pagelet(ConstrainedControl):
             FloatingActionButtonLocation, OffsetValue
         ] = None,
         bgcolor: Optional[str] = None,
-        design: Optional[PageDesign] = None,
+        #
+        # Adaptive
+        #
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -127,6 +129,8 @@ class Pagelet(ConstrainedControl):
             data=data,
         )
 
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.content = content
         self.appbar = appbar
         self.bgcolor = bgcolor
@@ -137,7 +141,6 @@ class Pagelet(ConstrainedControl):
         self.end_drawer = end_drawer
         self.floating_action_button = floating_action_button
         self.floating_action_button_location = floating_action_button_location
-        self.design = design
 
     def _get_control_name(self):
         return "pagelet"
@@ -318,16 +321,4 @@ class Pagelet(ConstrainedControl):
         self._set_attr(
             "floatingActionButtonLocation",
             value.value if isinstance(value, FloatingActionButtonLocation) else value,
-        )
-
-    # design
-    @property
-    def design(self):
-        av = self._get_attr("design")
-        return PageDesign(av) if av else PageDesign.MATERIAL
-
-    @design.setter
-    def design(self, value: Optional[PageDesign]):
-        self._set_attr(
-            "design", value.value if isinstance(value, PageDesign) else value
         )

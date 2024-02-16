@@ -239,7 +239,6 @@ from flet_core.types import (
     MaterialState,
     NotchShape,
     PaddingValue,
-    PageDesign,
     PagePlatform,
     ScrollMode,
     TabAlignment,

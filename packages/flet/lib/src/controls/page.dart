@@ -40,7 +40,7 @@ import 'navigation_drawer.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
-enum PageDesign { adaptive, material, cupertino }
+enum PageDesign { material, cupertino }
 
 class RoutesViewModel extends Equatable {
   final Control page;
@@ -124,7 +124,7 @@ class PageControl extends StatefulWidget {
 }
 
 class _PageControlState extends State<PageControl> with FletStoreMixin {
-  PageDesign _pageDesign = PageDesign.material;
+  bool? _adaptive;
   PageDesign _widgetsDesign = PageDesign.material;
   TargetPlatform _platform = defaultTargetPlatform;
   Brightness? _brightness;
@@ -247,20 +247,13 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             widget.control.attrString("platform", "")!.toLowerCase(),
         orElse: () => defaultTargetPlatform);
 
-    _pageDesign = PageDesign.values.firstWhere(
-        (a) =>
-            a.name.toLowerCase() ==
-            widget.control.attrString("design", "")!.toLowerCase(),
-        orElse: () => PageDesign.material);
+    _adaptive = widget.control.attrBool("adaptive");
 
-    if ((_pageDesign == PageDesign.adaptive &&
+    _widgetsDesign = _adaptive == true &&
             (_platform == TargetPlatform.iOS ||
-                _platform == TargetPlatform.macOS)) ||
-        _pageDesign == PageDesign.cupertino) {
-      _widgetsDesign = PageDesign.cupertino;
-    } else {
-      _widgetsDesign = PageDesign.material;
-    }
+                _platform == TargetPlatform.macOS)
+        ? PageDesign.cupertino
+        : PageDesign.material;
 
     // theme
     _themeMode = ThemeMode.values.firstWhereOrNull((t) =>
@@ -648,7 +641,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                 overlayWidgets: overlayWidgets(view.id),
                 loadingPage: loadingPage,
                 backend: widget.backend,
-                parentAdaptive: _pageDesign == PageDesign.adaptive,
+                parentAdaptive: _adaptive,
                 widgetsDesign: _widgetsDesign,
                 brightness: _brightness,
                 themeMode: _themeMode,
@@ -701,7 +694,7 @@ class ViewControl extends StatefulWidget {
   final List<Widget> overlayWidgets;
   final Widget? loadingPage;
   final FletControlBackend backend;
-  final bool parentAdaptive;
+  final bool? parentAdaptive;
   final PageDesign widgetsDesign;
   final Brightness? brightness;
   final ThemeMode? themeMode;
