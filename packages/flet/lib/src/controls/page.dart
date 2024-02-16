@@ -936,15 +936,11 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             ]);
 
             Widget scaffold = Scaffold(
-              key: widget.widgetsDesign != PageDesign.cupertino
-                  ? scaffoldKey
-                  : null,
+              key: bar == null || bar is AppBarControl ? scaffoldKey : null,
               backgroundColor: HexColor.fromString(
                       Theme.of(context), control.attrString("bgcolor", "")!) ??
                   CupertinoTheme.of(context).scaffoldBackgroundColor,
-              appBar: widget.widgetsDesign != PageDesign.cupertino
-                  ? bar as PreferredSizeWidget?
-                  : null,
+              appBar: bar is AppBarControl ? bar : null,
               drawer: drawerView != null
                   ? NavigationDrawerControl(
                       control: drawerView.control,
@@ -985,7 +981,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               floatingActionButtonLocation: fabLocation,
             );
 
-            if (widget.widgetsDesign == PageDesign.cupertino && bar != null) {
+            if (bar is CupertinoAppBarControl) {
               scaffold = CupertinoPageScaffold(
                   key: scaffoldKey,
                   backgroundColor: HexColor.fromString(

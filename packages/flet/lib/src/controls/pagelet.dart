@@ -204,13 +204,11 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
                 : null;
 
             Widget scaffold = Scaffold(
-                key: widgetsDesign != PageDesign.cupertino ? scaffoldKey : null,
+                key: bar == null || bar is AppBarControl ? scaffoldKey : null,
                 backgroundColor: HexColor.fromString(Theme.of(context),
                         widget.control.attrString("bgcolor", "")!) ??
                     CupertinoTheme.of(context).scaffoldBackgroundColor,
-                appBar: widgetsDesign != PageDesign.cupertino
-                    ? bar as PreferredSizeWidget?
-                    : null,
+                appBar: bar is AppBarControl ? bar : null,
                 drawer: drawerView != null
                     ? NavigationDrawerControl(
                         control: drawerView.control,
@@ -256,7 +254,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
                     : null,
                 floatingActionButtonLocation: fabLocation);
 
-            if (widgetsDesign == PageDesign.cupertino) {
+            if (bar is CupertinoAppBarControl) {
               scaffold = CupertinoPageScaffold(
                   key: scaffoldKey,
                   backgroundColor: HexColor.fromString(Theme.of(context),
