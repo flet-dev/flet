@@ -48,9 +48,10 @@ class _TextFieldControlState extends State<TextFieldControl>
     super.initState();
     _controller = TextEditingController();
     _shiftEnterfocusNode = FocusNode(
-      onKey: (FocusNode node, RawKeyEvent evt) {
-        if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
-          if (evt is RawKeyDownEvent) {
+      onKeyEvent: (FocusNode node, KeyEvent evt) {
+        if (!HardwareKeyboard.instance.isShiftPressed &&
+            evt.logicalKey.keyLabel == 'Enter') {
+          if (evt is KeyDownEvent) {
             widget.backend.triggerControlEvent(widget.control.id, "submit", "");
           }
           return KeyEventResult.handled;

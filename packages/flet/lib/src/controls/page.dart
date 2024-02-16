@@ -184,7 +184,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     _routeState.removeListener(_routeChanged);
     _routeState.dispose();
     if (_keyboardHandlerSubscribed) {
-      RawKeyboard.instance.removeListener(_handleKeyDown);
+      HardwareKeyboard.instance.removeHandler(_handleKeyDown);
     }
     super.dispose();
   }
@@ -194,8 +194,8 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         _routeState.route, FletAppServices.of(context).server));
   }
 
-  void _handleKeyDown(RawKeyEvent e) {
-    if (e is RawKeyDownEvent) {
+  bool _handleKeyDown(KeyEvent e) {
+    if (e is KeyDownEvent) {
       final k = e.logicalKey;
       if (![
         LogicalKeyboardKey.control,
@@ -216,13 +216,15 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             "keyboard_event",
             json.encode(KeyboardEvent(
                     key: k.keyLabel,
-                    isAltPressed: e.isAltPressed,
-                    isControlPressed: e.isControlPressed,
-                    isShiftPressed: e.isShiftPressed,
-                    isMetaPressed: e.isMetaPressed)
+                    isAltPressed: HardwareKeyboard.instance.isAltPressed,
+                    isControlPressed:
+                        HardwareKeyboard.instance.isControlPressed,
+                    isShiftPressed: HardwareKeyboard.instance.isShiftPressed,
+                    isMetaPressed: HardwareKeyboard.instance.isMetaPressed)
                 .toJson()));
       }
     }
+    return false;
   }
 
   @override
@@ -264,7 +266,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     // keyboard handler
     var onKeyboardEvent = widget.control.attrBool("onKeyboardEvent", false)!;
     if (onKeyboardEvent && !_keyboardHandlerSubscribed) {
-      RawKeyboard.instance.addListener(_handleKeyDown);
+      HardwareKeyboard.instance.addHandler(_handleKeyDown);
       _keyboardHandlerSubscribed = true;
     }
 
