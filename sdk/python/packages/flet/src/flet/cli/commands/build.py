@@ -808,7 +808,7 @@ class Command(BaseCommand):
         if self.flutter_dir and os.path.exists(self.flutter_dir):
             if self.verbose > 0:
                 print(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
-            shutil.rmtree(str(self.flutter_dir), ignore_errors=True, onerror=None)
+            # shutil.rmtree(str(self.flutter_dir), ignore_errors=True, onerror=None)
         if exit_code == 0:
             msg = message if message else "Success!"
             print(f"[spring_green3]{msg}[/spring_green3]")
