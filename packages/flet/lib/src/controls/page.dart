@@ -942,6 +942,18 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               ...widget.overlayWidgets
             ]);
 
+            var materialTheme = widget.themeMode == ThemeMode.light ||
+                    ((widget.themeMode == null ||
+                            widget.themeMode == ThemeMode.system) &&
+                        widget.brightness == Brightness.light)
+                ? parseTheme(widget.parent, "theme", Brightness.light)
+                : widget.parent.attrString("darkTheme") != null
+                    ? parseTheme(widget.parent, "darkTheme", Brightness.dark)
+                    : parseTheme(widget.parent, "theme", Brightness.dark);
+
+            var systemOverlayStyle =
+                materialTheme.extension<SystemUiOverlayStyleTheme>();
+
             Widget scaffold = Scaffold(
               key: widget.widgetsDesign != PageDesign.cupertino
                   ? scaffoldKey
@@ -1018,15 +1030,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               );
             } else if (widget.widgetsDesign == PageDesign.cupertino) {
               scaffold = Theme(
-                data: widget.themeMode == ThemeMode.light ||
-                        ((widget.themeMode == null ||
-                                widget.themeMode == ThemeMode.system) &&
-                            widget.brightness == Brightness.light)
-                    ? parseTheme(widget.parent, "theme", Brightness.light)
-                    : widget.parent.attrString("darkTheme") != null
-                        ? parseTheme(
-                            widget.parent, "darkTheme", Brightness.dark)
-                        : parseTheme(widget.parent, "theme", Brightness.dark),
+                data: materialTheme,
                 child: scaffold,
               );
             }

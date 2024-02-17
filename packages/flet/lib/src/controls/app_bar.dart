@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
-import '../utils/overlay_style.dart';
+import '../utils/theme.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
 import 'flet_store_mixin.dart';
@@ -57,8 +57,6 @@ class AppBarControl extends StatelessWidget
           Theme.of(context), control.attrString("color", "")!);
       var bgcolor = HexColor.fromString(
           Theme.of(context), control.attrString("bgcolor", "")!);
-      var systemOverlayStyle = parseSystemOverlayStyle(
-          Theme.of(context), control, "systemOverlayStyle");
 
       return AppBar(
         leading: leadingCtrls.isNotEmpty
@@ -80,7 +78,9 @@ class AppBarControl extends StatelessWidget
             .map((c) => createControl(control, c.id, control.isDisabled,
                 parentAdaptive: adaptive))
             .toList(),
-        systemOverlayStyle: systemOverlayStyle,
+        systemOverlayStyle: Theme.of(context)
+            .extension<SystemUiOverlayStyleTheme>()
+            ?.systemUiOverlayStyle,
       );
     });
   }

@@ -13,6 +13,23 @@ import 'numbers.dart';
 import 'overlay_style.dart';
 import 'text.dart';
 
+class SystemUiOverlayStyleTheme
+    extends ThemeExtension<SystemUiOverlayStyleTheme> {
+  final SystemUiOverlayStyle? systemUiOverlayStyle;
+  SystemUiOverlayStyleTheme(this.systemUiOverlayStyle);
+
+  @override
+  ThemeExtension<SystemUiOverlayStyleTheme> copyWith() {
+    return SystemUiOverlayStyleTheme(systemUiOverlayStyle);
+  }
+
+  @override
+  ThemeExtension<SystemUiOverlayStyleTheme> lerp(
+      covariant ThemeExtension<SystemUiOverlayStyleTheme>? other, double t) {
+    return this;
+  }
+}
+
 CupertinoThemeData parseCupertinoTheme(
     Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
@@ -58,14 +75,6 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     colorSchemeSeed = Colors.blue;
   }
 
-  var systemOverlayStyle = json?["system_overlay_style"] != null
-      ? overlayStyleFromJson(parentTheme, json?["system_overlay_style"])
-      : null;
-  debugPrint("SYSTEM OVERLAY STYLE: $systemOverlayStyle");
-  if (systemOverlayStyle != null) {
-    SystemChrome.setSystemUIOverlayStyle(systemOverlayStyle);
-  }
-
   // create new theme
   theme ??= ThemeData(
       primarySwatch:
@@ -89,9 +98,16 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       scrollbarTheme: parseScrollBarTheme(theme, json?["scrollbar_theme"]),
       tabBarTheme: parseTabBarTheme(theme, json?["tabs_theme"]));
 
-  return theme.copyWith(
+  var systemOverlayStyle = json?["system_overlay_style"] != null
+      ? overlayStyleFromJson(theme, json?["system_overlay_style"], brightness)
+      : null;
+
+  theme = theme.copyWith(
+      extensions: {SystemUiOverlayStyleTheme(systemOverlayStyle)},
       cupertinoOverrideTheme: fixCupertinoTheme(
           MaterialBasedCupertinoThemeData(materialTheme: theme), theme));
+
+  return theme;
 }
 
 ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {
