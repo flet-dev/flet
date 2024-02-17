@@ -8,6 +8,7 @@ import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
 import 'cupertino_button.dart';
+import 'cupertino_dialog_action.dart';
 import 'flet_store_mixin.dart';
 
 class TextButtonControl extends StatefulWidget {
@@ -65,12 +66,21 @@ class _TextButtonControlState extends State<TextButtonControl>
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
-        return CupertinoButtonControl(
-            control: widget.control,
-            parentDisabled: widget.parentDisabled,
-            parentAdaptive: adaptive,
-            children: widget.children,
-            backend: widget.backend);
+        return widget.control.name == "action" &&
+                (widget.parent?.type == "alertdialog" ||
+                    widget.parent?.type == "cupertinoalertdialog")
+            ? CupertinoDialogActionControl(
+                control: widget.control,
+                parentDisabled: widget.parentDisabled,
+                parentAdaptive: adaptive,
+                children: widget.children,
+                backend: widget.backend)
+            : CupertinoButtonControl(
+                control: widget.control,
+                parentDisabled: widget.parentDisabled,
+                parentAdaptive: adaptive,
+                children: widget.children,
+                backend: widget.backend);
       }
 
       String text = widget.control.attrString("text", "")!;

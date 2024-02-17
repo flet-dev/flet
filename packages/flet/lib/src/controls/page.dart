@@ -548,6 +548,9 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                                     "darkTheme", Brightness.dark)
                                 : parseCupertinoTheme(
                                     widget.control, "theme", Brightness.dark),
+                        localizationsDelegates: const [
+                          DefaultMaterialLocalizations.delegate
+                        ],
                       )
                     : MaterialApp.router(
                         debugShowCheckedModeBanner: false,

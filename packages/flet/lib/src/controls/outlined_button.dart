@@ -7,12 +7,16 @@ import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
+import 'cupertino_button.dart';
+import 'cupertino_dialog_action.dart';
+import 'flet_store_mixin.dart';
 
 class OutlinedButtonControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final FletControlBackend backend;
 
   const OutlinedButtonControl(
@@ -21,13 +25,15 @@ class OutlinedButtonControl extends StatefulWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
+      required this.parentAdaptive,
       required this.backend});
 
   @override
   State<OutlinedButtonControl> createState() => _OutlinedButtonControlState();
 }
 
-class _OutlinedButtonControlState extends State<OutlinedButtonControl> {
+class _OutlinedButtonControlState extends State<OutlinedButtonControl>
+    with FletStoreMixin {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -92,62 +98,86 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl> {
           }
         : null;
 
-    OutlinedButton? button;
+    return withPagePlatform((context, platform) {
+      bool? adaptive =
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      if (adaptive == true &&
+          (platform == TargetPlatform.iOS ||
+              platform == TargetPlatform.macOS)) {
+        return widget.control.name == "action" &&
+                (widget.parent?.type == "alertdialog" ||
+                    widget.parent?.type == "cupertinoalertdialog")
+            ? CupertinoDialogActionControl(
+                control: widget.control,
+                parentDisabled: widget.parentDisabled,
+                parentAdaptive: adaptive,
+                children: widget.children,
+                backend: widget.backend)
+            : CupertinoButtonControl(
+                control: widget.control,
+                parentDisabled: widget.parentDisabled,
+                parentAdaptive: adaptive,
+                children: widget.children,
+                backend: widget.backend);
+      }
 
-    var theme = Theme.of(context);
+      OutlinedButton? button;
 
-    var style = parseButtonStyle(Theme.of(context), widget.control, "style",
-        defaultForegroundColor: theme.colorScheme.primary,
-        defaultBackgroundColor: Colors.transparent,
-        defaultOverlayColor: Colors.transparent,
-        defaultShadowColor: Colors.transparent,
-        defaultSurfaceTintColor: Colors.transparent,
-        defaultElevation: 0,
-        defaultPadding: const EdgeInsets.all(8),
-        defaultBorderSide: BorderSide(color: theme.colorScheme.outline),
-        defaultShape: theme.useMaterial3
-            ? const StadiumBorder()
-            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
+      var theme = Theme.of(context);
 
-    if (icon != null) {
-      button = OutlinedButton.icon(
-          autofocus: autofocus,
-          focusNode: _focusNode,
-          onPressed: onPressed,
-          onLongPress: onLongPressHandler,
-          style: style,
-          icon: Icon(
-            icon,
-            color: iconColor,
-          ),
-          label: Text(text));
-    } else if (contentCtrls.isNotEmpty) {
-      button = OutlinedButton(
-          autofocus: autofocus,
-          focusNode: _focusNode,
-          onPressed: onPressed,
-          onLongPress: onLongPressHandler,
-          onHover: onHoverHandler,
-          style: style,
-          child:
-              createControl(widget.control, contentCtrls.first.id, disabled));
-    } else {
-      button = OutlinedButton(
-          autofocus: autofocus,
-          focusNode: _focusNode,
-          style: style,
-          onPressed: onPressed,
-          onLongPress: onLongPressHandler,
-          onHover: onHoverHandler,
-          child: Text(text));
-    }
+      var style = parseButtonStyle(Theme.of(context), widget.control, "style",
+          defaultForegroundColor: theme.colorScheme.primary,
+          defaultBackgroundColor: Colors.transparent,
+          defaultOverlayColor: Colors.transparent,
+          defaultShadowColor: Colors.transparent,
+          defaultSurfaceTintColor: Colors.transparent,
+          defaultElevation: 0,
+          defaultPadding: const EdgeInsets.all(8),
+          defaultBorderSide: BorderSide(color: theme.colorScheme.outline),
+          defaultShape: theme.useMaterial3
+              ? const StadiumBorder()
+              : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    var focusValue = widget.control.attrString("focus");
-    if (focusValue != null && focusValue != _lastFocusValue) {
-      _lastFocusValue = focusValue;
-      _focusNode.requestFocus();
-    }
+      if (icon != null) {
+        button = OutlinedButton.icon(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            style: style,
+            icon: Icon(
+              icon,
+              color: iconColor,
+            ),
+            label: Text(text));
+      } else if (contentCtrls.isNotEmpty) {
+        button = OutlinedButton(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            style: style,
+            child:
+                createControl(widget.control, contentCtrls.first.id, disabled));
+      } else {
+        button = OutlinedButton(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            style: style,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            child: Text(text));
+      }
 
-    return constrainedControl(context, button, widget.parent, widget.control);
+      var focusValue = widget.control.attrString("focus");
+      if (focusValue != null && focusValue != _lastFocusValue) {
+        _lastFocusValue = focusValue;
+        _focusNode.requestFocus();
+      }
+
+      return constrainedControl(context, button, widget.parent, widget.control);
+    });
   }
 }
