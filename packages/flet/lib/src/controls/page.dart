@@ -937,6 +937,15 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               ...widget.overlayWidgets
             ]);
 
+            var materialTheme = widget.themeMode == ThemeMode.light ||
+                    ((widget.themeMode == null ||
+                            widget.themeMode == ThemeMode.system) &&
+                        widget.brightness == Brightness.light)
+                ? parseTheme(widget.parent, "theme", Brightness.light)
+                : widget.parent.attrString("darkTheme") != null
+                    ? parseTheme(widget.parent, "darkTheme", Brightness.dark)
+                    : parseTheme(widget.parent, "theme", Brightness.dark);
+
             Widget scaffold = Scaffold(
               key: bar == null || bar is AppBarControl ? scaffoldKey : null,
               backgroundColor: HexColor.fromString(
@@ -983,6 +992,18 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               floatingActionButtonLocation: fabLocation,
             );
 
+            var systemOverlayStyle =
+                materialTheme.extension<SystemUiOverlayStyleTheme>();
+
+            if (systemOverlayStyle != null &&
+                systemOverlayStyle.systemUiOverlayStyle != null &&
+                bar == null) {
+              scaffold = AnnotatedRegion<SystemUiOverlayStyle>(
+                value: systemOverlayStyle.systemUiOverlayStyle!,
+                child: scaffold,
+              );
+            }
+
             if (bar is CupertinoAppBarControl) {
               scaffold = CupertinoPageScaffold(
                   key: scaffoldKey,
@@ -1009,15 +1030,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               );
             } else if (widget.widgetsDesign == PageDesign.cupertino) {
               scaffold = Theme(
-                data: widget.themeMode == ThemeMode.light ||
-                        ((widget.themeMode == null ||
-                                widget.themeMode == ThemeMode.system) &&
-                            widget.brightness == Brightness.light)
-                    ? parseTheme(widget.parent, "theme", Brightness.light)
-                    : widget.parent.attrString("darkTheme") != null
-                        ? parseTheme(
-                            widget.parent, "darkTheme", Brightness.dark)
-                        : parseTheme(widget.parent, "theme", Brightness.dark),
+                data: materialTheme,
                 child: scaffold,
               );
             }
