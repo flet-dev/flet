@@ -230,7 +230,7 @@ packages:
       path: "../packages/flet_audio"
       relative: true
     source: path
-    version: "0.20.0"
+    version: "0.20.1"
   flet_audio_recorder:
     dependency: "direct main"
     description:
