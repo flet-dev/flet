@@ -102,12 +102,10 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       ? overlayStyleFromJson(theme, json?["system_overlay_style"], brightness)
       : null;
 
-  theme = theme.copyWith(
+  return theme.copyWith(
       extensions: {SystemUiOverlayStyleTheme(systemOverlayStyle)},
       cupertinoOverrideTheme: fixCupertinoTheme(
           MaterialBasedCupertinoThemeData(materialTheme: theme), theme));
-
-  return theme;
 }
 
 ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {
