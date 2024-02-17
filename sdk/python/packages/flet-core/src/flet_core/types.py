@@ -301,12 +301,6 @@ class PagePlatform(Enum):
     LINUX = "linux"
 
 
-class PageDesign(Enum):
-    MATERIAL = "material"
-    CUPERTINO = "cupertino"
-    ADAPTIVE = "adaptive"
-
-
 ThemeModeString = Literal[None, "system", "light", "dark"]
 
 

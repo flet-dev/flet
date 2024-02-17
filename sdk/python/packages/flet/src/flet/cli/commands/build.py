@@ -38,49 +38,49 @@ class Command(BaseCommand):
             "windows": {
                 "build_command": "windows",
                 "status_text": "Windows app",
-                "output": "build/windows/x64/runner/Release/*",
+                "outputs": ["build/windows/x64/runner/Release/*"],
                 "dist": "windows",
                 "can_be_run_on": ["Windows"],
             },
             "macos": {
                 "build_command": "macos",
                 "status_text": "macOS bundle",
-                "output": "build/macos/Build/Products/Release/{product_name}.app",
+                "outputs": ["build/macos/Build/Products/Release/{product_name}.app"],
                 "dist": "macos",
                 "can_be_run_on": ["Darwin"],
             },
             "linux": {
                 "build_command": "linux",
                 "status_text": "app for Linux",
-                "output": "build/linux/{arch}/release/bundle/*",
+                "outputs": ["build/linux/{arch}/release/bundle/*"],
                 "dist": "linux",
                 "can_be_run_on": ["Linux"],
             },
             "web": {
                 "build_command": "web",
                 "status_text": "web app",
-                "output": "build/web/*",
+                "outputs": ["build/web/*"],
                 "dist": "web",
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "apk": {
                 "build_command": "apk",
                 "status_text": ".apk for Android",
-                "output": "build/app/outputs/flutter-apk/*",
+                "outputs": ["build/app/outputs/flutter-apk/*"],
                 "dist": "apk",
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "aab": {
                 "build_command": "appbundle",
                 "status_text": ".aab bundle for Android",
-                "output": "build/app/outputs/bundle/release/*",
+                "outputs": ["build/app/outputs/bundle/release/*"],
                 "dist": "aab",
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "ipa": {
                 "build_command": "ipa",
                 "status_text": ".ipa bundle for iOS",
-                "output": "build/ios/archive/*",
+                "outputs": ["build/ios/archive/*", "build/ios/ipa/*"],
                 "dist": "ipa",
                 "can_be_run_on": ["Darwin"],
             },
@@ -723,24 +723,32 @@ class Command(BaseCommand):
         elif arch == "arm64" or arch == "aarch64":
             arch = "arm64"
 
-        build_output_dir = (
-            str(self.flutter_dir.joinpath(self.platforms[target_platform]["output"]))
-            .replace("{arch}", arch)
-            .replace("{project_name}", project_name)
-            .replace("{product_name}", product_name)
-        )
-        build_output_glob = os.path.basename(build_output_dir)
-        build_output_dir = os.path.dirname(build_output_dir)
-        if out_dir.exists():
-            shutil.rmtree(str(out_dir), ignore_errors=False, onerror=None)
-        out_dir.mkdir(parents=True, exist_ok=True)
+        for build_output in self.platforms[target_platform]["outputs"]:
+            build_output_dir = (
+                str(self.flutter_dir.joinpath(build_output))
+                .replace("{arch}", arch)
+                .replace("{project_name}", project_name)
+                .replace("{product_name}", product_name)
+            )
 
-        def ignore_build_output(path, files):
-            if path == build_output_dir and build_output_glob != "*":
-                return [f for f in os.listdir(path) if f != build_output_glob]
-            return []
+            if self.verbose > 0:
+                print("Copying build output from:", build_output_dir)
 
-        copy_tree(build_output_dir, str(out_dir), ignore=ignore_build_output)
+            build_output_glob = os.path.basename(build_output_dir)
+            build_output_dir = os.path.dirname(build_output_dir)
+            if not os.path.exists(build_output_dir):
+                continue
+
+            if out_dir.exists():
+                shutil.rmtree(str(out_dir), ignore_errors=False, onerror=None)
+            out_dir.mkdir(parents=True, exist_ok=True)
+
+            def ignore_build_output(path, files):
+                if path == build_output_dir and build_output_glob != "*":
+                    return [f for f in os.listdir(path) if f != build_output_glob]
+                return []
+
+            copy_tree(build_output_dir, str(out_dir), ignore=ignore_build_output)
 
         if target_platform == "web" and assets_path.exists():
             # copy `assets` directory contents to the output directory
