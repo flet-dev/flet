@@ -1,5 +1,11 @@
 # Flet changelog
 
+# 0.20.2
+* Move `system_overlay_style` from `AppBar` to `Theme` ([#2667](https://github.com/flet-dev/flet/issues/2667)).
+* `flet build` command checks minimal Flutter SDK version.
+* Buttons turn to `CupertinoDialogAction` controls inside adaptive dialogs.
+* `FletApp` control takes control create factories from a parent app.
+
 # 0.20.1
 
 * Migrated to Flutter 3.19
