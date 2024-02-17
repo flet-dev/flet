@@ -18,8 +18,8 @@ SystemUiOverlayStyle? parseSystemOverlayStyle(
   return overlayStyleFromJson(theme, j);
 }
 
-SystemUiOverlayStyle overlayStyleFromJson(
-    ThemeData theme, Map<String, dynamic> json) {
+SystemUiOverlayStyle overlayStyleFromJson(ThemeData? theme,
+    Map<String, dynamic> json) {
   return SystemUiOverlayStyle(
     statusBarColor: json["status_bar_color"] != null
         ? HexColor.fromString(theme, json["status_bar_color"] ?? "")

@@ -141,6 +141,15 @@ class TabsTheme:
 
 
 @dataclasses.dataclass
+class SystemOverlayStyle:
+    status_bar_color: Optional[str] = field(default=None)
+    system_navigation_bar_color: Optional[str] = field(default=None)
+    system_navigation_bar_divider_color: Optional[str] = field(default=None)
+    enforce_system_navigation_bar_contrast: Optional[bool] = field(default=None)
+    enforce_system_status_bar_contrast: Optional[bool] = field(default=None)
+
+
+@dataclasses.dataclass
 class Theme:
     color_scheme_seed: Optional[str] = field(default=None)
     primary_swatch: Optional[str] = field(default=None)
@@ -153,3 +162,4 @@ class Theme:
     use_material3: Optional[bool] = field(default=None)
     visual_density: ThemeVisualDensity = field(default=ThemeVisualDensity.STANDARD)
     page_transitions: PageTransitionsTheme = field(default_factory=PageTransitionsTheme)
+    system_overlay_style: SystemOverlayStyle = field(default_factory=SystemOverlayStyle)

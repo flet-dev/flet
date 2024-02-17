@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../models/control.dart';
 import 'borders.dart';
@@ -9,6 +10,7 @@ import 'colors.dart';
 import 'edge_insets.dart';
 import 'material_state.dart';
 import 'numbers.dart';
+import 'overlay_style.dart';
 import 'text.dart';
 
 CupertinoThemeData parseCupertinoTheme(
@@ -54,6 +56,14 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
 
   if (colorSchemeSeed == null && primarySwatch == null) {
     colorSchemeSeed = Colors.blue;
+  }
+
+  var systemOverlayStyle = json?["system_overlay_style"] != null
+      ? overlayStyleFromJson(parentTheme, json?["system_overlay_style"])
+      : null;
+  debugPrint("SYSTEM OVERLAY STYLE: $systemOverlayStyle");
+  if (systemOverlayStyle != null) {
+    SystemChrome.setSystemUIOverlayStyle(systemOverlayStyle);
   }
 
   // create new theme
