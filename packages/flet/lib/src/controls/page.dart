@@ -946,9 +946,6 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                     ? parseTheme(widget.parent, "darkTheme", Brightness.dark)
                     : parseTheme(widget.parent, "theme", Brightness.dark);
 
-            var systemOverlayStyle =
-                materialTheme.extension<SystemUiOverlayStyleTheme>();
-
             Widget scaffold = Scaffold(
               key: bar == null || bar is AppBarControl ? scaffoldKey : null,
               backgroundColor: HexColor.fromString(
@@ -994,6 +991,18 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                   : null,
               floatingActionButtonLocation: fabLocation,
             );
+
+            var systemOverlayStyle =
+                materialTheme.extension<SystemUiOverlayStyleTheme>();
+
+            if (systemOverlayStyle != null &&
+                systemOverlayStyle.systemUiOverlayStyle != null &&
+                bar == null) {
+              scaffold = AnnotatedRegion<SystemUiOverlayStyle>(
+                value: systemOverlayStyle.systemUiOverlayStyle!,
+                child: scaffold,
+              );
+            }
 
             if (bar is CupertinoAppBarControl) {
               scaffold = CupertinoPageScaffold(

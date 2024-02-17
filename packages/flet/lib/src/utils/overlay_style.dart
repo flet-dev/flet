@@ -27,7 +27,23 @@ SystemUiOverlayStyle overlayStyleFromJson(
           json["enforce_system_navigation_bar_contrast"] != null
               ? parseBool(json["enforce_system_navigation_bar_contrast"])
               : null,
-      systemNavigationBarIconBrightness: brightness,
-      statusBarBrightness: brightness,
-      statusBarIconBrightness: brightness);
+      systemNavigationBarIconBrightness: parseBrightness(
+          json["system_navigation_bar_icon_brightness"], brightness),
+      statusBarBrightness:
+          parseBrightness(json["status_bar_brightness"], brightness),
+      statusBarIconBrightness:
+          parseBrightness(json["status_bar_icon_brightness"], brightness));
+}
+
+Brightness? parseBrightness(dynamic value, Brightness? brightness) {
+  if (value == null) {
+    return null;
+  }
+  var b = parseBool(value);
+  Brightness? invertedBrightness = brightness != null
+      ? brightness == Brightness.light
+          ? Brightness.dark
+          : Brightness.light
+      : null;
+  return b ? brightness : invertedBrightness;
 }
