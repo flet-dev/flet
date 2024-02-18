@@ -230,6 +230,7 @@ from flet_core.transparent_pointer import TransparentPointer
 from flet_core.types import (
     BlendMode,
     BoxShape,
+    Brightness,
     ClipBehavior,
     CrossAxisAlignment,
     FloatingActionButtonLocation,

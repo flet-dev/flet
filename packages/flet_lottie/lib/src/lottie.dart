@@ -57,7 +57,6 @@ class _LottieControlState extends State<LottieControl> with FletStoreMixin {
       if (srcBase64 != "") {
         try {
           Uint8List bytes = base64Decode(srcBase64);
-
           lottie = Lottie.memory(bytes,
               repeat: repeat,
               reverse: reverse,
@@ -71,9 +70,8 @@ class _LottieControlState extends State<LottieControl> with FletStoreMixin {
         }
       } else {
         var assetSrc = getAssetSrc(src, pageArgs.pageUri!, pageArgs.assetsDir);
-
         if (assetSrc.isFile) {
-          // from file
+          // Local File
           lottie = Lottie.asset(assetSrc.path,
               repeat: repeat,
               reverse: reverse,

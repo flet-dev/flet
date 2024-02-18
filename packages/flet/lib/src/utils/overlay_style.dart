@@ -36,14 +36,17 @@ SystemUiOverlayStyle overlayStyleFromJson(
 }
 
 Brightness? parseBrightness(dynamic value, Brightness? brightness) {
-  if (value == null) {
-    return null;
+  switch (value) {
+    case "light":
+      return Brightness.light;
+    case "dark":
+      return Brightness.dark;
+    default:
+      Brightness? invertedBrightness = brightness != null
+          ? brightness == Brightness.light
+              ? Brightness.dark
+              : Brightness.light
+          : null;
+      return invertedBrightness;
   }
-  var b = parseBool(value);
-  Brightness? invertedBrightness = brightness != null
-      ? brightness == Brightness.light
-          ? Brightness.dark
-          : Brightness.light
-      : null;
-  return b ? brightness : invertedBrightness;
 }
