@@ -4,6 +4,7 @@ import 'package:flet/flet.dart';
 import 'package:flet_audio/flet_audio.dart' as flet_audio;
 import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
+import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_video/flet_video.dart' as flet_video;
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
 import 'package:flutter/foundation.dart';
@@ -23,6 +24,7 @@ void main([List<String>? args]) async {
   WidgetsFlutterBinding.ensureInitialized();
   flet_audio.ensureInitialized();
   flet_audio_recorder.ensureInitialized();
+  flet_lottie.ensureInitialized();
   flet_video.ensureInitialized();
   flet_webview.ensureInitialized();
 
@@ -84,6 +86,7 @@ void main([List<String>? args]) async {
     createControlFactories: [
       flet_audio.createControl,
       flet_audio_recorder.createControl,
+      flet_lottie.createControl,
       flet_video.createControl,
       flet_webview.createControl
     ],

@@ -35,6 +35,8 @@ dependencies:
     path: ../packages/flet
   flet_audio:
     path: ../packages/flet_audio
+  flet_lottie:
+    path: ../packages/flet_lottie
   flet_audio_recorder:
     path: ../packages/flet_audio_recorder
   flet_video:
