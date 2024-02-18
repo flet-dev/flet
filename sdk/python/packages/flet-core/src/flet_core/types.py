@@ -310,6 +310,11 @@ class ThemeMode(Enum):
     DARK = "dark"
 
 
+class Brightness(Enum):
+    LIGHT = "light"
+    DARK = "dark"
+
+
 class FloatingActionButtonLocation(Enum):
     CENTER_DOCKED = "centerDocked"
     CENTER_FLOAT = "centerFloat"
