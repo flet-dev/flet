@@ -1,4 +1,5 @@
 import asyncio
+import concurrent.futures
 import copy
 import json
 import logging
@@ -128,7 +129,10 @@ class FletApp(LocalConnection):
             if is_coroutine(self.__session_handler):
                 await self.__session_handler(self.__page)
             else:
-                self.__session_handler(self.__page)
+                await asyncio.get_running_loop().run_in_executor(
+                    None, self.__session_handler, self.__page
+                )
+
         except Exception as e:
             print(
                 f"Unhandled error processing page session {self.__page.session_id}:",

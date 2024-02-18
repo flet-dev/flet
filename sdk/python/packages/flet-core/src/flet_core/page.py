@@ -530,7 +530,7 @@ class Page(AdaptiveControl):
                 if is_coroutine(handler):
                     await handler(ce)
                 else:
-                    handler(ce)
+                    await asyncio.get_running_loop().run_in_executor(None, handler, ce)
 
     def __on_page_change_event(self, data):
         for props in json.loads(data):
