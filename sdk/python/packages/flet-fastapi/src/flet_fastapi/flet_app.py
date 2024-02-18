@@ -3,12 +3,13 @@ import copy
 import json
 import logging
 import os
+import threading
 import traceback
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
 import flet_fastapi
-from fastapi import WebSocket
+from fastapi import WebSocket, WebSocketDisconnect
 from flet_core.event import Event
 from flet_core.local_connection import LocalConnection
 from flet_core.page import Page
@@ -22,6 +23,7 @@ from flet_core.protocol import (
     RegisterWebClientRequestPayload,
 )
 from flet_core.utils import is_coroutine, random_string
+from flet_fastapi.async_lock import async_lock
 from flet_fastapi.flet_app_manager import app_manager
 from flet_fastapi.oauth_state import OAuthState
 from flet_runtime.pubsub import PubSubHub
@@ -101,7 +103,8 @@ class FletApp(LocalConnection):
             )
 
         await self.__websocket.accept()
-        self.__send_queue = asyncio.Queue(1)
+        self.__send_queue = asyncio.Queue()
+        self.__send_queue_lock = threading.Lock()
         st = asyncio.create_task(self.__send_loop())
         await self.__receive_loop()
         st.cancel()
@@ -149,7 +152,9 @@ class FletApp(LocalConnection):
         try:
             while True:
                 await self.__on_message(await self.__websocket.receive_text())
-        except Exception:
+        except Exception as e:
+            if not isinstance(e, WebSocketDisconnect):
+                logger.warning(f"Receive loop error: {e}")
             if self.__page:
                 await app_manager.disconnect_session(
                     self.__get_unique_session_id(self.__page.session_id),
@@ -243,7 +248,7 @@ class FletApp(LocalConnection):
             self.__page.copy_attrs(p)
 
             # send register response
-            await self.__send(
+            await self.__send_async(
                 self._create_register_web_client_response(controls=self.__page.snapshot)
             )
 
@@ -290,7 +295,7 @@ class FletApp(LocalConnection):
             None,
         )
 
-    async def __process_oauth_authorize_command(self, attrs: Dict[str, Any]):
+    async def __process_oauth_authorize_command_async(self, attrs: Dict[str, Any]):
         state_id = attrs["state"]
         state = OAuthState(
             session_id=self.__get_unique_session_id(self._client_details.sessionId),
@@ -299,7 +304,22 @@ class FletApp(LocalConnection):
             complete_page_html=attrs.get("completePageHtml", None),
             complete_page_url=attrs.get("completePageUrl", None),
         )
-        await app_manager.store_state(state_id, state)
+        await app_manager.store_state_async(state_id, state)
+        return (
+            "",
+            None,
+        )
+
+    def __process_oauth_authorize_command(self, attrs: Dict[str, Any]):
+        state_id = attrs["state"]
+        state = OAuthState(
+            session_id=self.__get_unique_session_id(self._client_details.sessionId),
+            expires_at=datetime.utcnow()
+            + timedelta(seconds=self.__oauth_state_timeout_seconds),
+            complete_page_html=attrs.get("completePageHtml", None),
+            complete_page_url=attrs.get("completePageUrl", None),
+        )
+        app_manager.store_state(state_id, state)
         return (
             "",
             None,
@@ -362,13 +382,22 @@ class FletApp(LocalConnection):
 
     async def send_command_async(self, session_id: str, command: Command):
         if command.name == "oauthAuthorize":
-            result, message = await self.__process_oauth_authorize_command(
+            result, message = await self.__process_oauth_authorize_command_async(
                 command.attrs
             )
         else:
             result, message = self._process_command(command)
         if message:
-            await self.__send(message)
+            await self.__send_async(message)
+        return PageCommandResponsePayload(result=result, error="")
+
+    def send_command(self, session_id: str, command: Command):
+        if command.name == "oauthAuthorize":
+            result, message = self.__process_oauth_authorize_command(command.attrs)
+        else:
+            result, message = self._process_command(command)
+        if message:
+            self.__send(message)
         return PageCommandResponsePayload(result=result, error="")
 
     async def send_commands_async(self, session_id: str, commands: List[Command]):
@@ -376,7 +405,7 @@ class FletApp(LocalConnection):
         messages = []
         for command in commands:
             if command.name == "oauthAuthorize":
-                result, message = await self.__process_oauth_authorize_command(
+                result, message = await self.__process_oauth_authorize_command_async(
                     command.attrs
                 )
             else:
@@ -386,15 +415,38 @@ class FletApp(LocalConnection):
             if message:
                 messages.append(message)
         if len(messages) > 0:
-            await self.__send(
+            await self.__send_async(
                 ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages)
             )
         return PageCommandsBatchResponsePayload(results=results, error="")
 
-    async def __send(self, message: ClientMessage):
+    def send_commands(self, session_id: str, commands: List[Command]):
+        results = []
+        messages = []
+        for command in commands:
+            if command.name == "oauthAuthorize":
+                result, message = self.__process_oauth_authorize_command(command.attrs)
+            else:
+                result, message = self._process_command(command)
+            if command.name in ["add", "get"]:
+                results.append(result)
+            if message:
+                messages.append(message)
+        if len(messages) > 0:
+            self.__send(ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages))
+        return PageCommandsBatchResponsePayload(results=results, error="")
+
+    def __send(self, message: ClientMessage):
         m = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logger.debug(f"__send: {m}")
-        await self.__send_queue.put(m)
+        with self.__send_queue_lock:
+            self.__send_queue.put_nowait(m)
+
+    async def __send_async(self, message: ClientMessage):
+        m = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
+        logger.debug(f"__send_async: {m}")
+        async with async_lock(self.__send_queue_lock):
+            await self.__send_queue.put(m)
 
     def _get_next_control_id(self):
         assert self.__page

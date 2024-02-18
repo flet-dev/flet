@@ -1,4 +1,4 @@
-from typing import Awaitable, Callable, Optional
+from typing import Awaitable, Callable, Optional, Union
 
 from fastapi import Request, WebSocket
 from flet import WebRenderer
@@ -15,7 +15,7 @@ from flet_fastapi.flet_upload import FletUpload
 
 
 def app(
-    session_handler: Callable[[Page], Awaitable],
+    session_handler: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
     proxy_path: Optional[str] = None,
     assets_dir: Optional[str] = None,
     app_name: Optional[str] = None,

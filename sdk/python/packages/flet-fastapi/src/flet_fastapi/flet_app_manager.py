@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import shutil
+import threading
 import traceback
 from datetime import datetime
 from typing import Optional
@@ -8,6 +9,7 @@ from typing import Optional
 import flet_fastapi
 from flet_core.connection import Connection
 from flet_core.page import Page
+from flet_fastapi.async_lock import async_lock
 from flet_fastapi.oauth_state import OAuthState
 
 logger = logging.getLogger(flet_fastapi.__name__)
@@ -22,7 +24,7 @@ class FletAppManager:
         self.__sessions_lock = asyncio.Lock()
         self.__sessions: dict[str, Page] = {}
         self.__evict_sessions_task = None
-        self.__states_lock = asyncio.Lock()
+        self.__states_lock = threading.Lock()
         self.__states: dict[str, OAuthState] = {}
         self.__evict_oauth_states_task = None
         self.__temp_dirs = {}
@@ -87,13 +89,22 @@ class FletAppManager:
                     f"Error deleting expired session: {e} {traceback.format_exc()}"
                 )
 
-    async def store_state(self, state_id: str, state: OAuthState):
+    async def store_state_async(self, state_id: str, state: OAuthState):
         logger.info(f"Store oauth state: {state_id}")
-        async with self.__states_lock:
+        async with async_lock(self.__states_lock):
             self.__states[state_id] = state
 
-    async def retrieve_state(self, state_id: str) -> Optional[OAuthState]:
-        async with self.__states_lock:
+    def store_state(self, state_id: str, state: OAuthState):
+        logger.info(f"Store oauth state: {state_id}")
+        with self.__states_lock:
+            self.__states[state_id] = state
+
+    async def retrieve_state_async(self, state_id: str) -> Optional[OAuthState]:
+        async with async_lock(self.__states_lock):
+            return self.__states.pop(state_id, None)
+
+    def retrieve_state(self, state_id: str) -> Optional[OAuthState]:
+        with self.__states_lock:
             return self.__states.pop(state_id, None)
 
     def add_temp_dir(self, temp_dir: str):
@@ -114,13 +125,13 @@ class FletAppManager:
         while True:
             await asyncio.sleep(10)
             ids = []
-            async with self.__states_lock:
+            async with async_lock(self.__states_lock):
                 for id, state in self.__states.items():
                     if state.expires_at and datetime.utcnow() > state.expires_at:
                         ids.append(id)
             for id in ids:
                 logger.info(f"Delete expired oauth state: {id}")
-                await self.retrieve_state(id)
+                await self.retrieve_state_async(id)
 
     def delete_temp_dirs(self):
         for temp_dir in self.__temp_dirs.keys():
