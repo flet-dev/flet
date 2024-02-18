@@ -4,5 +4,4 @@ pypi-cleanup -u flet -p flet -y -r $VER --do-it
 pypi-cleanup -u flet -p flet-core -y -r $VER --do-it
 pypi-cleanup -u flet -p flet-runtime -y -r $VER --do-it
 pypi-cleanup -u flet -p flet-embed -y -r $VER --do-it
-pypi-cleanup -u flet -p flet-fastapi -y -r $VER --do-it
 pypi-cleanup -u flet -p flet-pyodide -y -r $VER --do-it

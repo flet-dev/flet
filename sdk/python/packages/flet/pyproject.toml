@@ -17,7 +17,7 @@ documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
 flet-runtime = "0.1.0"
-python = "^3.7"
+python = "^3.8"
 typing-extensions = { version = "^4.6.2", python = "<3.8" }
 websocket-client = "^1.5.2"
 watchdog = "^3.0.0"
@@ -25,6 +25,8 @@ websockets = "^11.0.3"
 packaging = "^23.1"
 qrcode = "^7.4.2"
 cookiecutter = "^2.4.0"
+fastapi = "^0.109.2"
+uvicorn = "^0.27.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.6"

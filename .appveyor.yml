@@ -444,7 +444,6 @@ for:
       - python3 patch_toml.py packages/flet-runtime/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-core/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-pyodide/pyproject.toml $PYPI_VER
-      - python3 patch_toml.py packages/flet-fastapi/pyproject.toml $PYPI_VER
 
       # build "flet-core" package
       - pushd packages/flet-core
@@ -473,15 +472,10 @@ for:
       - poetry build
       - popd
 
-      # build "flet-fastapi" package
-      - pushd packages/flet-fastapi
-      - poetry build
-      - popd
-
       # publish package
       - sh: |
           if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-              twine upload packages/flet-core/dist/* packages/flet-runtime/dist/* packages/flet-embed/dist/* packages/flet/dist/* packages/flet-pyodide/dist/* packages/flet-fastapi/dist/*
+              twine upload packages/flet-core/dist/* packages/flet-runtime/dist/* packages/flet-embed/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
           fi
 
     artifacts:
@@ -490,4 +484,3 @@ for:
       - path: sdk/python/packages/flet/dist/*
       - path: sdk/python/packages/flet-embed/dist/*
       - path: sdk/python/packages/flet-pyodide/dist/*
-      - path: sdk/python/packages/flet-fastapi/dist/*
