@@ -6,6 +6,12 @@ import 'colors.dart';
 
 SystemUiOverlayStyle overlayStyleFromJson(
     ThemeData? theme, Map<String, dynamic> json, Brightness? brightness) {
+  Brightness? invertedBrightness = brightness != null
+      ? brightness == Brightness.light
+          ? Brightness.dark
+          : Brightness.light
+      : null;
+
   return SystemUiOverlayStyle(
       statusBarColor: json["status_bar_color"] != null
           ? HexColor.fromString(theme, json["status_bar_color"] ?? "")
@@ -28,25 +34,20 @@ SystemUiOverlayStyle overlayStyleFromJson(
               ? parseBool(json["enforce_system_navigation_bar_contrast"])
               : null,
       systemNavigationBarIconBrightness: parseBrightness(
-          json["system_navigation_bar_icon_brightness"], brightness),
+          json["system_navigation_bar_icon_brightness"], invertedBrightness),
       statusBarBrightness:
           parseBrightness(json["status_bar_brightness"], brightness),
-      statusBarIconBrightness:
-          parseBrightness(json["status_bar_icon_brightness"], brightness));
+      statusBarIconBrightness: parseBrightness(
+          json["status_bar_icon_brightness"], invertedBrightness));
 }
 
-Brightness? parseBrightness(dynamic value, Brightness? brightness) {
+Brightness? parseBrightness(dynamic value, [Brightness? defValue]) {
   switch (value) {
     case "light":
       return Brightness.light;
     case "dark":
       return Brightness.dark;
     default:
-      Brightness? invertedBrightness = brightness != null
-          ? brightness == Brightness.light
-              ? Brightness.dark
-              : Brightness.light
-          : null;
-      return invertedBrightness;
+      return defValue;
   }
 }
