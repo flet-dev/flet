@@ -6,11 +6,11 @@ import traceback
 from datetime import datetime
 from typing import Optional
 
-import flet_fastapi
+import flet.fastapi as flet_fastapi
+from flet.fastapi.oauth_state import OAuthState
 from flet_core.connection import Connection
 from flet_core.page import Page
-from flet_fastapi.async_lock import async_lock
-from flet_fastapi.oauth_state import OAuthState
+from flet_runtime.utils import async_lock
 
 logger = logging.getLogger(flet_fastapi.__name__)
 

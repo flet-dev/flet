@@ -1,6 +1,6 @@
 from fastapi import HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from flet_fastapi.flet_app_manager import app_manager
+from flet.fastapi.flet_app_manager import app_manager
 
 
 class FletOAuth:

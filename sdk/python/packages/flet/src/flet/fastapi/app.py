@@ -2,16 +2,16 @@ from typing import Awaitable, Callable, Optional, Union
 
 from fastapi import Request, WebSocket
 from flet import WebRenderer
-from flet_core.page import Page
-from flet_fastapi.flet_app import (
+from flet.fastapi.flet_app import (
     DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
     DEFAULT_FLET_SESSION_TIMEOUT,
     FletApp,
 )
-from flet_fastapi.flet_fastapi import FastAPI
-from flet_fastapi.flet_oauth import FletOAuth
-from flet_fastapi.flet_static_files import FletStaticFiles
-from flet_fastapi.flet_upload import FletUpload
+from flet.fastapi.flet_fastapi import FastAPI
+from flet.fastapi.flet_oauth import FletOAuth
+from flet.fastapi.flet_static_files import FletStaticFiles
+from flet.fastapi.flet_upload import FletUpload
+from flet_core.page import Page
 
 
 def app(

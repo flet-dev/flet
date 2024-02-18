@@ -1,5 +1,4 @@
 import asyncio
-import concurrent.futures
 import copy
 import json
 import logging
@@ -9,8 +8,10 @@ import traceback
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-import flet_fastapi
+import flet.fastapi as flet_fastapi
 from fastapi import WebSocket, WebSocketDisconnect
+from flet.fastapi.flet_app_manager import app_manager
+from flet.fastapi.oauth_state import OAuthState
 from flet_core.event import Event
 from flet_core.local_connection import LocalConnection
 from flet_core.page import Page
@@ -24,11 +25,9 @@ from flet_core.protocol import (
     RegisterWebClientRequestPayload,
 )
 from flet_core.utils import is_coroutine, random_string
-from flet_fastapi.async_lock import async_lock
-from flet_fastapi.flet_app_manager import app_manager
-from flet_fastapi.oauth_state import OAuthState
 from flet_runtime.pubsub import PubSubHub
 from flet_runtime.uploads import build_upload_url
+from flet_runtime.utils import async_lock
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -138,6 +137,7 @@ class FletApp(LocalConnection):
                 f"Unhandled error processing page session {self.__page.session_id}:",
                 traceback.format_exc(),
             )
+            assert self.__page
             await self.__page.error_async(
                 f"There was an error while processing your request: {e}"
             )
@@ -204,6 +204,7 @@ class FletApp(LocalConnection):
                 new_session = False
 
             # update page props
+            assert self.__page
             original_route = self.__page.route
             self.__page._set_attr("route", self._client_details.pageRoute, False)
             self.__page._set_attr("pwa", self._client_details.isPWA, False)
@@ -330,6 +331,7 @@ class FletApp(LocalConnection):
         )
 
     def _process_add_command(self, command: Command):
+        assert self.__page
         result, message = super()._process_add_command(command)
         if message:
             for oc in message.payload.controls:
@@ -347,6 +349,7 @@ class FletApp(LocalConnection):
         return result, message
 
     def _process_set_command(self, values, attrs):
+        assert self.__page
         result, message = super()._process_set_command(values, attrs)
         control = self.__page.snapshot.get(values[0])
         if control:
@@ -355,6 +358,7 @@ class FletApp(LocalConnection):
         return result, message
 
     def _process_remove_command(self, values):
+        assert self.__page
         result, message = super()._process_remove_command(values)
         for id in values:
             control = self.__page.snapshot.get(id)
@@ -369,6 +373,7 @@ class FletApp(LocalConnection):
         return result, message
 
     def _process_clean_command(self, values):
+        assert self.__page
         result, message = super()._process_clean_command(values)
         for id in values:
             for cid in self.__get_all_descendant_ids(id):
@@ -376,6 +381,7 @@ class FletApp(LocalConnection):
         return result, message
 
     def __get_all_descendant_ids(self, id):
+        assert self.__page
         ids = []
         control = self.__page.snapshot.get(id)
         if control:
