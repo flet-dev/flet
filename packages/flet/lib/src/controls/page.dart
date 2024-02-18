@@ -548,6 +548,9 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                                     "darkTheme", Brightness.dark)
                                 : parseCupertinoTheme(
                                     widget.control, "theme", Brightness.dark),
+                        localizationsDelegates: const [
+                          DefaultMaterialLocalizations.delegate
+                        ],
                       )
                     : MaterialApp.router(
                         debugShowCheckedModeBanner: false,
@@ -612,7 +615,8 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                 overlayWidgets.addAll(routesView.offstageControls
                     .where((c) => !c.isNonVisual)
                     .map((c) => createControl(
-                        routesView.page, c.id, routesView.page.isDisabled)));
+                        routesView.page, c.id, routesView.page.isDisabled,
+                        parentAdaptive: _adaptive)));
                 overlayWidgets.add(const PageMedia());
               }
 
@@ -682,7 +686,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
               in routesView.offstageControls.where((c) => c.isNonVisual)) {
             nextChild = createControl(
                 routesView.page, c.id, routesView.page.isDisabled,
-                nextChild: nextChild);
+                parentAdaptive: _adaptive, nextChild: nextChild);
           }
 
           return nextChild;
