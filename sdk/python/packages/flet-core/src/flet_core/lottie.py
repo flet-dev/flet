@@ -29,8 +29,10 @@ class Lottie(ConstrainedControl):
             repeat: Optional[bool] = None,
             reverse: Optional[bool] = None,
             animate: Optional[bool] = None,
+            background_loading: Optional[bool] = None,
             filter_quality: Optional[FilterQuality] = None,
             fit: Optional[ImageFit] = None,
+            on_error=None,
             #
             # Common
             #
@@ -102,6 +104,8 @@ class Lottie(ConstrainedControl):
         self.animate = animate
         self.filter_quality = filter_quality
         self.fit = fit
+        self.background_loading = background_loading
+        self.on_error = on_error
 
     def _get_control_name(self):
         return "lottie"
@@ -172,3 +176,22 @@ class Lottie(ConstrainedControl):
     def fit(self, value: Optional[ImageFit]):
         self.__fit = value
         self._set_attr("fit", value.value if isinstance(value, ImageFit) else value)
+
+    # background_loading
+    @property
+    def background_loading(self):
+        return self._get_attr("backgroundLoading", data_type="bool")
+
+    @background_loading.setter
+    def background_loading(self, value):
+        self._set_attr("backgroundLoading", value)
+
+    # on_error
+    @property
+    def on_error(self):
+        return self._get_event_handler("error")
+
+    @on_error.setter
+    def on_error(self, handler):
+        self._add_event_handler("error", handler)
+        self._set_attr("onError", True if handler is not None else None)
