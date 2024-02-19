@@ -11,14 +11,10 @@ import urllib.request
 import zipfile
 from base64 import urlsafe_b64encode
 
-fletd_job_name = "Build Fletd"
-
 build_jobs = {}
 
 packages = {
     "Windows amd64": {
-        "fletd_asset": "windows_amd64",
-        "fletd_exec": "fletd.exe",
         "flet_client_job": "Build Flet for Windows",
         "flet_client_artifact": "flet_windows",
         "flet_client_filename": "flet-windows.zip",
@@ -26,8 +22,6 @@ packages = {
         "file_suffix": "py3-none-win_amd64",
     },
     "Windows x86": {
-        "fletd_asset": "windows_386",
-        "fletd_exec": "fletd.exe",
         "flet_client_job": "Build Flet for Windows",
         "flet_client_artifact": "flet_windows",
         "flet_client_filename": "flet-windows.zip",
@@ -35,14 +29,10 @@ packages = {
         "file_suffix": "py3-none-win32",
     },
     "Linux amd64 (Alpine)": {
-        "fletd_asset": "linux_amd64",
-        "fletd_exec": "fletd",
         "wheel_tags": ["py3-none-musllinux_1_2_x86_64"],
         "file_suffix": "py3-none-musllinux_1_2_x86_64",
     },
     "Linux amd64": {
-        "fletd_asset": "linux_amd64",
-        "fletd_exec": "fletd",
         "flet_client_job": "Build Flet for Linux",
         "flet_client_artifact": "flet_linux_amd64",
         "flet_client_filename": "flet-linux-amd64.tar.gz",
@@ -53,8 +43,6 @@ packages = {
         "file_suffix": "py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64",
     },
     "Linux arm64": {
-        "fletd_asset": "linux_arm64",
-        "fletd_exec": "fletd",
         "flet_client_job": "Build Flet for Linux ARM64",
         "flet_client_artifact": "flet_linux_arm64",
         "flet_client_filename": "flet-linux-arm64.tar.gz",
@@ -65,8 +53,6 @@ packages = {
         "file_suffix": "py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64",
     },
     "Linux arm": {
-        "fletd_asset": "linux_arm_7",
-        "fletd_exec": "fletd",
         "wheel_tags": [
             "py3-none-manylinux_2_17_armv7l",
             "py3-none-manylinux2014_armv7l",
@@ -74,8 +60,6 @@ packages = {
         "file_suffix": "py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l",
     },
     "macOS amd64": {
-        "fletd_asset": "darwin_amd64",
-        "fletd_exec": "fletd",
         "flet_client_job": "Build Flet for macOS",
         "flet_client_artifact": "flet_macos",
         "flet_client_filename": "flet-macos-amd64.tar.gz",
@@ -83,8 +67,6 @@ packages = {
         "file_suffix": "py3-none-macosx_10_14_x86_64",
     },
     "macOS arm64": {
-        "fletd_asset": "darwin_arm64",
-        "fletd_exec": "fletd",
         "flet_client_job": "Build Flet for macOS",
         "flet_client_artifact": "flet_macos",
         "flet_client_filename": "flet-macos-amd64.tar.gz",
@@ -97,14 +79,6 @@ packages = {
 def unpack_zip(zip_path, dest_dir):
     zf = zipfile.ZipFile(zip_path)
     zf.extractall(path=dest_dir)
-
-
-def download_flet_server(jobId, asset, exec_filename, dest_file):
-    fletd_url = f"https://ci.appveyor.com/api/buildjobs/{jobId}/artifacts/server%2Fdist%2Ffletd_{asset}%2F{exec_filename}"
-    print(f"Downloading {fletd_url}...")
-    urllib.request.urlretrieve(fletd_url, dest_file)
-    st = os.stat(dest_file)
-    os.chmod(dest_file, st.st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
 
 
 def download_artifact_by_name(jobId, artifact_name, dest_file):
@@ -120,20 +94,6 @@ def download_artifact_by_name(jobId, artifact_name, dest_file):
             print(f"Downloading {flet_url}...")
             urllib.request.urlretrieve(flet_url, dest_file)
             return
-
-
-def get_flet_server_job_ids():
-    account_name = os.environ.get("APPVEYOR_ACCOUNT_NAME")
-    project_slug = os.environ.get("APPVEYOR_PROJECT_SLUG")
-    build_id = os.environ.get("APPVEYOR_BUILD_ID")
-    url = f"https://ci.appveyor.com/api/projects/{account_name}/{project_slug}/builds/{build_id}"
-    print(f"Fetching build details at {url}")
-    req = urllib.request.Request(url)
-    req.add_header("Content-type", "application/json")
-    project = json.loads(urllib.request.urlopen(req).read().decode())
-    jobId = None
-    for job in project["build"]["jobs"]:
-        build_jobs[job["name"]] = job["jobId"]
 
 
 def read_chunks(file, size=io.DEFAULT_BUFFER_SIZE):
@@ -182,10 +142,7 @@ if len(whl_files) == 0:
 orig_whl = whl_files[0]
 
 package_version = os.path.basename(orig_whl).split("-")[1]
-get_flet_server_job_ids()
-
 print("package_version", package_version)
-print("flet_server_jobId", build_jobs[fletd_job_name])
 
 for name, package in packages.items():
     print(f"Building {name}...")
@@ -211,12 +168,6 @@ for name, package in packages.items():
     # create "bin" directory
     bin_path = unpacked_whl.joinpath("flet", "bin")
     bin_path.mkdir(exist_ok=True)
-
-    # download Fletd
-    asset = package["fletd_asset"]
-    exec_filename = package["fletd_exec"]
-    exec_path = str(bin_path.joinpath(exec_filename))
-    download_flet_server(build_jobs[fletd_job_name], asset, exec_filename, exec_path)
 
     # download Flet client
     flet_client_job = package.get("flet_client_job")
