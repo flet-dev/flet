@@ -1,0 +1,23 @@
+name: flet_google_navigation_bar
+description: Flet Google Navigation Bar Control
+homepage: https://flet.dev
+repository: https://github.com/flet-dev/flet/packages/flet_google_navigation_bar
+version: 0.20.2
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+    
+  flet:
+    path: ../flet/
+    
+  google_nav_bar: ^5.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0

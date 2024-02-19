@@ -238,6 +238,13 @@ packages:
       relative: true
     source: path
     version: "0.20.2"
+  flet_google_navigation_bar:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_google_navigation_bar"
+      relative: true
+    source: path
+    version: "0.20.2"
   flet_video:
     dependency: "direct main"
     description:
@@ -333,6 +340,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_nav_bar:
+    dependency: transitive
+    description:
+      name: google_nav_bar
+      sha256: "1c8e3882fa66ee7b74c24320668276ca23affbd58f0b14a24c1e5590f4d07ab0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.6"
   highlight:
     dependency: transitive
     description:

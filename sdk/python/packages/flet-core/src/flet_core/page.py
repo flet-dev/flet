@@ -25,6 +25,7 @@ from flet_core.control_event import ControlEvent
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
+from flet_core.google_navigation_bar import GoogleNavigationBar
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import FloatingActionButton
@@ -1311,13 +1312,15 @@ class Page(AdaptiveControl):
 
     # navigation_bar
     @property
-    def navigation_bar(self) -> Union[NavigationBar, CupertinoNavigationBar, None]:
+    def navigation_bar(
+        self,
+    ) -> Union[NavigationBar, CupertinoNavigationBar, GoogleNavigationBar, None]:
         return self.__default_view.navigation_bar
 
     @navigation_bar.setter
     def navigation_bar(
         self,
-        value: Union[NavigationBar, CupertinoNavigationBar, None],
+        value: Union[NavigationBar, CupertinoNavigationBar, GoogleNavigationBar, None],
     ):
         self.__default_view.navigation_bar = value
 

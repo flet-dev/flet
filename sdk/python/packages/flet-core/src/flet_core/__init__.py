@@ -252,4 +252,5 @@ from flet_core.vertical_divider import VerticalDivider
 from flet_core.video import FilterQuality, PlaylistMode, Video, VideoMedia
 from flet_core.view import View
 from flet_core.webview import WebView
+from flet_core.google_navigation_bar import GoogleNavigationBar
 from flet_core.window_drag_area import WindowDragArea

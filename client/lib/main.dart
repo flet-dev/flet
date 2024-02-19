@@ -6,6 +6,8 @@ import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
 import 'package:flet_video/flet_video.dart' as flet_video;
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
+import 'package:flet_google_navigation_bar/flet_google_navigation_bar.dart'
+    as flet_google_navigation_bar;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -25,6 +27,7 @@ void main([List<String>? args]) async {
   flet_audio_recorder.ensureInitialized();
   flet_video.ensureInitialized();
   flet_webview.ensureInitialized();
+  flet_google_navigation_bar.ensureInitialized();
 
   var pageUrl = Uri.base.toString();
   var assetsDir = "";
@@ -85,7 +88,8 @@ void main([List<String>? args]) async {
       flet_audio.createControl,
       flet_audio_recorder.createControl,
       flet_video.createControl,
-      flet_webview.createControl
+      flet_webview.createControl,
+      flet_google_navigation_bar.createControl,
     ],
   ));
 }

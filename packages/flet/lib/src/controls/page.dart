@@ -783,7 +783,8 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               fab = ctrl;
               continue;
             } else if (ctrl.type == "navigationbar" ||
-                ctrl.type == "cupertinonavigationbar") {
+                ctrl.type == "cupertinonavigationbar" ||
+                ctrl.type == "googlenavigationbar") {
               navBar = ctrl;
               continue;
             } else if (ctrl.type == "navigationdrawer" &&

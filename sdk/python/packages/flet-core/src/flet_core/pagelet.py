@@ -8,6 +8,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.floating_action_button import FloatingActionButton
+from flet_core.google_navigation_bar import GoogleNavigationBar
 from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.ref import Ref
@@ -83,7 +84,9 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         #
         content: Optional[Control] = None,
         appbar: Union[AppBar, CupertinoAppBar, None] = None,
-        navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None,
+        navigation_bar: Union[
+            NavigationBar, CupertinoNavigationBar, GoogleNavigationBar, None
+        ] = None,
         bottom_app_bar: Optional[BottomAppBar] = None,
         bottom_sheet: Optional[Control] = None,
         drawer: Optional[NavigationDrawer] = None,
@@ -257,13 +260,15 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     # navigation_bar
     @property
-    def navigation_bar(self) -> Union[NavigationBar, CupertinoNavigationBar, None]:
+    def navigation_bar(
+        self,
+    ) -> Union[NavigationBar, CupertinoNavigationBar, GoogleNavigationBar, None]:
         return self.__navigation_bar
 
     @navigation_bar.setter
     def navigation_bar(
         self,
-        value: Union[NavigationBar, CupertinoNavigationBar, None],
+        value: Union[NavigationBar, CupertinoNavigationBar, GoogleNavigationBar, None],
     ):
         self.__navigation_bar = value
 
