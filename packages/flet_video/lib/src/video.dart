@@ -65,6 +65,7 @@ class _VideoControlState extends State<VideoControl> {
     double? pitch = widget.control.attrDouble("pitch");
     double? playbackRate = widget.control.attrDouble("playbackRate");
     bool? shufflePlaylist = widget.control.attrBool("shufflePlaylist");
+    bool? showControls = widget.control.attrBool("showControls", true)!;
     PlaylistMode? playlistMode = PlaylistMode.values.firstWhereOrNull((e) =>
         e.name.toLowerCase() ==
         widget.control.attrString("playlistMode")?.toLowerCase());
@@ -78,6 +79,7 @@ class _VideoControlState extends State<VideoControl> {
     Video? video = Video(
       controller: controller,
       wakelock: widget.control.attrBool("wakelock", true)!,
+      controls: showControls ? AdaptiveVideoControls : null,
       pauseUponEnteringBackgroundMode:
           widget.control.attrBool("pauseUponEnteringBackgroundMode", true)!,
       resumeUponEnteringForegroundMode:

@@ -58,6 +58,7 @@ class Video(ConstrainedControl):
         fill_color: Optional[str] = None,
         wakelock: Optional[bool] = None,
         autoplay: Optional[bool] = None,
+            show_controls: Optional[bool] = None,
         muted: Optional[bool] = None,
         playlist_mode: Optional[PlaylistMode] = None,
         shuffle_playlist: Optional[bool] = None,
@@ -140,6 +141,7 @@ class Video(ConstrainedControl):
         self.alignment = alignment
         self.wakelock = wakelock
         self.autoplay = autoplay
+        self.show_controls = show_controls
         self.shuffle_playlist = shuffle_playlist
         self.muted = muted
         self.title = title
@@ -320,6 +322,15 @@ class Video(ConstrainedControl):
     @shuffle_playlist.setter
     def shuffle_playlist(self, value: Optional[bool]):
         self._set_attr("shufflePlaylist", value)
+
+    # show_controls
+    @property
+    def show_controls(self) -> Optional[bool]:
+        return self._get_attr("showControls", data_type="bool", def_value=True)
+
+    @show_controls.setter
+    def show_controls(self, value: Optional[bool]):
+        self._set_attr("showControls", value)
 
     # pitch
     @property
