@@ -6,7 +6,6 @@ import signal
 import subprocess
 import tarfile
 import tempfile
-import threading
 import traceback
 import urllib.request
 import zipfile
@@ -18,8 +17,7 @@ from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.types import AppView, WebRenderer
 from flet_core.utils import is_coroutine, random_string
-from flet_runtime.async_local_socket_connection import AsyncLocalSocketConnection
-from flet_runtime.sync_local_socket_connection import SyncLocalSocketConnection
+from flet_runtime.flet_socket_server import FletSocketServer
 from flet_runtime.utils import (
     get_arch,
     get_current_script_dir,
@@ -38,17 +36,25 @@ from flet_runtime.utils import (
 
 _pool = concurrent.futures.ThreadPoolExecutor(max_workers=10)
 
+
 try:
-    from flet.async_websocket_connection import AsyncWebSocketConnection
-    from flet.sync_websocket_connection import SyncWebSocketConnection
-except ImportError:
-    from flet_core.connection import Connection
+    from flet.fastapi.start_fastapi_web_app import start_fastapi_web_app
+except Exception as e:
+    print("ERROR:", e)
 
-    class AsyncWebSocketConnection(Connection):
-        pass
-
-    class SyncWebSocketConnection(Connection):
-        pass
+    async def start_fastapi_web_app(
+        session_handler,
+        host,
+        port,
+        page_name: str,
+        assets_dir,
+        upload_dir,
+        web_renderer: Optional[WebRenderer],
+        use_color_emoji,
+        route_url_strategy,
+        log_level,
+    ):
+        raise NotImplementedError()
 
 
 try:
@@ -70,7 +76,6 @@ def app(
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
     route_url_strategy="path",
-    auth_token=None,
 ):
     asyncio.get_event_loop().run_until_complete(
         app_async(
@@ -84,7 +89,6 @@ def app(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
-            auth_token=auth_token,
         )
     )
 
@@ -100,7 +104,6 @@ async def app_async(
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
     route_url_strategy="path",
-    auth_token=None,
 ):
     if isinstance(view, str):
         view = AppView(view)
@@ -109,21 +112,39 @@ async def app_async(
         web_renderer = WebRenderer(web_renderer)
 
     force_web_view = os.environ.get("FLET_FORCE_WEB_VIEW")
+    if force_web_view:
+        view = AppView.WEB_BROWSER
     assets_dir = __get_assets_dir_path(assets_dir)
 
-    conn = await __connect_internal_async(
-        page_name=name,
-        view=view if not force_web_view else AppView.WEB_BROWSER,
-        host=host,
-        port=port,
-        auth_token=auth_token,
-        session_handler=target,
-        assets_dir=assets_dir,
-        upload_dir=upload_dir,
-        web_renderer=web_renderer,
-        use_color_emoji=use_color_emoji,
-        route_url_strategy=route_url_strategy,
-    )
+    env_port = os.getenv("FLET_SERVER_PORT")
+    if env_port is not None and env_port:
+        port = int(env_port)
+
+    env_host = os.getenv("FLET_SERVER_IP")
+    if env_host is not None and env_host:
+        host = env_host
+
+    env_assets_dir = os.getenv("FLET_ASSETS_PATH")
+    if env_assets_dir:
+        assets_dir = env_assets_dir
+
+    env_page_name = os.getenv("FLET_PAGE_NAME")
+    page_name = env_page_name if not name and env_page_name else name
+
+    if is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN:
+        conn = await __start_socket_server(port=port, session_handler=target)
+    else:
+        conn = await __start_web_server(
+            session_handler=target,
+            host=host,
+            port=port,
+            page_name=page_name,
+            assets_dir=assets_dir,
+            upload_dir=upload_dir,
+            web_renderer=web_renderer,
+            use_color_emoji=use_color_emoji,
+            route_url_strategy=route_url_strategy,
+        )
 
     url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
     if url_prefix is not None:
@@ -177,59 +198,11 @@ async def app_async(
         await conn.close()
 
 
-def close_flet_view(pid_file):
-    if pid_file is not None and os.path.exists(pid_file):
-        try:
-            with open(pid_file) as f:
-                fvp_pid = int(f.read())
-            logger.debug(f"Flet View process {fvp_pid}")
-            os.kill(fvp_pid, signal.SIGKILL)
-        except Exception:
-            pass
-        finally:
-            os.remove(pid_file)
-
-
-async def __connect_internal_async(
-    page_name,
-    view: Optional[AppView] = None,
-    host=None,
+async def __start_socket_server(
     port=0,
-    server=None,
-    auth_token=None,
     session_handler=None,
-    assets_dir=None,
-    upload_dir=None,
-    web_renderer: Optional[WebRenderer] = None,
-    use_color_emoji=False,
-    route_url_strategy=None,
 ):
-    env_port = os.getenv("FLET_SERVER_PORT")
-    if env_port is not None and env_port:
-        port = int(env_port)
-
-    env_host = os.getenv("FLET_SERVER_IP")
-    if env_host is not None and env_host:
-        host = env_host
-
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
-
-    env_assets_dir = os.getenv("FLET_ASSETS_PATH")
-    if env_assets_dir:
-        assets_dir = env_assets_dir
-
-    is_socket_server = server is None and (
-        is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
-    )
-    if not is_socket_server:
-        server = __start_flet_server(
-            host,
-            port,
-            upload_dir,
-            web_renderer,
-            use_color_emoji,
-            route_url_strategy,
-        )
 
     async def on_event(e):
         if e.sessionID in conn.sessions:
@@ -250,12 +223,9 @@ async def __connect_internal_async(
         try:
             assert session_handler is not None
             print("session_handler:", session_handler)
-            # await session_handler(page)
             if is_coroutine(session_handler):
-                print("coroutine")
                 await session_handler(page)
             else:
-                print("function")
                 with concurrent.futures.ThreadPoolExecutor() as pool:
                     await asyncio.get_running_loop().run_in_executor(
                         pool, session_handler, page
@@ -269,33 +239,23 @@ async def __connect_internal_async(
                 f"There was an error while processing your request: {e}"
             )
 
-    env_page_name = os.getenv("FLET_PAGE_NAME")
-
-    if is_socket_server:
-        conn = AsyncLocalSocketConnection(
-            port,
-            uds_path,
-            on_event=on_event,
-            on_session_created=on_session_created,
-            blocking=is_embedded(),
-        )
-    else:
-        assert server
-        conn = AsyncWebSocketConnection(
-            server_address=server,
-            page_name=env_page_name if not page_name and env_page_name else page_name,
-            assets_dir=assets_dir,
-            auth_token=auth_token,
-            on_event=on_event,
-            on_session_created=on_session_created,
-        )
-    await conn.connect()
+    conn = FletSocketServer(
+        port,
+        uds_path,
+        on_event=on_event,
+        on_session_created=on_session_created,
+        blocking=is_embedded(),
+    )
+    await conn.start()
     return conn
 
 
-def __start_flet_server(
+async def __start_web_server(
+    session_handler,
     host,
     port,
+    page_name,
+    assets_dir,
     upload_dir,
     web_renderer: Optional[WebRenderer],
     use_color_emoji,
@@ -306,24 +266,7 @@ def __start_flet_server(
     if port == 0:
         port = get_free_tcp_port()
 
-    logger.info(f"Starting local Flet Server on port {port}...")
-
-    fletd_exe = "fletd.exe" if is_windows() else "fletd"
-
-    # check if flet.exe exists in "bin" directory (user mode)
-    fletd_path = os.path.join(get_package_bin_dir(), fletd_exe)
-    if os.path.exists(fletd_path):
-        logger.info(f"Flet Server found in: {fletd_path}")
-    else:
-        # check if flet.exe is in PATH (flet developer mode)
-        fletd_path = which(fletd_exe)
-        if not fletd_path:
-            # download flet from GitHub (python module developer mode)
-            fletd_path = __download_fletd()
-        else:
-            logger.info("Flet Server found in PATH")
-
-    fletd_env = {**os.environ}
+    logger.info(f"Starting Flet web server on port {port}...")
 
     if upload_dir:
         if not Path(upload_dir).is_absolute():
@@ -331,68 +274,31 @@ def __start_flet_server(
                 Path(get_current_script_dir()).joinpath(upload_dir).resolve()
             )
         logger.info(f"Upload path configured: {upload_dir}")
-        fletd_env["FLET_UPLOAD_ROOT_DIR"] = upload_dir
-
-    if host not in [None, ""]:
-        logger.info(f"Host binding configured: {host}")
-        fletd_env["FLET_SERVER_IP"] = host if host != "*" else ""
-
-        if host != "127.0.0.1":
-            fletd_env["FLET_ALLOW_REMOTE_HOST_CLIENTS"] = "true"
 
     if web_renderer and web_renderer not in [WebRenderer.AUTO]:
         logger.info(f"Web renderer configured: {web_renderer.value}")
-        fletd_env["FLET_WEB_RENDERER"] = web_renderer.value
 
     logger.info(f"Use color emoji: {use_color_emoji}")
-    fletd_env["FLET_USE_COLOR_EMOJI"] = str(use_color_emoji).lower()
 
     if route_url_strategy is not None:
         logger.info(f"Route URL strategy configured: {route_url_strategy}")
-        fletd_env["FLET_ROUTE_URL_STRATEGY"] = route_url_strategy
-
-    web_root_dir = get_package_web_dir()
-
-    if not os.path.exists(web_root_dir):
-        raise Exception(f"Web root path not found: {web_root_dir}")
-
-    args = [fletd_path, "--content-dir", web_root_dir, "--port", str(port)]
-
-    creationflags = 0
-    start_new_session = False
-
-    if os.getenv("FLET_DETACH_FLETD") is None:
-        args.append("--attached")
-    else:
-        if is_windows():
-            creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
-        else:
-            start_new_session = True
 
     log_level = logging.getLogger(flet_runtime.__name__).getEffectiveLevel()
-    if log_level == logging.CRITICAL:
+    if log_level == logging.CRITICAL or log_level == logging.NOTSET:
         log_level = logging.FATAL
 
-    if log_level != logging.NOTSET:
-        log_level_name = logging.getLevelName(log_level).lower()
-        args.extend(["--log-level", log_level_name])
-
-    startupinfo = None
-    if is_windows():
-        startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-
-    subprocess.Popen(
-        args,
-        env=fletd_env,
-        creationflags=creationflags,
-        start_new_session=start_new_session,
-        stdout=subprocess.DEVNULL if log_level >= logging.WARNING else None,
-        stderr=subprocess.DEVNULL if log_level >= logging.WARNING else None,
-        startupinfo=startupinfo,
+    return await start_fastapi_web_app(
+        session_handler,
+        host=server_ip,
+        port=port,
+        page_name=page_name,
+        assets_dir=assets_dir,
+        upload_dir=upload_dir,
+        web_renderer=web_renderer,
+        use_color_emoji=use_color_emoji,
+        route_url_strategy=route_url_strategy,
+        log_level=logging.getLevelName(log_level).lower(),
     )
-
-    return f"http://{server_ip}:{port}"
 
 
 def open_flet_view(page_url, assets_dir, hidden):
@@ -410,6 +316,19 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
         await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env),
         pid_file,
     )
+
+
+def close_flet_view(pid_file):
+    if pid_file is not None and os.path.exists(pid_file):
+        try:
+            with open(pid_file) as f:
+                fvp_pid = int(f.read())
+            logger.debug(f"Flet View process {fvp_pid}")
+            os.kill(fvp_pid, signal.SIGKILL)
+        except Exception:
+            pass
+        finally:
+            os.remove(pid_file)
 
 
 def __get_assets_dir_path(assets_dir: Optional[str]):

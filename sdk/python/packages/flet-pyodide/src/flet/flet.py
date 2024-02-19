@@ -22,7 +22,6 @@ def app(
     web_renderer=None,
     use_color_emoji=False,
     route_url_strategy=None,
-    auth_token=None,
 ):
     app_async(
         target=target,
@@ -35,7 +34,6 @@ def app(
         web_renderer=web_renderer,
         use_color_emoji=use_color_emoji,
         route_url_strategy=route_url_strategy,
-        auth_token=auth_token,
     )
 
 
@@ -50,7 +48,6 @@ def app_async(
     web_renderer=None,
     use_color_emoji=False,
     route_url_strategy=None,
-    auth_token=None,
 ):
     async def on_event(e):
         if e.sessionID in conn.sessions:

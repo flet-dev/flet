@@ -4,7 +4,6 @@ import logging
 import os
 import struct
 import tempfile
-import threading
 from pathlib import Path
 from typing import List, Optional
 
@@ -25,7 +24,7 @@ from flet_runtime.utils import async_lock, get_free_tcp_port, is_windows
 logger = logging.getLogger(flet_runtime.__name__)
 
 
-class AsyncLocalSocketConnection(LocalConnection):
+class FletSocketServer(LocalConnection):
     def __init__(
         self,
         port: int = 0,
@@ -36,14 +35,13 @@ class AsyncLocalSocketConnection(LocalConnection):
     ):
         super().__init__()
         self.__send_queue = asyncio.Queue()
-        self.__send_queue_lock = threading.Lock()
         self.__port = port
         self.__uds_path = uds_path
         self.__on_event = on_event
         self.__on_session_created = on_session_created
         self.__blocking = blocking
 
-    async def connect(self):
+    async def start(self):
         self.__connected = False
         if is_windows() or self.__port > 0:
             # TCP
@@ -97,13 +95,10 @@ class AsyncLocalSocketConnection(LocalConnection):
 
     async def __send_loop(self, writer: asyncio.StreamWriter):
         while True:
-            # logger.debug(f"Before queue get")
             message = await self.__send_queue.get()
-            # logger.debug(f"New send message fetched: {message}")
             try:
                 data = message.encode("utf-8")
                 msg = struct.pack(">I", len(data)) + data
-                # logger.debug(f"before sent to TCP: {len(msg)}")
                 writer.write(msg)
                 # await writer.drain()
                 logger.debug(f"sent to TCP: {len(msg)}")
@@ -186,24 +181,12 @@ class AsyncLocalSocketConnection(LocalConnection):
     async def __send_async(self, message: ClientMessage):
         j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logger.debug(f"__send_async: {j}")
-        # async with async_lock(self.__send_queue_lock):
         await self.__send_queue.put(j)
 
     def __send(self, message: ClientMessage):
         j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logger.debug(f"__send: {j}")
-        # with self.__send_queue_lock:
-        # if self.__send_queue._loop:
-        #     print("YYYYYYYYEEEEEESSSSSS LOOOOOOP")
-        #     self.__send_queue._loop.call_soon_threadsafe(
-        #         self.__send_queue.put_nowait, j
-        #     )
-        # else:
-        #     print("NOOOOOOOOOOO LOOOOOOP")
-        #     self.__send_queue.put_nowait(j)
-        # self.__send_queue.put_nowait(j)
         self.__send_queue._loop.call_soon_threadsafe(self.__send_queue.put_nowait, j)
-        logger.debug(f"after __send")
 
     async def close(self):
         logger.debug("Closing connection...")

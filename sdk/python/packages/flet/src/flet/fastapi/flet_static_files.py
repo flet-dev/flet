@@ -99,6 +99,9 @@ class FletStaticFiles(StaticFiles):
         web_dir = get_package_web_dir()
         logger.info(f"Web root: {web_dir}")
 
+        if not os.path.exists(web_dir):
+            raise Exception(f"Web root path not found: {web_dir}")
+
         # user-defined assets
         if self.__assets_dir:
             if not Path(self.__assets_dir).is_absolute():

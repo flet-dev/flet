@@ -426,7 +426,7 @@ class Page(AdaptiveControl):
 
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         if self.__conn is None:
-            logger.warning(f"Page is disconnected: {self._session_id}")
+            logger.info(f"Page has been disconnected: {self._session_id}")
             return [], []
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
         self.__validate_controls_page(added_controls)
@@ -436,7 +436,7 @@ class Page(AdaptiveControl):
 
     async def __update_async(self, *controls) -> Tuple[List[Control], List[Control]]:
         if self.__conn is None:
-            logger.warning(f"Page is disconnected: {self._session_id}")
+            logger.info(f"Page has been disconnected: {self._session_id}")
             return [], []
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
         self.__validate_controls_page(added_controls)

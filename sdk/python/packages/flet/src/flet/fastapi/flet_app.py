@@ -123,6 +123,7 @@ class FletApp(LocalConnection):
 
     async def __on_session_created(self, session_data):
         logger.info(f"Start session: {session_data.sessionID}")
+        session_id = session_data.sessionID
         try:
             assert self.__session_handler is not None
             if is_coroutine(self.__session_handler):
@@ -131,10 +132,11 @@ class FletApp(LocalConnection):
                 await asyncio.get_running_loop().run_in_executor(
                     None, self.__session_handler, self.__page
                 )
-
+        except BrokenPipeError:
+            logger.info(f"Session handler terminated: {session_id}")
         except Exception as e:
             print(
-                f"Unhandled error processing page session {self.__page.session_id}:",
+                f"Unhandled error processing page session {session_id}:",
                 traceback.format_exc(),
             )
             assert self.__page
