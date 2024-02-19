@@ -1,4 +1,5 @@
 import asyncio
+import concurrent.futures
 import logging
 import os
 import signal
@@ -12,12 +13,11 @@ import zipfile
 from pathlib import Path
 from typing import Optional
 
+import flet_runtime
 from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.types import AppView, WebRenderer
 from flet_core.utils import is_coroutine, random_string
-
-import flet_runtime
 from flet_runtime.async_local_socket_connection import AsyncLocalSocketConnection
 from flet_runtime.sync_local_socket_connection import SyncLocalSocketConnection
 from flet_runtime.utils import (
@@ -26,7 +26,6 @@ from flet_runtime.utils import (
     get_free_tcp_port,
     get_package_bin_dir,
     get_package_web_dir,
-    get_platform,
     is_embedded,
     is_linux,
     is_linux_server,
@@ -36,6 +35,8 @@ from flet_runtime.utils import (
     safe_tar_extractall,
     which,
 )
+
+_pool = concurrent.futures.ThreadPoolExecutor(max_workers=10)
 
 try:
     from flet.async_websocket_connection import AsyncWebSocketConnection
@@ -71,24 +72,8 @@ def app(
     route_url_strategy="path",
     auth_token=None,
 ):
-    if is_coroutine(target):
-        asyncio.get_event_loop().run_until_complete(
-            app_async(
-                target=target,
-                name=name,
-                host=host,
-                port=port,
-                view=view,
-                assets_dir=assets_dir,
-                upload_dir=upload_dir,
-                web_renderer=web_renderer,
-                use_color_emoji=use_color_emoji,
-                route_url_strategy=route_url_strategy,
-                auth_token=auth_token,
-            )
-        )
-    else:
-        __app_sync(
+    asyncio.get_event_loop().run_until_complete(
+        app_async(
             target=target,
             name=name,
             host=host,
@@ -101,96 +86,7 @@ def app(
             route_url_strategy=route_url_strategy,
             auth_token=auth_token,
         )
-
-
-def __app_sync(
-    target,
-    name="",
-    host=None,
-    port=0,
-    view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir="assets",
-    upload_dir=None,
-    web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
-    use_color_emoji=False,
-    route_url_strategy="path",
-    auth_token=None,
-):
-    if isinstance(view, str):
-        view = AppView(view)
-
-    if isinstance(web_renderer, str):
-        web_renderer = WebRenderer(web_renderer)
-
-    force_web_view = os.environ.get("FLET_FORCE_WEB_VIEW")
-    assets_dir = __get_assets_dir_path(assets_dir)
-
-    conn = __connect_internal_sync(
-        page_name=name,
-        view=view if not force_web_view else AppView.WEB_BROWSER,
-        host=host,
-        port=port,
-        auth_token=auth_token,
-        session_handler=target,
-        assets_dir=assets_dir,
-        upload_dir=upload_dir,
-        web_renderer=web_renderer,
-        use_color_emoji=use_color_emoji,
-        route_url_strategy=route_url_strategy,
     )
-
-    url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
-    if url_prefix is not None:
-        print(url_prefix, conn.page_url)
-    else:
-        logger.info(f"App URL: {conn.page_url}")
-
-    logger.info("Connected to Flet app and handling user sessions...")
-
-    if (
-        (
-            view == AppView.FLET_APP
-            or view == AppView.FLET_APP_HIDDEN
-            or view == AppView.FLET_APP_WEB
-        )
-        and not is_linux_server()
-        and not is_embedded()
-        and url_prefix is None
-    ):
-        fvp, pid_file = open_flet_view(
-            conn.page_url,
-            assets_dir if view != AppView.FLET_APP_WEB else None,
-            view == AppView.FLET_APP_HIDDEN,
-        )
-        try:
-            fvp.wait()
-        except:
-            pass
-
-        close_flet_view(pid_file)
-        conn.close()
-
-    elif not is_embedded():
-        if view == AppView.WEB_BROWSER and url_prefix is None:
-            open_in_browser(conn.page_url)
-
-        terminate = threading.Event()
-
-        def exit_gracefully(signum, frame):
-            logger.debug("Gracefully terminating Flet app...")
-            terminate.set()
-
-        signal.signal(signal.SIGINT, exit_gracefully)
-        signal.signal(signal.SIGTERM, exit_gracefully)
-
-        try:
-            while True:
-                if terminate.wait(1):
-                    break
-        except KeyboardInterrupt:
-            pass
-
-        conn.close()
 
 
 async def app_async(
@@ -294,98 +190,6 @@ def close_flet_view(pid_file):
             os.remove(pid_file)
 
 
-def __connect_internal_sync(
-    page_name,
-    view: Optional[AppView] = None,
-    host=None,
-    port=0,
-    server=None,
-    auth_token=None,
-    session_handler=None,
-    assets_dir=None,
-    upload_dir=None,
-    web_renderer: Optional[WebRenderer] = None,
-    use_color_emoji=False,
-    route_url_strategy=None,
-):
-    env_port = os.getenv("FLET_SERVER_PORT")
-    if env_port is not None and env_port:
-        port = int(env_port)
-
-    env_host = os.getenv("FLET_SERVER_IP")
-    if env_host is not None and env_host:
-        host = env_host
-
-    uds_path = os.getenv("FLET_SERVER_UDS_PATH")
-
-    env_assets_dir = os.getenv("FLET_ASSETS_PATH")
-    if env_assets_dir:
-        assets_dir = env_assets_dir
-
-    is_socket_server = server is None and (
-        is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
-    )
-
-    if not is_socket_server:
-        server = __start_flet_server(
-            host,
-            port,
-            upload_dir,
-            web_renderer,
-            use_color_emoji,
-            route_url_strategy,
-        )
-
-    def on_event(conn, e):
-        if e.sessionID in conn.sessions:
-            conn.sessions[e.sessionID].on_event(
-                Event(e.eventTarget, e.eventName, e.eventData)
-            )
-            if e.eventTarget == "page" and e.eventName == "close":
-                logger.info(f"Session closed: {e.sessionID}")
-                page = conn.sessions.pop(e.sessionID)
-                page._close()
-                del page
-
-    def on_session_created(conn, session_data):
-        page = Page(conn, session_data.sessionID)
-        page.fetch_page_details()
-        conn.sessions[session_data.sessionID] = page
-        logger.info(f"Session started: {session_data.sessionID}")
-        try:
-            assert session_handler is not None
-            session_handler(page)
-        except Exception as e:
-            print(
-                f"Unhandled error processing page session {page.session_id}:",
-                traceback.format_exc(),
-            )
-            page.error(f"There was an error while processing your request: {e}")
-
-    env_page_name = os.getenv("FLET_PAGE_NAME")
-
-    if is_socket_server:
-        conn = SyncLocalSocketConnection(
-            port,
-            uds_path,
-            on_event=on_event,
-            on_session_created=on_session_created,
-            blocking=is_embedded(),
-        )
-    else:
-        assert server
-        conn = SyncWebSocketConnection(
-            server_address=server,
-            page_name=env_page_name if not page_name and env_page_name else page_name,
-            assets_dir=assets_dir,
-            token=auth_token,
-            on_event=on_event,
-            on_session_created=on_session_created,
-        )
-    conn.connect()
-    return conn
-
-
 async def __connect_internal_async(
     page_name,
     view: Optional[AppView] = None,
@@ -445,7 +249,17 @@ async def __connect_internal_async(
         logger.info(f"Session started: {session_data.sessionID}")
         try:
             assert session_handler is not None
-            await session_handler(page)
+            print("session_handler:", session_handler)
+            # await session_handler(page)
+            if is_coroutine(session_handler):
+                print("coroutine")
+                await session_handler(page)
+            else:
+                print("function")
+                with concurrent.futures.ThreadPoolExecutor() as pool:
+                    await asyncio.get_running_loop().run_in_executor(
+                        pool, session_handler, page
+                    )
         except Exception as e:
             print(
                 f"Unhandled error processing page session {page.session_id}:",
@@ -719,40 +533,6 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
     return args, flet_env, pid_file
 
 
-def __download_fletd():
-    ver = version.version
-    flet_exe = "fletd.exe" if is_windows() else "fletd"
-
-    # build version-specific path to Fletd
-    temp_fletd_dir = Path.home().joinpath(".flet", "bin", f"fletd-{ver}")
-
-    if not temp_fletd_dir.exists():
-        logger.info(f"Downloading Fletd v{ver} to {temp_fletd_dir}")
-        temp_fletd_dir.mkdir(parents=True, exist_ok=True)
-        ext = "zip" if is_windows() else "tar.gz"
-        file_name = f"fletd-{ver}-{get_platform()}-{get_arch()}.{ext}"
-        flet_url = (
-            f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
-        )
-
-        temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
-        try:
-            urllib.request.urlretrieve(flet_url, temp_arch)
-            if is_windows():
-                with zipfile.ZipFile(temp_arch, "r") as zip_arch:
-                    zip_arch.extractall(str(temp_fletd_dir))
-            else:
-                with tarfile.open(temp_arch, "r:gz") as tar_arch:
-                    safe_tar_extractall(tar_arch, str(temp_fletd_dir))
-        finally:
-            os.remove(temp_arch)
-    else:
-        logger.info(
-            f"Fletd v{version.version} is already installed in {temp_fletd_dir}"
-        )
-    return str(temp_fletd_dir.joinpath(flet_exe))
-
-
 def __download_flet_client(file_name):
     ver = version.version
     temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
@@ -760,8 +540,3 @@ def __download_flet_client(file_name):
     flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
     urllib.request.urlretrieve(flet_url, temp_arch)
     return str(temp_arch)
-
-
-# Fix: https://bugs.python.org/issue35935
-# if _is_windows():
-#    signal.signal(signal.SIGINT, signal.SIG_DFL)

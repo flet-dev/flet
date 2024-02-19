@@ -4,6 +4,7 @@ import logging
 import os
 import struct
 import tempfile
+import threading
 from pathlib import Path
 from typing import List, Optional
 
@@ -19,7 +20,7 @@ from flet_core.protocol import (
     RegisterWebClientRequestPayload,
 )
 from flet_core.utils import random_string
-from flet_runtime.utils import get_free_tcp_port, is_windows
+from flet_runtime.utils import async_lock, get_free_tcp_port, is_windows
 
 logger = logging.getLogger(flet_runtime.__name__)
 
@@ -34,7 +35,8 @@ class AsyncLocalSocketConnection(LocalConnection):
         blocking=False,
     ):
         super().__init__()
-        self.__send_queue = asyncio.Queue(1)
+        self.__send_queue = asyncio.Queue()
+        self.__send_queue_lock = threading.Lock()
         self.__port = port
         self.__uds_path = uds_path
         self.__on_event = on_event
@@ -95,10 +97,13 @@ class AsyncLocalSocketConnection(LocalConnection):
 
     async def __send_loop(self, writer: asyncio.StreamWriter):
         while True:
+            # logger.debug(f"Before queue get")
             message = await self.__send_queue.get()
+            # logger.debug(f"New send message fetched: {message}")
             try:
                 data = message.encode("utf-8")
                 msg = struct.pack(">I", len(data)) + data
+                # logger.debug(f"before sent to TCP: {len(msg)}")
                 writer.write(msg)
                 # await writer.drain()
                 logger.debug(f"sent to TCP: {len(msg)}")
@@ -115,7 +120,7 @@ class AsyncLocalSocketConnection(LocalConnection):
             self._client_details = RegisterWebClientRequestPayload(**msg.payload)
 
             # register response
-            await self.__send(self._create_register_web_client_response())
+            await self.__send_async(self._create_register_web_client_response())
 
             # start session
             if self.__on_session_created is not None:
@@ -141,7 +146,13 @@ class AsyncLocalSocketConnection(LocalConnection):
     async def send_command_async(self, session_id: str, command: Command):
         result, message = self._process_command(command)
         if message:
-            await self.__send(message)
+            await self.__send_async(message)
+        return PageCommandResponsePayload(result=result, error="")
+
+    def send_command(self, session_id: str, command: Command):
+        result, message = self._process_command(command)
+        if message:
+            self.__send(message)
         return PageCommandResponsePayload(result=result, error="")
 
     async def send_commands_async(self, session_id: str, commands: List[Command]):
@@ -154,15 +165,45 @@ class AsyncLocalSocketConnection(LocalConnection):
             if message:
                 messages.append(message)
         if len(messages) > 0:
-            await self.__send(
+            await self.__send_async(
                 ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages)
             )
         return PageCommandsBatchResponsePayload(results=results, error="")
 
-    async def __send(self, message: ClientMessage):
+    def send_commands(self, session_id: str, commands: List[Command]):
+        results = []
+        messages = []
+        for command in commands:
+            result, message = self._process_command(command)
+            if command.name in ["add", "get"]:
+                results.append(result)
+            if message:
+                messages.append(message)
+        if len(messages) > 0:
+            self.__send(ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages))
+        return PageCommandsBatchResponsePayload(results=results, error="")
+
+    async def __send_async(self, message: ClientMessage):
+        j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
+        logger.debug(f"__send_async: {j}")
+        # async with async_lock(self.__send_queue_lock):
+        await self.__send_queue.put(j)
+
+    def __send(self, message: ClientMessage):
         j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logger.debug(f"__send: {j}")
-        await self.__send_queue.put(j)
+        # with self.__send_queue_lock:
+        # if self.__send_queue._loop:
+        #     print("YYYYYYYYEEEEEESSSSSS LOOOOOOP")
+        #     self.__send_queue._loop.call_soon_threadsafe(
+        #         self.__send_queue.put_nowait, j
+        #     )
+        # else:
+        #     print("NOOOOOOOOOOO LOOOOOOP")
+        #     self.__send_queue.put_nowait(j)
+        # self.__send_queue.put_nowait(j)
+        self.__send_queue._loop.call_soon_threadsafe(self.__send_queue.put_nowait, j)
+        logger.debug(f"after __send")
 
     async def close(self):
         logger.debug("Closing connection...")
