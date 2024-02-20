@@ -1,4 +1,5 @@
 import asyncio
+import atexit
 import concurrent.futures
 import logging
 import os
@@ -6,6 +7,7 @@ import signal
 import subprocess
 import tarfile
 import tempfile
+import threading
 import traceback
 import urllib.request
 import zipfile
@@ -23,7 +25,6 @@ from flet_runtime.utils import (
     get_current_script_dir,
     get_free_tcp_port,
     get_package_bin_dir,
-    get_package_web_dir,
     is_embedded,
     is_linux,
     is_linux_server,
@@ -31,11 +32,7 @@ from flet_runtime.utils import (
     is_windows,
     open_in_browser,
     safe_tar_extractall,
-    which,
 )
-
-_pool = concurrent.futures.ThreadPoolExecutor(max_workers=10)
-
 
 try:
     from flet.fastapi.start_fastapi_web_app import start_fastapi_web_app
@@ -131,10 +128,10 @@ async def app_async(
     env_page_name = os.getenv("FLET_PAGE_NAME")
     page_name = env_page_name if not name and env_page_name else name
 
-    if is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN:
-        conn = await __start_socket_server(port=port, session_handler=target)
-    else:
-        conn = await __start_web_server(
+    conn = (
+        await __start_socket_server(port=port, session_handler=target)
+        if is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
+        else await __start_web_server(
             session_handler=target,
             host=host,
             port=port,
@@ -145,56 +142,57 @@ async def app_async(
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
         )
+    )
 
-    url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
-    if url_prefix is not None:
-        print(url_prefix, conn.page_url)
-    else:
-        logger.info(f"App URL: {conn.page_url}")
+    try:
+        url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
+        if url_prefix is not None:
+            print(url_prefix, conn.page_url)
+        else:
+            logger.info(f"App URL: {conn.page_url}")
 
-    terminate = asyncio.Event()
+        terminate = asyncio.Event()
 
-    def exit_gracefully(signum, frame):
-        logger.debug("Gracefully terminating Flet app...")
-        asyncio.get_running_loop().call_soon_threadsafe(terminate.set)
+        def exit_gracefully(signum, frame):
+            logger.debug("Gracefully terminating Flet app...")
+            asyncio.get_running_loop().call_soon_threadsafe(terminate.set)
 
-    signal.signal(signal.SIGINT, exit_gracefully)
-    signal.signal(signal.SIGTERM, exit_gracefully)
+        signal.signal(signal.SIGINT, exit_gracefully)
+        signal.signal(signal.SIGTERM, exit_gracefully)
 
-    logger.info("Connected to Flet app and handling user sessions...")
+        logger.info("Connected to Flet app and handling user sessions...")
 
-    if (
-        (
-            view == AppView.FLET_APP
-            or view == AppView.FLET_APP_HIDDEN
-            or view == AppView.FLET_APP_WEB
-        )
-        and not is_linux_server()
-        and not is_embedded()
-        and url_prefix is None
-    ):
-        fvp, pid_file = await open_flet_view_async(
-            conn.page_url,
-            assets_dir if view != AppView.FLET_APP_WEB else None,
-            view == AppView.FLET_APP_HIDDEN,
-        )
-        try:
-            await fvp.wait()
-        except:
-            pass
+        if (
+            (
+                view == AppView.FLET_APP
+                or view == AppView.FLET_APP_HIDDEN
+                or view == AppView.FLET_APP_WEB
+            )
+            and not is_linux_server()
+            and not is_embedded()
+            and url_prefix is None
+        ):
+            fvp, pid_file = await open_flet_view_async(
+                conn.page_url,
+                assets_dir if view != AppView.FLET_APP_WEB else None,
+                view == AppView.FLET_APP_HIDDEN,
+            )
+            try:
+                await fvp.wait()
+            except:
+                pass
 
-        close_flet_view(pid_file)
-        await conn.close()
+            close_flet_view(pid_file)
 
-    elif not is_embedded():
-        if view == AppView.WEB_BROWSER and url_prefix is None:
-            open_in_browser(conn.page_url)
+        elif not is_embedded():
+            if view == AppView.WEB_BROWSER and url_prefix is None:
+                open_in_browser(conn.page_url)
 
-        try:
-            await terminate.wait()
-        except KeyboardInterrupt:
-            pass
-
+            try:
+                await terminate.wait()
+            except KeyboardInterrupt:
+                pass
+    finally:
         await conn.close()
 
 
@@ -203,6 +201,8 @@ async def __start_socket_server(
     session_handler=None,
 ):
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
+
+    pool = concurrent.futures.ThreadPoolExecutor()
 
     async def on_event(e):
         if e.sessionID in conn.sessions:
@@ -216,20 +216,18 @@ async def __start_socket_server(
                 del page
 
     async def on_session_created(session_data):
-        page = Page(conn, session_data.sessionID)
+        page = Page(conn, session_data.sessionID, pool=pool)
         await page.fetch_page_details_async()
         conn.sessions[session_data.sessionID] = page
         logger.info(f"Session started: {session_data.sessionID}")
         try:
             assert session_handler is not None
-            print("session_handler:", session_handler)
             if is_coroutine(session_handler):
                 await session_handler(page)
             else:
-                with concurrent.futures.ThreadPoolExecutor() as pool:
-                    await asyncio.get_running_loop().run_in_executor(
-                        pool, session_handler, page
-                    )
+                await asyncio.get_running_loop().run_in_executor(
+                    pool, session_handler, page
+                )
         except Exception as e:
             print(
                 f"Unhandled error processing page session {page.session_id}:",
@@ -245,6 +243,7 @@ async def __start_socket_server(
         on_event=on_event,
         on_session_created=on_session_created,
         blocking=is_embedded(),
+        pool=pool,
     )
     await conn.start()
     return conn

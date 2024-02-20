@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 
 from flet_core.types import WebRenderer
-from flet_runtime.utils.async_lock import async_lock
 from flet_runtime.utils.once import Once
 from flet_runtime.utils.patch_index import patch_index_html, patch_manifest_json
 

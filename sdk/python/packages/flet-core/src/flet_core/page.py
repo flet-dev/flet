@@ -4,6 +4,7 @@ import logging
 import threading
 import time
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
@@ -72,6 +73,11 @@ except ImportError as e:
             pass
 
 
+class PageDisconnectedException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
+
 class Page(AdaptiveControl):
     """
     Page is a container for `View` (https://flet.dev/docs/controls/view) controls.
@@ -97,7 +103,9 @@ class Page(AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/page
     """
 
-    def __init__(self, conn: Connection, session_id):
+    def __init__(
+        self, conn: Connection, session_id, pool: Optional[ThreadPoolExecutor] = None
+    ):
         Control.__init__(self)
 
         self._id = "page"
@@ -108,6 +116,7 @@ class Page(AdaptiveControl):
         self.__expires_at = None
         self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
+        self.__pool = pool
         self._index = {self._Control__uid: self}  # index with all page controls
 
         self.__lock = threading.Lock() if not is_asyncio() else NopeLock()
@@ -426,8 +435,7 @@ class Page(AdaptiveControl):
 
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         if self.__conn is None:
-            logger.info(f"Page has been disconnected: {self._session_id}")
-            return [], []
+            raise PageDisconnectedException("Page has been disconnected")
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
         self.__validate_controls_page(added_controls)
         results = self.__conn.send_commands(self._session_id, commands).results
@@ -436,8 +444,7 @@ class Page(AdaptiveControl):
 
     async def __update_async(self, *controls) -> Tuple[List[Control], List[Control]]:
         if self.__conn is None:
-            logger.info(f"Page has been disconnected: {self._session_id}")
-            return [], []
+            raise PageDisconnectedException("Page has been disconnected")
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
         self.__validate_controls_page(added_controls)
         results = (
@@ -530,7 +537,9 @@ class Page(AdaptiveControl):
                 if is_coroutine(handler):
                     await handler(ce)
                 else:
-                    await asyncio.get_running_loop().run_in_executor(None, handler, ce)
+                    await asyncio.get_running_loop().run_in_executor(
+                        self.__pool, handler, ce
+                    )
 
     def __on_page_change_event(self, data):
         for props in json.loads(data):

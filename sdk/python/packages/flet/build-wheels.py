@@ -96,6 +96,20 @@ def download_artifact_by_name(jobId, artifact_name, dest_file):
             return
 
 
+def get_flet_server_job_ids():
+    account_name = os.environ.get("APPVEYOR_ACCOUNT_NAME")
+    project_slug = os.environ.get("APPVEYOR_PROJECT_SLUG")
+    build_id = os.environ.get("APPVEYOR_BUILD_ID")
+    url = f"https://ci.appveyor.com/api/projects/{account_name}/{project_slug}/builds/{build_id}"
+    print(f"Fetching build details at {url}")
+    req = urllib.request.Request(url)
+    req.add_header("Content-type", "application/json")
+    project = json.loads(urllib.request.urlopen(req).read().decode())
+    jobId = None
+    for job in project["build"]["jobs"]:
+        build_jobs[job["name"]] = job["jobId"]
+
+
 def read_chunks(file, size=io.DEFAULT_BUFFER_SIZE):
     """Yield pieces of data from a file-like object until EOF."""
     while True:
@@ -143,6 +157,7 @@ orig_whl = whl_files[0]
 
 package_version = os.path.basename(orig_whl).split("-")[1]
 print("package_version", package_version)
+get_flet_server_job_ids()
 
 for name, package in packages.items():
     print(f"Building {name}...")

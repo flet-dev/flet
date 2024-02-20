@@ -4,6 +4,7 @@ import logging
 import os
 import struct
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import List, Optional
 
@@ -19,7 +20,7 @@ from flet_core.protocol import (
     RegisterWebClientRequestPayload,
 )
 from flet_core.utils import random_string
-from flet_runtime.utils import async_lock, get_free_tcp_port, is_windows
+from flet_runtime.utils import get_free_tcp_port, is_windows
 
 logger = logging.getLogger(flet_runtime.__name__)
 
@@ -32,6 +33,7 @@ class FletSocketServer(LocalConnection):
         on_event=None,
         on_session_created=None,
         blocking=False,
+        pool: Optional[ThreadPoolExecutor] = None,
     ):
         super().__init__()
         self.__send_queue = asyncio.Queue()
@@ -40,6 +42,8 @@ class FletSocketServer(LocalConnection):
         self.__on_event = on_event
         self.__on_session_created = on_session_created
         self.__blocking = blocking
+        self.__pool = pool
+        self.__running_tasks = set()
 
     async def start(self):
         self.__connected = False
@@ -111,6 +115,7 @@ class FletSocketServer(LocalConnection):
         logger.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
         msg = ClientMessage(**msg_dict)
+        task = None
         if msg.action == ClientActions.REGISTER_WEB_CLIENT:
             self._client_details = RegisterWebClientRequestPayload(**msg.payload)
 
@@ -119,24 +124,28 @@ class FletSocketServer(LocalConnection):
 
             # start session
             if self.__on_session_created is not None:
-                asyncio.create_task(
+                task = asyncio.create_task(
                     self.__on_session_created(self._create_session_handler_arg())
                 )
 
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
             if self.__on_event is not None:
-                asyncio.create_task(
+                task = asyncio.create_task(
                     self.__on_event(self._create_page_event_handler_arg(msg))
                 )
 
         elif msg.action == ClientActions.UPDATE_CONTROL_PROPS:
             if self.__on_event is not None:
-                asyncio.create_task(
+                task = asyncio.create_task(
                     self.__on_event(self._create_update_control_props_handler_arg(msg))
                 )
         else:
             # it's something else
             raise Exception(f'Unknown message "{msg.action}": {msg.payload}')
+
+        if task:
+            self.__running_tasks.add(task)
+            task.add_done_callback(self.__running_tasks.discard)
 
     async def send_command_async(self, session_id: str, command: Command):
         result, message = self._process_command(command)
@@ -190,6 +199,16 @@ class FletSocketServer(LocalConnection):
 
     async def close(self):
         logger.debug("Closing connection...")
+
+        logger.debug(f"Disconnecting all pages...")
+        while self.sessions:
+            _, page = self.sessions.popitem()
+            await page._disconnect(0)
+
+        if self.__pool:
+            logger.debug("Shutting down thread pool...")
+            self.__pool.shutdown(wait=False, cancel_futures=True)
+
         # close socket
         if self.__receive_loop_task:
             self.__receive_loop_task.cancel()

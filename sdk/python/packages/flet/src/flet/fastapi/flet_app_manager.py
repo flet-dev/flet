@@ -10,7 +10,6 @@ import flet.fastapi as flet_fastapi
 from flet.fastapi.oauth_state import OAuthState
 from flet_core.connection import Connection
 from flet_core.page import Page
-from flet_runtime.utils import async_lock
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -24,7 +23,6 @@ class FletAppManager:
         self.__sessions_lock = asyncio.Lock()
         self.__sessions: dict[str, Page] = {}
         self.__evict_sessions_task = None
-        self.__states_lock = threading.Lock()
         self.__states: dict[str, OAuthState] = {}
         self.__evict_oauth_states_task = None
         self.__temp_dirs = {}
@@ -91,21 +89,10 @@ class FletAppManager:
 
     async def store_state_async(self, state_id: str, state: OAuthState):
         logger.info(f"Store oauth state: {state_id}")
-        async with async_lock(self.__states_lock):
-            self.__states[state_id] = state
-
-    def store_state(self, state_id: str, state: OAuthState):
-        logger.info(f"Store oauth state: {state_id}")
-        with self.__states_lock:
-            self.__states[state_id] = state
+        self.__states[state_id] = state
 
     async def retrieve_state_async(self, state_id: str) -> Optional[OAuthState]:
-        async with async_lock(self.__states_lock):
-            return self.__states.pop(state_id, None)
-
-    def retrieve_state(self, state_id: str) -> Optional[OAuthState]:
-        with self.__states_lock:
-            return self.__states.pop(state_id, None)
+        return self.__states.pop(state_id, None)
 
     def add_temp_dir(self, temp_dir: str):
         self.__temp_dirs[temp_dir] = True
@@ -125,10 +112,9 @@ class FletAppManager:
         while True:
             await asyncio.sleep(10)
             ids = []
-            async with async_lock(self.__states_lock):
-                for id, state in self.__states.items():
-                    if state.expires_at and datetime.utcnow() > state.expires_at:
-                        ids.append(id)
+            for id, state in self.__states.items():
+                if state.expires_at and datetime.utcnow() > state.expires_at:
+                    ids.append(id)
             for id in ids:
                 logger.info(f"Delete expired oauth state: {id}")
                 await self.retrieve_state_async(id)

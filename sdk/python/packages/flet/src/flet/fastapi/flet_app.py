@@ -3,7 +3,6 @@ import copy
 import json
 import logging
 import os
-import threading
 import traceback
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
@@ -14,7 +13,7 @@ from flet.fastapi.flet_app_manager import app_manager
 from flet.fastapi.oauth_state import OAuthState
 from flet_core.event import Event
 from flet_core.local_connection import LocalConnection
-from flet_core.page import Page
+from flet_core.page import Page, PageDisconnectedException
 from flet_core.protocol import (
     ClientActions,
     ClientMessage,
@@ -27,7 +26,6 @@ from flet_core.protocol import (
 from flet_core.utils import is_coroutine, random_string
 from flet_runtime.pubsub import PubSubHub
 from flet_runtime.uploads import build_upload_url
-from flet_runtime.utils import async_lock
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -104,7 +102,7 @@ class FletApp(LocalConnection):
 
         await self.__websocket.accept()
         self.__send_queue = asyncio.Queue()
-        self.__send_queue_lock = threading.Lock()
+        self._loop = asyncio.get_running_loop()
         st = asyncio.create_task(self.__send_loop())
         await self.__receive_loop()
         st.cancel()
@@ -114,7 +112,14 @@ class FletApp(LocalConnection):
             self.__get_unique_session_id(e.sessionID)
         )
         if session is not None:
-            await session.on_event_async(Event(e.eventTarget, e.eventName, e.eventData))
+            try:
+                await session.on_event_async(
+                    Event(e.eventTarget, e.eventName, e.eventData)
+                )
+            except PageDisconnectedException:
+                logger.debug(
+                    f"Event handler attempted to update disconnected page: {e.sessionID}"
+                )
             if e.eventTarget == "page" and e.eventName == "close":
                 logger.info(f"Session closed: {e.sessionID}")
                 await app_manager.delete_session(
@@ -132,6 +137,10 @@ class FletApp(LocalConnection):
                 await asyncio.get_running_loop().run_in_executor(
                     None, self.__session_handler, self.__page
                 )
+        except PageDisconnectedException:
+            logger.debug(
+                f"Session handler attempted to update disconnected page: {session_id}"
+            )
         except BrokenPipeError:
             logger.info(f"Session handler terminated: {session_id}")
         except Exception as e:
@@ -326,7 +335,9 @@ class FletApp(LocalConnection):
             complete_page_html=attrs.get("completePageHtml", None),
             complete_page_url=attrs.get("completePageUrl", None),
         )
-        app_manager.store_state(state_id, state)
+        asyncio.run_coroutine_threadsafe(
+            app_manager.store_state_async(state_id, state), self._loop
+        ).result()
         return (
             "",
             None,
@@ -451,14 +462,12 @@ class FletApp(LocalConnection):
     def __send(self, message: ClientMessage):
         m = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logger.debug(f"__send: {m}")
-        with self.__send_queue_lock:
-            self.__send_queue.put_nowait(m)
+        self.__send_queue._loop.call_soon_threadsafe(self.__send_queue.put_nowait, m)
 
     async def __send_async(self, message: ClientMessage):
         m = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logger.debug(f"__send_async: {m}")
-        async with async_lock(self.__send_queue_lock):
-            await self.__send_queue.put(m)
+        await self.__send_queue.put(m)
 
     def _get_next_control_id(self):
         assert self.__page
