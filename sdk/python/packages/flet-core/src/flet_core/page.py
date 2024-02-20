@@ -296,7 +296,6 @@ class Page(AdaptiveControl):
         await self.on_event_async(Event("page", "connect", ""))
 
     async def _disconnect(self, session_timeout_seconds: int):
-        self.__conn = None
         self.__expires_at = datetime.utcnow() + timedelta(
             seconds=session_timeout_seconds
         )
@@ -432,6 +431,7 @@ class Page(AdaptiveControl):
         self.__client_storage = None
         self.__session_storage = None
         self.__query = None
+        self.__conn = None
 
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         if self.__conn is None:

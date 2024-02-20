@@ -57,7 +57,8 @@ class FletApp(LocalConnection):
         * `secret_key` (str, optional) - secret key to sign upload requests.
         """
         super().__init__()
-        logger.info("New FletConnection")
+        self.__id = random_string(8)
+        logger.info(f"New FletApp: {self.__id}")
 
         self.__page = None
         self.__session_handler = session_handler
@@ -176,7 +177,7 @@ class FletApp(LocalConnection):
                     self.__session_timeout_seconds,
                 )
         self.__websocket = None
-        self.__page = None
+        self.__send_queue = None
 
     async def __on_message(self, data: str):
         logger.debug(f"_on_message: {data}")
@@ -462,12 +463,16 @@ class FletApp(LocalConnection):
     def __send(self, message: ClientMessage):
         m = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logger.debug(f"__send: {m}")
-        self.__send_queue._loop.call_soon_threadsafe(self.__send_queue.put_nowait, m)
+        if self.__send_queue:
+            self.__send_queue._loop.call_soon_threadsafe(
+                self.__send_queue.put_nowait, m
+            )
 
     async def __send_async(self, message: ClientMessage):
         m = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logger.debug(f"__send_async: {m}")
-        await self.__send_queue.put(m)
+        if self.__send_queue:
+            await self.__send_queue.put(m)
 
     def _get_next_control_id(self):
         assert self.__page
@@ -475,3 +480,7 @@ class FletApp(LocalConnection):
 
     def __get_unique_session_id(self, session_id: str):
         return f"{self.page_name}{session_id}"
+
+    def dispose(self):
+        logger.info(f"Disposing FletApp: {self.__id}")
+        self.__page = None

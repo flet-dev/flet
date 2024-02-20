@@ -66,7 +66,11 @@ class FletAppManager:
         logger.info(f"Session reconnected: {session_id}")
         async with self.__sessions_lock:
             if session_id in self.__sessions:
-                await self.__sessions[session_id]._connect(conn)
+                page = self.__sessions[session_id]
+                old_conn = page.connection
+                await page._connect(conn)
+                if old_conn:
+                    old_conn.dispose()
 
     async def disconnect_session(self, session_id: str, session_timeout_seconds: int):
         logger.info(f"Session disconnected: {session_id}")
@@ -81,7 +85,10 @@ class FletAppManager:
         if page is not None:
             logger.info(f"Delete session ({total} left): {session_id}")
             try:
+                old_conn = page.connection
                 await page._close_async()
+                if old_conn:
+                    old_conn.dispose()
             except Exception as e:
                 logger.error(
                     f"Error deleting expired session: {e} {traceback.format_exc()}"

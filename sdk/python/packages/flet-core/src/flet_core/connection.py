@@ -38,3 +38,6 @@ class Connection:
         else:
             url = "ws://" + url
         return url + "/ws"
+
+    def dispose(self):
+        pass
