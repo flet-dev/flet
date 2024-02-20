@@ -45,6 +45,11 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
       python_stack: ""
 
+    - job_name: Build Flet for web
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+
     # - job_name: Build Flet for iOS
     #   job_group: build_flet
     #   job_depends_on: build_flet_package
@@ -344,22 +349,15 @@ for:
         name: flet_ios
 
   # ======================================
-  #      Build Fletd
+  #      Build Flet for web
   # ======================================
 
   - matrix:
       only:
-        - job_name: Build Fletd
+        - job_name: Build Flet for web
 
     install:
       - flutter upgrade --force
-
-      # Go and GoReleaser
-      - gvm install go${GO_VERSION} -B
-      - gvm use go${GO_VERSION}
-      - go version
-      - bash ./ci/install_goreleaser.sh
-      - goreleaser --version
 
     build_script:
       # Flutter Web client
@@ -370,19 +368,7 @@ for:
       - cd ..
       - tar -czvf client/build/flet-web.tar.gz -C client/build/web .
 
-      # Flet Server in Go
-      - cd server
-      - sh: |
-          if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-            goreleaser
-          else
-            goreleaser --snapshot --skip-publish
-          fi
-      - cd ..
-
     artifacts:
-      - path: server/dist/fletd-*
-      - path: server/dist/fletd_*/*
       - path: client/build/flet-web.tar.gz
         name: flet_web
 
