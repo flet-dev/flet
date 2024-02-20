@@ -150,7 +150,6 @@ class InkWell(ConstrainedControl, AdaptiveControl):
         # Specific
         #
         mouse_cursor: Optional[MouseCursor] = None,
-        hover_interval: Optional[int] = None,
         on_tap=None,
         on_tap_down=None,
         on_tap_up=None,
@@ -160,7 +159,7 @@ class InkWell(ConstrainedControl, AdaptiveControl):
         on_secondary_tap_down=None,
         on_secondary_tap_up=None,
         on_double_tap=None,
-        on_hover=None,  #
+        #
         # Adaptive
         #
         adaptive: Optional[bool] = None,
@@ -221,14 +220,8 @@ class InkWell(ConstrainedControl, AdaptiveControl):
             "secondary_tap_up", self.__on_secondary_tap_up.get_handler()
         )
 
-        # on_hover
-
-        self.__on_hover = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
-        self._add_event_handler("hover", self.__on_hover.get_handler())
-
         self.mouse_cursor = mouse_cursor
         self.content = content
-        self.hover_interval = hover_interval
         self.on_tap = on_tap
         self.on_tap_down = on_tap_down
         self.on_tap_up = on_tap_up
@@ -238,8 +231,6 @@ class InkWell(ConstrainedControl, AdaptiveControl):
         self.on_secondary_tap_down = on_secondary_tap_down
         self.on_secondary_tap_up = on_secondary_tap_up
         self.on_double_tap = on_double_tap
-
-        self.on_hover = on_hover
 
     def _get_control_name(self):
         return "inkwell"
@@ -259,15 +250,6 @@ class InkWell(ConstrainedControl, AdaptiveControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
-
-    # hover_interval
-    @property
-    def hover_interval(self) -> Optional[int]:
-        return self._get_attr("hoverInterval")
-
-    @hover_interval.setter
-    def hover_interval(self, value: Optional[int]):
-        self._set_attr("hoverInterval", value)
 
     # on_tap
     @property
@@ -381,15 +363,3 @@ class TapEvent(ControlEvent):
 class MultiTapEvent(ControlEvent):
     def __init__(self, correct_touches: bool) -> None:
         self.correct_touches: bool = correct_touches
-
-
-class HoverEvent(ControlEvent):
-    def __init__(self, ts, kind, gx, gy, lx, ly, dx=None, dy=None) -> None:
-        self.timestamp: float = ts
-        self.kind: str = kind
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.delta_x: Optional[float] = dx
-        self.delta_y: Optional[float] = dy
