@@ -68,10 +68,10 @@ class FletWebSocketServerProtocol implements FletServerProtocol {
 
   String getWebSocketEndpoint(Uri uri) {
     final wsScheme = uri.scheme == "https" ? "wss" : "ws";
-    final path = getWebsocketEndpointPath();
-    if (path == "") {
+    final wsPath = getWebsocketEndpointPath(uri.path);
+    if (wsPath == "") {
       throw Exception("WebSocket endpoint path cannot be empty.");
     }
-    return "$wsScheme://${uri.authority}/$path";
+    return "$wsScheme://${uri.authority}/$wsPath";
   }
 }

@@ -1,5 +1,4 @@
 import asyncio
-import atexit
 import concurrent.futures
 import logging
 import os
@@ -7,7 +6,6 @@ import signal
 import subprocess
 import tarfile
 import tempfile
-import threading
 import traceback
 import urllib.request
 import zipfile
@@ -129,9 +127,13 @@ async def app_async(
     env_page_name = os.getenv("FLET_PAGE_NAME")
     page_name = env_page_name if not name and env_page_name else name
 
+    is_socket_server = (
+        is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
+    )
+
     conn = (
         await __start_socket_server(port=port, session_handler=target)
-        if is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
+        if is_socket_server
         else await __start_web_server(
             session_handler=target,
             host=host,
@@ -156,7 +158,7 @@ async def app_async(
 
         def exit_gracefully(signum, frame):
             logger.debug("Gracefully terminating Flet app...")
-            asyncio.get_running_loop().call_soon_threadsafe(terminate.set)
+            asyncio.get_event_loop().call_soon_threadsafe(terminate.set)
 
         signal.signal(signal.SIGINT, exit_gracefully)
         signal.signal(signal.SIGTERM, exit_gracefully)
@@ -313,6 +315,7 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
         page_url, assets_dir, hidden
     )
+    logger.info(f"AAAAAAAAAAAAAA: {args}, {pid_file}")
     return (
         await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env),
         pid_file,
