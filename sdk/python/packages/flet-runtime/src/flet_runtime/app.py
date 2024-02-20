@@ -42,6 +42,7 @@ except Exception as e:
     async def start_fastapi_web_app(
         session_handler,
         host,
+        url_host,
         port,
         page_name: str,
         assets_dir,
@@ -260,7 +261,7 @@ async def __start_web_server(
     use_color_emoji,
     route_url_strategy,
 ):
-    server_ip = "127.0.0.1" if host in [None, "", "*"] else host
+    url_host = "127.0.0.1" if host in [None, "", "*"] else host
 
     if port == 0:
         port = get_free_tcp_port()
@@ -288,7 +289,8 @@ async def __start_web_server(
 
     return await start_fastapi_web_app(
         session_handler,
-        host=server_ip,
+        host=host,
+        url_host=url_host,
         port=port,
         page_name=page_name,
         assets_dir=assets_dir,

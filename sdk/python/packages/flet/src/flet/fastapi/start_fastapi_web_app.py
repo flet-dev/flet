@@ -19,6 +19,7 @@ class WebServerHandle:
 async def start_fastapi_web_app(
     session_handler,
     host,
+    url_host,
     port,
     page_name: str,
     assets_dir,
@@ -46,6 +47,6 @@ async def start_fastapi_web_app(
     asyncio.create_task(server.serve())
 
     return WebServerHandle(
-        page_url=f"http://{host}:{port}{web_path if web_path != '/' else ''}",
+        page_url=f"http://{url_host}:{port}{web_path if web_path != '/' else ''}",
         server=server,
     )
