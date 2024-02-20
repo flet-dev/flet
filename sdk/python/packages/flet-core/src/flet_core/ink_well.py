@@ -17,6 +17,45 @@ from flet_core.types import (
 )
 
 
+class MouseCursor(Enum):
+    ALIAS = "alias"
+    ALL_SCROLL = "allScroll"
+    BASIC = "basic"
+    CELL = "cell"
+    CLICK = "click"
+    CONTEXT_MENU = "contextMenu"
+    COPY = "copy"
+    DISAPPEARING = "disappearing"
+    FORBIDDEN = "forbidden"
+    GRAB = "grab"
+    GRABBING = "grabbing"
+    HELP = "help"
+    MOVE = "move"
+    NO_DROP = "noDrop"
+    NONE = "none"
+    PRECISE = "precise"
+    PROGRESS = "progress"
+    RESIZE_COLUMN = "resizeColumn"
+    RESIZE_DOWN = "resizeDown"
+    RESIZE_DOWN_LEFT = "resizeDownLeft"
+    RESIZE_DOWN_RIGHT = "resizeDownRight"
+    RESIZE_LEFT = "resizeLeft"
+    RESIZE_LEFT_RIGHT = "resizeLeftRight"
+    RESIZE_RIGHT = "resizeRight"
+    RESIZE_ROW = "resizeRow"
+    RESIZE_UP = "resizeUp"
+    RESIZE_UP_DOWN = "resizeUpDown"
+    RESIZE_UP_LEFT = "resizeUpLeft"
+    RESIZE_UP_LEFT_DOWN_RIGHT = "resizeUpLeftDownRight"
+    RESIZE_UP_RIGHT = "resizeUpRight"
+    RESIZE_UP_RIGHT_DOWN_LEFT = "resizeUpRightDownLeft"
+    TEXT = "text"
+    VERTICAL_TEXT = "verticalText"
+    WAIT = "wait"
+    ZOOM_IN = "zoomIn"
+    ZOOM_OUT = "zoomOut"
+
+
 class InkWell(ConstrainedControl, AdaptiveControl):
     """
     A control that detects gestures.
@@ -110,6 +149,7 @@ class InkWell(ConstrainedControl, AdaptiveControl):
         #
         # Specific
         #
+        mouse_cursor: Optional[MouseCursor] = None,
         hover_interval: Optional[int] = None,
         on_tap=None,
         on_tap_down=None,
@@ -185,11 +225,8 @@ class InkWell(ConstrainedControl, AdaptiveControl):
 
         self.__on_hover = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
         self._add_event_handler("hover", self.__on_hover.get_handler())
-        self.__on_enter = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
-        self._add_event_handler("enter", self.__on_enter.get_handler())
-        self.__on_exit = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
-        self._add_event_handler("exit", self.__on_exit.get_handler())
 
+        self.mouse_cursor = mouse_cursor
         self.content = content
         self.hover_interval = hover_interval
         self.on_tap = on_tap
@@ -321,35 +358,15 @@ class InkWell(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("double_tap", handler)
         self._set_attr("onDoubleTap", True if handler is not None else None)
 
-    # on_hover
+    # mouse_cursor
     @property
-    def on_hover(self):
-        return self.__on_hover
+    def mouse_cursor(self):
+        return self.__mouse_cursor
 
-    @on_hover.setter
-    def on_hover(self, handler):
-        self.__on_hover.subscribe(handler)
-        self._set_attr("onHover", True if handler is not None else None)
-
-    # on_enter
-    @property
-    def on_enter(self):
-        return self.__on_enter
-
-    @on_enter.setter
-    def on_enter(self, handler):
-        self.__on_enter.subscribe(handler)
-        self._set_attr("onEnter", True if handler is not None else None)
-
-    # on_exit
-    @property
-    def on_exit(self):
-        return self.__on_exit
-
-    @on_exit.setter
-    def on_exit(self, handler):
-        self.__on_exit.subscribe(handler)
-        self._set_attr("onExit", True if handler is not None else None)
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr("mouseCursor", value.value if value is not None else None)
 
 
 class TapEvent(ControlEvent):
@@ -366,53 +383,6 @@ class MultiTapEvent(ControlEvent):
         self.correct_touches: bool = correct_touches
 
 
-class LongPressStartEvent(ControlEvent):
-    def __init__(self, lx, ly, gx, gy) -> None:
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
-
-
-class LongPressEndEvent(ControlEvent):
-    def __init__(self, lx, ly, gx, gy, vx, vy) -> None:
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.velocity_x: float = vx
-        self.velocity_y: float = vy
-
-
-class DragStartEvent(ControlEvent):
-    def __init__(self, lx, ly, gx, gy, kind, ts) -> None:
-        self.kind: str = kind
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.timestamp: Optional[int] = ts
-
-
-class DragUpdateEvent(ControlEvent):
-    def __init__(self, dx, dy, pd, lx, ly, gx, gy, ts) -> None:
-        self.delta_x: float = dx
-        self.delta_y: float = dy
-        self.primary_delta: Optional[float] = pd
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.timestamp: Optional[int] = ts
-
-
-class DragEndEvent(ControlEvent):
-    def __init__(self, pv, vx, vy) -> None:
-        self.primary_velocity: Optional[float] = pv
-        self.velocity_x: float = vx
-        self.velocity_y: float = vy
-
-
 class HoverEvent(ControlEvent):
     def __init__(self, ts, kind, gx, gy, lx, ly, dx=None, dy=None) -> None:
         self.timestamp: float = ts
@@ -423,13 +393,3 @@ class HoverEvent(ControlEvent):
         self.local_y: float = ly
         self.delta_x: Optional[float] = dx
         self.delta_y: Optional[float] = dy
-
-
-class ScrollEvent(ControlEvent):
-    def __init__(self, gx, gy, lx, ly, dx=None, dy=None) -> None:
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.scroll_delta_x: Optional[float] = dx
-        self.scroll_delta_y: Optional[float] = dy

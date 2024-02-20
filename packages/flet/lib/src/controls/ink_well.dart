@@ -32,9 +32,6 @@ class InkWellControl extends StatefulWidget {
 }
 
 class _InkWellControlState extends State<InkWellControl> {
-  int _hoverTimestamp = DateTime.now().millisecondsSinceEpoch;
-  double _hoverX = 0;
-  double _hoverY = 0;
   Timer? _debounce;
 
   @override
@@ -68,7 +65,7 @@ class _InkWellControlState extends State<InkWellControl> {
       widget.backend.triggerControlEvent(widget.control.id, eventName, d);
     }
 
-    var onHover = widget.control.attrBool("onHover", false)!;
+    var mouseCursor = widget.control.attrString("mouseCursor");
     var onTap = widget.control.attrBool("onTap", false)!;
     var onTapDown = widget.control.attrBool("onTapDown", false)!;
     var onTapUp = widget.control.attrBool("onTapUp", false)!;
@@ -85,29 +82,6 @@ class _InkWellControlState extends State<InkWellControl> {
         : null;
 
     Widget? result = content;
-
-    var hoverInterval = widget.control.attrInt("hoverInterval", 0)!;
-
-    void handleHover(PointerHoverEvent details) {
-      var now = DateTime.now().millisecondsSinceEpoch;
-      if (now - _hoverTimestamp > hoverInterval) {
-        _hoverTimestamp = now;
-        var dx = details.localPosition.dx - _hoverX;
-        var dy = details.localPosition.dy - _hoverY;
-        _hoverX = details.localPosition.dx;
-        _hoverY = details.localPosition.dy;
-        sendEvent("hover", {
-          "ts": details.timeStamp.inMilliseconds,
-          "kind": details.kind.name,
-          "gx": details.position.dx,
-          "gy": details.position.dy,
-          "lx": details.localPosition.dx,
-          "ly": details.localPosition.dy,
-          "dx": dx,
-          "dy": dy,
-        });
-      }
-    }
 
     result = (onTap |
             onTapDown |
@@ -176,20 +150,8 @@ class _InkWellControlState extends State<InkWellControl> {
                     sendEvent("double_tap", "");
                   }
                 : null,
+            mouseCursor: parseMouseCursor(mouseCursor),
             child: result)
-        : result;
-
-    var mouseCursor = widget.control.attrString("mouseCursor");
-    result = ((mouseCursor != null) || onHover)
-        ? MouseRegion(
-            cursor: parseMouseCursor(mouseCursor),
-            onHover: onHover
-                ? (details) {
-                    handleHover(details);
-                  }
-                : null,
-            child: result,
-          )
         : result;
 
     if (result == null || result == content) {
