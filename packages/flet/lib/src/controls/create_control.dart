@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/ink_well.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -540,6 +541,15 @@ Widget createWidget(
           parentAdaptive: parentAdaptive);
     case "gesturedetector":
       return GestureDetectorControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "inkwell":
+      return InkWellControl(
           key: key,
           parent: parent,
           control: controlView.control,

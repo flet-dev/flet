@@ -253,3 +253,4 @@ from flet_core.video import FilterQuality, PlaylistMode, Video, VideoMedia
 from flet_core.view import View
 from flet_core.webview import WebView
 from flet_core.window_drag_area import WindowDragArea
+from flet_core.ink_well import InkWell
