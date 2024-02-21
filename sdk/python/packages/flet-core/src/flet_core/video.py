@@ -74,7 +74,7 @@ class Video(ConstrainedControl):
         on_enter_fullscreen=None,
         on_exit_fullscreen=None,
         #
-        # Common
+            # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -262,6 +262,62 @@ class Video(ConstrainedControl):
             control_id=self.uid,
         )
         self.__playlist.pop(media_index)
+
+    def is_playing(self, wait_timeout: Optional[float] = 5) -> bool:
+        playing = self.page.invoke_method(
+            "is_playing",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return playing == "true"
+
+    async def is_playing_async(self, wait_timeout: Optional[float] = 5) -> bool:
+        playing = await self.page.invoke_method_async(
+            "is_playing",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return playing == "true"
+
+    def is_completed(self, wait_timeout: Optional[float] = 5) -> bool:
+        completed = self.page.invoke_method(
+            "is_completed",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return completed == "true"
+
+    async def is_completed_async(self, wait_timeout: Optional[float] = 5) -> bool:
+        completed = await self.page.invoke_method_async(
+            "is_completed",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return completed == "true"
+
+    def get_duration(self, wait_timeout: Optional[float] = 5) -> Optional[int]:
+        sr = self.page.invoke_method(
+            "get_duration",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return int(sr) if sr else None
+
+    async def get_duration_async(
+            self, wait_timeout: Optional[float] = 5
+    ) -> Optional[int]:
+        sr = await self.page.invoke_method_async(
+            "get_duration",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return int(sr) if sr else None
 
     # playlist
     @property

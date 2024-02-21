@@ -193,6 +193,12 @@ class _VideoControlState extends State<VideoControl> {
             debugPrint("Video.remove($hashCode)");
             await player.remove(parseInt(args["media_index"], 0));
             break;
+          case "is_playing":
+            return player.state.playing.toString();
+          case "is_completed":
+            return player.state.completed.toString();
+          case "get_duration":
+            return player.state.duration.inMilliseconds.toString();
         }
         return null;
       });
