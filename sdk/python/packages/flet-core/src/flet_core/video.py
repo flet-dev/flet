@@ -58,7 +58,7 @@ class Video(ConstrainedControl):
         fill_color: Optional[str] = None,
         wakelock: Optional[bool] = None,
         autoplay: Optional[bool] = None,
-            show_controls: Optional[bool] = None,
+        show_controls: Optional[bool] = None,
         muted: Optional[bool] = None,
         playlist_mode: Optional[PlaylistMode] = None,
         shuffle_playlist: Optional[bool] = None,
@@ -73,8 +73,9 @@ class Video(ConstrainedControl):
         on_loaded=None,
         on_enter_fullscreen=None,
         on_exit_fullscreen=None,
+        on_error=None,
         #
-            # ConstrainedControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -152,6 +153,7 @@ class Video(ConstrainedControl):
         self.on_enter_fullscreen = on_enter_fullscreen
         self.on_exit_fullscreen = on_exit_fullscreen
         self.on_loaded = on_loaded
+        self.on_error = on_error
 
     def _get_control_name(self):
         return "video"
@@ -529,3 +531,13 @@ class Video(ConstrainedControl):
     def on_loaded(self, handler):
         self._set_attr("onLoaded", True if handler is not None else None)
         self._add_event_handler("loaded", handler)
+
+    # on_error
+    @property
+    def on_error(self):
+        return self._get_event_handler("error")
+
+    @on_error.setter
+    def on_error(self, handler):
+        self._set_attr("onError", True if handler is not None else None)
+        self._add_event_handler("error", handler)

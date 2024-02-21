@@ -61,6 +61,8 @@ class _VideoControlState extends State<VideoControl> {
         e.name.toLowerCase() ==
         widget.control.attrString("filterQuality", "low")!.toLowerCase());
 
+    bool onError = widget.control.attrBool("onError", false)!;
+
     double? volume = widget.control.attrDouble("volume");
     double? pitch = widget.control.attrDouble("pitch");
     double? playbackRate = widget.control.attrDouble("playbackRate");
@@ -205,6 +207,16 @@ class _VideoControlState extends State<VideoControl> {
         return null;
       });
     }();
+
+    player.stream.error.listen((event) {
+      if (onError) {
+        widget.backend.triggerControlEvent(
+          widget.control.id,
+          "error",
+          event,
+        );
+      }
+    });
 
     return constrainedControl(context, video, widget.parent, widget.control);
   }
