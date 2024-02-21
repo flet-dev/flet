@@ -148,8 +148,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       if ((onClick || url != "" || onLongPress || onHover) &&
           ink &&
           !disabled) {
-        var ink = Ink(
-            decoration: boxDecor,
+        var ink = Material(
+            color: Colors.transparent,
+            borderRadius: boxDecor.borderRadius,
             child: InkWell(
               // Dummy callback to enable widget
               // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
@@ -202,6 +203,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 height: control.attrDouble("height"),
                 margin: parseEdgeInsets(control, "margin"),
                 clipBehavior: Clip.none,
+                decoration: boxDecor,
                 child: ink,
               )
             : AnimatedContainer(
