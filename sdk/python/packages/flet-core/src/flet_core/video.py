@@ -6,6 +6,7 @@ from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -13,6 +14,8 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ImageFit,
+    PaddingValue,
+    TextAlign,
 )
 
 try:
@@ -39,6 +42,18 @@ class VideoMedia:
     resource: Optional[str] = dataclasses.field(default=None)
     http_headers: Optional[Dict[str, str]] = dataclasses.field(default=None)
     extras: Optional[Dict[str, str]] = dataclasses.field(default=None)
+
+
+@dataclasses.dataclass
+class VideoSubtitleConfiguration:
+    src: Optional[str] = dataclasses.field(default=None)
+    title: Optional[str] = dataclasses.field(default=None)
+    language: Optional[str] = dataclasses.field(default=None)
+    text_style: Optional[TextStyle] = dataclasses.field(default=None)
+    text_scale_factor: Optional[OptionalNumber] = dataclasses.field(default=None)
+    text_align: Optional[TextAlign] = dataclasses.field(default=None)
+    padding: Optional[PaddingValue] = dataclasses.field(default=None)
+    visible: Optional[bool] = dataclasses.field(default=None)
 
 
 class Video(ConstrainedControl):
@@ -70,6 +85,7 @@ class Video(ConstrainedControl):
         resume_upon_entering_foreground_mode: Optional[bool] = None,
         aspect_ratio: OptionalNumber = None,
         pitch: OptionalNumber = None,
+        subtitle_configuration: Optional[object] = None,
         on_loaded=None,
         on_enter_fullscreen=None,
         on_exit_fullscreen=None,
@@ -134,6 +150,7 @@ class Video(ConstrainedControl):
         )
 
         self.__playlist = playlist
+        self.subtitle_configuration = subtitle_configuration
         self.fit = fit
         self.pitch = pitch
         self.fill_color = fill_color
@@ -162,6 +179,8 @@ class Video(ConstrainedControl):
         super()._before_build_command()
         self._set_attr_json("alignment", self.__alignment)
         self._set_attr_json("playlist", self.__playlist if self.__playlist else None)
+        if dataclasses.is_dataclass(self.__subtitle_configuration):
+            self._set_attr_json("subtitleConfiguration", self.__subtitle_configuration)
 
     def play(self):
         self.page.invoke_method("play", control_id=self.uid)
@@ -355,6 +374,15 @@ class Video(ConstrainedControl):
     def fit(self, value: Optional[ImageFit]):
         self.__fit = value
         self._set_attr("fit", value.value if isinstance(value, ImageFit) else value)
+
+    # subtitle_configuration
+    @property
+    def subtitle_configuration(self) -> Optional[VideoSubtitleConfiguration]:
+        return self.__subtitle_configuration
+
+    @subtitle_configuration.setter
+    def subtitle_configuration(self, value: Optional[VideoSubtitleConfiguration]):
+        self.__subtitle_configuration = value
 
     # fill_color
     @property
