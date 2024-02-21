@@ -95,11 +95,8 @@ class TextControl extends StatelessWidget with FletStoreMixin {
             Theme.of(context), control.attrString("bgcolor", "")!),
       );
 
-      TextAlign textAlign = TextAlign.values.firstWhere(
-          (a) =>
-              a.name.toLowerCase() ==
-              control.attrString("textAlign", "")!.toLowerCase(),
-          orElse: () => TextAlign.start);
+      TextAlign textAlign =
+          parseTextAlign(control.attrString("align", "")!, TextAlign.start)!;
 
       TextOverflow overflow = TextOverflow.values.firstWhere(
           (v) =>
