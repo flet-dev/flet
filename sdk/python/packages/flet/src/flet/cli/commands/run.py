@@ -251,8 +251,7 @@ class Handler(FileSystemEventHandler):
     def start_process(self):
         p_env = {**os.environ}
         if self.web or self.ios or self.android:
-            p_env["FLET_FORCE_WEB_VIEW"] = "true"
-            p_env["FLET_DETACH_FLETD"] = "true"
+            p_env["FLET_FORCE_WEB_SERVER"] = "true"
 
             # force page name for ios
             if self.ios or self.android:
@@ -266,7 +265,7 @@ class Handler(FileSystemEventHandler):
         if self.uds_path is not None:
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
         if self.assets_dir is not None:
-            p_env["FLET_ASSETS_PATH"] = self.assets_dir
+            p_env["FLET_ASSETS_DIR"] = self.assets_dir
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
 
         p_env["PYTHONIOENCODING"] = "utf-8"

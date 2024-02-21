@@ -10,6 +10,11 @@ from flet_runtime.utils.once import Once
 from flet_runtime.utils.patch_index import patch_index_html, patch_manifest_json
 
 
+def get_bool_env_var(name: str):
+    v = os.getenv(name)
+    return v.lower() in ["true", "1", "yes"] if v is not None else None
+
+
 def is_ios():
     return os.getenv("FLET_PLATFORM") == "ios"
 

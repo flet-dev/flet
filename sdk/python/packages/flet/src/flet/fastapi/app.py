@@ -1,3 +1,4 @@
+import os
 from typing import Awaitable, Callable, Optional, Union
 
 from fastapi import Request, WebSocket
@@ -49,6 +50,10 @@ def app(
     * `session_timeout_seconds` (int, optional)- session lifetime, in seconds, after user disconnected.
     * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime, in seconds, which is a maximum allowed time between starting OAuth flow and redirecting to OAuth callback URL.
     """
+
+    env_upload_dir = os.getenv("FLET_UPLOAD_DIR")
+    if env_upload_dir:
+        upload_dir = env_upload_dir
 
     fastapi_app = FastAPI()
 

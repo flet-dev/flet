@@ -11,6 +11,7 @@ from flet.fastapi.flet_app_manager import app_manager
 from flet_core.types import WebRenderer
 from flet_runtime.utils import (
     Once,
+    get_bool_env_var,
     get_package_web_dir,
     patch_index_html,
     patch_manifest_json,
@@ -61,6 +62,18 @@ class FletStaticFiles(StaticFiles):
         self.__route_url_strategy = route_url_strategy
         self.__websocket_endpoint_path = websocket_endpoint_path
         self.__once = Once()
+
+        env_web_renderer = os.getenv("FLET_WEB_RENDERER")
+        if env_web_renderer:
+            self.__web_renderer = WebRenderer(env_web_renderer)
+
+        env_use_color_emoji = get_bool_env_var("FLET_WEB_USE_COLOR_EMOJI")
+        if env_use_color_emoji is not None:
+            self.__use_color_emoji = env_use_color_emoji
+
+        env_route_url_strategy = os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
+        if env_route_url_strategy:
+            self.__route_url_strategy = env_route_url_strategy
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         await self.__once.do(self.__config, scope["root_path"])

@@ -20,6 +20,7 @@ from flet_core.utils import is_coroutine, random_string
 from flet_runtime.flet_socket_server import FletSocketServer
 from flet_runtime.utils import (
     get_arch,
+    get_bool_env_var,
     get_current_script_dir,
     get_free_tcp_port,
     get_package_bin_dir,
@@ -108,7 +109,8 @@ async def app_async(
     if isinstance(web_renderer, str):
         web_renderer = WebRenderer(web_renderer)
 
-    if os.environ.get("FLET_FORCE_WEB_VIEW"):
+    force_web_server = get_bool_env_var("FLET_FORCE_WEB_SERVER") or is_linux_server()
+    if force_web_server:
         view = AppView.WEB_BROWSER
 
     assets_dir = __get_assets_dir_path(assets_dir)
@@ -117,20 +119,23 @@ async def app_async(
     if env_port is not None and env_port:
         port = int(env_port)
 
+    if port == 0 and force_web_server:
+        port = 8000
+
     env_host = os.getenv("FLET_SERVER_IP")
     if env_host is not None and env_host:
         host = env_host
 
-    env_assets_dir = os.getenv("FLET_ASSETS_PATH")
+    env_assets_dir = os.getenv("FLET_ASSETS_DIR")
     if env_assets_dir:
         assets_dir = env_assets_dir
 
-    env_page_name = os.getenv("FLET_PAGE_NAME")
+    env_page_name = os.getenv("FLET_WEB_APP_PATH")
     page_name = env_page_name if not name and env_page_name else name
 
     is_socket_server = (
         is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
-    ) and not is_linux_server()
+    ) and not force_web_server
 
     url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
 
@@ -140,7 +145,7 @@ async def app_async(
         else:
             logger.info(f"App URL: {page_url}")
 
-        if view == AppView.WEB_BROWSER and url_prefix is None and not is_linux_server():
+        if view == AppView.WEB_BROWSER and url_prefix is None and not force_web_server:
             open_in_browser(page_url)
 
     terminate = asyncio.Event()
@@ -153,7 +158,9 @@ async def app_async(
     signal.signal(signal.SIGTERM, exit_gracefully)
 
     conn = (
-        await __start_socket_server(port=port, session_handler=target)
+        await __start_socket_server(
+            port=port, session_handler=target, blocking=is_embedded()
+        )
         if is_socket_server
         else await __start_web_server(
             session_handler=target,
@@ -165,7 +172,7 @@ async def app_async(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
-            blocking=(view == AppView.WEB_BROWSER or is_linux_server()),
+            blocking=(view == AppView.WEB_BROWSER or force_web_server),
             on_startup=on_app_startup,
         )
     )
@@ -179,7 +186,7 @@ async def app_async(
                 or view == AppView.FLET_APP_HIDDEN
                 or view == AppView.FLET_APP_WEB
             )
-            and not is_linux_server()
+            and not force_web_server
             and not is_embedded()
             and url_prefix is None
         ):
@@ -209,10 +216,7 @@ async def app_async(
         await conn.close()
 
 
-async def __start_socket_server(
-    port=0,
-    session_handler=None,
-):
+async def __start_socket_server(port=0, session_handler=None, blocking=False):
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
     pool = concurrent.futures.ThreadPoolExecutor()
@@ -255,7 +259,7 @@ async def __start_socket_server(
         uds_path,
         on_event=on_event,
         on_session_created=on_session_created,
-        blocking=is_embedded(),
+        blocking=blocking,
         pool=pool,
     )
     await conn.start()
