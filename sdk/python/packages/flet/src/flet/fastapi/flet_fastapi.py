@@ -61,7 +61,13 @@ class FastAPI(fastapi.FastAPI):
         @asynccontextmanager
         async def lifespan(app: fastapi.FastAPI):
             await flet.fastapi.app_manager.start()
+            if on_startup:
+                for h in on_startup:
+                    h()
             yield
+            if on_shutdown:
+                for h in on_shutdown:
+                    h()
             await flet.fastapi.app_manager.shutdown()
 
         super().__init__(
@@ -83,8 +89,8 @@ class FastAPI(fastapi.FastAPI):
             swagger_ui_init_oauth=swagger_ui_init_oauth,
             middleware=middleware,
             exception_handlers=exception_handlers,
-            on_startup=on_startup,
-            on_shutdown=on_shutdown,
+            # on_startup=on_startup,
+            # on_shutdown=on_shutdown,
             lifespan=lifespan,
             terms_of_service=terms_of_service,
             contact=contact,

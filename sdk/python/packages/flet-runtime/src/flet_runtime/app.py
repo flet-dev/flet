@@ -35,7 +35,6 @@ from flet_runtime.utils import (
 try:
     from flet.fastapi.start_fastapi_web_app import start_fastapi_web_app
 except Exception as e:
-    print("ERROR:", e)
 
     async def start_fastapi_web_app(
         session_handler,
@@ -48,6 +47,8 @@ except Exception as e:
         web_renderer: Optional[WebRenderer],
         use_color_emoji,
         route_url_strategy,
+        blocking,
+        on_startup,
         log_level,
     ):
         raise NotImplementedError()
@@ -107,9 +108,9 @@ async def app_async(
     if isinstance(web_renderer, str):
         web_renderer = WebRenderer(web_renderer)
 
-    force_web_view = os.environ.get("FLET_FORCE_WEB_VIEW")
-    if force_web_view:
+    if os.environ.get("FLET_FORCE_WEB_VIEW"):
         view = AppView.WEB_BROWSER
+
     assets_dir = __get_assets_dir_path(assets_dir)
 
     env_port = os.getenv("FLET_SERVER_PORT")
@@ -129,7 +130,27 @@ async def app_async(
 
     is_socket_server = (
         is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
-    )
+    ) and not is_linux_server()
+
+    url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
+
+    def on_app_startup(page_url):
+        if url_prefix is not None:
+            print(url_prefix, page_url)
+        else:
+            logger.info(f"App URL: {page_url}")
+
+        if view == AppView.WEB_BROWSER and url_prefix is None and not is_linux_server():
+            open_in_browser(page_url)
+
+    terminate = asyncio.Event()
+
+    def exit_gracefully(signum, frame):
+        logger.debug("Gracefully terminating Flet app...")
+        asyncio.get_event_loop().call_soon_threadsafe(terminate.set)
+
+    signal.signal(signal.SIGINT, exit_gracefully)
+    signal.signal(signal.SIGTERM, exit_gracefully)
 
     conn = (
         await __start_socket_server(port=port, session_handler=target)
@@ -144,27 +165,14 @@ async def app_async(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
+            blocking=(view == AppView.WEB_BROWSER or is_linux_server()),
+            on_startup=on_app_startup,
         )
     )
 
+    logger.info("Flet app has started...")
+
     try:
-        url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
-        if url_prefix is not None:
-            print(url_prefix, conn.page_url)
-        else:
-            logger.info(f"App URL: {conn.page_url}")
-
-        terminate = asyncio.Event()
-
-        def exit_gracefully(signum, frame):
-            logger.debug("Gracefully terminating Flet app...")
-            asyncio.get_event_loop().call_soon_threadsafe(terminate.set)
-
-        signal.signal(signal.SIGINT, exit_gracefully)
-        signal.signal(signal.SIGTERM, exit_gracefully)
-
-        logger.info("Connected to Flet app and handling user sessions...")
-
         if (
             (
                 view == AppView.FLET_APP
@@ -175,6 +183,8 @@ async def app_async(
             and not is_embedded()
             and url_prefix is None
         ):
+            on_app_startup(conn.page_url)
+
             fvp, pid_file = await open_flet_view_async(
                 conn.page_url,
                 assets_dir if view != AppView.FLET_APP_WEB else None,
@@ -187,14 +197,14 @@ async def app_async(
 
             close_flet_view(pid_file)
 
-        elif not is_embedded():
-            if view == AppView.WEB_BROWSER and url_prefix is None:
-                open_in_browser(conn.page_url)
+        elif url_prefix and is_socket_server:
+            on_app_startup(conn.page_url)
 
             try:
                 await terminate.wait()
             except KeyboardInterrupt:
                 pass
+
     finally:
         await conn.close()
 
@@ -262,6 +272,8 @@ async def __start_web_server(
     web_renderer: Optional[WebRenderer],
     use_color_emoji,
     route_url_strategy,
+    blocking,
+    on_startup,
 ):
     url_host = "127.0.0.1" if host in [None, "", "*"] else host
 
@@ -300,6 +312,8 @@ async def __start_web_server(
         web_renderer=web_renderer,
         use_color_emoji=use_color_emoji,
         route_url_strategy=route_url_strategy,
+        blocking=blocking,
+        on_startup=on_startup,
         log_level=logging.getLevelName(log_level).lower(),
     )
 
@@ -315,7 +329,6 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
         page_url, assets_dir, hidden
     )
-    logger.info(f"AAAAAAAAAAAAAA: {args}, {pid_file}")
     return (
         await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env),
         pid_file,
