@@ -319,6 +319,26 @@ class Video(ConstrainedControl):
         )
         return int(sr) if sr else None
 
+    def get_current_position(self, wait_timeout: Optional[float] = 5) -> Optional[int]:
+        sr = self.page.invoke_method(
+            "get_current_position",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return int(sr) if sr else None
+
+    async def get_current_position_async(
+            self, wait_timeout: Optional[float] = 5
+    ) -> Optional[int]:
+        sr = await self.page.invoke_method_async(
+            "get_current_position",
+            control_id=self.uid,
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return int(sr) if sr else None
+
     # playlist
     @property
     def playlist(self) -> Optional[List[VideoMedia]]:

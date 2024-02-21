@@ -199,6 +199,8 @@ class _VideoControlState extends State<VideoControl> {
             return player.state.completed.toString();
           case "get_duration":
             return player.state.duration.inMilliseconds.toString();
+          case "get_current_position":
+            return player.state.position.inMilliseconds.toString();
         }
         return null;
       });
