@@ -255,13 +255,13 @@ class Handler(FileSystemEventHandler):
 
             # force page name for ios
             if self.ios or self.android:
-                p_env["FLET_PAGE_NAME"] = "/".join(Path(self.script_path).parts[-2:])
+                p_env["FLET_WEB_APP_PATH"] = "/".join(Path(self.script_path).parts[-2:])
         if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
         if self.host is not None:
             p_env["FLET_SERVER_IP"] = str(self.host)
         if self.page_name:
-            p_env["FLET_PAGE_NAME"] = self.page_name
+            p_env["FLET_WEB_APP_PATH"] = self.page_name
         if self.uds_path is not None:
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
         if self.assets_dir is not None:
