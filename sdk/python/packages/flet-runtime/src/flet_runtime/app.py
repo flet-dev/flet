@@ -57,14 +57,11 @@ def app(
     if export_asgi_app:
         from flet.fastapi.serve_fastapi_web_app import get_fastapi_web_app
 
-        if assets_dir and not Path(assets_dir).is_absolute():
-            assets_dir = None
-
         return get_fastapi_web_app(
             session_handler=target,
             page_name=__get_page_name(name),
-            assets_dir=__get_assets_dir_path(assets_dir),
-            upload_dir=__get_upload_dir_path(upload_dir),
+            assets_dir=__get_assets_dir_path(assets_dir, relative_to_cwd=True),
+            upload_dir=__get_upload_dir_path(upload_dir, relative_to_cwd=True),
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
@@ -334,7 +331,7 @@ def __get_page_name(name: str):
     return env_page_name if not name and env_page_name else name
 
 
-def __get_assets_dir_path(assets_dir: Optional[str]):
+def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
     if assets_dir:
         if not Path(assets_dir).is_absolute():
             if "_MEI" in __file__:
@@ -344,7 +341,9 @@ def __get_assets_dir_path(assets_dir: Optional[str]):
                 )
             else:
                 assets_dir = str(
-                    Path(get_current_script_dir()).joinpath(assets_dir).resolve()
+                    Path(os.getcwd() if relative_to_cwd else get_current_script_dir())
+                    .joinpath(assets_dir)
+                    .resolve()
                 )
         logger.info(f"Assets path configured: {assets_dir}")
 
@@ -354,11 +353,13 @@ def __get_assets_dir_path(assets_dir: Optional[str]):
     return assets_dir
 
 
-def __get_upload_dir_path(upload_dir: Optional[str]):
+def __get_upload_dir_path(upload_dir: Optional[str], relative_to_cwd=False):
     if upload_dir:
         if not Path(upload_dir).is_absolute():
             upload_dir = str(
-                Path(get_current_script_dir()).joinpath(upload_dir).resolve()
+                Path(os.getcwd() if relative_to_cwd else get_current_script_dir())
+                .joinpath(upload_dir)
+                .resolve()
             )
     return upload_dir
 
