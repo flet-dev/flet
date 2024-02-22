@@ -34,28 +34,6 @@ from flet_runtime.utils import (
 )
 
 try:
-    from flet.fastapi.start_fastapi_web_app import start_fastapi_web_app
-except Exception as e:
-
-    async def start_fastapi_web_app(
-        session_handler,
-        host,
-        url_host,
-        port,
-        page_name: str,
-        assets_dir,
-        upload_dir,
-        web_renderer: Optional[WebRenderer],
-        use_color_emoji,
-        route_url_strategy,
-        blocking,
-        on_startup,
-        log_level,
-    ):
-        raise NotImplementedError()
-
-
-try:
     from flet import version
 except ImportError:
     from flet_runtime import version
@@ -74,8 +52,25 @@ def app(
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
     route_url_strategy="path",
+    export_asgi_app=False,
 ):
-    asyncio.get_event_loop().run_until_complete(
+    if export_asgi_app:
+        from flet.fastapi.serve_fastapi_web_app import get_fastapi_web_app
+
+        if assets_dir and not Path(assets_dir).is_absolute():
+            assets_dir = None
+
+        return get_fastapi_web_app(
+            session_handler=target,
+            page_name=__get_page_name(name),
+            assets_dir=__get_assets_dir_path(assets_dir),
+            upload_dir=__get_upload_dir_path(upload_dir),
+            web_renderer=web_renderer,
+            use_color_emoji=use_color_emoji,
+            route_url_strategy=route_url_strategy,
+        )
+
+    return asyncio.get_event_loop().run_until_complete(
         app_async(
             target=target,
             name=name,
@@ -113,8 +108,6 @@ async def app_async(
     if force_web_server:
         view = AppView.WEB_BROWSER
 
-    assets_dir = __get_assets_dir_path(assets_dir)
-
     env_port = os.getenv("FLET_SERVER_PORT")
     if env_port is not None and env_port:
         port = int(env_port)
@@ -126,12 +119,9 @@ async def app_async(
     if env_host is not None and env_host:
         host = env_host
 
-    env_assets_dir = os.getenv("FLET_ASSETS_DIR")
-    if env_assets_dir:
-        assets_dir = env_assets_dir
-
-    env_page_name = os.getenv("FLET_WEB_APP_PATH")
-    page_name = env_page_name if not name and env_page_name else name
+    assets_dir = __get_assets_dir_path(assets_dir)
+    upload_dir = __get_upload_dir_path(upload_dir)
+    page_name = __get_page_name(name)
 
     is_socket_server = (
         is_embedded() or view == AppView.FLET_APP or view == AppView.FLET_APP_HIDDEN
@@ -158,11 +148,11 @@ async def app_async(
     signal.signal(signal.SIGTERM, exit_gracefully)
 
     conn = (
-        await __start_socket_server(
+        await __run_socket_server(
             port=port, session_handler=target, blocking=is_embedded()
         )
         if is_socket_server
-        else await __start_web_server(
+        else await __run_web_server(
             session_handler=target,
             host=host,
             port=port,
@@ -216,7 +206,7 @@ async def app_async(
         await conn.close()
 
 
-async def __start_socket_server(port=0, session_handler=None, blocking=False):
+async def __run_socket_server(port=0, session_handler=None, blocking=False):
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
     pool = concurrent.futures.ThreadPoolExecutor()
@@ -266,7 +256,7 @@ async def __start_socket_server(port=0, session_handler=None, blocking=False):
     return conn
 
 
-async def __start_web_server(
+async def __run_web_server(
     session_handler,
     host,
     port,
@@ -279,6 +269,8 @@ async def __start_web_server(
     blocking,
     on_startup,
 ):
+    from flet.fastapi.serve_fastapi_web_app import serve_fastapi_web_app
+
     url_host = "127.0.0.1" if host in [None, "", "*"] else host
 
     if port == 0:
@@ -286,26 +278,11 @@ async def __start_web_server(
 
     logger.info(f"Starting Flet web server on port {port}...")
 
-    if upload_dir:
-        if not Path(upload_dir).is_absolute():
-            upload_dir = str(
-                Path(get_current_script_dir()).joinpath(upload_dir).resolve()
-            )
-        logger.info(f"Upload path configured: {upload_dir}")
-
-    if web_renderer and web_renderer not in [WebRenderer.AUTO]:
-        logger.info(f"Web renderer configured: {web_renderer.value}")
-
-    logger.info(f"Use color emoji: {use_color_emoji}")
-
-    if route_url_strategy is not None:
-        logger.info(f"Route URL strategy configured: {route_url_strategy}")
-
     log_level = logging.getLogger(flet_runtime.__name__).getEffectiveLevel()
     if log_level == logging.CRITICAL or log_level == logging.NOTSET:
         log_level = logging.FATAL
 
-    return await start_fastapi_web_app(
+    return await serve_fastapi_web_app(
         session_handler,
         host=host,
         url_host=url_host,
@@ -352,6 +329,11 @@ def close_flet_view(pid_file):
             os.remove(pid_file)
 
 
+def __get_page_name(name: str):
+    env_page_name = os.getenv("FLET_WEB_APP_PATH")
+    return env_page_name if not name and env_page_name else name
+
+
 def __get_assets_dir_path(assets_dir: Optional[str]):
     if assets_dir:
         if not Path(assets_dir).is_absolute():
@@ -365,7 +347,20 @@ def __get_assets_dir_path(assets_dir: Optional[str]):
                     Path(get_current_script_dir()).joinpath(assets_dir).resolve()
                 )
         logger.info(f"Assets path configured: {assets_dir}")
+
+    env_assets_dir = os.getenv("FLET_ASSETS_DIR")
+    if env_assets_dir:
+        assets_dir = env_assets_dir
     return assets_dir
+
+
+def __get_upload_dir_path(upload_dir: Optional[str]):
+    if upload_dir:
+        if not Path(upload_dir).is_absolute():
+            upload_dir = str(
+                Path(get_current_script_dir()).joinpath(upload_dir).resolve()
+            )
+    return upload_dir
 
 
 def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):

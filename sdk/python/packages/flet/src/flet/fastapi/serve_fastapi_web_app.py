@@ -20,7 +20,33 @@ class WebServerHandle:
         await self.server.shutdown()
 
 
-async def start_fastapi_web_app(
+def get_fastapi_web_app(
+    session_handler,
+    page_name: str,
+    assets_dir,
+    upload_dir,
+    web_renderer: Optional[WebRenderer],
+    use_color_emoji,
+    route_url_strategy,
+):
+    web_path = f"/{page_name.strip('/')}"
+    app = flet.fastapi.FastAPI()
+    app.mount(
+        web_path,
+        flet.fastapi.app(
+            session_handler,
+            upload_dir=upload_dir,
+            assets_dir=assets_dir,
+            web_renderer=web_renderer if web_renderer else WebRenderer.AUTO,
+            use_color_emoji=use_color_emoji,
+            route_url_strategy=route_url_strategy,
+        ),
+    )
+
+    return app
+
+
+async def serve_fastapi_web_app(
     session_handler,
     host,
     url_host,

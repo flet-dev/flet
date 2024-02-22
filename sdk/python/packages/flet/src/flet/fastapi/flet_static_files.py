@@ -75,6 +75,10 @@ class FletStaticFiles(StaticFiles):
         if env_route_url_strategy:
             self.__route_url_strategy = env_route_url_strategy
 
+        logger.info(f"Web renderer configured: {self.__web_renderer}")
+        logger.info(f"Use color emoji: {self.__use_color_emoji}")
+        logger.info(f"Route URL strategy configured: {self.__route_url_strategy}")
+
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         await self.__once.do(self.__config, scope["root_path"])
         await super().__call__(scope, receive, send)

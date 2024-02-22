@@ -1,10 +1,14 @@
+import logging
 import os
 from datetime import datetime
 from typing import Optional
 
+import flet.fastapi as flet_fastapi
 from anyio import open_file
 from fastapi import Request
 from flet_runtime.uploads import build_upload_query_string, get_upload_signature
+
+logger = logging.getLogger(flet_fastapi.__name__)
 
 
 class FletUpload:
@@ -36,6 +40,8 @@ class FletUpload:
         env_upload_secret_key = os.getenv("FLET_UPLOAD_SECRET_KEY")
         if env_upload_secret_key:
             self.__secret_key = env_upload_secret_key
+
+        logger.info(f"Upload path configured: {self.__upload_dir}")
 
     """
     Handle file upload.
