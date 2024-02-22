@@ -31,6 +31,7 @@ class CupertinoButton(ConstrainedControl):
         icon_color: Optional[str] = None,
         content: Optional[Control] = None,
         bgcolor: Optional[str] = None,
+        color: Optional[str] = None,
         disabled_color: Optional[str] = None,
         filled: Optional[bool] = None,
         opacity_on_click: OptionalNumber = None,
@@ -108,6 +109,7 @@ class CupertinoButton(ConstrainedControl):
         self.icon = icon
         self.icon_color = icon_color
         self.bgcolor = bgcolor
+        self.color = color
         self.border_radius = border_radius
         self.min_size = min_size
         self.filled = filled
@@ -234,6 +236,15 @@ class CupertinoButton(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
+
+    # color
+    @property
+    def color(self) -> Optional[str]:
+        return self._get_attr("color")
+
+    @color.setter
+    def color(self, value: Optional[str]):
+        self._set_attr("color", value)
 
     # url
     @property

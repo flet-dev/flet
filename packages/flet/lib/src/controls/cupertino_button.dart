@@ -97,6 +97,8 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         CupertinoColors.quaternarySystemFill;
     Color? bgColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("bgColor", "")!);
+    Color? color = HexColor.fromString(
+        Theme.of(context), widget.control.attrString("color", "")!);
     AlignmentGeometry alignment =
         parseAlignment(widget.control, "alignment") ?? Alignment.center;
     BorderRadius borderRadius =
