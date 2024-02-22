@@ -30,6 +30,7 @@ def app(
     secret_key: Optional[str] = None,
     session_timeout_seconds: int = DEFAULT_FLET_SESSION_TIMEOUT,
     oauth_state_timeout_seconds: int = DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
+    opt_in_blocking=False,
 ):
     """
     Mount all Flet FastAPI handlers in one call.
@@ -49,6 +50,7 @@ def app(
     * `secret_key` (str, optional) - secret key to sign and verify upload requests.
     * `session_timeout_seconds` (int, optional)- session lifetime, in seconds, after user disconnected.
     * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime, in seconds, which is a maximum allowed time between starting OAuth flow and redirecting to OAuth callback URL.
+    * `opt_in_blocking` (bool, optional)
     """
 
     env_upload_dir = os.getenv("FLET_UPLOAD_DIR")
@@ -64,6 +66,7 @@ def app(
             session_timeout_seconds=session_timeout_seconds,
             oauth_state_timeout_seconds=oauth_state_timeout_seconds,
             secret_key=secret_key,
+            opt_in_blocking=opt_in_blocking,
         ).handle(websocket)
 
     if upload_dir:

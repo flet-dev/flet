@@ -104,7 +104,11 @@ class Page(AdaptiveControl):
     """
 
     def __init__(
-        self, conn: Connection, session_id, pool: Optional[ThreadPoolExecutor] = None
+        self,
+        conn: Connection,
+        session_id,
+        pool: Optional[ThreadPoolExecutor] = None,
+        opt_in_blocking=False,
     ):
         Control.__init__(self)
 
@@ -117,6 +121,7 @@ class Page(AdaptiveControl):
         self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
         self.__pool = pool
+        self.__opt_in_blocking = opt_in_blocking
         self._index = {self._Control__uid: self}  # index with all page controls
 
         self.__lock = threading.Lock() if not is_asyncio() else NopeLock()
@@ -537,9 +542,18 @@ class Page(AdaptiveControl):
                 if is_coroutine(handler):
                     await handler(ce)
                 else:
-                    await asyncio.get_running_loop().run_in_executor(
-                        self.__pool, handler, ce
-                    )
+                    if isinstance(handler, flet_core.blocking):
+                        # run in thread pool
+                        handler.pool = self.__pool
+                        await handler(ce)
+                    elif self.__opt_in_blocking == True:
+                        # run as blocking
+                        handler(ce)
+                    else:
+                        # run in thread pool by default
+                        await asyncio.get_running_loop().run_in_executor(
+                            self.__pool, handler, ce
+                        )
 
     def __on_page_change_event(self, data):
         for props in json.loads(data):
