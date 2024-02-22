@@ -112,6 +112,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         shape: Optional[BoxShape] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
+        ink_color: Optional[str] = None,
         animate: AnimationValue = None,
         blur: Union[
             None, float, int, Tuple[Union[float, int], Union[float, int]], Blur
@@ -190,6 +191,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.shape = shape
         self.clip_behavior = clip_behavior
         self.ink = ink
+        self.ink_color = ink_color
         self.animate = animate
         self.blur = blur
         self.shadow = shadow
@@ -433,6 +435,15 @@ class Container(ConstrainedControl, AdaptiveControl):
     @ink.setter
     def ink(self, value: Optional[bool]):
         self._set_attr("ink", value)
+
+    # ink color
+    @property
+    def ink_color(self):
+        return self._get_attr("inkColor")
+
+    @ink_color.setter
+    def ink_color(self, value):
+        self._set_attr("inkColor", value)
 
     # animate
     @property

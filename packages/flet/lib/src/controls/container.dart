@@ -194,6 +194,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                     }
                   : null,
               borderRadius: borderRadius,
+              splashColor: HexColor.fromString(
+                  Theme.of(context), control.attrString("inkColor", "")!),
               child: Container(
                 padding: parseEdgeInsets(control, "padding"),
                 alignment: parseAlignment(control, "alignment"),
