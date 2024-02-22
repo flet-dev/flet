@@ -137,7 +137,7 @@ gunicorn -k uvicorn.workers.UvicornWorker counter:app
 
 ### Environment variables
 
-`FLET_UPLOAD_SECRET_KEY` - secret key to sign upload requests. Must be set if upload directory is configured.
+`FLET_SECRET_KEY` - secret key to sign upload requests. Must be set if upload directory is configured.
 
 `FLET_SESSION_TIMEOUT` - the number of seconds to keep session alive after user has disconnected. Default is 3,600 seconds.
 

@@ -37,7 +37,7 @@ class FletUpload:
 
         self.__secret_key = secret_key
 
-        env_upload_secret_key = os.getenv("FLET_UPLOAD_SECRET_KEY")
+        env_upload_secret_key = os.getenv("FLET_SECRET_KEY")
         if env_upload_secret_key:
             self.__secret_key = env_upload_secret_key
 
