@@ -130,17 +130,18 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
           ?.resolve(selected ? {MaterialState.selected} : {});
     }
 
-    if (style != null) {
-      var color = style.foregroundColor
+    if (color == null && style != null) {
+      color = style.foregroundColor
           ?.resolve(selected ? {MaterialState.selected} : {});
-      if (color != null) {
-        content = DefaultTextStyle(
-            style: CupertinoTheme.of(context)
-                .textTheme
-                .textStyle
-                .copyWith(color: color),
-            child: content);
-      }
+    }
+
+    if (color != null) {
+      content = DefaultTextStyle(
+          style: CupertinoTheme.of(context)
+              .textTheme
+              .textStyle
+              .copyWith(color: color),
+          child: content);
     }
 
     Function()? onPressed = !disabled
