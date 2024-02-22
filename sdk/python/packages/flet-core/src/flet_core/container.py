@@ -121,6 +121,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         url_target: Optional[str] = None,
         theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
+        on_release=None,
         on_click=None,
         on_long_press=None,
         on_hover=None,
@@ -167,6 +168,8 @@ class Container(ConstrainedControl, AdaptiveControl):
             d = json.loads(e.data)
             return ContainerTapEvent(**d)
 
+        self.__on_release = EventHandler(convert_container_tap_event_data)
+        self._add_event_handler("tap", self.__on_release.get_handler())
         self.__on_click = EventHandler(convert_container_tap_event_data)
         self._add_event_handler("click", self.__on_click.get_handler())
 
@@ -194,6 +197,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.url_target = url_target
         self.theme = theme
         self.theme_mode = theme_mode
+        self.on_release = on_release
         self.on_click = on_click
         self.on_long_press = on_long_press
         self.on_hover = on_hover
@@ -475,6 +479,16 @@ class Container(ConstrainedControl, AdaptiveControl):
     def theme_mode(self, value: Optional[ThemeMode]):
         self.__theme_mode = value
         self._set_attr("themeMode", value.value if value is not None else None)
+
+    # on_release
+    @property
+    def on_release(self):
+        return self._get_event_handler("tap")
+
+    @on_release.setter
+    def on_release(self, handler):
+        self._add_event_handler("tap", handler)
+        self._set_attr("onTap", True if handler is not None else None)
 
     # on_click
     @property

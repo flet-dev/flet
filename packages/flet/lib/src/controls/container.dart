@@ -66,6 +66,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
         children.where((c) => c.name == "content" && c.isVisible);
     bool ink = control.attrBool("ink", false)!;
     bool onClick = control.attrBool("onclick", false)!;
+    bool onTap = control.attrBool("ontap", false)!;
     String url = control.attrString("url", "")!;
     String? urlTarget = control.attrString("urlTarget");
     bool onLongPress = control.attrBool("onLongPress", false)!;
@@ -145,7 +146,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
       Widget? result;
 
-      if ((onClick || url != "" || onLongPress || onHover) &&
+      if ((onTap || onClick || url != "" || onLongPress || onHover) &&
           ink &&
           !disabled) {
         var ink = Ink(
@@ -154,7 +155,12 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               // Dummy callback to enable widget
               // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
               // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
-              onTap: onHover ? () {} : null,
+              onTap: onTap
+                  ? () {
+                      debugPrint("Container ${control.id} Tap!");
+                      backend.triggerControlEvent(control.id, "tap", "");
+                    }
+                  : null,
               onTapDown: onClick || url != ""
                   ? (details) {
                       debugPrint("Container ${control.id} clicked!");
@@ -247,9 +253,10 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                     : null,
                 child: child);
 
-        if ((onClick || onLongPress || onHover || url != "") && !disabled) {
+        if ((onTap || onClick || onLongPress || onHover || url != "") &&
+            !disabled) {
           result = MouseRegion(
-            cursor: onClick || url != ""
+            cursor: onTap || onClick || url != ""
                 ? SystemMouseCursors.click
                 : MouseCursor.defer,
             onEnter: onHover
@@ -267,6 +274,12 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                   }
                 : null,
             child: GestureDetector(
+              onTap: onTap
+                  ? () {
+                      debugPrint("Container ${control.id} onTap!");
+                      backend.triggerControlEvent(control.id, "ontap", "");
+                    }
+                  : null,
               onTapDown: onClick || url != ""
                   ? (details) {
                       debugPrint("Container ${control.id} clicked!");
