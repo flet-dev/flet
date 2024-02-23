@@ -86,8 +86,8 @@ class CupertinoTextField(TextField):
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
-        label: Optional[str] = None,
-        label_style: Optional[TextStyle] = None,
+        # label: Optional[str] = None,
+        # label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
@@ -171,8 +171,8 @@ class CupertinoTextField(TextField):
             #
             text_size=text_size,
             text_style=text_style,
-            label=label,
-            label_style=label_style,
+            # label=label,
+            # label_style=label_style,
             icon=icon,
             border=border,
             color=color,
@@ -262,7 +262,7 @@ class CupertinoTextField(TextField):
     # placeholder_style
     @property
     def placeholder_style(self):
-        return self.__hint_style
+        return self.__placeholder_style
 
     @placeholder_style.setter
     def placeholder_style(self, value: Optional[TextStyle]):
