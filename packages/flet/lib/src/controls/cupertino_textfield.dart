@@ -201,13 +201,15 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     var borderRadius = parseBorderRadius(widget.control, "borderRadius");
     var bgColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("bgColor", "")!);
+    var placeholder = widget.control.attrString("placeholderText") ??
+        widget.control.attrString("label");
 
     Widget textField = CupertinoTextField(
         style: textStyle,
         textAlignVertical: textVerticalAlign != null
             ? TextAlignVertical(y: textVerticalAlign)
             : null,
-        placeholder: widget.control.attrString("placeholderText"),
+        placeholder: placeholder,
         placeholderStyle: parseTextStyle(
             Theme.of(context), widget.control, "placeholderStyle"),
         autofocus: autofocus,
