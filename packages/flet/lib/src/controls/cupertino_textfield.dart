@@ -192,13 +192,38 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       focusNode.requestFocus();
     }
 
+    BorderRadius? borderRadius =
+        parseBorderRadius(widget.control, "borderRadius");
+
+    BoxBorder? border;
+    double? borderWidth = widget.control.attrDouble("borderWidth");
+
+    try {
+      border = parseBorder(Theme.of(context), widget.control, "border");
+      // adaptive TextField is being created
+    } catch (e) {
+      FormFieldInputBorder inputBorder = FormFieldInputBorder.values.firstWhere(
+        ((b) =>
+            b.name == widget.control.attrString("border", "")!.toLowerCase()),
+        orElse: () => FormFieldInputBorder.outline,
+      );
+      if (inputBorder == FormFieldInputBorder.outline) {
+        border =
+            Border.all(color: Colors.blueAccent, width: borderWidth ?? 1.0);
+      } else if (inputBorder == FormFieldInputBorder.underline) {
+        border = Border(
+            bottom: BorderSide(
+                color: Colors.blueAccent, width: borderWidth ?? 1.0));
+        borderRadius = BorderRadius.zero;
+      }
+    }
+
     BoxDecoration? defaultDecoration = const CupertinoTextField().decoration;
     var gradient = parseGradient(Theme.of(context), widget.control, "gradient");
     var blendMode = BlendMode.values.firstWhereOrNull((e) =>
         e.name.toLowerCase() ==
         widget.control.attrString("blendMode", "")!.toLowerCase());
 
-    var borderRadius = parseBorderRadius(widget.control, "borderRadius");
     var bgColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("bgColor", "")!);
     var placeholder = widget.control.attrString("placeholderText") ??
@@ -225,7 +250,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             gradient: gradient,
             backgroundBlendMode:
                 bgColor != null || gradient != null ? blendMode : null,
-            border: parseBorder(Theme.of(context), widget.control, "border"),
+            border: border,
             borderRadius: borderRadius,
             boxShadow:
                 parseBoxShadow(Theme.of(context), widget.control, "shadow")),

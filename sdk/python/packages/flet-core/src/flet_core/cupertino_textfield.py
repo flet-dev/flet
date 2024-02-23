@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet_core.border import Border
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import InputBorder
 from flet_core.gradients import Gradient
@@ -89,7 +90,8 @@ class CupertinoTextField(TextField):
         # label: Optional[str] = None,
         # label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
-        border: Optional[InputBorder] = None,
+        border: Optional[Border] = None,
+        # border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         border_radius: BorderRadiusValue = None,
@@ -174,7 +176,7 @@ class CupertinoTextField(TextField):
             # label=label,
             # label_style=label_style,
             icon=icon,
-            border=border,
+            # border=border,
             color=color,
             bgcolor=bgcolor,
             border_radius=border_radius,
@@ -240,6 +242,7 @@ class CupertinoTextField(TextField):
         self.shadow = shadow
         self.suffix_visibility_mode = suffix_visibility_mode
         self.prefix_visibility_mode = prefix_visibility_mode
+        self.border = border
 
     def _get_control_name(self):
         return "cupertinotextfield"
@@ -249,6 +252,7 @@ class CupertinoTextField(TextField):
         self._set_attr_json("gradient", self.__gradient)
         self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
         self._set_attr_json("placeholderStyle", self.__placeholder_style)
+        self._set_attr_json("border", self.__border)
 
     # placeholder_text
     @property
@@ -323,3 +327,12 @@ class CupertinoTextField(TextField):
             "prefixVisibilityMode",
             value.value if isinstance(value, VisibilityMode) else value,
         )
+
+    # border
+    @property
+    def border(self) -> Optional[Border]:
+        return self.__border
+
+    @border.setter
+    def border(self, value: Optional[Border]):
+        self.__border = value
