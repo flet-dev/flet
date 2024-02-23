@@ -153,12 +153,3 @@ class PlotlyChart(Container):
     @figure.setter
     def figure(self, value):
         self.__figure = value
-
-    # maintain_aspect_ratio
-    @property
-    def maintain_aspect_ratio(self) -> bool:
-        return self.__maintain_aspect_ratio
-
-    @maintain_aspect_ratio.setter
-    def maintain_aspect_ratio(self, value: bool):
-        self.__maintain_aspect_ratio = value
