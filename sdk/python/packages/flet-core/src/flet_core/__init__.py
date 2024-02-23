@@ -249,7 +249,6 @@ from flet_core.types import (
     VerticalAlignment,
 )
 from flet_core.user_control import UserControl
-from flet_core.utils.blocking_decorator import blocking
 from flet_core.vertical_divider import VerticalDivider
 from flet_core.video import FilterQuality, PlaylistMode, Video, VideoMedia
 from flet_core.view import View

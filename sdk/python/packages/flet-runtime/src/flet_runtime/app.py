@@ -17,7 +17,6 @@ from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.types import AppView, WebRenderer
 from flet_core.utils import is_coroutine, random_string
-from flet_core.utils.blocking_decorator import blocking
 from flet_runtime.flet_socket_server import FletSocketServer
 from flet_runtime.utils import (
     get_arch,
@@ -53,7 +52,6 @@ def app(
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
     route_url_strategy="path",
-    opt_in_blocking=False,
     export_asgi_app=False,
 ):
     if export_asgi_app:
@@ -67,7 +65,6 @@ def app(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
-            opt_in_blocking=opt_in_blocking,
         )
 
     return asyncio.get_event_loop().run_until_complete(
@@ -82,7 +79,6 @@ def app(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
-            opt_in_blocking=opt_in_blocking,
         )
     )
 
@@ -98,7 +94,6 @@ async def app_async(
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
     route_url_strategy="path",
-    opt_in_blocking=False,
 ):
     if isinstance(view, str):
         view = AppView(view)
@@ -154,7 +149,6 @@ async def app_async(
             port=port,
             session_handler=target,
             blocking=is_embedded(),
-            opt_in_blocking=opt_in_blocking,
         )
         if is_socket_server
         else await __run_web_server(
@@ -167,7 +161,6 @@ async def app_async(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
-            opt_in_blocking=opt_in_blocking,
             blocking=(view == AppView.WEB_BROWSER or force_web_server),
             on_startup=on_app_startup,
         )
@@ -212,9 +205,7 @@ async def app_async(
         await conn.close()
 
 
-async def __run_socket_server(
-    port=0, session_handler=None, blocking=False, opt_in_blocking=False
-):
+async def __run_socket_server(port=0, session_handler=None, blocking=False):
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
     pool = concurrent.futures.ThreadPoolExecutor()
@@ -235,7 +226,7 @@ async def __run_socket_server(
             conn,
             session_data.sessionID,
             pool=pool,
-            opt_in_blocking=opt_in_blocking,
+            loop=asyncio.get_running_loop(),
         )
         await page.fetch_page_details_async()
         conn.sessions[session_data.sessionID] = page
@@ -245,18 +236,10 @@ async def __run_socket_server(
             if is_coroutine(session_handler):
                 await session_handler(page)
             else:
-                if isinstance(session_handler, flet_runtime.blocking):
-                    # run in thread pool
-                    session_handler.pool = pool
-                    await session_handler(page)
-                elif opt_in_blocking == True:
-                    # run as blocking
-                    session_handler(page)
-                else:
-                    # run in thread pool by default
-                    await asyncio.get_running_loop().run_in_executor(
-                        pool, session_handler, page
-                    )
+                # run in thread pool
+                await asyncio.get_running_loop().run_in_executor(
+                    pool, session_handler, page
+                )
 
         except Exception as e:
             print(
@@ -289,7 +272,6 @@ async def __run_web_server(
     web_renderer: Optional[WebRenderer],
     use_color_emoji,
     route_url_strategy,
-    opt_in_blocking,
     blocking,
     on_startup,
 ):
@@ -317,7 +299,6 @@ async def __run_web_server(
         web_renderer=web_renderer,
         use_color_emoji=use_color_emoji,
         route_url_strategy=route_url_strategy,
-        opt_in_blocking=opt_in_blocking,
         blocking=blocking,
         on_startup=on_startup,
         log_level=logging.getLevelName(log_level).lower(),

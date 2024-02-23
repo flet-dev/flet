@@ -3,6 +3,7 @@ import logging
 import shutil
 import threading
 import traceback
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from typing import Optional
 
@@ -26,6 +27,12 @@ class FletAppManager:
         self.__states: dict[str, OAuthState] = {}
         self.__evict_oauth_states_task = None
         self.__temp_dirs = {}
+        self.__pool = ThreadPoolExecutor(thread_name_prefix="flet_fastapi")
+
+    @property
+    def pool(self):
+        # return self.__pool
+        return None
 
     async def start(self):
         """

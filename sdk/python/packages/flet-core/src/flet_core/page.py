@@ -107,8 +107,8 @@ class Page(AdaptiveControl):
         self,
         conn: Connection,
         session_id,
+        loop: asyncio.AbstractEventLoop,
         pool: Optional[ThreadPoolExecutor] = None,
-        opt_in_blocking=False,
     ):
         Control.__init__(self)
 
@@ -120,8 +120,8 @@ class Page(AdaptiveControl):
         self.__expires_at = None
         self.__query = QueryString(page=self)  # Querystring
         self._session_id = session_id
+        self.__loop = loop
         self.__pool = pool
-        self.__opt_in_blocking = opt_in_blocking
         self._index = {self._Control__uid: self}  # index with all page controls
 
         self.__lock = threading.Lock() if not is_asyncio() else NopeLock()
@@ -241,59 +241,33 @@ class Page(AdaptiveControl):
         self.__next_control_id += 1
         return r
 
-    def fetch_page_details(self):
-        assert self.__conn.page_name is not None
-        values = self.__conn.send_commands(
-            self._session_id,
-            self.__get_page_detail_commands(),
-        ).results
-        self.__set_page_details(values)
-
     async def fetch_page_details_async(self):
-        assert self.__conn.page_name is not None
+        assert self.__conn
+        props = [
+            "route",
+            "pwa",
+            "web",
+            "debug",
+            "platform",
+            "platformBrightness",
+            "media",
+            "width",
+            "height",
+            "windowWidth",
+            "windowHeight",
+            "windowTop",
+            "windowLeft",
+            "clientIP",
+            "clientUserAgent",
+        ]
         values = (
             await self.__conn.send_commands_async(
                 self._session_id,
-                self.__get_page_detail_commands(),
+                [Command(0, "get", ["page", prop]) for prop in props],
             )
         ).results
-        self.__set_page_details(values)
-
-    def __get_page_detail_commands(self):
-        return [
-            Command(0, "get", ["page", "route"]),
-            Command(0, "get", ["page", "pwa"]),
-            Command(0, "get", ["page", "web"]),
-            Command(0, "get", ["page", "debug"]),
-            Command(0, "get", ["page", "platform"]),
-            Command(0, "get", ["page", "platformBrightness"]),
-            Command(0, "get", ["page", "media"]),
-            Command(0, "get", ["page", "width"]),
-            Command(0, "get", ["page", "height"]),
-            Command(0, "get", ["page", "windowWidth"]),
-            Command(0, "get", ["page", "windowHeight"]),
-            Command(0, "get", ["page", "windowTop"]),
-            Command(0, "get", ["page", "windowLeft"]),
-            Command(0, "get", ["page", "clientIP"]),
-            Command(0, "get", ["page", "clientUserAgent"]),
-        ]
-
-    def __set_page_details(self, values):
-        self._set_attr("route", values[0], False)
-        self._set_attr("pwa", values[1], False)
-        self._set_attr("web", values[2], False)
-        self._set_attr("debug", values[3], False)
-        self._set_attr("platform", values[4], False)
-        self._set_attr("platformBrightness", values[5], False)
-        self._set_attr("media", values[6], False)
-        self._set_attr("width", values[7], False)
-        self._set_attr("height", values[8], False)
-        self._set_attr("windowWidth", values[9], False)
-        self._set_attr("windowHeight", values[10], False)
-        self._set_attr("windowTop", values[11], False)
-        self._set_attr("windowLeft", values[12], False)
-        self._set_attr("clientIP", values[13], False)
-        self._set_attr("clientUserAgent", values[14], False)
+        for i in range(len(props)):
+            self._set_attr(props[i], values[i], False)
 
     async def _connect(self, conn: Connection):
         self.__conn = conn
@@ -515,19 +489,6 @@ class Page(AdaptiveControl):
         async with self.__async_lock:
             await self._send_command_async("error", [message])
 
-    def on_event(self, e: Event):
-        logger.debug(f"page.on_event: {e.target} {e.name} {e.data}")
-        with self.__lock:
-            if e.target == "page" and e.name == "change":
-                self.__on_page_change_event(e.data)
-
-            elif e.target in self._index:
-                ce = ControlEvent(e.target, e.name, e.data, self._index[e.target], self)
-                handler = self._index[e.target].event_handlers.get(e.name)
-                if handler:
-                    t = threading.Thread(target=handler, args=(ce,), daemon=True)
-                    t.start()
-
     async def on_event_async(self, e: Event):
         logger.debug(f"page.on_event_async: {e.target} {e.name} {e.data}")
 
@@ -542,18 +503,11 @@ class Page(AdaptiveControl):
                 if is_coroutine(handler):
                     await handler(ce)
                 else:
-                    if isinstance(handler, flet_core.blocking):
-                        # run in thread pool
-                        handler.pool = self.__pool
-                        await handler(ce)
-                    elif self.__opt_in_blocking == True:
-                        # run as blocking
-                        handler(ce)
-                    else:
-                        # run in thread pool by default
-                        await asyncio.get_running_loop().run_in_executor(
-                            self.__pool, handler, ce
-                        )
+                    # TODO - handle pyodide mode
+                    # run in thread pool
+                    await asyncio.get_running_loop().run_in_executor(
+                        self.__pool, handler, ce
+                    )
 
     def __on_page_change_event(self, data):
         for props in json.loads(data):

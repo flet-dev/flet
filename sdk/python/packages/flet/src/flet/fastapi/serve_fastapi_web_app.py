@@ -28,7 +28,6 @@ def get_fastapi_web_app(
     web_renderer: Optional[WebRenderer],
     use_color_emoji,
     route_url_strategy,
-    opt_in_blocking,
 ):
     web_path = f"/{page_name.strip('/')}"
     app = flet.fastapi.FastAPI()
@@ -41,7 +40,6 @@ def get_fastapi_web_app(
             web_renderer=web_renderer if web_renderer else WebRenderer.AUTO,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
-            opt_in_blocking=opt_in_blocking,
         ),
     )
 
@@ -59,7 +57,6 @@ async def serve_fastapi_web_app(
     web_renderer: Optional[WebRenderer],
     use_color_emoji,
     route_url_strategy,
-    opt_in_blocking,
     blocking,
     on_startup,
     log_level,
@@ -83,7 +80,6 @@ async def serve_fastapi_web_app(
             web_renderer=web_renderer if web_renderer else WebRenderer.AUTO,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
-            opt_in_blocking=opt_in_blocking,
         ),
     )
     config = uvicorn.Config(app, host=host, port=port, log_level=log_level)

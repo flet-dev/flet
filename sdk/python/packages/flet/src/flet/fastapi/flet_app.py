@@ -12,7 +12,6 @@ import flet_core
 from fastapi import WebSocket, WebSocketDisconnect
 from flet.fastapi.flet_app_manager import app_manager
 from flet.fastapi.oauth_state import OAuthState
-from flet_core import blocking
 from flet_core.event import Event
 from flet_core.local_connection import LocalConnection
 from flet_core.page import Page, PageDisconnectedException
@@ -46,7 +45,6 @@ class FletApp(LocalConnection):
         oauth_state_timeout_seconds: int = DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
         upload_endpoint_path: Optional[str] = None,
         secret_key: Optional[str] = None,
-        opt_in_blocking=False,
     ):
         """
         Handle Flet app WebSocket connections.
@@ -78,7 +76,6 @@ class FletApp(LocalConnection):
 
         self.__upload_endpoint_path = upload_endpoint_path
         self.__secret_key = secret_key
-        self.__opt_in_blocking = opt_in_blocking
 
     async def handle(self, websocket: WebSocket):
         """
@@ -139,17 +136,10 @@ class FletApp(LocalConnection):
             if is_coroutine(self.__session_handler):
                 await self.__session_handler(self.__page)
             else:
-                if isinstance(self.__session_handler, flet_core.blocking):
-                    # run in thread pool
-                    await self.__session_handler(self.__page)
-                elif self.__opt_in_blocking == True:
-                    # run as blocking
-                    self.__session_handler(self.__page)
-                else:
-                    # run in thread pool by default
-                    await asyncio.get_running_loop().run_in_executor(
-                        None, self.__session_handler, self.__page
-                    )
+                # run in thread pool
+                await asyncio.get_running_loop().run_in_executor(
+                    app_manager.pool, self.__session_handler, self.__page
+                )
         except PageDisconnectedException:
             logger.debug(
                 f"Session handler attempted to update disconnected page: {session_id}"
@@ -213,7 +203,8 @@ class FletApp(LocalConnection):
                 self.__page = Page(
                     self,
                     self._client_details.sessionId,
-                    opt_in_blocking=self.__opt_in_blocking,
+                    pool=app_manager.pool,
+                    loop=asyncio.get_running_loop(),
                 )
 
                 # register session
