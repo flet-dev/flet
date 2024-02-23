@@ -63,6 +63,7 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                 var itemIcon = parseIcon(cv.control.attrString("icon", "")!);
                 var text = cv.control.attrString("text", "")!;
                 var checked = cv.control.attrBool("checked");
+                var disabled = cv.control.isDisabled || parentDisabled;
                 var contentCtrls =
                     cv.children.where((c) => c.name == "content");
 
@@ -86,9 +87,11 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                     ? CheckedPopupMenuItem<String>(
                         value: cv.control.id,
                         checked: checked,
+                        enabled: !disabled,
                         child: child,
                       )
-                    : PopupMenuItem<String>(value: cv.control.id, child: child);
+                    : PopupMenuItem<String>(
+                        value: cv.control.id, enabled: !disabled, child: child);
 
                 return child != null
                     ? item

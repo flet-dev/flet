@@ -22,6 +22,7 @@ class PopupMenuItem(Control):
     def __init__(
         self,
         ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
         checked: Optional[bool] = None,
         icon: Optional[str] = None,
         text: Optional[str] = None,
@@ -29,7 +30,7 @@ class PopupMenuItem(Control):
         on_click=None,
         data: Any = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, disabled=disabled)
 
         self.checked = checked
         self.icon = icon
