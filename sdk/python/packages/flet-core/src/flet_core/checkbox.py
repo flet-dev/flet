@@ -1,9 +1,11 @@
+import dataclasses
 from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
@@ -83,6 +85,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         # Specific
         #
         label: Optional[str] = None,
+        label_style: Optional[TextStyle] = None,
         label_position: LabelPosition = LabelPosition.NONE,
         value: Optional[bool] = None,
         tristate: Optional[bool] = None,
@@ -134,6 +137,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self.value = value
         self.tristate = tristate
         self.label = label
+        self.label_style = label_style
         self.label_position = label_position
         self.autofocus = autofocus
         self.check_color = check_color
@@ -153,6 +157,8 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         super()._before_build_command()
         self._set_attr_json("fillColor", self.__fill_color)
         self._set_attr_json("overlayColor", self.__overlay_color)
+        if dataclasses.is_dataclass(self.__label_style):
+            self._set_attr_json("labelStyle", self.__label_style)
 
     # value
     @property
@@ -261,6 +267,15 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @overlay_color.setter
     def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__overlay_color = value
+
+    # label_style
+    @property
+    def label_style(self) -> Optional[TextStyle]:
+        return self.__label_style
+
+    @label_style.setter
+    def label_style(self, value: Optional[TextStyle]):
+        self.__label_style = value
 
     # on_change
     @property
