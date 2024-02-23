@@ -1,5 +1,18 @@
 # Flet changelog
 
+# 0.20.2
+* Move `system_overlay_style` from `AppBar` to `Theme` ([#2667](https://github.com/flet-dev/flet/issues/2667)).
+* `flet build` command checks minimal Flutter SDK version.
+* Buttons turn to `CupertinoDialogAction` controls inside adaptive dialogs.
+* `FletApp` control takes control create factories from a parent app.
+
+# 0.20.1
+
+* Migrated to Flutter 3.19
+* Fixed scrolling behavior changes in scrollable controls.
+* Remove `Page.design` and replace with `Page.adaptive` ([#2650](https://github.com/flet-dev/flet/issues/2650)).
+* Rename `Control.on_update` to `Control.before_update` ([#2642](https://github.com/flet-dev/flet/issues/2642)).
+
 # 0.20.0
 
 * `AppBar.system_overlay_style` property ([#2615](https://github.com/flet-dev/flet/issues/2615)).

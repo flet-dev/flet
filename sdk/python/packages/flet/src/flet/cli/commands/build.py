@@ -3,6 +3,7 @@ import glob
 import json
 import os
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -24,6 +25,7 @@ if is_windows():
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
+MINIMAL_FLUTTER_VERSION = "3.19.0"
 
 
 class Command(BaseCommand):
@@ -38,49 +40,49 @@ class Command(BaseCommand):
             "windows": {
                 "build_command": "windows",
                 "status_text": "Windows app",
-                "output": "build/windows/x64/runner/Release/*",
+                "outputs": ["build/windows/x64/runner/Release/*"],
                 "dist": "windows",
                 "can_be_run_on": ["Windows"],
             },
             "macos": {
                 "build_command": "macos",
                 "status_text": "macOS bundle",
-                "output": "build/macos/Build/Products/Release/{product_name}.app",
+                "outputs": ["build/macos/Build/Products/Release/{product_name}.app"],
                 "dist": "macos",
                 "can_be_run_on": ["Darwin"],
             },
             "linux": {
                 "build_command": "linux",
                 "status_text": "app for Linux",
-                "output": "build/linux/{arch}/release/bundle/*",
+                "outputs": ["build/linux/{arch}/release/bundle/*"],
                 "dist": "linux",
                 "can_be_run_on": ["Linux"],
             },
             "web": {
                 "build_command": "web",
                 "status_text": "web app",
-                "output": "build/web/*",
+                "outputs": ["build/web/*"],
                 "dist": "web",
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "apk": {
                 "build_command": "apk",
                 "status_text": ".apk for Android",
-                "output": "build/app/outputs/flutter-apk/*",
+                "outputs": ["build/app/outputs/flutter-apk/*"],
                 "dist": "apk",
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "aab": {
                 "build_command": "appbundle",
                 "status_text": ".aab bundle for Android",
-                "output": "build/app/outputs/bundle/release/*",
+                "outputs": ["build/app/outputs/bundle/release/*"],
                 "dist": "aab",
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "ipa": {
                 "build_command": "ipa",
                 "status_text": ".ipa bundle for iOS",
-                "output": "build/ios/archive/*",
+                "outputs": ["build/ios/archive/*", "build/ios/ipa/*"],
                 "dist": "ipa",
                 "can_be_run_on": ["Darwin"],
             },
@@ -268,12 +270,12 @@ class Command(BaseCommand):
         self.flutter_dir = None
 
         # get `flutter` and `dart` executables from PATH
-        flutter_exe = self.find_flutter_batch("flutter")
-        dart_exe = self.find_flutter_batch("dart")
+        self.flutter_exe = self.find_flutter_batch("flutter")
+        self.dart_exe = self.find_flutter_batch("dart")
 
         if self.verbose > 1:
-            print("Flutter executable:", flutter_exe)
-            print("Dart executable:", dart_exe)
+            print("Flutter executable:", self.flutter_exe)
+            print("Dart executable:", self.dart_exe)
 
         target_platform = options.target_platform.lower()
         # platform check
@@ -369,6 +371,9 @@ class Command(BaseCommand):
             for package in options.flutter_packages:
                 pspec = package.split(":")
                 flutter_dependencies[pspec[0]] = pspec[1] if len(pspec) > 1 else "any"
+
+        if self.verbose > 0:
+            print("Additional Flutter dependencies:", flutter_dependencies)
 
         template_data["flutter"] = {"dependencies": list(flutter_dependencies.keys())}
 
@@ -578,14 +583,16 @@ class Command(BaseCommand):
         # generate icons
         print("Generating app icons...", end="")
         icons_result = self.run(
-            [dart_exe, "run", "flutter_launcher_icons"], cwd=str(self.flutter_dir)
+            [self.dart_exe, "run", "flutter_launcher_icons"],
+            cwd=str(self.flutter_dir),
+            capture_output=self.verbose < 1,
         )
         if icons_result.returncode != 0:
             if icons_result.stdout:
                 print(icons_result.stdout)
             if icons_result.stderr:
                 print(icons_result.stderr)
-            self.cleanup(icons_result.returncode)
+            self.cleanup(icons_result.returncode, check_flutter_version=True)
 
         print("[spring_green3]OK[/spring_green3]")
 
@@ -593,22 +600,23 @@ class Command(BaseCommand):
         if target_platform in ["web", "ipa", "apk", "aab"]:
             print("Generating splash screens...", end="")
             splash_result = self.run(
-                [dart_exe, "run", "flutter_native_splash:create"],
+                [self.dart_exe, "run", "flutter_native_splash:create"],
                 cwd=str(self.flutter_dir),
+                capture_output=self.verbose < 1,
             )
             if splash_result.returncode != 0:
                 if splash_result.stdout:
                     print(splash_result.stdout)
                 if splash_result.stderr:
                     print(splash_result.stderr)
-                self.cleanup(splash_result.returncode)
+                self.cleanup(splash_result.returncode, check_flutter_version=True)
 
             print("[spring_green3]OK[/spring_green3]")
 
         # package Python app
         print(f"Packaging Python app...", end="")
         package_args = [
-            dart_exe,
+            self.dart_exe,
             "run",
             "serious_python:main",
             "package",
@@ -654,7 +662,9 @@ class Command(BaseCommand):
         if self.verbose > 1:
             package_args.append("--verbose")
 
-        package_result = self.run(package_args, cwd=str(self.flutter_dir))
+        package_result = self.run(
+            package_args, cwd=str(self.flutter_dir), capture_output=self.verbose < 1
+        )
 
         if package_result.returncode != 0:
             if package_result.stdout:
@@ -680,7 +690,7 @@ class Command(BaseCommand):
             end="",
         )
         build_args = [
-            flutter_exe,
+            self.flutter_exe,
             "build",
             self.platforms[target_platform]["build_command"],
         ]
@@ -702,14 +712,16 @@ class Command(BaseCommand):
         if self.verbose > 1:
             build_args.append("--verbose")
 
-        build_result = self.run(build_args, cwd=str(self.flutter_dir))
+        build_result = self.run(
+            build_args, cwd=str(self.flutter_dir), capture_output=self.verbose < 1
+        )
 
         if build_result.returncode != 0:
             if build_result.stdout:
                 print(build_result.stdout)
             if build_result.stderr:
                 print(build_result.stderr)
-            self.cleanup(build_result.returncode)
+            self.cleanup(build_result.returncode, check_flutter_version=True)
         print("[spring_green3]OK[/spring_green3]")
 
         # copy build results to `out_dir`
@@ -723,24 +735,32 @@ class Command(BaseCommand):
         elif arch == "arm64" or arch == "aarch64":
             arch = "arm64"
 
-        build_output_dir = (
-            str(self.flutter_dir.joinpath(self.platforms[target_platform]["output"]))
-            .replace("{arch}", arch)
-            .replace("{project_name}", project_name)
-            .replace("{product_name}", product_name)
-        )
-        build_output_glob = os.path.basename(build_output_dir)
-        build_output_dir = os.path.dirname(build_output_dir)
-        if out_dir.exists():
-            shutil.rmtree(str(out_dir), ignore_errors=False, onerror=None)
-        out_dir.mkdir(parents=True, exist_ok=True)
+        for build_output in self.platforms[target_platform]["outputs"]:
+            build_output_dir = (
+                str(self.flutter_dir.joinpath(build_output))
+                .replace("{arch}", arch)
+                .replace("{project_name}", project_name)
+                .replace("{product_name}", product_name)
+            )
 
-        def ignore_build_output(path, files):
-            if path == build_output_dir and build_output_glob != "*":
-                return [f for f in os.listdir(path) if f != build_output_glob]
-            return []
+            if self.verbose > 0:
+                print("Copying build output from:", build_output_dir)
 
-        copy_tree(build_output_dir, str(out_dir), ignore=ignore_build_output)
+            build_output_glob = os.path.basename(build_output_dir)
+            build_output_dir = os.path.dirname(build_output_dir)
+            if not os.path.exists(build_output_dir):
+                continue
+
+            if out_dir.exists():
+                shutil.rmtree(str(out_dir), ignore_errors=False, onerror=None)
+            out_dir.mkdir(parents=True, exist_ok=True)
+
+            def ignore_build_output(path, files):
+                if path == build_output_dir and build_output_glob != "*":
+                    return [f for f in os.listdir(path) if f != build_output_glob]
+                return []
+
+            copy_tree(build_output_dir, str(out_dir), ignore=ignore_build_output)
 
         if target_platform == "web" and assets_path.exists():
             # copy `assets` directory contents to the output directory
@@ -776,11 +796,12 @@ class Command(BaseCommand):
                 1,
                 f"`{exe_filename}` command is not available in PATH. Install Flutter SDK.",
             )
+            return
         if is_windows() and batch_path.endswith(".file"):
             return batch_path.replace(".file", ".bat")
         return batch_path
 
-    def run(self, args, cwd):
+    def run(self, args, cwd, capture_output=True):
         if is_windows():
             # Source: https://stackoverflow.com/a/77374899/1435891
             # Save the current console output code page and switch to 65001 (UTF-8)
@@ -793,7 +814,7 @@ class Command(BaseCommand):
         r = subprocess.run(
             args,
             cwd=cwd,
-            capture_output=self.verbose < 1,
+            capture_output=capture_output,
             text=True,
             encoding="utf8",
         )
@@ -804,7 +825,9 @@ class Command(BaseCommand):
 
         return r
 
-    def cleanup(self, exit_code: int, message: Optional[str] = None):
+    def cleanup(
+        self, exit_code: int, message: Optional[str] = None, check_flutter_version=False
+    ):
         if self.flutter_dir and os.path.exists(self.flutter_dir):
             if self.verbose > 0:
                 print(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
@@ -818,5 +841,24 @@ class Command(BaseCommand):
                 if message
                 else "Error building Flet app - see the log of failed command above."
             )
+            if check_flutter_version:
+                version_results = self.run(
+                    [self.flutter_exe, "--version"],
+                    cwd=os.getcwd(),
+                    capture_output=True,
+                )
+                if version_results.returncode == 0 and version_results.stdout:
+                    match = re.search(
+                        r"Flutter (\d+\.\d+\.\d+)", version_results.stdout
+                    )
+                    if match:
+                        flutter_version = version.parse(match.group(1))
+                        if flutter_version < version.parse(MINIMAL_FLUTTER_VERSION):
+                            flutter_msg = (
+                                "Incorrect version of Flutter SDK installed. "
+                                + f"Flet build requires Flutter {MINIMAL_FLUTTER_VERSION} or above. "
+                                + f"You have {flutter_version}."
+                            )
+                            msg = f"{msg}\n{flutter_msg}"
             print(f"[red]{msg}[/red]")
         sys.exit(exit_code)

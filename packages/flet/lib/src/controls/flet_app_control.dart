@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_app.dart';
 import '../flet_app_errors_handler.dart';
+import '../flet_app_services.dart';
 import '../models/control.dart';
 import 'create_control.dart';
 
@@ -36,6 +37,8 @@ class _FletAppControlState extends State<FletAppControl> {
           pageUrl: url,
           assetsDir: "",
           errorsHandler: _errorsHandler,
+          createControlFactories:
+              FletAppServices.of(context).createControlFactories,
         ),
         widget.parent,
         widget.control);

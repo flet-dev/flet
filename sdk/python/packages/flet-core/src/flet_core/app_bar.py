@@ -1,19 +1,8 @@
-import dataclasses
-from dataclasses import field
 from typing import List, Optional
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-
-
-@dataclasses.dataclass
-class SystemOverlayStyle:
-    status_bar_color: Optional[str] = field(default=None)
-    system_navigation_bar_color: Optional[str] = field(default=None)
-    system_navigation_bar_divider_color: Optional[str] = field(default=None)
-    enforce_system_navigation_bar_contrast: Optional[bool] = field(default=None)
-    enforce_system_status_bar_contrast: Optional[bool] = field(default=None)
 
 
 class AppBar(AdaptiveControl):
@@ -71,7 +60,6 @@ class AppBar(AdaptiveControl):
         toolbar_height: OptionalNumber = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
-        system_overlay_style: Optional[SystemOverlayStyle] = None,
         elevation: OptionalNumber = None,
         actions: Optional[List[Control]] = None,
         adaptive: Optional[bool] = None,
@@ -94,15 +82,9 @@ class AppBar(AdaptiveControl):
         self.bgcolor = bgcolor
         self.elevation = elevation
         self.actions = actions
-        self.system_overlay_style = system_overlay_style
 
     def _get_control_name(self):
         return "appbar"
-
-    def _before_build_command(self):
-        super()._before_build_command()
-        if dataclasses.is_dataclass(self.__system_overlay_style):
-            self._set_attr_json("systemOverlayStyle", self.__system_overlay_style)
 
     def _get_children(self):
         children = []
@@ -159,15 +141,6 @@ class AppBar(AdaptiveControl):
     @title.setter
     def title(self, value: Optional[Control]):
         self.__title = value
-
-    # system_overlay_style
-    @property
-    def system_overlay_style(self) -> Optional[SystemOverlayStyle]:
-        return self.__system_overlay_style
-
-    @system_overlay_style.setter
-    def system_overlay_style(self, value: Optional[SystemOverlayStyle]):
-        self.__system_overlay_style = value
 
     # center_title
     @property

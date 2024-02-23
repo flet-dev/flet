@@ -40,7 +40,7 @@ import 'navigation_drawer.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
-enum PageDesign { adaptive, material, cupertino }
+enum PageDesign { material, cupertino }
 
 class RoutesViewModel extends Equatable {
   final Control page;
@@ -124,7 +124,7 @@ class PageControl extends StatefulWidget {
 }
 
 class _PageControlState extends State<PageControl> with FletStoreMixin {
-  PageDesign _pageDesign = PageDesign.material;
+  bool? _adaptive;
   PageDesign _widgetsDesign = PageDesign.material;
   TargetPlatform _platform = defaultTargetPlatform;
   Brightness? _brightness;
@@ -184,7 +184,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     _routeState.removeListener(_routeChanged);
     _routeState.dispose();
     if (_keyboardHandlerSubscribed) {
-      RawKeyboard.instance.removeListener(_handleKeyDown);
+      HardwareKeyboard.instance.removeHandler(_handleKeyDown);
     }
     super.dispose();
   }
@@ -194,8 +194,8 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         _routeState.route, FletAppServices.of(context).server));
   }
 
-  void _handleKeyDown(RawKeyEvent e) {
-    if (e is RawKeyDownEvent) {
+  bool _handleKeyDown(KeyEvent e) {
+    if (e is KeyDownEvent) {
       final k = e.logicalKey;
       if (![
         LogicalKeyboardKey.control,
@@ -216,13 +216,15 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             "keyboard_event",
             json.encode(KeyboardEvent(
                     key: k.keyLabel,
-                    isAltPressed: e.isAltPressed,
-                    isControlPressed: e.isControlPressed,
-                    isShiftPressed: e.isShiftPressed,
-                    isMetaPressed: e.isMetaPressed)
+                    isAltPressed: HardwareKeyboard.instance.isAltPressed,
+                    isControlPressed:
+                        HardwareKeyboard.instance.isControlPressed,
+                    isShiftPressed: HardwareKeyboard.instance.isShiftPressed,
+                    isMetaPressed: HardwareKeyboard.instance.isMetaPressed)
                 .toJson()));
       }
     }
+    return false;
   }
 
   @override
@@ -247,20 +249,13 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             widget.control.attrString("platform", "")!.toLowerCase(),
         orElse: () => defaultTargetPlatform);
 
-    _pageDesign = PageDesign.values.firstWhere(
-        (a) =>
-            a.name.toLowerCase() ==
-            widget.control.attrString("design", "")!.toLowerCase(),
-        orElse: () => PageDesign.material);
+    _adaptive = widget.control.attrBool("adaptive");
 
-    if ((_pageDesign == PageDesign.adaptive &&
+    _widgetsDesign = _adaptive == true &&
             (_platform == TargetPlatform.iOS ||
-                _platform == TargetPlatform.macOS)) ||
-        _pageDesign == PageDesign.cupertino) {
-      _widgetsDesign = PageDesign.cupertino;
-    } else {
-      _widgetsDesign = PageDesign.material;
-    }
+                _platform == TargetPlatform.macOS)
+        ? PageDesign.cupertino
+        : PageDesign.material;
 
     // theme
     _themeMode = ThemeMode.values.firstWhereOrNull((t) =>
@@ -271,7 +266,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     // keyboard handler
     var onKeyboardEvent = widget.control.attrBool("onKeyboardEvent", false)!;
     if (onKeyboardEvent && !_keyboardHandlerSubscribed) {
-      RawKeyboard.instance.addListener(_handleKeyDown);
+      HardwareKeyboard.instance.addHandler(_handleKeyDown);
       _keyboardHandlerSubscribed = true;
     }
 
@@ -553,6 +548,9 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                                     "darkTheme", Brightness.dark)
                                 : parseCupertinoTheme(
                                     widget.control, "theme", Brightness.dark),
+                        localizationsDelegates: const [
+                          DefaultMaterialLocalizations.delegate
+                        ],
                       )
                     : MaterialApp.router(
                         debugShowCheckedModeBanner: false,
@@ -617,7 +615,8 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                 overlayWidgets.addAll(routesView.offstageControls
                     .where((c) => !c.isNonVisual)
                     .map((c) => createControl(
-                        routesView.page, c.id, routesView.page.isDisabled)));
+                        routesView.page, c.id, routesView.page.isDisabled,
+                        parentAdaptive: _adaptive)));
                 overlayWidgets.add(const PageMedia());
               }
 
@@ -648,7 +647,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                 overlayWidgets: overlayWidgets(view.id),
                 loadingPage: loadingPage,
                 backend: widget.backend,
-                parentAdaptive: _pageDesign == PageDesign.adaptive,
+                parentAdaptive: _adaptive,
                 widgetsDesign: _widgetsDesign,
                 brightness: _brightness,
                 themeMode: _themeMode,
@@ -687,7 +686,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
               in routesView.offstageControls.where((c) => c.isNonVisual)) {
             nextChild = createControl(
                 routesView.page, c.id, routesView.page.isDisabled,
-                nextChild: nextChild);
+                parentAdaptive: _adaptive, nextChild: nextChild);
           }
 
           return nextChild;
@@ -701,7 +700,7 @@ class ViewControl extends StatefulWidget {
   final List<Widget> overlayWidgets;
   final Widget? loadingPage;
   final FletControlBackend backend;
-  final bool parentAdaptive;
+  final bool? parentAdaptive;
   final PageDesign widgetsDesign;
   final Brightness? brightness;
   final ThemeMode? themeMode;
@@ -942,16 +941,21 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               ...widget.overlayWidgets
             ]);
 
+            var materialTheme = widget.themeMode == ThemeMode.light ||
+                    ((widget.themeMode == null ||
+                            widget.themeMode == ThemeMode.system) &&
+                        widget.brightness == Brightness.light)
+                ? parseTheme(widget.parent, "theme", Brightness.light)
+                : widget.parent.attrString("darkTheme") != null
+                    ? parseTheme(widget.parent, "darkTheme", Brightness.dark)
+                    : parseTheme(widget.parent, "theme", Brightness.dark);
+
             Widget scaffold = Scaffold(
-              key: widget.widgetsDesign != PageDesign.cupertino
-                  ? scaffoldKey
-                  : null,
+              key: bar == null || bar is AppBarControl ? scaffoldKey : null,
               backgroundColor: HexColor.fromString(
                       Theme.of(context), control.attrString("bgcolor", "")!) ??
                   CupertinoTheme.of(context).scaffoldBackgroundColor,
-              appBar: widget.widgetsDesign != PageDesign.cupertino
-                  ? bar as PreferredSizeWidget?
-                  : null,
+              appBar: bar is AppBarControl ? bar : null,
               drawer: drawerView != null
                   ? NavigationDrawerControl(
                       control: drawerView.control,
@@ -992,7 +996,19 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               floatingActionButtonLocation: fabLocation,
             );
 
-            if (widget.widgetsDesign == PageDesign.cupertino && bar != null) {
+            var systemOverlayStyle =
+                materialTheme.extension<SystemUiOverlayStyleTheme>();
+
+            if (systemOverlayStyle != null &&
+                systemOverlayStyle.systemUiOverlayStyle != null &&
+                bar == null) {
+              scaffold = AnnotatedRegion<SystemUiOverlayStyle>(
+                value: systemOverlayStyle.systemUiOverlayStyle!,
+                child: scaffold,
+              );
+            }
+
+            if (bar is CupertinoAppBarControl) {
               scaffold = CupertinoPageScaffold(
                   key: scaffoldKey,
                   backgroundColor: HexColor.fromString(
@@ -1018,15 +1034,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               );
             } else if (widget.widgetsDesign == PageDesign.cupertino) {
               scaffold = Theme(
-                data: widget.themeMode == ThemeMode.light ||
-                        ((widget.themeMode == null ||
-                                widget.themeMode == ThemeMode.system) &&
-                            widget.brightness == Brightness.light)
-                    ? parseTheme(widget.parent, "theme", Brightness.light)
-                    : widget.parent.attrString("darkTheme") != null
-                        ? parseTheme(
-                            widget.parent, "darkTheme", Brightness.dark)
-                        : parseTheme(widget.parent, "theme", Brightness.dark),
+                data: materialTheme,
                 child: scaffold,
               );
             }

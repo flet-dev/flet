@@ -60,7 +60,7 @@ class Control:
     def _build(self):
         pass
 
-    def on_update(self):
+    def before_update(self):
         pass
 
     def _before_build_command(self):
@@ -494,7 +494,7 @@ class Control:
             return command
 
         self._before_build_command()
-        self.on_update()
+        self.before_update()
 
         for attrName in sorted(self.__attrs):
             attrName = attrName.lower()
