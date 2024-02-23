@@ -90,6 +90,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         adaptive: Optional[bool] = None,
         icon_size: OptionalNumber = None,
         icon_color: Optional[str] = None,
+        highlight_color: Optional[str] = None,
         selected_icon: Optional[str] = None,
         selected_icon_color: Optional[str] = None,
         selected: Optional[bool] = None,
@@ -138,6 +139,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.icon = icon
         self.icon_size = icon_size
         self.icon_color = icon_color
+        self.highlight_color = highlight_color
         self.selected_icon = selected_icon
         self.selected_icon_color = selected_icon_color
         self.selected = selected
@@ -211,6 +213,15 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @icon_color.setter
     def icon_color(self, value):
         self._set_attr("iconColor", value)
+
+    # highlight_color
+    @property
+    def highlight_color(self):
+        return self._get_attr("highlightColor")
+
+    @highlight_color.setter
+    def highlight_color(self, value):
+        self._set_attr("highlightColor", value)
 
     # selected_icon_color
     @property
