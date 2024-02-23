@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
@@ -10,6 +11,11 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+
+
+class PopupMenuPosition(Enum):
+    OVER = "over"
+    UNDER = "under"
 
 
 class PopupMenuItem(Control):
@@ -165,6 +171,7 @@ class PopupMenuButton(ConstrainedControl):
         # PopupMenuButton-specific
         items: Optional[List[PopupMenuItem]] = None,
         icon: Optional[str] = None,
+        menu_position: Optional[PopupMenuPosition] = None,
         on_cancelled=None,
     ):
         ConstrainedControl.__init__(
@@ -203,6 +210,7 @@ class PopupMenuButton(ConstrainedControl):
         self.on_cancelled = on_cancelled
         self.__content: Optional[Control] = None
         self.content = content
+        self.menu_position = menu_position
 
     def _get_control_name(self):
         return "popupmenubutton"
@@ -250,3 +258,16 @@ class PopupMenuButton(ConstrainedControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # menu_position
+    @property
+    def menu_position(self) -> PopupMenuPosition:
+        return self.__menu_position
+
+    @menu_position.setter
+    def menu_position(self, value: PopupMenuPosition):
+        self.__menu_position = value
+        self._set_attr(
+            "menuPosition",
+            value.value if isinstance(value, PopupMenuPosition) else value,
+        )
