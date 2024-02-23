@@ -178,8 +178,8 @@ class FletServer implements FletControlBackend {
   }
 
   @override
-  void triggerControlEvent(
-      String controlId, String eventName, String eventData) {
+  void triggerControlEvent(String controlId, String eventName,
+      [String eventData = ""]) {
     _sendPageEvent(
         eventTarget: controlId, eventName: eventName, eventData: eventData);
   }
