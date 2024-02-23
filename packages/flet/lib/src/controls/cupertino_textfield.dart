@@ -197,6 +197,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
     BoxBorder? border;
     double? borderWidth = widget.control.attrDouble("borderWidth");
+    Color? borderColor = HexColor.fromString(
+        Theme.of(context), widget.control.attrString("borderColor", "")!);
 
     try {
       border = parseBorder(Theme.of(context), widget.control, "border");
@@ -208,12 +210,15 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         orElse: () => FormFieldInputBorder.outline,
       );
       if (inputBorder == FormFieldInputBorder.outline) {
-        border =
-            Border.all(color: Colors.blueAccent, width: borderWidth ?? 1.0);
+        border = Border.all(
+            color: borderColor ?? const Color(0xFF000000),
+            width: borderWidth ?? 1.0);
       } else if (inputBorder == FormFieldInputBorder.underline) {
         border = Border(
             bottom: BorderSide(
-                color: Colors.blueAccent, width: borderWidth ?? 1.0));
+          color: borderColor ?? const Color(0xFF000000),
+          width: borderWidth ?? 1.0,
+        ));
         borderRadius = BorderRadius.zero;
       }
     }
