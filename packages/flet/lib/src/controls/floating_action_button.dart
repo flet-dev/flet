@@ -51,7 +51,7 @@ class FloatingActionButtonControl extends StatelessWidget {
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            backend.triggerControlEvent(control.id, "click", "");
+            backend.triggerControlEvent(control.id, "click");
           };
 
     if (text == null && icon == null && contentCtrls.isEmpty) {

@@ -61,7 +61,7 @@ class _ChipControlState extends State<ChipControl> {
 
   void _onFocusChange() {
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -111,14 +111,14 @@ class _ChipControlState extends State<ChipControl> {
     Function()? onClickHandler = onClick && !disabled
         ? () {
             debugPrint("Chip ${widget.control.id} clicked!");
-            widget.backend.triggerControlEvent(widget.control.id, "click", "");
+            widget.backend.triggerControlEvent(widget.control.id, "click");
           }
         : null;
 
     Function()? onDeleteHandler = onDelete && !disabled
         ? () {
             debugPrint("Chip ${widget.control.id} deleted!");
-            widget.backend.triggerControlEvent(widget.control.id, "delete", "");
+            widget.backend.triggerControlEvent(widget.control.id, "delete");
           }
         : null;
 

@@ -51,7 +51,7 @@ class _TextFieldControlState extends State<TextFieldControl>
       onKey: (FocusNode node, RawKeyEvent evt) {
         if (!evt.isShiftPressed && evt.logicalKey.keyLabel == 'Enter') {
           if (evt is RawKeyDownEvent) {
-            widget.backend.triggerControlEvent(widget.control.id, "submit", "");
+            widget.backend.triggerControlEvent(widget.control.id, "submit");
           }
           return KeyEventResult.handled;
         } else {
@@ -78,8 +78,7 @@ class _TextFieldControlState extends State<TextFieldControl>
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    widget.backend.triggerControlEvent(widget.control.id,
-        _shiftEnterfocusNode.hasFocus ? "focus" : "blur", "");
+    widget.backend.triggerControlEvent(widget.control.id, _shiftEnterfocusNode.hasFocus ? "focus" : "blur");
   }
 
   void _onFocusChange() {
@@ -87,7 +86,7 @@ class _TextFieldControlState extends State<TextFieldControl>
       _focused = _focusNode.hasFocus;
     });
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -231,7 +230,7 @@ class _TextFieldControlState extends State<TextFieldControl>
           onFieldSubmitted: !multiline
               ? (_) {
                   widget.backend
-                      .triggerControlEvent(widget.control.id, "submit", "");
+                      .triggerControlEvent(widget.control.id, "submit");
                 }
               : null,
           decoration: buildInputDecoration(

@@ -140,7 +140,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
 
             void dismissDrawer(String id) {
               widget.backend.updateControlState(id, {"open": "false"});
-              widget.backend.triggerControlEvent(id, "dismiss", "");
+              widget.backend.triggerControlEvent(id, "dismiss");
             }
 
             WidgetsBinding.instance.addPostFrameCallback((_) {

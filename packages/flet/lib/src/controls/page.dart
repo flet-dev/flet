@@ -857,7 +857,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
 
             void dismissDrawer(String id) {
               widget.backend.updateControlState(id, {"open": "false"});
-              widget.backend.triggerControlEvent(id, "dismiss", "");
+              widget.backend.triggerControlEvent(id, "dismiss");
             }
 
             WidgetsBinding.instance.addPostFrameCallback((_) {

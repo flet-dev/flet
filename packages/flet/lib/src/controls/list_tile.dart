@@ -91,7 +91,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
                     openWebBrowser(url, webWindowName: urlTarget);
                   }
                   if (onclick) {
-                    backend.triggerControlEvent(control.id, "click", "");
+                    backend.triggerControlEvent(control.id, "click");
                   }
                 }
               : null;
@@ -99,7 +99,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
       Function()? onLongPress = onLongPressDefined && !disabled
           ? () {
               debugPrint("Button ${control.id} clicked!");
-              backend.triggerControlEvent(control.id, "long_press", "");
+              backend.triggerControlEvent(control.id, "long_press");
             }
           : null;
 

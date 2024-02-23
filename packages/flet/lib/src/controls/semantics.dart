@@ -38,7 +38,7 @@ class SemanticsControl extends StatelessWidget {
         selected: control.attrBool("selected"),
         onTap: control.attrBool("onclick", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "click", '');
+                backend.triggerControlEvent(control.id, "click");
               }
             : null,
         checked: control.attrBool("checked"),
@@ -54,57 +54,57 @@ class SemanticsControl extends StatelessWidget {
         liveRegion: control.attrBool("liveRegion"),
         onIncrease: control.attrBool("onIncrease", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "increase", '');
+                backend.triggerControlEvent(control.id, "increase");
               }
             : null,
         onDecrease: control.attrBool("onDecrease", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "decrease", '');
+                backend.triggerControlEvent(control.id, "decrease");
               }
             : null,
         onDismiss: control.attrBool("onDismiss", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "dismiss", '');
+                backend.triggerControlEvent(control.id, "dismiss");
               }
             : null,
         onScrollLeft: control.attrBool("onScrollLeft", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "scrollLeft", '');
+                backend.triggerControlEvent(control.id, "scrollLeft");
               }
             : null,
         onScrollRight: control.attrBool("onScrollRight", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "scrollRight", '');
+                backend.triggerControlEvent(control.id, "scrollRight");
               }
             : null,
         onScrollUp: control.attrBool("onScrollUp", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "scrollUp", '');
+                backend.triggerControlEvent(control.id, "scrollUp");
               }
             : null,
         onScrollDown: control.attrBool("onScrollDown", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "scrollDown", '');
+                backend.triggerControlEvent(control.id, "scrollDown");
               }
             : null,
         onCopy: control.attrBool("onCopy", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "copy", '');
+                backend.triggerControlEvent(control.id, "copy");
               }
             : null,
         onCut: control.attrBool("onCut", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "cut", '');
+                backend.triggerControlEvent(control.id, "cut");
               }
             : null,
         onPaste: control.attrBool("onPaste", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "paste", '');
+                backend.triggerControlEvent(control.id, "paste");
               }
             : null,
-        onLongPress: control.attrBool("onDismissed", false)!
+        onLongPress: control.attrBool("onDismiss", false)!
             ? () {
-                backend.triggerControlEvent(control.id, "dismissed", '');
+                backend.triggerControlEvent(control.id, "dismiss");
               }
             : null,
         onMoveCursorForwardByCharacter:
@@ -125,14 +125,14 @@ class SemanticsControl extends StatelessWidget {
             control.attrBool("onDidGainAccessibilityFocus", false)!
                 ? () {
                     backend.triggerControlEvent(
-                        control.id, "did_gain_accessibility_focus", '');
+                        control.id, "did_gain_accessibility_focus");
                   }
                 : null,
         onDidLoseAccessibilityFocus:
             control.attrBool("onDidLoseAccessibilityFocus", false)!
                 ? () {
                     backend.triggerControlEvent(
-                        control.id, "did_lose_accessibility_focus", '');
+                        control.id, "did_lose_accessibility_focus");
                   }
                 : null,
         obscured: control.attrBool("obscured"),

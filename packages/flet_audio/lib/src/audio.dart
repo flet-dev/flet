@@ -138,8 +138,7 @@ class _AudioControlState extends State<AudioControl> with FletStoreMixin {
       }
 
       _onSeekComplete = () {
-        widget.backend
-            .triggerControlEvent(widget.control.id, "seek_complete", "");
+        widget.backend.triggerControlEvent(widget.control.id, "seek_complete");
       };
 
       () async {
@@ -168,7 +167,7 @@ class _AudioControlState extends State<AudioControl> with FletStoreMixin {
 
         if (srcChanged) {
           debugPrint("Audio.srcChanged!");
-          widget.backend.triggerControlEvent(widget.control.id, "loaded", "");
+          widget.backend.triggerControlEvent(widget.control.id, "loaded");
         }
 
         if (releaseMode != null && releaseMode != prevReleaseMode) {

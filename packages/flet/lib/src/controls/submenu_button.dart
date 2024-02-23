@@ -46,7 +46,7 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
 
   void _onFocusChange() {
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -102,8 +102,7 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
           : null,
       onClose: onClose && !disabled
           ? () {
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "close", "");
+              widget.backend.triggerControlEvent(widget.control.id, "close");
             }
           : null,
       onHover: onHover && !disabled
@@ -114,7 +113,7 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
           : null,
       onOpen: onOpen && !disabled
           ? () {
-              widget.backend.triggerControlEvent(widget.control.id, "open", "");
+              widget.backend.triggerControlEvent(widget.control.id, "open");
             }
           : null,
       leadingIcon: leading.isNotEmpty

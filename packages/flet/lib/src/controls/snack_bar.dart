@@ -50,8 +50,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
                 widget.control.attrString("actionColor", "")!),
             onPressed: () {
               debugPrint("SnackBar ${widget.control.id} clicked!");
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "action", "");
+              widget.backend.triggerControlEvent(widget.control.id, "action");
             })
         : null;
 

@@ -30,7 +30,7 @@ class _VideoControlState extends State<VideoControl> {
     pitch: widget.control.attrDouble("pitch") != null ? true : false,
     ready: () {
       if (widget.control.attrBool("onLoaded", false)!) {
-        widget.backend.triggerControlEvent(widget.control.id, "loaded", "");
+        widget.backend.triggerControlEvent(widget.control.id, "loaded");
       }
     },
   );
@@ -91,14 +91,12 @@ class _VideoControlState extends State<VideoControl> {
           const Color(0xFF000000),
       onEnterFullscreen: widget.control.attrBool("onEnterFullscreen", false)!
           ? () async {
-              widget.backend.triggerControlEvent(
-                  widget.control.id, "enter_fullscreen", "");
+              widget.backend.triggerControlEvent(widget.control.id, "enter_fullscreen");
             }
           : defaultEnterNativeFullscreen,
       onExitFullscreen: widget.control.attrBool("onExitFullscreen", false)!
           ? () async {
-              widget.backend.triggerControlEvent(
-                  widget.control.id, "exit_fullscreen", "");
+              widget.backend.triggerControlEvent(widget.control.id, "exit_fullscreen");
             }
           : defaultExitNativeFullscreen,
     );

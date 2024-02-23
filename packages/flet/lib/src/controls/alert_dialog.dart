@@ -141,8 +141,7 @@ class _AlertDialogControlState extends State<AlertDialogControl>
             if (shouldDismiss) {
               widget.backend
                   .updateControlState(widget.control.id, {"open": "false"});
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "dismiss", "");
+              widget.backend.triggerControlEvent(widget.control.id, "dismiss");
             }
           });
         });
