@@ -177,13 +177,9 @@ class Radio(ConstrainedControl, AdaptiveControl):
     @label_position.setter
     def label_position(self, value: LabelPosition):
         self.__label_position = value
-        if isinstance(value, LabelPosition):
-            self._set_attr("labelPosition", value.value)
-        else:
-            self.__set_label_position(value)
-
-    def __set_label_position(self, value: LabelPositionString):
-        self._set_attr("labelPosition", value)
+        self._set_attr(
+            "labelPosition", value.value if isinstance(value, LabelPosition) else value
+        )
 
     # fill_color
     @property

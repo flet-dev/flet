@@ -342,13 +342,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     @keyboard_type.setter
     def keyboard_type(self, value: Optional[KeyboardType]):
         self.__keyboard_type = value
-        if isinstance(value, KeyboardType):
-            self._set_attr("keyboardType", value.value)
-        else:
-            self.__set_keyboard_type(value)
-
-    def __set_keyboard_type(self, value: KeyboardTypeString):
-        self._set_attr("keyboardType", value)
+        self._set_attr(
+            "keyboardType", value.value if isinstance(value, KeyboardType) else value
+        )
 
     # text_align
     @property
@@ -451,13 +447,10 @@ class TextField(FormFieldControl, AdaptiveControl):
     @capitalization.setter
     def capitalization(self, value: TextCapitalization):
         self.__capitalization = value
-        if isinstance(value, TextCapitalization):
-            self._set_attr("capitalization", value.value)
-        else:
-            self.__set_capitalization(value)
-
-    def __set_capitalization(self, value: TextCapitalizationString):
-        self._set_attr("capitalization", value)
+        self._set_attr(
+            "capitalization",
+            value.value if isinstance(value, TextCapitalization) else value,
+        )
 
     # autocorrect
     @property

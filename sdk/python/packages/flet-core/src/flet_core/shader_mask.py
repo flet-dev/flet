@@ -59,7 +59,7 @@ class ShaderMask(ConstrainedControl):
         blend_mode: BlendMode = BlendMode.NONE,
         shader: Optional[Gradient] = None,
         border_radius: BorderRadiusValue = None,
-            #
+        #
         # ConstrainedControl
         #
         ref: Optional[Ref] = None,
@@ -156,13 +156,9 @@ class ShaderMask(ConstrainedControl):
     @blend_mode.setter
     def blend_mode(self, value: BlendMode):
         self.__blend_mode = value
-        if isinstance(value, BlendMode):
-            self._set_attr("blendMode", value.value)
-        else:
-            self.__set_blend_mode(value)
-
-    def __set_blend_mode(self, value: BlendModeString):
-        self._set_attr("blendMode", value)
+        self._set_attr(
+            "blendMode", value.value if isinstance(value, BlendMode) else value
+        )
 
     # shader
     @property

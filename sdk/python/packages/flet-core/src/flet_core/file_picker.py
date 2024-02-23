@@ -291,13 +291,9 @@ class FilePicker(Control):
     @file_type.setter
     def file_type(self, value: FilePickerFileType):
         self.__file_type = value
-        if isinstance(value, FilePickerFileType):
-            self._set_attr("fileType", value.value)
-        else:
-            self.__set_file_type(value)
-
-    def __set_file_type(self, value: FileTypeString):
-        self._set_attr("fileType", value)
+        self._set_attr(
+            "fileType", value.value if isinstance(value, FilePickerFileType) else value
+        )
 
     # allowed_extensions
     @property

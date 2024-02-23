@@ -1,7 +1,7 @@
 from typing import Any, Optional
 
 from flet_core.canvas.shape import Shape
-from flet_core.types import BlendMode, BlendModeString
+from flet_core.types import BlendMode
 
 
 class Color(Shape):
@@ -45,10 +45,6 @@ class Color(Shape):
     @blend_mode.setter
     def blend_mode(self, value: BlendMode):
         self.__blend_mode = value
-        if isinstance(value, BlendMode):
-            self._set_attr("blendMode", value.value)
-        else:
-            self.__set_blend_mode(value)
-
-    def __set_blend_mode(self, value: BlendModeString):
-        self._set_attr("blendMode", value)
+        self._set_attr(
+            "blendMode", value.value if isinstance(value, BlendMode) else value
+        )

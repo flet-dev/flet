@@ -225,13 +225,9 @@ class Tooltip(Control):
     @text_align.setter
     def text_align(self, value: TextAlign):
         self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
-
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
+        self._set_attr(
+            "textAlign", value.value if isinstance(value, TextAlign) else value
+        )
 
     # text_style
     @property

@@ -341,13 +341,10 @@ class NavigationRail(ConstrainedControl):
     @label_type.setter
     def label_type(self, value: Optional[NavigationRailLabelType]):
         self.__label_type = value
-        if isinstance(value, NavigationRailLabelType):
-            self._set_attr("labelType", value.value)
-        else:
-            self.__set_label_type(value)
-
-    def __set_label_type(self, value: NavigationRailLabelTypeString):
-        self._set_attr("labelType", value)
+        self._set_attr(
+            "labelType",
+            value.value if isinstance(value, NavigationRailLabelType) else value,
+        )
 
     # indicator_shape
     @property

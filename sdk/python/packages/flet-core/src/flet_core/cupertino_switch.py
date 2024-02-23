@@ -6,7 +6,6 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
-    LabelPositionString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -160,13 +159,9 @@ class CupertinoSwitch(ConstrainedControl):
     @label_position.setter
     def label_position(self, value: LabelPosition):
         self.__label_position = value
-        if isinstance(value, LabelPosition):
-            self._set_attr("labelPosition", value.value)
-        else:
-            self.__set_label_position(value)
-
-    def __set_label_position(self, value: LabelPositionString):
-        self._set_attr("labelPosition", value)
+        self._set_attr(
+            "labelPosition", value.value if isinstance(value, LabelPosition) else value
+        )
 
     # autofocus
     @property

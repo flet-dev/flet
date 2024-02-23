@@ -11,13 +11,11 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     FontWeight,
-    FontWeightString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TextAlign,
-    TextAlignString,
 )
 
 try:
@@ -221,13 +219,7 @@ class Text(ConstrainedControl):
     @text_align.setter
     def text_align(self, value: TextAlign):
         self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
-
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
+        self._set_attr("textAlign", value.value if isinstance(value, TextAlign) else value)
 
     # font_family
     @property
@@ -255,13 +247,7 @@ class Text(ConstrainedControl):
     @weight.setter
     def weight(self, value: Optional[FontWeight]):
         self.__weight = value
-        if isinstance(value, FontWeight):
-            self._set_attr("weight", value.value)
-        else:
-            self.__set_weight(value)
-
-    def __set_weight(self, value: FontWeightString):
-        self._set_attr("weight", value)
+        self._set_attr("weight", value.value if isinstance(value, FontWeight) else value)
 
     # style
     @property
@@ -337,13 +323,7 @@ class Text(ConstrainedControl):
     @overflow.setter
     def overflow(self, value: TextOverflow):
         self.__overflow = value
-        if isinstance(value, TextOverflow):
-            self._set_attr("overflow", value.value)
-        else:
-            self.__set_overflow(value)
-
-    def __set_overflow(self, value: TextOverflowString):
-        self._set_attr("overflow", value)
+        self._set_attr("overflow", value.value if isinstance(value, TextOverflow) else value)
 
     # color
     @property

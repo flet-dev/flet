@@ -244,13 +244,9 @@ class FormFieldControl(ConstrainedControl):
     @border.setter
     def border(self, value: Optional[InputBorder]):
         self.__border = value
-        if isinstance(value, InputBorder):
-            self._set_attr("border", value.value)
-        else:
-            self.__set_border(value)
-
-    def __set_border(self, value: Optional[InputBorderString]):
-        self._set_attr("border", value)
+        self._set_attr(
+            "border", value.value if isinstance(value, InputBorder) else value
+        )
 
     # color
     @property

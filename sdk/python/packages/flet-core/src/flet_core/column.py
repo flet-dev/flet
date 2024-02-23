@@ -8,9 +8,7 @@ from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     AnimationValue,
     CrossAxisAlignment,
-    CrossAxisAlignmentString,
     MainAxisAlignment,
-    MainAxisAlignmentString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -183,13 +181,9 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @alignment.setter
     def alignment(self, value: MainAxisAlignment):
         self.__alignment = value
-        if isinstance(value, MainAxisAlignment):
-            self._set_attr("alignment", value.value)
-        else:
-            self.__set_alignment(value)
-
-    def __set_alignment(self, value: MainAxisAlignmentString):
-        self._set_attr("alignment", value)
+        self._set_attr(
+            "alignment", value.value if isinstance(value, MainAxisAlignment) else value
+        )
 
     # horizontal_alignment
     @property
@@ -199,13 +193,10 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__horizontal_alignment = value
-        if isinstance(value, CrossAxisAlignment):
-            self._set_attr("horizontalAlignment", value.value)
-        else:
-            self.__set_horizontal_alignment(value)
-
-    def __set_horizontal_alignment(self, value: CrossAxisAlignmentString):
-        self._set_attr("horizontalAlignment", value)
+        self._set_attr(
+            "horizontalAlignment",
+            value.value if isinstance(value, CrossAxisAlignment) else value,
+        )
 
     # spacing
     @property

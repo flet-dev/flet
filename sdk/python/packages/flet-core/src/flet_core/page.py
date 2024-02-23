@@ -1487,13 +1487,9 @@ class Page(AdaptiveControl):
     @theme_mode.setter
     def theme_mode(self, value: Optional[ThemeMode]):
         self.__theme_mode = value
-        if isinstance(value, ThemeMode):
-            self._set_attr("themeMode", value.value)
-        else:
-            self.__set_theme_mode(value)
-
-    def __set_theme_mode(self, value: ThemeModeString):
-        self._set_attr("themeMode", value)
+        self._set_attr(
+            "themeMode", value.value if isinstance(value, ThemeMode) else value
+        )
 
     # theme
     @property

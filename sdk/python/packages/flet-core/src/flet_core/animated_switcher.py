@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
-from flet_core.animation import AnimationCurve, AnimationCurveString
+from flet_core.animation import AnimationCurve
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -200,13 +200,9 @@ class AnimatedSwitcher(ConstrainedControl):
     @switch_in_curve.setter
     def switch_in_curve(self, value: Optional[AnimationCurve]):
         self.__switch_in_curve = value
-        if isinstance(value, AnimationCurve):
-            self._set_attr("switchInCurve", value.value)
-        else:
-            self.__set_switch_in_curve(value)
-
-    def __set_switch_in_curve(self, value: Optional[AnimationCurveString]):
-        self._set_attr("switchInCurve", value)
+        self._set_attr(
+            "switchInCurve", value.value if isinstance(value, AnimationCurve) else value
+        )
 
     # switch_out_curve
     @property
@@ -216,13 +212,10 @@ class AnimatedSwitcher(ConstrainedControl):
     @switch_out_curve.setter
     def switch_out_curve(self, value: Optional[AnimationCurve]):
         self.__switch_out_curve = value
-        if isinstance(value, AnimationCurve):
-            self._set_attr("switchOutCurve", value.value)
-        else:
-            self.__set_switch_out_curve(value)
-
-    def __set_switch_out_curve(self, value: Optional[AnimationCurveString]):
-        self._set_attr("switchOutCurve", value)
+        self._set_attr(
+            "switchOutCurve",
+            value.value if isinstance(value, AnimationCurve) else value,
+        )
 
     # transition
     @property
@@ -232,10 +225,7 @@ class AnimatedSwitcher(ConstrainedControl):
     @transition.setter
     def transition(self, value: Optional[AnimatedSwitcherTransition]):
         self.__transition = value
-        if isinstance(value, AnimatedSwitcherTransition):
-            self._set_attr("transition", value.value)
-        else:
-            self.__set_transition(value)
-
-    def __set_transition(self, value: Optional[TransitionValueString]):
-        self._set_attr("transition", value)
+        self._set_attr(
+            "transition",
+            value.value if isinstance(value, AnimatedSwitcherTransition) else value,
+        )

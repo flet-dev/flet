@@ -224,13 +224,10 @@ class View(ScrollableControl, AdaptiveControl):
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__horizontal_alignment = value
-        if isinstance(value, CrossAxisAlignment):
-            self._set_attr("horizontalAlignment", value.value)
-        else:
-            self.__set_horizontal_alignment(value)
-
-    def __set_horizontal_alignment(self, value: CrossAxisAlignmentString):
-        self._set_attr("horizontalAlignment", value)
+        self._set_attr(
+            "horizontalAlignment",
+            value.value if isinstance(value, CrossAxisAlignment) else value,
+        )
 
     # vertical_alignment
     @property
@@ -240,13 +237,10 @@ class View(ScrollableControl, AdaptiveControl):
     @vertical_alignment.setter
     def vertical_alignment(self, value: MainAxisAlignment):
         self.__vertical_alignment = value
-        if isinstance(value, MainAxisAlignment):
-            self._set_attr("verticalAlignment", value.value)
-        else:
-            self.__set_vertical_alignment(value)
-
-    def __set_vertical_alignment(self, value: MainAxisAlignmentString):
-        self._set_attr("verticalAlignment", value)
+        self._set_attr(
+            "verticalAlignment",
+            value.value if isinstance(value, MainAxisAlignment) else value,
+        )
 
     # spacing
     @property

@@ -6,7 +6,6 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
-    ClipBehaviorString,
     NotchShape,
     OffsetValue,
     PaddingValue,
@@ -185,13 +184,9 @@ class BottomAppBar(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        if isinstance(value, ClipBehavior):
-            self._set_attr("clipBehavior", value.value)
-        else:
-            self.__set_clip_behavior(value)
-
-    def __set_clip_behavior(self, value: Optional[ClipBehaviorString]):
-        self._set_attr("clipBehavior", value)
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
 
     # notch_margin
     @property

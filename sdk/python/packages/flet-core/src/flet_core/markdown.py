@@ -153,13 +153,10 @@ class Markdown(ConstrainedControl):
     @extension_set.setter
     def extension_set(self, value: Optional[MarkdownExtensionSet]):
         self.__extension_set = value
-        if isinstance(value, MarkdownExtensionSet):
-            self._set_attr("extensionSet", value.value)
-        else:
-            self.__set_extension_set(value)
-
-    def __set_extension_set(self, value: MarkdownExtensionSetString):
-        self._set_attr("extensionSet", value)
+        self._set_attr(
+            "extensionSet",
+            value.value if isinstance(value, MarkdownExtensionSet) else value,
+        )
 
     # code_theme
     @property

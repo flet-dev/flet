@@ -4,7 +4,7 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import MainAxisAlignment, MainAxisAlignmentString, PaddingValue
+from flet_core.types import MainAxisAlignment, PaddingValue
 
 
 class AlertDialog(AdaptiveControl):
@@ -251,13 +251,10 @@ class AlertDialog(AdaptiveControl):
     @actions_alignment.setter
     def actions_alignment(self, value: MainAxisAlignment):
         self.__actions_alignment = value
-        if isinstance(value, MainAxisAlignment):
-            self._set_attr("actionsAlignment", value.value)
-        else:
-            self.__set_actions_alignment(value)
-
-    def __set_actions_alignment(self, value: MainAxisAlignmentString):
-        self._set_attr("actionsAlignment", value)
+        self._set_attr(
+            "actionsAlignment",
+            value.value if isinstance(value, MainAxisAlignment) else value,
+        )
 
     # shape
     @property
