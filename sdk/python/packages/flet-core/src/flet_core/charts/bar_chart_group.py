@@ -10,15 +10,15 @@ class BarChartGroup(Control):
         self,
         x: Optional[int] = None,
         bar_rods: Optional[List[BarChartRod]] = None,
+        group_vertically: Optional[bool] = None,
+        bars_space: OptionalNumber = None,
+        #
+        # Control
+        #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        group_vertically: Optional[bool] = None,
-        bars_space: OptionalNumber = None,
     ):
 
         Control.__init__(

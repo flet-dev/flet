@@ -13,13 +13,6 @@ class BarChartRod(Control):
     def __init__(
         self,
         rod_stack_items: Optional[List[BarChartRodStackItem]] = None,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         from_y: OptionalNumber = None,
         to_y: OptionalNumber = None,
         width: OptionalNumber = None,
@@ -36,6 +29,13 @@ class BarChartRod(Control):
         tooltip: Optional[str] = None,
         tooltip_style: Optional[TextStyle] = None,
         tooltip_align: TextAlign = TextAlign.NONE,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(

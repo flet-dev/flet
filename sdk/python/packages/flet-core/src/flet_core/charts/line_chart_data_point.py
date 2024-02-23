@@ -13,13 +13,6 @@ class LineChartDataPoint(Control):
         self,
         x: OptionalNumber = None,
         y: OptionalNumber = None,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         selected: Optional[bool] = None,
         show_tooltip: Optional[bool] = None,
         tooltip: Optional[str] = None,
@@ -30,6 +23,13 @@ class LineChartDataPoint(Control):
         show_above_line: Optional[bool] = None,
         show_below_line: Optional[bool] = None,
         selected_below_line: Union[None, bool, ChartPointLine] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(

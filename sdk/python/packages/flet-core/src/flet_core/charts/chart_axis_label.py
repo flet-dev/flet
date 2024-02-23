@@ -7,15 +7,15 @@ from flet_core.ref import Ref
 class ChartAxisLabel(Control):
     def __init__(
         self,
+        value: OptionalNumber = None,
+        label: Optional[Control] = None,
+        #
+        # Specific
+        #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        value: OptionalNumber = None,
-        label: Optional[Control] = None,
     ):
 
         Control.__init__(

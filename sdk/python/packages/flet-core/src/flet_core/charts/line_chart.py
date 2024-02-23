@@ -1,5 +1,5 @@
 import json
-from typing import Any, List, Optional, Union
+from typing import List, Optional, Union
 
 from flet_core.border import Border
 from flet_core.charts.chart_axis import ChartAxis
@@ -23,6 +23,29 @@ class LineChart(ConstrainedControl):
     def __init__(
         self,
         data_series: Optional[List[LineChartData]] = None,
+        animate: AnimationValue = None,
+        interactive: Optional[bool] = None,
+        point_line_start: OptionalNumber = None,
+        point_line_end: OptionalNumber = None,
+        bgcolor: Optional[str] = None,
+        tooltip_bgcolor: Optional[str] = None,
+        border: Optional[Border] = None,
+        horizontal_grid_lines: Optional[ChartGridLines] = None,
+        vertical_grid_lines: Optional[ChartGridLines] = None,
+        left_axis: Optional[ChartAxis] = None,
+        top_axis: Optional[ChartAxis] = None,
+        right_axis: Optional[ChartAxis] = None,
+        bottom_axis: Optional[ChartAxis] = None,
+        baseline_x: OptionalNumber = None,
+        min_x: OptionalNumber = None,
+        max_x: OptionalNumber = None,
+        baseline_y: OptionalNumber = None,
+        min_y: OptionalNumber = None,
+        max_y: OptionalNumber = None,
+        on_chart_event=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -48,30 +71,6 @@ class LineChart(ConstrainedControl):
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
-        animate: AnimationValue = None,
-        interactive: Optional[bool] = None,
-        point_line_start: OptionalNumber = None,
-        point_line_end: OptionalNumber = None,
-        bgcolor: Optional[str] = None,
-        tooltip_bgcolor: Optional[str] = None,
-        border: Optional[Border] = None,
-        horizontal_grid_lines: Optional[ChartGridLines] = None,
-        vertical_grid_lines: Optional[ChartGridLines] = None,
-        left_axis: Optional[ChartAxis] = None,
-        top_axis: Optional[ChartAxis] = None,
-        right_axis: Optional[ChartAxis] = None,
-        bottom_axis: Optional[ChartAxis] = None,
-        baseline_x: OptionalNumber = None,
-        min_x: OptionalNumber = None,
-        max_x: OptionalNumber = None,
-        baseline_y: OptionalNumber = None,
-        min_y: OptionalNumber = None,
-        max_y: OptionalNumber = None,
-        on_chart_event=None,
     ):
         ConstrainedControl.__init__(
             self,
