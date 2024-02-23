@@ -57,11 +57,11 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         icon: Optional[str] = None,
-        icon_size: OptionalNumber = None,
         icon_color: Optional[str] = None,
+        icon_size: OptionalNumber = None,
+        selected: Optional[bool] = None,
         selected_icon: Optional[str] = None,
         selected_icon_color: Optional[str] = None,
-        selected: Optional[bool] = None,
         bgcolor: Optional[str] = None,
         style: Optional[ButtonStyle] = None,
         content: Optional[Control] = None,
