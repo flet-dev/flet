@@ -8,14 +8,15 @@ from flet_core.types import (
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
-    ScaleValue, ImageFit,
+    ScaleValue,
+    ImageFit,
 )
 from flet_core.video import FilterQuality
 
 
 class Lottie(ConstrainedControl):
     """
-    Parses Adobe After Effects animations exported as json with Bodymovin and renders them natively.
+    Displays lottie animations.
 
     -----
 
@@ -23,47 +24,47 @@ class Lottie(ConstrainedControl):
     """
 
     def __init__(
-            self,
-            src: Optional[str] = None,
-            src_base64: Optional[str] = None,
-            repeat: Optional[bool] = None,
-            reverse: Optional[bool] = None,
-            animate: Optional[bool] = None,
-            background_loading: Optional[bool] = None,
-            filter_quality: Optional[FilterQuality] = None,
-            fit: Optional[ImageFit] = None,
-            on_error=None,
-            #
-            # Common
-            #
-            ref: Optional[Ref] = None,
-            key: Optional[str] = None,
-            width: OptionalNumber = None,
-            height: OptionalNumber = None,
-            left: OptionalNumber = None,
-            top: OptionalNumber = None,
-            right: OptionalNumber = None,
-            bottom: OptionalNumber = None,
-            expand: Union[None, bool, int] = None,
-            expand_loose: Optional[bool] = None,
-            col: Optional[ResponsiveNumber] = None,
-            opacity: OptionalNumber = None,
-            rotate: RotateValue = None,
-            scale: ScaleValue = None,
-            offset: OffsetValue = None,
-            aspect_ratio: OptionalNumber = None,
-            animate_opacity: AnimationValue = None,
-            animate_size: AnimationValue = None,
-            animate_position: AnimationValue = None,
-            animate_rotation: AnimationValue = None,
-            animate_scale: AnimationValue = None,
-            animate_offset: AnimationValue = None,
-            on_animation_end=None,
-            tooltip: Optional[str] = None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-            rtl: Optional[bool] = None,
+        self,
+        src: Optional[str] = None,
+        src_base64: Optional[str] = None,
+        repeat: Optional[bool] = None,
+        reverse: Optional[bool] = None,
+        animate: Optional[bool] = None,
+        background_loading: Optional[bool] = None,
+        filter_quality: Optional[FilterQuality] = None,
+        fit: Optional[ImageFit] = None,
+        on_error=None,
+        #
+        # ConstrainedControl
+        #
+        ref: Optional[Ref] = None,
+        key: Optional[str] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        rtl: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
