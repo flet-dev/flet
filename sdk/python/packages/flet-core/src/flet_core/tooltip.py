@@ -65,13 +65,6 @@ class Tooltip(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         content: Optional[Control] = None,
         enable_feedback: Optional[bool] = None,
         height: OptionalNumber = None,
@@ -89,6 +82,13 @@ class Tooltip(Control):
         prefer_below: Optional[bool] = None,
         show_duration: Optional[int] = None,
         wait_duration: Optional[int] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,

@@ -28,6 +28,17 @@ class BottomAppBar(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        surface_tint_color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        shadow_color: Optional[str] = None,
+        padding: PaddingValue = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        shape: Optional[NotchShape] = None,
+        notch_margin: OptionalNumber = None,
+        elevation: OptionalNumber = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -53,17 +64,6 @@ class BottomAppBar(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        surface_tint_color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
-        shadow_color: Optional[str] = None,
-        padding: PaddingValue = None,
-        clip_behavior: Optional[ClipBehavior] = None,
-        shape: Optional[NotchShape] = None,
-        notch_margin: OptionalNumber = None,
-        elevation: OptionalNumber = None,
     ):
         ConstrainedControl.__init__(
             self,

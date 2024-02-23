@@ -36,17 +36,20 @@ class CupertinoAppBar(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
         leading: Optional[Control] = None,
         middle: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        bgcolor: Optional[str] = None,
         automatically_imply_leading: Optional[bool] = None,
         automatically_imply_middle: Optional[bool] = None,
         border: Optional[Border] = None,
         padding: PaddingValue = None,
-        trailing: Optional[Control] = None,
         transition_between_routes: Optional[bool] = None,
         previous_page_title: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
     ):
         Control.__init__(self, ref=ref)
 

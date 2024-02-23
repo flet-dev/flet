@@ -42,7 +42,7 @@ class CupertinoButton(ConstrainedControl):
         url_target: Optional[str] = None,
         on_click=None,
         #
-        # Common
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,

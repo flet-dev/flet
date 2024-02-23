@@ -15,7 +15,9 @@ class TextSpan(InlineSpan):
         on_click=None,
         on_enter=None,
         on_exit=None,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

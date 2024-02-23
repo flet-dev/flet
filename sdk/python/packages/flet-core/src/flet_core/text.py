@@ -86,6 +86,24 @@ class Text(ConstrainedControl):
     def __init__(
         self,
         value: Optional[str] = None,
+        spans: Optional[List[TextSpan]] = None,
+        text_align: TextAlign = TextAlign.NONE,
+        font_family: Optional[str] = None,
+        size: OptionalNumber = None,
+        weight: Optional[FontWeight] = None,
+        italic: Optional[bool] = None,
+        style: Union[TextThemeStyle, TextStyle, None] = None,
+        theme_style: Optional[TextThemeStyle] = None,
+        max_lines: Optional[int] = None,
+        overflow: TextOverflow = TextOverflow.NONE,
+        selectable: Optional[bool] = None,
+        no_wrap: Optional[bool] = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        semantics_label: Optional[str] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -114,24 +132,6 @@ class Text(ConstrainedControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
-        #
-        # text-specific
-        #
-        spans: Optional[List[TextSpan]] = None,
-        text_align: TextAlign = TextAlign.NONE,
-        font_family: Optional[str] = None,
-        size: OptionalNumber = None,
-        weight: Optional[FontWeight] = None,
-        italic: Optional[bool] = None,
-        style: Union[TextThemeStyle, TextStyle, None] = None,
-        theme_style: Optional[TextThemeStyle] = None,
-        max_lines: Optional[int] = None,
-        overflow: TextOverflow = TextOverflow.NONE,
-        selectable: Optional[bool] = None,
-        no_wrap: Optional[bool] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
-        semantics_label: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
             self,

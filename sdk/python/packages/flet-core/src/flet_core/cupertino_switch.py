@@ -42,6 +42,20 @@ class CupertinoSwitch(ConstrainedControl):
 
     def __init__(
         self,
+        value: Optional[bool] = None,
+        label: Optional[str] = None,
+        label_position: LabelPosition = LabelPosition.NONE,
+        active_color: Optional[str] = None,
+        thumb_color: Optional[str] = None,
+        track_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
+        autofocus: Optional[bool] = None,
+        on_change=None,
+        on_focus=None,
+        on_blur=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -69,20 +83,6 @@ class CupertinoSwitch(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        label: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
-        value: Optional[bool] = None,
-        autofocus: Optional[bool] = None,
-        active_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
-        thumb_color: Optional[str] = None,
-        track_color: Optional[str] = None,
-        on_change=None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,

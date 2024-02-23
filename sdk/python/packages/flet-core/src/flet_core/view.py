@@ -53,7 +53,7 @@ class View(ScrollableControl, AdaptiveControl):
         padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
         #
-        # ScrollableControl specific
+        # ScrollableControl
         #
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
@@ -61,7 +61,7 @@ class View(ScrollableControl, AdaptiveControl):
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Any = None,
         #
-        # Adaptive
+        # AdaptiveControl
         #
         adaptive: Optional[bool] = None,
     ):

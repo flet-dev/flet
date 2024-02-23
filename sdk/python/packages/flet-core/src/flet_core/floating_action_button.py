@@ -65,6 +65,18 @@ class FloatingActionButton(ConstrainedControl):
     def __init__(
         self,
         text: Optional[str] = None,
+        icon: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        content: Optional[Control] = None,
+        shape: Optional[OutlinedBorder] = None,
+        autofocus: Optional[bool] = None,
+        mini: Optional[bool] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
+        on_click=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -92,18 +104,6 @@ class FloatingActionButton(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        icon: Optional[str] = None,
-        bgcolor: Optional[str] = None,
-        content: Optional[Control] = None,
-        autofocus: Optional[bool] = None,
-        shape: Optional[OutlinedBorder] = None,
-        mini: Optional[bool] = None,
-        url: Optional[str] = None,
-        url_target: Optional[str] = None,
-        on_click=None,
     ):
         ConstrainedControl.__init__(
             self,

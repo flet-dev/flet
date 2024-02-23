@@ -49,13 +49,6 @@ class Banner(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         open: bool = False,
         leading: Optional[Control] = None,
         leading_padding: Optional[PaddingValue] = None,
@@ -64,6 +57,13 @@ class Banner(Control):
         actions: Optional[List[Control]] = None,
         force_actions_below: Optional[bool] = None,
         bgcolor: Optional[str] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(

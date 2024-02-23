@@ -40,6 +40,21 @@ class OutlinedButton(ConstrainedControl):
     def __init__(
         self,
         text: Optional[str] = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        content: Optional[Control] = None,
+        style: Optional[ButtonStyle] = None,
+        autofocus: Optional[bool] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
+        on_click=None,
+        on_long_press=None,
+        on_hover=None,
+        on_focus=None,
+        on_blur=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -67,21 +82,6 @@ class OutlinedButton(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
-        style: Optional[ButtonStyle] = None,
-        content: Optional[Control] = None,
-        autofocus: Optional[bool] = None,
-        url: Optional[str] = None,
-        url_target: Optional[str] = None,
-        on_click=None,
-        on_long_press=None,
-        on_hover=None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,

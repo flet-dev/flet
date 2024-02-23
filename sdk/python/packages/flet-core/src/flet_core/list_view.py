@@ -57,6 +57,22 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        horizontal: Optional[bool] = None,
+        spacing: OptionalNumber = None,
+        item_extent: OptionalNumber = None,
+        first_item_prototype: Optional[bool] = None,
+        divider_thickness: OptionalNumber = None,
+        padding: PaddingValue = None,
+        #
+        # ScrollableControl specific
+        #
+        auto_scroll: Optional[bool] = None,
+        reverse: Optional[bool] = None,
+        on_scroll_interval: OptionalNumber = None,
+        on_scroll: Any = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -84,23 +100,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         #
-        # ScrollableControl specific
-        #
-        auto_scroll: Optional[bool] = None,
-        reverse: Optional[bool] = None,
-        on_scroll_interval: OptionalNumber = None,
-        on_scroll: Any = None,
-        #
-        # Specific
-        #
-        horizontal: Optional[bool] = None,
-        spacing: OptionalNumber = None,
-        item_extent: OptionalNumber = None,
-        first_item_prototype: Optional[bool] = None,
-        divider_thickness: OptionalNumber = None,
-        padding: PaddingValue = None,
-        #
-        # Adaptive
+        # AdaptiveControl
         #
         adaptive: Optional[bool] = None,
     ):

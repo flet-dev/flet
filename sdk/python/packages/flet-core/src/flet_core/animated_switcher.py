@@ -80,6 +80,14 @@ class AnimatedSwitcher(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        duration: Optional[int] = None,
+        reverse_duration: Optional[int] = None,
+        switch_in_curve: Optional[AnimationCurve] = None,
+        switch_out_curve: Optional[AnimationCurve] = None,
+        transition: Optional[AnimatedSwitcherTransition] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -106,14 +114,6 @@ class AnimatedSwitcher(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        duration: Optional[int] = None,
-        reverse_duration: Optional[int] = None,
-        switch_in_curve: Optional[AnimationCurve] = None,
-        switch_out_curve: Optional[AnimationCurve] = None,
-        transition: Optional[AnimatedSwitcherTransition] = None,
     ):
         ConstrainedControl.__init__(
             self,

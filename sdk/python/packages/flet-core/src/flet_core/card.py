@@ -61,6 +61,15 @@ class Card(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        margin: MarginValue = None,
+        elevation: OptionalNumber = None,
+        color: Optional[str] = None,
+        shadow_color: Optional[str] = None,
+        surface_tint_color: Optional[str] = None,
+        shape: Optional[OutlinedBorder] = None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -88,18 +97,6 @@ class Card(ConstrainedControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         key: Optional[str] = None,
-        #
-        # Specific
-        #
-        margin: MarginValue = None,
-        elevation: OptionalNumber = None,
-        color: Optional[str] = None,
-        shadow_color: Optional[str] = None,
-        surface_tint_color: Optional[str] = None,
-        shape: Optional[OutlinedBorder] = None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(

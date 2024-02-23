@@ -73,7 +73,7 @@ class Video(ConstrainedControl):
         on_enter_fullscreen=None,
         on_exit_fullscreen=None,
         #
-        # Common
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,

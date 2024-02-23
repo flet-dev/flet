@@ -52,6 +52,25 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        label: Optional[str] = None,
+        label_position: LabelPosition = LabelPosition.NONE,
+        value: Optional[bool] = None,
+        autofocus: Optional[bool] = None,
+        active_color: Optional[str] = None,
+        active_track_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
+        inactive_thumb_color: Optional[str] = None,
+        inactive_track_color: Optional[str] = None,
+        thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
+        thumb_icon: Union[None, str, Dict[MaterialState, str]] = None,
+        track_color: Union[None, str, Dict[MaterialState, str]] = None,
+        adaptive: Optional[bool] = None,
+        on_change=None,
+        on_focus=None,
+        on_blur=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -79,25 +98,6 @@ class Switch(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        label: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
-        value: Optional[bool] = None,
-        autofocus: Optional[bool] = None,
-        active_color: Optional[str] = None,
-        active_track_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
-        inactive_thumb_color: Optional[str] = None,
-        inactive_track_color: Optional[str] = None,
-        thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
-        thumb_icon: Union[None, str, Dict[MaterialState, str]] = None,
-        track_color: Union[None, str, Dict[MaterialState, str]] = None,
-        adaptive: Optional[bool] = None,
-        on_change=None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,

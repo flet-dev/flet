@@ -67,6 +67,10 @@ class Stack(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -93,13 +97,6 @@ class Stack(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Stack-specific
-        #
-        clip_behavior: Optional[ClipBehavior] = None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(

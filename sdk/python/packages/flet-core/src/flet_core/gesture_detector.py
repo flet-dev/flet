@@ -109,35 +109,6 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content: Optional[Control] = None,
-        ref: Optional[Ref] = None,
-        key: Optional[str] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        left: OptionalNumber = None,
-        top: OptionalNumber = None,
-        right: OptionalNumber = None,
-        bottom: OptionalNumber = None,
-        expand: Union[None, bool, int] = None,
-        expand_loose: Optional[bool] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
-        aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         mouse_cursor: Optional[MouseCursor] = None,
         drag_interval: Optional[int] = None,
         hover_interval: Optional[int] = None,
@@ -173,7 +144,36 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         on_exit=None,
         on_scroll=None,
         #
-        # Adaptive
+        # ConstrainedControl
+        #
+        ref: Optional[Ref] = None,
+        key: Optional[str] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        #
+        # AdaptiveControl
         #
         adaptive: Optional[bool] = None,
     ):

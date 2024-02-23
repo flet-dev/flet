@@ -79,7 +79,7 @@ class AlertDialog(AdaptiveControl):
         adaptive: Optional[bool] = None,
         on_dismiss=None,
         #
-        # Common
+        # AdaptiveControl
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,

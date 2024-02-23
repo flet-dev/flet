@@ -56,6 +56,12 @@ class ShaderMask(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        blend_mode: BlendMode = BlendMode.NONE,
+        shader: Optional[Gradient] = None,
+        border_radius: BorderRadiusValue = None,
+            #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -82,12 +88,6 @@ class ShaderMask(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        blend_mode: BlendMode = BlendMode.NONE,
-        shader: Optional[Gradient] = None,
-        border_radius: BorderRadiusValue = None,
     ):
         ConstrainedControl.__init__(
             self,

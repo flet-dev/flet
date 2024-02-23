@@ -1,4 +1,3 @@
-import io
 import re
 import xml.etree.ElementTree as ET
 from typing import Any, Optional, Union
@@ -14,6 +13,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ImageFit,
 )
 
 try:
@@ -51,6 +51,11 @@ class PlotlyChart(Container):
     def __init__(
         self,
         figure: Optional[Figure] = None,
+        isolated: bool = False,
+        original_size: bool = False,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         expand: Union[None, bool, int] = None,
@@ -72,11 +77,6 @@ class PlotlyChart(Container):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        isolated: bool = False,
-        original_size: bool = False,
     ):
         Container.__init__(
             self,
@@ -112,7 +112,7 @@ class PlotlyChart(Container):
 
     def _build(self):
         self.alignment = alignment.center
-        self.__img = Image(fit="fill")
+        self.__img = Image(fit=ImageFit.FILL)
         self.content = self.__img
 
     def _before_build_command(self):

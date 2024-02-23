@@ -24,15 +24,17 @@ class Tab(AdaptiveControl):
         text: Optional[str] = None,
         content: Optional[Control] = None,
         tab_content: Optional[Control] = None,
-        ref: Optional[Ref] = None,
         icon: Optional[str] = None,
+        #
+        # Control and AdaptiveControl
+        #
+        ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         Control.__init__(self, ref=ref, visible=visible)
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.text = text
         self.icon = icon
         self.__content: Optional[Control] = None

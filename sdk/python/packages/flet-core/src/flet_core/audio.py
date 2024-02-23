@@ -42,9 +42,6 @@ class Audio(Control):
     def __init__(
         self,
         src: Optional[str] = None,
-        ref: Optional[Ref] = None,
-        data: Any = None,
-        # specific
         src_base64: Optional[str] = None,
         autoplay: Optional[bool] = None,
         volume: OptionalNumber = None,
@@ -56,6 +53,11 @@ class Audio(Control):
         on_state_changed=None,
         on_position_changed=None,
         on_seek_complete=None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,

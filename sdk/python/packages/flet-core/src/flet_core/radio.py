@@ -53,6 +53,17 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        label: Optional[str] = None,
+        label_position: LabelPosition = LabelPosition.NONE,
+        value: Optional[str] = None,
+        autofocus: Optional[bool] = None,
+        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
+        active_color: Optional[str] = None,
+        on_focus=None,
+        on_blur=None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -80,18 +91,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        label: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
-        value: Optional[str] = None,
-        autofocus: Optional[bool] = None,
         adaptive: Optional[bool] = None,
-        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
-        active_color: Optional[str] = None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,

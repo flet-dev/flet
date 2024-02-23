@@ -58,6 +58,15 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        spacing: OptionalNumber = None,
+        tight: Optional[bool] = None,
+        wrap: Optional[bool] = None,
+        run_spacing: OptionalNumber = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -86,24 +95,12 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         data: Any = None,
         rtl: Optional[bool] = None,
         #
-        # ScrollableControl specific
+        # ScrollableControl and AdaptiveControl
         #
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Any = None,
-        #
-        # Column specific
-        #
-        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
-        spacing: OptionalNumber = None,
-        tight: Optional[bool] = None,
-        wrap: Optional[bool] = None,
-        run_spacing: OptionalNumber = None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(

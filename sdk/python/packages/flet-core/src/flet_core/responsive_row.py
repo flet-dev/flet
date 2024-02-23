@@ -52,6 +52,15 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        columns: Optional[ResponsiveNumber] = None,
+        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        spacing: Optional[ResponsiveNumber] = None,
+        run_spacing: Optional[ResponsiveNumber] = None,
+        rtl: Optional[bool] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -78,17 +87,8 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        rtl: Optional[bool] = None,
         #
-        # Row specific
-        #
-        columns: Optional[ResponsiveNumber] = None,
-        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
-        spacing: Optional[ResponsiveNumber] = None,
-        run_spacing: Optional[ResponsiveNumber] = None,
-        #
-        # Adaptive
+        # AdaptiveControl
         #
         adaptive: Optional[bool] = None,
     ):

@@ -55,6 +55,18 @@ class Image(ConstrainedControl):
     def __init__(
         self,
         src: Optional[str] = None,
+        src_base64: Optional[str] = None,
+        error_content: Optional[Control] = None,
+        repeat: Optional[ImageRepeat] = None,
+        fit: Optional[ImageFit] = None,
+        border_radius: BorderRadiusValue = None,
+        color: Optional[str] = None,
+        color_blend_mode: BlendMode = BlendMode.NONE,
+        gapless_playback: Optional[bool] = None,
+        semantics_label: Optional[str] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -82,18 +94,6 @@ class Image(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        src_base64: Optional[str] = None,
-        error_content: Optional[Control] = None,
-        repeat: Optional[ImageRepeat] = None,
-        fit: Optional[ImageFit] = None,
-        border_radius: BorderRadiusValue = None,
-        color: Optional[str] = None,
-        color_blend_mode: BlendMode = BlendMode.NONE,
-        gapless_playback: Optional[bool] = None,
-        semantics_label: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
             self,

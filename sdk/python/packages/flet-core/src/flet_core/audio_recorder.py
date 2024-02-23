@@ -38,7 +38,7 @@ class AudioRecorder(Control):
         bit_rate: OptionalNumber = None,
         on_state_changed=None,
         #
-        # common
+        # Control
         #
         ref: Optional[Ref] = None,
         data: Any = None,

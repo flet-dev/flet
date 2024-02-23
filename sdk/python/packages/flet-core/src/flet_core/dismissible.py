@@ -34,6 +34,20 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content: Control,
+        background: Optional[Control] = None,
+        secondary_background: Optional[Control] = None,
+        dismiss_direction: Optional[DismissDirection] = None,
+        dismiss_thresholds: Optional[Dict[DismissDirection, OptionalNumber]] = None,
+        movement_duration: Optional[int] = None,
+        resize_duration: Optional[int] = None,
+        cross_axis_end_offset: OptionalNumber = None,
+        on_update=None,
+        on_dismiss=None,
+        on_confirm_dismiss=None,
+        on_resize=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -61,20 +75,6 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         key: Optional[str] = None,
-        #
-        # Specific
-        #
-        background: Optional[Control] = None,
-        secondary_background: Optional[Control] = None,
-        dismiss_direction: Optional[DismissDirection] = None,
-        dismiss_thresholds: Optional[Dict[DismissDirection, OptionalNumber]] = None,
-        movement_duration: Optional[int] = None,
-        resize_duration: Optional[int] = None,
-        cross_axis_end_offset: OptionalNumber = None,
-        on_update=None,
-        on_dismiss=None,
-        on_confirm_dismiss=None,
-        on_resize=None,
         #
         # Adaptive
         #

@@ -1,10 +1,10 @@
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
 from flet_core.alignment import Alignment
+from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import OffsetValue, PaddingValue
 from flet_core.text_style import TextStyle
+from flet_core.types import OffsetValue, PaddingValue
 
 
 class Badge(Control):
@@ -52,13 +52,6 @@ class Badge(Control):
     def __init__(
         self,
         content: Optional[Control] = None,
-        ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         text: Optional[str] = None,
         offset: OffsetValue = None,
         alignment: Optional[Alignment] = None,
@@ -69,6 +62,13 @@ class Badge(Control):
         small_size: OptionalNumber = None,
         text_color: Optional[str] = None,
         text_style: Optional[TextStyle] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        opacity: OptionalNumber = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,

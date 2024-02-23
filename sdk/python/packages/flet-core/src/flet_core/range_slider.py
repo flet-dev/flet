@@ -77,6 +77,20 @@ class RangeSlider(ConstrainedControl):
         self,
         start_value: [float],
         end_value: [float],
+        label: Optional[str] = None,
+        min: OptionalNumber = None,
+        max: OptionalNumber = None,
+        divisions: Optional[int] = None,
+        round: Optional[int] = None,
+        active_color: Optional[str] = None,
+        inactive_color: Optional[str] = None,
+        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        on_change=None,
+        on_change_start=None,
+        on_change_end=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -104,20 +118,6 @@ class RangeSlider(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        label: Optional[str] = None,
-        min: OptionalNumber = None,
-        max: OptionalNumber = None,
-        divisions: Optional[int] = None,
-        round: Optional[int] = None,
-        active_color: Optional[str] = None,
-        inactive_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
-        on_change=None,
-        on_change_start=None,
-        on_change_end=None,
     ):
         ConstrainedControl.__init__(
             self,

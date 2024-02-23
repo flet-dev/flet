@@ -61,6 +61,22 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        spacing: OptionalNumber = None,
+        tight: Optional[bool] = None,
+        wrap: Optional[bool] = None,
+        run_spacing: OptionalNumber = None,
+        #
+        # ScrollableControl specific
+        #
+        scroll: Optional[ScrollMode] = None,
+        auto_scroll: Optional[bool] = None,
+        on_scroll_interval: OptionalNumber = None,
+        on_scroll: Any = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -88,22 +104,6 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
-        #
-        # ScrollableControl specific
-        #
-        scroll: Optional[ScrollMode] = None,
-        auto_scroll: Optional[bool] = None,
-        on_scroll_interval: OptionalNumber = None,
-        on_scroll: Any = None,
-        #
-        # Row specific
-        #
-        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
-        spacing: OptionalNumber = None,
-        tight: Optional[bool] = None,
-        wrap: Optional[bool] = None,
-        run_spacing: OptionalNumber = None,
         #
         # Adaptive
         #

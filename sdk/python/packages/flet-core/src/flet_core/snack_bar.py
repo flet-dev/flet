@@ -62,13 +62,6 @@ class SnackBar(Control):
     def __init__(
         self,
         content: Control,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         open: bool = False,
         behavior: Optional[SnackBarBehavior] = None,
         dismiss_direction: Optional[DismissDirection] = None,
@@ -83,6 +76,13 @@ class SnackBar(Control):
         width: OptionalNumber = None,
         elevation: OptionalNumber = None,
         on_action=None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,
