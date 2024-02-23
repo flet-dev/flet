@@ -21,6 +21,11 @@ class Canvas(ConstrainedControl):
         self,
         shapes: Optional[List[Shape]] = None,
         content: Optional[Control] = None,
+        resize_interval: OptionalNumber = None,
+        on_resize=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -46,11 +51,6 @@ class Canvas(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # CustomPaint specific
-        #
-        resize_interval: OptionalNumber = None,
-        on_resize=None,
     ):
         ConstrainedControl.__init__(
             self,

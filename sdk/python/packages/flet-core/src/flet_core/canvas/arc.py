@@ -16,7 +16,9 @@ class Arc(Shape):
         sweep_angle: OptionalNumber = None,
         use_center: Optional[bool] = None,
         paint: Optional[Paint] = None,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

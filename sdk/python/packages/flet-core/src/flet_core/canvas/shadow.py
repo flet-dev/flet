@@ -12,7 +12,9 @@ class Shadow(Shape):
         color: Optional[str] = None,
         elevation: OptionalNumber = None,
         transparent_occluder: Optional[bool] = None,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

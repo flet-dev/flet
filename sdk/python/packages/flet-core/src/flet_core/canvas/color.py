@@ -9,7 +9,9 @@ class Color(Shape):
         self,
         color: Optional[str] = None,
         blend_mode: BlendMode = BlendMode.NONE,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

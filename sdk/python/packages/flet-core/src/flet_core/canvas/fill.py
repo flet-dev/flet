@@ -8,7 +8,9 @@ class Fill(Shape):
     def __init__(
         self,
         paint: Optional[Paint] = None,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

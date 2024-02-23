@@ -22,7 +22,9 @@ class Text(Shape):
         max_width: OptionalNumber = None,
         ellipsis: Optional[str] = None,
         rotate: OptionalNumber = None,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
