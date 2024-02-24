@@ -65,6 +65,7 @@ import 'list_view.dart';
 import 'markdown.dart';
 import 'menu_bar.dart';
 import 'menu_item_button.dart';
+import 'merge_semantics.dart';
 import 'navigation_bar.dart';
 import 'navigation_rail.dart';
 import 'outlined_button.dart';
@@ -556,6 +557,14 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "mergesemantics":
+      return MergeSemanticsControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive);
     case "shadermask":
       return ShaderMaskControl(
           key: key,
