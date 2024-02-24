@@ -36,15 +36,14 @@ class SemanticsControl extends StatelessWidget {
         expanded: control.attrBool("expanded"),
         hidden: control.attrBool("hidden"),
         selected: control.attrBool("selected"),
-        onTap: control.attrBool("onclick", false)!
-            ? () {
-                backend.triggerControlEvent(control.id, "click");
-              }
-            : null,
         checked: control.attrBool("checked"),
         button: control.attrBool("button"),
         slider: control.attrBool("slider"),
         value: control.attrString("value"),
+        textField: control.attrBool("textField"),
+        image: control.attrBool("image"),
+        link: control.attrBool("link"),
+        header: control.attrBool("header"),
         increasedValue: control.attrString("increasedValue"),
         decreasedValue: control.attrString("decreasedValue"),
         hint: control.attrString("hint"),
@@ -52,6 +51,19 @@ class SemanticsControl extends StatelessWidget {
         onLongPressHint: control.attrString("onLongPressHint"),
         container: control.attrBool("container")!,
         liveRegion: control.attrBool("liveRegion"),
+        obscured: control.attrBool("obscured"),
+        multiline: control.attrBool("multiline"),
+        focused: control.attrBool("focused"),
+        readOnly: control.attrBool("readOnly"),
+        focusable: control.attrBool("focusable"),
+        tooltip: control.attrString("tooltip"),
+        toggled: control.attrBool("toggled"),
+        maxValueLength: control.attrInt("maxValueLength"),
+        onTap: control.attrBool("onclick", false)!
+            ? () {
+                backend.triggerControlEvent(control.id, "click");
+              }
+            : null,
         onIncrease: control.attrBool("onIncrease", false)!
             ? () {
                 backend.triggerControlEvent(control.id, "increase");
@@ -135,14 +147,6 @@ class SemanticsControl extends StatelessWidget {
                         control.id, "did_lose_accessibility_focus");
                   }
                 : null,
-        obscured: control.attrBool("obscured"),
-        multiline: control.attrBool("multiline"),
-        focused: control.attrBool("focused"),
-        readOnly: control.attrBool("readOnly"),
-        focusable: control.attrBool("focusable"),
-        tooltip: control.attrString("tooltip"),
-        toggled: control.attrBool("toggled"),
-        maxValueLength: control.attrInt("maxValueLength"),
         child: contentCtrls.isNotEmpty
             ? createControl(control, contentCtrls.first.id, disabled,
                 parentAdaptive: parentAdaptive)

@@ -48,6 +48,10 @@ class Semantics(Control):
         on_long_press_hint_text: Optional[str] = None,
         container: Optional[bool] = None,
         live_region: Optional[bool] = None,
+        textfield: Optional[bool] = None,
+        link: Optional[bool] = None,
+        header: Optional[bool] = None,
+        image: Optional[bool] = None,
         on_tap=None,
         on_double_tap=None,
         on_increase=None,
@@ -98,6 +102,10 @@ class Semantics(Control):
         self.on_long_press_hint_text = on_long_press_hint_text
         self.container = container
         self.live_region = live_region
+        self.textfield = textfield
+        self.link = link
+        self.header = header
+        self.image = image
         self.on_tap = on_tap
         self.on_double_tap = on_double_tap
         self.on_increase = on_increase
@@ -161,6 +169,42 @@ class Semantics(Control):
     @hidden.setter
     def hidden(self, value: Optional[bool]):
         self._set_attr("hidden", value)
+
+    # textfield
+    @property
+    def textfield(self):
+        return self._get_attr("textfield")
+
+    @textfield.setter
+    def textfield(self, value: Optional[bool]):
+        self._set_attr("textfield", value)
+
+    # link
+    @property
+    def link(self):
+        return self._get_attr("link")
+
+    @link.setter
+    def link(self, value: Optional[bool]):
+        self._set_attr("link", value)
+
+    # image
+    @property
+    def image(self):
+        return self._get_attr("image")
+
+    @image.setter
+    def image(self, value: Optional[bool]):
+        self._set_attr("image", value)
+
+    # header
+    @property
+    def header(self):
+        return self._get_attr("header")
+
+    @header.setter
+    def header(self, value: Optional[bool]):
+        self._set_attr("header", value)
 
     # selected
     @property
