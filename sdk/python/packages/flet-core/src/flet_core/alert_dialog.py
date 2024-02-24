@@ -76,6 +76,7 @@ class AlertDialog(AdaptiveControl):
         actions_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
         shape: Optional[OutlinedBorder] = None,
         inset_padding: PaddingValue = None,
+        semantics_label: Optional[str] = None,
         adaptive: Optional[bool] = None,
         on_dismiss=None,
         #
@@ -115,6 +116,7 @@ class AlertDialog(AdaptiveControl):
         self.actions_alignment = actions_alignment
         self.shape = shape
         self.inset_padding = inset_padding
+        self.semantics_label = semantics_label
         self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
@@ -276,6 +278,15 @@ class AlertDialog(AdaptiveControl):
     @inset_padding.setter
     def inset_padding(self, value: PaddingValue):
         self.__inset_padding = value
+
+    # semantics_label
+    @property
+    def semantics_label(self):
+        return self._get_attr("semanticsLabel")
+
+    @semantics_label.setter
+    def semantics_label(self, value):
+        self._set_attr("semanticsLabel", value)
 
     # on_dismiss
     @property

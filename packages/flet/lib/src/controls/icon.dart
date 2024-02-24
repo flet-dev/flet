@@ -16,7 +16,8 @@ class IconControl extends StatelessWidget {
     debugPrint("Icon build: ${control.id}");
 
     var name = control.attrString("name", "")!;
-    var size = control.attrDouble("size", null);
+    var size = control.attrDouble("size");
+    var semanticsLabel = control.attrString("semanticsLabel");
     var color = HexColor.fromString(
         Theme.of(context), control.attrString("color", "")!);
 
@@ -26,6 +27,7 @@ class IconControl extends StatelessWidget {
           parseIcon(name),
           size: size,
           color: color,
+          semanticLabel: semanticsLabel,
         ),
         parent,
         control);

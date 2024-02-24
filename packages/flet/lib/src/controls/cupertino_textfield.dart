@@ -233,6 +233,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         cursorRadius: parseRadius(widget.control, "cursorRadius") ??
             const Radius.circular(2.0),
         keyboardType: keyboardType,
+        clearButtonSemanticLabel:
+            widget.control.attrString("clearButtonSemanticsLabel"),
         autocorrect: autocorrect,
         enableSuggestions: enableSuggestions,
         smartDashesType: smartDashesType

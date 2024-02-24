@@ -49,6 +49,7 @@ class CupertinoTextField(TextField):
         shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
         prefix_visibility_mode: Optional[VisibilityMode] = None,
         suffix_visibility_mode: Optional[VisibilityMode] = None,
+        clear_button_semantics_label: Optional[str] = None,
         #
         # TextField Specific
         #
@@ -240,6 +241,7 @@ class CupertinoTextField(TextField):
         self.shadow = shadow
         self.suffix_visibility_mode = suffix_visibility_mode
         self.prefix_visibility_mode = prefix_visibility_mode
+        self.clear_button_semantics_label = clear_button_semantics_label
 
     def _get_control_name(self):
         return "cupertinotextfield"
@@ -323,3 +325,12 @@ class CupertinoTextField(TextField):
             "prefixVisibilityMode",
             value.value if isinstance(value, VisibilityMode) else value,
         )
+
+    # clear_button_semantics_label
+    @property
+    def clear_button_semantics_label(self):
+        return self._get_attr("clearButtonSemanticsLabel")
+
+    @clear_button_semantics_label.setter
+    def clear_button_semantics_label(self, value):
+        self._set_attr("clearButtonSemanticsLabel", value)
