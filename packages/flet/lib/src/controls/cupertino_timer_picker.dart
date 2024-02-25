@@ -5,6 +5,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
+import 'create_control.dart';
 
 class CupertinoTimerPickerControl extends StatefulWidget {
   final Control? parent;
@@ -47,20 +48,24 @@ class _CupertinoTimerPickerControlState
     Color? backgroundColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("bgColor", "")!);
 
-    return CupertinoTimerPicker(
-      mode: mode,
-      initialTimerDuration: initialTimerDuration,
-      minuteInterval: minuteInterval,
-      secondInterval: secondInterval,
-      alignment:
-          parseAlignment(widget.control, "alignment") ?? Alignment.center,
-      backgroundColor: backgroundColor,
-      onTimerDurationChanged: (Duration d) {
-        widget.backend
-            .updateControlState(widget.control.id, {"value": d.toString()});
-        widget.backend.triggerControlEvent(
-            widget.control.id, "change", d.inMilliseconds.toString());
-      },
-    );
+    return constrainedControl(
+        context,
+        CupertinoTimerPicker(
+          mode: mode,
+          initialTimerDuration: initialTimerDuration,
+          minuteInterval: minuteInterval,
+          secondInterval: secondInterval,
+          alignment:
+              parseAlignment(widget.control, "alignment") ?? Alignment.center,
+          backgroundColor: backgroundColor,
+          onTimerDurationChanged: (Duration d) {
+            widget.backend
+                .updateControlState(widget.control.id, {"value": d.toString()});
+            widget.backend.triggerControlEvent(
+                widget.control.id, "change", d.inMilliseconds.toString());
+          },
+        ),
+        widget.parent,
+        widget.control);
   }
 }
