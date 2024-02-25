@@ -39,6 +39,7 @@ import 'cupertino_radio.dart';
 import 'cupertino_slider.dart';
 import 'cupertino_switch.dart';
 import 'cupertino_textfield.dart';
+import 'cupertino_timer_picker.dart';
 import 'datatable.dart';
 import 'date_picker.dart';
 import 'dismissible.dart';
@@ -476,6 +477,13 @@ Widget createWidget(
           backend: backend);
     case "timepicker":
       return TimePickerControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          backend: backend);
+    case "cupertinotimerpicker":
+      return CupertinoTimerPickerControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,

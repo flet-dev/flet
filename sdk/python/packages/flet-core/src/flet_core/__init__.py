@@ -77,6 +77,10 @@ from flet_core.cupertino_radio import CupertinoRadio
 from flet_core.cupertino_slider import CupertinoSlider
 from flet_core.cupertino_switch import CupertinoSwitch
 from flet_core.cupertino_textfield import CupertinoTextField, VisibilityMode
+from flet_core.cupertino_timer_picker import (
+    CupertinoTimerPicker,
+    CupertinoTimerPickerMode,
+)
 from flet_core.datatable import (
     DataCell,
     DataColumn,
