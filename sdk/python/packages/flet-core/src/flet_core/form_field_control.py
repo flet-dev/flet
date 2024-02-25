@@ -168,8 +168,8 @@ class FormFieldControl(ConstrainedControl):
         self.suffix_text = suffix_text
         self.suffix_style = suffix_style
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("contentPadding", self.__content_padding)
         self._set_attr_json("textStyle", self.__text_style)

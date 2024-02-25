@@ -1,6 +1,7 @@
 import dataclasses
 from enum import Enum
-from typing import Any, Optional, Union, List, Dict
+from typing import Any, Dict, List, Optional, Union
+from warnings import warn
 
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
@@ -8,11 +9,11 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    ImageFit,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ImageFit,
 )
 
 try:
@@ -154,110 +155,101 @@ class Video(ConstrainedControl):
     def _get_control_name(self):
         return "video"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("alignment", self.__alignment)
         self._set_attr_json("playlist", self.__playlist if self.__playlist else None)
 
     def play(self):
-        self.page.invoke_method("play", control_id=self.uid)
+        self.invoke_method("play")
 
     async def play_async(self):
-        await self.page.invoke_method_async("play", control_id=self.uid)
+        warn("Obsolete. Use play() method instead.")
+        self.play()
 
     def pause(self):
-        self.page.invoke_method("pause", control_id=self.uid)
+        self.invoke_method("pause")
 
     async def pause_async(self):
-        await self.page.invoke_method_async("pause", control_id=self.uid)
+        warn("Obsolete. Use pause() method instead.")
+        self.pause()
 
     def play_or_pause(self):
-        self.page.invoke_method("play_or_pause", control_id=self.uid)
+        self.invoke_method("play_or_pause")
 
     async def play_or_pause_async(self):
-        await self.page.invoke_method_async("play_or_pause", control_id=self.uid)
+        warn("Obsolete. Use play_or_pause() method instead.")
+        self.play_or_pause()
 
     def stop(self):
-        self.page.invoke_method("stop", control_id=self.uid)
+        self.invoke_method("stop")
 
     async def stop_async(self):
-        await self.page.invoke_method_async("stop", control_id=self.uid)
+        warn("Obsolete. Use stop() method instead.")
+        self.stop()
 
     def next(self):
-        self.page.invoke_method("next", control_id=self.uid)
+        self.invoke_method("next")
 
     async def next_async(self):
-        await self.page.invoke_method_async("next", control_id=self.uid)
+        warn("Obsolete. Use next() method instead.")
+        self.next()
 
     def previous(self):
-        self.page.invoke_method("previous", control_id=self.uid)
+        self.invoke_method("previous")
 
     async def previous_async(self):
-        await self.page.invoke_method_async("previous", control_id=self.uid)
+        warn("Obsolete. Use previous() method instead.")
+        self.previous()
 
     def seek(self, position_milliseconds: int):
-        self.page.invoke_method(
-            "seek", {"position": str(position_milliseconds)}, control_id=self.uid
-        )
+        self.invoke_method("seek", {"position": str(position_milliseconds)})
 
     async def seek_async(self, position_milliseconds: int):
-        await self.page.invoke_method_async(
-            "seek", {"position": str(position_milliseconds)}, control_id=self.uid
-        )
+        await self.invoke_method_async("seek", {"position": str(position_milliseconds)})
 
     def jump_to(self, media_index: int):
         assert self.__playlist[media_index], "index out of range"
-        self.page.invoke_method(
-            "jump_to", {"media_index": str(media_index)}, control_id=self.uid
-        )
+        self.invoke_method("jump_to", {"media_index": str(media_index)})
 
     async def jump_to_async(self, media_index: int):
         assert self.__playlist[media_index], "index out of range"
-        await self.page.invoke_method_async(
-            "jump_to", {"media_index": str(media_index)}, control_id=self.uid
-        )
+        await self.invoke_method_async("jump_to", {"media_index": str(media_index)})
 
     def playlist_add(self, media: VideoMedia):
         assert media.resource, "media has no resource"
-        self.page.invoke_method(
+        self.invoke_method(
             "playlist_add",
             {
                 "resource": media.resource,
                 "http_headers": str(media.http_headers or {}),
                 "extras": str(media.extras or {}),
             },
-            control_id=self.uid,
         )
         self.__playlist.append(media)
 
     async def playlist_add_async(self, media: VideoMedia):
         assert media.resource, "media has no resource"
-        await self.page.invoke_method_async(
+        await self.invoke_method_async(
             "playlist_add",
             {
                 "resource": media.resource,
                 "http_headers": str(media.http_headers),
                 "extras": str(media.extras),
             },
-            control_id=self.uid,
         )
         self.__playlist.append(media)
 
     def playlist_remove(self, media_index: int):
         assert self.__playlist[media_index], "index out of range"
-        self.page.invoke_method(
-            "playlist_remove",
-            {"media_index": str(media_index)},
-            control_id=self.uid,
-        )
+        self.invoke_method("playlist_remove", {"media_index": str(media_index)})
         self.__playlist.pop(media_index)
 
     async def playlist_remove_async(self, media_index: int):
         assert self.__playlist[media_index], "index out of range"
-        await self.page.invoke_method_async(
+        await self.invoke_method_async(
             "playlist_remove",
             {"media_index": str(media_index)},
-            control_id=self.uid,
         )
         self.__playlist.pop(media_index)
 

@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Any, Optional
+from warnings import warn
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -80,43 +81,43 @@ class Audio(Control):
         return "audio"
 
     def play(self):
-        self.page.invoke_method("play", control_id=self.uid)
+        self.invoke_method("play")
 
     async def play_async(self):
-        await self.page.invoke_method_async("play", control_id=self.uid)
+        warn("Obsolete. Use play() method instead.")
+        self.play()
 
     def pause(self):
-        self.page.invoke_method("pause", control_id=self.uid)
+        self.invoke_method("pause")
 
     async def pause_async(self):
-        await self.page.invoke_method_async("pause", control_id=self.uid)
+        warn("Obsolete. Use pause() method instead.")
+        self.pause()
 
     def resume(self):
-        self.page.invoke_method("resume", control_id=self.uid)
+        self.invoke_method("resume")
 
     async def resume_async(self):
-        await self.page.invoke_method_async("resume", control_id=self.uid)
+        warn("Obsolete. Use resume() method instead.")
+        self.resume()
 
     def release(self):
-        self.page.invoke_method("release", control_id=self.uid)
+        self.invoke_method("release")
 
     async def release_async(self):
-        await self.page.invoke_method_async("release", control_id=self.uid)
+        warn("Obsolete. Use release() method instead.")
+        self.release()
 
     def seek(self, position_milliseconds: int):
-        self.page.invoke_method(
-            "seek", {"position": str(position_milliseconds)}, control_id=self.uid
-        )
+        self.invoke_method("seek", {"position": str(position_milliseconds)})
 
     async def seek_async(self, position_milliseconds: int):
-        await self.page.invoke_method_async(
-            "seek", {"position": str(position_milliseconds)}, control_id=self.uid
-        )
+        warn("Obsolete. Use seek() method instead.")
+        self.seek(position_milliseconds)
 
     def get_duration(self, wait_timeout: Optional[float] = 5) -> Optional[int]:
-        sr = self.page.invoke_method(
+        sr = self.invoke_method(
             "get_duration",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
@@ -125,18 +126,16 @@ class Audio(Control):
     async def get_duration_async(
         self, wait_timeout: Optional[float] = 5
     ) -> Optional[int]:
-        sr = await self.page.invoke_method_async(
+        sr = await self.invoke_method_async(
             "get_duration",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
     def get_current_position(self, wait_timeout: Optional[float] = 5) -> Optional[int]:
-        sr = self.page.invoke_method(
+        sr = self.invoke_method(
             "get_current_position",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
@@ -145,9 +144,8 @@ class Audio(Control):
     async def get_current_position_async(
         self, wait_timeout: Optional[float] = 5
     ) -> Optional[int]:
-        sr = await self.page.invoke_method_async(
+        sr = await self.invoke_method_async(
             "get_current_position",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
@@ -217,7 +215,9 @@ class Audio(Control):
 
     @release_mode.setter
     def release_mode(self, value: Optional[ReleaseMode]):
-        self._set_attr("releaseMode", value.value if isinstance(value, ReleaseMode) else value)
+        self._set_attr(
+            "releaseMode", value.value if isinstance(value, ReleaseMode) else value
+        )
 
     # on_loaded
     @property

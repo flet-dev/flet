@@ -1,4 +1,5 @@
 from typing import Any, Optional, Union
+from warnings import warn
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.app_bar import AppBar
@@ -183,9 +184,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.update()
 
     async def show_drawer_async(self, drawer: NavigationDrawer):
-        self.drawer = drawer
-        self.drawer.open = True
-        await self.update_async()
+        warn("Obsolete. Use show_drawer_async() method instead.")
+        self.show_drawer(drawer)
 
     def close_drawer(self):
         if self.drawer is not None:
@@ -193,9 +193,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
             self.update()
 
     async def close_drawer_async(self):
-        if self.drawer is not None:
-            self.drawer.open = False
-            await self.drawer.update_async()
+        warn("Obsolete. Use close_end_drawer() method instead.")
+        self.close_end_drawer()
 
     # End_drawer
     #
@@ -205,9 +204,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.update()
 
     async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
-        self.end_drawer = end_drawer
-        self.end_drawer.open = True
-        await self.update_async()
+        warn("Obsolete. Use show_end_drawer() method instead.")
+        self.show_end_drawer(end_drawer)
 
     def close_end_drawer(self):
         if self.end_drawer is not None:
@@ -215,9 +213,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
             self.update()
 
     async def close_end_drawer_async(self):
-        if self.end_drawer is not None:
-            self.end_drawer.open = False
-            await self.end_drawer.update_async()
+        warn("Obsolete. Use close_end_drawer() method instead.")
+        self.close_end_drawer()
 
     # appbar
     @property

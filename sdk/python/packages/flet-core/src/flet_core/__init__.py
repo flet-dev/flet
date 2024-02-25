@@ -177,6 +177,7 @@ from flet_core.painting import (
 from flet_core.popup_menu_button import PopupMenuButton, PopupMenuItem
 from flet_core.progress_bar import ProgressBar
 from flet_core.progress_ring import ProgressRing
+from flet_core.pubsub import PubSub, PubSubHub
 from flet_core.querystring import QueryString
 from flet_core.radio import Radio
 from flet_core.radio_group import RadioGroup

@@ -1,5 +1,6 @@
 import time
 from typing import Any, Optional, Union
+from warnings import warn
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import ButtonStyle
@@ -154,8 +155,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "iconbutton"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if self.__style is not None:
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
@@ -173,8 +174,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.update()
 
     async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
+        warn("Obsolete. Use focus() method instead.")
+        self.focus()
 
     # icon
     @property

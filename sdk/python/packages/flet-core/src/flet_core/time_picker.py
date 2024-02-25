@@ -1,6 +1,7 @@
 from datetime import time
 from enum import Enum
 from typing import Any, Optional, Union
+from warnings import warn
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -116,8 +117,8 @@ class TimePicker(Control):
         self.update()
 
     async def pick_time_async(self):
-        self.open = True
-        await self.update_async()
+        warn("Obsolete. Use pick_time() method instead.")
+        self.pick_time()
 
     # open
     @property

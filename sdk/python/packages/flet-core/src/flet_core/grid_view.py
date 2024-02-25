@@ -1,4 +1,5 @@
 from typing import Any, List, Optional, Union
+from warnings import warn
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -166,8 +167,8 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def _get_control_name(self):
         return "gridview"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
@@ -178,8 +179,8 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.__controls.clear()
 
     async def clean_async(self):
-        await super().clean_async()
-        self.__controls.clear()
+        warn("Obsolete. Use clean() method instead.")
+        self.clean()
 
     # horizontal
     @property

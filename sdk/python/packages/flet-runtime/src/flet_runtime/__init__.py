@@ -1,4 +1,5 @@
 from flet_core import *
+from flet_core.pubsub import PubSub
 from flet_core.types import (
     FLET_APP,
     FLET_APP_HIDDEN,
@@ -8,4 +9,3 @@ from flet_core.types import (
     WebRenderer,
 )
 from flet_runtime.app import app, app_async
-from flet_runtime.pubsub import PubSub

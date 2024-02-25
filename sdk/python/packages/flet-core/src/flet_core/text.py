@@ -190,8 +190,8 @@ class Text(ConstrainedControl):
         children.extend(self.__spans)
         return children
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if dataclasses.is_dataclass(self.__style):
             self._set_attr_json("style", self.__style)
 

@@ -1,4 +1,5 @@
 from typing import Any, Optional
+from warnings import warn
 
 from flet_core.control import Control
 from flet_core.ref import Ref
@@ -47,29 +48,33 @@ class HapticFeedback(Control):
     def _get_control_name(self):
         return "hapticfeedback"
 
-    def _is_isolated(self):
+    def is_isolated(self):
         return True
 
     def heavy_impact(self):
         self.page.invoke_method("heavy_impact", control_id=self.uid)
 
     async def heavy_impact_async(self):
-        await self.page.invoke_method_async("heavy_impact", control_id=self.uid)
+        warn("Obsolete. Use heavy_impact() method instead.")
+        self.heavy_impact()
 
     def light_impact(self):
         self.page.invoke_method("light_impact", control_id=self.uid)
 
     async def light_impact_async(self):
-        await self.page.invoke_method_async("light_impact", control_id=self.uid)
+        warn("Obsolete. Use light_impact() method instead.")
+        self.light_impact()
 
     def medium_impact(self):
         self.page.invoke_method("medium_impact", control_id=self.uid)
 
     async def medium_impact_async(self):
-        await self.page.invoke_method_async("medium_impact", control_id=self.uid)
+        warn("Obsolete. Use medium_impact() method instead.")
+        self.medium_impact()
 
     def vibrate(self):
         self.page.invoke_method("vibrate", control_id=self.uid)
 
     async def vibrate_async(self):
-        await self.page.invoke_method_async("vibrate", control_id=self.uid)
+        warn("Obsolete. Use vibrate() method instead.")
+        self.vibrate()

@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from enum import Enum
 from typing import Any, Optional, Union
+from warnings import warn
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -142,16 +143,16 @@ class DatePicker(Control):
     def _get_control_name(self):
         return "datepicker"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
 
     def pick_date(self):
         self.open = True
         self.update()
 
     async def pick_date_async(self):
-        self.open = True
-        await self.update_async()
+        warn("Obsolete. Use pick_date() method instead.")
+        self.pick_date()
 
     # open
     @property

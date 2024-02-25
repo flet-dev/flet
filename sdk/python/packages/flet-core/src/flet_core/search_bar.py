@@ -1,5 +1,6 @@
 import time
 from typing import Any, Dict, List, Optional, Union
+from warnings import warn
 
 from flet_core import BorderSide, OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -130,8 +131,8 @@ class SearchBar(ConstrainedControl):
     def _get_control_name(self):
         return "searchbar"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("barBgcolor", self.__bar_bgcolor)
         self._set_attr_json("barOverlayColor", self.__bar_overlay_color)
         self._set_attr_json("viewShape", self.__view_shape)
@@ -171,13 +172,8 @@ class SearchBar(ConstrainedControl):
         self.update()
 
     async def open_view_async(self):
-        m = {
-            "n": "openView",
-            "i": str(time.time()),
-            "p": {},
-        }
-        self._set_attr_json("method", m)
-        await self.update_async()
+        warn("Obsolete. Use open_view() method instead.")
+        self.open_view()
 
     def close_view(self, text: str = ""):
         m = {
@@ -190,14 +186,8 @@ class SearchBar(ConstrainedControl):
         self.update()
 
     async def close_view_async(self, text: str = ""):
-        m = {
-            "n": "closeView",
-            "i": str(time.time()),
-            "p": {"text": text},
-        }
-        self.value = text
-        self._set_attr_json("method", m)
-        await self.update_async()
+        warn("Obsolete. Use close_view() method instead.")
+        self.close_view()
 
     # bar_leading
     @property

@@ -1,5 +1,6 @@
 import time
 from typing import Any, Optional, Union
+from warnings import warn
 
 from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
@@ -199,8 +200,8 @@ class Dropdown(FormFieldControl):
     def _get_control_name(self):
         return "dropdown"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("alignment", self.__alignment)
 
     def _get_children(self):
@@ -213,8 +214,8 @@ class Dropdown(FormFieldControl):
         self.update()
 
     async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
+        warn("Obsolete. Use focus() method instead.")
+        self.focus()
 
     # options
     @property

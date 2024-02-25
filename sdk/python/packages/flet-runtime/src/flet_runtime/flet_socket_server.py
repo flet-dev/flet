@@ -19,6 +19,7 @@ from flet_core.protocol import (
     PageCommandsBatchResponsePayload,
     RegisterWebClientRequestPayload,
 )
+from flet_core.pubsub import PubSubHub
 from flet_core.utils import random_string
 from flet_runtime.utils import get_free_tcp_port, is_windows
 
@@ -28,6 +29,7 @@ logger = logging.getLogger(flet_runtime.__name__)
 class FletSocketServer(LocalConnection):
     def __init__(
         self,
+        loop: asyncio.AbstractEventLoop,
         port: int = 0,
         uds_path: Optional[str] = None,
         on_event=None,
@@ -42,7 +44,9 @@ class FletSocketServer(LocalConnection):
         self.__on_event = on_event
         self.__on_session_created = on_session_created
         self.__blocking = blocking
+        self.__loop = loop
         self.__pool = pool
+        self.pubsubhub = PubSubHub(loop=asyncio.get_running_loop(), pool=pool)
         self.__running_tasks = set()
 
     async def start(self):
@@ -120,7 +124,7 @@ class FletSocketServer(LocalConnection):
             self._client_details = RegisterWebClientRequestPayload(**msg.payload)
 
             # register response
-            await self.__send_async(self._create_register_web_client_response())
+            self.__send(self._create_register_web_client_response())
 
             # start session
             if self.__on_session_created is not None:
@@ -147,32 +151,11 @@ class FletSocketServer(LocalConnection):
             self.__running_tasks.add(task)
             task.add_done_callback(self.__running_tasks.discard)
 
-    async def send_command_async(self, session_id: str, command: Command):
-        result, message = self._process_command(command)
-        if message:
-            await self.__send_async(message)
-        return PageCommandResponsePayload(result=result, error="")
-
     def send_command(self, session_id: str, command: Command):
         result, message = self._process_command(command)
         if message:
             self.__send(message)
         return PageCommandResponsePayload(result=result, error="")
-
-    async def send_commands_async(self, session_id: str, commands: List[Command]):
-        results = []
-        messages = []
-        for command in commands:
-            result, message = self._process_command(command)
-            if command.name in ["add", "get"]:
-                results.append(result)
-            if message:
-                messages.append(message)
-        if len(messages) > 0:
-            await self.__send_async(
-                ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages)
-            )
-        return PageCommandsBatchResponsePayload(results=results, error="")
 
     def send_commands(self, session_id: str, commands: List[Command]):
         results = []
@@ -187,15 +170,10 @@ class FletSocketServer(LocalConnection):
             self.__send(ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages))
         return PageCommandsBatchResponsePayload(results=results, error="")
 
-    async def __send_async(self, message: ClientMessage):
-        j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
-        logger.debug(f"__send_async: {j}")
-        await self.__send_queue.put(j)
-
     def __send(self, message: ClientMessage):
         j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logger.debug(f"__send: {j}")
-        self.__send_queue._loop.call_soon_threadsafe(self.__send_queue.put_nowait, j)
+        self.__loop.call_soon_threadsafe(self.__send_queue.put_nowait, j)
 
     async def close(self):
         logger.debug("Closing connection...")

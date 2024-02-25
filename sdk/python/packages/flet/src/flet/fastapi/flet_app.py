@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
 import flet.fastapi as flet_fastapi
-import flet_core
 from fastapi import WebSocket, WebSocketDisconnect
 from flet.fastapi.flet_app_manager import app_manager
 from flet.fastapi.oauth_state import OAuthState
@@ -24,8 +23,8 @@ from flet_core.protocol import (
     PageCommandsBatchResponsePayload,
     RegisterWebClientRequestPayload,
 )
-from flet_core.utils import is_coroutine, random_string
-from flet_runtime.pubsub import PubSubHub
+from flet_core.pubsub import PubSubHub
+from flet_core.utils import random_string
 from flet_runtime.uploads import build_upload_url
 
 logger = logging.getLogger(flet_fastapi.__name__)
@@ -40,6 +39,7 @@ _pubsubhubs = {}
 class FletApp(LocalConnection):
     def __init__(
         self,
+        loop: asyncio.AbstractEventLoop,
         session_handler,
         session_timeout_seconds: int = DEFAULT_FLET_SESSION_TIMEOUT,
         oauth_state_timeout_seconds: int = DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
@@ -62,6 +62,7 @@ class FletApp(LocalConnection):
         logger.info(f"New FletApp: {self.__id}")
 
         self.__page = None
+        self.__loop = loop
         self.__session_handler = session_handler
         self.__session_timeout_seconds = session_timeout_seconds
         self.__oauth_state_timeout_seconds = oauth_state_timeout_seconds
@@ -90,7 +91,7 @@ class FletApp(LocalConnection):
         async with _pubsubhubs_lock:
             psh = _pubsubhubs.get(self.__session_handler, None)
             if psh is None:
-                psh = PubSubHub()
+                psh = PubSubHub(loop=asyncio.get_running_loop(), pool=app_manager.pool)
                 _pubsubhubs[self.__session_handler] = psh
             self.pubsubhub = psh
 
@@ -133,7 +134,7 @@ class FletApp(LocalConnection):
         session_id = session_data.sessionID
         try:
             assert self.__session_handler is not None
-            if is_coroutine(self.__session_handler):
+            if asyncio.iscoroutinefunction(self.__session_handler):
                 await self.__session_handler(self.__page)
             else:
                 # run in thread pool
@@ -272,7 +273,7 @@ class FletApp(LocalConnection):
             self.__page.copy_attrs(p)
 
             # send register response
-            await self.__send_async(
+            self.__send(
                 self._create_register_web_client_response(controls=self.__page.snapshot)
             )
 
@@ -411,17 +412,6 @@ class FletApp(LocalConnection):
                 ids.extend(self.__get_all_descendant_ids(cid))
         return ids
 
-    async def send_command_async(self, session_id: str, command: Command):
-        if command.name == "oauthAuthorize":
-            result, message = await self.__process_oauth_authorize_command_async(
-                command.attrs
-            )
-        else:
-            result, message = self._process_command(command)
-        if message:
-            await self.__send_async(message)
-        return PageCommandResponsePayload(result=result, error="")
-
     def send_command(self, session_id: str, command: Command):
         if command.name == "oauthAuthorize":
             result, message = self.__process_oauth_authorize_command(command.attrs)
@@ -430,26 +420,6 @@ class FletApp(LocalConnection):
         if message:
             self.__send(message)
         return PageCommandResponsePayload(result=result, error="")
-
-    async def send_commands_async(self, session_id: str, commands: List[Command]):
-        results = []
-        messages = []
-        for command in commands:
-            if command.name == "oauthAuthorize":
-                result, message = await self.__process_oauth_authorize_command_async(
-                    command.attrs
-                )
-            else:
-                result, message = self._process_command(command)
-            if command.name in ["add", "get"]:
-                results.append(result)
-            if message:
-                messages.append(message)
-        if len(messages) > 0:
-            await self.__send_async(
-                ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages)
-            )
-        return PageCommandsBatchResponsePayload(results=results, error="")
 
     def send_commands(self, session_id: str, commands: List[Command]):
         results = []
@@ -471,15 +441,7 @@ class FletApp(LocalConnection):
         m = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logger.debug(f"__send: {m}")
         if self.__send_queue:
-            self.__send_queue._loop.call_soon_threadsafe(
-                self.__send_queue.put_nowait, m
-            )
-
-    async def __send_async(self, message: ClientMessage):
-        m = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
-        logger.debug(f"__send_async: {m}")
-        if self.__send_queue:
-            await self.__send_queue.put(m)
+            self.__loop.call_soon_threadsafe(self.__send_queue.put_nowait, m)
 
     def _get_next_control_id(self):
         assert self.__page

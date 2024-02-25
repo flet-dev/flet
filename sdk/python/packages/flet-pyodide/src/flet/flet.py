@@ -7,7 +7,6 @@ import flet_js
 from flet.pyodide_connection import PyodideConnection
 from flet_core.event import Event
 from flet_core.page import Page
-from flet_core.utils import is_coroutine
 
 logger = logging.getLogger(flet.__name__)
 
@@ -66,7 +65,7 @@ def app_async(
         logger.info(f"Session started: {session_data.sessionID}")
         try:
             assert target is not None
-            if is_coroutine(target):
+            if asyncio.iscoroutinefunction(target):
                 await target(page)
             else:
                 target(page)

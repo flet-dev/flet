@@ -1,3 +1,4 @@
+import asyncio
 import os
 from typing import Awaitable, Callable, Optional, Union
 
@@ -60,6 +61,7 @@ def app(
     @fastapi_app.websocket("/ws")
     async def app_handler(websocket: WebSocket):
         await FletApp(
+            asyncio.get_running_loop(),
             session_handler,
             session_timeout_seconds=session_timeout_seconds,
             oauth_state_timeout_seconds=oauth_state_timeout_seconds,

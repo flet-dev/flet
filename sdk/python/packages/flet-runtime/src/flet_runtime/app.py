@@ -16,7 +16,7 @@ import flet_runtime
 from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.types import AppView, WebRenderer
-from flet_core.utils import is_coroutine, random_string
+from flet_core.utils import random_string
 from flet_runtime.flet_socket_server import FletSocketServer
 from flet_runtime.utils import (
     get_arch,
@@ -233,7 +233,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
         logger.info(f"Session started: {session_data.sessionID}")
         try:
             assert session_handler is not None
-            if is_coroutine(session_handler):
+            if asyncio.iscoroutinefunction(session_handler):
                 await session_handler(page)
             else:
                 # run in thread pool
@@ -251,8 +251,9 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
             )
 
     conn = FletSocketServer(
-        port,
-        uds_path,
+        loop=asyncio.get_running_loop(),
+        port=port,
+        uds_path=uds_path,
         on_event=on_event,
         on_session_created=on_session_created,
         blocking=blocking,

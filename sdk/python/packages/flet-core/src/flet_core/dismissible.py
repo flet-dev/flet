@@ -1,5 +1,6 @@
 import json
 from typing import Any, Dict, Optional, Union
+from warnings import warn
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -156,8 +157,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
             children.append(self.__secondary_background)
         return children
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("dismissThresholds", self.__dismiss_thresholds)
 
     def confirm_dismiss(self, dismiss: bool):
@@ -166,9 +167,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         )
 
     async def confirm_dismiss_async(self, dismiss: bool):
-        await self.page.invoke_method_async(
-            "confirm_dismiss", {"dismiss": str(dismiss).lower()}, control_id=self.uid
-        )
+        warn("Obsolete. Use confirm_dismiss() method instead.")
+        self.confirm_dismiss(dismiss)
 
     # content
     @property

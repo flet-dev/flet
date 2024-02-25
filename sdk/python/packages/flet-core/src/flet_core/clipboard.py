@@ -1,5 +1,6 @@
 import dataclasses
 from typing import Any, Optional
+from warnings import warn
 
 from flet_core.control import Control
 from flet_core.ref import Ref
@@ -26,23 +27,18 @@ class Clipboard(Control):
     def _get_control_name(self):
         return "clipboard"
 
-    def _is_isolated(self):
+    def is_isolated(self):
         return True
 
     def set_data(self, data: str):
-        self.page.invoke_method("set_data", {"data": data}, control_id=self.uid)
+        self.invoke_method("set_data", {"data": data})
 
     async def set_data_async(self, data: str):
-        await self.page.invoke_method_async(
-            "set_data", {"data": data}, control_id=self.uid
-        )
+        warn("Obsolete. Use set_data() method instead.")
+        self.set_data(data)
 
     def get_data(self) -> str:
-        return self.page.invoke_method(
-            "get_data", control_id=self.uid, wait_for_result=True
-        )
+        return self.invoke_method("get_data", wait_for_result=True)
 
     async def get_data_async(self) -> str:
-        return await self.page.invoke_method_async(
-            "get_data", control_id=self.uid, wait_for_result=True
-        )
+        return await self.invoke_method_async("get_data", wait_for_result=True)

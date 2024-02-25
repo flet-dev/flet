@@ -1,5 +1,4 @@
 import asyncio
-import inspect
 import sys
 
 
@@ -10,5 +9,5 @@ def is_asyncio():
         return False
 
 
-def is_coroutine(method):
-    return inspect.iscoroutinefunction(method)
+def is_pyodide():
+    return sys.platform == "emscripten"

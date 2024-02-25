@@ -1,6 +1,7 @@
 import json
 from enum import Enum
 from typing import Any, Optional
+from warnings import warn
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -63,39 +64,31 @@ class AudioRecorder(Control):
     def start_recording(self, output_path: str = None):
         if not self.page.web and not output_path:
             raise ValueError("output_path must be provided when not on web!")
-        self.page.invoke_method(
-            "start_recording", {"outputPath": output_path}, control_id=self.uid
-        )
+        self.invoke_method("start_recording", {"outputPath": output_path})
 
     async def start_recording_async(self, output_path: str):
-        if not self.page.web and not output_path:
-            raise ValueError("output_path must be provided when not on web!")
-        await self.page.invoke_method_async(
-            "start_recording", {"outputPath": output_path}, control_id=self.uid
-        )
+        warn("Obsolete. Use start_recording() method instead.")
+        self.start_recording(output_path)
 
     def is_recording(self, wait_timeout: Optional[float] = 5) -> bool:
-        recording = self.page.invoke_method(
+        recording = self.invoke_method(
             "is_recording",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return recording == "true"
 
     async def is_recording_async(self, wait_timeout: Optional[float] = 5) -> bool:
-        recording = await self.page.invoke_method_async(
+        recording = await self.invoke_method_async(
             "is_recording",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return recording == "true"
 
     def stop_recording(self, wait_timeout: Optional[float] = 5) -> Optional[str]:
-        out = self.page.invoke_method(
+        out = self.invoke_method(
             "stop_recording",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
@@ -104,39 +97,38 @@ class AudioRecorder(Control):
     async def stop_recording_async(
         self, wait_timeout: Optional[float] = 10
     ) -> Optional[str]:
-        out = await self.page.invoke_method_async(
+        out = await self.invoke_method_async(
             "stop_recording",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return out if out != "null" else None
 
     def resume_recording(self):
-        self.page.invoke_method("resume_recording", control_id=self.uid)
+        self.invoke_method("resume_recording")
 
     async def resume_recording_async(self):
-        await self.page.invoke_method_async("resume_recording", control_id=self.uid)
+        warn("Obsolete. Use resume_recording() method instead.")
+        self.resume_recording()
 
     def pause_recording(self):
-        self.page.invoke_method("pause_recording", control_id=self.uid)
+        self.invoke_method("pause_recording")
 
     async def pause_recording_async(self):
-        await self.page.invoke_method_async("pause_recording", control_id=self.uid)
+        warn("Obsolete. Use pause_recording() method instead.")
+        self.pause_recording()
 
     def is_paused(self, wait_timeout: Optional[float] = 5) -> bool:
-        paused = self.page.invoke_method(
+        paused = self.invoke_method(
             "is_paused",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return paused == "true"
 
     async def is_paused_async(self, wait_timeout: Optional[float] = 5) -> bool:
-        supported = await self.page.invoke_method_async(
+        supported = await self.invoke_method_async(
             "is_paused",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
@@ -145,14 +137,13 @@ class AudioRecorder(Control):
     def is_supported_encoder(
         self, encoder: AudioEncoder, wait_timeout: Optional[float] = 5
     ) -> bool:
-        supported = self.page.invoke_method(
+        supported = self.invoke_method(
             "is_supported_encoder",
             {
-                "encoder": encoder.value
-                if isinstance(encoder, AudioEncoder)
-                else encoder
+                "encoder": (
+                    encoder.value if isinstance(encoder, AudioEncoder) else encoder
+                )
             },
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
@@ -161,50 +152,45 @@ class AudioRecorder(Control):
     async def is_supported_encoder_async(
         self, encoder: AudioEncoder, wait_timeout: Optional[float] = 5
     ) -> bool:
-        supported = await self.page.invoke_method_async(
+        supported = await self.invoke_method_async(
             "is_supported_encoder",
             {
-                "encoder": encoder.value
-                if isinstance(encoder, AudioEncoder)
-                else encoder
+                "encoder": (
+                    encoder.value if isinstance(encoder, AudioEncoder) else encoder
+                )
             },
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return supported == "true"
 
     def get_input_devices(self, wait_timeout: Optional[float] = 5) -> dict:
-        devices = self.page.invoke_method(
+        devices = self.invoke_method(
             "get_input_devices",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return json.loads(devices)
 
     async def get_input_devices_async(self, wait_timeout: Optional[float] = 5) -> bool:
-        devices = await self.page.invoke_method_async(
+        devices = await self.invoke_method_async(
             "get_input_devices",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return json.loads(devices)
 
     def has_permission(self, wait_timeout: Optional[float] = 10) -> bool:
-        p = self.page.invoke_method(
+        p = self.invoke_method(
             "has_permission",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return p == "true"
 
     async def has_permission_async(self, wait_timeout: Optional[float] = 10) -> bool:
-        p = await self.page.invoke_method_async(
+        p = await self.invoke_method_async(
             "has_permission",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )

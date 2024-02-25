@@ -1,5 +1,6 @@
 import json
 from typing import Any, List, Optional, Union
+from warnings import warn
 
 from flet_core.canvas.shape import Shape
 from flet_core.constrained_control import ConstrainedControl
@@ -109,8 +110,8 @@ class Canvas(ConstrainedControl):
         self.__shapes.clear()
 
     async def clean_async(self):
-        await super().clean_async()
-        self.__shapes.clear()
+        warn("Obsolete. Use clean() method instead.")
+        self.clean()
 
     # shapes
     @property

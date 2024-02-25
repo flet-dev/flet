@@ -1,4 +1,5 @@
 from typing import Any, List, Optional, Union
+from warnings import warn
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -166,8 +167,8 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.__controls.clear()
 
     async def clean_async(self):
-        await super().clean_async()
-        self.__controls.clear()
+        warn("Obsolete. Use clean() method instead.")
+        self.clean()
 
     # tight
     @property

@@ -1,6 +1,7 @@
 import json
 import time
 from typing import Any, Optional
+from warnings import warn
 
 from flet_core.animation import AnimationCurve
 from flet_core.control import Control, OptionalNumber
@@ -61,19 +62,8 @@ class ScrollableControl(Control):
         duration: Optional[int] = None,
         curve: Optional[AnimationCurve] = None,
     ):
-        m = {
-            "n": "scroll_to",
-            "i": str(time.time()),
-            "p": {
-                "offset": offset,
-                "delta": delta,
-                "key": key,
-                "duration": duration,
-                "curve": curve.value if curve is not None else None,
-            },
-        }
-        self._set_attr_json("method", m)
-        await self.update_async()
+        warn("Obsolete. Use scroll_to() method instead.")
+        self.scroll_to(offset, delta, key, duration, curve)
 
     # scroll
     @property
