@@ -245,8 +245,13 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
     var bgColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("bgColor", "")!);
+    // for adaptive TextField use label for placeholder
     var placeholder = widget.control.attrString("placeholderText") ??
         widget.control.attrString("label");
+    // for adaptive TextField use labelStyle for placeholderStyle
+    var placeholderStyle =
+        parseTextStyle(Theme.of(context), widget.control, "placeholderStyle") ??
+            parseTextStyle(Theme.of(context), widget.control, "labelStyle");
 
     Widget textField = CupertinoTextField(
         style: textStyle,
@@ -254,8 +259,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             ? TextAlignVertical(y: textVerticalAlign)
             : null,
         placeholder: placeholder,
-        placeholderStyle: parseTextStyle(
-            Theme.of(context), widget.control, "placeholderStyle"),
+        placeholderStyle: placeholderStyle,
         autofocus: autofocus,
         enabled: !disabled,
         onSubmitted: !multiline
