@@ -228,7 +228,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     if (password && canRevealPassword) {
       revealPasswordIcon = GestureDetector(
           child: Icon(
-            _revealPassword ? Icons.visibility_off : Icons.visibility,
+            _revealPassword ? CupertinoIcons.eye_slash : CupertinoIcons.eye,
           ),
           onTap: () {
             setState(() {
@@ -299,10 +299,12 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             ? createControl(widget.control, prefixControls.first.id, disabled,
                 parentAdaptive: widget.parentAdaptive)
             : null,
-        suffix: suffixControls.isNotEmpty
-            ? createControl(widget.control, suffixControls.first.id, disabled,
-                parentAdaptive: widget.parentAdaptive)
-            : revealPasswordIcon,
+        suffix: revealPasswordIcon ??
+            (suffixControls.isNotEmpty
+                ? createControl(
+                    widget.control, suffixControls.first.id, disabled,
+                    parentAdaptive: widget.parentAdaptive)
+                : null),
         readOnly: readOnly,
         textDirection: rtl ? TextDirection.rtl : null,
         inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
