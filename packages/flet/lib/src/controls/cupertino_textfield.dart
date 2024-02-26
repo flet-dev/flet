@@ -40,6 +40,7 @@ class CupertinoTextFieldControl extends StatefulWidget {
 class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
   String _value = "";
   bool _focused = false;
+  bool _revealPassword = false;
   late TextEditingController _controller;
   late final FocusNode _focusNode;
   late final FocusNode _shiftEnterfocusNode;
@@ -196,9 +197,10 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         parseBorderRadius(widget.control, "borderRadius");
 
     BoxBorder? border;
-    double? borderWidth = widget.control.attrDouble("borderWidth");
-    Color? borderColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("borderColor", "")!);
+    double borderWidth = widget.control.attrDouble("borderWidth") ?? 1.0;
+    Color borderColor = HexColor.fromString(
+            Theme.of(context), widget.control.attrString("borderColor", "")!) ??
+        const Color(0xFF000000);
 
     try {
       border = parseBorder(Theme.of(context), widget.control, "border");
@@ -209,18 +211,30 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             b.name == widget.control.attrString("border", "")!.toLowerCase()),
         orElse: () => FormFieldInputBorder.outline,
       );
+
       if (inputBorder == FormFieldInputBorder.outline) {
-        border = Border.all(
-            color: borderColor ?? const Color(0xFF000000),
-            width: borderWidth ?? 1.0);
+        border = Border.all(color: borderColor, width: borderWidth);
       } else if (inputBorder == FormFieldInputBorder.underline) {
-        border = Border(
-            bottom: BorderSide(
-          color: borderColor ?? const Color(0xFF000000),
-          width: borderWidth ?? 1.0,
-        ));
+        border =
+            Border(bottom: BorderSide(color: borderColor, width: borderWidth));
         borderRadius = BorderRadius.zero;
       }
+    }
+
+    bool canRevealPassword =
+        widget.control.attrBool("canRevealPassword", false)!;
+
+    Widget? revealPasswordIcon;
+    if (password && canRevealPassword) {
+      revealPasswordIcon = GestureDetector(
+          child: Icon(
+            _revealPassword ? Icons.visibility_off : Icons.visibility,
+          ),
+          onTap: () {
+            setState(() {
+              _revealPassword = !_revealPassword;
+            });
+          });
     }
 
     BoxDecoration? defaultDecoration = const CupertinoTextField().decoration;
@@ -288,11 +302,11 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         suffix: suffixControls.isNotEmpty
             ? createControl(widget.control, suffixControls.first.id, disabled,
                 parentAdaptive: widget.parentAdaptive)
-            : null,
+            : revealPasswordIcon,
         readOnly: readOnly,
         textDirection: rtl ? TextDirection.rtl : null,
         inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
-        obscureText: password,
+        obscureText: password && !_revealPassword,
         controller: _controller,
         focusNode: focusNode,
         onChanged: (String value) {
