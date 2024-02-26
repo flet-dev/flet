@@ -269,6 +269,7 @@ class Handler(FileSystemEventHandler):
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
 
         p_env["PYTHONIOENCODING"] = "utf-8"
+        p_env["PYTHONWARNINGS"] = "default::DeprecationWarning"
 
         self.p = subprocess.Popen(
             self.args, env=p_env, stdout=subprocess.PIPE, encoding="utf-8"

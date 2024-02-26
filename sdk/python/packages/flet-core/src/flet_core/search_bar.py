@@ -1,7 +1,7 @@
 import time
 from typing import Any, Dict, List, Optional, Union
-from warnings import warn
 
+from deprecated import deprecated
 from flet_core import BorderSide, OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -171,8 +171,8 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("method", m)
         self.update()
 
+    @deprecated(version="0.21.0", reason="Use open_view() method instead.")
     async def open_view_async(self):
-        warn("Obsolete. Use open_view() method instead.")
         self.open_view()
 
     def close_view(self, text: str = ""):
@@ -185,8 +185,8 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("method", m)
         self.update()
 
+    @deprecated(version="0.21.0", reason="Use close_view() method instead.")
     async def close_view_async(self, text: str = ""):
-        warn("Obsolete. Use close_view() method instead.")
         self.close_view()
 
     # bar_leading

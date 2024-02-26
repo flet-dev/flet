@@ -1,6 +1,6 @@
 from typing import Any, Optional, Union
-from warnings import warn
 
+from deprecated import deprecated
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
@@ -183,8 +183,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.drawer.open = True
         self.update()
 
+    @deprecated(version="0.21.0", reason="Use show_drawer() method instead.")
     async def show_drawer_async(self, drawer: NavigationDrawer):
-        warn("Obsolete. Use show_drawer_async() method instead.")
         self.show_drawer(drawer)
 
     def close_drawer(self):
@@ -192,8 +192,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
             self.drawer.open = False
             self.update()
 
+    @deprecated(version="0.21.0", reason="Use close_end_drawer() method instead.")
     async def close_drawer_async(self):
-        warn("Obsolete. Use close_end_drawer() method instead.")
         self.close_end_drawer()
 
     # End_drawer
@@ -203,8 +203,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.end_drawer.open = True
         self.update()
 
+    @deprecated(version="0.21.0", reason="Use show_end_drawer() method instead.")
     async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
-        warn("Obsolete. Use show_end_drawer() method instead.")
         self.show_end_drawer(end_drawer)
 
     def close_end_drawer(self):
@@ -212,8 +212,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
             self.end_drawer.open = False
             self.update()
 
+    @deprecated(version="0.21.0", reason="Use close_end_drawer() method instead.")
     async def close_end_drawer_async(self):
-        warn("Obsolete. Use close_end_drawer() method instead.")
         self.close_end_drawer()
 
     # appbar

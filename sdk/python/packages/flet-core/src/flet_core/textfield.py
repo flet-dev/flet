@@ -3,8 +3,8 @@ import time
 from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union
-from warnings import warn
 
+from deprecated import deprecated
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
@@ -322,8 +322,8 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr_json("focus", str(time.time()))
         self.update()
 
+    @deprecated(version="0.21.0", reason="Use focus() method instead.")
     async def focus_async(self):
-        warn("Obsolete. Use focus() method instead.")
         self.focus()
 
     # value

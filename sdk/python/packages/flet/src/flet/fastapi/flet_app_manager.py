@@ -93,7 +93,7 @@ class FletAppManager:
             logger.info(f"Delete session ({total} left): {session_id}")
             try:
                 old_conn = page.connection
-                await page._close_async()
+                page._close()
                 if old_conn:
                     old_conn.dispose()
             except Exception as e:

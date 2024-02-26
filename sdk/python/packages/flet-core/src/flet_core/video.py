@@ -1,8 +1,8 @@
 import dataclasses
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
-from warnings import warn
 
+from deprecated import deprecated
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
@@ -163,43 +163,43 @@ class Video(ConstrainedControl):
     def play(self):
         self.invoke_method("play")
 
+    @deprecated(version="0.21.0", reason="Use play() method instead.")
     async def play_async(self):
-        warn("Obsolete. Use play() method instead.")
         self.play()
 
     def pause(self):
         self.invoke_method("pause")
 
+    @deprecated(version="0.21.0", reason="Use pause() method instead.")
     async def pause_async(self):
-        warn("Obsolete. Use pause() method instead.")
         self.pause()
 
     def play_or_pause(self):
         self.invoke_method("play_or_pause")
 
+    @deprecated(version="0.21.0", reason="Use play_or_pause() method instead.")
     async def play_or_pause_async(self):
-        warn("Obsolete. Use play_or_pause() method instead.")
         self.play_or_pause()
 
     def stop(self):
         self.invoke_method("stop")
 
+    @deprecated(version="0.21.0", reason="Use stop() method instead.")
     async def stop_async(self):
-        warn("Obsolete. Use stop() method instead.")
         self.stop()
 
     def next(self):
         self.invoke_method("next")
 
+    @deprecated(version="0.21.0", reason="Use next() method instead.")
     async def next_async(self):
-        warn("Obsolete. Use next() method instead.")
         self.next()
 
     def previous(self):
         self.invoke_method("previous")
 
+    @deprecated(version="0.21.0", reason="Use previous() method instead.")
     async def previous_async(self):
-        warn("Obsolete. Use previous() method instead.")
         self.previous()
 
     def seek(self, position_milliseconds: int):

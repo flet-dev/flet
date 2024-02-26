@@ -1,8 +1,8 @@
 import json
 import time
 from typing import Any, Optional
-from warnings import warn
 
+from deprecated import deprecated
 from flet_core.animation import AnimationCurve
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
@@ -54,6 +54,7 @@ class ScrollableControl(Control):
         self._set_attr_json("method", m)
         self.update()
 
+    @deprecated(version="0.21.0", reason="Use scroll_to() method instead.")
     async def scroll_to_async(
         self,
         offset: Optional[float] = None,
@@ -62,7 +63,6 @@ class ScrollableControl(Control):
         duration: Optional[int] = None,
         curve: Optional[AnimationCurve] = None,
     ):
-        warn("Obsolete. Use scroll_to() method instead.")
         self.scroll_to(offset, delta, key, duration, curve)
 
     # scroll

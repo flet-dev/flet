@@ -1,8 +1,8 @@
 from datetime import date, datetime
 from enum import Enum
 from typing import Any, Optional, Union
-from warnings import warn
 
+from deprecated import deprecated
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
@@ -150,8 +150,8 @@ class DatePicker(Control):
         self.open = True
         self.update()
 
+    @deprecated(version="0.21.0", reason="Use pick_date() method instead.")
     async def pick_date_async(self):
-        warn("Obsolete. Use pick_date() method instead.")
         self.pick_date()
 
     # open

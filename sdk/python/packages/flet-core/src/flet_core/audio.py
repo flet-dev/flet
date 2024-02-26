@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any, Optional
-from warnings import warn
 
+from deprecated import deprecated
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
@@ -83,36 +83,36 @@ class Audio(Control):
     def play(self):
         self.invoke_method("play")
 
+    @deprecated(version="0.21.0", reason="Use play() method instead.")
     async def play_async(self):
-        warn("Obsolete. Use play() method instead.")
         self.play()
 
     def pause(self):
         self.invoke_method("pause")
 
+    @deprecated(version="0.21.0", reason="Use pause() method instead.")
     async def pause_async(self):
-        warn("Obsolete. Use pause() method instead.")
         self.pause()
 
     def resume(self):
         self.invoke_method("resume")
 
+    @deprecated(version="0.21.0", reason="Use resume() method instead.")
     async def resume_async(self):
-        warn("Obsolete. Use resume() method instead.")
         self.resume()
 
     def release(self):
         self.invoke_method("release")
 
+    @deprecated(version="0.21.0", reason="Use release() method instead.")
     async def release_async(self):
-        warn("Obsolete. Use release() method instead.")
         self.release()
 
     def seek(self, position_milliseconds: int):
         self.invoke_method("seek", {"position": str(position_milliseconds)})
 
+    @deprecated(version="0.21.0", reason="Use seek() method instead.")
     async def seek_async(self, position_milliseconds: int):
-        warn("Obsolete. Use seek() method instead.")
         self.seek(position_milliseconds)
 
     def get_duration(self, wait_timeout: Optional[float] = 5) -> Optional[int]:

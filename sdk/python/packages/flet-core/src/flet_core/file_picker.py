@@ -2,8 +2,8 @@ import json
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, List, Optional, Union
-from warnings import warn
 
+from deprecated import deprecated
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.dropdown import Option
@@ -168,6 +168,7 @@ class FilePicker(Control):
         self.allow_multiple = allow_multiple
         self.update()
 
+    @deprecated(version="0.21.0", reason="Use pick_files() method instead.")
     async def pick_files_async(
         self,
         dialog_title: Optional[str] = None,
@@ -176,7 +177,6 @@ class FilePicker(Control):
         allowed_extensions: Optional[List[str]] = None,
         allow_multiple: Optional[bool] = False,
     ):
-        warn("Obsolete. Use pick_files() method instead.")
         self.pick_files(
             dialog_title,
             initial_directory,
@@ -201,6 +201,7 @@ class FilePicker(Control):
         self.allowed_extensions = allowed_extensions
         self.update()
 
+    @deprecated(version="0.21.0", reason="Use save_file() method instead.")
     async def save_file_async(
         self,
         dialog_title: Optional[str] = None,
@@ -209,7 +210,6 @@ class FilePicker(Control):
         file_type: FilePickerFileType = FilePickerFileType.ANY,
         allowed_extensions: Optional[List[str]] = None,
     ):
-        warn("Obsolete. Use save_file() method instead.")
         self.save_file(
             dialog_title, file_name, initial_directory, file_type, allowed_extensions
         )
@@ -224,20 +224,20 @@ class FilePicker(Control):
         self.initial_directory = initial_directory
         self.update()
 
+    @deprecated(version="0.21.0", reason="Use get_directory_path() method instead.")
     async def get_directory_path_async(
         self,
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
     ):
-        warn("Obsolete. Use get_directory_path() method instead.")
         self.get_directory_path(dialog_title, initial_directory)
 
     def upload(self, files: List[FilePickerUploadFile]):
         self.__upload = files
         self.update()
 
+    @deprecated(version="0.21.0", reason="Use upload() method instead.")
     async def upload_async(self, files: List[FilePickerUploadFile]):
-        warn("Obsolete. Use upload() method instead.")
         self.upload(files)
 
     # state

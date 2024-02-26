@@ -3,9 +3,9 @@ import logging
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Awaitable, Callable, Dict, Iterable, Optional, Union
-from warnings import warn
 
 import flet_core
+from deprecated import deprecated
 from flet_core.locks import NopeLock
 from flet_core.utils.concurrency_utils import is_pyodide
 
@@ -153,62 +153,62 @@ class PubSub:
     def send_all(self, message: Any):
         self.__pubsub.send_all(message)
 
+    @deprecated(version="0.21.0", reason="Use send_all() method instead.")
     async def send_all_async(self, message: Any):
-        warn("Obsolete. Use pubsub.send_all() method instead.")
         self.send_all(message)
 
     def send_all_on_topic(self, topic: str, message: Any):
         self.__pubsub.send_all_on_topic(topic, message)
 
+    @deprecated(version="0.21.0", reason="Use send_all_on_topic() method instead.")
     async def send_all_on_topic_async(self, topic: str, message: Any):
-        warn("Obsolete. Use pubsub.send_all_on_topic() method instead.")
         self.send_all_on_topic(topic, message)
 
     def send_others(self, message: Any):
         self.__pubsub.send_others(self.__session_id, message)
 
+    @deprecated(version="0.21.0", reason="Use send_others() method instead.")
     async def send_others_async(self, message: Any):
-        warn("Obsolete. Use pubsub.send_others() method instead.")
         self.send_others(message)
 
     def send_others_on_topic(self, topic: str, message: Any):
         self.__pubsub.send_others_on_topic(self.__session_id, topic, message)
 
+    @deprecated(version="0.21.0", reason="Use send_others_on_topic() method instead.")
     async def send_others_on_topic_async(self, topic: str, message: Any):
-        warn("Obsolete. Use pubsub.send_others_on_topic() method instead.")
         self.send_others_on_topic(topic, message)
 
     def subscribe(self, handler: Callable):
         self.__pubsub.subscribe(self.__session_id, handler)
 
+    @deprecated(version="0.21.0", reason="Use subscribe() method instead.")
     async def subscribe_async(self, handler: Callable):
-        warn("Obsolete. Use pubsub.subscribe() method instead.")
         self.subscribe(handler)
 
     def subscribe_topic(self, topic: str, handler: Callable):
         self.__pubsub.subscribe_topic(self.__session_id, topic, handler)
 
+    @deprecated(version="0.21.0", reason="Use subscribe_topic() method instead.")
     async def subscribe_topic_async(self, topic: str, handler: Callable):
-        warn("Obsolete. Use pubsub.subscribe_topic() method instead.")
         self.subscribe_topic(topic, handler)
 
     def unsubscribe(self):
         self.__pubsub.unsubscribe(self.__session_id)
 
+    @deprecated(version="0.21.0", reason="Use unsubscribe() method instead.")
     async def unsubscribe_async(self):
-        warn("Obsolete. Use pubsub.unsubscribe() method instead.")
         self.unsubscribe()
 
     def unsubscribe_topic(self, topic: str):
         self.__pubsub.unsubscribe_topic(self.__session_id, topic)
 
+    @deprecated(version="0.21.0", reason="Use unsubscribe_topic() method instead.")
     async def unsubscribe_topic_async(self, topic: str):
-        warn("Obsolete. Use pubsub.unsubscribe_topic() method instead.")
         self.unsubscribe_topic(topic)
 
     def unsubscribe_all(self):
         self.__pubsub.unsubscribe_all(self.__session_id)
 
+    @deprecated(version="0.21.0", reason="Use unsubscribe_all() method instead.")
     async def unsubscribe_all_async(self):
-        warn("Obsolete. Use pubsub.unsubscribe_all() method instead.")
         self.unsubscribe_all()

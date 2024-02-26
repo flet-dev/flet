@@ -218,7 +218,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
             if e.eventTarget == "page" and e.eventName == "close":
                 logger.info(f"Session closed: {e.sessionID}")
                 page = conn.sessions.pop(e.sessionID)
-                await page._close_async()
+                page._close()
                 del page
 
     async def on_session_created(session_data):
