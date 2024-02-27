@@ -589,6 +589,15 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "cupertinoactionsheetbutton":
+      return CupertinoActionSheetButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
     case "expansiontile":
       return ExpansionTileControl(
           key: key,
