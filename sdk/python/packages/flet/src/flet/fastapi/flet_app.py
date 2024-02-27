@@ -91,7 +91,7 @@ class FletApp(LocalConnection):
         async with _pubsubhubs_lock:
             psh = _pubsubhubs.get(self.__session_handler, None)
             if psh is None:
-                psh = PubSubHub(loop=asyncio.get_running_loop(), pool=app_manager.pool)
+                psh = PubSubHub(loop=self.__loop, pool=app_manager.pool)
                 _pubsubhubs[self.__session_handler] = psh
             self.pubsubhub = psh
 

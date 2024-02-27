@@ -46,7 +46,7 @@ class FletSocketServer(LocalConnection):
         self.__blocking = blocking
         self.__loop = loop
         self.__pool = pool
-        self.pubsubhub = PubSubHub(loop=asyncio.get_running_loop(), pool=pool)
+        self.pubsubhub = PubSubHub(loop=loop, pool=pool)
         self.__running_tasks = set()
 
     async def start(self):
