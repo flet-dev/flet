@@ -189,7 +189,7 @@ class Page(AdaptiveControl):
 
         def convert_page_media_change_event(e):
             d = json.loads(e.data)
-            return PageMediaChangeEvent(**d)
+            return PageMediaData(**d)
 
         self.__on_page_media_change_event = EventHandler(
             convert_page_media_change_event
@@ -1119,7 +1119,7 @@ class Page(AdaptiveControl):
         if not isinstance(m, str):
             return None
         d = json.loads(m)
-        return PageMediaChangeEvent(**d)
+        return PageMediaData(**d)
 
     # client_ip
     @property
@@ -1935,7 +1935,7 @@ class InvokeMethodResults:
     error: Optional[str]
 
 
-class PageMediaChangeEvent(ControlEvent):
+class PageMediaData(ControlEvent):
     def __init__(self, padding, view_padding, view_insets) -> None:
         self.padding = Padding(
             left=padding["left"],
@@ -1957,4 +1957,4 @@ class PageMediaChangeEvent(ControlEvent):
         )
 
     def __str__(self) -> str:
-        return f"PageMediaChangeEvent(padding={self.padding}, view_padding={self.view_padding}, view_insets={self.view_insets})"
+        return f"PageMediaData(padding={self.padding}, view_padding={self.view_padding}, view_insets={self.view_insets})"

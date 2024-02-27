@@ -160,7 +160,7 @@ from flet_core.page import (
     LoginEvent,
     Page,
     PageDisconnectedException,
-    PageMediaChangeEvent,
+    PageMediaData,
     RouteChangeEvent,
     ViewPopEvent,
 )
