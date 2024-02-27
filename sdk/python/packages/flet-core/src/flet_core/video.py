@@ -132,7 +132,7 @@ class Video(ConstrainedControl):
             data=data,
         )
 
-        self.__playlist = playlist
+        self.__playlist = playlist or []
         self.fit = fit
         self.pitch = pitch
         self.fill_color = fill_color
