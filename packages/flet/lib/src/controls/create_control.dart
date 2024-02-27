@@ -29,6 +29,8 @@ import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
+import 'cupertino_action_sheet.dart';
+import 'cupertino_action_sheet_button.dart';
 import 'cupertino_alert_dialog.dart';
 import 'cupertino_button.dart';
 import 'cupertino_checkbox.dart';
@@ -582,6 +584,15 @@ Widget createWidget(
           backend: backend);
     case "cupertinolisttile":
       return CupertinoListTileControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "cupertinoactionsheet":
+      return CupertinoActionSheetControl(
           key: key,
           parent: parent,
           control: controlView.control,
