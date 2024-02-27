@@ -56,9 +56,26 @@ def app(
     if env_upload_dir:
         upload_dir = env_upload_dir
 
+    env_websocket_endpoint = os.getenv("FLET_WEBSOCKET_HANDLER_ENDPOINT")
+    websocket_endpoint = (
+        "ws" if not env_websocket_endpoint else env_websocket_endpoint.strip("/")
+    )
+
+    env_upload_endpoint = os.getenv("FLET_UPLOAD_HANDLER_ENDPOINT")
+    upload_endpoint = (
+        "upload" if not env_upload_endpoint else env_upload_endpoint.strip("/")
+    )
+
+    env_oauth_callback_endpoint = os.getenv("FLET_OAUTH_CALLBACK_HANDLER_ENDPOINT")
+    oauth_callback_endpoint = (
+        "oauth_callback"
+        if not env_oauth_callback_endpoint
+        else env_oauth_callback_endpoint.strip("/")
+    )
+
     fastapi_app = FastAPI()
 
-    @fastapi_app.websocket("/ws")
+    @fastapi_app.websocket(f"/{websocket_endpoint}")
     async def app_handler(websocket: WebSocket):
         await FletApp(
             asyncio.get_running_loop(),
@@ -70,7 +87,7 @@ def app(
 
     if upload_dir:
 
-        @fastapi_app.put("/upload")
+        @fastapi_app.put(f"/{upload_endpoint}")
         async def upload_handler(request: Request):
             if not upload_dir:
                 return
@@ -80,7 +97,7 @@ def app(
                 secret_key=secret_key,
             ).handle(request)
 
-    @fastapi_app.get("/oauth_callback")
+    @fastapi_app.get(f"/{oauth_callback_endpoint}")
     async def oauth_redirect_handler(request: Request):
         return await FletOAuth().handle(request)
 
