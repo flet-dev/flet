@@ -228,30 +228,18 @@ class Video(ConstrainedControl):
         )
         self.__playlist.append(media)
 
+    @deprecated(version="0.21.0", reason="Use playlist_add() method instead.")
     async def playlist_add_async(self, media: VideoMedia):
-        assert media.resource, "media has no resource"
-        await self.invoke_method_async(
-            "playlist_add",
-            {
-                "resource": media.resource,
-                "http_headers": str(media.http_headers),
-                "extras": str(media.extras),
-            },
-        )
-        self.__playlist.append(media)
+        self.playlist_add(media)
 
     def playlist_remove(self, media_index: int):
         assert self.__playlist[media_index], "index out of range"
         self.invoke_method("playlist_remove", {"media_index": str(media_index)})
         self.__playlist.pop(media_index)
 
+    @deprecated(version="0.21.0", reason="Use playlist_remove() method instead.")
     async def playlist_remove_async(self, media_index: int):
-        assert self.__playlist[media_index], "index out of range"
-        await self.invoke_method_async(
-            "playlist_remove",
-            {"media_index": str(media_index)},
-        )
-        self.__playlist.pop(media_index)
+        self.playlist_remove(media_index)
 
     # playlist
     @property
