@@ -274,6 +274,7 @@ class Handler(FileSystemEventHandler):
         self.p = subprocess.Popen(
             self.args, env=p_env, stdout=subprocess.PIPE, encoding="utf-8"
         )
+
         self.is_running = True
         th = threading.Thread(target=self.print_output, args=[self.p], daemon=True)
         th.start()
@@ -327,6 +328,10 @@ class Handler(FileSystemEventHandler):
         )
         self.fvp.wait()
         self.p.send_signal(signal.SIGTERM)
+        try:
+            self.p.wait(2)
+        except subprocess.TimeoutExpired:
+            self.p.kill()
         self.terminate.set()
 
     def restart_program(self):

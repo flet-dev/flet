@@ -320,21 +320,6 @@ class FletApp(LocalConnection):
             None,
         )
 
-    async def __process_oauth_authorize_command_async(self, attrs: Dict[str, Any]):
-        state_id = attrs["state"]
-        state = OAuthState(
-            session_id=self.__get_unique_session_id(self._client_details.sessionId),
-            expires_at=datetime.utcnow()
-            + timedelta(seconds=self.__oauth_state_timeout_seconds),
-            complete_page_html=attrs.get("completePageHtml", None),
-            complete_page_url=attrs.get("completePageUrl", None),
-        )
-        await app_manager.store_state_async(state_id, state)
-        return (
-            "",
-            None,
-        )
-
     def __process_oauth_authorize_command(self, attrs: Dict[str, Any]):
         state_id = attrs["state"]
         state = OAuthState(
@@ -344,9 +329,7 @@ class FletApp(LocalConnection):
             complete_page_html=attrs.get("completePageHtml", None),
             complete_page_url=attrs.get("completePageUrl", None),
         )
-        asyncio.run_coroutine_threadsafe(
-            app_manager.store_state_async(state_id, state), self._loop
-        ).result()
+        app_manager.store_state(state_id, state)
         return (
             "",
             None,

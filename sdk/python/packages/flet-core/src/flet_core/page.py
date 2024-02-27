@@ -51,7 +51,6 @@ from flet_core.types import (
     ThemeMode,
     ThemeModeString,
 )
-from flet_core.utils import is_asyncio
 from flet_core.utils.concurrency_utils import is_pyodide
 from flet_core.view import View
 
@@ -62,13 +61,19 @@ try:
     from flet_runtime.auth.authorization import Authorization
     from flet_runtime.auth.oauth_provider import OAuthProvider
 except ImportError as e:
-    logger.warning("Authorization classes are not loaded, using fake implementations.")
-
-    class Authorization:
-        pass
 
     class OAuthProvider:
         pass
+
+    class Authorization:
+        def __init__(
+            self,
+            provider: OAuthProvider,
+            fetch_user: bool,
+            fetch_groups: bool,
+            scope: Optional[List[str]] = None,
+        ):
+            pass
 
 
 class PageDisconnectedException(Exception):
@@ -134,8 +139,8 @@ class Page(AdaptiveControl):
         self.__dark_theme = None
         self.__theme_mode = ThemeMode.SYSTEM  # Default Theme Mode
         self.__pubsub: PubSub = PubSub(conn.pubsubhub, session_id)
-        self.__client_storage = ClientStorage(self)
-        self.__session_storage = SessionStorage(self)
+        self.__client_storage: ClientStorage = ClientStorage(self)
+        self.__session_storage: SessionStorage = SessionStorage(self)
         self.__authorization: Optional[Authorization] = None
 
         self.__on_close = EventHandler()
@@ -152,10 +157,7 @@ class Page(AdaptiveControl):
 
         # authorize/login/logout
         self.__on_login = EventHandler()
-        self._add_event_handler(
-            "authorize",
-            self.__on_authorize if not is_asyncio() else self.__on_authorize_async,
-        )
+        self._add_event_handler("authorize", self.__on_authorize_async)
         self.__on_logout = EventHandler()
 
         # route_change
@@ -362,11 +364,9 @@ class Page(AdaptiveControl):
             c._dispose()
         self._controls.clear()
         self._previous_children.clear()
-        self.__on_route_change = None
         self.__on_view_pop = None
         self.__client_storage = None
         self.__session_storage = None
-        self.__query = None
         self.__conn = None
 
     def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
@@ -538,8 +538,17 @@ class Page(AdaptiveControl):
                 )
         else:
             self.__authorization.dehydrate_token(saved_token)
-            self.__on_login.get_sync_handler()(
-                LoginEvent(error="", error_description="")
+            self.run_task(
+                self.__on_login.get_handler(),
+                LoginEvent(
+                    error="",
+                    error_description="",
+                    page=self,
+                    control=self,
+                    target="page",
+                    name="on_login",
+                    data="",
+                ),
             )
         return self.__authorization
 
@@ -577,20 +586,29 @@ class Page(AdaptiveControl):
             if on_open_authorization_url:
                 await on_open_authorization_url(authorization_url)
             else:
-                await self.launch_url_async(
+                self.launch_url(
                     authorization_url, "flet_oauth_signin", web_popup_window=self.web
                 )
         else:
             await self.__authorization.dehydrate_token_async(saved_token)
-            await self.__on_login.get_handler()(
-                LoginEvent(error="", error_description="")
+            self.run_task(
+                self.__on_login.get_handler(),
+                LoginEvent(
+                    error="",
+                    error_description="",
+                    page=self,
+                    control=self,
+                    target="page",
+                    name="on_login",
+                    data="",
+                ),
             )
         return self.__authorization
 
     async def _authorize_callback_async(self, data):
         await self.on_event_async(Event("page", "authorize", json.dumps(data)))
 
-    def __on_authorize(self, e):
+    async def __on_authorize_async(self, e):
         assert self.__authorization is not None
         d = json.loads(e.data)
         state = d["state"]
@@ -605,34 +623,13 @@ class Page(AdaptiveControl):
                 self.window_to_front()
 
         login_evt = LoginEvent(
-            error=d["error"], error_description=d["error_description"]
-        )
-        if not login_evt.error:
-            # perform token request
-            code = d["code"]
-            assert code not in [None, ""]
-            try:
-                self.__authorization.request_token(code)
-            except Exception as ex:
-                login_evt.error = str(ex)
-        self.__on_login.get_sync_handler()(login_evt)
-
-    async def __on_authorize_async(self, e):
-        assert self.__authorization is not None
-        d = json.loads(e.data)
-        state = d["state"]
-        assert state == self.__authorization.state
-
-        if not self.web:
-            if self.platform in ["ios", "android"]:
-                # close web view on mobile
-                await self.close_in_app_web_view_async()
-            else:
-                # activate desktop window
-                await self.window_to_front_async()
-
-        login_evt = LoginEvent(
-            error=d["error"], error_description=d["error_description"]
+            error=d["error"],
+            error_description=d["error_description"],
+            page=self,
+            control=self,
+            target="page",
+            name="on_login",
+            data="",
         )
         if not login_evt.error:
             # perform token request
@@ -642,19 +639,24 @@ class Page(AdaptiveControl):
                 await self.__authorization.request_token_async(code)
             except Exception as ex:
                 login_evt.error = str(ex)
-        await self.__on_login.get_handler()(login_evt)
+
+        self.run_task(
+            self.__on_login.get_handler(),
+            login_evt,
+        )
 
     def logout(self):
         self.__authorization = None
-        self.__on_logout.get_sync_handler()(
-            ControlEvent(target="page", name="logout", data="", control=self, page=self)
+        self.run_task(
+            self.__on_logout.get_handler(),
+            ControlEvent(
+                target="page", name="logout", data="", control=self, page=self
+            ),
         )
 
+    @deprecated(version="0.21.0", reason="Use logout() method instead.")
     async def logout_async(self):
-        self.__authorization = None
-        await self.__on_logout.get_handler()(
-            ControlEvent(target="page", name="logout", data="", control=self, page=self)
-        )
+        self.logout()
 
     def _send_command(
         self,
@@ -703,7 +705,7 @@ class Page(AdaptiveControl):
         if window_height is not None:
             args["window_height"] = str(window_height)
 
-        self.invoke_method("launchUrl", args)
+        self._invoke_method("launchUrl", args)
 
     @deprecated(version="0.21.0", reason="Use launch_url() method instead.")
     async def launch_url_async(
@@ -720,24 +722,24 @@ class Page(AdaptiveControl):
 
     def can_launch_url(self, url: str):
         args = {"url": url}
-        return self.invoke_method("canLaunchUrl", args, wait_for_result=True) == "true"
+        return self._invoke_method("canLaunchUrl", args, wait_for_result=True) == "true"
 
     async def can_launch_url_async(self, url: str):
         args = {"url": url}
         return (
-            await self.invoke_method_async("canLaunchUrl", args, wait_for_result=True)
+            await self._invoke_method_async("canLaunchUrl", args, wait_for_result=True)
             == "true"
         )
 
     def close_in_app_web_view(self):
-        self.invoke_method("closeInAppWebView")
+        self._invoke_method("closeInAppWebView")
 
     @deprecated(version="0.21.0", reason="Use close_in_app_web_view() method instead.")
     async def close_in_app_web_view_async(self):
         self.close_in_app_web_view()
 
     def window_to_front(self):
-        self.invoke_method("windowToFront")
+        self._invoke_method("windowToFront")
 
     @deprecated(version="0.21.0", reason="Use window_to_front() method instead.")
     async def window_to_front_async(self):
@@ -1909,10 +1911,21 @@ class KeyboardEvent(ControlEvent):
     meta: bool
 
 
-@dataclass
 class LoginEvent(ControlEvent):
-    error: str
-    error_description: str
+    def __init__(
+        self,
+        error: str,
+        error_description: str,
+        target: str,
+        name: str,
+        data: str,
+        control,
+        page,
+    ):
+        super().__init__(target, name, data, control, page)
+
+        self.error = error
+        self.error_description = error_description
 
 
 @dataclass

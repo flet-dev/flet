@@ -24,7 +24,7 @@ class FletOAuth:
         if not state_id:
             raise HTTPException(status_code=400, detail="Invalid state")
 
-        state = await app_manager.retrieve_state_async(state_id)
+        state = app_manager.retrieve_state(state_id)
 
         if not state:
             raise HTTPException(status_code=400, detail="Invalid state")
