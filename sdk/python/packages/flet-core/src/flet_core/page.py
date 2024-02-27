@@ -442,7 +442,7 @@ class Page(AdaptiveControl):
                 if asyncio.iscoroutinefunction(handler):
                     await handler(ce)
                 else:
-                    self.run_in_thread(handler, ce)
+                    self.run_thread(handler, ce)
 
     def __on_page_change_event(self, data):
         for props in json.loads(data):
@@ -456,7 +456,7 @@ class Page(AdaptiveControl):
         assert asyncio.iscoroutinefunction(handler)
         asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
 
-    def run_in_thread(self, handler, *args):
+    def run_thread(self, handler, *args):
         if is_pyodide():
             handler(*args)
         else:
