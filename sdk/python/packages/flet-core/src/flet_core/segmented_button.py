@@ -96,7 +96,7 @@ class Segment(Control):
 
 class SegmentedButton(ConstrainedControl):
     """
-
+    A segmented button control.
 
     -----
 
