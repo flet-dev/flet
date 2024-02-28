@@ -1,8 +1,8 @@
 from typing import Any, Optional
 
-from deprecated import deprecated
 from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.utils import deprecated
 
 
 class HapticFeedback(Control):
@@ -54,27 +54,43 @@ class HapticFeedback(Control):
     def heavy_impact(self):
         self.invoke_method("heavy_impact")
 
-    @deprecated(version="0.21.0", reason="Use heavy_impact() method instead.")
+    @deprecated(
+        reason="Use heavy_impact() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def heavy_impact_async(self):
         self.heavy_impact()
 
     def light_impact(self):
         self.invoke_method("light_impact")
 
-    @deprecated(version="0.21.0", reason="Use light_impact() method instead.")
+    @deprecated(
+        reason="Use light_impact() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def light_impact_async(self):
         self.light_impact()
 
     def medium_impact(self):
         self.invoke_method("medium_impact")
 
-    @deprecated(version="0.21.0", reason="Use medium_impact() method instead.")
+    @deprecated(
+        reason="Use medium_impact() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def medium_impact_async(self):
         self.medium_impact()
 
     def vibrate(self):
         self.invoke_method("vibrate")
 
-    @deprecated(version="0.21.0", reason="Use vibrate() method instead.")
+    @deprecated(
+        reason="Use vibrate() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def vibrate_async(self):
         self.vibrate()

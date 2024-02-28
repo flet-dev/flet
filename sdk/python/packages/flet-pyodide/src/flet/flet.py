@@ -62,7 +62,7 @@ def app_async(
         page = Page(conn, session_data.sessionID, loop=asyncio.get_running_loop())
         await page.fetch_page_details_async()
         conn.sessions[session_data.sessionID] = page
-        logger.info(f"Session started: {session_data.sessionID}")
+        logger.info("App session started")
         try:
             assert target is not None
             if asyncio.iscoroutinefunction(target):

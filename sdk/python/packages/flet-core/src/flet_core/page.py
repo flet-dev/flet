@@ -11,7 +11,6 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union,
 from urllib.parse import urlparse
 
 import flet_core
-from deprecated import deprecated
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
 from flet_core.animation import AnimationCurve
@@ -51,6 +50,7 @@ from flet_core.types import (
     ThemeMode,
     ThemeModeString,
 )
+from flet_core.utils import deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
 from flet_core.view import View
 
@@ -287,7 +287,9 @@ class Page(AdaptiveControl):
                 r = self.__update(*controls)
         self.__handle_mount_unmount(*r)
 
-    @deprecated(version="0.21.0", reason="Use update() method instead.")
+    @deprecated(
+        reason="Use update() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def update_async(self, *controls):
         self.update(*controls)
 
@@ -297,7 +299,9 @@ class Page(AdaptiveControl):
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
-    @deprecated(version="0.21.0", reason="Use add() method instead.")
+    @deprecated(
+        reason="Use add() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def add_async(self, *controls):
         self.add(*controls)
 
@@ -310,7 +314,9 @@ class Page(AdaptiveControl):
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
-    @deprecated(version="0.21.0", reason="Use insert() method instead.")
+    @deprecated(
+        reason="Use insert() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def insert_async(self, at, *controls):
         self.insert(at, *controls)
 
@@ -321,7 +327,9 @@ class Page(AdaptiveControl):
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
-    @deprecated(version="0.21.0", reason="Use remove() method instead.")
+    @deprecated(
+        reason="Use remove() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def remove_async(self, *controls):
         self.remove(*controls)
 
@@ -331,7 +339,9 @@ class Page(AdaptiveControl):
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
-    @deprecated(version="0.21.0", reason="Use remove_at() method instead.")
+    @deprecated(
+        reason="Use remove_at() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def remove_at_async(self, index):
         self.remove_at(index)
 
@@ -339,7 +349,9 @@ class Page(AdaptiveControl):
         self._clean(self)
         self._controls.clear()
 
-    @deprecated(version="0.21.0", reason="Use clean() method instead.")
+    @deprecated(
+        reason="Use clean() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def clean_async(self):
         self.clean()
 
@@ -424,7 +436,9 @@ class Page(AdaptiveControl):
         with self.__lock:
             self._send_command("error", [message])
 
-    @deprecated(version="0.21.0", reason="Use error() method instead.")
+    @deprecated(
+        reason="Use error() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def error_async(self, message=""):
         self.error(message)
 
@@ -483,7 +497,9 @@ class Page(AdaptiveControl):
         self.update()
         self.query()  # Update query url (required when using go)
 
-    @deprecated(version="0.21.0", reason="Use go() method instead.")
+    @deprecated(
+        reason="Use go() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def go_async(self, route, skip_route_change_event=False, **kwargs):
         self.go(route, skip_route_change_event, **kwargs)
 
@@ -495,7 +511,11 @@ class Page(AdaptiveControl):
             raise Exception(r.error)
         return r.result
 
-    @deprecated(version="0.21.0", reason="Use get_upload_url() method instead.")
+    @deprecated(
+        reason="Use get_upload_url() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def get_upload_url_async(self, file_name: str, expires: int):
         return self.get_upload_url(file_name, expires)
 
@@ -654,7 +674,9 @@ class Page(AdaptiveControl):
             ),
         )
 
-    @deprecated(version="0.21.0", reason="Use logout() method instead.")
+    @deprecated(
+        reason="Use logout() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def logout_async(self):
         self.logout()
 
@@ -677,7 +699,11 @@ class Page(AdaptiveControl):
     def set_clipboard(self, value: str):
         self.__offstage.clipboard.set_data(value)
 
-    @deprecated(version="0.21.0", reason="Use set_clipboard() method instead.")
+    @deprecated(
+        reason="Use set_clipboard() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def set_clipboard_async(self, value: str):
         self.set_clipboard(value)
 
@@ -707,7 +733,11 @@ class Page(AdaptiveControl):
 
         self._invoke_method("launchUrl", args)
 
-    @deprecated(version="0.21.0", reason="Use launch_url() method instead.")
+    @deprecated(
+        reason="Use launch_url() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def launch_url_async(
         self,
         url: str,
@@ -734,14 +764,22 @@ class Page(AdaptiveControl):
     def close_in_app_web_view(self):
         self._invoke_method("closeInAppWebView")
 
-    @deprecated(version="0.21.0", reason="Use close_in_app_web_view() method instead.")
+    @deprecated(
+        reason="Use close_in_app_web_view() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_in_app_web_view_async(self):
         self.close_in_app_web_view()
 
     def window_to_front(self):
         self._invoke_method("windowToFront")
 
-    @deprecated(version="0.21.0", reason="Use window_to_front() method instead.")
+    @deprecated(
+        reason="Use window_to_front() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def window_to_front_async(self):
         self.window_to_front()
 
@@ -757,7 +795,9 @@ class Page(AdaptiveControl):
             offset=offset, delta=delta, key=key, duration=duration, curve=curve
         )
 
-    @deprecated(version="0.21.0", reason="Use scroll_to() method instead.")
+    @deprecated(
+        reason="Use scroll_to() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def scroll_to_async(
         self,
         offset: Optional[float] = None,
@@ -875,7 +915,11 @@ class Page(AdaptiveControl):
         self.__offstage.snack_bar.open = True
         self.__offstage.update()
 
-    @deprecated(version="0.21.0", reason="Use show_snack_bar() method instead.")
+    @deprecated(
+        reason="Use show_snack_bar() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def show_snack_bar_async(self, snack_bar: SnackBar):
         self.show_snack_bar(snack_bar)
 
@@ -887,7 +931,11 @@ class Page(AdaptiveControl):
         self.__offstage.dialog.open = True
         self.__offstage.update()
 
-    @deprecated(version="0.21.0", reason="Use show_dialog() method instead.")
+    @deprecated(
+        reason="Use show_dialog() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def show_dialog_async(self, dialog: Union[AlertDialog, CupertinoAlertDialog]):
         self.show_dialog(dialog)
 
@@ -896,7 +944,11 @@ class Page(AdaptiveControl):
             self.__offstage.dialog.open = False
             self.__offstage.update()
 
-    @deprecated(version="0.21.0", reason="Use close_dialog() method instead.")
+    @deprecated(
+        reason="Use close_dialog() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_dialog_async(self):
         self.close_dialog()
 
@@ -908,7 +960,11 @@ class Page(AdaptiveControl):
         self.__offstage.banner.open = True
         self.__offstage.update()
 
-    @deprecated(version="0.21.0", reason="Use show_banner() method instead.")
+    @deprecated(
+        reason="Use show_banner() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def show_banner_async(self, banner: Banner):
         self.show_banner(banner)
 
@@ -917,7 +973,11 @@ class Page(AdaptiveControl):
             self.__offstage.banner.open = False
             self.__offstage.update()
 
-    @deprecated(version="0.21.0", reason="Use close_banner() method instead.")
+    @deprecated(
+        reason="Use close_banner() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_banner_async(self):
         self.close_banner()
 
@@ -929,7 +989,11 @@ class Page(AdaptiveControl):
         self.__offstage.bottom_sheet.open = True
         self.__offstage.update()
 
-    @deprecated(version="0.21.0", reason="Use show_bottom_sheet() method instead.")
+    @deprecated(
+        reason="Use show_bottom_sheet() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def show_bottom_sheet_async(self, bottom_sheet: BottomSheet):
         self.show_bottom_sheet(bottom_sheet)
 
@@ -938,7 +1002,11 @@ class Page(AdaptiveControl):
             self.__offstage.bottom_sheet.open = False
             self.__offstage.update()
 
-    @deprecated(version="0.21.0", reason="Use close_bottom_sheet() method instead.")
+    @deprecated(
+        reason="Use close_bottom_sheet() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_bottom_sheet_async(self):
         self.close_bottom_sheet()
 
@@ -949,7 +1017,11 @@ class Page(AdaptiveControl):
         self.drawer.open = True
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use show_drawer() method instead.")
+    @deprecated(
+        reason="Use show_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def show_drawer_async(self, drawer: NavigationDrawer):
         self.show_drawer(drawer)
 
@@ -958,7 +1030,11 @@ class Page(AdaptiveControl):
             self.drawer.open = False
             self.update()
 
-    @deprecated(version="0.21.0", reason="Use close_drawer() method instead.")
+    @deprecated(
+        reason="Use close_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_drawer_async(self):
         self.close_drawer()
 
@@ -969,7 +1045,11 @@ class Page(AdaptiveControl):
         self.end_drawer.open = True
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use show_end_drawer() method instead.")
+    @deprecated(
+        reason="Use show_end_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
         self.show_end_drawer(end_drawer)
 
@@ -978,7 +1058,11 @@ class Page(AdaptiveControl):
             self.end_drawer.open = False
             self.update()
 
-    @deprecated(version="0.21.0", reason="Use close_end_drawer() method instead.")
+    @deprecated(
+        reason="Use close_end_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_end_drawer_async(self):
         self.close_end_drawer()
 
@@ -986,7 +1070,11 @@ class Page(AdaptiveControl):
         self._set_attr("windowDestroy", "true")
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use window_destroy() method instead.")
+    @deprecated(
+        reason="Use window_destroy() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def window_destroy_async(self):
         self.window_destroy()
 
@@ -994,7 +1082,11 @@ class Page(AdaptiveControl):
         self._set_attr("windowCenter", str(time.time()))
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use window_center() method instead.")
+    @deprecated(
+        reason="Use window_center() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def window_center_async(self):
         self.window_center()
 
@@ -1002,7 +1094,11 @@ class Page(AdaptiveControl):
         self._set_attr("windowClose", str(time.time()))
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use window_close() method instead.")
+    @deprecated(
+        reason="Use window_close() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def window_close_async(self):
         self.window_close()
 

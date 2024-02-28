@@ -1,7 +1,6 @@
 import time
 from typing import Any, Optional, Union
 
-from deprecated import deprecated
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -14,6 +13,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class MenuItemButton(ConstrainedControl):
@@ -140,7 +140,11 @@ class MenuItemButton(ConstrainedControl):
         self._set_attr_json("focus", str(time.time()))
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use focus() method instead.")
+    @deprecated(
+        reason="Use focus() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def focus_async(self):
         self.focus()
 

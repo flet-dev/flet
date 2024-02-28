@@ -1,6 +1,5 @@
 from typing import Any, Optional, Union
 
-from deprecated import deprecated
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
@@ -20,6 +19,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class Pagelet(ConstrainedControl, AdaptiveControl):
@@ -183,7 +183,11 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.drawer.open = True
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use show_drawer() method instead.")
+    @deprecated(
+        reason="Use show_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def show_drawer_async(self, drawer: NavigationDrawer):
         self.show_drawer(drawer)
 
@@ -192,7 +196,11 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
             self.drawer.open = False
             self.update()
 
-    @deprecated(version="0.21.0", reason="Use close_end_drawer() method instead.")
+    @deprecated(
+        reason="Use close_end_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_drawer_async(self):
         self.close_end_drawer()
 
@@ -203,7 +211,11 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.end_drawer.open = True
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use show_end_drawer() method instead.")
+    @deprecated(
+        reason="Use show_end_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
         self.show_end_drawer(end_drawer)
 
@@ -212,7 +224,11 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
             self.end_drawer.open = False
             self.update()
 
-    @deprecated(version="0.21.0", reason="Use close_end_drawer() method instead.")
+    @deprecated(
+        reason="Use close_end_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_end_drawer_async(self):
         self.close_end_drawer()
 

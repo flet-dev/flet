@@ -2,10 +2,10 @@ from datetime import time
 from enum import Enum
 from typing import Any, Optional, Union
 
-from deprecated import deprecated
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import ResponsiveNumber
+from flet_core.utils import deprecated
 
 
 class TimePickerEntryMode(Enum):
@@ -116,7 +116,11 @@ class TimePicker(Control):
         self.open = True
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use pick_time() method instead.")
+    @deprecated(
+        reason="Use pick_time() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def pick_time_async(self):
         self.pick_time()
 

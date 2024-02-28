@@ -3,12 +3,12 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, List, Optional, Union
 
-from deprecated import deprecated
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.dropdown import Option
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.utils import deprecated
 
 try:
     from typing import Literal
@@ -168,7 +168,11 @@ class FilePicker(Control):
         self.allow_multiple = allow_multiple
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use pick_files() method instead.")
+    @deprecated(
+        reason="Use pick_files() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def pick_files_async(
         self,
         dialog_title: Optional[str] = None,
@@ -201,7 +205,11 @@ class FilePicker(Control):
         self.allowed_extensions = allowed_extensions
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use save_file() method instead.")
+    @deprecated(
+        reason="Use save_file() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def save_file_async(
         self,
         dialog_title: Optional[str] = None,
@@ -224,7 +232,11 @@ class FilePicker(Control):
         self.initial_directory = initial_directory
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use get_directory_path() method instead.")
+    @deprecated(
+        reason="Use get_directory_path() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def get_directory_path_async(
         self,
         dialog_title: Optional[str] = None,
@@ -236,7 +248,11 @@ class FilePicker(Control):
         self.__upload = files
         self.update()
 
-    @deprecated(version="0.21.0", reason="Use upload() method instead.")
+    @deprecated(
+        reason="Use upload() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def upload_async(self, files: List[FilePickerUploadFile]):
         self.upload(files)
 

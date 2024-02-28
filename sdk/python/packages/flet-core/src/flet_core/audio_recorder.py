@@ -2,9 +2,9 @@ import json
 from enum import Enum
 from typing import Any, Optional
 
-from deprecated import deprecated
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.utils import deprecated
 
 
 class AudioEncoder(Enum):
@@ -66,7 +66,11 @@ class AudioRecorder(Control):
             raise ValueError("output_path must be provided when not on web!")
         self.invoke_method("start_recording", {"outputPath": output_path})
 
-    @deprecated(version="0.21.0", reason="Use start_recording() method instead.")
+    @deprecated(
+        reason="Use start_recording() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def start_recording_async(self, output_path: str):
         self.start_recording(output_path)
 
@@ -107,14 +111,22 @@ class AudioRecorder(Control):
     def resume_recording(self):
         self.invoke_method("resume_recording")
 
-    @deprecated(version="0.21.0", reason="Use resume_recording() method instead.")
+    @deprecated(
+        reason="Use resume_recording() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def resume_recording_async(self):
         self.resume_recording()
 
     def pause_recording(self):
         self.invoke_method("pause_recording")
 
-    @deprecated(version="0.21.0", reason="Use pause_recording() method instead.")
+    @deprecated(
+        reason="Use pause_recording() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def pause_recording_async(self):
         self.pause_recording()
 

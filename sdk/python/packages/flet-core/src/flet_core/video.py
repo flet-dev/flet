@@ -2,7 +2,6 @@ import dataclasses
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
 
-from deprecated import deprecated
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
@@ -15,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 try:
     from typing import Literal
@@ -163,42 +163,66 @@ class Video(ConstrainedControl):
     def play(self):
         self.invoke_method("play")
 
-    @deprecated(version="0.21.0", reason="Use play() method instead.")
+    @deprecated(
+        reason="Use play() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def play_async(self):
         self.play()
 
     def pause(self):
         self.invoke_method("pause")
 
-    @deprecated(version="0.21.0", reason="Use pause() method instead.")
+    @deprecated(
+        reason="Use pause() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def pause_async(self):
         self.pause()
 
     def play_or_pause(self):
         self.invoke_method("play_or_pause")
 
-    @deprecated(version="0.21.0", reason="Use play_or_pause() method instead.")
+    @deprecated(
+        reason="Use play_or_pause() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def play_or_pause_async(self):
         self.play_or_pause()
 
     def stop(self):
         self.invoke_method("stop")
 
-    @deprecated(version="0.21.0", reason="Use stop() method instead.")
+    @deprecated(
+        reason="Use stop() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def stop_async(self):
         self.stop()
 
     def next(self):
         self.invoke_method("next")
 
-    @deprecated(version="0.21.0", reason="Use next() method instead.")
+    @deprecated(
+        reason="Use next() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def next_async(self):
         self.next()
 
     def previous(self):
         self.invoke_method("previous")
 
-    @deprecated(version="0.21.0", reason="Use previous() method instead.")
+    @deprecated(
+        reason="Use previous() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def previous_async(self):
         self.previous()
 
@@ -228,7 +252,11 @@ class Video(ConstrainedControl):
         )
         self.__playlist.append(media)
 
-    @deprecated(version="0.21.0", reason="Use playlist_add() method instead.")
+    @deprecated(
+        reason="Use playlist_add() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def playlist_add_async(self, media: VideoMedia):
         self.playlist_add(media)
 
@@ -237,7 +265,11 @@ class Video(ConstrainedControl):
         self.invoke_method("playlist_remove", {"media_index": str(media_index)})
         self.__playlist.pop(media_index)
 
-    @deprecated(version="0.21.0", reason="Use playlist_remove() method instead.")
+    @deprecated(
+        reason="Use playlist_remove() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def playlist_remove_async(self, media_index: int):
         self.playlist_remove(media_index)
 

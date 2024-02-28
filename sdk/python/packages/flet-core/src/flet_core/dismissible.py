@@ -1,7 +1,6 @@
 import json
 from typing import Any, Dict, Optional, Union
 
-from deprecated import deprecated
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -16,6 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class Dismissible(ConstrainedControl, AdaptiveControl):
@@ -164,7 +164,11 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     def confirm_dismiss(self, dismiss: bool):
         self.invoke_method("confirm_dismiss", {"dismiss": str(dismiss).lower()})
 
-    @deprecated(version="0.21.0", reason="Use confirm_dismiss() method instead.")
+    @deprecated(
+        reason="Use confirm_dismiss() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def confirm_dismiss_async(self, dismiss: bool):
         self.confirm_dismiss(dismiss)
 

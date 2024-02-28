@@ -230,7 +230,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
         )
         await page.fetch_page_details_async()
         conn.sessions[session_data.sessionID] = page
-        logger.info(f"Session started: {session_data.sessionID}")
+        logger.info("App session started")
         try:
             assert session_handler is not None
             if asyncio.iscoroutinefunction(session_handler):

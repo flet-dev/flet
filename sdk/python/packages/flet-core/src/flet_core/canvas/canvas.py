@@ -1,7 +1,6 @@
 import json
 from typing import Any, List, Optional, Union
 
-from deprecated import deprecated
 from flet_core.canvas.shape import Shape
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -15,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class Canvas(ConstrainedControl):
@@ -109,7 +109,9 @@ class Canvas(ConstrainedControl):
         super().clean()
         self.__shapes.clear()
 
-    @deprecated(version="0.21.0", reason="Use clean() method instead.")
+    @deprecated(
+        reason="Use clean() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def clean_async(self):
         self.clean()
 

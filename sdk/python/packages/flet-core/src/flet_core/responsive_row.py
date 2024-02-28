@@ -1,6 +1,5 @@
 from typing import Any, List, Optional, Union
 
-from deprecated import deprecated
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -16,6 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class ResponsiveRow(ConstrainedControl, AdaptiveControl):
@@ -149,7 +149,11 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         super().clean()
         self.__controls.clear()
 
-    @deprecated(version="0.21.0", reason="Use clean() method instead.")
+    @deprecated(
+        reason="Use clean() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def clean_async(self):
         self.clean()
 
