@@ -105,7 +105,6 @@ class FletApp(LocalConnection):
 
         await self.__websocket.accept()
         self.__send_queue = asyncio.Queue()
-        self._loop = asyncio.get_running_loop()
         st = asyncio.create_task(self.__send_loop())
         await self.__receive_loop()
         st.cancel()

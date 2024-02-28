@@ -89,7 +89,7 @@ async def app_async(
     host=None,
     port=0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir=None,
+    assets_dir="assets",
     upload_dir=None,
     web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
     use_color_emoji=False,
