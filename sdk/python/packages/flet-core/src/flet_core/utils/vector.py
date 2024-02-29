@@ -1,38 +1,4 @@
-import asyncio
-import inspect
 import math
-import random
-import re
-import string
-import sys
-import unicodedata
-
-
-def random_string(length):
-    return "".join(random.choice(string.ascii_letters) for _ in range(length))
-
-
-def is_asyncio():
-    try:
-        return asyncio.current_task() is not None or sys.platform == "emscripten"
-    except RuntimeError:
-        return False
-
-
-def is_coroutine(method):
-    return inspect.iscoroutinefunction(method)
-
-
-def slugify(value: str) -> str:
-    """
-    Converts to lowercase, removes non-word characters (alphanumerics and underscores)
-    and converts spaces to hyphens. Also strips leading and trailing whitespace.
-    """
-    value = (
-        unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
-    )
-    value = re.sub(r"[^\w\s-]", "", value).strip().lower()
-    return re.sub(r"[-\s]+", "-", value).strip("-")
 
 
 class Vector(complex):

@@ -115,8 +115,8 @@ class CupertinoRadio(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinoradio"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
 
     # value
     @property

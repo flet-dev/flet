@@ -112,6 +112,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         shape: Optional[BoxShape] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
+        ink_color: Optional[str] = None,
         animate: AnimationValue = None,
         blur: Union[
             None, float, int, Tuple[Union[float, int], Union[float, int]], Blur
@@ -121,6 +122,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         url_target: Optional[str] = None,
         theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
+        on_release=None,
         on_click=None,
         on_long_press=None,
         on_hover=None,
@@ -167,6 +169,8 @@ class Container(ConstrainedControl, AdaptiveControl):
             d = json.loads(e.data)
             return ContainerTapEvent(**d)
 
+        self.__on_release = EventHandler(convert_container_tap_event_data)
+        self._add_event_handler("tap", self.__on_release.get_handler())
         self.__on_click = EventHandler(convert_container_tap_event_data)
         self._add_event_handler("click", self.__on_click.get_handler())
 
@@ -187,6 +191,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.shape = shape
         self.clip_behavior = clip_behavior
         self.ink = ink
+        self.ink_color = ink_color
         self.animate = animate
         self.blur = blur
         self.shadow = shadow
@@ -194,6 +199,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.url_target = url_target
         self.theme = theme
         self.theme_mode = theme_mode
+        self.on_release = on_release
         self.on_click = on_click
         self.on_long_press = on_long_press
         self.on_hover = on_hover
@@ -201,8 +207,8 @@ class Container(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "container"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("border", self.__border)
         self._set_attr_json("margin", self.__margin)
@@ -430,6 +436,15 @@ class Container(ConstrainedControl, AdaptiveControl):
     def ink(self, value: Optional[bool]):
         self._set_attr("ink", value)
 
+    # ink color
+    @property
+    def ink_color(self):
+        return self._get_attr("inkColor")
+
+    @ink_color.setter
+    def ink_color(self, value):
+        self._set_attr("inkColor", value)
+
     # animate
     @property
     def animate(self) -> AnimationValue:
@@ -475,6 +490,16 @@ class Container(ConstrainedControl, AdaptiveControl):
     def theme_mode(self, value: Optional[ThemeMode]):
         self.__theme_mode = value
         self._set_attr("themeMode", value.value if value is not None else None)
+
+    # on_release
+    @property
+    def on_release(self):
+        return self._get_event_handler("tap")
+
+    @on_release.setter
+    def on_release(self, handler):
+        self._add_event_handler("tap", handler)
+        self._set_attr("onTap", True if handler is not None else None)
 
     # on_click
     @property

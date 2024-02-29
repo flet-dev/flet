@@ -2,6 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.utils import deprecated
 
 
 class HapticFeedback(Control):
@@ -47,29 +48,49 @@ class HapticFeedback(Control):
     def _get_control_name(self):
         return "hapticfeedback"
 
-    def _is_isolated(self):
+    def is_isolated(self):
         return True
 
     def heavy_impact(self):
-        self.page.invoke_method("heavy_impact", control_id=self.uid)
+        self.invoke_method("heavy_impact")
 
+    @deprecated(
+        reason="Use heavy_impact() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def heavy_impact_async(self):
-        await self.page.invoke_method_async("heavy_impact", control_id=self.uid)
+        self.heavy_impact()
 
     def light_impact(self):
-        self.page.invoke_method("light_impact", control_id=self.uid)
+        self.invoke_method("light_impact")
 
+    @deprecated(
+        reason="Use light_impact() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def light_impact_async(self):
-        await self.page.invoke_method_async("light_impact", control_id=self.uid)
+        self.light_impact()
 
     def medium_impact(self):
-        self.page.invoke_method("medium_impact", control_id=self.uid)
+        self.invoke_method("medium_impact")
 
+    @deprecated(
+        reason="Use medium_impact() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def medium_impact_async(self):
-        await self.page.invoke_method_async("medium_impact", control_id=self.uid)
+        self.medium_impact()
 
     def vibrate(self):
-        self.page.invoke_method("vibrate", control_id=self.uid)
+        self.invoke_method("vibrate")
 
+    @deprecated(
+        reason="Use vibrate() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def vibrate_async(self):
-        await self.page.invoke_method_async("vibrate", control_id=self.uid)
+        self.vibrate()
