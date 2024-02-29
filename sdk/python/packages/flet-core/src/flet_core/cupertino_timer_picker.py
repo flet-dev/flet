@@ -27,14 +27,14 @@ class CupertinoTimerPicker(ConstrainedControl):
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/time_picker
+    Online docs: https://flet.dev/docs/controls/cupertinotimerpicker
     """
 
     def __init__(
         self,
         value: Optional[int] = None,
-        second_interval: Optional[int] = None,
-        minute_interval: Optional[int] = None,
+        second_interval: OptionalNumber = None,
+        minute_interval: OptionalNumber = None,
         mode: Optional[CupertinoTimerPickerMode] = None,
         bgcolor: Optional[str] = None,
         on_change=None,
@@ -129,20 +129,20 @@ class CupertinoTimerPicker(ConstrainedControl):
 
     # second_interval
     @property
-    def second_interval(self) -> Optional[int]:
-        return self._get_attr("secondInterval")
+    def second_interval(self) -> OptionalNumber:
+        return self._get_attr("secondInterval", data_type="int", def_value=1)
 
     @second_interval.setter
-    def second_interval(self, value: Optional[int]):
+    def second_interval(self, value: OptionalNumber):
         self._set_attr("secondInterval", value)
 
     # minute_interval
     @property
-    def minute_interval(self) -> Optional[int]:
-        return self._get_attr("minuteInterval")
+    def minute_interval(self) -> OptionalNumber:
+        return self._get_attr("minuteInterval", data_type="int", def_value=1)
 
     @minute_interval.setter
-    def minute_interval(self, value: Optional[int]):
+    def minute_interval(self, value: OptionalNumber):
         self._set_attr("minuteInterval", value)
 
     # mode
