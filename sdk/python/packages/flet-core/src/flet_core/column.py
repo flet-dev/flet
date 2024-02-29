@@ -17,6 +17,7 @@ from flet_core.types import (
     ScaleValue,
     ScrollMode,
 )
+from flet_core.utils import deprecated
 
 
 class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
@@ -165,9 +166,13 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         super().clean()
         self.__controls.clear()
 
+    @deprecated(
+        reason="Use clean() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def clean_async(self):
-        await super().clean_async()
-        self.__controls.clear()
+        self.clean()
 
     # tight
     @property

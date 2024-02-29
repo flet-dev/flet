@@ -15,6 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class Dismissible(ConstrainedControl, AdaptiveControl):
@@ -156,19 +157,20 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
             children.append(self.__secondary_background)
         return children
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("dismissThresholds", self.__dismiss_thresholds)
 
     def confirm_dismiss(self, dismiss: bool):
-        self.page.invoke_method(
-            "confirm_dismiss", {"dismiss": str(dismiss).lower()}, control_id=self.uid
-        )
+        self.invoke_method("confirm_dismiss", {"dismiss": str(dismiss).lower()})
 
+    @deprecated(
+        reason="Use confirm_dismiss() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def confirm_dismiss_async(self, dismiss: bool):
-        await self.page.invoke_method_async(
-            "confirm_dismiss", {"dismiss": str(dismiss).lower()}, control_id=self.uid
-        )
+        self.confirm_dismiss(dismiss)
 
     # content
     @property

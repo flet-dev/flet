@@ -251,29 +251,30 @@ class Handler(FileSystemEventHandler):
     def start_process(self):
         p_env = {**os.environ}
         if self.web or self.ios or self.android:
-            p_env["FLET_FORCE_WEB_VIEW"] = "true"
-            p_env["FLET_DETACH_FLETD"] = "true"
+            p_env["FLET_FORCE_WEB_SERVER"] = "true"
 
             # force page name for ios
             if self.ios or self.android:
-                p_env["FLET_PAGE_NAME"] = "/".join(Path(self.script_path).parts[-2:])
+                p_env["FLET_WEB_APP_PATH"] = "/".join(Path(self.script_path).parts[-2:])
         if self.port is not None:
             p_env["FLET_SERVER_PORT"] = str(self.port)
         if self.host is not None:
             p_env["FLET_SERVER_IP"] = str(self.host)
         if self.page_name:
-            p_env["FLET_PAGE_NAME"] = self.page_name
+            p_env["FLET_WEB_APP_PATH"] = self.page_name
         if self.uds_path is not None:
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
         if self.assets_dir is not None:
-            p_env["FLET_ASSETS_PATH"] = self.assets_dir
+            p_env["FLET_ASSETS_DIR"] = self.assets_dir
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
 
         p_env["PYTHONIOENCODING"] = "utf-8"
+        p_env["PYTHONWARNINGS"] = "default::DeprecationWarning"
 
         self.p = subprocess.Popen(
             self.args, env=p_env, stdout=subprocess.PIPE, encoding="utf-8"
         )
+
         self.is_running = True
         th = threading.Thread(target=self.print_output, args=[self.p], daemon=True)
         th.start()
@@ -327,6 +328,10 @@ class Handler(FileSystemEventHandler):
         )
         self.fvp.wait()
         self.p.send_signal(signal.SIGTERM)
+        try:
+            self.p.wait(2)
+        except subprocess.TimeoutExpired:
+            self.p.kill()
         self.terminate.set()
 
     def restart_program(self):

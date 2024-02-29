@@ -1,6 +1,6 @@
 import dataclasses
 from enum import Enum
-from typing import Any, Optional, Union, List, Dict
+from typing import Any, Dict, List, Optional, Union, cast
 
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
@@ -9,19 +9,15 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
+    ImageFit,
     OffsetValue,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ImageFit,
-    PaddingValue,
     TextAlign,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
+from flet_core.utils import deprecated
 
 
 class FilterQuality(Enum):
@@ -85,7 +81,7 @@ class Video(ConstrainedControl):
         resume_upon_entering_foreground_mode: Optional[bool] = None,
         aspect_ratio: OptionalNumber = None,
         pitch: OptionalNumber = None,
-        subtitle_configuration: Optional[object] = None,
+        subtitle_configuration: Optional[VideoSubtitleConfiguration] = None,
         on_loaded=None,
         on_enter_fullscreen=None,
         on_exit_fullscreen=None,
@@ -149,7 +145,7 @@ class Video(ConstrainedControl):
             data=data,
         )
 
-        self.__playlist = playlist
+        self.__playlist = playlist or []
         self.subtitle_configuration = subtitle_configuration
         self.fit = fit
         self.pitch = pitch
@@ -175,186 +171,189 @@ class Video(ConstrainedControl):
     def _get_control_name(self):
         return "video"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("alignment", self.__alignment)
         self._set_attr_json("playlist", self.__playlist if self.__playlist else None)
         if dataclasses.is_dataclass(self.__subtitle_configuration):
             self._set_attr_json("subtitleConfiguration", self.__subtitle_configuration)
 
     def play(self):
-        self.page.invoke_method("play", control_id=self.uid)
+        self.invoke_method("play")
 
+    @deprecated(
+        reason="Use play() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def play_async(self):
-        await self.page.invoke_method_async("play", control_id=self.uid)
+        self.play()
 
     def pause(self):
-        self.page.invoke_method("pause", control_id=self.uid)
+        self.invoke_method("pause")
 
+    @deprecated(
+        reason="Use pause() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def pause_async(self):
-        await self.page.invoke_method_async("pause", control_id=self.uid)
+        self.pause()
 
     def play_or_pause(self):
-        self.page.invoke_method("play_or_pause", control_id=self.uid)
+        self.invoke_method("play_or_pause")
 
+    @deprecated(
+        reason="Use play_or_pause() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def play_or_pause_async(self):
-        await self.page.invoke_method_async("play_or_pause", control_id=self.uid)
+        self.play_or_pause()
 
     def stop(self):
-        self.page.invoke_method("stop", control_id=self.uid)
+        self.invoke_method("stop")
 
+    @deprecated(
+        reason="Use stop() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def stop_async(self):
-        await self.page.invoke_method_async("stop", control_id=self.uid)
+        self.stop()
 
     def next(self):
-        self.page.invoke_method("next", control_id=self.uid)
+        self.invoke_method("next")
 
+    @deprecated(
+        reason="Use next() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def next_async(self):
-        await self.page.invoke_method_async("next", control_id=self.uid)
+        self.next()
 
     def previous(self):
-        self.page.invoke_method("previous", control_id=self.uid)
+        self.invoke_method("previous")
 
+    @deprecated(
+        reason="Use previous() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def previous_async(self):
-        await self.page.invoke_method_async("previous", control_id=self.uid)
+        self.previous()
 
     def seek(self, position_milliseconds: int):
-        self.page.invoke_method(
-            "seek", {"position": str(position_milliseconds)}, control_id=self.uid
-        )
+        self.invoke_method("seek", {"position": str(position_milliseconds)})
 
     async def seek_async(self, position_milliseconds: int):
-        await self.page.invoke_method_async(
-            "seek", {"position": str(position_milliseconds)}, control_id=self.uid
-        )
+        await self.invoke_method_async("seek", {"position": str(position_milliseconds)})
 
     def jump_to(self, media_index: int):
         assert self.__playlist[media_index], "index out of range"
-        self.page.invoke_method(
-            "jump_to", {"media_index": str(media_index)}, control_id=self.uid
-        )
+        self.invoke_method("jump_to", {"media_index": str(media_index)})
 
     async def jump_to_async(self, media_index: int):
         assert self.__playlist[media_index], "index out of range"
-        await self.page.invoke_method_async(
-            "jump_to", {"media_index": str(media_index)}, control_id=self.uid
-        )
+        await self.invoke_method_async("jump_to", {"media_index": str(media_index)})
 
     def playlist_add(self, media: VideoMedia):
         assert media.resource, "media has no resource"
-        self.page.invoke_method(
+        self.invoke_method(
             "playlist_add",
             {
                 "resource": media.resource,
                 "http_headers": str(media.http_headers or {}),
                 "extras": str(media.extras or {}),
             },
-            control_id=self.uid,
         )
         self.__playlist.append(media)
 
+    @deprecated(
+        reason="Use playlist_add() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def playlist_add_async(self, media: VideoMedia):
-        assert media.resource, "media has no resource"
-        await self.page.invoke_method_async(
-            "playlist_add",
-            {
-                "resource": media.resource,
-                "http_headers": str(media.http_headers),
-                "extras": str(media.extras),
-            },
-            control_id=self.uid,
-        )
-        self.__playlist.append(media)
+        self.playlist_add(media)
 
     def playlist_remove(self, media_index: int):
         assert self.__playlist[media_index], "index out of range"
-        self.page.invoke_method(
-            "playlist_remove",
-            {"media_index": str(media_index)},
-            control_id=self.uid,
-        )
+        self.invoke_method("playlist_remove", {"media_index": str(media_index)})
         self.__playlist.pop(media_index)
 
+    @deprecated(
+        reason="Use playlist_remove() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def playlist_remove_async(self, media_index: int):
-        assert self.__playlist[media_index], "index out of range"
-        await self.page.invoke_method_async(
-            "playlist_remove",
-            {"media_index": str(media_index)},
-            control_id=self.uid,
-        )
-        self.__playlist.pop(media_index)
+        self.playlist_remove(media_index)
 
     def is_playing(self, wait_timeout: Optional[float] = 5) -> bool:
-        playing = self.page.invoke_method(
+        playing = self.invoke_method(
             "is_playing",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return playing == "true"
 
     async def is_playing_async(self, wait_timeout: Optional[float] = 5) -> bool:
-        playing = await self.page.invoke_method_async(
+        playing = await self.invoke_method_async(
             "is_playing",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return playing == "true"
 
     def is_completed(self, wait_timeout: Optional[float] = 5) -> bool:
-        completed = self.page.invoke_method(
+        completed = self.invoke_method(
             "is_completed",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return completed == "true"
 
     async def is_completed_async(self, wait_timeout: Optional[float] = 5) -> bool:
-        completed = await self.page.invoke_method_async(
+        completed = await self.invoke_method_async(
             "is_completed",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return completed == "true"
 
     def get_duration(self, wait_timeout: Optional[float] = 5) -> Optional[int]:
-        sr = self.page.invoke_method(
+        sr = self.invoke_method(
             "get_duration",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
     async def get_duration_async(
-            self, wait_timeout: Optional[float] = 5
+        self, wait_timeout: Optional[float] = 5
     ) -> Optional[int]:
-        sr = await self.page.invoke_method_async(
+        sr = await self.invoke_method_async(
             "get_duration",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
     def get_current_position(self, wait_timeout: Optional[float] = 5) -> Optional[int]:
-        sr = self.page.invoke_method(
+        sr = self.invoke_method(
             "get_current_position",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
     async def get_current_position_async(
-            self, wait_timeout: Optional[float] = 5
+        self, wait_timeout: Optional[float] = 5
     ) -> Optional[int]:
-        sr = await self.page.invoke_method_async(
+        sr = await self.invoke_method_async(
             "get_current_position",
-            control_id=self.uid,
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
@@ -477,8 +476,11 @@ class Video(ConstrainedControl):
     # pause_upon_entering_background_mode
     @property
     def pause_upon_entering_background_mode(self) -> Optional[bool]:
-        return self._get_attr(
-            "pauseUponEnteringBackgroundMode", data_type="bool", def_value=True
+        return cast(
+            bool,
+            self._get_attr(
+                "pauseUponEnteringBackgroundMode", data_type="bool", def_value=True
+            ),
         )
 
     @pause_upon_entering_background_mode.setter
@@ -488,8 +490,11 @@ class Video(ConstrainedControl):
     # resume_upon_entering_foreground_mode
     @property
     def resume_upon_entering_foreground_mode(self) -> Optional[bool]:
-        return self._get_attr(
-            "resumeUponEnteringForegroundMode", data_type="bool", def_value=False
+        return cast(
+            bool,
+            self._get_attr(
+                "resumeUponEnteringForegroundMode", data_type="bool", def_value=False
+            ),
         )
 
     @resume_upon_entering_foreground_mode.setter

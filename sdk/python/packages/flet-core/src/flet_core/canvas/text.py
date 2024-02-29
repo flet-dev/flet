@@ -50,8 +50,8 @@ class Text(Shape):
         children.extend(self.__spans)
         return children
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("style", self.__style)
         self._set_attr_json("alignment", self.__alignment)
 

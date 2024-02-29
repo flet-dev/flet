@@ -12,6 +12,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class OutlinedButton(ConstrainedControl):
@@ -131,8 +132,8 @@ class OutlinedButton(ConstrainedControl):
     def _get_control_name(self):
         return "outlinedbutton"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if self.__style is not None:
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
@@ -149,9 +150,13 @@ class OutlinedButton(ConstrainedControl):
         self._set_attr_json("focus", str(time.time()))
         self.update()
 
+    @deprecated(
+        reason="Use focus() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
+        self.focus()
 
     # text
     @property
