@@ -151,8 +151,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "expansiontile"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("expandedAlignment", self.__expanded_alignment)
         self._set_attr_json("controlsPadding", self.__controls_padding)
         self._set_attr_json("tilePadding", self.__tile_padding)

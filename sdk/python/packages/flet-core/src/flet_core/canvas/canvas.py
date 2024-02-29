@@ -14,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class Canvas(ConstrainedControl):
@@ -108,9 +109,11 @@ class Canvas(ConstrainedControl):
         super().clean()
         self.__shapes.clear()
 
+    @deprecated(
+        reason="Use clean() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def clean_async(self):
-        await super().clean_async()
-        self.__shapes.clear()
+        self.clean()
 
     # shapes
     @property

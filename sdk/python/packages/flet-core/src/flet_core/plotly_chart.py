@@ -107,16 +107,16 @@ class PlotlyChart(Container):
         self.isolated = isolated
         self.original_size = original_size
 
-    def _is_isolated(self):
+    def is_isolated(self):
         return self.__isolated
 
-    def _build(self):
+    def build(self):
         self.alignment = alignment.center
         self.__img = Image(fit=ImageFit.FILL)
         self.content = self.__img
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if self.__figure is not None:
             svg = self.__figure.to_image(format="svg").decode("utf-8")
 

@@ -45,15 +45,15 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
       python_stack: ""
 
+    - job_name: Build Flet for web
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+
     # - job_name: Build Flet for iOS
     #   job_group: build_flet
     #   job_depends_on: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
-
-    - job_name: Build Fletd
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Test Python 3.8
       job_group: python_tests
@@ -349,22 +349,15 @@ for:
         name: flet_ios
 
   # ======================================
-  #      Build Fletd
+  #      Build Flet for web
   # ======================================
 
   - matrix:
       only:
-        - job_name: Build Fletd
+        - job_name: Build Flet for web
 
     install:
       - flutter upgrade --force
-
-      # Go and GoReleaser
-      - gvm install go${GO_VERSION} -B
-      - gvm use go${GO_VERSION}
-      - go version
-      - bash ./ci/install_goreleaser.sh
-      - goreleaser --version
 
     build_script:
       # Flutter Web client
@@ -375,19 +368,7 @@ for:
       - cd ..
       - tar -czvf client/build/flet-web.tar.gz -C client/build/web .
 
-      # Flet Server in Go
-      - cd server
-      - sh: |
-          if [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-            goreleaser
-          else
-            goreleaser --snapshot --skip-publish
-          fi
-      - cd ..
-
     artifacts:
-      - path: server/dist/fletd-*
-      - path: server/dist/fletd_*/*
       - path: client/build/flet-web.tar.gz
         name: flet_web
 
@@ -444,7 +425,6 @@ for:
       - python3 patch_toml.py packages/flet-runtime/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-core/pyproject.toml $PYPI_VER
       - python3 patch_toml.py packages/flet-pyodide/pyproject.toml $PYPI_VER
-      - python3 patch_toml.py packages/flet-fastapi/pyproject.toml $PYPI_VER
 
       # build "flet-core" package
       - pushd packages/flet-core
@@ -473,15 +453,10 @@ for:
       - poetry build
       - popd
 
-      # build "flet-fastapi" package
-      - pushd packages/flet-fastapi
-      - poetry build
-      - popd
-
       # publish package
       - sh: |
           if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-              twine upload packages/flet-core/dist/* packages/flet-runtime/dist/* packages/flet-embed/dist/* packages/flet/dist/* packages/flet-pyodide/dist/* packages/flet-fastapi/dist/*
+              twine upload packages/flet-core/dist/* packages/flet-runtime/dist/* packages/flet-embed/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
           fi
 
     artifacts:
@@ -490,4 +465,3 @@ for:
       - path: sdk/python/packages/flet/dist/*
       - path: sdk/python/packages/flet-embed/dist/*
       - path: sdk/python/packages/flet-pyodide/dist/*
-      - path: sdk/python/packages/flet-fastapi/dist/*

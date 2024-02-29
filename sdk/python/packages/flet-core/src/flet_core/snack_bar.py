@@ -118,8 +118,8 @@ class SnackBar(Control):
             children.append(self.__content)
         return children
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("margin", self.__margin)
         self._set_attr_json("padding", self.__padding)
 

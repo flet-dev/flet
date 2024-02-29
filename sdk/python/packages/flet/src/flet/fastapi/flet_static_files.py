@@ -5,18 +5,18 @@ import tempfile
 from pathlib import Path
 from typing import Optional, Tuple
 
+import flet.fastapi as flet_fastapi
 from fastapi.staticfiles import StaticFiles
-from starlette.types import Receive, Scope, Send
-
-import flet_fastapi
+from flet.fastapi.flet_app_manager import app_manager
 from flet_core.types import WebRenderer
-from flet_fastapi.flet_app_manager import app_manager
-from flet_fastapi.once import Once
 from flet_runtime.utils import (
+    Once,
+    get_bool_env_var,
     get_package_web_dir,
     patch_index_html,
     patch_manifest_json,
 )
+from starlette.types import Receive, Scope, Send
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -63,6 +63,22 @@ class FletStaticFiles(StaticFiles):
         self.__websocket_endpoint_path = websocket_endpoint_path
         self.__once = Once()
 
+        env_web_renderer = os.getenv("FLET_WEB_RENDERER")
+        if env_web_renderer:
+            self.__web_renderer = WebRenderer(env_web_renderer)
+
+        env_use_color_emoji = get_bool_env_var("FLET_WEB_USE_COLOR_EMOJI")
+        if env_use_color_emoji is not None:
+            self.__use_color_emoji = env_use_color_emoji
+
+        env_route_url_strategy = os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
+        if env_route_url_strategy:
+            self.__route_url_strategy = env_route_url_strategy
+
+        logger.info(f"Web renderer configured: {self.__web_renderer}")
+        logger.info(f"Use color emoji: {self.__use_color_emoji}")
+        logger.info(f"Route URL strategy configured: {self.__route_url_strategy}")
+
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         await self.__once.do(self.__config, scope["root_path"])
         await super().__call__(scope, receive, send)
@@ -100,12 +116,17 @@ class FletStaticFiles(StaticFiles):
         web_dir = get_package_web_dir()
         logger.info(f"Web root: {web_dir}")
 
+        if not os.path.exists(web_dir):
+            raise Exception(f"Web root path not found: {web_dir}")
+
         # user-defined assets
         if self.__assets_dir:
             if not Path(self.__assets_dir).is_absolute():
-                raise Exception("assets_dir must be absolute path.")
+                logger.warning("assets_dir must be absolute path.")
+                self.__assets_dir = None
             elif not os.path.exists(self.__assets_dir):
-                raise Exception(f"assets_dir does not exists: {self.__assets_dir}")
+                logger.warning(f"assets_dir does not exist: {self.__assets_dir}")
+                self.__assets_dir = None
 
         logger.info(f"Assets dir: {self.__assets_dir}")
 

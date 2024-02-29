@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import traceback
 
@@ -6,7 +7,6 @@ import flet_js
 from flet.pyodide_connection import PyodideConnection
 from flet_core.event import Event
 from flet_core.page import Page
-from flet_core.utils import is_coroutine
 
 logger = logging.getLogger(flet.__name__)
 
@@ -22,7 +22,6 @@ def app(
     web_renderer=None,
     use_color_emoji=False,
     route_url_strategy=None,
-    auth_token=None,
 ):
     app_async(
         target=target,
@@ -35,7 +34,6 @@ def app(
         web_renderer=web_renderer,
         use_color_emoji=use_color_emoji,
         route_url_strategy=route_url_strategy,
-        auth_token=auth_token,
     )
 
 
@@ -50,7 +48,6 @@ def app_async(
     web_renderer=None,
     use_color_emoji=False,
     route_url_strategy=None,
-    auth_token=None,
 ):
     async def on_event(e):
         if e.sessionID in conn.sessions:
@@ -62,13 +59,13 @@ def app_async(
                 del conn.sessions[e.sessionID]
 
     async def on_session_created(session_data):
-        page = Page(conn, session_data.sessionID)
+        page = Page(conn, session_data.sessionID, loop=asyncio.get_running_loop())
         await page.fetch_page_details_async()
         conn.sessions[session_data.sessionID] = page
-        logger.info(f"Session started: {session_data.sessionID}")
+        logger.info("App session started")
         try:
             assert target is not None
-            if is_coroutine(target):
+            if asyncio.iscoroutinefunction(target):
                 await target(page)
             else:
                 target(page)

@@ -19,6 +19,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class Pagelet(ConstrainedControl, AdaptiveControl):
@@ -182,20 +183,26 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.drawer.open = True
         self.update()
 
+    @deprecated(
+        reason="Use show_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def show_drawer_async(self, drawer: NavigationDrawer):
-        self.drawer = drawer
-        self.drawer.open = True
-        await self.update_async()
+        self.show_drawer(drawer)
 
     def close_drawer(self):
         if self.drawer is not None:
             self.drawer.open = False
             self.update()
 
+    @deprecated(
+        reason="Use close_end_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_drawer_async(self):
-        if self.drawer is not None:
-            self.drawer.open = False
-            await self.drawer.update_async()
+        self.close_end_drawer()
 
     # End_drawer
     #
@@ -204,20 +211,26 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.end_drawer.open = True
         self.update()
 
+    @deprecated(
+        reason="Use show_end_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
-        self.end_drawer = end_drawer
-        self.end_drawer.open = True
-        await self.update_async()
+        self.show_end_drawer(end_drawer)
 
     def close_end_drawer(self):
         if self.end_drawer is not None:
             self.end_drawer.open = False
             self.update()
 
+    @deprecated(
+        reason="Use close_end_drawer() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_end_drawer_async(self):
-        if self.end_drawer is not None:
-            self.end_drawer.open = False
-            await self.end_drawer.update_async()
+        self.close_end_drawer()
 
     # appbar
     @property

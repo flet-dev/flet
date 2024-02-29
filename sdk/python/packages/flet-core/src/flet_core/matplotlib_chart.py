@@ -127,16 +127,16 @@ class MatplotlibChart(Container):
         self.original_size = original_size
         self.transparent = transparent
 
-    def _is_isolated(self):
+    def is_isolated(self):
         return self.__isolated
 
-    def _build(self):
+    def build(self):
         self.alignment = alignment.center
         self.__img = Image(fit=ImageFit.FILL)
         self.content = self.__img
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if self.__figure is not None:
             s = io.StringIO()
             self.__figure.savefig(s, format="svg", transparent=self.__transparent)

@@ -134,8 +134,8 @@ class LineChart(ConstrainedControl):
     def _get_control_name(self):
         return "linechart"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("horizontalGridLines", self.__horizontal_grid_lines)
         self._set_attr_json("verticalGridLines", self.__vertical_grid_lines)
         self._set_attr_json("animate", self.__animate)

@@ -13,6 +13,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class ElevatedButton(ConstrainedControl, AdaptiveControl):
@@ -145,8 +146,8 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "elevatedbutton"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if (
             self.__color is not None
             or self.__bgcolor is not None
@@ -188,9 +189,13 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("focus", str(time.time()))
         self.update()
 
+    @deprecated(
+        reason="Use focus() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
+        self.focus()
 
     # text
     @property

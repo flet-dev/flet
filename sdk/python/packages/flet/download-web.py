@@ -4,7 +4,7 @@ import pathlib
 import tarfile
 import urllib.request
 
-flet_web_job_name = "Build Fletd"
+flet_web_job_name = "Build Flet for web"
 
 build_jobs = {}
 

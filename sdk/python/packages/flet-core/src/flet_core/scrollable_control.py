@@ -7,6 +7,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.types import ScrollMode, ScrollModeString
+from flet_core.utils import deprecated
 
 
 class ScrollableControl(Control):
@@ -53,6 +54,11 @@ class ScrollableControl(Control):
         self._set_attr_json("method", m)
         self.update()
 
+    @deprecated(
+        reason="Use scroll_to() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def scroll_to_async(
         self,
         offset: Optional[float] = None,
@@ -61,19 +67,7 @@ class ScrollableControl(Control):
         duration: Optional[int] = None,
         curve: Optional[AnimationCurve] = None,
     ):
-        m = {
-            "n": "scroll_to",
-            "i": str(time.time()),
-            "p": {
-                "offset": offset,
-                "delta": delta,
-                "key": key,
-                "duration": duration,
-                "curve": curve.value if curve is not None else None,
-            },
-        }
-        self._set_attr_json("method", m)
-        await self.update_async()
+        self.scroll_to(offset, delta, key, duration, curve)
 
     # scroll
     @property

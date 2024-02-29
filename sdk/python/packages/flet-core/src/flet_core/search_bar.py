@@ -15,6 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class SearchBar(ConstrainedControl):
@@ -130,8 +131,8 @@ class SearchBar(ConstrainedControl):
     def _get_control_name(self):
         return "searchbar"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("barBgcolor", self.__bar_bgcolor)
         self._set_attr_json("barOverlayColor", self.__bar_overlay_color)
         self._set_attr_json("viewShape", self.__view_shape)
@@ -170,14 +171,13 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("method", m)
         self.update()
 
+    @deprecated(
+        reason="Use open_view() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def open_view_async(self):
-        m = {
-            "n": "openView",
-            "i": str(time.time()),
-            "p": {},
-        }
-        self._set_attr_json("method", m)
-        await self.update_async()
+        self.open_view()
 
     def close_view(self, text: str = ""):
         m = {
@@ -189,15 +189,13 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("method", m)
         self.update()
 
+    @deprecated(
+        reason="Use close_view() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_view_async(self, text: str = ""):
-        m = {
-            "n": "closeView",
-            "i": str(time.time()),
-            "p": {"text": text},
-        }
-        self.value = text
-        self._set_attr_json("method", m)
-        await self.update_async()
+        self.close_view()
 
     # bar_leading
     @property
