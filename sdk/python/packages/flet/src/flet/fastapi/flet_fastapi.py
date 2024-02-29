@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from typing import Any, Callable, Coroutine, Dict, List, Optional, Sequence, Type, Union
 
 import fastapi
+import flet.fastapi
 from fastapi.datastructures import Default
 from fastapi.params import Depends
 from fastapi.utils import generate_unique_id
@@ -9,8 +10,6 @@ from starlette.middleware import Middleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.routing import BaseRoute
-
-import flet_fastapi
 
 
 class FastAPI(fastapi.FastAPI):
@@ -61,9 +60,15 @@ class FastAPI(fastapi.FastAPI):
     ) -> None:
         @asynccontextmanager
         async def lifespan(app: fastapi.FastAPI):
-            await flet_fastapi.app_manager.start()
+            await flet.fastapi.app_manager.start()
+            if on_startup:
+                for h in on_startup:
+                    h()
             yield
-            await flet_fastapi.app_manager.shutdown()
+            if on_shutdown:
+                for h in on_shutdown:
+                    h()
+            await flet.fastapi.app_manager.shutdown()
 
         super().__init__(
             debug=debug,
@@ -84,8 +89,8 @@ class FastAPI(fastapi.FastAPI):
             swagger_ui_init_oauth=swagger_ui_init_oauth,
             middleware=middleware,
             exception_handlers=exception_handlers,
-            on_startup=on_startup,
-            on_shutdown=on_shutdown,
+            # on_startup=on_startup,
+            # on_shutdown=on_shutdown,
             lifespan=lifespan,
             terms_of_service=terms_of_service,
             contact=contact,

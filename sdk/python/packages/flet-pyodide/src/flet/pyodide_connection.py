@@ -79,17 +79,11 @@ class PyodideConnection(LocalConnection):
             # it's something else
             raise Exception(f'Unknown message "{msg.action}": {msg.payload}')
 
-    async def send_command_async(self, session_id: str, command: Command):
-        return self.send_command(session_id, command)
-
     def send_command(self, session_id: str, command: Command):
         result, message = self._process_command(command)
         if message:
             self.__send(message)
         return PageCommandResponsePayload(result=result, error="")
-
-    async def send_commands_async(self, session_id: str, commands: List[Command]):
-        return self.send_commands(session_id, commands)
 
     def send_commands(self, session_id: str, commands: List[Command]):
         results = []
