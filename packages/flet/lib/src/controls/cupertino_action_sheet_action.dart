@@ -5,7 +5,7 @@ import '../models/control.dart';
 import 'create_control.dart';
 import 'error.dart';
 
-class CupertinoActionSheetActionControl extends StatefulWidget {
+class CupertinoActionSheetActionControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -23,36 +23,29 @@ class CupertinoActionSheetActionControl extends StatefulWidget {
       required this.backend});
 
   @override
-  State<CupertinoActionSheetActionControl> createState() =>
-      _CupertinoActionSheetActionControlState();
-}
-
-class _CupertinoActionSheetActionControlState
-    extends State<CupertinoActionSheetActionControl> {
-  @override
   Widget build(BuildContext context) {
-    debugPrint("CupertinoActionSheetActionControl build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    debugPrint("CupertinoActionSheetActionControl build: ${control.id}");
+    bool disabled = control.isDisabled || parentDisabled;
 
     var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        children.where((c) => c.name == "content" && c.isVisible);
     if (contentCtrls.isEmpty) {
-      return ErrorControl(
+      return const ErrorControl(
           "CupertinoActionSheetAction must have a content control!");
     }
 
     return constrainedControl(
         context,
         CupertinoActionSheetAction(
-          isDefaultAction: widget.control.attrBool("default", false)!,
-          isDestructiveAction: widget.control.attrBool("destructive", false)!,
+          isDefaultAction: control.attrBool("default", false)!,
+          isDestructiveAction: control.attrBool("destructive", false)!,
           onPressed: () {
-            widget.backend.triggerControlEvent(widget.control.id, "click", "");
+            backend.triggerControlEvent(control.id, "click", "");
           },
-          child: createControl(widget.control, contentCtrls.first.id, disabled,
-              parentAdaptive: widget.parentAdaptive),
+          child: createControl(control, contentCtrls.first.id, disabled,
+              parentAdaptive: parentAdaptive),
         ),
-        widget.parent,
-        widget.control);
+        parent,
+        control);
   }
 }

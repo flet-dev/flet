@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union, List
+from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -101,8 +101,8 @@ class CupertinoActionSheet(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "cupertinoactionsheet"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
 
     def _get_children(self):
         children = []

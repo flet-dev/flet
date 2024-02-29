@@ -101,8 +101,8 @@ class CupertinoActionSheetAction(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "cupertinoactionsheetaction"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
 
     def _get_children(self):
         children = []
