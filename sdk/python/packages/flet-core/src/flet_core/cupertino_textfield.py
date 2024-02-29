@@ -3,7 +3,6 @@ from typing import Any, List, Optional, Union
 
 from flet_core.border import Border
 from flet_core.control import Control, OptionalNumber
-from flet_core.form_field_control import InputBorder
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.shadow import BoxShadow
@@ -87,7 +86,6 @@ class CupertinoTextField(TextField):
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
-        # icon: Optional[str] = None,
         border: Optional[Border] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
@@ -99,18 +97,8 @@ class CupertinoTextField(TextField):
         content_padding: PaddingValue = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
-        # hint_text: Optional[str] = None,
-        # hint_style: Optional[TextStyle] = None,
-        # helper_text: Optional[str] = None,
-        # helper_style: Optional[TextStyle] = None,
-        # counter_text: Optional[str] = None,
-        # counter_style: Optional[TextStyle] = None,
-        # error_text: Optional[str] = None,
-        # error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        # prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        # suffix_style: Optional[TextStyle] = None,
         #
         # Control specific
         #
@@ -168,7 +156,6 @@ class CupertinoTextField(TextField):
             #
             text_size=text_size,
             text_style=text_style,
-            # icon=icon,
             color=color,
             bgcolor=bgcolor,
             border_radius=border_radius,
@@ -179,18 +166,8 @@ class CupertinoTextField(TextField):
             content_padding=content_padding,
             dense=dense,
             filled=filled,
-            # hint_text=hint_text,
-            # hint_style=hint_style,
-            # helper_text=helper_text,
-            # helper_style=helper_style,
-            # counter_text=counter_text,
-            # counter_style=counter_style,
-            # error_text=error_text,
-            # error_style=error_style,
             prefix=prefix,
-            # prefix_style=prefix_style,
             suffix=suffix,
-            # suffix_style=suffix_style,
             #
             # TextField
             #
