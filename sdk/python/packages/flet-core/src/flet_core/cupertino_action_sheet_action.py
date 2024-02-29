@@ -13,18 +13,18 @@ from flet_core.types import (
 )
 
 
-class CupertinoActionSheetButton(ConstrainedControl, AdaptiveControl):
+class CupertinoActionSheetAction(ConstrainedControl, AdaptiveControl):
     """
-    A button typically used in a CupertinoActionSheet.
+    An action button typically used in a CupertinoActionSheet.
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/cupertinoactionsheetbutton
+    Online docs: https://flet.dev/docs/controls/cupertinoactionsheetaction
     """
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         default: Optional[bool] = None,
         destructive: Optional[bool] = None,
         on_click=None,
@@ -99,7 +99,7 @@ class CupertinoActionSheetButton(ConstrainedControl, AdaptiveControl):
         self.on_click = on_click
 
     def _get_control_name(self):
-        return "cupertinoactionsheetbutton"
+        return "cupertinoactionsheetaction"
 
     def _before_build_command(self):
         super()._before_build_command()
@@ -131,11 +131,11 @@ class CupertinoActionSheetButton(ConstrainedControl, AdaptiveControl):
 
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value: Optional[Control]):
+    def content(self, value: Control):
         self.__content = value
 
     # on_click

@@ -5,7 +5,7 @@ import '../models/control.dart';
 import 'create_control.dart';
 import 'error.dart';
 
-class CupertinoActionSheetButtonControl extends StatefulWidget {
+class CupertinoActionSheetActionControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -13,7 +13,7 @@ class CupertinoActionSheetButtonControl extends StatefulWidget {
   final bool? parentAdaptive;
   final FletControlBackend backend;
 
-  const CupertinoActionSheetButtonControl(
+  const CupertinoActionSheetActionControl(
       {super.key,
       this.parent,
       required this.control,
@@ -23,22 +23,22 @@ class CupertinoActionSheetButtonControl extends StatefulWidget {
       required this.backend});
 
   @override
-  State<CupertinoActionSheetButtonControl> createState() =>
-      _CupertinoActionSheetButtonControlState();
+  State<CupertinoActionSheetActionControl> createState() =>
+      _CupertinoActionSheetActionControlState();
 }
 
-class _CupertinoActionSheetButtonControlState
-    extends State<CupertinoActionSheetButtonControl> {
+class _CupertinoActionSheetActionControlState
+    extends State<CupertinoActionSheetActionControl> {
   @override
   Widget build(BuildContext context) {
-    debugPrint("CupertinoActionSheetButtonControl build: ${widget.control.id}");
+    debugPrint("CupertinoActionSheetActionControl build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var contentCtrls =
         widget.children.where((c) => c.name == "content" && c.isVisible);
     if (contentCtrls.isEmpty) {
       return ErrorControl(
-          "CupertinoActionSheetButton must have a content control!");
+          "CupertinoActionSheetAction must have a content control!");
     }
 
     return constrainedControl(

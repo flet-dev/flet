@@ -30,7 +30,7 @@ import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'cupertino_action_sheet.dart';
-import 'cupertino_action_sheet_button.dart';
+import 'cupertino_action_sheet_action.dart';
 import 'cupertino_alert_dialog.dart';
 import 'cupertino_button.dart';
 import 'cupertino_checkbox.dart';
@@ -600,8 +600,8 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
-    case "cupertinoactionsheetbutton":
-      return CupertinoActionSheetButtonControl(
+    case "cupertinoactionsheetaction":
+      return CupertinoActionSheetActionControl(
           key: key,
           parent: parent,
           control: controlView.control,
