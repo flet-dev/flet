@@ -89,8 +89,8 @@ class MenuBar(Control):
     def _get_control_name(self):
         return "menubar"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if self.__style is not None:
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)

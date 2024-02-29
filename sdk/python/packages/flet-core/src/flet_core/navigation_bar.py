@@ -241,8 +241,8 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "navigationbar"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("indicatorShape", self.__indicator_shape)
         self._set_attr_json("border", self.__border)
 

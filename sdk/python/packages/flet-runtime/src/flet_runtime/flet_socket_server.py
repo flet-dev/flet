@@ -4,6 +4,7 @@ import logging
 import os
 import struct
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import List, Optional
 
@@ -18,30 +19,37 @@ from flet_core.protocol import (
     PageCommandsBatchResponsePayload,
     RegisterWebClientRequestPayload,
 )
+from flet_core.pubsub import PubSubHub
 from flet_core.utils import random_string
 from flet_runtime.utils import get_free_tcp_port, is_windows
 
 logger = logging.getLogger(flet_runtime.__name__)
 
 
-class AsyncLocalSocketConnection(LocalConnection):
+class FletSocketServer(LocalConnection):
     def __init__(
         self,
+        loop: asyncio.AbstractEventLoop,
         port: int = 0,
         uds_path: Optional[str] = None,
         on_event=None,
         on_session_created=None,
         blocking=False,
+        pool: Optional[ThreadPoolExecutor] = None,
     ):
         super().__init__()
-        self.__send_queue = asyncio.Queue(1)
+        self.__send_queue = asyncio.Queue()
         self.__port = port
         self.__uds_path = uds_path
         self.__on_event = on_event
         self.__on_session_created = on_session_created
         self.__blocking = blocking
+        self.__loop = loop
+        self.__pool = pool
+        self.pubsubhub = PubSubHub(loop=loop, pool=pool)
+        self.__running_tasks = set()
 
-    async def connect(self):
+    async def start(self):
         self.__connected = False
         if is_windows() or self.__port > 0:
             # TCP
@@ -111,40 +119,45 @@ class AsyncLocalSocketConnection(LocalConnection):
         logger.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
         msg = ClientMessage(**msg_dict)
+        task = None
         if msg.action == ClientActions.REGISTER_WEB_CLIENT:
             self._client_details = RegisterWebClientRequestPayload(**msg.payload)
 
             # register response
-            await self.__send(self._create_register_web_client_response())
+            self.__send(self._create_register_web_client_response())
 
             # start session
             if self.__on_session_created is not None:
-                asyncio.create_task(
+                task = asyncio.create_task(
                     self.__on_session_created(self._create_session_handler_arg())
                 )
 
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
             if self.__on_event is not None:
-                asyncio.create_task(
+                task = asyncio.create_task(
                     self.__on_event(self._create_page_event_handler_arg(msg))
                 )
 
         elif msg.action == ClientActions.UPDATE_CONTROL_PROPS:
             if self.__on_event is not None:
-                asyncio.create_task(
+                task = asyncio.create_task(
                     self.__on_event(self._create_update_control_props_handler_arg(msg))
                 )
         else:
             # it's something else
             raise Exception(f'Unknown message "{msg.action}": {msg.payload}')
 
-    async def send_command_async(self, session_id: str, command: Command):
+        if task:
+            self.__running_tasks.add(task)
+            task.add_done_callback(self.__running_tasks.discard)
+
+    def send_command(self, session_id: str, command: Command):
         result, message = self._process_command(command)
         if message:
-            await self.__send(message)
+            self.__send(message)
         return PageCommandResponsePayload(result=result, error="")
 
-    async def send_commands_async(self, session_id: str, commands: List[Command]):
+    def send_commands(self, session_id: str, commands: List[Command]):
         results = []
         messages = []
         for command in commands:
@@ -154,18 +167,26 @@ class AsyncLocalSocketConnection(LocalConnection):
             if message:
                 messages.append(message)
         if len(messages) > 0:
-            await self.__send(
-                ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages)
-            )
+            self.__send(ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages))
         return PageCommandsBatchResponsePayload(results=results, error="")
 
-    async def __send(self, message: ClientMessage):
+    def __send(self, message: ClientMessage):
         j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
         logger.debug(f"__send: {j}")
-        await self.__send_queue.put(j)
+        self.__loop.call_soon_threadsafe(self.__send_queue.put_nowait, j)
 
     async def close(self):
         logger.debug("Closing connection...")
+
+        logger.debug(f"Disconnecting all pages...")
+        while self.sessions:
+            _, page = self.sessions.popitem()
+            await page._disconnect(0)
+
+        if self.__pool:
+            logger.debug("Shutting down thread pool...")
+            self.__pool.shutdown(wait=False, cancel_futures=True)
+
         # close socket
         if self.__receive_loop_task:
             self.__receive_loop_task.cancel()
