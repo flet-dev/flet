@@ -7,8 +7,8 @@ def deprecated(reason, version, delete_version):
         @functools.wraps(func)
         def new_func(*args, **kwargs):
             warnings.warn(
-                f"Call to {func.__name__}() is deprecated in version {version}. {reason} "
-                f"It will be removed in version {delete_version}.",
+                f"Call to {func.__name__}() is deprecated since version {version} "
+                f"and will be removed in version {delete_version}. {reason}",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
