@@ -32,6 +32,7 @@ import 'container.dart';
 import 'cupertino_alert_dialog.dart';
 import 'cupertino_button.dart';
 import 'cupertino_checkbox.dart';
+import 'cupertino_context_menu.dart';
 import 'cupertino_dialog_action.dart';
 import 'cupertino_list_tile.dart';
 import 'cupertino_navigation_bar.dart';
@@ -751,6 +752,15 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           nextChild: nextChild,
+          backend: backend);
+    case "cupertinocontextmenu":
+      return CupertinoContextMenuControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
           backend: backend);
     case "cupertinoalertdialog":
       return CupertinoAlertDialogControl(
