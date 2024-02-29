@@ -175,7 +175,11 @@ from flet_core.painting import (
     StrokeCap,
     StrokeJoin,
 )
-from flet_core.popup_menu_button import PopupMenuButton, PopupMenuItem
+from flet_core.popup_menu_button import (
+    PopupMenuButton,
+    PopupMenuItem,
+    PopupMenuPosition,
+)
 from flet_core.progress_bar import ProgressBar
 from flet_core.progress_ring import ProgressRing
 from flet_core.pubsub import PubSub, PubSubHub
