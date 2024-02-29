@@ -6,7 +6,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
 
-class CupertinoActivityIndicatorControl extends StatefulWidget {
+class CupertinoActivityIndicatorControl extends StatelessWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
@@ -20,26 +20,18 @@ class CupertinoActivityIndicatorControl extends StatefulWidget {
       required this.backend});
 
   @override
-  State<CupertinoActivityIndicatorControl> createState() =>
-      _CupertinoActivityIndicatorControlState();
-}
-
-class _CupertinoActivityIndicatorControlState
-    extends State<CupertinoActivityIndicatorControl> {
-  @override
   Widget build(BuildContext context) {
-    debugPrint("CupertinoActivityIndicatorControl build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    debugPrint("CupertinoActivityIndicatorControl build: ${control.id}");
 
     return constrainedControl(
         context,
         CupertinoActivityIndicator(
-          radius: widget.control.attrDouble("radius", 10)!,
-          animating: widget.control.attrBool("animating", true)!,
+          radius: control.attrDouble("radius", 10)!,
+          animating: control.attrBool("animating", true)!,
           color: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("color", "")!),
+              Theme.of(context), control.attrString("color", "")!),
         ),
-        widget.parent,
-        widget.control);
+        parent,
+        control);
   }
 }
