@@ -190,8 +190,8 @@ class Text(ConstrainedControl):
         children.extend(self.__spans)
         return children
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if dataclasses.is_dataclass(self.__style):
             self._set_attr_json("style", self.__style)
 
@@ -280,6 +280,7 @@ class Text(ConstrainedControl):
                     "If you wish to set the TextThemeStyle, use `Text.theme_style` instead. "
                     "The `Text.style` property should be used to set the TextStyle only.",
                     stacklevel=2,
+                    category=DeprecationWarning,
                 )
 
     # theme_style

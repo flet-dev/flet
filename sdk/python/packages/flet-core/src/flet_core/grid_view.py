@@ -13,6 +13,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
@@ -166,8 +167,8 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def _get_control_name(self):
         return "gridview"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
@@ -177,9 +178,13 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         super().clean()
         self.__controls.clear()
 
+    @deprecated(
+        reason="Use clean() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def clean_async(self):
-        await super().clean_async()
-        self.__controls.clear()
+        self.clean()
 
     # horizontal
     @property

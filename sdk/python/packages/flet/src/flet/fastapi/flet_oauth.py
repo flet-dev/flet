@@ -1,7 +1,6 @@
 from fastapi import HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-
-from flet_fastapi.flet_app_manager import app_manager
+from flet.fastapi.flet_app_manager import app_manager
 
 
 class FletOAuth:
@@ -25,7 +24,7 @@ class FletOAuth:
         if not state_id:
             raise HTTPException(status_code=400, detail="Invalid state")
 
-        state = await app_manager.retrieve_state(state_id)
+        state = app_manager.retrieve_state(state_id)
 
         if not state:
             raise HTTPException(status_code=400, detail="Invalid state")

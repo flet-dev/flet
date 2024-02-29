@@ -22,7 +22,7 @@ async def main(page: ft.Page):
     async def add_click(e):
         counter.data += 1
         counter.value = str(counter.data)
-        await counter.update_async()
+        counter.update()
 
     page.floating_action_button = ft.FloatingActionButton(
         icon=ft.icons.ADD, on_click=add_click

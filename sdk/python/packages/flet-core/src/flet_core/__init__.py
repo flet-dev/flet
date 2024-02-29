@@ -71,6 +71,7 @@ from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.cupertino_checkbox import CupertinoCheckbox
 from flet_core.cupertino_dialog_action import CupertinoDialogAction
+from flet_core.cupertino_filled_button import CupertinoFilledButton
 from flet_core.cupertino_list_tile import CupertinoListTile
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.cupertino_radio import CupertinoRadio
@@ -159,7 +160,8 @@ from flet_core.page import (
     KeyboardEvent,
     LoginEvent,
     Page,
-    PageMediaChangeEvent,
+    PageDisconnectedException,
+    PageMediaData,
     RouteChangeEvent,
     ViewPopEvent,
 )
@@ -176,6 +178,7 @@ from flet_core.painting import (
 from flet_core.popup_menu_button import PopupMenuButton, PopupMenuItem
 from flet_core.progress_bar import ProgressBar
 from flet_core.progress_ring import ProgressRing
+from flet_core.pubsub import PubSub, PubSubHub
 from flet_core.querystring import QueryString
 from flet_core.radio import Radio
 from flet_core.radio_group import RadioGroup

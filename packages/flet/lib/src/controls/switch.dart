@@ -4,6 +4,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_switch.dart';
 import 'flet_store_mixin.dart';
@@ -86,6 +87,12 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
+      TextStyle? labelStyle =
+          parseTextStyle(Theme.of(context), widget.control, "labelStyle");
+      if (disabled && labelStyle != null) {
+        labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
+      }
+
       debugPrint("Switch build: ${widget.control.id}");
 
       bool value = widget.control.attrBool("value", false)!;
@@ -126,9 +133,10 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       Widget result = swtch;
       if (label != "") {
         var labelWidget = disabled
-            ? Text(label,
-                style: TextStyle(color: Theme.of(context).disabledColor))
-            : MouseRegion(cursor: SystemMouseCursors.click, child: Text(label));
+            ? Text(label, style: labelStyle)
+            : MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Text(label, style: labelStyle));
         result = MergeSemantics(
             child: GestureDetector(
                 onTap: !disabled
