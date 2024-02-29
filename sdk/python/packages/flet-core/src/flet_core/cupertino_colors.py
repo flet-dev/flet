@@ -14,11 +14,13 @@ for line in __import__("sys").stdin:
 ' >> "$output_file"
 """
 
+PRIMARY = "primary"
+ON_PRIMARY = "onprimary"
 ACTIVE_BLUE = "activeBlue"
 ACTIVE_GREEN = "activeGreen"
 ACTIVE_ORANGE = "activeOrange"
-WHITE = "white"
-BLACK = "black"
+WHITE = "cupertinoWhite"
+BLACK = "cupertinoBlack"
 LIGHT_BACKGROUND_GRAY = "lightBackgroundGray"
 EXTRA_LIGHT_BACKGROUND_GRAY = "extraLightBackgroundGray"
 DARK_BACKGROUND_GRAY = "darkBackgroundGray"
@@ -60,7 +62,3 @@ TERTIARY_SYSTEM_GROUPED_BACKGROUND = "tertiarySystemGroupedBackground"
 SEPARATOR = "separator"
 OPAQUE_SEPARATOR = "opaqueSeparator"
 LINK = "link"
-
-
-
-

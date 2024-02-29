@@ -1,9 +1,8 @@
 import dataclasses
+import time
 from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union
-
-import time
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
@@ -21,6 +20,7 @@ from flet_core.types import (
     TextAlign,
     VerticalAlignment,
 )
+from flet_core.utils import deprecated
 
 try:
     from typing import Literal
@@ -312,8 +312,8 @@ class TextField(FormFieldControl, AdaptiveControl):
     def _get_control_name(self):
         return "textfield"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("inputFilter", self.__input_filter)
         if self.bgcolor is not None and self.filled is None:
             self.filled = True  # Flutter requires filled = True to display a bgcolor
@@ -322,9 +322,13 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr_json("focus", str(time.time()))
         self.update()
 
+    @deprecated(
+        reason="Use focus() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
+        self.focus()
 
     # value
     @property

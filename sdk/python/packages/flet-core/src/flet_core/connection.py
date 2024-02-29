@@ -1,13 +1,7 @@
 from typing import List, Optional
 
 from flet_core.protocol import Command
-
-try:
-    from flet_runtime.pubsub import PubSubHub
-except ImportError:
-
-    class PubSubHub:
-        pass
+from flet_core.pubsub import PubSubHub
 
 
 class Connection:
@@ -20,13 +14,7 @@ class Connection:
     def send_command(self, session_id: str, command: Command):
         raise NotImplementedError()
 
-    async def send_command_async(self, session_id: str, command: Command):
-        raise NotImplementedError()
-
     def send_commands(self, session_id: str, commands: List[Command]):
-        raise NotImplementedError()
-
-    async def send_commands_async(self, session_id: str, commands: List[Command]):
         raise NotImplementedError()
 
     def _get_ws_url(self, server: str):
@@ -38,3 +26,6 @@ class Connection:
         else:
             url = "ws://" + url
         return url + "/ws"
+
+    def dispose(self):
+        pass

@@ -1,6 +1,7 @@
 import time
 from typing import Any, Optional, Union
 
+from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -12,9 +13,10 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
-class OutlinedButton(ConstrainedControl):
+class OutlinedButton(ConstrainedControl, AdaptiveControl):
     """
     Outlined buttons are medium-emphasis buttons. They contain actions that are important, but aren’t the primary action in an app. Outlined buttons pair well with filled buttons to indicate an alternative, secondary action.
 
@@ -70,6 +72,7 @@ class OutlinedButton(ConstrainedControl):
         #
         # Specific
         #
+        adaptive: Optional[bool] = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
         style: Optional[ButtonStyle] = None,
@@ -113,6 +116,7 @@ class OutlinedButton(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.text = text
         self.icon = icon
@@ -131,8 +135,8 @@ class OutlinedButton(ConstrainedControl):
     def _get_control_name(self):
         return "outlinedbutton"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if self.__style is not None:
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
@@ -149,9 +153,13 @@ class OutlinedButton(ConstrainedControl):
         self._set_attr_json("focus", str(time.time()))
         self.update()
 
+    @deprecated(
+        reason="Use focus() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
+        self.focus()
 
     # text
     @property

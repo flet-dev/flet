@@ -79,8 +79,8 @@ class ConstrainedControl(Control):
         self.animate_offset = animate_offset
         self.on_animation_end = on_animation_end
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("rotate", self.__rotate)
         self._set_attr_json("scale", self.__scale)
         self._set_attr_json("offset", self.__offset)

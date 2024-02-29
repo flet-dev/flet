@@ -237,8 +237,8 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "tabs"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("overlayColor", self.__overlay_color)
         self._set_attr_json("indicatorBorderRadius", self.__indicator_border_radius)
         self._set_attr_json("indicatorBorderSide", self.__indicator_border_side)
