@@ -13,13 +13,6 @@ class LineChartData(Control):
     def __init__(
         self,
         data_points: Optional[List[LineChartDataPoint]] = None,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         curved: Optional[bool] = None,
         color: Optional[str] = None,
         gradient: Optional[Gradient] = None,
@@ -40,6 +33,13 @@ class LineChartData(Control):
         selected_below_line: Union[None, bool, ChartPointLine] = None,
         point: Union[None, bool, ChartPointShape] = None,
         selected_point: Union[None, bool, ChartPointShape] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(

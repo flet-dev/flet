@@ -66,6 +66,16 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        horizontal: Optional[bool] = None,
+        runs_count: Optional[int] = None,
+        max_extent: Optional[int] = None,
+        spacing: OptionalNumber = None,
+        run_spacing: OptionalNumber = None,
+        child_aspect_ratio: OptionalNumber = None,
+        padding: PaddingValue = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -93,24 +103,14 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         #
-        # ScrollableControl specific
+        # ScrollableControl
         #
         auto_scroll: Optional[bool] = None,
         reverse: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Any = None,
         #
-        # Specific
-        #
-        horizontal: Optional[bool] = None,
-        runs_count: Optional[int] = None,
-        max_extent: Optional[int] = None,
-        spacing: OptionalNumber = None,
-        run_spacing: OptionalNumber = None,
-        child_aspect_ratio: OptionalNumber = None,
-        padding: PaddingValue = None,
-        #
-        # Adaptive
+        # AdaptiveControl
         #
         adaptive: Optional[bool] = None,
     ):

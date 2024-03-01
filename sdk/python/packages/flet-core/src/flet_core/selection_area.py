@@ -31,6 +31,9 @@ class SelectionArea(Control):
     def __init__(
         self,
         content: Control,
+        #
+        # Control
+        #
         ref: Optional[Ref] = None,
         data: Any = None,
     ):

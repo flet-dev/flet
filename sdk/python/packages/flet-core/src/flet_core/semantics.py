@@ -18,14 +18,14 @@ class Semantics(Control):
     def __init__(
         self,
         content: Optional[Control] = None,
+        label: Optional[str] = None,
+        #
+        # Control
+        #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        label: Optional[str] = None,
     ):
         Control.__init__(
             self,

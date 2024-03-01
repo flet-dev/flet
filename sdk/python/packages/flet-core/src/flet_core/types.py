@@ -45,21 +45,6 @@ OffsetValue = Union[None, Offset, Tuple[Union[float, int], Union[float, int]]]
 
 AnimationValue = Union[None, bool, int, Animation]
 
-FontWeightString = Literal[
-    None,
-    "normal",
-    "bold",
-    "w100",
-    "w200",
-    "w300",
-    "w400",
-    "w500",
-    "w600",
-    "w700",
-    "w800",
-    "w900",
-]
-
 
 class FontWeight(Enum):
     NORMAL = "normal"
@@ -100,26 +85,6 @@ class MaterialState(Enum):
     DEFAULT = ""
 
 
-MainAxisAlignmentString = Literal[
-    None,
-    "start",
-    "end",
-    "center",
-    "spaceBetween",
-    "spaceAround",
-    "spaceEvenly",
-]
-
-CrossAxisAlignmentString = Literal[
-    None,
-    "start",
-    "end",
-    "center",
-    "stretch",
-    "baseline",
-]
-
-
 class MainAxisAlignment(Enum):
     NONE = None
     START = "start"
@@ -154,47 +119,10 @@ class TabAlignment(Enum):
     CENTER = "center"
 
 
-LabelPositionString = Literal[None, "right", "left"]
-
-
 class LabelPosition(Enum):
     NONE = None
     RIGHT = "right"
     LEFT = "left"
-
-
-BlendModeString = Literal[
-    "clear",
-    "color",
-    "colorBurn",
-    "colorDodge",
-    "darken",
-    "difference",
-    "dst",
-    "dstATop",
-    "dstIn",
-    "dstOut",
-    "dstOver",
-    "exclusion",
-    "hardLight",
-    "hue",
-    "lighten",
-    "luminosity",
-    "modulate",
-    "multiply",
-    "overlay",
-    "plus",
-    "saturation",
-    "screen",
-    "softLight",
-    "src",
-    "srcATop",
-    "srcIn",
-    "srcOut",
-    "srcOver",
-    "values",
-    "xor",
-]
 
 
 class BlendMode(Enum):
@@ -231,9 +159,6 @@ class BlendMode(Enum):
     XOR = "xor"
 
 
-TextAlignString = Literal[None, "left", "right", "center", "justify", "start", "end"]
-
-
 class TextAlign(Enum):
     NONE = None
     LEFT = "left"
@@ -244,11 +169,6 @@ class TextAlign(Enum):
     END = "end"
 
 
-ScrollModeString = Literal[
-    None, True, False, "none", "auto", "adaptive", "always", "hidden"
-]
-
-
 class ScrollMode(Enum):
     AUTO = "auto"
     ADAPTIVE = "adaptive"
@@ -256,21 +176,11 @@ class ScrollMode(Enum):
     HIDDEN = "hidden"
 
 
-ClipBehaviorString = Literal[
-    None, "none", "antiAlias", "antiAliasWithSaveLayer", "hardEdge"
-]
-
-
 class ClipBehavior(Enum):
     NONE = "none"
     ANTI_ALIAS = "antiAlias"
     ANTI_ALIAS_WITH_SAVE_LAYER = "antiAliasWithSaveLayer"
     HARD_EDGE = "hardEdge"
-
-
-ImageFitString = Literal[
-    None, "none", "contain", "cover", "fill", "fitHeight", "fitWidth", "scaleDown"
-]
 
 
 class ImageFit(Enum):
@@ -281,9 +191,6 @@ class ImageFit(Enum):
     FIT_HEIGHT = "fitHeight"
     FIT_WIDTH = "fitWidth"
     SCALE_DOWN = "scaleDown"
-
-
-ImageRepeatString = Literal[None, "noRepeat", "repeat", "repeatX", "repeatY"]
 
 
 class ImageRepeat(Enum):
@@ -299,9 +206,6 @@ class PagePlatform(Enum):
     MACOS = "macos"
     WINDOWS = "windows"
     LINUX = "linux"
-
-
-ThemeModeString = Literal[None, "system", "light", "dark"]
 
 
 class ThemeMode(Enum):

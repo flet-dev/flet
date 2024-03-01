@@ -14,6 +14,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ImageFit,
 )
 
 try:
@@ -68,6 +69,12 @@ class MatplotlibChart(Container):
     def __init__(
         self,
         figure: Optional[Figure] = None,
+        isolated: bool = False,
+        original_size: bool = False,
+        transparent: bool = False,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         expand: Union[None, bool, int] = None,
@@ -89,12 +96,6 @@ class MatplotlibChart(Container):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        isolated: bool = False,
-        original_size: bool = False,
-        transparent: bool = False,
     ):
         Container.__init__(
             self,
@@ -131,7 +132,7 @@ class MatplotlibChart(Container):
 
     def build(self):
         self.alignment = alignment.center
-        self.__img = Image(fit="fill")
+        self.__img = Image(fit=ImageFit.FILL)
         self.content = self.__img
 
     def before_update(self):
@@ -174,15 +175,6 @@ class MatplotlibChart(Container):
     @figure.setter
     def figure(self, value):
         self.__figure = value
-
-    # maintain_aspect_ratio
-    @property
-    def maintain_aspect_ratio(self) -> bool:
-        return self.__maintain_aspect_ratio
-
-    @maintain_aspect_ratio.setter
-    def maintain_aspect_ratio(self, value: bool):
-        self.__maintain_aspect_ratio = value
 
     # transparent
     @property

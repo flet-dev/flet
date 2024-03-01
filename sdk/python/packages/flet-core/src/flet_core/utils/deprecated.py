@@ -3,6 +3,14 @@ import warnings
 
 
 def deprecated(reason, version, delete_version):
+    """
+    A decorator function that marks a function as deprecated.
+
+    :param reason: The reason for deprecation.
+    :param version: The version from which the function was deprecated.
+    :param delete_version: The version in which the function will be removed from the API.
+    """
+
     def decorator(func):
         @functools.wraps(func)
         def new_func(*args, **kwargs):

@@ -64,17 +64,8 @@ class TimePicker(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        expand: Optional[Union[bool, int]] = None,
-        expand_loose: Optional[bool] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-        open: bool = False,
         value: Optional[time] = None,
+        open: bool = False,
         time_picker_entry_mode: Optional[TimePickerEntryMode] = None,
         hour_label_text: Optional[str] = None,
         minute_label_text: Optional[str] = None,
@@ -84,6 +75,18 @@ class TimePicker(Control):
         error_invalid_text: Optional[str] = None,
         on_change=None,
         on_dismiss=None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        expand: Optional[Union[bool, int]] = None,
+        expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,

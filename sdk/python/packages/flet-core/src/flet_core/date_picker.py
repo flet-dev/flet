@@ -75,20 +75,11 @@ class DatePicker(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        expand: Optional[Union[bool, int]] = None,
-        expand_loose: Optional[bool] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
         open: bool = False,
         value: Optional[datetime] = None,
-        text_style: Optional[TextStyle] = None,
         first_date: Optional[datetime] = None,
         last_date: Optional[datetime] = None,
+        text_style: Optional[TextStyle] = None,
         current_date: Optional[datetime] = None,
         keyboard_type: Optional[KeyboardType] = None,
         date_picker_mode: Optional[DatePickerMode] = None,
@@ -105,6 +96,18 @@ class DatePicker(Control):
         switch_to_input_icon: Optional[str] = None,
         on_change=None,
         on_dismiss=None,
+        #
+        # ConstrainedControl
+        #
+        ref: Optional[Ref] = None,
+        expand: Optional[Union[bool, int]] = None,
+        expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,

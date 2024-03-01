@@ -47,16 +47,16 @@ class VerticalDivider(Control):
 
     def __init__(
         self,
+        width: OptionalNumber = None,
+        thickness: OptionalNumber = None,
+        color: Optional[str] = None,
+        #
+        # Control
+        #
         ref: Optional[Ref] = None,
         opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        width: OptionalNumber = None,
-        thickness: OptionalNumber = None,
-        color: Optional[str] = None,
     ):
 
         Control.__init__(

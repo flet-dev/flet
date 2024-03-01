@@ -35,6 +35,20 @@ class FilledButton(ElevatedButton):
     def __init__(
         self,
         text: Optional[str] = None,
+        adaptive: Optional[bool] = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        style: Optional[ButtonStyle] = None,
+        content: Optional[Control] = None,
+        autofocus: Optional[bool] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
+        on_click=None,
+        on_long_press=None,
+        on_hover=None,
+        #
+        # Control and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -47,20 +61,6 @@ class FilledButton(ElevatedButton):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        adaptive: Optional[bool] = None,
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
-        style: Optional[ButtonStyle] = None,
-        content: Optional[Control] = None,
-        autofocus: Optional[bool] = None,
-        url: Optional[str] = None,
-        url_target: Optional[str] = None,
-        on_click=None,
-        on_long_press=None,
-        on_hover=None,
     ):
         ElevatedButton.__init__(
             self,

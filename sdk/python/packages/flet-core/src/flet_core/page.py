@@ -48,7 +48,6 @@ from flet_core.types import (
     PagePlatform,
     ScrollMode,
     ThemeMode,
-    ThemeModeString,
 )
 from flet_core.utils import deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
@@ -1446,13 +1445,9 @@ class Page(AdaptiveControl):
     @theme_mode.setter
     def theme_mode(self, value: Optional[ThemeMode]):
         self.__theme_mode = value
-        if isinstance(value, ThemeMode):
-            self._set_attr("themeMode", value.value)
-        else:
-            self.__set_theme_mode(value)
-
-    def __set_theme_mode(self, value: ThemeModeString):
-        self._set_attr("themeMode", value)
+        self._set_attr(
+            "themeMode", value.value if isinstance(value, ThemeMode) else value
+        )
 
     # theme
     @property

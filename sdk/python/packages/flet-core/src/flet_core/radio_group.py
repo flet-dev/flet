@@ -37,6 +37,8 @@ class RadioGroup(Control):
     def __init__(
         self,
         content: Optional[Control] = None,
+        value: Optional[str] = None,
+        on_change=None,
         #
         # Control
         #
@@ -45,11 +47,6 @@ class RadioGroup(Control):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        value: Optional[str] = None,
-        on_change=None,
     ):
 
         Control.__init__(

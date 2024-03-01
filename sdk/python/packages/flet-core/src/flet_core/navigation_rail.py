@@ -31,7 +31,6 @@ class NavigationRailLabelType(Enum):
 class NavigationRailDestination(Control):
     def __init__(
         self,
-        ref: Optional[Ref] = None,
         icon: Optional[str] = None,
         icon_content: Optional[Control] = None,
         selected_icon: Optional[str] = None,
@@ -39,6 +38,10 @@ class NavigationRailDestination(Control):
         label: Optional[str] = None,
         label_content: Optional[Control] = None,
         padding: PaddingValue = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
     ):
         Control.__init__(self, ref=ref)
         self.label = label
@@ -196,6 +199,23 @@ class NavigationRail(ConstrainedControl):
 
     def __init__(
         self,
+        destinations: Optional[List[NavigationRailDestination]] = None,
+        elevation: OptionalNumber = None,
+        selected_index: Optional[int] = None,
+        extended: Optional[bool] = None,
+        label_type: Optional[NavigationRailLabelType] = None,
+        bgcolor: Optional[str] = None,
+        indicator_color: Optional[str] = None,
+        indicator_shape: Optional[OutlinedBorder] = None,
+        leading: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        min_width: OptionalNumber = None,
+        min_extended_width: OptionalNumber = None,
+        group_alignment: OptionalNumber = None,
+        on_change=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -221,22 +241,6 @@ class NavigationRail(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # NavigationRail-specific
-        destinations: Optional[List[NavigationRailDestination]] = None,
-        elevation: OptionalNumber = None,
-        selected_index: Optional[int] = None,
-        extended: Optional[bool] = None,
-        label_type: Optional[NavigationRailLabelType] = None,
-        bgcolor: Optional[str] = None,
-        indicator_color: Optional[str] = None,
-        indicator_shape: Optional[OutlinedBorder] = None,
-        leading: Optional[Control] = None,
-        trailing: Optional[Control] = None,
-        min_width: OptionalNumber = None,
-        min_extended_width: OptionalNumber = None,
-        group_alignment: OptionalNumber = None,
-        on_change=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -337,13 +341,10 @@ class NavigationRail(ConstrainedControl):
     @label_type.setter
     def label_type(self, value: Optional[NavigationRailLabelType]):
         self.__label_type = value
-        if isinstance(value, NavigationRailLabelType):
-            self._set_attr("labelType", value.value)
-        else:
-            self.__set_label_type(value)
-
-    def __set_label_type(self, value: NavigationRailLabelTypeString):
-        self._set_attr("labelType", value)
+        self._set_attr(
+            "labelType",
+            value.value if isinstance(value, NavigationRailLabelType) else value,
+        )
 
     # indicator_shape
     @property
