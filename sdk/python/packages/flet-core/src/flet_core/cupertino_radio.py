@@ -29,8 +29,8 @@ class CupertinoRadio(ConstrainedControl):
 
     def __init__(
         self,
-        value: Optional[str] = None,
         label: Optional[str] = None,
+        value: Optional[str] = None,
         label_position: LabelPosition = LabelPosition.NONE,
         fill_color: Optional[str] = None,
         active_color: Optional[str] = None,

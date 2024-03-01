@@ -51,8 +51,8 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
-        value: Optional[bool] = None,
         label: Optional[str] = None,
+        value: Optional[bool] = None,
         label_position: LabelPosition = LabelPosition.NONE,
         tristate: Optional[bool] = None,
         autofocus: Optional[bool] = None,

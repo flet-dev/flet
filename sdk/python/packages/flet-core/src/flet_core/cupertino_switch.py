@@ -41,8 +41,8 @@ class CupertinoSwitch(ConstrainedControl):
 
     def __init__(
         self,
-        value: Optional[bool] = None,
         label: Optional[str] = None,
+        value: Optional[bool] = None,
         label_position: LabelPosition = LabelPosition.NONE,
         active_color: Optional[str] = None,
         thumb_color: Optional[str] = None,
