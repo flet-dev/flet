@@ -7,8 +7,9 @@ import traceback
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-import flet.fastapi as flet_fastapi
 from fastapi import WebSocket, WebSocketDisconnect
+
+import flet.fastapi as flet_fastapi
 from flet.fastapi.flet_app_manager import app_manager
 from flet.fastapi.oauth_state import OAuthState
 from flet_core.event import Event
@@ -278,7 +279,7 @@ class FletApp(LocalConnection):
 
             # start session
             if new_session:
-                asyncio.create_task(
+                await asyncio.create_task(
                     self.__on_session_created(self._create_session_handler_arg())
                 )
             else:
@@ -291,13 +292,13 @@ class FletApp(LocalConnection):
 
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
             if self.__on_event is not None:
-                asyncio.create_task(
+                await asyncio.create_task(
                     self.__on_event(self._create_page_event_handler_arg(msg))
                 )
 
         elif msg.action == ClientActions.UPDATE_CONTROL_PROPS:
             if self.__on_event is not None:
-                asyncio.create_task(
+                await asyncio.create_task(
                     self.__on_event(self._create_update_control_props_handler_arg(msg))
                 )
         else:

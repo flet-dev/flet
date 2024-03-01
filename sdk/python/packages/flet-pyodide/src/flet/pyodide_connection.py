@@ -3,9 +3,9 @@ import json
 import logging
 from typing import List
 
-import flet
 import flet_js
-import js
+
+import flet
 from flet_core.local_connection import LocalConnection
 from flet_core.protocol import (
     ClientActions,
@@ -36,7 +36,7 @@ class PyodideConnection(LocalConnection):
         logger.info("Starting Pyodide connection...")
         self.page_url = flet_js.documentUrl
         self.send_callback = send_callback
-        asyncio.create_task(self.receive_loop())
+        await asyncio.create_task(self.receive_loop())
         flet_js.send = self.send_from_js
 
     async def receive_loop(self):
@@ -60,19 +60,19 @@ class PyodideConnection(LocalConnection):
 
             # start session
             if self.__on_session_created is not None:
-                asyncio.create_task(
+                await asyncio.create_task(
                     self.__on_session_created(self._create_session_handler_arg())
                 )
 
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
             if self.__on_event is not None:
-                asyncio.create_task(
+                await asyncio.create_task(
                     self.__on_event(self._create_page_event_handler_arg(msg))
                 )
 
         elif msg.action == ClientActions.UPDATE_CONTROL_PROPS:
             if self.__on_event is not None:
-                asyncio.create_task(
+                await asyncio.create_task(
                     self.__on_event(self._create_update_control_props_handler_arg(msg))
                 )
         else:
