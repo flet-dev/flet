@@ -8,12 +8,6 @@ from flet_core.protocol import Command
 from flet_core.ref import Ref
 from flet_core.types import ResponsiveNumber
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
-
 if TYPE_CHECKING:
     from .page import Page
 
@@ -54,10 +48,10 @@ class Control:
         if ref:
             ref.current = self
 
-    def _is_isolated(self):
+    def is_isolated(self):
         return False
 
-    def _build(self):
+    def build(self):
         pass
 
     def before_update(self):
@@ -69,13 +63,7 @@ class Control:
     def did_mount(self):
         pass
 
-    async def did_mount_async(self):
-        pass
-
     def will_unmount(self):
-        pass
-
-    async def will_unmount_async(self):
         pass
 
     def _get_children(self):
@@ -309,6 +297,38 @@ class Control:
         assert self.__page, "Control must be added to the page first."
         await self.__page._clean_async(self)
 
+    def invoke_method(
+        self,
+        method_name: str,
+        arguments: Optional[Dict[str, str]] = None,
+        wait_for_result: bool = False,
+        wait_timeout: Optional[float] = 5,
+    ) -> Optional[str]:
+        assert self.__page, "Control must be added to the page first."
+        self.__page._invoke_method(
+            control_id=self.uid,
+            method_name=method_name,
+            arguments=arguments,
+            wait_for_result=wait_for_result,
+            wait_timeout=wait_timeout,
+        )
+
+    def invoke_method_async(
+        self,
+        method_name: str,
+        arguments: Optional[Dict[str, str]] = None,
+        wait_for_result: bool = False,
+        wait_timeout: Optional[float] = 5,
+    ):
+        assert self.__page, "Control must be added to the page first."
+        return self.__page._invoke_method_async(
+            control_id=self.uid,
+            method_name=method_name,
+            arguments=arguments,
+            wait_for_result=wait_for_result,
+            wait_timeout=wait_timeout,
+        )
+
     def copy_attrs(self, dest: Dict[str, Any]):
         for attrName in sorted(self.__attrs):
             attrName = attrName.lower()
@@ -413,7 +433,7 @@ class Control:
                         commands,
                         added_controls,
                         removed_controls,
-                        isolated=ctrl._is_isolated(),
+                        isolated=ctrl.is_isolated(),
                     )
                     n += 1
             elif tag == "insert":
@@ -457,7 +477,18 @@ class Control:
     def _build_add_commands(self, indent=0, index=None, added_controls=None):
         if index:
             self.page = index["page"]
-        self._build()
+        content = self.build()
+
+        # fix for UserControl
+        if content is not None:
+            if isinstance(content, Control) and hasattr(self, "controls"):
+                self.controls = [content]
+            elif (
+                isinstance(content, List)
+                and hasattr(self, "controls")
+                and all(isinstance(control, Control) for control in content)
+            ):
+                self.controls = content
 
         # remove control from index
         if self.__uid and index is not None and self.__uid in index:

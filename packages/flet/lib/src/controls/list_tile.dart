@@ -116,6 +116,8 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
             Theme.of(context), control.attrString("bgcolor", "")!),
         splashColor: HexColor.fromString(
             Theme.of(context), control.attrString("bgcolorActivated", "")!),
+        hoverColor: HexColor.fromString(
+            Theme.of(context), control.attrString("hoverColor", "")!),
         leading: leadingCtrls.isNotEmpty
             ? createControl(control, leadingCtrls.first.id, disabled,
                 parentAdaptive: adaptive)

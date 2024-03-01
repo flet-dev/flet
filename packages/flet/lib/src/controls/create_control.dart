@@ -29,6 +29,9 @@ import 'circle_avatar.dart';
 import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
+import 'cupertino_action_sheet.dart';
+import 'cupertino_action_sheet_action.dart';
+import 'cupertino_activity_indicator.dart';
 import 'cupertino_alert_dialog.dart';
 import 'cupertino_button.dart';
 import 'cupertino_checkbox.dart';
@@ -609,6 +612,25 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "cupertinoactionsheet":
+      return CupertinoActionSheetControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          nextChild: nextChild,
+          backend: backend);
+    case "cupertinoactionsheetaction":
+      return CupertinoActionSheetActionControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
     case "expansiontile":
       return ExpansionTileControl(
           key: key,
@@ -762,6 +784,13 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "cupertinoactivityindicator":
+      return CupertinoActivityIndicatorControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled,
           backend: backend);
     case "alertdialog":
       return AlertDialogControl(

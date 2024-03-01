@@ -7,14 +7,13 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     CrossAxisAlignment,
-    CrossAxisAlignmentString,
     MainAxisAlignment,
-    MainAxisAlignmentString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class ResponsiveRow(ConstrainedControl, AdaptiveControl):
@@ -52,6 +51,15 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        columns: Optional[ResponsiveNumber] = None,
+        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        spacing: Optional[ResponsiveNumber] = None,
+        run_spacing: Optional[ResponsiveNumber] = None,
+        rtl: Optional[bool] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -78,17 +86,8 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        rtl: Optional[bool] = None,
         #
-        # Row specific
-        #
-        columns: Optional[ResponsiveNumber] = None,
-        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
-        spacing: Optional[ResponsiveNumber] = None,
-        run_spacing: Optional[ResponsiveNumber] = None,
-        #
-        # Adaptive
+        # AdaptiveControl
         #
         adaptive: Optional[bool] = None,
     ):
@@ -135,8 +134,8 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "responsiverow"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("columns", self.__columns)
         self._set_attr_json("spacing", self.__spacing)
         self._set_attr_json("runSpacing", self.__run_spacing)
@@ -148,9 +147,13 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         super().clean()
         self.__controls.clear()
 
+    @deprecated(
+        reason="Use clean() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def clean_async(self):
-        await super().clean_async()
-        self.__controls.clear()
+        self.clean()
 
     # horizontal_alignment
     @property
@@ -160,13 +163,9 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     @alignment.setter
     def alignment(self, value: MainAxisAlignment):
         self.__alignment = value
-        if isinstance(value, MainAxisAlignment):
-            self._set_attr("alignment", value.value)
-        else:
-            self.__set_alignment(value)
-
-    def __set_alignment(self, value: MainAxisAlignmentString):
-        self._set_attr("alignment", value)
+        self._set_attr(
+            "alignment", value.value if isinstance(value, MainAxisAlignment) else value
+        )
 
     # vertical_alignment
     @property
@@ -176,13 +175,10 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     @vertical_alignment.setter
     def vertical_alignment(self, value: CrossAxisAlignment):
         self.__vertical_alignment = value
-        if isinstance(value, CrossAxisAlignment):
-            self._set_attr("verticalAlignment", value.value)
-        else:
-            self.__set_vertical_alignment(value)
-
-    def __set_vertical_alignment(self, value: CrossAxisAlignmentString):
-        self._set_attr("verticalAlignment", value)
+        self._set_attr(
+            "verticalAlignment",
+            value.value if isinstance(value, CrossAxisAlignment) else value,
+        )
 
     # columns
     @property

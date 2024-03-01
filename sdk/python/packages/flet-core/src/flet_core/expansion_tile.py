@@ -36,6 +36,30 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        title: Optional[Control] = None,
+        subtitle: Optional[Control] = None,
+        leading: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        controls_padding: PaddingValue = None,
+        tile_padding: PaddingValue = None,
+        affinity: Optional[TileAffinity] = None,
+        expanded_alignment: Optional[Alignment] = None,
+        expanded_cross_axis_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER,
+        clip_behavior: Optional[ClipBehavior] = None,
+        initially_expanded: Optional[bool] = None,
+        maintain_state: Optional[bool] = None,
+        text_color: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        shape: Optional[OutlinedBorder] = None,
+        bgcolor: Optional[str] = None,
+        collapsed_bgcolor: Optional[str] = None,
+        collapsed_icon_color: Optional[str] = None,
+        collapsed_text_color: Optional[str] = None,
+        collapsed_shape: Optional[OutlinedBorder] = None,
+        on_change=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -63,30 +87,6 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        title: Optional[Control] = None,
-        subtitle: Optional[Control] = None,
-        leading: Optional[Control] = None,
-        trailing: Optional[Control] = None,
-        controls_padding: PaddingValue = None,
-        tile_padding: PaddingValue = None,
-        affinity: Optional[TileAffinity] = None,
-        expanded_alignment: Optional[Alignment] = None,
-        expanded_cross_axis_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER,
-        clip_behavior: Optional[ClipBehavior] = None,
-        initially_expanded: Optional[bool] = None,
-        maintain_state: Optional[bool] = None,
-        text_color: Optional[str] = None,
-        icon_color: Optional[str] = None,
-        shape: Optional[OutlinedBorder] = None,
-        bgcolor: Optional[str] = None,
-        collapsed_bgcolor: Optional[str] = None,
-        collapsed_icon_color: Optional[str] = None,
-        collapsed_text_color: Optional[str] = None,
-        collapsed_shape: Optional[OutlinedBorder] = None,
-        on_change=None,
         #
         # Adaptive
         #
@@ -151,8 +151,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "expansiontile"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("expandedAlignment", self.__expanded_alignment)
         self._set_attr_json("controlsPadding", self.__controls_padding)
         self._set_attr_json("tilePadding", self.__tile_padding)

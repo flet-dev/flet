@@ -46,6 +46,10 @@ class WindowDragArea(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        maximizable: Optional[bool] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -72,7 +76,6 @@ class WindowDragArea(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        maximizable: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,

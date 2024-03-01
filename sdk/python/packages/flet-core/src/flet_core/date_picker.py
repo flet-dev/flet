@@ -7,6 +7,7 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.textfield import KeyboardType
 from flet_core.types import ResponsiveNumber
+from flet_core.utils import deprecated
 
 try:
     from typing import Literal
@@ -74,20 +75,11 @@ class DatePicker(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        expand: Optional[Union[bool, int]] = None,
-        expand_loose: Optional[bool] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
         open: bool = False,
         value: Optional[datetime] = None,
-        text_style: Optional[TextStyle] = None,
         first_date: Optional[datetime] = None,
         last_date: Optional[datetime] = None,
+        text_style: Optional[TextStyle] = None,
         current_date: Optional[datetime] = None,
         keyboard_type: Optional[KeyboardType] = None,
         date_picker_mode: Optional[DatePickerMode] = None,
@@ -104,6 +96,18 @@ class DatePicker(Control):
         switch_to_input_icon: Optional[str] = None,
         on_change=None,
         on_dismiss=None,
+        #
+        # ConstrainedControl
+        #
+        ref: Optional[Ref] = None,
+        expand: Optional[Union[bool, int]] = None,
+        expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,
@@ -142,16 +146,20 @@ class DatePicker(Control):
     def _get_control_name(self):
         return "datepicker"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
 
     def pick_date(self):
         self.open = True
         self.update()
 
+    @deprecated(
+        reason="Use pick_date() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def pick_date_async(self):
-        self.open = True
-        await self.update_async()
+        self.pick_date()
 
     # open
     @property

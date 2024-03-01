@@ -16,7 +16,9 @@ class Arc(Shape):
         sweep_angle: OptionalNumber = None,
         use_center: Optional[bool] = None,
         paint: Optional[Paint] = None,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -36,8 +38,8 @@ class Arc(Shape):
     def _get_control_name(self):
         return "arc"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("paint", self.__paint)
 
     # x

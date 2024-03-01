@@ -10,6 +10,9 @@ class TransparentPointer(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -35,9 +38,6 @@ class TransparentPointer(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
     ):
         ConstrainedControl.__init__(
             self,

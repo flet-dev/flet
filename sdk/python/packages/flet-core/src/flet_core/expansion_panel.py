@@ -16,7 +16,7 @@ from flet_core.types import (
 
 class ExpansionPanel(ConstrainedControl, AdaptiveControl):
     """
-    A material expansion panel. It can either be  expanded or collapsed. Its body is only visible when it is expanded.
+    A material expansion panel. It can either be expanded or collapsed. Its body is only visible when it is expanded.
 
     -----
 
@@ -27,6 +27,12 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         self,
         header: Optional[Control] = None,
         content: Optional[Control] = None,
+        bgcolor: Optional[str] = None,
+        expanded: Optional[bool] = None,
+        can_tap_header: Optional[bool] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -53,12 +59,6 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        bgcolor: Optional[str] = None,
-        expanded: Optional[bool] = None,
-        can_tap_header: Optional[bool] = None,
         #
         # Adaptive
         #
@@ -105,8 +105,8 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "expansionpanel"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
 
     def _get_children(self):
         children = []
@@ -253,8 +253,8 @@ class ExpansionPanelList(ConstrainedControl):
     def _get_control_name(self):
         return "expansionpanellist"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("expandedHeaderPadding", self.__expanded_header_padding)
 
     def _get_children(self):

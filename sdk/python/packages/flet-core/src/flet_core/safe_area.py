@@ -18,6 +18,16 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        key: Optional[str] = None,
+        left: Optional[bool] = None,
+        top: Optional[bool] = None,
+        right: Optional[bool] = None,
+        bottom: Optional[bool] = None,
+        maintain_bottom_view_padding: Optional[bool] = None,
+        minimum: PaddingValue = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -40,16 +50,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        key: Optional[str] = None,
-        left: Optional[bool] = None,
-        top: Optional[bool] = None,
-        right: Optional[bool] = None,
-        bottom: Optional[bool] = None,
-        maintain_bottom_view_padding: Optional[bool] = None,
-        minimum: PaddingValue = None,
+        rtl: Optional[bool] = None,
         #
         # Adaptive
         #
@@ -80,6 +81,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
@@ -95,8 +97,8 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "safearea"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("minimum", self.__minimum)
 
     def _get_children(self):

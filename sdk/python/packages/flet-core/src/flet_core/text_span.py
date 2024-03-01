@@ -15,7 +15,9 @@ class TextSpan(InlineSpan):
         on_click=None,
         on_enter=None,
         on_exit=None,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -42,8 +44,8 @@ class TextSpan(InlineSpan):
         children.extend(self.__spans)
         return children
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("style", self.__style)
 
     # text

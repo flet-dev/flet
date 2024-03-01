@@ -46,6 +46,11 @@ class Icon(ConstrainedControl):
     def __init__(
         self,
         name: Optional[str] = None,
+        color: Optional[str] = None,
+        size: OptionalNumber = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         expand: Union[None, bool, int] = None,
@@ -67,11 +72,6 @@ class Icon(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        color: Optional[str] = None,
-        size: OptionalNumber = None,
     ):
         ConstrainedControl.__init__(
             self,

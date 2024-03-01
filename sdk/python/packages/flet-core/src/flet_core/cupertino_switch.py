@@ -6,7 +6,6 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
-    LabelPositionString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -42,6 +41,20 @@ class CupertinoSwitch(ConstrainedControl):
 
     def __init__(
         self,
+        label: Optional[str] = None,
+        value: Optional[bool] = None,
+        label_position: LabelPosition = LabelPosition.NONE,
+        active_color: Optional[str] = None,
+        thumb_color: Optional[str] = None,
+        track_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
+        autofocus: Optional[bool] = None,
+        on_change=None,
+        on_focus=None,
+        on_blur=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -69,20 +82,6 @@ class CupertinoSwitch(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        label: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
-        value: Optional[bool] = None,
-        autofocus: Optional[bool] = None,
-        active_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
-        thumb_color: Optional[str] = None,
-        track_color: Optional[str] = None,
-        on_change=None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -129,8 +128,8 @@ class CupertinoSwitch(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinoswitch"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("thumbColor", self.__thumb_color)
         self._set_attr_json("trackColor", self.__track_color)
 
@@ -160,13 +159,9 @@ class CupertinoSwitch(ConstrainedControl):
     @label_position.setter
     def label_position(self, value: LabelPosition):
         self.__label_position = value
-        if isinstance(value, LabelPosition):
-            self._set_attr("labelPosition", value.value)
-        else:
-            self.__set_label_position(value)
-
-    def __set_label_position(self, value: LabelPositionString):
-        self._set_attr("labelPosition", value)
+        self._set_attr(
+            "labelPosition", value.value if isinstance(value, LabelPosition) else value
+        )
 
     # autofocus
     @property

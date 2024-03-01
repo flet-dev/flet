@@ -11,7 +11,6 @@ from flet_core.types import (
     MarginValue,
     PaddingValue,
     TextAlign,
-    TextAlignString,
 )
 
 
@@ -65,13 +64,6 @@ class Tooltip(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         content: Optional[Control] = None,
         enable_feedback: Optional[bool] = None,
         height: OptionalNumber = None,
@@ -89,6 +81,13 @@ class Tooltip(Control):
         prefer_below: Optional[bool] = None,
         show_duration: Optional[int] = None,
         wait_duration: Optional[int] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,
@@ -119,8 +118,8 @@ class Tooltip(Control):
     def _get_control_name(self):
         return "tooltip"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("margin", self.__margin)
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("textStyle", self.__text_style)
@@ -225,13 +224,9 @@ class Tooltip(Control):
     @text_align.setter
     def text_align(self, value: TextAlign):
         self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
-
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
+        self._set_attr(
+            "textAlign", value.value if isinstance(value, TextAlign) else value
+        )
 
     # text_style
     @property

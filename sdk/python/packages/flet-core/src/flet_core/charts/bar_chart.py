@@ -23,6 +23,25 @@ class BarChart(ConstrainedControl):
     def __init__(
         self,
         bar_groups: Optional[List[BarChartGroup]] = None,
+        groups_space: OptionalNumber = None,
+        animate: AnimationValue = None,
+        interactive: Optional[bool] = None,
+        bgcolor: Optional[str] = None,
+        tooltip_bgcolor: Optional[str] = None,
+        border: Optional[Border] = None,
+        horizontal_grid_lines: Optional[ChartGridLines] = None,
+        vertical_grid_lines: Optional[ChartGridLines] = None,
+        left_axis: Optional[ChartAxis] = None,
+        top_axis: Optional[ChartAxis] = None,
+        right_axis: Optional[ChartAxis] = None,
+        bottom_axis: Optional[ChartAxis] = None,
+        baseline_y: OptionalNumber = None,
+        min_y: OptionalNumber = None,
+        max_y: OptionalNumber = None,
+        on_chart_event=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -49,25 +68,6 @@ class BarChart(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        groups_space: OptionalNumber = None,
-        animate: AnimationValue = None,
-        interactive: Optional[bool] = None,
-        bgcolor: Optional[str] = None,
-        tooltip_bgcolor: Optional[str] = None,
-        border: Optional[Border] = None,
-        horizontal_grid_lines: Optional[ChartGridLines] = None,
-        vertical_grid_lines: Optional[ChartGridLines] = None,
-        left_axis: Optional[ChartAxis] = None,
-        top_axis: Optional[ChartAxis] = None,
-        right_axis: Optional[ChartAxis] = None,
-        bottom_axis: Optional[ChartAxis] = None,
-        baseline_y: OptionalNumber = None,
-        min_y: OptionalNumber = None,
-        max_y: OptionalNumber = None,
-        on_chart_event=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -127,8 +127,8 @@ class BarChart(ConstrainedControl):
     def _get_control_name(self):
         return "barchart"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("horizontalGridLines", self.__horizontal_grid_lines)
         self._set_attr_json("verticalGridLines", self.__vertical_grid_lines)
         self._set_attr_json("animate", self.__animate)

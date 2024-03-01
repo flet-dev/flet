@@ -8,15 +8,14 @@ from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     AnimationValue,
     CrossAxisAlignment,
-    CrossAxisAlignmentString,
     MainAxisAlignment,
-    MainAxisAlignmentString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ScrollMode,
 )
+from flet_core.utils import deprecated
 
 
 class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
@@ -58,6 +57,15 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        spacing: OptionalNumber = None,
+        tight: Optional[bool] = None,
+        wrap: Optional[bool] = None,
+        run_spacing: OptionalNumber = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -86,24 +94,12 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         data: Any = None,
         rtl: Optional[bool] = None,
         #
-        # ScrollableControl specific
+        # ScrollableControl and AdaptiveControl
         #
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Any = None,
-        #
-        # Column specific
-        #
-        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
-        spacing: OptionalNumber = None,
-        tight: Optional[bool] = None,
-        wrap: Optional[bool] = None,
-        run_spacing: OptionalNumber = None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -165,9 +161,13 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         super().clean()
         self.__controls.clear()
 
+    @deprecated(
+        reason="Use clean() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def clean_async(self):
-        await super().clean_async()
-        self.__controls.clear()
+        self.clean()
 
     # tight
     @property
@@ -186,13 +186,9 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @alignment.setter
     def alignment(self, value: MainAxisAlignment):
         self.__alignment = value
-        if isinstance(value, MainAxisAlignment):
-            self._set_attr("alignment", value.value)
-        else:
-            self.__set_alignment(value)
-
-    def __set_alignment(self, value: MainAxisAlignmentString):
-        self._set_attr("alignment", value)
+        self._set_attr(
+            "alignment", value.value if isinstance(value, MainAxisAlignment) else value
+        )
 
     # horizontal_alignment
     @property
@@ -202,13 +198,10 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__horizontal_alignment = value
-        if isinstance(value, CrossAxisAlignment):
-            self._set_attr("horizontalAlignment", value.value)
-        else:
-            self.__set_horizontal_alignment(value)
-
-    def __set_horizontal_alignment(self, value: CrossAxisAlignmentString):
-        self._set_attr("horizontalAlignment", value)
+        self._set_attr(
+            "horizontalAlignment",
+            value.value if isinstance(value, CrossAxisAlignment) else value,
+        )
 
     # spacing
     @property

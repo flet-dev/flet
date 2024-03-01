@@ -1,9 +1,15 @@
+import 'strings.dart';
+
 bool isProgressiveWebApp() {
   return false;
 }
 
-String getWebsocketEndpointPath() {
-  return "ws";
+String getWebsocketEndpointPath(String uriPath) {
+  var pagePath = trim(uriPath, "/");
+  if (pagePath != "") {
+    pagePath = "$pagePath/";
+  }
+  return "${pagePath}ws";
 }
 
 String getFletRouteUrlStrategy() {

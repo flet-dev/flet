@@ -1,4 +1,3 @@
-import io
 import re
 import xml.etree.ElementTree as ET
 from typing import Any, Optional, Union
@@ -14,6 +13,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ImageFit,
 )
 
 try:
@@ -51,6 +51,11 @@ class PlotlyChart(Container):
     def __init__(
         self,
         figure: Optional[Figure] = None,
+        isolated: bool = False,
+        original_size: bool = False,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         expand: Union[None, bool, int] = None,
@@ -72,11 +77,6 @@ class PlotlyChart(Container):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        isolated: bool = False,
-        original_size: bool = False,
     ):
         Container.__init__(
             self,
@@ -107,16 +107,16 @@ class PlotlyChart(Container):
         self.isolated = isolated
         self.original_size = original_size
 
-    def _is_isolated(self):
+    def is_isolated(self):
         return self.__isolated
 
-    def _build(self):
+    def build(self):
         self.alignment = alignment.center
-        self.__img = Image(fit="fill")
+        self.__img = Image(fit=ImageFit.FILL)
         self.content = self.__img
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if self.__figure is not None:
             svg = self.__figure.to_image(format="svg").decode("utf-8")
 
@@ -153,12 +153,3 @@ class PlotlyChart(Container):
     @figure.setter
     def figure(self, value):
         self.__figure = value
-
-    # maintain_aspect_ratio
-    @property
-    def maintain_aspect_ratio(self) -> bool:
-        return self.__maintain_aspect_ratio
-
-    @maintain_aspect_ratio.setter
-    def maintain_aspect_ratio(self, value: bool):
-        self.__maintain_aspect_ratio = value

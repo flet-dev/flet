@@ -51,6 +51,24 @@ class CupertinoListTile(ConstrainedControl):
 
     def __init__(
         self,
+        title: Optional[Control] = None,
+        subtitle: Optional[Control] = None,
+        leading: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        bgcolor: Optional[str] = None,
+        bgcolor_activated: Optional[str] = None,
+        padding: PaddingValue = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
+        toggle_inputs: Optional[bool] = None,
+        additional_info: Optional[Control] = None,
+        leading_size: OptionalNumber = None,
+        leading_to_title: OptionalNumber = None,
+        notched: Optional[bool] = None,
+        on_click=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -78,24 +96,6 @@ class CupertinoListTile(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        bgcolor: Optional[str] = None,
-        bgcolor_activated: Optional[str] = None,
-        leading: Optional[Control] = None,
-        padding: PaddingValue = None,
-        title: Optional[Control] = None,
-        subtitle: Optional[Control] = None,
-        trailing: Optional[Control] = None,
-        url: Optional[str] = None,
-        url_target: Optional[str] = None,
-        toggle_inputs: Optional[bool] = None,
-        additional_info: Optional[Control] = None,
-        leading_size: OptionalNumber = None,
-        leading_to_title: OptionalNumber = None,
-        notched: Optional[bool] = None,
-        on_click=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -147,8 +147,8 @@ class CupertinoListTile(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinolisttile"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("contentPadding", self.__padding)
 
     def _get_children(self):

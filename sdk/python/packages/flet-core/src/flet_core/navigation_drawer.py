@@ -14,13 +14,16 @@ class NavigationDrawerDestination(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        # bgcolor: Optional[str] = None,
+        label: Optional[str] = None,
         icon: Optional[str] = None,
         icon_content: Optional[Control] = None,
-        label: Optional[str] = None,
         selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
+        # bgcolor: Optional[str] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
     ):
         Control.__init__(self, ref=ref)
         self.label = label
@@ -185,15 +188,8 @@ class NavigationDrawer(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # NavigationDrawer-specific
-        #
-        open: bool = False,
         controls: Optional[List[Control]] = None,
+        open: bool = False,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
         elevation: OptionalNumber = None,
@@ -204,6 +200,13 @@ class NavigationDrawer(Control):
         tile_padding: PaddingValue = None,
         on_change=None,
         on_dismiss=None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,
@@ -230,8 +233,8 @@ class NavigationDrawer(Control):
     def _get_control_name(self):
         return "navigationdrawer"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("indicatorShape", self.__indicator_shape)
         self._set_attr_json("tilePadding", self.__tile_padding)
 

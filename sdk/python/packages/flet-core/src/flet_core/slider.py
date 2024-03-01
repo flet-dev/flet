@@ -40,6 +40,24 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        value: OptionalNumber = None,
+        label: Optional[str] = None,
+        min: OptionalNumber = None,
+        max: OptionalNumber = None,
+        divisions: Optional[int] = None,
+        round: Optional[int] = None,
+        autofocus: Optional[bool] = None,
+        active_color: Optional[str] = None,
+        inactive_color: Optional[str] = None,
+        thumb_color: Optional[str] = None,
+        on_change=None,
+        on_change_start=None,
+        on_change_end=None,
+        on_focus=None,
+        on_blur=None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -67,25 +85,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        value: OptionalNumber = None,
         adaptive: Optional[bool] = None,
-        label: Optional[str] = None,
-        min: OptionalNumber = None,
-        max: OptionalNumber = None,
-        divisions: Optional[int] = None,
-        round: Optional[int] = None,
-        autofocus: Optional[bool] = None,
-        active_color: Optional[str] = None,
-        inactive_color: Optional[str] = None,
-        thumb_color: Optional[str] = None,
-        on_change=None,
-        on_change_start=None,
-        on_change_end=None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,

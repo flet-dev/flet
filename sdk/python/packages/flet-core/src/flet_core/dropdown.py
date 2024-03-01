@@ -1,5 +1,5 @@
 import time
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, List
 
 from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
@@ -15,6 +15,44 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
+
+
+class Option(Control):
+    def __init__(
+        self,
+        key: Optional[str] = None,
+        text: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        ref=None,
+    ):
+        Control.__init__(self, ref=ref, disabled=disabled, visible=visible)
+        assert key is not None or text is not None, "key or text must be specified"
+        self.key = key
+        self.text = text
+        self.disabled = disabled
+
+    def _get_control_name(self):
+        return "dropdownoption"
+
+    # key
+    @property
+    def key(self):
+        return self._get_attr("key")
+
+    @key.setter
+    def key(self, value):
+        self._set_attr("key", value)
+
+    # text
+    @property
+    def text(self):
+        return self._get_attr("text")
+
+    @text.setter
+    def text(self, value):
+        self._set_attr("text", value)
 
 
 class Dropdown(FormFieldControl):
@@ -52,29 +90,13 @@ class Dropdown(FormFieldControl):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        key: Optional[str] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        expand: Union[None, bool, int] = None,
-        expand_loose: Optional[bool] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
-        aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
+        value: Optional[str] = None,
+        options: Optional[List[Option]] = None,
+        alignment: Optional[Alignment] = None,
+        autofocus: Optional[bool] = None,
+        on_change=None,
+        on_focus=None,
+        on_blur=None,
         #
         # FormField specific
         #
@@ -113,15 +135,31 @@ class Dropdown(FormFieldControl):
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         #
-        # DropDown Specific
+        # ConstrainedControl
         #
-        value: Optional[str] = None,
-        autofocus: Optional[bool] = None,
-        options=None,
-        alignment: Optional[Alignment] = None,
-        on_change=None,
-        on_focus=None,
-        on_blur=None,
+        ref: Optional[Ref] = None,
+        key: Optional[str] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         FormFieldControl.__init__(
             self,
@@ -199,8 +237,8 @@ class Dropdown(FormFieldControl):
     def _get_control_name(self):
         return "dropdown"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("alignment", self.__alignment)
 
     def _get_children(self):
@@ -212,9 +250,13 @@ class Dropdown(FormFieldControl):
         self._set_attr_json("focus", str(time.time()))
         self.update()
 
+    @deprecated(
+        reason="Use focus() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
+        self.focus()
 
     # options
     @property
@@ -278,40 +320,3 @@ class Dropdown(FormFieldControl):
     @on_blur.setter
     def on_blur(self, handler):
         self._add_event_handler("blur", handler)
-
-
-class Option(Control):
-    def __init__(
-        self,
-        key: Optional[str] = None,
-        text: Optional[str] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        ref=None,
-    ):
-        Control.__init__(self, ref=ref, disabled=disabled, visible=visible)
-        assert key is not None or text is not None, "key or text must be specified"
-        self.key = key
-        self.text = text
-        self.disabled = disabled
-
-    def _get_control_name(self):
-        return "dropdownoption"
-
-    # key
-    @property
-    def key(self):
-        return self._get_attr("key")
-
-    @key.setter
-    def key(self, value):
-        self._set_attr("key", value)
-
-    # text
-    @property
-    def text(self):
-        return self._get_attr("text")
-
-    @text.setter
-    def text(self, value):
-        self._set_attr("text", value)

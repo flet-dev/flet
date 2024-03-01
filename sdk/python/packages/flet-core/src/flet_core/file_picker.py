@@ -1,13 +1,13 @@
 import json
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
-from flet_core.dropdown import Option
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.utils import deprecated
 
 try:
     from typing import Literal
@@ -103,15 +103,15 @@ class FilePicker(Control):
 
     def __init__(
         self,
+        on_result=None,
+        on_upload=None,
+        #
+        # Control
+        #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        on_result=None,
-        on_upload=None,
     ):
 
         Control.__init__(
@@ -146,8 +146,8 @@ class FilePicker(Control):
     def _get_control_name(self):
         return "filepicker"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("allowedExtensions", self.__allowed_extensions)
         self._set_attr_json("upload", self.__upload)
 
@@ -167,6 +167,11 @@ class FilePicker(Control):
         self.allow_multiple = allow_multiple
         self.update()
 
+    @deprecated(
+        reason="Use pick_files() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def pick_files_async(
         self,
         dialog_title: Optional[str] = None,
@@ -175,13 +180,13 @@ class FilePicker(Control):
         allowed_extensions: Optional[List[str]] = None,
         allow_multiple: Optional[bool] = False,
     ):
-        self.state = "pickFiles"
-        self.dialog_title = dialog_title
-        self.initial_directory = initial_directory
-        self.file_type = file_type
-        self.allowed_extensions = allowed_extensions
-        self.allow_multiple = allow_multiple
-        await self.update_async()
+        self.pick_files(
+            dialog_title,
+            initial_directory,
+            file_type,
+            allowed_extensions,
+            allow_multiple,
+        )
 
     def save_file(
         self,
@@ -199,6 +204,11 @@ class FilePicker(Control):
         self.allowed_extensions = allowed_extensions
         self.update()
 
+    @deprecated(
+        reason="Use save_file() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def save_file_async(
         self,
         dialog_title: Optional[str] = None,
@@ -207,13 +217,9 @@ class FilePicker(Control):
         file_type: FilePickerFileType = FilePickerFileType.ANY,
         allowed_extensions: Optional[List[str]] = None,
     ):
-        self.state = "saveFile"
-        self.dialog_title = dialog_title
-        self.file_name = file_name
-        self.initial_directory = initial_directory
-        self.file_type = file_type
-        self.allowed_extensions = allowed_extensions
-        await self.update_async()
+        self.save_file(
+            dialog_title, file_name, initial_directory, file_type, allowed_extensions
+        )
 
     def get_directory_path(
         self,
@@ -225,23 +231,29 @@ class FilePicker(Control):
         self.initial_directory = initial_directory
         self.update()
 
+    @deprecated(
+        reason="Use get_directory_path() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def get_directory_path_async(
         self,
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
     ):
-        self.state = "getDirectoryPath"
-        self.dialog_title = dialog_title
-        self.initial_directory = initial_directory
-        await self.update_async()
+        self.get_directory_path(dialog_title, initial_directory)
 
     def upload(self, files: List[FilePickerUploadFile]):
         self.__upload = files
         self.update()
 
+    @deprecated(
+        reason="Use upload() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def upload_async(self, files: List[FilePickerUploadFile]):
-        self.__upload = files
-        await self.update_async()
+        self.upload(files)
 
     # state
     @property
@@ -292,13 +304,9 @@ class FilePicker(Control):
     @file_type.setter
     def file_type(self, value: FilePickerFileType):
         self.__file_type = value
-        if isinstance(value, FilePickerFileType):
-            self._set_attr("fileType", value.value)
-        else:
-            self.__set_file_type(value)
-
-    def __set_file_type(self, value: FileTypeString):
-        self._set_attr("fileType", value)
+        self._set_attr(
+            "fileType", value.value if isinstance(value, FilePickerFileType) else value
+        )
 
     # allowed_extensions
     @property

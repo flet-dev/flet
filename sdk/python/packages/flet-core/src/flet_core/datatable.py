@@ -31,14 +31,16 @@ class DataColumn(Control):
     def __init__(
         self,
         label: Control,
+        numeric: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+        on_sort=None,
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        # specific
-        numeric: Optional[bool] = None,
-        tooltip: Optional[str] = None,
-        on_sort=None,
     ):
         Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
@@ -104,11 +106,6 @@ class DataCell(Control):
     def __init__(
         self,
         content: Control,
-        ref=None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-        # specific
         on_double_tap=None,
         on_long_press=None,
         on_tap=None,
@@ -116,6 +113,13 @@ class DataCell(Control):
         on_tap_down=None,
         placeholder: Optional[bool] = None,
         show_edit_icon: Optional[bool] = None,
+        #
+        # Control
+        #
+        ref=None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
@@ -240,8 +244,8 @@ class DataRow(Control):
     def _get_control_name(self):
         return "r"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("color", self.__color)
 
     def _get_children(self):
@@ -300,6 +304,31 @@ class DataTable(ConstrainedControl):
         self,
         columns: Optional[List[DataColumn]] = None,
         rows: Optional[List[DataRow]] = None,
+        sort_ascending: Optional[bool] = None,
+        show_checkbox_column: Optional[bool] = None,
+        sort_column_index: Optional[int] = None,
+        show_bottom_border: Optional[bool] = None,
+        border: Optional[Border] = None,
+        border_radius: BorderRadiusValue = None,
+        horizontal_lines: Optional[BorderSide] = None,
+        vertical_lines: Optional[BorderSide] = None,
+        checkbox_horizontal_margin: OptionalNumber = None,
+        column_spacing: OptionalNumber = None,
+        data_row_color: Union[None, str, Dict[MaterialState, str]] = None,
+        data_row_min_height: OptionalNumber = None,
+        data_row_max_height: OptionalNumber = None,
+        data_text_style: Optional[TextStyle] = None,
+        bgcolor: Optional[str] = None,
+        gradient: Optional[Gradient] = None,
+        divider_thickness: OptionalNumber = None,
+        heading_row_color: Union[None, str, Dict[MaterialState, str]] = None,
+        heading_row_height: OptionalNumber = None,
+        heading_text_style: Optional[TextStyle] = None,
+        horizontal_margin: OptionalNumber = None,
+        on_select_all=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -327,31 +356,6 @@ class DataTable(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # DataTable-specific
-        #
-        border: Optional[Border] = None,
-        border_radius: BorderRadiusValue = None,
-        horizontal_lines: Optional[BorderSide] = None,
-        vertical_lines: Optional[BorderSide] = None,
-        checkbox_horizontal_margin: OptionalNumber = None,
-        column_spacing: OptionalNumber = None,
-        data_row_color: Union[None, str, Dict[MaterialState, str]] = None,
-        data_row_min_height: OptionalNumber = None,
-        data_row_max_height: OptionalNumber = None,
-        data_text_style: Optional[TextStyle] = None,
-        bgcolor: Optional[str] = None,
-        gradient: Optional[Gradient] = None,
-        divider_thickness: OptionalNumber = None,
-        heading_row_color: Union[None, str, Dict[MaterialState, str]] = None,
-        heading_row_height: OptionalNumber = None,
-        heading_text_style: Optional[TextStyle] = None,
-        horizontal_margin: OptionalNumber = None,
-        show_bottom_border: Optional[bool] = None,
-        show_checkbox_column: Optional[bool] = None,
-        sort_ascending: Optional[bool] = None,
-        sort_column_index: Optional[int] = None,
-        on_select_all=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -412,8 +416,8 @@ class DataTable(ConstrainedControl):
     def _get_control_name(self):
         return "datatable"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("border", self.__border)
         self._set_attr_json("gradient", self.__gradient)
         self._set_attr_json("borderRadius", self.__border_radius)

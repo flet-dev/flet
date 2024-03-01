@@ -57,6 +57,26 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        content_padding: PaddingValue = None,
+        bgcolor: Optional[str] = None,
+        bgcolor_activated: Optional[str] = None,
+        hover_color: Optional[str] = None,
+        leading: Optional[Control] = None,
+        title: Optional[Control] = None,
+        subtitle: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        is_three_line: Optional[bool] = None,
+        selected: Optional[bool] = None,
+        dense: Optional[bool] = None,
+        autofocus: Optional[bool] = None,
+        toggle_inputs: Optional[bool] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
+        on_click=None,
+        on_long_press=None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -84,26 +104,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
         adaptive: Optional[bool] = None,
-        content_padding: PaddingValue = None,
-        bgcolor: Optional[str] = None,
-        bgcolor_activated: Optional[str] = None,
-        leading: Optional[Control] = None,
-        title: Optional[Control] = None,
-        subtitle: Optional[Control] = None,
-        trailing: Optional[Control] = None,
-        is_three_line: Optional[bool] = None,
-        selected: Optional[bool] = None,
-        dense: Optional[bool] = None,
-        autofocus: Optional[bool] = None,
-        toggle_inputs: Optional[bool] = None,
-        url: Optional[str] = None,
-        url_target: Optional[str] = None,
-        on_click=None,
-        on_long_press=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -152,14 +153,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         self.url_target = url_target
         self.bgcolor = bgcolor
         self.bgcolor_activated = bgcolor_activated
+        self.hover_color = hover_color
         self.on_click = on_click
         self.on_long_press = on_long_press
 
     def _get_control_name(self):
         return "listtile"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("contentPadding", self.__content_padding)
 
     def _get_children(self):
@@ -204,6 +206,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @bgcolor_activated.setter
     def bgcolor_activated(self, value):
         self._set_attr("bgcolorActivated", value)
+
+    # hover_color
+    @property
+    def hover_color(self):
+        return self._get_attr("hoverColor")
+
+    @hover_color.setter
+    def hover_color(self, value):
+        self._set_attr("hoverColor", value)
 
     # leading
     @property

@@ -61,6 +61,15 @@ class Card(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        margin: MarginValue = None,
+        elevation: OptionalNumber = None,
+        color: Optional[str] = None,
+        shadow_color: Optional[str] = None,
+        surface_tint_color: Optional[str] = None,
+        shape: Optional[OutlinedBorder] = None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -88,18 +97,6 @@ class Card(ConstrainedControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         key: Optional[str] = None,
-        #
-        # Specific
-        #
-        margin: MarginValue = None,
-        elevation: OptionalNumber = None,
-        color: Optional[str] = None,
-        shadow_color: Optional[str] = None,
-        surface_tint_color: Optional[str] = None,
-        shape: Optional[OutlinedBorder] = None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -146,8 +143,8 @@ class Card(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "card"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("margin", self.__margin)
         self._set_attr_json("shape", self.__shape)
 
