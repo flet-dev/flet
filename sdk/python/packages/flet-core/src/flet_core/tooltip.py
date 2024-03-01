@@ -11,7 +11,6 @@ from flet_core.types import (
     MarginValue,
     PaddingValue,
     TextAlign,
-    TextAlignString,
 )
 
 

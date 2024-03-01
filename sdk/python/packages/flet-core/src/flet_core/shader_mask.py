@@ -7,7 +7,6 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     BlendMode,
-    BlendModeString,
     BorderRadiusValue,
     OffsetValue,
     ResponsiveNumber,

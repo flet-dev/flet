@@ -6,7 +6,7 @@ from flet_core.animation import AnimationCurve
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
-from flet_core.types import ScrollMode, ScrollModeString
+from flet_core.types import ScrollMode
 from flet_core.utils import deprecated
 
 
@@ -77,17 +77,14 @@ class ScrollableControl(Control):
     @scroll.setter
     def scroll(self, value: Optional[ScrollMode]):
         self.__scroll = value
-        if isinstance(value, ScrollMode):
-            self._set_attr("scroll", value.value)
-        else:
-            self.__set_scroll(value)
-
-    def __set_scroll(self, value: Optional[ScrollModeString]):
-        if value is True:
-            value = "auto"
-        elif value is False:
-            value = None
-        self._set_attr("scroll", value)
+        self._set_attr(
+            "scroll",
+            value.value
+            if isinstance(value, ScrollMode)
+            else "auto"
+            if value is True
+            else value,
+        )
 
     # auto_scroll
     @property

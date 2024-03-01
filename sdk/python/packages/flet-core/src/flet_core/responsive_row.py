@@ -7,9 +7,7 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     CrossAxisAlignment,
-    CrossAxisAlignmentString,
     MainAxisAlignment,
-    MainAxisAlignmentString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,

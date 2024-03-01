@@ -13,10 +13,8 @@ from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     CrossAxisAlignment,
-    CrossAxisAlignmentString,
     FloatingActionButtonLocation,
     MainAxisAlignment,
-    MainAxisAlignmentString,
     OffsetValue,
     PaddingValue,
     ScrollMode,

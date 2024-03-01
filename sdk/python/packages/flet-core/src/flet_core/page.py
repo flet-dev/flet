@@ -48,7 +48,6 @@ from flet_core.types import (
     PagePlatform,
     ScrollMode,
     ThemeMode,
-    ThemeModeString,
 )
 from flet_core.utils import deprecated
 from flet_core.utils.concurrency_utils import is_pyodide

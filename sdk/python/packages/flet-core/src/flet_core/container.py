@@ -16,13 +16,11 @@ from flet_core.theme import Theme
 from flet_core.types import (
     AnimationValue,
     BlendMode,
-    BlendModeString,
     BorderRadiusValue,
     BoxShape,
     ClipBehavior,
     ImageFit,
     ImageRepeat,
-    ImageRepeatString,
     MarginValue,
     OffsetValue,
     PaddingValue,
@@ -287,9 +285,6 @@ class Container(ConstrainedControl, AdaptiveControl):
             "blendMode", value.value if isinstance(value, BlendMode) else value
         )
 
-    def __set_blend_mode(self, value: BlendModeString):
-        self._set_attr("blendMode", value)
-
     # blur
     @property
     def blur(self):
@@ -372,9 +367,6 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr(
             "imageRepeat", value.value if isinstance(value, ImageRepeat) else value
         )
-
-    def __set_image_repeat(self, value: ImageRepeatString):
-        self._set_attr("imageRepeat", value)
 
     # image_opacity
     @property

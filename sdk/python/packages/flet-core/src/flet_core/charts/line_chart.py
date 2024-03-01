@@ -1,5 +1,5 @@
 import json
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Any
 
 from flet_core.border import Border
 from flet_core.charts.chart_axis import ChartAxis
@@ -71,6 +71,7 @@ class LineChart(ConstrainedControl):
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         ConstrainedControl.__init__(
             self,
