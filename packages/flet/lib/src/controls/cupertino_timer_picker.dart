@@ -32,7 +32,7 @@ class _CupertinoTimerPickerControlState
     extends State<CupertinoTimerPickerControl> {
   Widget _createPicker() {
     int value = widget.control.attrInt("value", 0)!;
-    Duration initialTimerDuration = Duration(milliseconds: value);
+    Duration initialTimerDuration = Duration(seconds: value);
     int minuteInterval =
         widget.control.attrDouble("minuteInterval", 1)!.toInt();
     int secondInterval =
@@ -55,10 +55,10 @@ class _CupertinoTimerPickerControlState
           parseAlignment(widget.control, "alignment") ?? Alignment.center,
       backgroundColor: backgroundColor,
       onTimerDurationChanged: (Duration d) {
-        widget.backend
-            .updateControlState(widget.control.id, {"value": d.toString()});
+        widget.backend.updateControlState(
+            widget.control.id, {"value": d.inSeconds.toString()});
         widget.backend.triggerControlEvent(
-            widget.control.id, "change", d.inMilliseconds.toString());
+            widget.control.id, "change", d.inSeconds.toString());
       },
     );
 
