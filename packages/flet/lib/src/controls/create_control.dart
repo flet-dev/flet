@@ -599,6 +599,7 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
+          nextChild: nextChild,
           backend: backend);
     case "cupertinoactionsheetaction":
       return CupertinoActionSheetActionControl(

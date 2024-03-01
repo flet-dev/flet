@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import 'create_control.dart';
+import 'error.dart';
 
 class CupertinoActionSheetControl extends StatefulWidget {
   final Control? parent;
@@ -10,6 +11,7 @@ class CupertinoActionSheetControl extends StatefulWidget {
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final Widget? nextChild;
   final FletControlBackend backend;
 
   const CupertinoActionSheetControl(
@@ -19,6 +21,7 @@ class CupertinoActionSheetControl extends StatefulWidget {
       required this.children,
       required this.parentDisabled,
       required this.parentAdaptive,
+      required this.nextChild,
       required this.backend});
 
   @override
@@ -28,9 +31,7 @@ class CupertinoActionSheetControl extends StatefulWidget {
 
 class _CupertinoActionSheetControlState
     extends State<CupertinoActionSheetControl> {
-  @override
-  Widget build(BuildContext context) {
-    debugPrint("CupertinoActionSheetControl build: ${widget.control.id}");
+  Widget _createActionSheet() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var titleCtrls =
@@ -42,7 +43,7 @@ class _CupertinoActionSheetControlState
     var actionCtrls =
         widget.children.where((c) => c.name == "action" && c.isVisible);
 
-    var cupertinoActionSheet = CupertinoActionSheet(
+    return CupertinoActionSheet(
       title: titleCtrls.isNotEmpty
           ? createControl(widget.control, titleCtrls.first.id, disabled,
               parentAdaptive: widget.parentAdaptive)
@@ -62,8 +63,56 @@ class _CupertinoActionSheetControlState
               .toList()
           : null,
     );
+  }
 
-    return constrainedControl(
-        context, cupertinoActionSheet, widget.parent, widget.control);
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("CupertinoActionSheetControl build: ${widget.control.id}");
+
+    bool lastOpen = widget.control.state["open"] ?? false;
+
+    var open = widget.control.attrBool("open", false)!;
+    var modal = widget.control.attrBool("modal", false)!;
+
+    debugPrint("Current open state: $lastOpen");
+    debugPrint("New open state: $open");
+
+    if (open && (open != lastOpen)) {
+      var dialog = _createActionSheet();
+      if (dialog is ErrorControl) {
+        return dialog;
+      }
+
+      // close previous dialog
+      if (ModalRoute.of(context)?.isCurrent != true) {
+        Navigator.of(context).pop();
+      }
+
+      widget.control.state["open"] = open;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showCupertinoModalPopup(
+            barrierDismissible: !modal,
+            useRootNavigator: false,
+            context: context,
+            builder: (context) => _createActionSheet()).then((value) {
+          lastOpen = widget.control.state["open"] ?? false;
+          debugPrint("Action sheet should be dismissed ($hashCode): $lastOpen");
+          bool shouldDismiss = lastOpen;
+          widget.control.state["open"] = false;
+
+          if (shouldDismiss) {
+            widget.backend
+                .updateControlState(widget.control.id, {"open": "false"});
+            widget.backend
+                .triggerControlEvent(widget.control.id, "dismiss", "");
+          }
+        });
+      });
+    } else if (open != lastOpen && lastOpen) {
+      Navigator.of(context).pop();
+    }
+
+    return widget.nextChild ?? const SizedBox.shrink();
   }
 }

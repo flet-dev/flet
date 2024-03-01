@@ -23,6 +23,7 @@ from flet_core.clipboard import Clipboard
 from flet_core.connection import Connection
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_action_sheet import CupertinoActionSheet
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
@@ -984,7 +985,7 @@ class Page(AdaptiveControl):
     #
     # BottomSheet
     #
-    def show_bottom_sheet(self, bottom_sheet: BottomSheet):
+    def show_bottom_sheet(self, bottom_sheet: Union[BottomSheet, CupertinoActionSheet]):
         self.__offstage.bottom_sheet = bottom_sheet
         self.__offstage.bottom_sheet.open = True
         self.__offstage.update()
@@ -994,7 +995,9 @@ class Page(AdaptiveControl):
         version="0.21.0",
         delete_version="1.0",
     )
-    async def show_bottom_sheet_async(self, bottom_sheet: BottomSheet):
+    async def show_bottom_sheet_async(
+        self, bottom_sheet: Union[BottomSheet, CupertinoActionSheet]
+    ):
         self.show_bottom_sheet(bottom_sheet)
 
     def close_bottom_sheet(self):
@@ -1980,11 +1983,11 @@ class Offstage(Control):
 
     # bottom_sheet
     @property
-    def bottom_sheet(self) -> Optional[BottomSheet]:
+    def bottom_sheet(self) -> Union[BottomSheet, CupertinoActionSheet, None]:
         return self.__bottom_sheet
 
     @bottom_sheet.setter
-    def bottom_sheet(self, value: Optional[BottomSheet]):
+    def bottom_sheet(self, value: Union[BottomSheet, CupertinoActionSheet, None]):
         self.__bottom_sheet = value
 
 
