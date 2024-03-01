@@ -103,18 +103,18 @@ class DragTarget(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         group: Optional[str] = None,
         content: Optional[Control] = None,
         on_will_accept=None,
         on_accept=None,
         on_leave=None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(

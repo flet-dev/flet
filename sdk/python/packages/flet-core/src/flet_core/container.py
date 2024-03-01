@@ -16,15 +16,11 @@ from flet_core.theme import Theme
 from flet_core.types import (
     AnimationValue,
     BlendMode,
-    BlendModeString,
     BorderRadiusValue,
     BoxShape,
     ClipBehavior,
-    ClipBehaviorString,
     ImageFit,
-    ImageFitString,
     ImageRepeat,
-    ImageRepeatString,
     MarginValue,
     OffsetValue,
     PaddingValue,
@@ -289,9 +285,6 @@ class Container(ConstrainedControl, AdaptiveControl):
             "blendMode", value.value if isinstance(value, BlendMode) else value
         )
 
-    def __set_blend_mode(self, value: BlendModeString):
-        self._set_attr("blendMode", value)
-
     # blur
     @property
     def blur(self):
@@ -359,13 +352,9 @@ class Container(ConstrainedControl, AdaptiveControl):
     @image_fit.setter
     def image_fit(self, value: Optional[ImageFit]):
         self.__image_fit = value
-        if isinstance(value, ImageFit):
-            self._set_attr("imageFit", value.value)
-        else:
-            self.__set_image_fit(value)
-
-    def __set_image_fit(self, value: ImageFitString):
-        self._set_attr("imageFit", value)
+        self._set_attr(
+            "imageFit", value.value if isinstance(value, ImageFit) else value
+        )
 
     # image_repeat
     @property
@@ -375,13 +364,9 @@ class Container(ConstrainedControl, AdaptiveControl):
     @image_repeat.setter
     def image_repeat(self, value: Optional[ImageRepeat]):
         self.__image_repeat = value
-        if isinstance(value, ImageRepeat):
-            self._set_attr("imageRepeat", value.value)
-        else:
-            self.__set_image_repeat(value)
-
-    def __set_image_repeat(self, value: ImageRepeatString):
-        self._set_attr("imageRepeat", value)
+        self._set_attr(
+            "imageRepeat", value.value if isinstance(value, ImageRepeat) else value
+        )
 
     # image_opacity
     @property
@@ -419,13 +404,9 @@ class Container(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        if isinstance(value, ClipBehavior):
-            self._set_attr("clipBehavior", value.value)
-        else:
-            self.__set_clip_behavior(value)
-
-    def __set_clip_behavior(self, value: Optional[ClipBehaviorString]):
-        self._set_attr("clipBehavior", value)
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
 
     # ink
     @property

@@ -94,7 +94,9 @@ class Path(Shape):
         self,
         elements: Optional[List[PathElement]] = None,
         paint: Optional[Paint] = None,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

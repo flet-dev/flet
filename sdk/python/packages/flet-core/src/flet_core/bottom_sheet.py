@@ -52,13 +52,6 @@ class BottomSheet(Control):
     def __init__(
         self,
         content: Optional[Control] = None,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         open: bool = False,
         elevation: OptionalNumber = None,
         bgcolor: Optional[str] = None,
@@ -69,6 +62,13 @@ class BottomSheet(Control):
         is_scroll_controlled: Optional[bool] = None,
         maintain_bottom_view_insets_padding: Optional[bool] = None,
         on_dismiss=None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,

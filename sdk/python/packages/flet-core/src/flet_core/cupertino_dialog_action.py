@@ -42,18 +42,18 @@ class CupertinoDialogAction(Control):
     def __init__(
         self,
         text: Optional[str] = None,
-        ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         content: Optional[Control] = None,
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
         text_style: Optional[TextStyle] = None,
         on_click=None,
+        #
+        # Specific
+        #
+        ref: Optional[Ref] = None,
+        opacity: OptionalNumber = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,

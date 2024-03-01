@@ -40,12 +40,15 @@ class NavigationDestination(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
+        label: Optional[str] = None,
         icon: Optional[str] = None,
         icon_content: Optional[Control] = None,
         selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
-        label: Optional[str] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
         tooltip: Optional[str] = None,
     ):
         Control.__init__(self, ref=ref, tooltip=tooltip)
@@ -155,6 +158,20 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        destinations: Optional[List[NavigationDestination]] = None,
+        selected_index: Optional[int] = None,
+        bgcolor: Optional[str] = None,
+        label_behavior: Optional[NavigationBarLabelBehavior] = None,
+        elevation: OptionalNumber = None,
+        shadow_color: Optional[str] = None,
+        indicator_color: Optional[str] = None,
+        indicator_shape: Optional[OutlinedBorder] = None,
+        surface_tint_color: Optional[str] = None,
+        border: Optional[Border] = None,
+        on_change=None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -180,20 +197,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # NavigationRail-specific
-        destinations: Optional[List[NavigationDestination]] = None,
-        selected_index: Optional[int] = None,
         adaptive: Optional[bool] = None,
-        bgcolor: Optional[str] = None,
-        label_behavior: Optional[NavigationBarLabelBehavior] = None,
-        elevation: OptionalNumber = None,
-        shadow_color: Optional[str] = None,
-        indicator_color: Optional[str] = None,
-        indicator_shape: Optional[OutlinedBorder] = None,
-        surface_tint_color: Optional[str] = None,
-        border: Optional[Border] = None,
-        on_change=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -277,13 +281,10 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     @label_behavior.setter
     def label_behavior(self, value: Optional[NavigationBarLabelBehavior]):
         self.__label_behavior = value
-        if isinstance(value, NavigationBarLabelBehavior):
-            self._set_attr("labelBehavior", value.value)
-        else:
-            self.__set_label_behavior(value)
-
-    def __set_label_behavior(self, value: NavigationBarLabelBehaviorString):
-        self._set_attr("labelBehavior", value)
+        self._set_attr(
+            "labelBehavior",
+            value.value if isinstance(value, NavigationBarLabelBehavior) else value,
+        )
 
     # bgcolor
     @property

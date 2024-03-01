@@ -113,17 +113,17 @@ class Draggable(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         group: Optional[str] = None,
         content: Optional[Control] = None,
         content_when_dragging: Optional[Control] = None,
         content_feedback: Optional[Control] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(
