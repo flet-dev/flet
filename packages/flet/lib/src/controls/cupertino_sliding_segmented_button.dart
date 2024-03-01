@@ -43,7 +43,7 @@ class _CupertinoSlidingSegmentedButtonControlState
 
     var thumbColor = HexColor.fromString(
             Theme.of(context), widget.control.attrString("thumbColor", "")!) ??
-        CupertinoDynamicColor.withBrightness(
+        const CupertinoDynamicColor.withBrightness(
           color: Color(0xFFFFFFFF),
           darkColor: Color(0xFF636366),
         );
@@ -54,7 +54,7 @@ class _CupertinoSlidingSegmentedButtonControlState
     int? selectedIndex = widget.control.attrInt("selectedIndex");
     var padding =
         (parseEdgeInsets(widget.control, "padding") as EdgeInsetsGeometry?) ??
-            EdgeInsets.symmetric(vertical: 2, horizontal: 3);
+            const EdgeInsets.symmetric(vertical: 2, horizontal: 3);
 
     if (ctrls.length < 2) {
       return const ErrorControl("When allow_empty_selection is False, "

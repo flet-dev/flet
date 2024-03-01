@@ -166,7 +166,7 @@ class FletServer implements FletControlBackend {
       {bool client = true, bool server = true}) {
     Map<String, String> allProps = {"i": id};
     for (var entry in props.entries) {
-      allProps[entry.key] = entry.value;
+      allProps[entry.key.toLowerCase()] = entry.value;
     }
     if (client) {
       _store.dispatch(UpdateControlPropsAction(
