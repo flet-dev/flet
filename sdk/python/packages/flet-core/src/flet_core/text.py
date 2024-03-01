@@ -219,7 +219,9 @@ class Text(ConstrainedControl):
     @text_align.setter
     def text_align(self, value: TextAlign):
         self.__text_align = value
-        self._set_attr("textAlign", value.value if isinstance(value, TextAlign) else value)
+        self._set_attr(
+            "textAlign", value.value if isinstance(value, TextAlign) else value
+        )
 
     # font_family
     @property
@@ -247,7 +249,9 @@ class Text(ConstrainedControl):
     @weight.setter
     def weight(self, value: Optional[FontWeight]):
         self.__weight = value
-        self._set_attr("weight", value.value if isinstance(value, FontWeight) else value)
+        self._set_attr(
+            "weight", value.value if isinstance(value, FontWeight) else value
+        )
 
     # style
     @property
@@ -324,7 +328,9 @@ class Text(ConstrainedControl):
     @overflow.setter
     def overflow(self, value: TextOverflow):
         self.__overflow = value
-        self._set_attr("overflow", value.value if isinstance(value, TextOverflow) else value)
+        self._set_attr(
+            "overflow", value.value if isinstance(value, TextOverflow) else value
+        )
 
     # color
     @property

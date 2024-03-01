@@ -81,8 +81,8 @@ class ScrollableControl(Control):
             "scroll",
             value.value
             if isinstance(value, ScrollMode)
-            else "auto"
-            if value is True
+            else "auto" if value is True
+            else None if value is False
             else value,
         )
 
