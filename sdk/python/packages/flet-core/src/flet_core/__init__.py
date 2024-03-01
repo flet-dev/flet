@@ -192,6 +192,7 @@ from flet_core.search_bar import SearchBar
 from flet_core.segmented_button import Segment, SegmentedButton
 from flet_core.selection_area import SelectionArea
 from flet_core.semantics import Semantics
+from flet_core.semantics_service import Assertiveness, SemanticsService
 from flet_core.shader_mask import ShaderMask
 from flet_core.shadow import BoxShadow, ShadowBlurStyle
 from flet_core.shake_detector import ShakeDetector

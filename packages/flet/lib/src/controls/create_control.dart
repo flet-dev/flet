@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/semantics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -565,6 +566,9 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive);
+    case "semanticsservice":
+      return SemanticsServiceControl(
+          parent: parent, control: controlView.control, backend: backend);
     case "shadermask":
       return ShaderMaskControl(
           key: key,
