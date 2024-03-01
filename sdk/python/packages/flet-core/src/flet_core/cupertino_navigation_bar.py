@@ -55,6 +55,17 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     def __init__(
         self,
+        destinations: Optional[List[NavigationDestination]] = None,
+        selected_index: Optional[int] = None,
+        bgcolor: Optional[str] = None,
+        active_color: Optional[str] = None,
+        inactive_color: Optional[str] = None,
+        border: Optional[Border] = None,
+        icon_size: OptionalNumber = None,
+        on_change=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -80,17 +91,6 @@ class CupertinoNavigationBar(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        destinations: Optional[List[NavigationDestination]] = None,
-        selected_index: Optional[int] = None,
-        bgcolor: Optional[str] = None,
-        active_color: Optional[str] = None,
-        inactive_color: Optional[str] = None,
-        border: Optional[Border] = None,
-        icon_size: OptionalNumber = None,
-        on_change=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -133,8 +133,8 @@ class CupertinoNavigationBar(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinonavigationbar"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("border", self.__border)
 
     def _get_children(self):

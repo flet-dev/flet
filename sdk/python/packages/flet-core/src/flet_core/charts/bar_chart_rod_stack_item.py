@@ -12,13 +12,13 @@ class BarChartRodStackItem(Control):
         to_y: OptionalNumber = None,
         color: Optional[str] = None,
         border_side: Optional[BorderSide] = None,
+        #
+        # Control
+        #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
     ):
 
         Control.__init__(
@@ -37,8 +37,8 @@ class BarChartRodStackItem(Control):
     def _get_control_name(self):
         return "stack_item"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("borderSide", self.__border_side)
 
     # from_y

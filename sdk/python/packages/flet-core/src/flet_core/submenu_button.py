@@ -14,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class SubmenuButton(ConstrainedControl):
@@ -29,6 +30,20 @@ class SubmenuButton(ConstrainedControl):
         self,
         content: Optional[Control] = None,
         controls: Optional[List[Control]] = None,
+        leading: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        menu_style: Optional[MenuStyle] = None,
+        style: Optional[ButtonStyle] = None,
+        alignment_offset: OffsetValue = None,
+        on_open=None,
+        on_close=None,
+        on_hover=None,
+        on_focus=None,
+        on_blur=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -56,20 +71,6 @@ class SubmenuButton(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        leading: Optional[Control] = None,
-        trailing: Optional[Control] = None,
-        clip_behavior: Optional[ClipBehavior] = None,
-        menu_style: Optional[MenuStyle] = None,
-        style: Optional[ButtonStyle] = None,
-        alignment_offset: OffsetValue = None,
-        on_open=None,
-        on_close=None,
-        on_hover=None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -119,8 +120,8 @@ class SubmenuButton(ConstrainedControl):
     def _get_control_name(self):
         return "submenubutton"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if self.__style is not None:
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
@@ -151,9 +152,13 @@ class SubmenuButton(ConstrainedControl):
         self._set_attr_json("focus", str(time.time()))
         self.update()
 
+    @deprecated(
+        reason="Use focus() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
+        self.focus()
 
     # controls
     @property

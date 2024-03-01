@@ -8,19 +8,19 @@ from flet_core.ref import Ref
 class ChartAxis(Control):
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         title: Optional[Control] = None,
         title_size: OptionalNumber = None,
         show_labels: Optional[bool] = None,
         labels: Optional[List[ChartAxisLabel]] = None,
         labels_interval: OptionalNumber = None,
         labels_size: OptionalNumber = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(

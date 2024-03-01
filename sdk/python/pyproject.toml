@@ -11,7 +11,6 @@ python = "<3.12,>=3.8"
 [tool.poetry.group.dev.dependencies]
 flet-core = {path = "packages/flet-core", develop = true}
 flet-runtime = {path = "packages/flet-runtime", develop = true}
-flet-fastapi = {path = "packages/flet-fastapi", develop = true}
 flet = {path = "packages/flet", develop = true}
 pytest = "^7.2.0"
 black = "^22.12.0"
@@ -22,7 +21,6 @@ pillow = "^9.4.0"
 pre-commit = "^2.21.0"
 hypercorn = "^0.14.4"
 gunicorn = "^21.2.0"
-uvicorn = "^0.23.2"
 pypi-cleanup = "^0.1.4"
 
 [build-system]

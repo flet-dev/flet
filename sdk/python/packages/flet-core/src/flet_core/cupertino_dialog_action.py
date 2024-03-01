@@ -42,18 +42,18 @@ class CupertinoDialogAction(Control):
     def __init__(
         self,
         text: Optional[str] = None,
-        ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         content: Optional[Control] = None,
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
         text_style: Optional[TextStyle] = None,
         on_click=None,
+        #
+        # Specific
+        #
+        ref: Optional[Ref] = None,
+        opacity: OptionalNumber = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,
@@ -73,8 +73,8 @@ class CupertinoDialogAction(Control):
     def _get_control_name(self):
         return "cupertinodialogaction"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("textStyle", self.__text_style)
 
     def _get_children(self):

@@ -140,6 +140,12 @@ InlineSpan? parseInlineSpan(
   return null;
 }
 
+TextAlign? parseTextAlign(String align, [TextAlign? defaultAlign]) {
+  return TextAlign.values.firstWhereOrNull(
+          (a) => a.name.toLowerCase() == align.toLowerCase()) ??
+      defaultAlign;
+}
+
 TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
   dynamic j;
   var v = control.attrString(propName, null);

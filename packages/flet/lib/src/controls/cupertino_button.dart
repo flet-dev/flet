@@ -88,7 +88,6 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
           "CupertinoButton has no content control. Please specify one.");
     }
 
-    bool filled = widget.control.attrBool("filled", false)!;
     double pressedOpacity = widget.control.attrDouble("opacityOnClick", 0.4)!;
     double minSize = widget.control.attrDouble("minSize", 44.0)!;
     String url = widget.control.attrString("url", "")!;
@@ -97,6 +96,8 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         CupertinoColors.quaternarySystemFill;
     Color? bgColor = HexColor.fromString(
         Theme.of(context), widget.control.attrString("bgColor", "")!);
+    Color? color = HexColor.fromString(
+        Theme.of(context), widget.control.attrString("color", "")!);
     AlignmentGeometry alignment =
         parseAlignment(widget.control, "alignment") ?? Alignment.center;
     BorderRadius borderRadius =
@@ -128,6 +129,20 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
           ?.resolve(selected ? {MaterialState.selected} : {});
     }
 
+    if (color == null && style != null) {
+      color = style.foregroundColor
+          ?.resolve(selected ? {MaterialState.selected} : {});
+    }
+
+    if (color != null) {
+      content = DefaultTextStyle(
+          style: CupertinoTheme.of(context)
+              .textTheme
+              .textStyle
+              .copyWith(color: color),
+          child: content);
+    }
+
     Function()? onPressed = !disabled
         ? () {
             debugPrint("CupertinoButton ${widget.control.id} clicked!");
@@ -139,28 +154,17 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
           }
         : null;
 
-    CupertinoButton? button = !filled
-        ? CupertinoButton(
-            onPressed: onPressed,
-            disabledColor: disabledColor,
-            color: bgColor,
-            padding: padding,
-            borderRadius: borderRadius,
-            pressedOpacity: pressedOpacity,
-            alignment: alignment,
-            minSize: minSize,
-            child: content,
-          )
-        : CupertinoButton.filled(
-            onPressed: onPressed,
-            disabledColor: disabledColor,
-            padding: padding,
-            borderRadius: borderRadius,
-            pressedOpacity: pressedOpacity,
-            alignment: alignment,
-            minSize: minSize,
-            child: content,
-          );
+    CupertinoButton? button = CupertinoButton(
+      onPressed: onPressed,
+      disabledColor: disabledColor,
+      color: bgColor,
+      padding: padding,
+      borderRadius: borderRadius,
+      pressedOpacity: pressedOpacity,
+      alignment: alignment,
+      minSize: minSize,
+      child: content,
+    );
 
     return constrainedControl(context, button, widget.parent, widget.control);
   }

@@ -35,14 +35,16 @@ class ShakeDetector(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        data: Any = None,
-        # specific
         minimum_shake_count: Optional[int] = None,
         shake_slop_time_ms: Optional[int] = None,
         shake_count_reset_time_ms: Optional[int] = None,
         shake_threshold_gravity: OptionalNumber = None,
         on_shake=None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        data: Any = None,
     ):
 
         Control.__init__(

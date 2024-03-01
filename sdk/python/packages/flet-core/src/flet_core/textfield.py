@@ -1,9 +1,8 @@
 import dataclasses
+import time
 from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union
-
-import time
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
@@ -21,6 +20,7 @@ from flet_core.types import (
     TextAlign,
     VerticalAlignment,
 )
+from flet_core.utils import deprecated
 
 try:
     from typing import Literal
@@ -116,30 +116,34 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        key: Optional[str] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        expand: Union[None, bool, int] = None,
-        expand_loose: Optional[bool] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
-        aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-        rtl: Optional[bool] = None,
+        value: Optional[str] = None,
+        keyboard_type: Optional[KeyboardType] = None,
+        multiline: Optional[bool] = None,
+        min_lines: Optional[int] = None,
+        max_lines: Optional[int] = None,
+        max_length: Optional[int] = None,
+        password: Optional[bool] = None,
+        can_reveal_password: Optional[bool] = None,
+        read_only: Optional[bool] = None,
+        shift_enter: Optional[bool] = None,
+        text_align: TextAlign = TextAlign.NONE,
+        autofocus: Optional[bool] = None,
+        capitalization: TextCapitalization = TextCapitalization.NONE,
+        autocorrect: Optional[bool] = None,
+        enable_suggestions: Optional[bool] = None,
+        smart_dashes_type: Optional[bool] = None,
+        smart_quotes_type: Optional[bool] = None,
+        show_cursor: Optional[bool] = None,
+        cursor_color: Optional[str] = None,
+        cursor_width: OptionalNumber = None,
+        cursor_height: OptionalNumber = None,
+        cursor_radius: OptionalNumber = None,
+        selection_color: Optional[str] = None,
+        input_filter: Optional[InputFilter] = None,
+        on_change=None,
+        on_submit=None,
+        on_focus=None,
+        on_blur=None,
         #
         # FormField specific
         #
@@ -179,37 +183,33 @@ class TextField(FormFieldControl, AdaptiveControl):
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         #
-        # TextField Specific
+        # ConstrainedControl and AdaptiveControl
         #
-        value: Optional[str] = None,
+        ref: Optional[Ref] = None,
+        key: Optional[str] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
-        keyboard_type: Optional[KeyboardType] = None,
-        multiline: Optional[bool] = None,
-        min_lines: Optional[int] = None,
-        max_lines: Optional[int] = None,
-        max_length: Optional[int] = None,
-        password: Optional[bool] = None,
-        can_reveal_password: Optional[bool] = None,
-        read_only: Optional[bool] = None,
-        shift_enter: Optional[bool] = None,
-        text_align: TextAlign = TextAlign.NONE,
-        autofocus: Optional[bool] = None,
-        capitalization: TextCapitalization = TextCapitalization.NONE,
-        autocorrect: Optional[bool] = None,
-        enable_suggestions: Optional[bool] = None,
-        smart_dashes_type: Optional[bool] = None,
-        smart_quotes_type: Optional[bool] = None,
-        show_cursor: Optional[bool] = None,
-        cursor_color: Optional[str] = None,
-        cursor_width: OptionalNumber = None,
-        cursor_height: OptionalNumber = None,
-        cursor_radius: OptionalNumber = None,
-        selection_color: Optional[str] = None,
-        input_filter: Optional[InputFilter] = None,
-        on_change=None,
-        on_submit=None,
-        on_focus=None,
-        on_blur=None,
     ):
         FormFieldControl.__init__(
             self,
@@ -312,8 +312,8 @@ class TextField(FormFieldControl, AdaptiveControl):
     def _get_control_name(self):
         return "textfield"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("inputFilter", self.__input_filter)
         if self.bgcolor is not None and self.filled is None:
             self.filled = True  # Flutter requires filled = True to display a bgcolor
@@ -322,9 +322,13 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr_json("focus", str(time.time()))
         self.update()
 
+    @deprecated(
+        reason="Use focus() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
+        self.focus()
 
     # value
     @property
@@ -343,13 +347,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     @keyboard_type.setter
     def keyboard_type(self, value: Optional[KeyboardType]):
         self.__keyboard_type = value
-        if isinstance(value, KeyboardType):
-            self._set_attr("keyboardType", value.value)
-        else:
-            self.__set_keyboard_type(value)
-
-    def __set_keyboard_type(self, value: KeyboardTypeString):
-        self._set_attr("keyboardType", value)
+        self._set_attr(
+            "keyboardType", value.value if isinstance(value, KeyboardType) else value
+        )
 
     # text_align
     @property
@@ -452,13 +452,10 @@ class TextField(FormFieldControl, AdaptiveControl):
     @capitalization.setter
     def capitalization(self, value: TextCapitalization):
         self.__capitalization = value
-        if isinstance(value, TextCapitalization):
-            self._set_attr("capitalization", value.value)
-        else:
-            self.__set_capitalization(value)
-
-    def __set_capitalization(self, value: TextCapitalizationString):
-        self._set_attr("capitalization", value)
+        self._set_attr(
+            "capitalization",
+            value.value if isinstance(value, TextCapitalization) else value,
+        )
 
     # autocorrect
     @property

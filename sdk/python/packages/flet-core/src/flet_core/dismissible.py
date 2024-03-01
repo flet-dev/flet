@@ -15,6 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class Dismissible(ConstrainedControl, AdaptiveControl):
@@ -34,6 +35,20 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content: Control,
+        background: Optional[Control] = None,
+        secondary_background: Optional[Control] = None,
+        dismiss_direction: Optional[DismissDirection] = None,
+        dismiss_thresholds: Optional[Dict[DismissDirection, OptionalNumber]] = None,
+        movement_duration: Optional[int] = None,
+        resize_duration: Optional[int] = None,
+        cross_axis_end_offset: OptionalNumber = None,
+        on_update=None,
+        on_dismiss=None,
+        on_confirm_dismiss=None,
+        on_resize=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -61,20 +76,6 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         key: Optional[str] = None,
-        #
-        # Specific
-        #
-        background: Optional[Control] = None,
-        secondary_background: Optional[Control] = None,
-        dismiss_direction: Optional[DismissDirection] = None,
-        dismiss_thresholds: Optional[Dict[DismissDirection, OptionalNumber]] = None,
-        movement_duration: Optional[int] = None,
-        resize_duration: Optional[int] = None,
-        cross_axis_end_offset: OptionalNumber = None,
-        on_update=None,
-        on_dismiss=None,
-        on_confirm_dismiss=None,
-        on_resize=None,
         #
         # Adaptive
         #
@@ -156,19 +157,20 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
             children.append(self.__secondary_background)
         return children
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("dismissThresholds", self.__dismiss_thresholds)
 
     def confirm_dismiss(self, dismiss: bool):
-        self.page.invoke_method(
-            "confirm_dismiss", {"dismiss": str(dismiss).lower()}, control_id=self.uid
-        )
+        self.invoke_method("confirm_dismiss", {"dismiss": str(dismiss).lower()})
 
+    @deprecated(
+        reason="Use confirm_dismiss() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def confirm_dismiss_async(self, dismiss: bool):
-        await self.page.invoke_method_async(
-            "confirm_dismiss", {"dismiss": str(dismiss).lower()}, control_id=self.uid
-        )
+        self.confirm_dismiss(dismiss)
 
     # content
     @property

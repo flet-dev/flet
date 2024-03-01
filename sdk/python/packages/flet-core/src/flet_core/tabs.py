@@ -24,15 +24,17 @@ class Tab(AdaptiveControl):
         text: Optional[str] = None,
         content: Optional[Control] = None,
         tab_content: Optional[Control] = None,
-        ref: Optional[Ref] = None,
         icon: Optional[str] = None,
+        #
+        # Control and AdaptiveControl
+        #
+        ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         Control.__init__(self, ref=ref, visible=visible)
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.text = text
         self.icon = icon
         self.__content: Optional[Control] = None
@@ -237,8 +239,8 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "tabs"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("overlayColor", self.__overlay_color)
         self._set_attr_json("indicatorBorderRadius", self.__indicator_border_radius)
         self._set_attr_json("indicatorBorderSide", self.__indicator_border_side)

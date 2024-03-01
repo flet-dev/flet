@@ -10,13 +10,6 @@ class PieChartSection(Control):
     def __init__(
         self,
         value: OptionalNumber = None,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         radius: OptionalNumber = None,
         color: Optional[str] = None,
         border_side: Optional[BorderSide] = None,
@@ -25,6 +18,13 @@ class PieChartSection(Control):
         title_position: OptionalNumber = None,
         badge: Optional[Control] = None,
         badge_position: OptionalNumber = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(
@@ -48,8 +48,8 @@ class PieChartSection(Control):
     def _get_control_name(self):
         return "section"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("borderSide", self.__border_side)
         self._set_attr_json("titleStyle", self.__title_style)
 

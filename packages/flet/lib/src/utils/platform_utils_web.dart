@@ -9,7 +9,7 @@ bool isProgressiveWebApp() {
       html.window.matchMedia('(display-mode: minimal-ui)').matches;
 }
 
-String getWebsocketEndpointPath() {
+String getWebsocketEndpointPath(String uriPath) {
   var meta = html.document.head
       ?.querySelector("meta[name='flet-websocket-endpoint-path']");
   return trim(meta?.attributes["content"] ?? "ws", "/");

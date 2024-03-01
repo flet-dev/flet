@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_radio.dart';
 import 'error.dart';
@@ -85,6 +86,12 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
+      TextStyle? labelStyle =
+          parseTextStyle(Theme.of(context), widget.control, "labelStyle");
+      if (disabled && labelStyle != null) {
+        labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
+      }
+
       return withControlAncestor(widget.control.id, "radiogroup",
           (context, viewModel) {
         debugPrint("Radio StoreConnector build: ${widget.control.id}");
@@ -119,10 +126,10 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
         Widget result = radio;
         if (label != "") {
           var labelWidget = disabled
-              ? Text(label,
-                  style: TextStyle(color: Theme.of(context).disabledColor))
+              ? Text(label, style: labelStyle)
               : MouseRegion(
-                  cursor: SystemMouseCursors.click, child: Text(label));
+                  cursor: SystemMouseCursors.click,
+                  child: Text(label, style: labelStyle));
           result = MergeSemantics(
               child: GestureDetector(
                   onTap: !disabled

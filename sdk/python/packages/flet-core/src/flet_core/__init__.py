@@ -66,11 +66,15 @@ from flet_core.column import Column
 from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_action_sheet import CupertinoActionSheet
+from flet_core.cupertino_action_sheet_action import CupertinoActionSheetAction
+from flet_core.cupertino_activity_indicator import CupertinoActivityIndicator
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.cupertino_checkbox import CupertinoCheckbox
 from flet_core.cupertino_dialog_action import CupertinoDialogAction
+from flet_core.cupertino_filled_button import CupertinoFilledButton
 from flet_core.cupertino_list_tile import CupertinoListTile
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.cupertino_picker import CupertinoPicker
@@ -143,6 +147,7 @@ from flet_core.icon_button import IconButton
 from flet_core.image import Image
 from flet_core.list_tile import ListTile
 from flet_core.list_view import ListView
+from flet_core.lottie import Lottie
 from flet_core.margin import Margin
 from flet_core.markdown import Markdown, MarkdownExtensionSet
 from flet_core.menu_bar import MenuBar, MenuStyle
@@ -164,7 +169,8 @@ from flet_core.page import (
     KeyboardEvent,
     LoginEvent,
     Page,
-    PageMediaChangeEvent,
+    PageDisconnectedException,
+    PageMediaData,
     RouteChangeEvent,
     ViewPopEvent,
 )
@@ -178,9 +184,14 @@ from flet_core.painting import (
     StrokeCap,
     StrokeJoin,
 )
-from flet_core.popup_menu_button import PopupMenuButton, PopupMenuItem
+from flet_core.popup_menu_button import (
+    PopupMenuButton,
+    PopupMenuItem,
+    PopupMenuPosition,
+)
 from flet_core.progress_bar import ProgressBar
 from flet_core.progress_ring import ProgressRing
+from flet_core.pubsub import PubSub, PubSubHub
 from flet_core.querystring import QueryString
 from flet_core.radio import Radio
 from flet_core.radio_group import RadioGroup
@@ -234,6 +245,7 @@ from flet_core.transparent_pointer import TransparentPointer
 from flet_core.types import (
     BlendMode,
     BoxShape,
+    Brightness,
     ClipBehavior,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
@@ -254,7 +266,7 @@ from flet_core.types import (
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
-from flet_core.video import FilterQuality, PlaylistMode, Video, VideoMedia
+from flet_core.video import FilterQuality, PlaylistMode, Video, VideoMedia, VideoSubtitleConfiguration
 from flet_core.view import View
 from flet_core.webview import WebView
 from flet_core.window_drag_area import WindowDragArea

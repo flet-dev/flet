@@ -10,15 +10,15 @@ class BarChartGroup(Control):
         self,
         x: Optional[int] = None,
         bar_rods: Optional[List[BarChartRod]] = None,
+        group_vertically: Optional[bool] = None,
+        bars_space: OptionalNumber = None,
+        #
+        # Control
+        #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        group_vertically: Optional[bool] = None,
-        bars_space: OptionalNumber = None,
     ):
 
         Control.__init__(
@@ -37,8 +37,8 @@ class BarChartGroup(Control):
     def _get_control_name(self):
         return "group"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
 
     def _get_children(self):
         return self.__bar_rods

@@ -50,6 +50,13 @@ class ProgressBar(ConstrainedControl):
 
     def __init__(
         self,
+        value: OptionalNumber = None,
+        bar_height: OptionalNumber = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -77,13 +84,6 @@ class ProgressBar(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        value: OptionalNumber = None,
-        bar_height: OptionalNumber = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
             self,

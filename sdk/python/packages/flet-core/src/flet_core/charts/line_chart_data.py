@@ -13,13 +13,6 @@ class LineChartData(Control):
     def __init__(
         self,
         data_points: Optional[List[LineChartDataPoint]] = None,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         curved: Optional[bool] = None,
         color: Optional[str] = None,
         gradient: Optional[Gradient] = None,
@@ -40,6 +33,13 @@ class LineChartData(Control):
         selected_below_line: Union[None, bool, ChartPointLine] = None,
         point: Union[None, bool, ChartPointShape] = None,
         selected_point: Union[None, bool, ChartPointShape] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(
@@ -57,7 +57,9 @@ class LineChartData(Control):
         self.stroke_width = stroke_width
         self.stroke_cap_round = stroke_cap_round
         self.prevent_curve_over_shooting = prevent_curve_over_shooting
-        self.prevent_curve_over_shooting_threshold = prevent_curve_over_shooting_threshold
+        self.prevent_curve_over_shooting_threshold = (
+            prevent_curve_over_shooting_threshold
+        )
         self.shadow = shadow
         self.dash_pattern = dash_pattern
         self.above_line_bgcolor = above_line_bgcolor
@@ -75,8 +77,8 @@ class LineChartData(Control):
     def _get_control_name(self):
         return "data"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("gradient", self.__gradient)
         self._set_attr_json("shadow", self.__shadow)
         self._set_attr_json("point", self.__point)

@@ -6,7 +6,6 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
-    ClipBehaviorString,
     NotchShape,
     OffsetValue,
     PaddingValue,
@@ -28,6 +27,17 @@ class BottomAppBar(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        surface_tint_color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        shadow_color: Optional[str] = None,
+        padding: PaddingValue = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        shape: Optional[NotchShape] = None,
+        notch_margin: OptionalNumber = None,
+        elevation: OptionalNumber = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -53,17 +63,6 @@ class BottomAppBar(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        surface_tint_color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
-        shadow_color: Optional[str] = None,
-        padding: PaddingValue = None,
-        clip_behavior: Optional[ClipBehavior] = None,
-        shape: Optional[NotchShape] = None,
-        notch_margin: OptionalNumber = None,
-        elevation: OptionalNumber = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -111,8 +110,8 @@ class BottomAppBar(ConstrainedControl):
     def _get_control_name(self):
         return "bottomappbar"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
@@ -185,13 +184,9 @@ class BottomAppBar(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        if isinstance(value, ClipBehavior):
-            self._set_attr("clipBehavior", value.value)
-        else:
-            self.__set_clip_behavior(value)
-
-    def __set_clip_behavior(self, value: Optional[ClipBehaviorString]):
-        self._set_attr("clipBehavior", value)
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
 
     # notch_margin
     @property

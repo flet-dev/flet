@@ -15,6 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class SearchBar(ConstrainedControl):
@@ -29,6 +30,30 @@ class SearchBar(ConstrainedControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        value: Optional[str] = None,
+        bar_leading: Optional[Control] = None,
+        bar_trailing: Optional[List[Control]] = None,
+        bar_hint_text: Optional[str] = None,
+        bar_bgcolor: Union[None, str, Dict[MaterialState, str]] = None,
+        bar_overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        view_leading: Optional[Control] = None,
+        view_trailing: Optional[List[Control]] = None,
+        view_elevation: OptionalNumber = None,
+        view_bgcolor: Optional[str] = None,
+        view_hint_text: Optional[str] = None,
+        view_side: Optional[BorderSide] = None,
+        view_shape: Optional[OutlinedBorder] = None,
+        view_header_text_style: Optional[TextStyle] = None,
+        view_hint_text_style: Optional[TextStyle] = None,
+        divider_color: Optional[str] = None,
+        full_screen: Optional[bool] = None,
+        capitalization: TextCapitalization = TextCapitalization.NONE,
+        on_tap=None,
+        on_submit=None,
+        on_change=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -52,30 +77,6 @@ class SearchBar(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # SearchBar Specific
-        #
-        value: Optional[str] = None,
-        bar_leading: Optional[Control] = None,
-        bar_trailing: Optional[List[Control]] = None,
-        bar_hint_text: Optional[str] = None,
-        bar_bgcolor: Union[None, str, Dict[MaterialState, str]] = None,
-        bar_overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
-        view_leading: Optional[Control] = None,
-        view_trailing: Optional[List[Control]] = None,
-        view_elevation: OptionalNumber = None,
-        view_bgcolor: Optional[str] = None,
-        view_hint_text: Optional[str] = None,
-        view_side: Optional[BorderSide] = None,
-        view_shape: Optional[OutlinedBorder] = None,
-        view_header_text_style: Optional[TextStyle] = None,
-        view_hint_text_style: Optional[TextStyle] = None,
-        divider_color: Optional[str] = None,
-        full_screen: Optional[bool] = None,
-        capitalization: TextCapitalization = TextCapitalization.NONE,
-        on_tap=None,
-        on_submit=None,
-        on_change=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -130,8 +131,8 @@ class SearchBar(ConstrainedControl):
     def _get_control_name(self):
         return "searchbar"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         self._set_attr_json("barBgcolor", self.__bar_bgcolor)
         self._set_attr_json("barOverlayColor", self.__bar_overlay_color)
         self._set_attr_json("viewShape", self.__view_shape)
@@ -170,14 +171,13 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("method", m)
         self.update()
 
+    @deprecated(
+        reason="Use open_view() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def open_view_async(self):
-        m = {
-            "n": "openView",
-            "i": str(time.time()),
-            "p": {},
-        }
-        self._set_attr_json("method", m)
-        await self.update_async()
+        self.open_view()
 
     def close_view(self, text: str = ""):
         m = {
@@ -189,15 +189,13 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("method", m)
         self.update()
 
+    @deprecated(
+        reason="Use close_view() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def close_view_async(self, text: str = ""):
-        m = {
-            "n": "closeView",
-            "i": str(time.time()),
-            "p": {"text": text},
-        }
-        self.value = text
-        self._set_attr_json("method", m)
-        await self.update_async()
+        self.close_view(text=text)
 
     # bar_leading
     @property

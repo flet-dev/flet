@@ -13,6 +13,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class TextButton(ConstrainedControl, AdaptiveControl):
@@ -41,6 +42,21 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         text: Optional[str] = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        content: Optional[Control] = None,
+        style: Optional[ButtonStyle] = None,
+        autofocus: Optional[bool] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
+        on_click=None,
+        on_long_press=None,
+        on_hover=None,
+        on_focus=None,
+        on_blur=None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -68,22 +84,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
         adaptive: Optional[bool] = None,
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
-        style: Optional[ButtonStyle] = None,
-        content: Optional[Control] = None,
-        autofocus: Optional[bool] = None,
-        url: Optional[str] = None,
-        url_target: Optional[str] = None,
-        on_click=None,
-        on_long_press=None,
-        on_hover=None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -134,8 +135,8 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "textbutton"
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
         if self.__style is not None:
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
@@ -152,9 +153,13 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("focus", str(time.time()))
         self.update()
 
+    @deprecated(
+        reason="Use focus() method instead.",
+        version="0.21.0",
+        delete_version="1.0",
+    )
     async def focus_async(self):
-        self._set_attr_json("focus", str(time.time()))
-        await self.update_async()
+        self.focus()
 
     # text
     @property
