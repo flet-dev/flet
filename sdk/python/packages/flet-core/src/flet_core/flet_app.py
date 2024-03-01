@@ -10,6 +10,12 @@ class FletApp(ConstrainedControl):
     def __init__(
         self,
         url: Optional[str] = None,
+        reconnect_interval_ms: Optional[int] = None,
+        reconnect_timeout_ms: Optional[int] = None,
+        on_error=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -35,12 +41,6 @@ class FletApp(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        reconnect_interval_ms: Optional[int] = None,
-        reconnect_timeout_ms: Optional[int] = None,
-        on_error=None,
     ):
         ConstrainedControl.__init__(
             self,

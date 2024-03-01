@@ -75,6 +75,15 @@ class WebView(ConstrainedControl):
     def __init__(
         self,
         url: str,
+        javascript_enabled: bool = True,
+        prevent_link: str = "none",
+        bgcolor: Optional[str] = None,
+        on_page_started=None,
+        on_page_ended=None,
+        on_web_resource_error=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -102,15 +111,6 @@ class WebView(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # webview-specific
-        #
-        javascript_enabled: bool = True,
-        prevent_link: str = "none",
-        bgcolor: Optional[str] = None,
-        on_page_started=None,
-        on_page_ended=None,
-        on_web_resource_error=None,
     ):
         ConstrainedControl.__init__(
             self,

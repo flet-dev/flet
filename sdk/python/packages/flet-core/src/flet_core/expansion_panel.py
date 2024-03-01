@@ -16,7 +16,7 @@ from flet_core.types import (
 
 class ExpansionPanel(ConstrainedControl, AdaptiveControl):
     """
-    A material expansion panel. It can either be  expanded or collapsed. Its body is only visible when it is expanded.
+    A material expansion panel. It can either be expanded or collapsed. Its body is only visible when it is expanded.
 
     -----
 
@@ -27,6 +27,12 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         self,
         header: Optional[Control] = None,
         content: Optional[Control] = None,
+        bgcolor: Optional[str] = None,
+        expanded: Optional[bool] = None,
+        can_tap_header: Optional[bool] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -53,12 +59,6 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        bgcolor: Optional[str] = None,
-        expanded: Optional[bool] = None,
-        can_tap_header: Optional[bool] = None,
         #
         # Adaptive
         #

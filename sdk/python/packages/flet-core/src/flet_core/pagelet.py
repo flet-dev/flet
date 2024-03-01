@@ -52,6 +52,21 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        content: Optional[Control] = None,
+        appbar: Union[AppBar, CupertinoAppBar, None] = None,
+        navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None,
+        bottom_app_bar: Optional[BottomAppBar] = None,
+        bottom_sheet: Optional[Control] = None,
+        drawer: Optional[NavigationDrawer] = None,
+        end_drawer: Optional[NavigationDrawer] = None,
+        floating_action_button: Optional[FloatingActionButton] = None,
+        floating_action_button_location: Union[
+            FloatingActionButtonLocation, OffsetValue
+        ] = None,
+        bgcolor: Optional[str] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -80,22 +95,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         data: Any = None,
         key: Optional[str] = None,
         #
-        # Specific
-        #
-        content: Optional[Control] = None,
-        appbar: Union[AppBar, CupertinoAppBar, None] = None,
-        navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None,
-        bottom_app_bar: Optional[BottomAppBar] = None,
-        bottom_sheet: Optional[Control] = None,
-        drawer: Optional[NavigationDrawer] = None,
-        end_drawer: Optional[NavigationDrawer] = None,
-        floating_action_button: Optional[FloatingActionButton] = None,
-        floating_action_button_location: Union[
-            FloatingActionButtonLocation, OffsetValue
-        ] = None,
-        bgcolor: Optional[str] = None,
-        #
-        # Adaptive
+        # AdaptiveControl
         #
         adaptive: Optional[bool] = None,
     ):

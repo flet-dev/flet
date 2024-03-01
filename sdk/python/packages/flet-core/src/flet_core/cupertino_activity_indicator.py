@@ -1,27 +1,39 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet_core.types import (
+    AnimationValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
-class TransparentPointer(ConstrainedControl):
+class CupertinoActivityIndicator(ConstrainedControl):
+    """
+    An iOS-style activity indicator that spins clockwise.
+
+    -----
+
+    Online docs: https://flet.dev/docs/controls/cupertinoactivityindicator
+    """
+
     def __init__(
         self,
-        content: Optional[Control] = None,
+        radius: OptionalNumber = None,
+        color: Optional[str] = None,
+        animating: Optional[bool] = None,
         #
         # ConstrainedControl
         #
         ref: Optional[Ref] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        left: OptionalNumber = None,
-        top: OptionalNumber = None,
-        right: OptionalNumber = None,
-        bottom: OptionalNumber = None,
+        key: Optional[str] = None,
         expand: Union[None, bool, int] = None,
         expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -42,14 +54,10 @@ class TransparentPointer(ConstrainedControl):
         ConstrainedControl.__init__(
             self,
             ref=ref,
-            width=width,
-            height=height,
-            left=left,
-            top=top,
-            right=right,
-            bottom=bottom,
+            key=key,
             expand=expand,
             expand_loose=expand_loose,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
@@ -68,23 +76,36 @@ class TransparentPointer(ConstrainedControl):
             data=data,
         )
 
-        self.content = content
+        self.color = color
+        self.radius = radius
+        self.animating = animating
 
     def _get_control_name(self):
-        return "transparentpointer"
+        return "cupertinoactivityindicator"
 
-    def _get_children(self):
-        children = []
-        if self.__content is not None:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
-
-    # content
+    # color
     @property
-    def content(self) -> Optional[Control]:
-        return self.__content
+    def color(self):
+        return self._get_attr("color")
 
-    @content.setter
-    def content(self, value: Optional[Control]):
-        self.__content = value
+    @color.setter
+    def color(self, value):
+        self._set_attr("color", value)
+
+    # animating
+    @property
+    def animating(self):
+        return self._get_attr("animating")
+
+    @animating.setter
+    def animating(self, value):
+        self._set_attr("animating", value)
+
+    # radius
+    @property
+    def radius(self) -> OptionalNumber:
+        return self._get_attr("radius")
+
+    @radius.setter
+    def radius(self, value: OptionalNumber):
+        self._set_attr("radius", value)

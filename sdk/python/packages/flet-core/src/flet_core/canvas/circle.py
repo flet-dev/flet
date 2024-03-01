@@ -12,7 +12,9 @@ class Circle(Shape):
         y: OptionalNumber = None,
         radius: OptionalNumber = None,
         paint: Optional[Paint] = None,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

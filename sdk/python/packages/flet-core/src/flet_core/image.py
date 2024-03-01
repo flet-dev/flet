@@ -6,12 +6,9 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     BlendMode,
-    BlendModeString,
     BorderRadiusValue,
     ImageFit,
-    ImageFitString,
     ImageRepeat,
-    ImageRepeatString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -55,6 +52,18 @@ class Image(ConstrainedControl):
     def __init__(
         self,
         src: Optional[str] = None,
+        src_base64: Optional[str] = None,
+        error_content: Optional[Control] = None,
+        repeat: Optional[ImageRepeat] = None,
+        fit: Optional[ImageFit] = None,
+        border_radius: BorderRadiusValue = None,
+        color: Optional[str] = None,
+        color_blend_mode: BlendMode = BlendMode.NONE,
+        gapless_playback: Optional[bool] = None,
+        semantics_label: Optional[str] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -82,18 +91,6 @@ class Image(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        src_base64: Optional[str] = None,
-        error_content: Optional[Control] = None,
-        repeat: Optional[ImageRepeat] = None,
-        fit: Optional[ImageFit] = None,
-        border_radius: BorderRadiusValue = None,
-        color: Optional[str] = None,
-        color_blend_mode: BlendMode = BlendMode.NONE,
-        gapless_playback: Optional[bool] = None,
-        semantics_label: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -177,13 +174,7 @@ class Image(ConstrainedControl):
     @fit.setter
     def fit(self, value: Optional[ImageFit]):
         self.__fit = value
-        if isinstance(value, ImageFit):
-            self._set_attr("fit", value.value)
-        else:
-            self.__set_fit(value)
-
-    def __set_fit(self, value: ImageFitString):
-        self._set_attr("fit", value)
+        self._set_attr("fit", value.value if isinstance(value, ImageFit) else value)
 
     # repeat
     @property
@@ -193,13 +184,9 @@ class Image(ConstrainedControl):
     @repeat.setter
     def repeat(self, value: Optional[ImageRepeat]):
         self.__repeat = value
-        if isinstance(value, ImageRepeat):
-            self._set_attr("repeat", value.value)
-        else:
-            self.__set_repeat(value)
-
-    def __set_repeat(self, value: ImageRepeatString):
-        self._set_attr("repeat", value)
+        self._set_attr(
+            "repeat", value.value if isinstance(value, ImageRepeat) else value
+        )
 
     # border_radius
     @property
@@ -227,13 +214,9 @@ class Image(ConstrainedControl):
     @color_blend_mode.setter
     def color_blend_mode(self, value: BlendMode):
         self.__blend_mode = value
-        if isinstance(value, BlendMode):
-            self._set_attr("colorBlendMode", value.value)
-        else:
-            self.__set_blend_mode(value)
-
-    def __set_blend_mode(self, value: BlendModeString):
-        self._set_attr("colorBlendMode", value)
+        self._set_attr(
+            "colorBlendMode", value.value if isinstance(value, BlendMode) else value
+        )
 
     # gapless_playback
     @property

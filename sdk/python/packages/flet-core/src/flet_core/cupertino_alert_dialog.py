@@ -41,19 +41,19 @@ class CupertinoAlertDialog(Control):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         open: bool = False,
         modal: bool = False,
         title: Optional[Control] = None,
         content: Optional[Control] = None,
         actions: Optional[List[Control]] = None,
         on_dismiss=None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,

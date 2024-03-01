@@ -70,6 +70,17 @@ class CircleAvatar(ConstrainedControl):
 
     def __init__(
         self,
+        content: Optional[Control] = None,
+        foreground_image_url: Optional[str] = None,
+        background_image_url: Optional[str] = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        radius: OptionalNumber = None,
+        min_radius: OptionalNumber = None,
+        max_radius: OptionalNumber = None,
+        #
+        # ConstrainedControl
+        #
         key: Optional[str] = None,
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
@@ -97,17 +108,6 @@ class CircleAvatar(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        foreground_image_url: Optional[str] = None,
-        background_image_url: Optional[str] = None,
-        radius: OptionalNumber = None,
-        min_radius: OptionalNumber = None,
-        max_radius: OptionalNumber = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
-        content: Optional[Control] = None,
     ):
         ConstrainedControl.__init__(
             self,
