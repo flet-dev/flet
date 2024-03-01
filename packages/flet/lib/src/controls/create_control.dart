@@ -491,6 +491,7 @@ Widget createWidget(
           parent: parent,
           control: controlView.control,
           parentDisabled: parentDisabled,
+          nextChild: nextChild,
           backend: backend);
     case "cupertinopicker":
       return CupertinoPickerControl(
@@ -499,6 +500,7 @@ Widget createWidget(
           children: controlView.children,
           parentAdaptive: parentAdaptive,
           parentDisabled: parentDisabled,
+          nextChild: nextChild,
           backend: backend);
     case "draggable":
       return DraggableControl(

@@ -16,11 +16,11 @@ class CupertinoPicker(Control):
     def __init__(
         self,
         controls: List[Control],
-        item_extent: Union[int, float],
+        item_extent: OptionalNumber = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
-        show_magnifier: Optional[bool] = None,
-        loop: Optional[bool] = None,
+        use_magnifier: Optional[bool] = None,
+        looping: Optional[bool] = None,
         magnification: OptionalNumber = None,
         squeeze: OptionalNumber = None,
         diameter_ratio: OptionalNumber = None,
@@ -51,10 +51,10 @@ class CupertinoPicker(Control):
         self.magnification = magnification
         self.diameter_ratio = diameter_ratio
         self.off_axis_fraction = off_axis_fraction
-        self.show_magnifier = show_magnifier
+        self.use_magnifier = use_magnifier
         self.item_extent = item_extent
         self.controls = controls
-        self.loop = loop
+        self.looping = looping
         self.selected_index = selected_index
         self.modal = modal
         self.open = open
@@ -86,14 +86,14 @@ class CupertinoPicker(Control):
     def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
-    # show_magnifier
+    # use_magnifier
     @property
-    def show_magnifier(self) -> Optional[bool]:
-        return self._get_attr("showMagnifier", data_type="bool", def_value=False)
+    def use_magnifier(self) -> Optional[bool]:
+        return self._get_attr("useMagnifier", data_type="bool", def_value=False)
 
-    @show_magnifier.setter
-    def show_magnifier(self, value: Optional[bool]):
-        self._set_attr("showMagnifier", value)
+    @use_magnifier.setter
+    def use_magnifier(self, value: Optional[bool]):
+        self._set_attr("useMagnifier", value)
 
     # magnification
     @property
@@ -108,22 +108,23 @@ class CupertinoPicker(Control):
 
     # item_extent
     @property
-    def item_extent(self) -> float:
+    def item_extent(self) -> OptionalNumber:
         return self._get_attr("itemExtent", data_type="float")
 
     @item_extent.setter
-    def item_extent(self, value: Union[int, float]):
-        assert value > 0, "CupertinoPicker.item_extent must be greater than 0"
+    def item_extent(self, value: OptionalNumber):
+        if value is not None and value <= 0:
+            raise ValueError("CupertinoPicker.item_extent must be greater than 0")
         self._set_attr("itemExtent", value)
 
-    # loop
+    # looping
     @property
-    def loop(self) -> Optional[bool]:
-        return self._get_attr("loop", data_type="bool", def_value=False)
+    def looping(self) -> Optional[bool]:
+        return self._get_attr("looping", data_type="bool", def_value=False)
 
-    @loop.setter
-    def loop(self, value: Optional[bool]):
-        self._set_attr("loop", value)
+    @looping.setter
+    def looping(self, value: Optional[bool]):
+        self._set_attr("looping", value)
 
     # selected_index
     @property
