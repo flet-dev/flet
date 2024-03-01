@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_checkbox.dart';
 import 'flet_store_mixin.dart';
@@ -107,6 +108,12 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
         _value = value;
       }
 
+      TextStyle? labelStyle =
+          parseTextStyle(Theme.of(context), widget.control, "labelStyle");
+      if (disabled && labelStyle != null) {
+        labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
+      }
+
       var checkbox = Checkbox(
           autofocus: autofocus,
           focusNode: _focusNode,
@@ -137,9 +144,10 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
       Widget result = checkbox;
       if (label != "") {
         var labelWidget = disabled
-            ? Text(label,
-                style: TextStyle(color: Theme.of(context).disabledColor))
-            : MouseRegion(cursor: SystemMouseCursors.click, child: Text(label));
+            ? Text(label, style: labelStyle)
+            : MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Text(label, style: labelStyle));
         result = MergeSemantics(
             child: GestureDetector(
                 onTap: !disabled ? _toggleValue : null,

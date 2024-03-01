@@ -66,11 +66,13 @@ from flet_core.column import Column
 from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_activity_indicator import CupertinoActivityIndicator
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.cupertino_checkbox import CupertinoCheckbox
 from flet_core.cupertino_dialog_action import CupertinoDialogAction
+from flet_core.cupertino_filled_button import CupertinoFilledButton
 from flet_core.cupertino_list_tile import CupertinoListTile
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.cupertino_radio import CupertinoRadio
@@ -175,7 +177,11 @@ from flet_core.painting import (
     StrokeCap,
     StrokeJoin,
 )
-from flet_core.popup_menu_button import PopupMenuButton, PopupMenuItem
+from flet_core.popup_menu_button import (
+    PopupMenuButton,
+    PopupMenuItem,
+    PopupMenuPosition,
+)
 from flet_core.progress_bar import ProgressBar
 from flet_core.progress_ring import ProgressRing
 from flet_core.pubsub import PubSub, PubSubHub
