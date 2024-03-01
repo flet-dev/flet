@@ -1,9 +1,11 @@
+import dataclasses
 from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
@@ -53,6 +55,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self,
         label: Optional[str] = None,
         label_position: LabelPosition = LabelPosition.NONE,
+        label_style: Optional[TextStyle] = None,
         value: Optional[bool] = None,
         autofocus: Optional[bool] = None,
         active_color: Optional[str] = None,
@@ -133,6 +136,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
         self.value = value
         self.label = label
+        self.label_style = label_style
         self.label_position = label_position
         self.autofocus = autofocus
         self.active_color = active_color
@@ -155,6 +159,8 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("thumbColor", self.__thumb_color)
         self._set_attr_json("thumbIcon", self.__thumb_icon)
         self._set_attr_json("trackColor", self.__track_color)
+        if dataclasses.is_dataclass(self.__label_style):
+            self._set_attr_json("labelStyle", self.__label_style)
 
     # value
     @property
@@ -173,6 +179,15 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @label.setter
     def label(self, value):
         self._set_attr("label", value)
+
+    # label_style
+    @property
+    def label_style(self) -> Optional[TextStyle]:
+        return self.__label_style
+
+    @label_style.setter
+    def label_style(self, value: Optional[TextStyle]):
+        self.__label_style = value
 
     # label_position
     @property

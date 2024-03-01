@@ -29,10 +29,10 @@ class CupertinoButton(ConstrainedControl):
         text: Optional[str] = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
         content: Optional[Control] = None,
+        bgcolor: Optional[str] = None,
+        color: Optional[str] = None,
         disabled_color: Optional[str] = None,
-        filled: Optional[bool] = None,
         opacity_on_click: OptionalNumber = None,
         min_size: OptionalNumber = None,
         padding: PaddingValue = None,
@@ -42,7 +42,7 @@ class CupertinoButton(ConstrainedControl):
         url_target: Optional[str] = None,
         on_click=None,
         #
-        # ConstrainedControl
+        # Common
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -108,9 +108,9 @@ class CupertinoButton(ConstrainedControl):
         self.icon = icon
         self.icon_color = icon_color
         self.bgcolor = bgcolor
+        self.color = color
         self.border_radius = border_radius
         self.min_size = min_size
-        self.filled = filled
         self.opacity_on_click = opacity_on_click
         self.padding = padding
         self.alignment = alignment
@@ -179,15 +179,6 @@ class CupertinoButton(ConstrainedControl):
     def disabled_color(self, value: Optional[str]):
         self._set_attr("disabledColor", value)
 
-    # filled
-    @property
-    def filled(self) -> bool:
-        return self._get_attr("filled", data_type="bool", def_value=False)
-
-    @filled.setter
-    def filled(self, value: bool):
-        self._set_attr("filled", value)
-
     # opacity_on_click
     @property
     def opacity_on_click(self) -> OptionalNumber:
@@ -234,6 +225,15 @@ class CupertinoButton(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
+
+    # color
+    @property
+    def color(self) -> Optional[str]:
+        return self._get_attr("color")
+
+    @color.setter
+    def color(self, value: Optional[str]):
+        self._set_attr("color", value)
 
     # url
     @property

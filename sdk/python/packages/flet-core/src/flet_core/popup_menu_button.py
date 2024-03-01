@@ -12,6 +12,11 @@ from flet_core.types import (
 )
 
 
+class PopupMenuPosition(Enum):
+    OVER = "over"
+    UNDER = "under"
+
+
 class PopupMenuItem(Control):
     def __init__(
         self,
@@ -25,8 +30,9 @@ class PopupMenuItem(Control):
         # Control
         #
         ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref, data=data)
+        Control.__init__(self, ref=ref, disabled=disabled)
 
         self.checked = checked
         self.icon = icon
@@ -138,6 +144,7 @@ class PopupMenuButton(ConstrainedControl):
         content: Optional[Control] = None,
         items: Optional[List[PopupMenuItem]] = None,
         icon: Optional[str] = None,
+        menu_position: Optional[PopupMenuPosition] = None,
         on_cancelled=None,
         #
         # ConstrainedControl
@@ -206,6 +213,7 @@ class PopupMenuButton(ConstrainedControl):
         self.on_cancelled = on_cancelled
         self.__content: Optional[Control] = None
         self.content = content
+        self.menu_position = menu_position
 
     def _get_control_name(self):
         return "popupmenubutton"
@@ -253,3 +261,16 @@ class PopupMenuButton(ConstrainedControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # menu_position
+    @property
+    def menu_position(self) -> PopupMenuPosition:
+        return self.__menu_position
+
+    @menu_position.setter
+    def menu_position(self, value: PopupMenuPosition):
+        self.__menu_position = value
+        self._set_attr(
+            "menuPosition",
+            value.value if isinstance(value, PopupMenuPosition) else value,
+        )

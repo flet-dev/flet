@@ -1,9 +1,11 @@
+import dataclasses
 from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
@@ -133,6 +135,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self.value = value
         self.tristate = tristate
         self.label = label
+        self.label_style = label_style
         self.label_position = label_position
         self.autofocus = autofocus
         self.check_color = check_color
@@ -152,6 +155,8 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         super().before_update()
         self._set_attr_json("fillColor", self.__fill_color)
         self._set_attr_json("overlayColor", self.__overlay_color)
+        if dataclasses.is_dataclass(self.__label_style):
+            self._set_attr_json("labelStyle", self.__label_style)
 
     # value
     @property
@@ -190,9 +195,13 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @label_position.setter
     def label_position(self, value: LabelPosition):
         self.__label_position = value
-        self._set_attr(
-            "labelPosition", value.value if isinstance(value, LabelPosition) else value
-        )
+        if isinstance(value, LabelPosition):
+            self._set_attr("labelPosition", value.value)
+        else:
+            self.__set_label_position(value)
+
+    def __set_label_position(self, value: LabelPositionString):
+        self._set_attr("labelPosition", value)
 
     # autofocus
     @property
@@ -256,6 +265,15 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @overlay_color.setter
     def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__overlay_color = value
+
+    # label_style
+    @property
+    def label_style(self) -> Optional[TextStyle]:
+        return self.__label_style
+
+    @label_style.setter
+    def label_style(self, value: Optional[TextStyle]):
+        self.__label_style = value
 
     # on_change
     @property
