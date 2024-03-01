@@ -41,6 +41,7 @@ from flet_core.session_storage import SessionStorage
 from flet_core.snack_bar import SnackBar
 from flet_core.theme import Theme
 from flet_core.types import (
+    Brightness,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,
@@ -1208,7 +1209,7 @@ class Page(AdaptiveControl):
     def platform_brightness(self) -> ThemeMode:
         brightness = self._get_attr("platformBrightness")
         assert brightness is not None
-        return ThemeMode(brightness)
+        return Brightness(brightness)
 
     # media
     @property
