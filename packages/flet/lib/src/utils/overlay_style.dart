@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -42,12 +43,5 @@ SystemUiOverlayStyle overlayStyleFromJson(
 }
 
 Brightness? parseBrightness(dynamic value, [Brightness? defValue]) {
-  switch (value) {
-    case "light":
-      return Brightness.light;
-    case "dark":
-      return Brightness.dark;
-    default:
-      return defValue;
-  }
+  Brightness.values.firstWhereOrNull((e) => e.toString() == value) ?? defValue;
 }
