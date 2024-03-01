@@ -13,10 +13,8 @@ from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     CrossAxisAlignment,
-    CrossAxisAlignmentString,
     FloatingActionButtonLocation,
     MainAxisAlignment,
-    MainAxisAlignmentString,
     OffsetValue,
     PaddingValue,
     ScrollMode,
@@ -53,7 +51,7 @@ class View(ScrollableControl, AdaptiveControl):
         padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
         #
-        # ScrollableControl specific
+        # ScrollableControl
         #
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
@@ -61,7 +59,7 @@ class View(ScrollableControl, AdaptiveControl):
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Any = None,
         #
-        # Adaptive
+        # AdaptiveControl
         #
         adaptive: Optional[bool] = None,
     ):
@@ -224,13 +222,10 @@ class View(ScrollableControl, AdaptiveControl):
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__horizontal_alignment = value
-        if isinstance(value, CrossAxisAlignment):
-            self._set_attr("horizontalAlignment", value.value)
-        else:
-            self.__set_horizontal_alignment(value)
-
-    def __set_horizontal_alignment(self, value: CrossAxisAlignmentString):
-        self._set_attr("horizontalAlignment", value)
+        self._set_attr(
+            "horizontalAlignment",
+            value.value if isinstance(value, CrossAxisAlignment) else value,
+        )
 
     # vertical_alignment
     @property
@@ -240,13 +235,10 @@ class View(ScrollableControl, AdaptiveControl):
     @vertical_alignment.setter
     def vertical_alignment(self, value: MainAxisAlignment):
         self.__vertical_alignment = value
-        if isinstance(value, MainAxisAlignment):
-            self._set_attr("verticalAlignment", value.value)
-        else:
-            self.__set_vertical_alignment(value)
-
-    def __set_vertical_alignment(self, value: MainAxisAlignmentString):
-        self._set_attr("verticalAlignment", value)
+        self._set_attr(
+            "verticalAlignment",
+            value.value if isinstance(value, MainAxisAlignment) else value,
+        )
 
     # spacing
     @property

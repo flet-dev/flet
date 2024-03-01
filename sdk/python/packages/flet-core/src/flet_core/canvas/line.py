@@ -13,7 +13,9 @@ class Line(Shape):
         x2: OptionalNumber = None,
         y2: OptionalNumber = None,
         paint: Optional[Paint] = None,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

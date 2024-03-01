@@ -152,6 +152,22 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
             ? createControl(widget.parent, viewLeadingCtrls.first.id, disabled,
                 parentAdaptive: widget.parentAdaptive)
             : null,
+        viewOnSubmitted: onSubmit
+            ? (String value) {
+                debugPrint("SearchBar.onSubmit: $value");
+                _updateValue(value);
+                widget.backend
+                    .triggerControlEvent(widget.control.id, "submit", value);
+              }
+            : null,
+        viewOnChanged: onChange
+            ? (String value) {
+                debugPrint("SearchBar.onChange: $value");
+                _updateValue(value);
+                widget.backend
+                    .triggerControlEvent(widget.control.id, "change", value);
+              }
+            : null,
         builder: (BuildContext context, SearchController controller) {
           return SearchBar(
             controller: controller,

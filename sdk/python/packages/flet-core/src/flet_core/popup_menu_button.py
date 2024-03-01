@@ -21,14 +21,17 @@ class PopupMenuPosition(Enum):
 class PopupMenuItem(Control):
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        checked: Optional[bool] = None,
-        icon: Optional[str] = None,
         text: Optional[str] = None,
+        icon: Optional[str] = None,
+        checked: Optional[bool] = None,
         content: Optional[Control] = None,
         on_click=None,
         data: Any = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
     ):
         Control.__init__(self, ref=ref, disabled=disabled)
 
@@ -38,7 +41,6 @@ class PopupMenuItem(Control):
         self.__content: Optional[Control] = None
         self.content = content
         self.on_click = on_click
-        self.data = data
 
     def _get_control_name(self):
         return "popupmenuitem"
@@ -141,6 +143,13 @@ class PopupMenuButton(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        items: Optional[List[PopupMenuItem]] = None,
+        icon: Optional[str] = None,
+        menu_position: Optional[PopupMenuPosition] = None,
+        on_cancelled=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -168,12 +177,6 @@ class PopupMenuButton(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # PopupMenuButton-specific
-        items: Optional[List[PopupMenuItem]] = None,
-        icon: Optional[str] = None,
-        menu_position: Optional[PopupMenuPosition] = None,
-        on_cancelled=None,
     ):
         ConstrainedControl.__init__(
             self,

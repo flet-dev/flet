@@ -30,6 +30,20 @@ class SubmenuButton(ConstrainedControl):
         self,
         content: Optional[Control] = None,
         controls: Optional[List[Control]] = None,
+        leading: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        menu_style: Optional[MenuStyle] = None,
+        style: Optional[ButtonStyle] = None,
+        alignment_offset: OffsetValue = None,
+        on_open=None,
+        on_close=None,
+        on_hover=None,
+        on_focus=None,
+        on_blur=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -57,20 +71,6 @@ class SubmenuButton(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        leading: Optional[Control] = None,
-        trailing: Optional[Control] = None,
-        clip_behavior: Optional[ClipBehavior] = None,
-        menu_style: Optional[MenuStyle] = None,
-        style: Optional[ButtonStyle] = None,
-        alignment_offset: OffsetValue = None,
-        on_open=None,
-        on_close=None,
-        on_hover=None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,

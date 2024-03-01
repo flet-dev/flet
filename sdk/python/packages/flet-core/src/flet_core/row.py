@@ -8,9 +8,7 @@ from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     AnimationValue,
     CrossAxisAlignment,
-    CrossAxisAlignmentString,
     MainAxisAlignment,
-    MainAxisAlignmentString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -62,6 +60,22 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
+        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        spacing: OptionalNumber = None,
+        tight: Optional[bool] = None,
+        wrap: Optional[bool] = None,
+        run_spacing: OptionalNumber = None,
+        #
+        # ScrollableControl specific
+        #
+        scroll: Optional[ScrollMode] = None,
+        auto_scroll: Optional[bool] = None,
+        on_scroll_interval: OptionalNumber = None,
+        on_scroll: Any = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -89,22 +103,6 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
-        #
-        # ScrollableControl specific
-        #
-        scroll: Optional[ScrollMode] = None,
-        auto_scroll: Optional[bool] = None,
-        on_scroll_interval: OptionalNumber = None,
-        on_scroll: Any = None,
-        #
-        # Row specific
-        #
-        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
-        spacing: OptionalNumber = None,
-        tight: Optional[bool] = None,
-        wrap: Optional[bool] = None,
-        run_spacing: OptionalNumber = None,
         #
         # Adaptive
         #
@@ -194,13 +192,9 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @alignment.setter
     def alignment(self, value: MainAxisAlignment):
         self.__alignment = value
-        if isinstance(value, MainAxisAlignment):
-            self._set_attr("alignment", value.value)
-        else:
-            self.__set_alignment(value)
-
-    def __set_alignment(self, value: MainAxisAlignmentString):
-        self._set_attr("alignment", value)
+        self._set_attr(
+            "alignment", value.value if isinstance(value, MainAxisAlignment) else value
+        )
 
     # vertical_alignment
     @property
@@ -210,13 +204,10 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @vertical_alignment.setter
     def vertical_alignment(self, value: CrossAxisAlignment):
         self.__vertical_alignment = value
-        if isinstance(value, CrossAxisAlignment):
-            self._set_attr("verticalAlignment", value.value)
-        else:
-            self.__set_vertical_alignment(value)
-
-    def __set_vertical_alignment(self, value: CrossAxisAlignmentString):
-        self._set_attr("verticalAlignment", value)
+        self._set_attr(
+            "verticalAlignment",
+            value.value if isinstance(value, CrossAxisAlignment) else value,
+        )
 
     # spacing
     @property

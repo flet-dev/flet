@@ -66,6 +66,9 @@ from flet_core.column import Column
 from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_action_sheet import CupertinoActionSheet
+from flet_core.cupertino_action_sheet_action import CupertinoActionSheetAction
+from flet_core.cupertino_activity_indicator import CupertinoActivityIndicator
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_button import CupertinoButton
@@ -141,6 +144,7 @@ from flet_core.icon_button import IconButton
 from flet_core.image import Image
 from flet_core.list_tile import ListTile
 from flet_core.list_view import ListView
+from flet_core.lottie import Lottie
 from flet_core.margin import Margin
 from flet_core.markdown import Markdown, MarkdownExtensionSet
 from flet_core.menu_bar import MenuBar, MenuStyle
@@ -238,6 +242,7 @@ from flet_core.transparent_pointer import TransparentPointer
 from flet_core.types import (
     BlendMode,
     BoxShape,
+    Brightness,
     ClipBehavior,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
@@ -258,7 +263,7 @@ from flet_core.types import (
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
-from flet_core.video import FilterQuality, PlaylistMode, Video, VideoMedia
+from flet_core.video import FilterQuality, PlaylistMode, Video, VideoMedia, VideoSubtitleConfiguration
 from flet_core.view import View
 from flet_core.webview import WebView
 from flet_core.window_drag_area import WindowDragArea

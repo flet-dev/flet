@@ -5,7 +5,7 @@ from flet_core.charts.chart_point_shape import ChartPointShape
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import TextAlign, TextAlignString
+from flet_core.types import TextAlign
 
 
 class LineChartDataPoint(Control):
@@ -13,13 +13,6 @@ class LineChartDataPoint(Control):
         self,
         x: OptionalNumber = None,
         y: OptionalNumber = None,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         selected: Optional[bool] = None,
         show_tooltip: Optional[bool] = None,
         tooltip: Optional[str] = None,
@@ -30,6 +23,13 @@ class LineChartDataPoint(Control):
         show_above_line: Optional[bool] = None,
         show_below_line: Optional[bool] = None,
         selected_below_line: Union[None, bool, ChartPointLine] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(
@@ -120,13 +120,9 @@ class LineChartDataPoint(Control):
     @tooltip_align.setter
     def tooltip_align(self, value: TextAlign):
         self.__tooltip_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("tooltipAlign", value.value)
-        else:
-            self.__set_tooltip_align(value)
-
-    def __set_tooltip_align(self, value: TextAlignString):
-        self._set_attr("tooltipAlign", value)
+        self._set_attr(
+            "tooltipAlign", value.value if isinstance(value, TextAlign) else value
+        )
 
     # tooltip_style
     @property

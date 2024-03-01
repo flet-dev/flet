@@ -42,6 +42,16 @@ class Markdown(ConstrainedControl):
     def __init__(
         self,
         value: Optional[str] = None,
+        selectable: Optional[bool] = None,
+        extension_set: Optional[MarkdownExtensionSet] = None,
+        code_theme: Optional[str] = None,
+        code_style: Optional[TextStyle] = None,
+        auto_follow_links: Optional[bool] = None,
+        auto_follow_links_target: Optional[str] = None,
+        on_tap_link=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -69,16 +79,6 @@ class Markdown(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        selectable: Optional[bool] = None,
-        extension_set: Optional[MarkdownExtensionSet] = None,
-        code_theme: Optional[str] = None,
-        code_style: Optional[TextStyle] = None,
-        auto_follow_links: Optional[bool] = None,
-        auto_follow_links_target: Optional[str] = None,
-        on_tap_link=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -153,13 +153,10 @@ class Markdown(ConstrainedControl):
     @extension_set.setter
     def extension_set(self, value: Optional[MarkdownExtensionSet]):
         self.__extension_set = value
-        if isinstance(value, MarkdownExtensionSet):
-            self._set_attr("extensionSet", value.value)
-        else:
-            self.__set_extension_set(value)
-
-    def __set_extension_set(self, value: MarkdownExtensionSetString):
-        self._set_attr("extensionSet", value)
+        self._set_attr(
+            "extensionSet",
+            value.value if isinstance(value, MarkdownExtensionSet) else value,
+        )
 
     # code_theme
     @property

@@ -51,7 +51,6 @@ class AppBar(AdaptiveControl):
 
     def __init__(
         self,
-        ref: Optional[Ref] = None,
         leading: Optional[Control] = None,
         leading_width: OptionalNumber = None,
         automatically_imply_leading: Optional[bool] = None,
@@ -62,6 +61,10 @@ class AppBar(AdaptiveControl):
         bgcolor: Optional[str] = None,
         elevation: OptionalNumber = None,
         actions: Optional[List[Control]] = None,
+        #
+        # AdaptiveControl
+        #
+        ref: Optional[Ref] = None,
         adaptive: Optional[bool] = None,
     ):
         Control.__init__(self, ref=ref)

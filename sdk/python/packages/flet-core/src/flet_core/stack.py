@@ -7,7 +7,6 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
-    ClipBehaviorString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -67,6 +66,10 @@ class Stack(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -93,13 +96,6 @@ class Stack(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Stack-specific
-        #
-        clip_behavior: Optional[ClipBehavior] = None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -161,10 +157,6 @@ class Stack(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        if isinstance(value, ClipBehavior):
-            self._set_attr("clipBehavior", value.value)
-        else:
-            self.__set_clip_behavior(value)
-
-    def __set_clip_behavior(self, value: Optional[ClipBehaviorString]):
-        self._set_attr("clipBehavior", value)
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )

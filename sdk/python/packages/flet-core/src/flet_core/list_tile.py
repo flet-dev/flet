@@ -57,6 +57,26 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        content_padding: PaddingValue = None,
+        bgcolor: Optional[str] = None,
+        bgcolor_activated: Optional[str] = None,
+        hover_color: Optional[str] = None,
+        leading: Optional[Control] = None,
+        title: Optional[Control] = None,
+        subtitle: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        is_three_line: Optional[bool] = None,
+        selected: Optional[bool] = None,
+        dense: Optional[bool] = None,
+        autofocus: Optional[bool] = None,
+        toggle_inputs: Optional[bool] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
+        on_click=None,
+        on_long_press=None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -84,27 +104,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
         adaptive: Optional[bool] = None,
-        content_padding: PaddingValue = None,
-        bgcolor: Optional[str] = None,
-        bgcolor_activated: Optional[str] = None,
-        hover_color: Optional[str] = None,
-        leading: Optional[Control] = None,
-        title: Optional[Control] = None,
-        subtitle: Optional[Control] = None,
-        trailing: Optional[Control] = None,
-        is_three_line: Optional[bool] = None,
-        selected: Optional[bool] = None,
-        dense: Optional[bool] = None,
-        autofocus: Optional[bool] = None,
-        toggle_inputs: Optional[bool] = None,
-        url: Optional[str] = None,
-        url_target: Optional[str] = None,
-        on_click=None,
-        on_long_press=None,
     ):
         ConstrainedControl.__init__(
             self,

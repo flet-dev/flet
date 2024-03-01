@@ -20,6 +20,15 @@ class PieChart(ConstrainedControl):
     def __init__(
         self,
         sections: Optional[List[PieChartSection]] = None,
+        center_space_color: Optional[str] = None,
+        center_space_radius: OptionalNumber = None,
+        sections_space: OptionalNumber = None,
+        start_degree_offset: OptionalNumber = None,
+        animate: AnimationValue = None,
+        on_chart_event=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
@@ -46,15 +55,6 @@ class PieChart(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        center_space_color: Optional[str] = None,
-        center_space_radius: OptionalNumber = None,
-        sections_space: OptionalNumber = None,
-        start_degree_offset: OptionalNumber = None,
-        animate: AnimationValue = None,
-        on_chart_event=None,
     ):
         ConstrainedControl.__init__(
             self,

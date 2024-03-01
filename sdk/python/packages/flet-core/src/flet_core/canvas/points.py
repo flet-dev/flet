@@ -18,7 +18,9 @@ class Points(Shape):
         points: Optional[List[OffsetValue]] = None,
         point_mode: Optional[PointMode] = None,
         paint: Optional[Paint] = None,
-        # base
+        #
+        # Control
+        #
         ref=None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

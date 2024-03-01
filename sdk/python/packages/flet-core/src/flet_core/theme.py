@@ -7,7 +7,7 @@ from warnings import warn
 from flet_core.border import BorderSide
 from flet_core.border_radius import BorderRadius
 from flet_core.text_style import TextStyle
-from flet_core.types import MaterialState, PaddingValue
+from flet_core.types import MaterialState, PaddingValue, Brightness
 
 try:
     from typing import Literal
@@ -147,9 +147,9 @@ class SystemOverlayStyle:
     system_navigation_bar_divider_color: Optional[str] = field(default=None)
     enforce_system_navigation_bar_contrast: Optional[bool] = field(default=None)
     enforce_system_status_bar_contrast: Optional[bool] = field(default=None)
-    system_navigation_bar_icon_brightness: Optional[bool] = field(default=None)
-    status_bar_brightness: Optional[bool] = field(default=None)
-    status_bar_icon_brightness: Optional[bool] = field(default=None)
+    system_navigation_bar_icon_brightness: Optional[Brightness] = field(default=None)
+    status_bar_brightness: Optional[Brightness] = field(default=None)
+    status_bar_icon_brightness: Optional[Brightness] = field(default=None)
 
 
 @dataclasses.dataclass
