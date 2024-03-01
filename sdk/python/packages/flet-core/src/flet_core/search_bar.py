@@ -195,7 +195,7 @@ class SearchBar(ConstrainedControl):
         delete_version="1.0",
     )
     async def close_view_async(self, text: str = ""):
-        self.close_view()
+        self.close_view(text=text)
 
     # bar_leading
     @property
