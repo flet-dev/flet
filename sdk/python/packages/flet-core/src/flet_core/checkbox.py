@@ -56,6 +56,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         label: Optional[str] = None,
         value: Optional[bool] = None,
         label_position: LabelPosition = LabelPosition.NONE,
+        label_style: Optional[TextStyle] = None,
         tristate: Optional[bool] = None,
         autofocus: Optional[bool] = None,
         fill_color: Union[None, str, Dict[MaterialState, str]] = None,
@@ -195,7 +196,9 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @label_position.setter
     def label_position(self, value: LabelPosition):
         self.__label_position = value
-        self._set_attr("labelPosition", value.value if isinstance(value, LabelPosition) else value)
+        self._set_attr(
+            "labelPosition", value.value if isinstance(value, LabelPosition) else value
+        )
 
     # autofocus
     @property

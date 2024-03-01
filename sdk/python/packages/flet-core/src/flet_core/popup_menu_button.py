@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
