@@ -1,7 +1,7 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, List
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import OptionalNumber, Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -9,24 +9,26 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    PaddingValue,
 )
 
 
-class CupertinoActionSheetAction(ConstrainedControl):
+class CupertinoSlidingSegmentedButton(ConstrainedControl):
     """
-    An action button typically used in a CupertinoActionSheet.
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/cupertinoactionsheetaction
+    Online docs: https://flet.dev/docs/controls/cupertinoslidingsegmentedbutton
     """
 
     def __init__(
         self,
-        content: Control,
-        default: Optional[bool] = None,
-        destructive: Optional[bool] = None,
-        on_click=None,
+        controls: List[Control],
+        selected_index: Optional[int] = None,
+        bgcolor: Optional[str] = None,
+        thumb_color: Optional[str] = None,
+        padding: PaddingValue = None,
+        on_change=None,
         #
         # ConstrainedControl
         #
@@ -88,57 +90,75 @@ class CupertinoActionSheetAction(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
-
-        self.content = content
-        self.default = default
-        self.destructive = destructive
-        self.on_click = on_click
+        self.controls = controls
+        self.padding = padding
+        self.selected_index = selected_index
+        self.bgcolor = bgcolor
+        self.thumb_color = thumb_color
+        self.on_change = on_change
 
     def _get_control_name(self):
-        return "cupertinoactionsheetaction"
-
-    def before_update(self):
-        super().before_update()
+        return "cupertinoslidingsegmentedbutton"
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        return self.__controls
 
-    # default
+    def _before_build_command(self):
+        super()._before_build_command()
+        self._set_attr_json("padding", self.__padding)
+
+    # controls
     @property
-    def default(self) -> Optional[bool]:
-        return self._get_attr("default", data_type="bool", def_value=False)
+    def controls(self):
+        return self.__controls
 
-    @default.setter
-    def default(self, value: Optional[bool]):
-        self._set_attr("default", value)
+    @controls.setter
+    def controls(self, value: List[Control]):
+        self.__controls = value if value is not None else []
 
-    # destructive
+    # selected_index
     @property
-    def destructive(self) -> Optional[bool]:
-        return self._get_attr("destructive", data_type="bool", def_value=False)
+    def selected_index(self) -> Optional[int]:
+        return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
-    @destructive.setter
-    def destructive(self, value: Optional[bool]):
-        self._set_attr("destructive", value)
+    @selected_index.setter
+    def selected_index(self, value: Optional[int]):
+        if value is not None:
+            assert 0 <= value <= len(self.controls) - 1, "selected_index out of range"
+        self._set_attr("selectedIndex", value)
 
-    # content
+    # bgcolor
     @property
-    def content(self) -> Control:
-        return self.__content
+    def bgcolor(self):
+        return self._get_attr("bgcolor")
 
-    @content.setter
-    def content(self, value: Control):
-        self.__content = value
+    @bgcolor.setter
+    def bgcolor(self, value):
+        self._set_attr("bgcolor", value)
 
-    # on_click
+    # thumb_color
     @property
-    def on_click(self):
-        return self._get_event_handler("click")
+    def thumb_color(self):
+        return self._get_attr("thumbColor")
 
-    @on_click.setter
-    def on_click(self, handler):
-        self._add_event_handler("click", handler)
+    @thumb_color.setter
+    def thumb_color(self, value):
+        self._set_attr("thumbColor", value)
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+
+    # on_change
+    @property
+    def on_change(self):
+        return self._get_event_handler("change")
+
+    @on_change.setter
+    def on_change(self, handler):
+        self._add_event_handler("change", handler)

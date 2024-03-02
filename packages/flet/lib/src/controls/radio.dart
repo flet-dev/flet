@@ -43,7 +43,7 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
 
   void _onFocusChange() {
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override

@@ -43,7 +43,7 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
     widget.backend.updateControlState(widget.control.id, props, server: false);
     _debouncer.run(() {
       widget.backend.updateControlState(widget.control.id, props);
-      widget.backend.triggerControlEvent(widget.control.id, "change", '');
+      widget.backend.triggerControlEvent(widget.control.id, "change");
     });
   }
 

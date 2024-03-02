@@ -54,7 +54,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
   void _onFocusChange() {
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -102,8 +102,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
                 openWebBrowser(url,
                     webWindowName: widget.control.attrString("urlTarget"));
               }
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "click", "");
+              widget.backend.triggerControlEvent(widget.control.id, "click");
             }
           : null;
 
@@ -111,7 +110,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
           ? () {
               debugPrint("Button ${widget.control.id} long pressed!");
               widget.backend
-                  .triggerControlEvent(widget.control.id, "long_press", "");
+                  .triggerControlEvent(widget.control.id, "long_press");
             }
           : null;
 

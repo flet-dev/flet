@@ -52,10 +52,10 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
               ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
               : null,
           onCanceled: () {
-            backend.triggerControlEvent(control.id, "cancelled", "");
+            backend.triggerControlEvent(control.id, "cancelled");
           },
           onSelected: (itemId) {
-            backend.triggerControlEvent(itemId, "click", "");
+            backend.triggerControlEvent(itemId, "click");
           },
           position: menuPosition,
           itemBuilder: (BuildContext context) =>

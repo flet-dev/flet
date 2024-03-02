@@ -150,7 +150,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
               openWebBrowser(url,
                   webWindowName: widget.control.attrString("urlTarget"));
             }
-            widget.backend.triggerControlEvent(widget.control.id, "click", "");
+            widget.backend.triggerControlEvent(widget.control.id, "click");
           }
         : null;
 

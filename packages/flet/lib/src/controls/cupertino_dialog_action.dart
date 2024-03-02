@@ -36,7 +36,7 @@ class CupertinoDialogActionControl extends StatelessWidget {
     Function()? onPressed = !disabled
         ? () {
             debugPrint("CupertinoDialogAction ${control.id} clicked!");
-            backend.triggerControlEvent(control.id, "click", "");
+            backend.triggerControlEvent(control.id, "click");
           }
         : null;
 

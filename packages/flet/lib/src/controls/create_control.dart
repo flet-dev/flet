@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/semantics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -35,13 +36,19 @@ import 'cupertino_activity_indicator.dart';
 import 'cupertino_alert_dialog.dart';
 import 'cupertino_button.dart';
 import 'cupertino_checkbox.dart';
+import 'cupertino_context_menu.dart';
+import 'cupertino_context_menu_action.dart';
 import 'cupertino_dialog_action.dart';
 import 'cupertino_list_tile.dart';
 import 'cupertino_navigation_bar.dart';
+import 'cupertino_picker.dart';
 import 'cupertino_radio.dart';
+import 'cupertino_segmented_button.dart';
 import 'cupertino_slider.dart';
+import 'cupertino_sliding_segmented_button.dart';
 import 'cupertino_switch.dart';
 import 'cupertino_textfield.dart';
+import 'cupertino_timer_picker.dart';
 import 'datatable.dart';
 import 'date_picker.dart';
 import 'dismissible.dart';
@@ -68,6 +75,7 @@ import 'list_view.dart';
 import 'markdown.dart';
 import 'menu_bar.dart';
 import 'menu_item_button.dart';
+import 'merge_semantics.dart';
 import 'navigation_bar.dart';
 import 'navigation_rail.dart';
 import 'outlined_button.dart';
@@ -436,12 +444,30 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "cupertinoslidingsegmentedbutton":
+      return CupertinoSlidingSegmentedButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentAdaptive: parentAdaptive,
+          parentDisabled: parentDisabled,
+          backend: backend);
     case "segmentedbutton":
       return SegmentedButtonControl(
           key: key,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
+          parentDisabled: parentDisabled,
+          backend: backend);
+    case "cupertinosegmentedbutton":
+      return CupertinoSegmentedButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentAdaptive: parentAdaptive,
           parentDisabled: parentDisabled,
           backend: backend);
     case "expansionpanellist":
@@ -483,6 +509,22 @@ Widget createWidget(
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
+          backend: backend);
+    case "cupertinotimerpicker":
+      return CupertinoTimerPickerControl(
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled,
+          nextChild: nextChild,
+          backend: backend);
+    case "cupertinopicker":
+      return CupertinoPickerControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentAdaptive: parentAdaptive,
+          parentDisabled: parentDisabled,
+          nextChild: nextChild,
           backend: backend);
     case "draggable":
       return DraggableControl(
@@ -557,7 +599,19 @@ Widget createWidget(
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "mergesemantics":
+      return MergeSemanticsControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive);
+    case "semanticsservice":
+      return SemanticsServiceControl(
+          parent: parent, control: controlView.control, backend: backend);
     case "shadermask":
       return ShaderMaskControl(
           key: key,
@@ -780,6 +834,22 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           nextChild: nextChild,
+          backend: backend);
+    case "cupertinocontextmenu":
+      return CupertinoContextMenuControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "cupertinocontextmenuaction":
+      return CupertinoContextMenuActionControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
           backend: backend);
     case "cupertinoalertdialog":
       return CupertinoAlertDialogControl(

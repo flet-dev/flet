@@ -89,7 +89,7 @@ class CupertinoListTileControl extends StatelessWidget {
               openWebBrowser(url, webWindowName: urlTarget);
             }
             if (onclick) {
-              backend.triggerControlEvent(control.id, "click", "");
+              backend.triggerControlEvent(control.id, "click");
             }
           }
         : null;

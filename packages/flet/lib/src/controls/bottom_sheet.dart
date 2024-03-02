@@ -104,8 +104,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
           if (shouldDismiss) {
             resetOpenState();
-            widget.backend
-                .triggerControlEvent(widget.control.id, "dismiss", "");
+            widget.backend.triggerControlEvent(widget.control.id, "dismiss");
           }
         });
       });

@@ -1,18 +1,10 @@
 from typing import Any, List, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
 
 
-class CupertinoActionSheet(AdaptiveControl):
+class CupertinoActionSheet(Control):
     """
     An iOS-style action sheet.
 
@@ -31,13 +23,12 @@ class CupertinoActionSheet(AdaptiveControl):
         open: bool = False,
         on_dismiss=None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # Control
         #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        adaptive: Optional[bool] = None,
     ):
         Control.__init__(
             self,
@@ -46,8 +37,6 @@ class CupertinoActionSheet(AdaptiveControl):
             visible=visible,
             data=data,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.cancel = cancel
         self.title = title

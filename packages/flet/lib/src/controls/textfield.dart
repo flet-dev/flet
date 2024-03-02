@@ -52,7 +52,7 @@ class _TextFieldControlState extends State<TextFieldControl>
         if (!HardwareKeyboard.instance.isShiftPressed &&
             evt.logicalKey.keyLabel == 'Enter') {
           if (evt is KeyDownEvent) {
-            widget.backend.triggerControlEvent(widget.control.id, "submit", "");
+            widget.backend.triggerControlEvent(widget.control.id, "submit");
           }
           return KeyEventResult.handled;
         } else {

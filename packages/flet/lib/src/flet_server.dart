@@ -166,7 +166,7 @@ class FletServer implements FletControlBackend {
       {bool client = true, bool server = true}) {
     Map<String, String> allProps = {"i": id};
     for (var entry in props.entries) {
-      allProps[entry.key] = entry.value;
+      allProps[entry.key.toLowerCase()] = entry.value;
     }
     if (client) {
       _store.dispatch(UpdateControlPropsAction(
@@ -178,8 +178,8 @@ class FletServer implements FletControlBackend {
   }
 
   @override
-  void triggerControlEvent(
-      String controlId, String eventName, String eventData) {
+  void triggerControlEvent(String controlId, String eventName,
+      [String eventData = ""]) {
     _sendPageEvent(
         eventTarget: controlId, eventName: eventName, eventData: eventData);
   }

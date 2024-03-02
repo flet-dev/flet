@@ -53,7 +53,7 @@ class _TextButtonControlState extends State<TextButtonControl>
 
   void _onFocusChange() {
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -101,8 +101,7 @@ class _TextButtonControlState extends State<TextButtonControl>
               if (url != "") {
                 openWebBrowser(url, webWindowName: urlTarget);
               }
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "click", "");
+              widget.backend.triggerControlEvent(widget.control.id, "click");
             }
           : null;
 
@@ -110,7 +109,7 @@ class _TextButtonControlState extends State<TextButtonControl>
           ? () {
               debugPrint("Button ${widget.control.id} long pressed!");
               widget.backend
-                  .triggerControlEvent(widget.control.id, "long_press", "");
+                  .triggerControlEvent(widget.control.id, "long_press");
             }
           : null;
 

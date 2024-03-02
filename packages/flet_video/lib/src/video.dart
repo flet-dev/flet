@@ -30,7 +30,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     pitch: widget.control.attrDouble("pitch") != null ? true : false,
     ready: () {
       if (widget.control.attrBool("onLoaded", false)!) {
-        widget.backend.triggerControlEvent(widget.control.id, "loaded", "");
+        widget.backend.triggerControlEvent(widget.control.id, "loaded");
       }
     },
   );

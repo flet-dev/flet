@@ -73,14 +73,23 @@ from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.cupertino_checkbox import CupertinoCheckbox
+from flet_core.cupertino_context_menu import CupertinoContextMenu
+from flet_core.cupertino_context_menu_action import CupertinoContextMenuAction
 from flet_core.cupertino_dialog_action import CupertinoDialogAction
 from flet_core.cupertino_filled_button import CupertinoFilledButton
 from flet_core.cupertino_list_tile import CupertinoListTile
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
+from flet_core.cupertino_picker import CupertinoPicker
 from flet_core.cupertino_radio import CupertinoRadio
+from flet_core.cupertino_segmented_button import CupertinoSegmentedButton
 from flet_core.cupertino_slider import CupertinoSlider
+from flet_core.cupertino_sliding_segmented_button import CupertinoSlidingSegmentedButton
 from flet_core.cupertino_switch import CupertinoSwitch
 from flet_core.cupertino_textfield import CupertinoTextField, VisibilityMode
+from flet_core.cupertino_timer_picker import (
+    CupertinoTimerPicker,
+    CupertinoTimerPickerMode,
+)
 from flet_core.datatable import (
     DataCell,
     DataColumn,
@@ -200,6 +209,7 @@ from flet_core.search_bar import SearchBar
 from flet_core.segmented_button import Segment, SegmentedButton
 from flet_core.selection_area import SelectionArea
 from flet_core.semantics import Semantics
+from flet_core.semantics_service import Assertiveness, SemanticsService
 from flet_core.shader_mask import ShaderMask
 from flet_core.shadow import BoxShadow, ShadowBlurStyle
 from flet_core.shake_detector import ShakeDetector

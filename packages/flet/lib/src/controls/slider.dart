@@ -50,7 +50,7 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
 
   void _onFocusChange() {
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   void onChange(double value) {
@@ -61,7 +61,7 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
     widget.backend.updateControlState(widget.control.id, props, server: false);
     _debouncer.run(() {
       widget.backend.updateControlState(widget.control.id, props);
-      widget.backend.triggerControlEvent(widget.control.id, "change", '');
+      widget.backend.triggerControlEvent(widget.control.id, "change");
     });
   }
 

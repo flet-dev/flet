@@ -140,8 +140,7 @@ class _DataTableControlState extends State<DataTableControl>
                     : null,
                 onLongPress: row.control.attrBool("onLongPress", false)!
                     ? () {
-                        widget.backend.triggerControlEvent(
-                            row.control.id, "long_press", "");
+                        widget.backend.triggerControlEvent(row.control.id, "long_press");
                       }
                     : null,
                 cells: row.children
@@ -153,25 +152,25 @@ class _DataTableControlState extends State<DataTableControl>
                           onDoubleTap: cell.attrBool("onDoubleTap", false)!
                               ? () {
                                   widget.backend.triggerControlEvent(
-                                      cell.id, "double_tap", "");
+                                      cell.id, "double_tap");
                                 }
                               : null,
                           onLongPress: cell.attrBool("onLongPress", false)!
                               ? () {
                                   widget.backend.triggerControlEvent(
-                                      cell.id, "long_press", "");
+                                      cell.id, "long_press");
                                 }
                               : null,
                           onTap: cell.attrBool("onTap", false)!
                               ? () {
                                   widget.backend
-                                      .triggerControlEvent(cell.id, "tap", "");
+                                      .triggerControlEvent(cell.id, "tap");
                                 }
                               : null,
                           onTapCancel: cell.attrBool("onTapCancel", false)!
                               ? () {
                                   widget.backend.triggerControlEvent(
-                                      cell.id, "tap_cancel", "");
+                                      cell.id, "tap_cancel");
                                 }
                               : null,
                           onTapDown: cell.attrBool("onTapDown", false)!

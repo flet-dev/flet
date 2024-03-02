@@ -60,7 +60,7 @@ class _ShakeDetectorControlState extends State<ShakeDetectorControl> {
       _shakeDetector?.stopListening();
       _shakeDetector = ShakeDetector.autoStart(
         onPhoneShake: () {
-          widget.backend.triggerControlEvent(widget.control.id, "shake", "");
+          widget.backend.triggerControlEvent(widget.control.id, "shake");
         },
         minimumShakeCount: minimumShakeCount,
         shakeSlopTimeMS: shakeSlopTimeMs,
