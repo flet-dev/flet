@@ -2,10 +2,9 @@ import asyncio
 import logging
 from typing import Optional
 
-import uvicorn
-
 import flet.fastapi
 import flet.fastapi as flet_fastapi
+import uvicorn
 from flet_core.types import WebRenderer
 
 logger = logging.getLogger(flet_fastapi.__name__)
@@ -89,6 +88,6 @@ async def serve_fastapi_web_app(
     if blocking:
         await server.serve()
     else:
-        await asyncio.create_task(server.serve())
+        asyncio.create_task(server.serve())
 
     return WebServerHandle(page_url=page_url, server=server)
