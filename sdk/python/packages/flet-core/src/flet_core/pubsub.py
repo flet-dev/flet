@@ -16,11 +16,11 @@ class PubSubHub:
     def __init__(
         self,
         loop: Optional[asyncio.AbstractEventLoop] = None,
-        pool: Optional[ThreadPoolExecutor] = None,
+        executor: Optional[ThreadPoolExecutor] = None,
     ):
         logger.debug("Creating new PubSubHub instance")
         self.__loop = loop
-        self.__pool = pool
+        self.__executor = executor
         self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
         self.__subscribers: Dict[
             str, Union[Callable, Callable[..., Awaitable[Any]]]
@@ -137,9 +137,9 @@ class PubSubHub:
         if asyncio.iscoroutinefunction(handler):
             asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
         else:
-            if self.__pool:
+            if self.__executor:
                 self.__loop.call_soon_threadsafe(
-                    self.__loop.run_in_executor, self.__pool, handler, *args
+                    self.__loop.run_in_executor, self.__executor, handler, *args
                 )
             else:
                 handler(*args)

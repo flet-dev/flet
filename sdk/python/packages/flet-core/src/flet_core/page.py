@@ -112,7 +112,7 @@ class Page(AdaptiveControl):
         conn: Connection,
         session_id,
         loop: asyncio.AbstractEventLoop,
-        pool: Optional[ThreadPoolExecutor] = None,
+        executor: Optional[ThreadPoolExecutor] = None,
     ):
         Control.__init__(self)
 
@@ -125,7 +125,7 @@ class Page(AdaptiveControl):
         self.__query: QueryString = QueryString(page=self)  # Querystring
         self._session_id = session_id
         self.__loop = loop
-        self.__pool = pool
+        self.__executor = executor
         self._index = {self._Control__uid: self}  # index with all page controls
 
         self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
@@ -477,7 +477,7 @@ class Page(AdaptiveControl):
         else:
             assert self.__loop
             self.__loop.call_soon_threadsafe(
-                self.__loop.run_in_executor, self.__pool, handler, *args
+                self.__loop.run_in_executor, self.__executor, handler, *args
             )
 
     def go(self, route, skip_route_change_event=False, **kwargs):
@@ -1129,6 +1129,14 @@ class Page(AdaptiveControl):
     @property
     def snapshot(self) -> Dict[str, Dict[str, Any]]:
         return self.__snapshot
+
+    @property
+    def loop(self):
+        return self.__loop
+
+    @property
+    def executor(self):
+        return self.__executor
 
     # expires_at
     @property

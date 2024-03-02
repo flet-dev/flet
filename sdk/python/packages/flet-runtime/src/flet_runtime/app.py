@@ -208,7 +208,7 @@ async def app_async(
 async def __run_socket_server(port=0, session_handler=None, blocking=False):
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
-    pool = concurrent.futures.ThreadPoolExecutor()
+    executor = concurrent.futures.ThreadPoolExecutor()
 
     async def on_event(e):
         if e.sessionID in conn.sessions:
@@ -225,7 +225,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
         page = Page(
             conn,
             session_data.sessionID,
-            pool=pool,
+            executor=executor,
             loop=asyncio.get_running_loop(),
         )
         await page.fetch_page_details_async()
@@ -238,7 +238,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
             else:
                 # run in thread pool
                 await asyncio.get_running_loop().run_in_executor(
-                    pool, session_handler, page
+                    executor, session_handler, page
                 )
 
         except Exception as e:
@@ -257,7 +257,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
         on_event=on_event,
         on_session_created=on_session_created,
         blocking=blocking,
-        pool=pool,
+        executor=executor,
     )
     await conn.start()
     return conn

@@ -30,11 +30,11 @@ class FletAppManager:
         self.__states_lock = threading.Lock() if not is_pyodide() else NopeLock()
         self.__evict_oauth_states_task = None
         self.__temp_dirs = {}
-        self.__pool = ThreadPoolExecutor(thread_name_prefix="flet_fastapi")
+        self.__executor = ThreadPoolExecutor(thread_name_prefix="flet_fastapi")
 
     @property
-    def pool(self):
-        return self.__pool
+    def executor(self):
+        return self.__executor
 
     async def start(self):
         """
