@@ -39,10 +39,12 @@ import 'cupertino_checkbox.dart';
 import 'cupertino_dialog_action.dart';
 import 'cupertino_list_tile.dart';
 import 'cupertino_navigation_bar.dart';
+import 'cupertino_picker.dart';
 import 'cupertino_radio.dart';
 import 'cupertino_slider.dart';
 import 'cupertino_switch.dart';
 import 'cupertino_textfield.dart';
+import 'cupertino_timer_picker.dart';
 import 'datatable.dart';
 import 'date_picker.dart';
 import 'dismissible.dart';
@@ -485,6 +487,22 @@ Widget createWidget(
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
+          backend: backend);
+    case "cupertinotimerpicker":
+      return CupertinoTimerPickerControl(
+          parent: parent,
+          control: controlView.control,
+          parentDisabled: parentDisabled,
+          nextChild: nextChild,
+          backend: backend);
+    case "cupertinopicker":
+      return CupertinoPickerControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentAdaptive: parentAdaptive,
+          parentDisabled: parentDisabled,
+          nextChild: nextChild,
           backend: backend);
     case "draggable":
       return DraggableControl(

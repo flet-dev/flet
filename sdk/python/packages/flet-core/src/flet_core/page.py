@@ -27,6 +27,8 @@ from flet_core.cupertino_action_sheet import CupertinoActionSheet
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
+from flet_core.cupertino_picker import CupertinoPicker
+from flet_core.cupertino_timer_picker import CupertinoTimerPicker
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import FloatingActionButton
@@ -985,7 +987,12 @@ class Page(AdaptiveControl):
     #
     # BottomSheet
     #
-    def show_bottom_sheet(self, bottom_sheet: Union[BottomSheet, CupertinoActionSheet]):
+    def show_bottom_sheet(
+        self,
+        bottom_sheet: Union[
+            BottomSheet, CupertinoActionSheet, CupertinoPicker, CupertinoTimerPicker
+        ],
+    ):
         self.__offstage.bottom_sheet = bottom_sheet
         self.__offstage.bottom_sheet.open = True
         self.__offstage.update()
@@ -996,7 +1003,10 @@ class Page(AdaptiveControl):
         delete_version="1.0",
     )
     async def show_bottom_sheet_async(
-        self, bottom_sheet: Union[BottomSheet, CupertinoActionSheet]
+        self,
+        bottom_sheet: Union[
+            BottomSheet, CupertinoActionSheet, CupertinoPicker, CupertinoTimerPicker
+        ],
     ):
         self.show_bottom_sheet(bottom_sheet)
 
@@ -1979,11 +1989,24 @@ class Offstage(Control):
 
     # bottom_sheet
     @property
-    def bottom_sheet(self) -> Union[BottomSheet, CupertinoActionSheet, None]:
+    def bottom_sheet(
+        self,
+    ) -> Union[
+        BottomSheet, CupertinoActionSheet, CupertinoPicker, CupertinoTimerPicker, None
+    ]:
         return self.__bottom_sheet
 
     @bottom_sheet.setter
-    def bottom_sheet(self, value: Union[BottomSheet, CupertinoActionSheet, None]):
+    def bottom_sheet(
+        self,
+        value: Union[
+            BottomSheet,
+            CupertinoActionSheet,
+            CupertinoPicker,
+            CupertinoTimerPicker,
+            None,
+        ],
+    ):
         self.__bottom_sheet = value
 
 

@@ -1,6 +1,5 @@
 from typing import Any, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -13,7 +12,7 @@ from flet_core.types import (
 )
 
 
-class CupertinoActionSheetAction(ConstrainedControl, AdaptiveControl):
+class CupertinoActionSheetAction(ConstrainedControl):
     """
     An action button typically used in a CupertinoActionSheet.
 
@@ -29,7 +28,7 @@ class CupertinoActionSheetAction(ConstrainedControl, AdaptiveControl):
         destructive: Optional[bool] = None,
         on_click=None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -58,7 +57,6 @@ class CupertinoActionSheetAction(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -91,8 +89,6 @@ class CupertinoActionSheetAction(ConstrainedControl, AdaptiveControl):
             data=data,
         )
 
-        AdaptiveControl.__init__(self, adaptive=adaptive)
-
         self.content = content
         self.default = default
         self.destructive = destructive
@@ -122,11 +118,11 @@ class CupertinoActionSheetAction(ConstrainedControl, AdaptiveControl):
 
     # destructive
     @property
-    def destructive(self) -> Optional[Control]:
+    def destructive(self) -> Optional[bool]:
         return self._get_attr("destructive", data_type="bool", def_value=False)
 
     @destructive.setter
-    def destructive(self, value: Optional[Control]):
+    def destructive(self, value: Optional[bool]):
         self._set_attr("destructive", value)
 
     # content
