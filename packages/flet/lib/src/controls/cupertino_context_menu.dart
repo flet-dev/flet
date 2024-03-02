@@ -54,12 +54,12 @@ class _CupertinoContextMenuControlState
     return CupertinoContextMenu(
       enableHapticFeedback:
           widget.control.attrBool("enableHapticFeedback", false)!,
-      child: createControl(widget.control, contentCtrls.first.id, disabled,
-          parentAdaptive: adaptive),
       actions: actionCtrls.map((c) {
         return createControl(widget.control, c.id, disabled,
             parentAdaptive: adaptive);
       }).toList(),
+      child: createControl(widget.control, contentCtrls.first.id, disabled,
+          parentAdaptive: adaptive),
     );
   }
 }
