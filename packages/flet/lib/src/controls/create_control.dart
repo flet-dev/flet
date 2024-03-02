@@ -41,7 +41,9 @@ import 'cupertino_list_tile.dart';
 import 'cupertino_navigation_bar.dart';
 import 'cupertino_picker.dart';
 import 'cupertino_radio.dart';
+import 'cupertino_segmented_button.dart';
 import 'cupertino_slider.dart';
+import 'cupertino_sliding_segmented_button.dart';
 import 'cupertino_switch.dart';
 import 'cupertino_textfield.dart';
 import 'cupertino_timer_picker.dart';
@@ -440,12 +442,30 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "cupertinoslidingsegmentedbutton":
+      return CupertinoSlidingSegmentedButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentAdaptive: parentAdaptive,
+          parentDisabled: parentDisabled,
+          backend: backend);
     case "segmentedbutton":
       return SegmentedButtonControl(
           key: key,
           parent: parent,
           control: controlView.control,
           children: controlView.children,
+          parentDisabled: parentDisabled,
+          backend: backend);
+    case "cupertinosegmentedbutton":
+      return CupertinoSegmentedButtonControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentAdaptive: parentAdaptive,
           parentDisabled: parentDisabled,
           backend: backend);
     case "expansionpanellist":

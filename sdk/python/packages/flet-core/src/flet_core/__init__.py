@@ -79,7 +79,9 @@ from flet_core.cupertino_list_tile import CupertinoListTile
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.cupertino_picker import CupertinoPicker
 from flet_core.cupertino_radio import CupertinoRadio
+from flet_core.cupertino_segmented_button import CupertinoSegmentedButton
 from flet_core.cupertino_slider import CupertinoSlider
+from flet_core.cupertino_sliding_segmented_button import CupertinoSlidingSegmentedButton
 from flet_core.cupertino_switch import CupertinoSwitch
 from flet_core.cupertino_textfield import CupertinoTextField, VisibilityMode
 from flet_core.cupertino_timer_picker import (

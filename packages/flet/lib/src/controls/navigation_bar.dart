@@ -39,7 +39,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
     widget.backend.updateControlState(
-        widget.control.id, {"selectedindex": _selectedIndex.toString()});
+        widget.control.id, {"selectedIndex": _selectedIndex.toString()});
     widget.backend.triggerControlEvent(
         widget.control.id, "change", _selectedIndex.toString());
   }
