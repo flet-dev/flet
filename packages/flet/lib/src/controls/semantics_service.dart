@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 
@@ -18,40 +16,26 @@ class SemanticsServiceControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("SemanticsService build: ${control.id}");
 
-    var method = control.attrString("method");
-
-    if (method != null) {
-      debugPrint("SemanticsService JSON method: $method");
-
-      void resetMethod() {
-        backend.updateControlState(control.id, {"method": ""});
-      }
-
-      var mj = json.decode(method);
-      var name = mj["n"] as String;
-      var params = Map<String, dynamic>.from(mj["p"] as Map);
-
-      var message = params["text"].toString();
-      if (name == "announce") {
-        debugPrint("SemanticsService.announceMessage($message)");
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          resetMethod();
-          var rtl = params["rtl"];
+    backend.subscribeMethods(control.id, (methodName, args) async {
+      var message = args["message"].toString();
+      switch (methodName) {
+        case "announce_message":
+          debugPrint("SemanticsService.announceMessage($message)");
+          var rtl = args["rtl"] == "true";
           var assertiveness = Assertiveness.values.firstWhere(
-              (e) => e.name == params["assertiveness"].toString().toLowerCase(),
+              (e) => e.name == args["assertiveness"].toString().toLowerCase(),
               orElse: () => Assertiveness.polite);
           SemanticsService.announce(
               message, rtl ? TextDirection.rtl : TextDirection.ltr,
               assertiveness: assertiveness);
-        });
-      } else if (name == "tooltip") {
-        debugPrint("SemanticsService.announceTooltip($message)");
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          resetMethod();
+          break;
+        case "announce_tooltip":
+          debugPrint("SemanticsService.announceTooltip($message)");
           SemanticsService.tooltip(message);
-        });
+          break;
       }
-    }
+      return null;
+    });
 
     return const SizedBox.shrink();
   }

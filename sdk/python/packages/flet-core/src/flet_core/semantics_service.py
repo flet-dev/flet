@@ -1,4 +1,3 @@
-import time
 from enum import Enum
 from typing import Any, Optional
 
@@ -32,23 +31,21 @@ class SemanticsService(Control):
         rtl: bool = False,
         assertiveness: Assertiveness = Assertiveness.POLITE,
     ):
-        m = {
-            "n": "announce",
-            "i": str(time.time()),
-            "p": {
+        self.invoke_method(
+            "announce_message",
+            arguments={
                 "message": message,
-                "rtl": rtl,
+                "rtl": str(rtl),
                 "assertiveness": assertiveness.value
                 if isinstance(assertiveness, Assertiveness)
-                else assertiveness,
+                else str(assertiveness),
             },
-        }
-        self._set_attr_json("method", m)
+        )
 
     def announce_tooltip(self, message: str):
-        m = {
-            "n": "tooltip",
-            "i": str(time.time()),
-            "p": {"message": message},
-        }
-        self._set_attr_json("method", m)
+        self.invoke_method(
+            "announce_tooltip",
+            arguments={
+                "message": message,
+            },
+        )
