@@ -46,7 +46,7 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
 
   void _onFocusChange() {
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -98,8 +98,7 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
           : null,
       onPressed: onClick && !disabled
           ? () {
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "click", "");
+              widget.backend.triggerControlEvent(widget.control.id, "click");
             }
           : null,
       leadingIcon: leading.isNotEmpty

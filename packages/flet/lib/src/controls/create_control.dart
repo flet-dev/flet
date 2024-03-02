@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/controls/semantics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -68,6 +69,7 @@ import 'list_view.dart';
 import 'markdown.dart';
 import 'menu_bar.dart';
 import 'menu_item_button.dart';
+import 'merge_semantics.dart';
 import 'navigation_bar.dart';
 import 'navigation_rail.dart';
 import 'outlined_button.dart';
@@ -557,7 +559,19 @@ Widget createWidget(
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "mergesemantics":
+      return MergeSemanticsControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive);
+    case "semanticsservice":
+      return SemanticsServiceControl(
+          parent: parent, control: controlView.control, backend: backend);
     case "shadermask":
       return ShaderMaskControl(
           key: key,

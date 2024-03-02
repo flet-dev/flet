@@ -53,7 +53,7 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
 
   void _onFocusChange() {
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -78,15 +78,14 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            widget.backend.triggerControlEvent(widget.control.id, "click", "");
+            widget.backend.triggerControlEvent(widget.control.id, "click");
           }
         : null;
 
     Function()? onLongPressHandler = onLongPress && !disabled
         ? () {
             debugPrint("Button ${widget.control.id} long pressed!");
-            widget.backend
-                .triggerControlEvent(widget.control.id, "long_press", "");
+            widget.backend.triggerControlEvent(widget.control.id, "long_press");
           }
         : null;
 

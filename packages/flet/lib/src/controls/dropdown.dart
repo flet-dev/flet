@@ -47,7 +47,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
       _focused = _focusNode.hasFocus;
     });
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override

@@ -94,7 +94,7 @@ class _DismissibleControlState extends State<DismissibleControl> {
             onResize: widget.control.attrBool("onResize", false)!
                 ? () {
                     widget.backend
-                        .triggerControlEvent(widget.control.id, "resize", "");
+                        .triggerControlEvent(widget.control.id, "resize");
                   }
                 : null,
             onUpdate: widget.control.attrBool("onUpdate", false)!

@@ -184,7 +184,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               onLongPress: onLongPress
                   ? () {
                       debugPrint("Container ${control.id} long pressed!");
-                      backend.triggerControlEvent(control.id, "long_press", "");
+                      backend.triggerControlEvent(control.id, "long_press");
                     }
                   : null,
               onHover: onHover
@@ -306,7 +306,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               onLongPress: onLongPress
                   ? () {
                       debugPrint("Container ${control.id} clicked!");
-                      backend.triggerControlEvent(control.id, "long_press", "");
+                      backend.triggerControlEvent(control.id, "long_press");
                     }
                   : null,
               child: result,

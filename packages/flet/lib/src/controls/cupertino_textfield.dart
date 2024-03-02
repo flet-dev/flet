@@ -55,7 +55,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         if (!HardwareKeyboard.instance.isShiftPressed &&
             evt.logicalKey.keyLabel == 'Enter') {
           if (evt is KeyDownEvent) {
-            widget.backend.triggerControlEvent(widget.control.id, "submit", "");
+            widget.backend.triggerControlEvent(widget.control.id, "submit");
           }
           return KeyEventResult.handled;
         } else {
@@ -283,6 +283,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         cursorRadius: parseRadius(widget.control, "cursorRadius") ??
             const Radius.circular(2.0),
         keyboardType: keyboardType,
+        clearButtonSemanticLabel:
+            widget.control.attrString("clearButtonSemanticsLabel"),
         autocorrect: autocorrect,
         enableSuggestions: enableSuggestions,
         smartDashesType: smartDashesType

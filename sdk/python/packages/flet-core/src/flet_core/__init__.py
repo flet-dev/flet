@@ -200,6 +200,7 @@ from flet_core.search_bar import SearchBar
 from flet_core.segmented_button import Segment, SegmentedButton
 from flet_core.selection_area import SelectionArea
 from flet_core.semantics import Semantics
+from flet_core.semantics_service import Assertiveness, SemanticsService
 from flet_core.shader_mask import ShaderMask
 from flet_core.shadow import BoxShadow, ShadowBlurStyle
 from flet_core.shake_detector import ShakeDetector
@@ -261,7 +262,13 @@ from flet_core.types import (
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
-from flet_core.video import FilterQuality, PlaylistMode, Video, VideoMedia, VideoSubtitleConfiguration
+from flet_core.video import (
+    FilterQuality,
+    PlaylistMode,
+    Video,
+    VideoMedia,
+    VideoSubtitleConfiguration,
+)
 from flet_core.view import View
 from flet_core.webview import WebView
 from flet_core.window_drag_area import WindowDragArea

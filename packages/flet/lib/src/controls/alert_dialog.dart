@@ -73,6 +73,7 @@ class _AlertDialogControlState extends State<AlertDialogControl>
       actionsPadding: parseEdgeInsets(widget.control, "actionsPadding"),
       actionsAlignment: actionsAlignment,
       shape: parseOutlinedBorder(widget.control, "shape"),
+      semanticLabel: widget.control.attrString("semanticsLabel"),
       insetPadding: parseEdgeInsets(widget.control, "insetPadding") ??
           const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
       backgroundColor: HexColor.fromString(
@@ -141,8 +142,7 @@ class _AlertDialogControlState extends State<AlertDialogControl>
             if (shouldDismiss) {
               widget.backend
                   .updateControlState(widget.control.id, {"open": "false"});
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "dismiss", "");
+              widget.backend.triggerControlEvent(widget.control.id, "dismiss");
             }
           });
         });

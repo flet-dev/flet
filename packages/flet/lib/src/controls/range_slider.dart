@@ -46,7 +46,7 @@ class _SliderControlState extends State<RangeSliderControl> {
     widget.backend.updateControlState(widget.control.id, props, server: false);
     _debouncer.run(() {
       widget.backend.updateControlState(widget.control.id, props);
-      widget.backend.triggerControlEvent(widget.control.id, "change", "");
+      widget.backend.triggerControlEvent(widget.control.id, "change");
     });
   }
 
@@ -91,13 +91,13 @@ class _SliderControlState extends State<RangeSliderControl> {
         onChangeStart: !disabled
             ? (RangeValues newValues) {
                 widget.backend
-                    .triggerControlEvent(widget.control.id, "change_start", '');
+                    .triggerControlEvent(widget.control.id, "change_start");
               }
             : null,
         onChangeEnd: !disabled
             ? (RangeValues newValues) {
                 widget.backend
-                    .triggerControlEvent(widget.control.id, "change_end", '');
+                    .triggerControlEvent(widget.control.id, "change_end");
               }
             : null);
 
