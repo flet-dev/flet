@@ -18,13 +18,6 @@ class Semantics(Control):
     def __init__(
         self,
         content: Optional[Control] = None,
-        ref: Optional[Ref] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         label: Optional[str] = None,
         expanded: Optional[bool] = None,
         hidden: Optional[bool] = None,
@@ -69,6 +62,13 @@ class Semantics(Control):
         on_move_cursor_backward_by_character=None,
         on_did_gain_accessibility_focus=None,
         on_did_lose_accessibility_focus=None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(
             self,

@@ -11,13 +11,11 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     FontWeight,
-    FontWeightString,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TextAlign,
-    TextAlignString,
 )
 
 try:
@@ -86,6 +84,24 @@ class Text(ConstrainedControl):
     def __init__(
         self,
         value: Optional[str] = None,
+        spans: Optional[List[TextSpan]] = None,
+        text_align: TextAlign = TextAlign.NONE,
+        font_family: Optional[str] = None,
+        size: OptionalNumber = None,
+        weight: Optional[FontWeight] = None,
+        italic: Optional[bool] = None,
+        style: Union[TextThemeStyle, TextStyle, None] = None,
+        theme_style: Optional[TextThemeStyle] = None,
+        max_lines: Optional[int] = None,
+        overflow: TextOverflow = TextOverflow.NONE,
+        selectable: Optional[bool] = None,
+        no_wrap: Optional[bool] = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        semantics_label: Optional[str] = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -114,24 +130,6 @@ class Text(ConstrainedControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
-        #
-        # text-specific
-        #
-        spans: Optional[List[TextSpan]] = None,
-        text_align: TextAlign = TextAlign.NONE,
-        font_family: Optional[str] = None,
-        size: OptionalNumber = None,
-        weight: Optional[FontWeight] = None,
-        italic: Optional[bool] = None,
-        style: Union[TextThemeStyle, TextStyle, None] = None,
-        theme_style: Optional[TextThemeStyle] = None,
-        max_lines: Optional[int] = None,
-        overflow: TextOverflow = TextOverflow.NONE,
-        selectable: Optional[bool] = None,
-        no_wrap: Optional[bool] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
-        semantics_label: Optional[str] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -221,13 +219,9 @@ class Text(ConstrainedControl):
     @text_align.setter
     def text_align(self, value: TextAlign):
         self.__text_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("textAlign", value.value)
-        else:
-            self.__set_text_align(value)
-
-    def __set_text_align(self, value: TextAlignString):
-        self._set_attr("textAlign", value)
+        self._set_attr(
+            "textAlign", value.value if isinstance(value, TextAlign) else value
+        )
 
     # font_family
     @property
@@ -255,13 +249,9 @@ class Text(ConstrainedControl):
     @weight.setter
     def weight(self, value: Optional[FontWeight]):
         self.__weight = value
-        if isinstance(value, FontWeight):
-            self._set_attr("weight", value.value)
-        else:
-            self.__set_weight(value)
-
-    def __set_weight(self, value: FontWeightString):
-        self._set_attr("weight", value)
+        self._set_attr(
+            "weight", value.value if isinstance(value, FontWeight) else value
+        )
 
     # style
     @property
@@ -338,13 +328,9 @@ class Text(ConstrainedControl):
     @overflow.setter
     def overflow(self, value: TextOverflow):
         self.__overflow = value
-        if isinstance(value, TextOverflow):
-            self._set_attr("overflow", value.value)
-        else:
-            self.__set_overflow(value)
-
-    def __set_overflow(self, value: TextOverflowString):
-        self._set_attr("overflow", value)
+        self._set_attr(
+            "overflow", value.value if isinstance(value, TextOverflow) else value
+        )
 
     # color
     @property

@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
@@ -12,18 +13,27 @@ from flet_core.types import (
 )
 
 
+class PopupMenuPosition(Enum):
+    OVER = "over"
+    UNDER = "under"
+
+
 class PopupMenuItem(Control):
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        checked: Optional[bool] = None,
-        icon: Optional[str] = None,
         text: Optional[str] = None,
+        icon: Optional[str] = None,
+        checked: Optional[bool] = None,
         content: Optional[Control] = None,
         on_click=None,
         data: Any = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, disabled=disabled)
 
         self.checked = checked
         self.icon = icon
@@ -31,7 +41,6 @@ class PopupMenuItem(Control):
         self.__content: Optional[Control] = None
         self.content = content
         self.on_click = on_click
-        self.data = data
 
     def _get_control_name(self):
         return "popupmenuitem"
@@ -134,6 +143,13 @@ class PopupMenuButton(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        items: Optional[List[PopupMenuItem]] = None,
+        icon: Optional[str] = None,
+        menu_position: Optional[PopupMenuPosition] = None,
+        on_cancelled=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -161,11 +177,6 @@ class PopupMenuButton(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # PopupMenuButton-specific
-        items: Optional[List[PopupMenuItem]] = None,
-        icon: Optional[str] = None,
-        on_cancelled=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -203,6 +214,7 @@ class PopupMenuButton(ConstrainedControl):
         self.on_cancelled = on_cancelled
         self.__content: Optional[Control] = None
         self.content = content
+        self.menu_position = menu_position
 
     def _get_control_name(self):
         return "popupmenubutton"
@@ -250,3 +262,16 @@ class PopupMenuButton(ConstrainedControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # menu_position
+    @property
+    def menu_position(self) -> PopupMenuPosition:
+        return self.__menu_position
+
+    @menu_position.setter
+    def menu_position(self, value: PopupMenuPosition):
+        self.__menu_position = value
+        self._set_attr(
+            "menuPosition",
+            value.value if isinstance(value, PopupMenuPosition) else value,
+        )

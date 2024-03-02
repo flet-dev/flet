@@ -58,6 +58,24 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        icon_size: OptionalNumber = None,
+        selected: Optional[bool] = None,
+        selected_icon: Optional[str] = None,
+        selected_icon_color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        highlight_color: Optional[str] = None,
+        style: Optional[ButtonStyle] = None,
+        content: Optional[Control] = None,
+        autofocus: Optional[bool] = None,
+        url: Optional[str] = None,
+        url_target: Optional[str] = None,
+        on_click=None,
+        on_focus=None,
+        on_blur=None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -85,24 +103,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
         adaptive: Optional[bool] = None,
-        icon_size: OptionalNumber = None,
-        icon_color: Optional[str] = None,
-        selected_icon: Optional[str] = None,
-        selected_icon_color: Optional[str] = None,
-        selected: Optional[bool] = None,
-        bgcolor: Optional[str] = None,
-        style: Optional[ButtonStyle] = None,
-        content: Optional[Control] = None,
-        autofocus: Optional[bool] = None,
-        url: Optional[str] = None,
-        url_target: Optional[str] = None,
-        on_click=None,
-        on_focus=None,
-        on_blur=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -139,6 +140,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.icon = icon
         self.icon_size = icon_size
         self.icon_color = icon_color
+        self.highlight_color = highlight_color
         self.selected_icon = selected_icon
         self.selected_icon_color = selected_icon_color
         self.selected = selected
@@ -216,6 +218,15 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @icon_color.setter
     def icon_color(self, value):
         self._set_attr("iconColor", value)
+
+    # highlight_color
+    @property
+    def highlight_color(self):
+        return self._get_attr("highlightColor")
+
+    @highlight_color.setter
+    def highlight_color(self, value):
+        self._set_attr("highlightColor", value)
 
     # selected_icon_color
     @property

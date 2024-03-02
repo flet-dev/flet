@@ -1,11 +1,10 @@
 import json
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
-from flet_core.dropdown import Option
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.utils import deprecated
@@ -104,15 +103,15 @@ class FilePicker(Control):
 
     def __init__(
         self,
+        on_result=None,
+        on_upload=None,
+        #
+        # Control
+        #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        on_result=None,
-        on_upload=None,
     ):
 
         Control.__init__(
@@ -305,13 +304,9 @@ class FilePicker(Control):
     @file_type.setter
     def file_type(self, value: FilePickerFileType):
         self.__file_type = value
-        if isinstance(value, FilePickerFileType):
-            self._set_attr("fileType", value.value)
-        else:
-            self.__set_file_type(value)
-
-    def __set_file_type(self, value: FileTypeString):
-        self._set_attr("fileType", value)
+        self._set_attr(
+            "fileType", value.value if isinstance(value, FilePickerFileType) else value
+        )
 
     # allowed_extensions
     @property

@@ -47,16 +47,16 @@ class Divider(Control):
 
     def __init__(
         self,
+        height: OptionalNumber = None,
+        thickness: OptionalNumber = None,
+        color: Optional[str] = None,
+        #
+        # Control
+        #
         ref: Optional[Ref] = None,
         opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        height: OptionalNumber = None,
-        thickness: OptionalNumber = None,
-        color: Optional[str] = None,
     ):
 
         Control.__init__(

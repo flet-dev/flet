@@ -55,6 +55,11 @@ class MenuBar(Control):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        style: Optional[MenuStyle] = None,
+        #
+        # Control
+        #
         ref: Optional[Ref] = None,
         expand: Union[None, bool, int] = None,
         expand_loose: Optional[bool] = None,
@@ -63,11 +68,6 @@ class MenuBar(Control):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        clip_behavior: Optional[ClipBehavior] = None,
-        style: Optional[MenuStyle] = None,
     ):
         Control.__init__(
             self,

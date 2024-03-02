@@ -6,20 +6,13 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import BorderRadiusValue, TextAlign, TextAlignString
+from flet_core.types import BorderRadiusValue, TextAlign
 
 
 class BarChartRod(Control):
     def __init__(
         self,
         rod_stack_items: Optional[List[BarChartRodStackItem]] = None,
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # Specific
-        #
         from_y: OptionalNumber = None,
         to_y: OptionalNumber = None,
         width: OptionalNumber = None,
@@ -36,6 +29,13 @@ class BarChartRod(Control):
         tooltip: Optional[str] = None,
         tooltip_style: Optional[TextStyle] = None,
         tooltip_align: TextAlign = TextAlign.NONE,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None,
     ):
 
         Control.__init__(
@@ -220,13 +220,9 @@ class BarChartRod(Control):
     @tooltip_align.setter
     def tooltip_align(self, value: TextAlign):
         self.__tooltip_align = value
-        if isinstance(value, TextAlign):
-            self._set_attr("tooltipAlign", value.value)
-        else:
-            self.__set_tooltip_align(value)
-
-    def __set_tooltip_align(self, value: TextAlignString):
-        self._set_attr("tooltipAlign", value)
+        self._set_attr(
+            "tooltipAlign", value.value if isinstance(value, TextAlign) else value
+        )
 
     # tooltip_style
     @property

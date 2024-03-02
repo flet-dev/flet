@@ -238,6 +238,13 @@ packages:
       relative: true
     source: path
     version: "0.20.2"
+  flet_lottie:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_lottie"
+      relative: true
+    source: path
+    version: "0.20.2"
   flet_video:
     dependency: "direct main"
     description:
@@ -426,6 +433,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  lottie:
+    dependency: transitive
+    description:
+      name: lottie
+      sha256: "1f0ce68112072d66ea271a9841994fa8d16442e23d8cf8996c9fa74174e58b4e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   markdown:
     dependency: transitive
     description:

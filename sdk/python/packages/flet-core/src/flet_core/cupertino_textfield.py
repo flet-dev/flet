@@ -39,10 +39,8 @@ class CupertinoTextField(TextField):
 
     def __init__(
         self,
-        #
-        # CupertinoTextField specific
-        #
         placeholder_text: Optional[str] = None,
+        value: Optional[str] = None,
         placeholder_style: Optional[TextStyle] = None,
         gradient: Optional[Gradient] = None,
         blend_mode: BlendMode = BlendMode.NONE,
@@ -51,9 +49,8 @@ class CupertinoTextField(TextField):
         suffix_visibility_mode: Optional[VisibilityMode] = None,
         clear_button_semantics_label: Optional[str] = None,
         #
-        # TextField Specific
+        # TextField
         #
-        value: Optional[str] = None,
         keyboard_type: Optional[KeyboardType] = None,
         rtl: Optional[bool] = None,
         multiline: Optional[bool] = None,
@@ -83,7 +80,7 @@ class CupertinoTextField(TextField):
         on_focus=None,
         on_blur=None,
         #
-        # FormField specific
+        # FormField
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
@@ -101,7 +98,7 @@ class CupertinoTextField(TextField):
         prefix: Optional[Control] = None,
         suffix: Optional[Control] = None,
         #
-        # Control specific
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,

@@ -33,37 +33,6 @@ class InputBorder(Enum):
 class FormFieldControl(ConstrainedControl):
     def __init__(
         self,
-        ref: Optional[Ref] = None,
-        key: Optional[str] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        left: OptionalNumber = None,
-        top: OptionalNumber = None,
-        right: OptionalNumber = None,
-        bottom: OptionalNumber = None,
-        expand: Union[None, bool, int] = None,
-        expand_loose: Optional[bool] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
-        aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-        rtl: Optional[bool] = None,
-        #
-        # FormField specific
-        #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
         text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
@@ -99,6 +68,37 @@ class FormFieldControl(ConstrainedControl):
         suffix_icon: Optional[str] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
+        rtl: Optional[bool] = None,
+        #
+        # ConstrainedControl
+        #
+        ref: Optional[Ref] = None,
+        key: Optional[str] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
+        tooltip: Optional[str] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -244,13 +244,9 @@ class FormFieldControl(ConstrainedControl):
     @border.setter
     def border(self, value: Optional[InputBorder]):
         self.__border = value
-        if isinstance(value, InputBorder):
-            self._set_attr("border", value.value)
-        else:
-            self.__set_border(value)
-
-    def __set_border(self, value: Optional[InputBorderString]):
-        self._set_attr("border", value)
+        self._set_attr(
+            "border", value.value if isinstance(value, InputBorder) else value
+        )
 
     # color
     @property

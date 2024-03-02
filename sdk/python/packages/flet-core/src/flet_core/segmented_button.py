@@ -18,6 +18,11 @@ class Segment(Control):
     def __init__(
         self,
         value: str,
+        icon: Optional[Control] = None,
+        label: Optional[Control] = None,
+        #
+        # Control
+        #
         ref: Optional[Ref] = None,
         expand: Union[None, bool, int] = None,
         expand_loose: Optional[bool] = None,
@@ -27,11 +32,6 @@ class Segment(Control):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        icon: Optional[Control] = None,
-        label: Optional[Control] = None,
     ):
         Control.__init__(
             self,

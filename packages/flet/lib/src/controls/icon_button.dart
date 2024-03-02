@@ -32,7 +32,8 @@ class IconButtonControl extends StatefulWidget {
   State<IconButtonControl> createState() => _IconButtonControlState();
 }
 
-class _IconButtonControlState extends State<IconButtonControl> with FletStoreMixin {
+class _IconButtonControlState extends State<IconButtonControl>
+    with FletStoreMixin {
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -78,6 +79,8 @@ class _IconButtonControlState extends State<IconButtonControl> with FletStoreMix
           parseIcon(widget.control.attrString("selectedIcon", "")!);
       Color? iconColor = HexColor.fromString(
           Theme.of(context), widget.control.attrString("iconColor", "")!);
+      Color? highlightColor = HexColor.fromString(
+          Theme.of(context), widget.control.attrString("highlightColor", "")!);
       Color? selectedIconColor = HexColor.fromString(Theme.of(context),
           widget.control.attrString("selectedIconColor", "")!);
       Color? bgColor = HexColor.fromString(
@@ -122,6 +125,7 @@ class _IconButtonControlState extends State<IconButtonControl> with FletStoreMix
         button = IconButton(
             autofocus: autofocus,
             focusNode: _focusNode,
+            highlightColor: highlightColor,
             icon: Icon(
               icon,
               color: iconColor,
@@ -138,6 +142,7 @@ class _IconButtonControlState extends State<IconButtonControl> with FletStoreMix
         button = IconButton(
             autofocus: autofocus,
             focusNode: _focusNode,
+            highlightColor: highlightColor,
             onPressed: onPressed,
             iconSize: iconSize,
             style: style,
