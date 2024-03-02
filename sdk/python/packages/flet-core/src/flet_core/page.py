@@ -35,7 +35,7 @@ from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.padding import Padding
 from flet_core.protocol import Command
-from flet_core.pubsub import PubSub
+from flet_core.pubsub import PubSubClient
 from flet_core.querystring import QueryString
 from flet_core.session_storage import SessionStorage
 from flet_core.snack_bar import SnackBar
@@ -139,7 +139,7 @@ class Page(AdaptiveControl):
         self.__theme = None
         self.__dark_theme = None
         self.__theme_mode = ThemeMode.SYSTEM  # Default Theme Mode
-        self.__pubsub: PubSub = PubSub(conn.pubsubhub, session_id)
+        self.__pubsub: PubSubClient = PubSubClient(conn.pubsubhub, session_id)
         self.__client_storage: ClientStorage = ClientStorage(self)
         self.__session_storage: SessionStorage = SessionStorage(self)
         self.__authorization: Optional[Authorization] = None
@@ -1160,7 +1160,7 @@ class Page(AdaptiveControl):
 
     # pubsub
     @property
-    def pubsub(self) -> PubSub:
+    def pubsub(self) -> PubSubClient:
         return self.__pubsub
 
     # overlay

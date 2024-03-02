@@ -186,7 +186,7 @@ from flet_core.popup_menu_button import (
 )
 from flet_core.progress_bar import ProgressBar
 from flet_core.progress_ring import ProgressRing
-from flet_core.pubsub import PubSub, PubSubHub
+from flet_core.pubsub import PubSubClient, PubSubHub
 from flet_core.querystring import QueryString
 from flet_core.radio import Radio
 from flet_core.radio_group import RadioGroup
@@ -261,7 +261,13 @@ from flet_core.types import (
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
-from flet_core.video import FilterQuality, PlaylistMode, Video, VideoMedia, VideoSubtitleConfiguration
+from flet_core.video import (
+    FilterQuality,
+    PlaylistMode,
+    Video,
+    VideoMedia,
+    VideoSubtitleConfiguration,
+)
 from flet_core.view import View
 from flet_core.webview import WebView
 from flet_core.window_drag_area import WindowDragArea
