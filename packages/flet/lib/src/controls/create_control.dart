@@ -27,7 +27,6 @@ import 'card.dart';
 import 'checkbox.dart';
 import 'chip.dart';
 import 'circle_avatar.dart';
-import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'cupertino_action_sheet.dart';
@@ -269,12 +268,6 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive);
-    case "clipboard":
-      return ClipboardControl(
-          parent: parent,
-          control: controlView.control,
-          nextChild: nextChild,
-          backend: backend);
     case "hapticfeedback":
       return HapticFeedbackControl(
           parent: parent,

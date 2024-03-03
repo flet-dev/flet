@@ -19,7 +19,6 @@ from flet_core.banner import Banner
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
 from flet_core.client_storage import ClientStorage
-from flet_core.clipboard import Clipboard
 from flet_core.connection import Connection
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
@@ -700,7 +699,7 @@ class Page(AdaptiveControl):
         )
 
     def set_clipboard(self, value: str):
-        self.__offstage.clipboard.set_data(value)
+        self._invoke_method("setClipboard", {"data": value})
 
     @deprecated(
         reason="Use set_clipboard() method instead.",
@@ -711,10 +710,10 @@ class Page(AdaptiveControl):
         self.set_clipboard(value)
 
     def get_clipboard(self):
-        return self.__offstage.clipboard.get_data()
+        return self._invoke_method("getClipboard", wait_for_result=True)
 
     def get_clipboard_async(self):
-        return self.__offstage.clipboard.get_data_async()
+        return self._invoke_method_async("getClipboard", wait_for_result=True)
 
     def launch_url(
         self,
@@ -1922,7 +1921,6 @@ class Offstage(Control):
         )
 
         self.__controls: List[Control] = []
-        self.__clipboard = Clipboard()
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
@@ -1935,8 +1933,6 @@ class Offstage(Control):
     def _get_children(self):
         children = []
         children.extend(self.__controls)
-        if self.__clipboard:
-            children.append(self.__clipboard)
         if self.__banner:
             children.append(self.__banner)
         if self.__snack_bar:
@@ -1953,11 +1949,6 @@ class Offstage(Control):
     @property
     def controls(self):
         return self.__controls
-
-    # clipboard
-    @property
-    def clipboard(self):
-        return self.__clipboard
 
     # splash
     @property
