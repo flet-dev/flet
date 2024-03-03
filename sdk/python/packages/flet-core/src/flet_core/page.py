@@ -709,11 +709,15 @@ class Page(AdaptiveControl):
     async def set_clipboard_async(self, value: str):
         self.set_clipboard(value)
 
-    def get_clipboard(self):
-        return self._invoke_method("getClipboard", wait_for_result=True)
+    def get_clipboard(self, wait_timeout: Optional[float] = 10):
+        return self._invoke_method(
+            "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
+        )
 
-    def get_clipboard_async(self):
-        return self._invoke_method_async("getClipboard", wait_for_result=True)
+    def get_clipboard_async(self, wait_timeout: Optional[float] = 10):
+        return self._invoke_method_async(
+            "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
+        )
 
     def launch_url(
         self,
