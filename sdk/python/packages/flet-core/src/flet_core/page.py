@@ -698,16 +698,16 @@ class Page(AdaptiveControl):
             ),
         )
 
-    def set_clipboard(self, value: str):
-        self._invoke_method("setClipboard", {"data": value})
+    def set_clipboard(self, value: str, wait_timeout: Optional[float] = 10):
+        self._invoke_method("setClipboard", {"data": value}, wait_timeout=wait_timeout)
 
     @deprecated(
         reason="Use set_clipboard() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
-    async def set_clipboard_async(self, value: str):
-        self.set_clipboard(value)
+    async def set_clipboard_async(self, value: str, wait_timeout: Optional[float] = 10):
+        self.set_clipboard(value, wait_timeout=wait_timeout)
 
     def get_clipboard(self, wait_timeout: Optional[float] = 10):
         return self._invoke_method(

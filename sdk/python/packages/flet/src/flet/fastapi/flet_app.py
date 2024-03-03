@@ -153,7 +153,7 @@ class FletApp(LocalConnection):
                 traceback.format_exc(),
             )
             assert self.__page
-            await self.__page.error(
+            self.__page.error(
                 f"There was an error while processing your request: {e}"
             )
 
