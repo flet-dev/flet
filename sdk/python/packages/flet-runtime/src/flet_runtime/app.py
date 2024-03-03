@@ -246,9 +246,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
                 f"Unhandled error processing page session {page.session_id}:",
                 traceback.format_exc(),
             )
-            await page.error_async(
-                f"There was an error while processing your request: {e}"
-            )
+            page.error(f"There was an error while processing your request: {e}")
 
     conn = FletSocketServer(
         loop=asyncio.get_running_loop(),
