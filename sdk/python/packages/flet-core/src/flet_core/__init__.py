@@ -71,6 +71,7 @@ from flet_core.cupertino_action_sheet_action import CupertinoActionSheetAction
 from flet_core.cupertino_activity_indicator import CupertinoActivityIndicator
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
+from flet_core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.cupertino_checkbox import CupertinoCheckbox
 from flet_core.cupertino_context_menu import CupertinoContextMenu
