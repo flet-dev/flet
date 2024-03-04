@@ -1,15 +1,8 @@
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
 
 
 class CupertinoTimerPickerMode(Enum):
