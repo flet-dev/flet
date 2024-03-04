@@ -7,6 +7,7 @@
 * `CupertinoSlidingSegmentedButton` and `CupertinoSegmentedButton` controls ([#2767](https://github.com/flet-dev/flet/issues/2767)).
 * `CupertinoTimerPicker` and `CupertinorPicker` Controls ([#2743](https://github.com/flet-dev/flet/issues/2743)).
 * `CupertinoContextMenu` and `CupertinoContextMenuAction` controls ([#2772](https://github.com/flet-dev/flet/issues/2772)).
+* `CupertinoDatePicker` Control ([#2795](https://github.com/flet-dev/flet/issues/2795)).
 * `Page.on_app_lifecycle_state_change` event ([#2800](https://github.com/flet-dev/flet/issues/2800)).
 * More `Semantics` properties and `SemanticsService` control ([#2731](https://github.com/flet-dev/flet/issues/2731)).
 * Fix container.dart for issue #2628 ([#2701](https://github.com/flet-dev/flet/issues/2701)).(#2701)
