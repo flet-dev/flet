@@ -7,6 +7,7 @@ from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
 from flet_core.ref import Ref
 from flet_core.types import ResponsiveNumber
+from flet_core.utils import deprecated
 
 if TYPE_CHECKING:
     from .page import Page
@@ -293,9 +294,11 @@ class Control:
         assert self.__page, "Control must be added to the page first."
         self.__page._clean(self)
 
+    @deprecated(
+        reason="Use clean() method instead.", version="0.21.0", delete_version="1.0"
+    )
     async def clean_async(self):
-        assert self.__page, "Control must be added to the page first."
-        await self.__page._clean_async(self)
+        self.clean()
 
     def invoke_method(
         self,
@@ -305,7 +308,7 @@ class Control:
         wait_timeout: Optional[float] = 5,
     ) -> Optional[str]:
         assert self.__page, "Control must be added to the page first."
-        self.__page._invoke_method(
+        return self.__page._invoke_method(
             control_id=self.uid,
             method_name=method_name,
             arguments=arguments,

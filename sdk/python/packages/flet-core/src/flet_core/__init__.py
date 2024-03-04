@@ -71,6 +71,7 @@ from flet_core.cupertino_action_sheet_action import CupertinoActionSheetAction
 from flet_core.cupertino_activity_indicator import CupertinoActivityIndicator
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
+from flet_core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.cupertino_checkbox import CupertinoCheckbox
 from flet_core.cupertino_context_menu import CupertinoContextMenu
@@ -200,7 +201,7 @@ from flet_core.popup_menu_button import (
 )
 from flet_core.progress_bar import ProgressBar
 from flet_core.progress_ring import ProgressRing
-from flet_core.pubsub import PubSub, PubSubHub
+from flet_core.pubsub import PubSubClient, PubSubHub
 from flet_core.querystring import QueryString
 from flet_core.radio import Radio
 from flet_core.radio_group import RadioGroup

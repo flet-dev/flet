@@ -1,5 +1,5 @@
 from flet_core import *
-from flet_core.pubsub import PubSub
+from flet_core.pubsub import PubSubClient
 from flet_core.types import (
     FLET_APP,
     FLET_APP_HIDDEN,
