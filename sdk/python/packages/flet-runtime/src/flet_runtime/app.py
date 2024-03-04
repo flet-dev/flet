@@ -67,7 +67,7 @@ def app(
             route_url_strategy=route_url_strategy,
         )
 
-    return asyncio.get_event_loop().run_until_complete(
+    return asyncio.run(
         app_async(
             target=target,
             name=name,

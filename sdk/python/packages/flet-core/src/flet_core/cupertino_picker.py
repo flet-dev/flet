@@ -1,10 +1,18 @@
 from typing import Any, List, Optional, Union
 
+from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import (
+    AnimationValue,
+    OffsetValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
-class CupertinoPicker(Control):
+class CupertinoPicker(ConstrainedControl):
     """
     An iOS-styled picker.
 
@@ -25,23 +33,66 @@ class CupertinoPicker(Control):
         squeeze: OptionalNumber = None,
         diameter_ratio: OptionalNumber = None,
         off_axis_fraction: OptionalNumber = None,
-        modal: bool = False,
-        open: bool = False,
         on_change=None,
-        on_dismiss=None,
         #
-        # Control
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end=None,
+        tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
-        Control.__init__(
+        ConstrainedControl.__init__(
             self,
             ref=ref,
-            disabled=disabled,
+            key=key,
+            width=width,
+            height=height,
+            left=left,
+            top=top,
+            right=right,
+            bottom=bottom,
+            expand=expand,
+            expand_loose=expand_loose,
+            col=col,
+            opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            aspect_ratio=aspect_ratio,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
+            tooltip=tooltip,
             visible=visible,
+            disabled=disabled,
             data=data,
         )
 
@@ -56,9 +107,6 @@ class CupertinoPicker(Control):
         self.controls = controls
         self.looping = looping
         self.selected_index = selected_index
-        self.modal = modal
-        self.open = open
-        self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
         return "cupertinopicker"
@@ -162,24 +210,6 @@ class CupertinoPicker(Control):
     def controls(self, value: Optional[List[Control]]):
         self.__controls = value if value is not None else []
 
-    # open
-    @property
-    def open(self) -> Optional[bool]:
-        return self._get_attr("open", data_type="bool", def_value=False)
-
-    @open.setter
-    def open(self, value: Optional[bool]):
-        self._set_attr("open", value)
-
-    # modal
-    @property
-    def modal(self) -> Optional[bool]:
-        return self._get_attr("modal", data_type="bool", def_value=False)
-
-    @modal.setter
-    def modal(self, value: Optional[bool]):
-        self._set_attr("modal", value)
-
     # on_change
     @property
     def on_change(self):
@@ -188,12 +218,3 @@ class CupertinoPicker(Control):
     @on_change.setter
     def on_change(self, handler):
         self._add_event_handler("change", handler)
-
-    # on_dismiss
-    @property
-    def on_dismiss(self):
-        return self._get_event_handler("dismiss")
-
-    @on_dismiss.setter
-    def on_dismiss(self, handler):
-        self._add_event_handler("dismiss", handler)

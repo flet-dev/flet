@@ -125,7 +125,7 @@ class FletStaticFiles(StaticFiles):
                 logger.warning("assets_dir must be absolute path.")
                 self.__assets_dir = None
             elif not os.path.exists(self.__assets_dir):
-                logger.warning(f"assets_dir does not exist: {self.__assets_dir}")
+                logger.info(f"assets_dir does not exist: {self.__assets_dir}")
                 self.__assets_dir = None
 
         logger.info(f"Assets dir: {self.__assets_dir}")
