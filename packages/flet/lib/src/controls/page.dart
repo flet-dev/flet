@@ -238,7 +238,8 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   }
 
   void _handleAppLifecycleTransition(String state) {
-    widget.backend.triggerControlEvent("page", "app_lifecycle_change", state);
+    widget.backend
+        .triggerControlEvent("page", "app_lifecycle_state_change", state);
   }
 
   @override

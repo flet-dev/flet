@@ -155,9 +155,10 @@ class Page(AdaptiveControl):
             "platformBrightnessChange",
             self.__on_platform_brightness_change.get_handler(),
         )
-        self.__on_app_lifecycle_change = EventHandler()
+        self.__on_app_lifecycle_state_change = EventHandler()
         self._add_event_handler(
-            "app_lifecycle_change", self.__on_app_lifecycle_change.get_handler()
+            "app_lifecycle_state_change",
+            self.__on_app_lifecycle_state_change.get_handler(),
         )
 
         self.__last_route = None
@@ -1813,12 +1814,12 @@ class Page(AdaptiveControl):
 
     # on_app_lifecycle_change
     @property
-    def on_app_lifecycle_change(self):
-        return self.__on_app_lifecycle_change
+    def on_app_lifecycle_state_change(self):
+        return self.__on_app_lifecycle_state_change
 
-    @on_app_lifecycle_change.setter
-    def on_app_lifecycle_change(self, handler):
-        self.__on_app_lifecycle_change.subscribe(handler)
+    @on_app_lifecycle_state_change.setter
+    def on_app_lifecycle_state_change(self, handler):
+        self.__on_app_lifecycle_state_change.subscribe(handler)
 
     # on_route_change
     @property
