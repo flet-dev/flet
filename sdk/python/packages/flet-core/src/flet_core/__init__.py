@@ -75,6 +75,11 @@ from flet_core.cupertino_button import CupertinoButton
 from flet_core.cupertino_checkbox import CupertinoCheckbox
 from flet_core.cupertino_context_menu import CupertinoContextMenu
 from flet_core.cupertino_context_menu_action import CupertinoContextMenuAction
+from flet_core.cupertino_date_picker import (
+    CupertinoDatePicker,
+    CupertinoDatePickerDateOrder,
+    CupertinoDatePickerMode,
+)
 from flet_core.cupertino_dialog_action import CupertinoDialogAction
 from flet_core.cupertino_filled_button import CupertinoFilledButton
 from flet_core.cupertino_list_tile import CupertinoListTile

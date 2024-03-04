@@ -38,6 +38,7 @@ import 'cupertino_button.dart';
 import 'cupertino_checkbox.dart';
 import 'cupertino_context_menu.dart';
 import 'cupertino_context_menu_action.dart';
+import 'cupertino_date_picker.dart';
 import 'cupertino_dialog_action.dart';
 import 'cupertino_list_tile.dart';
 import 'cupertino_navigation_bar.dart';
@@ -500,7 +501,12 @@ Widget createWidget(
       return DatePickerControl(
           parent: parent,
           control: controlView.control,
-          children: controlView.children,
+          parentDisabled: parentDisabled,
+          backend: backend);
+    case "cupertinodatepicker":
+      return CupertinoDatePickerControl(
+          parent: parent,
+          control: controlView.control,
           parentDisabled: parentDisabled,
           backend: backend);
     case "timepicker":
