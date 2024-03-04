@@ -7,8 +7,9 @@ import traceback
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-import flet.fastapi as flet_fastapi
 from fastapi import WebSocket, WebSocketDisconnect
+
+import flet.fastapi as flet_fastapi
 from flet.fastapi.flet_app_manager import app_manager
 from flet.fastapi.oauth_state import OAuthState
 from flet_core.event import Event
@@ -91,7 +92,7 @@ class FletApp(LocalConnection):
         async with _pubsubhubs_lock:
             psh = _pubsubhubs.get(self.__session_handler, None)
             if psh is None:
-                psh = PubSubHub(loop=self.__loop, pool=app_manager.pool)
+                psh = PubSubHub(loop=self.__loop, executor=app_manager.executor)
                 _pubsubhubs[self.__session_handler] = psh
             self.pubsubhub = psh
 
@@ -138,7 +139,7 @@ class FletApp(LocalConnection):
             else:
                 # run in thread pool
                 await asyncio.get_running_loop().run_in_executor(
-                    app_manager.pool, self.__session_handler, self.__page
+                    app_manager.executor, self.__session_handler, self.__page
                 )
         except PageDisconnectedException:
             logger.debug(
@@ -152,7 +153,7 @@ class FletApp(LocalConnection):
                 traceback.format_exc(),
             )
             assert self.__page
-            await self.__page.error_async(
+            self.__page.error(
                 f"There was an error while processing your request: {e}"
             )
 
@@ -203,7 +204,7 @@ class FletApp(LocalConnection):
                 self.__page = Page(
                     self,
                     self._client_details.sessionId,
-                    pool=app_manager.pool,
+                    executor=app_manager.executor,
                     loop=asyncio.get_running_loop(),
                 )
 

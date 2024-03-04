@@ -35,7 +35,7 @@ class FletSocketServer(LocalConnection):
         on_event=None,
         on_session_created=None,
         blocking=False,
-        pool: Optional[ThreadPoolExecutor] = None,
+        executor: Optional[ThreadPoolExecutor] = None,
     ):
         super().__init__()
         self.__send_queue = asyncio.Queue()
@@ -45,8 +45,8 @@ class FletSocketServer(LocalConnection):
         self.__on_session_created = on_session_created
         self.__blocking = blocking
         self.__loop = loop
-        self.__pool = pool
-        self.pubsubhub = PubSubHub(loop=loop, pool=pool)
+        self.__executor = executor
+        self.pubsubhub = PubSubHub(loop=loop, executor=executor)
         self.__running_tasks = set()
 
     async def start(self):
@@ -183,9 +183,9 @@ class FletSocketServer(LocalConnection):
             _, page = self.sessions.popitem()
             await page._disconnect(0)
 
-        if self.__pool:
+        if self.__executor:
             logger.debug("Shutting down thread pool...")
-            self.__pool.shutdown(wait=False, cancel_futures=True)
+            self.__executor.shutdown(wait=False, cancel_futures=True)
 
         # close socket
         if self.__receive_loop_task:
