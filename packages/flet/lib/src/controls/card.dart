@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -27,6 +28,11 @@ class CardControl extends StatelessWidget {
 
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
+    var clipBehavior = Clip.values.firstWhereOrNull(
+      (e) =>
+          e.name.toLowerCase() ==
+          control.attrString("clipBehavior", "")!.toLowerCase(),
+    );
     bool disabled = control.isDisabled || parentDisabled;
     bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
@@ -36,6 +42,9 @@ class CardControl extends StatelessWidget {
             elevation: control.attrDouble("elevation"),
             shape: parseOutlinedBorder(control, "shape"),
             margin: parseEdgeInsets(control, "margin"),
+            semanticContainer: control.attrBool("semanticContainer", true)!,
+            borderOnForeground: control.attrBool("borderOnForeground", true)!,
+            clipBehavior: clipBehavior,
             color: HexColor.fromString(
                 Theme.of(context), control.attrString("color", "")!),
             shadowColor: HexColor.fromString(

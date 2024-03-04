@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
@@ -118,6 +119,10 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
           autofocus: autofocus,
           focusNode: _focusNode,
           value: _value,
+          isError: widget.control.attrBool("error", false)!,
+          semanticLabel: widget.control.attrString("semanticsLabel"),
+          shape: parseOutlinedBorder(widget.control, "shape"),
+          splashRadius: widget.control.attrDouble("splashRadius"),
           activeColor: HexColor.fromString(
               Theme.of(context), widget.control.attrString("activeColor", "")!),
           focusColor: HexColor.fromString(

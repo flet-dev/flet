@@ -296,7 +296,8 @@ Widget createWidget(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          backend: backend);
     case "chip":
       return ChipControl(
           key: key,
@@ -533,7 +534,8 @@ Widget createWidget(
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
+          parentAdaptive: parentAdaptive,
+          backend: backend);
     case "dragtarget":
       return DragTargetControl(
           key: key,

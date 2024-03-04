@@ -70,6 +70,18 @@ class DragTargetControl extends StatelessWidget {
             "DragTarget.builder ${control.id}: accepted=${accepted.length}, rejected=${rejected.length}");
         return child;
       },
+      onMove: (details) {
+        var data = details.data;
+        debugPrint("DragTarget.onMove ${control.id}: $data");
+        var jd = json.decode(data);
+        var srcId = jd["id"] as String;
+        backend.triggerControlEvent(
+            control.id,
+            "move",
+            json.encode(DragTargetAcceptEvent(
+                    srcId: srcId, x: details.offset.dx, y: details.offset.dy)
+                .toJson()));
+      },
       onWillAcceptWithDetails: (details) {
         var data = details.data;
         debugPrint("DragTarget.onWillAcceptWithDetails ${control.id}: $data");

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
@@ -9,13 +10,15 @@ class CircleAvatarControl extends StatelessWidget {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
+  final FletControlBackend backend;
 
   const CircleAvatarControl(
       {super.key,
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled});
+      required this.parentDisabled,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,12 @@ class CircleAvatarControl extends StatelessWidget {
         radius: control.attrDouble("radius"),
         minRadius: control.attrDouble("minRadius"),
         maxRadius: control.attrDouble("maxRadius"),
+        onBackgroundImageError: (object, trace) {
+          backend.triggerControlEvent(control.id, "imageError");
+        },
+        onForegroundImageError: (object, trace) {
+          backend.triggerControlEvent(control.id, "imageError");
+        },
         child: contentCtrls.isNotEmpty
             ? createControl(control, contentCtrls.first.id, disabled)
             : null);
