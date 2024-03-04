@@ -1,3 +1,20 @@
+# 0.21.0
+
+* FastAPI instead of built-in Fletd server. Mixed async/sync apps. ([#2700](https://github.com/flet-dev/flet/issues/2700)).
+* `CupertinoActivityIndicator` Control ([#2762](https://github.com/flet-dev/flet/issues/2762)).
+* `Lottie`Control and `Video` v2 ([#2673](https://github.com/flet-dev/flet/issues/2673)).
+* `CupertinoActionSheet` and `CupertinoActionSheetAction` controls ([#2763](https://github.com/flet-dev/flet/issues/2763)).
+* `CupertinoSlidingSegmentedButton` and `CupertinoSegmentedButton` controls ([#2767](https://github.com/flet-dev/flet/issues/2767)).
+* `CupertinoTimerPicker` and `CupertinorPicker` Controls ([#2743](https://github.com/flet-dev/flet/issues/2743)).
+* `CupertinoContextMenu` and `CupertinoContextMenuAction` controls ([#2772](https://github.com/flet-dev/flet/issues/2772)).
+* `Page.on_app_lifecycle_state_change` event ([#2800](https://github.com/flet-dev/flet/issues/2800)).
+* More `Semantics` properties and `SemanticsService` control ([#2731](https://github.com/flet-dev/flet/issues/2731)).
+* Fix container.dart for issue #2628 ([#2701](https://github.com/flet-dev/flet/issues/2701)).(#2701)
+* Adaptive fixes ([#2720](https://github.com/flet-dev/flet/issues/2720)).
+* `label_style` property for `Checkbox`, `Switch`, and `Radio` ([#2730](https://github.com/flet-dev/flet/issues/2730)).
+* Additional properties ([#2736](https://github.com/flet-dev/flet/issues/2736)).
+* Reorder `__init__` ([#2724](https://github.com/flet-dev/flet/issues/2724)).
+
 # 0.20.2
 * Move `system_overlay_style` from `AppBar` to `Theme` ([#2667](https://github.com/flet-dev/flet/issues/2667)).
 * `flet build` command checks minimal Flutter SDK version.
