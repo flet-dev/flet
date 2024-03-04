@@ -471,7 +471,7 @@ class Page(AdaptiveControl):
 
     def run_task(self, handler: Callable[..., Awaitable[Any]], *args):
         assert asyncio.iscoroutinefunction(handler)
-        asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
+        return asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
 
     def run_thread(self, handler, *args):
         if is_pyodide():
@@ -993,9 +993,7 @@ class Page(AdaptiveControl):
     #
     def show_bottom_sheet(
         self,
-        bottom_sheet: Union[
-            BottomSheet, CupertinoBottomSheet
-        ],
+        bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
     ):
         self.__offstage.bottom_sheet = bottom_sheet
         self.__offstage.bottom_sheet.open = True
@@ -1008,9 +1006,7 @@ class Page(AdaptiveControl):
     )
     async def show_bottom_sheet_async(
         self,
-        bottom_sheet: Union[
-            BottomSheet, CupertinoBottomSheet
-        ],
+        bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
     ):
         self.show_bottom_sheet(bottom_sheet)
 
@@ -1995,9 +1991,7 @@ class Offstage(Control):
     @property
     def bottom_sheet(
         self,
-    ) -> Union[
-        BottomSheet, CupertinoBottomSheet, None
-    ]:
+    ) -> Union[BottomSheet, CupertinoBottomSheet, None]:
         return self.__bottom_sheet
 
     @bottom_sheet.setter
