@@ -74,9 +74,7 @@ def app_async(
                 f"Unhandled error processing page session {page.session_id}:",
                 traceback.format_exc(),
             )
-            await page.error_async(
-                f"There was an error while processing your request: {e}"
-            )
+            page.error(f"There was an error while processing your request: {e}")
 
     conn = PyodideConnection(
         on_event=on_event,

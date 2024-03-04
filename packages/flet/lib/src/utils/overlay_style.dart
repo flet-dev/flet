@@ -43,5 +43,6 @@ SystemUiOverlayStyle overlayStyleFromJson(
 }
 
 Brightness? parseBrightness(dynamic value, [Brightness? defValue]) {
-  Brightness.values.firstWhereOrNull((e) => e.toString() == value) ?? defValue;
+  return Brightness.values.firstWhereOrNull((e) => e.toString() == value) ??
+      defValue;
 }
