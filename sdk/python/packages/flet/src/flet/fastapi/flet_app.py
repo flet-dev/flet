@@ -7,9 +7,8 @@ import traceback
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-from fastapi import WebSocket, WebSocketDisconnect
-
 import flet.fastapi as flet_fastapi
+from fastapi import WebSocket, WebSocketDisconnect
 from flet.fastapi.flet_app_manager import app_manager
 from flet.fastapi.oauth_state import OAuthState
 from flet_core.event import Event
@@ -153,9 +152,7 @@ class FletApp(LocalConnection):
                 traceback.format_exc(),
             )
             assert self.__page
-            self.__page.error(
-                f"There was an error while processing your request: {e}"
-            )
+            self.__page.error(f"There was an error while processing your request: {e}")
 
     async def __send_loop(self):
         while True:
@@ -288,7 +285,7 @@ class FletApp(LocalConnection):
                 )
 
                 if original_route != self.__page.route:
-                    await self.__page.go_async(self.__page.route)
+                    self.__page.go(self.__page.route)
 
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
             if self.__on_event is not None:
