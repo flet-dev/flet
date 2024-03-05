@@ -239,3 +239,13 @@ class FloatingActionButtonLocation(Enum):
     START_DOCKED = "startDocked"
     START_FLOAT = "startFloat"
     START_TOP = "startTop"
+
+
+class AppLifecycleState(Enum):
+    SHOW = "show"
+    RESUME = "resume"
+    HIDE = "hide"
+    INACTIVE = "inactive"
+    PAUSE = "pause"
+    DETACH = "detach"
+    RESTART = "restart"
