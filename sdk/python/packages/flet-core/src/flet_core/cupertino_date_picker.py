@@ -47,7 +47,6 @@ class CupertinoDatePicker(ConstrainedControl):
         value: Optional[datetime] = None,
         first_date: Optional[datetime] = None,
         last_date: Optional[datetime] = None,
-        current_date: Optional[datetime] = None,
         bgcolor: Optional[str] = None,
         minute_interval: Optional[int] = None,
         minimum_year: Optional[int] = None,
@@ -127,7 +126,6 @@ class CupertinoDatePicker(ConstrainedControl):
         self.first_date = first_date
         self.use_24h_format = use_24h_format
         self.last_date = last_date
-        self.current_date = current_date
         self.date_picker_mode = date_picker_mode
         self.date_order = date_order
         self.on_change = on_change
@@ -175,20 +173,6 @@ class CupertinoDatePicker(ConstrainedControl):
             value = value.isoformat()
         self._set_attr("lastDate", value)
 
-    # current_date
-    @property
-    def current_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("currentDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
-
-    @current_date.setter
-    def current_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("currentDate", value)
-
     # bgcolor
     @property
     def bgcolor(self) -> Optional[str]:
@@ -205,6 +189,8 @@ class CupertinoDatePicker(ConstrainedControl):
 
     @item_extent.setter
     def item_extent(self, value: OptionalNumber):
+        if value is not None and value<0:
+            raise ValueError("item_extent must be greater than 0")
         self._set_attr("itemExtent", value)
 
     # min_year
@@ -232,6 +218,8 @@ class CupertinoDatePicker(ConstrainedControl):
 
     @minute_interval.setter
     def minute_interval(self, value: Optional[int]):
+        if value is not None and (value < 0 or 60 % value != 0):
+            raise ValueError("minute_interval must be a positive integer factor of 60")
         self._set_attr("minuteInterval", value)
 
     # use_24h_format

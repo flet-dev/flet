@@ -39,7 +39,6 @@ class _CupertinoDatePickerControlState
     DateTime? value = widget.control.attrDateTime("value");
     DateTime? firstDate = widget.control.attrDateTime("firstDate");
     DateTime? lastDate = widget.control.attrDateTime("lastDate");
-    DateTime? currentDate = widget.control.attrDateTime("currentDate");
     int minimumYear = widget.control.attrInt("minimumYear", 1)!;
     int? maximumYear = widget.control.attrInt("maximumYear");
     double itemExtent = widget.control.attrDouble("itemExtent", _kItemExtent)!;
@@ -57,11 +56,12 @@ class _CupertinoDatePickerControlState
                 widget.control.attrString("datePickerMode", "")!.toLowerCase(),
             orElse: () => CupertinoDatePickerMode.dateAndTime);
 
-    Widget dialog = CupertinoDatePicker(
-      initialDateTime: value ?? currentDate,
+    try {
+      Widget dialog = CupertinoDatePicker(
+      initialDateTime: value,
       showDayOfWeek: showDayOfWeek,
-      minimumDate: firstDate ?? DateTime(1900),
-      maximumDate: lastDate ?? DateTime(2050),
+      minimumDate: firstDate,
+      maximumDate: lastDate,
       backgroundColor: bgcolor,
       minimumYear: minimumYear,
       maximumYear: maximumYear,
@@ -78,6 +78,9 @@ class _CupertinoDatePickerControlState
             .triggerControlEvent(widget.control.id, "change", stringValue);
       },
     );
+    } catch (e) {
+      return ErrorControl(e.toString());
+    }
 
     return constrainedControl(context, dialog, widget.parent, widget.control);
   }
