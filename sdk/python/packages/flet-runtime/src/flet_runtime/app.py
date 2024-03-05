@@ -135,11 +135,13 @@ async def app_async(
         if view == AppView.WEB_BROWSER and url_prefix is None and not force_web_server:
             open_in_browser(page_url)
 
+    loop = asyncio.get_running_loop()
+
     terminate = asyncio.Event()
 
     def exit_gracefully(signum, frame):
         logger.debug("Gracefully terminating Flet app...")
-        asyncio.get_event_loop().call_soon_threadsafe(terminate.set)
+        loop.call_soon_threadsafe(terminate.set)
 
     signal.signal(signal.SIGINT, exit_gracefully)
     signal.signal(signal.SIGTERM, exit_gracefully)

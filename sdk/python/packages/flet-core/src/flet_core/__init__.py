@@ -171,6 +171,7 @@ from flet_core.navigation_rail import (
 from flet_core.outlined_button import OutlinedButton
 from flet_core.padding import Padding
 from flet_core.page import (
+    AppLifecycleStateChangeEvent,
     KeyboardEvent,
     LoginEvent,
     Page,
@@ -249,6 +250,7 @@ from flet_core.tooltip import Tooltip
 from flet_core.transform import Offset, Rotate, Scale
 from flet_core.transparent_pointer import TransparentPointer
 from flet_core.types import (
+    AppLifecycleState,
     BlendMode,
     BoxShape,
     Brightness,

@@ -43,6 +43,7 @@ from flet_core.session_storage import SessionStorage
 from flet_core.snack_bar import SnackBar
 from flet_core.theme import Theme
 from flet_core.types import (
+    AppLifecycleState,
     Brightness,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
@@ -155,7 +156,13 @@ class Page(AdaptiveControl):
             "platformBrightnessChange",
             self.__on_platform_brightness_change.get_handler(),
         )
-        self.__on_app_lifecycle_state_change = EventHandler()
+
+        def convert_app_lifecycle_state_change_event(e):
+            return AppLifecycleStateChangeEvent(e)
+
+        self.__on_app_lifecycle_state_change = EventHandler(
+            convert_app_lifecycle_state_change_event
+        )
         self._add_event_handler(
             "app_lifecycle_state_change",
             self.__on_app_lifecycle_state_change.get_handler(),
@@ -2086,3 +2093,10 @@ class PageMediaData(ControlEvent):
 
     def __str__(self) -> str:
         return f"PageMediaData(padding={self.padding}, view_padding={self.view_padding}, view_insets={self.view_insets})"
+
+
+class AppLifecycleStateChangeEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+
+        self.state = AppLifecycleState(e.data)
