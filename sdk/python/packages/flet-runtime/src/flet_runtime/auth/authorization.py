@@ -9,11 +9,12 @@ import httpx
 from flet.version import version
 from flet_core.locks import AsyncNopeLock, NopeLock
 from flet_core.utils import is_asyncio
+from oauthlib.oauth2 import WebApplicationClient
+from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
+
 from flet_runtime.auth.oauth_provider import OAuthProvider
 from flet_runtime.auth.oauth_token import OAuthToken
 from flet_runtime.auth.user import User
-from oauthlib.oauth2 import WebApplicationClient
-from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
 
 
 class Authorization:
@@ -76,6 +77,8 @@ class Authorization:
             self.provider.redirect_url,
             scope=self.scope,
             state=self.state,
+            code_challenge=self.provider.code_challenge,
+            code_challenge_method=self.provider.code_challenge_method,
         )
         return authorization_url, self.state
 
@@ -106,6 +109,7 @@ class Authorization:
             redirect_uri=self.provider.redirect_url,
             client_secret=self.provider.client_secret,
             include_client_id=True,
+            code_verifier=self.provider.code_verifier,
         )
         headers = self.__get_default_headers()
         headers["content-type"] = "application/x-www-form-urlencoded"
