@@ -1,3 +1,7 @@
+# 0.21.1
+
+* Bugfixing.
+
 # 0.21.0
 
 * FastAPI instead of built-in Fletd server. Mixed async/sync apps. ([#2700](https://github.com/flet-dev/flet/issues/2700)).

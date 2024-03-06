@@ -1,5 +1,10 @@
 # Flet changelog
 
+# 0.21.1
+
+* Python dependencies bumped and losen.
+* Fixed: "No supported WebSocket library detected." when running web app with Flet 0.21.0 ([#2818](https://github.com/flet-dev/flet/issues/2818)).
+
 # 0.21.0
 
 * FastAPI instead of built-in Fletd server. Mixed async/sync apps. ([#2700](https://github.com/flet-dev/flet/issues/2700)).
