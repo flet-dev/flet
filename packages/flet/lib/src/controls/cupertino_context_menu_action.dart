@@ -54,10 +54,13 @@ class _CupertinoContextMenuActionControlState
             : Text(text, overflow: TextOverflow.ellipsis));
 
     return CupertinoContextMenuAction(
-      isDefaultAction: widget.control.attrBool("default", false)!,
-      isDestructiveAction: widget.control.attrBool("destructive", false)!,
+      isDefaultAction: widget.control.attrBool("isDefaultAction", false)!,
+      isDestructiveAction:
+          widget.control.attrBool("isDestructiveAction", false)!,
       onPressed: () {
-        widget.backend.triggerControlEvent(widget.control.id, "click", "");
+        if (!disabled) {
+          widget.backend.triggerControlEvent(widget.control.id, "click");
+        }
       },
       trailingIcon: trailingIcon,
       child: child,

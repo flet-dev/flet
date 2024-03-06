@@ -23,9 +23,10 @@ class CupertinoActionSheetAction(ConstrainedControl):
 
     def __init__(
         self,
-        content: Control,
-        default: Optional[bool] = None,
-        destructive: Optional[bool] = None,
+        text: Optional[str] = None,
+        content: Optional[Control] = None,
+        is_default_action: Optional[bool] = None,
+        is_destructive_action: Optional[bool] = None,
         on_click=None,
         #
         # ConstrainedControl
@@ -89,9 +90,10 @@ class CupertinoActionSheetAction(ConstrainedControl):
             data=data,
         )
 
+        self.text = text
         self.content = content
-        self.default = default
-        self.destructive = destructive
+        self.is_default_action = is_default_action
+        self.is_destructive_action = is_destructive_action
         self.on_click = on_click
 
     def _get_control_name(self):
@@ -107,23 +109,32 @@ class CupertinoActionSheetAction(ConstrainedControl):
             children.append(self.__content)
         return children
 
-    # default
+    # text
     @property
-    def default(self) -> Optional[bool]:
-        return self._get_attr("default", data_type="bool", def_value=False)
+    def text(self):
+        return self._get_attr("text")
 
-    @default.setter
-    def default(self, value: Optional[bool]):
-        self._set_attr("default", value)
+    @text.setter
+    def text(self, value):
+        self._set_attr("text", value)
 
-    # destructive
+    # is_default_action
     @property
-    def destructive(self) -> Optional[bool]:
-        return self._get_attr("destructive", data_type="bool", def_value=False)
+    def is_default_action(self) -> Optional[bool]:
+        return self._get_attr("isDefaultAction")
 
-    @destructive.setter
-    def destructive(self, value: Optional[bool]):
-        self._set_attr("destructive", value)
+    @is_default_action.setter
+    def is_default_action(self, value: Optional[bool]):
+        self._set_attr("isDefaultAction", value)
+
+    # is_destructive_action
+    @property
+    def is_destructive_action(self) -> Optional[bool]:
+        return self._get_attr("isDestructiveAction")
+
+    @is_destructive_action.setter
+    def is_destructive_action(self, value: Optional[bool]):
+        self._set_attr("isDestructiveAction", value)
 
     # content
     @property

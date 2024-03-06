@@ -16,11 +16,11 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
         text: Optional[str] = None,
+        content: Optional[Control] = None,
+        is_default_action: Optional[bool] = None,
+        is_destructive_action: Optional[bool] = None,
         trailing_icon: Optional[str] = None,
-        default: Optional[bool] = None,
-        destructive: Optional[bool] = None,
         on_click=None,
         #
         # Control
@@ -41,8 +41,8 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.default = default
-        self.destructive = destructive
+        self.is_default_action = is_default_action
+        self.is_destructive_action = is_destructive_action
         self.content = content
         self.trailing_icon = trailing_icon
         self.on_click = on_click
@@ -54,23 +54,23 @@ class CupertinoContextMenuAction(AdaptiveControl):
     def _get_children(self):
         return [self.__content] if self.__content else []
 
-    # default
+    # is_default_action
     @property
-    def default(self) -> Optional[bool]:
-        return self._get_attr("default", data_type="bool", def_value=False)
+    def is_default_action(self) -> Optional[bool]:
+        return self._get_attr("isDefaultAction", data_type="bool", def_value=False)
 
-    @default.setter
-    def default(self, value: Optional[bool]):
-        self._set_attr("default", value)
+    @is_default_action.setter
+    def is_default_action(self, value: Optional[bool]):
+        self._set_attr("isDefaultAction", value)
 
-    # destructive
+    # is_destructive_action
     @property
-    def destructive(self) -> Optional[bool]:
-        return self._get_attr("destructive", data_type="bool", def_value=False)
+    def is_destructive_action(self) -> Optional[bool]:
+        return self._get_attr("isDestructiveAction", data_type="bool", def_value=False)
 
-    @destructive.setter
-    def destructive(self, value: Optional[bool]):
-        self._set_attr("destructive", value)
+    @is_destructive_action.setter
+    def is_destructive_action(self, value: Optional[bool]):
+        self._set_attr("isDestructiveAction", value)
 
     # trailing_icon
     @property
