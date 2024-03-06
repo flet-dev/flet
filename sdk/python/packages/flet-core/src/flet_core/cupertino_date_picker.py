@@ -13,11 +13,6 @@ from flet_core.types import (
     ScaleValue,
 )
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 
 class CupertinoDatePickerMode(Enum):
     TIME = "time"
@@ -189,7 +184,7 @@ class CupertinoDatePicker(ConstrainedControl):
 
     @item_extent.setter
     def item_extent(self, value: OptionalNumber):
-        if value is not None and value<0:
+        if value is not None and value < 0:
             raise ValueError("item_extent must be greater than 0")
         self._set_attr("itemExtent", value)
 
