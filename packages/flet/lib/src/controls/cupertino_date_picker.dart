@@ -6,6 +6,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'create_control.dart';
+import 'error.dart';
 
 class CupertinoDatePickerControl extends StatefulWidget {
   final Control? parent;
@@ -56,30 +57,31 @@ class _CupertinoDatePickerControlState
                 widget.control.attrString("datePickerMode", "")!.toLowerCase(),
             orElse: () => CupertinoDatePickerMode.dateAndTime);
 
+    Widget dialog;
     try {
-      Widget dialog = CupertinoDatePicker(
-      initialDateTime: value,
-      showDayOfWeek: showDayOfWeek,
-      minimumDate: firstDate,
-      maximumDate: lastDate,
-      backgroundColor: bgcolor,
-      minimumYear: minimumYear,
-      maximumYear: maximumYear,
-      itemExtent: itemExtent,
-      minuteInterval: minuteInterval,
-      use24hFormat: use24hFormat,
-      dateOrder: dateOrder,
-      mode: datePickerMode,
-      onDateTimeChanged: (DateTime value) {
-        String stringValue = value.toIso8601String();
-        widget.backend
-            .updateControlState(widget.control.id, {"value": stringValue});
-        widget.backend
-            .triggerControlEvent(widget.control.id, "change", stringValue);
-      },
-    );
+      dialog = CupertinoDatePicker(
+        initialDateTime: value,
+        showDayOfWeek: showDayOfWeek,
+        minimumDate: firstDate,
+        maximumDate: lastDate,
+        backgroundColor: bgcolor,
+        minimumYear: minimumYear,
+        maximumYear: maximumYear,
+        itemExtent: itemExtent,
+        minuteInterval: minuteInterval,
+        use24hFormat: use24hFormat,
+        dateOrder: dateOrder,
+        mode: datePickerMode,
+        onDateTimeChanged: (DateTime value) {
+          String stringValue = value.toIso8601String();
+          widget.backend
+              .updateControlState(widget.control.id, {"value": stringValue});
+          widget.backend
+              .triggerControlEvent(widget.control.id, "change", stringValue);
+        },
+      );
     } catch (e) {
-      return ErrorControl(e.toString());
+      return ErrorControl("CupertinoDatePicker Error: ${e.toString()}");
     }
 
     return constrainedControl(context, dialog, widget.parent, widget.control);
