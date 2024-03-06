@@ -15,6 +15,7 @@ from flet_core.types import (
 
 class CupertinoSegmentedButton(ConstrainedControl):
     """
+    An iOS-style segmented button.
 
     -----
 
