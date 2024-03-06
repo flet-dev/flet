@@ -23,7 +23,7 @@ packaging = "^23.1"
 qrcode = "^7.4.2"
 cookiecutter = "^2.6.0"
 fastapi = "^0"
-uvicorn = "^0"
+uvicorn = {extras = ["standard"], version = "^0"}
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.6"
