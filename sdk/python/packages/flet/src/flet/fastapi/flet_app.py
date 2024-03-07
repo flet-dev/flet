@@ -4,7 +4,7 @@ import json
 import logging
 import os
 import traceback
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
 import flet.fastapi as flet_fastapi
@@ -321,7 +321,7 @@ class FletApp(LocalConnection):
         state_id = attrs["state"]
         state = OAuthState(
             session_id=self.__get_unique_session_id(self._client_details.sessionId),
-            expires_at=datetime.now(UTC)
+            expires_at=datetime.now(timezone.utc)
             + timedelta(seconds=self.__oauth_state_timeout_seconds),
             complete_page_html=attrs.get("completePageHtml", None),
             complete_page_url=attrs.get("completePageUrl", None),

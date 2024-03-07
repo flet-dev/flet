@@ -1,6 +1,6 @@
 import logging
 import os
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 import flet.fastapi as flet_fastapi
@@ -70,7 +70,7 @@ class FletUpload:
             raise Exception("Invalid request")
 
         # check expiration date
-        if datetime.now(UTC) >= expire_date:
+        if datetime.now(timezone.utc) >= expire_date:
             raise Exception("Invalid request")
 
         # build/validate dest path
