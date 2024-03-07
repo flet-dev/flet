@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import struct
+import sys
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -187,7 +188,10 @@ class FletSocketServer(LocalConnection):
 
         if self.__executor:
             logger.debug("Shutting down thread pool...")
-            self.__executor.shutdown(wait=False, cancel_futures=True)
+            if sys.version_info >= (3, 9):
+                self.__executor.shutdown(wait=False, cancel_futures=True)
+            else:
+                self.__executor.shutdown(wait=False)
 
         # close socket
         if self.__receive_loop_task:
