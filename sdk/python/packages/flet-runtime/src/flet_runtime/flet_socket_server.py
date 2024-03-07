@@ -51,6 +51,8 @@ class FletSocketServer(LocalConnection):
 
     async def start(self):
         self.__connected = False
+        self.__receive_loop_task = None
+        self.__send_loop_task = None
         if is_windows() or self.__port > 0:
             # TCP
             host = "localhost"
