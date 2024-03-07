@@ -4,6 +4,7 @@
 
 * Python dependencies bumped and losen.
 * Fixed: "No supported WebSocket library detected." when running web app with Flet 0.21.0 ([#2818](https://github.com/flet-dev/flet/issues/2818)).
+* Fix `EventHandler`: do not call it when converter returned `None`.
 
 # 0.21.0
 
