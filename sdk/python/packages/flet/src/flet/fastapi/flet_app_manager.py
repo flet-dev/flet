@@ -4,7 +4,7 @@ import shutil
 import threading
 import traceback
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Optional
 
 import flet.fastapi as flet_fastapi
@@ -121,7 +121,7 @@ class FletAppManager:
             session_ids = []
             async with self.__sessions_lock:
                 for session_id, page in self.__sessions.items():
-                    if page.expires_at and datetime.utcnow() > page.expires_at:
+                    if page.expires_at and datetime.now(UTC) > page.expires_at:
                         session_ids.append(session_id)
             for session_id in session_ids:
                 await self.delete_session(session_id)
@@ -132,7 +132,7 @@ class FletAppManager:
             with self.__states_lock:
                 ids = []
                 for id, state in self.__states.items():
-                    if state.expires_at and datetime.utcnow() > state.expires_at:
+                    if state.expires_at and datetime.now(UTC) > state.expires_at:
                         ids.append(id)
                 for id in ids:
                     logger.info(f"Delete expired oauth state: {id}")
