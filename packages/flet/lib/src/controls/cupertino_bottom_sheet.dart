@@ -8,10 +8,6 @@ import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
 
-const double _kItemExtent = 32.0;
-const double _kDefaultDiameterRatio = 1.07;
-const double _kSqueeze = 1.45;
-
 class CupertinoBottomSheetControl extends StatefulWidget {
   final Control? parent;
   final Control control;

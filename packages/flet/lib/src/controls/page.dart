@@ -196,6 +196,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     if (_keyboardHandlerSubscribed) {
       HardwareKeyboard.instance.removeHandler(_handleKeyDown);
     }
+    _appLifecycleListener.dispose();
     super.dispose();
   }
 
