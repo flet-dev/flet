@@ -1,3 +1,7 @@
+# 0.21.2
+
+* Bugfixing on Python side. No changes in Flutter package.
+
 # 0.21.1
 
 * Bugfixing.
