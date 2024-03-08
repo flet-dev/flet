@@ -26,6 +26,7 @@ from flet_core.protocol import (
 from flet_core.pubsub import PubSubHub
 from flet_core.utils import random_string
 from flet_runtime.uploads import build_upload_url
+from flet_runtime.utils import sha1
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
@@ -87,6 +88,13 @@ class FletApp(LocalConnection):
         * `websocket` (WebSocket) - Websocket instance.
         """
         self.__websocket = websocket
+
+        self.client_ip = self.__websocket.client.host if self.__websocket.client else ""
+        self.client_user_agent = (
+            self.__websocket.headers["user-agent"]
+            if "user-agent" in self.__websocket.headers
+            else ""
+        )
 
         async with _pubsubhubs_lock:
             psh = _pubsubhubs.get(self.__session_handler, None)
@@ -155,6 +163,8 @@ class FletApp(LocalConnection):
             self.__page.error(f"There was an error while processing your request: {e}")
 
     async def __send_loop(self):
+        assert self.__websocket
+        assert self.__send_queue
         while True:
             message = await self.__send_queue.get()
             try:
@@ -165,6 +175,7 @@ class FletApp(LocalConnection):
                 raise
 
     async def __receive_loop(self):
+        assert self.__websocket
         try:
             while True:
                 await self.__on_message(await self.__websocket.receive_text())
@@ -242,21 +253,8 @@ class FletApp(LocalConnection):
             )
             self.__page._set_attr("windowTop", self._client_details.windowTop, False)
             self.__page._set_attr("windowLeft", self._client_details.windowLeft, False)
-
-            self.__page._set_attr(
-                "clientIP",
-                self.__websocket.client.host if self.__websocket.client else "",
-                False,
-            )
-            self.__page._set_attr(
-                "clientUserAgent",
-                (
-                    self.__websocket.headers["user-agent"]
-                    if "user-agent" in self.__websocket.headers
-                    else ""
-                ),
-                False,
-            )
+            self.__page._set_attr("clientIP", self.client_ip, False)
+            self.__page._set_attr("clientUserAgent", self.client_user_agent, False)
 
             p = self.__page.snapshot.get("page")
             if not p:
@@ -428,7 +426,8 @@ class FletApp(LocalConnection):
         return self.__page.get_next_control_id()
 
     def __get_unique_session_id(self, session_id: str):
-        return f"{self.page_name}{session_id}"
+        client_hash = sha1(f"{self.client_ip}{self.client_user_agent}")
+        return f"{self.page_name}_{session_id}_{client_hash}"
 
     def dispose(self):
         logger.info(f"Disposing FletApp: {self.__id}")
