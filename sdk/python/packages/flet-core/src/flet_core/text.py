@@ -352,9 +352,9 @@ class Text(ConstrainedControl):
 
     # semantics_label
     @property
-    def semantics_label(self):
+    def semantics_label(self) -> Optional[str]:
         return self._get_attr("semanticsLabel")
 
     @semantics_label.setter
-    def semantics_label(self, value):
+    def semantics_label(self, value: Optional[str]):
         self._set_attr("semanticsLabel", value)

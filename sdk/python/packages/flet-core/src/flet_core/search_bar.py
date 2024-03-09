@@ -1,7 +1,8 @@
 import time
 from typing import Any, Dict, List, Optional, Union
 
-from flet_core import BorderSide, OutlinedBorder
+from flet_core.border import BorderSide
+from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -136,9 +137,12 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("barBgcolor", self.__bar_bgcolor)
         self._set_attr_json("barOverlayColor", self.__bar_overlay_color)
         self._set_attr_json("viewShape", self.__view_shape)
-        self._set_attr_json("viewHeaderTextStyle", self.__view_header_text_style)
-        self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
-        self._set_attr_json("viewSide", self.__view_side)
+        if isinstance(self.__view_header_text_style, TextStyle):
+            self._set_attr_json("viewHeaderTextStyle", self.__view_header_text_style)
+        if isinstance(self.__view_hint_text_style, TextStyle):
+            self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
+        if isinstance(self.__view_side, BorderSide):
+            self._set_attr_json("viewSide", self.__view_side)
 
     def _get_children(self):
         children = []

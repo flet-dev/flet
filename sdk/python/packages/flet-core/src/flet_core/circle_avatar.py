@@ -155,72 +155,72 @@ class CircleAvatar(ConstrainedControl):
         return "circleavatar"
 
     def _get_children(self):
-        if self.__content is None:
-            return []
-        self.__content._set_attr_internal("n", "content")
-        return [self.__content]
+        if self.__content is not None:
+            self.__content._set_attr_internal("n", "content")
+            return [self.__content]
+        return []
 
     # foreground_image_url
     @property
-    def foreground_image_url(self):
+    def foreground_image_url(self) -> Optional[str]:
         return self._get_attr("foregroundImageUrl")
 
     @foreground_image_url.setter
-    def foreground_image_url(self, value):
+    def foreground_image_url(self, value: Optional[str]):
         self._set_attr("foregroundImageUrl", value)
 
     # background_image_url
     @property
-    def background_image_url(self):
+    def background_image_url(self) -> Optional[str]:
         return self._get_attr("backgroundImageUrl")
 
     @background_image_url.setter
-    def background_image_url(self, value):
+    def background_image_url(self, value: Optional[str]):
         self._set_attr("backgroundImageUrl", value)
 
     # radius
     @property
-    def radius(self):
-        return self._get_attr("radius")
+    def radius(self) -> OptionalNumber:
+        return self._get_attr("radius", data_type="float")
 
     @radius.setter
-    def radius(self, value):
+    def radius(self, value: OptionalNumber):
         self._set_attr("radius", value)
 
     # min_radius
     @property
-    def min_radius(self):
-        return self._get_attr("minRadius")
+    def min_radius(self) -> OptionalNumber:
+        return self._get_attr("minRadius", data_type="float")
 
     @min_radius.setter
-    def min_radius(self, value):
+    def min_radius(self, value: OptionalNumber):
         self._set_attr("minRadius", value)
 
     # max_radius
     @property
-    def max_radius(self):
-        return self._get_attr("maxRadius")
+    def max_radius(self) -> OptionalNumber:
+        return self._get_attr("maxRadius", data_type="float")
 
     @max_radius.setter
-    def max_radius(self, value):
+    def max_radius(self, value: OptionalNumber):
         self._set_attr("maxRadius", value)
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # content

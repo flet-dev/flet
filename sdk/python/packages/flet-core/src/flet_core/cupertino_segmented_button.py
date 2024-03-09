@@ -121,11 +121,11 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     # border_color
     @property
-    def border_color(self):
+    def border_color(self) -> Optional[str]:
         return self._get_attr("borderColor")
 
     @border_color.setter
-    def border_color(self, value):
+    def border_color(self, value: Optional[str]):
         self._set_attr("borderColor", value)
 
     # selected_index
@@ -135,17 +135,17 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     @selected_index.setter
     def selected_index(self, value: Optional[int]):
-        if value is not None:
-            assert 0 <= value <= len(self.controls) - 1, "selected_index out of range"
+        if value is not None and (0 <= value <= len(self.controls) - 1):
+            raise IndexError("selected_index out of range")
         self._set_attr("selectedIndex", value)
 
     # selected_color
     @property
-    def selected_color(self):
+    def selected_color(self) -> Optional[str]:
         return self._get_attr("selectedColor")
 
     @selected_color.setter
-    def selected_color(self, value):
+    def selected_color(self, value: Optional[str]):
         self._set_attr("selectedColor", value)
 
     # unselected_color

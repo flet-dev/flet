@@ -94,9 +94,9 @@ class Divider(Control):
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)

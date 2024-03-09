@@ -157,20 +157,20 @@ class DragTarget(Control):
 
     # group
     @property
-    def group(self):
+    def group(self) -> Optional[str]:
         return self._get_attr("group")
 
     @group.setter
-    def group(self, value):
+    def group(self, value: Optional[str]):
         self._set_attr("group", value)
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Optional[Control]):
         self.__content = value
 
     # on_will_accept

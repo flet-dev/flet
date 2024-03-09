@@ -196,20 +196,20 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # label
     @property
-    def label(self):
+    def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
 
     # label_position
     @property
-    def label_position(self) -> LabelPosition:
+    def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
 
     @label_position.setter
-    def label_position(self, value: LabelPosition):
+    def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
         self._set_attr(
             "labelPosition", value.value if isinstance(value, LabelPosition) else value
@@ -226,38 +226,38 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # check_color
     @property
-    def check_color(self):
+    def check_color(self) -> Optional[str]:
         return self._get_attr("checkColor")
 
     @check_color.setter
-    def check_color(self, value):
+    def check_color(self, value: Optional[str]):
         self._set_attr("checkColor", value)
 
     # active_color
     @property
-    def active_color(self):
+    def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
 
     @active_color.setter
-    def active_color(self, value):
+    def active_color(self, value: Optional[str]):
         self._set_attr("activeColor", value)
 
     # focus_color
     @property
-    def focus_color(self):
+    def focus_color(self) -> Optional[str]:
         return self._get_attr("focusColor")
 
     @focus_color.setter
-    def focus_color(self, value):
+    def focus_color(self, value: Optional[str]):
         self._set_attr("focusColor", value)
 
     # hover_color
     @property
-    def hover_color(self):
+    def hover_color(self) -> Optional[str]:
         return self._get_attr("hoverColor")
 
     @hover_color.setter
-    def hover_color(self, value):
+    def hover_color(self, value: Optional[str]):
         self._set_attr("hoverColor", value)
 
     # fill_color
