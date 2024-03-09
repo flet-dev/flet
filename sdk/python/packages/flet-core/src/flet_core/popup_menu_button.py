@@ -26,14 +26,14 @@ class PopupMenuItem(Control):
         checked: Optional[bool] = None,
         content: Optional[Control] = None,
         on_click=None,
-        data: Any = None,
         #
         # Control
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
+        data: Any = None,
     ):
-        Control.__init__(self, ref=ref, disabled=disabled)
+        Control.__init__(self, ref=ref, disabled=disabled, data=data)
 
         self.checked = checked
         self.icon = icon
