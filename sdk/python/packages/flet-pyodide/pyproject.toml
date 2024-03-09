@@ -16,8 +16,8 @@ repository = "https://github.com/flet-dev/flet"
 documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
-flet-core = "0.1.0"
 python = "^3.9"
+flet-core = "0.1.0"
 
 [build-system]
 requires = ["poetry-core"]

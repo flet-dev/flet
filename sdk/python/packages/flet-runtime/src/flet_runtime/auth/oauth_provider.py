@@ -17,6 +17,9 @@ class OAuthProvider:
         user_endpoint: Optional[str] = None,
         user_id_fn: Optional[Callable] = None,
         group_scopes: Optional[List[str]] = None,
+        code_challenge: Optional[str] = None,
+        code_challenge_method: Optional[str] = None,
+        code_verifier: Optional[str] = None,
     ) -> None:
         self.client_id = client_id
         self.client_secret = client_secret
@@ -28,6 +31,9 @@ class OAuthProvider:
         self.user_endpoint = user_endpoint
         self.user_id_fn = user_id_fn
         self.group_scopes = group_scopes if group_scopes is not None else []
+        self.code_challenge = code_challenge
+        self.code_challenge_method = code_challenge_method
+        self.code_verifier = code_verifier
 
     def _name(self):
         raise Exception("Not implemented")

@@ -8,7 +8,6 @@ import 'form_field.dart';
 class DatePickerControl extends StatefulWidget {
   final Control? parent;
   final Control control;
-  final List<Control> children;
   final bool parentDisabled;
   final FletControlBackend backend;
 
@@ -16,7 +15,6 @@ class DatePickerControl extends StatefulWidget {
       {super.key,
       this.parent,
       required this.control,
-      required this.children,
       required this.parentDisabled,
       required this.backend});
 

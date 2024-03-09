@@ -91,7 +91,7 @@ class FletApp(LocalConnection):
         async with _pubsubhubs_lock:
             psh = _pubsubhubs.get(self.__session_handler, None)
             if psh is None:
-                psh = PubSubHub(loop=self.__loop, pool=app_manager.pool)
+                psh = PubSubHub(loop=self.__loop, executor=app_manager.executor)
                 _pubsubhubs[self.__session_handler] = psh
             self.pubsubhub = psh
 
@@ -138,7 +138,7 @@ class FletApp(LocalConnection):
             else:
                 # run in thread pool
                 await asyncio.get_running_loop().run_in_executor(
-                    app_manager.pool, self.__session_handler, self.__page
+                    app_manager.executor, self.__session_handler, self.__page
                 )
         except PageDisconnectedException:
             logger.debug(
@@ -152,9 +152,7 @@ class FletApp(LocalConnection):
                 traceback.format_exc(),
             )
             assert self.__page
-            await self.__page.error_async(
-                f"There was an error while processing your request: {e}"
-            )
+            self.__page.error(f"There was an error while processing your request: {e}")
 
     async def __send_loop(self):
         while True:
@@ -203,7 +201,7 @@ class FletApp(LocalConnection):
                 self.__page = Page(
                     self,
                     self._client_details.sessionId,
-                    pool=app_manager.pool,
+                    executor=app_manager.executor,
                     loop=asyncio.get_running_loop(),
                 )
 
@@ -287,7 +285,7 @@ class FletApp(LocalConnection):
                 )
 
                 if original_route != self.__page.route:
-                    await self.__page.go_async(self.__page.route)
+                    self.__page.go(self.__page.route)
 
         elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
             if self.__on_event is not None:

@@ -19,13 +19,13 @@ from flet_core.banner import Banner
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
 from flet_core.client_storage import ClientStorage
-from flet_core.clipboard import Clipboard
 from flet_core.connection import Connection
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.cupertino_action_sheet import CupertinoActionSheet
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
+from flet_core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.cupertino_picker import CupertinoPicker
 from flet_core.cupertino_timer_picker import CupertinoTimerPicker
@@ -37,12 +37,13 @@ from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.padding import Padding
 from flet_core.protocol import Command
-from flet_core.pubsub import PubSub
+from flet_core.pubsub import PubSubClient
 from flet_core.querystring import QueryString
 from flet_core.session_storage import SessionStorage
 from flet_core.snack_bar import SnackBar
 from flet_core.theme import Theme
 from flet_core.types import (
+    AppLifecycleState,
     Brightness,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
@@ -114,7 +115,7 @@ class Page(AdaptiveControl):
         conn: Connection,
         session_id,
         loop: asyncio.AbstractEventLoop,
-        pool: Optional[ThreadPoolExecutor] = None,
+        executor: Optional[ThreadPoolExecutor] = None,
     ):
         Control.__init__(self)
 
@@ -127,7 +128,7 @@ class Page(AdaptiveControl):
         self.__query: QueryString = QueryString(page=self)  # Querystring
         self._session_id = session_id
         self.__loop = loop
-        self.__pool = pool
+        self.__executor = executor
         self._index = {self._Control__uid: self}  # index with all page controls
 
         self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
@@ -141,7 +142,7 @@ class Page(AdaptiveControl):
         self.__theme = None
         self.__dark_theme = None
         self.__theme_mode = ThemeMode.SYSTEM  # Default Theme Mode
-        self.__pubsub: PubSub = PubSub(conn.pubsubhub, session_id)
+        self.__pubsub: PubSubClient = PubSubClient(conn.pubsubhub, session_id)
         self.__client_storage: ClientStorage = ClientStorage(self)
         self.__session_storage: SessionStorage = SessionStorage(self)
         self.__authorization: Optional[Authorization] = None
@@ -154,6 +155,17 @@ class Page(AdaptiveControl):
         self._add_event_handler(
             "platformBrightnessChange",
             self.__on_platform_brightness_change.get_handler(),
+        )
+
+        def convert_app_lifecycle_state_change_event(e):
+            return AppLifecycleStateChangeEvent(e)
+
+        self.__on_app_lifecycle_state_change = EventHandler(
+            convert_app_lifecycle_state_change_event
+        )
+        self._add_event_handler(
+            "app_lifecycle_state_change",
+            self.__on_app_lifecycle_state_change.get_handler(),
         )
 
         self.__last_route = None
@@ -471,7 +483,7 @@ class Page(AdaptiveControl):
 
     def run_task(self, handler: Callable[..., Awaitable[Any]], *args):
         assert asyncio.iscoroutinefunction(handler)
-        asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
+        return asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
 
     def run_thread(self, handler, *args):
         if is_pyodide():
@@ -479,7 +491,7 @@ class Page(AdaptiveControl):
         else:
             assert self.__loop
             self.__loop.call_soon_threadsafe(
-                self.__loop.run_in_executor, self.__pool, handler, *args
+                self.__loop.run_in_executor, self.__executor, handler, *args
             )
 
     def go(self, route, skip_route_change_event=False, **kwargs):
@@ -699,22 +711,26 @@ class Page(AdaptiveControl):
             ),
         )
 
-    def set_clipboard(self, value: str):
-        self.__offstage.clipboard.set_data(value)
+    def set_clipboard(self, value: str, wait_timeout: Optional[float] = 10):
+        self._invoke_method("setClipboard", {"data": value}, wait_timeout=wait_timeout)
 
     @deprecated(
         reason="Use set_clipboard() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
-    async def set_clipboard_async(self, value: str):
-        self.set_clipboard(value)
+    async def set_clipboard_async(self, value: str, wait_timeout: Optional[float] = 10):
+        self.set_clipboard(value, wait_timeout=wait_timeout)
 
-    def get_clipboard(self):
-        return self.__offstage.clipboard.get_data()
+    def get_clipboard(self, wait_timeout: Optional[float] = 10):
+        return self._invoke_method(
+            "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
+        )
 
-    def get_clipboard_async(self):
-        return self.__offstage.clipboard.get_data_async()
+    def get_clipboard_async(self, wait_timeout: Optional[float] = 10):
+        return self._invoke_method_async(
+            "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
+        )
 
     def launch_url(
         self,
@@ -989,9 +1005,7 @@ class Page(AdaptiveControl):
     #
     def show_bottom_sheet(
         self,
-        bottom_sheet: Union[
-            BottomSheet, CupertinoActionSheet, CupertinoPicker, CupertinoTimerPicker
-        ],
+        bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
     ):
         self.__offstage.bottom_sheet = bottom_sheet
         self.__offstage.bottom_sheet.open = True
@@ -1004,9 +1018,7 @@ class Page(AdaptiveControl):
     )
     async def show_bottom_sheet_async(
         self,
-        bottom_sheet: Union[
-            BottomSheet, CupertinoActionSheet, CupertinoPicker, CupertinoTimerPicker
-        ],
+        bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
     ):
         self.show_bottom_sheet(bottom_sheet)
 
@@ -1140,6 +1152,14 @@ class Page(AdaptiveControl):
     def snapshot(self) -> Dict[str, Dict[str, Any]]:
         return self.__snapshot
 
+    @property
+    def loop(self):
+        return self.__loop
+
+    @property
+    def executor(self):
+        return self.__executor
+
     # expires_at
     @property
     def expires_at(self):
@@ -1162,7 +1182,7 @@ class Page(AdaptiveControl):
 
     # pubsub
     @property
-    def pubsub(self) -> PubSub:
+    def pubsub(self) -> PubSubClient:
         return self.__pubsub
 
     # overlay
@@ -1799,6 +1819,15 @@ class Page(AdaptiveControl):
     def on_platform_brightness_change(self, handler):
         self.__on_platform_brightness_change.subscribe(handler)
 
+    # on_app_lifecycle_change
+    @property
+    def on_app_lifecycle_state_change(self):
+        return self.__on_app_lifecycle_state_change
+
+    @on_app_lifecycle_state_change.setter
+    def on_app_lifecycle_state_change(self, handler):
+        self.__on_app_lifecycle_state_change.subscribe(handler)
+
     # on_route_change
     @property
     def on_route_change(self):
@@ -1914,7 +1943,6 @@ class Offstage(Control):
         )
 
         self.__controls: List[Control] = []
-        self.__clipboard = Clipboard()
         self.__banner = None
         self.__snack_bar = None
         self.__dialog = None
@@ -1927,8 +1955,6 @@ class Offstage(Control):
     def _get_children(self):
         children = []
         children.extend(self.__controls)
-        if self.__clipboard:
-            children.append(self.__clipboard)
         if self.__banner:
             children.append(self.__banner)
         if self.__snack_bar:
@@ -1945,11 +1971,6 @@ class Offstage(Control):
     @property
     def controls(self):
         return self.__controls
-
-    # clipboard
-    @property
-    def clipboard(self):
-        return self.__clipboard
 
     # splash
     @property
@@ -1991,9 +2012,7 @@ class Offstage(Control):
     @property
     def bottom_sheet(
         self,
-    ) -> Union[
-        BottomSheet, CupertinoActionSheet, CupertinoPicker, CupertinoTimerPicker, None
-    ]:
+    ) -> Union[BottomSheet, CupertinoBottomSheet, None]:
         return self.__bottom_sheet
 
     @bottom_sheet.setter
@@ -2001,9 +2020,7 @@ class Offstage(Control):
         self,
         value: Union[
             BottomSheet,
-            CupertinoActionSheet,
-            CupertinoPicker,
-            CupertinoTimerPicker,
+            CupertinoBottomSheet,
             None,
         ],
     ):
@@ -2076,3 +2093,10 @@ class PageMediaData(ControlEvent):
 
     def __str__(self) -> str:
         return f"PageMediaData(padding={self.padding}, view_padding={self.view_padding}, view_insets={self.view_insets})"
+
+
+class AppLifecycleStateChangeEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+
+        self.state = AppLifecycleState(e.data)

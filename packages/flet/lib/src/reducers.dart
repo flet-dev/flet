@@ -15,6 +15,7 @@ import 'protocol/message.dart';
 import 'protocol/remove_control_payload.dart';
 import 'protocol/update_control_props_payload.dart';
 import 'utils/client_storage.dart';
+import 'utils/clipboard.dart';
 import 'utils/desktop.dart';
 import 'utils/launch_url.dart';
 import 'utils/platform_utils_non_web.dart'
@@ -232,24 +233,27 @@ AppState appReducer(AppState state, dynamic action) {
   } else if (action is InvokeMethodAction) {
     debugPrint(
         "InvokeMethodAction: ${action.payload.methodName} (controlId: ${action.payload.controlId}) (${action.payload.args})");
+
+    sendMethodResult({String? result, String? error}) {
+      action.server.triggerControlEvent(
+          "page",
+          "invoke_method_result",
+          json.encode(InvokeMethodResult(
+              methodId: action.payload.methodId,
+              result: result,
+              error: error)));
+    }
+
     if (action.payload.controlId != "") {
       // control-specific method
       var handler =
           action.server.controlInvokeMethods[action.payload.controlId];
+      debugPrint("Invoke method handler: $handler");
       if (handler != null) {
         handler(action.payload.methodName, action.payload.args)
-            .then((result) => action.server.triggerControlEvent(
-                "page",
-                "invoke_method_result",
-                json.encode(InvokeMethodResult(
-                    methodId: action.payload.methodId,
-                    result: result.toString()))))
-            .onError((error, stackTrace) => action.server.triggerControlEvent(
-                "page",
-                "invoke_method_result",
-                json.encode(InvokeMethodResult(
-                    methodId: action.payload.methodId,
-                    error: error.toString()))));
+            .then((result) => sendMethodResult(result: result.toString()))
+            .onError((error, stackTrace) =>
+                sendMethodResult(error: error.toString()));
       }
     } else {
       // global methods
@@ -269,13 +273,24 @@ AppState appReducer(AppState state, dynamic action) {
                   int.tryParse(action.payload.args["window_height"] ?? ""));
           break;
         case "canLaunchUrl":
-          canLaunchUrl(Uri.parse(action.payload.args["url"]!)).then((value) =>
-              action.server.triggerControlEvent(
-                  "page",
-                  "invoke_method_result",
-                  json.encode(InvokeMethodResult(
-                      methodId: action.payload.methodId,
-                      result: value.toString()))));
+          canLaunchUrl(Uri.parse(action.payload.args["url"]!))
+              .then((result) => sendMethodResult(result: result.toString()));
+          break;
+        case "setClipboard":
+          String? data = action.payload.args["data"];
+          if (data != null) {
+            try {
+              setClipboard(data);
+            } catch (e) {
+              sendMethodResult(error: e.toString());
+            }
+          }
+          break;
+        case "getClipboard":
+          getClipboard()
+              .then((value) => sendMethodResult(result: value))
+              .onError((error, stackTrace) =>
+                  sendMethodResult(error: error?.toString()));
           break;
         case "windowToFront":
           windowToFront();

@@ -71,10 +71,16 @@ from flet_core.cupertino_action_sheet_action import CupertinoActionSheetAction
 from flet_core.cupertino_activity_indicator import CupertinoActivityIndicator
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
+from flet_core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.cupertino_checkbox import CupertinoCheckbox
 from flet_core.cupertino_context_menu import CupertinoContextMenu
 from flet_core.cupertino_context_menu_action import CupertinoContextMenuAction
+from flet_core.cupertino_date_picker import (
+    CupertinoDatePicker,
+    CupertinoDatePickerDateOrder,
+    CupertinoDatePickerMode,
+)
 from flet_core.cupertino_dialog_action import CupertinoDialogAction
 from flet_core.cupertino_filled_button import CupertinoFilledButton
 from flet_core.cupertino_list_tile import CupertinoListTile
@@ -170,6 +176,7 @@ from flet_core.navigation_rail import (
 from flet_core.outlined_button import OutlinedButton
 from flet_core.padding import Padding
 from flet_core.page import (
+    AppLifecycleStateChangeEvent,
     KeyboardEvent,
     LoginEvent,
     Page,
@@ -195,7 +202,7 @@ from flet_core.popup_menu_button import (
 )
 from flet_core.progress_bar import ProgressBar
 from flet_core.progress_ring import ProgressRing
-from flet_core.pubsub import PubSub, PubSubHub
+from flet_core.pubsub import PubSubClient, PubSubHub
 from flet_core.querystring import QueryString
 from flet_core.radio import Radio
 from flet_core.radio_group import RadioGroup
@@ -248,6 +255,7 @@ from flet_core.tooltip import Tooltip
 from flet_core.transform import Offset, Rotate, Scale
 from flet_core.transparent_pointer import TransparentPointer
 from flet_core.types import (
+    AppLifecycleState,
     BlendMode,
     BoxShape,
     Brightness,

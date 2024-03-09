@@ -21,10 +21,11 @@ class EventHandler:
                         ce.control = e.control
                         ce.page = e.page
 
-                if asyncio.iscoroutinefunction(handler):
-                    await handler(ce)
-                else:
-                    e.page.run_in_thread(handler, ce)
+                if ce is not None:
+                    if asyncio.iscoroutinefunction(handler):
+                        await handler(ce)
+                    else:
+                        e.page.run_thread(handler, ce)
 
         return fn
 

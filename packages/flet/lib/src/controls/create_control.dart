@@ -27,17 +27,18 @@ import 'card.dart';
 import 'checkbox.dart';
 import 'chip.dart';
 import 'circle_avatar.dart';
-import 'clipboard.dart';
 import 'column.dart';
 import 'container.dart';
 import 'cupertino_action_sheet.dart';
 import 'cupertino_action_sheet_action.dart';
 import 'cupertino_activity_indicator.dart';
 import 'cupertino_alert_dialog.dart';
+import 'cupertino_bottom_sheet.dart';
 import 'cupertino_button.dart';
 import 'cupertino_checkbox.dart';
 import 'cupertino_context_menu.dart';
 import 'cupertino_context_menu_action.dart';
+import 'cupertino_date_picker.dart';
 import 'cupertino_dialog_action.dart';
 import 'cupertino_list_tile.dart';
 import 'cupertino_navigation_bar.dart';
@@ -269,12 +270,6 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive);
-    case "clipboard":
-      return ClipboardControl(
-          parent: parent,
-          control: controlView.control,
-          nextChild: nextChild,
-          backend: backend);
     case "hapticfeedback":
       return HapticFeedbackControl(
           parent: parent,
@@ -501,7 +496,12 @@ Widget createWidget(
       return DatePickerControl(
           parent: parent,
           control: controlView.control,
-          children: controlView.children,
+          parentDisabled: parentDisabled,
+          backend: backend);
+    case "cupertinodatepicker":
+      return CupertinoDatePickerControl(
+          parent: parent,
+          control: controlView.control,
           parentDisabled: parentDisabled,
           backend: backend);
     case "timepicker":
@@ -516,10 +516,17 @@ Widget createWidget(
           parent: parent,
           control: controlView.control,
           parentDisabled: parentDisabled,
-          nextChild: nextChild,
           backend: backend);
     case "cupertinopicker":
       return CupertinoPickerControl(
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentAdaptive: parentAdaptive,
+          parentDisabled: parentDisabled,
+          backend: backend);
+    case "cupertinobottomsheet":
+      return CupertinoBottomSheetControl(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
@@ -656,7 +663,6 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
-          nextChild: nextChild,
           backend: backend);
     case "cupertinoactionsheetaction":
       return CupertinoActionSheetActionControl(

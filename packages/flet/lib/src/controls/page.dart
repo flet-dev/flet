@@ -161,6 +161,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
+  late final AppLifecycleListener _appLifecycleListener;
   String? _prevViewRoutes;
   bool _keyboardHandlerSubscribed = false;
 
@@ -177,6 +178,15 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
       navigatorKey: _navigatorKey,
       builder: (context) => _buildNavigator(context, _navigatorKey),
     );
+
+    _appLifecycleListener = AppLifecycleListener(
+        onShow: () => _handleAppLifecycleTransition('show'),
+        onResume: () => _handleAppLifecycleTransition('resume'),
+        onHide: () => _handleAppLifecycleTransition('hide'),
+        onInactive: () => _handleAppLifecycleTransition('inactive'),
+        onPause: () => _handleAppLifecycleTransition('pause'),
+        onDetach: () => _handleAppLifecycleTransition('detach'),
+        onRestart: () => _handleAppLifecycleTransition('restart'));
   }
 
   @override
@@ -186,6 +196,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     if (_keyboardHandlerSubscribed) {
       HardwareKeyboard.instance.removeHandler(_handleKeyDown);
     }
+    _appLifecycleListener.dispose();
     super.dispose();
   }
 
@@ -225,6 +236,11 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
       }
     }
     return false;
+  }
+
+  void _handleAppLifecycleTransition(String state) {
+    widget.backend
+        .triggerControlEvent("page", "app_lifecycle_state_change", state);
   }
 
   @override

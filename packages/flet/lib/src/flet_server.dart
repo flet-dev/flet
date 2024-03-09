@@ -32,7 +32,7 @@ class FletServer implements FletControlBackend {
   final int? reconnectTimeoutMs;
   final FletAppErrorsHandler? errorsHandler;
 
-  late FletServerProtocol _clientProtocol;
+  FletServerProtocol? _clientProtocol;
   bool _disposed = false;
   String _address = "";
   String _pageName = "";
@@ -64,7 +64,7 @@ class FletServer implements FletControlBackend {
           address: _address,
           onDisconnect: _onDisconnect,
           onMessage: _onMessage);
-      await _clientProtocol.connect();
+      await _clientProtocol!.connect();
       registerWebClientInternal();
     } catch (e) {
       debugPrint("Error connecting to Flet server: $e");
@@ -84,8 +84,8 @@ class FletServer implements FletControlBackend {
 
     // set/update timeout
     nextReconnectDelayMs =
-        nextReconnectDelayMs == 0 || _clientProtocol.isLocalConnection
-            ? reconnectIntervalMs ?? _clientProtocol.defaultReconnectIntervalMs
+        nextReconnectDelayMs == 0 || _clientProtocol!.isLocalConnection
+            ? reconnectIntervalMs ?? _clientProtocol!.defaultReconnectIntervalMs
             : nextReconnectDelayMs * 2;
 
     if (reconnectTimeoutMs == null ||
@@ -271,12 +271,12 @@ class FletServer implements FletControlBackend {
 
   send(Message message) {
     final m = json.encode(message.toJson());
-    _clientProtocol.send(m);
+    _clientProtocol?.send(m);
   }
 
   void disconnect() {
     debugPrint("Disconnecting from Flet server.");
     _disposed = true;
-    _clientProtocol.disconnect();
+    _clientProtocol?.disconnect();
   }
 }

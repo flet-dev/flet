@@ -67,7 +67,7 @@ def app(
             route_url_strategy=route_url_strategy,
         )
 
-    return asyncio.get_event_loop().run_until_complete(
+    return asyncio.run(
         app_async(
             target=target,
             name=name,
@@ -135,11 +135,13 @@ async def app_async(
         if view == AppView.WEB_BROWSER and url_prefix is None and not force_web_server:
             open_in_browser(page_url)
 
+    loop = asyncio.get_running_loop()
+
     terminate = asyncio.Event()
 
     def exit_gracefully(signum, frame):
         logger.debug("Gracefully terminating Flet app...")
-        asyncio.get_event_loop().call_soon_threadsafe(terminate.set)
+        loop.call_soon_threadsafe(terminate.set)
 
     signal.signal(signal.SIGINT, exit_gracefully)
     signal.signal(signal.SIGTERM, exit_gracefully)
@@ -208,7 +210,7 @@ async def app_async(
 async def __run_socket_server(port=0, session_handler=None, blocking=False):
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
 
-    pool = concurrent.futures.ThreadPoolExecutor()
+    executor = concurrent.futures.ThreadPoolExecutor()
 
     async def on_event(e):
         if e.sessionID in conn.sessions:
@@ -225,7 +227,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
         page = Page(
             conn,
             session_data.sessionID,
-            pool=pool,
+            executor=executor,
             loop=asyncio.get_running_loop(),
         )
         await page.fetch_page_details_async()
@@ -238,7 +240,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
             else:
                 # run in thread pool
                 await asyncio.get_running_loop().run_in_executor(
-                    pool, session_handler, page
+                    executor, session_handler, page
                 )
 
         except Exception as e:
@@ -246,9 +248,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
                 f"Unhandled error processing page session {page.session_id}:",
                 traceback.format_exc(),
             )
-            await page.error_async(
-                f"There was an error while processing your request: {e}"
-            )
+            page.error(f"There was an error while processing your request: {e}")
 
     conn = FletSocketServer(
         loop=asyncio.get_running_loop(),
@@ -257,7 +257,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
         on_event=on_event,
         on_session_created=on_session_created,
         blocking=blocking,
-        pool=pool,
+        executor=executor,
     )
     await conn.start()
     return conn

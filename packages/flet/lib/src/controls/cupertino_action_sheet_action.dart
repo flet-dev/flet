@@ -27,6 +27,7 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
     debugPrint("CupertinoActionSheetActionControl build: ${control.id}");
     bool disabled = control.isDisabled || parentDisabled;
 
+    String text = control.attrString("text", "")!;
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
     if (contentCtrls.isEmpty) {
@@ -37,13 +38,17 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
     return constrainedControl(
         context,
         CupertinoActionSheetAction(
-          isDefaultAction: control.attrBool("default", false)!,
-          isDestructiveAction: control.attrBool("destructive", false)!,
+          isDefaultAction: control.attrBool("isDefaultAction", false)!,
+          isDestructiveAction: control.attrBool("isDestructiveAction", false)!,
           onPressed: () {
-            backend.triggerControlEvent(control.id, "click", "");
+            if (!disabled) {
+              backend.triggerControlEvent(control.id, "click");
+            }
           },
-          child: createControl(control, contentCtrls.first.id, disabled,
-              parentAdaptive: parentAdaptive),
+          child: contentCtrls.isNotEmpty
+              ? createControl(control, contentCtrls.first.id, disabled,
+                  parentAdaptive: parentAdaptive)
+              : Text(text),
         ),
         parent,
         control);
