@@ -47,7 +47,7 @@ class ExpansionTileControl extends StatelessWidget {
     bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
     bool onchange = control.attrBool("onchange", false)!;
     bool maintainState = control.attrBool("maintainState", false)!;
-    bool initiallyExpanded = control.attrBool("maintainState", false)!;
+    bool initiallyExpanded = control.attrBool("initiallyExpanded", false)!;
 
     var iconColor = HexColor.fromString(
         Theme.of(context), control.attrString("iconColor", "")!);
