@@ -50,6 +50,8 @@ class Divider(Control):
         height: OptionalNumber = None,
         thickness: OptionalNumber = None,
         color: Optional[str] = None,
+        indent: OptionalNumber = None,
+        end_indent: OptionalNumber = None,
         #
         # Control
         #
@@ -70,6 +72,8 @@ class Divider(Control):
         self.height = height
         self.thickness = thickness
         self.color = color
+        self.indent = indent
+        self.end_indent = end_indent
 
     def _get_control_name(self):
         return "divider"
@@ -100,3 +104,21 @@ class Divider(Control):
     @color.setter
     def color(self, value: Optional[str]):
         self._set_attr("color", value)
+
+    # indent
+    @property
+    def indent(self) -> OptionalNumber:
+        return self._get_attr("indent")
+
+    @indent.setter
+    def indent(self, value: OptionalNumber):
+        self._set_attr("indent", value)
+
+    # end_indent
+    @property
+    def end_indent(self) -> OptionalNumber:
+        return self._get_attr("endIndent")
+
+    @end_indent.setter
+    def end_indent(self, value: OptionalNumber):
+        self._set_attr("endIndent", value)
