@@ -44,10 +44,10 @@ class CircleAvatarControl extends StatelessWidget {
         minRadius: control.attrDouble("minRadius"),
         maxRadius: control.attrDouble("maxRadius"),
         onBackgroundImageError: (object, trace) {
-          backend.triggerControlEvent(control.id, "imageError");
+          backend.triggerControlEvent(control.id, "imageError", "background");
         },
         onForegroundImageError: (object, trace) {
-          backend.triggerControlEvent(control.id, "imageError");
+          backend.triggerControlEvent(control.id, "imageError", "foreground");
         },
         child: contentCtrls.isNotEmpty
             ? createControl(control, contentCtrls.first.id, disabled)

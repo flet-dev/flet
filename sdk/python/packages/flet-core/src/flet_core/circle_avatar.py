@@ -78,6 +78,7 @@ class CircleAvatar(ConstrainedControl):
         radius: OptionalNumber = None,
         min_radius: OptionalNumber = None,
         max_radius: OptionalNumber = None,
+        on_image_error=None,
         #
         # ConstrainedControl
         #
@@ -148,6 +149,7 @@ class CircleAvatar(ConstrainedControl):
         self.color = color
         self.bgcolor = bgcolor
         self.content = content
+        self.on_image_error = on_image_error
 
     def _get_control_name(self):
         return "circleavatar"
@@ -229,3 +231,12 @@ class CircleAvatar(ConstrainedControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # on_image_error
+    @property
+    def on_image_error(self):
+        return self._get_event_handler("imageError")
+
+    @on_image_error.setter
+    def on_image_error(self, handler):
+        self._add_event_handler("imageError", handler)
