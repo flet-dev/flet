@@ -42,8 +42,9 @@ class CardControl extends StatelessWidget {
             elevation: control.attrDouble("elevation"),
             shape: parseOutlinedBorder(control, "shape"),
             margin: parseEdgeInsets(control, "margin"),
-            semanticContainer: control.attrBool("semanticContainer", true)!,
-            borderOnForeground: control.attrBool("borderOnForeground", true)!,
+            semanticContainer: control.attrBool("isSemanticContainer", true)!,
+            borderOnForeground:
+                control.attrBool("showBorderOnForeground", true)!,
             clipBehavior: clipBehavior,
             color: HexColor.fromString(
                 Theme.of(context), control.attrString("color", "")!),
