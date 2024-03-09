@@ -2,6 +2,8 @@ import dataclasses
 from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.border import BorderSide
+from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -65,6 +67,11 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         active_color: Optional[str] = None,
         hover_color: Optional[str] = None,
         focus_color: Optional[str] = None,
+        semantics_label: Optional[str] = None,
+        shape: Optional[OutlinedBorder] = None,
+        splash_radius: OptionalNumber = None,
+        border_side: Optional[BorderSide] = None,
+        is_error: Optional[bool] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -145,6 +152,11 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self.hover_color = hover_color
         self.overlay_color = overlay_color
         self.active_color = active_color
+        self.semantics_label = semantics_label
+        self.shape = shape
+        self.splash_radius = splash_radius
+        self.border_side = border_side
+        self.is_error = is_error
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
@@ -156,8 +168,11 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         super().before_update()
         self._set_attr_json("fillColor", self.__fill_color)
         self._set_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("shape", self.__shape)
         if dataclasses.is_dataclass(self.__label_style):
             self._set_attr_json("labelStyle", self.__label_style)
+        if dataclasses.is_dataclass(self.__border_side):
+            self._set_attr_json("borderSide", self.__border_side)
 
     # value
     @property
@@ -271,6 +286,51 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @label_style.setter
     def label_style(self, value: Optional[TextStyle]):
         self.__label_style = value
+
+    # semantics_label
+    @property
+    def semantics_label(self) -> Optional[str]:
+        return self._get_attr("semanticsLabel")
+
+    @semantics_label.setter
+    def semantics_label(self, value: Optional[str]):
+        self._set_attr("semanticsLabel", value)
+
+    # shape
+    @property
+    def shape(self) -> Optional[OutlinedBorder]:
+        return self.__shape
+
+    @shape.setter
+    def shape(self, value: Optional[OutlinedBorder]):
+        self.__shape = value
+
+    # splash_radius
+    @property
+    def splash_radius(self) -> Optional[float]:
+        return self._get_attr("splashRadius", data_type="float")
+
+    @splash_radius.setter
+    def splash_radius(self, value: OptionalNumber):
+        self._set_attr("splashRadius", value)
+
+    # is_error
+    @property
+    def is_error(self) -> Optional[bool]:
+        return self._get_attr("isError", data_type="bool", def_value=False)
+
+    @is_error.setter
+    def is_error(self, value: Optional[bool]):
+        self._set_attr("isError", value)
+
+    # border_side
+    @property
+    def border_side(self) -> Optional[BorderSide]:
+        return self.__border_side
+
+    @border_side.setter
+    def border_side(self, value: Optional[BorderSide]):
+        self.__border_side = value
 
     # on_change
     @property

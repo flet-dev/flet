@@ -119,9 +119,11 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
           autofocus: autofocus,
           focusNode: _focusNode,
           value: _value,
-          isError: widget.control.attrBool("error", false)!,
+          isError: widget.control.attrBool("isError", false)!,
           semanticLabel: widget.control.attrString("semanticsLabel"),
           shape: parseOutlinedBorder(widget.control, "shape"),
+          side:
+              parseBorderSide(Theme.of(context), widget.control, "borderSide"),
           splashRadius: widget.control.attrDouble("splashRadius"),
           activeColor: HexColor.fromString(
               Theme.of(context), widget.control.attrString("activeColor", "")!),
