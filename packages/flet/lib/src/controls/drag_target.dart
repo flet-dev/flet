@@ -7,12 +7,12 @@ import '../models/control.dart';
 import 'create_control.dart';
 import 'error.dart';
 
-class DragTargetAcceptEvent {
+class DragTargetEvent {
   final String srcId;
   final double x;
   final double y;
 
-  DragTargetAcceptEvent({
+  DragTargetEvent({
     required this.srcId,
     required this.x,
     required this.y,
@@ -78,7 +78,7 @@ class DragTargetControl extends StatelessWidget {
         backend.triggerControlEvent(
             control.id,
             "move",
-            json.encode(DragTargetAcceptEvent(
+            json.encode(DragTargetEvent(
                     srcId: srcId, x: details.offset.dx, y: details.offset.dy)
                 .toJson()));
       },
@@ -101,7 +101,7 @@ class DragTargetControl extends StatelessWidget {
         backend.triggerControlEvent(
             control.id,
             "accept",
-            json.encode(DragTargetAcceptEvent(
+            json.encode(DragTargetEvent(
                     srcId: srcId, x: details.offset.dx, y: details.offset.dy)
                 .toJson()));
       },
