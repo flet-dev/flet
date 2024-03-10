@@ -28,9 +28,9 @@ class _RiveControlState extends State<RiveControl> with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("Rive build: ${widget.control.id} (${widget.control.hashCode})");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    Widget? placeholder;
 
     var src = widget.control.attrString("src", "")!;
-
     if (src == "") {
       return const ErrorControl("Rive must have \"src\" specified.");
     }
@@ -39,7 +39,15 @@ class _RiveControlState extends State<RiveControl> with FletStoreMixin {
     var antiAliasing = widget.control.attrBool("enableAntiAliasing", true)!;
     var useArtBoardSize = widget.control.attrBool("useArtBoardSize", false)!;
     var fit = parseBoxFit(widget.control, "fit");
-    var placeholderCtrls = widget.children.where((c) => c.isVisible);
+    var alignment = parseAlignment(widget.control, "alignment");
+    var ctrls = widget.children.where((c) => c.isVisible);
+    if (ctrls.isNotEmpty) {
+      placeholder = createControl(widget.control, ctrls.first.id, disabled);
+    }
+
+    void _onInit(artboard) {
+      widget.backend.triggerControlEvent(widget.control.id, "init");
+    }
 
     return withPageArgs((context, pageArgs) {
       Widget? rive;
@@ -53,32 +61,21 @@ class _RiveControlState extends State<RiveControl> with FletStoreMixin {
           fit: fit,
           antialiasing: antiAliasing,
           useArtboardSize: useArtBoardSize,
-          alignment: parseAlignment(widget.control, "alignment"),
-          onInit: (artboard) {
-            widget.backend.triggerControlEvent(widget.control.id, "init");
-          },
-          placeHolder: placeholderCtrls.isNotEmpty
-              ? createControl(
-                  widget.control, placeholderCtrls.first.id, disabled,
-                  parentAdaptive: widget.parentAdaptive)
-              : null,
+          alignment: alignment,
+          placeHolder: placeholder,
+          // onInit: _onInit,
         );
       } else {
         // URL
         rive = RiveAnimation.network(
           assetSrc.path,
-          artboard: artBoard,
           fit: fit,
+          artboard: artBoard,
+          alignment: alignment,
           antialiasing: antiAliasing,
           useArtboardSize: useArtBoardSize,
-          alignment: parseAlignment(widget.control, "alignment"),
-          onInit: (artboard) {
-            widget.backend.triggerControlEvent(widget.control.id, "init");
-          },
-          placeHolder: placeholderCtrls.isNotEmpty
-              ? createControl(
-                  widget.control, placeholderCtrls.first.id, disabled)
-              : null,
+          placeHolder: placeholder,
+          // onInit: _onInit,
         );
       }
 
