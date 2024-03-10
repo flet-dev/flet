@@ -362,6 +362,9 @@ class FletApp(LocalConnection):
         result, message = super()._process_remove_command(values)
         for id in values:
             control = self.__page.snapshot.get(id)
+            assert (
+                control is not None
+            ), f"_process_remove_command: control with ID '{id}' not found."
             for cid in self.__get_all_descendant_ids(id):
                 self.__page.snapshot.pop(cid, None)
             # delete control itself
