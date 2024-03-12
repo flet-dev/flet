@@ -1,4 +1,3 @@
-import dataclasses
 from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
@@ -70,7 +69,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         semantics_label: Optional[str] = None,
         shape: Optional[OutlinedBorder] = None,
         splash_radius: OptionalNumber = None,
-        border_side: Optional[BorderSide] = None,
+        border: Optional[BorderSide] = None,
         is_error: Optional[bool] = None,
         on_change=None,
         on_focus=None,
@@ -155,7 +154,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self.semantics_label = semantics_label
         self.shape = shape
         self.splash_radius = splash_radius
-        self.border_side = border_side
+        self.border = border
         self.is_error = is_error
         self.on_change = on_change
         self.on_focus = on_focus
@@ -169,10 +168,10 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("fillColor", self.__fill_color)
         self._set_attr_json("overlayColor", self.__overlay_color)
         self._set_attr_json("shape", self.__shape)
-        if dataclasses.is_dataclass(self.__label_style):
+        if isinstance(self.__label_style, TextStyle):
             self._set_attr_json("labelStyle", self.__label_style)
-        if dataclasses.is_dataclass(self.__border_side):
-            self._set_attr_json("borderSide", self.__border_side)
+        if isinstance(self.__border, BorderSide):
+            self._set_attr_json("borderSide", self.__border)
 
     # value
     @property
@@ -323,14 +322,14 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     def is_error(self, value: Optional[bool]):
         self._set_attr("isError", value)
 
-    # border_side
+    # border
     @property
-    def border_side(self) -> Optional[BorderSide]:
-        return self.__border_side
+    def border(self) -> Optional[BorderSide]:
+        return self.__border
 
-    @border_side.setter
-    def border_side(self, value: Optional[BorderSide]):
-        self.__border_side = value
+    @border.setter
+    def border(self, value: Optional[BorderSide]):
+        self.__border = value
 
     # on_change
     @property
