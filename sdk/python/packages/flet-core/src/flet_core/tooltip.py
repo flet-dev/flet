@@ -159,9 +159,7 @@ class Tooltip(Control):
     # exclude_from_semantics
     @property
     def exclude_from_semantics(self) -> Optional[bool]:
-        return self._get_attr(
-            "excludeFromSemantics", data_type="bool", def_value=False
-        )
+        return self._get_attr("excludeFromSemantics", data_type="bool", def_value=False)
 
     @exclude_from_semantics.setter
     def exclude_from_semantics(self, value: Optional[bool]):
@@ -223,13 +221,13 @@ class Tooltip(Control):
 
     # shape
     @property
-    def shape(self):
+    def shape(self) -> Optional[BoxShape]:
         return self.__shape
 
     @shape.setter
     def shape(self, value: Optional[BoxShape]):
         self.__shape = value
-        self._set_attr("shape", value.value if value is not None else None)
+        self._set_attr("shape", value.value if isinstance(value, BoxShape) else value)
 
     # message
     @property
@@ -254,7 +252,7 @@ class Tooltip(Control):
 
     # text_style
     @property
-    def text_style(self):
+    def text_style(self) -> Optional[TextStyle]:
         return self.__text_style
 
     @text_style.setter

@@ -390,7 +390,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @shape.setter
     def shape(self, value: Optional[BoxShape]):
         self.__shape = value
-        self._set_attr("shape", value.value if value is not None else None)
+        self._set_attr("shape", value.value if isinstance(value, BoxShape) else value)
 
     # clip_behavior
     @property
@@ -466,7 +466,9 @@ class Container(ConstrainedControl, AdaptiveControl):
     @theme_mode.setter
     def theme_mode(self, value: Optional[ThemeMode]):
         self.__theme_mode = value
-        self._set_attr("themeMode", value.value if value is not None else None)
+        self._set_attr(
+            "themeMode", value.value if isinstance(value, ThemeMode) else value
+        )
 
     # on_click
     @property
@@ -477,7 +479,6 @@ class Container(ConstrainedControl, AdaptiveControl):
     def on_click(self, handler):
         self.__on_click.subscribe(handler)
         self._set_attr("onClick", True if handler is not None else None)
-
 
     # on_long_press
     @property

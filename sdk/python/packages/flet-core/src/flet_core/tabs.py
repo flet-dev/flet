@@ -293,7 +293,9 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     @tab_alignment.setter
     def tab_alignment(self, value: Optional[TabAlignment]):
         self.__tab_alignment = value
-        self._set_attr("tabAlignment", value.value if value is not None else None)
+        self._set_attr(
+            "tabAlignment", value.value if isinstance(value, TabAlignment) else value
+        )
 
     # animation_duration
     @property

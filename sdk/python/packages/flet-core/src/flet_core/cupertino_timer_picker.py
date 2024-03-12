@@ -154,7 +154,10 @@ class CupertinoTimerPicker(ConstrainedControl):
     @mode.setter
     def mode(self, value: Optional[CupertinoTimerPickerMode]):
         self.__mode = value
-        self._set_attr("mode", value.value if value is not None else None)
+        self._set_attr(
+            "mode",
+            value.value if isinstance(value, CupertinoTimerPickerMode) else value,
+        )
 
     # on_change
     @property
