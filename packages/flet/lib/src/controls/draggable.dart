@@ -71,7 +71,7 @@ class DraggableControl extends StatelessWidget {
       },
       onDragCompleted: () {
         debugPrint("Draggable.onDragCompleted ${control.id}");
-        backend.triggerControlEvent(control.id, "dragEnd");
+        backend.triggerControlEvent(control.id, "dragComplete");
       },
       child: MouseRegion(
         cursor: SystemMouseCursors.grab,

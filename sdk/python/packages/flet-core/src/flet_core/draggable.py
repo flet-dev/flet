@@ -118,7 +118,7 @@ class Draggable(Control):
         content_when_dragging: Optional[Control] = None,
         content_feedback: Optional[Control] = None,
         on_drag_start=None,
-        on_drag_end=None,
+        on_drag_complete=None,
         #
         # Control
         #
@@ -145,7 +145,7 @@ class Draggable(Control):
         self.content_when_dragging = content_when_dragging
         self.content_feedback = content_feedback
         self.on_drag_start = on_drag_start
-        self.on_drag_end = on_drag_end
+        self.on_drag_complete = on_drag_complete
 
     def _get_control_name(self):
         return "draggable"
@@ -210,11 +210,11 @@ class Draggable(Control):
     def on_drag_start(self, handler):
         self._add_event_handler("dragStart", handler)
 
-    # on_drag_end
+    # on_drag_complete
     @property
-    def on_drag_end(self):
-        return self._get_event_handler("dragEnd")
+    def on_drag_complete(self):
+        return self._get_event_handler("dragComplete")
 
-    @on_drag_end.setter
-    def on_drag_end(self, handler):
-        self._add_event_handler("dragEnd", handler)
+    @on_drag_complete.setter
+    def on_drag_complete(self, handler):
+        self._add_event_handler("dragComplete", handler)
