@@ -50,8 +50,8 @@ class Divider(Control):
         height: OptionalNumber = None,
         thickness: OptionalNumber = None,
         color: Optional[str] = None,
-        indent: OptionalNumber = None,
-        end_indent: OptionalNumber = None,
+        leading_indent: OptionalNumber = None,
+        trailing_indent: OptionalNumber = None,
         #
         # Control
         #
@@ -72,8 +72,8 @@ class Divider(Control):
         self.height = height
         self.thickness = thickness
         self.color = color
-        self.indent = indent
-        self.end_indent = end_indent
+        self.leading_indent = leading_indent
+        self.trailing_indent = trailing_indent
 
     def _get_control_name(self):
         return "divider"
@@ -107,18 +107,18 @@ class Divider(Control):
 
     # indent
     @property
-    def indent(self) -> OptionalNumber:
-        return self._get_attr("indent")
+    def leading_indent(self) -> OptionalNumber:
+        return self._get_attr("leadingIndent")
 
-    @indent.setter
-    def indent(self, value: OptionalNumber):
-        self._set_attr("indent", value)
+    @leading_indent.setter
+    def leading_indent(self, value: OptionalNumber):
+        self._set_attr("leadingIndent", value)
 
-    # end_indent
+    # trailing_indent
     @property
-    def end_indent(self) -> OptionalNumber:
-        return self._get_attr("endIndent")
+    def trailing_indent(self) -> OptionalNumber:
+        return self._get_attr("trailingIndent")
 
-    @end_indent.setter
-    def end_indent(self, value: OptionalNumber):
-        self._set_attr("endIndent", value)
+    @trailing_indent.setter
+    def trailing_indent(self, value: OptionalNumber):
+        self._set_attr("trailingIndent", value)

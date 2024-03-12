@@ -15,8 +15,8 @@ class DividerControl extends StatelessWidget {
     debugPrint("Divider build: ${control.id}");
 
     var height = control.attrDouble("height");
-    var indent = control.attrDouble("indent");
-    var endIndent = control.attrDouble("endIndent");
+    var leadingIndent = control.attrDouble("leadingIndent");
+    var trailingIndent = control.attrDouble("trailingIndent");
     var thickness = control.attrDouble("thickness");
     var color = HexColor.fromString(
         Theme.of(context), control.attrString("color", "")!);
@@ -27,8 +27,8 @@ class DividerControl extends StatelessWidget {
           height: height,
           thickness: thickness,
           color: color,
-          indent: indent,
-          endIndent: endIndent,
+          indent: leadingIndent,
+          endIndent: trailingIndent,
         ),
         parent,
         control);
