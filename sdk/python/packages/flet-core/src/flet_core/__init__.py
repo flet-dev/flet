@@ -269,6 +269,7 @@ from flet_core.types import (
     MainAxisAlignment,
     MaterialState,
     NotchShape,
+    Orientation,
     PaddingValue,
     PagePlatform,
     ScrollMode,

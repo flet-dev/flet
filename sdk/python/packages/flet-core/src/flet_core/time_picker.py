@@ -4,7 +4,7 @@ from typing import Any, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import ResponsiveNumber
+from flet_core.types import Orientation, ResponsiveNumber
 from flet_core.utils import deprecated
 
 
@@ -73,6 +73,7 @@ class TimePicker(Control):
         cancel_text: Optional[str] = None,
         confirm_text: Optional[str] = None,
         error_invalid_text: Optional[str] = None,
+        orientation: Optional[Orientation] = None,
         on_change=None,
         on_dismiss=None,
         #
@@ -108,6 +109,7 @@ class TimePicker(Control):
         self.hour_label_text = hour_label_text
         self.minute_label_text = minute_label_text
         self.time_picker_entry_mode = time_picker_entry_mode
+        self.orientation = orientation
         self.on_change = on_change
         self.on_dismiss = on_dismiss
         self.open = open
@@ -218,7 +220,20 @@ class TimePicker(Control):
     def time_picker_entry_mode(self, value: Optional[TimePickerEntryMode]):
         self.__time_picker_entry_mode = value
         self._set_attr(
-            "timePickerEntryMode", value.value if value is not None else None
+            "timePickerEntryMode",
+            value.value if isinstance(value, TimePickerEntryMode) else value,
+        )
+
+    # orientation
+    @property
+    def orientation(self) -> Optional[Orientation]:
+        return self.__orientation
+
+    @orientation.setter
+    def orientation(self, value: Optional[Orientation]):
+        self.__orientation = value
+        self._set_attr(
+            "orientation", value.value if isinstance(value, Orientation) else value
         )
 
     # on_change

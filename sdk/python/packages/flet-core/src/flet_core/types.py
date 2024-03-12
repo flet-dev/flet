@@ -219,6 +219,11 @@ class Brightness(Enum):
     DARK = "dark"
 
 
+class Orientation(Enum):
+    PORTRAIT = "portrait"
+    LANDSCAPE = "landscape"
+
+
 class FloatingActionButtonLocation(Enum):
     CENTER_DOCKED = "centerDocked"
     CENTER_FLOAT = "centerFloat"
