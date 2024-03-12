@@ -67,6 +67,8 @@ class TooltipControl extends StatelessWidget {
         Tooltip(
             decoration: decoration,
             enableFeedback: control.attrBool("enableFeedback"),
+            enableTapToDismiss: control.attrBool("enableTapToDismiss", true)!,
+            excludeFromSemantics: control.attrBool("excludeFromSemantics"),
             height: control.attrDouble("height"),
             margin: parseEdgeInsets(control, "margin"),
             padding: parseEdgeInsets(control, "padding"),
