@@ -7,6 +7,8 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 
+enum CardVariant { normal, filled, outlined }
+
 class CardControl extends StatelessWidget {
   final Control? parent;
   final Control control;
@@ -25,6 +27,8 @@ class CardControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Card build: ${control.id}");
+    bool disabled = control.isDisabled || parentDisabled;
+    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
@@ -33,30 +37,71 @@ class CardControl extends StatelessWidget {
           e.name.toLowerCase() ==
           control.attrString("clipBehavior", "")!.toLowerCase(),
     );
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
-    return constrainedControl(
-        context,
-        Card(
-            elevation: control.attrDouble("elevation"),
-            shape: parseOutlinedBorder(control, "shape"),
-            margin: parseEdgeInsets(control, "margin"),
-            semanticContainer: control.attrBool("isSemanticContainer", true)!,
-            borderOnForeground:
-                control.attrBool("showBorderOnForeground", true)!,
-            clipBehavior: clipBehavior,
-            color: HexColor.fromString(
-                Theme.of(context), control.attrString("color", "")!),
-            shadowColor: HexColor.fromString(
-                Theme.of(context), control.attrString("shadowColor", "")!),
-            surfaceTintColor: HexColor.fromString(
-                Theme.of(context), control.attrString("surfaceTintColor", "")!),
-            child: contentCtrls.isNotEmpty
-                ? createControl(control, contentCtrls.first.id, disabled,
-                    parentAdaptive: adaptive)
-                : null),
-        parent,
-        control);
+    Widget? card;
+
+    CardVariant variant = CardVariant.values.firstWhere(
+        (v) =>
+            v.name.toLowerCase() ==
+            control.attrString("variant", "")!.toLowerCase(),
+        orElse: () => CardVariant.normal);
+
+    if (variant == CardVariant.outlined) {
+      card = Card.outlined(
+          elevation: control.attrDouble("elevation"),
+          shape: parseOutlinedBorder(control, "shape"),
+          margin: parseEdgeInsets(control, "margin"),
+          semanticContainer: control.attrBool("isSemanticContainer", true)!,
+          borderOnForeground: control.attrBool("showBorderOnForeground", true)!,
+          clipBehavior: clipBehavior,
+          color: HexColor.fromString(
+              Theme.of(context), control.attrString("color", "")!),
+          shadowColor: HexColor.fromString(
+              Theme.of(context), control.attrString("shadowColor", "")!),
+          surfaceTintColor: HexColor.fromString(
+              Theme.of(context), control.attrString("surfaceTintColor", "")!),
+          child: contentCtrls.isNotEmpty
+              ? createControl(control, contentCtrls.first.id, disabled,
+                  parentAdaptive: adaptive)
+              : null);
+    } else if (variant == CardVariant.filled) {
+      card = Card.filled(
+          elevation: control.attrDouble("elevation"),
+          shape: parseOutlinedBorder(control, "shape"),
+          margin: parseEdgeInsets(control, "margin"),
+          semanticContainer: control.attrBool("isSemanticContainer", true)!,
+          borderOnForeground: control.attrBool("showBorderOnForeground", true)!,
+          clipBehavior: clipBehavior,
+          color: HexColor.fromString(
+              Theme.of(context), control.attrString("color", "")!),
+          shadowColor: HexColor.fromString(
+              Theme.of(context), control.attrString("shadowColor", "")!),
+          surfaceTintColor: HexColor.fromString(
+              Theme.of(context), control.attrString("surfaceTintColor", "")!),
+          child: contentCtrls.isNotEmpty
+              ? createControl(control, contentCtrls.first.id, disabled,
+                  parentAdaptive: adaptive)
+              : null);
+    } else {
+      card = Card(
+          elevation: control.attrDouble("elevation"),
+          shape: parseOutlinedBorder(control, "shape"),
+          margin: parseEdgeInsets(control, "margin"),
+          semanticContainer: control.attrBool("isSemanticContainer", true)!,
+          borderOnForeground: control.attrBool("showBorderOnForeground", true)!,
+          clipBehavior: clipBehavior,
+          color: HexColor.fromString(
+              Theme.of(context), control.attrString("color", "")!),
+          shadowColor: HexColor.fromString(
+              Theme.of(context), control.attrString("shadowColor", "")!),
+          surfaceTintColor: HexColor.fromString(
+              Theme.of(context), control.attrString("surfaceTintColor", "")!),
+          child: contentCtrls.isNotEmpty
+              ? createControl(control, contentCtrls.first.id, disabled,
+                  parentAdaptive: adaptive)
+              : null);
+    }
+
+    return constrainedControl(context, card, parent, control);
   }
 }

@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core import OutlinedBorder
@@ -14,6 +15,12 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+
+
+class CardVariant(Enum):
+    NORMAL = "normal"
+    FILLED = "filled"
+    OUTLINED = "outlined"
 
 
 class Card(ConstrainedControl, AdaptiveControl):
@@ -71,6 +78,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         clip_behavior: Optional[ClipBehavior] = None,
         is_semantic_container: Optional[bool] = None,
         show_border_on_foreground: Optional[bool] = None,
+        variant: Optional[CardVariant] = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -146,6 +154,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         self.clip_behavior = clip_behavior
         self.is_semantic_container = is_semantic_container
         self.show_border_on_foreground = show_border_on_foreground
+        self.variant = variant
 
     def _get_control_name(self):
         return "card"
@@ -257,3 +266,15 @@ class Card(ConstrainedControl, AdaptiveControl):
     @show_border_on_foreground.setter
     def show_border_on_foreground(self, value):
         self._set_attr("showBorderOnForeground", value)
+
+    # variant
+    @property
+    def variant(self) -> Optional[CardVariant]:
+        return self.__variant
+
+    @variant.setter
+    def variant(self, value: Optional[CardVariant]):
+        self.__variant = value
+        self._set_attr(
+            "variant", value.value if isinstance(value, CardVariant) else value
+        )
