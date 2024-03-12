@@ -105,7 +105,7 @@ class Divider(Control):
     def color(self, value: Optional[str]):
         self._set_attr("color", value)
 
-    # indent
+    # leading_indent
     @property
     def leading_indent(self) -> OptionalNumber:
         return self._get_attr("leadingIndent")
