@@ -6,7 +6,6 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
-import '../utils/transforms.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -35,13 +34,25 @@ class FloatingActionButtonControl extends StatelessWidget {
     IconData? icon = parseIcon(control.attrString("icon", "")!);
     String url = control.attrString("url", "")!;
     String? urlTarget = control.attrString("urlTarget");
+    double? disabledElevation = control.attrDouble("disabledElevation");
+    double? elevation = control.attrDouble("elevation");
+    double? hoverElevation = control.attrDouble("hoverElevation");
+    double? highlightElevation = control.attrDouble("highlightElevation");
+    double? focusElevation = control.attrDouble("focusElevation");
     Color? bgColor = HexColor.fromString(
         Theme.of(context), control.attrString("bgColor", "")!);
+    Color? foregroundColor = HexColor.fromString(
+        Theme.of(context), control.attrString("foregroundColor", "")!);
+    Color? splashColor = HexColor.fromString(
+        Theme.of(context), control.attrString("splashColor", "")!);
+    Color? hoverColor = HexColor.fromString(
+        Theme.of(context), control.attrString("hoverColor", "")!);
     OutlinedBorder? shape = parseOutlinedBorder(control, "shape");
     var contentCtrls = children.where((c) => c.name == "content");
     var tooltip = control.attrString("tooltip");
     bool autofocus = control.attrBool("autofocus", false)!;
     bool mini = control.attrBool("mini", false)!;
+    bool? enableFeedback = control.attrBool("enableFeedback");
     bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = disabled
@@ -66,6 +77,15 @@ class FloatingActionButtonControl extends StatelessWidget {
           autofocus: autofocus,
           onPressed: onPressed,
           backgroundColor: bgColor,
+          foregroundColor: foregroundColor,
+          hoverColor: hoverColor,
+          splashColor: splashColor,
+          elevation: elevation,
+          disabledElevation: disabledElevation,
+          focusElevation: focusElevation,
+          hoverElevation: hoverElevation,
+          highlightElevation: highlightElevation,
+          enableFeedback: enableFeedback,
           tooltip: tooltip,
           shape: shape,
           mini: mini,
@@ -77,6 +97,15 @@ class FloatingActionButtonControl extends StatelessWidget {
           autofocus: autofocus,
           onPressed: onPressed,
           backgroundColor: bgColor,
+          foregroundColor: foregroundColor,
+          hoverColor: hoverColor,
+          splashColor: splashColor,
+          elevation: elevation,
+          disabledElevation: disabledElevation,
+          focusElevation: focusElevation,
+          hoverElevation: hoverElevation,
+          highlightElevation: highlightElevation,
+          enableFeedback: enableFeedback,
           tooltip: tooltip,
           shape: shape,
           mini: mini,
@@ -87,6 +116,15 @@ class FloatingActionButtonControl extends StatelessWidget {
         autofocus: autofocus,
         onPressed: onPressed,
         backgroundColor: bgColor,
+        foregroundColor: foregroundColor,
+        hoverColor: hoverColor,
+        splashColor: splashColor,
+        elevation: elevation,
+        disabledElevation: disabledElevation,
+        focusElevation: focusElevation,
+        hoverElevation: hoverElevation,
+        highlightElevation: highlightElevation,
+        enableFeedback: enableFeedback,
         tooltip: tooltip,
         shape: shape,
         mini: mini,
@@ -100,6 +138,15 @@ class FloatingActionButtonControl extends StatelessWidget {
         label: Text(text),
         icon: Icon(icon),
         backgroundColor: bgColor,
+        foregroundColor: foregroundColor,
+        hoverColor: hoverColor,
+        splashColor: splashColor,
+        elevation: elevation,
+        disabledElevation: disabledElevation,
+        focusElevation: focusElevation,
+        hoverElevation: hoverElevation,
+        highlightElevation: highlightElevation,
+        enableFeedback: enableFeedback,
         tooltip: tooltip,
         shape: shape,
       );
@@ -109,69 +156,4 @@ class FloatingActionButtonControl extends StatelessWidget {
 
     return constrainedControl(context, button, parent, control);
   }
-}
-
-FloatingActionButtonLocation parseFloatingActionButtonLocation(
-    Control control, String propName, FloatingActionButtonLocation defValue) {
-  List<FloatingActionButtonLocation> fabLocations = [
-    FloatingActionButtonLocation.centerDocked,
-    FloatingActionButtonLocation.centerFloat,
-    FloatingActionButtonLocation.centerTop,
-    FloatingActionButtonLocation.endContained,
-    FloatingActionButtonLocation.endDocked,
-    FloatingActionButtonLocation.endFloat,
-    FloatingActionButtonLocation.endTop,
-    FloatingActionButtonLocation.miniCenterDocked,
-    FloatingActionButtonLocation.miniCenterFloat,
-    FloatingActionButtonLocation.miniCenterTop,
-    FloatingActionButtonLocation.miniEndFloat,
-    FloatingActionButtonLocation.miniEndTop,
-    FloatingActionButtonLocation.miniStartDocked,
-    FloatingActionButtonLocation.miniStartFloat,
-    FloatingActionButtonLocation.miniStartTop,
-    FloatingActionButtonLocation.startDocked,
-    FloatingActionButtonLocation.startFloat,
-    FloatingActionButtonLocation.startTop
-  ];
-
-  try {
-    OffsetDetails? fabLocationOffsetDetails = parseOffset(control, propName);
-    if (fabLocationOffsetDetails != null) {
-      return CustomFloatingActionButtonLocation(
-          dx: fabLocationOffsetDetails.x, dy: fabLocationOffsetDetails.y);
-    } else {
-      return defValue;
-    }
-  } catch (e) {
-    return fabLocations.firstWhere(
-        (l) =>
-            l.toString().split('.').last.toLowerCase() ==
-            control.attrString(propName, "")!.toLowerCase(),
-        orElse: () => defValue);
-  }
-}
-
-class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
-  final double dx;
-  final double dy;
-
-  CustomFloatingActionButtonLocation({required this.dx, required this.dy});
-
-  @override
-  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
-    return Offset(scaffoldGeometry.scaffoldSize.width - dx,
-        scaffoldGeometry.scaffoldSize.height - dy);
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      other is CustomFloatingActionButtonLocation &&
-      other.dx == dx &&
-      other.dy == dy;
-
-  @override
-  int get hashCode => dx.hashCode + dy.hashCode;
-
-  @override
-  String toString() => 'CustomFloatingActionButtonLocation';
 }
