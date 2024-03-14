@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, Optional, Union, Dict
 
 from flet_core.adaptive_control import AdaptiveControl
