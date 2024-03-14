@@ -54,6 +54,12 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
         Theme.of(context), control.attrString("color", "")!);
     String? semanticsLabel = control.attrString("semanticsLabel");
     var gaplessPlayback = control.attrBool("gaplessPlayback");
+    var excludeFromSemantics = control.attrBool("excludeFromSemantics", false)!;
+    FilterQuality filterQuality = FilterQuality.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("filterQuality", "")!.toLowerCase(),
+        orElse: () => FilterQuality.low);
     bool disabled = control.isDisabled || parentDisabled;
     var errorContentCtrls =
         children.where((c) => c.name == "error_content" && c.isVisible);
@@ -117,6 +123,8 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
               width: width,
               height: height,
               repeat: repeat,
+              filterQuality: filterQuality,
+              excludeFromSemantics: excludeFromSemantics,
               fit: fit,
               color: color,
               gaplessPlayback: gaplessPlayback ?? false,
@@ -136,6 +144,7 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
             image = SvgPicture.network(assetSrc.path,
                 width: width,
                 height: height,
+                excludeFromSemantics: excludeFromSemantics,
                 fit: fit ?? BoxFit.contain,
                 colorFilter: color != null
                     ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
@@ -146,6 +155,8 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
                 width: width,
                 height: height,
                 repeat: repeat,
+                filterQuality: filterQuality,
+                excludeFromSemantics: excludeFromSemantics,
                 fit: fit,
                 color: color,
                 gaplessPlayback: gaplessPlayback ?? false,
