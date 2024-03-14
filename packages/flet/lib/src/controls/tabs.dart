@@ -210,7 +210,7 @@ class _TabsControlState extends State<TabsControl>
             return Tab(child: tabChild);
           }).toList();
 
-          Widget? tabBar;
+          TabBar? tabBar;
 
           if (secondary) {
             tabBar = TabBar.secondary(
