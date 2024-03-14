@@ -12,6 +12,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ClipBehavior,
 )
 from flet_core.utils import deprecated
 
@@ -64,6 +65,8 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         first_item_prototype: Optional[bool] = None,
         divider_thickness: OptionalNumber = None,
         padding: PaddingValue = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        semantic_child_count: Optional[int] = None,
         #
         # ScrollableControl specific
         #
@@ -153,6 +156,8 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.item_extent = item_extent
         self.first_item_prototype = first_item_prototype
         self.padding = padding
+        self.clip_behavior = clip_behavior
+        self.semantic_child_count = semantic_child_count
 
     def _get_control_name(self):
         return "listview"
@@ -238,3 +243,23 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @controls.setter
     def controls(self, value):
         self.__controls = value if value is not None else []
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self._get_attr("clipBehavior")
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
+
+    # semantic_child_count
+    @property
+    def semantic_child_count(self) -> Optional[int]:
+        return self._get_attr("semanticChildCount", data_type="int")
+
+    @semantic_child_count.setter
+    def semantic_child_count(self, value: Optional[int]):
+        self._set_attr("semanticChildCount", value)
