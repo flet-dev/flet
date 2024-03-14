@@ -269,7 +269,8 @@ Widget createWidget(
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
+          parentAdaptive: parentAdaptive,
+          backend: backend);
     case "hapticfeedback":
       return HapticFeedbackControl(
           parent: parent,
