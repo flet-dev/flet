@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -83,6 +84,8 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
               p.name.toLowerCase() ==
               widget.control.attrString("labelPosition", "")!.toLowerCase(),
           orElse: () => LabelPosition.right);
+      VisualDensity? visualDensity =
+          parseVisualDensity(widget.control.attrString("visualDensity"), null);
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
@@ -111,8 +114,17 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
             value: value,
             activeColor: HexColor.fromString(Theme.of(context),
                 widget.control.attrString("activeColor", "")!),
+            focusColor: HexColor.fromString(Theme.of(context),
+                widget.control.attrString("activeColor", "")!),
+            hoverColor: HexColor.fromString(Theme.of(context),
+                widget.control.attrString("activeColor", "")!),
+            splashRadius: widget.control.attrDouble("splashRadius"),
+            toggleable: widget.control.attrBool("toggleable", false)!,
             fillColor: parseMaterialStateColor(
                 Theme.of(context), widget.control, "fillColor"),
+            overlayColor: parseMaterialStateColor(
+                Theme.of(context), widget.control, "overlayColor"),
+            visualDensity: visualDensity,
             onChanged: !disabled
                 ? (String? value) {
                     _onChange(ancestorId, value);
