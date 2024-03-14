@@ -151,6 +151,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         indicator_border_side: Optional[BorderSide] = None,
         indicator_padding: PaddingValue = None,
         indicator_tab_size: Optional[bool] = None,
+        secondary: Optional[bool] = None,
         label_color: Optional[str] = None,
         unselected_label_color: Optional[str] = None,
         overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
@@ -239,6 +240,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self.divider_height = divider_height
         self.indicator_thickness = indicator_thickness
         self.enable_feedback = enable_feedback
+        self.secondary = secondary
 
     def _get_control_name(self):
         return "tabs"
@@ -288,6 +290,15 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     @scrollable.setter
     def scrollable(self, value: Optional[bool]):
         self._set_attr("scrollable", value)
+
+    # secondary
+    @property
+    def secondary(self) -> Optional[bool]:
+        return self._get_attr("secondary", data_type="bool", def_value=False)
+
+    @secondary.setter
+    def secondary(self, value: Optional[bool]):
+        self._set_attr("secondary", value)
 
     # tab_alignment
     @property
