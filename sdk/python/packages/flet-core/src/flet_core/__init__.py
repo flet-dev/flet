@@ -201,7 +201,7 @@ from flet_core.popup_menu_button import (
     PopupMenuPosition,
 )
 from flet_core.progress_bar import ProgressBar
-from flet_core.progress_ring import ProgressRing
+from flet_core.progress_ring import ProgressRing, StrokeCap
 from flet_core.pubsub import PubSubClient, PubSubHub
 from flet_core.querystring import QueryString
 from flet_core.radio import Radio
