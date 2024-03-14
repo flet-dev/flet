@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
@@ -53,6 +54,11 @@ class _SnackBarControlState extends State<SnackBarControl> {
               widget.backend.triggerControlEvent(widget.control.id, "action");
             })
         : null;
+    var clipBehavior = Clip.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
+        orElse: () => Clip.hardEdge);
 
     SnackBarBehavior? behavior = SnackBarBehavior.values.firstWhereOrNull((a) =>
         a.name.toLowerCase() ==
@@ -66,6 +72,12 @@ class _SnackBarControlState extends State<SnackBarControl> {
 
     return SnackBar(
         behavior: behavior,
+        clipBehavior: clipBehavior,
+        shape: parseOutlinedBorder(widget.control, "shape"),
+        onVisible: () {
+          debugPrint("SnackBar.onVisible(${widget.control.id})");
+          widget.backend.triggerControlEvent(widget.control.id, "visible");
+        },
         dismissDirection: dismissDirection,
         showCloseIcon: widget.control.attrBool("showCloseIcon"),
         closeIconColor: HexColor.fromString(Theme.of(context),
@@ -85,8 +97,6 @@ class _SnackBarControlState extends State<SnackBarControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("SnackBar build: ${widget.control.id}");
-
     debugPrint("SnackBar build: ${widget.control.id}");
 
     var open = widget.control.attrBool("open", false)!;

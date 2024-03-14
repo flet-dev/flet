@@ -1,9 +1,10 @@
 from enum import Enum
 from typing import Any, Optional
 
+from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import MarginValue, PaddingValue
+from flet_core.types import MarginValue, PaddingValue, ClipBehavior
 
 
 class SnackBarBehavior(Enum):
@@ -75,7 +76,10 @@ class SnackBar(Control):
         padding: PaddingValue = None,
         width: OptionalNumber = None,
         elevation: OptionalNumber = None,
+        shape: Optional[OutlinedBorder] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
         on_action=None,
+        on_visible=None,
         #
         # Control
         #
@@ -107,6 +111,9 @@ class SnackBar(Control):
         self.duration = duration
         self.elevation = elevation
         self.on_action = on_action
+        self.on_visible = on_visible
+        self.shape = shape
+        self.clip_behavior = clip_behavior
 
     def _get_control_name(self):
         return "snackbar"
@@ -120,6 +127,7 @@ class SnackBar(Control):
 
     def before_update(self):
         super().before_update()
+        self._set_attr_json("shape", self.__shape)
         self._set_attr_json("margin", self.__margin)
         self._set_attr_json("padding", self.__padding)
 
@@ -257,6 +265,27 @@ class SnackBar(Control):
     def elevation(self, value: OptionalNumber):
         self._set_attr("elevation", value)
 
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
+
+    # shape
+    @property
+    def shape(self) -> Optional[OutlinedBorder]:
+        return self.__shape
+
+    @shape.setter
+    def shape(self, value: Optional[OutlinedBorder]):
+        self.__shape = value
+
     # on_action
     @property
     def on_action(self):
@@ -265,3 +294,12 @@ class SnackBar(Control):
     @on_action.setter
     def on_action(self, handler):
         self._add_event_handler("action", handler)
+
+    # on_visible
+    @property
+    def on_visible(self):
+        return self._get_event_handler("visible")
+
+    @on_visible.setter
+    def on_visible(self, handler):
+        self._add_event_handler("visible", handler)
