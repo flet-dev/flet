@@ -22,13 +22,10 @@ from flet_core.client_storage import ClientStorage
 from flet_core.connection import Connection
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
-from flet_core.cupertino_action_sheet import CupertinoActionSheet
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
-from flet_core.cupertino_picker import CupertinoPicker
-from flet_core.cupertino_timer_picker import CupertinoTimerPicker
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import FloatingActionButton
@@ -481,9 +478,9 @@ class Page(AdaptiveControl):
                     if name != "i":
                         self._index[id]._set_attr(name, props[name], dirty=False)
 
-    def run_task(self, handler: Callable[..., Awaitable[Any]], *args):
+    def run_task(self, handler: Callable[..., Awaitable[Any]], *args, **kwargs):
         assert asyncio.iscoroutinefunction(handler)
-        return asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
+        return asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.__loop)
 
     def run_thread(self, handler, *args):
         if is_pyodide():
