@@ -4,7 +4,7 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import MainAxisAlignment, PaddingValue
+from flet_core.types import ClipBehavior, MainAxisAlignment, PaddingValue
 
 
 class AlertDialog(AdaptiveControl):
@@ -76,6 +76,11 @@ class AlertDialog(AdaptiveControl):
         actions_alignment: MainAxisAlignment = MainAxisAlignment.NONE,
         shape: Optional[OutlinedBorder] = None,
         inset_padding: PaddingValue = None,
+        icon_padding: PaddingValue = None,
+        action_button_padding: PaddingValue = None,
+        surface_tint_color: Optional[str] = None,
+        shadow_color: Optional[str] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
         semantics_label: Optional[str] = None,
         adaptive: Optional[bool] = None,
         on_dismiss=None,
@@ -118,6 +123,11 @@ class AlertDialog(AdaptiveControl):
         self.inset_padding = inset_padding
         self.semantics_label = semantics_label
         self.on_dismiss = on_dismiss
+        self.clip_behavior = clip_behavior
+        self.action_button_padding = action_button_padding
+        self.shadow_color = shadow_color
+        self.surface_tint_color = surface_tint_color
+        self.icon_padding = icon_padding
 
     def _get_control_name(self):
         return "alertdialog"
@@ -129,6 +139,8 @@ class AlertDialog(AdaptiveControl):
         self._set_attr_json("titlePadding", self.__title_padding)
         self._set_attr_json("shape", self.__shape)
         self._set_attr_json("insetPadding", self.__inset_padding)
+        self._set_attr_json("iconPadding", self.__icon_padding)
+        self._set_attr_json("actionButtonPadding", self.__action_button_padding)
 
     def _get_children(self):
         children = []
@@ -161,8 +173,26 @@ class AlertDialog(AdaptiveControl):
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
+
+    # shadow_color
+    @property
+    def shadow_color(self):
+        return self._get_attr("shadowColor")
+
+    @shadow_color.setter
+    def shadow_color(self, value: Optional[str]):
+        self._set_attr("shadowColor", value)
+
+    # surface_tint_color
+    @property
+    def surface_tint_color(self):
+        return self._get_attr("surfaceTintColor")
+
+    @surface_tint_color.setter
+    def surface_tint_color(self, value: Optional[str]):
+        self._set_attr("surfaceTintColor", value)
 
     # elevation
     @property
@@ -276,6 +306,24 @@ class AlertDialog(AdaptiveControl):
     def inset_padding(self, value: PaddingValue):
         self.__inset_padding = value
 
+    # icon_padding
+    @property
+    def icon_padding(self) -> PaddingValue:
+        return self.__icon_padding
+
+    @icon_padding.setter
+    def icon_padding(self, value: PaddingValue):
+        self.__icon_padding = value
+
+    # action_button_padding
+    @property
+    def action_button_padding(self) -> PaddingValue:
+        return self.__action_button_padding
+
+    @action_button_padding.setter
+    def action_button_padding(self, value: PaddingValue):
+        self.__action_button_padding = value
+
     # semantics_label
     @property
     def semantics_label(self):
@@ -284,6 +332,17 @@ class AlertDialog(AdaptiveControl):
     @semantics_label.setter
     def semantics_label(self, value):
         self._set_attr("semanticsLabel", value)
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self._get_attr("clipBehavior")
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
 
     # on_dismiss
     @property

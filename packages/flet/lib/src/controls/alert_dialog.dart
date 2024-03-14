@@ -53,6 +53,11 @@ class _AlertDialogControlState extends State<AlertDialogControl>
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
       return const ErrorControl("AlertDialog does not have any content.");
     }
+    var clipBehavior = Clip.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
+        orElse: () => Clip.none);
 
     return AlertDialog(
       title: titleCtrls.isNotEmpty
@@ -76,9 +81,16 @@ class _AlertDialogControlState extends State<AlertDialogControl>
       semanticLabel: widget.control.attrString("semanticsLabel"),
       insetPadding: parseEdgeInsets(widget.control, "insetPadding") ??
           const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
+      iconPadding: parseEdgeInsets(widget.control, "iconPadding"),
       backgroundColor: HexColor.fromString(
           Theme.of(context), widget.control.attrString("bgcolor", "")!),
+      buttonPadding: parseEdgeInsets(widget.control, "actionButtonPadding"),
+      surfaceTintColor: HexColor.fromString(Theme.of(context),
+          widget.control.attrString("surfaceTintColor", "")!),
+      shadowColor: HexColor.fromString(
+          Theme.of(context), widget.control.attrString("shadowColor", "")!),
       elevation: widget.control.attrDouble("elevation"),
+      clipBehavior: clipBehavior,
       icon: iconCtrls.isNotEmpty
           ? createControl(widget.control, iconCtrls.first.id, disabled,
               parentAdaptive: adaptive)
