@@ -68,6 +68,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
       if (_selectedIndex != selectedIndex) {
         _selectedIndex = selectedIndex;
       }
+      var animationDuration = widget.control.attrInt("animationDuration");
 
       NavigationDestinationLabelBehavior? labelBehavior =
           NavigationDestinationLabelBehavior.values.firstWhereOrNull((a) =>
@@ -81,6 +82,9 @@ class _NavigationBarControlState extends State<NavigationBarControl>
         return NavigationBar(
             labelBehavior: labelBehavior,
             height: widget.control.attrDouble("height"),
+            animationDuration: animationDuration != null
+                ? Duration(milliseconds: animationDuration)
+                : null,
             elevation: widget.control.attrDouble("elevation"),
             shadowColor: HexColor.fromString(Theme.of(context),
                 widget.control.attrString("shadowColor", "")!),

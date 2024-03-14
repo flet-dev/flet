@@ -168,6 +168,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         indicator_shape: Optional[OutlinedBorder] = None,
         surface_tint_color: Optional[str] = None,
         border: Optional[Border] = None,
+        animation_duration: Optional[int] = None,
         on_change=None,
         #
         # ConstrainedControl and AdaptiveControl
@@ -241,6 +242,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         self.surface_tint_color = surface_tint_color
         self.border = border
         self.on_change = on_change
+        self.animation_duration = animation_duration
 
     def _get_control_name(self):
         return "navigationbar"
@@ -348,6 +350,15 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     @border.setter
     def border(self, value: Optional[Border]):
         self.__border = value
+
+    # animation_duration
+    @property
+    def animation_duration(self):
+        return self._get_attr("animationDuration", data_type="int")
+
+    @animation_duration.setter
+    def animation_duration(self, value: OptionalNumber):
+        self._set_attr("animationDuration", value)
 
     # on_change
     @property
