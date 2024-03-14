@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
@@ -85,10 +87,22 @@ class _IconButtonControlState extends State<IconButtonControl>
           widget.control.attrString("selectedIconColor", "")!);
       Color? bgColor = HexColor.fromString(
           Theme.of(context), widget.control.attrString("bgColor", "")!);
+      Color? disabledColor = HexColor.fromString(
+          Theme.of(context), widget.control.attrString("disabledColor", "")!);
+      Color? hoverColor = HexColor.fromString(
+          Theme.of(context), widget.control.attrString("hoverColor", "")!);
+      Color? splashColor = HexColor.fromString(
+          Theme.of(context), widget.control.attrString("splashColor", "")!);
+      Color? focusColor = HexColor.fromString(
+          Theme.of(context), widget.control.attrString("focusColor", "")!);
       double? iconSize = widget.control.attrDouble("iconSize");
+      double? splashRadius = widget.control.attrDouble("splashRadius");
+      var padding = parseEdgeInsets(widget.control, "padding");
+      var alignment = parseAlignment(widget.control, "alignment");
       var tooltip = widget.control.attrString("tooltip");
       var contentCtrls = widget.children.where((c) => c.name == "content");
       bool autofocus = widget.control.attrBool("autofocus", false)!;
+      bool enableFeedback = widget.control.attrBool("enableFeedback", true)!;
       bool selected = widget.control.attrBool("selected", false)!;
       String url = widget.control.attrString("url", "")!;
       String? urlTarget = widget.control.attrString("urlTarget");
@@ -126,6 +140,14 @@ class _IconButtonControlState extends State<IconButtonControl>
             autofocus: autofocus,
             focusNode: _focusNode,
             highlightColor: highlightColor,
+            disabledColor: highlightColor,
+            hoverColor: highlightColor,
+            enableFeedback: enableFeedback,
+            padding: padding,
+            alignment: alignment,
+            focusColor: focusColor,
+            splashColor: splashColor,
+            splashRadius: splashRadius,
             icon: Icon(
               icon,
               color: iconColor,
@@ -143,6 +165,14 @@ class _IconButtonControlState extends State<IconButtonControl>
             autofocus: autofocus,
             focusNode: _focusNode,
             highlightColor: highlightColor,
+            disabledColor: highlightColor,
+            hoverColor: highlightColor,
+            enableFeedback: enableFeedback,
+            padding: padding,
+            alignment: alignment,
+            focusColor: focusColor,
+            splashColor: splashColor,
+            splashRadius: splashRadius,
             onPressed: onPressed,
             iconSize: iconSize,
             style: style,
