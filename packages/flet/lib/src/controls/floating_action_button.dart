@@ -47,7 +47,14 @@ class FloatingActionButtonControl extends StatelessWidget {
         Theme.of(context), control.attrString("splashColor", "")!);
     Color? hoverColor = HexColor.fromString(
         Theme.of(context), control.attrString("hoverColor", "")!);
+    Color? focusColor = HexColor.fromString(
+        Theme.of(context), control.attrString("focusColor", "")!);
     OutlinedBorder? shape = parseOutlinedBorder(control, "shape");
+    var clipBehavior = Clip.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("clipBehavior", "")!.toLowerCase(),
+        orElse: () => Clip.none);
     var contentCtrls = children.where((c) => c.name == "content");
     var tooltip = control.attrString("tooltip");
     bool autofocus = control.attrBool("autofocus", false)!;
@@ -86,6 +93,8 @@ class FloatingActionButtonControl extends StatelessWidget {
           hoverElevation: hoverElevation,
           highlightElevation: highlightElevation,
           enableFeedback: enableFeedback,
+          clipBehavior: clipBehavior,
+          focusColor: focusColor,
           tooltip: tooltip,
           shape: shape,
           mini: mini,
@@ -106,6 +115,8 @@ class FloatingActionButtonControl extends StatelessWidget {
           hoverElevation: hoverElevation,
           highlightElevation: highlightElevation,
           enableFeedback: enableFeedback,
+          clipBehavior: clipBehavior,
+          focusColor: focusColor,
           tooltip: tooltip,
           shape: shape,
           mini: mini,
@@ -125,6 +136,8 @@ class FloatingActionButtonControl extends StatelessWidget {
         hoverElevation: hoverElevation,
         highlightElevation: highlightElevation,
         enableFeedback: enableFeedback,
+        clipBehavior: clipBehavior,
+        focusColor: focusColor,
         tooltip: tooltip,
         shape: shape,
         mini: mini,
@@ -147,6 +160,8 @@ class FloatingActionButtonControl extends StatelessWidget {
         hoverElevation: hoverElevation,
         highlightElevation: highlightElevation,
         enableFeedback: enableFeedback,
+        clipBehavior: clipBehavior,
+        focusColor: focusColor,
         tooltip: tooltip,
         shape: shape,
       );

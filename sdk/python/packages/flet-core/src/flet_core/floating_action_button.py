@@ -10,6 +10,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ClipBehavior,
 )
 
 
@@ -71,6 +72,15 @@ class FloatingActionButton(ConstrainedControl):
         shape: Optional[OutlinedBorder] = None,
         autofocus: Optional[bool] = None,
         mini: Optional[bool] = None,
+        foreground_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        elevation: OptionalNumber = None,
+        disabled_elevation: OptionalNumber = None,
+        focus_elevation: OptionalNumber = None,
+        highlight_elevation: OptionalNumber = None,
+        hover_elevation: OptionalNumber = None,
+        enable_feedback: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
         on_click=None,
@@ -146,6 +156,15 @@ class FloatingActionButton(ConstrainedControl):
         self.url = url
         self.url_target = url_target
         self.on_click = on_click
+        self.foreground_color = foreground_color
+        self.focus_color = focus_color
+        self.clip_behavior = clip_behavior
+        self.elevation = elevation
+        self.disabled_elevation = disabled_elevation
+        self.focus_elevation = focus_elevation
+        self.highlight_elevation = highlight_elevation
+        self.hover_elevation = hover_elevation
+        self.enable_feedback = enable_feedback
 
     def _get_control_name(self):
         return "floatingactionbutton"
@@ -249,3 +268,87 @@ class FloatingActionButton(ConstrainedControl):
     @mini.setter
     def mini(self, value: Optional[bool]):
         self._set_attr("mini", value)
+
+    # elevation
+    @property
+    def elevation(self):
+        return self._get_attr("elevation", data_type="float")
+
+    @elevation.setter
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
+
+    # disabled_elevation
+    @property
+    def disabled_elevation(self):
+        return self._get_attr("disabledElevation", data_type="float")
+
+    @disabled_elevation.setter
+    def disabled_elevation(self, value: OptionalNumber):
+        self._set_attr("disabledElevation", value)
+
+    # enable_feedback
+    @property
+    def enable_feedback(self):
+        return self._get_attr("enableFeedback", data_type="bool", def_value=True)
+
+    @enable_feedback.setter
+    def enable_feedback(self, value: Optional[bool]):
+        self._set_attr("enableFeedback", value)
+
+    # focus_color
+    @property
+    def focus_color(self):
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value: Optional[str]):
+        self._set_attr("focusColor", value)
+
+    # focus_elevation
+    @property
+    def focus_elevation(self):
+        return self._get_attr("focusElevation", data_type="float")
+
+    @focus_elevation.setter
+    def focus_elevation(self, value: OptionalNumber):
+        self._set_attr("focusElevation", value)
+
+    # foreground_color
+    @property
+    def foreground_color(self):
+        return self._get_attr("foregroundColor")
+
+    @foreground_color.setter
+    def foreground_color(self, value: Optional[str]):
+        self._set_attr("foregroundColor", value)
+
+    # highlight_elevation
+    @property
+    def highlight_elevation(self):
+        return self._get_attr("highlightElevation", data_type="float")
+
+    @highlight_elevation.setter
+    def highlight_elevation(self, value: OptionalNumber):
+        self._set_attr("highlightElevation", value)
+
+    # hover_elevation
+    @property
+    def hover_elevation(self):
+        return self._get_attr("hoverElevation", data_type="float")
+
+    @hover_elevation.setter
+    def hover_elevation(self, value: OptionalNumber):
+        self._set_attr("hoverElevation", value)
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
