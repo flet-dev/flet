@@ -61,7 +61,7 @@ class Tab(AdaptiveControl):
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
     # icon
@@ -70,7 +70,7 @@ class Tab(AdaptiveControl):
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
     # tab_content
@@ -79,7 +79,7 @@ class Tab(AdaptiveControl):
         return self.__tab_content
 
     @tab_content.setter
-    def tab_content(self, value):
+    def tab_content(self, value: Optional[Control]):
         self.__tab_content = value
 
     # content
@@ -88,7 +88,7 @@ class Tab(AdaptiveControl):
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Optional[Control]):
         self.__content = value
 
 
@@ -140,6 +140,27 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        tabs: Optional[List[Tab]] = None,
+        selected_index: Optional[int] = None,
+        scrollable: Optional[bool] = None,
+        tab_alignment: Optional[TabAlignment] = None,
+        animation_duration: Optional[int] = None,
+        divider_color: Optional[str] = None,
+        indicator_color: Optional[str] = None,
+        indicator_border_radius: BorderRadiusValue = None,
+        indicator_border_side: Optional[BorderSide] = None,
+        indicator_padding: PaddingValue = None,
+        indicator_tab_size: Optional[bool] = None,
+        label_color: Optional[str] = None,
+        unselected_label_color: Optional[str] = None,
+        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        divider_height: OptionalNumber = None,
+        indicator_thickness: OptionalNumber = None,
+        enable_feedback: Optional[str] = None,
+        on_change=None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -166,26 +187,6 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Tabs-specific
-        tabs: Optional[List[Tab]] = None,
-        selected_index: Optional[int] = None,
-        scrollable: Optional[bool] = None,
-        tab_alignment: Optional[TabAlignment] = None,
-        animation_duration: Optional[int] = None,
-        divider_color: Optional[str] = None,
-        indicator_color: Optional[str] = None,
-        indicator_border_radius: BorderRadiusValue = None,
-        indicator_border_side: Optional[BorderSide] = None,
-        indicator_padding: PaddingValue = None,
-        indicator_tab_size: Optional[bool] = None,
-        label_color: Optional[str] = None,
-        unselected_label_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
-        on_change=None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -235,6 +236,9 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self.indicator_tab_size = indicator_tab_size
         self.overlay_color = overlay_color
         self.on_change = on_change
+        self.divider_height = divider_height
+        self.indicator_thickness = indicator_thickness
+        self.enable_feedback = enable_feedback
 
     def _get_control_name(self):
         return "tabs"
@@ -300,11 +304,38 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     # animation_duration
     @property
     def animation_duration(self) -> Optional[int]:
-        return self._get_attr("animationDuration")
+        return self._get_attr("animationDuration", data_type="int")
 
     @animation_duration.setter
     def animation_duration(self, value: Optional[int]):
         self._set_attr("animationDuration", value)
+
+    # divider_height
+    @property
+    def divider_height(self):
+        return self._get_attr("dividerHeight", data_type="float", def_value=1.0)
+
+    @divider_height.setter
+    def divider_height(self, value: OptionalNumber):
+        self._set_attr("dividerHeight", value)
+
+    # enable_feedback
+    @property
+    def enable_feedback(self):
+        return self._get_attr("enableFeedback")
+
+    @enable_feedback.setter
+    def enable_feedback(self, value: Optional[bool]):
+        self._set_attr("enableFeedback", value)
+
+    # indicator_thickness
+    @property
+    def indicator_thickness(self):
+        return self._get_attr("indicatorThickness", data_type="float", def_value=3.0)
+
+    @indicator_thickness.setter
+    def indicator_thickness(self, value: OptionalNumber):
+        self._set_attr("indicatorThickness", value)
 
     # divider_color
     @property

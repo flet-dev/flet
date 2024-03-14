@@ -143,9 +143,12 @@ class _TabsControlState extends State<TabsControl>
               tabAlignment: tabAlignment,
               controller: _tabController,
               isScrollable: isScrollable,
-              dividerColor:
-                  HexColor.fromString(Theme.of(context), widget.control.attrString("dividerColor", "")!) ??
-                      TabBarTheme.of(context).dividerColor,
+              dividerHeight: widget.control.attrDouble("dividerHeight"),
+              enableFeedback: widget.control.attrBool("enableFeedback"),
+              indicatorWeight:
+                  widget.control.attrDouble("indicatorThickness", 2.0)!,
+              dividerColor: HexColor.fromString(Theme.of(context), widget.control.attrString("dividerColor", "")!) ??
+                  TabBarTheme.of(context).dividerColor,
               indicatorSize: indicatorTabSize != null
                   ? (indicatorTabSize
                       ? TabBarIndicatorSize.tab
@@ -174,10 +177,9 @@ class _TabsControlState extends State<TabsControl>
               labelColor: HexColor.fromString(Theme.of(context), widget.control.attrString("labelColor", "")!) ??
                   TabBarTheme.of(context).labelColor ??
                   Theme.of(context).colorScheme.primary,
-              unselectedLabelColor:
-                  HexColor.fromString(Theme.of(context), widget.control.attrString("unselectedLabelColor", "")!) ??
-                      TabBarTheme.of(context).unselectedLabelColor ??
-                      Theme.of(context).colorScheme.onSurface,
+              unselectedLabelColor: HexColor.fromString(Theme.of(context), widget.control.attrString("unselectedLabelColor", "")!) ??
+                  TabBarTheme.of(context).unselectedLabelColor ??
+                  Theme.of(context).colorScheme.onSurface,
               overlayColor: getMaterialStateProperty<Color?>(
                       overlayColor, (jv) => HexColor.fromString(Theme.of(context), jv as String), null) ??
                   TabBarTheme.of(context).overlayColor,
