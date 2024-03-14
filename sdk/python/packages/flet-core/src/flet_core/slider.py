@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Dict
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -6,11 +6,19 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    MaterialState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
+
+
+class SliderInteraction(Enum):
+    TAP_AND_SLIDE = "tapAndSlide"
+    TAP_ONLY = "tapOnly"
+    SLIDE_ONLY = "slideOnly"
+    SLIDE_THUMB = "slideThumb"
 
 
 class Slider(ConstrainedControl, AdaptiveControl):
@@ -50,6 +58,8 @@ class Slider(ConstrainedControl, AdaptiveControl):
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
         thumb_color: Optional[str] = None,
+        interaction: Optional[SliderInteraction] = None,
+        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
         on_change=None,
         on_change_start=None,
         on_change_end=None,
@@ -130,6 +140,8 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self.active_color = active_color
         self.inactive_color = inactive_color
         self.thumb_color = thumb_color
+        self.interaction = interaction
+        self.overlay_color = overlay_color
         self.on_change = on_change
         self.on_change_start = on_change_start
         self.on_change_end = on_change_end
@@ -138,6 +150,10 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     def _get_control_name(self):
         return "slider"
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("overlayColor", self.__overlay_color)
 
     # value
     @property
@@ -162,6 +178,19 @@ class Slider(ConstrainedControl, AdaptiveControl):
     @label.setter
     def label(self, value):
         self._set_attr("label", value)
+
+    # interaction
+    @property
+    def interaction(self) -> Optional[SliderInteraction]:
+        return self.__interaction
+
+    @interaction.setter
+    def interaction(self, value: Optional[SliderInteraction]):
+        self.__interaction = value
+        self._set_attr(
+            "interaction",
+            value.value if isinstance(value, SliderInteraction) else value,
+        )
 
     # min
     @property
@@ -198,6 +227,15 @@ class Slider(ConstrainedControl, AdaptiveControl):
     @round.setter
     def round(self, value: Optional[int]):
         self._set_attr("round", value)
+
+    # overlay_color
+    @property
+    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__overlay_color
+
+    @overlay_color.setter
+    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__overlay_color = value
 
     # autofocus
     @property

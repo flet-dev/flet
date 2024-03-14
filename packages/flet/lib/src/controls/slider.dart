@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -90,6 +91,13 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
       int? divisions = widget.control.attrInt("divisions");
       int round = widget.control.attrInt("round", 0)!;
 
+      var interaction = SliderInteraction.values.firstWhereOrNull((e) =>
+          e.name.toLowerCase() ==
+          widget.control.attrString("interaction", "")!.toLowerCase());
+
+      var overlayColor = parseMaterialStateColor(
+          Theme.of(context), widget.control, "overlayColor");
+
       debugPrint("SliderControl build: ${widget.control.id}");
 
       double value = widget.control.attrDouble("value", 0)!;
@@ -116,6 +124,8 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
               Theme.of(context), widget.control.attrString("activeColor", "")!),
           inactiveColor: HexColor.fromString(Theme.of(context),
               widget.control.attrString("inactiveColor", "")!),
+          overlayColor: overlayColor,
+          allowedInteraction: interaction,
           thumbColor: HexColor.fromString(
               Theme.of(context), widget.control.attrString("thumbColor", "")!),
           onChanged: !disabled

@@ -220,7 +220,7 @@ from flet_core.semantics_service import Assertiveness, SemanticsService
 from flet_core.shader_mask import ShaderMask
 from flet_core.shadow import BoxShadow, ShadowBlurStyle
 from flet_core.shake_detector import ShakeDetector
-from flet_core.slider import Slider
+from flet_core.slider import Slider, SliderInteraction
 from flet_core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
 from flet_core.stack import Stack, StackFit
 from flet_core.submenu_button import SubmenuButton
