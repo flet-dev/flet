@@ -1,4 +1,3 @@
-import dataclasses
 from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
@@ -169,9 +168,9 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("fillColor", self.__fill_color)
         self._set_attr_json("overlayColor", self.__overlay_color)
         self._set_attr_json("shape", self.__shape)
-        if dataclasses.is_dataclass(self.__label_style):
+        if isinstance(self.__label_style, TextStyle):
             self._set_attr_json("labelStyle", self.__label_style)
-        if dataclasses.is_dataclass(self.__border_side):
+        if isinstance(self.__border_side, BorderSide):
             self._set_attr_json("borderSide", self.__border_side)
 
     # value

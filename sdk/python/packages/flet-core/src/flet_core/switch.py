@@ -1,4 +1,3 @@
-import dataclasses
 from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
@@ -159,7 +158,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("thumbColor", self.__thumb_color)
         self._set_attr_json("thumbIcon", self.__thumb_icon)
         self._set_attr_json("trackColor", self.__track_color)
-        if dataclasses.is_dataclass(self.__label_style):
+        if isinstance(self.__label_style, TextStyle):
             self._set_attr_json("labelStyle", self.__label_style)
 
     # value
