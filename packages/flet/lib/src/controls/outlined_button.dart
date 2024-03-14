@@ -59,6 +59,7 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("Button build: ${widget.control.id}");
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     String text = widget.control.attrString("text", "")!;
     IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
@@ -70,8 +71,11 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
     bool onHover = widget.control.attrBool("onHover", false)!;
     bool onLongPress = widget.control.attrBool("onLongPress", false)!;
     bool autofocus = widget.control.attrBool("autofocus", false)!;
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
+    var clipBehavior = Clip.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
+        orElse: () => Clip.none);
     Function()? onPressed = !disabled
         ? () {
             debugPrint("Button ${widget.control.id} clicked!");
@@ -143,6 +147,7 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
             focusNode: _focusNode,
             onPressed: onPressed,
             onLongPress: onLongPressHandler,
+            clipBehavior: clipBehavior,
             style: style,
             icon: Icon(
               icon,
@@ -155,6 +160,7 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
             focusNode: _focusNode,
             onPressed: onPressed,
             onLongPress: onLongPressHandler,
+            clipBehavior: clipBehavior,
             onHover: onHoverHandler,
             style: style,
             child:
@@ -166,6 +172,7 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
             style: style,
             onPressed: onPressed,
             onLongPress: onLongPressHandler,
+            clipBehavior: clipBehavior,
             onHover: onHoverHandler,
             child: Text(text));
       }

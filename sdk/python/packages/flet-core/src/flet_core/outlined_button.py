@@ -8,6 +8,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    ClipBehavior,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -47,6 +48,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
         content: Optional[Control] = None,
         style: Optional[ButtonStyle] = None,
         autofocus: Optional[bool] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
         on_click=None,
@@ -126,6 +128,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
         self.autofocus = autofocus
         self.url = url
         self.url_target = url_target
+        self.clip_behavior = clip_behavior
         self.on_click = on_click
         self.on_long_press = on_long_press
         self.on_hover = on_hover
@@ -251,6 +254,17 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self._get_attr("clipBehavior")
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
 
     # on_hover
     @property
