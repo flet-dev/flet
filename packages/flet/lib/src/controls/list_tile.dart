@@ -76,6 +76,10 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
       bool onclick = control.attrBool("onclick", false)!;
       bool toggleInputs = control.attrBool("toggleInputs", false)!;
       bool onLongPressDefined = control.attrBool("onLongPress", false)!;
+      bool? enableFeedback = control.attrBool("enableFeedback");
+      double? horizontalSpacing = control.attrDouble("horizontalSpacing");
+      double? minLeadingWidth = control.attrDouble("minLeadingWidth");
+      double? minVerticalPadding = control.attrDouble("minVerticalPadding");
       String url = control.attrString("url", "")!;
       String? urlTarget = control.attrString("urlTarget");
       bool disabled = control.isDisabled || parentDisabled;
@@ -112,6 +116,16 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         onTap: onPressed,
         onLongPress: onLongPress,
         enabled: !disabled,
+        horizontalTitleGap: horizontalSpacing,
+        enableFeedback: enableFeedback,
+        minLeadingWidth: minLeadingWidth,
+        minVerticalPadding: minVerticalPadding,
+        selectedTileColor: HexColor.fromString(
+            Theme.of(context), control.attrString("selectedTileColor", "")!),
+        selectedColor: HexColor.fromString(
+            Theme.of(context), control.attrString("selectedColor", "")!),
+        focusColor: HexColor.fromString(
+            Theme.of(context), control.attrString("focusColor", "")!),
         tileColor: HexColor.fromString(
             Theme.of(context), control.attrString("bgcolor", "")!),
         splashColor: HexColor.fromString(

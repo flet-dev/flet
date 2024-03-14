@@ -155,7 +155,7 @@ from flet_core.haptic_feedback import HapticFeedback
 from flet_core.icon import Icon
 from flet_core.icon_button import IconButton
 from flet_core.image import Image
-from flet_core.list_tile import ListTile
+from flet_core.list_tile import ListTile, ListTileStyle
 from flet_core.list_view import ListView
 from flet_core.lottie import Lottie
 from flet_core.margin import Margin

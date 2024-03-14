@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
@@ -12,6 +13,11 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+
+
+class ListTileStyle(Enum):
+    LIST = "list"
+    DRAWER = "drawer"
 
 
 class ListTile(ConstrainedControl, AdaptiveControl):
@@ -70,6 +76,13 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         dense: Optional[bool] = None,
         autofocus: Optional[bool] = None,
         toggle_inputs: Optional[bool] = None,
+        selected_color: Optional[str] = None,
+        selected_tile_color: Optional[str] = None,
+        style: Optional[ListTileStyle] = None,
+        enable_feedback: Optional[bool] = None,
+        horizontal_spacing: OptionalNumber = None,
+        min_leading_width: OptionalNumber = None,
+        min_vertical_padding: OptionalNumber = None,
         url: Optional[str] = None,
         url_target: Optional[str] = None,
         on_click=None,
@@ -156,6 +169,13 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         self.hover_color = hover_color
         self.on_click = on_click
         self.on_long_press = on_long_press
+        self.style = style
+        self.selected_color = selected_color
+        self.selected_tile_color = selected_tile_color
+        self.enable_feedback = enable_feedback
+        self.horizontal_spacing = horizontal_spacing
+        self.min_leading_width = min_leading_width
+        self.min_vertical_padding = min_vertical_padding
 
     def _get_control_name(self):
         return "listtile"
@@ -195,8 +215,26 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
+
+    # selected_color
+    @property
+    def selected_color(self):
+        return self._get_attr("selectedColor")
+
+    @selected_color.setter
+    def selected_color(self, value: Optional[str]):
+        self._set_attr("selectedColor", value)
+
+    # selected_tile_color
+    @property
+    def selected_tile_color(self):
+        return self._get_attr("selectedTileColor")
+
+    @selected_tile_color.setter
+    def selected_tile_color(self, value: Optional[str]):
+        self._set_attr("selectedTileColor", value)
 
     # bgcolor_activated
     @property
@@ -204,8 +242,26 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         return self._get_attr("bgcolorActivated")
 
     @bgcolor_activated.setter
-    def bgcolor_activated(self, value):
+    def bgcolor_activated(self, value: Optional[str]):
         self._set_attr("bgcolorActivated", value)
+
+    # min_leading_width
+    @property
+    def min_leading_width(self):
+        return self._get_attr("minLeadingWidth", data_type="float", def_value=40)
+
+    @min_leading_width.setter
+    def min_leading_width(self, value: OptionalNumber):
+        self._set_attr("minLeadingWidth", value)
+
+    # horizontal_spacing
+    @property
+    def horizontal_spacing(self):
+        return self._get_attr("horizontalSpacing", data_type="float", def_value=16)
+
+    @horizontal_spacing.setter
+    def horizontal_spacing(self, value: OptionalNumber):
+        self._set_attr("horizontalSpacing", value)
 
     # hover_color
     @property
@@ -234,6 +290,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     def title(self, value: Optional[Control]):
         self.__title = value
 
+    # min_vertical_padding
+    @property
+    def min_vertical_padding(self) -> OptionalNumber:
+        return self._get_attr("minVerticalPadding", data_type="float", def_value=4.0)
+
+    @min_vertical_padding.setter
+    def min_vertical_padding(self, value: OptionalNumber):
+        self._set_attr("minVerticalPadding", value)
+
     # subtitle
     @property
     def subtitle(self) -> Optional[Control]:
@@ -260,6 +325,27 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @is_three_line.setter
     def is_three_line(self, value: Optional[bool]):
         self._set_attr("isThreeLine", value)
+
+    # enable_feedback
+    @property
+    def enable_feedback(self) -> Optional[bool]:
+        return self._get_attr("enableFeedback", data_type="bool", def_value=True)
+
+    @enable_feedback.setter
+    def enable_feedback(self, value: Optional[bool]):
+        self._set_attr("enableFeedback", value)
+
+    # style
+    @property
+    def style(self) -> Optional[ListTileStyle]:
+        return self.__style
+
+    @style.setter
+    def style(self, value: Optional[ListTileStyle]):
+        self.__style = value
+        self._set_attr(
+            "style", value.value if isinstance(value, ListTileStyle) else value
+        )
 
     # selected
     @property
