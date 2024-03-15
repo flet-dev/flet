@@ -23,18 +23,29 @@ class Option(Control):
         self,
         key: Optional[str] = None,
         text: Optional[str] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
+        alignment: Optional[Alignment] = None,
+        on_click=None,
+        #
+        # Control
+        #
         ref=None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        data: Any = None
     ):
-        Control.__init__(self, ref=ref, disabled=disabled, visible=visible)
+        Control.__init__(self, ref=ref, disabled=disabled, visible=visible, data=data)
         assert key is not None or text is not None, "key or text must be specified"
         self.key = key
         self.text = text
-        self.disabled = disabled
+        self.on_click = on_click
+        self.alignment = alignment
 
     def _get_control_name(self):
         return "dropdownoption"
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("alignment", self.__alignment)
 
     # key
     @property
@@ -53,6 +64,24 @@ class Option(Control):
     @text.setter
     def text(self, value):
         self._set_attr("text", value)
+
+    # alignment
+    @property
+    def alignment(self) -> Optional[Alignment]:
+        return self.__alignment
+
+    @alignment.setter
+    def alignment(self, value: Optional[Alignment]):
+        self.__alignment = value
+
+    # on_click
+    @property
+    def on_click(self):
+        return self._get_event_handler("click")
+
+    @on_click.setter
+    def on_click(self, handler):
+        self._add_event_handler("click", handler)
 
 
 class Dropdown(FormFieldControl):

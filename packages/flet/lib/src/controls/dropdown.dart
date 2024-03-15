@@ -100,6 +100,13 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           enabled: !(disabled || itemCtrl.isDisabled),
           value: itemCtrl.attrs["key"] ?? itemCtrl.attrs["text"] ?? itemCtrl.id,
           child: itemChild,
+          alignment: parseAlignment(itemCtrl, "alignment") ??
+              AlignmentDirectional.centerStart,
+          onTap: !(disabled || itemCtrl.isDisabled)
+              ? () {
+                  widget.backend.triggerControlEvent(itemCtrl.id, "click");
+                }
+              : null,
         );
       }).toList();
 
