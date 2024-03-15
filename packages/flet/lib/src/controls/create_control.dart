@@ -808,6 +808,7 @@ Widget createWidget(
           key: key,
           parent: parent,
           control: controlView.control,
+          children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
