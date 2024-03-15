@@ -3,18 +3,19 @@ import 'dart:html' as html;
 
 import 'package:flutter/foundation.dart';
 
+const String _sessionIdKey = "_flet_session_id";
+
 class SessionStore {
   static String? get sessionId {
-    return html.window.name;
+    return get(_sessionIdKey);
   }
 
   static set sessionId(String? value) {
-    html.window.name = value;
+    set(_sessionIdKey, value ?? "");
   }
 
   static String? get(String name) {
     debugPrint("Get session storage $name");
-
     return html.window.sessionStorage[name];
   }
 

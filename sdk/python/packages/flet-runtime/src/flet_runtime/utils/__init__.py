@@ -186,3 +186,9 @@ def calculate_file_hash(path, blocksize=65536):
 
 def copy_tree(src, dst, ignore=None):
     return shutil.copytree(src, dst, ignore=ignore, symlinks=True, dirs_exist_ok=True)
+
+
+def sha1(input_string):
+    sha1_hash = hashlib.sha1()
+    sha1_hash.update(input_string.encode("utf-8"))
+    return sha1_hash.hexdigest()

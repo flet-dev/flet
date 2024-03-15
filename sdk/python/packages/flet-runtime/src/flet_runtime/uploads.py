@@ -3,7 +3,7 @@ import hmac
 import logging
 import os
 import urllib.parse
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import flet_runtime
@@ -17,7 +17,7 @@ def build_upload_url(
     expires_in_seconds: int,
     secret_key: Optional[str],
 ):
-    expire_date = datetime.utcnow() + timedelta(seconds=expires_in_seconds)
+    expire_date = datetime.now(timezone.utc) + timedelta(seconds=expires_in_seconds)
     query_string = build_upload_query_string(file_name, expire_date)
     signature = get_upload_signature(
         upload_endpoint_path, query_string, expire_date, secret_key
