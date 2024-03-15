@@ -2,6 +2,7 @@
 
 # 0.21.2
 
+* Add `--android-adaptive-icon-background` to `flet build` command.
 * Fix for mobile Safari: Store session ID in SessionStorage instead of window.name.
 * Fix `_FletSocketServer__receive_loop_task` error on Linux.
 * Replace deprecated (in Python 3.12) `datetime.utcnow()` with `datetime.now(timezone.utc)`.
