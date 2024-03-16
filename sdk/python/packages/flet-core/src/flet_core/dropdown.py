@@ -424,15 +424,6 @@ class Dropdown(FormFieldControl):
     def enable_feedback(self, value: Optional[bool]):
         self._set_attr("enableFeedback", value)
 
-    # dense
-    @property
-    def dense(self) -> Optional[bool]:
-        return self._get_attr("dense", data_type="bool", def_value=True)
-
-    @dense.setter
-    def dense(self, value: Optional[bool]):
-        self._set_attr("dense", value)
-
     # elevation
     @property
     def elevation(self) -> OptionalNumber:

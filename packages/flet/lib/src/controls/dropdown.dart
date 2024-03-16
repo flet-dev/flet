@@ -151,7 +151,6 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         dropdownColor: bgcolor,
         enableFeedback: widget.control.attrBool("enableFeedback"),
         elevation: widget.control.attrInt("elevation", 8)!,
-        isDense: widget.control.attrBool("isDense", true)!,
         padding: parseEdgeInsets(widget.control, "padding"),
         itemHeight: widget.control.attrDouble("itemHeight"),
         menuMaxHeight: widget.control.attrDouble("maxMenuHeight"),
