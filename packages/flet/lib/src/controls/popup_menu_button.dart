@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
@@ -27,7 +30,28 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
     debugPrint("PopupMenuButton build: ${control.id}");
 
     var icon = parseIcon(control.attrString("icon", "")!);
-    var tooltip = control.attrString("tooltip");
+    var tooltip = control.attrString("tooltip", "")!;
+    var iconSize = control.attrDouble("iconSize");
+    var splashRadius = control.attrDouble("splashRadius");
+    var elevation = control.attrDouble("elevation");
+    var enableFeedback = control.attrBool("enableFeedback");
+    var shape = parseOutlinedBorder(control, "shape") ??
+        (Theme.of(context).useMaterial3
+            ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
+            : null);
+    var clipBehavior = Clip.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("clipBehavior", "")!.toLowerCase(),
+        orElse: () => Clip.none);
+    var bgcolor = HexColor.fromString(
+        Theme.of(context), control.attrString("bgcolor", "")!);
+    var iconColor = HexColor.fromString(
+        Theme.of(context), control.attrString("iconColor", "")!);
+    var shadowColor = HexColor.fromString(
+        Theme.of(context), control.attrString("shadowColor", "")!);
+    var surfaceTintColor = HexColor.fromString(
+        Theme.of(context), control.attrString("surfaceTintColor", "")!);
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = control.isDisabled || parentDisabled;
@@ -48,11 +72,22 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           enabled: !disabled,
           icon: icon != null ? Icon(icon) : null,
           tooltip: tooltip,
-          shape: Theme.of(context).useMaterial3
-              ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
-              : null,
+          iconSize: iconSize,
+          splashRadius: splashRadius,
+          shadowColor: shadowColor,
+          surfaceTintColor: surfaceTintColor,
+          iconColor: iconColor,
+          elevation: elevation,
+          enableFeedback: enableFeedback,
+          padding: parseEdgeInsets(control, "padding") ?? EdgeInsets.all(8),
+          color: bgcolor,
+          clipBehavior: clipBehavior,
+          shape: shape,
           onCanceled: () {
-            backend.triggerControlEvent(control.id, "cancelled");
+            backend.triggerControlEvent(control.id, "cancel");
+          },
+          onOpened: () {
+            backend.triggerControlEvent(control.id, "open");
           },
           onSelected: (itemId) {
             backend.triggerControlEvent(itemId, "click");
@@ -88,10 +123,18 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                         value: cv.control.id,
                         checked: checked,
                         enabled: !disabled,
+                        onTap: () {
+                          backend.triggerControlEvent(cv.control.id, "click");
+                        },
                         child: child,
                       )
                     : PopupMenuItem<String>(
-                        value: cv.control.id, enabled: !disabled, child: child);
+                        value: cv.control.id,
+                        enabled: !disabled,
+                        onTap: () {
+                          backend.triggerControlEvent(cv.control.id, "click");
+                        },
+                        child: child);
 
                 return child != null
                     ? item
@@ -100,6 +143,10 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           child: child);
     });
 
-    return constrainedControl(context, popupButton, parent, control);
+    return constrainedControl(
+        context,
+        TooltipVisibility(visible: tooltip != "", child: popupButton),
+        parent,
+        control);
   }
 }
