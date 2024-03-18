@@ -178,6 +178,8 @@ from flet_core.padding import Padding
 from flet_core.page import (
     AppLifecycleStateChangeEvent,
     KeyboardEvent,
+    Locale,
+    LocaleConfiguration,
     LoginEvent,
     Page,
     PageDisconnectedException,

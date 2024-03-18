@@ -5,7 +5,7 @@ import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
@@ -77,6 +77,18 @@ except ImportError as e:
             pass
 
 
+@dataclass
+class Locale:
+    language_code: str = field(default="en")
+    country_code: Optional[str] = field(default=None)
+
+
+@dataclass
+class LocaleConfiguration:
+    supported_locales: Optional[List[Locale]] = field(default=None)
+    used_locale: Optional[Locale] = field(default=None)
+
+
 class PageDisconnectedException(Exception):
     def __init__(self, message):
         super().__init__(message)
@@ -138,6 +150,7 @@ class Page(AdaptiveControl):
         self.__offstage = Offstage()
         self.__theme = None
         self.__dark_theme = None
+        self.__locale_configuration = None
         self.__theme_mode = ThemeMode.SYSTEM  # Default Theme Mode
         self.__pubsub: PubSubClient = PubSubClient(conn.pubsubhub, session_id)
         self.__client_storage: ClientStorage = ClientStorage(self)
@@ -232,6 +245,7 @@ class Page(AdaptiveControl):
         super().before_update()
         self._set_attr_json("fonts", self.__fonts)
         self._set_attr_json("theme", self.__theme)
+        self._set_attr_json("localeConfiguration", self.__locale_configuration)
         self._set_attr_json("darkTheme", self.__dark_theme)
 
         # keyboard event
@@ -1233,7 +1247,7 @@ class Page(AdaptiveControl):
 
     # platform_brightness
     @property
-    def platform_brightness(self) -> ThemeMode:
+    def platform_brightness(self) -> Brightness:
         brightness = self._get_attr("platformBrightness")
         assert brightness is not None
         return Brightness(brightness)
@@ -1497,6 +1511,15 @@ class Page(AdaptiveControl):
     @dark_theme.setter
     def dark_theme(self, value: Optional[Theme]):
         self.__dark_theme = value
+
+    # locale_configuration
+    @property
+    def locale_configuration(self) -> Optional[LocaleConfiguration]:
+        return self.__locale_configuration
+
+    @locale_configuration.setter
+    def locale_configuration(self, value: Optional[LocaleConfiguration]):
+        self.__locale_configuration = value
 
     # rtl
     @property

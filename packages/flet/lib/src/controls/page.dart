@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flet/src/utils/locale.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
@@ -129,6 +131,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   TargetPlatform _platform = defaultTargetPlatform;
   Brightness? _brightness;
   ThemeMode? _themeMode;
+  Map<String, dynamic>? _localeConfiguration;
   String? _windowTitle;
   Color? _windowBgcolor;
   double? _windowWidth;
@@ -278,6 +281,9 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             t.name.toLowerCase() ==
             widget.control.attrString("themeMode", "")!.toLowerCase()) ??
         FletAppContext.of(context)?.themeMode;
+
+    _localeConfiguration =
+        parseLocaleConfiguration(widget.control, "localeConfiguration");
 
     // keyboard handler
     var onKeyboardEvent = widget.control.attrBool("onKeyboardEvent", false)!;
@@ -565,8 +571,16 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                                 : parseCupertinoTheme(
                                     widget.control, "theme", Brightness.dark),
                         localizationsDelegates: const [
-                          DefaultMaterialLocalizations.delegate
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
                         ],
+                        supportedLocales: _localeConfiguration != null
+                            ? _localeConfiguration!["supportedLocales"]
+                            : [const Locale('en', 'US')],
+                        locale: _localeConfiguration != null
+                            ? (_localeConfiguration?["locale"])
+                            : null,
                       )
                     : MaterialApp.router(
                         debugShowCheckedModeBanner: false,
@@ -575,6 +589,17 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                         routerDelegate: _routerDelegate,
                         routeInformationParser: _routeParser,
                         title: windowTitle,
+                        localizationsDelegates: const [
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
+                        ],
+                        supportedLocales: _localeConfiguration != null
+                            ? _localeConfiguration!["supportedLocales"]
+                            : [const Locale('en', 'US')],
+                        locale: _localeConfiguration != null
+                            ? (_localeConfiguration?["locale"])
+                            : null,
                         theme: parseTheme(
                             widget.control, "theme", Brightness.light),
                         darkTheme: widget.control.attrString("darkTheme") ==
