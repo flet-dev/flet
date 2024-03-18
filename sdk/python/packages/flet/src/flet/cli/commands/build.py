@@ -146,6 +146,12 @@ class Command(BaseCommand):
             required=False,
         )
         parser.add_argument(
+            "--android-adaptive-icon-background",
+            dest="android_adaptive_icon_background",
+            help="the color which will be used to fill out the background of the adaptive icon",
+            required=False,
+        )
+        parser.add_argument(
             "--splash-color",
             dest="splash_color",
             help="background color of app splash screen on iOS, Android and web",
@@ -460,6 +466,14 @@ class Command(BaseCommand):
                 "flutter_launcher_icons/image_path_android",
                 [android_icon, default_icon],
             )
+            if options.android_adaptive_icon_background:
+                fallback_image(
+                    "flutter_launcher_icons/adaptive_icon_foreground",
+                    [android_icon, default_icon],
+                )
+                pubspec["flutter_launcher_icons"][
+                    "adaptive_icon_background"
+                ] = options.android_adaptive_icon_background
             fallback_image(
                 "flutter_launcher_icons/web/image_path", [web_icon, default_icon]
             )
