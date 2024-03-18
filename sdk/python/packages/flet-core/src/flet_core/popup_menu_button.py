@@ -28,6 +28,8 @@ class PopupMenuItem(Control):
         icon: Optional[str] = None,
         checked: Optional[bool] = None,
         content: Optional[Control] = None,
+        height: OptionalNumber = None,
+        padding: PaddingValue = None,
         on_click=None,
         #
         # Control
@@ -44,6 +46,8 @@ class PopupMenuItem(Control):
         self.__content: Optional[Control] = None
         self.content = content
         self.on_click = on_click
+        self.height = height
+        self.padding = padding
 
     def _get_control_name(self):
         return "popupmenuitem"
@@ -75,12 +79,30 @@ class PopupMenuItem(Control):
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
+
+    # height
+    @property
+    def height(self) -> OptionalNumber:
+        return self._get_attr("height", data_type="float", def_value=48)
+
+    @height.setter
+    def height(self, value: OptionalNumber):
+        self._set_attr("height", value)
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
 
     # content
     @property

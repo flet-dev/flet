@@ -79,7 +79,8 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           iconColor: iconColor,
           elevation: elevation,
           enableFeedback: enableFeedback,
-          padding: parseEdgeInsets(control, "padding") ?? EdgeInsets.all(8),
+          padding:
+              parseEdgeInsets(control, "padding") ?? const EdgeInsets.all(8),
           color: bgcolor,
           clipBehavior: clipBehavior,
           shape: shape,
@@ -98,6 +99,8 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                 var itemIcon = parseIcon(cv.control.attrString("icon", "")!);
                 var text = cv.control.attrString("text", "")!;
                 var checked = cv.control.attrBool("checked");
+                var height = cv.control.attrDouble("height", 48.0)!;
+                var padding = parseEdgeInsets(cv.control, "padding");
                 var disabled = cv.control.isDisabled || parentDisabled;
                 var contentCtrls =
                     cv.children.where((c) => c.name == "content");
@@ -122,6 +125,8 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                     ? CheckedPopupMenuItem<String>(
                         value: cv.control.id,
                         checked: checked,
+                        height: height,
+                        padding: padding,
                         enabled: !disabled,
                         onTap: () {
                           backend.triggerControlEvent(cv.control.id, "click");
@@ -130,6 +135,8 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                       )
                     : PopupMenuItem<String>(
                         value: cv.control.id,
+                        height: height,
+                        padding: padding,
                         enabled: !disabled,
                         onTap: () {
                           backend.triggerControlEvent(cv.control.id, "click");
