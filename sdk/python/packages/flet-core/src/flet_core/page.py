@@ -443,6 +443,7 @@ class Page(AdaptiveControl):
     def __handle_mount_unmount(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             ctrl.will_unmount()
+            ctrl.parent = None
             ctrl.page = None
         for ctrl in added_controls:
             ctrl.did_mount()
