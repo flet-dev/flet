@@ -46,7 +46,7 @@ class Control:
         self.__data: Any = None
         self.data = data
         self.__event_handlers = {}
-        self.parent: Control = None
+        self.parent: Optional[Control] = None
         if ref:
             ref.current = self
 
