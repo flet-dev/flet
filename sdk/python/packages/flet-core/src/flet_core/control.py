@@ -46,6 +46,7 @@ class Control:
         self.__data: Any = None
         self.data = data
         self.__event_handlers = {}
+        self.parent: Control = None
         if ref:
             ref.current = self
 
@@ -515,6 +516,8 @@ class Control:
                 indent=indent + 2, index=index, added_controls=added_controls
             )
             commands.extend(childCmd)
+            # set the parent
+            control.parent = self
 
         self.__previous_children.clear()
         self.__previous_children.extend(children)
