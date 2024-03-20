@@ -7,7 +7,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 
-enum CardVariant { normal, filled, outlined }
+enum CardVariant { elevated, filled, outlined }
 
 class CardControl extends StatelessWidget {
   final Control? parent;
@@ -44,7 +44,7 @@ class CardControl extends StatelessWidget {
         (v) =>
             v.name.toLowerCase() ==
             control.attrString("variant", "")!.toLowerCase(),
-        orElse: () => CardVariant.normal);
+        orElse: () => CardVariant.elevated);
 
     if (variant == CardVariant.outlined) {
       card = Card.outlined(

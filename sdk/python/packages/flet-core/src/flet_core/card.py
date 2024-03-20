@@ -18,7 +18,7 @@ from flet_core.types import (
 
 
 class CardVariant(Enum):
-    NORMAL = "normal"
+    ELEVATED = "elevated"
     FILLED = "filled"
     OUTLINED = "outlined"
 
