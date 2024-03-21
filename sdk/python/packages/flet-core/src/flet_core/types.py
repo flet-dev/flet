@@ -31,6 +31,11 @@ class WebRenderer(Enum):
     CANVAS_KIT = "canvaskit"
 
 
+class UrlTarget(Enum):
+    BLANK = "blank"
+    SELF = "_self"
+
+
 PaddingValue = Union[None, int, float, Padding]
 
 MarginValue = Union[None, int, float, Margin]

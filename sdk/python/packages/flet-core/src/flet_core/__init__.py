@@ -278,6 +278,7 @@ from flet_core.types import (
     TabAlignment,
     TextAlign,
     ThemeMode,
+    UrlTarget,
     VerticalAlignment,
 )
 from flet_core.user_control import UserControl

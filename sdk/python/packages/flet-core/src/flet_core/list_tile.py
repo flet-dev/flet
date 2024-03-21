@@ -12,6 +12,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    UrlTarget,
 )
 
 
@@ -84,7 +85,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         min_leading_width: OptionalNumber = None,
         min_vertical_padding: OptionalNumber = None,
         url: Optional[str] = None,
-        url_target: Optional[str] = None,
+        url_target: Optional[UrlTarget] = None,
         on_click=None,
         on_long_press=None,
         #
@@ -394,12 +395,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # url_target
     @property
-    def url_target(self):
-        return self._get_attr("urlTarget")
+    def url_target(self) -> Optional[UrlTarget]:
+        return self.__url_target
 
     @url_target.setter
-    def url_target(self, value):
-        self._set_attr("urlTarget", value)
+    def url_target(self, value: Optional[UrlTarget]):
+        self.__url_target = value
+        self._set_attr(
+            "urlTarget", value.value if isinstance(value, UrlTarget) else value
+        )
 
     # on_click
     @property
