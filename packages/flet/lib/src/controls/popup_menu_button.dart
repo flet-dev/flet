@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
@@ -44,14 +43,10 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
             e.name.toLowerCase() ==
             control.attrString("clipBehavior", "")!.toLowerCase(),
         orElse: () => Clip.none);
-    var bgcolor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgcolor", "")!);
-    var iconColor = HexColor.fromString(
-        Theme.of(context), control.attrString("iconColor", "")!);
-    var shadowColor = HexColor.fromString(
-        Theme.of(context), control.attrString("shadowColor", "")!);
-    var surfaceTintColor = HexColor.fromString(
-        Theme.of(context), control.attrString("surfaceTintColor", "")!);
+    var bgcolor = control.attrColor("bgcolor", context);
+    var iconColor = control.attrColor("iconColor", context);
+    var shadowColor = control.attrColor("shadowColor", context);
+    var surfaceTintColor = control.attrColor("surfaceTintColor", context);
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = control.isDisabled || parentDisabled;

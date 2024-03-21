@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/alignment.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/text.dart';
 import '../utils/transforms.dart';
@@ -40,11 +39,9 @@ class BadgeControl extends StatelessWidget {
 
     var offsetDetails = parseOffset(control, "offset");
 
-    var bgColor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgColor", "")!);
+    var bgColor = control.attrColor("bgcolor", context);
 
-    var textColor = HexColor.fromString(
-        Theme.of(context), control.attrString("textColor", "")!);
+    var textColor = control.attrColor("textColor", context);
 
     bool isLabelVisible = control.attrBool("isLabelVisible", true)!;
     var largeSize = control.attrDouble("largeSize");

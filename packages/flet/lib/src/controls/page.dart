@@ -24,7 +24,6 @@ import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
 import '../utils/alignment.dart';
 import '../utils/buttons.dart';
-import '../utils/colors.dart';
 import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
 import '../utils/images.dart';
@@ -294,8 +293,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
 
     // window params
     var windowTitle = widget.control.attrString("title", "")!;
-    var windowBgcolor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("windowBgcolor", "")!);
+    var windowBgcolor = widget.control.attrColor("windowBgcolor", context);
     var windowWidth = widget.control.attrDouble("windowWidth");
     var windowHeight = widget.control.attrDouble("windowHeight");
     var windowMinWidth = widget.control.attrDouble("windowMinWidth");
@@ -993,8 +991,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
 
             Widget scaffold = Scaffold(
               key: bar == null || bar is AppBarControl ? scaffoldKey : null,
-              backgroundColor: HexColor.fromString(
-                      Theme.of(context), control.attrString("bgcolor", "")!) ??
+              backgroundColor: control.attrColor("bgcolor", context) ??
                   CupertinoTheme.of(context).scaffoldBackgroundColor,
               appBar: bar is AppBarControl ? bar : null,
               drawer: drawerView != null
@@ -1052,8 +1049,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             if (bar is CupertinoAppBarControl) {
               scaffold = CupertinoPageScaffold(
                   key: scaffoldKey,
-                  backgroundColor: HexColor.fromString(
-                      Theme.of(context), control.attrString("bgcolor", "")!),
+                  backgroundColor: control.attrColor("bgcolor", context),
                   navigationBar: bar as ObstructingPreferredSizeWidget,
                   child: scaffold);
             }

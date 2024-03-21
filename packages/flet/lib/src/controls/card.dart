@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 
@@ -54,12 +53,9 @@ class CardControl extends StatelessWidget {
           semanticContainer: control.attrBool("isSemanticContainer", true)!,
           borderOnForeground: control.attrBool("showBorderOnForeground", true)!,
           clipBehavior: clipBehavior,
-          color: HexColor.fromString(
-              Theme.of(context), control.attrString("color", "")!),
-          shadowColor: HexColor.fromString(
-              Theme.of(context), control.attrString("shadowColor", "")!),
-          surfaceTintColor: HexColor.fromString(
-              Theme.of(context), control.attrString("surfaceTintColor", "")!),
+          color: control.attrColor("color", context),
+          shadowColor: control.attrColor("shadowColor", context),
+          surfaceTintColor: control.attrColor("surfaceTintColor", context),
           child: contentCtrls.isNotEmpty
               ? createControl(control, contentCtrls.first.id, disabled,
                   parentAdaptive: adaptive)
@@ -72,12 +68,9 @@ class CardControl extends StatelessWidget {
           semanticContainer: control.attrBool("isSemanticContainer", true)!,
           borderOnForeground: control.attrBool("showBorderOnForeground", true)!,
           clipBehavior: clipBehavior,
-          color: HexColor.fromString(
-              Theme.of(context), control.attrString("color", "")!),
-          shadowColor: HexColor.fromString(
-              Theme.of(context), control.attrString("shadowColor", "")!),
-          surfaceTintColor: HexColor.fromString(
-              Theme.of(context), control.attrString("surfaceTintColor", "")!),
+          color: control.attrColor("color", context),
+          shadowColor: control.attrColor("shadowColor", context),
+          surfaceTintColor: control.attrColor("surfaceTintColor", context),
           child: contentCtrls.isNotEmpty
               ? createControl(control, contentCtrls.first.id, disabled,
                   parentAdaptive: adaptive)
@@ -90,12 +83,9 @@ class CardControl extends StatelessWidget {
           semanticContainer: control.attrBool("isSemanticContainer", true)!,
           borderOnForeground: control.attrBool("showBorderOnForeground", true)!,
           clipBehavior: clipBehavior,
-          color: HexColor.fromString(
-              Theme.of(context), control.attrString("color", "")!),
-          shadowColor: HexColor.fromString(
-              Theme.of(context), control.attrString("shadowColor", "")!),
-          surfaceTintColor: HexColor.fromString(
-              Theme.of(context), control.attrString("surfaceTintColor", "")!),
+          color: control.attrColor("color", context),
+          shadowColor: control.attrColor("shadowColor", context),
+          surfaceTintColor: control.attrColor("surfaceTintColor", context),
           child: contentCtrls.isNotEmpty
               ? createControl(control, contentCtrls.first.id, disabled,
                   parentAdaptive: adaptive)

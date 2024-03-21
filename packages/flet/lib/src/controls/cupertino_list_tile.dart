@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
@@ -72,10 +70,8 @@ class CupertinoListTileControl extends StatelessWidget {
             parentAdaptive: parentAdaptive)
         : null;
 
-    Color? backgroundColor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgcolor", "")!);
-    Color? bgcolorActivated = HexColor.fromString(
-        Theme.of(context), control.attrString("bgcolorActivated", "")!);
+    Color? backgroundColor = control.attrColor("bgcolor", context);
+    Color? bgcolorActivated = control.attrColor("bgcolorActivated", context);
 
     var padding = parseEdgeInsets(control, "contentPadding");
 

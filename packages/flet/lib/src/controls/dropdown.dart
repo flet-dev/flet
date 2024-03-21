@@ -4,7 +4,6 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
@@ -77,16 +76,13 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
       var hintCtrl =
           widget.children.where((c) => c.name == "hint" && c.isVisible);
 
-      var color = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("color", "")!);
-      var focusedColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("focusedColor", "")!);
-      var bgcolor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("bgcolor", "")!);
-      var iconEnabledColor = HexColor.fromString(Theme.of(context),
-          widget.control.attrString("iconEnabledColor", "")!);
-      var iconDisabledColor = HexColor.fromString(Theme.of(context),
-          widget.control.attrString("iconDisabledColor", "")!);
+      var color = widget.control.attrColor("color", context);
+      var focusedColor = widget.control.attrColor("focusedColor", context);
+      var bgcolor = widget.control.attrColor("bgcolor", context);
+      var iconEnabledColor =
+          widget.control.attrColor("iconEnabledColor", context);
+      var iconDisabledColor =
+          widget.control.attrColor("iconDisabledColor", context);
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
@@ -111,13 +107,13 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         return DropdownMenuItem<String>(
           enabled: !(disabled || itemCtrl.isDisabled),
           value: itemCtrl.attrs["key"] ?? itemCtrl.attrs["text"] ?? itemCtrl.id,
-          child: itemChild,
           alignment: align ?? AlignmentDirectional.centerStart,
           onTap: !(disabled || itemCtrl.isDisabled)
               ? () {
                   widget.backend.triggerControlEvent(itemCtrl.id, "click");
                 }
               : null,
+          child: itemChild,
         );
       }).toList();
 

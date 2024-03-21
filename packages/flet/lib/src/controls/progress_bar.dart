@@ -2,7 +2,6 @@ import 'package:flet/src/utils/borders.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/colors.dart';
 import 'create_control.dart';
 
 class ProgressBarControl extends StatelessWidget {
@@ -20,10 +19,8 @@ class ProgressBarControl extends StatelessWidget {
     var semanticsValue = control.attrDouble("semanticsValue");
     var semanticsLabel = control.attrString("semanticsLabel");
     var barHeight = control.attrDouble("barHeight", 4)!;
-    var color = HexColor.fromString(
-        Theme.of(context), control.attrString("color", "")!);
-    var bgColor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgColor", "")!);
+    var color = control.attrColor("color", context);
+    var bgColor = control.attrColor("bgColor", context);
 
     return constrainedControl(
         context,

@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -38,8 +36,7 @@ class _CupertinoBottomSheetControlState
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var height = widget.control.attrDouble("height");
-    var bgcolor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("bgcolor", "")!);
+    var bgcolor = widget.control.attrColor("bgcolor", context);
     var padding = parseEdgeInsets(widget.control, "padding");
 
     var contentCtrls =

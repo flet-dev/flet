@@ -4,7 +4,6 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/buttons.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
@@ -79,22 +78,16 @@ class _IconButtonControlState extends State<IconButtonControl>
       IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
       IconData? selectedIcon =
           parseIcon(widget.control.attrString("selectedIcon", "")!);
-      Color? iconColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("iconColor", "")!);
-      Color? highlightColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("highlightColor", "")!);
-      Color? selectedIconColor = HexColor.fromString(Theme.of(context),
-          widget.control.attrString("selectedIconColor", "")!);
-      Color? bgColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("bgColor", "")!);
-      Color? disabledColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("disabledColor", "")!);
-      Color? hoverColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("hoverColor", "")!);
-      Color? splashColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("splashColor", "")!);
-      Color? focusColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("focusColor", "")!);
+      Color? iconColor = widget.control.attrColor("iconColor", context);
+      Color? highlightColor =
+          widget.control.attrColor("highlightColor", context);
+      Color? selectedIconColor =
+          widget.control.attrColor("selectedIconColor", context);
+      Color? bgColor = widget.control.attrColor("bgColor", context);
+      Color? disabledColor = widget.control.attrColor("disabledColor", context);
+      Color? hoverColor = widget.control.attrColor("hoverColor", context);
+      Color? splashColor = widget.control.attrColor("splashColor", context);
+      Color? focusColor = widget.control.attrColor("focusColor", context);
       double? iconSize = widget.control.attrDouble("iconSize");
       double? splashRadius = widget.control.attrDouble("splashRadius");
       var padding = parseEdgeInsets(widget.control, "padding");

@@ -12,7 +12,6 @@ import '../models/app_state.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
@@ -113,8 +112,8 @@ class _PieChartControlState extends State<PieChartControl> {
 
           Widget chart = PieChart(
             PieChartData(
-              centerSpaceColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("centerSpaceColor", "")!),
+              centerSpaceColor:
+                  widget.control.attrColor("centerSpaceColor", context),
               centerSpaceRadius: widget.control.attrDouble("centerSpaceRadius"),
               sectionsSpace: widget.control.attrDouble("sectionsSpace"),
               startDegreeOffset: widget.control.attrDouble("startDegreeOffset"),
@@ -171,8 +170,7 @@ class _PieChartControlState extends State<PieChartControl> {
       PieChartSectionViewModel sectionViewModel) {
     return PieChartSectionData(
       value: sectionViewModel.control.attrDouble("value"),
-      color: HexColor.fromString(
-          Theme.of(context), sectionViewModel.control.attrString("color", "")!),
+      color: sectionViewModel.control.attrColor("color", context),
       radius: sectionViewModel.control.attrDouble("radius"),
       showTitle: sectionViewModel.control.attrString("title", "")! != "",
       title: sectionViewModel.control.attrString("title"),

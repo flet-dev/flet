@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
@@ -39,16 +38,11 @@ class FloatingActionButtonControl extends StatelessWidget {
     double? hoverElevation = control.attrDouble("hoverElevation");
     double? highlightElevation = control.attrDouble("highlightElevation");
     double? focusElevation = control.attrDouble("focusElevation");
-    Color? bgColor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgColor", "")!);
-    Color? foregroundColor = HexColor.fromString(
-        Theme.of(context), control.attrString("foregroundColor", "")!);
-    Color? splashColor = HexColor.fromString(
-        Theme.of(context), control.attrString("splashColor", "")!);
-    Color? hoverColor = HexColor.fromString(
-        Theme.of(context), control.attrString("hoverColor", "")!);
-    Color? focusColor = HexColor.fromString(
-        Theme.of(context), control.attrString("focusColor", "")!);
+    Color? bgColor = control.attrColor("bgColor", context);
+    Color? foregroundColor = control.attrColor("foregroundColor", context);
+    Color? splashColor = control.attrColor("splashColor", context);
+    Color? hoverColor = control.attrColor("hoverColor", context);
+    Color? focusColor = control.attrColor("focusColor", context);
     OutlinedBorder? shape = parseOutlinedBorder(control, "shape");
     var clipBehavior = Clip.values.firstWhere(
         (e) =>

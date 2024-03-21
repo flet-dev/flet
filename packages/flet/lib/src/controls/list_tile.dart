@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
@@ -120,18 +119,12 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         enableFeedback: enableFeedback,
         minLeadingWidth: minLeadingWidth,
         minVerticalPadding: minVerticalPadding,
-        selectedTileColor: HexColor.fromString(
-            Theme.of(context), control.attrString("selectedTileColor", "")!),
-        selectedColor: HexColor.fromString(
-            Theme.of(context), control.attrString("selectedColor", "")!),
-        focusColor: HexColor.fromString(
-            Theme.of(context), control.attrString("focusColor", "")!),
-        tileColor: HexColor.fromString(
-            Theme.of(context), control.attrString("bgcolor", "")!),
-        splashColor: HexColor.fromString(
-            Theme.of(context), control.attrString("bgcolorActivated", "")!),
-        hoverColor: HexColor.fromString(
-            Theme.of(context), control.attrString("hoverColor", "")!),
+        selectedTileColor: control.attrColor("selectedTileColor", context),
+        selectedColor: control.attrColor("selectedColor", context),
+        focusColor: control.attrColor("focusColor", context),
+        tileColor: control.attrColor("bgcolor", context),
+        splashColor: control.attrColor("bgcolorActivated", context),
+        hoverColor: control.attrColor("hoverColor", context),
         leading: leadingCtrls.isNotEmpty
             ? createControl(control, leadingCtrls.first.id, disabled,
                 parentAdaptive: adaptive)

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'cupertino_navigation_bar.dart';
@@ -86,16 +85,13 @@ class _NavigationBarControlState extends State<NavigationBarControl>
                 ? Duration(milliseconds: animationDuration)
                 : null,
             elevation: widget.control.attrDouble("elevation"),
-            shadowColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("shadowColor", "")!),
-            surfaceTintColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("surfaceTintColor", "")!),
-            indicatorColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("indicatorColor", "")!),
+            shadowColor: widget.control.attrColor("shadowColor", context),
+            surfaceTintColor:
+                widget.control.attrColor("surfaceTintColor", context),
+            indicatorColor: widget.control.attrColor("indicatorColor", context),
             indicatorShape:
                 parseOutlinedBorder(widget.control, "indicatorShape"),
-            backgroundColor: HexColor.fromString(
-                Theme.of(context), widget.control.attrString("bgColor", "")!),
+            backgroundColor: widget.control.attrColor("bgColor", context),
             selectedIndex: _selectedIndex,
             onDestinationSelected: _destinationChanged,
             destinations: viewModel.controlViews.map((destView) {

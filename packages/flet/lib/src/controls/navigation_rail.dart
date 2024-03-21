@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
@@ -96,10 +95,9 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               minWidth: widget.control.attrDouble("minWidth"),
               minExtendedWidth: widget.control.attrDouble("minExtendedWidth"),
               groupAlignment: widget.control.attrDouble("groupAlignment"),
-              backgroundColor: HexColor.fromString(
-                  Theme.of(context), widget.control.attrString("bgColor", "")!),
-              indicatorColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("indicatorColor", "")!),
+              backgroundColor: widget.control.attrColor("bgColor", context),
+              indicatorColor:
+                  widget.control.attrColor("indicatorColor", context),
               leading: leadingCtrls.isNotEmpty
                   ? createControl(
                       widget.control, leadingCtrls.first.id, disabled,

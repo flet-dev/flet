@@ -4,7 +4,6 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -49,18 +48,12 @@ class ExpansionTileControl extends StatelessWidget {
     bool maintainState = control.attrBool("maintainState", false)!;
     bool initiallyExpanded = control.attrBool("initiallyExpanded", false)!;
 
-    var iconColor = HexColor.fromString(
-        Theme.of(context), control.attrString("iconColor", "")!);
-    var textColor = HexColor.fromString(
-        Theme.of(context), control.attrString("textColor", "")!);
-    var bgColor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgColor", "")!);
-    var collapsedBgColor = HexColor.fromString(
-        Theme.of(context), control.attrString("collapsedBgColor", "")!);
-    var collapsedIconColor = HexColor.fromString(
-        Theme.of(context), control.attrString("collapsedIconColor", "")!);
-    var collapsedTextColor = HexColor.fromString(
-        Theme.of(context), control.attrString("collapsedTextColor", "")!);
+    var iconColor = control.attrColor("iconColor", context);
+    var textColor = control.attrColor("textColor", context);
+    var bgColor = control.attrColor("bgColor", context);
+    var collapsedBgColor = control.attrColor("collapsedBgColor", context);
+    var collapsedIconColor = control.attrColor("collapsedIconColor", context);
+    var collapsedTextColor = control.attrColor("collapsedTextColor", context);
 
     var affinity = ListTileControlAffinity.values.firstWhere(
         (e) =>

@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
@@ -138,19 +137,15 @@ class _TextFieldControlState extends State<TextFieldControl>
           widget.control.attrBool("canRevealPassword", false)!;
       bool onChange = widget.control.attrBool("onChange", false)!;
 
-      var cursorColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("cursorColor", "")!);
-      var selectionColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("selectionColor", "")!);
+      var cursorColor = widget.control.attrColor("cursorColor", context);
+      var selectionColor = widget.control.attrColor("selectionColor", context);
 
       int? maxLength = widget.control.attrInt("maxLength");
 
       var textSize = widget.control.attrDouble("textSize");
 
-      var color = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("color", "")!);
-      var focusedColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("focusedColor", "")!);
+      var color = widget.control.attrColor("color", context);
+      var focusedColor = widget.control.attrColor("focusedColor", context);
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");

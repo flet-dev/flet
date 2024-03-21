@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/text.dart';
@@ -55,7 +54,7 @@ class TooltipControl extends StatelessWidget {
         gradient != null ||
         shape != null) {
       decoration = (defaultDecoration as BoxDecoration).copyWith(
-          color: HexColor.fromString(Theme.of(context), bgColor ?? ""),
+          color: control.attrColor("bgColor", context),
           gradient: gradient,
           border: border,
           borderRadius: borderRadius,

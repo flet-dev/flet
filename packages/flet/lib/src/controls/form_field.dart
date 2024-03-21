@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/text.dart';
@@ -59,16 +58,12 @@ InputDecoration buildInputDecoration(
   var suffixIcon = parseIcon(control.attrString("suffixIcon", "")!);
   var suffixText = control.attrString("suffixText");
 
-  var bgcolor = HexColor.fromString(
-      Theme.of(context), control.attrString("bgcolor", "")!);
-  var focusedBgcolor = HexColor.fromString(
-      Theme.of(context), control.attrString("focusedBgcolor", "")!);
+  var bgcolor = control.attrColor("bgcolor", context);
+  var focusedBgcolor = control.attrColor("focusedBgcolor", context);
 
   var borderRadius = parseBorderRadius(control, "borderRadius");
-  var borderColor = HexColor.fromString(
-      Theme.of(context), control.attrString("borderColor", "")!);
-  var focusedBorderColor = HexColor.fromString(
-      Theme.of(context), control.attrString("focusedBorderColor", "")!);
+  var borderColor = control.attrColor("borderColor", context);
+  var focusedBorderColor = control.attrColor("focusedBorderColor", context);
   var borderWidth = control.attrDouble("borderWidth");
   var focusedBorderWidth = control.attrDouble("focusedBorderWidth");
 

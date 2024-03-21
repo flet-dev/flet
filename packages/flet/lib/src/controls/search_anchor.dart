@@ -88,10 +88,8 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
     var viewTrailingCtrls =
         widget.children.where((c) => c.name == "viewTrailing" && c.isVisible);
 
-    var viewBgcolor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("viewBgcolor", "")!);
-    var dividerColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("dividerColor", "")!);
+    var viewBgcolor = widget.control.attrColor("viewBgcolor", context);
+    var dividerColor = widget.control.attrColor("dividerColor", context);
 
     TextStyle? viewHeaderTextStyle = parseTextStyle(
         Theme.of(context), widget.control, "viewHeaderTextStyle");

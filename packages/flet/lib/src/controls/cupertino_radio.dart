@@ -91,12 +91,10 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
           value: value,
           useCheckmarkStyle:
               widget.control.attrBool("useCheckmarkStyle", false)!,
-          fillColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("fillColor", "")!),
+          fillColor: widget.control.attrColor("fillColor", context),
           activeColor: HexColor.fromString(Theme.of(context),
               widget.control.attrString("activeColor", "primary")!),
-          inactiveColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("inactiveColor", "")!),
+          inactiveColor: widget.control.attrColor("inactiveColor", context),
           onChanged: !disabled
               ? (String? value) {
                   _onChange(ancestorId, value);

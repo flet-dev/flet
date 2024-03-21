@@ -103,22 +103,20 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       var swtch = Switch(
           autofocus: autofocus,
           focusNode: _focusNode,
-          activeColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("activeColor", "")!),
-          activeTrackColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("activeTrackColor", "")!),
-          inactiveThumbColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("inactiveThumbColor", "")!),
-          inactiveTrackColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("inactiveTrackColor", "")!),
+          activeColor: widget.control.attrColor("activeColor", context),
+          activeTrackColor:
+              widget.control.attrColor("activeTrackColor", context),
+          inactiveThumbColor:
+              widget.control.attrColor("inactiveThumbColor", context),
+          inactiveTrackColor:
+              widget.control.attrColor("inactiveTrackColor", context),
           thumbColor: parseMaterialStateColor(
               Theme.of(context), widget.control, "thumbColor"),
           thumbIcon: parseMaterialStateIcon(
               Theme.of(context), widget.control, "thumbIcon"),
           trackColor: parseMaterialStateColor(
               Theme.of(context), widget.control, "trackColor"),
-          focusColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("focusColor", "")!),
+          focusColor: widget.control.attrColor("focusColor", context),
           value: _value,
           onChanged: !disabled
               ? (bool value) {

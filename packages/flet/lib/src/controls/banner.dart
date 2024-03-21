@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -59,8 +58,7 @@ class _BannerControlState extends State<BannerControl> {
               parentAdaptive: widget.parentAdaptive))
           .toList(),
       forceActionsBelow: widget.control.attrBool("forceActionsBelow", false)!,
-      backgroundColor: HexColor.fromString(
-          Theme.of(context), widget.control.attrString("bgcolor", "")!),
+      backgroundColor: widget.control.attrColor("bgcolor", context),
     );
   }
 

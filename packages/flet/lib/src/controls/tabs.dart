@@ -128,21 +128,20 @@ class _TabsControlState extends State<TabsControl>
           var indicatorPadding =
               parseEdgeInsets(widget.control, "indicatorPadding");
 
-          var indicatorColor = HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("indicatorColor", "")!) ??
-              TabBarTheme.of(context).indicatorColor ??
+          var indicatorColor =
+              widget.control.attrColor("indicatorColor", context) ??
+                  TabBarTheme.of(context).indicatorColor ??
               Theme.of(context).colorScheme.primary;
-          var labelColor = HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("labelColor", "")!) ??
+          var labelColor = widget.control.attrColor("labelColor", context) ??
               TabBarTheme.of(context).labelColor ??
               Theme.of(context).colorScheme.primary;
-          var unselectedLabelColor = HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("unselectedLabelColor", "")!) ??
-              TabBarTheme.of(context).unselectedLabelColor ??
+          var unselectedLabelColor =
+              widget.control.attrColor("unselectedLabelColor", context) ??
+                  TabBarTheme.of(context).unselectedLabelColor ??
               Theme.of(context).colorScheme.onSurface;
-          var dividerColor = HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("dividerColor", "")!) ??
-              TabBarTheme.of(context).dividerColor;
+          var dividerColor =
+              widget.control.attrColor("dividerColor", context) ??
+                  TabBarTheme.of(context).dividerColor;
 
           var themeIndicator =
               TabBarTheme.of(context).indicator as UnderlineTabIndicator?;

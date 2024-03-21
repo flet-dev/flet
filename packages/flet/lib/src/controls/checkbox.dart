@@ -125,16 +125,12 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
           side:
               parseBorderSide(Theme.of(context), widget.control, "borderSide"),
           splashRadius: widget.control.attrDouble("splashRadius"),
-          activeColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("activeColor", "")!),
-          focusColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("focusColor", "")!),
-          hoverColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("hoverColor", "")!),
+          activeColor: widget.control.attrColor("activeColor", context),
+          focusColor: widget.control.attrColor("focusColor", context),
+          hoverColor: widget.control.attrColor("hoverColor", context),
           overlayColor: parseMaterialStateColor(
               Theme.of(context), widget.control, "overlayColor"),
-          checkColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("checkColor", "")!),
+          checkColor: widget.control.attrColor("checkColor", context),
           fillColor: parseMaterialStateColor(
               Theme.of(context), widget.control, "fillColor"),
           tristate: _tristate,

@@ -10,7 +10,6 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/collections.dart';
-import '../utils/colors.dart';
 import '../utils/images.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -50,8 +49,7 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
     var colorBlendMode = BlendMode.values.firstWhereOrNull((e) =>
         e.name.toLowerCase() ==
         control.attrString("colorBlendMode", "")!.toLowerCase());
-    var color = HexColor.fromString(
-        Theme.of(context), control.attrString("color", "")!);
+    var color = control.attrColor("color", context);
     String? semanticsLabel = control.attrString("semanticsLabel");
     var gaplessPlayback = control.attrBool("gaplessPlayback");
     var excludeFromSemantics = control.attrBool("excludeFromSemantics", false)!;

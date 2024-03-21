@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/images.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
@@ -68,10 +67,8 @@ class CircleAvatarControl extends StatelessWidget with FletStoreMixin {
       var avatar = CircleAvatar(
           foregroundImage: foregroundImage,
           backgroundImage: backgroundImage,
-          backgroundColor: HexColor.fromString(
-              Theme.of(context), control.attrString("bgColor", "")!),
-          foregroundColor: HexColor.fromString(
-              Theme.of(context), control.attrString("color", "")!),
+          backgroundColor: control.attrColor("bgColor", context),
+          foregroundColor: control.attrColor("color", context),
           radius: control.attrDouble("radius"),
           minRadius: control.attrDouble("minRadius"),
           maxRadius: control.attrDouble("maxRadius"),

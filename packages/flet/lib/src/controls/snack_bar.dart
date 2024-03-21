@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -47,8 +46,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
     SnackBarAction? action = actionName != ""
         ? SnackBarAction(
             label: actionName,
-            textColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("actionColor", "")!),
+            textColor: widget.control.attrColor("actionColor", context),
             onPressed: () {
               debugPrint("SnackBar ${widget.control.id} clicked!");
               widget.backend.triggerControlEvent(widget.control.id, "action");
@@ -80,12 +78,10 @@ class _SnackBarControlState extends State<SnackBarControl> {
         },
         dismissDirection: dismissDirection,
         showCloseIcon: widget.control.attrBool("showCloseIcon"),
-        closeIconColor: HexColor.fromString(Theme.of(context),
-            widget.control.attrString("closeIconColor", "")!),
+        closeIconColor: widget.control.attrColor("closeIconColor", context),
         content: createControl(widget.control, contentCtrls.first.id, disabled,
             parentAdaptive: widget.parentAdaptive),
-        backgroundColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("bgColor", "")!),
+        backgroundColor: widget.control.attrColor("bgColor", context),
         action: action,
         margin: parseEdgeInsets(widget.control, "margin"),
         padding: parseEdgeInsets(widget.control, "padding"),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
@@ -81,12 +80,9 @@ class _ChipControlState extends State<ChipControl> {
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    var bgcolor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("bgcolor", "")!);
-    var deleteIconColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("deleteIconColor", "")!);
-    var disabledColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("disabledColor", "")!);
+    var bgcolor = widget.control.attrColor("bgcolor", context);
+    var deleteIconColor = widget.control.attrColor("deleteIconColor", context);
+    var disabledColor = widget.control.attrColor("disabledColor", context);
 
     bool onClick = widget.control.attrBool("onclick", false)!;
     bool onDelete = widget.control.attrBool("onDelete", false)!;
@@ -134,8 +130,7 @@ class _ChipControlState extends State<ChipControl> {
                   parentAdaptive: widget.parentAdaptive)
               : null,
           backgroundColor: bgcolor,
-          checkmarkColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("checkColor", "")!),
+          checkmarkColor: widget.control.attrColor("checkColor", context),
           selected: _selected,
           showCheckmark: showCheckmark,
           deleteButtonTooltipMessage: deleteButtonTooltipMessage,
@@ -159,12 +154,10 @@ class _ChipControlState extends State<ChipControl> {
           labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
           labelStyle:
               parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
-          selectedColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("selectedColor", "")!),
-          selectedShadowColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("selectedShadowColor", "")!),
-          shadowColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("shadowColor", "")!),
+          selectedColor: widget.control.attrColor("selectedColor", context),
+          selectedShadowColor:
+              widget.control.attrColor("selectedShadowColor", context),
+          shadowColor: widget.control.attrColor("shadowColor", context),
           shape: parseOutlinedBorder(widget.control, "shape"),
         ),
         widget.parent,

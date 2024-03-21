@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/colors.dart';
 import 'create_control.dart';
 
 class ProgressRingControl extends StatelessWidget {
@@ -24,10 +23,8 @@ class ProgressRingControl extends StatelessWidget {
         e.name.toLowerCase() ==
         control.attrString("strokeCap", "")!.toLowerCase());
     var strokeWidth = control.attrDouble("strokeWidth", 4)!;
-    var color = HexColor.fromString(
-        Theme.of(context), control.attrString("color", "")!);
-    var bgColor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgColor", "")!);
+    var color = control.attrColor("color", context);
+    var bgColor = control.attrColor("bgColor", context);
 
     return constrainedControl(
         context,

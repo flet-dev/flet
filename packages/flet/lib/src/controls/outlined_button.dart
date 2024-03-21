@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
-import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
@@ -63,8 +62,7 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
 
     String text = widget.control.attrString("text", "")!;
     IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
-    Color? iconColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("iconColor", "")!);
+    Color? iconColor = widget.control.attrColor("iconColor", context);
     var contentCtrls = widget.children.where((c) => c.name == "content");
     String url = widget.control.attrString("url", "")!;
     String? urlTarget = widget.control.attrString("urlTarget");

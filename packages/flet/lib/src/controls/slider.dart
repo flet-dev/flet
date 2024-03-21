@@ -120,14 +120,11 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
           max: max,
           divisions: divisions,
           label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
-          activeColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("activeColor", "")!),
-          inactiveColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("inactiveColor", "")!),
+          activeColor: widget.control.attrColor("activeColor", context),
+          inactiveColor: widget.control.attrColor("inactiveColor", context),
           overlayColor: overlayColor,
           allowedInteraction: interaction,
-          thumbColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("thumbColor", "")!),
+          thumbColor: widget.control.attrColor("thumbColor", context),
           onChanged: !disabled
               ? (double value) {
                   onChange(value);
