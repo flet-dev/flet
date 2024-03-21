@@ -63,6 +63,8 @@ class _GridViewControlState extends State<GridViewControl> {
     final padding = parseEdgeInsets(widget.control, "padding");
     final childAspectRatio = widget.control.attrDouble("childAspectRatio", 1)!;
     final reverse = widget.control.attrBool("reverse", false)!;
+    final cacheExtent = widget.control.attrDouble("cacheExtent");
+
     var clipBehavior = Clip.values.firstWhere(
         (e) =>
             e.name.toLowerCase() ==
@@ -98,6 +100,7 @@ class _GridViewControlState extends State<GridViewControl> {
           controller: _controller,
           clipBehavior: clipBehavior,
           reverse: reverse,
+          cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
           shrinkWrap: shrinkWrap,
           padding: padding,

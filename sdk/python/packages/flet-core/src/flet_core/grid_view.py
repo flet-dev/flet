@@ -76,6 +76,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         padding: PaddingValue = None,
         clip_behavior: Optional[ClipBehavior] = None,
         semantic_child_count: Optional[int] = None,
+        cache_extent: OptionalNumber = None,
         #
         # ConstrainedControl
         #
@@ -168,6 +169,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.padding = padding
         self.clip_behavior = clip_behavior
         self.semantic_child_count = semantic_child_count
+        self.cache_extent = cache_extent
 
     def _get_control_name(self):
         return "gridview"
@@ -199,6 +201,15 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @horizontal.setter
     def horizontal(self, value: Optional[bool]):
         self._set_attr("horizontal", value)
+
+    # cache_extent
+    @property
+    def cache_extent(self) -> OptionalNumber:
+        return self._get_attr("cacheExtent")
+
+    @cache_extent.setter
+    def cache_extent(self, value: OptionalNumber):
+        self._set_attr("cacheExtent", value)
 
     # runs_count
     @property

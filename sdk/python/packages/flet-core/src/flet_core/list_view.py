@@ -67,6 +67,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         padding: PaddingValue = None,
         clip_behavior: Optional[ClipBehavior] = None,
         semantic_child_count: Optional[int] = None,
+        cache_extent: OptionalNumber = None,
         #
         # ScrollableControl specific
         #
@@ -158,6 +159,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.padding = padding
         self.clip_behavior = clip_behavior
         self.semantic_child_count = semantic_child_count
+        self.cache_extent = cache_extent
 
     def _get_control_name(self):
         return "listview"
@@ -216,6 +218,15 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @item_extent.setter
     def item_extent(self, value: OptionalNumber):
         self._set_attr("itemExtent", value)
+
+    # cache_extent
+    @property
+    def cache_extent(self) -> OptionalNumber:
+        return self._get_attr("cacheExtent")
+
+    @cache_extent.setter
+    def cache_extent(self, value: OptionalNumber):
+        self._set_attr("cacheExtent", value)
 
     # first_item_prototype
     @property
