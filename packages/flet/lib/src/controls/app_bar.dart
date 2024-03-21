@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -46,6 +47,14 @@ class AppBarControl extends StatelessWidget
       var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
       var actionCtrls =
           children.where((c) => c.name == "action" && c.isVisible);
+      /*
+      var bottomCtrls = children.where((c) =>
+          c.name == "bottom" &&
+          (c.type == "cupertinoappbar" ||
+              c.type == "appbar" ||
+              c.type == "tabs") && // must be of type PreferredSizeWidget
+          c.isVisible);
+      */
 
       var leadingWidth = control.attrDouble("leadingWidth");
       var elevation = control.attrDouble("elevation");
@@ -54,6 +63,21 @@ class AppBarControl extends StatelessWidget
           control.attrBool("automaticallyImplyLeading", true)!;
       var color = control.attrColor("color", context);
       var bgcolor = control.attrColor("bgcolor", context);
+      var shadowColor = control.attrColor("shadowColor", context);
+      var surfaceTintColor = control.attrColor("surfaceTintColor", context);
+      var elevationOnScroll = control.attrDouble("elevationOnScroll");
+      var forceMaterialTransparency =
+          control.attrBool("forceMaterialTransparency", false)!;
+      var isSecondary = control.attrBool("isSecondary", false)!;
+      var excludeHeaderSemantics =
+          control.attrBool("excludeHeaderSemantics", false)!;
+      var titleSpacing = control.attrDouble("titleSpacing");
+
+      var clipBehavior = Clip.values.firstWhereOrNull(
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("clipBehavior", "")!.toLowerCase(),
+      );
 
       return AppBar(
         leading: leadingCtrls.isNotEmpty
@@ -78,6 +102,14 @@ class AppBarControl extends StatelessWidget
         systemOverlayStyle: Theme.of(context)
             .extension<SystemUiOverlayStyleTheme>()
             ?.systemUiOverlayStyle,
+        shadowColor: shadowColor,
+        surfaceTintColor: surfaceTintColor,
+        scrolledUnderElevation: elevationOnScroll,
+        forceMaterialTransparency: forceMaterialTransparency,
+        primary: !isSecondary,
+        titleSpacing: titleSpacing,
+        excludeHeaderSemantics: excludeHeaderSemantics,
+        clipBehavior: clipBehavior,
       );
     });
   }

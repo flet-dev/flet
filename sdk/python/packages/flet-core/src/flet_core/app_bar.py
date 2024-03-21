@@ -3,6 +3,7 @@ from typing import List, Optional
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import ClipBehavior
 
 
 class AppBar(AdaptiveControl):
@@ -60,6 +61,14 @@ class AppBar(AdaptiveControl):
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         elevation: OptionalNumber = None,
+        elevation_on_scroll: OptionalNumber = None,
+        shadow_color: Optional[str] = None,
+        surface_tint_color: Optional[str] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        force_material_transparency: Optional[bool] = None,
+        is_secondary: Optional[bool] = None,
+        title_spacing: OptionalNumber = None,
+        exclude_header_semantics: Optional[bool] = None,
         actions: Optional[List[Control]] = None,
         #
         # AdaptiveControl
@@ -85,6 +94,14 @@ class AppBar(AdaptiveControl):
         self.bgcolor = bgcolor
         self.elevation = elevation
         self.actions = actions
+        self.elevation_on_scroll = elevation_on_scroll
+        self.shadow_color = shadow_color
+        self.surface_tint_color = surface_tint_color
+        self.clip_behavior = clip_behavior
+        self.force_material_transparency = force_material_transparency
+        self.is_secondary = is_secondary
+        self.title_spacing = title_spacing
+        self.exclude_header_semantics = exclude_header_semantics
 
     def _get_control_name(self):
         return "appbar"
@@ -124,6 +141,15 @@ class AppBar(AdaptiveControl):
     @leading_width.setter
     def leading_width(self, value: OptionalNumber):
         self._set_attr("leadingWidth", value)
+
+    # title_spacing
+    @property
+    def title_spacing(self) -> OptionalNumber:
+        return self._get_attr("titleSpacing", data_type="float")
+
+    @title_spacing.setter
+    def title_spacing(self, value: OptionalNumber):
+        self._set_attr("titleSpacing", value)
 
     # automatically_imply_leading
     @property
@@ -165,21 +191,70 @@ class AppBar(AdaptiveControl):
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
+
+    # shadow_color
+    @property
+    def shadow_color(self) -> Optional[str]:
+        return self._get_attr("shadowColor")
+
+    @shadow_color.setter
+    def shadow_color(self, value: Optional[str]):
+        self._set_attr("shadowColor", value)
+
+    # surface_tint_color
+    @property
+    def surface_tint_color(self) -> Optional[str]:
+        return self._get_attr("surfaceTintColor")
+
+    @surface_tint_color.setter
+    def surface_tint_color(self, value: Optional[str]):
+        self._set_attr("surfaceTintColor", value)
+
+    # is_secondary
+    @property
+    def is_secondary(self) -> Optional[bool]:
+        return self._get_attr("isSecondary", data_type="bool", def_value=False)
+
+    @is_secondary.setter
+    def is_secondary(self, value: Optional[bool]):
+        self._set_attr("isSecondary", value)
+
+    # exclude_header_semantics
+    @property
+    def exclude_header_semantics(self) -> Optional[bool]:
+        return self._get_attr(
+            "excludeHeaderSemantics", data_type="bool", def_value=False
+        )
+
+    @exclude_header_semantics.setter
+    def exclude_header_semantics(self, value: Optional[bool]):
+        self._set_attr("excludeHeaderSemantics", value)
+
+    # force_material_transparency
+    @property
+    def force_material_transparency(self) -> Optional[bool]:
+        return self._get_attr(
+            "forceMaterialTransparency", data_type="bool", def_value=False
+        )
+
+    @force_material_transparency.setter
+    def force_material_transparency(self, value: Optional[bool]):
+        self._set_attr("forceMaterialTransparency", value)
 
     # elevation
     @property
@@ -189,6 +264,27 @@ class AppBar(AdaptiveControl):
     @elevation.setter
     def elevation(self, value: OptionalNumber):
         self._set_attr("elevation", value)
+
+    # elevation_on_scroll
+    @property
+    def elevation_on_scroll(self) -> OptionalNumber:
+        return self._get_attr("elevationOnScroll")
+
+    @elevation_on_scroll.setter
+    def elevation_on_scroll(self, value: OptionalNumber):
+        self._set_attr("elevationOnScroll", value)
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self._get_attr("clipBehavior")
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self._set_attr(
+            "clipBehavior",
+            value.value if isinstance(value, ClipBehavior) else value,
+        )
 
     # actions
     @property

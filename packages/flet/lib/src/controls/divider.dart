@@ -17,7 +17,7 @@ class DividerControl extends StatelessWidget {
     var leadingIndent = control.attrDouble("leadingIndent");
     var trailingIndent = control.attrDouble("trailingIndent");
     var thickness = control.attrDouble("thickness");
-    var color = widget.control.attrColor("color", context);
+    var color = control.attrColor("color", context);
 
     return baseControl(
         context,
