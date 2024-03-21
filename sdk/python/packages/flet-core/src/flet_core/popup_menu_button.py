@@ -182,6 +182,7 @@ class PopupMenuButton(ConstrainedControl):
         enable_feedback: Optional[bool] = None,
         shape: Optional[OutlinedBorder] = None,
         padding: PaddingValue = None,
+        on_cancelled=None,
         on_open=None,
         on_cancel=None,
         #
@@ -249,6 +250,7 @@ class PopupMenuButton(ConstrainedControl):
         self.items = items
         self.icon = icon
         self.on_cancel = on_cancel
+        self.on_cancelled = on_cancelled
         self.on_open = on_open
         self.shape = shape
         self.padding = padding
@@ -432,6 +434,15 @@ class PopupMenuButton(ConstrainedControl):
     @on_cancel.setter
     def on_cancel(self, handler):
         self._add_event_handler("cancel", handler)
+
+    # on_cancelled
+    @property
+    def on_cancelled(self):
+        return self._get_event_handler("cancelled")
+
+    @on_cancelled.setter
+    def on_cancelled(self, handler):
+        self._add_event_handler("cancelled", handler)
 
     # on_open
     @property
