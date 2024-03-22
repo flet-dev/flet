@@ -41,6 +41,7 @@ class PopupMenuItem(Control):
         self.__content: Optional[Control] = None
         self.content = content
         self.on_click = on_click
+        self.data = data
 
     def _get_control_name(self):
         return "popupmenuitem"
