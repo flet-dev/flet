@@ -307,7 +307,7 @@ class TextField(FormFieldControl, AdaptiveControl):
             or self.hover_color is not None,
             self.focused_bgcolor is not None,
         ) and self.filled is None:
-            self.filled = True  # required to display a one of above colors
+            self.filled = True  # required to display any of the above colors
 
     def focus(self):
         self._set_attr_json("focus", str(time.time()))

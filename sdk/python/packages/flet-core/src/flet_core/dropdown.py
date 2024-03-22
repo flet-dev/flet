@@ -158,6 +158,7 @@ class Dropdown(FormFieldControl):
         content_padding: PaddingValue = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
+        fill_color: Optional[str] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
@@ -247,6 +248,7 @@ class Dropdown(FormFieldControl):
             content_padding=content_padding,
             dense=dense,
             filled=filled,
+            fill_color=fill_color,
             hint_text=hint_text,
             hint_style=hint_style,
             helper_text=helper_text,
@@ -292,6 +294,12 @@ class Dropdown(FormFieldControl):
         super().before_update()
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("alignment", self.__alignment)
+        if (
+            self.bgcolor is not None
+            or self.fill_color is not None
+            or self.focused_bgcolor is not None,
+        ) and self.filled is None:
+            self.filled = True  # required to display any of the above colors
 
     def _get_children(self):
         children = FormFieldControl._get_children(self)
