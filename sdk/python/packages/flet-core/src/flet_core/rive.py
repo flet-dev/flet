@@ -32,7 +32,6 @@ class Rive(ConstrainedControl):
         enable_antialiasing: Optional[bool] = None,
         use_artboard_size: Optional[bool] = None,
         fit: Optional[ImageFit] = None,
-        on_init=None,
         #
         # ConstrainedControl
         #
@@ -104,7 +103,6 @@ class Rive(ConstrainedControl):
         self.use_artboard_size = use_artboard_size
         self.alignment = alignment
         self.fit = fit
-        self.on_init = on_init
 
     def _get_control_name(self):
         return "rive"
@@ -183,13 +181,3 @@ class Rive(ConstrainedControl):
     def fit(self, value: Optional[ImageFit]):
         self.__fit = value
         self._set_attr("fit", value.value if isinstance(value, ImageFit) else value)
-
-    # on_init
-    @property
-    def on_init(self):
-        return self._get_event_handler("init")
-
-    @on_init.setter
-    def on_init(self, handler):
-        self._add_event_handler("init", handler)
-        self._set_attr("onInit", True if handler is not None else None)
