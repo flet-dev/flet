@@ -1,3 +1,8 @@
+# 0.21.2
+
+* Fix for mobile Safari: Store session ID in SessionStorage instead of window.name.
+* Bugfixing on Python side.
+
 # 0.21.1
 
 * Bugfixing.

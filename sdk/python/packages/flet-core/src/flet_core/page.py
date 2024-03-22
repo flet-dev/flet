@@ -6,7 +6,7 @@ import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
@@ -289,7 +289,7 @@ class Page(AdaptiveControl):
         await self.on_event_async(Event("page", "connect", ""))
 
     async def _disconnect(self, session_timeout_seconds: int):
-        self.__expires_at = datetime.utcnow() + timedelta(
+        self.__expires_at = datetime.now(timezone.utc) + timedelta(
             seconds=session_timeout_seconds
         )
         await self.on_event_async(Event("page", "disconnect", ""))
