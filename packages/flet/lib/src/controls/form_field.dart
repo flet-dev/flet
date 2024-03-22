@@ -60,9 +60,11 @@ InputDecoration buildInputDecoration(
 
   var bgcolor = control.attrColor("bgcolor", context);
   var focusedBgcolor = control.attrColor("focusedBgcolor", context);
+  var fillColor = control.attrColor("fillColor", context);
+  var hoverColor = control.attrColor("hoverColor", context);
+  var borderColor = control.attrColor("borderColor", context);
 
   var borderRadius = parseBorderRadius(control, "borderRadius");
-  var borderColor = control.attrColor("borderColor", context);
   var focusedBorderColor = control.attrColor("focusedBorderColor", context);
   var borderWidth = control.attrDouble("borderWidth");
   var focusedBorderWidth = control.attrDouble("focusedBorderWidth");
@@ -115,9 +117,10 @@ InputDecoration buildInputDecoration(
       border: border,
       enabledBorder: border,
       focusedBorder: focusedBorder,
+      hoverColor: hoverColor,
       icon: icon != null ? Icon(icon) : null,
       filled: control.attrBool("filled", false)!,
-      fillColor: focused ? focusedBgcolor ?? bgcolor : bgcolor,
+      fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
       hintText: control.attrString("hintText"),
       hintStyle: parseTextStyle(Theme.of(context), control, "hintStyle"),
       helperText: control.attrString("helperText"),

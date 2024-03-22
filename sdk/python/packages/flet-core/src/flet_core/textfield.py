@@ -27,21 +27,6 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-KeyboardTypeString = Literal[
-    None,
-    "text",
-    "multiline",
-    "number",
-    "phone",
-    "datetime",
-    "email",
-    "url",
-    "visiblePassword",
-    "name",
-    "streetAddress",
-    "none",
-]
-
 
 class KeyboardType(Enum):
     NONE = "none"
@@ -55,9 +40,6 @@ class KeyboardType(Enum):
     VISIBLE_PASSWORD = "visiblePassword"
     NAME = "name"
     STREET_ADDRESS = "streetAddress"
-
-
-TextCapitalizationString = Literal[None, "none", "characters", "words", "sentences"]
 
 
 class TextCapitalization(Enum):
@@ -76,12 +58,12 @@ class InputFilter:
 
 class NumbersOnlyInputFilter(InputFilter):
     def __init__(self):
-        super().__init__(r"[0-9]")
+        super().__init__(regex_string=r"[0-9]")
 
 
 class TextOnlyInputFilter(InputFilter):
     def __init__(self):
-        super().__init__(r"[a-zA-Z]")
+        super().__init__(regex_string=r"[a-zA-Z]")
 
 
 class TextField(FormFieldControl, AdaptiveControl):
@@ -166,6 +148,8 @@ class TextField(FormFieldControl, AdaptiveControl):
         content_padding: PaddingValue = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
+        fill_color: Optional[str] = None,
+        hover_color: Optional[str] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
@@ -259,6 +243,8 @@ class TextField(FormFieldControl, AdaptiveControl):
             content_padding=content_padding,
             dense=dense,
             filled=filled,
+            fill_color=fill_color,
+            hover_color=hover_color,
             hint_text=hint_text,
             hint_style=hint_style,
             helper_text=helper_text,
@@ -315,8 +301,13 @@ class TextField(FormFieldControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("inputFilter", self.__input_filter)
-        if self.bgcolor is not None and self.filled is None:
-            self.filled = True  # Flutter requires filled = True to display a bgcolor
+        if (
+            self.bgcolor is not None
+            or self.fill_color is not None
+            or self.hover_color is not None,
+            self.focused_bgcolor is not None,
+        ) and self.filled is None:
+            self.filled = True  # required to display a one of above colors
 
     def focus(self):
         self._set_attr_json("focus", str(time.time()))
