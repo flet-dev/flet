@@ -79,8 +79,9 @@ except ImportError as e:
 
 @dataclass
 class Locale:
-    language_code: str = field(default="en")
+    language_code: Optional[str] = field(default=None)
     country_code: Optional[str] = field(default=None)
+    script_code: Optional[str] = field(default=None)
 
 
 @dataclass

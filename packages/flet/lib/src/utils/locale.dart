@@ -18,35 +18,31 @@ Map<String, dynamic>? parseLocaleConfiguration(
 Map<String, dynamic> localeConfigurationFromJSON(dynamic json) {
   List<Locale>? supportedLocales;
   var sl = json["supported_locales"];
-  var locale =
-      json["used_locale"] != null ? parseLocale(json["used_locale"]) : null;
+  Locale? locale =
+      json["used_locale"] != null ? localeFromJSON(json["used_locale"]) : null;
   if (sl != null) {
     supportedLocales =
-        sl.map((e) => parseLocale(e)).whereType<Locale>().toList();
+        sl.map((e) => localeFromJSON(e)).whereType<Locale>().toList();
   }
 
   return {
     "supportedLocales": supportedLocales != null && supportedLocales.isNotEmpty
         ? supportedLocales
-        : [const Locale("en", "US")],
+        : [const Locale("en", "US")], // American locale as fallback
     "locale": locale
   };
 }
 
-Locale? parseLocale(value) {
-  var languageCode = value["language_code"];
-  if (languageCode != null && languageCode.trim().isNotEmpty) {
-    var countryCode = value["country_code"];
-    return Locale(languageCode, countryCode);
-  }
-  return null;
-}
-
-Locale? localeFromJSON(dynamic json) {
-  String? languageCode = json["language_code"];
-  if (languageCode != null && languageCode.trim().isNotEmpty) {
-    String? countryCode = json["country_code"];
-    return Locale(languageCode, countryCode);
-  }
-  return null;
+Locale localeFromJSON(dynamic json) {
+  var languageCode = json["language_code"]?.trim();
+  var countryCode = json["country_code"]?.trim();
+  var scriptCode = json["script_code"]?.trim();
+  return Locale.fromSubtags(
+      languageCode: (languageCode != null && languageCode.isNotEmpty)
+          ? languageCode
+          : "und", // und = undefined language code
+      countryCode:
+          (countryCode != null && countryCode.isNotEmpty) ? countryCode : null,
+      scriptCode:
+          (scriptCode != null && scriptCode.isNotEmpty) ? scriptCode : null);
 }
