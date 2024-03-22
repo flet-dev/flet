@@ -302,10 +302,12 @@ class TextField(FormFieldControl, AdaptiveControl):
         super().before_update()
         self._set_attr_json("inputFilter", self.__input_filter)
         if (
-            self.bgcolor is not None
-            or self.fill_color is not None
-            or self.hover_color is not None,
-            self.focused_bgcolor is not None,
+            (
+                self.bgcolor is not None
+                or self.fill_color is not None
+                or self.hover_color is not None
+                or self.focused_color is not None
+            )
         ) and self.filled is None:
             self.filled = True  # required to display any of the above colors
 

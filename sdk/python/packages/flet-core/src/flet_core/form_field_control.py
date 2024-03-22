@@ -366,7 +366,7 @@ class FormFieldControl(ConstrainedControl):
     # filled
     @property
     def filled(self) -> Optional[bool]:
-        return self._get_attr("filled")
+        return self._get_attr("filled", data_type=bool)
 
     @filled.setter
     def filled(self, value: Optional[bool]):

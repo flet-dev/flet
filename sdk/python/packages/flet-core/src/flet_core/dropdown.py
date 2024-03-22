@@ -295,9 +295,11 @@ class Dropdown(FormFieldControl):
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("alignment", self.__alignment)
         if (
-            self.bgcolor is not None
-            or self.fill_color is not None
-            or self.focused_bgcolor is not None,
+            (
+                self.bgcolor is not None
+                or self.fill_color is not None
+                or self.focused_bgcolor is not None
+            )
         ) and self.filled is None:
             self.filled = True  # required to display any of the above colors
 
