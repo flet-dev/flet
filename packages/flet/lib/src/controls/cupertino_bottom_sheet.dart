@@ -35,8 +35,9 @@ class _CupertinoBottomSheetControlState
   Widget _createDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    var height = widget.control.attrDouble("height");
-    var bgcolor = widget.control.attrColor("bgcolor", context);
+    var height = widget.control.attrDouble("height", 220.0)!;
+    var bgcolor = widget.control.attrColor("bgcolor", context) ??
+        CupertinoColors.systemBackground.resolveFrom(context);
     var padding = parseEdgeInsets(widget.control, "padding");
 
     var contentCtrls =
@@ -47,7 +48,7 @@ class _CupertinoBottomSheetControlState
             parentAdaptive: widget.parentAdaptive)
         : const SizedBox.shrink();
 
-    if (height != null || bgcolor != null || padding != null) {
+    if (padding != null) {
       content = Container(
         height: height,
         padding: padding,
@@ -55,7 +56,7 @@ class _CupertinoBottomSheetControlState
         margin: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        // Provide a background color for the popup.
+        // background color for the popup.
         color: bgcolor,
         // Use a SafeArea widget to avoid system overlaps.
         child: SafeArea(
