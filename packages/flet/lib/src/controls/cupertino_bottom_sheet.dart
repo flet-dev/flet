@@ -48,7 +48,10 @@ class _CupertinoBottomSheetControlState
             parentAdaptive: widget.parentAdaptive)
         : const SizedBox.shrink();
 
-    if (padding != null) {
+    if (contentCtrls.isNotEmpty &&
+        (contentCtrls.first.type == "cupertinopicker" ||
+            contentCtrls.first.type == "cupertinotimerpicker" ||
+            contentCtrls.first.type == "cupertinodatepicker")) {
       content = Container(
         height: height,
         padding: padding,
