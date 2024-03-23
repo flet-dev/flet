@@ -1,4 +1,5 @@
 import asyncio
+from contextvars import ContextVar
 import json
 import logging
 import threading
@@ -54,11 +55,19 @@ from flet_core.types import (
     ScrollMode,
     ThemeMode,
 )
-from flet_core.utils import deprecated
+from flet_core.utils import deprecated, classproperty
 from flet_core.utils.concurrency_utils import is_pyodide
 from flet_core.view import View
 
 logger = logging.getLogger(flet_core.__name__)
+
+_session_page = ContextVar("flet_session_page", default=None)
+
+
+class context:
+    @classproperty
+    def page(cls) -> "Page":
+        return _session_page.get()
 
 
 try:
@@ -228,6 +237,8 @@ class Page(AdaptiveControl):
         self.__on_error = EventHandler()
         self._add_event_handler("error", self.__on_error.get_handler())
 
+        _session_page.set(self)
+
     def get_control(self, id):
         return self._index.get(id)
 
@@ -284,6 +295,7 @@ class Page(AdaptiveControl):
             self._set_attr(props[i], values[i], False)
 
     async def _connect(self, conn: Connection):
+        _session_page.set(self)
         self.__conn = conn
         self.__expires_at = None
         await self.on_event_async(Event("page", "connect", ""))
@@ -482,16 +494,28 @@ class Page(AdaptiveControl):
                         self._index[id]._set_attr(name, props[name], dirty=False)
 
     def run_task(self, handler: Callable[..., Awaitable[Any]], *args):
+        _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
         return asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
 
-    def run_thread(self, handler, *args):
-        if is_pyodide():
+    def __context_wrapper(self, handler):
+        def wrapper(*args):
+            _session_page.set(self)
             handler(*args)
+
+        return wrapper
+
+    def run_thread(self, handler, *args):
+        handler_with_context = self.__context_wrapper(handler)
+        if is_pyodide():
+            handler_with_context(*args)
         else:
             assert self.__loop
             self.__loop.call_soon_threadsafe(
-                self.__loop.run_in_executor, self.__executor, handler, *args
+                self.__loop.run_in_executor,
+                self.__executor,
+                handler_with_context,
+                *args,
             )
 
     def go(self, route, skip_route_change_event=False, **kwargs):
