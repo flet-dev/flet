@@ -87,7 +87,7 @@ class Locale:
 @dataclass
 class LocaleConfiguration:
     supported_locales: Optional[List[Locale]] = field(default=None)
-    default_locale: Optional[Locale] = field(default=None)
+    current_locale: Optional[Locale] = field(default=None)
 
 
 class PageDisconnectedException(Exception):

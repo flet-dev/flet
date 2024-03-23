@@ -18,8 +18,8 @@ Map<String, dynamic>? parseLocaleConfiguration(
 Map<String, dynamic> localeConfigurationFromJSON(dynamic json) {
   List<Locale>? supportedLocales;
   var sl = json["supported_locales"];
-  Locale? locale = json["default_locale"] != null
-      ? localeFromJSON(json["default_locale"])
+  Locale? locale = json["current_locale"] != null
+      ? localeFromJSON(json["current_locale"])
       : null;
   if (sl != null) {
     supportedLocales =
