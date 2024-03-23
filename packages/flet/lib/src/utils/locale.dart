@@ -18,8 +18,9 @@ Map<String, dynamic>? parseLocaleConfiguration(
 Map<String, dynamic> localeConfigurationFromJSON(dynamic json) {
   List<Locale>? supportedLocales;
   var sl = json["supported_locales"];
-  Locale? locale =
-      json["used_locale"] != null ? localeFromJSON(json["used_locale"]) : null;
+  Locale? locale = json["default_locale"] != null
+      ? localeFromJSON(json["default_locale"])
+      : null;
   if (sl != null) {
     supportedLocales =
         sl.map((e) => localeFromJSON(e)).whereType<Locale>().toList();
