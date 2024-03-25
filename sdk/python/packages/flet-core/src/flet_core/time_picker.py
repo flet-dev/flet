@@ -144,12 +144,11 @@ class TimePicker(Control):
         value_string = self._get_attr(
             "value", def_value=None
         )  # value_string in comes in format 'HH:MM'
-        splitted = value_string.split(":")
-        return (
-            time(hour=int(splitted[0]), minute=int(splitted[1]))
-            if value_string
-            else None
-        )
+        if value_string:
+            splitted = value_string.split(":")
+            return time(hour=int(splitted[0]), minute=int(splitted[1]))
+        else:
+            return None
 
     @value.setter
     def value(self, value: Optional[Union[time, str]]):
