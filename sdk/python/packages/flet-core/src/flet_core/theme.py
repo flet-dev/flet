@@ -9,9 +9,8 @@ from flet_core.border import BorderSide
 from flet_core.border_radius import BorderRadius
 from flet_core.buttons import ButtonStyle, OutlinedBorder
 from flet_core.control import OptionalNumber
-from flet_core.menu_bar import MenuStyle
 from flet_core.navigation_rail import NavigationRailLabelType
-from flet_core.snack_bar import SnackBarBehavior
+from flet_core.snack_bar import SnackBarBehavior, DismissDirection
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     MaterialState,
@@ -191,20 +190,18 @@ class BottomSheetTheme:
 
 @dataclasses.dataclass
 class CardTheme:
-    bgcolor: Optional[str] = field(default=None)
+    color: Optional[str] = field(default=None)
     shadow_color: Optional[str] = field(default=None)
     surface_tint_color: Optional[str] = field(default=None)
     elevation: OptionalNumber = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
     clip_behavior: Optional[ClipBehavior] = field(default=None)
-    drag_handle_color: Optional[str] = field(default=None)
-    show_drag_handle: Optional[bool] = field(default=None)
-    modal_bgcolor: Optional[str] = field(default=None)
     margin: MarginValue = field(default=None)
 
 
 @dataclasses.dataclass
 class ChipTheme:
+    # color: Optional[str] = field(default=None)
     bgcolor: Optional[str] = field(default=None)
     shadow_color: Optional[str] = field(default=None)
     surface_tint_color: Optional[str] = field(default=None)
@@ -215,19 +212,19 @@ class ChipTheme:
     secondary_selected_color: Optional[str] = field(default=None)
     selected_shadow_color: Optional[str] = field(default=None)
     elevation: OptionalNumber = field(default=None)
+    click_elevation: OptionalNumber = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
     padding: PaddingValue = field(default=None)
     label_padding: PaddingValue = field(default=None)
-    label_style: Optional[TextStyle] = field(default=None)
-    secondary_label_style: Optional[TextStyle] = field(default=None)
-    side: Optional[BorderSide] = field(default=None)
+    label_text_style: Optional[TextStyle] = field(default=None)
+    secondary_label_text_style: Optional[TextStyle] = field(default=None)
+    border_side: Optional[BorderSide] = field(default=None)
     brightness: Optional[Brightness] = field(default=None)
-    showCheckmark: Optional[bool] = field(default=None)
-    press_elevation: OptionalNumber = field(default=None)
+    show_checkmark: Optional[bool] = field(default=None)
 
 
 @dataclasses.dataclass
-class ChipTheme:
+class FloatingActionButtonTheme:
     bgcolor: Optional[str] = field(default=None)
     hover_color: Optional[str] = field(default=None)
     focus_color: Optional[str] = field(default=None)
@@ -257,6 +254,7 @@ class NavigationRailTheme:
     min_width: OptionalNumber = field(default=None)
     min_extended_width: OptionalNumber = field(default=None)
     group_alignment: OptionalNumber = field(default=None)
+    use_indicator: Optional = field(default=None)
 
 
 @dataclasses.dataclass
@@ -272,7 +270,7 @@ class AppBarTheme:
     toolbar_text_style: Optional[TextStyle] = field(default=None)
     center_title: Optional[bool] = field(default=None)
     title_spacing: OptionalNumber = field(default=None)
-    scrolled_under_elevation: OptionalNumber = field(default=None)
+    scroll_elevation: OptionalNumber = field(default=None)
     toolbar_height: OptionalNumber = field(default=None)
 
 
@@ -288,8 +286,12 @@ class BottomAppBarTheme:
 
 @dataclasses.dataclass
 class RadioTheme:
-    fill_color: Optional[str] = field(default=None)
-    # overlay_color: Optional[str] = field(default=None)
+    fill_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
     splash_radius: OptionalNumber = field(default=None)
     height: OptionalNumber = field(default=None)
     visual_density: Optional[ThemeVisualDensity] = field(default=None)
@@ -297,11 +299,17 @@ class RadioTheme:
 
 @dataclasses.dataclass
 class CheckboxTheme:
-    # overlay_color: Optional[str] = field(default=None)
-    # check_color: Optional[str] = field(default=None)
-    # fill_color: Optional[str] = field(default=None)
+    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    check_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    fill_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
     splash_radius: OptionalNumber = field(default=None)
-    side: Optional[BorderSide] = field(default=None)
+    border_side: Optional[BorderSide] = field(default=None)
     visual_density: Optional[ThemeVisualDensity] = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
 
@@ -320,12 +328,24 @@ class BadgeTheme:
 
 @dataclasses.dataclass
 class SwitchTheme:
-    # thumb_color: Optional[str] = field(default=None)
-    # track_color: Optional[str] = field(default=None)
-    # overlay_color: Optional[str] = field(default=None)
-    # track_outline_color: Optional[str] = field(default=None)
-    # thumb_icon: Optional[str] = field(default=None)
-    # track_outline_width: OptionalNumber = field(default=None)
+    thumb_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    track_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    track_outline_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    thumb_icon: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    track_outline_width: Union[
+        None, Union[int, float], Dict[Union[str, MaterialState], Union[int, float]]
+    ] = field(default=None)
     splash_radius: OptionalNumber = field(default=None)
 
 
@@ -333,6 +353,7 @@ class SwitchTheme:
 class DividerTheme:
     color: Optional[str] = field(default=None)
     thickness: OptionalNumber = field(default=None)
+    space: OptionalNumber = field(default=None)
     leading_indent: OptionalNumber = field(default=None)
     trailing_indent: OptionalNumber = field(default=None)
 
@@ -350,21 +371,10 @@ class SnackBarTheme:
     width: OptionalNumber = field(default=None)
     alignment: Optional[Alignment] = field(default=None)
     show_close_icon: Optional[bool] = field(default=None)
-    # dismiss_direction: Optional[SnackBarDismissDirection] = field(default=None)
+    dismiss_direction: Optional[DismissDirection] = field(default=None)
     behavior: Optional[SnackBarBehavior] = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
     inset_padding: PaddingValue = field(default=None)
-
-
-@dataclasses.dataclass
-class DrawerTheme:
-    bgcolor: Optional[str] = field(default=None)
-    surface_tint_color: Optional[str] = field(default=None)
-    shadow_color: Optional[str] = field(default=None)
-    elevation: OptionalNumber = field(default=None)
-    width: OptionalNumber = field(default=None)
-    shape: Optional[OutlinedBorder] = field(default=None)
-    end_shape: Optional[OutlinedBorder] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -386,19 +396,31 @@ class DatePickerTheme:
     shadow_color: Optional[str] = field(default=None)
     divider_color: Optional[str] = field(default=None)
     header_bgcolor: Optional[str] = field(default=None)
-    # day_bgcolor: Optional[str] = field(default=None)
-    # day_overlay_color: Optional[str] = field(default=None)
-    # today_bgcolor: Optional[str] = field(default=None)
-    # day_foreground_color: Optional[str] = field(default=None)
+    today_bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    day_bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    day_overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    day_foreground_color: Union[
+        None, str, Dict[Union[str, MaterialState], str]
+    ] = field(default=None)
     elevation: OptionalNumber = field(default=None)
     range_picker_elevation: OptionalNumber = field(default=None)
-    day_style: Optional[TextStyle] = field(default=None)
+    day_text_style: Optional[TextStyle] = field(default=None)
+    year_text_style: Optional[TextStyle] = field(default=None)
+    shape: Optional[OutlinedBorder] = field(default=None)
+    cancel_button_style: Optional[ButtonStyle] = field(default=None)
+    confirm_button_style: Optional[ButtonStyle] = field(default=None)
 
 
-@dataclasses.dataclass
-class DropdownMenuTheme:
-    menu_style: Optional[MenuStyle] = field(default=None)
-    text_style: Optional[TextStyle] = field(default=None)
+# @dataclasses.dataclass
+# class DropdownMenuTheme:
+#     menu_style: Optional[MenuStyle] = field(default=None)
+#     text_style: Optional[TextStyle] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -415,7 +437,7 @@ class ListTileTheme:
     visual_density: Optional[ThemeVisualDensity] = field(default=None)
     content_padding: PaddingValue = field(default=None)
     min_vertical_padding: PaddingValue = field(default=None)
-    horizontal_title_gap: OptionalNumber = field(default=None)
+    horizontal_spacing: OptionalNumber = field(default=None)
     min_leading_width: OptionalNumber = field(default=None)
     title_text_style: Optional[TextStyle] = field(default=None)
     subtitle_text_style: Optional[TextStyle] = field(default=None)
@@ -425,9 +447,9 @@ class ListTileTheme:
 @dataclasses.dataclass
 class TooltipTheme:
     height: OptionalNumber = field(default=None)
+    text_style: Optional[TextStyle] = field(default=None)
     enable_feedback: Optional[bool] = field(default=None)
     exclude_from_semantics: Optional[bool] = field(default=None)
-    text_style: Optional[TextStyle] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -477,13 +499,27 @@ class PopupMenuTheme:
 @dataclasses.dataclass
 class SearchBarTheme:
     bgcolor: Optional[str] = field(default=None)
-    # shadow_color: Optional[str] = field(default=None)
-    # surface_tint_color: Optional[str] = field(default=None)
-    # overlay_color: Optional[str] = field(default=None)
-    # elevation: OptionalNumber = field(default=None)
-    # text_style: Optional[TextStyle] = field(default=None)
-    # hint_style: Optional[TextStyle] = field(default=None)
-    # shape: Optional[OutlinedBorder] = field(default=None)
+    shadow_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    surface_tint_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    elevation: Union[
+        None, Union[int, float], Dict[Union[str, MaterialState], Union[int, float]]
+    ] = field(default=None)
+    text_style: Union[
+        None, TextStyle, Dict[Union[str, MaterialState], TextStyle]
+    ] = field(default=None)
+    hint_style: Union[
+        None, TextStyle, Dict[Union[str, MaterialState], TextStyle]
+    ] = field(default=None)
+    shape: Union[
+        None, OutlinedBorder, Dict[Union[str, MaterialState], OutlinedBorder]
+    ] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -538,7 +574,7 @@ class NavigationBarTheme:
 
 @dataclasses.dataclass
 class SegmentedButtonTheme:
-    selected_icon: Optional[str] = field(default=None)
+    # selected_icon: Optional[str] = field(default=None)
     style: Optional[ButtonStyle] = field(default=None)
 
 
@@ -576,7 +612,6 @@ class Theme:
     date_picker_theme: Optional[DatePickerTheme] = field(default=None)
     dialog_theme: Optional[DialogTheme] = field(default=None)
     divider_theme: Optional[DividerTheme] = field(default=None)
-    drawer_theme: Optional[DrawerTheme] = field(default=None)
     # dropdown_menu_theme: Optional[DropdownMenuTheme] = field(default=None)
     expansion_tile_theme: Optional[ExpansionTileTheme] = field(default=None)
     list_tile_theme: Optional[ListTileTheme] = field(default=None)
@@ -585,6 +620,9 @@ class Theme:
     navigation_rail_theme: Optional[NavigationRailTheme] = field(default=None)
     page_transitions: PageTransitionsTheme = field(default_factory=PageTransitionsTheme)
     popup_menu_theme: Optional[PopupMenuTheme] = field(default=None)
+    primary_color: Optional[str] = field(default=None)
+    primary_color_dark: Optional[str] = field(default=None)
+    primary_color_light: Optional[str] = field(default=None)
     primary_text_theme: Optional[TextTheme] = field(default=None)
     progress_indicator_theme: Optional[ProgressIndicatorTheme] = field(default=None)
     radio_theme: Optional[RadioTheme] = field(default=None)

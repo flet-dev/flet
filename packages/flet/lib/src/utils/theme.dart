@@ -122,9 +122,9 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
         HexColor.fromString(theme, json?["secondary_header_color"]),
     dialogTheme: parseDialogTheme(theme, json?["dialog_theme"]),
     bottomSheetTheme: parseBottomSheetTheme(theme, json?["bottom_sheet_theme"]),
-    // primaryColor: HexColor.fromString(theme, json?["primary_color"]),
-    // primaryColorLight: HexColor.fromString(theme, json?["primary_color_light"]),
-    // primaryColorDark: HexColor.fromString(theme, json?["primary_color_dark"]),
+    primaryColor: HexColor.fromString(theme, json?["primary_color"]),
+    primaryColorLight: HexColor.fromString(theme, json?["primary_color_light"]),
+    primaryColorDark: HexColor.fromString(theme, json?["primary_color_dark"]),
     cardTheme: parseCardTheme(theme, json?["card_theme"]),
     chipTheme: parseChipTheme(theme, json?["chip_theme"]),
     floatingActionButtonTheme: parseFloatingActionButtonTheme(
@@ -137,7 +137,6 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     switchTheme: parseSwitchTheme(theme, json?["switch_theme"]),
     dividerTheme: parseDividerTheme(theme, json?["divider_theme"]),
     snackBarTheme: parseSnackBarTheme(theme, json?["snackbar_theme"]),
-    drawerTheme: parseDrawerTheme(theme, json?["drawer_theme"]),
     bannerTheme: parseBannerTheme(theme, json?["banner_theme"]),
     datePickerTheme: parseDatePickerTheme(theme, json?["banner_theme"]),
     navigationRailTheme:
@@ -402,7 +401,7 @@ CardTheme? parseCardTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.cardTheme.copyWith(
-    color: HexColor.fromString(theme, j["bgcolor"]),
+    color: HexColor.fromString(theme, j["color"]),
     shadowColor: HexColor.fromString(theme, j["shadow_color"]),
     surfaceTintColor: HexColor.fromString(theme, j["surface_tint_color"]),
     elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
@@ -424,7 +423,8 @@ ChipThemeData? parseChipTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.chipTheme.copyWith(
-    // color: ,
+    color: getMaterialStateProperty<Color?>(
+        j["color"], (jv) => HexColor.fromString(theme, jv as String)),
     backgroundColor: HexColor.fromString(theme, j["bgcolor"]),
     shadowColor: HexColor.fromString(theme, j["shadow_color"]),
     surfaceTintColor: HexColor.fromString(theme, j["surface_tint_color"]),
@@ -434,24 +434,26 @@ ChipThemeData? parseChipTheme(ThemeData theme, Map<String, dynamic>? j) {
     labelPadding: j["label_padding"] != null
         ? edgeInsetsFromJson(j["label_padding"])
         : null,
-    labelStyle: parseTextStyle("label_style"),
-    secondaryLabelStyle: parseTextStyle("secondary_label_style"),
+    labelStyle: parseTextStyle("label_text_style"),
+    secondaryLabelStyle: parseTextStyle("secondary_label_text_style"),
     disabledColor: HexColor.fromString(theme, j["disabled_color"]),
     selectedColor: HexColor.fromString(theme, j["selected_color"]),
-    checkmarkColor: HexColor.fromString(theme, j["checkmark_color"]),
+    checkmarkColor: HexColor.fromString(theme, j["check_color"]),
     deleteIconColor: HexColor.fromString(theme, j["delete_icon_color"]),
-    side: j["side"] != null ? borderSideFromJSON(theme, j["side"], null) : null,
+    side: j["border_side"] != null
+        ? borderSideFromJSON(theme, j["border_side"], null)
+        : null,
     secondarySelectedColor:
         HexColor.fromString(theme, j["secondary_selected_color"]),
     brightness: j["brightness"] != null
         ? Brightness.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == j["brightness"].toLowerCase())
+            (b) => b.name.toLowerCase() == j["brightness"].toLowerCase())
         : null,
     selectedShadowColor: HexColor.fromString(theme, j["selected_shadow_color"]),
     showCheckmark:
         j["show_checkmark"] != null ? parseBool(j["show_checkmark"]) : null,
     pressElevation:
-        j["press_elevation"] != null ? parseDouble(j["press_elevation"]) : null,
+        j["click_elevation"] != null ? parseDouble(j["click_elevation"]) : null,
   );
 }
 
@@ -522,7 +524,8 @@ NavigationRailThemeData? parseNavigationRailTheme(
     minExtendedWidth: j["min_extended_width"] != null
         ? parseDouble(j["min_extended_width"])
         : null,
-    // useIndicator: j["use_indicator"] != null ? parseBool(j["use_indicator"]) : null,
+    useIndicator:
+        j["use_indicator"] != null ? parseBool(j["use_indicator"]) : null,
   );
 }
 
@@ -546,14 +549,10 @@ AppBarTheme? parseAppBarTheme(ThemeData theme, Map<String, dynamic>? j) {
     elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
     centerTitle:
         j["center_title"] != null ? parseBool(j["center_title"]) : null,
-    // systemOverlayStyle: j["system_overlay_style"] != null
-    //     ? overlayStyleFromJson(
-    //         theme, j["system_overlay_style"], theme.brightness)
-    //     : null,
     titleSpacing:
         j["title_spacing"] != null ? parseDouble(j["title_spacing"]) : null,
-    scrolledUnderElevation: j["scrolled_under_elevation"] != null
-        ? parseDouble(j["scrolled_under_elevation"])
+    scrolledUnderElevation: j["scroll_elevation"] != null
+        ? parseDouble(j["scroll_elevation"])
         : null,
     toolbarHeight:
         j["toolbar_height"] != null ? parseDouble(j["toolbar_height"]) : null,
@@ -573,7 +572,6 @@ BottomAppBarTheme? parseBottomAppBarTheme(
     elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
     height: j["height"] != null ? parseDouble(j["height"]) : null,
     padding: j["padding"] != null ? edgeInsetsFromJson(j["padding"]) : null,
-    //shape: j["shape"],
   );
 }
 
@@ -613,7 +611,9 @@ CheckboxThemeData? parseCheckboxTheme(
         : null,
     checkColor: getMaterialStateProperty<Color?>(
         j["check_color"], (jv) => HexColor.fromString(theme, jv as String)),
-    side: j["side"] != null ? borderSideFromJSON(theme, j["side"], null) : null,
+    side: j["border_side"] != null
+        ? borderSideFromJSON(theme, j["border_side"], null)
+        : null,
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
   );
 }
@@ -719,23 +719,6 @@ SnackBarThemeData? parseSnackBarTheme(
   );
 }
 
-DrawerThemeData? parseDrawerTheme(ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  return theme.drawerTheme.copyWith(
-    backgroundColor: HexColor.fromString(theme, j["bgcolor"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    width: j["width"] != null ? parseDouble(j["width"]) : null,
-    surfaceTintColor: HexColor.fromString(theme, j["surface_tint_color"]),
-    shadowColor: HexColor.fromString(theme, j["shadow_color"]),
-    endShape:
-        j["end_shape"] != null ? outlinedBorderFromJSON(j["end_shape"]) : null,
-  );
-}
-
 MaterialBannerThemeData? parseBannerTheme(
     ThemeData theme, Map<String, dynamic>? j) {
   if (j == null) {
@@ -776,12 +759,12 @@ DatePickerThemeData? parseDatePickerTheme(
     dividerColor: HexColor.fromString(theme, j["divider_color"]),
     surfaceTintColor: HexColor.fromString(theme, j["surface_tint_color"]),
     shadowColor: HexColor.fromString(theme, j["shadow_color"]),
-    // cancelButtonStyle: buttonStyleFromJSON(theme, j["cancel_button_style"]),
-    // confirmButtonStyle: parseTextStyle("confirm_button_style"),
+    cancelButtonStyle: buttonStyleFromJSON(theme, j["cancel_button_style"]),
+    confirmButtonStyle: buttonStyleFromJSON(theme, j["confirm_button_style"]),
     dayBackgroundColor: getMaterialStateProperty<Color?>(
         j["day_bgcolor"], (jv) => HexColor.fromString(theme, jv as String)),
-    yearStyle: parseTextStyle("year_style"),
-    dayStyle: parseTextStyle("day_style"),
+    yearStyle: parseTextStyle("year_text_style"),
+    dayStyle: parseTextStyle("day_text_style"),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
     dayOverlayColor: getMaterialStateProperty<Color?>(j["day_overlay_color"],
         (jv) => HexColor.fromString(theme, jv as String)),
@@ -849,8 +832,8 @@ ListTileThemeData? parseListTileTheme(
         j["enable_feedback"] != null ? parseBool(j["enable_feedback"]) : null,
     dense: j["dense"] != null ? parseBool(j["dense"]) : null,
     // style:
-    horizontalTitleGap: j["horizontal_title_gap"] != null
-        ? parseDouble(j["horizontal_title_gap"])
+    horizontalTitleGap: j["horizontal_spacing"] != null
+        ? parseDouble(j["horizontal_spacing"])
         : null,
     // titleAlignment: j["title_alignment"] != null ? alignmentFromJson(j["title_alignment"]) : null,
     minLeadingWidth: j["min_leading_width"] != null
