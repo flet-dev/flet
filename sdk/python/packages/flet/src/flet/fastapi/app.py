@@ -27,6 +27,7 @@ def app(
     use_color_emoji: bool = False,
     route_url_strategy: str = "path",
     upload_dir: Optional[str] = None,
+    upload_endpoint_path: Optional[str] = None,
     max_upload_size: Optional[int] = None,
     secret_key: Optional[str] = None,
     session_timeout_seconds: int = DEFAULT_FLET_SESSION_TIMEOUT,
@@ -82,15 +83,16 @@ def app(
             session_handler,
             session_timeout_seconds=session_timeout_seconds,
             oauth_state_timeout_seconds=oauth_state_timeout_seconds,
+            upload_endpoint_path=upload_endpoint_path,
             secret_key=secret_key,
         ).handle(websocket)
 
     if upload_dir:
 
-        @fastapi_app.put(f"/{upload_endpoint}")
+        @fastapi_app.put(
+            f"/{upload_endpoint_path if upload_endpoint_path else upload_endpoint}"
+        )
         async def upload_handler(request: Request):
-            if not upload_dir:
-                return
             await FletUpload(
                 upload_dir=upload_dir,
                 max_upload_size=max_upload_size,
