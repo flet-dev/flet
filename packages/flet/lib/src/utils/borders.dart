@@ -69,8 +69,8 @@ BorderRadius borderRadiusFromJSON(dynamic json) {
   );
 }
 
-Border borderFromJSON(
-    ThemeData? theme, Map<String, dynamic> json, Color? defaultSideColor) {
+Border borderFromJSON(ThemeData? theme, Map<String, dynamic> json,
+    [Color? defaultSideColor]) {
   return Border(
       top: borderSideFromJSON(theme, json['t'], defaultSideColor) ??
           BorderSide.none,
@@ -82,8 +82,8 @@ Border borderFromJSON(
           BorderSide.none);
 }
 
-BorderSide? borderSideFromJSON(
-    ThemeData? theme, dynamic json, Color? defaultSideColor) {
+BorderSide? borderSideFromJSON(ThemeData? theme, dynamic json,
+    [Color? defaultSideColor]) {
   return json != null
       ? BorderSide(
           color: json['c'] != null

@@ -21,5 +21,5 @@ MaterialStateProperty<Icon?>? parseMaterialStateIcon(
   final j1 = json.decode(v);
 
   return getMaterialStateProperty<Icon?>(
-      j1, (jv) => Icon(parseIcon(jv as String)), null);
+      j1, (jv) => Icon(parseIcon(jv as String)));
 }

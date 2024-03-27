@@ -137,7 +137,7 @@ Map<String, MaterialAccentColor> _materialAccentColors = {
 
 // https://stackoverflow.com/questions/50081213/how-do-i-use-hexadecimal-color-strings-in-flutter
 extension HexColor on Color {
-  static Color? fromString(ThemeData? theme, String colorString) {
+  static Color? fromString(ThemeData? theme, [String colorString = ""]) {
     var colorParts = colorString.split(",");
 
     var colorValue = colorParts[0];
@@ -245,5 +245,5 @@ MaterialStateProperty<Color?>? parseMaterialStateColor(
 
   final j1 = json.decode(v);
   return getMaterialStateProperty<Color?>(
-      j1, (jv) => HexColor.fromString(theme, jv as String), null);
+      j1, (jv) => HexColor.fromString(theme, jv as String));
 }

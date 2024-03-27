@@ -41,10 +41,8 @@ MenuStyle? parseMenuStyle(ThemeData theme, Control control, String propName,
       defaultShape);
 }
 
-MenuStyle? menuStyleFromJSON(
-    ThemeData theme,
-    Map<String, dynamic> json,
-    Color? defaultBackgroundColor,
+MenuStyle? menuStyleFromJSON(ThemeData theme, Map<String, dynamic> json,
+    [Color? defaultBackgroundColor,
     Color? defaultShadowColor,
     Color? defaultSurfaceTintColor,
     double? defaultElevation,
@@ -52,7 +50,7 @@ MenuStyle? menuStyleFromJSON(
     MouseCursor? defaultMouseCursor,
     EdgeInsets? defaultPadding,
     BorderSide? defaultBorderSide,
-    OutlinedBorder? defaultShape) {
+    OutlinedBorder? defaultShape]) {
   return MenuStyle(
     alignment: json["alignment"] != null
         ? alignmentFromJson(json["alignment"])

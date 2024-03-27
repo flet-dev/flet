@@ -179,7 +179,7 @@ class _TabsControlState extends State<TabsControl>
                       TabBarTheme.of(context).unselectedLabelColor ??
                       Theme.of(context).colorScheme.onSurface,
               overlayColor: getMaterialStateProperty<Color?>(
-                      overlayColor, (jv) => HexColor.fromString(Theme.of(context), jv as String), null) ??
+                      overlayColor, (jv) => HexColor.fromString(Theme.of(context), jv as String)) ??
                   TabBarTheme.of(context).overlayColor,
               tabs: viewModel.controlViews.map((tabView) {
                 var text = tabView.control.attrString("text");
