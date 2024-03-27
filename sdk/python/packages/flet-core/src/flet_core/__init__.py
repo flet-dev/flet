@@ -276,6 +276,7 @@ from flet_core.theme import (
     TextTheme,
     Theme,
     ThemeVisualDensity,
+    TimePickerTheme,
     TooltipTheme,
 )
 from flet_core.time_picker import TimePicker, TimePickerEntryMode

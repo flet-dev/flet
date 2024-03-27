@@ -1,7 +1,7 @@
 import dataclasses
 from dataclasses import field
 from enum import Enum, EnumMeta
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, List, Union
 from warnings import warn
 
 from flet_core.alignment import Alignment
@@ -9,9 +9,15 @@ from flet_core.border import BorderSide
 from flet_core.border_radius import BorderRadius
 from flet_core.buttons import ButtonStyle, OutlinedBorder
 from flet_core.control import OptionalNumber
+from flet_core.gesture_detector import MouseCursor
+from flet_core.navigation_bar import NavigationBarLabelBehavior
 from flet_core.navigation_rail import NavigationRailLabelType
+from flet_core.padding import Padding
+from flet_core.popup_menu_button import PopupMenuPosition
+from flet_core.shadow import BoxShadow
 from flet_core.snack_bar import SnackBarBehavior, DismissDirection
 from flet_core.text_style import TextStyle
+from flet_core.textfield import TextCapitalization
 from flet_core.types import (
     MaterialState,
     PaddingValue,
@@ -31,7 +37,8 @@ class ThemeVisualDensityDeprecated(EnumMeta):
     def __getattribute__(self, item):
         if item == "ADAPTIVEPLATFORMDENSITY":
             warn(
-                "ADAPTIVEPLATFORMDENSITY is deprecated, use ADAPTIVE_PLATFORM_DENSITY instead.",
+                "ADAPTIVEPLATFORMDENSITY is deprecated and will be removed in version 1.0, "
+                "use ADAPTIVE_PLATFORM_DENSITY instead.",
                 DeprecationWarning,
                 stacklevel=2,
             )
@@ -146,6 +153,12 @@ class TabsTheme:
     label_color: Optional[str] = field(default=None)
     unselected_label_color: Optional[str] = field(default=None)
     overlay_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
+    mouse_cursor: Union[
+        None, MouseCursor, Dict[Union[str, MaterialState], MouseCursor]
+    ] = field(default=None)
+    label_padding: PaddingValue = field(default=None)
+    label_text_style: Optional[TextStyle] = field(default=None)
+    unselected_label_text_style: Optional[TextStyle] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -295,6 +308,9 @@ class RadioTheme:
     splash_radius: OptionalNumber = field(default=None)
     height: OptionalNumber = field(default=None)
     visual_density: Optional[ThemeVisualDensity] = field(default=None)
+    mouse_cursor: Union[
+        None, MouseCursor, Dict[Union[str, MaterialState], MouseCursor]
+    ] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -312,6 +328,9 @@ class CheckboxTheme:
     border_side: Optional[BorderSide] = field(default=None)
     visual_density: Optional[ThemeVisualDensity] = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
+    mouse_cursor: Union[
+        None, MouseCursor, Dict[Union[str, MaterialState], MouseCursor]
+    ] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -347,6 +366,9 @@ class SwitchTheme:
         None, Union[int, float], Dict[Union[str, MaterialState], Union[int, float]]
     ] = field(default=None)
     splash_radius: OptionalNumber = field(default=None)
+    mouse_cursor: Union[
+        None, MouseCursor, Dict[Union[str, MaterialState], MouseCursor]
+    ] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -375,6 +397,7 @@ class SnackBarTheme:
     behavior: Optional[SnackBarBehavior] = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
     inset_padding: PaddingValue = field(default=None)
+    action_overflow_threshold: OptionalNumber = field(default=None)
 
 
 @dataclasses.dataclass
@@ -411,10 +434,64 @@ class DatePickerTheme:
     elevation: OptionalNumber = field(default=None)
     range_picker_elevation: OptionalNumber = field(default=None)
     day_text_style: Optional[TextStyle] = field(default=None)
+    weekday_text_style: Optional[TextStyle] = field(default=None)
     year_text_style: Optional[TextStyle] = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
     cancel_button_style: Optional[ButtonStyle] = field(default=None)
     confirm_button_style: Optional[ButtonStyle] = field(default=None)
+    header_foreground_color: Optional[str] = field(default=None)
+    header_headline_text_style: Optional[TextStyle] = field(default=None)
+    header_help_text_style: Optional[TextStyle] = field(default=None)
+    range_picker_bgcolor: Optional[str] = field(default=None)
+    range_picker_header_bgcolor: Optional[str] = field(default=None)
+    range_picker_header_foreground_color: Optional[str] = field(default=None)
+    today_foreground_color: Union[
+        None, str, Dict[Union[str, MaterialState], str]
+    ] = field(default=None)
+    range_picker_shape: Optional[OutlinedBorder] = field(default=None)
+    range_picker_header_help_text_style: Optional[TextStyle] = field(default=None)
+    range_picker_header_headline_text_style: Optional[TextStyle] = field(default=None)
+    range_picker_surface_tint_color: Optional[str] = field(default=None)
+    range_selection_bgcolor: Optional[str] = field(default=None)
+    range_selection_overlay_color: Union[
+        None, str, Dict[Union[str, MaterialState], str]
+    ] = field(default=None)
+    today_border_side: Optional[BorderSide] = field(default=None)
+    year_bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+    year_foreground_color: Union[
+        None, str, Dict[Union[str, MaterialState], str]
+    ] = field(default=None)
+    year_overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
+
+
+@dataclasses.dataclass
+class TimePickerTheme:
+    bgcolor: Optional[str] = field(default=None)
+    day_period_color: Optional[str] = field(default=None)
+    day_period_text_color: Optional[str] = field(default=None)
+    dial_bgcolor: Optional[str] = field(default=None)
+    dial_hand_color: Optional[str] = field(default=None)
+    dial_text_color: Optional[str] = field(default=None)
+    entry_mode_icon_color: Optional[str] = field(default=None)
+    hour_minute_color: Optional[str] = field(default=None)
+    hour_minute_text_color: Optional[str] = field(default=None)
+    day_period_button_style: Optional[ButtonStyle] = field(default=None)
+    cancel_button_style: Optional[ButtonStyle] = field(default=None)
+    confirm_button_style: Optional[ButtonStyle] = field(default=None)
+    day_period_text_style: Optional[TextStyle] = field(default=None)
+    dial_text_style: Optional[TextStyle] = field(default=None)
+    help_text_style: Optional[TextStyle] = field(default=None)
+    hour_minute_text_style: Optional[TextStyle] = field(default=None)
+    elevation: OptionalNumber = field(default=None)
+    shape: Optional[OutlinedBorder] = field(default=None)
+    day_period_shape: Optional[OutlinedBorder] = field(default=None)
+    hour_minute_shape: Optional[OutlinedBorder] = field(default=None)
+    day_period_border_side: Optional[BorderSide] = field(default=None)
+    padding: PaddingValue = field(default=None)
 
 
 # @dataclasses.dataclass
@@ -493,12 +570,16 @@ class PopupMenuTheme:
     elevation: OptionalNumber = field(default=None)
     icon_size: OptionalNumber = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
-    # position: Optional[PopupMenuPosition] = field(default=None)
+    menu_position: Optional[PopupMenuPosition] = field(default=None)
+    mouse_cursor: Union[
+        None, MouseCursor, Dict[Union[str, MaterialState], MouseCursor]
+    ] = field(default=None)
 
 
 @dataclasses.dataclass
 class SearchBarTheme:
     bgcolor: Optional[str] = field(default=None)
+    text_capitalization: Optional[TextCapitalization] = field(default=None)
     shadow_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
         default=None
     )
@@ -520,6 +601,11 @@ class SearchBarTheme:
     shape: Union[
         None, OutlinedBorder, Dict[Union[str, MaterialState], OutlinedBorder]
     ] = field(default=None)
+    padding: Union[
+        None,
+        Union[int, float, Padding],
+        Dict[Union[str, MaterialState], Union[int, float, Padding]],
+    ] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -528,10 +614,10 @@ class SearchViewTheme:
     surface_tint_color: Optional[str] = field(default=None)
     divider_color: Optional[str] = field(default=None)
     elevation: OptionalNumber = field(default=None)
-    header_hint_style: Optional[TextStyle] = field(default=None)
+    header_hint_text_style: Optional[TextStyle] = field(default=None)
     header_text_style: Optional[TextStyle] = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
-    side: Optional[BorderSide] = field(default=None)
+    border_side: Optional[BorderSide] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -543,8 +629,8 @@ class BottomNavigationBarTheme:
     enable_feedback: Optional[bool] = field(default=None)
     show_selected_labels: Optional[bool] = field(default=None)
     show_unselected_labels: Optional[bool] = field(default=None)
-    selected_label_style: Optional[TextStyle] = field(default=None)
-    unselected_label_style: Optional[TextStyle] = field(default=None)
+    selected_label_text_style: Optional[TextStyle] = field(default=None)
+    unselected_label_text_style: Optional[TextStyle] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -555,7 +641,9 @@ class NavigationDrawerTheme:
     indicator_color: Optional[str] = field(default=None)
     elevation: OptionalNumber = field(default=None)
     tile_height: OptionalNumber = field(default=None)
-    # label_text_style: Optional[TextStyle] = field(default=None)
+    label_text_style: Union[
+        None, TextStyle, Dict[Union[str, MaterialState], TextStyle]
+    ] = field(default=None)
     indicator_shape: Optional[OutlinedBorder] = field(default=None)
 
 
@@ -565,11 +653,16 @@ class NavigationBarTheme:
     shadow_color: Optional[str] = field(default=None)
     surface_tint_color: Optional[str] = field(default=None)
     indicator_color: Optional[str] = field(default=None)
-    # overlay_color: Optional[str] = field(default=None)
+    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+        default=None
+    )
     elevation: OptionalNumber = field(default=None)
     height: OptionalNumber = field(default=None)
-    label_text_style: Optional[TextStyle] = field(default=None)
+    label_text_style: Union[
+        None, TextStyle, Dict[Union[str, MaterialState], TextStyle]
+    ] = field(default=None)
     indicator_shape: Optional[OutlinedBorder] = field(default=None)
+    label_behavior: Optional[NavigationBarLabelBehavior] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -588,7 +681,7 @@ class IconTheme:
     optical_size: OptionalNumber = field(default=None)
     grade: OptionalNumber = field(default=None)
     weight: OptionalNumber = field(default=None)
-    # shadows: Optional[List[BoxShadow]] = field(default=None)
+    shadows: Optional[List[BoxShadow]] = field(default=None)
 
 
 @dataclasses.dataclass
@@ -636,5 +729,6 @@ class Theme:
     system_overlay_style: SystemOverlayStyle = field(default_factory=SystemOverlayStyle)
     tabs_theme: Optional[TabsTheme] = field(default=None)
     text_theme: Optional[TextTheme] = field(default=None)
+    time_picker_theme: Optional[TimePickerTheme] = field(default=None)
     tooltip_theme: Optional[TooltipTheme] = field(default=None)
     visual_density: ThemeVisualDensity = field(default=ThemeVisualDensity.STANDARD)

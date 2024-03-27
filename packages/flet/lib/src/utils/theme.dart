@@ -15,8 +15,10 @@ import 'edge_insets.dart';
 import 'icons.dart';
 import 'material_state.dart';
 import 'menu.dart';
+import 'mouse.dart';
 import 'numbers.dart';
 import 'overlay_style.dart';
+import 'shadows.dart';
 import 'text.dart';
 
 class SystemUiOverlayStyleTheme
@@ -167,6 +169,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       json?["segmented_button_theme"],
     ),
     iconTheme: parseIconTheme(theme, json?["icon_theme"]),
+    timePickerTheme: parseTimePickerTheme(theme, json?["time_picker_theme"]),
   );
 
   var systemOverlayStyle = json?["system_overlay_style"] != null
@@ -314,6 +317,19 @@ TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
                 ? edgeInsetsFromJson(j["indicator_padding"])
                 : EdgeInsets.zero)
         : null,
+    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    labelPadding: j["label_padding"] != null
+        ? edgeInsetsFromJson(j["label_padding"])
+        : null,
+    dividerHeight:
+        j["divider_height"] != null ? parseDouble(j["divider_height"]) : null,
+    labelStyle: j["label_text_style"] != null
+        ? textStyleFromJson(theme, j["label_text_style"])
+        : null,
+    unselectedLabelStyle: j["unselected_label_text_style"] != null
+        ? textStyleFromJson(theme, j["unselected_label_text_style"])
+        : null,
   );
 }
 
@@ -401,17 +417,16 @@ CardTheme? parseCardTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.cardTheme.copyWith(
-    color: HexColor.fromString(theme, j["color"]),
-    shadowColor: HexColor.fromString(theme, j["shadow_color"]),
-    surfaceTintColor: HexColor.fromString(theme, j["surface_tint_color"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
-    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    clipBehavior: j["clip_behavior"] != null
-        ? Clip.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == j["clip_behavior"].toLowerCase())
-        : null,
-    margin: j["margin"] != null ? edgeInsetsFromJson(j["margin"]) : null,
-  );
+      color: HexColor.fromString(theme, j["color"]),
+      shadowColor: HexColor.fromString(theme, j["shadow_color"]),
+      surfaceTintColor: HexColor.fromString(theme, j["surface_tint_color"]),
+      elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+      shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
+      clipBehavior: j["clip_behavior"] != null
+          ? Clip.values.firstWhereOrNull(
+              (c) => c.name.toLowerCase() == j["clip_behavior"].toLowerCase())
+          : null,
+      margin: j["margin"] != null ? edgeInsetsFromJson(j["margin"]) : null);
 }
 
 ChipThemeData? parseChipTheme(ThemeData theme, Map<String, dynamic>? j) {
@@ -493,6 +508,9 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     extendedIconLabelSpacing: j["extended_icon_label_spacing"] != null
         ? parseDouble(j["extended_icon_label_spacing"])
         : null,
+    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    iconSize: j["icon_size"] != null ? parseDouble(j["icon_size"]) : null,
   );
 }
 
@@ -572,6 +590,7 @@ BottomAppBarTheme? parseBottomAppBarTheme(
     elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
     height: j["height"] != null ? parseDouble(j["height"]) : null,
     padding: j["padding"] != null ? edgeInsetsFromJson(j["padding"]) : null,
+    //shape:
   );
 }
 
@@ -590,6 +609,8 @@ RadioThemeData? parseRadioTheme(ThemeData theme, Map<String, dynamic>? j) {
     visualDensity: j["visual_density"] != null
         ? parseVisualDensity(j["visual_density"])
         : null,
+    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
   );
 }
 
@@ -615,6 +636,8 @@ CheckboxThemeData? parseCheckboxTheme(
         ? borderSideFromJSON(theme, j["border_side"], null)
         : null,
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
+    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
   );
 }
 
@@ -661,6 +684,8 @@ SwitchThemeData? parseSwitchTheme(ThemeData theme, Map<String, dynamic>? j) {
         null),
     trackOutlineWidth: getMaterialStateProperty<double?>(
         j["track_outline_width"], (jv) => parseDouble(jv)),
+    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
   );
 }
 
@@ -716,6 +741,9 @@ SnackBarThemeData? parseSnackBarTheme(
         : null,
     showCloseIcon:
         j["show_close_icon"] != null ? parseBool(j["show_close_icon"]) : null,
+    actionOverflowThreshold: j["action_overflow_threshold"] != null
+        ? parseDouble(j["action_overflow_threshold"])
+        : null,
   );
 }
 
@@ -777,6 +805,90 @@ DatePickerThemeData? parseDatePickerTheme(
         : null,
     todayBackgroundColor: getMaterialStateProperty<Color?>(
         j["today_bgcolor"], (jv) => HexColor.fromString(theme, jv as String)),
+    headerForegroundColor:
+        HexColor.fromString(theme, j["header_foreground_color"]),
+    headerHeadlineStyle: parseTextStyle("header_headline_text_style"),
+    headerHelpStyle: parseTextStyle("header_help_text_style"),
+    rangePickerBackgroundColor:
+        HexColor.fromString(theme, j["range_picker_bgcolor"]),
+    rangePickerHeaderBackgroundColor:
+        HexColor.fromString(theme, j["range_picker_header_bgcolor"]),
+    rangePickerHeaderForegroundColor:
+        HexColor.fromString(theme, j["range_picker_header_foreground_color"]),
+    rangePickerShadowColor:
+        HexColor.fromString(theme, j["range_picker_shadow_color"]),
+    todayForegroundColor: getMaterialStateProperty<Color?>(
+        j["today_foreground_color"],
+        (jv) => HexColor.fromString(theme, jv as String)),
+    rangePickerShape: j["range_picker_shape"] != null
+        ? outlinedBorderFromJSON(j["range_picker_shape"])
+        : null,
+    rangePickerHeaderHelpStyle:
+        parseTextStyle("range_picker_header_help_text_style"),
+    rangePickerHeaderHeadlineStyle:
+        parseTextStyle("range_picker_header_headline_text_style"),
+    rangePickerSurfaceTintColor:
+        HexColor.fromString(theme, j["range_picker_surface_tint_color"]),
+    rangeSelectionBackgroundColor:
+        HexColor.fromString(theme, j["range_selection_bgcolor"]),
+    rangeSelectionOverlayColor: getMaterialStateProperty<Color?>(
+        j["range_selection_overlay_color"],
+        (jv) => HexColor.fromString(theme, jv as String)),
+    todayBorder: j["today_border_side"] != null
+        ? borderSideFromJSON(theme, j["today_border_side"])
+        : null,
+    yearBackgroundColor: getMaterialStateProperty<Color?>(
+        j["year_bgcolor"], (jv) => HexColor.fromString(theme, jv as String)),
+    yearForegroundColor: getMaterialStateProperty<Color?>(
+        j["year_foreground_color"],
+        (jv) => HexColor.fromString(theme, jv as String)),
+    yearOverlayColor: getMaterialStateProperty<Color?>(j["year_overlay_color"],
+        (jv) => HexColor.fromString(theme, jv as String)),
+    weekdayStyle: parseTextStyle("weekday_text_style"),
+  );
+}
+
+TimePickerThemeData? parseTimePickerTheme(
+    ThemeData theme, Map<String, dynamic>? j) {
+  if (j == null) {
+    return null;
+  }
+
+  TextStyle? parseTextStyle(String propName) {
+    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
+  }
+
+  return theme.timePickerTheme.copyWith(
+    backgroundColor: HexColor.fromString(theme, j["bgcolor"]),
+    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+    padding: j["padding"] != null ? edgeInsetsFromJson(j["padding"]) : null,
+    shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
+    dayPeriodBorderSide: j["day_period_border_side"] != null
+        ? borderSideFromJSON(theme, j["day_period_border_side"])
+        : null,
+    dayPeriodButtonStyle:
+        buttonStyleFromJSON(theme, j["day_period_button_style"]),
+    dayPeriodColor: HexColor.fromString(theme, j["day_period_color"]),
+    dayPeriodShape: j["day_period_shape"] != null
+        ? outlinedBorderFromJSON(j["day_period_shape"])
+        : null,
+    dayPeriodTextColor: HexColor.fromString(theme, j["day_period_text_color"]),
+    dayPeriodTextStyle: parseTextStyle("day_period_text_style"),
+    dialBackgroundColor: HexColor.fromString(theme, j["dial_bgcolor"]),
+    dialHandColor: HexColor.fromString(theme, j["dial_hand_color"]),
+    dialTextColor: HexColor.fromString(theme, j["dial_text_color"]),
+    dialTextStyle: parseTextStyle("dial_text_style"),
+    entryModeIconColor: HexColor.fromString(theme, j["entry_mode_icon_color"]),
+    helpTextStyle: parseTextStyle("help_text_style"),
+    hourMinuteColor: HexColor.fromString(theme, j["hour_minute_color"]),
+    hourMinuteTextColor:
+        HexColor.fromString(theme, j["hour_minute_text_color"]),
+    hourMinuteTextStyle: parseTextStyle("hour_minute_text_style"),
+    hourMinuteShape: j["hour_minute_shape"] != null
+        ? outlinedBorderFromJSON(j["hour_minute_shape"])
+        : null,
+    cancelButtonStyle: buttonStyleFromJSON(theme, j["cancel_button_style"]),
+    confirmButtonStyle: buttonStyleFromJSON(theme, j["confirm_button_style"]),
   );
 }
 
@@ -937,8 +1049,12 @@ PopupMenuThemeData? parsePopupMenuTheme(
     enableFeedback: parseBool(j["enable_feedback"], true),
     elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
     iconSize: j["icon_size"] != null ? parseDouble(j["icon_size"]) : null,
-    // position: ,
-    // mouseCursor: ,
+    position: j["menu_position"] != null
+        ? PopupMenuPosition.values.firstWhereOrNull(
+            (c) => c.name.toLowerCase() == j["menu_position"].toLowerCase())
+        : null,
+    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
   );
 }
@@ -970,8 +1086,12 @@ SearchBarThemeData? parseSearchBarTheme(
         j["hint_style"], (jv) => parseTextStyle(jv)),
     shape: getMaterialStateProperty<OutlinedBorder?>(
         j["shape"], (jv) => outlinedBorderFromJSON(jv)),
-    // textCapitalization: ,
-    // padding: ,
+    textCapitalization: j["text_capitalization"] != null
+        ? TextCapitalization.values.firstWhereOrNull((c) =>
+            c.name.toLowerCase() == j["text_capitalization"].toLowerCase())
+        : null,
+    padding: getMaterialStateProperty<EdgeInsetsGeometry?>(
+        j["padding"], (jv) => edgeInsetsFromJson(jv)),
   );
 }
 
@@ -990,10 +1110,12 @@ SearchViewThemeData? parseSearchViewTheme(
     surfaceTintColor: HexColor.fromString(theme, j["surface_tint_color"]),
     dividerColor: HexColor.fromString(theme, j["divider_color"]),
     elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
-    headerHintStyle: parseTextStyle("header_hint_style"),
+    headerHintStyle: parseTextStyle("header_hint_text_style"),
     headerTextStyle: parseTextStyle("header_text_style"),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    // side: ,
+    side: j["border_side"] != null
+        ? borderSideFromJSON(theme, j["border_side"])
+        : null,
   );
 }
 
@@ -1019,8 +1141,8 @@ BottomNavigationBarThemeData? parseBottomNavigationBarTheme(
     showUnselectedLabels: j["show_unselected_labels"] != null
         ? parseBool(j["show_unselected_labels"])
         : null,
-    selectedLabelStyle: parseTextStyle("selected_label_style"),
-    unselectedLabelStyle: parseTextStyle("unselected_label_style"),
+    selectedLabelStyle: parseTextStyle("selected_label_text_style"),
+    unselectedLabelStyle: parseTextStyle("unselected_label_text_style"),
   );
 }
 
@@ -1074,6 +1196,10 @@ NavigationBarThemeData? parseNavigationBarTheme(
     indicatorShape: j["indicator_shape"] != null
         ? outlinedBorderFromJSON(j["indicator_shape"])
         : null,
+    labelBehavior: j["label_behavior"] != null
+        ? NavigationDestinationLabelBehavior.values.firstWhereOrNull(
+            (c) => c.name.toLowerCase() == j["label_behavior"].toLowerCase())
+        : null,
   );
 }
 
@@ -1100,11 +1226,12 @@ IconThemeData? parseIconTheme(ThemeData theme, Map<String, dynamic>? j) {
     fill: j["fill"] != null ? parseDouble(j["fill"]) : null,
     opacity: j["opacity"] != null ? parseDouble(j["opacity"]) : null,
     size: j["size"] != null ? parseDouble(j["size"]) : null,
-    // FIXME
-    opticalSize: j["size"] != null ? parseDouble(j["optical_size"]) : null,
+    opticalSize:
+        j["optical_size"] != null ? parseDouble(j["optical_size"]) : null,
     grade: j["grade"] != null ? parseDouble(j["grade"]) : null,
     weight: j["weight"] != null ? parseDouble(j["weight"]) : null,
-    // shadows: boxShadowsFromJSON(theme, j["shadows"]),
+    shadows:
+        j["shadows"] != null ? boxShadowsFromJSON(theme, j["shadows"]) : null,
   );
 }
 
