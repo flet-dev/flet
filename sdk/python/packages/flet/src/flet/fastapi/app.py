@@ -3,6 +3,9 @@ import os
 from typing import Awaitable, Callable, Optional, Union
 
 from fastapi import Request, WebSocket
+from flet_core.page import Page
+from flet_core.types import WebRenderer
+
 from flet.fastapi.flet_app import (
     DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
     DEFAULT_FLET_SESSION_TIMEOUT,
@@ -12,8 +15,6 @@ from flet.fastapi.flet_fastapi import FastAPI
 from flet.fastapi.flet_oauth import FletOAuth
 from flet.fastapi.flet_static_files import FletStaticFiles
 from flet.fastapi.flet_upload import FletUpload
-from flet_core.page import Page
-from flet_core.types import WebRenderer
 
 
 def app(
@@ -47,6 +48,7 @@ def app(
     * `use_color_emoji` (bool) - whether to load a font with color emoji. Default is `False`.
     * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
     * `upload_dir` (str) - an absolute path to a directory with uploaded files.
+    * `upload_endpoint_path` (str, optional) - absolute URL of upload endpoint, e.g. `/upload`.
     * `max_upload_size` (str, int) - maximum size of a single upload, bytes. Unlimited if `None`.
     * `secret_key` (str, optional) - secret key to sign and verify upload requests.
     * `session_timeout_seconds` (int, optional)- session lifetime, in seconds, after user disconnected.
