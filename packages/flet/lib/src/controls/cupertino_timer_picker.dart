@@ -49,6 +49,7 @@ class _CupertinoTimerPickerControlState
       initialTimerDuration: initialTimerDuration,
       minuteInterval: minuteInterval,
       secondInterval: secondInterval,
+      itemExtent: widget.control.attrDouble("itemExtent", 32.0)!,
       alignment:
           parseAlignment(widget.control, "alignment") ?? Alignment.center,
       backgroundColor: backgroundColor,
