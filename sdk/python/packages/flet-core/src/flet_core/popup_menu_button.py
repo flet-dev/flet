@@ -2,6 +2,7 @@ import warnings
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet_core import MouseCursor
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -31,6 +32,7 @@ class PopupMenuItem(Control):
         content: Optional[Control] = None,
         height: OptionalNumber = None,
         padding: PaddingValue = None,
+        mouse_cursor: Optional[MouseCursor] = None,
         on_click=None,
         #
         # Control
@@ -49,6 +51,7 @@ class PopupMenuItem(Control):
         self.on_click = on_click
         self.height = height
         self.padding = padding
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "popupmenuitem"
@@ -69,13 +72,24 @@ class PopupMenuItem(Control):
     def checked(self, value: Optional[bool]):
         self._set_attr("checked", value)
 
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self._get_attr("mouseCursor")
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self._set_attr(
+            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
+        )
+
     # icon
     @property
-    def icon(self):
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
     # text
@@ -107,11 +121,11 @@ class PopupMenuItem(Control):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Optional[Control]):
         self.__content = value
 
     # on_click

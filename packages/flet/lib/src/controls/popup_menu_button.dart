@@ -6,6 +6,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
+import '../utils/mouse.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
 
@@ -123,7 +124,9 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                         checked: checked,
                         height: height,
                         padding: padding,
-                        enabled: !disabled,
+                        enabled: !disabled || !cv.control.isDisabled,
+                        mouseCursor: parseMouseCursor(
+                            cv.control.attrString("mouseCursor")),
                         onTap: () {
                           backend.triggerControlEvent(cv.control.id, "click");
                         },
@@ -133,7 +136,9 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                         value: cv.control.id,
                         height: height,
                         padding: padding,
-                        enabled: !disabled,
+                        enabled: !disabled || !cv.control.isDisabled,
+                        mouseCursor: parseMouseCursor(
+                            cv.control.attrString("mouseCursor")),
                         onTap: () {
                           backend.triggerControlEvent(cv.control.id, "click");
                         },
