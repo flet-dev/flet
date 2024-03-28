@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'cupertino_navigation_bar.dart';
@@ -88,6 +89,8 @@ class _NavigationBarControlState extends State<NavigationBarControl>
             shadowColor: widget.control.attrColor("shadowColor", context),
             surfaceTintColor:
                 widget.control.attrColor("surfaceTintColor", context),
+            overlayColor: parseMaterialStateColor(
+                Theme.of(context), widget.control, "overlayColor"),
             indicatorColor: widget.control.attrColor("indicatorColor", context),
             indicatorShape:
                 parseOutlinedBorder(widget.control, "indicatorShape"),
@@ -107,6 +110,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
                   .where((c) => c.name == "selected_icon_content");
 
               return NavigationDestination(
+                  enabled: !disabled || !destView.control.isDisabled,
                   tooltip: destView.control.attrString("tooltip", "")!,
                   icon: iconContentCtrls.isNotEmpty
                       ? createControl(

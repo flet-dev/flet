@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Dict
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.border import Border
@@ -13,6 +13,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    MaterialState,
 )
 
 try:
@@ -51,8 +52,10 @@ class NavigationDestination(Control):
         #
         ref: Optional[Ref] = None,
         tooltip: Optional[str] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
-        Control.__init__(self, ref=ref, tooltip=tooltip)
+        Control.__init__(self, ref=ref, tooltip=tooltip, disabled=disabled, data=data)
         self.label = label
         self.icon = icon
         self.__icon_content: Optional[Control] = None
@@ -180,6 +183,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         surface_tint_color: Optional[str] = None,
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
+        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
         on_change=None,
         #
         # ConstrainedControl and AdaptiveControl
@@ -254,6 +258,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         self.border = border
         self.on_change = on_change
         self.animation_duration = animation_duration
+        self.overlay_color = overlay_color
 
     def _get_control_name(self):
         return "navigationbar"
@@ -262,6 +267,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         super().before_update()
         self._set_attr_json("indicatorShape", self.__indicator_shape)
         self._set_attr_json("border", self.__border)
+        self._set_attr_json("overlayColor", self.__overlay_color)
 
     def _get_children(self):
         children = []
@@ -298,6 +304,15 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
             "labelBehavior",
             value.value if isinstance(value, NavigationBarLabelBehavior) else value,
         )
+
+    # overlay_color
+    @property
+    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__overlay_color
+
+    @overlay_color.setter
+    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__overlay_color = value
 
     # bgcolor
     @property
