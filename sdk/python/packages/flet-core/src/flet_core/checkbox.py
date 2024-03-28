@@ -5,8 +5,10 @@ from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
+from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
@@ -71,6 +73,8 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         splash_radius: OptionalNumber = None,
         border_side: Optional[BorderSide] = None,
         is_error: Optional[bool] = None,
+        visual_density: Optional[ThemeVisualDensity] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -159,6 +163,8 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.visual_density = visual_density
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "checkbox"
@@ -212,6 +218,32 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self.__label_position = value
         self._set_attr(
             "labelPosition", value.value if isinstance(value, LabelPosition) else value
+        )
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr(
+            "mouseCursor",
+            value.value if isinstance(value, MouseCursor) else value,
+        )
+
+    # visual_density
+    @property
+    def visual_density(self) -> Optional[ThemeVisualDensity]:
+        return self.__visual_density
+
+    @visual_density.setter
+    def visual_density(self, value: Optional[ThemeVisualDensity]):
+        self.__visual_density = value
+        self._set_attr(
+            "visualDensity",
+            value.value if isinstance(value, ThemeVisualDensity) else value,
         )
 
     # autofocus

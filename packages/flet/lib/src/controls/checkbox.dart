@@ -4,7 +4,9 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/mouse.dart';
 import '../utils/text.dart';
+import '../utils/theme.dart';
 import 'create_control.dart';
 import 'cupertino_checkbox.dart';
 import 'flet_store_mixin.dart';
@@ -134,6 +136,10 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
           fillColor: parseMaterialStateColor(
               Theme.of(context), widget.control, "fillColor"),
           tristate: _tristate,
+          visualDensity: parseVisualDensity(
+              widget.control.attrString("visualDensity"), null),
+          mouseCursor:
+              parseMouseCursor(widget.control.attrString("mouseCursor"), null),
           onChanged: !disabled
               ? (bool? value) {
                   _onChange(value);
