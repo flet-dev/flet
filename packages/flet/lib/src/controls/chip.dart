@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/text.dart';
+import '../utils/theme.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -66,6 +68,7 @@ class _ChipControlState extends State<ChipControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("Chip build: ${widget.control.id}");
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var labelCtrls =
         widget.children.where((c) => c.name == "label" && c.isVisible);
@@ -78,11 +81,26 @@ class _ChipControlState extends State<ChipControl> {
       return const ErrorControl("Chip must have label specified.");
     }
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    double? clickElevation = widget.control.attrDouble("clickElevation");
+    Color? bgcolor = widget.control.attrColor("bgcolor", context);
+    Color? deleteIconColor =
+        widget.control.attrColor("deleteIconColor", context);
+    Color? disabledColor = widget.control.attrColor("disabledColor", context);
+    Color? surfaceTintColor =
+        widget.control.attrColor("surfaceTintColor", context);
+    Color? selectedShadowColor =
+        widget.control.attrColor("selectedShadowColor", context);
+    Color? shadowColor = widget.control.attrColor("shadowColor", context);
+    var color =
+        parseMaterialStateColor(Theme.of(context), widget.control, "color");
 
-    var bgcolor = widget.control.attrColor("bgcolor", context);
-    var deleteIconColor = widget.control.attrColor("deleteIconColor", context);
-    var disabledColor = widget.control.attrColor("disabledColor", context);
+    BorderSide? borderSide =
+        parseBorderSide(Theme.of(context), widget.control, "borderSide");
+    VisualDensity? visualDensity =
+        parseVisualDensity(widget.control.attrString("visualDensity"), null);
+    Clip clipBehavior = Clip.values.firstWhere(
+        (c) => c.toString() == widget.control.attrString("clipBehavior", "")!,
+        orElse: () => Clip.none);
 
     bool onClick = widget.control.attrBool("onclick", false)!;
     bool onDelete = widget.control.attrBool("onDelete", false)!;
@@ -155,10 +173,15 @@ class _ChipControlState extends State<ChipControl> {
           labelStyle:
               parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
           selectedColor: widget.control.attrColor("selectedColor", context),
-          selectedShadowColor:
-              widget.control.attrColor("selectedShadowColor", context),
-          shadowColor: widget.control.attrColor("shadowColor", context),
+          selectedShadowColor: selectedShadowColor,
+          shadowColor: shadowColor,
           shape: parseOutlinedBorder(widget.control, "shape"),
+          color: color,
+          surfaceTintColor: surfaceTintColor,
+          pressElevation: clickElevation,
+          side: borderSide,
+          clipBehavior: clipBehavior,
+          visualDensity: visualDensity,
         ),
         widget.parent,
         widget.control);
