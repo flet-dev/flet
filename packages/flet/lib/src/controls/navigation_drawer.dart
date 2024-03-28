@@ -68,9 +68,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
           var selectedIconContentCtrls =
               destView.children.where((c) => c.name == "selected_icon_content");
           return NavigationDrawerDestination(
-            // backgroundColor: HexColor.fromString(Theme.of(context),
-            //     destView.control.attrString("bgColor", "")!),
-            // flutter issue https://github.com/flutter/flutter/issues/138105
+            backgroundColor: destView.control.attrColor("bgColor", context),
             icon: iconContentCtrls.isNotEmpty
                 ? createControl(
                     destView.control, iconContentCtrls.first.id, disabled,
