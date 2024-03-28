@@ -886,7 +886,8 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
-          nextChild: nextChild);
+          nextChild: nextChild,
+          backend: backend);
     case "tabs":
       return TabsControl(
           key: key,
