@@ -71,6 +71,8 @@ class _SnackBarControlState extends State<SnackBarControl> {
     return SnackBar(
         behavior: behavior,
         clipBehavior: clipBehavior,
+        actionOverflowThreshold:
+            widget.control.attrDouble("actionOverflowThreshold"),
         shape: parseOutlinedBorder(widget.control, "shape"),
         onVisible: () {
           debugPrint("SnackBar.onVisible(${widget.control.id})");
