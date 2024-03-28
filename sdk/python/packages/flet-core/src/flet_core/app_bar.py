@@ -1,8 +1,10 @@
 from typing import List, Optional
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
 from flet_core.types import ClipBehavior
 
 
@@ -70,6 +72,10 @@ class AppBar(AdaptiveControl):
         title_spacing: OptionalNumber = None,
         exclude_header_semantics: Optional[bool] = None,
         actions: Optional[List[Control]] = None,
+        toolbar_opacity: OptionalNumber = None,
+        title_text_style: Optional[TextStyle] = None,
+        toolbar_text_style: Optional[TextStyle] = None,
+        shape: Optional[OutlinedBorder] = None,
         #
         # AdaptiveControl
         #
@@ -102,9 +108,22 @@ class AppBar(AdaptiveControl):
         self.is_secondary = is_secondary
         self.title_spacing = title_spacing
         self.exclude_header_semantics = exclude_header_semantics
+        self.toolbar_opacity = toolbar_opacity
+        self.title_text_style = title_text_style
+        self.toolbar_text_style = toolbar_text_style
+        self.shape = shape
 
     def _get_control_name(self):
         return "appbar"
+
+    def before_update(self):
+        super().before_update()
+        if isinstance(self.__title_text_style, TextStyle):
+            self._set_attr_json("titleTextStyle", self.__title_text_style)
+        if isinstance(self.__toolbar_text_style, TextStyle):
+            self._set_attr_json("toolbarTextStyle", self.__toolbar_text_style)
+        if isinstance(self.__shape, OutlinedBorder):
+            self._set_attr_json("shape", self.__shape)
 
     def _get_children(self):
         children = []
@@ -150,6 +169,42 @@ class AppBar(AdaptiveControl):
     @title_spacing.setter
     def title_spacing(self, value: OptionalNumber):
         self._set_attr("titleSpacing", value)
+
+    # toolbar_opacity
+    @property
+    def toolbar_opacity(self) -> OptionalNumber:
+        return self._get_attr("toolbarOpacity", data_type="float", def_value=1.0)
+
+    @toolbar_opacity.setter
+    def toolbar_opacity(self, value: OptionalNumber):
+        self._set_attr("toolbarOpacity", value)
+
+    # shape
+    @property
+    def shape(self) -> Optional[OutlinedBorder]:
+        return self.__shape
+
+    @shape.setter
+    def shape(self, value: Optional[OutlinedBorder]):
+        self.__shape = value
+
+    # title_text_style
+    @property
+    def title_text_style(self) -> Optional[TextStyle]:
+        return self.__title_text_style
+
+    @title_text_style.setter
+    def title_text_style(self, value: Optional[TextStyle]):
+        self.__title_text_style = value
+
+    # toolbar_text_style
+    @property
+    def toolbar_text_style(self) -> Optional[TextStyle]:
+        return self.__toolbar_text_style
+
+    @toolbar_text_style.setter
+    def toolbar_text_style(self, value: Optional[TextStyle]):
+        self.__toolbar_text_style = value
 
     # automatically_imply_leading
     @property
@@ -288,9 +343,9 @@ class AppBar(AdaptiveControl):
 
     # actions
     @property
-    def actions(self):
+    def actions(self) -> Optional[List[Control]]:
         return self.__actions
 
     @actions.setter
-    def actions(self, value):
+    def actions(self, value: Optional[List[Control]]):
         self.__actions = value if value is not None else []

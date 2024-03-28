@@ -2,6 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/borders.dart';
+import '../utils/text.dart';
 import '../utils/theme.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
@@ -47,17 +49,10 @@ class AppBarControl extends StatelessWidget
       var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
       var actionCtrls =
           children.where((c) => c.name == "action" && c.isVisible);
-      /*
-      var bottomCtrls = children.where((c) =>
-          c.name == "bottom" &&
-          (c.type == "cupertinoappbar" ||
-              c.type == "appbar" ||
-              c.type == "tabs") && // must be of type PreferredSizeWidget
-          c.isVisible);
-      */
 
       var leadingWidth = control.attrDouble("leadingWidth");
       var elevation = control.attrDouble("elevation");
+      var toolbarOpacity = control.attrDouble("toolbarOpacity", 1)!;
       var centerTitle = control.attrBool("centerTitle", false)!;
       var automaticallyImplyLeading =
           control.attrBool("automaticallyImplyLeading", true)!;
@@ -110,6 +105,12 @@ class AppBarControl extends StatelessWidget
         titleSpacing: titleSpacing,
         excludeHeaderSemantics: excludeHeaderSemantics,
         clipBehavior: clipBehavior,
+        titleTextStyle:
+            parseTextStyle(Theme.of(context), control, "titleTextStyle"),
+        shape: parseOutlinedBorder(control, "shape"),
+        toolbarOpacity: toolbarOpacity,
+        toolbarTextStyle:
+            parseTextStyle(Theme.of(context), control, "toolbarTextStyle"),
       );
     });
   }
