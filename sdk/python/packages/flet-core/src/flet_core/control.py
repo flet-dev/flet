@@ -419,6 +419,7 @@ class Control:
                             index=index, added_controls=added_controls
                         )
                         assert self.__uid is not None
+                        ctrl.parent = self  # set as parent
                         commands.append(
                             Command(
                                 indent=0,
@@ -448,6 +449,7 @@ class Control:
                         index=index, added_controls=added_controls
                     )
                     assert self.__uid is not None
+                    ctrl.parent = self  # set as parent
                     commands.append(
                         Command(
                             indent=0,
@@ -516,8 +518,7 @@ class Control:
                 indent=indent + 2, index=index, added_controls=added_controls
             )
             commands.extend(childCmd)
-            # set the parent
-            control.parent = self
+            control.parent = self  # set as parent
 
         self.__previous_children.clear()
         self.__previous_children.extend(children)

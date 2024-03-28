@@ -22,13 +22,10 @@ from flet_core.client_storage import ClientStorage
 from flet_core.connection import Connection
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
-from flet_core.cupertino_action_sheet import CupertinoActionSheet
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
-from flet_core.cupertino_picker import CupertinoPicker
-from flet_core.cupertino_timer_picker import CupertinoTimerPicker
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import FloatingActionButton
@@ -443,7 +440,7 @@ class Page(AdaptiveControl):
     def __handle_mount_unmount(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             ctrl.will_unmount()
-            ctrl.parent = None
+            ctrl.parent = None  # remove parent reference
             ctrl.page = None
         for ctrl in added_controls:
             ctrl.did_mount()
@@ -1237,7 +1234,7 @@ class Page(AdaptiveControl):
 
     # platform_brightness
     @property
-    def platform_brightness(self) -> ThemeMode:
+    def platform_brightness(self) -> Brightness:
         brightness = self._get_attr("platformBrightness")
         assert brightness is not None
         return Brightness(brightness)
