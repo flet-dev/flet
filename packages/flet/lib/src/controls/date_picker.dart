@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/form_field.dart';
 import '../utils/icons.dart';
-import 'form_field.dart';
 
 class DatePickerControl extends StatefulWidget {
   final Control? parent;
@@ -34,7 +34,6 @@ class _DatePickerControlState extends State<DatePickerControl> {
     DateTime? firstDate = widget.control.attrDateTime("firstDate");
     DateTime? lastDate = widget.control.attrDateTime("lastDate");
     DateTime? currentDate = widget.control.attrDateTime("currentDate");
-    //String? localeString = widget.control.attrString("locale");
     String? helpText = widget.control.attrString("helpText");
     String? cancelText = widget.control.attrString("cancelText");
     String? confirmText = widget.control.attrString("confirmText");
@@ -61,13 +60,6 @@ class _DatePickerControlState extends State<DatePickerControl> {
         widget.control.attrString("switchToCalendarEntryModeIcon", "")!);
     IconData? switchToInputEntryModeIcon =
         parseIcon(widget.control.attrString("switchToInputEntryModeIcon", "")!);
-
-    //Locale locale;
-    // if (localeString == null) {
-    //   locale = Localizations.localeOf(context);
-    // } else {
-    //   //locale = Locale(localeString);
-    // }
 
     void onClosed(DateTime? dateValue) {
       String stringValue;
@@ -103,6 +95,10 @@ class _DatePickerControlState extends State<DatePickerControl> {
         initialEntryMode: datePickerEntryMode,
         fieldHintText: fieldHintText,
         fieldLabelText: fieldLabelText,
+        onDatePickerModeChange: (DatePickerEntryMode mode) {
+          widget.backend.triggerControlEvent(
+              widget.control.id, "entryModeChange", mode.name);
+        },
         switchToCalendarEntryModeIcon: switchToCalendarEntryModeIcon != null
             ? Icon(switchToCalendarEntryModeIcon)
             : null,
@@ -110,12 +106,6 @@ class _DatePickerControlState extends State<DatePickerControl> {
             ? Icon(switchToInputEntryModeIcon)
             : null,
       );
-
-      // dialog = Localizations.override(
-      //   context: context,
-      //   locale: locale,
-      //   child: dialog,
-      // );
 
       return dialog;
     }

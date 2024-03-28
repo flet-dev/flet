@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -12,6 +13,7 @@ class DraggableControl extends StatelessWidget {
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const DraggableControl(
       {super.key,
@@ -19,7 +21,8 @@ class DraggableControl extends StatelessWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -62,15 +65,18 @@ class DraggableControl extends StatelessWidget {
         cursor: SystemMouseCursors.grabbing,
         child: childFeedback ?? Opacity(opacity: 0.5, child: child),
       ),
+      onDragStarted: () {
+        debugPrint("Draggable.onDragStarted ${control.id}");
+        backend.triggerControlEvent(control.id, "dragStart");
+      },
+      onDragCompleted: () {
+        debugPrint("Draggable.onDragCompleted ${control.id}");
+        backend.triggerControlEvent(control.id, "dragComplete");
+      },
       child: MouseRegion(
         cursor: SystemMouseCursors.grab,
         child: child,
       ),
-      // dragAnchorStrategy: (d, context, offset) {
-      //   debugPrint("dragAnchorStrategy: ${offset.dx}, ${offset.dy}");
-      //   return offset;
-      // }
-      //feedbackOffset: const Offset(-30, -30),
     );
   }
 }

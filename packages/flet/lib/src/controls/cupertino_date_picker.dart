@@ -1,10 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -35,8 +33,7 @@ class _CupertinoDatePickerControlState
     debugPrint("CupertinoDatePicker build: ${widget.control.id}");
 
     bool showDayOfWeek = widget.control.attrBool("showDayOfWeek", false)!;
-    Color? bgcolor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("bgcolor", "")!);
+    Color? bgcolor = widget.control.attrColor("bgcolor", context);
     DateTime? value = widget.control.attrDateTime("value");
     DateTime? firstDate = widget.control.attrDateTime("firstDate");
     DateTime? lastDate = widget.control.attrDateTime("lastDate");

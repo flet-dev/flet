@@ -72,9 +72,14 @@ class _DataTableControlState extends State<DataTableControl>
             verticalInside: verticalLines ?? BorderSide.none);
       }
 
+      Clip clipBehavior = Clip.values.firstWhere(
+          (c) => c.toString() == widget.control.attrString("clipBehavior", "")!,
+          orElse: () => Clip.none);
+
       return DataTable(
           decoration: decoration,
           border: tableBorder,
+          clipBehavior: clipBehavior,
           checkboxHorizontalMargin:
               widget.control.attrDouble("checkboxHorizontalMargin"),
           columnSpacing: widget.control.attrDouble("columnSpacing"),

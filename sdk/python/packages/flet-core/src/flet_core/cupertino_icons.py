@@ -1,5 +1,7 @@
 """
-To generate update the list run:
+Flet Cupertino Icons
+
+To generate/update these values run:
 
 sh ci/generate_cupertino_icons_python.sh
 """

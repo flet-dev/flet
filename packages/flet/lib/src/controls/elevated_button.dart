@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
-import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import 'create_control.dart';
@@ -60,6 +59,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("Button build: ${widget.control.id}");
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     return withPagePlatform((context, platform) {
       bool? adaptive =
@@ -87,13 +87,16 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       String text = widget.control.attrString("text", "")!;
       String url = widget.control.attrString("url", "")!;
       IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
-      Color? iconColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("iconColor", "")!);
+      Color? iconColor = widget.control.attrColor("iconColor", context);
       var contentCtrls = widget.children.where((c) => c.name == "content");
+      var clipBehavior = Clip.values.firstWhere(
+          (e) =>
+              e.name.toLowerCase() ==
+              widget.control.attrString("clipBehavior", "")!.toLowerCase(),
+          orElse: () => Clip.none);
       bool onHover = widget.control.attrBool("onHover", false)!;
       bool onLongPress = widget.control.attrBool("onLongPress", false)!;
       bool autofocus = widget.control.attrBool("autofocus", false)!;
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
       Function()? onPressed = !disabled
           ? () {
@@ -152,6 +155,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onPressed: onPressed,
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
             icon: Icon(
               icon,
               color: iconColor,
@@ -165,6 +169,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onPressed: onPressed,
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
             child: createControl(
                 widget.control, contentCtrls.first.id, disabled,
                 parentAdaptive: adaptive));
@@ -176,6 +181,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onPressed: onPressed,
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
             child: Text(text));
       }
 

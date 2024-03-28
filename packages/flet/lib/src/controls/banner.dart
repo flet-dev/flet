@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -13,6 +14,7 @@ class BannerControl extends StatefulWidget {
   final bool parentDisabled;
   final bool? parentAdaptive;
   final Widget? nextChild;
+  final FletControlBackend backend;
 
   const BannerControl(
       {super.key,
@@ -21,7 +23,8 @@ class BannerControl extends StatefulWidget {
       required this.children,
       required this.parentDisabled,
       required this.parentAdaptive,
-      required this.nextChild});
+      required this.nextChild,
+      required this.backend});
 
   @override
   State<BannerControl> createState() => _BannerControlState();
@@ -59,8 +62,17 @@ class _BannerControlState extends State<BannerControl> {
               parentAdaptive: widget.parentAdaptive))
           .toList(),
       forceActionsBelow: widget.control.attrBool("forceActionsBelow", false)!,
-      backgroundColor: HexColor.fromString(
-          Theme.of(context), widget.control.attrString("bgcolor", "")!),
+      backgroundColor: widget.control.attrColor("bgcolor", context),
+      contentTextStyle:
+          parseTextStyle(Theme.of(context), widget.control, "contentTextStyle"),
+      surfaceTintColor: widget.control.attrColor("surfaceTintColor", context),
+      shadowColor: widget.control.attrColor("shadowColor", context),
+      dividerColor: widget.control.attrColor("dividerColor", context),
+      elevation: widget.control.attrDouble("elevation"),
+      margin: parseEdgeInsets(widget.control, "margin"),
+      onVisible: () {
+        widget.backend.triggerControlEvent(widget.control.id, "visible");
+      },
     );
   }
 

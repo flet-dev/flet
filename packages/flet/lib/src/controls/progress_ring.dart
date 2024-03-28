@@ -1,7 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/colors.dart';
 import 'create_control.dart';
 
 class ProgressRingControl extends StatelessWidget {
@@ -15,12 +15,16 @@ class ProgressRingControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("ProgressRing build: ${control.id}");
 
-    var value = control.attrDouble("value", null);
+    var value = control.attrDouble("value");
+    var semanticsValue = control.attrDouble("semanticsValue");
+    var strokeAlign = control.attrDouble("strokeAlign", 0)!;
+    var semanticsLabel = control.attrString("semanticsLabel");
+    var strokeCap = StrokeCap.values.firstWhereOrNull((e) =>
+        e.name.toLowerCase() ==
+        control.attrString("strokeCap", "")!.toLowerCase());
     var strokeWidth = control.attrDouble("strokeWidth", 4)!;
-    var color = HexColor.fromString(
-        Theme.of(context), control.attrString("color", "")!);
-    var bgColor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgColor", "")!);
+    var color = control.attrColor("color", context);
+    var bgColor = control.attrColor("bgColor", context);
 
     return constrainedControl(
         context,
@@ -29,6 +33,10 @@ class ProgressRingControl extends StatelessWidget {
           strokeWidth: strokeWidth,
           color: color,
           backgroundColor: bgColor,
+          semanticsLabel: semanticsLabel,
+          strokeCap: strokeCap,
+          semanticsValue: semanticsValue.toString(),
+          strokeAlign: strokeAlign,
         ),
         parent,
         control);

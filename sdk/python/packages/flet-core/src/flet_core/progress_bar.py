@@ -5,6 +5,7 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    BorderRadiusValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -54,6 +55,9 @@ class ProgressBar(ConstrainedControl):
         bar_height: OptionalNumber = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
+        border_radius: BorderRadiusValue = None,
+        semantics_label: Optional[str] = None,
+        semantics_value: OptionalNumber = None,
         #
         # ConstrainedControl
         #
@@ -119,9 +123,16 @@ class ProgressBar(ConstrainedControl):
         self.bar_height = bar_height
         self.color = color
         self.bgcolor = bgcolor
+        self.border_radius = border_radius
+        self.semantics_label = semantics_label
+        self.semantics_value = semantics_value
 
     def _get_control_name(self):
         return "progressbar"
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("borderRadius", self.__border_radius)
 
     # value
     @property
@@ -135,11 +146,20 @@ class ProgressBar(ConstrainedControl):
     # bar_height
     @property
     def bar_height(self) -> OptionalNumber:
-        return self._get_attr("barheight")
+        return self._get_attr("barHeight")
 
     @bar_height.setter
     def bar_height(self, value: OptionalNumber):
-        self._set_attr("barheight", value)
+        self._set_attr("barHeight", value)
+
+    # semantics_value
+    @property
+    def semantics_value(self) -> OptionalNumber:
+        return self._get_attr("semanticsValue")
+
+    @semantics_value.setter
+    def semantics_value(self, value: OptionalNumber):
+        self._set_attr("semanticsValue", value)
 
     # color
     @property
@@ -147,8 +167,17 @@ class ProgressBar(ConstrainedControl):
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)
+
+    # semantics_label
+    @property
+    def semantics_label(self):
+        return self._get_attr("semanticsLabel")
+
+    @semantics_label.setter
+    def semantics_label(self, value: Optional[str]):
+        self._set_attr("semanticsLabel", value)
 
     # bgcolor
     @property
@@ -156,5 +185,14 @@ class ProgressBar(ConstrainedControl):
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
+
+    # border_radius
+    @property
+    def border_radius(self) -> BorderRadiusValue:
+        return self.__border_radius
+
+    @border_radius.setter
+    def border_radius(self, value: BorderRadiusValue):
+        self.__border_radius = value

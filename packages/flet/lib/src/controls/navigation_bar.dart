@@ -68,6 +68,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
       if (_selectedIndex != selectedIndex) {
         _selectedIndex = selectedIndex;
       }
+      var animationDuration = widget.control.attrInt("animationDuration");
 
       NavigationDestinationLabelBehavior? labelBehavior =
           NavigationDestinationLabelBehavior.values.firstWhereOrNull((a) =>
@@ -81,17 +82,19 @@ class _NavigationBarControlState extends State<NavigationBarControl>
         return NavigationBar(
             labelBehavior: labelBehavior,
             height: widget.control.attrDouble("height"),
+            animationDuration: animationDuration != null
+                ? Duration(milliseconds: animationDuration)
+                : null,
             elevation: widget.control.attrDouble("elevation"),
-            shadowColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("shadowColor", "")!),
-            surfaceTintColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("surfaceTintColor", "")!),
-            indicatorColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("indicatorColor", "")!),
+            shadowColor: widget.control.attrColor("shadowColor", context),
+            surfaceTintColor:
+                widget.control.attrColor("surfaceTintColor", context),
+            overlayColor: parseMaterialStateColor(
+                Theme.of(context), widget.control, "overlayColor"),
+            indicatorColor: widget.control.attrColor("indicatorColor", context),
             indicatorShape:
                 parseOutlinedBorder(widget.control, "indicatorShape"),
-            backgroundColor: HexColor.fromString(
-                Theme.of(context), widget.control.attrString("bgColor", "")!),
+            backgroundColor: widget.control.attrColor("bgColor", context),
             selectedIndex: _selectedIndex,
             onDestinationSelected: _destinationChanged,
             destinations: viewModel.controlViews.map((destView) {
@@ -107,6 +110,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
                   .where((c) => c.name == "selected_icon_content");
 
               return NavigationDestination(
+                  enabled: !disabled || !destView.control.isDisabled,
                   tooltip: destView.control.attrString("tooltip", "")!,
                   icon: iconContentCtrls.isNotEmpty
                       ? createControl(

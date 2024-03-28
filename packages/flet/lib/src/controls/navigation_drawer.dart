@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
@@ -69,9 +68,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
           var selectedIconContentCtrls =
               destView.children.where((c) => c.name == "selected_icon_content");
           return NavigationDrawerDestination(
-            // backgroundColor: HexColor.fromString(Theme.of(context),
-            //     destView.control.attrString("bgColor", "")!),
-            // flutter issue https://github.com/flutter/flutter/issues/138105
+            backgroundColor: destView.control.attrColor("bgColor", context),
             icon: iconContentCtrls.isNotEmpty
                 ? createControl(
                     destView.control, iconContentCtrls.first.id, disabled,
@@ -93,16 +90,12 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
       }).toList();
       return NavigationDrawer(
         elevation: widget.control.attrDouble("elevation"),
-        indicatorColor: HexColor.fromString(Theme.of(context),
-            widget.control.attrString("indicatorColor", "")!),
+        indicatorColor: widget.control.attrColor("indicatorColor", context),
         indicatorShape: parseOutlinedBorder(widget.control, "indicatorShape"),
-        backgroundColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("bgColor", "")!),
+        backgroundColor: widget.control.attrColor("bgColor", context),
         selectedIndex: _selectedIndex,
-        shadowColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("shadowColor", "")!),
-        surfaceTintColor: HexColor.fromString(Theme.of(context),
-            widget.control.attrString("surfaceTintColor", "")!),
+        shadowColor: widget.control.attrColor("shadowColor", context),
+        surfaceTintColor: widget.control.attrColor("surfaceTintColor", context),
         tilePadding: parseEdgeInsets(widget.control, "tilePadding") ??
             const EdgeInsets.symmetric(horizontal: 12.0),
         onDestinationSelected: _destinationChanged,

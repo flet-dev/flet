@@ -4,6 +4,7 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.border import BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
+from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -15,6 +16,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TabAlignment,
+    ClipBehavior,
 )
 
 
@@ -61,7 +63,7 @@ class Tab(AdaptiveControl):
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
     # icon
@@ -70,7 +72,7 @@ class Tab(AdaptiveControl):
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
     # tab_content
@@ -79,7 +81,7 @@ class Tab(AdaptiveControl):
         return self.__tab_content
 
     @tab_content.setter
-    def tab_content(self, value):
+    def tab_content(self, value: Optional[Control]):
         self.__tab_content = value
 
     # content
@@ -88,7 +90,7 @@ class Tab(AdaptiveControl):
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Optional[Control]):
         self.__content = value
 
 
@@ -140,6 +142,30 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        tabs: Optional[List[Tab]] = None,
+        selected_index: Optional[int] = None,
+        scrollable: Optional[bool] = None,
+        tab_alignment: Optional[TabAlignment] = None,
+        animation_duration: Optional[int] = None,
+        divider_color: Optional[str] = None,
+        indicator_color: Optional[str] = None,
+        indicator_border_radius: BorderRadiusValue = None,
+        indicator_border_side: Optional[BorderSide] = None,
+        indicator_padding: PaddingValue = None,
+        indicator_tab_size: Optional[bool] = None,
+        is_secondary: Optional[bool] = None,
+        label_color: Optional[str] = None,
+        unselected_label_color: Optional[str] = None,
+        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        divider_height: OptionalNumber = None,
+        indicator_thickness: OptionalNumber = None,
+        enable_feedback: Optional[str] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        on_change=None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -166,26 +192,6 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Tabs-specific
-        tabs: Optional[List[Tab]] = None,
-        selected_index: Optional[int] = None,
-        scrollable: Optional[bool] = None,
-        tab_alignment: Optional[TabAlignment] = None,
-        animation_duration: Optional[int] = None,
-        divider_color: Optional[str] = None,
-        indicator_color: Optional[str] = None,
-        indicator_border_radius: BorderRadiusValue = None,
-        indicator_border_side: Optional[BorderSide] = None,
-        indicator_padding: PaddingValue = None,
-        indicator_tab_size: Optional[bool] = None,
-        label_color: Optional[str] = None,
-        unselected_label_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
-        on_change=None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -235,6 +241,12 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self.indicator_tab_size = indicator_tab_size
         self.overlay_color = overlay_color
         self.on_change = on_change
+        self.divider_height = divider_height
+        self.indicator_thickness = indicator_thickness
+        self.enable_feedback = enable_feedback
+        self.is_secondary = is_secondary
+        self.mouse_cursor = mouse_cursor
+        self.clip_behavior = clip_behavior
 
     def _get_control_name(self):
         return "tabs"
@@ -285,6 +297,41 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     def scrollable(self, value: Optional[bool]):
         self._set_attr("scrollable", value)
 
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr(
+            "mouseCursor",
+            value.value if isinstance(value, MouseCursor) else value,
+        )
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        self._set_attr(
+            "clipBehavior",
+            value.value if isinstance(value, ClipBehavior) else value,
+        )
+
+    # is_secondary
+    @property
+    def is_secondary(self) -> Optional[bool]:
+        return self._get_attr("isSecondary", data_type="bool", def_value=False)
+
+    @is_secondary.setter
+    def is_secondary(self, value: Optional[bool]):
+        self._set_attr("isSecondary", value)
+
     # tab_alignment
     @property
     def tab_alignment(self) -> Optional[TabAlignment]:
@@ -293,16 +340,45 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     @tab_alignment.setter
     def tab_alignment(self, value: Optional[TabAlignment]):
         self.__tab_alignment = value
-        self._set_attr("tabAlignment", value.value if value is not None else None)
+        self._set_attr(
+            "tabAlignment", value.value if isinstance(value, TabAlignment) else value
+        )
 
     # animation_duration
     @property
     def animation_duration(self) -> Optional[int]:
-        return self._get_attr("animationDuration")
+        return self._get_attr("animationDuration", data_type="int")
 
     @animation_duration.setter
     def animation_duration(self, value: Optional[int]):
         self._set_attr("animationDuration", value)
+
+    # divider_height
+    @property
+    def divider_height(self):
+        return self._get_attr("dividerHeight", data_type="float", def_value=1.0)
+
+    @divider_height.setter
+    def divider_height(self, value: OptionalNumber):
+        self._set_attr("dividerHeight", value)
+
+    # enable_feedback
+    @property
+    def enable_feedback(self):
+        return self._get_attr("enableFeedback")
+
+    @enable_feedback.setter
+    def enable_feedback(self, value: Optional[bool]):
+        self._set_attr("enableFeedback", value)
+
+    # indicator_thickness
+    @property
+    def indicator_thickness(self):
+        return self._get_attr("indicatorThickness", data_type="float", def_value=3.0)
+
+    @indicator_thickness.setter
+    def indicator_thickness(self, value: OptionalNumber):
+        self._set_attr("indicatorThickness", value)
 
     # divider_color
     @property

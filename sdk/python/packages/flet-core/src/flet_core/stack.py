@@ -1,6 +1,8 @@
+from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -12,6 +14,12 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+
+
+class StackFit(Enum):
+    LOOSE = "loose"
+    EXPAND = "expand"
+    PASS_THROUGH = "passThrough"
 
 
 class Stack(ConstrainedControl, AdaptiveControl):
@@ -67,6 +75,8 @@ class Stack(ConstrainedControl, AdaptiveControl):
         self,
         controls: Optional[List[Control]] = None,
         clip_behavior: Optional[ClipBehavior] = None,
+        alignment: Optional[Alignment] = None,
+        fit: Optional[StackFit] = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -133,6 +143,8 @@ class Stack(ConstrainedControl, AdaptiveControl):
         self.__controls: List[Control] = []
         self.controls = controls
         self.clip_behavior = clip_behavior
+        self.alignment = alignment
+        self.fit = fit
 
     def _get_control_name(self):
         return "stack"
@@ -160,3 +172,22 @@ class Stack(ConstrainedControl, AdaptiveControl):
         self._set_attr(
             "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
         )
+
+    # alignment
+    @property
+    def alignment(self) -> Optional[Alignment]:
+        return self.__alignment
+
+    @alignment.setter
+    def alignment(self, value: Optional[Alignment]):
+        self.__alignment = value
+
+    # fit
+    @property
+    def fit(self) -> Optional[StackFit]:
+        return self.__fit
+
+    @fit.setter
+    def fit(self, value: Optional[StackFit]):
+        self.__fit = value
+        self._set_attr("fit", value.value if isinstance(value, StackFit) else value)

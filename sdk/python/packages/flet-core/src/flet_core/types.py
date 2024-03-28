@@ -31,6 +31,11 @@ class WebRenderer(Enum):
     CANVAS_KIT = "canvaskit"
 
 
+class UrlTarget(Enum):
+    BLANK = "blank"
+    SELF = "_self"
+
+
 PaddingValue = Union[None, int, float, Padding]
 
 MarginValue = Union[None, int, float, Margin]
@@ -217,6 +222,11 @@ class ThemeMode(Enum):
 class Brightness(Enum):
     LIGHT = "light"
     DARK = "dark"
+
+
+class Orientation(Enum):
+    PORTRAIT = "portrait"
+    LANDSCAPE = "landscape"
 
 
 class FloatingActionButtonLocation(Enum):

@@ -1,12 +1,13 @@
 import time
 from typing import Any, Dict, List, Optional, Union
 
-from flet_core import BorderSide, OutlinedBorder
+from flet_core.border import BorderSide
+from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.textfield import TextCapitalization
+from flet_core.textfield import TextCapitalization, KeyboardType
 from flet_core.types import (
     AnimationValue,
     MaterialState,
@@ -46,8 +47,11 @@ class SearchBar(ConstrainedControl):
         view_header_text_style: Optional[TextStyle] = None,
         view_hint_text_style: Optional[TextStyle] = None,
         divider_color: Optional[str] = None,
+        capitalization: Optional[TextCapitalization] = None,
         full_screen: Optional[bool] = None,
-        capitalization: TextCapitalization = TextCapitalization.NONE,
+        keyboard_type: Optional[KeyboardType] = None,
+        view_surface_tint_color: Optional[str] = None,
+        autofocus: Optional[bool] = None,
         on_tap=None,
         on_submit=None,
         on_change=None,
@@ -127,6 +131,9 @@ class SearchBar(ConstrainedControl):
         self.on_tap = on_tap
         self.on_submit = on_submit
         self.on_change = on_change
+        self.keyboard_type = keyboard_type
+        self.view_surface_tint_color = view_surface_tint_color
+        self.autofocus = autofocus
 
     def _get_control_name(self):
         return "searchbar"
@@ -136,9 +143,12 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("barBgcolor", self.__bar_bgcolor)
         self._set_attr_json("barOverlayColor", self.__bar_overlay_color)
         self._set_attr_json("viewShape", self.__view_shape)
-        self._set_attr_json("viewHeaderTextStyle", self.__view_header_text_style)
-        self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
-        self._set_attr_json("viewSide", self.__view_side)
+        if isinstance(self.__view_header_text_style, TextStyle):
+            self._set_attr_json("viewHeaderTextStyle", self.__view_header_text_style)
+        if isinstance(self.__view_hint_text_style, TextStyle):
+            self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
+        if isinstance(self.__view_side, BorderSide):
+            self._set_attr_json("viewSide", self.__view_side)
 
     def _get_children(self):
         children = []
@@ -242,6 +252,24 @@ class SearchBar(ConstrainedControl):
     def view_leading(self, value: Optional[Control]):
         self.__view_leading = value
 
+    # view_surface_tint_color
+    @property
+    def view_surface_tint_color(self) -> Optional[str]:
+        return self._get_attr("viewSurfaceTintColor")
+
+    @view_surface_tint_color.setter
+    def view_surface_tint_color(self, value: Optional[str]):
+        self._set_attr("viewSurfaceTintColor", value)
+
+    # autofocus
+    @property
+    def autofocus(self) -> Optional[bool]:
+        return self._get_attr("autofocus", data_type="bool", def_value=False)
+
+    @autofocus.setter
+    def autofocus(self, value: Optional[bool]):
+        self._set_attr("autofocus", value)
+
     # view_trailing
     @property
     def view_trailing(self) -> Optional[List[Control]]:
@@ -262,38 +290,38 @@ class SearchBar(ConstrainedControl):
 
     # view_bgcolor
     @property
-    def view_bgcolor(self):
+    def view_bgcolor(self) -> Optional[str]:
         return self._get_attr("viewBgcolor")
 
     @view_bgcolor.setter
-    def view_bgcolor(self, value):
+    def view_bgcolor(self, value: Optional[str]):
         self._set_attr("viewBgcolor", value)
 
     # divider_color
     @property
-    def divider_color(self):
+    def divider_color(self) -> Optional[str]:
         return self._get_attr("dividerColor")
 
     @divider_color.setter
-    def divider_color(self, value):
+    def divider_color(self, value: Optional[str]):
         self._set_attr("dividerColor", value)
 
     # bar_hint_text
     @property
-    def bar_hint_text(self):
+    def bar_hint_text(self) -> Optional[str]:
         return self._get_attr("barHintText")
 
     @bar_hint_text.setter
-    def bar_hint_text(self, value):
+    def bar_hint_text(self, value: Optional[str]):
         self._set_attr("barHintText", value)
 
     # view_hint_text
     @property
-    def view_hint_text(self):
+    def view_hint_text(self) -> Optional[str]:
         return self._get_attr("viewHintText")
 
     @view_hint_text.setter
-    def view_hint_text(self, value):
+    def view_hint_text(self, value: Optional[str]):
         self._set_attr("viewHintText", value)
 
     # view_shape
@@ -334,6 +362,19 @@ class SearchBar(ConstrainedControl):
         self._set_attr(
             "capitalization",
             value.value if isinstance(value, TextCapitalization) else value,
+        )
+
+    # keyboard_type
+    @property
+    def keyboard_type(self) -> KeyboardType:
+        return self.__keyboard_type
+
+    @keyboard_type.setter
+    def keyboard_type(self, value: KeyboardType):
+        self.__keyboard_type = value
+        self._set_attr(
+            "keyboardType",
+            value.value if isinstance(value, KeyboardType) else value,
         )
 
     # view_header_text_style

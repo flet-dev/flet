@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -89,8 +88,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                   return content;
                 },
                 isDismissible: dismissible,
-                backgroundColor: HexColor.fromString(Theme.of(context),
-                    widget.control.attrString("bgColor", "")!),
+                backgroundColor: widget.control.attrColor("bgColor", context),
                 elevation: widget.control.attrDouble("elevation"),
                 isScrollControlled: isScrollControlled,
                 enableDrag: enableDrag,

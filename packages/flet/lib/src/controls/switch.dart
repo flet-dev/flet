@@ -4,6 +4,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/mouse.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_switch.dart';
@@ -103,23 +104,29 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       var swtch = Switch(
           autofocus: autofocus,
           focusNode: _focusNode,
-          activeColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("activeColor", "")!),
-          activeTrackColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("activeTrackColor", "")!),
-          inactiveThumbColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("inactiveThumbColor", "")!),
-          inactiveTrackColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("inactiveTrackColor", "")!),
+          activeColor: widget.control.attrColor("activeColor", context),
+          activeTrackColor:
+              widget.control.attrColor("activeTrackColor", context),
+          inactiveThumbColor:
+              widget.control.attrColor("inactiveThumbColor", context),
+          inactiveTrackColor:
+              widget.control.attrColor("inactiveTrackColor", context),
           thumbColor: parseMaterialStateColor(
               Theme.of(context), widget.control, "thumbColor"),
           thumbIcon: parseMaterialStateIcon(
               Theme.of(context), widget.control, "thumbIcon"),
           trackColor: parseMaterialStateColor(
               Theme.of(context), widget.control, "trackColor"),
-          focusColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("focusColor", "")!),
+          focusColor: widget.control.attrColor("focusColor", context),
           value: _value,
+          mouseCursor:
+              parseMouseCursor(widget.control.attrString("mouseCursor")),
+          splashRadius: widget.control.attrDouble("splashRadius"),
+          hoverColor: widget.control.attrColor("hoverColor", context),
+          overlayColor: parseMaterialStateColor(
+              Theme.of(context), widget.control, "overlayColor"),
+          trackOutlineColor: parseMaterialStateColor(
+              Theme.of(context), widget.control, "trackOutlineColor"),
           onChanged: !disabled
               ? (bool value) {
                   _onChange(value);

@@ -6,7 +6,6 @@ import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/buttons.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
@@ -44,16 +43,15 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
 
     String? text = widget.control.attrString("text");
     IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
-    Color? iconColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("iconColor", "")!);
+    Color? iconColor = widget.control.attrColor("iconColor", context);
 
     // IconButton props below
     double? iconSize = widget.control.attrDouble("iconSize");
     bool selected = widget.control.attrBool("selected", false)!;
     IconData? selectedIcon =
         parseIcon(widget.control.attrString("selectedIcon", "")!);
-    Color? selectedIconColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("selectedIconColor", "")!);
+    Color? selectedIconColor =
+        widget.control.attrColor("selectedIconColor", context);
 
     Widget? content;
     List<Widget> children = [];
@@ -91,13 +89,10 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     double pressedOpacity = widget.control.attrDouble("opacityOnClick", 0.4)!;
     double minSize = widget.control.attrDouble("minSize", 44.0)!;
     String url = widget.control.attrString("url", "")!;
-    Color disabledColor = HexColor.fromString(Theme.of(context),
-            widget.control.attrString("disabledColor", "")!) ??
+    Color disabledColor = widget.control.attrColor("disabledColor", context) ??
         CupertinoColors.quaternarySystemFill;
-    Color? bgColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("bgColor", "")!);
-    Color? color = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("color", "")!);
+    Color? bgColor = widget.control.attrColor("bgColor", context);
+    Color? color = widget.control.attrColor("color", context);
     AlignmentGeometry alignment =
         parseAlignment(widget.control, "alignment") ?? Alignment.center;
     BorderRadius borderRadius =

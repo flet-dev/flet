@@ -58,13 +58,21 @@ class _ListViewControlState extends State<ListViewControl> {
     final spacing = widget.control.attrDouble("spacing", 0)!;
     final dividerThickness = widget.control.attrDouble("dividerThickness", 0)!;
     final itemExtent = widget.control.attrDouble("itemExtent");
+    final cacheExtent = widget.control.attrDouble("cacheExtent");
+    final semanticChildCount = widget.control.attrInt("semanticChildCount");
     final firstItemPrototype =
         widget.control.attrBool("firstItemPrototype", false)!;
     final padding = parseEdgeInsets(widget.control, "padding");
     final reverse = widget.control.attrBool("reverse", false)!;
+    var clipBehavior = Clip.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
+        orElse: () => Clip.hardEdge);
 
     List<Control> visibleControls =
         widget.children.where((c) => c.isVisible).toList();
+    var scrollDirection = horizontal ? Axis.horizontal : Axis.vertical;
 
     Widget listView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -78,8 +86,10 @@ class _ListViewControlState extends State<ListViewControl> {
         Widget child = spacing > 0
             ? ListView.separated(
                 controller: _controller,
+                cacheExtent: cacheExtent,
                 reverse: reverse,
-                scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+                clipBehavior: clipBehavior,
+                scrollDirection: scrollDirection,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
                 itemCount: widget.children.length,
@@ -102,8 +112,11 @@ class _ListViewControlState extends State<ListViewControl> {
               )
             : ListView.builder(
                 controller: _controller,
+                clipBehavior: clipBehavior,
+                semanticChildCount: semanticChildCount,
                 reverse: reverse,
-                scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+                cacheExtent: cacheExtent,
+                scrollDirection: scrollDirection,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
                 itemCount: widget.children.length,

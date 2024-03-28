@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
@@ -60,12 +59,9 @@ class _CupertinoNavigationBarControlState
             .where((c) => c.isVisible && c.name == null)
             .map((c) => c.id), (content, viewModel) {
       return CupertinoTabBar(
-          backgroundColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("bgColor", "")!),
-          activeColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("activeColor", "")!),
-          inactiveColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("inactiveColor", "")!) ??
+          backgroundColor: widget.control.attrColor("bgColor", context),
+          activeColor: widget.control.attrColor("activeColor", context),
+          inactiveColor: widget.control.attrColor("inactiveColor", context) ??
               CupertinoColors.inactiveGray,
           iconSize: widget.control.attrDouble("iconSize", 30.0)!,
           currentIndex: _selectedIndex,
@@ -85,6 +81,7 @@ class _CupertinoNavigationBarControlState
 
             return BottomNavigationBarItem(
                 tooltip: destView.control.attrString("tooltip", "")!,
+                backgroundColor: widget.control.attrColor("bgColor", context),
                 icon: iconContentCtrls.isNotEmpty
                     ? createControl(
                         destView.control, iconContentCtrls.first.id, disabled,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 
@@ -44,8 +43,7 @@ class CupertinoAppBarControl extends StatelessWidget
         control.attrBool("automaticallyImplyMiddle", true)!;
     var transitionBetweenRoutes =
         control.attrBool("transitionBetweenRoutes", true)!;
-    var bgcolor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgcolor", "")!);
+    var bgcolor = control.attrColor("bgcolor", context);
 
     return CupertinoNavigationBar(
       leading: leadingCtrls.isNotEmpty
@@ -78,9 +76,7 @@ class CupertinoAppBarControl extends StatelessWidget
   @override
   bool shouldFullyObstruct(BuildContext context) {
     final Color backgroundColor = CupertinoDynamicColor.maybeResolve(
-            HexColor.fromString(
-                Theme.of(context), control.attrString("bgcolor", "")!),
-            context) ??
+            control.attrColor("bgcolor", context), context) ??
         CupertinoTheme.of(context).barBackgroundColor;
     return backgroundColor.alpha == 0xFF;
   }

@@ -43,12 +43,14 @@ class CupertinoSwitch(ConstrainedControl):
         self,
         label: Optional[str] = None,
         value: Optional[bool] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
+        label_position: Optional[LabelPosition] = None,
         active_color: Optional[str] = None,
         thumb_color: Optional[str] = None,
         track_color: Optional[str] = None,
         focus_color: Optional[str] = None,
         autofocus: Optional[bool] = None,
+        on_label_color: Optional[str] = None,
+        off_label_color: Optional[str] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -124,6 +126,8 @@ class CupertinoSwitch(ConstrainedControl):
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.on_label_color = on_label_color
+        self.off_label_color = off_label_color
 
     def _get_control_name(self):
         return "cupertinoswitch"
@@ -144,20 +148,20 @@ class CupertinoSwitch(ConstrainedControl):
 
     # label
     @property
-    def label(self):
+    def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
 
     # label_position
     @property
-    def label_position(self) -> LabelPosition:
+    def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
 
     @label_position.setter
-    def label_position(self, value: LabelPosition):
+    def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
         self._set_attr(
             "labelPosition", value.value if isinstance(value, LabelPosition) else value
@@ -174,20 +178,20 @@ class CupertinoSwitch(ConstrainedControl):
 
     # active_color
     @property
-    def active_color(self):
+    def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
 
     @active_color.setter
-    def active_color(self, value):
+    def active_color(self, value: Optional[str]):
         self._set_attr("activeColor", value)
 
     # focus_color
     @property
-    def focus_color(self):
+    def focus_color(self) -> Optional[str]:
         return self._get_attr("focusColor")
 
     @focus_color.setter
-    def focus_color(self, value):
+    def focus_color(self, value: Optional[str]):
         self._set_attr("focusColor", value)
 
     # thumb_color
@@ -207,6 +211,24 @@ class CupertinoSwitch(ConstrainedControl):
     @track_color.setter
     def track_color(self, value: Optional[str]):
         self.__track_color = value
+
+    # on_label_color
+    @property
+    def on_label_color(self) -> Optional[str]:
+        return self._get_attr("onLabelColor")
+
+    @on_label_color.setter
+    def on_label_color(self, value: Optional[str]):
+        self._set_attr("onLabelColor", value)
+
+    # off_label_color
+    @property
+    def off_label_color(self) -> Optional[str]:
+        return self._get_attr("offLabelColor")
+
+    @off_label_color.setter
+    def off_label_color(self, value: Optional[str]):
+        self._set_attr("offLabelColor", value)
 
     # on_change
     @property

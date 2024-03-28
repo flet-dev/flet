@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/text.dart';
@@ -55,7 +54,7 @@ class TooltipControl extends StatelessWidget {
         gradient != null ||
         shape != null) {
       decoration = (defaultDecoration as BoxDecoration).copyWith(
-          color: HexColor.fromString(Theme.of(context), bgColor ?? ""),
+          color: control.attrColor("bgColor", context),
           gradient: gradient,
           border: border,
           borderRadius: borderRadius,
@@ -67,6 +66,8 @@ class TooltipControl extends StatelessWidget {
         Tooltip(
             decoration: decoration,
             enableFeedback: control.attrBool("enableFeedback"),
+            enableTapToDismiss: control.attrBool("enableTapToDismiss", true)!,
+            excludeFromSemantics: control.attrBool("excludeFromSemantics"),
             height: control.attrDouble("height"),
             margin: parseEdgeInsets(control, "margin"),
             padding: parseEdgeInsets(control, "padding"),
@@ -80,9 +81,7 @@ class TooltipControl extends StatelessWidget {
                 : null,
             verticalOffset: control.attrDouble("verticalOffset"),
             textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
-            textAlign: TextAlign.values.firstWhereOrNull((a) =>
-                a.name.toLowerCase() ==
-                control.attrString("textAlign", "")!.toLowerCase()),
+            textAlign: parseTextAlign(control.attrString("textAlign", "")!),
             child: contentCtrls.isNotEmpty
                 ? createControl(control, contentCtrls.first.id, disabled,
                     parentAdaptive: parentAdaptive)

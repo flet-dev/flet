@@ -18,6 +18,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ClipBehavior,
 )
 
 
@@ -325,6 +326,7 @@ class DataTable(ConstrainedControl):
         heading_row_height: OptionalNumber = None,
         heading_text_style: Optional[TextStyle] = None,
         horizontal_margin: OptionalNumber = None,
+        clip_behavior: Optional[ClipBehavior] = None,
         on_select_all=None,
         #
         # ConstrainedControl
@@ -412,6 +414,7 @@ class DataTable(ConstrainedControl):
         self.sort_ascending = sort_ascending
         self.sort_column_index = sort_column_index
         self.on_select_all = on_select_all
+        self.clip_behavior = clip_behavior
 
     def _get_control_name(self):
         return "datatable"
@@ -640,6 +643,18 @@ class DataTable(ConstrainedControl):
     @sort_column_index.setter
     def sort_column_index(self, value: Optional[int]):
         self._set_attr("sortColumnIndex", value)
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
 
     # on_select_all
     @property

@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flet/src/utils/locale.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
@@ -21,7 +23,7 @@ import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
 import '../utils/alignment.dart';
-import '../utils/colors.dart';
+import '../utils/buttons.dart';
 import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
 import '../utils/images.dart';
@@ -35,7 +37,6 @@ import 'app_bar.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
 import 'flet_store_mixin.dart';
-import 'floating_action_button.dart';
 import 'navigation_drawer.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
@@ -129,6 +130,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   TargetPlatform _platform = defaultTargetPlatform;
   Brightness? _brightness;
   ThemeMode? _themeMode;
+  Map<String, dynamic>? _localeConfiguration;
   String? _windowTitle;
   Color? _windowBgcolor;
   double? _windowWidth;
@@ -279,6 +281,9 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             widget.control.attrString("themeMode", "")!.toLowerCase()) ??
         FletAppContext.of(context)?.themeMode;
 
+    _localeConfiguration =
+        parseLocaleConfiguration(widget.control, "localeConfiguration");
+
     // keyboard handler
     var onKeyboardEvent = widget.control.attrBool("onKeyboardEvent", false)!;
     if (onKeyboardEvent && !_keyboardHandlerSubscribed) {
@@ -288,8 +293,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
 
     // window params
     var windowTitle = widget.control.attrString("title", "")!;
-    var windowBgcolor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("windowBgcolor", "")!);
+    var windowBgcolor = widget.control.attrColor("windowBgcolor", context);
     var windowWidth = widget.control.attrDouble("windowWidth");
     var windowHeight = widget.control.attrDouble("windowHeight");
     var windowMinWidth = widget.control.attrDouble("windowMinWidth");
@@ -565,8 +569,16 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                                 : parseCupertinoTheme(
                                     widget.control, "theme", Brightness.dark),
                         localizationsDelegates: const [
-                          DefaultMaterialLocalizations.delegate
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
                         ],
+                        supportedLocales: _localeConfiguration != null
+                            ? _localeConfiguration!["supportedLocales"]
+                            : [const Locale('en', 'US')],
+                        locale: _localeConfiguration != null
+                            ? (_localeConfiguration?["locale"])
+                            : null,
                       )
                     : MaterialApp.router(
                         debugShowCheckedModeBanner: false,
@@ -575,6 +587,17 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                         routerDelegate: _routerDelegate,
                         routeInformationParser: _routeParser,
                         title: windowTitle,
+                        localizationsDelegates: const [
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
+                        ],
+                        supportedLocales: _localeConfiguration != null
+                            ? _localeConfiguration!["supportedLocales"]
+                            : [const Locale('en', 'US')],
+                        locale: _localeConfiguration != null
+                            ? (_localeConfiguration?["locale"])
+                            : null,
                         theme: parseTheme(
                             widget.control, "theme", Brightness.light),
                         darkTheme: widget.control.attrString("darkTheme") ==
@@ -968,8 +991,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
 
             Widget scaffold = Scaffold(
               key: bar == null || bar is AppBarControl ? scaffoldKey : null,
-              backgroundColor: HexColor.fromString(
-                      Theme.of(context), control.attrString("bgcolor", "")!) ??
+              backgroundColor: control.attrColor("bgcolor", context) ??
                   CupertinoTheme.of(context).scaffoldBackgroundColor,
               appBar: bar is AppBarControl ? bar : null,
               drawer: drawerView != null
@@ -1027,8 +1049,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             if (bar is CupertinoAppBarControl) {
               scaffold = CupertinoPageScaffold(
                   key: scaffoldKey,
-                  backgroundColor: HexColor.fromString(
-                      Theme.of(context), control.attrString("bgcolor", "")!),
+                  backgroundColor: control.attrColor("bgcolor", context),
                   navigationBar: bar as ObstructingPreferredSizeWidget,
                   child: scaffold);
             }

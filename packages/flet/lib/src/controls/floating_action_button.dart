@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
-import '../utils/transforms.dart';
+import '../utils/mouse.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -35,13 +34,27 @@ class FloatingActionButtonControl extends StatelessWidget {
     IconData? icon = parseIcon(control.attrString("icon", "")!);
     String url = control.attrString("url", "")!;
     String? urlTarget = control.attrString("urlTarget");
-    Color? bgColor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgColor", "")!);
+    double? disabledElevation = control.attrDouble("disabledElevation");
+    double? elevation = control.attrDouble("elevation");
+    double? hoverElevation = control.attrDouble("hoverElevation");
+    double? highlightElevation = control.attrDouble("highlightElevation");
+    double? focusElevation = control.attrDouble("focusElevation");
+    Color? bgColor = control.attrColor("bgColor", context);
+    Color? foregroundColor = control.attrColor("foregroundColor", context);
+    Color? splashColor = control.attrColor("splashColor", context);
+    Color? hoverColor = control.attrColor("hoverColor", context);
+    Color? focusColor = control.attrColor("focusColor", context);
     OutlinedBorder? shape = parseOutlinedBorder(control, "shape");
+    var clipBehavior = Clip.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("clipBehavior", "")!.toLowerCase(),
+        orElse: () => Clip.none);
     var contentCtrls = children.where((c) => c.name == "content");
     var tooltip = control.attrString("tooltip");
     bool autofocus = control.attrBool("autofocus", false)!;
     bool mini = control.attrBool("mini", false)!;
+    bool? enableFeedback = control.attrBool("enableFeedback");
     bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = disabled
@@ -65,7 +78,19 @@ class FloatingActionButtonControl extends StatelessWidget {
           heroTag: control.id,
           autofocus: autofocus,
           onPressed: onPressed,
+          mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
           backgroundColor: bgColor,
+          foregroundColor: foregroundColor,
+          hoverColor: hoverColor,
+          splashColor: splashColor,
+          elevation: elevation,
+          disabledElevation: disabledElevation,
+          focusElevation: focusElevation,
+          hoverElevation: hoverElevation,
+          highlightElevation: highlightElevation,
+          enableFeedback: enableFeedback,
+          clipBehavior: clipBehavior,
+          focusColor: focusColor,
           tooltip: tooltip,
           shape: shape,
           mini: mini,
@@ -76,7 +101,19 @@ class FloatingActionButtonControl extends StatelessWidget {
           heroTag: control.id,
           autofocus: autofocus,
           onPressed: onPressed,
+          mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
           backgroundColor: bgColor,
+          foregroundColor: foregroundColor,
+          hoverColor: hoverColor,
+          splashColor: splashColor,
+          elevation: elevation,
+          disabledElevation: disabledElevation,
+          focusElevation: focusElevation,
+          hoverElevation: hoverElevation,
+          highlightElevation: highlightElevation,
+          enableFeedback: enableFeedback,
+          clipBehavior: clipBehavior,
+          focusColor: focusColor,
           tooltip: tooltip,
           shape: shape,
           mini: mini,
@@ -86,7 +123,19 @@ class FloatingActionButtonControl extends StatelessWidget {
         heroTag: control.id,
         autofocus: autofocus,
         onPressed: onPressed,
+        mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
         backgroundColor: bgColor,
+        foregroundColor: foregroundColor,
+        hoverColor: hoverColor,
+        splashColor: splashColor,
+        elevation: elevation,
+        disabledElevation: disabledElevation,
+        focusElevation: focusElevation,
+        hoverElevation: hoverElevation,
+        highlightElevation: highlightElevation,
+        enableFeedback: enableFeedback,
+        clipBehavior: clipBehavior,
+        focusColor: focusColor,
         tooltip: tooltip,
         shape: shape,
         mini: mini,
@@ -97,9 +146,21 @@ class FloatingActionButtonControl extends StatelessWidget {
         heroTag: control.id,
         autofocus: autofocus,
         onPressed: onPressed,
+        mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
         label: Text(text),
         icon: Icon(icon),
         backgroundColor: bgColor,
+        foregroundColor: foregroundColor,
+        hoverColor: hoverColor,
+        splashColor: splashColor,
+        elevation: elevation,
+        disabledElevation: disabledElevation,
+        focusElevation: focusElevation,
+        hoverElevation: hoverElevation,
+        highlightElevation: highlightElevation,
+        enableFeedback: enableFeedback,
+        clipBehavior: clipBehavior,
+        focusColor: focusColor,
         tooltip: tooltip,
         shape: shape,
       );
@@ -109,69 +170,4 @@ class FloatingActionButtonControl extends StatelessWidget {
 
     return constrainedControl(context, button, parent, control);
   }
-}
-
-FloatingActionButtonLocation parseFloatingActionButtonLocation(
-    Control control, String propName, FloatingActionButtonLocation defValue) {
-  List<FloatingActionButtonLocation> fabLocations = [
-    FloatingActionButtonLocation.centerDocked,
-    FloatingActionButtonLocation.centerFloat,
-    FloatingActionButtonLocation.centerTop,
-    FloatingActionButtonLocation.endContained,
-    FloatingActionButtonLocation.endDocked,
-    FloatingActionButtonLocation.endFloat,
-    FloatingActionButtonLocation.endTop,
-    FloatingActionButtonLocation.miniCenterDocked,
-    FloatingActionButtonLocation.miniCenterFloat,
-    FloatingActionButtonLocation.miniCenterTop,
-    FloatingActionButtonLocation.miniEndFloat,
-    FloatingActionButtonLocation.miniEndTop,
-    FloatingActionButtonLocation.miniStartDocked,
-    FloatingActionButtonLocation.miniStartFloat,
-    FloatingActionButtonLocation.miniStartTop,
-    FloatingActionButtonLocation.startDocked,
-    FloatingActionButtonLocation.startFloat,
-    FloatingActionButtonLocation.startTop
-  ];
-
-  try {
-    OffsetDetails? fabLocationOffsetDetails = parseOffset(control, propName);
-    if (fabLocationOffsetDetails != null) {
-      return CustomFloatingActionButtonLocation(
-          dx: fabLocationOffsetDetails.x, dy: fabLocationOffsetDetails.y);
-    } else {
-      return defValue;
-    }
-  } catch (e) {
-    return fabLocations.firstWhere(
-        (l) =>
-            l.toString().split('.').last.toLowerCase() ==
-            control.attrString(propName, "")!.toLowerCase(),
-        orElse: () => defValue);
-  }
-}
-
-class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
-  final double dx;
-  final double dy;
-
-  CustomFloatingActionButtonLocation({required this.dx, required this.dy});
-
-  @override
-  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
-    return Offset(scaffoldGeometry.scaffoldSize.width - dx,
-        scaffoldGeometry.scaffoldSize.height - dy);
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      other is CustomFloatingActionButtonLocation &&
-      other.dx == dx &&
-      other.dy == dy;
-
-  @override
-  int get hashCode => dx.hashCode + dy.hashCode;
-
-  @override
-  String toString() => 'CustomFloatingActionButtonLocation';
 }

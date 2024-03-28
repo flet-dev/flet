@@ -13,6 +13,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/material_state.dart';
+import '../utils/mouse.dart';
 import 'create_control.dart';
 
 class TabsControl extends StatefulWidget {
@@ -67,6 +68,9 @@ class _TabsControlState extends State<TabsControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("TabsControl build: ${widget.control.id}");
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool? adaptive =
+        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
     // keep only visible tabs
     widget.children.retainWhere((c) => c.isVisible);
@@ -94,8 +98,6 @@ class _TabsControlState extends State<TabsControl>
             _tabController!.addListener(_tabChanged);
           }
 
-          bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
           var selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
 
           if (selectedIndex > -1 &&
@@ -112,7 +114,12 @@ class _TabsControlState extends State<TabsControl>
           var overlayColorStr = widget.control.attrString("overlayColor");
           dynamic overlayColor;
           if (overlayColorStr != null) {
-            overlayColor = json.decode(overlayColorStr);
+            overlayColor = getMaterialStateProperty<Color?>(
+                    json.decode(overlayColorStr),
+                    (jv) =>
+                        HexColor.fromString(Theme.of(context), jv as String),
+                    null) ??
+                TabBarTheme.of(context).overlayColor;
           }
 
           var indicatorBorderRadius =
@@ -122,93 +129,131 @@ class _TabsControlState extends State<TabsControl>
           var indicatorPadding =
               parseEdgeInsets(widget.control, "indicatorPadding");
 
-          var indicatorColor = HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("indicatorColor", "")!) ??
-              TabBarTheme.of(context).indicatorColor ??
+          var indicatorColor =
+              widget.control.attrColor("indicatorColor", context) ??
+                  TabBarTheme.of(context).indicatorColor ??
+                  Theme.of(context).colorScheme.primary;
+          var labelColor = widget.control.attrColor("labelColor", context) ??
+              TabBarTheme.of(context).labelColor ??
               Theme.of(context).colorScheme.primary;
+          var unselectedLabelColor =
+              widget.control.attrColor("unselectedLabelColor", context) ??
+                  TabBarTheme.of(context).unselectedLabelColor ??
+                  Theme.of(context).colorScheme.onSurface;
+          var dividerColor =
+              widget.control.attrColor("dividerColor", context) ??
+                  TabBarTheme.of(context).dividerColor;
 
           var themeIndicator =
               TabBarTheme.of(context).indicator as UnderlineTabIndicator?;
-
           var indicatorTabSize = widget.control.attrBool("indicatorTabSize");
-
           var isScrollable = widget.control.attrBool("scrollable", true)!;
+          var secondary = widget.control.attrBool("isSecondary", false)!;
+          var dividerHeight = widget.control.attrDouble("dividerHeight");
+          var enableFeedback = widget.control.attrBool("enableFeedback");
+          var indicatorWeight =
+              widget.control.attrDouble("indicatorThickness", 2.0)!;
           var tabAlignment = parseTabAlignment(widget.control, "tabAlignment",
               isScrollable ? TabAlignment.start : TabAlignment.fill);
+          var mouseCursor =
+              parseMouseCursor(widget.control.attrString("mouseCursor"));
+          var clipBehavior = Clip.values.firstWhere(
+              (e) =>
+                  e.name.toLowerCase() ==
+                  widget.control.attrString("clipBehavior", "")!.toLowerCase(),
+              orElse: () => Clip.hardEdge);
 
-          bool? adaptive =
-              widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+          var indicator = indicatorBorderRadius != null ||
+                  indicatorBorderSide != null ||
+                  indicatorPadding != null
+              ? UnderlineTabIndicator(
+                  borderRadius: indicatorBorderRadius ??
+                      themeIndicator?.borderRadius ??
+                      const BorderRadius.only(
+                          topLeft: Radius.circular(2),
+                          topRight: Radius.circular(2)),
+                  borderSide: indicatorBorderSide ??
+                      themeIndicator?.borderSide ??
+                      BorderSide(
+                          width: themeIndicator?.borderSide.width ?? 2,
+                          color: themeIndicator?.borderSide.color ??
+                              indicatorColor),
+                  insets: indicatorPadding ??
+                      themeIndicator?.insets ??
+                      EdgeInsets.zero)
+              : TabBarTheme.of(context).indicator;
+          var indicatorSize = indicatorTabSize != null
+              ? (indicatorTabSize
+                  ? TabBarIndicatorSize.tab
+                  : TabBarIndicatorSize.label)
+              : TabBarTheme.of(context).indicatorSize;
 
-          var tabBar = TabBar(
-              tabAlignment: tabAlignment,
-              controller: _tabController,
-              isScrollable: isScrollable,
-              dividerColor:
-                  HexColor.fromString(Theme.of(context), widget.control.attrString("dividerColor", "")!) ??
-                      TabBarTheme.of(context).dividerColor,
-              indicatorSize: indicatorTabSize != null
-                  ? (indicatorTabSize
-                      ? TabBarIndicatorSize.tab
-                      : TabBarIndicatorSize.label)
-                  : TabBarTheme.of(context).indicatorSize,
-              indicator: indicatorBorderRadius != null ||
-                      indicatorBorderSide != null ||
-                      indicatorPadding != null
-                  ? UnderlineTabIndicator(
-                      borderRadius: indicatorBorderRadius ??
-                          themeIndicator?.borderRadius ??
-                          const BorderRadius.only(
-                              topLeft: Radius.circular(2),
-                              topRight: Radius.circular(2)),
-                      borderSide: indicatorBorderSide ??
-                          themeIndicator?.borderSide ??
-                          BorderSide(
-                              width: themeIndicator?.borderSide.width ?? 2,
-                              color: themeIndicator?.borderSide.color ??
-                                  indicatorColor),
-                      insets: indicatorPadding ??
-                          themeIndicator?.insets ??
-                          EdgeInsets.zero)
-                  : TabBarTheme.of(context).indicator,
-              indicatorColor: indicatorColor,
-              labelColor: HexColor.fromString(Theme.of(context), widget.control.attrString("labelColor", "")!) ??
-                  TabBarTheme.of(context).labelColor ??
-                  Theme.of(context).colorScheme.primary,
-              unselectedLabelColor:
-                  HexColor.fromString(Theme.of(context), widget.control.attrString("unselectedLabelColor", "")!) ??
-                      TabBarTheme.of(context).unselectedLabelColor ??
-                      Theme.of(context).colorScheme.onSurface,
-              overlayColor: getMaterialStateProperty<Color?>(
-                      overlayColor, (jv) => HexColor.fromString(Theme.of(context), jv as String), null) ??
-                  TabBarTheme.of(context).overlayColor,
-              tabs: viewModel.controlViews.map((tabView) {
-                var text = tabView.control.attrString("text");
-                var icon = parseIcon(tabView.control.attrString("icon", "")!);
-                var tabContentCtrls = tabView.children
-                    .where((c) => c.name == "tab_content" && c.isVisible);
+          var tabs = viewModel.controlViews.map((tabView) {
+            var text = tabView.control.attrString("text");
+            var icon = parseIcon(tabView.control.attrString("icon", "")!);
+            var tabContentCtrls = tabView.children
+                .where((c) => c.name == "tab_content" && c.isVisible);
 
-                Widget tabChild;
-                List<Widget> widgets = [];
-                if (tabContentCtrls.isNotEmpty) {
-                  tabChild = createControl(
-                      widget.control, tabContentCtrls.first.id, disabled,
-                      parentAdaptive: adaptive);
-                } else {
-                  if (icon != null) {
-                    widgets.add(Icon(icon));
-                    if (text != null) {
-                      widgets.add(const SizedBox(width: 8));
-                    }
-                  }
-                  if (text != null) {
-                    widgets.add(Text(text));
-                  }
-                  tabChild = Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: widgets);
+            Widget tabChild;
+            List<Widget> widgets = [];
+            if (tabContentCtrls.isNotEmpty) {
+              tabChild = createControl(
+                  widget.control, tabContentCtrls.first.id, disabled,
+                  parentAdaptive: adaptive);
+            } else {
+              if (icon != null) {
+                widgets.add(Icon(icon));
+                if (text != null) {
+                  widgets.add(const SizedBox(width: 8));
                 }
-                return Tab(child: tabChild);
-              }).toList());
+              }
+              if (text != null) {
+                widgets.add(Text(text));
+              }
+              tabChild = Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: widgets);
+            }
+            return Tab(child: tabChild);
+          }).toList();
+
+          TabBar? tabBar;
+
+          if (secondary) {
+            tabBar = TabBar.secondary(
+                tabAlignment: tabAlignment,
+                controller: _tabController,
+                isScrollable: isScrollable,
+                dividerHeight: dividerHeight,
+                enableFeedback: enableFeedback,
+                mouseCursor: mouseCursor,
+                indicatorWeight: indicatorWeight,
+                dividerColor: dividerColor,
+                indicatorSize: indicatorSize,
+                indicator: indicator,
+                indicatorColor: indicatorColor,
+                labelColor: labelColor,
+                unselectedLabelColor: unselectedLabelColor,
+                overlayColor: overlayColor,
+                tabs: tabs);
+          } else {
+            tabBar = TabBar(
+                tabAlignment: tabAlignment,
+                controller: _tabController,
+                isScrollable: isScrollable,
+                dividerHeight: dividerHeight,
+                enableFeedback: enableFeedback,
+                mouseCursor: mouseCursor,
+                indicatorWeight: indicatorWeight,
+                dividerColor: dividerColor,
+                indicatorSize: indicatorSize,
+                indicator: indicator,
+                indicatorColor: indicatorColor,
+                labelColor: labelColor,
+                unselectedLabelColor: unselectedLabelColor,
+                overlayColor: overlayColor,
+                tabs: tabs);
+          }
 
           debugPrint("tabs.length: ${tabBar.tabs.length}");
 
@@ -223,6 +268,7 @@ class _TabsControlState extends State<TabsControl>
               Expanded(
                   child: TabBarView(
                       controller: _tabController,
+                      clipBehavior: clipBehavior,
                       children: viewModel.controlViews.map((tabView) {
                         var contentCtrls = tabView.children
                             .where((c) => c.name == "content" && c.isVisible);

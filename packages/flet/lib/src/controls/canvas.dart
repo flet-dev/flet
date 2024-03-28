@@ -13,7 +13,6 @@ import '../models/control.dart';
 import '../models/control_tree_view_model.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/dash_path.dart';
 import '../utils/drawing.dart';
 import '../utils/numbers.dart';
@@ -232,9 +231,7 @@ class FletCustomPainter extends CustomPainter {
   }
 
   void drawColor(Canvas canvas, ControlTreeViewModel shape) {
-    var color =
-        HexColor.fromString(theme, shape.control.attrString("color", "")!) ??
-            Colors.black;
+    var color = shape.control.attrColor("color", context) ?? Colors.black;
     var blendMode = BlendMode.values.firstWhere(
         (e) =>
             e.name.toLowerCase() ==
@@ -333,9 +330,7 @@ class FletCustomPainter extends CustomPainter {
 
   void drawShadow(Canvas canvas, ControlTreeViewModel shape) {
     var path = buildPath(json.decode(shape.control.attrString("path", "[]")!));
-    var color =
-        HexColor.fromString(theme, shape.control.attrString("color", "")!) ??
-            Colors.black;
+    var color = shape.control.attrColor("color", context) ?? Colors.black;
     var elevation = shape.control.attrDouble("elevation", 0)!;
     var transparentOccluder =
         shape.control.attrBool("transparentOccluder", false)!;

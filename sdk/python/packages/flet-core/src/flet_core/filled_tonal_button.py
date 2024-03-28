@@ -4,7 +4,7 @@ from flet_core.buttons import ButtonStyle
 from flet_core.control import Control, OptionalNumber
 from flet_core.elevated_button import ElevatedButton
 from flet_core.ref import Ref
-from flet_core.types import ResponsiveNumber
+from flet_core.types import ResponsiveNumber, UrlTarget
 
 
 class FilledTonalButton(ElevatedButton):
@@ -41,7 +41,7 @@ class FilledTonalButton(ElevatedButton):
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,
         url: Optional[str] = None,
-        url_target: Optional[str] = None,
+        url_target: Optional[UrlTarget] = None,
         on_click=None,
         on_long_press=None,
         on_hover=None,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flet_control_backend.dart';
 import '../models/control.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -10,6 +11,7 @@ class SelectionAreaControl extends StatelessWidget {
   final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final FletControlBackend backend;
 
   const SelectionAreaControl(
       {super.key,
@@ -17,7 +19,8 @@ class SelectionAreaControl extends StatelessWidget {
       required this.control,
       required this.children,
       required this.parentDisabled,
-      required this.parentAdaptive});
+      required this.parentAdaptive,
+      required this.backend});
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,10 @@ class SelectionAreaControl extends StatelessWidget {
         context,
         SelectionArea(
           child: child,
+          onSelectionChanged: (selection) {
+            backend.triggerControlEvent(
+                control.id, "change", selection?.plainText ?? "");
+          },
         ),
         parent,
         control);

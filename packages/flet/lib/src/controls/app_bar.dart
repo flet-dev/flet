@@ -1,7 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/colors.dart';
+import '../utils/borders.dart';
+import '../utils/text.dart';
 import '../utils/theme.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
@@ -50,13 +52,27 @@ class AppBarControl extends StatelessWidget
 
       var leadingWidth = control.attrDouble("leadingWidth");
       var elevation = control.attrDouble("elevation");
+      var toolbarOpacity = control.attrDouble("toolbarOpacity", 1)!;
       var centerTitle = control.attrBool("centerTitle", false)!;
       var automaticallyImplyLeading =
           control.attrBool("automaticallyImplyLeading", true)!;
-      var color = HexColor.fromString(
-          Theme.of(context), control.attrString("color", "")!);
-      var bgcolor = HexColor.fromString(
-          Theme.of(context), control.attrString("bgcolor", "")!);
+      var color = control.attrColor("color", context);
+      var bgcolor = control.attrColor("bgcolor", context);
+      var shadowColor = control.attrColor("shadowColor", context);
+      var surfaceTintColor = control.attrColor("surfaceTintColor", context);
+      var elevationOnScroll = control.attrDouble("elevationOnScroll");
+      var forceMaterialTransparency =
+          control.attrBool("forceMaterialTransparency", false)!;
+      var isSecondary = control.attrBool("isSecondary", false)!;
+      var excludeHeaderSemantics =
+          control.attrBool("excludeHeaderSemantics", false)!;
+      var titleSpacing = control.attrDouble("titleSpacing");
+
+      var clipBehavior = Clip.values.firstWhereOrNull(
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("clipBehavior", "")!.toLowerCase(),
+      );
 
       return AppBar(
         leading: leadingCtrls.isNotEmpty
@@ -81,6 +97,20 @@ class AppBarControl extends StatelessWidget
         systemOverlayStyle: Theme.of(context)
             .extension<SystemUiOverlayStyleTheme>()
             ?.systemUiOverlayStyle,
+        shadowColor: shadowColor,
+        surfaceTintColor: surfaceTintColor,
+        scrolledUnderElevation: elevationOnScroll,
+        forceMaterialTransparency: forceMaterialTransparency,
+        primary: !isSecondary,
+        titleSpacing: titleSpacing,
+        excludeHeaderSemantics: excludeHeaderSemantics,
+        clipBehavior: clipBehavior,
+        titleTextStyle:
+            parseTextStyle(Theme.of(context), control, "titleTextStyle"),
+        shape: parseOutlinedBorder(control, "shape"),
+        toolbarOpacity: toolbarOpacity,
+        toolbarTextStyle:
+            parseTextStyle(Theme.of(context), control, "toolbarTextStyle"),
       );
     });
   }

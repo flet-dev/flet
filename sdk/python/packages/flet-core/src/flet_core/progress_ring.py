@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
@@ -10,6 +11,12 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+
+
+class StrokeCap(Enum):
+    ROUND = "round"
+    SQUARE = "square"
+    BUTT = "butt"
 
 
 class ProgressRing(ConstrainedControl):
@@ -56,6 +63,10 @@ class ProgressRing(ConstrainedControl):
         stroke_width: OptionalNumber = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
+        stroke_align: OptionalNumber = None,
+        stroke_cap: Optional[StrokeCap] = None,
+        semantics_label: Optional[str] = None,
+        semantics_value: OptionalNumber = None,
         #
         # ConstrainedControl
         #
@@ -121,6 +132,10 @@ class ProgressRing(ConstrainedControl):
         self.stroke_width = stroke_width
         self.color = color
         self.bgcolor = bgcolor
+        self.semantics_label = semantics_label
+        self.semantics_value = semantics_value
+        self.stroke_align = stroke_align
+        self.stroke_cap = stroke_cap
 
     def _get_control_name(self):
         return "progressring"
@@ -142,6 +157,27 @@ class ProgressRing(ConstrainedControl):
     @stroke_width.setter
     def stroke_width(self, value: OptionalNumber):
         self._set_attr("strokeWidth", value)
+
+    # stroke_align
+    @property
+    def stroke_align(self) -> OptionalNumber:
+        return self._get_attr("strokeAlign", data_type="float", def_value=0.0)
+
+    @stroke_align.setter
+    def stroke_align(self, value: OptionalNumber):
+        self._set_attr("strokeAlign", value)
+
+    # stroke_cap
+    @property
+    def stroke_cap(self) -> OptionalNumber:
+        return self.__stroke_cap
+
+    @stroke_cap.setter
+    def stroke_cap(self, value: OptionalNumber):
+        self.__stroke_cap = value
+        self._set_attr(
+            "strokeCap", value.value if isinstance(value, StrokeCap) else value
+        )
 
     # color
     @property

@@ -1,8 +1,10 @@
+import 'package:flet/src/utils/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/mouse.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_radio.dart';
@@ -83,6 +85,8 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
               p.name.toLowerCase() ==
               widget.control.attrString("labelPosition", "")!.toLowerCase(),
           orElse: () => LabelPosition.right);
+      VisualDensity? visualDensity =
+          parseVisualDensity(widget.control.attrString("visualDensity"), null);
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
@@ -108,11 +112,19 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
             autofocus: autofocus,
             focusNode: _focusNode,
             groupValue: groupValue,
+            mouseCursor: parseMouseCursor(
+                widget.control.attrString("mouseCursor"), null),
             value: value,
-            activeColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("activeColor", "")!),
+            activeColor: widget.control.attrColor("activeColor", context),
+            focusColor: widget.control.attrColor("focusColor", context),
+            hoverColor: widget.control.attrColor("hoverColor", context),
+            splashRadius: widget.control.attrDouble("splashRadius"),
+            toggleable: widget.control.attrBool("toggleable", false)!,
             fillColor: parseMaterialStateColor(
                 Theme.of(context), widget.control, "fillColor"),
+            overlayColor: parseMaterialStateColor(
+                Theme.of(context), widget.control, "overlayColor"),
+            visualDensity: visualDensity,
             onChanged: !disabled
                 ? (String? value) {
                     _onChange(ancestorId, value);

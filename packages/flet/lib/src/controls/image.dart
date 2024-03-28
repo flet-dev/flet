@@ -10,7 +10,6 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/collections.dart';
-import '../utils/colors.dart';
 import '../utils/images.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -50,10 +49,15 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
     var colorBlendMode = BlendMode.values.firstWhereOrNull((e) =>
         e.name.toLowerCase() ==
         control.attrString("colorBlendMode", "")!.toLowerCase());
-    var color = HexColor.fromString(
-        Theme.of(context), control.attrString("color", "")!);
+    var color = control.attrColor("color", context);
     String? semanticsLabel = control.attrString("semanticsLabel");
     var gaplessPlayback = control.attrBool("gaplessPlayback");
+    var excludeFromSemantics = control.attrBool("excludeFromSemantics", false)!;
+    FilterQuality filterQuality = FilterQuality.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("filterQuality", "")!.toLowerCase(),
+        orElse: () => FilterQuality.low);
     bool disabled = control.isDisabled || parentDisabled;
     var errorContentCtrls =
         children.where((c) => c.name == "error_content" && c.isVisible);
@@ -117,6 +121,8 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
               width: width,
               height: height,
               repeat: repeat,
+              filterQuality: filterQuality,
+              excludeFromSemantics: excludeFromSemantics,
               fit: fit,
               color: color,
               gaplessPlayback: gaplessPlayback ?? false,
@@ -136,6 +142,7 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
             image = SvgPicture.network(assetSrc.path,
                 width: width,
                 height: height,
+                excludeFromSemantics: excludeFromSemantics,
                 fit: fit ?? BoxFit.contain,
                 colorFilter: color != null
                     ? ColorFilter.mode(color, colorBlendMode ?? BlendMode.srcIn)
@@ -146,6 +153,8 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
                 width: width,
                 height: height,
                 repeat: repeat,
+                filterQuality: filterQuality,
+                excludeFromSemantics: excludeFromSemantics,
                 fit: fit,
                 color: color,
                 gaplessPlayback: gaplessPlayback ?? false,
