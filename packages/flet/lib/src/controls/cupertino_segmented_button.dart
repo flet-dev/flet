@@ -41,6 +41,7 @@ class _CupertinoSegmentedButtonControlState
     var borderColor = widget.control.attrColor("borderColor", context);
     var selectedColor = widget.control.attrColor("selectedColor", context);
     var unselectedColor = widget.control.attrColor("unselectedColor", context);
+    var clickColor = widget.control.attrColor("clickColor", context);
     List<Control> ctrls = widget.children.where((c) => c.isVisible).toList();
     int? selectedIndex = widget.control.attrInt("selectedIndex");
 
@@ -72,6 +73,7 @@ class _CupertinoSegmentedButtonControlState
           borderColor: borderColor,
           selectedColor: selectedColor,
           unselectedColor: unselectedColor,
+          pressedColor: clickColor,
           padding: parseEdgeInsets(widget.control, "padding"),
         ),
         widget.parent,

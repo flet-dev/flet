@@ -30,6 +30,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         unselected_color: Optional[str] = None,
         border_color: Optional[str] = None,
         padding: PaddingValue = None,
+        click_color: Optional[str] = None,
         on_change=None,
         #
         # ConstrainedControl
@@ -99,6 +100,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self.selected_color = selected_color
         self.unselected_color = unselected_color
         self.on_change = on_change
+        self.click_color = click_color
 
     def _get_control_name(self):
         return "cupertinosegmentedbutton"
@@ -112,7 +114,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     # controls
     @property
-    def controls(self):
+    def controls(self) -> List[Control]:
         return self.__controls
 
     @controls.setter
@@ -150,12 +152,21 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     # unselected_color
     @property
-    def unselected_color(self):
+    def unselected_color(self) -> Optional[str]:
         return self._get_attr("unselectedColor")
 
     @unselected_color.setter
-    def unselected_color(self, value):
+    def unselected_color(self, value: Optional[str]):
         self._set_attr("unselectedColor", value)
+
+    # click_color
+    @property
+    def click_color(self) -> Optional[str]:
+        return self._get_attr("clickColor")
+
+    @click_color.setter
+    def click_color(self, value: Optional[str]):
+        self._set_attr("clickColor", value)
 
     # padding
     @property
