@@ -91,6 +91,8 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
         trackColor: materialTrackColor?.resolve({}),
         focusColor: widget.control.attrColor("focusColor", context),
         value: _value,
+        offLabelColor: widget.control.attrColor("offLabelColor", context),
+        onLabelColor: widget.control.attrColor("onLabelColor", context),
         onChanged: !disabled
             ? (bool value) {
                 _onChange(value);
