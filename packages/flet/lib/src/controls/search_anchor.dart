@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/form_field.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
@@ -96,6 +98,14 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
     TextStyle? viewHintTextStyle =
         parseTextStyle(Theme.of(context), widget.control, "viewHintTextStyle");
 
+    var textCapitalization = TextCapitalization.values.firstWhereOrNull(
+      (c) =>
+          c.name.toLowerCase() ==
+          widget.control.attrString("capitalization", "")!,
+    );
+    TextInputType keyboardType =
+        parseTextInputType(widget.control.attrString("keyboardType", "")!);
+
     var method = widget.control.attrString("method");
 
     if (method != null) {
@@ -166,9 +176,16 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                     .triggerControlEvent(widget.control.id, "change", value);
               }
             : null,
+        viewSurfaceTintColor:
+            widget.control.attrColor("viewSurfaceTintColor", context),
+        textCapitalization: textCapitalization,
+        keyboardType: keyboardType,
         builder: (BuildContext context, SearchController controller) {
           return SearchBar(
             controller: controller,
+            keyboardType: keyboardType,
+            textCapitalization: textCapitalization,
+            autoFocus: widget.control.attrBool("autoFocus", false)!,
             hintText: widget.control.attrString("barHintText"),
             backgroundColor: parseMaterialStateColor(
                 Theme.of(context), widget.control, "barBgcolor"),
