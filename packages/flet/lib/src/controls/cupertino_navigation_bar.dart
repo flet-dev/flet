@@ -81,6 +81,7 @@ class _CupertinoNavigationBarControlState
 
             return BottomNavigationBarItem(
                 tooltip: destView.control.attrString("tooltip", "")!,
+                backgroundColor: widget.control.attrColor("bgColor", context),
                 icon: iconContentCtrls.isNotEmpty
                     ? createControl(
                         destView.control, iconContentCtrls.first.id, disabled,

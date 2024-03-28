@@ -45,6 +45,7 @@ class NavigationDestination(Control):
         icon_content: Optional[Control] = None,
         selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
+        bgcolor: Optional[str] = None,
         #
         # Control
         #
@@ -59,6 +60,7 @@ class NavigationDestination(Control):
         self.selected_icon = selected_icon
         self.__selected_icon_content: Optional[Control] = None
         self.selected_icon_content = selected_icon_content
+        self.bgcolor = bgcolor
 
     def _get_control_name(self):
         return "navigationdestination"
@@ -77,11 +79,11 @@ class NavigationDestination(Control):
 
     # icon
     @property
-    def icon(self):
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
     # icon_content
@@ -95,11 +97,11 @@ class NavigationDestination(Control):
 
     # selected_icon
     @property
-    def selected_icon(self):
+    def selected_icon(self) -> Optional[str]:
         return self._get_attr("selectedIcon")
 
     @selected_icon.setter
-    def selected_icon(self, value):
+    def selected_icon(self, value: Optional[str]):
         self._set_attr("selectedIcon", value)
 
     # selected_icon_content
@@ -113,12 +115,21 @@ class NavigationDestination(Control):
 
     # label
     @property
-    def label(self):
+    def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
+
+    # bgcolor
+    @property
+    def bgcolor(self) -> Optional[str]:
+        return self._get_attr("bgcolor")
+
+    @bgcolor.setter
+    def bgcolor(self, value: Optional[str]):
+        self._set_attr("bgcolor", value)
 
 
 class NavigationBar(ConstrainedControl, AdaptiveControl):
