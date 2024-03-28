@@ -483,7 +483,22 @@ class Page(AdaptiveControl):
 
     def run_task(self, handler: Callable[..., Awaitable[Any]], *args):
         assert asyncio.iscoroutinefunction(handler)
-        return asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
+
+        handler_with_context = self.__context_wrapper(handler)
+
+        future = asyncio.run_coroutine_threadsafe(
+            handler_with_context(*args), self.__loop
+        )
+
+        def _on_completion(f):
+            exception = f.exception()
+
+            if exception:
+                raise exception
+
+        future.add_done_callback(_on_completion)
+
+        return future
 
     def run_thread(self, handler, *args):
         if is_pyodide():
