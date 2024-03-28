@@ -13,6 +13,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/material_state.dart';
+import '../utils/mouse.dart';
 import 'create_control.dart';
 
 class TabsControl extends StatefulWidget {
@@ -131,14 +132,14 @@ class _TabsControlState extends State<TabsControl>
           var indicatorColor =
               widget.control.attrColor("indicatorColor", context) ??
                   TabBarTheme.of(context).indicatorColor ??
-              Theme.of(context).colorScheme.primary;
+                  Theme.of(context).colorScheme.primary;
           var labelColor = widget.control.attrColor("labelColor", context) ??
               TabBarTheme.of(context).labelColor ??
               Theme.of(context).colorScheme.primary;
           var unselectedLabelColor =
               widget.control.attrColor("unselectedLabelColor", context) ??
                   TabBarTheme.of(context).unselectedLabelColor ??
-              Theme.of(context).colorScheme.onSurface;
+                  Theme.of(context).colorScheme.onSurface;
           var dividerColor =
               widget.control.attrColor("dividerColor", context) ??
                   TabBarTheme.of(context).dividerColor;
@@ -147,13 +148,20 @@ class _TabsControlState extends State<TabsControl>
               TabBarTheme.of(context).indicator as UnderlineTabIndicator?;
           var indicatorTabSize = widget.control.attrBool("indicatorTabSize");
           var isScrollable = widget.control.attrBool("scrollable", true)!;
-          var secondary = widget.control.attrBool("secondary", false)!;
+          var secondary = widget.control.attrBool("isSecondary", false)!;
           var dividerHeight = widget.control.attrDouble("dividerHeight");
           var enableFeedback = widget.control.attrBool("enableFeedback");
           var indicatorWeight =
               widget.control.attrDouble("indicatorThickness", 2.0)!;
           var tabAlignment = parseTabAlignment(widget.control, "tabAlignment",
               isScrollable ? TabAlignment.start : TabAlignment.fill);
+          var mouseCursor =
+              parseMouseCursor(widget.control.attrString("mouseCursor"));
+          var clipBehavior = Clip.values.firstWhere(
+              (e) =>
+                  e.name.toLowerCase() ==
+                  widget.control.attrString("clipBehavior", "")!.toLowerCase(),
+              orElse: () => Clip.hardEdge);
 
           var indicator = indicatorBorderRadius != null ||
                   indicatorBorderSide != null ||
@@ -218,6 +226,7 @@ class _TabsControlState extends State<TabsControl>
                 isScrollable: isScrollable,
                 dividerHeight: dividerHeight,
                 enableFeedback: enableFeedback,
+                mouseCursor: mouseCursor,
                 indicatorWeight: indicatorWeight,
                 dividerColor: dividerColor,
                 indicatorSize: indicatorSize,
@@ -234,6 +243,7 @@ class _TabsControlState extends State<TabsControl>
                 isScrollable: isScrollable,
                 dividerHeight: dividerHeight,
                 enableFeedback: enableFeedback,
+                mouseCursor: mouseCursor,
                 indicatorWeight: indicatorWeight,
                 dividerColor: dividerColor,
                 indicatorSize: indicatorSize,
@@ -258,6 +268,7 @@ class _TabsControlState extends State<TabsControl>
               Expanded(
                   child: TabBarView(
                       controller: _tabController,
+                      clipBehavior: clipBehavior,
                       children: viewModel.controlViews.map((tabView) {
                         var contentCtrls = tabView.children
                             .where((c) => c.name == "content" && c.isVisible);

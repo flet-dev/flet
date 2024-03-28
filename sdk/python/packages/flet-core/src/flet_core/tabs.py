@@ -4,6 +4,7 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.border import BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
+from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -15,6 +16,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TabAlignment,
+    ClipBehavior,
 )
 
 
@@ -151,13 +153,15 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         indicator_border_side: Optional[BorderSide] = None,
         indicator_padding: PaddingValue = None,
         indicator_tab_size: Optional[bool] = None,
-        secondary: Optional[bool] = None,
+        is_secondary: Optional[bool] = None,
         label_color: Optional[str] = None,
         unselected_label_color: Optional[str] = None,
         overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
         divider_height: OptionalNumber = None,
         indicator_thickness: OptionalNumber = None,
         enable_feedback: Optional[str] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
         on_change=None,
         #
         # ConstrainedControl and AdaptiveControl
@@ -240,7 +244,9 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self.divider_height = divider_height
         self.indicator_thickness = indicator_thickness
         self.enable_feedback = enable_feedback
-        self.secondary = secondary
+        self.is_secondary = is_secondary
+        self.mouse_cursor = mouse_cursor
+        self.clip_behavior = clip_behavior
 
     def _get_control_name(self):
         return "tabs"
@@ -291,14 +297,40 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     def scrollable(self, value: Optional[bool]):
         self._set_attr("scrollable", value)
 
-    # secondary
+    # mouse_cursor
     @property
-    def secondary(self) -> Optional[bool]:
-        return self._get_attr("secondary", data_type="bool", def_value=False)
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
 
-    @secondary.setter
-    def secondary(self, value: Optional[bool]):
-        self._set_attr("secondary", value)
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr(
+            "mouseCursor",
+            value.value if isinstance(value, MouseCursor) else value,
+        )
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        self._set_attr(
+            "clipBehavior",
+            value.value if isinstance(value, ClipBehavior) else value,
+        )
+
+    # is_secondary
+    @property
+    def is_secondary(self) -> Optional[bool]:
+        return self._get_attr("isSecondary", data_type="bool", def_value=False)
+
+    @is_secondary.setter
+    def is_secondary(self, value: Optional[bool]):
+        self._set_attr("isSecondary", value)
 
     # tab_alignment
     @property

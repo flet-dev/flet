@@ -251,11 +251,11 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # mouse_cursor
     @property
-    def mouse_cursor(self) -> MouseCursor:
+    def mouse_cursor(self) -> Optional[MouseCursor]:
         return self.__mouse_cursor
 
     @mouse_cursor.setter
-    def mouse_cursor(self, value: MouseCursor):
+    def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
         self._set_attr(
             "mouseCursor",
