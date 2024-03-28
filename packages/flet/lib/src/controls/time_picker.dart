@@ -82,6 +82,10 @@ class _TimePickerControlState extends State<TimePickerControl> {
         errorInvalidText: errorInvalidText,
         initialEntryMode: timePickerEntryMode,
         orientation: orientation,
+        onEntryModeChanged: (TimePickerEntryMode mode) {
+          widget.backend.triggerControlEvent(
+              widget.control.id, "entryModeChange", mode.name);
+        },
       );
 
       return dialog;

@@ -101,6 +101,7 @@ class DatePicker(Control):
         switch_to_input_icon: Optional[str] = None,
         on_change=None,
         on_dismiss=None,
+        on_entry_mode_change=None,
         #
         # ConstrainedControl
         #
@@ -156,6 +157,7 @@ class DatePicker(Control):
         self.on_change = on_change
         self.on_dismiss = on_dismiss
         self.open = open
+        self.on_entry_mode_change = on_entry_mode_change
 
     def _get_control_name(self):
         return "datepicker"

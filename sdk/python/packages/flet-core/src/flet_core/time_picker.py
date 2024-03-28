@@ -1,8 +1,11 @@
+import json
 from datetime import time
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.types import Orientation, ResponsiveNumber
 from flet_core.utils import deprecated
@@ -15,16 +18,21 @@ class TimePickerEntryMode(Enum):
     INPUT_ONLY = "inputOnly"
 
 
+class TimePickerEntryModeChangeEvent(ControlEvent):
+    def __init__(self, mode) -> None:
+        self.mode: Optional[TimePickerEntryMode] = TimePickerEntryMode(mode)
+
+
 class TimePicker(Control):
     """
-        A Material-style time picker dialog.
+    A Material-style time picker dialog.
 
-        It is added to [`page.overlay`](page#overlay) and called using its `pick_time()` method.
+    It is added to [`page.overlay`](page#overlay) and called using its `pick_time()` method.
 
-        Depending on the `time_picker_entry_mode`, it will show either a Dial or an Input (hour and minute text fields) for picking a time.
+    Depending on the `time_picker_entry_mode`, it will show either a Dial or an Input (hour and minute text fields) for picking a time.
 
-        Example:
-        ```
+    Example:
+    ```
     import datetime
     import flet as ft
 
@@ -55,11 +63,11 @@ class TimePicker(Control):
 
 
     ft.app(target=main)
-        ```
+    ```
 
-        -----
+    -----
 
-        Online docs: https://flet.dev/docs/controls/time_picker
+    Online docs: https://flet.dev/docs/controls/time_picker
     """
 
     def __init__(
@@ -76,6 +84,7 @@ class TimePicker(Control):
         orientation: Optional[Orientation] = None,
         on_change=None,
         on_dismiss=None,
+        on_entry_mode_change=None,
         #
         # Control
         #
@@ -101,6 +110,17 @@ class TimePicker(Control):
             disabled=disabled,
             data=data,
         )
+
+        def convert_entry_mode_event_data(e):
+            d = json.loads(e.data)
+            self.__result = TimePickerEntryModeChangeEvent(**d)
+            return self.__result
+
+        self.__on_entry_mode_change = EventHandler(convert_entry_mode_event_data)
+        self._add_event_handler(
+            "entryModeChange", self.__on_entry_mode_change.get_handler()
+        )
+
         self.value = value
         self.help_text = help_text
         self.cancel_text = cancel_text
@@ -113,6 +133,7 @@ class TimePicker(Control):
         self.on_change = on_change
         self.on_dismiss = on_dismiss
         self.open = open
+        self.on_entry_mode_change = on_entry_mode_change
 
     def _get_control_name(self):
         return "timepicker"
@@ -252,3 +273,12 @@ class TimePicker(Control):
     @on_dismiss.setter
     def on_dismiss(self, handler):
         self._add_event_handler("dismiss", handler)
+
+    # on_entry_mode_change
+    @property
+    def on_entry_mode_change(self):
+        return self.__on_entry_mode_change
+
+    @on_entry_mode_change.setter
+    def on_entry_mode_change(self, handler):
+        self.__on_entry_mode_change.subscribe(handler)
