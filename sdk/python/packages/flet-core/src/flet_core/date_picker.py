@@ -1,8 +1,11 @@
+import json
 from datetime import date, datetime
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.textfield import KeyboardType
 from flet_core.types import ResponsiveNumber
@@ -24,6 +27,11 @@ class DatePickerEntryMode(Enum):
     INPUT = "input"
     CALENDAR_ONLY = "calendarOnly"
     INPUT_ONLY = "inputOnly"
+
+
+class DatePickerEntryModeChangeEvent(ControlEvent):
+    def __init__(self, mode) -> None:
+        self.mode: Optional[DatePickerEntryMode] = DatePickerEntryMode(mode)
 
 
 class DatePicker(Control):
@@ -118,12 +126,22 @@ class DatePicker(Control):
             disabled=disabled,
             data=data,
         )
+
+        def convert_entry_mode_event_data(e):
+            d = json.loads(e.data)
+            self.__result = DatePickerEntryModeChangeEvent(**d)
+            return self.__result
+
+        self.__on_entry_mode_change = EventHandler(convert_entry_mode_event_data)
+        self._add_event_handler(
+            "entryModeChange", self.__on_entry_mode_change.get_handler()
+        )
+
         self.value = value
         self.first_date = first_date
         self.last_date = last_date
         self.current_date = current_date
         self.keyboard_type = keyboard_type
-        # self.locale = locale
         self.help_text = help_text
         self.cancel_text = cancel_text
         self.confirm_text = confirm_text
@@ -182,7 +200,9 @@ class DatePicker(Control):
     @property
     def first_date(self) -> Optional[datetime]:
         value_string = self._get_attr("firstDate", def_value=None)
-        return datetime.fromisoformat(value_string) if value_string is not None else None
+        return (
+            datetime.fromisoformat(value_string) if value_string is not None else None
+        )
 
     @first_date.setter
     def first_date(self, value: Optional[Union[datetime, str]]):
@@ -194,7 +214,9 @@ class DatePicker(Control):
     @property
     def last_date(self) -> Optional[datetime]:
         value_string = self._get_attr("lastDate", def_value=None)
-        return datetime.fromisoformat(value_string) if value_string is not None else None
+        return (
+            datetime.fromisoformat(value_string) if value_string is not None else None
+        )
 
     @last_date.setter
     def last_date(self, value: Optional[Union[datetime, str]]):
@@ -206,7 +228,9 @@ class DatePicker(Control):
     @property
     def current_date(self) -> Optional[datetime]:
         value_string = self._get_attr("currentDate", def_value=None)
-        return datetime.fromisoformat(value_string) if value_string is not None else None
+        return (
+            datetime.fromisoformat(value_string) if value_string is not None else None
+        )
 
     @current_date.setter
     def current_date(self, value: Optional[Union[datetime, str]]):
@@ -285,7 +309,9 @@ class DatePicker(Control):
     @keyboard_type.setter
     def keyboard_type(self, value: Optional[KeyboardType]):
         self.__keyboard_type = value
-        self._set_attr("keyboardType", value.value if isinstance(value, KeyboardType) else value)
+        self._set_attr(
+            "keyboardType", value.value if isinstance(value, KeyboardType) else value
+        )
 
     # date_picker_mode
     @property
@@ -295,7 +321,10 @@ class DatePicker(Control):
     @date_picker_mode.setter
     def date_picker_mode(self, value: Optional[DatePickerMode]):
         self.__date_picker_mode = value
-        self._set_attr("datePickerMode", value.value if isinstance(value, DatePickerMode) else value)
+        self._set_attr(
+            "datePickerMode",
+            value.value if isinstance(value, DatePickerMode) else value,
+        )
 
     # date_picker_entry_mode
     @property
@@ -306,7 +335,8 @@ class DatePicker(Control):
     def date_picker_entry_mode(self, value: Optional[DatePickerEntryMode]):
         self.__date_picker_entry_mode = value
         self._set_attr(
-            "datePickerEntryMode", value.value if isinstance(value, DatePickerEntryMode) else value
+            "datePickerEntryMode",
+            value.value if isinstance(value, DatePickerEntryMode) else value,
         )
 
     # switch_to_calendar_icon
@@ -344,3 +374,12 @@ class DatePicker(Control):
     @on_dismiss.setter
     def on_dismiss(self, handler):
         self._add_event_handler("dismiss", handler)
+
+    # on_entry_mode_change
+    @property
+    def on_entry_mode_change(self):
+        return self.__on_entry_mode_change
+
+    @on_entry_mode_change.setter
+    def on_entry_mode_change(self, handler):
+        self.__on_entry_mode_change.subscribe(handler)
