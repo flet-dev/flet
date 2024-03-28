@@ -1,9 +1,14 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
+import '../utils/mouse.dart';
+import '../utils/text.dart';
+import '../utils/theme.dart';
 import 'create_control.dart';
 import 'cupertino_list_tile.dart';
 import 'flet_store_mixin.dart';
@@ -68,6 +73,13 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
       var trailingCtrls =
           children.where((c) => c.name == "trailing" && c.isVisible);
 
+      var titleAlignment = ListTileTitleAlignment.values.firstWhereOrNull((e) =>
+          e.name.toLowerCase() ==
+          control.attrString("titleAlignment", "")!.toLowerCase());
+      var style = ListTileStyle.values.firstWhereOrNull((e) =>
+          e.name.toLowerCase() ==
+          control.attrString("style", "")!.toLowerCase());
+
       bool selected = control.attrBool("selected", false)!;
       bool dense = control.attrBool("dense", false)!;
       bool isThreeLine = control.attrBool("isThreeLine", false)!;
@@ -125,6 +137,23 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         tileColor: control.attrColor("bgcolor", context),
         splashColor: control.attrColor("bgcolorActivated", context),
         hoverColor: control.attrColor("hoverColor", context),
+        iconColor: control.attrColor("iconColor", context),
+        textColor: control.attrColor("textColor", context),
+        mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
+        visualDensity:
+            parseVisualDensity(control.attrString("visualDensity"), null),
+        shape: parseOutlinedBorder(control, "shape"),
+        titleTextStyle:
+            parseTextStyle(Theme.of(context), control, "titleTextStyle"),
+        leadingAndTrailingTextStyle: parseTextStyle(
+            Theme.of(context), control, "leadingAndTrailingTextStyle"),
+        subtitleTextStyle:
+            parseTextStyle(Theme.of(context), control, "subtitleTextStyle"),
+        titleAlignment: titleAlignment,
+        style: style,
+        onFocusChange: (bool hasFocus) {
+          backend.triggerControlEvent(control.id, hasFocus ? "focus" : "blur");
+        },
         leading: leadingCtrls.isNotEmpty
             ? createControl(control, leadingCtrls.first.id, disabled,
                 parentAdaptive: adaptive)

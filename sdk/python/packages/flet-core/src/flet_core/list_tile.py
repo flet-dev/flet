@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet_core import MouseCursor, TextStyle, ThemeVisualDensity, OutlinedBorder
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -14,6 +15,14 @@ from flet_core.types import (
     ScaleValue,
     UrlTarget,
 )
+
+
+class ListTileTitleAlignment(Enum):
+    TOP = "top"
+    CENTER = "center"
+    BOTTOM = "bottom"
+    THREE_LINE = "threeLine"
+    TITLE_HEIGHT = "titleHeight"
 
 
 class ListTileStyle(Enum):
@@ -86,6 +95,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         min_vertical_padding: OptionalNumber = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
+        title_alignment: Optional[ListTileTitleAlignment] = None,
+        icon_color: Optional[str] = None,
+        text_color: Optional[str] = None,
+        shape: Optional[OutlinedBorder] = None,
+        visual_density: Optional[ThemeVisualDensity] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
+        title_text_style: Optional[TextStyle] = None,
+        subtitle_text_style: Optional[TextStyle] = None,
+        leading_and_trailing_text_style: Optional[TextStyle] = None,
         on_click=None,
         on_long_press=None,
         #
@@ -177,6 +195,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         self.horizontal_spacing = horizontal_spacing
         self.min_leading_width = min_leading_width
         self.min_vertical_padding = min_vertical_padding
+        self.title_alignment = title_alignment
+        self.icon_color = icon_color
+        self.text_color = text_color
+        self.shape = shape
+        self.visual_density = visual_density
+        self.mouse_cursor = mouse_cursor
+        self.title_text_style = title_text_style
+        self.subtitle_text_style = subtitle_text_style
+        self.leading_and_trailing_text_style = leading_and_trailing_text_style
 
     def _get_control_name(self):
         return "listtile"
@@ -184,6 +211,16 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("contentPadding", self.__content_padding)
+        if isinstance(self.__shape, OutlinedBorder):
+            self._set_attr_json("shape", self.__shape)
+        if isinstance(self.__title_text_style, TextStyle):
+            self._set_attr_json("titleTextStyle", self.__title_text_style)
+        if isinstance(self.__subtitle_text_style, TextStyle):
+            self._set_attr_json("subtitleTextStyle", self.__subtitle_text_style)
+        if isinstance(self.__leading_and_trailing_text_style, TextStyle):
+            self._set_attr_json(
+                "leadingAndTrailingTextStyle", self.__leading_and_trailing_text_style
+            )
 
     def _get_children(self):
         children = []
@@ -212,7 +249,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
@@ -221,7 +258,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # selected_color
     @property
-    def selected_color(self):
+    def selected_color(self) -> Optional[str]:
         return self._get_attr("selectedColor")
 
     @selected_color.setter
@@ -230,7 +267,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # selected_tile_color
     @property
-    def selected_tile_color(self):
+    def selected_tile_color(self) -> Optional[str]:
         return self._get_attr("selectedTileColor")
 
     @selected_tile_color.setter
@@ -239,7 +276,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # bgcolor_activated
     @property
-    def bgcolor_activated(self):
+    def bgcolor_activated(self) -> Optional[str]:
         return self._get_attr("bgcolorActivated")
 
     @bgcolor_activated.setter
@@ -248,7 +285,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # min_leading_width
     @property
-    def min_leading_width(self):
+    def min_leading_width(self) -> OptionalNumber:
         return self._get_attr("minLeadingWidth", data_type="float", def_value=40)
 
     @min_leading_width.setter
@@ -257,7 +294,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # horizontal_spacing
     @property
-    def horizontal_spacing(self):
+    def horizontal_spacing(self) -> OptionalNumber:
         return self._get_attr("horizontalSpacing", data_type="float", def_value=16)
 
     @horizontal_spacing.setter
@@ -266,11 +303,11 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # hover_color
     @property
-    def hover_color(self):
+    def hover_color(self) -> Optional[str]:
         return self._get_attr("hoverColor")
 
     @hover_color.setter
-    def hover_color(self, value):
+    def hover_color(self, value: Optional[str]):
         self._set_attr("hoverColor", value)
 
     # leading
@@ -348,6 +385,19 @@ class ListTile(ConstrainedControl, AdaptiveControl):
             "style", value.value if isinstance(value, ListTileStyle) else value
         )
 
+    # title_alignment
+    @property
+    def title_alignment(self) -> Optional[ListTileTitleAlignment]:
+        return self.__title_alignment
+
+    @title_alignment.setter
+    def title_alignment(self, value: Optional[ListTileTitleAlignment]):
+        self.__title_alignment = value
+        self._set_attr(
+            "titleAlignment",
+            value.value if isinstance(value, ListTileTitleAlignment) else value,
+        )
+
     # selected
     @property
     def selected(self) -> Optional[bool]:
@@ -386,12 +436,30 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # url
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         return self._get_attr("url")
 
     @url.setter
-    def url(self, value):
+    def url(self, value: Optional[str]):
         self._set_attr("url", value)
+
+    # icon_color
+    @property
+    def icon_color(self) -> Optional[str]:
+        return self._get_attr("iconColor")
+
+    @icon_color.setter
+    def icon_color(self, value: Optional[str]):
+        self._set_attr("iconColor", value)
+
+    # text_color
+    @property
+    def text_color(self) -> Optional[str]:
+        return self._get_attr("textColor")
+
+    @text_color.setter
+    def text_color(self, value: Optional[str]):
+        self._set_attr("textColor", value)
 
     # url_target
     @property
@@ -405,6 +473,67 @@ class ListTile(ConstrainedControl, AdaptiveControl):
             "urlTarget", value.value if isinstance(value, UrlTarget) else value
         )
 
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr(
+            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
+        )
+
+    # visual_density
+    @property
+    def visual_density(self) -> Optional[ThemeVisualDensity]:
+        return self.__visual_density
+
+    @visual_density.setter
+    def visual_density(self, value: Optional[ThemeVisualDensity]):
+        self.__visual_density = value
+        self._set_attr(
+            "visualDensity",
+            value.value if isinstance(value, ThemeVisualDensity) else value,
+        )
+
+    # shape
+    @property
+    def shape(self) -> Optional[OutlinedBorder]:
+        return self.__shape
+
+    @shape.setter
+    def shape(self, value: Optional[OutlinedBorder]):
+        self.__shape = value
+
+    # title_text_style
+    @property
+    def title_text_style(self) -> Optional[TextStyle]:
+        return self.__title_text_style
+
+    @title_text_style.setter
+    def title_text_style(self, value: Optional[TextStyle]):
+        self.__title_text_style = value
+
+    # subtitle_text_style
+    @property
+    def subtitle_text_style(self) -> Optional[TextStyle]:
+        return self.__subtitle_text_style
+
+    @subtitle_text_style.setter
+    def subtitle_text_style(self, value: Optional[TextStyle]):
+        self.__subtitle_text_style = value
+
+    # leading_and_trailing_text_style
+    @property
+    def leading_and_trailing_text_style(self) -> Optional[TextStyle]:
+        return self.__leading_and_trailing_text_style
+
+    @leading_and_trailing_text_style.setter
+    def leading_and_trailing_text_style(self, value: Optional[TextStyle]):
+        self.__leading_and_trailing_text_style = value
+
     # on_click
     @property
     def on_click(self):
@@ -413,10 +542,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @on_click.setter
     def on_click(self, handler):
         self._add_event_handler("click", handler)
-        if handler is not None:
-            self._set_attr("onclick", True)
-        else:
-            self._set_attr("onclick", None)
+        self._set_attr("onclick", True if handler is not None else None)
 
     # on_long_press
     @property
@@ -427,3 +553,21 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     def on_long_press(self, handler):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
+
+    # on_focus
+    @property
+    def on_focus(self):
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self):
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler):
+        self._add_event_handler("blur", handler)
