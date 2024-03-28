@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 import 'error.dart';
 import 'flet_store_mixin.dart';
@@ -90,6 +91,10 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               labelType: extended ? NavigationRailLabelType.none : labelType,
               extended: extended,
               elevation: widget.control.attrDouble("elevation", 0),
+              selectedLabelTextStyle: parseTextStyle(
+                  Theme.of(context), widget.control, "selectedLabelTextStyle"),
+              unselectedLabelTextStyle: parseTextStyle(Theme.of(context),
+                  widget.control, "unselectedLabelTextStyle"),
               indicatorShape:
                   parseOutlinedBorder(widget.control, "indicatorShape"),
               minWidth: widget.control.attrDouble("minWidth"),
@@ -125,7 +130,12 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                     .where((c) => c.name == "selected_icon_content");
 
                 return NavigationRailDestination(
+                    disabled: disabled || destView.control.isDisabled,
                     padding: parseEdgeInsets(destView.control, "padding"),
+                    indicatorColor:
+                        destView.control.attrColor("indicatorColor", context),
+                    indicatorShape:
+                        parseOutlinedBorder(destView.control, "indicatorShape"),
                     icon: iconContentCtrls.isNotEmpty
                         ? createControl(destView.control,
                             iconContentCtrls.first.id, disabled,
