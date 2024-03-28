@@ -6,6 +6,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/desktop.dart';
+import '../utils/mouse.dart';
 import 'create_control.dart';
 import 'cupertino_slider.dart';
 import 'flet_store_mixin.dart';
@@ -130,6 +131,11 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
                   onChange(value);
                 }
               : null,
+          mouseCursor:
+              parseMouseCursor(widget.control.attrString("mouseCursor")),
+          secondaryActiveColor:
+              widget.control.attrColor("secondaryActiveColor", context),
+          secondaryTrackValue: widget.control.attrDouble("secondaryTrackValue"),
           onChangeStart: !disabled
               ? (double value) {
                   widget.backend.triggerControlEvent(
