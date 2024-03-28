@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_alert_dialog.dart';
 import 'error.dart';
@@ -48,7 +49,7 @@ class _AlertDialogControlState extends State<AlertDialogControl>
     var actionCtrls =
         widget.children.where((c) => c.name == "action" && c.isVisible);
     final actionsAlignment = parseMainAxisAlignment(
-        widget.control, "actionsAlignment", MainAxisAlignment.start);
+        widget.control, "actionsAlignment", MainAxisAlignment.end);
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
       return const ErrorControl("AlertDialog does not have any content.");
     }
@@ -91,6 +92,15 @@ class _AlertDialogControlState extends State<AlertDialogControl>
           ? createControl(widget.control, iconCtrls.first.id, disabled,
               parentAdaptive: adaptive)
           : null,
+      iconColor: widget.control.attrColor("iconColor", context),
+      scrollable: widget.control.attrBool("scrollable", false)!,
+      actionsOverflowButtonSpacing:
+          widget.control.attrDouble("actionsOverflowButtonSpacing"),
+      alignment: parseAlignment(widget.control, "alignment"),
+      contentTextStyle:
+          parseTextStyle(Theme.of(context), widget.control, "contentTextStyle"),
+      titleTextStyle:
+          parseTextStyle(Theme.of(context), widget.control, "titleTextStyle"),
     );
   }
 
