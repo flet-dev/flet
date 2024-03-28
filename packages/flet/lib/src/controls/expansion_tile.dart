@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
+import '../utils/theme.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -103,6 +104,10 @@ class ExpansionTileControl extends StatelessWidget {
       shape: parseOutlinedBorder(control, "shape"),
       collapsedShape: parseOutlinedBorder(control, "collapsedShape"),
       onExpansionChanged: onChange,
+      visualDensity:
+          parseVisualDensity(control.attrString("visualDensity"), null),
+      enableFeedback: control.attrBool("enableFeedback"),
+      dense: control.attrBool("dense"),
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled,
               parentAdaptive: adaptive)
