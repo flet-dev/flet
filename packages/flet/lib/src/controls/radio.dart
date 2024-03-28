@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/mouse.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_radio.dart';
@@ -111,6 +112,8 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
             autofocus: autofocus,
             focusNode: _focusNode,
             groupValue: groupValue,
+            mouseCursor: parseMouseCursor(
+                widget.control.attrString("mouseCursor"), null),
             value: value,
             activeColor: widget.control.attrColor("activeColor", context),
             focusColor: widget.control.attrColor("focusColor", context),

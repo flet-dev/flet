@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional, Union
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
+from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.theme import ThemeVisualDensity
@@ -67,6 +68,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         splash_radius: OptionalNumber = None,
         toggleable: Optional[bool] = None,
         visual_density: Optional[ThemeVisualDensity] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
         on_focus=None,
         on_blur=None,
         #
@@ -149,6 +151,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self.splash_radius = splash_radius
         self.toggleable = toggleable
         self.visual_density = visual_density
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "radio"
@@ -237,6 +240,18 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self.__label_position = value
         self._set_attr(
             "labelPosition", value.value if isinstance(value, LabelPosition) else value
+        )
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr(
+            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
         )
 
     # label_style
