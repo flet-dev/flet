@@ -7,6 +7,8 @@ import '../utils/buttons.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
+import '../utils/mouse.dart';
+import '../utils/theme.dart';
 import 'create_control.dart';
 import 'cupertino_button.dart';
 import 'error.dart';
@@ -100,6 +102,10 @@ class _IconButtonControlState extends State<IconButtonControl>
       String url = widget.control.attrString("url", "")!;
       String? urlTarget = widget.control.attrString("urlTarget");
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
+      var mouseCursor =
+          parseMouseCursor(widget.control.attrString("mouseCursor"), null);
+      var visualDensity =
+          parseVisualDensity(widget.control.attrString("visualDensity"), null);
 
       Function()? onPressed = disabled
           ? null
@@ -146,6 +152,8 @@ class _IconButtonControlState extends State<IconButtonControl>
               color: iconColor,
             ),
             iconSize: iconSize,
+            mouseCursor: mouseCursor,
+            visualDensity: visualDensity,
             tooltip: tooltip,
             style: style,
             isSelected: selected,
@@ -168,6 +176,8 @@ class _IconButtonControlState extends State<IconButtonControl>
             splashRadius: splashRadius,
             onPressed: onPressed,
             iconSize: iconSize,
+            mouseCursor: mouseCursor,
+            visualDensity: visualDensity,
             style: style,
             tooltip: tooltip,
             isSelected: selected,

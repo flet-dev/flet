@@ -6,7 +6,9 @@ from flet_core.alignment import Alignment
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
+from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
+from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -81,6 +83,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         enable_feedback: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
+        visual_density: Optional[ThemeVisualDensity] = None,
         on_click=None,
         on_focus=None,
         on_blur=None,
@@ -172,6 +176,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.on_click = on_click
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.mouse_cursor = mouse_cursor
+        self.visual_density = visual_density
 
     def _get_control_name(self):
         return "iconbutton"
@@ -367,6 +373,31 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.__url_target = value
         self._set_attr(
             "urlTarget", value.value if isinstance(value, UrlTarget) else value
+        )
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr(
+            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
+        )
+
+    # visual_density
+    @property
+    def visual_density(self) -> Optional[ThemeVisualDensity]:
+        return self.__visual_density
+
+    @visual_density.setter
+    def visual_density(self, value: Optional[ThemeVisualDensity]):
+        self.__visual_density = value
+        self._set_attr(
+            "visualDensity",
+            value.value if isinstance(value, ThemeVisualDensity) else value,
         )
 
     # on_click
