@@ -3,6 +3,7 @@ from typing import Any, Optional, Union
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
+from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -84,6 +85,7 @@ class FloatingActionButton(ConstrainedControl):
         enable_feedback: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
         on_click=None,
         #
         # ConstrainedControl
@@ -166,6 +168,7 @@ class FloatingActionButton(ConstrainedControl):
         self.highlight_elevation = highlight_elevation
         self.hover_elevation = hover_elevation
         self.enable_feedback = enable_feedback
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "floatingactionbutton"
@@ -226,6 +229,18 @@ class FloatingActionButton(ConstrainedControl):
         self.__url_target = value
         self._set_attr(
             "urlTarget", value.value if isinstance(value, UrlTarget) else value
+        )
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr(
+            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
         )
 
     # on_click

@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
+import '../utils/mouse.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -77,6 +78,7 @@ class FloatingActionButtonControl extends StatelessWidget {
           heroTag: control.id,
           autofocus: autofocus,
           onPressed: onPressed,
+          mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
           backgroundColor: bgColor,
           foregroundColor: foregroundColor,
           hoverColor: hoverColor,
@@ -99,6 +101,7 @@ class FloatingActionButtonControl extends StatelessWidget {
           heroTag: control.id,
           autofocus: autofocus,
           onPressed: onPressed,
+          mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
           backgroundColor: bgColor,
           foregroundColor: foregroundColor,
           hoverColor: hoverColor,
@@ -120,6 +123,7 @@ class FloatingActionButtonControl extends StatelessWidget {
         heroTag: control.id,
         autofocus: autofocus,
         onPressed: onPressed,
+        mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
         backgroundColor: bgColor,
         foregroundColor: foregroundColor,
         hoverColor: hoverColor,
@@ -142,6 +146,7 @@ class FloatingActionButtonControl extends StatelessWidget {
         heroTag: control.id,
         autofocus: autofocus,
         onPressed: onPressed,
+        mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
         label: Text(text),
         icon: Icon(icon),
         backgroundColor: bgColor,
