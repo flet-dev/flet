@@ -484,11 +484,7 @@ class Page(AdaptiveControl):
     def run_task(self, handler: Callable[..., Awaitable[Any]], *args):
         assert asyncio.iscoroutinefunction(handler)
 
-        handler_with_context = self.__context_wrapper(handler)
-
-        future = asyncio.run_coroutine_threadsafe(
-            handler_with_context(*args), self.__loop
-        )
+        future = asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
 
         def _on_completion(f):
             exception = f.exception()
