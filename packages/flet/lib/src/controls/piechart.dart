@@ -18,8 +18,6 @@ import 'create_control.dart';
 class PieChartEventData extends Equatable {
   final String eventType;
   final int? sectionIndex;
-  // final double? angle;
-  // final double? radius;
 
   const PieChartEventData(
       {required this.eventType, required this.sectionIndex});

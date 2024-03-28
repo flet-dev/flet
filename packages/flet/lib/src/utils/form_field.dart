@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../controls/create_control.dart';
 import '../models/control.dart';
-import '../utils/borders.dart';
-import '../utils/edge_insets.dart';
-import '../utils/icons.dart';
-import '../utils/text.dart';
-import 'create_control.dart';
+import 'borders.dart';
+import 'edge_insets.dart';
+import 'icons.dart';
+import 'text.dart';
 
 enum FormFieldInputBorder { outline, underline, none }
 

@@ -1,7 +1,7 @@
-import 'package:flet/src/utils/borders.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/borders.dart';
 import 'create_control.dart';
 
 class ProgressBarControl extends StatelessWidget {
