@@ -111,6 +111,8 @@ class CupertinoListTileControl extends StatelessWidget {
             backgroundColor: backgroundColor,
             backgroundColorActivated: bgcolorActivated,
             leading: leading,
+            leadingSize: control.attrDouble("leadingSize", 30.0)!,
+            leadingToTitle: control.attrDouble("leadingToTitle", 12.0)!,
             padding: padding,
             title: title,
             subtitle: subtitle,
