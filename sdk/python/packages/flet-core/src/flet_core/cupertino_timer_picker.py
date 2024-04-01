@@ -37,6 +37,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         minute_interval: OptionalNumber = None,
         mode: Optional[CupertinoTimerPickerMode] = None,
         bgcolor: Optional[str] = None,
+        item_extent: OptionalNumber = None,
         on_change=None,
         #
         # ConstrainedControl
@@ -106,6 +107,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         self.on_change = on_change
         self.second_interval = second_interval
         self.minute_interval = minute_interval
+        self.item_extent = item_extent
 
     def _get_control_name(self):
         return "cupertinotimerpicker"
@@ -137,6 +139,15 @@ class CupertinoTimerPicker(ConstrainedControl):
     def second_interval(self, value: OptionalNumber):
         self._set_attr("secondInterval", value)
 
+    # item_extent
+    @property
+    def item_extent(self) -> OptionalNumber:
+        return self._get_attr("itemExtent", data_type="float", def_value=32.0)
+
+    @item_extent.setter
+    def item_extent(self, value: OptionalNumber):
+        self._set_attr("itemExtent", value)
+
     # minute_interval
     @property
     def minute_interval(self) -> OptionalNumber:
@@ -154,7 +165,10 @@ class CupertinoTimerPicker(ConstrainedControl):
     @mode.setter
     def mode(self, value: Optional[CupertinoTimerPickerMode]):
         self.__mode = value
-        self._set_attr("mode", value.value if value is not None else None)
+        self._set_attr(
+            "mode",
+            value.value if isinstance(value, CupertinoTimerPickerMode) else value,
+        )
 
     # on_change
     @property

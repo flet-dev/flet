@@ -19,7 +19,7 @@ class NavigationDrawerDestination(Control):
         icon_content: Optional[Control] = None,
         selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
-        # bgcolor: Optional[str] = None,
+        bgcolor: Optional[str] = None,
         #
         # Control
         #
@@ -27,7 +27,7 @@ class NavigationDrawerDestination(Control):
     ):
         Control.__init__(self, ref=ref)
         self.label = label
-        # self.bgcolor = bgcolor
+        self.bgcolor = bgcolor
         self.icon = icon
         self.__icon_content: Optional[Control] = None
         self.icon_content = icon_content
@@ -50,22 +50,22 @@ class NavigationDrawerDestination(Control):
             children.append(self.__selected_icon_content)
         return children
 
-    # # bgcolor
-    # @property
-    # def bgcolor(self):
-    #     return self._get_attr("bgColor")
+    # bgcolor
+    @property
+    def bgcolor(self) -> Optional[str]:
+        return self._get_attr("bgColor")
 
-    # @bgcolor.setter
-    # def bgcolor(self, value):
-    #     self._set_attr("bgColor", value)
+    @bgcolor.setter
+    def bgcolor(self, value: Optional[str]):
+        self._set_attr("bgColor", value)
 
     # icon
     @property
-    def icon(self):
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
     # icon_content
@@ -79,11 +79,11 @@ class NavigationDrawerDestination(Control):
 
     # selected_icon
     @property
-    def selected_icon(self):
+    def selected_icon(self) -> Optional[str]:
         return self._get_attr("selectedIcon")
 
     @selected_icon.setter
-    def selected_icon(self, value):
+    def selected_icon(self, value: Optional[str]):
         self._set_attr("selectedIcon", value)
 
     # selected_icon_content
@@ -97,11 +97,11 @@ class NavigationDrawerDestination(Control):
 
     # label
     @property
-    def label(self):
+    def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
 
 

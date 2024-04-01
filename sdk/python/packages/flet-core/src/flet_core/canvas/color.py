@@ -8,7 +8,7 @@ class Color(Shape):
     def __init__(
         self,
         color: Optional[str] = None,
-        blend_mode: BlendMode = BlendMode.NONE,
+        blend_mode: Optional[BlendMode] = None,
         #
         # Control
         #
@@ -39,11 +39,11 @@ class Color(Shape):
 
     # blend_mode
     @property
-    def blend_mode(self) -> BlendMode:
+    def blend_mode(self) -> Optional[BlendMode]:
         return self.__blend_mode
 
     @blend_mode.setter
-    def blend_mode(self, value: BlendMode):
+    def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
         self._set_attr(
             "blendMode", value.value if isinstance(value, BlendMode) else value

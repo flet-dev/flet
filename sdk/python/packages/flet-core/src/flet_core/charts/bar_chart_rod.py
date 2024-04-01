@@ -28,7 +28,7 @@ class BarChartRod(Control):
         show_tooltip: Optional[bool] = None,
         tooltip: Optional[str] = None,
         tooltip_style: Optional[TextStyle] = None,
-        tooltip_align: TextAlign = TextAlign.NONE,
+        tooltip_align: Optional[TextAlign] = None,
         #
         # Control
         #
@@ -214,11 +214,11 @@ class BarChartRod(Control):
 
     # tooltip_align
     @property
-    def tooltip_align(self) -> TextAlign:
+    def tooltip_align(self) -> Optional[TextAlign]:
         return self.__tooltip_align
 
     @tooltip_align.setter
-    def tooltip_align(self, value: TextAlign):
+    def tooltip_align(self, value: Optional[TextAlign]):
         self.__tooltip_align = value
         self._set_attr(
             "tooltipAlign", value.value if isinstance(value, TextAlign) else value

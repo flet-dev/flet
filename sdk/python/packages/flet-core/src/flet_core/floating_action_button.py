@@ -3,6 +3,7 @@ from typing import Any, Optional, Union
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
+from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -10,6 +11,8 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ClipBehavior,
+    UrlTarget,
 )
 
 
@@ -71,8 +74,18 @@ class FloatingActionButton(ConstrainedControl):
         shape: Optional[OutlinedBorder] = None,
         autofocus: Optional[bool] = None,
         mini: Optional[bool] = None,
+        foreground_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        elevation: OptionalNumber = None,
+        disabled_elevation: OptionalNumber = None,
+        focus_elevation: OptionalNumber = None,
+        highlight_elevation: OptionalNumber = None,
+        hover_elevation: OptionalNumber = None,
+        enable_feedback: Optional[bool] = None,
         url: Optional[str] = None,
-        url_target: Optional[str] = None,
+        url_target: Optional[UrlTarget] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
         on_click=None,
         #
         # ConstrainedControl
@@ -146,6 +159,16 @@ class FloatingActionButton(ConstrainedControl):
         self.url = url
         self.url_target = url_target
         self.on_click = on_click
+        self.foreground_color = foreground_color
+        self.focus_color = focus_color
+        self.clip_behavior = clip_behavior
+        self.elevation = elevation
+        self.disabled_elevation = disabled_elevation
+        self.focus_elevation = focus_elevation
+        self.highlight_elevation = highlight_elevation
+        self.hover_elevation = hover_elevation
+        self.enable_feedback = enable_feedback
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "floatingactionbutton"
@@ -198,12 +221,27 @@ class FloatingActionButton(ConstrainedControl):
 
     # url_target
     @property
-    def url_target(self):
-        return self._get_attr("urlTarget")
+    def url_target(self) -> Optional[UrlTarget]:
+        return self.__url_target
 
     @url_target.setter
-    def url_target(self, value):
-        self._set_attr("urlTarget", value)
+    def url_target(self, value: Optional[UrlTarget]):
+        self.__url_target = value
+        self._set_attr(
+            "urlTarget", value.value if isinstance(value, UrlTarget) else value
+        )
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr(
+            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
+        )
 
     # on_click
     @property
@@ -249,3 +287,87 @@ class FloatingActionButton(ConstrainedControl):
     @mini.setter
     def mini(self, value: Optional[bool]):
         self._set_attr("mini", value)
+
+    # elevation
+    @property
+    def elevation(self):
+        return self._get_attr("elevation", data_type="float")
+
+    @elevation.setter
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
+
+    # disabled_elevation
+    @property
+    def disabled_elevation(self):
+        return self._get_attr("disabledElevation", data_type="float")
+
+    @disabled_elevation.setter
+    def disabled_elevation(self, value: OptionalNumber):
+        self._set_attr("disabledElevation", value)
+
+    # enable_feedback
+    @property
+    def enable_feedback(self):
+        return self._get_attr("enableFeedback", data_type="bool", def_value=True)
+
+    @enable_feedback.setter
+    def enable_feedback(self, value: Optional[bool]):
+        self._set_attr("enableFeedback", value)
+
+    # focus_color
+    @property
+    def focus_color(self):
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value: Optional[str]):
+        self._set_attr("focusColor", value)
+
+    # focus_elevation
+    @property
+    def focus_elevation(self):
+        return self._get_attr("focusElevation", data_type="float")
+
+    @focus_elevation.setter
+    def focus_elevation(self, value: OptionalNumber):
+        self._set_attr("focusElevation", value)
+
+    # foreground_color
+    @property
+    def foreground_color(self):
+        return self._get_attr("foregroundColor")
+
+    @foreground_color.setter
+    def foreground_color(self, value: Optional[str]):
+        self._set_attr("foregroundColor", value)
+
+    # highlight_elevation
+    @property
+    def highlight_elevation(self):
+        return self._get_attr("highlightElevation", data_type="float")
+
+    @highlight_elevation.setter
+    def highlight_elevation(self, value: OptionalNumber):
+        self._set_attr("highlightElevation", value)
+
+    # hover_elevation
+    @property
+    def hover_elevation(self):
+        return self._get_attr("hoverElevation", data_type="float")
+
+    @hover_elevation.setter
+    def hover_elevation(self, value: OptionalNumber):
+        self._set_attr("hoverElevation", value)
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )

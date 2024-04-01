@@ -89,7 +89,9 @@ class FletApp(LocalConnection):
         """
         self.__websocket = websocket
 
-        self.client_ip = self.__websocket.client.host if self.__websocket.client else ""
+        self.client_ip = (
+            self.__websocket.client.host if self.__websocket.client else ""
+        ).split(":")[0]
         self.client_user_agent = (
             self.__websocket.headers["user-agent"]
             if "user-agent" in self.__websocket.headers

@@ -1,10 +1,12 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Dict
 
+from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -12,6 +14,8 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ClipBehavior,
+    MaterialState,
 )
 
 
@@ -82,6 +86,12 @@ class Chip(ConstrainedControl):
         label_style: Optional[TextStyle] = None,
         selected_shadow_color: Optional[str] = None,
         autofocus: Optional[bool] = None,
+        surface_tint_color: Optional[str] = None,
+        color: Union[None, str, Dict[Union[MaterialState, str], str]] = None,
+        click_elevation: OptionalNumber = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        visual_density: Optional[ThemeVisualDensity] = None,
+        border_side: Optional[BorderSide] = None,
         on_click=None,
         on_delete=None,
         on_select=None,
@@ -176,6 +186,12 @@ class Chip(ConstrainedControl):
         self.on_select = on_select
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.color = color
+        self.surface_tint_color = surface_tint_color
+        self.click_elevation = click_elevation
+        self.clip_behavior = clip_behavior
+        self.visual_density = visual_density
+        self.border_side = border_side
 
     def _get_control_name(self):
         return "chip"
@@ -186,6 +202,7 @@ class Chip(ConstrainedControl):
         self._set_attr_json("labelStyle", self.__label_style)
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("shape", self.__shape)
+        self._set_attr_json("color", self.__color)
 
     def _get_children(self):
         children = []
@@ -299,6 +316,15 @@ class Chip(ConstrainedControl):
     def disabled_color(self, value):
         self._set_attr("disabledColor", value)
 
+    # color
+    @property
+    def color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__color
+
+    @color.setter
+    def color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__color = value
+
     # autofocus
     @property
     def autofocus(self) -> Optional[bool]:
@@ -310,57 +336,75 @@ class Chip(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # check_color
     @property
-    def check_color(self):
+    def check_color(self) -> Optional[str]:
         return self._get_attr("checkColor")
 
     @check_color.setter
-    def check_color(self, value):
+    def check_color(self, value: Optional[str]):
         self._set_attr("checkColor", value)
 
     # selected_color
     @property
-    def selected_color(self):
+    def selected_color(self) -> Optional[str]:
         return self._get_attr("selectedColor")
 
     @selected_color.setter
-    def selected_color(self, value):
+    def selected_color(self, value: Optional[str]):
         self._set_attr("selectedColor", value)
 
     # selected_shadow_color
     @property
-    def selected_shadow_color(self):
+    def selected_shadow_color(self) -> Optional[str]:
         return self._get_attr("selectedShadowColor")
 
     @selected_shadow_color.setter
-    def selected_shadow_color(self, value):
+    def selected_shadow_color(self, value: Optional[str]):
         self._set_attr("selectedShadowColor", value)
+
+    # surface_tint_color
+    @property
+    def surface_tint_color(self) -> Optional[str]:
+        return self._get_attr("surfaceTintColor")
+
+    @surface_tint_color.setter
+    def surface_tint_color(self, value: Optional[str]):
+        self._set_attr("surfaceTintColor", value)
 
     # shadow_color
     @property
-    def shadow_color(self):
+    def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
 
     @shadow_color.setter
-    def shadow_color(self, value):
+    def shadow_color(self, value: Optional[str]):
         self._set_attr("shadowColor", value)
 
     # elevation
     @property
     def elevation(self) -> OptionalNumber:
-        return self._get_attr("elevation")
+        return self._get_attr("elevation", data_type="float")
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
         self._set_attr("elevation", value)
+
+    # click_elevation
+    @property
+    def click_elevation(self) -> OptionalNumber:
+        return self._get_attr("clickElevation", data_type="float")
+
+    @click_elevation.setter
+    def click_elevation(self, value: OptionalNumber):
+        self._set_attr("clickElevation", value)
 
     # shape
     @property
@@ -370,6 +414,40 @@ class Chip(ConstrainedControl):
     @shape.setter
     def shape(self, value: Optional[OutlinedBorder]):
         self.__shape = value
+
+    # visual_density
+    @property
+    def visual_density(self) -> Optional[ThemeVisualDensity]:
+        return self.__visual_density
+
+    @visual_density.setter
+    def visual_density(self, value: Optional[ThemeVisualDensity]):
+        self.__visual_density = value
+        self._set_attr(
+            "visualDensity",
+            value.value if isinstance(value, ThemeVisualDensity) else value,
+        )
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
+
+    # border_side
+    @property
+    def border_side(self) -> Optional[BorderSide]:
+        return self.__border_side
+
+    @border_side.setter
+    def border_side(self, value: Optional[BorderSide]):
+        self.__border_side = value
 
     # on_click
     @property

@@ -77,10 +77,8 @@ class _SliderControlState extends State<RangeSliderControl> {
         min: min,
         max: max,
         divisions: divisions,
-        activeColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("activeColor", "")!),
-        inactiveColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("inactiveColor", "")!),
+        activeColor: widget.control.attrColor("activeColor", context),
+        inactiveColor: widget.control.attrColor("inactiveColor", context),
         overlayColor: parseMaterialStateColor(
             Theme.of(context), widget.control, "overlayColor"),
         onChanged: !disabled

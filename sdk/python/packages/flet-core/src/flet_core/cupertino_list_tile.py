@@ -10,6 +10,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    UrlTarget,
 )
 
 
@@ -59,7 +60,7 @@ class CupertinoListTile(ConstrainedControl):
         bgcolor_activated: Optional[str] = None,
         padding: PaddingValue = None,
         url: Optional[str] = None,
-        url_target: Optional[str] = None,
+        url_target: Optional[UrlTarget] = None,
         toggle_inputs: Optional[bool] = None,
         additional_info: Optional[Control] = None,
         leading_size: OptionalNumber = None,
@@ -149,7 +150,7 @@ class CupertinoListTile(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("contentPadding", self.__padding)
+        self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
         children = []
@@ -181,20 +182,20 @@ class CupertinoListTile(ConstrainedControl):
 
     # leading_size
     @property
-    def leading_size(self):
-        return self._get_attr("leadingSize")
+    def leading_size(self) -> OptionalNumber:
+        return self._get_attr("leadingSize", data_type="float", def_value=30.0)
 
     @leading_size.setter
-    def leading_size(self, value):
+    def leading_size(self, value: OptionalNumber):
         self._set_attr("leadingSize", value)
 
     # leading_to_title
     @property
-    def leading_to_title(self):
-        return self._get_attr("leadingToTitle")
+    def leading_to_title(self) -> OptionalNumber:
+        return self._get_attr("leadingToTitle", data_type="float", def_value=12.0)
 
     @leading_to_title.setter
-    def leading_to_title(self, value):
+    def leading_to_title(self, value: OptionalNumber):
         self._set_attr("leadingToTitle", value)
 
     # title
@@ -253,39 +254,42 @@ class CupertinoListTile(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # bgcolor_activated
     @property
-    def bgcolor_activated(self):
+    def bgcolor_activated(self) -> Optional[str]:
         return self._get_attr("bgcolorActivated")
 
     @bgcolor_activated.setter
-    def bgcolor_activated(self, value):
+    def bgcolor_activated(self, value: Optional[str]):
         self._set_attr("bgcolorActivated", value)
 
     # url
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         return self._get_attr("url")
 
     @url.setter
-    def url(self, value):
+    def url(self, value: Optional[str]):
         self._set_attr("url", value)
 
     # url_target
     @property
-    def url_target(self):
-        return self._get_attr("urlTarget")
+    def url_target(self) -> Optional[UrlTarget]:
+        return self.__url_target
 
     @url_target.setter
-    def url_target(self, value):
-        self._set_attr("urlTarget", value)
+    def url_target(self, value: Optional[UrlTarget]):
+        self.__url_target = value
+        self._set_attr(
+            "urlTarget", value.value if isinstance(value, UrlTarget) else value
+        )
 
     # toggle_inputs
     @property
@@ -304,7 +308,4 @@ class CupertinoListTile(ConstrainedControl):
     @on_click.setter
     def on_click(self, handler):
         self._add_event_handler("click", handler)
-        if handler is not None:
-            self._set_attr("onclick", True)
-        else:
-            self._set_attr("onclick", None)
+        self._set_attr("onclick", True if handler is not None else None)

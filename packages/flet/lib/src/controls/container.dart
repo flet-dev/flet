@@ -9,7 +9,6 @@ import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
@@ -60,8 +59,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("Container build: ${control.id}");
 
-    var bgColor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgColor", "")!);
+    var bgColor = control.attrColor("bgColor", context);
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
     bool ink = control.attrBool("ink", false)!;
@@ -189,8 +187,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                     }
                   : null,
               borderRadius: borderRadius,
-              splashColor: HexColor.fromString(
-                  Theme.of(context), control.attrString("inkColor", "")!),
+              splashColor: control.attrColor("inkColor", context),
               child: Container(
                 padding: parseEdgeInsets(control, "padding"),
                 alignment: parseAlignment(control, "alignment"),

@@ -23,7 +23,8 @@ class ThemeVisualDensityDeprecated(EnumMeta):
     def __getattribute__(self, item):
         if item == "ADAPTIVEPLATFORMDENSITY":
             warn(
-                "ADAPTIVEPLATFORMDENSITY is deprecated, use ADAPTIVE_PLATFORM_DENSITY instead.",
+                "ADAPTIVEPLATFORMDENSITY is deprecated and will be removed in v1.0. "
+                "Use ADAPTIVE_PLATFORM_DENSITY instead.",
                 DeprecationWarning,
                 stacklevel=2,
             )

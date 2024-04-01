@@ -1,16 +1,26 @@
-from typing import Any, Optional, Union
+from enum import Enum
+from typing import Any, Optional, Union, Dict
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
+from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    MaterialState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
+
+
+class SliderInteraction(Enum):
+    TAP_AND_SLIDE = "tapAndSlide"
+    TAP_ONLY = "tapOnly"
+    SLIDE_ONLY = "slideOnly"
+    SLIDE_THUMB = "slideThumb"
 
 
 class Slider(ConstrainedControl, AdaptiveControl):
@@ -50,6 +60,11 @@ class Slider(ConstrainedControl, AdaptiveControl):
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
         thumb_color: Optional[str] = None,
+        interaction: Optional[SliderInteraction] = None,
+        secondary_active_color: Optional[str] = None,
+        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        secondary_track_value: OptionalNumber = None,
+        mouse_cursor: Optional[MouseCursor] = None,
         on_change=None,
         on_change_start=None,
         on_change_end=None,
@@ -130,14 +145,23 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self.active_color = active_color
         self.inactive_color = inactive_color
         self.thumb_color = thumb_color
+        self.interaction = interaction
+        self.overlay_color = overlay_color
         self.on_change = on_change
         self.on_change_start = on_change_start
         self.on_change_end = on_change_end
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.secondary_active_color = secondary_active_color
+        self.secondary_track_value = secondary_track_value
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "slider"
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("overlayColor", self.__overlay_color)
 
     # value
     @property
@@ -156,12 +180,25 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # label
     @property
-    def label(self):
+    def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
+
+    # interaction
+    @property
+    def interaction(self) -> Optional[SliderInteraction]:
+        return self.__interaction
+
+    @interaction.setter
+    def interaction(self, value: Optional[SliderInteraction]):
+        self.__interaction = value
+        self._set_attr(
+            "interaction",
+            value.value if isinstance(value, SliderInteraction) else value,
+        )
 
     # min
     @property
@@ -171,6 +208,35 @@ class Slider(ConstrainedControl, AdaptiveControl):
     @min.setter
     def min(self, value: OptionalNumber):
         self._set_attr("min", value)
+
+    # secondary_track_value
+    @property
+    def secondary_track_value(self) -> OptionalNumber:
+        return self._get_attr("secondaryTrackValue", data_type="float")
+
+    @secondary_track_value.setter
+    def secondary_track_value(self, value: OptionalNumber):
+        self._set_attr("secondaryTrackValue", value)
+
+    # secondary_active_color
+    @property
+    def secondary_active_color(self) -> Optional[str]:
+        return self._get_attr("secondaryActiveColor")
+
+    @secondary_active_color.setter
+    def secondary_active_color(self, value: Optional[str]):
+        self._set_attr("secondaryActiveColor", value)
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self._get_attr("mouseCursor")
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self._set_attr(
+            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
+        )
 
     # max
     @property
@@ -199,6 +265,15 @@ class Slider(ConstrainedControl, AdaptiveControl):
     def round(self, value: Optional[int]):
         self._set_attr("round", value)
 
+    # overlay_color
+    @property
+    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__overlay_color
+
+    @overlay_color.setter
+    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__overlay_color = value
+
     # autofocus
     @property
     def autofocus(self) -> Optional[bool]:
@@ -210,29 +285,29 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # active_color
     @property
-    def active_color(self):
+    def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
 
     @active_color.setter
-    def active_color(self, value):
+    def active_color(self, value: Optional[str]):
         self._set_attr("activeColor", value)
 
     # inactive_color
     @property
-    def inactive_color(self):
+    def inactive_color(self) -> Optional[str]:
         return self._get_attr("inactiveColor")
 
     @inactive_color.setter
-    def inactive_color(self, value):
+    def inactive_color(self, value: Optional[str]):
         self._set_attr("inactiveColor", value)
 
     # thumb_color
     @property
-    def thumb_color(self):
+    def thumb_color(self) -> Optional[str]:
         return self._get_attr("thumbColor")
 
     @thumb_color.setter
-    def thumb_color(self, value):
+    def thumb_color(self, value: Optional[str]):
         self._set_attr("thumbColor", value)
 
     # on_change

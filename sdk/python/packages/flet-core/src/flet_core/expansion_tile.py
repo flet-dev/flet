@@ -1,11 +1,13 @@
 from enum import Enum
 from typing import Any, List, Optional, Union
 
-from flet_core import Alignment, OutlinedBorder
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.alignment import Alignment
+from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
@@ -56,6 +58,9 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         collapsed_icon_color: Optional[str] = None,
         collapsed_text_color: Optional[str] = None,
         collapsed_shape: Optional[OutlinedBorder] = None,
+        dense: Optional[bool] = None,
+        enable_feedback: Optional[bool] = None,
+        visual_density: Optional[ThemeVisualDensity] = None,
         on_change=None,
         #
         # ConstrainedControl
@@ -88,7 +93,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         #
-        # Adaptive
+        # AdaptiveControl
         #
         adaptive: Optional[bool] = None,
     ):
@@ -147,6 +152,9 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.collapsed_text_color = collapsed_text_color
         self.collapsed_shape = collapsed_shape
         self.on_change = on_change
+        self.dense = dense
+        self.enable_feedback = enable_feedback
+        self.visual_density = visual_density
 
     def _get_control_name(self):
         return "expansiontile"
@@ -217,11 +225,11 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # expanded_cross_axis_alignment
     @property
-    def expanded_cross_axis_alignment(self) -> CrossAxisAlignment:
+    def expanded_cross_axis_alignment(self) -> Optional[CrossAxisAlignment]:
         return self.__expanded_cross_axis_alignment
 
     @expanded_cross_axis_alignment.setter
-    def expanded_cross_axis_alignment(self, value: CrossAxisAlignment):
+    def expanded_cross_axis_alignment(self, value: Optional[CrossAxisAlignment]):
         self.__expanded_cross_axis_alignment = value
         self._set_attr(
             "crossAxisAlignment",
@@ -230,11 +238,11 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # affinity
     @property
-    def affinity(self) -> TileAffinity:
+    def affinity(self) -> Optional[TileAffinity]:
         return self.__affinity
 
     @affinity.setter
-    def affinity(self, value: TileAffinity):
+    def affinity(self, value: Optional[TileAffinity]):
         self.__affinity = value
         self._set_attr(
             "affinity",
@@ -277,6 +285,24 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     def trailing(self, value: Optional[Control]):
         self.__trailing = value
 
+    # dense
+    @property
+    def dense(self) -> Optional[bool]:
+        return self._get_attr("dense", data_type="bool")
+
+    @dense.setter
+    def dense(self, value: Optional[bool]):
+        self._set_attr("dense", value)
+
+    # enable_feedback
+    @property
+    def enable_feedback(self) -> Optional[bool]:
+        return self._get_attr("enableFeedback", data_type="bool", def_value=True)
+
+    @enable_feedback.setter
+    def enable_feedback(self, value: Optional[bool]):
+        self._set_attr("enableFeedback", value)
+
     # clip_behavior
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
@@ -287,6 +313,19 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__clip_behavior = value
         self._set_attr(
             "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
+
+    # visual_density
+    @property
+    def visual_density(self) -> Optional[ThemeVisualDensity]:
+        return self.__visual_density
+
+    @visual_density.setter
+    def visual_density(self, value: Optional[ThemeVisualDensity]):
+        self.__visual_density = value
+        self._set_attr(
+            "visualDensity",
+            value.value if isinstance(value, ThemeVisualDensity) else value,
         )
 
     # maintain_state
@@ -318,56 +357,56 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # text_color
     @property
-    def text_color(self):
+    def text_color(self) -> Optional[str]:
         return self._get_attr("textColor")
 
     @text_color.setter
-    def text_color(self, value):
+    def text_color(self, value: Optional[str]):
         self._set_attr("textColor", value)
 
     # icon_color
     @property
-    def icon_color(self):
+    def icon_color(self) -> Optional[str]:
         return self._get_attr("iconColor")
 
     @icon_color.setter
-    def icon_color(self, value):
+    def icon_color(self, value: Optional[str]):
         self._set_attr("iconColor", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
 
     # collapsed_bgcolor
     @property
-    def collapsed_bgcolor(self):
+    def collapsed_bgcolor(self) -> Optional[str]:
         return self._get_attr("collapsedBgColor")
 
     @collapsed_bgcolor.setter
-    def collapsed_bgcolor(self, value):
+    def collapsed_bgcolor(self, value: Optional[str]):
         self._set_attr("collapsedBgColor", value)
 
     # collapsed_icon_color
     @property
-    def collapsed_icon_color(self):
+    def collapsed_icon_color(self) -> Optional[str]:
         return self._get_attr("collapsedIconColor")
 
     @collapsed_icon_color.setter
-    def collapsed_icon_color(self, value):
+    def collapsed_icon_color(self, value: Optional[str]):
         self._set_attr("collapsedIconColor", value)
 
     # collapsed_text_color
     @property
-    def collapsed_text_color(self):
+    def collapsed_text_color(self) -> Optional[str]:
         return self._get_attr("collapsedTextColor")
 
     @collapsed_text_color.setter
-    def collapsed_text_color(self, value):
+    def collapsed_text_color(self, value: Optional[str]):
         self._set_attr("collapsedTextColor", value)
 
     # collapsed_shape

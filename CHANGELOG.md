@@ -8,7 +8,7 @@
 * Replace deprecated (in Python 3.12) `datetime.utcnow()` with `datetime.now(timezone.utc)`.
 * Fix a call to `self.__executor.shutdown` for Python 3.8.
 * Add client IP and user agent to a session ID.
-* Generate crypto-strong strings.
+* Generate crypto-strong strings across the framework.
 
 # 0.21.1
 

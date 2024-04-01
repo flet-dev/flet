@@ -1,12 +1,17 @@
+import warnings
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet_core import MouseCursor
+from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    ClipBehavior,
     OffsetValue,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -25,15 +30,18 @@ class PopupMenuItem(Control):
         icon: Optional[str] = None,
         checked: Optional[bool] = None,
         content: Optional[Control] = None,
+        height: OptionalNumber = None,
+        padding: PaddingValue = None,
+        mouse_cursor: Optional[MouseCursor] = None,
         on_click=None,
-        data: Any = None,
         #
         # Control
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
+        data: Any = None,
     ):
-        Control.__init__(self, ref=ref, disabled=disabled)
+        Control.__init__(self, ref=ref, disabled=disabled, data=data)
 
         self.checked = checked
         self.icon = icon
@@ -41,6 +49,9 @@ class PopupMenuItem(Control):
         self.__content: Optional[Control] = None
         self.content = content
         self.on_click = on_click
+        self.height = height
+        self.padding = padding
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "popupmenuitem"
@@ -61,31 +72,60 @@ class PopupMenuItem(Control):
     def checked(self, value: Optional[bool]):
         self._set_attr("checked", value)
 
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self._get_attr("mouseCursor")
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self._set_attr(
+            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
+        )
+
     # icon
     @property
-    def icon(self):
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
+
+    # height
+    @property
+    def height(self) -> OptionalNumber:
+        return self._get_attr("height", data_type="float", def_value=48)
+
+    @height.setter
+    def height(self, value: OptionalNumber):
+        self._set_attr("height", value)
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Optional[Control]):
         self.__content = value
 
     # on_click
@@ -145,8 +185,21 @@ class PopupMenuButton(ConstrainedControl):
         content: Optional[Control] = None,
         items: Optional[List[PopupMenuItem]] = None,
         icon: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        shadow_color: Optional[str] = None,
+        surface_tint_color: Optional[str] = None,
+        icon_size: OptionalNumber = None,
+        splash_radius: OptionalNumber = None,
+        elevation: OptionalNumber = None,
         menu_position: Optional[PopupMenuPosition] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        enable_feedback: Optional[bool] = None,
+        shape: Optional[OutlinedBorder] = None,
+        padding: PaddingValue = None,
         on_cancelled=None,
+        on_open=None,
+        on_cancel=None,
         #
         # ConstrainedControl
         #
@@ -211,7 +264,20 @@ class PopupMenuButton(ConstrainedControl):
 
         self.items = items
         self.icon = icon
+        self.on_cancel = on_cancel
         self.on_cancelled = on_cancelled
+        self.on_open = on_open
+        self.shape = shape
+        self.padding = padding
+        self.clip_behavior = clip_behavior
+        self.bgcolor = bgcolor
+        self.icon_color = icon_color
+        self.shadow_color = shadow_color
+        self.surface_tint_color = surface_tint_color
+        self.splash_radius = splash_radius
+        self.icon_size = icon_size
+        self.elevation = elevation
+        self.enable_feedback = enable_feedback
         self.__content: Optional[Control] = None
         self.content = content
         self.menu_position = menu_position
@@ -227,6 +293,11 @@ class PopupMenuButton(ConstrainedControl):
         children.extend(self.__items)
         return children
 
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("shape", self.__shape)
+        self._set_attr_json("padding", self.__padding)
+
     # items
     @property
     def items(self) -> Optional[List[PopupMenuItem]]:
@@ -236,23 +307,104 @@ class PopupMenuButton(ConstrainedControl):
     def items(self, value: Optional[List[PopupMenuItem]]):
         self.__items = value if value is not None else []
 
-    # on_cancelled
+    # shape
     @property
-    def on_cancelled(self):
-        return self._get_event_handler("cancelled")
+    def shape(self) -> Optional[OutlinedBorder]:
+        return self.__shape
 
-    @on_cancelled.setter
-    def on_cancelled(self, handler):
-        self._add_event_handler("cancelled", handler)
+    @shape.setter
+    def shape(self, value: Optional[OutlinedBorder]):
+        self.__shape = value
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
 
     # icon
     @property
-    def icon(self):
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
+
+    # icon_color
+    @property
+    def icon_color(self) -> Optional[str]:
+        return self._get_attr("iconColor")
+
+    @icon_color.setter
+    def icon_color(self, value: Optional[str]):
+        self._set_attr("iconColor", value)
+
+    # bgcolor
+    @property
+    def bgcolor(self) -> Optional[str]:
+        return self._get_attr("bgcolor")
+
+    @bgcolor.setter
+    def bgcolor(self, value: Optional[str]):
+        self._set_attr("bgcolor", value)
+
+    # shadow_color
+    @property
+    def shadow_color(self) -> Optional[str]:
+        return self._get_attr("shadowColor")
+
+    @shadow_color.setter
+    def shadow_color(self, value: Optional[str]):
+        self._set_attr("shadowColor", value)
+
+    # surface_tint_color
+    @property
+    def surface_tint_color(self) -> Optional[str]:
+        return self._get_attr("surfaceTintColor")
+
+    @surface_tint_color.setter
+    def surface_tint_color(self, value: Optional[str]):
+        self._set_attr("surfaceTintColor", value)
+
+    # icon_size
+    @property
+    def icon_size(self) -> OptionalNumber:
+        return self._get_attr("iconSize", data_type="float")
+
+    @icon_size.setter
+    def icon_size(self, value: OptionalNumber):
+        self._set_attr("iconSize", value)
+
+    # enable_feedback
+    @property
+    def enable_feedback(self) -> Optional[bool]:
+        return self._get_attr("enableFeedback", data_type="bool", def_value=True)
+
+    @enable_feedback.setter
+    def enable_feedback(self, value: Optional[bool]):
+        self._set_attr("enableFeedback", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation", data_type="float", def_value=8)
+
+    @elevation.setter
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
+
+    # splash_radius
+    @property
+    def splash_radius(self) -> OptionalNumber:
+        return self._get_attr("splashRadius", data_type="float")
+
+    @splash_radius.setter
+    def splash_radius(self, value: OptionalNumber):
+        self._set_attr("splashRadius", value)
 
     # content
     @property
@@ -275,3 +427,56 @@ class PopupMenuButton(ConstrainedControl):
             "menuPosition",
             value.value if isinstance(value, PopupMenuPosition) else value,
         )
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> ClipBehavior:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: ClipBehavior):
+        self.__clip_behavior = value
+        self._set_attr(
+            "clipBehavior",
+            value.value if isinstance(value, ClipBehavior) else value,
+        )
+
+    # on_cancel
+    @property
+    def on_cancel(self):
+        return self._get_event_handler("cancel")
+
+    @on_cancel.setter
+    def on_cancel(self, handler):
+        self._add_event_handler("cancel", handler)
+
+    # on_cancelled
+    @property
+    def on_cancelled(self):
+        warnings.warn(
+            f"on_cancelled is deprecated/renamed since version 0.22.0 "
+            f"and will be removed in version 1.0. Use on_cancel instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        return self._get_event_handler("cancelled")
+
+    @on_cancelled.setter
+    def on_cancelled(self, handler):
+        self._add_event_handler("cancelled", handler)
+        if handler is not None:
+            warnings.warn(
+                f"on_cancelled is deprecated/renamed since version 0.22.0 "
+                f"and will be removed in version 1.0. Use on_cancel instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+
+    # on_open
+    @property
+    def on_open(self):
+        return self._get_event_handler("open")
+
+    @on_open.setter
+    def on_open(self, handler):
+        self._add_event_handler("open", handler)
