@@ -82,7 +82,7 @@ class Text(ConstrainedControl):
         self,
         value: Optional[str] = None,
         spans: Optional[List[TextSpan]] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: Optional[TextAlign] = None,
         font_family: Optional[str] = None,
         size: OptionalNumber = None,
         weight: Optional[FontWeight] = None,
@@ -210,11 +210,11 @@ class Text(ConstrainedControl):
 
     # text_align
     @property
-    def text_align(self) -> TextAlign:
+    def text_align(self) -> Optional[TextAlign]:
         return self.__text_align
 
     @text_align.setter
-    def text_align(self, value: TextAlign):
+    def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
         self._set_attr(
             "textAlign", value.value if isinstance(value, TextAlign) else value

@@ -382,7 +382,7 @@ class PopupMenuButton(ConstrainedControl):
     # enable_feedback
     @property
     def enable_feedback(self) -> Optional[bool]:
-        return self._get_attr("enableFeedback", data_type="bool", def_val=True)
+        return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
     def enable_feedback(self, value: Optional[bool]):

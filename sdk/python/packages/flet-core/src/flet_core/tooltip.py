@@ -77,7 +77,7 @@ class Tooltip(Control):
         shape: Optional[BoxShape] = None,
         message: Optional[str] = None,
         text_style: Optional[TextStyle] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: Optional[TextAlign] = None,
         prefer_below: Optional[bool] = None,
         show_duration: Optional[int] = None,
         wait_duration: Optional[int] = None,
@@ -240,11 +240,11 @@ class Tooltip(Control):
 
     # text_align
     @property
-    def text_align(self) -> TextAlign:
+    def text_align(self) -> Optional[TextAlign]:
         return self.__text_align
 
     @text_align.setter
-    def text_align(self, value: TextAlign):
+    def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
         self._set_attr(
             "textAlign", value.value if isinstance(value, TextAlign) else value

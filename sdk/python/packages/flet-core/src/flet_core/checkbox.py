@@ -58,7 +58,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self,
         label: Optional[str] = None,
         value: Optional[bool] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
+        label_position: Optional[LabelPosition] = None,
         label_style: Optional[TextStyle] = None,
         tristate: Optional[bool] = None,
         autofocus: Optional[bool] = None,

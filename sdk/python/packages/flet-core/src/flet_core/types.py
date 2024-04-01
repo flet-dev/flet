@@ -103,7 +103,6 @@ class MainAxisAlignment(Enum):
 
 
 class CrossAxisAlignment(Enum):
-    NONE = None
     START = "start"
     END = "end"
     CENTER = "center"
@@ -119,7 +118,6 @@ class VerticalAlignment(Enum):
 
 
 class TabAlignment(Enum):
-    NONE = None
     START = "start"
     START_OFFSET = "startOffset"
     FILL = "fill"
@@ -127,13 +125,11 @@ class TabAlignment(Enum):
 
 
 class LabelPosition(Enum):
-    NONE = None
     RIGHT = "right"
     LEFT = "left"
 
 
 class BlendMode(Enum):
-    NONE = None
     CLEAR = "clear"
     COLOR = "color"
     COLOR_BURN = "colorBurn"
@@ -167,7 +163,6 @@ class BlendMode(Enum):
 
 
 class TextAlign(Enum):
-    NONE = None
     LEFT = "left"
     RIGHT = "right"
     CENTER = "center"

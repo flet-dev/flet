@@ -59,7 +59,7 @@ class Image(ConstrainedControl):
         fit: Optional[ImageFit] = None,
         border_radius: BorderRadiusValue = None,
         color: Optional[str] = None,
-        color_blend_mode: BlendMode = BlendMode.NONE,
+        color_blend_mode: Optional[BlendMode] = None,
         gapless_playback: Optional[bool] = None,
         semantics_label: Optional[str] = None,
         exclude_from_semantics: Optional[bool] = None,
@@ -225,11 +225,11 @@ class Image(ConstrainedControl):
 
     # color_blend_mode
     @property
-    def color_blend_mode(self) -> BlendMode:
+    def color_blend_mode(self) -> Optional[BlendMode]:
         return self.__blend_mode
 
     @color_blend_mode.setter
-    def color_blend_mode(self, value: BlendMode):
+    def color_blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
         self._set_attr(
             "colorBlendMode", value.value if isinstance(value, BlendMode) else value

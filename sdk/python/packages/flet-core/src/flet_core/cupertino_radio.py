@@ -31,7 +31,7 @@ class CupertinoRadio(ConstrainedControl):
         self,
         label: Optional[str] = None,
         value: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
+        label_position: Optional[LabelPosition] = None,
         fill_color: Optional[str] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
@@ -141,11 +141,11 @@ class CupertinoRadio(ConstrainedControl):
 
     # label_position
     @property
-    def label_position(self) -> LabelPosition:
+    def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
 
     @label_position.setter
-    def label_position(self, value: LabelPosition):
+    def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
         self._set_attr(
             "labelPosition", value.value if isinstance(value, LabelPosition) else value

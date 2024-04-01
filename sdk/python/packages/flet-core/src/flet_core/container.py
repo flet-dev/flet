@@ -67,7 +67,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         alignment: Optional[Alignment] = None,
         bgcolor: Optional[str] = None,
         gradient: Optional[Gradient] = None,
-        blend_mode: BlendMode = BlendMode.NONE,
+        blend_mode: Optional[BlendMode] = None,
         border: Optional[Border] = None,
         border_radius: BorderRadiusValue = None,
         image_src: Optional[str] = None,
@@ -269,11 +269,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # blend_mode
     @property
-    def blend_mode(self) -> BlendMode:
+    def blend_mode(self) -> Optional[BlendMode]:
         return self.__blend_mode
 
     @blend_mode.setter
-    def blend_mode(self, value: BlendMode):
+    def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
         self._set_attr(
             "blendMode", value.value if isinstance(value, BlendMode) else value
