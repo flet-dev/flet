@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -5,6 +6,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/desktop.dart';
+import '../utils/mouse.dart';
 import 'create_control.dart';
 import 'cupertino_slider.dart';
 import 'flet_store_mixin.dart';
@@ -90,6 +92,13 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
       int? divisions = widget.control.attrInt("divisions");
       int round = widget.control.attrInt("round", 0)!;
 
+      var interaction = SliderInteraction.values.firstWhereOrNull((e) =>
+          e.name.toLowerCase() ==
+          widget.control.attrString("interaction", "")!.toLowerCase());
+
+      var overlayColor = parseMaterialStateColor(
+          Theme.of(context), widget.control, "overlayColor");
+
       debugPrint("SliderControl build: ${widget.control.id}");
 
       double value = widget.control.attrDouble("value", 0)!;
@@ -112,17 +121,21 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
           max: max,
           divisions: divisions,
           label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
-          activeColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("activeColor", "")!),
-          inactiveColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("inactiveColor", "")!),
-          thumbColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("thumbColor", "")!),
+          activeColor: widget.control.attrColor("activeColor", context),
+          inactiveColor: widget.control.attrColor("inactiveColor", context),
+          overlayColor: overlayColor,
+          allowedInteraction: interaction,
+          thumbColor: widget.control.attrColor("thumbColor", context),
           onChanged: !disabled
               ? (double value) {
                   onChange(value);
                 }
               : null,
+          mouseCursor:
+              parseMouseCursor(widget.control.attrString("mouseCursor")),
+          secondaryActiveColor:
+              widget.control.attrColor("secondaryActiveColor", context),
+          secondaryTrackValue: widget.control.attrDouble("secondaryTrackValue"),
           onChangeStart: !disabled
               ? (double value) {
                   widget.backend.triggerControlEvent(

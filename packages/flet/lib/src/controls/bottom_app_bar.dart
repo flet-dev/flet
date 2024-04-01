@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -65,12 +64,9 @@ class _BottomAppBarControlState extends State<BottomAppBarControl>
         height: widget.control.attrDouble("height"),
         elevation: elevation,
         shape: shape,
-        shadowColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("shadowColor", "")!),
-        surfaceTintColor: HexColor.fromString(Theme.of(context),
-            widget.control.attrString("surfaceTintColor", "")!),
-        color: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("bgColor", "")!),
+        shadowColor: widget.control.attrColor("shadowColor", context),
+        surfaceTintColor: widget.control.attrColor("surfaceTintColor", context),
+        color: widget.control.attrColor("bgColor", context),
         notchMargin: widget.control.attrDouble("notchMargin", 4.0)!,
         child: contentCtrls.isNotEmpty
             ? createControl(widget.control, contentCtrls.first.id, disabled,

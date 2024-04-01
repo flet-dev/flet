@@ -43,7 +43,7 @@ class CupertinoTextField(TextField):
         value: Optional[str] = None,
         placeholder_style: Optional[TextStyle] = None,
         gradient: Optional[Gradient] = None,
-        blend_mode: BlendMode = BlendMode.NONE,
+        blend_mode: Optional[BlendMode] = None,
         shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
         prefix_visibility_mode: Optional[VisibilityMode] = None,
         suffix_visibility_mode: Optional[VisibilityMode] = None,
@@ -61,7 +61,7 @@ class CupertinoTextField(TextField):
         can_reveal_password: Optional[bool] = None,
         read_only: Optional[bool] = None,
         shift_enter: Optional[bool] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: Optional[TextAlign] = None,
         autofocus: Optional[bool] = None,
         capitalization: TextCapitalization = TextCapitalization.NONE,
         autocorrect: Optional[bool] = None,
@@ -249,11 +249,11 @@ class CupertinoTextField(TextField):
 
     # blend_mode
     @property
-    def blend_mode(self) -> BlendMode:
+    def blend_mode(self) -> Optional[BlendMode]:
         return self.__blend_mode
 
     @blend_mode.setter
-    def blend_mode(self, value: BlendMode):
+    def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
         self._set_attr(
             "blendMode", value.value if isinstance(value, BlendMode) else value

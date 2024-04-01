@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 import 'error.dart';
 import 'flet_store_mixin.dart';
@@ -91,15 +91,18 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               labelType: extended ? NavigationRailLabelType.none : labelType,
               extended: extended,
               elevation: widget.control.attrDouble("elevation", 0),
+              selectedLabelTextStyle: parseTextStyle(
+                  Theme.of(context), widget.control, "selectedLabelTextStyle"),
+              unselectedLabelTextStyle: parseTextStyle(Theme.of(context),
+                  widget.control, "unselectedLabelTextStyle"),
               indicatorShape:
                   parseOutlinedBorder(widget.control, "indicatorShape"),
               minWidth: widget.control.attrDouble("minWidth"),
               minExtendedWidth: widget.control.attrDouble("minExtendedWidth"),
               groupAlignment: widget.control.attrDouble("groupAlignment"),
-              backgroundColor: HexColor.fromString(
-                  Theme.of(context), widget.control.attrString("bgColor", "")!),
-              indicatorColor: HexColor.fromString(Theme.of(context),
-                  widget.control.attrString("indicatorColor", "")!),
+              backgroundColor: widget.control.attrColor("bgColor", context),
+              indicatorColor:
+                  widget.control.attrColor("indicatorColor", context),
               leading: leadingCtrls.isNotEmpty
                   ? createControl(
                       widget.control, leadingCtrls.first.id, disabled,
@@ -127,7 +130,12 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                     .where((c) => c.name == "selected_icon_content");
 
                 return NavigationRailDestination(
+                    disabled: disabled || destView.control.isDisabled,
                     padding: parseEdgeInsets(destView.control, "padding"),
+                    indicatorColor:
+                        destView.control.attrColor("indicatorColor", context),
+                    indicatorShape:
+                        parseOutlinedBorder(destView.control, "indicatorShape"),
                     icon: iconContentCtrls.isNotEmpty
                         ? createControl(destView.control,
                             iconContentCtrls.first.id, disabled,

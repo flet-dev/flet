@@ -7,12 +7,12 @@ import '../models/control.dart';
 import 'create_control.dart';
 import 'error.dart';
 
-class DragTargetAcceptEvent {
+class DragTargetEvent {
   final String srcId;
   final double x;
   final double y;
 
-  DragTargetAcceptEvent({
+  DragTargetEvent({
     required this.srcId,
     required this.x,
     required this.y,
@@ -70,6 +70,18 @@ class DragTargetControl extends StatelessWidget {
             "DragTarget.builder ${control.id}: accepted=${accepted.length}, rejected=${rejected.length}");
         return child;
       },
+      onMove: (details) {
+        var data = details.data;
+        debugPrint("DragTarget.onMove ${control.id}: $data");
+        var jd = json.decode(data);
+        var srcId = jd["id"] as String;
+        backend.triggerControlEvent(
+            control.id,
+            "move",
+            json.encode(DragTargetEvent(
+                    srcId: srcId, x: details.offset.dx, y: details.offset.dy)
+                .toJson()));
+      },
       onWillAcceptWithDetails: (details) {
         var data = details.data;
         debugPrint("DragTarget.onWillAcceptWithDetails ${control.id}: $data");
@@ -89,7 +101,7 @@ class DragTargetControl extends StatelessWidget {
         backend.triggerControlEvent(
             control.id,
             "accept",
-            json.encode(DragTargetAcceptEvent(
+            json.encode(DragTargetEvent(
                     srcId: srcId, x: details.offset.dx, y: details.offset.dy)
                 .toJson()));
       },

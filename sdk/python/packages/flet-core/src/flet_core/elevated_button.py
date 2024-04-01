@@ -12,6 +12,8 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ClipBehavior,
+    UrlTarget,
 )
 from flet_core.utils import deprecated
 
@@ -50,16 +52,16 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         elevation: OptionalNumber = None,
         style: Optional[ButtonStyle] = None,
         autofocus: Optional[bool] = None,
-        adaptive: Optional[bool] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
         url: Optional[str] = None,
-        url_target: Optional[str] = None,
+        url_target: Optional[UrlTarget] = None,
         on_click=None,
         on_long_press=None,
         on_hover=None,
         on_focus=None,
         on_blur=None,
         #
-        # ConstrainedControl
+        # ConstrainedControl and AdaptiveControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -88,6 +90,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -142,6 +145,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self.on_hover = on_hover
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.clip_behavior = clip_behavior
 
     def _get_control_name(self):
         return "elevatedbutton"
@@ -272,12 +276,15 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     # url_target
     @property
-    def url_target(self):
-        return self._get_attr("urlTarget")
+    def url_target(self) -> Optional[UrlTarget]:
+        return self.__url_target
 
     @url_target.setter
-    def url_target(self, value):
-        self._set_attr("urlTarget", value)
+    def url_target(self, value: Optional[UrlTarget]):
+        self.__url_target = value
+        self._set_attr(
+            "urlTarget", value.value if isinstance(value, UrlTarget) else value
+        )
 
     # on_click
     @property
@@ -315,6 +322,17 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self._get_attr("clipBehavior")
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
 
     # on_hover
     @property

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
+import '../utils/alignment.dart';
 import 'create_control.dart';
 
 class StackControl extends StatelessWidget {
@@ -21,6 +22,8 @@ class StackControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Stack build: ${control.id}");
+    bool disabled = control.isDisabled || parentDisabled;
+    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
     var clipBehavior = Clip.values.firstWhere(
         (e) =>
@@ -28,17 +31,25 @@ class StackControl extends StatelessWidget {
             control.attrString("clipBehavior", "")!.toLowerCase(),
         orElse: () => Clip.hardEdge);
 
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+    StackFit fit = StackFit.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            control.attrString("fit", "")!.toLowerCase(),
+        orElse: () => StackFit.loose);
+    var ctrls = children
+        .where((c) => c.isVisible)
+        .map((c) =>
+            createControl(control, c.id, disabled, parentAdaptive: adaptive))
+        .toList();
+
     return constrainedControl(
         context,
         Stack(
           clipBehavior: clipBehavior,
-          children: children
-              .where((c) => c.isVisible)
-              .map((c) => createControl(control, c.id, disabled,
-                  parentAdaptive: adaptive))
-              .toList(),
+          fit: fit,
+          alignment: parseAlignment(control, "alignment") ??
+              AlignmentDirectional.topStart,
+          children: ctrls,
         ),
         parent,
         control);

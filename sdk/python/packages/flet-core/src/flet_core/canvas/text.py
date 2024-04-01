@@ -17,7 +17,7 @@ class Text(Shape):
         style: Optional[TextStyle] = None,
         spans: Optional[List[InlineSpan]] = None,
         alignment: Optional[Alignment] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: Optional[TextAlign] = None,
         max_lines: Optional[int] = None,
         max_width: OptionalNumber = None,
         ellipsis: Optional[str] = None,
@@ -119,7 +119,9 @@ class Text(Shape):
     @text_align.setter
     def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
-        self._set_attr("textAlign", value.value if value is not None else None)
+        self._set_attr(
+            "textAlign", value.value if isinstance(value, TextAlign) else value
+        )
 
     # max_lines
     @property
