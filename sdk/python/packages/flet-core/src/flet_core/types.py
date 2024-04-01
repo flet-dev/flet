@@ -34,6 +34,9 @@ class WebRenderer(Enum):
 class UrlTarget(Enum):
     BLANK = "blank"
     SELF = "_self"
+    PARENT = "_parent"
+    TOP = "_top"
+    UNFENCED_TOP = "_unfencedTop"
 
 
 PaddingValue = Union[None, int, float, Padding]
@@ -91,7 +94,6 @@ class MaterialState(Enum):
 
 
 class MainAxisAlignment(Enum):
-    NONE = None
     START = "start"
     END = "end"
     CENTER = "center"

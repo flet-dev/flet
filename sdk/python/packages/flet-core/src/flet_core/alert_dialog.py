@@ -75,7 +75,7 @@ class AlertDialog(AdaptiveControl):
         title_padding: PaddingValue = None,
         content_padding: PaddingValue = None,
         actions_padding: PaddingValue = None,
-        actions_alignment: MainAxisAlignment = None,
+        actions_alignment: Optional[MainAxisAlignment] = None,
         shape: Optional[OutlinedBorder] = None,
         inset_padding: PaddingValue = None,
         icon_padding: PaddingValue = None,
@@ -350,11 +350,11 @@ class AlertDialog(AdaptiveControl):
 
     # actions_alignment
     @property
-    def actions_alignment(self) -> MainAxisAlignment:
+    def actions_alignment(self) -> Optional[MainAxisAlignment]:
         return self.__actions_alignment
 
     @actions_alignment.setter
-    def actions_alignment(self, value: MainAxisAlignment):
+    def actions_alignment(self, value: Optional[MainAxisAlignment]):
         self.__actions_alignment = value
         self._set_attr(
             "actionsAlignment",
