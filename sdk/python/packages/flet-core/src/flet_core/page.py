@@ -6,7 +6,7 @@ import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
@@ -23,13 +23,10 @@ from flet_core.client_storage import ClientStorage
 from flet_core.connection import Connection
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
-from flet_core.cupertino_action_sheet import CupertinoActionSheet
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
-from flet_core.cupertino_picker import CupertinoPicker
-from flet_core.cupertino_timer_picker import CupertinoTimerPicker
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import FloatingActionButton
@@ -87,6 +84,19 @@ except ImportError as e:
             scope: Optional[List[str]] = None,
         ):
             pass
+
+
+@dataclass
+class Locale:
+    language_code: Optional[str] = field(default=None)
+    country_code: Optional[str] = field(default=None)
+    script_code: Optional[str] = field(default=None)
+
+
+@dataclass
+class LocaleConfiguration:
+    supported_locales: Optional[List[Locale]] = field(default=None)
+    current_locale: Optional[Locale] = field(default=None)
 
 
 class PageDisconnectedException(Exception):
@@ -150,6 +160,7 @@ class Page(AdaptiveControl):
         self.__offstage = Offstage()
         self.__theme = None
         self.__dark_theme = None
+        self.__locale_configuration = None
         self.__theme_mode = ThemeMode.SYSTEM  # Default Theme Mode
         self.__pubsub: PubSubClient = PubSubClient(conn.pubsubhub, session_id)
         self.__client_storage: ClientStorage = ClientStorage(self)
@@ -246,6 +257,7 @@ class Page(AdaptiveControl):
         super().before_update()
         self._set_attr_json("fonts", self.__fonts)
         self._set_attr_json("theme", self.__theme)
+        self._set_attr_json("localeConfiguration", self.__locale_configuration)
         self._set_attr_json("darkTheme", self.__dark_theme)
 
         # keyboard event
@@ -493,10 +505,10 @@ class Page(AdaptiveControl):
                     if name != "i":
                         self._index[id]._set_attr(name, props[name], dirty=False)
 
-    def run_task(self, handler: Callable[..., Awaitable[Any]], *args):
+    def run_task(self, handler: Callable[..., Awaitable[Any]], *args, **kwargs):
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
-        return asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
+        return asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.__loop)
 
     def __context_wrapper(self, handler):
         def wrapper(*args):
@@ -1260,7 +1272,7 @@ class Page(AdaptiveControl):
 
     # platform_brightness
     @property
-    def platform_brightness(self) -> ThemeMode:
+    def platform_brightness(self) -> Brightness:
         brightness = self._get_attr("platformBrightness")
         assert brightness is not None
         return Brightness(brightness)
@@ -1524,6 +1536,15 @@ class Page(AdaptiveControl):
     @dark_theme.setter
     def dark_theme(self, value: Optional[Theme]):
         self.__dark_theme = value
+
+    # locale_configuration
+    @property
+    def locale_configuration(self) -> Optional[LocaleConfiguration]:
+        return self.__locale_configuration
+
+    @locale_configuration.setter
+    def locale_configuration(self, value: Optional[LocaleConfiguration]):
+        self.__locale_configuration = value
 
     # rtl
     @property

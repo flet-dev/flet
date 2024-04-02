@@ -1,9 +1,9 @@
-import dataclasses
 from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
+from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
@@ -54,7 +54,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         label: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
+        label_position: Optional[LabelPosition] = None,
         label_style: Optional[TextStyle] = None,
         value: Optional[bool] = None,
         autofocus: Optional[bool] = None,
@@ -67,6 +67,11 @@ class Switch(ConstrainedControl, AdaptiveControl):
         thumb_icon: Union[None, str, Dict[MaterialState, str]] = None,
         track_color: Union[None, str, Dict[MaterialState, str]] = None,
         adaptive: Optional[bool] = None,
+        hover_color: Optional[str] = None,
+        splash_radius: OptionalNumber = None,
+        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        track_outline_color: Union[None, str, Dict[MaterialState, str]] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
         on_change=None,
         on_focus=None,
         on_blur=None,
@@ -150,6 +155,11 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.hover_color = hover_color
+        self.splash_radius = splash_radius
+        self.overlay_color = overlay_color
+        self.track_outline_color = track_outline_color
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "switch"
@@ -157,9 +167,11 @@ class Switch(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("thumbColor", self.__thumb_color)
+        self._set_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("trackOutlineColor", self.__track_outline_color)
         self._set_attr_json("thumbIcon", self.__thumb_icon)
         self._set_attr_json("trackColor", self.__track_color)
-        if dataclasses.is_dataclass(self.__label_style):
+        if isinstance(self.__label_style, TextStyle):
             self._set_attr_json("labelStyle", self.__label_style)
 
     # value
@@ -173,12 +185,48 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # label
     @property
-    def label(self):
+    def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
+
+    # hover_color
+    @property
+    def hover_color(self) -> Optional[str]:
+        return self._get_attr("hoverColor")
+
+    @hover_color.setter
+    def hover_color(self, value: Optional[str]):
+        self._set_attr("hoverColor", value)
+
+    # track_outline_color
+    @property
+    def track_outline_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__track_outline_color
+
+    @track_outline_color.setter
+    def track_outline_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__track_outline_color = value
+
+    # overlay_color
+    @property
+    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__overlay_color
+
+    @overlay_color.setter
+    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__overlay_color = value
+
+    # splash_radius
+    @property
+    def splash_radius(self) -> OptionalNumber:
+        return self._get_attr("splashRadius", data_type="float")
+
+    @splash_radius.setter
+    def splash_radius(self, value: OptionalNumber):
+        self._set_attr("splashRadius", value)
 
     # label_style
     @property
@@ -191,14 +239,27 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # label_position
     @property
-    def label_position(self) -> LabelPosition:
+    def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
 
     @label_position.setter
-    def label_position(self, value: LabelPosition):
+    def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
         self._set_attr(
             "labelPosition", value.value if isinstance(value, LabelPosition) else value
+        )
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr(
+            "mouseCursor",
+            value.value if isinstance(value, MouseCursor) else value,
         )
 
     # autofocus

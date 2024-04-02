@@ -1,4 +1,3 @@
-import dataclasses
 from enum import Enum
 from typing import Any, List, Optional, Union
 from warnings import warn
@@ -22,8 +21,6 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-TextOverflowString = Literal[None, "clip", "ellipsis", "fade", "visible"]
 
 
 class TextOverflow(Enum):
@@ -85,7 +82,7 @@ class Text(ConstrainedControl):
         self,
         value: Optional[str] = None,
         spans: Optional[List[TextSpan]] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: Optional[TextAlign] = None,
         font_family: Optional[str] = None,
         size: OptionalNumber = None,
         weight: Optional[FontWeight] = None,
@@ -190,7 +187,7 @@ class Text(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        if dataclasses.is_dataclass(self.__style):
+        if isinstance(self.__style, TextStyle):
             self._set_attr_json("style", self.__style)
 
     # value
@@ -213,11 +210,11 @@ class Text(ConstrainedControl):
 
     # text_align
     @property
-    def text_align(self) -> TextAlign:
+    def text_align(self) -> Optional[TextAlign]:
         return self.__text_align
 
     @text_align.setter
-    def text_align(self, value: TextAlign):
+    def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
         self._set_attr(
             "textAlign", value.value if isinstance(value, TextAlign) else value
@@ -352,9 +349,9 @@ class Text(ConstrainedControl):
 
     # semantics_label
     @property
-    def semantics_label(self):
+    def semantics_label(self) -> Optional[str]:
         return self._get_attr("semanticsLabel")
 
     @semantics_label.setter
-    def semantics_label(self, value):
+    def semantics_label(self, value: Optional[str]):
         self._set_attr("semanticsLabel", value)

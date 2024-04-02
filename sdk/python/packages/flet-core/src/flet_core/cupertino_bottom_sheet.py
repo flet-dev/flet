@@ -93,7 +93,7 @@ class CupertinoBottomSheet(Control):
     # height
     @property
     def height(self) -> OptionalNumber:
-        return self._get_attr("height", data_type="float")
+        return self._get_attr("height", data_type="float", def_value=220)
 
     @height.setter
     def height(self, value: OptionalNumber):

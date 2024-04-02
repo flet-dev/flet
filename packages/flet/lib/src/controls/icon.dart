@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/icons.dart';
 import 'create_control.dart';
 
@@ -18,8 +17,7 @@ class IconControl extends StatelessWidget {
     var name = control.attrString("name", "")!;
     var size = control.attrDouble("size");
     var semanticsLabel = control.attrString("semanticsLabel");
-    var color = HexColor.fromString(
-        Theme.of(context), control.attrString("color", "")!);
+    var color = control.attrColor("color", context);
 
     return constrainedControl(
         context,

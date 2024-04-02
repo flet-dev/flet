@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import 'create_control.dart';
 
 class CupertinoActivityIndicatorControl extends StatelessWidget {
@@ -28,8 +26,7 @@ class CupertinoActivityIndicatorControl extends StatelessWidget {
         CupertinoActivityIndicator(
           radius: control.attrDouble("radius", 10)!,
           animating: control.attrBool("animating", true)!,
-          color: HexColor.fromString(
-              Theme.of(context), control.attrString("color", "")!),
+          color: control.attrColor("color", context),
         ),
         parent,
         control);

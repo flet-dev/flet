@@ -1,0 +1,24 @@
+name: flet_rive
+description: Flet Rive control
+homepage: https://flet.dev
+repository: https://github.com/flet-dev/flet/packages/flet_rive
+version: 0.21.2
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  collection: ^1.16.0
+  rive: ^0.13.0
+
+  flet:
+    path: ../flet/
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0

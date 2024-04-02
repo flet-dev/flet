@@ -2,9 +2,7 @@ import logging
 from typing import Any, Callable
 
 import flet_core
-from flet_core.locks import NopeLock
 from flet_core.pubsub.pubsub_hub import PubSubHub
-from flet_core.utils.concurrency_utils import is_pyodide
 from flet_core.utils.deprecated import deprecated
 
 logger = logging.getLogger(flet_core.__name__)

@@ -31,6 +31,14 @@ class WebRenderer(Enum):
     CANVAS_KIT = "canvaskit"
 
 
+class UrlTarget(Enum):
+    BLANK = "blank"
+    SELF = "_self"
+    PARENT = "_parent"
+    TOP = "_top"
+    UNFENCED_TOP = "_unfencedTop"
+
+
 PaddingValue = Union[None, int, float, Padding]
 
 MarginValue = Union[None, int, float, Margin]
@@ -86,7 +94,6 @@ class MaterialState(Enum):
 
 
 class MainAxisAlignment(Enum):
-    NONE = None
     START = "start"
     END = "end"
     CENTER = "center"
@@ -96,7 +103,6 @@ class MainAxisAlignment(Enum):
 
 
 class CrossAxisAlignment(Enum):
-    NONE = None
     START = "start"
     END = "end"
     CENTER = "center"
@@ -112,7 +118,6 @@ class VerticalAlignment(Enum):
 
 
 class TabAlignment(Enum):
-    NONE = None
     START = "start"
     START_OFFSET = "startOffset"
     FILL = "fill"
@@ -120,13 +125,11 @@ class TabAlignment(Enum):
 
 
 class LabelPosition(Enum):
-    NONE = None
     RIGHT = "right"
     LEFT = "left"
 
 
 class BlendMode(Enum):
-    NONE = None
     CLEAR = "clear"
     COLOR = "color"
     COLOR_BURN = "colorBurn"
@@ -160,7 +163,6 @@ class BlendMode(Enum):
 
 
 class TextAlign(Enum):
-    NONE = None
     LEFT = "left"
     RIGHT = "right"
     CENTER = "center"
@@ -217,6 +219,11 @@ class ThemeMode(Enum):
 class Brightness(Enum):
     LIGHT = "light"
     DARK = "dark"
+
+
+class Orientation(Enum):
+    PORTRAIT = "portrait"
+    LANDSCAPE = "landscape"
 
 
 class FloatingActionButtonLocation(Enum):

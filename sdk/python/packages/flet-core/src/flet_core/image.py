@@ -14,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.video import FilterQuality
 
 try:
     from typing import Literal
@@ -58,9 +59,11 @@ class Image(ConstrainedControl):
         fit: Optional[ImageFit] = None,
         border_radius: BorderRadiusValue = None,
         color: Optional[str] = None,
-        color_blend_mode: BlendMode = BlendMode.NONE,
+        color_blend_mode: Optional[BlendMode] = None,
         gapless_playback: Optional[bool] = None,
         semantics_label: Optional[str] = None,
+        exclude_from_semantics: Optional[bool] = None,
+        filter_quality: Optional[FilterQuality] = None,
         #
         # ConstrainedControl
         #
@@ -133,6 +136,8 @@ class Image(ConstrainedControl):
         self.color_blend_mode = color_blend_mode
         self.gapless_playback = gapless_playback
         self.semantics_label = semantics_label
+        self.exclude_from_semantics = exclude_from_semantics
+        self.filter_quality = filter_quality
 
     def _get_control_name(self):
         return "image"
@@ -154,7 +159,7 @@ class Image(ConstrainedControl):
         return self._get_attr("src")
 
     @src.setter
-    def src(self, value):
+    def src(self, value: Optional[str]):
         self._set_attr("src", value)
 
     # src_base64
@@ -163,7 +168,7 @@ class Image(ConstrainedControl):
         return self._get_attr("srcBase64")
 
     @src_base64.setter
-    def src_base64(self, value):
+    def src_base64(self, value: Optional[str]):
         self._set_attr("srcBase64", value)
 
     # fit
@@ -175,6 +180,18 @@ class Image(ConstrainedControl):
     def fit(self, value: Optional[ImageFit]):
         self.__fit = value
         self._set_attr("fit", value.value if isinstance(value, ImageFit) else value)
+
+    # filter_quality
+    @property
+    def filter_quality(self) -> Optional[FilterQuality]:
+        return self.__filter_quality
+
+    @filter_quality.setter
+    def filter_quality(self, value: Optional[FilterQuality]):
+        self.__filter_quality = value
+        self._set_attr(
+            "filterQuality", value.value if isinstance(value, FilterQuality) else value
+        )
 
     # repeat
     @property
@@ -208,11 +225,11 @@ class Image(ConstrainedControl):
 
     # color_blend_mode
     @property
-    def color_blend_mode(self) -> BlendMode:
+    def color_blend_mode(self) -> Optional[BlendMode]:
         return self.__blend_mode
 
     @color_blend_mode.setter
-    def color_blend_mode(self, value: BlendMode):
+    def color_blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
         self._set_attr(
             "colorBlendMode", value.value if isinstance(value, BlendMode) else value
@@ -226,6 +243,15 @@ class Image(ConstrainedControl):
     @gapless_playback.setter
     def gapless_playback(self, value: Optional[bool]):
         self._set_attr("gaplessPlayback", value)
+
+    # exclude_from_semantics
+    @property
+    def exclude_from_semantics(self) -> Optional[bool]:
+        return self._get_attr("excludeFromSemantics", data_type="bool", def_value=False)
+
+    @exclude_from_semantics.setter
+    def exclude_from_semantics(self, value: Optional[bool]):
+        self._set_attr("excludeFromSemantics", value)
 
     # semantics_label
     @property
