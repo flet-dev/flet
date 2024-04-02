@@ -31,12 +31,14 @@ class CupertinoRadio(ConstrainedControl):
         self,
         label: Optional[str] = None,
         value: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
+        label_position: Optional[LabelPosition] = None,
         fill_color: Optional[str] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
         autofocus: Optional[bool] = None,
         use_checkmark_style: Optional[bool] = None,
+        toggleable: Optional[bool] = None,
+        focus_color: Optional[str] = None,
         on_focus=None,
         on_blur=None,
         #
@@ -110,6 +112,8 @@ class CupertinoRadio(ConstrainedControl):
         self.inactive_color = inactive_color
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.focus_color = focus_color
+        self.toggleable = toggleable
 
     def _get_control_name(self):
         return "cupertinoradio"
@@ -128,20 +132,20 @@ class CupertinoRadio(ConstrainedControl):
 
     # label
     @property
-    def label(self):
+    def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
 
     # label_position
     @property
-    def label_position(self) -> LabelPosition:
+    def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
 
     @label_position.setter
-    def label_position(self, value: LabelPosition):
+    def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
         self._set_attr(
             "labelPosition", value.value if isinstance(value, LabelPosition) else value
@@ -155,6 +159,24 @@ class CupertinoRadio(ConstrainedControl):
     @fill_color.setter
     def fill_color(self, value: Optional[str]):
         self._set_attr("fillColor", value)
+
+    # focus_color
+    @property
+    def focus_color(self) -> Optional[str]:
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value: Optional[str]):
+        self._set_attr("focusColor", value)
+
+    # toggleable
+    @property
+    def toggleable(self) -> Optional[bool]:
+        return self._get_attr("toggleable", data_type="bool", def_value=False)
+
+    @toggleable.setter
+    def toggleable(self, value: Optional[bool]):
+        self._set_attr("toggleable", value)
 
     # on_focus
     @property

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
@@ -49,10 +48,9 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
     bool? adaptive =
         widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
-    var dividerColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("dividerColor", "")!);
-    var expandedIconColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("expandedIconColor", "")!);
+    var dividerColor = widget.control.attrColor("dividerColor", context);
+    var expandedIconColor =
+        widget.control.attrColor("expandedIconColor", context);
 
     var expandedHeaderPadding =
         parseEdgeInsets(widget.control, "expandedHeaderPadding");
@@ -83,8 +81,7 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
             var isExpanded = panelView.control.attrBool("expanded", false)!;
             var canTapHeader =
                 panelView.control.attrBool("canTapHeader", false)!;
-            var bgColor = HexColor.fromString(Theme.of(context),
-                panelView.control.attrString("bgColor", "")!);
+            var bgColor = widget.control.attrColor("bgColor", context);
 
             return ExpansionPanel(
               backgroundColor: bgColor,

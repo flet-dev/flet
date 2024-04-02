@@ -12,6 +12,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ClipBehavior,
 )
 from flet_core.utils import deprecated
 
@@ -73,6 +74,9 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         run_spacing: OptionalNumber = None,
         child_aspect_ratio: OptionalNumber = None,
         padding: PaddingValue = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        semantic_child_count: Optional[int] = None,
+        cache_extent: OptionalNumber = None,
         #
         # ConstrainedControl
         #
@@ -163,6 +167,9 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.run_spacing = run_spacing
         self.child_aspect_ratio = child_aspect_ratio
         self.padding = padding
+        self.clip_behavior = clip_behavior
+        self.semantic_child_count = semantic_child_count
+        self.cache_extent = cache_extent
 
     def _get_control_name(self):
         return "gridview"
@@ -194,6 +201,15 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @horizontal.setter
     def horizontal(self, value: Optional[bool]):
         self._set_attr("horizontal", value)
+
+    # cache_extent
+    @property
+    def cache_extent(self) -> OptionalNumber:
+        return self._get_attr("cacheExtent")
+
+    @cache_extent.setter
+    def cache_extent(self, value: OptionalNumber):
+        self._set_attr("cacheExtent", value)
 
     # runs_count
     @property
@@ -257,3 +273,23 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @controls.setter
     def controls(self, value):
         self.__controls = value if value is not None else []
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self._get_attr("clipBehavior")
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self._set_attr(
+            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
+        )
+
+    # semantic_child_count
+    @property
+    def semantic_child_count(self) -> Optional[int]:
+        return self._get_attr("semanticChildCount", data_type="int")
+
+    @semantic_child_count.setter
+    def semantic_child_count(self, value: Optional[int]):
+        self._set_attr("semanticChildCount", value)

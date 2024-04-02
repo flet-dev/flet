@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/desktop.dart';
 import 'create_control.dart';
@@ -76,10 +74,8 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
         min: min,
         max: max,
         divisions: divisions,
-        activeColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("activeColor", "")!),
-        thumbColor: HexColor.fromString(Theme.of(context),
-                widget.control.attrString("thumbColor", "")!) ??
+        activeColor: widget.control.attrColor("activeColor", context),
+        thumbColor: widget.control.attrColor("thumbColor", context) ??
             CupertinoColors.white,
         onChanged: !disabled
             ? (double value) {

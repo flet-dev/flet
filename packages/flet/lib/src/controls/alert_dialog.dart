@@ -4,8 +4,8 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_alert_dialog.dart';
 import 'error.dart';
@@ -49,10 +49,15 @@ class _AlertDialogControlState extends State<AlertDialogControl>
     var actionCtrls =
         widget.children.where((c) => c.name == "action" && c.isVisible);
     final actionsAlignment = parseMainAxisAlignment(
-        widget.control, "actionsAlignment", MainAxisAlignment.start);
+        widget.control, "actionsAlignment", MainAxisAlignment.end);
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
       return const ErrorControl("AlertDialog does not have any content.");
     }
+    var clipBehavior = Clip.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
+        orElse: () => Clip.none);
 
     return AlertDialog(
       title: titleCtrls.isNotEmpty
@@ -76,13 +81,26 @@ class _AlertDialogControlState extends State<AlertDialogControl>
       semanticLabel: widget.control.attrString("semanticsLabel"),
       insetPadding: parseEdgeInsets(widget.control, "insetPadding") ??
           const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
-      backgroundColor: HexColor.fromString(
-          Theme.of(context), widget.control.attrString("bgcolor", "")!),
+      iconPadding: parseEdgeInsets(widget.control, "iconPadding"),
+      backgroundColor: widget.control.attrColor("bgcolor", context),
+      buttonPadding: parseEdgeInsets(widget.control, "actionButtonPadding"),
+      surfaceTintColor: widget.control.attrColor("surfaceTintColor", context),
+      shadowColor: widget.control.attrColor("shadowColor", context),
       elevation: widget.control.attrDouble("elevation"),
+      clipBehavior: clipBehavior,
       icon: iconCtrls.isNotEmpty
           ? createControl(widget.control, iconCtrls.first.id, disabled,
               parentAdaptive: adaptive)
           : null,
+      iconColor: widget.control.attrColor("iconColor", context),
+      scrollable: widget.control.attrBool("scrollable", false)!,
+      actionsOverflowButtonSpacing:
+          widget.control.attrDouble("actionsOverflowButtonSpacing"),
+      alignment: parseAlignment(widget.control, "alignment"),
+      contentTextStyle:
+          parseTextStyle(Theme.of(context), widget.control, "contentTextStyle"),
+      titleTextStyle:
+          parseTextStyle(Theme.of(context), widget.control, "titleTextStyle"),
     );
   }
 

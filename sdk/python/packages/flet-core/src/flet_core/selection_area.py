@@ -31,6 +31,7 @@ class SelectionArea(Control):
     def __init__(
         self,
         content: Control,
+        on_change=None,
         #
         # Control
         #
@@ -44,6 +45,7 @@ class SelectionArea(Control):
         )
 
         self.content = content
+        self.on_change = on_change
 
     def _get_control_name(self):
         return "selectionarea"
@@ -63,3 +65,12 @@ class SelectionArea(Control):
     @content.setter
     def content(self, value: Control):
         self.__content = value
+
+    # on_change
+    @property
+    def on_change(self):
+        return self._get_event_handler("change")
+
+    @on_change.setter
+    def on_change(self, handler):
+        self._add_event_handler("change", handler)

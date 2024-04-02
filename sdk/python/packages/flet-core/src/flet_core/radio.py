@@ -1,11 +1,12 @@
-import dataclasses
 from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
+from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
@@ -55,12 +56,19 @@ class Radio(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         label: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
+        label_position: Optional[LabelPosition] = None,
         label_style: Optional[TextStyle] = None,
         value: Optional[str] = None,
         autofocus: Optional[bool] = None,
         fill_color: Union[None, str, Dict[MaterialState, str]] = None,
         active_color: Optional[str] = None,
+        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        hover_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
+        splash_radius: OptionalNumber = None,
+        toggleable: Optional[bool] = None,
+        visual_density: Optional[ThemeVisualDensity] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
         on_focus=None,
         on_blur=None,
         #
@@ -137,6 +145,13 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self.active_color = active_color
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.overlay_color = overlay_color
+        self.hover_color = hover_color
+        self.focus_color = focus_color
+        self.splash_radius = splash_radius
+        self.toggleable = toggleable
+        self.visual_density = visual_density
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "radio"
@@ -144,7 +159,8 @@ class Radio(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("fillColor", self.__fill_color)
-        if dataclasses.is_dataclass(self.__label_style):
+        self._set_attr_json("overlayColor", self.__overlay_color)
+        if isinstance(self.__label_style, TextStyle):
             self._set_attr_json("labelStyle", self.__label_style)
 
     # value
@@ -165,6 +181,46 @@ class Radio(ConstrainedControl, AdaptiveControl):
     def active_color(self, value: Optional[str]):
         self._set_attr("activeColor", value)
 
+    # focus_color
+    @property
+    def focus_color(self) -> Optional[str]:
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value: Optional[str]):
+        self._set_attr("focusColor", value)
+
+    # splash_radius
+    @property
+    def splash_radius(self) -> OptionalNumber:
+        return self._get_attr("splashRadius", data_type="float")
+
+    @splash_radius.setter
+    def splash_radius(self, value: OptionalNumber):
+        self._set_attr("splashRadius", value)
+
+    # toggleable
+    @property
+    def toggleable(self) -> Optional[bool]:
+        return self._get_attr("toggleable", data_type="bool", def_value=False)
+
+    @toggleable.setter
+    def toggleable(self, value: Optional[bool]):
+        self._set_attr("toggleable", value)
+
+    # visual_density
+    @property
+    def visual_density(self) -> Optional[ThemeVisualDensity]:
+        return self.__visual_density
+
+    @visual_density.setter
+    def visual_density(self, value: Optional[ThemeVisualDensity]):
+        self.__visual_density = value
+        self._set_attr(
+            "visualDensity",
+            value.value if isinstance(value, ThemeVisualDensity) else value,
+        )
+
     # label
     @property
     def label(self):
@@ -176,14 +232,26 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     # label_position
     @property
-    def label_position(self) -> LabelPosition:
+    def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
 
     @label_position.setter
-    def label_position(self, value: LabelPosition):
+    def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
         self._set_attr(
             "labelPosition", value.value if isinstance(value, LabelPosition) else value
+        )
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr(
+            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
         )
 
     # label_style
@@ -203,6 +271,15 @@ class Radio(ConstrainedControl, AdaptiveControl):
     @fill_color.setter
     def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
         self.__fill_color = value
+
+    # overlay_color
+    @property
+    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+        return self.__overlay_color
+
+    @overlay_color.setter
+    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+        self.__overlay_color = value
 
     # on_focus
     @property

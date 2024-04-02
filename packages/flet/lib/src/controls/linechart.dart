@@ -324,9 +324,9 @@ class _LineChartControlState extends State<LineChartControl> {
                     }).toList();
                   },
                   touchTooltipData: LineTouchTooltipData(
-                    tooltipBgColor: HexColor.fromString(Theme.of(context),
-                            widget.control.attrString("tooltipBgcolor", "")!) ??
-                        const Color.fromRGBO(96, 125, 139, 1),
+                    tooltipBgColor:
+                        widget.control.attrColor("tooltipBgColor", context) ??
+                            const Color.fromRGBO(96, 125, 139, 1),
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((spot) {
                         var dp = viewModel.dataSeries[spot.barIndex]
@@ -402,20 +402,18 @@ class _LineChartControlState extends State<LineChartControl> {
 
   LineChartBarData getBarData(ThemeData theme, Control parent,
       bool interactiveChart, LineChartDataViewModel dataViewModel) {
-    Color? aboveLineBgcolor = HexColor.fromString(
-        theme, dataViewModel.control.attrString("aboveLineBgcolor", "")!);
+    Color? aboveLineBgcolor =
+        widget.control.attrColor("aboveLineBgcolor", context);
     Gradient? aboveLineGradient =
         parseGradient(theme, dataViewModel.control, "aboveLineGradient");
-    Color? belowLineBgcolor = HexColor.fromString(
-        theme, dataViewModel.control.attrString("belowLineBgcolor", "")!);
+    Color? belowLineBgcolor =
+        widget.control.attrColor("belowLineBgcolor", context);
     Gradient? belowLineGradient =
         parseGradient(theme, dataViewModel.control, "belowLineGradient");
     var dashPattern = dataViewModel.control.attrString("dashPattern");
     var shadow =
         parseBoxShadow(Theme.of(context), dataViewModel.control, "shadow");
-    Color barColor = HexColor.fromString(
-            theme, dataViewModel.control.attrString("color", "")!) ??
-        Colors.cyan;
+    Color barColor = widget.control.attrColor("color", context) ?? Colors.cyan;
     Gradient? barGradient =
         parseGradient(theme, dataViewModel.control, "gradient");
     FlLine? aboveLine =

@@ -1,5 +1,4 @@
 import flet_core as ft
-import pytest
 from flet_core.protocol import Command
 
 
@@ -19,7 +18,7 @@ def test_instance_no_attrs_set():
 
 def test_text_align_enum():
     r = ft.Tooltip()
-    assert r.text_align == ft.TextAlign.NONE
+    assert r.text_align is None
     assert r._get_attr("textAlign") is None
 
     r = ft.Tooltip(text_align=ft.TextAlign.RIGHT)

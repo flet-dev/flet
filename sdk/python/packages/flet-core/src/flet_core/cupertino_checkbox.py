@@ -40,7 +40,7 @@ class CupertinoCheckbox(ConstrainedControl):
     def __init__(
         self,
         label: Optional[str] = None,
-        label_position: LabelPosition = LabelPosition.NONE,
+        label_position: Optional[LabelPosition] = None,
         value: Optional[bool] = None,
         tristate: Optional[bool] = None,
         autofocus: Optional[bool] = None,
@@ -159,11 +159,11 @@ class CupertinoCheckbox(ConstrainedControl):
 
     # label_position
     @property
-    def label_position(self) -> LabelPosition:
+    def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
 
     @label_position.setter
-    def label_position(self, value: LabelPosition):
+    def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
         self._set_attr(
             "labelPosition", value.value if isinstance(value, LabelPosition) else value

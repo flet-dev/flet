@@ -6,13 +6,12 @@ import 'package:flutter/services.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
+import '../utils/form_field.dart';
 import '../utils/gradient.dart';
 import '../utils/shadows.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
-import 'form_field.dart';
 import 'textfield.dart';
 
 class CupertinoTextFieldControl extends StatefulWidget {
@@ -123,19 +122,15 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     bool password = widget.control.attrBool("password", false)!;
     bool onChange = widget.control.attrBool("onChange", false)!;
 
-    var cursorColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("cursorColor", "")!);
-    var selectionColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("selectionColor", "")!);
+    var cursorColor = widget.control.attrColor("cursorColor", context);
+    var selectionColor = widget.control.attrColor("selectionColor", context);
 
     int? maxLength = widget.control.attrInt("maxLength");
 
     var textSize = widget.control.attrDouble("textSize");
 
-    var color = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("color", "")!);
-    var focusedColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("focusedColor", "")!);
+    var color = widget.control.attrColor("color", context);
+    var focusedColor = widget.control.attrColor("focusedColor", context);
 
     TextStyle? textStyle =
         parseTextStyle(Theme.of(context), widget.control, "textStyle");
@@ -198,8 +193,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
     BoxBorder? border;
     double borderWidth = widget.control.attrDouble("borderWidth") ?? 1.0;
-    Color borderColor = HexColor.fromString(
-            Theme.of(context), widget.control.attrString("borderColor", "")!) ??
+    Color borderColor = widget.control.attrColor("borderColor", context) ??
         const Color(0xFF000000);
 
     try {
@@ -243,8 +237,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         e.name.toLowerCase() ==
         widget.control.attrString("blendMode", "")!.toLowerCase());
 
-    var bgColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("bgColor", "")!);
+    var bgColor = widget.control.attrColor("bgColor", context);
     // for adaptive TextField use label for placeholder
     var placeholder = widget.control.attrString("placeholderText") ??
         widget.control.attrString("label");

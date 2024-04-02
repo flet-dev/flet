@@ -6,6 +6,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/text.dart';
+import '../utils/theme.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -67,6 +68,7 @@ class _ChipControlState extends State<ChipControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("Chip build: ${widget.control.id}");
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var labelCtrls =
         widget.children.where((c) => c.name == "label" && c.isVisible);
@@ -79,14 +81,26 @@ class _ChipControlState extends State<ChipControl> {
       return const ErrorControl("Chip must have label specified.");
     }
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    double? clickElevation = widget.control.attrDouble("clickElevation");
+    Color? bgcolor = widget.control.attrColor("bgcolor", context);
+    Color? deleteIconColor =
+        widget.control.attrColor("deleteIconColor", context);
+    Color? disabledColor = widget.control.attrColor("disabledColor", context);
+    Color? surfaceTintColor =
+        widget.control.attrColor("surfaceTintColor", context);
+    Color? selectedShadowColor =
+        widget.control.attrColor("selectedShadowColor", context);
+    Color? shadowColor = widget.control.attrColor("shadowColor", context);
+    var color =
+        parseMaterialStateColor(Theme.of(context), widget.control, "color");
 
-    var bgcolor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("bgcolor", "")!);
-    var deleteIconColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("deleteIconColor", "")!);
-    var disabledColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("disabledColor", "")!);
+    BorderSide? borderSide =
+        parseBorderSide(Theme.of(context), widget.control, "borderSide");
+    VisualDensity? visualDensity =
+        parseVisualDensity(widget.control.attrString("visualDensity"), null);
+    Clip clipBehavior = Clip.values.firstWhere(
+        (c) => c.toString() == widget.control.attrString("clipBehavior", "")!,
+        orElse: () => Clip.none);
 
     bool onClick = widget.control.attrBool("onclick", false)!;
     bool onDelete = widget.control.attrBool("onDelete", false)!;
@@ -134,8 +148,7 @@ class _ChipControlState extends State<ChipControl> {
                   parentAdaptive: widget.parentAdaptive)
               : null,
           backgroundColor: bgcolor,
-          checkmarkColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("checkColor", "")!),
+          checkmarkColor: widget.control.attrColor("checkColor", context),
           selected: _selected,
           showCheckmark: showCheckmark,
           deleteButtonTooltipMessage: deleteButtonTooltipMessage,
@@ -159,13 +172,16 @@ class _ChipControlState extends State<ChipControl> {
           labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
           labelStyle:
               parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
-          selectedColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("selectedColor", "")!),
-          selectedShadowColor: HexColor.fromString(Theme.of(context),
-              widget.control.attrString("selectedShadowColor", "")!),
-          shadowColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("shadowColor", "")!),
+          selectedColor: widget.control.attrColor("selectedColor", context),
+          selectedShadowColor: selectedShadowColor,
+          shadowColor: shadowColor,
           shape: parseOutlinedBorder(widget.control, "shape"),
+          color: color,
+          surfaceTintColor: surfaceTintColor,
+          pressElevation: clickElevation,
+          side: borderSide,
+          clipBehavior: clipBehavior,
+          visualDensity: visualDensity,
         ),
         widget.parent,
         widget.control);

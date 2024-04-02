@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/colors.dart';
+import '../utils/borders.dart';
 import 'create_control.dart';
 
 class ProgressBarControl extends StatelessWidget {
@@ -15,12 +15,12 @@ class ProgressBarControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("ProgressBar build: ${control.id}");
 
-    var value = control.attrDouble("value", null);
+    var value = control.attrDouble("value");
+    var semanticsValue = control.attrDouble("semanticsValue");
+    var semanticsLabel = control.attrString("semanticsLabel");
     var barHeight = control.attrDouble("barHeight", 4)!;
-    var color = HexColor.fromString(
-        Theme.of(context), control.attrString("color", "")!);
-    var bgColor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgColor", "")!);
+    var color = control.attrColor("color", context);
+    var bgColor = control.attrColor("bgColor", context);
 
     return constrainedControl(
         context,
@@ -29,6 +29,10 @@ class ProgressBarControl extends StatelessWidget {
           minHeight: barHeight,
           color: color,
           backgroundColor: bgColor,
+          semanticsLabel: semanticsLabel,
+          semanticsValue: semanticsValue.toString(),
+          borderRadius:
+              parseBorderRadius(control, "borderRadius") ?? BorderRadius.zero,
         ),
         parent,
         control);
