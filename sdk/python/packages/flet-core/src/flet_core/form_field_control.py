@@ -101,6 +101,7 @@ class FormFieldControl(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        auto_update: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -131,6 +132,7 @@ class FormFieldControl(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            auto_update=auto_update,
             rtl=rtl,
         )
 

@@ -192,6 +192,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        auto_update: Optional[bool] = None,
         rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
@@ -220,6 +221,7 @@ class TextField(FormFieldControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            auto_update=auto_update,
             rtl=rtl,
             #
             # FormField
@@ -557,10 +559,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @on_change.setter
     def on_change(self, handler):
         self._add_event_handler("change", handler)
-        if handler is not None:
-            self._set_attr("onchange", True)
-        else:
-            self._set_attr("onchange", None)
+        self._set_attr("onchange", True if handler is not None else None)
 
     # on_submit
     @property
