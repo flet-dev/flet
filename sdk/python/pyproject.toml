@@ -21,7 +21,7 @@ pillow = "^9.4.0"
 pre-commit = "^2.21.0"
 hypercorn = "^0.14.4"
 gunicorn = "^21.2.0"
-pypi-cleanup = "^0.1.4"
+pypi-cleanup = "0.1.4"
 
 [build-system]
 requires = ["poetry-core"]

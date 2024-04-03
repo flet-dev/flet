@@ -71,7 +71,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         semantics_label: Optional[str] = None,
         shape: Optional[OutlinedBorder] = None,
         splash_radius: OptionalNumber = None,
-        border_side: Optional[BorderSide] = None,
+        border_side: Union[None, BorderSide, Dict[MaterialState, BorderSide]] = None,
         is_error: Optional[bool] = None,
         visual_density: Optional[ThemeVisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
@@ -174,10 +174,9 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("fillColor", self.__fill_color)
         self._set_attr_json("overlayColor", self.__overlay_color)
         self._set_attr_json("shape", self.__shape)
+        self._set_attr_json("borderSide", self.__border_side)
         if isinstance(self.__label_style, TextStyle):
             self._set_attr_json("labelStyle", self.__label_style)
-        if isinstance(self.__border_side, BorderSide):
-            self._set_attr_json("borderSide", self.__border_side)
 
     # value
     @property
@@ -356,11 +355,13 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # border_side
     @property
-    def border_side(self) -> Optional[BorderSide]:
+    def border_side(self) -> Union[None, BorderSide, Dict[MaterialState, BorderSide]]:
         return self.__border_side
 
     @border_side.setter
-    def border_side(self, value: Optional[BorderSide]):
+    def border_side(
+        self, value: Union[None, BorderSide, Dict[MaterialState, BorderSide]]
+    ):
         self.__border_side = value
 
     # on_change
