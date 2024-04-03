@@ -9,7 +9,6 @@ from flet_core.border import BorderSide
 from flet_core.border_radius import BorderRadius
 from flet_core.buttons import ButtonStyle, OutlinedBorder
 from flet_core.control import OptionalNumber
-from flet_core.gesture_detector import MouseCursor
 from flet_core.navigation_bar import NavigationBarLabelBehavior
 from flet_core.navigation_rail import NavigationRailLabelType
 from flet_core.padding import Padding
@@ -23,6 +22,7 @@ from flet_core.types import (
     ClipBehavior,
     MarginValue,
     MaterialState,
+    MouseCursor,
     OffsetValue,
     PaddingValue,
 )
