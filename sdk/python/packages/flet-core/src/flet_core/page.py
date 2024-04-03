@@ -496,7 +496,7 @@ class Page(AdaptiveControl):
 
     def run_task(self, handler: Callable[..., Awaitable[Any]], *args, **kwargs):
         assert asyncio.iscoroutinefunction(handler)
-        
+
         future = asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.__loop)
 
         def _on_completion(f):
@@ -1815,6 +1815,15 @@ class Page(AdaptiveControl):
     @window_visible.setter
     def window_visible(self, value: Optional[bool]):
         self._set_attr("windowVisible", value)
+
+    # cookie
+    @property
+    def cookie(self) -> str:
+        return self._get_attr("cookie", def_value="")
+
+    @cookie.setter
+    def cookie(self, value):
+        self._set_attr("cookie", value)
 
     # on_scroll_interval
     @property

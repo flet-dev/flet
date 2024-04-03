@@ -152,6 +152,7 @@ class RegisterWebClientRequestPayload:
     platformBrightness: str
     media: str
     sessionId: str
+    cookie: str
 
 
 @dataclass

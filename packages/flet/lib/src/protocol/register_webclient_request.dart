@@ -14,6 +14,7 @@ class RegisterWebClientRequest {
   final String? platformBrightness;
   final String? media;
   final String? sessionId;
+  final String? cookie;
 
   RegisterWebClientRequest(
       {required this.pageName,
@@ -30,7 +31,8 @@ class RegisterWebClientRequest {
       this.platform,
       this.platformBrightness,
       this.media,
-      this.sessionId});
+      this.sessionId,
+      this.cookie});
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'pageName': pageName,
@@ -47,6 +49,7 @@ class RegisterWebClientRequest {
         'platform': platform,
         'platformBrightness': platformBrightness,
         'media': media,
-        'sessionId': sessionId
+        'sessionId': sessionId,
+        'cookie': cookie
       };
 }

@@ -236,6 +236,7 @@ class FletApp(LocalConnection):
             # update page props
             assert self.__page
             original_route = self.__page.route
+            self.__page._set_attr("cookie", self._client_details.cookie, False)
             self.__page._set_attr("route", self._client_details.pageRoute, False)
             self.__page._set_attr("pwa", self._client_details.isPWA, False)
             self.__page._set_attr("web", self._client_details.isWeb, False)

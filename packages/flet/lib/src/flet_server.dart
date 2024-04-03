@@ -49,6 +49,7 @@ class FletServer implements FletControlBackend {
   String _platform = "";
   String _platformBrightness = "";
   String _media = "";
+  String _cookie = "";
   int reconnectStarted = 0;
   final Map<String, ControlInvokeMethodCallback> controlInvokeMethods;
 
@@ -106,21 +107,23 @@ class FletServer implements FletControlBackend {
     }
   }
 
-  registerWebClient(
-      {required String pageName,
-      required String pageRoute,
-      required String pageWidth,
-      required String pageHeight,
-      required String windowWidth,
-      required String windowHeight,
-      required String windowTop,
-      required String windowLeft,
-      required String isPWA,
-      required String isWeb,
-      required String isDebug,
-      required String platform,
-      required String platformBrightness,
-      required String media}) {
+  registerWebClient({
+    required String pageName,
+    required String pageRoute,
+    required String pageWidth,
+    required String pageHeight,
+    required String windowWidth,
+    required String windowHeight,
+    required String windowTop,
+    required String windowLeft,
+    required String isPWA,
+    required String isWeb,
+    required String isDebug,
+    required String platform,
+    required String platformBrightness,
+    required String media,
+    required String cookie,
+  }) {
     _pageName = pageName;
     _pageHash = pageRoute;
     _pageWidth = pageWidth;
@@ -135,6 +138,7 @@ class FletServer implements FletControlBackend {
     _platform = platform;
     _platformBrightness = platformBrightness;
     _media = media;
+    _cookie = cookie;
   }
 
   registerWebClientInternal() {
@@ -157,7 +161,8 @@ class FletServer implements FletControlBackend {
             platform: _platform,
             platformBrightness: _platformBrightness,
             media: _media,
-            sessionId: _store.state.sessionId)));
+            sessionId: _store.state.sessionId,
+            cookie: _cookie)));
     _pageHash = "";
   }
 
