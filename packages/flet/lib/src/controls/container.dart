@@ -64,6 +64,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
         children.where((c) => c.name == "content" && c.isVisible);
     bool ink = control.attrBool("ink", false)!;
     bool onClick = control.attrBool("onclick", false)!;
+    bool onTapDown = control.attrBool("onTapDown", false)!;
     String url = control.attrString("url", "")!;
     String? urlTarget = control.attrString("urlTarget");
     bool onLongPress = control.attrBool("onLongPress", false)!;
@@ -160,10 +161,21 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                         openWebBrowser(url, webWindowName: urlTarget);
                       }
                       if (onClick) {
-                        backend.triggerControlEvent(
-                            control.id,
-                            "click");
+                        backend.triggerControlEvent(control.id, "click");
                       }
+                    }
+                  : null,
+              onTapDown: onTapDown
+                  ? (details) {
+                      backend.triggerControlEvent(
+                          control.id,
+                          "tap_down",
+                          json.encode(ContainerTapEvent(
+                                  localX: details.localPosition.dx,
+                                  localY: details.localPosition.dy,
+                                  globalX: details.globalPosition.dx,
+                                  globalY: details.globalPosition.dy)
+                              .toJson()));
                     }
                   : null,
               onLongPress: onLongPress
@@ -241,8 +253,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                     : null,
                 child: child);
 
-        if ((onClick || onLongPress || onHover || url != "") &&
-            !disabled) {
+        if ((onClick || onLongPress || onHover || url != "") && !disabled) {
           result = MouseRegion(
             cursor: onClick || url != ""
                 ? SystemMouseCursors.click
@@ -269,10 +280,21 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                         openWebBrowser(url, webWindowName: urlTarget);
                       }
                       if (onClick) {
-                        backend.triggerControlEvent(
-                            control.id,
-                            "click");
+                        backend.triggerControlEvent(control.id, "click");
                       }
+                    }
+                  : null,
+              onTapDown: onTapDown
+                  ? (details) {
+                      backend.triggerControlEvent(
+                          control.id,
+                          "tap_down",
+                          json.encode(ContainerTapEvent(
+                                  localX: details.localPosition.dx,
+                                  localY: details.localPosition.dy,
+                                  globalX: details.globalPosition.dx,
+                                  globalY: details.globalPosition.dy)
+                              .toJson()));
                     }
                   : null,
               onLongPress: onLongPress

@@ -89,6 +89,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
         on_click=None,
+        on_tap_down=None,
         on_long_press=None,
         on_hover=None,
         #
@@ -162,8 +163,8 @@ class Container(ConstrainedControl, AdaptiveControl):
             d = json.loads(e.data)
             return ContainerTapEvent(**d)
 
-        self.__on_click = EventHandler(convert_container_tap_event_data)
-        self._add_event_handler("click", self.__on_click.get_handler())
+        self.__on_tap_down = EventHandler(convert_container_tap_event_data)
+        self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
 
         self.content = content
         self.padding = padding
@@ -191,6 +192,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.theme = theme
         self.theme_mode = theme_mode
         self.on_click = on_click
+        self.on_tap_down = on_tap_down
         self.on_long_press = on_long_press
         self.on_hover = on_hover
 
@@ -480,6 +482,16 @@ class Container(ConstrainedControl, AdaptiveControl):
     def on_click(self, handler):
         self._add_event_handler("click", handler)
         self._set_attr("onClick", True if handler is not None else None)
+
+    # on_tap_down
+    @property
+    def on_tap_down(self):
+        return self.__on_tap_down
+
+    @on_tap_down.setter
+    def on_tap_down(self, handler):
+        self.__on_tap_down.subscribe(handler)
+        self._set_attr("onTapDown", True if handler is not None else None)
 
     # on_long_press
     @property
