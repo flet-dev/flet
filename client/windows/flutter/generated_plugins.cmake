@@ -10,6 +10,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   screen_brightness_windows
   screen_retriever
   url_launcher_windows
+  webview_windows
   window_manager
   window_to_front
 )

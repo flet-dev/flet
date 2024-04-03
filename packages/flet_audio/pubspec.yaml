@@ -17,6 +17,7 @@ dependencies:
 
   flet:
     path: ../flet/
+  web: ^0.5.1
 
 dev_dependencies:
   flutter_test:

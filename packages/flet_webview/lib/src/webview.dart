@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_windows/webview_windows.dart' as web_windows;
 
 class WebViewControl extends StatelessWidget {
   final Control? parent;
@@ -65,11 +66,43 @@ class WebViewControl extends StatelessWidget {
       }
       controller.loadRequest(Uri.parse(url));
       result = WebViewWidget(controller: controller);
+
+      return constrainedControl(context, result, parent, control);
+    } else if (Platform.isWindows) {
+      web_windows.WebviewController controller;
+      controller = web_windows.WebviewController();
+      Future<void> initializeController() async {
+        await controller.initialize();
+        controller
+          ..loadingState.listen((event) {
+            if (event == web_windows.LoadingState.loading) {
+              backend.triggerControlEvent(control.id, "page_started", url);
+            } else if (event == web_windows.LoadingState.navigationCompleted) {
+              backend.triggerControlEvent(control.id, "page_ended", url);
+            }
+          })
+          ..onLoadError.listen((error) {
+            backend.triggerControlEvent(
+                control.id, "web_resource_error", error.toString());
+          })
+          ..setBackgroundColor(bgcolor ?? Colors.transparent)
+          ..loadUrl(url);
+      }
+
+      return FutureBuilder(
+          future: initializeController(),
+          builder: (BuildContext context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return constrainedControl(
+                  context, web_windows.Webview(controller), parent, control);
+            }
+            return Container();
+          });
     } else {
       result = const ErrorControl(
           "WebView control is not supported on this platform yet.");
-    }
 
-    return constrainedControl(context, result, parent, control);
+      return constrainedControl(context, result, parent, control);
+    }
   }
 }
