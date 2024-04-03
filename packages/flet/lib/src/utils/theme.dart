@@ -333,7 +333,8 @@ TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
   );
 }
 
-VisualDensity parseVisualDensity(String? vd) {
+VisualDensity? parseVisualDensity(String? vd,
+    [VisualDensity? defValue = VisualDensity.standard]) {
   switch (vd?.toLowerCase()) {
     case "adaptiveplatformdensity":
       return VisualDensity.adaptivePlatformDensity;
@@ -342,7 +343,7 @@ VisualDensity parseVisualDensity(String? vd) {
     case "compact":
       return VisualDensity.compact;
     default:
-      return VisualDensity.standard;
+      return defValue;
   }
 }
 

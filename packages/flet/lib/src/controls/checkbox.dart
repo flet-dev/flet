@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/material_state.dart';
+import '../utils/mouse.dart';
 import '../utils/text.dart';
+import '../utils/theme.dart';
 import 'create_control.dart';
 import 'cupertino_checkbox.dart';
 import 'flet_store_mixin.dart';
@@ -114,23 +120,31 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
         labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
       }
 
+      MaterialStateBorderSide? side = parseMaterialStateBorderSide(
+          Theme.of(context), widget.control, "borderSide");
+
       var checkbox = Checkbox(
           autofocus: autofocus,
           focusNode: _focusNode,
           value: _value,
-          activeColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("activeColor", "")!),
-          focusColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("focusColor", "")!),
-          hoverColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("hoverColor", "")!),
+          isError: widget.control.attrBool("isError", false)!,
+          semanticLabel: widget.control.attrString("semanticsLabel"),
+          shape: parseOutlinedBorder(widget.control, "shape"),
+          side: side,
+          splashRadius: widget.control.attrDouble("splashRadius"),
+          activeColor: widget.control.attrColor("activeColor", context),
+          focusColor: widget.control.attrColor("focusColor", context),
+          hoverColor: widget.control.attrColor("hoverColor", context),
           overlayColor: parseMaterialStateColor(
               Theme.of(context), widget.control, "overlayColor"),
-          checkColor: HexColor.fromString(
-              Theme.of(context), widget.control.attrString("checkColor", "")!),
+          checkColor: widget.control.attrColor("checkColor", context),
           fillColor: parseMaterialStateColor(
               Theme.of(context), widget.control, "fillColor"),
           tristate: _tristate,
+          visualDensity: parseVisualDensity(
+              widget.control.attrString("visualDensity"), null),
+          mouseCursor:
+              parseMouseCursor(widget.control.attrString("mouseCursor"), null),
           onChanged: !disabled
               ? (bool? value) {
                   _onChange(value);

@@ -120,3 +120,56 @@ OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic> json) {
   }
   return null;
 }
+
+MaterialStateBorderSide? parseMaterialStateBorderSide(
+    ThemeData theme, Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  var j = json.decode(v);
+  if (j is Map<String, dynamic> && (j.containsKey("w") || j.containsKey("c"))) {
+    j = {"": j};
+  }
+
+  return MaterialStateBorderSideFromJSON(
+      j, (jv) => borderSideFromJSON(theme, jv, null), BorderSide.none);
+}
+
+class MaterialStateBorderSideFromJSON extends MaterialStateBorderSide {
+  late final Map<String, BorderSide?> _states;
+  late final BorderSide _defaultValue;
+
+  MaterialStateBorderSideFromJSON(
+      Map<String, dynamic>? jsonDictValue,
+      BorderSide? Function(dynamic) converterFromJson,
+      BorderSide defaultValue) {
+    _defaultValue = defaultValue;
+    _states = {};
+    if (jsonDictValue != null) {
+      jsonDictValue.forEach((stateStr, jv) {
+        stateStr.split(",").map((s) => s.trim().toLowerCase()).forEach((state) {
+          _states[state] = converterFromJson(jv);
+        });
+      });
+    }
+  }
+
+  @override
+  BorderSide? resolve(Set<MaterialState> states) {
+    // find specific state
+    for (var state in states) {
+      if (_states.containsKey(state.name)) {
+        return _states[state.name];
+      }
+    }
+
+    // catch-all value
+    if (_states.containsKey("")) {
+      return _states[""];
+    }
+
+    return _defaultValue;
+  }
+}

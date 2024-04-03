@@ -269,7 +269,8 @@ Widget createWidget(
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
+          parentAdaptive: parentAdaptive,
+          backend: backend);
     case "hapticfeedback":
       return HapticFeedbackControl(
           parent: parent,
@@ -291,7 +292,8 @@ Widget createWidget(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
-          parentDisabled: parentDisabled);
+          parentDisabled: parentDisabled,
+          backend: backend);
     case "chip":
       return ChipControl(
           key: key,
@@ -540,7 +542,8 @@ Widget createWidget(
           control: controlView.control,
           children: controlView.children,
           parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
+          parentAdaptive: parentAdaptive,
+          backend: backend);
     case "dragtarget":
       return DragTargetControl(
           key: key,
@@ -805,6 +808,7 @@ Widget createWidget(
           key: key,
           parent: parent,
           control: controlView.control,
+          children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
@@ -882,7 +886,8 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
-          nextChild: nextChild);
+          nextChild: nextChild,
+          backend: backend);
     case "tabs":
       return TabsControl(
           key: key,

@@ -57,8 +57,8 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
-        alignment: MainAxisAlignment = MainAxisAlignment.NONE,
-        horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.NONE,
+        alignment: Optional[MainAxisAlignment] = None,
+        horizontal_alignment: Optional[CrossAxisAlignment] = None,
         spacing: OptionalNumber = None,
         tight: Optional[bool] = None,
         wrap: Optional[bool] = None,

@@ -1,11 +1,12 @@
 import asyncio
+from contextvars import ContextVar
 import json
 import logging
 import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
@@ -22,13 +23,10 @@ from flet_core.client_storage import ClientStorage
 from flet_core.connection import Connection
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
-from flet_core.cupertino_action_sheet import CupertinoActionSheet
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
-from flet_core.cupertino_picker import CupertinoPicker
-from flet_core.cupertino_timer_picker import CupertinoTimerPicker
 from flet_core.event import Event
 from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import FloatingActionButton
@@ -54,11 +52,19 @@ from flet_core.types import (
     ScrollMode,
     ThemeMode,
 )
-from flet_core.utils import deprecated
+from flet_core.utils import deprecated, classproperty
 from flet_core.utils.concurrency_utils import is_pyodide
 from flet_core.view import View
 
 logger = logging.getLogger(flet_core.__name__)
+
+_session_page = ContextVar("flet_session_page", default=None)
+
+
+class context:
+    @classproperty
+    def page(cls) -> "Page":
+        return _session_page.get()
 
 
 try:
@@ -78,6 +84,19 @@ except ImportError as e:
             scope: Optional[List[str]] = None,
         ):
             pass
+
+
+@dataclass
+class Locale:
+    language_code: Optional[str] = field(default=None)
+    country_code: Optional[str] = field(default=None)
+    script_code: Optional[str] = field(default=None)
+
+
+@dataclass
+class LocaleConfiguration:
+    supported_locales: Optional[List[Locale]] = field(default=None)
+    current_locale: Optional[Locale] = field(default=None)
 
 
 class PageDisconnectedException(Exception):
@@ -141,6 +160,7 @@ class Page(AdaptiveControl):
         self.__offstage = Offstage()
         self.__theme = None
         self.__dark_theme = None
+        self.__locale_configuration = None
         self.__theme_mode = ThemeMode.SYSTEM  # Default Theme Mode
         self.__pubsub: PubSubClient = PubSubClient(conn.pubsubhub, session_id)
         self.__client_storage: ClientStorage = ClientStorage(self)
@@ -228,6 +248,8 @@ class Page(AdaptiveControl):
         self.__on_error = EventHandler()
         self._add_event_handler("error", self.__on_error.get_handler())
 
+        _session_page.set(self)
+
     def get_control(self, id):
         return self._index.get(id)
 
@@ -235,6 +257,7 @@ class Page(AdaptiveControl):
         super().before_update()
         self._set_attr_json("fonts", self.__fonts)
         self._set_attr_json("theme", self.__theme)
+        self._set_attr_json("localeConfiguration", self.__locale_configuration)
         self._set_attr_json("darkTheme", self.__dark_theme)
 
         # keyboard event
@@ -284,6 +307,7 @@ class Page(AdaptiveControl):
             self._set_attr(props[i], values[i], False)
 
     async def _connect(self, conn: Connection):
+        _session_page.set(self)
         self.__conn = conn
         self.__expires_at = None
         await self.on_event_async(Event("page", "connect", ""))
@@ -443,6 +467,7 @@ class Page(AdaptiveControl):
     def __handle_mount_unmount(self, added_controls, removed_controls):
         for ctrl in removed_controls:
             ctrl.will_unmount()
+            ctrl.parent = None  # remove parent reference
             ctrl.page = None
         for ctrl in added_controls:
             ctrl.did_mount()
@@ -481,17 +506,40 @@ class Page(AdaptiveControl):
                     if name != "i":
                         self._index[id]._set_attr(name, props[name], dirty=False)
 
-    def run_task(self, handler: Callable[..., Awaitable[Any]], *args):
+    def run_task(self, handler: Callable[..., Awaitable[Any]], *args, **kwargs):
+        _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
-        return asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
+        
+        future = asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.__loop)
+
+        def _on_completion(f):
+            exception = f.exception()
+
+            if exception:
+                raise exception
+
+        future.add_done_callback(_on_completion)
+
+        return future
+
+    def __context_wrapper(self, handler):
+        def wrapper(*args):
+            _session_page.set(self)
+            handler(*args)
+
+        return wrapper
 
     def run_thread(self, handler, *args):
+        handler_with_context = self.__context_wrapper(handler)
         if is_pyodide():
-            handler(*args)
+            handler_with_context(*args)
         else:
             assert self.__loop
             self.__loop.call_soon_threadsafe(
-                self.__loop.run_in_executor, self.__executor, handler, *args
+                self.__loop.run_in_executor,
+                self.__executor,
+                handler_with_context,
+                *args,
             )
 
     def go(self, route, skip_route_change_event=False, **kwargs):
@@ -1236,7 +1284,7 @@ class Page(AdaptiveControl):
 
     # platform_brightness
     @property
-    def platform_brightness(self) -> ThemeMode:
+    def platform_brightness(self) -> Brightness:
         brightness = self._get_attr("platformBrightness")
         assert brightness is not None
         return Brightness(brightness)
@@ -1500,6 +1548,15 @@ class Page(AdaptiveControl):
     @dark_theme.setter
     def dark_theme(self, value: Optional[Theme]):
         self.__dark_theme = value
+
+    # locale_configuration
+    @property
+    def locale_configuration(self) -> Optional[LocaleConfiguration]:
+        return self.__locale_configuration
+
+    @locale_configuration.setter
+    def locale_configuration(self, value: Optional[LocaleConfiguration]):
+        self.__locale_configuration = value
 
     # rtl
     @property

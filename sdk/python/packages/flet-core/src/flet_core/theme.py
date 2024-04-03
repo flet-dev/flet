@@ -1,7 +1,7 @@
 import dataclasses
 from dataclasses import field
 from enum import Enum, EnumMeta
-from typing import Dict, Optional, List, Union
+from typing import Dict, List, Optional, Union
 from warnings import warn
 
 from flet_core.alignment import Alignment
@@ -15,16 +15,16 @@ from flet_core.navigation_rail import NavigationRailLabelType
 from flet_core.padding import Padding
 from flet_core.popup_menu_button import PopupMenuPosition
 from flet_core.shadow import BoxShadow
-from flet_core.snack_bar import SnackBarBehavior, DismissDirection
+from flet_core.snack_bar import DismissDirection, SnackBarBehavior
 from flet_core.text_style import TextStyle
 from flet_core.textfield import TextCapitalization
 from flet_core.types import (
-    MaterialState,
-    PaddingValue,
     Brightness,
     ClipBehavior,
     MarginValue,
+    MaterialState,
     OffsetValue,
+    PaddingValue,
 )
 
 try:
@@ -37,8 +37,8 @@ class ThemeVisualDensityDeprecated(EnumMeta):
     def __getattribute__(self, item):
         if item == "ADAPTIVEPLATFORMDENSITY":
             warn(
-                "ADAPTIVEPLATFORMDENSITY is deprecated and will be removed in version 1.0, "
-                "use ADAPTIVE_PLATFORM_DENSITY instead.",
+                "ADAPTIVEPLATFORMDENSITY is deprecated and will be removed in v1.0. "
+                "Use ADAPTIVE_PLATFORM_DENSITY instead.",
                 DeprecationWarning,
                 stacklevel=2,
             )
@@ -428,9 +428,9 @@ class DatePickerTheme:
     day_overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
         default=None
     )
-    day_foreground_color: Union[
-        None, str, Dict[Union[str, MaterialState], str]
-    ] = field(default=None)
+    day_foreground_color: Union[None, str, Dict[Union[str, MaterialState], str]] = (
+        field(default=None)
+    )
     elevation: OptionalNumber = field(default=None)
     range_picker_elevation: OptionalNumber = field(default=None)
     day_text_style: Optional[TextStyle] = field(default=None)
@@ -445,9 +445,9 @@ class DatePickerTheme:
     range_picker_bgcolor: Optional[str] = field(default=None)
     range_picker_header_bgcolor: Optional[str] = field(default=None)
     range_picker_header_foreground_color: Optional[str] = field(default=None)
-    today_foreground_color: Union[
-        None, str, Dict[Union[str, MaterialState], str]
-    ] = field(default=None)
+    today_foreground_color: Union[None, str, Dict[Union[str, MaterialState], str]] = (
+        field(default=None)
+    )
     range_picker_shape: Optional[OutlinedBorder] = field(default=None)
     range_picker_header_help_text_style: Optional[TextStyle] = field(default=None)
     range_picker_header_headline_text_style: Optional[TextStyle] = field(default=None)
@@ -460,9 +460,9 @@ class DatePickerTheme:
     year_bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
         default=None
     )
-    year_foreground_color: Union[
-        None, str, Dict[Union[str, MaterialState], str]
-    ] = field(default=None)
+    year_foreground_color: Union[None, str, Dict[Union[str, MaterialState], str]] = (
+        field(default=None)
+    )
     year_overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
         default=None
     )
@@ -592,12 +592,12 @@ class SearchBarTheme:
     elevation: Union[
         None, Union[int, float], Dict[Union[str, MaterialState], Union[int, float]]
     ] = field(default=None)
-    text_style: Union[
-        None, TextStyle, Dict[Union[str, MaterialState], TextStyle]
-    ] = field(default=None)
-    hint_style: Union[
-        None, TextStyle, Dict[Union[str, MaterialState], TextStyle]
-    ] = field(default=None)
+    text_style: Union[None, TextStyle, Dict[Union[str, MaterialState], TextStyle]] = (
+        field(default=None)
+    )
+    hint_style: Union[None, TextStyle, Dict[Union[str, MaterialState], TextStyle]] = (
+        field(default=None)
+    )
     shape: Union[
         None, OutlinedBorder, Dict[Union[str, MaterialState], OutlinedBorder]
     ] = field(default=None)

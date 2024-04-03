@@ -9,7 +9,6 @@ import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
@@ -60,12 +59,12 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("Container build: ${control.id}");
 
-    var bgColor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgColor", "")!);
+    var bgColor = control.attrColor("bgColor", context);
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
     bool ink = control.attrBool("ink", false)!;
     bool onClick = control.attrBool("onclick", false)!;
+    bool onTapDown = control.attrBool("onTapDown", false)!;
     String url = control.attrString("url", "")!;
     String? urlTarget = control.attrString("urlTarget");
     bool onLongPress = control.attrBool("onLongPress", false)!;
@@ -155,24 +154,28 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               // Dummy callback to enable widget
               // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
               // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
-              onTap: onHover ? () {} : null,
-              onTapDown: onClick || url != ""
-                  ? (details) {
+              onTap: onClick || url != ""
+                  ? () {
                       debugPrint("Container ${control.id} clicked!");
                       if (url != "") {
                         openWebBrowser(url, webWindowName: urlTarget);
                       }
                       if (onClick) {
-                        backend.triggerControlEvent(
-                            control.id,
-                            "click",
-                            json.encode(ContainerTapEvent(
-                                    localX: details.localPosition.dx,
-                                    localY: details.localPosition.dy,
-                                    globalX: details.globalPosition.dx,
-                                    globalY: details.globalPosition.dy)
-                                .toJson()));
+                        backend.triggerControlEvent(control.id, "click");
                       }
+                    }
+                  : null,
+              onTapDown: onTapDown
+                  ? (details) {
+                      backend.triggerControlEvent(
+                          control.id,
+                          "tap_down",
+                          json.encode(ContainerTapEvent(
+                                  localX: details.localPosition.dx,
+                                  localY: details.localPosition.dy,
+                                  globalX: details.globalPosition.dx,
+                                  globalY: details.globalPosition.dy)
+                              .toJson()));
                     }
                   : null,
               onLongPress: onLongPress
@@ -189,8 +192,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                     }
                   : null,
               borderRadius: borderRadius,
-              splashColor: HexColor.fromString(
-                  Theme.of(context), control.attrString("inkColor", "")!),
+              splashColor: control.attrColor("inkColor", context),
               child: Container(
                 padding: parseEdgeInsets(control, "padding"),
                 alignment: parseAlignment(control, "alignment"),
@@ -204,7 +206,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 width: control.attrDouble("width"),
                 height: control.attrDouble("height"),
                 margin: parseEdgeInsets(control, "margin"),
-                clipBehavior: Clip.none,
+                clipBehavior: clipBehavior,
                 decoration: boxDecor,
                 child: ink,
               )
@@ -251,8 +253,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                     : null,
                 child: child);
 
-        if ((onClick || onLongPress || onHover || url != "") &&
-            !disabled) {
+        if ((onClick || onLongPress || onHover || url != "") && !disabled) {
           result = MouseRegion(
             cursor: onClick || url != ""
                 ? SystemMouseCursors.click
@@ -272,23 +273,28 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                   }
                 : null,
             child: GestureDetector(
-              onTapDown: onClick || url != ""
-                  ? (details) {
+              onTap: onClick || url != ""
+                  ? () {
                       debugPrint("Container ${control.id} clicked!");
                       if (url != "") {
                         openWebBrowser(url, webWindowName: urlTarget);
                       }
                       if (onClick) {
-                        backend.triggerControlEvent(
-                            control.id,
-                            "click",
-                            json.encode(ContainerTapEvent(
-                                    localX: details.localPosition.dx,
-                                    localY: details.localPosition.dy,
-                                    globalX: details.globalPosition.dx,
-                                    globalY: details.globalPosition.dy)
-                                .toJson()));
+                        backend.triggerControlEvent(control.id, "click");
                       }
+                    }
+                  : null,
+              onTapDown: onTapDown
+                  ? (details) {
+                      backend.triggerControlEvent(
+                          control.id,
+                          "tap_down",
+                          json.encode(ContainerTapEvent(
+                                  localX: details.localPosition.dx,
+                                  localY: details.localPosition.dy,
+                                  globalX: details.globalPosition.dx,
+                                  globalY: details.globalPosition.dy)
+                              .toJson()));
                     }
                   : null,
               onLongPress: onLongPress

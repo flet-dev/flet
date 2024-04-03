@@ -4,7 +4,7 @@ from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.ref import Ref
-from flet_core.types import BorderRadiusValue, PaddingValue, ResponsiveNumber
+from flet_core.types import BorderRadiusValue, PaddingValue, ResponsiveNumber, UrlTarget
 
 
 class CupertinoFilledButton(CupertinoButton):
@@ -56,7 +56,7 @@ class CupertinoFilledButton(CupertinoButton):
         icon_color: Optional[str] = None,
         content: Optional[Control] = None,
         url: Optional[str] = None,
-        url_target: Optional[str] = None,
+        url_target: Optional[UrlTarget] = None,
         on_click=None,
     ):
         CupertinoButton.__init__(

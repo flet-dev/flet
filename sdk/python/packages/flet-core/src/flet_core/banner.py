@@ -1,8 +1,9 @@
 from typing import Any, List, Optional
 
-from flet_core.control import Control
+from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import PaddingValue
+from flet_core.text_style import TextStyle
+from flet_core.types import PaddingValue, MarginValue
 
 
 class Banner(Control):
@@ -57,6 +58,13 @@ class Banner(Control):
         actions: Optional[List[Control]] = None,
         force_actions_below: Optional[bool] = None,
         bgcolor: Optional[str] = None,
+        surface_tint_color: Optional[str] = None,
+        shadow_color: Optional[str] = None,
+        divider_color: Optional[str] = None,
+        elevation: OptionalNumber = None,
+        margin: MarginValue = None,
+        content_text_style: Optional[TextStyle] = None,
+        on_visible=None,
         #
         # Control
         #
@@ -86,6 +94,13 @@ class Banner(Control):
         self.actions = actions
         self.force_actions_below = force_actions_below
         self.bgcolor = bgcolor
+        self.surface_tint_color = surface_tint_color
+        self.shadow_color = shadow_color
+        self.divider_color = divider_color
+        self.elevation = elevation
+        self.margin = margin
+        self.content_text_style = content_text_style
+        self.on_visible = on_visible
 
     def _get_control_name(self):
         return "banner"
@@ -94,6 +109,9 @@ class Banner(Control):
         super().before_update()
         self._set_attr_json("contentPadding", self.__content_padding)
         self._set_attr_json("leadingPadding", self.__leading_padding)
+        self._set_attr_json("margin", self.__margin)
+        if isinstance(self.__content_text_style, TextStyle):
+            self._set_attr_json("contentTextStyle", self.__content_text_style)
 
     def _get_children(self):
         children = []
@@ -128,11 +146,11 @@ class Banner(Control):
 
     # leading
     @property
-    def leading(self):
+    def leading(self) -> Optional[Control]:
         return self.__leading
 
     @leading.setter
-    def leading(self, value):
+    def leading(self, value: Optional[Control]):
         self.__leading = value
 
     # leading_padding
@@ -146,11 +164,11 @@ class Banner(Control):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Optional[Control]):
         self.__content = value
 
     # content_padding
@@ -161,6 +179,15 @@ class Banner(Control):
     @content_padding.setter
     def content_padding(self, value: PaddingValue):
         self.__content_padding = value
+
+    # margin
+    @property
+    def margin(self) -> MarginValue:
+        return self.__margin
+
+    @margin.setter
+    def margin(self, value: MarginValue):
+        self.__margin = value
 
     # actions
     @property
@@ -182,9 +209,63 @@ class Banner(Control):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
+
+    # content_text_style
+    @property
+    def content_text_style(self) -> Optional[TextStyle]:
+        return self.__content_text_style
+
+    @content_text_style.setter
+    def content_text_style(self, value: Optional[TextStyle]):
+        self.__content_text_style = value
+
+    # shadow_color
+    @property
+    def shadow_color(self) -> Optional[str]:
+        return self._get_attr("shadowColor")
+
+    @shadow_color.setter
+    def shadow_color(self, value: Optional[str]):
+        self._set_attr("shadowColor", value)
+
+    # surface_tint_color
+    @property
+    def surface_tint_color(self) -> Optional[str]:
+        return self._get_attr("surfaceTintColor")
+
+    @surface_tint_color.setter
+    def surface_tint_color(self, value: Optional[str]):
+        self._set_attr("surfaceTintColor", value)
+
+    # divider_color
+    @property
+    def divider_color(self) -> Optional[str]:
+        return self._get_attr("dividerColor")
+
+    @divider_color.setter
+    def divider_color(self, value: Optional[str]):
+        self._set_attr("dividerColor", value)
+
+    # elevation
+    @property
+    def elevation(self) -> OptionalNumber:
+        return self._get_attr("elevation", data_type="float")
+
+    @elevation.setter
+    def elevation(self, value: OptionalNumber):
+        self._set_attr("elevation", value)
+
+    # on_visible
+    @property
+    def on_visible(self):
+        return self._get_event_handler("visible")
+
+    @on_visible.setter
+    def on_visible(self, handler):
+        self._add_event_handler("visible", handler)

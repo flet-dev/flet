@@ -1,10 +1,11 @@
 from enum import Enum
 from typing import Any, List, Optional, Union
 
-from flet_core import OutlinedBorder
+from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -38,12 +39,16 @@ class NavigationRailDestination(Control):
         label: Optional[str] = None,
         label_content: Optional[Control] = None,
         padding: PaddingValue = None,
+        indicator_color: Optional[str] = None,
+        indicator_shape: Optional[OutlinedBorder] = None,
         #
         # Control
         #
         ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, disabled=disabled, data=data)
         self.label = label
         self.icon = icon
         self.__icon_content: Optional[Control] = None
@@ -54,6 +59,8 @@ class NavigationRailDestination(Control):
         self.__label_content: Optional[Control] = None
         self.label_content = label_content
         self.padding = padding
+        self.indicator_color = indicator_color
+        self.indicator_shape = indicator_shape
 
     def _get_control_name(self):
         return "navigationraildestination"
@@ -61,6 +68,8 @@ class NavigationRailDestination(Control):
     def before_update(self):
         super().before_update()
         self._set_attr_json("padding", self.__padding)
+        if isinstance(self.__indicator_shape, OutlinedBorder):
+            self._set_attr_json("indicatorShape", self.__indicator_shape)
 
     def _get_children(self):
         children = []
@@ -79,12 +88,30 @@ class NavigationRailDestination(Control):
 
     # icon
     @property
-    def icon(self):
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
+
+    # indicator_color
+    @property
+    def indicator_color(self) -> Optional[str]:
+        return self._get_attr("indicatorColor")
+
+    @indicator_color.setter
+    def indicator_color(self, value: Optional[str]):
+        self._set_attr("indicatorColor", value)
+
+    # indicator_shape
+    @property
+    def indicator_shape(self) -> Optional[OutlinedBorder]:
+        return self.__indicator_shape
+
+    @indicator_shape.setter
+    def indicator_shape(self, value: Optional[OutlinedBorder]):
+        self.__indicator_shape = value
 
     # icon_content
     @property
@@ -212,6 +239,8 @@ class NavigationRail(ConstrainedControl):
         min_width: OptionalNumber = None,
         min_extended_width: OptionalNumber = None,
         group_alignment: OptionalNumber = None,
+        selected_label_text_style: Optional[TextStyle] = None,
+        unselected_label_text_style: Optional[TextStyle] = None,
         on_change=None,
         #
         # ConstrainedControl
@@ -287,13 +316,24 @@ class NavigationRail(ConstrainedControl):
         self.min_extended_width = min_extended_width
         self.group_alignment = group_alignment
         self.on_change = on_change
+        self.selected_label_text_style = selected_label_text_style
+        self.unselected_label_text_style = unselected_label_text_style
 
     def _get_control_name(self):
         return "navigationrail"
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("indicatorShape", self.__indicator_shape)
+        if isinstance(self.__indicator_shape, OutlinedBorder):
+            self._set_attr_json("indicatorShape", self.__indicator_shape)
+        if isinstance(self.__selected_label_text_style, TextStyle):
+            self._set_attr_json(
+                "selectedLabelTextStyle", self.__selected_label_text_style
+            )
+        if isinstance(self.__unselected_label_text_style, TextStyle):
+            self._set_attr_json(
+                "unselectedLabelTextStyle", self.__unselected_label_text_style
+            )
 
     def _get_children(self):
         children = []
@@ -357,20 +397,20 @@ class NavigationRail(ConstrainedControl):
 
     # indicator_color
     @property
-    def indicator_color(self):
+    def indicator_color(self) -> Optional[str]:
         return self._get_attr("indicatorColor")
 
     @indicator_color.setter
-    def indicator_color(self, value):
+    def indicator_color(self, value: Optional[str]):
         self._set_attr("indicatorColor", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # elevation
@@ -408,6 +448,24 @@ class NavigationRail(ConstrainedControl):
     @trailing.setter
     def trailing(self, value: Optional[Control]):
         self.__trailing = value
+
+    # selected_label_text_style
+    @property
+    def selected_label_text_style(self) -> Optional[TextStyle]:
+        return self.__selected_label_text_style
+
+    @selected_label_text_style.setter
+    def selected_label_text_style(self, value: Optional[TextStyle]):
+        self.__selected_label_text_style = value
+
+    # unselected_label_text_style
+    @property
+    def unselected_label_text_style(self) -> Optional[TextStyle]:
+        return self.__unselected_label_text_style
+
+    @unselected_label_text_style.setter
+    def unselected_label_text_style(self, value: Optional[TextStyle]):
+        self.__unselected_label_text_style = value
 
     # min_width
     @property

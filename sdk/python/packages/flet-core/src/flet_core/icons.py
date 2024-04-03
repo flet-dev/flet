@@ -1,5 +1,7 @@
 """
-To generate update the list run:
+Flet Material Icons
+
+To generate/update these values run:
 
 sh ci/generate_material_icons_python.sh
 """

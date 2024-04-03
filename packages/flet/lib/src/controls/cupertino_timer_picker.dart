@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
-import '../utils/colors.dart';
 import 'create_control.dart';
 
 class CupertinoTimerPickerControl extends StatefulWidget {
@@ -44,14 +42,14 @@ class _CupertinoTimerPickerControlState
             widget.control.attrString("mode", "")!.toLowerCase(),
         orElse: () => CupertinoTimerPickerMode.hms);
 
-    Color? backgroundColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("bgColor", "")!);
+    Color? backgroundColor = widget.control.attrColor("bgColor", context);
 
     Widget picker = CupertinoTimerPicker(
       mode: mode,
       initialTimerDuration: initialTimerDuration,
       minuteInterval: minuteInterval,
       secondInterval: secondInterval,
+      itemExtent: widget.control.attrDouble("itemExtent", 32.0)!,
       alignment:
           parseAlignment(widget.control, "alignment") ?? Alignment.center,
       backgroundColor: backgroundColor,

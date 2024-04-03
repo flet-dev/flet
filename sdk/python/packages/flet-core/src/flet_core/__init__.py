@@ -39,7 +39,7 @@ from flet_core.buttons import (
     RoundedRectangleBorder,
     StadiumBorder,
 )
-from flet_core.card import Card
+from flet_core.card import Card, CardVariant
 from flet_core.charts.bar_chart import BarChart, BarChartEvent
 from flet_core.charts.bar_chart_group import BarChartGroup
 from flet_core.charts.bar_chart_rod import BarChartRod
@@ -155,7 +155,7 @@ from flet_core.haptic_feedback import HapticFeedback
 from flet_core.icon import Icon
 from flet_core.icon_button import IconButton
 from flet_core.image import Image
-from flet_core.list_tile import ListTile
+from flet_core.list_tile import ListTile, ListTileStyle
 from flet_core.list_view import ListView
 from flet_core.lottie import Lottie
 from flet_core.margin import Margin
@@ -176,8 +176,11 @@ from flet_core.navigation_rail import (
 from flet_core.outlined_button import OutlinedButton
 from flet_core.padding import Padding
 from flet_core.page import (
+    context,
     AppLifecycleStateChangeEvent,
     KeyboardEvent,
+    Locale,
+    LocaleConfiguration,
     LoginEvent,
     Page,
     PageDisconnectedException,
@@ -201,7 +204,7 @@ from flet_core.popup_menu_button import (
     PopupMenuPosition,
 )
 from flet_core.progress_bar import ProgressBar
-from flet_core.progress_ring import ProgressRing
+from flet_core.progress_ring import ProgressRing, StrokeCap
 from flet_core.pubsub import PubSubClient, PubSubHub
 from flet_core.querystring import QueryString
 from flet_core.radio import Radio
@@ -209,6 +212,7 @@ from flet_core.radio_group import RadioGroup
 from flet_core.range_slider import RangeSlider
 from flet_core.ref import Ref
 from flet_core.responsive_row import ResponsiveRow
+from flet_core.rive import Rive
 from flet_core.row import Row
 from flet_core.safe_area import SafeArea
 from flet_core.scrollable_control import OnScrollEvent
@@ -220,9 +224,9 @@ from flet_core.semantics_service import Assertiveness, SemanticsService
 from flet_core.shader_mask import ShaderMask
 from flet_core.shadow import BoxShadow, ShadowBlurStyle
 from flet_core.shake_detector import ShakeDetector
-from flet_core.slider import Slider
+from flet_core.slider import Slider, SliderInteraction
 from flet_core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
-from flet_core.stack import Stack
+from flet_core.stack import Stack, StackFit
 from flet_core.submenu_button import SubmenuButton
 from flet_core.switch import Switch
 from flet_core.tabs import Tab, Tabs
@@ -298,12 +302,14 @@ from flet_core.types import (
     MainAxisAlignment,
     MaterialState,
     NotchShape,
+    Orientation,
     PaddingValue,
     PagePlatform,
     ScrollMode,
     TabAlignment,
     TextAlign,
     ThemeMode,
+    UrlTarget,
     VerticalAlignment,
 )
 from flet_core.user_control import UserControl

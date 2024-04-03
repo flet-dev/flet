@@ -63,9 +63,11 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("Video build: ${widget.control.id}");
 
-    FilterQuality filterQuality = FilterQuality.values.firstWhere((e) =>
-        e.name.toLowerCase() ==
-        widget.control.attrString("filterQuality", "low")!.toLowerCase());
+    FilterQuality filterQuality = FilterQuality.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() ==
+            widget.control.attrString("filterQuality", "")!.toLowerCase(),
+        orElse: () => FilterQuality.low);
 
     return withPageArgs((context, pageArgs) {
       SubtitleTrack? subtitleTrack;

@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import 'create_control.dart';
 
 const double _kItemExtent = 32.0;
@@ -53,8 +51,7 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
     double offAxisFraction = widget.control.attrDouble("offAxisFraction", 0.0)!;
     bool useMagnifier = widget.control.attrBool("useMagnifier", false)!;
     bool looping = widget.control.attrBool("looping", false)!;
-    Color? backgroundColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("bgColor", "")!);
+    Color? backgroundColor = widget.control.attrColor("bgColor", context);
 
     Widget picker = CupertinoPicker(
       backgroundColor: backgroundColor,

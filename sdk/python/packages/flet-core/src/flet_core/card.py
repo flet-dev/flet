@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core import OutlinedBorder
@@ -7,12 +8,19 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    ClipBehavior,
     MarginValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
+
+
+class CardVariant(Enum):
+    ELEVATED = "elevated"
+    FILLED = "filled"
+    OUTLINED = "outlined"
 
 
 class Card(ConstrainedControl, AdaptiveControl):
@@ -67,6 +75,10 @@ class Card(ConstrainedControl, AdaptiveControl):
         shadow_color: Optional[str] = None,
         surface_tint_color: Optional[str] = None,
         shape: Optional[OutlinedBorder] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        is_semantic_container: Optional[bool] = None,
+        show_border_on_foreground: Optional[bool] = None,
+        variant: Optional[CardVariant] = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -139,6 +151,10 @@ class Card(ConstrainedControl, AdaptiveControl):
         self.shadow_color = shadow_color
         self.surface_tint_color = surface_tint_color
         self.shape = shape
+        self.clip_behavior = clip_behavior
+        self.is_semantic_container = is_semantic_container
+        self.show_border_on_foreground = show_border_on_foreground
+        self.variant = variant
 
     def _get_control_name(self):
         return "card"
@@ -217,3 +233,48 @@ class Card(ConstrainedControl, AdaptiveControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        self._set_attr(
+            "clipBehavior",
+            value.value if isinstance(value, ClipBehavior) else value,
+        )
+
+    # is_semantic_container
+    @property
+    def is_semantic_container(self) -> Optional[bool]:
+        return self._get_attr("isSemanticContainer", data_type="bool", def_value=True)
+
+    @is_semantic_container.setter
+    def is_semantic_container(self, value):
+        self._set_attr("isSemanticContainer", value)
+
+    # show_border_on_foreground
+    @property
+    def show_border_on_foreground(self) -> Optional[bool]:
+        return self._get_attr(
+            "showBorderOnForeground", data_type="bool", def_value=True
+        )
+
+    @show_border_on_foreground.setter
+    def show_border_on_foreground(self, value):
+        self._set_attr("showBorderOnForeground", value)
+
+    # variant
+    @property
+    def variant(self) -> Optional[CardVariant]:
+        return self.__variant
+
+    @variant.setter
+    def variant(self, value: Optional[CardVariant]):
+        self.__variant = value
+        self._set_attr(
+            "variant", value.value if isinstance(value, CardVariant) else value
+        )

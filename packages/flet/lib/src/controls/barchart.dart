@@ -13,7 +13,6 @@ import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/charts.dart';
-import '../utils/colors.dart';
 import '../utils/gradient.dart';
 import '../utils/text.dart';
 import 'charts.dart';
@@ -205,8 +204,7 @@ class _BarChartControlState extends State<BarChartControl> {
 
           var chart = BarChart(
             BarChartData(
-              backgroundColor: HexColor.fromString(
-                  Theme.of(context), widget.control.attrString("bgcolor", "")!),
+              backgroundColor: widget.control.attrColor("bgcolor", context),
               minY: widget.control.attrDouble("miny"),
               maxY: widget.control.attrDouble("maxy"),
               baselineY: widget.control.attrDouble("baseliney"),
@@ -231,8 +229,8 @@ class _BarChartControlState extends State<BarChartControl> {
               barTouchData: BarTouchData(
                 enabled: interactive,
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: HexColor.fromString(Theme.of(context),
-                      widget.control.attrString("tooltipBgcolor", "")!),
+                  tooltipBgColor:
+                      widget.control.attrColor("tooltipBgColor", context),
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     var dp = viewModel.barGroups[groupIndex].barRods[rodIndex];
 
@@ -333,16 +331,14 @@ class _BarChartControlState extends State<BarChartControl> {
       bool interactiveChart, BarChartRodViewModel rodViewModel) {
     var bgFromY = rodViewModel.control.attrDouble("bgFromY");
     var bgToY = rodViewModel.control.attrDouble("bgToY");
-    var bgColor = HexColor.fromString(
-        theme, rodViewModel.control.attrString("bgColor", "")!);
+    var bgColor = rodViewModel.control.attrColor("bgColor", context);
     var bgGradient = parseGradient(theme, rodViewModel.control, "bgGradient");
 
     return BarChartRodData(
         fromY: rodViewModel.control.attrDouble("fromY"),
         toY: rodViewModel.control.attrDouble("toY", 0)!,
         width: rodViewModel.control.attrDouble("width"),
-        color: HexColor.fromString(
-            theme, rodViewModel.control.attrString("color", "")!),
+        color: rodViewModel.control.attrColor("color", context),
         gradient: parseGradient(theme, rodViewModel.control, "gradient"),
         borderRadius: parseBorderRadius(rodViewModel.control, "borderRadius"),
         borderSide:
@@ -370,8 +366,7 @@ class _BarChartControlState extends State<BarChartControl> {
     return BarChartRodStackItem(
         stackItemViewModel.control.attrDouble("fromY")!,
         stackItemViewModel.control.attrDouble("toY", 0)!,
-        HexColor.fromString(
-            theme, stackItemViewModel.control.attrString("color", "")!)!,
+        stackItemViewModel.control.attrColor("color", context)!,
         parseBorderSide(theme, stackItemViewModel.control, "borderSide") ??
             BorderSide.none);
   }
