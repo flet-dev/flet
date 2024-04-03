@@ -474,11 +474,11 @@ class Container(ConstrainedControl, AdaptiveControl):
     # on_click
     @property
     def on_click(self):
-        return self.__on_click
+        return self._get_event_handler("click")
 
     @on_click.setter
     def on_click(self, handler):
-        self.__on_click.subscribe(handler)
+        self._add_event_handler("click", handler)
         self._set_attr("onClick", True if handler is not None else None)
 
     # on_long_press
