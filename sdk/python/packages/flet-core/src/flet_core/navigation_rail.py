@@ -20,8 +20,6 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-NavigationRailLabelTypeString = Literal[None, "none", "all", "selected"]
-
 
 class NavigationRailLabelType(Enum):
     NONE = "none"
@@ -381,10 +379,7 @@ class NavigationRail(ConstrainedControl):
     @label_type.setter
     def label_type(self, value: Optional[NavigationRailLabelType]):
         self.__label_type = value
-        self._set_attr(
-            "labelType",
-            value.value if isinstance(value, NavigationRailLabelType) else value,
-        )
+        self._set_enum_attr("labelType", value, NavigationRailLabelType)
 
     # indicator_shape
     @property

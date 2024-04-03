@@ -396,10 +396,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @title_alignment.setter
     def title_alignment(self, value: Optional[ListTileTitleAlignment]):
         self.__title_alignment = value
-        self._set_attr(
-            "titleAlignment",
-            value.value if isinstance(value, ListTileTitleAlignment) else value,
-        )
+        self._set_enum_attr("titleAlignment", value, ListTileTitleAlignment)
 
     # selected
     @property

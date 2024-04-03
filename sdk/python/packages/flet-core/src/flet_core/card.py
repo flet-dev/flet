@@ -275,6 +275,4 @@ class Card(ConstrainedControl, AdaptiveControl):
     @variant.setter
     def variant(self, value: Optional[CardVariant]):
         self.__variant = value
-        self._set_attr(
-            "variant", value.value if isinstance(value, CardVariant) else value
-        )
+        self._set_enum_attr("variant", value, CardVariant)

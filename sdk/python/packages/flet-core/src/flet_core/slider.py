@@ -195,10 +195,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     @interaction.setter
     def interaction(self, value: Optional[SliderInteraction]):
         self.__interaction = value
-        self._set_attr(
-            "interaction",
-            value.value if isinstance(value, SliderInteraction) else value,
-        )
+        self._set_enum_attr("interaction", value, SliderInteraction)
 
     # min
     @property
