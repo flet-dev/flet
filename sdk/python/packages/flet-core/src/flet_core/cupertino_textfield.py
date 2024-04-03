@@ -63,7 +63,7 @@ class CupertinoTextField(TextField):
         shift_enter: Optional[bool] = None,
         text_align: Optional[TextAlign] = None,
         autofocus: Optional[bool] = None,
-        capitalization: TextCapitalization = TextCapitalization.NONE,
+        capitalization: Optional[TextCapitalization] = None,
         autocorrect: Optional[bool] = None,
         enable_suggestions: Optional[bool] = None,
         smart_dashes_type: Optional[bool] = None,
