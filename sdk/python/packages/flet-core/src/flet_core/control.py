@@ -28,6 +28,7 @@ class Control:
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
+        auto_update: Optional[bool] = None,
     ):
         super().__init__()
         self.__page: Optional[Page] = None
@@ -43,6 +44,7 @@ class Control:
         self.visible = visible
         self.rtl = rtl
         self.disabled = disabled
+        self.auto_update = auto_update
         self.__data: Any = None
         self.data = data
         self.__event_handlers = {}
@@ -128,6 +130,9 @@ class Control:
 
         if orig_val is None or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
+
+            if self.auto_update and self.__page:
+                self.update()
 
     def _set_attr_json(self, name, value):
         ov = self._get_attr(name)
