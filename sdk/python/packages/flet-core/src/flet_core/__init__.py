@@ -176,6 +176,7 @@ from flet_core.navigation_rail import (
 from flet_core.outlined_button import OutlinedButton
 from flet_core.padding import Padding
 from flet_core.page import (
+    context,
     AppLifecycleStateChangeEvent,
     KeyboardEvent,
     Locale,
