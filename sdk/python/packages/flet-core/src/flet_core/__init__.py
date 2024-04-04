@@ -136,7 +136,6 @@ from flet_core.gesture_detector import (
     HoverEvent,
     LongPressEndEvent,
     LongPressStartEvent,
-    MouseCursor,
     MultiTapEvent,
     ScaleEndEvent,
     ScaleStartEvent,
@@ -176,7 +175,6 @@ from flet_core.navigation_rail import (
 from flet_core.outlined_button import OutlinedButton
 from flet_core.padding import Padding
 from flet_core.page import (
-    context,
     AppLifecycleStateChangeEvent,
     KeyboardEvent,
     Locale,
@@ -187,6 +185,7 @@ from flet_core.page import (
     PageMediaData,
     RouteChangeEvent,
     ViewPopEvent,
+    context,
 )
 from flet_core.pagelet import Pagelet
 from flet_core.painting import (
@@ -244,15 +243,44 @@ from flet_core.textfield import (
     TextOnlyInputFilter,
 )
 from flet_core.theme import (
+    AppBarTheme,
+    BadgeTheme,
+    BannerTheme,
+    BottomAppBarTheme,
+    BottomNavigationBarTheme,
+    CardTheme,
+    CheckboxTheme,
+    ChipTheme,
     ColorScheme,
+    DatePickerTheme,
+    DialogTheme,
+    DividerTheme,
+    ExpansionTileTheme,
+    FloatingActionButtonTheme,
+    IconTheme,
+    ListTileTheme,
+    NavigationBarTheme,
+    NavigationDrawerTheme,
+    NavigationRailTheme,
     PageTransitionsTheme,
     PageTransitionTheme,
+    PopupMenuTheme,
+    ProgressIndicatorTheme,
+    RadioTheme,
     ScrollbarTheme,
+    SearchBarTheme,
+    SearchViewTheme,
+    SegmentedButtonTheme,
+    SliderTheme,
+    SnackBarTheme,
+    SwitchTheme,
     SystemOverlayStyle,
     TabsTheme,
     TextTheme,
     Theme,
     ThemeVisualDensity,
+    TimePickerTheme,
+    TooltipTheme,
 )
 from flet_core.time_picker import TimePicker, TimePickerEntryMode
 from flet_core.tooltip import Tooltip
@@ -272,6 +300,7 @@ from flet_core.types import (
     LabelPosition,
     MainAxisAlignment,
     MaterialState,
+    MouseCursor,
     NotchShape,
     Orientation,
     PaddingValue,
