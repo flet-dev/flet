@@ -1,5 +1,19 @@
 # Flet changelog
 
+# 0.22.0
+
+* Controls enhancement (see [#2882](https://github.com/flet-dev/flet/issues/2882) for details).
+* `Theme` Enhancement ([#2955](https://github.com/flet-dev/flet/issues/2955)).
+* `Rive` Control ([#2841](https://github.com/flet-dev/flet/issues/2841)).
+* `Control.parent` property ([#2906](https://github.com/flet-dev/flet/issues/2906)).
+* `Container.on_tap_down` event.
+* Add `upload_endpoint_path` into `flet.fastapi.app` ([#2954](https://github.com/flet-dev/flet/issues/2954)).
+* Add checkbox border side state ([#2973](https://github.com/flet-dev/flet/issues/2973)).
+* Global context for session ([#2934](https://github.com/flet-dev/flet/issues/2934)).
+* Fix silent error in `page.run_task` ([#2959](https://github.com/flet-dev/flet/issues/2959)).
+* Web: patch html title with app_name ([#2909](https://github.com/flet-dev/flet/issues/2909)).
+* `Container`: fix triggered both `on_click` and `on_long_press` events ([#2914](https://github.com/flet-dev/flet/issues/2914)).
+
 # 0.21.2
 
 * Add `--android-adaptive-icon-background` to `flet build` command.
