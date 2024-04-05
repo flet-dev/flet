@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/material_state.dart';
 import '../utils/mouse.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
@@ -117,6 +120,9 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
         labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
       }
 
+      MaterialStateBorderSide? side = parseMaterialStateBorderSide(
+          Theme.of(context), widget.control, "borderSide");
+
       var checkbox = Checkbox(
           autofocus: autofocus,
           focusNode: _focusNode,
@@ -124,8 +130,7 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
           isError: widget.control.attrBool("isError", false)!,
           semanticLabel: widget.control.attrString("semanticsLabel"),
           shape: parseOutlinedBorder(widget.control, "shape"),
-          side:
-              parseBorderSide(Theme.of(context), widget.control, "borderSide"),
+          side: side,
           splashRadius: widget.control.attrDouble("splashRadius"),
           activeColor: widget.control.attrColor("activeColor", context),
           focusColor: widget.control.attrColor("focusColor", context),

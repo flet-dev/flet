@@ -40,18 +40,16 @@ ButtonStyle? parseButtonStyle(ThemeData theme, Control control, String propName,
       defaultShape);
 }
 
-ButtonStyle? buttonStyleFromJSON(
-    ThemeData theme,
-    Map<String, dynamic> json,
-    Color defaultForegroundColor,
-    Color defaultBackgroundColor,
-    Color defaultOverlayColor,
-    Color defaultShadowColor,
-    Color defaultSurfaceTintColor,
-    double defaultElevation,
-    EdgeInsets defaultPadding,
-    BorderSide defaultBorderSide,
-    OutlinedBorder defaultShape) {
+ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic> json,
+    [Color? defaultForegroundColor,
+    Color? defaultBackgroundColor,
+    Color? defaultOverlayColor,
+    Color? defaultShadowColor,
+    Color? defaultSurfaceTintColor,
+    double? defaultElevation,
+    EdgeInsets? defaultPadding,
+    BorderSide? defaultBorderSide,
+    OutlinedBorder? defaultShape]) {
   return ButtonStyle(
       foregroundColor: getMaterialStateProperty<Color?>(
           json["color"],

@@ -65,6 +65,11 @@ def patch_index_html(
             r'<meta name="apple-mobile-web-app-title" content="{}">'.format(app_name),
             index,
         )
+        index = re.sub(
+            r"\<title>(.+)</title>",
+            r"<title>{}</title>".format(app_name),
+            index,
+        )
     if app_description:
         index = re.sub(
             r"\<meta name=\"description\" content=\"(.+)\">",
