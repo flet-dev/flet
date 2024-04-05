@@ -43,7 +43,6 @@ class KeyboardType(Enum):
 
 
 class TextCapitalization(Enum):
-    NONE = None
     CHARACTERS = "characters"
     WORDS = "words"
     SENTENCES = "sentences"
@@ -110,7 +109,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         shift_enter: Optional[bool] = None,
         text_align: Optional[TextAlign] = None,
         autofocus: Optional[bool] = None,
-        capitalization: TextCapitalization = TextCapitalization.NONE,
+        capitalization: Optional[TextCapitalization] = None,
         autocorrect: Optional[bool] = None,
         enable_suggestions: Optional[bool] = None,
         smart_dashes_type: Optional[bool] = None,
@@ -340,9 +339,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @keyboard_type.setter
     def keyboard_type(self, value: Optional[KeyboardType]):
         self.__keyboard_type = value
-        self._set_attr(
-            "keyboardType", value.value if isinstance(value, KeyboardType) else value
-        )
+        self._set_enum_attr("keyboardType", value, KeyboardType)
 
     # text_align
     @property
@@ -445,10 +442,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @capitalization.setter
     def capitalization(self, value: TextCapitalization):
         self.__capitalization = value
-        self._set_attr(
-            "capitalization",
-            value.value if isinstance(value, TextCapitalization) else value,
-        )
+        self._set_enum_attr("capitalization", value, TextCapitalization)
 
     # autocorrect
     @property

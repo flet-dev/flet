@@ -323,10 +323,7 @@ class DatePicker(Control):
     @date_picker_mode.setter
     def date_picker_mode(self, value: Optional[DatePickerMode]):
         self.__date_picker_mode = value
-        self._set_attr(
-            "datePickerMode",
-            value.value if isinstance(value, DatePickerMode) else value,
-        )
+        self._set_enum_attr("datePickerMode", value, DatePickerMode)
 
     # date_picker_entry_mode
     @property

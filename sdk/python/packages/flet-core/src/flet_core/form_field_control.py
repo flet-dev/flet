@@ -21,8 +21,6 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-InputBorderString = Literal[None, "outline", "underline", "none"]
-
 
 class InputBorder(Enum):
     NONE = "none"
@@ -248,9 +246,7 @@ class FormFieldControl(ConstrainedControl):
     @border.setter
     def border(self, value: Optional[InputBorder]):
         self.__border = value
-        self._set_attr(
-            "border", value.value if isinstance(value, InputBorder) else value
-        )
+        self._set_enum_attr("border", value, InputBorder)
 
     # color
     @property

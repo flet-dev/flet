@@ -518,9 +518,7 @@ class Video(ConstrainedControl):
     @filter_quality.setter
     def filter_quality(self, value: Optional[FilterQuality]):
         self.__filter_quality = value
-        self._set_attr(
-            "filterQuality", value.value if isinstance(value, FilterQuality) else value
-        )
+        self._set_enum_attr("filterQuality", value, FilterQuality)
 
     # playlist_mode
     @property
@@ -530,10 +528,7 @@ class Video(ConstrainedControl):
     @playlist_mode.setter
     def playlist_mode(self, value: Optional[PlaylistMode]):
         self.__playlist_mode = value
-        self._set_attr(
-            "playlistMode",
-            value.value if isinstance(value, PlaylistMode) else value,
-        )
+        self._set_enum_attr("playlistMode", value, PlaylistMode)
 
     # on_enter_fullscreen
     @property

@@ -234,10 +234,7 @@ class CupertinoDatePicker(ConstrainedControl):
     @date_picker_mode.setter
     def date_picker_mode(self, value: Optional[CupertinoDatePickerMode]):
         self.__date_picker_mode = value
-        self._set_attr(
-            "datePickerMode",
-            value.value if isinstance(value, CupertinoDatePickerMode) else value,
-        )
+        self._set_enum_attr("datePickerMode", value, CupertinoDatePickerMode)
 
     # date_order
     @property
@@ -247,10 +244,7 @@ class CupertinoDatePicker(ConstrainedControl):
     @date_order.setter
     def date_order(self, value: Optional[CupertinoDatePickerDateOrder]):
         self.__date_order = value
-        self._set_attr(
-            "dateOrder",
-            value.value if isinstance(value, CupertinoDatePickerDateOrder) else value,
-        )
+        self._set_enum_attr("dateOrder", value, CupertinoDatePickerDateOrder)
 
     # on_change
     @property

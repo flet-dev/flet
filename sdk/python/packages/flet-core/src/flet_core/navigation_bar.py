@@ -21,10 +21,6 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-NavigationBarLabelBehaviorString = Literal[
-    None, "alwaysShow", "alwaysHide", "onlyShowSelected"
-]
-
 
 class NavigationBarLabelBehavior(Enum):
     """Defines how the destinations' labels will be laid out and when they'll be displayed."""
@@ -300,10 +296,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     @label_behavior.setter
     def label_behavior(self, value: Optional[NavigationBarLabelBehavior]):
         self.__label_behavior = value
-        self._set_attr(
-            "labelBehavior",
-            value.value if isinstance(value, NavigationBarLabelBehavior) else value,
-        )
+        self._set_enum_attr("labelBehavior", value, NavigationBarLabelBehavior)
 
     # overlay_color
     @property

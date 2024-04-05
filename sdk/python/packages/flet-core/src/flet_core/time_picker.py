@@ -239,10 +239,7 @@ class TimePicker(Control):
     @time_picker_entry_mode.setter
     def time_picker_entry_mode(self, value: Optional[TimePickerEntryMode]):
         self.__time_picker_entry_mode = value
-        self._set_attr(
-            "timePickerEntryMode",
-            value.value if isinstance(value, TimePickerEntryMode) else value,
-        )
+        self._set_enum_attr("timePickerEntryMode", value, TimePickerEntryMode)
 
     # orientation
     @property
@@ -252,9 +249,7 @@ class TimePicker(Control):
     @orientation.setter
     def orientation(self, value: Optional[Orientation]):
         self.__orientation = value
-        self._set_attr(
-            "orientation", value.value if isinstance(value, Orientation) else value
-        )
+        self._set_enum_attr("orientation", value, Orientation)
 
     # on_change
     @property

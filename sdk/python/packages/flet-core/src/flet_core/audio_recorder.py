@@ -215,9 +215,7 @@ class AudioRecorder(Control):
 
     @audio_encoder.setter
     def audio_encoder(self, value: Optional[AudioEncoder]):
-        self._set_attr(
-            "audioEncoder", value.value if isinstance(value, AudioEncoder) else value
-        )
+        self._set_enum_attr("audioEncoder", value, AudioEncoder)
 
     # suppress_noise
     @property

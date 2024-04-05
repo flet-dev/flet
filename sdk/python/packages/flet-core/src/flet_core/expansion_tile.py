@@ -244,10 +244,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @affinity.setter
     def affinity(self, value: Optional[TileAffinity]):
         self.__affinity = value
-        self._set_attr(
-            "affinity",
-            value.value if isinstance(value, TileAffinity) else value,
-        )
+        self._set_enum_attr("affinity", value, TileAffinity)
 
     # leading
     @property
