@@ -190,4 +190,4 @@ class Stack(ConstrainedControl, AdaptiveControl):
     @fit.setter
     def fit(self, value: Optional[StackFit]):
         self.__fit = value
-        self._set_attr("fit", value.value if isinstance(value, StackFit) else value)
+        self._set_enum_attr("fit", value, StackFit)

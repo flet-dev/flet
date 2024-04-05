@@ -378,9 +378,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr(
-            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # drag_interval
     @property

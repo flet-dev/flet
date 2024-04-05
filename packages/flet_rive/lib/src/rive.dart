@@ -45,10 +45,6 @@ class _RiveControlState extends State<RiveControl> with FletStoreMixin {
       placeholder = createControl(widget.control, ctrls.first.id, disabled);
     }
 
-    void _onInit(artboard) {
-      widget.backend.triggerControlEvent(widget.control.id, "init");
-    }
-
     return withPageArgs((context, pageArgs) {
       Widget? rive;
 
@@ -63,7 +59,6 @@ class _RiveControlState extends State<RiveControl> with FletStoreMixin {
           useArtboardSize: useArtBoardSize,
           alignment: alignment,
           placeHolder: placeholder,
-          // onInit: _onInit,
         );
       } else {
         // URL

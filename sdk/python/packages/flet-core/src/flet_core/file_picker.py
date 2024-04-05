@@ -304,9 +304,7 @@ class FilePicker(Control):
     @file_type.setter
     def file_type(self, value: FilePickerFileType):
         self.__file_type = value
-        self._set_attr(
-            "fileType", value.value if isinstance(value, FilePickerFileType) else value
-        )
+        self._set_enum_attr("fileType", value, FilePickerFileType)
 
     # allowed_extensions
     @property

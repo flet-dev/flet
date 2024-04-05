@@ -225,7 +225,4 @@ class AnimatedSwitcher(ConstrainedControl):
     @transition.setter
     def transition(self, value: Optional[AnimatedSwitcherTransition]):
         self.__transition = value
-        self._set_attr(
-            "transition",
-            value.value if isinstance(value, AnimatedSwitcherTransition) else value,
-        )
+        self._set_enum_attr("transition", value, AnimatedSwitcherTransition)

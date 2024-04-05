@@ -1,5 +1,4 @@
 import flet_core as ft
-import pytest
 from flet_core.protocol import Command
 
 
@@ -50,7 +49,7 @@ def test_keyboard_type_enum():
 
 def test_capitalization_enum():
     r = ft.TextField()
-    assert r.capitalization == ft.TextCapitalization.NONE
+    assert r.capitalization is None
     assert r._get_attr("capitalization") is None
 
     r = ft.TextField(capitalization=ft.TextCapitalization.WORDS)

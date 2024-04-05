@@ -222,10 +222,7 @@ class SnackBar(Control):
     @behavior.setter
     def behavior(self, value: Optional[SnackBarBehavior]):
         self.__behavior = value
-        self._set_attr(
-            "behavior",
-            value.value if isinstance(value, SnackBarBehavior) else value,
-        )
+        self._set_attr("behavior", value, SnackBarBehavior)
 
     # dismissDirection
     @property
@@ -235,10 +232,7 @@ class SnackBar(Control):
     @dismiss_direction.setter
     def dismiss_direction(self, value: Optional[DismissDirection]):
         self.__dismiss_direction = value
-        self._set_attr(
-            "dismissDirection",
-            value.value if isinstance(value, DismissDirection) else value,
-        )
+        self._set_enum_attr("dismissDirection", value, DismissDirection)
 
     # padding
     @property
