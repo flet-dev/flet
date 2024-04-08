@@ -125,8 +125,6 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                         mouseCursor: parseMouseCursor(
                             cv.control.attrString("mouseCursor")),
                         onTap: () {
-                          backend.updateControlState(
-                              cv.control.id, {"checked": "${!checked}"});
                           backend.triggerControlEvent(
                               cv.control.id, "click", "${!checked}");
                         },
