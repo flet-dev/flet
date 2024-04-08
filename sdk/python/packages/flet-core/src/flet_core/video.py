@@ -63,7 +63,7 @@ class Video(ConstrainedControl):
 
     def __init__(
         self,
-        playlist: Union[List[VideoMedia], None] = None,
+        playlist: Optional[List[VideoMedia]] = None,
         title: Optional[str] = None,
         fit: Optional[ImageFit] = None,
         fill_color: Optional[str] = None,
