@@ -87,9 +87,6 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           onOpened: () {
             backend.triggerControlEvent(control.id, "open");
           },
-          onSelected: (itemId) {
-            backend.triggerControlEvent(itemId, "click");
-          },
           position: menuPosition,
           itemBuilder: (BuildContext context) =>
               viewModel.controlViews.map((cv) {
