@@ -46,8 +46,8 @@ class _CupertinoSegmentedButtonControlState
     int? selectedIndex = widget.control.attrInt("selectedIndex");
 
     if (ctrls.length < 2) {
-      return const ErrorControl("When allow_empty_selection is False, "
-          "the selected property must contain at least one value.");
+      return const ErrorControl(
+          "CupertinoSegmentedButton must have at least two controls.");
     }
     var children = ctrls.asMap().map((i, c) => MapEntry(
         i,
