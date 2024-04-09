@@ -1,4 +1,3 @@
-import json
 from datetime import date, datetime
 from enum import Enum
 from typing import Any, Optional, Union
@@ -30,8 +29,8 @@ class DatePickerEntryMode(Enum):
 
 
 class DatePickerEntryModeChangeEvent(ControlEvent):
-    def __init__(self, mode) -> None:
-        self.mode: Optional[DatePickerEntryMode] = DatePickerEntryMode(mode)
+    def __init__(self, entry_mode) -> None:
+        self.entry_mode: Optional[DatePickerEntryMode] = DatePickerEntryMode(entry_mode)
 
 
 class DatePicker(Control):
@@ -128,12 +127,7 @@ class DatePicker(Control):
             data=data,
         )
 
-        def convert_entry_mode_event_data(e):
-            d = json.loads(e.data)
-            self.__result = DatePickerEntryModeChangeEvent(**d)
-            return self.__result
-
-        self.__on_entry_mode_change = EventHandler(convert_entry_mode_event_data)
+        self.__on_entry_mode_change = EventHandler(lambda e: DatePickerEntryModeChangeEvent(e.data))
         self._add_event_handler(
             "entryModeChange", self.__on_entry_mode_change.get_handler()
         )
