@@ -87,9 +87,6 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           onOpened: () {
             backend.triggerControlEvent(control.id, "open");
           },
-          onSelected: (itemId) {
-            backend.triggerControlEvent(itemId, "click");
-          },
           position: menuPosition,
           itemBuilder: (BuildContext context) =>
               viewModel.controlViews.map((cv) {
@@ -128,8 +125,6 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                         mouseCursor: parseMouseCursor(
                             cv.control.attrString("mouseCursor")),
                         onTap: () {
-                          backend.updateControlState(
-                              cv.control.id, {"checked": "${!checked}"});
                           backend.triggerControlEvent(
                               cv.control.id, "click", "${!checked}");
                         },
