@@ -243,6 +243,10 @@ class NavigationDrawer(Control):
         children.extend(self.__controls)
         return children
 
+    def add(self, *controls: Control) -> None:
+        self.__controls.extend(controls)
+        self.update()
+
     # open
     @property
     def open(self) -> Optional[bool]:
@@ -254,7 +258,7 @@ class NavigationDrawer(Control):
 
     # controls
     @property
-    def controls(self) -> Optional[List[Control]]:
+    def controls(self) -> List[Control]:
         return self.__controls
 
     @controls.setter

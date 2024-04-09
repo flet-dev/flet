@@ -264,6 +264,10 @@ class ExpansionPanelList(ConstrainedControl):
             children.append(c)
         return children
 
+    def add(self, *controls: ExpansionPanel) -> None:
+        self.__controls.extend(controls)
+        self.update()
+
     # divider_color
     @property
     def divider_color(self):

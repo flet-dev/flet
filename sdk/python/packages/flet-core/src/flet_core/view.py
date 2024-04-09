@@ -125,6 +125,10 @@ class View(ScrollableControl, AdaptiveControl):
         children.extend(self.__controls)
         return children
 
+    def add(self, *controls: Control) -> None:
+        self.__controls.extend(controls)
+        self.update()
+
     # route
     @property
     def route(self):

@@ -148,6 +148,10 @@ class SubmenuButton(ConstrainedControl):
             children.append(self.__content)
         return children
 
+    def add(self, *controls: Control) -> None:
+        self.__controls.extend(controls)
+        self.update()
+
     def focus(self):
         self._set_attr_json("focus", str(time.time()))
         self.update()

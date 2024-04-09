@@ -143,6 +143,10 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     def _get_children(self):
         return self.__controls
 
+    def add(self, *controls: Control) -> None:
+        self.__controls.extend(controls)
+        self.update()
+
     def clean(self):
         super().clean()
         self.__controls.clear()
@@ -209,9 +213,9 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
 
     # controls
     @property
-    def controls(self):
+    def controls(self) -> List[Control]:
         return self.__controls
 
     @controls.setter
-    def controls(self, value):
+    def controls(self, value: Optional[List[Control]]):
         self.__controls = value if value is not None else []

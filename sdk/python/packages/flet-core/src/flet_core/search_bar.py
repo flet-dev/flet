@@ -172,6 +172,10 @@ class SearchBar(ConstrainedControl):
                 children.append(i)
         return children
 
+    def add(self, *controls: Control) -> None:
+        self.__controls.extend(controls)
+        self.update()
+
     def open_view(self):
         m = {
             "n": "openView",

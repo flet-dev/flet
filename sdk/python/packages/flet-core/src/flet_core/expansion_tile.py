@@ -187,9 +187,13 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
             children.append(self.__trailing)
         return children
 
+    def add(self, *controls: Control) -> None:
+        self.__controls.extend(controls)
+        self.update()
+
     # controls
     @property
-    def controls(self):
+    def controls(self) -> Optional[List[Control]]:
         return self.__controls
 
     @controls.setter

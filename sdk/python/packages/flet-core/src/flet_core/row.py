@@ -163,6 +163,10 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def _get_children(self):
         return self.__controls
 
+    def add(self, *controls: Control) -> None:
+        self.__controls.extend(controls)
+        self.update()
+
     def clean(self):
         super().clean()
         self.__controls.clear()

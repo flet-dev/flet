@@ -193,6 +193,10 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     async def clean_async(self):
         self.clean()
 
+    def add(self, *controls: Control) -> None:
+        self.__controls.extend(controls)
+        self.update()
+
     # horizontal
     @property
     def horizontal(self) -> Optional[bool]:
