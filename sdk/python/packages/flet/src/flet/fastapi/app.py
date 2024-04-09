@@ -3,9 +3,6 @@ import os
 from typing import Awaitable, Callable, Optional, Union
 
 from fastapi import Request, WebSocket
-from flet_core.page import Page
-from flet_core.types import WebRenderer
-
 from flet.fastapi.flet_app import (
     DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
     DEFAULT_FLET_SESSION_TIMEOUT,
@@ -15,6 +12,8 @@ from flet.fastapi.flet_fastapi import FastAPI
 from flet.fastapi.flet_oauth import FletOAuth
 from flet.fastapi.flet_static_files import FletStaticFiles
 from flet.fastapi.flet_upload import FletUpload
+from flet_core.page import Page
+from flet_core.types import WebRenderer
 
 
 def app(
@@ -38,8 +37,7 @@ def app(
     Mount all Flet FastAPI handlers in one call.
 
     Parameters:
-    * `fastapi_app` (FastAPI) - FastAPI application instance.
-    * `session_handler` (Coroutine) - application entry point - an async method called for newly connected user. Handler coroutine must have 1 parameter: `page` - `Page` instance.
+    * `session_handler` (function or coroutine) - application entry point - a method called for newly connected user. Handler must have 1 parameter: `page` - `Page` instance.
     * `assets_dir` (str, optional) - an absolute path to app's assets directory.
     * `app_name` (str, optional) - PWA application name.
     * `app_short_name` (str, optional) - PWA application short name.

@@ -163,7 +163,7 @@ async def app_async(
             web_renderer=web_renderer,
             use_color_emoji=use_color_emoji,
             route_url_strategy=route_url_strategy,
-            blocking=(view == AppView.WEB_BROWSER or force_web_server),
+            blocking=(view == AppView.WEB_BROWSER or view is None or force_web_server),
             on_startup=on_app_startup,
         )
     )
