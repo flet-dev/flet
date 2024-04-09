@@ -2,8 +2,8 @@ import dataclasses
 import json
 from typing import Any, Optional, List
 
-from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
+from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 
@@ -46,8 +46,9 @@ class AutoComplete(Control):
         )
 
         def convert_event_data(e):
+            print(e.data)
             d = json.loads(e.data)
-            return AutoCompleteSuggestion(**d)
+            return AutoCompleteSelectEvent(**d)
 
         self.__on_select = EventHandler(convert_event_data)
         self._add_event_handler("select", self.__on_select.get_handler())
@@ -93,5 +94,7 @@ class AutoComplete(Control):
 
 
 class AutoCompleteSelectEvent(ControlEvent):
-    def __init__(self, selection: str) -> None:
-        self.selection: AutoCompleteSuggestion = AutoCompleteSuggestion(selection)
+    def __init__(self, key: str, value: str) -> None:
+        self.selection: AutoCompleteSuggestion = AutoCompleteSuggestion(
+            key=key, value=value
+        )

@@ -20,7 +20,7 @@ class AutoCompleteSuggestion {
   }
 
   String selectionString() {
-    return "$key $value";
+    return key;
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -79,7 +79,7 @@ AutoCompleteSuggestion? autoCompleteSuggestionFromJSON(dynamic json) {
     value = key;
   }
   return AutoCompleteSuggestion(
-    key: key,
-    value: value,
+    key: key.toString(),
+    value: value.toString(),
   );
 }
