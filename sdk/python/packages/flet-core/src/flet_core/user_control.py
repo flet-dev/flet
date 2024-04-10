@@ -8,8 +8,8 @@ class UserControl(Stack):
         version="0.21.0",
         delete_version="1.0",
     )
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def build(self):
         pass
