@@ -1,57 +1,12 @@
 import dataclasses
 from dataclasses import field
-from typing import Optional
 from enum import Enum
+from typing import Optional
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-AnimationCurveString = Literal[
-    "bounceIn",
-    "bounceInOut",
-    "bounceOut",
-    "decelerate",
-    "ease",
-    "easeIn",
-    "easeInBack",
-    "easeInCirc",
-    "easeInCubic",
-    "easeInExpo",
-    "easeInOut",
-    "easeInOutBack",
-    "easeInOutCirc",
-    "easeInOutCubic",
-    "easeInOutCubicEmphasized",
-    "easeInOutExpo",
-    "easeInOutQuad",
-    "easeInOutQuart",
-    "easeInOutQuint",
-    "easeInOutSine",
-    "easeInQuad",
-    "easeInQuart",
-    "easeInQuint",
-    "easeInSine",
-    "easeInToLinear",
-    "easeOut",
-    "easeOutBack",
-    "easeOutCirc",
-    "easeOutCubic",
-    "easeOutExpo",
-    "easeOutQuad",
-    "easeOutQuart",
-    "easeOutQuint",
-    "easeOutSine",
-    "elasticIn",
-    "elasticInOut",
-    "elasticOut",
-    "fastLinearToSlowEaseIn",
-    "fastOutSlowIn",
-    "linear",
-    "linearToEaseOut",
-    "slowMiddle",
-]
 
 
 class AnimationCurve(Enum):

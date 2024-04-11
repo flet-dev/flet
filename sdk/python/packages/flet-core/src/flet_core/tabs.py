@@ -4,19 +4,19 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.border import BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
-from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
+    ClipBehavior,
     MaterialState,
+    MouseCursor,
     OffsetValue,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TabAlignment,
-    ClipBehavior,
 )
 
 

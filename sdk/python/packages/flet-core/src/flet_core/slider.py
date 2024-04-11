@@ -1,14 +1,14 @@
 from enum import Enum
-from typing import Any, Optional, Union, Dict
+from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
-from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     MaterialState,
+    MouseCursor,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -195,10 +195,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     @interaction.setter
     def interaction(self, value: Optional[SliderInteraction]):
         self.__interaction = value
-        self._set_attr(
-            "interaction",
-            value.value if isinstance(value, SliderInteraction) else value,
-        )
+        self._set_enum_attr("interaction", value, SliderInteraction)
 
     # min
     @property

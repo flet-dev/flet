@@ -117,8 +117,7 @@ class _TabsControlState extends State<TabsControl>
             overlayColor = getMaterialStateProperty<Color?>(
                     json.decode(overlayColorStr),
                     (jv) =>
-                        HexColor.fromString(Theme.of(context), jv as String),
-                    null) ??
+                        HexColor.fromString(Theme.of(context), jv as String)) ??
                 TabBarTheme.of(context).overlayColor;
           }
 

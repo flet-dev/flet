@@ -18,10 +18,6 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-MarkdownExtensionSetString = Literal[
-    None, "none", "commonMark", "gitHubWeb", "gitHubFlavored"
-]
-
 
 class MarkdownExtensionSet(Enum):
     NONE = "none"
@@ -153,10 +149,7 @@ class Markdown(ConstrainedControl):
     @extension_set.setter
     def extension_set(self, value: Optional[MarkdownExtensionSet]):
         self.__extension_set = value
-        self._set_attr(
-            "extensionSet",
-            value.value if isinstance(value, MarkdownExtensionSet) else value,
-        )
+        self._set_enum_attr("extensionSet", value, MarkdownExtensionSet)
 
     # code_theme
     @property

@@ -81,7 +81,7 @@ class Divider(Control):
     # height
     @property
     def height(self) -> OptionalNumber:
-        return self._get_attr("height")
+        return self._get_attr("height", data_type="float")
 
     @height.setter
     def height(self, value: OptionalNumber):
@@ -90,7 +90,7 @@ class Divider(Control):
     # thickness
     @property
     def thickness(self) -> OptionalNumber:
-        return self._get_attr("thickness")
+        return self._get_attr("thickness", data_type="float")
 
     @thickness.setter
     def thickness(self, value: OptionalNumber):
@@ -108,7 +108,7 @@ class Divider(Control):
     # leading_indent
     @property
     def leading_indent(self) -> OptionalNumber:
-        return self._get_attr("leadingIndent")
+        return self._get_attr("leadingIndent", data_type="float")
 
     @leading_indent.setter
     def leading_indent(self, value: OptionalNumber):
@@ -117,7 +117,7 @@ class Divider(Control):
     # trailing_indent
     @property
     def trailing_indent(self) -> OptionalNumber:
-        return self._get_attr("trailingIndent")
+        return self._get_attr("trailingIndent", data_type="float")
 
     @trailing_indent.setter
     def trailing_indent(self, value: OptionalNumber):

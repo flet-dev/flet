@@ -5,12 +5,12 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
-from flet_core.gesture_detector import MouseCursor
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
+    MouseCursor,
     OffsetValue,
     PaddingValue,
     ResponsiveNumber,
@@ -396,10 +396,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @title_alignment.setter
     def title_alignment(self, value: Optional[ListTileTitleAlignment]):
         self.__title_alignment = value
-        self._set_attr(
-            "titleAlignment",
-            value.value if isinstance(value, ListTileTitleAlignment) else value,
-        )
+        self._set_enum_attr("titleAlignment", value, ListTileTitleAlignment)
 
     # selected
     @property

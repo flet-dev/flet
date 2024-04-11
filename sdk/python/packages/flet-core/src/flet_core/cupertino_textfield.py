@@ -63,7 +63,7 @@ class CupertinoTextField(TextField):
         shift_enter: Optional[bool] = None,
         text_align: Optional[TextAlign] = None,
         autofocus: Optional[bool] = None,
-        capitalization: TextCapitalization = TextCapitalization.NONE,
+        capitalization: Optional[TextCapitalization] = None,
         autocorrect: Optional[bool] = None,
         enable_suggestions: Optional[bool] = None,
         smart_dashes_type: Optional[bool] = None,
@@ -276,10 +276,7 @@ class CupertinoTextField(TextField):
     @suffix_visibility_mode.setter
     def suffix_visibility_mode(self, value: Optional[VisibilityMode]):
         self.__suffix_visibility_mode = value
-        self._set_attr(
-            "suffixVisibilityMode",
-            value.value if isinstance(value, VisibilityMode) else value,
-        )
+        self._set_enum_attr("suffixVisibilityMode", value, VisibilityMode)
 
     # prefix_visibility_mode
     @property

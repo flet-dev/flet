@@ -1,4 +1,3 @@
-import json
 from datetime import time
 from enum import Enum
 from typing import Any, Optional, Union
@@ -19,8 +18,8 @@ class TimePickerEntryMode(Enum):
 
 
 class TimePickerEntryModeChangeEvent(ControlEvent):
-    def __init__(self, mode) -> None:
-        self.mode: Optional[TimePickerEntryMode] = TimePickerEntryMode(mode)
+    def __init__(self, entry_mode) -> None:
+        self.entry_mode: Optional[TimePickerEntryMode] = TimePickerEntryMode(entry_mode)
 
 
 class TimePicker(Control):
@@ -111,12 +110,7 @@ class TimePicker(Control):
             data=data,
         )
 
-        def convert_entry_mode_event_data(e):
-            d = json.loads(e.data)
-            self.__result = TimePickerEntryModeChangeEvent(**d)
-            return self.__result
-
-        self.__on_entry_mode_change = EventHandler(convert_entry_mode_event_data)
+        self.__on_entry_mode_change = EventHandler(lambda e: TimePickerEntryModeChangeEvent(e.data))
         self._add_event_handler(
             "entryModeChange", self.__on_entry_mode_change.get_handler()
         )
@@ -239,10 +233,7 @@ class TimePicker(Control):
     @time_picker_entry_mode.setter
     def time_picker_entry_mode(self, value: Optional[TimePickerEntryMode]):
         self.__time_picker_entry_mode = value
-        self._set_attr(
-            "timePickerEntryMode",
-            value.value if isinstance(value, TimePickerEntryMode) else value,
-        )
+        self._set_enum_attr("timePickerEntryMode", value, TimePickerEntryMode)
 
     # orientation
     @property
@@ -252,9 +243,7 @@ class TimePicker(Control):
     @orientation.setter
     def orientation(self, value: Optional[Orientation]):
         self.__orientation = value
-        self._set_attr(
-            "orientation", value.value if isinstance(value, Orientation) else value
-        )
+        self._set_enum_attr("orientation", value, Orientation)
 
     # on_change
     @property

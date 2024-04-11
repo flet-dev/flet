@@ -10,50 +10,12 @@ from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    MouseCursor,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
-
-
-class MouseCursor(Enum):
-    ALIAS = "alias"
-    ALL_SCROLL = "allScroll"
-    BASIC = "basic"
-    CELL = "cell"
-    CLICK = "click"
-    CONTEXT_MENU = "contextMenu"
-    COPY = "copy"
-    DISAPPEARING = "disappearing"
-    FORBIDDEN = "forbidden"
-    GRAB = "grab"
-    GRABBING = "grabbing"
-    HELP = "help"
-    MOVE = "move"
-    NO_DROP = "noDrop"
-    NONE = "none"
-    PRECISE = "precise"
-    PROGRESS = "progress"
-    RESIZE_COLUMN = "resizeColumn"
-    RESIZE_DOWN = "resizeDown"
-    RESIZE_DOWN_LEFT = "resizeDownLeft"
-    RESIZE_DOWN_RIGHT = "resizeDownRight"
-    RESIZE_LEFT = "resizeLeft"
-    RESIZE_LEFT_RIGHT = "resizeLeftRight"
-    RESIZE_RIGHT = "resizeRight"
-    RESIZE_ROW = "resizeRow"
-    RESIZE_UP = "resizeUp"
-    RESIZE_UP_DOWN = "resizeUpDown"
-    RESIZE_UP_LEFT = "resizeUpLeft"
-    RESIZE_UP_LEFT_DOWN_RIGHT = "resizeUpLeftDownRight"
-    RESIZE_UP_RIGHT = "resizeUpRight"
-    RESIZE_UP_RIGHT_DOWN_LEFT = "resizeUpRightDownLeft"
-    TEXT = "text"
-    VERTICAL_TEXT = "verticalText"
-    WAIT = "wait"
-    ZOOM_IN = "zoomIn"
-    ZOOM_OUT = "zoomOut"
 
 
 class GestureDetector(ConstrainedControl, AdaptiveControl):
@@ -416,9 +378,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr(
-            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # drag_interval
     @property
