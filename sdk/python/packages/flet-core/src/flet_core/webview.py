@@ -16,16 +16,14 @@ class WebView(ConstrainedControl):
     """
     Easily load webpages while allowing user interaction.
 
-    The `WebView` control is designed exclusively for iOS and Android platforms.
+    For now, the WebView control is designed exclusively for iOS and Android platforms.
 
-    ## Examples
-    A simple webview implementation using this class could be like:
-
+    Example:
     ```python
-    import flet
+    import flet as ft
 
-    def main(page: flet.Page):
-        wv = flet.WebView(
+    def main(page: ft.Page):
+        wv = ft.WebView(
             "https://flet.dev",
             expand=True,
             on_page_started=lambda _: print("Page started"),
@@ -34,42 +32,12 @@ class WebView(ConstrainedControl):
         )
         page.add(wv)
 
-    flet.app(main)
+    ft.app(main)
     ```
 
-    ## Properties
+    -----
 
-    ### `url`
-
-    Start the webview by loading the `url` value.
-
-    ### `javascript_enabled`
-
-    Enable or disable the javascript execution of the page. Note that disabling the javascript execution of the page may result unexpected webpage behaviour.
-
-    ### `prevent_link`
-
-    Specify a link to prevent it from downloading.
-
-    ### `bgcolor`
-
-    Set the background color of the webview.
-
-    ## Events
-
-    ### `on_page_started`
-
-    Fires soon as the first loading process of the webpage is started.
-
-    ### `on_page_ended`
-
-    Fires when all the webpage loading processes are ended.
-
-    ### `on_web_resource_error`
-
-    Fires when there is error with loading a webpage resource.
-
-    View docs: [WebView](https://flet.dev/docs/controls/webview)
+    Online docs: https://flet.dev/docs/controls/webview
     """
 
     def __init__(
