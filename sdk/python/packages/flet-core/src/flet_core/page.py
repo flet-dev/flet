@@ -1,11 +1,11 @@
 import asyncio
-from contextvars import ContextVar
 import json
 import logging
 import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union, cast
@@ -318,7 +318,7 @@ class Page(AdaptiveControl):
         )
         await self.on_event_async(Event("page", "disconnect", ""))
 
-    def update(self, *controls):
+    def update(self, *controls) -> None:
         with self.__lock:
             if len(controls) == 0:
                 r = self.__update(self)
@@ -329,10 +329,10 @@ class Page(AdaptiveControl):
     @deprecated(
         reason="Use update() method instead.", version="0.21.0", delete_version="1.0"
     )
-    async def update_async(self, *controls):
+    async def update_async(self, *controls) -> None:
         self.update(*controls)
 
-    def add(self, *controls):
+    def add(self, *controls) -> None:
         with self.__lock:
             self._controls.extend(controls)
             r = self.__update(self)
@@ -341,25 +341,23 @@ class Page(AdaptiveControl):
     @deprecated(
         reason="Use add() method instead.", version="0.21.0", delete_version="1.0"
     )
-    async def add_async(self, *controls):
+    async def add_async(self, *controls) -> None:
         self.add(*controls)
 
-    def insert(self, at, *controls):
+    def insert(self, at: int, *controls) -> None:
         with self.__lock:
-            n = at
-            for control in controls:
-                self._controls.insert(n, control)
-                n += 1
+            for i, control in enumerate(controls, start=at):
+                self._controls.insert(i, control)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     @deprecated(
         reason="Use insert() method instead.", version="0.21.0", delete_version="1.0"
     )
-    async def insert_async(self, at, *controls):
+    async def insert_async(self, at, *controls) -> None:
         self.insert(at, *controls)
 
-    def remove(self, *controls):
+    def remove(self, *controls) -> None:
         with self.__lock:
             for control in controls:
                 self._controls.remove(control)
@@ -369,10 +367,10 @@ class Page(AdaptiveControl):
     @deprecated(
         reason="Use remove() method instead.", version="0.21.0", delete_version="1.0"
     )
-    async def remove_async(self, *controls):
+    async def remove_async(self, *controls) -> None:
         self.remove(*controls)
 
-    def remove_at(self, index):
+    def remove_at(self, index) -> None:
         with self.__lock:
             self._controls.pop(index)
             r = self.__update(self)
@@ -381,20 +379,20 @@ class Page(AdaptiveControl):
     @deprecated(
         reason="Use remove_at() method instead.", version="0.21.0", delete_version="1.0"
     )
-    async def remove_at_async(self, index):
+    async def remove_at_async(self, index) -> None:
         self.remove_at(index)
 
-    def clean(self):
+    def clean(self) -> None:
         self._clean(self)
         self._controls.clear()
 
     @deprecated(
         reason="Use clean() method instead.", version="0.21.0", delete_version="1.0"
     )
-    async def clean_async(self):
+    async def clean_async(self) -> None:
         self.clean()
 
-    def _clean(self, control: Control):
+    def _clean(self, control: Control) -> None:
         with self.__lock:
             control._previous_children.clear()
             assert control.uid is not None
