@@ -268,6 +268,16 @@ class ExpansionPanelList(ConstrainedControl):
         self.__controls.extend(controls)
         self.update()
 
+    def insert(self, at: int, *controls: ExpansionPanel) -> None:
+        for i, control in enumerate(controls, start=at):
+            self.__controls.insert(i, control)
+        self.update()
+
+    def remove(self, *controls: ExpansionPanel) -> None:
+        for control in controls:
+            self.__controls.remove(control)
+        self.update()
+
     # divider_color
     @property
     def divider_color(self):

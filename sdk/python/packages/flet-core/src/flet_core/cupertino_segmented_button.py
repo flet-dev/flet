@@ -112,6 +112,20 @@ class CupertinoSegmentedButton(ConstrainedControl):
         super()._before_build_command()
         self._set_attr_json("padding", self.__padding)
 
+    def add(self, *controls: Control) -> None:
+        self.__controls.extend(controls)
+        self.update()
+
+    def insert(self, at: int, *controls: Control) -> None:
+        for i, control in enumerate(controls, start=at):
+            self.__controls.insert(i, control)
+        self.update()
+
+    def remove(self, *controls: Control) -> None:
+        for control in controls:
+            self.__controls.remove(control)
+        self.update()
+
     # controls
     @property
     def controls(self) -> List[Control]:

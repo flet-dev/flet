@@ -191,6 +191,16 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__controls.extend(controls)
         self.update()
 
+    def insert(self, at: int, *controls: Control) -> None:
+        for i, control in enumerate(controls, start=at):
+            self.__controls.insert(i, control)
+        self.update()
+
+    def remove(self, *controls: Control) -> None:
+        for control in controls:
+            self.__controls.remove(control)
+        self.update()
+
     # controls
     @property
     def controls(self) -> Optional[List[Control]]:

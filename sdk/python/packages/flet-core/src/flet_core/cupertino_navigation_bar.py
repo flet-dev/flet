@@ -142,6 +142,20 @@ class CupertinoNavigationBar(ConstrainedControl):
         children.extend(self.__destinations)
         return children
 
+    def add(self, *destinations: NavigationDestination) -> None:
+        self.__destinations.extend(destinations)
+        self.update()
+
+    def insert(self, at: int, *destinations: NavigationDestination) -> None:
+        for i, control in enumerate(destinations, start=at):
+            self.__destinations.insert(i, control)
+        self.update()
+
+    def remove(self, *destinations: NavigationDestination) -> None:
+        for control in destinations:
+            self.__destinations.remove(control)
+        self.update()
+
     # destinations
     @property
     def destinations(self) -> Optional[List[NavigationDestination]]:
