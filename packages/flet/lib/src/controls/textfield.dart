@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/autofill_hint.dart';
 import '../utils/borders.dart';
 import '../utils/form_field.dart';
 import '../utils/text.dart';
@@ -263,6 +264,7 @@ class _TextFieldControlState extends State<TextFieldControl>
           obscureText: password && !_revealPassword,
           controller: _controller,
           focusNode: focusNode,
+          autofillHints: parseAutofillHints(widget.control, "autofillHints"),
           onChanged: (String value) {
             //debugPrint(value);
             _value = value;

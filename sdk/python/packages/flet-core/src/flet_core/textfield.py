@@ -2,7 +2,7 @@ import dataclasses
 import time
 from dataclasses import field
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, List
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control, OptionalNumber
@@ -19,6 +19,7 @@ from flet_core.types import (
     ScaleValue,
     TextAlign,
     VerticalAlignment,
+    AutoFillHint,
 )
 from flet_core.utils import deprecated
 
@@ -121,6 +122,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         cursor_radius: OptionalNumber = None,
         selection_color: Optional[str] = None,
         input_filter: Optional[InputFilter] = None,
+        autofill_hints: Union[None, AutoFillHint, List[AutoFillHint]] = None,
         on_change=None,
         on_submit=None,
         on_focus=None,
@@ -289,6 +291,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self.cursor_radius = cursor_radius
         self.selection_color = selection_color
         self.input_filter = input_filter
+        self.autofill_hints = autofill_hints
         self.on_change = on_change
         self.on_submit = on_submit
         self.on_focus = on_focus
@@ -300,6 +303,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("inputFilter", self.__input_filter)
+        self._set_attr_json("autofillHints", self.__autofill_hints)
         if (
             (
                 self.bgcolor is not None
@@ -349,9 +353,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @text_align.setter
     def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
-        self._set_attr(
-            "textAlign", value.value if isinstance(value, TextAlign) else value
-        )
+        self._set_enum_attr("textAlign", value, TextAlign)
 
     # multiline
     @property
@@ -542,6 +544,28 @@ class TextField(FormFieldControl, AdaptiveControl):
     @input_filter.setter
     def input_filter(self, value: Optional[InputFilter]):
         self.__input_filter = value
+
+    # autofill_hints
+    @property
+    def autofill_hints(self) -> Union[None, AutoFillHint, List[AutoFillHint]]:
+        # return self._get_value_or_list_attr("autoFillHints", ",")
+        return self.__autofill_hints
+
+    @autofill_hints.setter
+    def autofill_hints(self, value: Union[None, AutoFillHint, List[AutoFillHint]]):
+        if value is not None:
+            if isinstance(value, List):
+                value = list(
+                    map(
+                        lambda x: x.value if isinstance(x, AutoFillHint) else str(x),
+                        value,
+                    )
+                )
+            elif isinstance(value, AutoFillHint):
+                value = value.value
+        self.__autofill_hints = value
+        print(value)
+        # self._set_value_or_list_attr("autoFillHints", value, ",")
 
     # on_change
     @property
