@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 MouseCursor? parseMouseCursor(String? cursor,
     [MouseCursor? defaultMouseCursor = MouseCursor.defer]) {
-  switch (cursor) {
+  switch (cursor?.toLowerCase()) {
     case "alias":
       return SystemMouseCursors.alias;
-    case "allScroll":
+    case "allscroll":
       return SystemMouseCursors.allScroll;
     case "basic":
       return SystemMouseCursors.basic;
@@ -13,7 +13,7 @@ MouseCursor? parseMouseCursor(String? cursor,
       return SystemMouseCursors.cell;
     case "click":
       return SystemMouseCursors.click;
-    case "contextMenu":
+    case "contextmenu":
       return SystemMouseCursors.contextMenu;
     case "copy":
       return SystemMouseCursors.copy;
@@ -29,7 +29,7 @@ MouseCursor? parseMouseCursor(String? cursor,
       return SystemMouseCursors.help;
     case "move":
       return SystemMouseCursors.move;
-    case "noDrop":
+    case "nodrop":
       return SystemMouseCursors.noDrop;
     case "none":
       return SystemMouseCursors.none;
@@ -37,43 +37,43 @@ MouseCursor? parseMouseCursor(String? cursor,
       return SystemMouseCursors.precise;
     case "progress":
       return SystemMouseCursors.progress;
-    case "resizeColumn":
+    case "resizecolumn":
       return SystemMouseCursors.resizeColumn;
-    case "resizeDown":
+    case "resizedown":
       return SystemMouseCursors.resizeDown;
-    case "resizeDownLeft":
+    case "resizedownleft":
       return SystemMouseCursors.resizeDownLeft;
-    case "resizeDownRight":
+    case "resizedownright":
       return SystemMouseCursors.resizeDownRight;
-    case "resizeLeft":
+    case "resizeleft":
       return SystemMouseCursors.resizeLeft;
-    case "resizeLeftRight":
+    case "resizeleftright":
       return SystemMouseCursors.resizeLeftRight;
-    case "resizeRight":
+    case "resizeright":
       return SystemMouseCursors.resizeRight;
-    case "resizeRow":
+    case "resizerow":
       return SystemMouseCursors.resizeRow;
-    case "resizeUp":
+    case "resizeup":
       return SystemMouseCursors.resizeUp;
-    case "resizeUpDown":
+    case "resizeupdown":
       return SystemMouseCursors.resizeUpDown;
-    case "resizeUpLeft":
+    case "resizeupleft":
       return SystemMouseCursors.resizeUpLeft;
-    case "resizeUpLeftDownRight":
+    case "resizeupleftdownright":
       return SystemMouseCursors.resizeUpLeftDownRight;
-    case "resizeUpRight":
+    case "resizeupright":
       return SystemMouseCursors.resizeUpRight;
-    case "resizeUpRightDownLeft":
+    case "resizeuprightdownleft":
       return SystemMouseCursors.resizeUpRightDownLeft;
     case "text":
       return SystemMouseCursors.text;
-    case "verticalText":
+    case "verticaltext":
       return SystemMouseCursors.verticalText;
     case "wait":
       return SystemMouseCursors.wait;
-    case "zoomIn":
+    case "zoomin":
       return SystemMouseCursors.zoomIn;
-    case "zoomOut":
+    case "zoomout":
       return SystemMouseCursors.zoomOut;
     default:
       return defaultMouseCursor;
