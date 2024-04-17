@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/autofill_hint.dart';
+import '../utils/autofill.dart';
 import '../utils/borders.dart';
 import '../utils/form_field.dart';
 import '../utils/text.dart';

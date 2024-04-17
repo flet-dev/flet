@@ -5,6 +5,7 @@ from enum import Enum
 from typing import Any, Optional, Union, List
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.autofill_group import AutoFillHint
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
@@ -19,7 +20,6 @@ from flet_core.types import (
     ScaleValue,
     TextAlign,
     VerticalAlignment,
-    AutoFillHint,
 )
 from flet_core.utils import deprecated
 
@@ -548,7 +548,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     # autofill_hints
     @property
     def autofill_hints(self) -> Union[None, AutoFillHint, List[AutoFillHint]]:
-        # return self._get_value_or_list_attr("autoFillHints", ",")
         return self.__autofill_hints
 
     @autofill_hints.setter
@@ -564,8 +563,6 @@ class TextField(FormFieldControl, AdaptiveControl):
             elif isinstance(value, AutoFillHint):
                 value = value.value
         self.__autofill_hints = value
-        print(value)
-        # self._set_value_or_list_attr("autoFillHints", value, ",")
 
     # on_change
     @property

@@ -17,6 +17,7 @@ import '../utils/theme.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
+import 'autofill_group.dart';
 import 'badge.dart';
 import 'banner.dart';
 import 'barchart.dart';
@@ -796,6 +797,14 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "autofillgroup":
+      return AutofillGroupControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive);
     case "cupertinoradio":
       return CupertinoRadioControl(
           key: key,

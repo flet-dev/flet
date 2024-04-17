@@ -166,3 +166,15 @@ String? autofillHintFromString(String? hint, [String? defaultAutoFillHint]) {
       return defaultAutoFillHint;
   }
 }
+
+AutofillContextAction? parseAutofillContextAction(String? action,
+    [AutofillContextAction? defaultAction]) {
+  switch (action?.toLowerCase()) {
+    case 'commit':
+      return AutofillContextAction.commit;
+    case 'cancel':
+      return AutofillContextAction.cancel;
+    default:
+      return defaultAction;
+  }
+}

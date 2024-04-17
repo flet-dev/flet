@@ -23,6 +23,11 @@ from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
 from flet_core.audio_recorder import AudioEncoder, AudioRecorder
+from flet_core.autofill_group import (
+    AutoFillGroup,
+    AutoFillGroupDisposeAction,
+    AutoFillHint,
+)
 from flet_core.badge import Badge
 from flet_core.banner import Banner
 from flet_core.blur import Blur, BlurTileMode
@@ -296,7 +301,6 @@ from flet_core.tooltip import Tooltip
 from flet_core.transform import Offset, Rotate, Scale
 from flet_core.transparent_pointer import TransparentPointer
 from flet_core.types import (
-    AutoFillHint,
     AppLifecycleState,
     BlendMode,
     BoxShape,
