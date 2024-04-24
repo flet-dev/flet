@@ -1,0 +1,53 @@
+<mxfile host="app.diagrams.net" modified="2024-04-11T17:43:26.654Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0" etag="x94I2PibWqxrtdHtLgfj" version="24.2.3" type="device">
+  <diagram id="pKdXsaXQYBjCAHHxvpPH" name="Page-1">
+    <mxGraphModel dx="1234" dy="750" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="HLoMKegQJEXttFURE07I-44" value="WebSockets, IPC" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontSize=9;align=center;strokeColor=none;fontColor=#333333;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="280" y="229" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="HLoMKegQJEXttFURE07I-17" value="" style="endArrow=classic;html=1;entryX=1;entryY=0.75;entryDx=0;entryDy=0;exitX=0;exitY=0.75;exitDx=0;exitDy=0;" parent="1" edge="1" target="HLoMKegQJEXttFURE07I-13" source="FlBj93cmDOt8YyDK-OAz-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="460" y="269" as="sourcePoint" />
+            <mxPoint x="280" y="269" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HLoMKegQJEXttFURE07I-18" value="&amp;nbsp; Events&amp;nbsp;&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="HLoMKegQJEXttFURE07I-17" vertex="1" connectable="0">
+          <mxGeometry x="-0.2778" y="4" relative="1" as="geometry">
+            <mxPoint x="-25" y="-4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HLoMKegQJEXttFURE07I-20" value="" style="endArrow=classic;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" parent="1" edge="1" target="FlBj93cmDOt8YyDK-OAz-1" source="HLoMKegQJEXttFURE07I-13">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="280" y="208.08" as="sourcePoint" />
+            <mxPoint x="460" y="208.08" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HLoMKegQJEXttFURE07I-21" value="&amp;nbsp; Page updates&amp;nbsp;&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;" parent="HLoMKegQJEXttFURE07I-20" vertex="1" connectable="0">
+          <mxGeometry x="-0.2778" y="4" relative="1" as="geometry">
+            <mxPoint x="13" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FlBj93cmDOt8YyDK-OAz-1" value="Frontend" style="rounded=1;whiteSpace=wrap;html=1;fontSize=15;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=top;arcSize=7;fontStyle=1;fillColor=none;strokeColor=#4D4D4D;" parent="1" vertex="1">
+          <mxGeometry x="410" y="139" width="140" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="HLoMKegQJEXttFURE07I-13" value="Backend" style="rounded=1;whiteSpace=wrap;html=1;fontSize=15;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=top;arcSize=7;fontStyle=1;fillColor=none;strokeColor=#4D4D4D;" parent="1" vertex="1">
+          <mxGeometry x="140" y="139" width="140" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="HLoMKegQJEXttFURE07I-14" value="Python app" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fillColor=#e65cda;strokeColor=none;arcSize=22;fontColor=#FFFFFF;" parent="1" vertex="1">
+          <mxGeometry x="140" y="299" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="HLoMKegQJEXttFURE07I-1" value="Compiled Flutter app&lt;br style=&quot;font-size: 13px;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;.exe, .apk, .ipa&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fillColor=#30ACFF;strokeColor=none;arcSize=23;fontColor=#FFFFFF;" parent="1" vertex="1">
+          <mxGeometry x="410" y="299" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="HLoMKegQJEXttFURE07I-37" value="&lt;span&gt;Modifies controls and their properties&lt;/span&gt;&lt;div&gt;&lt;span&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;Sends control updates to Frontend&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;Dispatches events to controls&lt;span&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=0" parent="1" vertex="1">
+          <mxGeometry x="147.5" y="170.5" width="125" height="129.5" as="geometry" />
+        </mxCell>
+        <mxCell id="HLoMKegQJEXttFURE07I-2" value="Translates JSON into Flutter widgets&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Sends events to Frontend&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="417.5" y="190" width="125" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
