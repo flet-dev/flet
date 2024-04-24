@@ -1,4 +1,5 @@
-from typing import Any, Optional, Union
+from dataclasses import dataclass, field
+from typing import Any, Optional, Union, List, Tuple
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
@@ -12,6 +13,40 @@ from flet_core.types import (
 )
 
 
+@dataclass
+class MapOption:
+    apply_pointer_translucency_to_layers: Optional[bool] = field(default=None)
+    bgcolor: Optional[str] = field(default=None)
+    initial_center: Optional[Tuple[Union[int, float], Union[int, float]]] = field(
+        default=None
+    )
+    initial_rotation: OptionalNumber = field(default=None)
+    initial_zoom: OptionalNumber = field(default=None)
+    keep_alive: Optional[bool] = field(default=None)
+    max_zoom: OptionalNumber = field(default=None)
+    min_zoom: OptionalNumber = field(default=None)
+
+
+@dataclass
+class MapTileLayer:
+    url_template: str = field(default=None)
+    fallback_url: Optional[str] = field(default=None)
+    tile_size: OptionalNumber = field(default=None)
+    min_native_zoom: Optional[int] = field(default=None)
+    max_native_zoom: Optional[int] = field(default=None)
+    zoom_reverse: Optional[bool] = field(default=None)
+    zoom_offset: OptionalNumber = field(default=None)
+    keep_buffer: Optional[int] = field(default=None)
+    pan_buffer: Optional[int] = field(default=None)
+    tms: Optional[bool] = field(default=None)
+    # initial_center:
+    initial_rotation: OptionalNumber = field(default=None)
+    initial_zoom: OptionalNumber = field(default=None)
+    keep_alive: Optional[bool] = field(default=None)
+    max_zoom: OptionalNumber = field(default=None)
+    min_zoom: OptionalNumber = field(default=None)
+
+
 class Map(ConstrainedControl):
     """
     Map Control.
@@ -23,10 +58,8 @@ class Map(ConstrainedControl):
 
     def __init__(
         self,
-        thickness: OptionalNumber = None,
-        color: Optional[str] = None,
-        leading_indent: OptionalNumber = None,
-        trailing_indent: OptionalNumber = None,
+        layers: List[MapTileLayer],
+        option: Optional[MapOption] = None,
         #
         # ConstrainedControl
         #
@@ -90,46 +123,36 @@ class Map(ConstrainedControl):
             data=data,
         )
 
-        self.thickness = thickness
-        self.color = color
-        self.leading_indent = leading_indent
-        self.trailing_indent = trailing_indent
+        self.option = option
+        self.layers = layers
 
     def _get_control_name(self):
         return "map"
 
-    # thickness
+    def before_update(self):
+        super().before_update()
+        if isinstance(self.__layers, List):
+            self._set_attr_json(
+                "layers",
+                list(filter(lambda x: isinstance(x, MapTileLayer), self.__layers)),
+            )
+        if isinstance(self.__option, MapOption):
+            self._set_attr_json("option", self.__option)
+
+    # option
     @property
-    def thickness(self) -> OptionalNumber:
-        return self._get_attr("thickness", data_type="float")
+    def option(self) -> Optional[MapOption]:
+        return self.__option
 
-    @thickness.setter
-    def thickness(self, value: OptionalNumber):
-        self._set_attr("thickness", value)
+    @option.setter
+    def option(self, value: Optional[MapOption]):
+        self.__option = value
 
-    # color
+    # layers
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def layers(self) -> List[MapTileLayer]:
+        return self.__layers
 
-    @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
-
-    # leading_indent
-    @property
-    def leading_indent(self) -> OptionalNumber:
-        return self._get_attr("leadingIndent", data_type="float")
-
-    @leading_indent.setter
-    def leading_indent(self, value: OptionalNumber):
-        self._set_attr("leadingIndent", value)
-
-    # trailing_indent
-    @property
-    def trailing_indent(self) -> OptionalNumber:
-        return self._get_attr("trailingIndent", data_type="float")
-
-    @trailing_indent.setter
-    def trailing_indent(self, value: OptionalNumber):
-        self._set_attr("trailingIndent", value)
+    @layers.setter
+    def layers(self, value: List[MapTileLayer]):
+        self.__layers = value

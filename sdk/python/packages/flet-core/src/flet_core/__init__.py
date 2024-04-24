@@ -162,7 +162,7 @@ from flet_core.image import Image
 from flet_core.list_tile import ListTile, ListTileTitleAlignment, ListTileStyle
 from flet_core.list_view import ListView
 from flet_core.lottie import Lottie
-from flet_core.map import Map
+from flet_core.map import Map, MapOption, MapTileLayer
 from flet_core.margin import Margin
 from flet_core.markdown import Markdown, MarkdownExtensionSet
 from flet_core.menu_bar import MenuBar, MenuStyle
