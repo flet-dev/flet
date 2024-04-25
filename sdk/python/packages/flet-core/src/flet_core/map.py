@@ -40,7 +40,7 @@ class Map(ConstrainedControl):
 
     def __init__(
         self,
-        layers: List[MapTileLayer],
+        layers: List[Union[MapTileLayer, RichAttribution]] = None,
         option: Optional[MapOption] = None,
         #
         # ConstrainedControl
@@ -111,13 +111,11 @@ class Map(ConstrainedControl):
     def _get_control_name(self):
         return "map"
 
+    def _get_children(self):
+        return self.layers
+
     def before_update(self):
         super().before_update()
-        if isinstance(self.__layers, List):
-            self._set_attr_json(
-                "layers",
-                list(filter(lambda x: isinstance(x, MapTileLayer), self.__layers)),
-            )
         if isinstance(self.__option, MapOption):
             self._set_attr_json("option", self.__option)
 
@@ -132,9 +130,9 @@ class Map(ConstrainedControl):
 
     # layers
     @property
-    def layers(self) -> List[MapTileLayer]:
+    def layers(self) -> List[Union[MapTileLayer, RichAttribution]]:
         return self.__layers
 
     @layers.setter
-    def layers(self, value: List[MapTileLayer]):
+    def layers(self, value: List[Union[MapTileLayer, RichAttribution]]):
         self.__layers = value
