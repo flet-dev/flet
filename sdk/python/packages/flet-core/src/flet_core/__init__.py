@@ -217,6 +217,7 @@ from flet_core.radio_group import RadioGroup
 from flet_core.range_slider import RangeSlider
 from flet_core.ref import Ref
 from flet_core.responsive_row import ResponsiveRow
+from flet_core.rich_attribution import RichAttribution, RichAttributionAlignment
 from flet_core.rive import Rive
 from flet_core.row import Row
 from flet_core.safe_area import SafeArea
