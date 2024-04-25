@@ -7,14 +7,16 @@ import 'utils/map.dart';
 class MapControl extends StatefulWidget {
   final Control? parent;
   final Control control;
-  final Widget? nextChild;
+  final List<Control> children;
+  final bool parentDisabled;
   final FletControlBackend backend;
 
   const MapControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.nextChild,
+      required this.children,
+      required this.parentDisabled,
       required this.backend});
 
   @override
@@ -25,12 +27,19 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("Map build: ${widget.control.id} (${widget.control.hashCode})");
-
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
     MapOptions options = parseMapOptions(widget.control, "options", context);
-
+    var ctrls = widget.children
+        .where((c) =>
+            c.isVisible &&
+            (c.type == "richattribution" || c.type == "maptilelayer"))
+        .toList();
+    debugPrint("Map build: ${ctrls.length} children");
     Widget map = FlutterMap(
       options: options,
-      children: parseMapChildren(widget.control, "layers").toList(),
+      children: ctrls
+          .map((c) => createControl(widget.control, c.id, disabled))
+          .toList(),
     );
 
     return constrainedControl(context, map, widget.parent, widget.control);

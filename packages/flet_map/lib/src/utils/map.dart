@@ -30,7 +30,6 @@ MapOptions mapOptionsFromJSON(dynamic json, ThemeData theme) {
     initialCenter: json["initial_center"] != null
         ? LatLng(json["initial_center"][0], json["initial_center"][1])
         : const LatLng(50.5, 30.51),
-    // LatLng(latitude, longitude)
     initialRotation: parseDoubleFromJson(json["initial_rotation"], 0.0)!,
     initialZoom: parseDoubleFromJson(json["initial_zoom"], 13.0)!,
     // interactionOptions: ,

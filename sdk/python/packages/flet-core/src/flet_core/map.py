@@ -3,7 +3,9 @@ from typing import Any, Optional, Union, List, Tuple
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
+from flet_core.map_tile_layer import MapTileLayer
 from flet_core.ref import Ref
+from flet_core.rich_attribution import RichAttribution
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -20,26 +22,6 @@ class MapOption:
     initial_center: Optional[Tuple[Union[int, float], Union[int, float]]] = field(
         default=None
     )
-    initial_rotation: OptionalNumber = field(default=None)
-    initial_zoom: OptionalNumber = field(default=None)
-    keep_alive: Optional[bool] = field(default=None)
-    max_zoom: OptionalNumber = field(default=None)
-    min_zoom: OptionalNumber = field(default=None)
-
-
-@dataclass
-class MapTileLayer:
-    url_template: str = field(default=None)
-    fallback_url: Optional[str] = field(default=None)
-    tile_size: OptionalNumber = field(default=None)
-    min_native_zoom: Optional[int] = field(default=None)
-    max_native_zoom: Optional[int] = field(default=None)
-    zoom_reverse: Optional[bool] = field(default=None)
-    zoom_offset: OptionalNumber = field(default=None)
-    keep_buffer: Optional[int] = field(default=None)
-    pan_buffer: Optional[int] = field(default=None)
-    tms: Optional[bool] = field(default=None)
-    # initial_center:
     initial_rotation: OptionalNumber = field(default=None)
     initial_zoom: OptionalNumber = field(default=None)
     keep_alive: Optional[bool] = field(default=None)
