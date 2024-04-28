@@ -67,47 +67,137 @@ class MapTileLayer(Control):
     def _get_control_name(self):
         return "maptilelayer"
 
-    # height
+    # url_template
     @property
-    def height(self) -> OptionalNumber:
-        return self._get_attr("height", data_type="float")
+    def url_template(self) -> str:
+        return self._get_attr("urlTemplate")
 
-    @height.setter
-    def height(self, value: OptionalNumber):
-        self._set_attr("height", value)
+    @url_template.setter
+    def url_template(self, value: str):
+        self._set_attr("urlTemplate", value)
 
-    # thickness
+    # fallback_url
     @property
-    def thickness(self) -> OptionalNumber:
-        return self._get_attr("thickness", data_type="float")
+    def fallback_url(self) -> Optional[str]:
+        return self._get_attr("fallbackUrl")
 
-    @thickness.setter
-    def thickness(self, value: OptionalNumber):
-        self._set_attr("thickness", value)
+    @fallback_url.setter
+    def fallback_url(self, value: Optional[str]):
+        self._set_attr("fallbackUrl", value)
 
-    # color
+    # tile_size
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def tile_size(self) -> OptionalNumber:
+        return self._get_attr("tileSize", data_type="float")
 
-    @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    @tile_size.setter
+    def tile_size(self, value: OptionalNumber):
+        self._set_attr("tileSize", value)
 
-    # leading_indent
+    # min_native_zoom
     @property
-    def leading_indent(self) -> OptionalNumber:
-        return self._get_attr("leadingIndent", data_type="float")
+    def min_native_zoom(self) -> Optional[int]:
+        return self._get_attr("minNativeZoom", data_type="int")
 
-    @leading_indent.setter
-    def leading_indent(self, value: OptionalNumber):
-        self._set_attr("leadingIndent", value)
+    @min_native_zoom.setter
+    def min_native_zoom(self, value: Optional[int]):
+        self._set_attr("minNativeZoom", value)
 
-    # trailing_indent
+    # max_native_zoom
     @property
-    def trailing_indent(self) -> OptionalNumber:
-        return self._get_attr("trailingIndent", data_type="float")
+    def max_native_zoom(self) -> Optional[int]:
+        return self._get_attr("maxNativeZoom", data_type="int")
 
-    @trailing_indent.setter
-    def trailing_indent(self, value: OptionalNumber):
-        self._set_attr("trailingIndent", value)
+    @max_native_zoom.setter
+    def max_native_zoom(self, value: Optional[int]):
+        self._set_attr("maxNativeZoom", value)
+
+    # zoom_reverse
+    @property
+    def zoom_reverse(self) -> Optional[bool]:
+        return self._get_attr("zoomReverse", data_type="bool")
+
+    @zoom_reverse.setter
+    def zoom_reverse(self, value: Optional[bool]):
+        self._set_attr("zoomReverse", value)
+
+    # zoom_offset
+    @property
+    def zoom_offset(self) -> OptionalNumber:
+        return self._get_attr("zoomOffset", data_type="float")
+
+    @zoom_offset.setter
+    def zoom_offset(self, value: OptionalNumber):
+        self._set_attr("zoomOffset", value)
+
+    # keep_buffer
+    @property
+    def keep_buffer(self) -> Optional[int]:
+        return self._get_attr("keepBuffer", data_type="int")
+
+    @keep_buffer.setter
+    def keep_buffer(self, value: Optional[int]):
+        self._set_attr("keepBuffer", value)
+
+    # pan_buffer
+    @property
+    def pan_buffer(self) -> Optional[int]:
+        return self._get_attr("panBuffer", data_type="int")
+
+    @pan_buffer.setter
+    def pan_buffer(self, value: Optional[int]):
+        self._set_attr("panBuffer", value)
+
+    # tms
+    @property
+    def tms(self) -> Optional[bool]:
+        return self._get_attr("tms", data_type="bool")
+
+    @tms.setter
+    def tms(self, value: Optional[bool]):
+        self._set_attr("tms", value)
+
+    # initial_rotation
+    @property
+    def initial_rotation(self) -> OptionalNumber:
+        return self._get_attr("initialRotation", data_type="float")
+
+    @initial_rotation.setter
+    def initial_rotation(self, value: OptionalNumber):
+        self._set_attr("initialRotation", value)
+
+    # initial_zoom
+    @property
+    def initial_zoom(self) -> OptionalNumber:
+        return self._get_attr("initialZoom", data_type="float")
+
+    @initial_zoom.setter
+    def initial_zoom(self, value: OptionalNumber):
+        self._set_attr("initialZoom", value)
+
+    # keep_alive
+    @property
+    def keep_alive(self) -> Optional[bool]:
+        return self._get_attr("keepAlive", data_type="bool")
+
+    @keep_alive.setter
+    def keep_alive(self, value: Optional[bool]):
+        self._set_attr("keepAlive", value)
+
+    # max_zoom
+    @property
+    def max_zoom(self) -> OptionalNumber:
+        return self._get_attr("maxZoom", data_type="float")
+
+    @max_zoom.setter
+    def max_zoom(self, value: OptionalNumber):
+        self._set_attr("maxZoom", value)
+
+    # min_zoom
+    @property
+    def min_zoom(self) -> OptionalNumber:
+        return self._get_attr("minZoom", data_type="float")
+
+    @min_zoom.setter
+    def min_zoom(self, value: OptionalNumber):
+        self._set_attr("minZoom", value)
