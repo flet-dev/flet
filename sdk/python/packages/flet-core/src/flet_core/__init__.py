@@ -162,7 +162,12 @@ from flet_core.image import Image
 from flet_core.list_tile import ListTile, ListTileTitleAlignment, ListTileStyle
 from flet_core.list_view import ListView
 from flet_core.lottie import Lottie
-from flet_core.map import Map, MapOption
+from flet_core.map import Map, MapOption, MapLatitudeLongitude
+from flet_core.map_circle_layer import MapCircleLayer, MapCircle
+from flet_core.map_marker_layer import MapMarkerLayer, MapMarker
+from flet_core.map_rich_attribution import MapRichAttribution, MapAttributionAlignment
+from flet_core.map_simple_attribution import MapSimpleAttribution
+from flet_core.map_text_source_attribution import MapTextSourceAttribution
 from flet_core.map_tile_layer import MapTileLayer
 from flet_core.margin import Margin
 from flet_core.markdown import Markdown, MarkdownExtensionSet
@@ -218,7 +223,6 @@ from flet_core.radio_group import RadioGroup
 from flet_core.range_slider import RangeSlider
 from flet_core.ref import Ref
 from flet_core.responsive_row import ResponsiveRow
-from flet_core.rich_attribution import RichAttribution, RichAttributionAlignment
 from flet_core.rive import Rive
 from flet_core.row import Row
 from flet_core.safe_area import SafeArea
@@ -240,7 +244,6 @@ from flet_core.tabs import Tab, Tabs
 from flet_core.template_route import TemplateRoute
 from flet_core.text import Text, TextOverflow, TextThemeStyle
 from flet_core.text_button import TextButton
-from flet_core.text_source_attribution import TextSourceAttribution
 from flet_core.text_span import TextSpan
 from flet_core.text_style import TextDecoration, TextDecorationStyle, TextStyle
 from flet_core.textfield import (
