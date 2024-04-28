@@ -1,17 +1,17 @@
-from typing import Any, Optional, List
+from typing import Any, Optional
 
-from flet_core.text_style import TextStyle
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
 
 
-class TextSourceAttribution(Control):
+class MapTextSourceAttribution(Control):
     """
     TBA
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/textsourceattribution
+    Online docs: https://flet.dev/docs/controls/maptextsourceattribution
     """
 
     def __init__(
@@ -43,7 +43,7 @@ class TextSourceAttribution(Control):
         self.on_click = on_click
 
     def _get_control_name(self):
-        return "textsourceattribution"
+        return "maptextsourceattribution"
 
     def before_update(self):
         super().before_update()

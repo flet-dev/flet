@@ -29,6 +29,6 @@ class TextSourceAttributionControl extends StatelessWidget {
       prependCopyright: control.attrBool("prependCopyright", true)!,
     );
 
-    return constrainedControl(context, text, parent, control);
+    return constrainedControl(context, const Placeholder(), parent, control);
   }
 }
