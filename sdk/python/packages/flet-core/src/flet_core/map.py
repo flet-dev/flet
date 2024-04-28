@@ -1,11 +1,12 @@
+import dataclasses
 from dataclasses import dataclass, field
 from typing import Any, Optional, Union, List, Tuple
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
+from flet_core.map_rich_attribution import MapRichAttribution
 from flet_core.map_tile_layer import MapTileLayer
 from flet_core.ref import Ref
-from flet_core.rich_attribution import RichAttribution
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -15,13 +16,19 @@ from flet_core.types import (
 )
 
 
+@dataclasses.dataclass
+class MapLatitudeLongitude:
+    latitude: Union[float, int]
+    longitude: Union[float, int]
+
+
 @dataclass
 class MapOption:
     apply_pointer_translucency_to_layers: Optional[bool] = field(default=None)
     bgcolor: Optional[str] = field(default=None)
     initial_center: Optional[Tuple[Union[int, float], Union[int, float]]] = field(
         default=None
-    )
+    )  # todo: change type to MapLatitudeLongitude
     initial_rotation: OptionalNumber = field(default=None)
     initial_zoom: OptionalNumber = field(default=None)
     keep_alive: Optional[bool] = field(default=None)
@@ -40,7 +47,7 @@ class Map(ConstrainedControl):
 
     def __init__(
         self,
-        layers: List[Union[MapTileLayer, RichAttribution]] = None,
+        layers: List[Union[MapTileLayer, MapRichAttribution]] = None,
         option: Optional[MapOption] = None,
         #
         # ConstrainedControl
@@ -130,9 +137,9 @@ class Map(ConstrainedControl):
 
     # layers
     @property
-    def layers(self) -> List[Union[MapTileLayer, RichAttribution]]:
+    def layers(self) -> List[Union[MapTileLayer, MapRichAttribution]]:
         return self.__layers
 
     @layers.setter
-    def layers(self, value: List[Union[MapTileLayer, RichAttribution]]):
+    def layers(self, value: List[Union[MapTileLayer, MapRichAttribution]]):
         self.__layers = value

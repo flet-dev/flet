@@ -2,28 +2,28 @@ from enum import Enum
 from typing import Any, Optional, List
 
 from flet_core.control import Control, OptionalNumber
+from flet_core.map_text_source_attribution import MapTextSourceAttribution
 from flet_core.ref import Ref
-from flet_core.text_source_attribution import TextSourceAttribution
 
 
-class RichAttributionAlignment(Enum):
+class MapAttributionAlignment(Enum):
     BOTTOM_LEFT = "bottomLeft"
     BOTTOM_RIGHT = "bottomRight"
 
 
-class RichAttribution(Control):
+class MapRichAttribution(Control):
     """
     TBA
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/richattribution
+    Online docs: https://flet.dev/docs/controls/maprichattribution
     """
 
     def __init__(
         self,
-        attributions: List[TextSourceAttribution] = None,
-        alignment: Optional[RichAttributionAlignment] = None,
+        attributions: List[MapTextSourceAttribution] = None,
+        alignment: Optional[MapAttributionAlignment] = None,
         popup_bgcolor: Optional[str] = None,
         permanent_height: OptionalNumber = None,
         show_flutter_map_attribution: Optional[bool] = None,
@@ -51,7 +51,7 @@ class RichAttribution(Control):
         self.show_flutter_map_attribution = show_flutter_map_attribution
 
     def _get_control_name(self):
-        return "richattribution"
+        return "maprichattribution"
 
     def _get_children(self):
         return self.attributions
@@ -67,13 +67,13 @@ class RichAttribution(Control):
 
     # alignment
     @property
-    def alignment(self) -> Optional[RichAttributionAlignment]:
+    def alignment(self) -> Optional[MapAttributionAlignment]:
         return self.__alignment
 
     @alignment.setter
-    def alignment(self, value: Optional[RichAttributionAlignment]):
+    def alignment(self, value: Optional[MapAttributionAlignment]):
         self.__alignment = value
-        self._set_enum_attr("alignment", value, RichAttributionAlignment)
+        self._set_enum_attr("alignment", value, MapAttributionAlignment)
 
     # show_flutter_map_attribution
     @property
@@ -97,9 +97,9 @@ class RichAttribution(Control):
 
     # attributions
     @property
-    def attributions(self) -> List[TextSourceAttribution]:
+    def attributions(self) -> List[MapTextSourceAttribution]:
         return self.__attributions
 
     @attributions.setter
-    def attributions(self, value: List[TextSourceAttribution]):
+    def attributions(self, value: List[MapTextSourceAttribution]):
         self.__attributions = value
