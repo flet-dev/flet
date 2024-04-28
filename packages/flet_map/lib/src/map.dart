@@ -36,13 +36,14 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
       "maprichattribution",
       "mapsimpleattribution"
     ];
-    MapOptions options = parseMapOptions(widget.control, "option", context);
+    MapOptions configuration =
+        parseMapOptions(widget.control, "configuration", context);
     var ctrls = widget.children
         .where((c) => c.isVisible && (acceptedChildrenTypes.contains(c.type)))
         .toList();
 
     Widget map = FlutterMap(
-      options: options,
+      options: configuration,
       children: ctrls
           .map((c) => createControl(widget.control, c.id, disabled))
           .toList(),

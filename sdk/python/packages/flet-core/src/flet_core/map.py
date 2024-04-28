@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from typing import Any, Optional, Union, List, Tuple
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
+from flet_core.control import OptionalNumber, Control
 from flet_core.map_rich_attribution import MapRichAttribution
 from flet_core.map_tile_layer import MapTileLayer
 from flet_core.ref import Ref
@@ -23,7 +23,7 @@ class MapLatitudeLongitude:
 
 
 @dataclass
-class MapOption:
+class MapConfiguration:
     apply_pointer_translucency_to_layers: Optional[bool] = field(default=None)
     bgcolor: Optional[str] = field(default=None)
     initial_center: Optional[Tuple[Union[int, float], Union[int, float]]] = field(
@@ -47,8 +47,8 @@ class Map(ConstrainedControl):
 
     def __init__(
         self,
-        layers: List[Union[MapTileLayer, MapRichAttribution]] = None,
-        option: Optional[MapOption] = None,
+        layers: List[Control] = None,
+        configuration: Optional[MapConfiguration] = None,
         #
         # ConstrainedControl
         #
@@ -112,7 +112,7 @@ class Map(ConstrainedControl):
             data=data,
         )
 
-        self.option = option
+        self.configuration = configuration
         self.layers = layers
 
     def _get_control_name(self):
@@ -123,17 +123,17 @@ class Map(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        if isinstance(self.__option, MapOption):
-            self._set_attr_json("option", self.__option)
+        if isinstance(self.__configuration, MapConfiguration):
+            self._set_attr_json("configuration", self.__configuration)
 
-    # option
+    # configuration
     @property
-    def option(self) -> Optional[MapOption]:
-        return self.__option
+    def configuration(self) -> Optional[MapConfiguration]:
+        return self.__configuration
 
-    @option.setter
-    def option(self, value: Optional[MapOption]):
-        self.__option = value
+    @configuration.setter
+    def configuration(self, value: Optional[MapConfiguration]):
+        self.__configuration = value
 
     # layers
     @property

@@ -162,7 +162,7 @@ from flet_core.image import Image
 from flet_core.list_tile import ListTile, ListTileTitleAlignment, ListTileStyle
 from flet_core.list_view import ListView
 from flet_core.lottie import Lottie
-from flet_core.map import Map, MapOption, MapLatitudeLongitude
+from flet_core.map import Map, MapConfiguration, MapLatitudeLongitude
 from flet_core.map_circle_layer import MapCircleLayer, MapCircle
 from flet_core.map_marker_layer import MapMarkerLayer, MapMarker
 from flet_core.map_rich_attribution import MapRichAttribution, MapAttributionAlignment
