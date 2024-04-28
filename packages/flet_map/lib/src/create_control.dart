@@ -1,8 +1,10 @@
 import 'package:flet/flet.dart';
 
+import 'circle_layer.dart';
 import 'map.dart';
+import 'marker_layer.dart';
 import 'rich_attribution.dart';
-import 'text_source_attribution.dart';
+import 'simple_attribution.dart';
 import 'tile_layer.dart';
 
 CreateControlFactory createControl = (CreateControlArgs args) {
@@ -15,7 +17,7 @@ CreateControlFactory createControl = (CreateControlArgs args) {
         parentDisabled: args.parentDisabled,
         backend: args.backend,
       );
-    case "richattribution":
+    case "maprichattribution":
       return RichAttributionControl(
         parent: args.parent,
         control: args.control,
@@ -23,16 +25,34 @@ CreateControlFactory createControl = (CreateControlArgs args) {
         parentDisabled: args.parentDisabled,
         backend: args.backend,
       );
-    case "textsourceattribution":
-      return TextSourceAttributionControl(
-          parent: args.parent,
-          control: args.control,
-          nextChild: args.nextChild,
-          backend: args.backend);
+    case "mapsimpleattribution":
+      return SimpleAttributionControl(
+        parent: args.parent,
+        control: args.control,
+        children: args.children,
+        parentDisabled: args.parentDisabled,
+        backend: args.backend,
+      );
     case "maptilelayer":
       return TileLayerControl(
         parent: args.parent,
         control: args.control,
+        parentDisabled: args.parentDisabled,
+        backend: args.backend,
+      );
+    case "mapmarkerlayer":
+      return MarkerLayerControl(
+        parent: args.parent,
+        control: args.control,
+        children: args.children,
+        parentDisabled: args.parentDisabled,
+        backend: args.backend,
+      );
+    case "mapcirclelayer":
+      return CircleLayerControl(
+        parent: args.parent,
+        control: args.control,
+        children: args.children,
         parentDisabled: args.parentDisabled,
         backend: args.backend,
       );

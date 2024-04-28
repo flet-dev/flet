@@ -28,7 +28,8 @@ MapOptions mapOptionsFromJSON(dynamic json, ThemeData theme) {
     // crs: ,
     // initialCameraFit: ,
     initialCenter: json["initial_center"] != null
-        ? LatLng(json["initial_center"][0], json["initial_center"][1])
+        ? LatLng(parseDoubleFromJson(json["initial_center"][0], 50.5)!,
+            parseDoubleFromJson(json["initial_center"][1], 30.51)!)
         : const LatLng(50.5, 30.51),
     initialRotation: parseDoubleFromJson(json["initial_rotation"], 0.0)!,
     initialZoom: parseDoubleFromJson(json["initial_zoom"], 13.0)!,
@@ -79,4 +80,18 @@ List<Widget> mapChildrenFromJSON(dynamic json) {
     m = json.map((e) => tileLayerFromJSON(e)).whereNotNull().toList();
   }
   return m;
+}
+
+LatLng? parseLatLng(Control control, String propName, [LatLng? defValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return defValue;
+  }
+
+  final j1 = json.decode(v);
+  return latLngFromJson(j1);
+}
+
+LatLng latLngFromJson(Map<String, dynamic> json) {
+  return LatLng(parseDouble(json['latitude']), parseDouble(json['longitude']));
 }

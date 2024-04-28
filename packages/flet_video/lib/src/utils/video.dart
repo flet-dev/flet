@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -19,11 +20,7 @@ List<Media> parseVideoMedia(Control control, String propName) {
 List<Media> videoMediasFromJSON(dynamic json) {
   List<Media> m = [];
   if (json is List) {
-    json.map((e) => videoMediaFromJSON(e)).toList().forEach((e) {
-      if (e != null) {
-        m.add(e);
-      }
-    });
+    m = json.map((e) => videoMediaFromJSON(e)).whereNotNull().toList();
   } else {
     if (videoMediaFromJSON(json) != null) {
       m.add(videoMediaFromJSON(json)!);

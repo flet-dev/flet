@@ -28,13 +28,19 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("Map build: ${widget.control.id} (${widget.control.hashCode})");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    MapOptions options = parseMapOptions(widget.control, "options", context);
+
+    List<String> acceptedChildrenTypes = [
+      "mapcirclelayer",
+      "maptilelayer",
+      "mapmarkerlayer",
+      "maprichattribution",
+      "mapsimpleattribution"
+    ];
+    MapOptions options = parseMapOptions(widget.control, "option", context);
     var ctrls = widget.children
-        .where((c) =>
-            c.isVisible &&
-            (c.type == "richattribution" || c.type == "maptilelayer"))
+        .where((c) => c.isVisible && (acceptedChildrenTypes.contains(c.type)))
         .toList();
-    debugPrint("Map build: ${ctrls.length} children");
+
     Widget map = FlutterMap(
       options: options,
       children: ctrls
@@ -45,25 +51,3 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
     return constrainedControl(context, map, widget.parent, widget.control);
   }
 }
-
-/*
-FlutterMap(
-    options: MapOptions(
-      initialCenter: LatLng(51.509364, -0.128928),
-      initialZoom: 9.2,
-    ),
-    children: [
-      TileLayer(
-        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-        userAgentPackageName: 'com.example.app',
-      ),
-      RichAttributionWidget(
-        attributions: [
-          TextSourceAttribution(
-            'OpenStreetMap contributors',
-            onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-          ),
-        ],
-      ),
-    ],
-  );*/

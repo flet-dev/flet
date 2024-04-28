@@ -177,39 +177,30 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
   }
 
   return TextStyle(
-      fontSize: json["size"] != null ? parseDouble(json["size"]) : null,
+      fontSize: parseDoubleFromJson(json["size"]),
       fontWeight: fontWeight != null ? getFontWeight(fontWeight) : null,
       fontStyle: (json["italic"] != null)
           ? (parseBool(json["italic"]) ? FontStyle.italic : null)
           : null,
       fontFamily: json["font_family"],
       fontVariations: variations,
-      height: json["height"] != null ? parseDouble(json["height"]) : null,
+      height: parseDoubleFromJson(json["height"]),
       decoration:
           decorations.isNotEmpty ? TextDecoration.combine(decorations) : null,
       decorationStyle: json["decoration_style"] != null
           ? TextDecorationStyle.values.firstWhereOrNull((v) =>
               v.name.toLowerCase() == json["decoration_style"].toLowerCase())
           : null,
-      decorationColor: json["decoration_color"] != null
-          ? HexColor.fromString(theme, json["decoration_color"] ?? "")
-          : null,
-      decorationThickness: json["decoration_thickness"] != null
-          ? parseDouble(json["decoration_thickness"])
-          : null,
-      color: json["color"] != null
-          ? HexColor.fromString(theme, json["color"] ?? "")
-          : null,
-      backgroundColor: json["bgcolor"] != null
-          ? HexColor.fromString(theme, json["bgcolor"] ?? "")
-          : null,
+      decorationColor:
+          parseColorFromJson(theme, json["decoration_color"] ?? ""),
+      decorationThickness: parseDoubleFromJson(json["decoration_thickness"]),
+      color: parseColorFromJson(theme, json["color"]),
+      backgroundColor: parseColorFromJson(theme, json["bgcolor"] ?? ""),
       shadows: json["shadow"] != null
           ? boxShadowsFromJSON(theme, json["shadow"])
           : null,
       foreground: json["foreground"] != null
           ? paintFromJSON(theme, json["foreground"])
           : null,
-      letterSpacing: json['letter_spacing'] != null
-          ? parseDouble(json['letter_spacing'])
-          : null);
+      letterSpacing: parseDoubleFromJson(json['letter_spacing']));
 }
