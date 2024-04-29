@@ -1,7 +1,7 @@
 from typing import Any, Optional, List, Union
 
 from flet_core.control import Control, OptionalNumber
-from flet_core.map import MapLatitudeLongitude
+from flet_core.map.map import MapLatitudeLongitude
 from flet_core.ref import Ref
 
 

@@ -31,6 +31,8 @@ class TileLayer(Control):
         keep_alive: Optional[bool] = None,
         max_zoom: OptionalNumber = None,
         min_zoom: OptionalNumber = None,
+        error_image_src: Optional[str] = None,
+        on_image_error=None,
         #
         # Control
         #
@@ -63,6 +65,8 @@ class TileLayer(Control):
         self.keep_alive = keep_alive
         self.max_zoom = max_zoom
         self.min_zoom = min_zoom
+        self.error_image_src = error_image_src
+        self.on_image_error = on_image_error
 
     def _get_control_name(self):
         return "maptilelayer"
@@ -201,3 +205,21 @@ class TileLayer(Control):
     @min_zoom.setter
     def min_zoom(self, value: OptionalNumber):
         self._set_attr("minZoom", value)
+
+    # error_image_src
+    @property
+    def error_image_src(self) -> Optional[str]:
+        return self._get_attr("errorImageSrc")
+
+    @error_image_src.setter
+    def error_image_src(self, value: Optional[str]):
+        self._set_attr("errorImageSrc", value)
+
+    # on_image_error
+    @property
+    def on_image_error(self):
+        return self._get_event_handler("imageError")
+
+    @on_image_error.setter
+    def on_image_error(self, handler):
+        self._add_event_handler("imageError", handler)

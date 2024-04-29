@@ -6,7 +6,7 @@ from flet_core.map.text_source_attribution import TextSourceAttribution
 from flet_core.ref import Ref
 
 
-class MapAttributionAlignment(Enum):
+class AttributionAlignment(Enum):
     BOTTOM_LEFT = "bottomLeft"
     BOTTOM_RIGHT = "bottomRight"
 
@@ -23,7 +23,7 @@ class RichAttribution(Control):
     def __init__(
         self,
         attributions: List[TextSourceAttribution] = None,
-        alignment: Optional[MapAttributionAlignment] = None,
+        alignment: Optional[AttributionAlignment] = None,
         popup_bgcolor: Optional[str] = None,
         permanent_height: OptionalNumber = None,
         show_flutter_map_attribution: Optional[bool] = None,
@@ -67,13 +67,13 @@ class RichAttribution(Control):
 
     # alignment
     @property
-    def alignment(self) -> Optional[MapAttributionAlignment]:
+    def alignment(self) -> Optional[AttributionAlignment]:
         return self.__alignment
 
     @alignment.setter
-    def alignment(self, value: Optional[MapAttributionAlignment]):
+    def alignment(self, value: Optional[AttributionAlignment]):
         self.__alignment = value
-        self._set_enum_attr("alignment", value, MapAttributionAlignment)
+        self._set_enum_attr("alignment", value, AttributionAlignment)
 
     # show_flutter_map_attribution
     @property
