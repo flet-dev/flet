@@ -5,7 +5,7 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 
 
-class MapTextSourceAttribution(Control):
+class TextSourceAttribution(Control):
     """
     TBA
 

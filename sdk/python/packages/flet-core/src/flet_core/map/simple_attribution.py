@@ -5,7 +5,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
 
-class MapSimpleAttribution(Control):
+class SimpleAttribution(Control):
     """
     TBA
 

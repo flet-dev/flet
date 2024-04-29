@@ -5,7 +5,7 @@ from flet_core.map import MapLatitudeLongitude
 from flet_core.ref import Ref
 
 
-class MapCircle(Control):
+class Circle(Control):
     """
     TBA
 
@@ -108,7 +108,7 @@ class MapCircle(Control):
         self.__point = value
 
 
-class MapCircleLayer(Control):
+class CircleLayer(Control):
     """
     TBA
 
@@ -120,7 +120,7 @@ class MapCircleLayer(Control):
 
     def __init__(
         self,
-        circles: List[MapCircle] = None,
+        circles: List[Circle] = None,
         #
         # Control
         #
@@ -148,9 +148,9 @@ class MapCircleLayer(Control):
 
     # circles
     @property
-    def circles(self) -> List[MapCircle]:
+    def circles(self) -> List[Circle]:
         return self.__circles
 
     @circles.setter
-    def circles(self, value: List[MapCircle]):
+    def circles(self, value: List[Circle]):
         self.__circles = value

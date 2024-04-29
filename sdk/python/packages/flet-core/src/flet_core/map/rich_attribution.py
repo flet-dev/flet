@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Any, Optional, List
 
 from flet_core.control import Control, OptionalNumber
-from flet_core.map_text_source_attribution import MapTextSourceAttribution
+from flet_core.map.text_source_attribution import TextSourceAttribution
 from flet_core.ref import Ref
 
 
@@ -11,7 +11,7 @@ class MapAttributionAlignment(Enum):
     BOTTOM_RIGHT = "bottomRight"
 
 
-class MapRichAttribution(Control):
+class RichAttribution(Control):
     """
     TBA
 
@@ -22,7 +22,7 @@ class MapRichAttribution(Control):
 
     def __init__(
         self,
-        attributions: List[MapTextSourceAttribution] = None,
+        attributions: List[TextSourceAttribution] = None,
         alignment: Optional[MapAttributionAlignment] = None,
         popup_bgcolor: Optional[str] = None,
         permanent_height: OptionalNumber = None,
@@ -97,9 +97,9 @@ class MapRichAttribution(Control):
 
     # attributions
     @property
-    def attributions(self) -> List[MapTextSourceAttribution]:
+    def attributions(self) -> List[TextSourceAttribution]:
         return self.__attributions
 
     @attributions.setter
-    def attributions(self, value: List[MapTextSourceAttribution]):
+    def attributions(self, value: List[TextSourceAttribution]):
         self.__attributions = value

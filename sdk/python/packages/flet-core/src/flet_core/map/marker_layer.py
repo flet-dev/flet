@@ -6,7 +6,7 @@ from flet_core.map import MapLatitudeLongitude
 from flet_core.ref import Ref
 
 
-class MapMarker(Control):
+class Marker(Control):
     """
     TBA
 
@@ -114,7 +114,7 @@ class MapMarker(Control):
         self.__point = value
 
 
-class MapMarkerLayer(Control):
+class MarkerLayer(Control):
     """
     TBA
 
@@ -126,7 +126,7 @@ class MapMarkerLayer(Control):
 
     def __init__(
         self,
-        markers: List[MapMarker] = None,
+        markers: List[Marker] = None,
         alignment: Optional[Alignment] = None,
         rotate: Optional[bool] = None,
         #
@@ -171,11 +171,11 @@ class MapMarkerLayer(Control):
 
     # markers
     @property
-    def markers(self) -> List[MapMarker]:
+    def markers(self) -> List[Marker]:
         return self.__markers
 
     @markers.setter
-    def markers(self, value: List[MapMarker]):
+    def markers(self, value: List[Marker]):
         self.__markers = value
 
     # rotate
