@@ -1,11 +1,8 @@
-import dataclasses
-from dataclasses import dataclass, field
-from typing import Any, Optional, Union, List, Tuple
+from typing import Any, Optional, Union, List
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber, Control
-from flet_core.map_rich_attribution import MapRichAttribution
-from flet_core.map_tile_layer import MapTileLayer
+from flet_core.map.map_configuration import MapConfiguration
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -14,26 +11,6 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
-
-
-@dataclasses.dataclass
-class MapLatitudeLongitude:
-    latitude: Union[float, int]
-    longitude: Union[float, int]
-
-
-@dataclass
-class MapConfiguration:
-    apply_pointer_translucency_to_layers: Optional[bool] = field(default=None)
-    bgcolor: Optional[str] = field(default=None)
-    initial_center: Optional[Tuple[Union[int, float], Union[int, float]]] = field(
-        default=None
-    )  # todo: change type to MapLatitudeLongitude
-    initial_rotation: OptionalNumber = field(default=None)
-    initial_zoom: OptionalNumber = field(default=None)
-    keep_alive: Optional[bool] = field(default=None)
-    max_zoom: OptionalNumber = field(default=None)
-    min_zoom: OptionalNumber = field(default=None)
 
 
 class Map(ConstrainedControl):
@@ -80,7 +57,6 @@ class Map(ConstrainedControl):
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
-
         ConstrainedControl.__init__(
             self,
             ref=ref,
@@ -119,12 +95,7 @@ class Map(ConstrainedControl):
         return "map"
 
     def _get_children(self):
-        return self.layers
-
-    def before_update(self):
-        super().before_update()
-        if isinstance(self.__configuration, MapConfiguration):
-            self._set_attr_json("configuration", self.__configuration)
+        return self.__layers + [self.__configuration]
 
     # configuration
     @property
@@ -137,9 +108,9 @@ class Map(ConstrainedControl):
 
     # layers
     @property
-    def layers(self) -> List[Union[MapTileLayer, MapRichAttribution]]:
+    def layers(self) -> List[Control]:
         return self.__layers
 
     @layers.setter
-    def layers(self, value: List[Union[MapTileLayer, MapRichAttribution]]):
+    def layers(self, value: List[Control]):
         self.__layers = value
