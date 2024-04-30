@@ -17,7 +17,7 @@ class Circle(Control):
     def __init__(
         self,
         radius: Union[int, float],
-        point: MapLatitudeLongitude,
+        location: MapLatitudeLongitude,
         color: Optional[str] = None,
         border_color: Optional[str] = None,
         border_stroke_width: OptionalNumber = None,
@@ -39,7 +39,7 @@ class Circle(Control):
             data=data,
         )
 
-        self.point = point
+        self.location = location
         self.color = color
         self.border_color = border_color
         self.border_stroke_width = border_stroke_width
@@ -51,7 +51,7 @@ class Circle(Control):
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("point", self.__point)
+        self._set_attr_json("location", self.__location)
 
     # use_radius_in_meter
     @property
@@ -98,14 +98,14 @@ class Circle(Control):
     def border_stroke_width(self, value: OptionalNumber):
         self._set_attr("borderStrokeWidth", value)
 
-    # point
+    # location
     @property
-    def point(self) -> MapLatitudeLongitude:
-        return self.__point
+    def location(self) -> MapLatitudeLongitude:
+        return self.__location
 
-    @point.setter
-    def point(self, value: MapLatitudeLongitude):
-        self.__point = value
+    @location.setter
+    def location(self, value: MapLatitudeLongitude):
+        self.__location = value
 
 
 class CircleLayer(Control):
@@ -145,6 +145,20 @@ class CircleLayer(Control):
 
     def _get_children(self):
         return self.__circles
+
+    def add(self, *circle: Circle):
+        self.__circles.extend(circle)
+        self.update()
+
+    def insert(self, at: int, *circles: Circle) -> None:
+        for i, circle in enumerate(circles, start=at):
+            self.__circles.insert(i, circle)
+        self.update()
+
+    def remove(self, *circles: Circle) -> None:
+        for circle in circles:
+            self.__circles.remove(circle)
+        self.update()
 
     # circles
     @property

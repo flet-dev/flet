@@ -51,7 +51,7 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
         d = json.encode(eventData);
       }
 
-      debugPrint("Map ${widget.control.id} $eventName");
+      // debugPrint("Map ${widget.control.id} $eventName");
       widget.backend.triggerControlEvent(ctrl.id, eventName, d);
     }
 

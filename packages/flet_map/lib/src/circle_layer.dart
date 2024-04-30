@@ -31,7 +31,7 @@ class CircleLayerControl extends StatelessWidget with FletStoreMixin {
           .where((c) => c.control.type == "mapcircle" && c.control.isVisible)
           .map((circle) {
         return CircleMarker(
-            point: parseLatLng(circle.control, "point")!,
+            point: parseLatLng(circle.control, "location")!,
             color: circle.control
                 .attrColor("color", context, const Color(0xFF00FF00))!,
             borderColor: circle.control

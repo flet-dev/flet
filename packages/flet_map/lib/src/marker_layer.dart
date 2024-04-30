@@ -31,7 +31,7 @@ class MarkerLayerControl extends StatelessWidget with FletStoreMixin {
           .where((c) => c.control.type == "mapmarker" && c.control.isVisible)
           .map((marker) {
         return Marker(
-            point: parseLatLng(marker.control, "point")!,
+            point: parseLatLng(marker.control, "location")!,
             rotate: marker.control.attrBool("rotate"),
             height: marker.control.attrDouble("height", 30)!,
             width: marker.control.attrDouble("width", 30)!,

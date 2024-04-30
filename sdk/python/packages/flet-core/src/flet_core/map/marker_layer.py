@@ -19,7 +19,7 @@ class Marker(Control):
     def __init__(
         self,
         content: Control,
-        point: MapLatitudeLongitude,
+        location: MapLatitudeLongitude,
         rotate: Optional[bool] = None,
         height: OptionalNumber = None,
         width: OptionalNumber = None,
@@ -42,7 +42,7 @@ class Marker(Control):
         )
 
         self.content = content
-        self.point = point
+        self.location = location
         self.rotate = rotate
         self.height = height
         self.width = width
@@ -57,7 +57,7 @@ class Marker(Control):
     def before_update(self):
         super().before_update()
         self._set_attr_json("alignment", self.__alignment)
-        self._set_attr_json("point", self.__point)
+        self._set_attr_json("location", self.__location)
 
     # content
     @property
@@ -104,14 +104,14 @@ class Marker(Control):
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
 
-    # point
+    # location
     @property
-    def point(self) -> MapLatitudeLongitude:
-        return self.__point
+    def location(self) -> MapLatitudeLongitude:
+        return self.__location
 
-    @point.setter
-    def point(self, value: MapLatitudeLongitude):
-        self.__point = value
+    @location.setter
+    def location(self, value: MapLatitudeLongitude):
+        self.__location = value
 
 
 class MarkerLayer(Control):
@@ -159,6 +159,20 @@ class MarkerLayer(Control):
     def before_update(self):
         super().before_update()
         self._set_attr_json("alignment", self.__alignment)
+
+    def add(self, *marker: Marker):
+        self.__markers.extend(marker)
+        self.update()
+
+    def insert(self, at: int, *markers: Marker) -> None:
+        for i, marker in enumerate(markers, start=at):
+            self.__markers.insert(i, marker)
+        self.update()
+
+    def remove(self, *markers: Marker) -> None:
+        for marker in markers:
+            self.__markers.remove(marker)
+        self.update()
 
     # alignment
     @property
