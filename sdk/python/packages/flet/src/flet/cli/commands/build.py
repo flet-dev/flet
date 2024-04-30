@@ -12,15 +12,14 @@ import urllib.request
 from pathlib import Path
 from typing import Optional
 
+import flet.version
 import yaml
+from flet.cli.commands.base import BaseCommand
+from flet.version import update_version
 from flet_core.utils import random_string, slugify
 from flet_runtime.utils import calculate_file_hash, copy_tree, is_windows
 from packaging import version
 from rich import print
-
-import flet.version
-from flet.cli.commands.base import BaseCommand
-from flet.version import update_version
 
 if is_windows():
     from ctypes import windll
@@ -397,7 +396,7 @@ class Command(BaseCommand):
 
         # create Flutter project from a template
         print(
-            f"Creating Flutter bootstrap project from {template_url} with ref {template_ref} ... ",
+            f"Creating Flutter bootstrap project from {template_url} with ref {template_ref}...",
             end="",
         )
         try:
