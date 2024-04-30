@@ -1,5 +1,6 @@
 import dataclasses
 import json
+from enum import Enum
 from typing import Optional, Union
 
 from flet_core import ControlEvent
@@ -197,10 +198,32 @@ class TapEvent(ControlEvent):
         self.location: MapLatitudeLongitude = MapLatitudeLongitude(lat, long)
 
 
+class MapEventSource(Enum):
+    MAP_CONTROLLER = "mapController"
+    TAP = "tap"
+    SECONDARY_TAP = "secondaryTap"
+    LONG_PRESS = "longPress"
+    DOUBLE_TAP = "doubleTap"
+    DOUBLE_TAP_HOLD = "doubleTapHold"
+    DRAG_START = "dragStart"
+    ON_DRAG = "onDrag"
+    DRAG_END = "dragEnd"
+    MULTI_FINGER_GESTURE_START = "multiFingerGestureStart"
+    ON_MULTI_FINGER = "onMultiFinger"
+    MULTI_FINGER_GESTURE_END = "multiFingerEnd"
+    FLING_ANIMATION_CONTROLLER = "flingAnimationController"
+    DOUBLE_TAP_ZOOM_ANIMATION_CONTROLLER = "doubleTapZoomAnimationController"
+    INTERACTIVE_FLAGS_CHANGED = "interactiveFlagsChanged"
+    FIT_CAMERA = "fitCamera"
+    CUSTOM = "custom"
+    SCROLL_WHEEL = "scrollWheel"
+    NON_ROTATED_SIZE_CHANGE = "nonRotatedSizeChange"
+    CURSOR_KEYBOARD_ROTATION = "cursorKeyboardRotation"
+
+
 class MapEvent(ControlEvent):
-    def __init__(self, source, center_lat, center_long, zoom) -> None:
-        self.source: str = source
-        self.center: MapLatitudeLongitude = MapLatitudeLongitude(
-            center_lat, center_long
-        )
+    def __init__(self, src, c_lat, c_long, zoom, rot) -> None:
+        self.source: MapEventSource = MapEventSource(src)
+        self.center: MapLatitudeLongitude = MapLatitudeLongitude(c_lat, c_long)
         self.zoom: float = zoom
+        self.rotation: float = rot

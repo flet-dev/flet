@@ -116,10 +116,11 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
           onMapEvent: onMapEvent
               ? (MapEvent e) {
                   triggerEvent(config.control, "event", {
-                    "source": e.source.name,
-                    "center_lat": e.camera.center.latitude,
-                    "center_long": e.camera.center.longitude,
+                    "src": e.source.name,
+                    "c_lat": e.camera.center.latitude,
+                    "c_long": e.camera.center.longitude,
                     "zoom": e.camera.zoom,
+                    "rot": e.camera.rotation,
                   });
                 }
               : null,
