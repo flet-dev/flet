@@ -137,7 +137,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     @selected_index.setter
     def selected_index(self, value: Optional[int]):
-        if value is not None and (0 <= value <= len(self.controls) - 1):
+        if value is not None and not (0 <= value < len(self.controls)):
             raise IndexError("selected_index out of range")
         self._set_attr("selectedIndex", value)
 

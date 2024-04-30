@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
-import 'package:flet/src/controls/semantics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -17,6 +16,7 @@ import '../utils/theme.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
+import 'auto_complete.dart';
 import 'badge.dart';
 import 'banner.dart';
 import 'barchart.dart';
@@ -96,6 +96,7 @@ import 'search_anchor.dart';
 import 'segmented_button.dart';
 import 'selection_area.dart';
 import 'semantics.dart';
+import 'semantics_service.dart';
 import 'shader_mask.dart';
 import 'shake_detector.dart';
 import 'slider.dart';
@@ -700,6 +701,12 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "autocomplete":
+      return AutoCompleteControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
           backend: backend);
     case "textfield":
       return TextFieldControl(
