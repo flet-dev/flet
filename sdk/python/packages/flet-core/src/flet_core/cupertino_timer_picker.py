@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -33,6 +34,7 @@ class CupertinoTimerPicker(ConstrainedControl):
     def __init__(
         self,
         value: Optional[int] = None,
+        alignment: Optional[Alignment] = None,
         second_interval: OptionalNumber = None,
         minute_interval: OptionalNumber = None,
         mode: Optional[CupertinoTimerPickerMode] = None,
@@ -102,6 +104,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         )
 
         self.value = value
+        self.alignment = alignment
         self.mode = mode
         self.bgcolor = bgcolor
         self.on_change = on_change
@@ -112,6 +115,10 @@ class CupertinoTimerPicker(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinotimerpicker"
 
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("alignment", self.__alignment)
+
     # value
     @property
     def value(self) -> Optional[int]:
@@ -120,6 +127,15 @@ class CupertinoTimerPicker(ConstrainedControl):
     @value.setter
     def value(self, value: Optional[int]):
         self._set_attr("value", value)
+
+    # alignment
+    @property
+    def alignment(self) -> Optional[Alignment]:
+        return self.__alignment
+
+    @alignment.setter
+    def alignment(self, value: Optional[Alignment]):
+        self.__alignment = value
 
     # bgcolor
     @property
