@@ -10,15 +10,13 @@ class MarkerLayerControl extends StatelessWidget with FletStoreMixin {
   final Control control;
   final List<Control> children;
   final bool parentDisabled;
-  final FletControlBackend backend;
 
   const MarkerLayerControl(
       {super.key,
       required this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
-      required this.backend});
+      required this.parentDisabled});
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +38,11 @@ class MarkerLayerControl extends StatelessWidget with FletStoreMixin {
                 control, marker.control.childIds.first, parentDisabled));
       }).toList();
 
-      Widget layer = MarkerLayer(
+      return MarkerLayer(
         markers: markers,
         rotate: control.attrBool("rotate", false)!,
         alignment: parseAlignment(control, "alignment", Alignment.center)!,
       );
-
-      return constrainedControl(context, layer, parent, control);
     });
   }
 }

@@ -22,7 +22,6 @@ CreateControlFactory createControl = (CreateControlArgs args) {
         parent: args.parent,
         control: args.control,
         children: args.children,
-        parentDisabled: args.parentDisabled,
         backend: args.backend,
       );
     case "mapsimpleattribution":
@@ -30,14 +29,12 @@ CreateControlFactory createControl = (CreateControlArgs args) {
         parent: args.parent,
         control: args.control,
         children: args.children,
-        parentDisabled: args.parentDisabled,
         backend: args.backend,
       );
     case "maptilelayer":
       return TileLayerControl(
         parent: args.parent,
         control: args.control,
-        parentDisabled: args.parentDisabled,
         backend: args.backend,
       );
     case "mapmarkerlayer":
@@ -46,15 +43,12 @@ CreateControlFactory createControl = (CreateControlArgs args) {
         control: args.control,
         children: args.children,
         parentDisabled: args.parentDisabled,
-        backend: args.backend,
       );
     case "mapcirclelayer":
       return CircleLayerControl(
         parent: args.parent,
         control: args.control,
         children: args.children,
-        parentDisabled: args.parentDisabled,
-        backend: args.backend,
       );
     default:
       return null;

@@ -1,4 +1,4 @@
-from flet_core.map.circle_layer import Circle, CircleLayer
+from flet_core.map.circle_layer import CircleMarker, CircleLayer
 from flet_core.map.map import Map
 from flet_core.map.map_configuration import (
     MapConfiguration,

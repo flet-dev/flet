@@ -8,7 +8,6 @@ class RichAttributionControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
-  final bool parentDisabled;
   final FletControlBackend backend;
 
   const RichAttributionControl(
@@ -16,7 +15,6 @@ class RichAttributionControl extends StatefulWidget {
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
       required this.backend});
 
   @override
@@ -29,7 +27,6 @@ class _RichAttributionControlState extends State<RichAttributionControl>
   Widget build(BuildContext context) {
     debugPrint(
         "RichAttributionControl build: ${widget.control.id} (${widget.control.hashCode})");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     return withControls(widget.control.childIds, (context, attributionsView) {
       debugPrint("RichAttributionControlState build: ${widget.control.id}");
@@ -48,7 +45,7 @@ class _RichAttributionControlState extends State<RichAttributionControl>
         );
       }).toList();
 
-      Widget rich = RichAttributionWidget(
+      return RichAttributionWidget(
         attributions: attributions,
         permanentHeight: widget.control.attrDouble("permanentHeight", 24)!,
         popupBackgroundColor: widget.control.attrColor("popupBgColor", context),
@@ -57,8 +54,6 @@ class _RichAttributionControlState extends State<RichAttributionControl>
         alignment: parseAttributionAlignment(
             "alignment", widget.control, AttributionAlignment.bottomRight)!,
       );
-
-      return constrainedControl(context, rich, widget.parent, widget.control);
     });
   }
 }

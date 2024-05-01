@@ -1,13 +1,14 @@
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 
 
 class TextSourceAttribution(Control):
     """
-    TBA
+    A text source attribution displayed on the Map.
+    For it to be displayed, it should be part of a RichAttribution.attributions list.
 
     -----
 
@@ -24,7 +25,6 @@ class TextSourceAttribution(Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
@@ -32,7 +32,6 @@ class TextSourceAttribution(Control):
         Control.__init__(
             self,
             ref=ref,
-            opacity=opacity,
             visible=visible,
             data=data,
         )

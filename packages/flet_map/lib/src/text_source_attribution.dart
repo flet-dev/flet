@@ -5,14 +5,12 @@ import 'package:flutter_map/flutter_map.dart';
 class TextSourceAttributionControl extends StatelessWidget {
   final Control? parent;
   final Control control;
-  final Widget? nextChild;
   final FletControlBackend backend;
 
   const TextSourceAttributionControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.nextChild,
       required this.backend});
 
   @override
@@ -20,7 +18,7 @@ class TextSourceAttributionControl extends StatelessWidget {
     debugPrint(
         "TextSourceAttributionControl build: ${control.id} (${control.hashCode})");
 
-    Widget text = TextSourceAttribution(
+    return TextSourceAttribution(
       control.attrString("text", "Placeholder Text")!,
       textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
       onTap: () {
@@ -28,7 +26,5 @@ class TextSourceAttributionControl extends StatelessWidget {
       },
       prependCopyright: control.attrBool("prependCopyright", true)!,
     );
-
-    return constrainedControl(context, const Placeholder(), parent, control);
   }
 }

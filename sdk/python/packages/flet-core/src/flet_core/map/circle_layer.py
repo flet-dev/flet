@@ -5,13 +5,13 @@ from flet_core.map.map_configuration import MapLatitudeLongitude
 from flet_core.ref import Ref
 
 
-class Circle(Control):
+class CircleMarker(Control):
     """
-    TBA
+    A circular marker displayed on the Map at the specified location  through the CircleLayer.
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/mapcircle
+    Online docs: https://flet.dev/docs/controls/mapcirclemarker
     """
 
     def __init__(
@@ -26,7 +26,6 @@ class Circle(Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
@@ -34,7 +33,6 @@ class Circle(Control):
         Control.__init__(
             self,
             ref=ref,
-            opacity=opacity,
             visible=visible,
             data=data,
         )
@@ -47,7 +45,7 @@ class Circle(Control):
         self.radius = radius
 
     def _get_control_name(self):
-        return "mapcircle"
+        return "mapcirclemarker"
 
     def before_update(self):
         super().before_update()
@@ -110,8 +108,7 @@ class Circle(Control):
 
 class CircleLayer(Control):
     """
-    TBA
-
+    A layer to display CircleMarkers.
 
     -----
 
@@ -120,7 +117,7 @@ class CircleLayer(Control):
 
     def __init__(
         self,
-        circles: List[Circle] = None,
+        circles: List[CircleMarker] = None,
         #
         # Control
         #
@@ -146,25 +143,25 @@ class CircleLayer(Control):
     def _get_children(self):
         return self.__circles
 
-    def add(self, *circle: Circle):
+    def add(self, *circle: CircleMarker):
         self.__circles.extend(circle)
         self.update()
 
-    def insert(self, at: int, *circles: Circle) -> None:
+    def insert(self, at: int, *circles: CircleMarker) -> None:
         for i, circle in enumerate(circles, start=at):
             self.__circles.insert(i, circle)
         self.update()
 
-    def remove(self, *circles: Circle) -> None:
+    def remove(self, *circles: CircleMarker) -> None:
         for circle in circles:
             self.__circles.remove(circle)
         self.update()
 
     # circles
     @property
-    def circles(self) -> List[Circle]:
+    def circles(self) -> List[CircleMarker]:
         return self.__circles
 
     @circles.setter
-    def circles(self, value: List[Circle]):
+    def circles(self, value: List[CircleMarker]):
         self.__circles = value

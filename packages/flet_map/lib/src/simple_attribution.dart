@@ -7,7 +7,6 @@ class SimpleAttributionControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
-  final bool parentDisabled;
   final FletControlBackend backend;
 
   const SimpleAttributionControl(
@@ -15,7 +14,6 @@ class SimpleAttributionControl extends StatefulWidget {
       this.parent,
       required this.control,
       required this.children,
-      required this.parentDisabled,
       required this.backend});
 
   @override
@@ -29,7 +27,7 @@ class _SimpleAttributionControlState extends State<SimpleAttributionControl> {
     debugPrint(
         "SimpleAttributionControl build: ${widget.control.id} (${widget.control.hashCode})");
 
-    Widget a = SimpleAttributionWidget(
+    return SimpleAttributionWidget(
       source: Text(widget.control.attrString("text", "Placeholder Text")!),
       onTap: () {
         widget.backend.triggerControlEvent(widget.control.id, "click");
@@ -38,7 +36,5 @@ class _SimpleAttributionControlState extends State<SimpleAttributionControl> {
       alignment:
           parseAlignment(widget.control, "alignment", Alignment.bottomRight)!,
     );
-
-    return constrainedControl(context, a, widget.parent, widget.control);
   }
 }

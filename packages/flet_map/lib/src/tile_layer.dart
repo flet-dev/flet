@@ -6,14 +6,12 @@ import 'package:flutter_map/flutter_map.dart';
 class TileLayerControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
-  final bool parentDisabled;
   final FletControlBackend backend;
 
   const TileLayerControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.parentDisabled,
       required this.backend});
 
   @override

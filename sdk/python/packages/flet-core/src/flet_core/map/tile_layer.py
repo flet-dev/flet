@@ -6,8 +6,8 @@ from flet_core.ref import Ref
 
 class TileLayer(Control):
     """
-    TBA
-
+    The Map's main item.
+    It displays square raster images in a continuous grid, sourced from the provided utl_template.
 
     -----
 
@@ -37,7 +37,6 @@ class TileLayer(Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):

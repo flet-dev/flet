@@ -13,7 +13,8 @@ class AttributionAlignment(Enum):
 
 class RichAttribution(Control):
     """
-    TBA
+    An animated and interactive attribution layer that supports both logos/images and text
+    (displayed in a popup controlled by an icon button adjacent to the logos).
 
     -----
 
@@ -31,7 +32,6 @@ class RichAttribution(Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
@@ -39,7 +39,6 @@ class RichAttribution(Control):
         Control.__init__(
             self,
             ref=ref,
-            opacity=opacity,
             visible=visible,
             data=data,
         )

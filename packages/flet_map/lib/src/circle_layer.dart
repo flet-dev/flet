@@ -9,16 +9,12 @@ class CircleLayerControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
   const CircleLayerControl(
       {super.key,
       required this.parent,
       required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.backend});
+      required this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +24,8 @@ class CircleLayerControl extends StatelessWidget with FletStoreMixin {
       debugPrint("CircleLayerControlState build: ${control.id}");
 
       var circles = circlesView.controlViews
-          .where((c) => c.control.type == "mapcircle" && c.control.isVisible)
+          .where(
+              (c) => c.control.type == "mapcirclemarker" && c.control.isVisible)
           .map((circle) {
         return CircleMarker(
             point: parseLatLng(circle.control, "location")!,
@@ -43,9 +40,7 @@ class CircleLayerControl extends StatelessWidget with FletStoreMixin {
             radius: circle.control.attrDouble("radius", 10)!);
       }).toList();
 
-      Widget layer = CircleLayer(circles: circles);
-
-      return constrainedControl(context, layer, parent, control);
+      return CircleLayer(circles: circles);
     });
   }
 }

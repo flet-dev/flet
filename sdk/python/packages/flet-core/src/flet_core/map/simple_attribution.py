@@ -1,13 +1,13 @@
 from typing import Any, Optional
 
 from flet_core.alignment import Alignment
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 
 
 class SimpleAttribution(Control):
     """
-    TBA
+    A simple attribution layer displayed on the Map.
 
     -----
 
@@ -24,7 +24,6 @@ class SimpleAttribution(Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
@@ -32,7 +31,6 @@ class SimpleAttribution(Control):
         Control.__init__(
             self,
             ref=ref,
-            opacity=opacity,
             visible=visible,
             data=data,
         )

@@ -8,12 +8,11 @@ from flet_core.ref import Ref
 
 class Marker(Control):
     """
-    TBA
-
+    A marker displayed on the Map at the specified location through the MarkerLayer.
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/mapmarkerlayer
+    Online docs: https://flet.dev/docs/controls/mapmarker
     """
 
     def __init__(
@@ -28,7 +27,6 @@ class Marker(Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
@@ -36,7 +34,6 @@ class Marker(Control):
         Control.__init__(
             self,
             ref=ref,
-            opacity=opacity,
             visible=visible,
             data=data,
         )
@@ -116,7 +113,7 @@ class Marker(Control):
 
 class MarkerLayer(Control):
     """
-    TBA
+    A layer to display Markers.
 
 
     -----
@@ -133,7 +130,6 @@ class MarkerLayer(Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
@@ -141,7 +137,6 @@ class MarkerLayer(Control):
         Control.__init__(
             self,
             ref=ref,
-            opacity=opacity,
             visible=visible,
             data=data,
         )
