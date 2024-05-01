@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 
 
@@ -74,12 +74,12 @@ class AutoFillHint(Enum):
     USERNAME = "username"
 
 
-class AutoFillGroupDisposeAction(Enum):
+class AutofillGroupDisposeAction(Enum):
     COMMIT = "commit"
     CANCEL = "cancel"
 
 
-class AutoFillGroup(Control):
+class AutofillGroup(Control):
     """
     This control is used to group autofill controls together.
 
@@ -91,23 +91,17 @@ class AutoFillGroup(Control):
     def __init__(
         self,
         content: Optional[Control] = None,
-        dispose_action: Optional[AutoFillGroupDisposeAction] = None,
+        dispose_action: Optional[AutofillGroupDisposeAction] = None,
         #
         # Control
         #
         ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
         data: Any = None,
     ):
 
         Control.__init__(
             self,
             ref=ref,
-            opacity=opacity,
-            visible=visible,
-            disabled=disabled,
             data=data,
         )
 
@@ -134,10 +128,10 @@ class AutoFillGroup(Control):
 
     # dispose_action
     @property
-    def dispose_action(self) -> Optional[AutoFillGroupDisposeAction]:
+    def dispose_action(self) -> Optional[AutofillGroupDisposeAction]:
         return self.__dispose_action
 
     @dispose_action.setter
-    def dispose_action(self, value: Optional[AutoFillGroupDisposeAction]):
+    def dispose_action(self, value: Optional[AutofillGroupDisposeAction]):
         self.__dispose_action = value
-        self._set_enum_attr("disposeAction", value, AutoFillGroupDisposeAction)
+        self._set_enum_attr("disposeAction", value, AutofillGroupDisposeAction)
