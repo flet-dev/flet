@@ -1,8 +1,9 @@
 from enum import Enum
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalNumber
 from flet_core.utils import deprecated
 
 
@@ -174,6 +175,7 @@ class Audio(Control):
         return int(sr) if sr else None
 
     # src
+
     @property
     def src(self):
         return self._get_attr("src")
@@ -183,6 +185,7 @@ class Audio(Control):
         self._set_attr("src", value)
 
     # src_base64
+
     @property
     def src_base64(self):
         return self._get_attr("srcBase64")
@@ -192,6 +195,7 @@ class Audio(Control):
         self._set_attr("srcBase64", value)
 
     # autoplay
+
     @property
     def autoplay(self) -> Optional[bool]:
         return self._get_attr("autoplay", data_type="bool", def_value=False)
@@ -201,6 +205,7 @@ class Audio(Control):
         self._set_attr("autoplay", value)
 
     # volume
+
     @property
     def volume(self) -> OptionalNumber:
         return self._get_attr("volume")
@@ -211,6 +216,7 @@ class Audio(Control):
             self._set_attr("volume", value)
 
     # balance
+
     @property
     def balance(self) -> OptionalNumber:
         return self._get_attr("balance")
@@ -221,6 +227,7 @@ class Audio(Control):
             self._set_attr("balance", value)
 
     # playback_rate
+
     @property
     def playback_rate(self) -> OptionalNumber:
         return self._get_attr("playbackRate")
@@ -231,6 +238,7 @@ class Audio(Control):
             self._set_attr("playbackRate", value)
 
     # release_mode
+
     @property
     def release_mode(self):
         return self._get_attr("releaseMode")
@@ -240,6 +248,7 @@ class Audio(Control):
         self._set_enum_attr("releaseMode", value, ReleaseMode)
 
     # on_loaded
+
     @property
     def on_loaded(self):
         return self._get_event_handler("loaded")
@@ -249,6 +258,7 @@ class Audio(Control):
         self._add_event_handler("loaded", handler)
 
     # on_duration_changed
+
     @property
     def on_duration_changed(self):
         return self._get_event_handler("duration_changed")
@@ -258,6 +268,7 @@ class Audio(Control):
         self._add_event_handler("duration_changed", handler)
 
     # on_state_changed
+
     @property
     def on_state_changed(self):
         return self._get_event_handler("state_changed")
@@ -267,6 +278,7 @@ class Audio(Control):
         self._add_event_handler("state_changed", handler)
 
     # on_position_changed
+
     @property
     def on_position_changed(self):
         return self._get_event_handler("position_changed")
@@ -280,6 +292,7 @@ class Audio(Control):
             self._set_attr("onPositionChanged", None)
 
     # on_seek_complete
+
     @property
     def on_seek_complete(self):
         return self._get_event_handler("seek_complete")

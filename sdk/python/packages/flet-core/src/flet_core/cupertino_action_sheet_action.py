@@ -1,11 +1,12 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -110,6 +111,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
         return children
 
     # text
+
     @property
     def text(self):
         return self._get_attr("text")
@@ -119,6 +121,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
         self._set_attr("text", value)
 
     # is_default_action
+
     @property
     def is_default_action(self) -> Optional[bool]:
         return self._get_attr("isDefaultAction")
@@ -128,6 +131,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
         self._set_attr("isDefaultAction", value)
 
     # is_destructive_action
+
     @property
     def is_destructive_action(self) -> Optional[bool]:
         return self._get_attr("isDestructiveAction")
@@ -137,6 +141,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
         self._set_attr("isDestructiveAction", value)
 
     # content
+
     @property
     def content(self) -> Control:
         return self.__content
@@ -146,6 +151,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
         self.__content = value
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")

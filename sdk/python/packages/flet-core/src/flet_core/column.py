@@ -2,7 +2,7 @@ from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
@@ -10,6 +10,7 @@ from flet_core.types import (
     CrossAxisAlignment,
     MainAxisAlignment,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -170,6 +171,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.clean()
 
     # tight
+
     @property
     def tight(self) -> Optional[bool]:
         return self._get_attr("tight", data_type="bool", def_value=False)
@@ -179,6 +181,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("tight", value)
 
     # alignment
+
     @property
     def alignment(self) -> MainAxisAlignment:
         return self.__alignment
@@ -191,6 +194,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         )
 
     # horizontal_alignment
+
     @property
     def horizontal_alignment(self) -> CrossAxisAlignment:
         return self.__horizontal_alignment
@@ -204,6 +208,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         )
 
     # spacing
+
     @property
     def spacing(self) -> OptionalNumber:
         return self._get_attr("spacing")
@@ -213,6 +218,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("spacing", value)
 
     # wrap
+
     @property
     def wrap(self) -> Optional[bool]:
         return self._get_attr("wrap", data_type="bool", def_value=False)
@@ -222,6 +228,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("wrap", value)
 
     # run_spacing
+
     @property
     def run_spacing(self) -> OptionalNumber:
         return self._get_attr("runSpacing")
@@ -231,6 +238,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("runSpacing", value)
 
     # controls
+
     @property
     def controls(self):
         return self.__controls

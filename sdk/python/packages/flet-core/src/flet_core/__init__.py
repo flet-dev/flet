@@ -65,7 +65,7 @@ from flet_core.chip import Chip
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
 from flet_core.container import Container, ContainerTapEvent
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.cupertino_action_sheet import CupertinoActionSheet
 from flet_core.cupertino_action_sheet_action import CupertinoActionSheetAction
@@ -104,7 +104,12 @@ from flet_core.datatable import (
     DataRow,
     DataTable,
 )
-from flet_core.date_picker import DatePicker, DatePickerEntryMode, DatePickerMode, DatePickerEntryModeChangeEvent
+from flet_core.date_picker import (
+    DatePicker,
+    DatePickerEntryMode,
+    DatePickerEntryModeChangeEvent,
+    DatePickerMode,
+)
 from flet_core.dismissible import (
     Dismissible,
     DismissibleDismissEvent,
@@ -155,7 +160,7 @@ from flet_core.haptic_feedback import HapticFeedback
 from flet_core.icon import Icon
 from flet_core.icon_button import IconButton
 from flet_core.image import Image
-from flet_core.list_tile import ListTile, ListTileTitleAlignment, ListTileStyle
+from flet_core.list_tile import ListTile, ListTileStyle, ListTileTitleAlignment
 from flet_core.list_view import ListView
 from flet_core.lottie import Lottie
 from flet_core.margin import Margin
@@ -164,8 +169,8 @@ from flet_core.menu_bar import MenuBar, MenuStyle
 from flet_core.menu_item_button import MenuItemButton
 from flet_core.navigation_bar import (
     NavigationBar,
-    NavigationBarLabelBehavior,
     NavigationBarDestination,
+    NavigationBarLabelBehavior,
 )
 from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
 from flet_core.navigation_rail import (
@@ -177,6 +182,7 @@ from flet_core.outlined_button import OutlinedButton
 from flet_core.padding import Padding
 from flet_core.page import (
     AppLifecycleStateChangeEvent,
+    context,
     KeyboardEvent,
     Locale,
     LocaleConfiguration,
@@ -186,7 +192,6 @@ from flet_core.page import (
     PageMediaData,
     RouteChangeEvent,
     ViewPopEvent,
-    context,
 )
 from flet_core.pagelet import Pagelet
 from flet_core.painting import (
@@ -283,7 +288,11 @@ from flet_core.theme import (
     TimePickerTheme,
     TooltipTheme,
 )
-from flet_core.time_picker import TimePicker, TimePickerEntryMode, TimePickerEntryModeChangeEvent
+from flet_core.time_picker import (
+    TimePicker,
+    TimePickerEntryMode,
+    TimePickerEntryModeChangeEvent,
+)
 from flet_core.tooltip import Tooltip
 from flet_core.transform import Offset, Rotate, Scale
 from flet_core.transparent_pointer import TransparentPointer
@@ -303,6 +312,7 @@ from flet_core.types import (
     MaterialState,
     MouseCursor,
     NotchShape,
+    OptionalNumber,
     Orientation,
     PaddingValue,
     PagePlatform,

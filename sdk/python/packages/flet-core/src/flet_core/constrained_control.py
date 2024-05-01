@@ -1,10 +1,11 @@
 from typing import Any, Optional, Union
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -92,6 +93,7 @@ class ConstrainedControl(Control):
         self._set_attr_json("animateOffset", self.__animate_offset)
 
     # key
+
     @property
     def key(self) -> Optional[str]:
         return self._get_attr("key")
@@ -101,6 +103,7 @@ class ConstrainedControl(Control):
         self._set_attr("key", value)
 
     # width
+
     @property
     def width(self) -> OptionalNumber:
         """
@@ -113,6 +116,7 @@ class ConstrainedControl(Control):
         self._set_attr("width", value)
 
     # height
+
     @property
     def height(self) -> OptionalNumber:
         return self._get_attr("height")
@@ -122,6 +126,7 @@ class ConstrainedControl(Control):
         self._set_attr("height", value)
 
     # left
+
     @property
     def left(self) -> OptionalNumber:
         return self._get_attr("left")
@@ -131,6 +136,7 @@ class ConstrainedControl(Control):
         self._set_attr("left", value)
 
     # top
+
     @property
     def top(self) -> OptionalNumber:
         return self._get_attr("top")
@@ -140,6 +146,7 @@ class ConstrainedControl(Control):
         self._set_attr("top", value)
 
     # right
+
     @property
     def right(self) -> OptionalNumber:
         return self._get_attr("right")
@@ -149,6 +156,7 @@ class ConstrainedControl(Control):
         self._set_attr("right", value)
 
     # bottom
+
     @property
     def bottom(self) -> OptionalNumber:
         return self._get_attr("bottom")
@@ -158,6 +166,7 @@ class ConstrainedControl(Control):
         self._set_attr("bottom", value)
 
     # rotate
+
     @property
     def rotate(self) -> RotateValue:
         return self.__rotate
@@ -167,6 +176,7 @@ class ConstrainedControl(Control):
         self.__rotate = value
 
     # scale
+
     @property
     def scale(self) -> ScaleValue:
         return self.__scale
@@ -176,6 +186,7 @@ class ConstrainedControl(Control):
         self.__scale = value
 
     # offset
+
     @property
     def offset(self) -> OffsetValue:
         return self.__offset
@@ -185,6 +196,7 @@ class ConstrainedControl(Control):
         self.__offset = value
 
     # aspect_ratio
+
     @property
     def aspect_ratio(self) -> OptionalNumber:
         return self._get_attr("aspectRatio")
@@ -194,6 +206,7 @@ class ConstrainedControl(Control):
         self._set_attr("aspectRatio", value)
 
     # animate_opacity
+
     @property
     def animate_opacity(self) -> AnimationValue:
         return self.__animate_opacity
@@ -203,6 +216,7 @@ class ConstrainedControl(Control):
         self.__animate_opacity = value
 
     # animate_size
+
     @property
     def animate_size(self) -> AnimationValue:
         return self.__animate_size
@@ -212,6 +226,7 @@ class ConstrainedControl(Control):
         self.__animate_size = value
 
     # animate_position
+
     @property
     def animate_position(self) -> AnimationValue:
         return self.__animate_position
@@ -221,6 +236,7 @@ class ConstrainedControl(Control):
         self.__animate_position = value
 
     # animate_rotation
+
     @property
     def animate_rotation(self) -> AnimationValue:
         return self.__animate_rotation
@@ -230,6 +246,7 @@ class ConstrainedControl(Control):
         self.__animate_rotation = value
 
     # animate_scale
+
     @property
     def animate_scale(self) -> AnimationValue:
         return self.__animate_scale
@@ -239,6 +256,7 @@ class ConstrainedControl(Control):
         self.__animate_scale = value
 
     # animate_offset
+
     @property
     def animate_offset(self) -> AnimationValue:
         return self.__animate_offset
@@ -248,6 +266,7 @@ class ConstrainedControl(Control):
         self.__animate_offset = value
 
     # on_animation_end
+
     @property
     def on_animation_end(self):
         return self._get_event_handler("animation_end")

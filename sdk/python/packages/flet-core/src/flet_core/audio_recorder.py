@@ -2,8 +2,9 @@ import json
 from enum import Enum
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalNumber
 from flet_core.utils import deprecated
 
 
@@ -209,6 +210,7 @@ class AudioRecorder(Control):
         return p == "true"
 
     # audio_encoder
+
     @property
     def audio_encoder(self):
         return self._get_attr("audioEncoder")
@@ -218,6 +220,7 @@ class AudioRecorder(Control):
         self._set_enum_attr("audioEncoder", value, AudioEncoder)
 
     # suppress_noise
+
     @property
     def suppress_noise(self) -> Optional[bool]:
         return self._get_attr("suppressNoise", data_type="bool", def_value=False)
@@ -227,6 +230,7 @@ class AudioRecorder(Control):
         self._set_attr("suppressNoise", value)
 
     # cancel_echo
+
     @property
     def cancel_echo(self) -> Optional[bool]:
         return self._get_attr("cancelEcho", data_type="bool", def_value=False)
@@ -236,6 +240,7 @@ class AudioRecorder(Control):
         self._set_attr("cancelEcho", value)
 
     # auto_gain
+
     @property
     def auto_gain(self) -> Optional[bool]:
         return self._get_attr("autoGain", data_type="bool", def_value=False)
@@ -245,6 +250,7 @@ class AudioRecorder(Control):
         self._set_attr("autoGain", value)
 
     # bit_rate
+
     @property
     def bit_rate(self) -> OptionalNumber:
         return self._get_attr("bitRate")
@@ -254,6 +260,7 @@ class AudioRecorder(Control):
         self._set_attr("bitRate", value)
 
     # sample_rate
+
     @property
     def sample_rate(self) -> OptionalNumber:
         return self._get_attr("sampleRate")
@@ -263,6 +270,7 @@ class AudioRecorder(Control):
         self._set_attr("sampleRate", value)
 
     # channels_num
+
     @property
     def channels_num(self) -> OptionalNumber:
         return self._get_attr("channels")
@@ -273,6 +281,7 @@ class AudioRecorder(Control):
             self._set_attr("channels", value)
 
     # on_state_changed
+
     @property
     def on_state_changed(self):
         return self._get_event_handler("state_changed")

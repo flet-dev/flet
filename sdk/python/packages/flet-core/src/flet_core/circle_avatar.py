@@ -2,11 +2,12 @@ import warnings
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -167,6 +168,7 @@ class CircleAvatar(ConstrainedControl):
         return []
 
     # foreground_image_url
+
     @property
     def foreground_image_url(self) -> Optional[str]:
         warnings.warn(
@@ -189,6 +191,7 @@ class CircleAvatar(ConstrainedControl):
             )
 
     # background_image_url
+
     @property
     def background_image_url(self) -> Optional[str]:
         warnings.warn(
@@ -211,6 +214,7 @@ class CircleAvatar(ConstrainedControl):
             )
 
     # foreground_image_src
+
     @property
     def foreground_image_src(self) -> Optional[str]:
         return self._get_attr("foregroundImageSrc")
@@ -220,6 +224,7 @@ class CircleAvatar(ConstrainedControl):
         self._set_attr("foregroundImageSrc", value)
 
     # background_image_src
+
     @property
     def background_image_src(self) -> Optional[str]:
         return self._get_attr("backgroundImageSrc")
@@ -229,6 +234,7 @@ class CircleAvatar(ConstrainedControl):
         self._set_attr("backgroundImageSrc", value)
 
     # radius
+
     @property
     def radius(self) -> OptionalNumber:
         return self._get_attr("radius", data_type="float")
@@ -238,6 +244,7 @@ class CircleAvatar(ConstrainedControl):
         self._set_attr("radius", value)
 
     # min_radius
+
     @property
     def min_radius(self) -> OptionalNumber:
         return self._get_attr("minRadius", data_type="float")
@@ -247,6 +254,7 @@ class CircleAvatar(ConstrainedControl):
         self._set_attr("minRadius", value)
 
     # max_radius
+
     @property
     def max_radius(self) -> OptionalNumber:
         return self._get_attr("maxRadius", data_type="float")
@@ -256,6 +264,7 @@ class CircleAvatar(ConstrainedControl):
         self._set_attr("maxRadius", value)
 
     # color
+
     @property
     def color(self) -> Optional[str]:
         return self._get_attr("color")
@@ -265,6 +274,7 @@ class CircleAvatar(ConstrainedControl):
         self._set_attr("color", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
@@ -274,6 +284,7 @@ class CircleAvatar(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -283,6 +294,7 @@ class CircleAvatar(ConstrainedControl):
         self.__content = value
 
     # on_image_error
+
     @property
     def on_image_error(self):
         return self._get_event_handler("imageError")

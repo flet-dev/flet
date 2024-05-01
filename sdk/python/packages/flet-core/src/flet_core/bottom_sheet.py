@@ -1,7 +1,8 @@
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalNumber
 
 
 class BottomSheet(Control):
@@ -103,6 +104,7 @@ class BottomSheet(Control):
         return children
 
     # open
+
     @property
     def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
@@ -112,6 +114,7 @@ class BottomSheet(Control):
         self._set_attr("open", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation")
@@ -121,6 +124,7 @@ class BottomSheet(Control):
         self._set_attr("elevation", value)
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgColor")
@@ -130,6 +134,7 @@ class BottomSheet(Control):
         self._set_attr("bgColor", value)
 
     # dismissible
+
     @property
     def dismissible(self) -> Optional[bool]:
         return self._get_attr("dismissible", data_type="bool", def_value=True)
@@ -139,6 +144,7 @@ class BottomSheet(Control):
         self._set_attr("dismissible", value)
 
     # enable_drag
+
     @property
     def enable_drag(self) -> Optional[bool]:
         return self._get_attr("enableDrag", data_type="bool", def_value=False)
@@ -148,6 +154,7 @@ class BottomSheet(Control):
         self._set_attr("enableDrag", value)
 
     # show_drag_handle
+
     @property
     def show_drag_handle(self) -> Optional[bool]:
         return self._get_attr("showDragHandle", data_type="bool", def_value=False)
@@ -157,6 +164,7 @@ class BottomSheet(Control):
         self._set_attr("showDragHandle", value)
 
     # use_safe_area
+
     @property
     def use_safe_area(self) -> Optional[bool]:
         return self._get_attr("useSafeArea", data_type="bool", def_value=True)
@@ -166,6 +174,7 @@ class BottomSheet(Control):
         self._set_attr("useSafeArea", value)
 
     # is_scroll_controlled
+
     @property
     def is_scroll_controlled(self) -> Optional[bool]:
         return self._get_attr("isScrollControlled", data_type="bool", def_value=False)
@@ -175,6 +184,7 @@ class BottomSheet(Control):
         self._set_attr("isScrollControlled", value)
 
     # maintain_bottom_view_insets_padding
+
     @property
     def maintain_bottom_view_insets_padding(self) -> Optional[bool]:
         return self._get_attr(
@@ -186,6 +196,7 @@ class BottomSheet(Control):
         self._set_attr("maintainBottomViewInsetsPadding", value)
 
     # content
+
     @property
     def content(self):
         return self.__content
@@ -195,6 +206,7 @@ class BottomSheet(Control):
         self.__content = value
 
     # on_dismiss
+
     @property
     def on_dismiss(self):
         return self._get_event_handler("dismiss")

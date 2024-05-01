@@ -6,7 +6,7 @@ from flet_core.alignment import Alignment
 from flet_core.blur import Blur
 from flet_core.border import Border
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.gradients import Gradient
@@ -23,6 +23,7 @@ from flet_core.types import (
     ImageRepeat,
     MarginValue,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -220,6 +221,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return children
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         """:obj:`Alignment`, optional: Align the child control within the container.
@@ -234,6 +236,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__alignment = value
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -243,6 +246,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__padding = value
 
     # margin
+
     @property
     def margin(self) -> MarginValue:
         return self.__margin
@@ -252,6 +256,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__margin = value
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgColor")
@@ -261,6 +266,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr("bgColor", value)
 
     # gradient
+
     @property
     def gradient(self) -> Optional[Gradient]:
         return self.__gradient
@@ -270,6 +276,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__gradient = value
 
     # blend_mode
+
     @property
     def blend_mode(self) -> Optional[BlendMode]:
         return self.__blend_mode
@@ -282,6 +289,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         )
 
     # blur
+
     @property
     def blur(self):
         return self.__blur
@@ -296,6 +304,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__blur = value
 
     # shadow
+
     @property
     def shadow(self):
         return self.__shadow
@@ -305,6 +314,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__shadow = value if value is not None else []
 
     # border
+
     @property
     def border(self) -> Optional[Border]:
         return self.__border
@@ -314,6 +324,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__border = value
 
     # border_radius
+
     @property
     def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius
@@ -323,6 +334,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__border_radius = value
 
     # image_src
+
     @property
     def image_src(self):
         return self._get_attr("imageSrc")
@@ -332,6 +344,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr("imageSrc", value)
 
     # image_src_base64
+
     @property
     def image_src_base64(self):
         return self._get_attr("imageSrcBase64")
@@ -341,6 +354,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr("imageSrcBase64", value)
 
     # image_fit
+
     @property
     def image_fit(self) -> Optional[ImageFit]:
         return self.__image_fit
@@ -353,6 +367,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         )
 
     # image_repeat
+
     @property
     def image_repeat(self) -> Optional[ImageRepeat]:
         return self.__image_repeat
@@ -365,6 +380,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         )
 
     # image_opacity
+
     @property
     def image_opacity(self) -> OptionalNumber:
         return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
@@ -374,6 +390,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr("imageOpacity", value)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -383,6 +400,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__content = value
 
     # shape
+
     @property
     def shape(self):
         return self.__shape
@@ -393,6 +411,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr("shape", value.value if isinstance(value, BoxShape) else value)
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -405,6 +424,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         )
 
     # ink
+
     @property
     def ink(self) -> Optional[bool]:
         return self._get_attr("ink", data_type="bool", def_value=False)
@@ -414,6 +434,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr("ink", value)
 
     # ink color
+
     @property
     def ink_color(self):
         return self._get_attr("inkColor")
@@ -423,6 +444,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr("inkColor", value)
 
     # animate
+
     @property
     def animate(self) -> AnimationValue:
         return self.__animate
@@ -432,6 +454,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__animate = value
 
     # url
+
     @property
     def url(self):
         return self._get_attr("url")
@@ -441,6 +464,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr("url", value)
 
     # url_target
+
     @property
     def url_target(self) -> Optional[UrlTarget]:
         return self.__url_target
@@ -453,6 +477,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         )
 
     # theme
+
     @property
     def theme(self) -> Optional[Theme]:
         return self.__theme
@@ -462,6 +487,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__theme = value
 
     # theme_mode
+
     @property
     def theme_mode(self) -> Optional[ThemeMode]:
         return self.__theme_mode
@@ -474,6 +500,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         )
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")
@@ -484,6 +511,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr("onClick", True if handler is not None else None)
 
     # on_tap_down
+
     @property
     def on_tap_down(self):
         return self.__on_tap_down
@@ -494,6 +522,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr("onTapDown", True if handler is not None else None)
 
     # on_long_press
+
     @property
     def on_long_press(self):
         return self._get_event_handler("long_press")
@@ -504,6 +533,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_hover
+
     @property
     def on_hover(self):
         return self._get_event_handler("hover")

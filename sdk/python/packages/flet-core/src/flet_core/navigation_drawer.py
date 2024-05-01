@@ -1,17 +1,13 @@
-from typing import Any, Callable, List, Optional
+from typing import Any, List, Optional
 
 from flet_core.buttons import OutlinedBorder
-from flet_core.control import Control, OptionalNumber
-from flet_core.control_event import ControlEvent
+from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import PaddingValue
+from flet_core.types import ControlEventFunction, OptionalNumber, PaddingValue
 
 
 class NavigationDrawerDestination(Control):
-    """
-    Displays an icon with a label, for use in NavigationDrawer destinations.
-
-    """
+    "Displays an icon with a label, for use in NavigationDrawer destinations."
 
     def __init__(
         self,
@@ -52,6 +48,7 @@ class NavigationDrawerDestination(Control):
         return children
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
@@ -61,6 +58,7 @@ class NavigationDrawerDestination(Control):
         self._set_attr("bgColor", value)
 
     # icon
+
     @property
     def icon(self) -> Optional[str]:
         return self._get_attr("icon")
@@ -70,6 +68,7 @@ class NavigationDrawerDestination(Control):
         self._set_attr("icon", value)
 
     # icon_content
+
     @property
     def icon_content(self) -> Optional[Control]:
         return self.__icon_content
@@ -79,6 +78,7 @@ class NavigationDrawerDestination(Control):
         self.__icon_content = value
 
     # selected_icon
+
     @property
     def selected_icon(self) -> Optional[str]:
         return self._get_attr("selectedIcon")
@@ -88,6 +88,7 @@ class NavigationDrawerDestination(Control):
         self._set_attr("selectedIcon", value)
 
     # selected_icon_content
+
     @property
     def selected_icon_content(self) -> Optional[Control]:
         return self.__selected_icon_content
@@ -97,6 +98,7 @@ class NavigationDrawerDestination(Control):
         self.__selected_icon_content = value
 
     # label
+
     @property
     def label(self) -> Optional[str]:
         return self._get_attr("label")
@@ -192,8 +194,8 @@ class NavigationDrawer(Control):
         shadow_color: Optional[str] = None,
         surface_tint_color: Optional[str] = None,
         tile_padding: PaddingValue = None,
-        on_change: Optional[Callable[[ControlEvent], None]] = None,
-        on_dismiss: Optional[Callable[[ControlEvent], None]] = None,
+        on_change: Optional[ControlEventFunction] = None,
+        on_dismiss: Optional[ControlEventFunction] = None,
         #
         # Control
         #
@@ -238,6 +240,7 @@ class NavigationDrawer(Control):
         return children
 
     # open
+
     @property
     def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
@@ -247,6 +250,7 @@ class NavigationDrawer(Control):
         self._set_attr("open", value)
 
     # controls
+
     @property
     def controls(self) -> Optional[List[Control]]:
         return self.__controls
@@ -256,6 +260,7 @@ class NavigationDrawer(Control):
         self.__controls = value if value else []
 
     # selected_index
+
     @property
     def selected_index(self) -> Optional[int]:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
@@ -265,6 +270,7 @@ class NavigationDrawer(Control):
         self._set_attr("selectedIndex", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
@@ -274,6 +280,7 @@ class NavigationDrawer(Control):
         self._set_attr("bgcolor", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation")
@@ -283,6 +290,7 @@ class NavigationDrawer(Control):
         self._set_attr("elevation", value)
 
     # indicator_color
+
     @property
     def indicator_color(self) -> Optional[str]:
         return self._get_attr("indicatorColor")
@@ -292,6 +300,7 @@ class NavigationDrawer(Control):
         self._set_attr("indicatorColor", value)
 
     # indicator_shape
+
     @property
     def indicator_shape(self) -> Optional[OutlinedBorder]:
         return self.__indicator_shape
@@ -301,6 +310,7 @@ class NavigationDrawer(Control):
         self.__indicator_shape = value
 
     # shadow_color
+
     @property
     def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
@@ -310,6 +320,7 @@ class NavigationDrawer(Control):
         self._set_attr("shadowColor", value)
 
     # surface_tint_color
+
     @property
     def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
@@ -319,6 +330,7 @@ class NavigationDrawer(Control):
         self._set_attr("surfaceTintColor", value)
 
     # tile_padding
+
     @property
     def tile_padding(self) -> PaddingValue:
         return self.__tile_padding
@@ -328,19 +340,21 @@ class NavigationDrawer(Control):
         self.__tile_padding = value
 
     # on_change
+
     @property
-    def on_change(self) -> Optional[Callable[[ControlEvent], None]]:
+    def on_change(self) -> Optional[ControlEventFunction]:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: Callable[[ControlEvent], None]) -> None:
+    def on_change(self, handler: ControlEventFunction) -> None:
         self._add_event_handler("change", handler)
 
     # on_dismiss
+
     @property
-    def on_dismiss(self) -> Optional[Callable[[ControlEvent], None]]:
+    def on_dismiss(self) -> Optional[ControlEventFunction]:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: Callable[[ControlEvent], None]) -> None:
+    def on_dismiss(self, handler: ControlEventFunction) -> None:
         self._add_event_handler("dismiss", handler)

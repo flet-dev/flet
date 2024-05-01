@@ -1,21 +1,22 @@
-from typing import Any, Optional, Union, Dict
+from typing import Any, Dict, Optional, Union
 
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
+    ClipBehavior,
+    MaterialState,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
-    MaterialState,
 )
 
 
@@ -218,6 +219,7 @@ class Chip(ConstrainedControl):
         return children
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -227,6 +229,7 @@ class Chip(ConstrainedControl):
         self.__padding = value
 
     # selected
+
     @property
     def selected(self) -> Optional[bool]:
         return self._get_attr("selected", data_type="bool", def_value=False)
@@ -236,6 +239,7 @@ class Chip(ConstrainedControl):
         self._set_attr("selected", value)
 
     # show_checkmark
+
     @property
     def show_checkmark(self) -> Optional[bool]:
         return self._get_attr("showCheckmark")
@@ -245,6 +249,7 @@ class Chip(ConstrainedControl):
         self._set_attr("showCheckmark", value)
 
     # delete_icon_tooltip
+
     @property
     def delete_icon_tooltip(self):
         return self._get_attr("deleteButtonTooltipMessage")
@@ -254,6 +259,7 @@ class Chip(ConstrainedControl):
         self._set_attr("deleteButtonTooltipMessage", value)
 
     # label
+
     @property
     def label(self) -> Control:
         return self.__label
@@ -263,6 +269,7 @@ class Chip(ConstrainedControl):
         self.__label = value
 
     # label_padding
+
     @property
     def label_padding(self) -> PaddingValue:
         return self.__label_padding
@@ -272,6 +279,7 @@ class Chip(ConstrainedControl):
         self.__label_padding = value
 
     # label_style
+
     @property
     def label_style(self):
         return self.__label_style
@@ -281,6 +289,7 @@ class Chip(ConstrainedControl):
         self.__label_style = value
 
     # leading
+
     @property
     def leading(self) -> Optional[Control]:
         return self.__leading
@@ -290,6 +299,7 @@ class Chip(ConstrainedControl):
         self.__leading = value
 
     # delete_icon
+
     @property
     def delete_icon(self) -> Optional[Control]:
         return self.__delete_icon
@@ -299,6 +309,7 @@ class Chip(ConstrainedControl):
         self.__delete_icon = value
 
     # delete_icon_color
+
     @property
     def delete_icon_color(self):
         return self._get_attr("deleteIconColor")
@@ -308,6 +319,7 @@ class Chip(ConstrainedControl):
         self._set_attr("deleteIconColor", value)
 
     # disabled_color
+
     @property
     def disabled_color(self):
         return self._get_attr("disabledColor")
@@ -317,6 +329,7 @@ class Chip(ConstrainedControl):
         self._set_attr("disabledColor", value)
 
     # color
+
     @property
     def color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__color
@@ -326,6 +339,7 @@ class Chip(ConstrainedControl):
         self.__color = value
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -335,6 +349,7 @@ class Chip(ConstrainedControl):
         self._set_attr("autofocus", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
@@ -344,6 +359,7 @@ class Chip(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # check_color
+
     @property
     def check_color(self) -> Optional[str]:
         return self._get_attr("checkColor")
@@ -353,6 +369,7 @@ class Chip(ConstrainedControl):
         self._set_attr("checkColor", value)
 
     # selected_color
+
     @property
     def selected_color(self) -> Optional[str]:
         return self._get_attr("selectedColor")
@@ -362,6 +379,7 @@ class Chip(ConstrainedControl):
         self._set_attr("selectedColor", value)
 
     # selected_shadow_color
+
     @property
     def selected_shadow_color(self) -> Optional[str]:
         return self._get_attr("selectedShadowColor")
@@ -371,6 +389,7 @@ class Chip(ConstrainedControl):
         self._set_attr("selectedShadowColor", value)
 
     # surface_tint_color
+
     @property
     def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
@@ -380,6 +399,7 @@ class Chip(ConstrainedControl):
         self._set_attr("surfaceTintColor", value)
 
     # shadow_color
+
     @property
     def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
@@ -389,6 +409,7 @@ class Chip(ConstrainedControl):
         self._set_attr("shadowColor", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation", data_type="float")
@@ -398,6 +419,7 @@ class Chip(ConstrainedControl):
         self._set_attr("elevation", value)
 
     # click_elevation
+
     @property
     def click_elevation(self) -> OptionalNumber:
         return self._get_attr("clickElevation", data_type="float")
@@ -407,6 +429,7 @@ class Chip(ConstrainedControl):
         self._set_attr("clickElevation", value)
 
     # shape
+
     @property
     def shape(self) -> Optional[OutlinedBorder]:
         return self.__shape
@@ -416,6 +439,7 @@ class Chip(ConstrainedControl):
         self.__shape = value
 
     # visual_density
+
     @property
     def visual_density(self) -> Optional[ThemeVisualDensity]:
         return self.__visual_density
@@ -429,6 +453,7 @@ class Chip(ConstrainedControl):
         )
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -441,6 +466,7 @@ class Chip(ConstrainedControl):
         )
 
     # border_side
+
     @property
     def border_side(self) -> Optional[BorderSide]:
         return self.__border_side
@@ -450,6 +476,7 @@ class Chip(ConstrainedControl):
         self.__border_side = value
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")
@@ -460,6 +487,7 @@ class Chip(ConstrainedControl):
         self._set_attr("onclick", True if handler is not None else None)
 
     # on_delete
+
     @property
     def on_delete(self):
         return self._get_event_handler("delete")
@@ -470,6 +498,7 @@ class Chip(ConstrainedControl):
         self._set_attr("onDelete", True if handler is not None else None)
 
     # on_select
+
     @property
     def on_select(self):
         return self._get_event_handler("select")
@@ -480,6 +509,7 @@ class Chip(ConstrainedControl):
         self._set_attr("onSelect", True if handler is not None else None)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -489,6 +519,7 @@ class Chip(ConstrainedControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")

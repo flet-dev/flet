@@ -2,10 +2,10 @@ from typing import List, Optional
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import OutlinedBorder
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import ClipBehavior
+from flet_core.types import ClipBehavior, OptionalNumber
 
 
 class AppBar(AdaptiveControl):
@@ -139,6 +139,7 @@ class AppBar(AdaptiveControl):
         return children
 
     # leading
+
     @property
     def leading(self) -> Optional[Control]:
         return self.__leading
@@ -153,6 +154,7 @@ class AppBar(AdaptiveControl):
         self.__leading = value
 
     # leading_width
+
     @property
     def leading_width(self) -> OptionalNumber:
         return self._get_attr("leadingWidth")
@@ -162,6 +164,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("leadingWidth", value)
 
     # title_spacing
+
     @property
     def title_spacing(self) -> OptionalNumber:
         return self._get_attr("titleSpacing", data_type="float")
@@ -171,6 +174,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("titleSpacing", value)
 
     # toolbar_opacity
+
     @property
     def toolbar_opacity(self) -> OptionalNumber:
         return self._get_attr("toolbarOpacity", data_type="float", def_value=1.0)
@@ -180,6 +184,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("toolbarOpacity", value)
 
     # shape
+
     @property
     def shape(self) -> Optional[OutlinedBorder]:
         return self.__shape
@@ -189,6 +194,7 @@ class AppBar(AdaptiveControl):
         self.__shape = value
 
     # title_text_style
+
     @property
     def title_text_style(self) -> Optional[TextStyle]:
         return self.__title_text_style
@@ -198,6 +204,7 @@ class AppBar(AdaptiveControl):
         self.__title_text_style = value
 
     # toolbar_text_style
+
     @property
     def toolbar_text_style(self) -> Optional[TextStyle]:
         return self.__toolbar_text_style
@@ -207,6 +214,7 @@ class AppBar(AdaptiveControl):
         self.__toolbar_text_style = value
 
     # automatically_imply_leading
+
     @property
     def automatically_imply_leading(self) -> Optional[bool]:
         return self._get_attr(
@@ -218,6 +226,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("automaticallyImplyLeading", value)
 
     # title
+
     @property
     def title(self) -> Optional[Control]:
         return self.__title
@@ -227,6 +236,7 @@ class AppBar(AdaptiveControl):
         self.__title = value
 
     # center_title
+
     @property
     def center_title(self) -> Optional[bool]:
         return self._get_attr("centerTitle", data_type="bool", def_value=False)
@@ -236,6 +246,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("centerTitle", value)
 
     # toolbar_height
+
     @property
     def toolbar_height(self) -> OptionalNumber:
         return self._get_attr("toolbarHeight")
@@ -245,6 +256,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("toolbarHeight", value)
 
     # color
+
     @property
     def color(self) -> Optional[str]:
         return self._get_attr("color")
@@ -254,6 +266,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("color", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
@@ -263,6 +276,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("bgcolor", value)
 
     # shadow_color
+
     @property
     def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
@@ -272,6 +286,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("shadowColor", value)
 
     # surface_tint_color
+
     @property
     def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
@@ -281,6 +296,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("surfaceTintColor", value)
 
     # is_secondary
+
     @property
     def is_secondary(self) -> Optional[bool]:
         return self._get_attr("isSecondary", data_type="bool", def_value=False)
@@ -290,6 +306,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("isSecondary", value)
 
     # exclude_header_semantics
+
     @property
     def exclude_header_semantics(self) -> Optional[bool]:
         return self._get_attr(
@@ -301,6 +318,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("excludeHeaderSemantics", value)
 
     # force_material_transparency
+
     @property
     def force_material_transparency(self) -> Optional[bool]:
         return self._get_attr(
@@ -312,6 +330,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("forceMaterialTransparency", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation")
@@ -321,6 +340,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("elevation", value)
 
     # elevation_on_scroll
+
     @property
     def elevation_on_scroll(self) -> OptionalNumber:
         return self._get_attr("elevationOnScroll")
@@ -330,6 +350,7 @@ class AppBar(AdaptiveControl):
         self._set_attr("elevationOnScroll", value)
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self._get_attr("clipBehavior")
@@ -342,6 +363,7 @@ class AppBar(AdaptiveControl):
         )
 
     # actions
+
     @property
     def actions(self) -> Optional[List[Control]]:
         return self.__actions

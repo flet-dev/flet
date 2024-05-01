@@ -1,10 +1,10 @@
 from typing import Any, Optional
 
 from flet_core.alignment import Alignment
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import OffsetValue, PaddingValue
+from flet_core.types import OffsetValue, OptionalNumber, PaddingValue
 
 
 class Badge(Control):
@@ -108,6 +108,7 @@ class Badge(Control):
         return children
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         """:obj:`Alignment`, optional: Align the child control within the container.
@@ -122,6 +123,7 @@ class Badge(Control):
         self.__alignment = value
 
     # text
+
     @property
     def text(self) -> Optional[str]:
         return self._get_attr("labelText")
@@ -131,6 +133,7 @@ class Badge(Control):
         self._set_attr("labelText", value)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -140,6 +143,7 @@ class Badge(Control):
         self.__content = value
 
     # offset
+
     @property
     def offset(self) -> OffsetValue:
         return self.__offset
@@ -149,6 +153,7 @@ class Badge(Control):
         self.__offset = value
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgColor")
@@ -158,6 +163,7 @@ class Badge(Control):
         self._set_attr("bgColor", value)
 
     # label_visible
+
     @property
     def label_visible(self) -> Optional[bool]:
         return self._get_attr("isLabelVisible")
@@ -167,6 +173,7 @@ class Badge(Control):
         self._set_attr("isLabelVisible", value)
 
     # large_size
+
     @property
     def large_size(self) -> OptionalNumber:
         return self._get_attr("largeSize")
@@ -176,6 +183,7 @@ class Badge(Control):
         self._set_attr("largeSize", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -185,6 +193,7 @@ class Badge(Control):
         self.__padding = value
 
     # small_size
+
     @property
     def small_size(self) -> OptionalNumber:
         return self._get_attr("smallSize")
@@ -194,6 +203,7 @@ class Badge(Control):
         self._set_attr("smallSize", value)
 
     # text_color
+
     @property
     def text_color(self):
         return self._get_attr("textColor")
@@ -203,6 +213,7 @@ class Badge(Control):
         self._set_attr("textColor", value)
 
     # text_style
+
     @property
     def text_style(self):
         return self.__text_style

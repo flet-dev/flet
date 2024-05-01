@@ -3,10 +3,15 @@ from typing import Any, List, Optional
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.buttons import OutlinedBorder
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import ClipBehavior, MainAxisAlignment, PaddingValue
+from flet_core.types import (
+    ClipBehavior,
+    MainAxisAlignment,
+    OptionalNumber,
+    PaddingValue,
+)
 
 
 class AlertDialog(AdaptiveControl):
@@ -178,6 +183,7 @@ class AlertDialog(AdaptiveControl):
         return children
 
     # open
+
     @property
     def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
@@ -187,6 +193,7 @@ class AlertDialog(AdaptiveControl):
         self._set_attr("open", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
@@ -196,6 +203,7 @@ class AlertDialog(AdaptiveControl):
         self._set_attr("bgcolor", value)
 
     # shadow_color
+
     @property
     def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
@@ -205,6 +213,7 @@ class AlertDialog(AdaptiveControl):
         self._set_attr("shadowColor", value)
 
     # surface_tint_color
+
     @property
     def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
@@ -214,6 +223,7 @@ class AlertDialog(AdaptiveControl):
         self._set_attr("surfaceTintColor", value)
 
     # icon_color
+
     @property
     def icon_color(self) -> Optional[str]:
         return self._get_attr("iconColor")
@@ -223,6 +233,7 @@ class AlertDialog(AdaptiveControl):
         self._set_attr("iconColor", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation", data_type="float")
@@ -232,6 +243,7 @@ class AlertDialog(AdaptiveControl):
         self._set_attr("elevation", value)
 
     # actions_overflow_button_spacing
+
     @property
     def actions_overflow_button_spacing(self) -> OptionalNumber:
         return self._get_attr("actionsOverflowButtonSpacing", data_type="float")
@@ -241,6 +253,7 @@ class AlertDialog(AdaptiveControl):
         self._set_attr("actionsOverflowButtonSpacing", value)
 
     # scrollable
+
     @property
     def scrollable(self) -> Optional[bool]:
         return self._get_attr("scrollable", data_type="bool", def_value=False)
@@ -250,6 +263,7 @@ class AlertDialog(AdaptiveControl):
         self._set_attr("scrollable", value)
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         return self.__alignment
@@ -259,6 +273,7 @@ class AlertDialog(AdaptiveControl):
         self.__alignment = value
 
     # content_text_style
+
     @property
     def content_text_style(self) -> Optional[TextStyle]:
         return self.__content_text_style
@@ -268,6 +283,7 @@ class AlertDialog(AdaptiveControl):
         self.__content_text_style = value
 
     # title_text_style
+
     @property
     def title_text_style(self) -> Optional[TextStyle]:
         return self.__title_text_style
@@ -277,6 +293,7 @@ class AlertDialog(AdaptiveControl):
         self.__title_text_style = value
 
     # modal
+
     @property
     def modal(self) -> Optional[bool]:
         return self._get_attr("modal", data_type="bool", def_value=False)
@@ -286,6 +303,7 @@ class AlertDialog(AdaptiveControl):
         self._set_attr("modal", value)
 
     # title
+
     @property
     def title(self) -> Optional[Control]:
         return self.__title
@@ -295,6 +313,7 @@ class AlertDialog(AdaptiveControl):
         self.__title = value
 
     # icon
+
     @property
     def icon(self) -> Optional[Control]:
         return self.__icon
@@ -304,6 +323,7 @@ class AlertDialog(AdaptiveControl):
         self.__icon = value
 
     # title_padding
+
     @property
     def title_padding(self) -> PaddingValue:
         return self.__title_padding
@@ -313,6 +333,7 @@ class AlertDialog(AdaptiveControl):
         self.__title_padding = value
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -322,6 +343,7 @@ class AlertDialog(AdaptiveControl):
         self.__content = value
 
     # content_padding
+
     @property
     def content_padding(self) -> PaddingValue:
         return self.__content_padding
@@ -331,6 +353,7 @@ class AlertDialog(AdaptiveControl):
         self.__content_padding = value
 
     # actions
+
     @property
     def actions(self) -> Optional[List[Control]]:
         return self.__actions
@@ -340,6 +363,7 @@ class AlertDialog(AdaptiveControl):
         self.__actions = value if value is not None else []
 
     # actions_padding
+
     @property
     def actions_padding(self) -> PaddingValue:
         return self.__actions_padding
@@ -349,6 +373,7 @@ class AlertDialog(AdaptiveControl):
         self.__actions_padding = value
 
     # actions_alignment
+
     @property
     def actions_alignment(self) -> Optional[MainAxisAlignment]:
         return self.__actions_alignment
@@ -362,6 +387,7 @@ class AlertDialog(AdaptiveControl):
         )
 
     # shape
+
     @property
     def shape(self) -> Optional[OutlinedBorder]:
         return self.__shape
@@ -371,6 +397,7 @@ class AlertDialog(AdaptiveControl):
         self.__shape = value
 
     # inset_padding
+
     @property
     def inset_padding(self) -> PaddingValue:
         return self.__inset_padding
@@ -380,6 +407,7 @@ class AlertDialog(AdaptiveControl):
         self.__inset_padding = value
 
     # icon_padding
+
     @property
     def icon_padding(self) -> PaddingValue:
         return self.__icon_padding
@@ -389,6 +417,7 @@ class AlertDialog(AdaptiveControl):
         self.__icon_padding = value
 
     # action_button_padding
+
     @property
     def action_button_padding(self) -> PaddingValue:
         return self.__action_button_padding
@@ -398,6 +427,7 @@ class AlertDialog(AdaptiveControl):
         self.__action_button_padding = value
 
     # semantics_label
+
     @property
     def semantics_label(self) -> Optional[str]:
         return self._get_attr("semanticsLabel")
@@ -407,6 +437,7 @@ class AlertDialog(AdaptiveControl):
         self._set_attr("semanticsLabel", value)
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self._get_attr("clipBehavior")
@@ -418,6 +449,7 @@ class AlertDialog(AdaptiveControl):
         )
 
     # on_dismiss
+
     @property
     def on_dismiss(self):
         return self._get_event_handler("dismiss")

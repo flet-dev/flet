@@ -1,9 +1,9 @@
 from typing import Any, List, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import PaddingValue, MarginValue
+from flet_core.types import MarginValue, OptionalNumber, PaddingValue
 
 
 class Banner(Control):
@@ -127,6 +127,7 @@ class Banner(Control):
         return children
 
     # open
+
     @property
     def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
@@ -136,6 +137,7 @@ class Banner(Control):
         self._set_attr("open", value)
 
     # modal
+
     @property
     def modal(self) -> Optional[bool]:
         return self._get_attr("modal", data_type="bool", def_value=False)
@@ -145,6 +147,7 @@ class Banner(Control):
         self._set_attr("modal", value)
 
     # leading
+
     @property
     def leading(self) -> Optional[Control]:
         return self.__leading
@@ -154,6 +157,7 @@ class Banner(Control):
         self.__leading = value
 
     # leading_padding
+
     @property
     def leading_padding(self) -> PaddingValue:
         return self.__leading_padding
@@ -163,6 +167,7 @@ class Banner(Control):
         self.__leading_padding = value
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -172,6 +177,7 @@ class Banner(Control):
         self.__content = value
 
     # content_padding
+
     @property
     def content_padding(self) -> PaddingValue:
         return self.__content_padding
@@ -181,6 +187,7 @@ class Banner(Control):
         self.__content_padding = value
 
     # margin
+
     @property
     def margin(self) -> MarginValue:
         return self.__margin
@@ -190,6 +197,7 @@ class Banner(Control):
         self.__margin = value
 
     # actions
+
     @property
     def actions(self):
         return self.__actions
@@ -199,6 +207,7 @@ class Banner(Control):
         self.__actions = value if value is not None else []
 
     # force_actions_below
+
     @property
     def force_actions_below(self) -> Optional[bool]:
         return self._get_attr("forceActionsBelow", data_type="bool", def_value=False)
@@ -208,6 +217,7 @@ class Banner(Control):
         self._set_attr("forceActionsBelow", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
@@ -217,6 +227,7 @@ class Banner(Control):
         self._set_attr("bgColor", value)
 
     # content_text_style
+
     @property
     def content_text_style(self) -> Optional[TextStyle]:
         return self.__content_text_style
@@ -226,6 +237,7 @@ class Banner(Control):
         self.__content_text_style = value
 
     # shadow_color
+
     @property
     def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
@@ -235,6 +247,7 @@ class Banner(Control):
         self._set_attr("shadowColor", value)
 
     # surface_tint_color
+
     @property
     def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
@@ -244,6 +257,7 @@ class Banner(Control):
         self._set_attr("surfaceTintColor", value)
 
     # divider_color
+
     @property
     def divider_color(self) -> Optional[str]:
         return self._get_attr("dividerColor")
@@ -253,6 +267,7 @@ class Banner(Control):
         self._set_attr("dividerColor", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation", data_type="float")
@@ -262,6 +277,7 @@ class Banner(Control):
         self._set_attr("elevation", value)
 
     # on_visible
+
     @property
     def on_visible(self):
         return self._get_event_handler("visible")

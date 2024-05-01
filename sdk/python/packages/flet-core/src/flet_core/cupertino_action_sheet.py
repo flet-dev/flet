@@ -1,11 +1,12 @@
 from typing import Any, List, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -117,6 +118,7 @@ class CupertinoActionSheet(ConstrainedControl):
         return children
 
     # cancel
+
     @property
     def cancel(self) -> Optional[Control]:
         return self.__cancel
@@ -126,6 +128,7 @@ class CupertinoActionSheet(ConstrainedControl):
         self.__cancel = value
 
     # title
+
     @property
     def title(self) -> Optional[Control]:
         return self.__title
@@ -135,6 +138,7 @@ class CupertinoActionSheet(ConstrainedControl):
         self.__title = value
 
     # message
+
     @property
     def message(self) -> Optional[Control]:
         return self.__message
@@ -144,6 +148,7 @@ class CupertinoActionSheet(ConstrainedControl):
         self.__message = value
 
     # actions
+
     @property
     def actions(self):
         return self.__actions

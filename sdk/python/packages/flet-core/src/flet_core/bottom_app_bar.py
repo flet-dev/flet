@@ -1,13 +1,14 @@
 from typing import Any, List, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
     NotchShape,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -122,6 +123,7 @@ class BottomAppBar(ConstrainedControl):
         return children
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -131,6 +133,7 @@ class BottomAppBar(ConstrainedControl):
         self.__content = value
 
     # surface_tint_color
+
     @property
     def surface_tint_color(self):
         return self._get_attr("surfaceTintColor")
@@ -140,6 +143,7 @@ class BottomAppBar(ConstrainedControl):
         self._set_attr("surfaceTintColor", value)
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgcolor")
@@ -149,6 +153,7 @@ class BottomAppBar(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # shadow_color
+
     @property
     def shadow_color(self):
         return self._get_attr("shadowColor")
@@ -158,6 +163,7 @@ class BottomAppBar(ConstrainedControl):
         self._set_attr("shadowColor", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -167,6 +173,7 @@ class BottomAppBar(ConstrainedControl):
         self.__padding = value
 
     # shape
+
     @property
     def shape(self):
         return self.__shape
@@ -177,6 +184,7 @@ class BottomAppBar(ConstrainedControl):
         self._set_attr("shape", value.value if isinstance(value, NotchShape) else value)
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -189,6 +197,7 @@ class BottomAppBar(ConstrainedControl):
         )
 
     # notch_margin
+
     @property
     def notch_margin(self) -> OptionalNumber:
         return self._get_attr("notchMargin")
@@ -198,6 +207,7 @@ class BottomAppBar(ConstrainedControl):
         self._set_attr("notchMargin", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation")

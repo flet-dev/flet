@@ -4,13 +4,14 @@ from typing import Any, Optional, Union
 from flet_core import OutlinedBorder
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
     MarginValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -172,6 +173,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         return children
 
     # margin
+
     @property
     def margin(self) -> MarginValue:
         return self.__margin
@@ -181,6 +183,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         self.__margin = value
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation")
@@ -190,6 +193,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         self._set_attr("elevation", value)
 
     # color
+
     @property
     def color(self):
         return self._get_attr("color")
@@ -199,6 +203,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         self._set_attr("color", value)
 
     # shadow_color
+
     @property
     def shadow_color(self):
         return self._get_attr("shadowColor")
@@ -208,6 +213,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         self._set_attr("shadowColor", value)
 
     # surface_tint_color
+
     @property
     def surface_tint_color(self):
         return self._get_attr("surfaceTintColor")
@@ -217,6 +223,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         self._set_attr("surfaceTintColor", value)
 
     # shape
+
     @property
     def shape(self) -> Optional[OutlinedBorder]:
         return self.__shape
@@ -226,6 +233,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         self.__shape = value
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -235,6 +243,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         self.__content = value
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -248,6 +257,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         )
 
     # is_semantic_container
+
     @property
     def is_semantic_container(self) -> Optional[bool]:
         return self._get_attr("isSemanticContainer", data_type="bool", def_value=True)
@@ -257,6 +267,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         self._set_attr("isSemanticContainer", value)
 
     # show_border_on_foreground
+
     @property
     def show_border_on_foreground(self) -> Optional[bool]:
         return self._get_attr(
@@ -268,6 +279,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         self._set_attr("showBorderOnForeground", value)
 
     # variant
+
     @property
     def variant(self) -> Optional[CardVariant]:
         return self.__variant

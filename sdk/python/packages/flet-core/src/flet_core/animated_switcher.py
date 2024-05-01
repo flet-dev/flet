@@ -3,11 +3,12 @@ from typing import Any, Optional, Union
 
 from flet_core.animation import AnimationCurve
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -17,7 +18,6 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
 TransitionValueString = Literal["fade", "rotation", "scale"]
 
 
@@ -166,6 +166,7 @@ class AnimatedSwitcher(ConstrainedControl):
         return children
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -175,6 +176,7 @@ class AnimatedSwitcher(ConstrainedControl):
         self.__content = value
 
     # duration
+
     @property
     def duration(self) -> Optional[int]:
         return self._get_attr("duration")
@@ -184,6 +186,7 @@ class AnimatedSwitcher(ConstrainedControl):
         self._set_attr("duration", value)
 
     # reverse_duration
+
     @property
     def reverse_duration(self) -> Optional[int]:
         return self._get_attr("reverseDuration")
@@ -193,6 +196,7 @@ class AnimatedSwitcher(ConstrainedControl):
         self._set_attr("reverseDuration", value)
 
     # switch_in_curve
+
     @property
     def switch_in_curve(self) -> Optional[AnimationCurve]:
         return self.__switch_in_curve
@@ -205,6 +209,7 @@ class AnimatedSwitcher(ConstrainedControl):
         )
 
     # switch_out_curve
+
     @property
     def switch_out_curve(self) -> Optional[AnimationCurve]:
         return self.__switch_out_curve
@@ -218,6 +223,7 @@ class AnimatedSwitcher(ConstrainedControl):
         )
 
     # transition
+
     @property
     def transition(self) -> Optional[AnimatedSwitcherTransition]:
         return self.__transition
