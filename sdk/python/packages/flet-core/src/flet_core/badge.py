@@ -22,15 +22,15 @@ class Badge(Control):
         page.title = "Badges in NavigationBar icons"
         page.navigation_bar = ft.NavigationBar(
             destinations=[
-                ft.NavigationDestination(
+                ft.NavigationBarDestination(
                     icon_content=ft.Badge(
                         content=ft.Icon(ft.icons.EXPLORE),
                         small_size=10,
                     ),
                     label="Explore",
                 ),
-                ft.NavigationDestination(icon=ft.icons.COMMUTE, label="Commute"),
-                ft.NavigationDestination(
+                ft.NavigationBarDestination(icon=ft.icons.COMMUTE, label="Commute"),
+                ft.NavigationBarDestination(
                     icon_content=ft.Badge(content=ft.Icon(ft.icons.PHONE), text="10")
                 ),
             ]

@@ -165,7 +165,7 @@ from flet_core.menu_item_button import MenuItemButton
 from flet_core.navigation_bar import (
     NavigationBar,
     NavigationBarLabelBehavior,
-    NavigationDestination,
+    NavigationBarDestination,
 )
 from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
 from flet_core.navigation_rail import (

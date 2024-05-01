@@ -1,11 +1,12 @@
 from enum import Enum
-from typing import Any, List, Optional, Union, Dict
+from typing import Any, Callable, List, Optional, Union, Dict
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.border import Border
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
+from flet_core.control_event import ControlEvent
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -16,12 +17,6 @@ from flet_core.types import (
     MaterialState,
 )
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
-
 class NavigationBarLabelBehavior(Enum):
     """Defines how the destinations' labels will be laid out and when they'll be displayed."""
 
@@ -30,10 +25,10 @@ class NavigationBarLabelBehavior(Enum):
     ONLY_SHOW_SELECTED = "onlyShowSelected"
 
 
-class NavigationDestination(Control):
+class NavigationBarDestination(Control):
     """Defines the appearance of the button items that are arrayed within the navigation bar.
 
-    The value must be a list of two or more NavigationDestination instances."""
+    The value must be a list of two or more NavigationBarDestination instances."""
 
     def __init__(
         self,
@@ -50,7 +45,7 @@ class NavigationDestination(Control):
         tooltip: Optional[str] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-    ):
+    ) -> None:
         Control.__init__(self, ref=ref, tooltip=tooltip, disabled=disabled, data=data)
         self.label = label
         self.icon = icon
@@ -61,10 +56,10 @@ class NavigationDestination(Control):
         self.selected_icon_content = selected_icon_content
         self.bgcolor = bgcolor
 
-    def _get_control_name(self):
-        return "navigationdestination"
+    def _get_control_name(self) -> str:
+        return "navigationbardestination"
 
-    def _get_children(self):
+    def _get_children(self) -> Optional[List[Control]]:
         children = []
         if self.__icon_content:
             self.__icon_content._set_attr_internal("n", "icon_content")
@@ -82,7 +77,7 @@ class NavigationDestination(Control):
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value: Optional[str]):
+    def icon(self, value: str) -> None:
         self._set_attr("icon", value)
 
     # icon_content
@@ -91,7 +86,7 @@ class NavigationDestination(Control):
         return self.__icon_content
 
     @icon_content.setter
-    def icon_content(self, value: Optional[Control]):
+    def icon_content(self, value: Control) -> None:
         self.__icon_content = value
 
     # selected_icon
@@ -100,7 +95,7 @@ class NavigationDestination(Control):
         return self._get_attr("selectedIcon")
 
     @selected_icon.setter
-    def selected_icon(self, value: Optional[str]):
+    def selected_icon(self, value: str) -> None:
         self._set_attr("selectedIcon", value)
 
     # selected_icon_content
@@ -109,7 +104,7 @@ class NavigationDestination(Control):
         return self.__selected_icon_content
 
     @selected_icon_content.setter
-    def selected_icon_content(self, value: Optional[Control]):
+    def selected_icon_content(self, value: Control) -> None:
         self.__selected_icon_content = value
 
     # label
@@ -118,7 +113,7 @@ class NavigationDestination(Control):
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value: Optional[str]):
+    def label(self, value: str) -> None:
         self._set_attr("label", value)
 
     # bgcolor
@@ -127,7 +122,7 @@ class NavigationDestination(Control):
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
+    def bgcolor(self, value: str) -> None:
         self._set_attr("bgcolor", value)
 
 
@@ -143,16 +138,15 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     import flet as ft
 
     def main(page: ft.Page):
-
         page.title = "NavigationBar Example"
         page.navigation_bar = ft.NavigationBar(
             destinations=[
-                ft.NavigationDestination(icon=ft.icons.EXPLORE, label="Explore"),
-                ft.NavigationDestination(icon=ft.icons.COMMUTE, label="Commute"),
-                ft.NavigationDestination(
+                ft.NavigationBarDestination(icon=ft.icons.EXPLORE, label="Explore"),
+                ft.NavigationBarDestination(icon=ft.icons.COMMUTE, label="Commute"),
+                ft.NavigationBarDestination(
                     icon=ft.icons.BOOKMARK_BORDER,
                     selected_icon=ft.icons.BOOKMARK,
-                    label="Explore",
+                    label="Explore"
                 ),
             ]
         )
@@ -168,7 +162,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
-        destinations: Optional[List[NavigationDestination]] = None,
+        destinations: Optional[List[NavigationBarDestination]] = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
         label_behavior: Optional[NavigationBarLabelBehavior] = None,
@@ -180,7 +174,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
         overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
-        on_change=None,
+        on_change: Optional[Callable[[ControlEvent], None]] = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -205,12 +199,12 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: Callable[..., None] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
         adaptive: Optional[bool] = None,
-    ):
+    ) -> None:
         ConstrainedControl.__init__(
             self,
             ref=ref,
@@ -256,28 +250,28 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         self.animation_duration = animation_duration
         self.overlay_color = overlay_color
 
-    def _get_control_name(self):
+    def _get_control_name(self) -> str:
         return "navigationbar"
 
-    def before_update(self):
+    def before_update(self) -> None:
         super().before_update()
         self._set_attr_json("indicatorShape", self.__indicator_shape)
         self._set_attr_json("border", self.__border)
         self._set_attr_json("overlayColor", self.__overlay_color)
 
-    def _get_children(self):
+    def _get_children(self) -> Optional[List[NavigationBarDestination]]:
         children = []
         children.extend(self.__destinations)
         return children
 
     # destinations
     @property
-    def destinations(self) -> Optional[List[NavigationDestination]]:
+    def destinations(self) -> Optional[List[NavigationBarDestination]]:
         return self.__destinations
 
     @destinations.setter
-    def destinations(self, value: Optional[List[NavigationDestination]]):
-        self.__destinations = value if value is not None else []
+    def destinations(self, value: List[NavigationBarDestination]) -> None:
+        self.__destinations = value if value else []
 
     # selected_index
     @property
@@ -285,7 +279,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
-    def selected_index(self, value: Optional[int]):
+    def selected_index(self, value: int) -> None:
         self._set_attr("selectedIndex", value)
 
     # label_behavior
@@ -294,26 +288,26 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         return self.__label_behavior
 
     @label_behavior.setter
-    def label_behavior(self, value: Optional[NavigationBarLabelBehavior]):
+    def label_behavior(self, value: NavigationBarLabelBehavior) -> None:
         self.__label_behavior = value
         self._set_enum_attr("labelBehavior", value, NavigationBarLabelBehavior)
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Optional[Union[str, Dict[MaterialState, str]]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[str, Dict[MaterialState, str]]) -> None:
         self.__overlay_color = value
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: str) -> None:
         self._set_attr("bgcolor", value)
 
     # elevation
@@ -322,25 +316,25 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         return self._get_attr("elevation")
 
     @elevation.setter
-    def elevation(self, value: OptionalNumber):
+    def elevation(self, value: OptionalNumber) -> None:
         self._set_attr("elevation", value)
 
     # shadow_color
     @property
-    def shadow_color(self):
+    def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
 
     @shadow_color.setter
-    def shadow_color(self, value):
+    def shadow_color(self, value: str) -> None:
         self._set_attr("shadowColor", value)
 
     # indicator_color
     @property
-    def indicator_color(self):
+    def indicator_color(self) -> Optional[str]:
         return self._get_attr("indicatorColor")
 
     @indicator_color.setter
-    def indicator_color(self, value):
+    def indicator_color(self, value: str) -> None:
         self._set_attr("indicatorColor", value)
 
     # indicator_shape
@@ -349,16 +343,16 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         return self.__indicator_shape
 
     @indicator_shape.setter
-    def indicator_shape(self, value: Optional[OutlinedBorder]):
+    def indicator_shape(self, value: OutlinedBorder) -> None:
         self.__indicator_shape = value
 
     # surface_tint_color
     @property
-    def surface_tint_color(self):
+    def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value):
+    def surface_tint_color(self, value: str) -> None:
         self._set_attr("surfaceTintColor", value)
 
     # border
@@ -367,23 +361,23 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         return self.__border
 
     @border.setter
-    def border(self, value: Optional[Border]):
+    def border(self, value: Border) -> None:
         self.__border = value
 
     # animation_duration
     @property
-    def animation_duration(self):
+    def animation_duration(self) -> OptionalNumber:
         return self._get_attr("animationDuration", data_type="int")
 
     @animation_duration.setter
-    def animation_duration(self, value: OptionalNumber):
+    def animation_duration(self, value: Union[int, float]) -> None:
         self._set_attr("animationDuration", value)
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> Optional[Callable[[ControlEvent], None]]:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: Callable[[ControlEvent], None]) -> None:
         self._add_event_handler("change", handler)

@@ -3,7 +3,7 @@ from typing import Any, List, Optional, Union
 from flet_core.border import Border
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
-from flet_core.navigation_bar import NavigationDestination
+from flet_core.navigation_bar import NavigationBarDestination
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -33,9 +33,9 @@ class CupertinoNavigationBar(ConstrainedControl):
             active_color=ft.colors.BLACK,
             on_change=lambda e: print("Selected tab:", e.control.selected_index),
             destinations=[
-                ft.NavigationDestination(icon=ft.icons.EXPLORE, label="Explore"),
-                ft.NavigationDestination(icon=ft.icons.COMMUTE, label="Commute"),
-                ft.NavigationDestination(
+                ft.NavigationBarDestination(icon=ft.icons.EXPLORE, label="Explore"),
+                ft.NavigationBarDestination(icon=ft.icons.COMMUTE, label="Commute"),
+                ft.NavigationBarDestination(
                     icon=ft.icons.BOOKMARK_BORDER,
                     selected_icon=ft.icons.BOOKMARK,
                     label="Explore",
@@ -55,7 +55,7 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     def __init__(
         self,
-        destinations: Optional[List[NavigationDestination]] = None,
+        destinations: Optional[List[NavigationBarDestination]] = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
         active_color: Optional[str] = None,
@@ -144,11 +144,11 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     # destinations
     @property
-    def destinations(self) -> Optional[List[NavigationDestination]]:
+    def destinations(self) -> Optional[List[NavigationBarDestination]]:
         return self.__destinations
 
     @destinations.setter
-    def destinations(self, value: Optional[List[NavigationDestination]]):
+    def destinations(self, value: Optional[List[NavigationBarDestination]]):
         self.__destinations = value if value is not None else []
 
     # border
