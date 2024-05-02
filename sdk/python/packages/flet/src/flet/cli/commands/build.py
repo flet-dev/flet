@@ -104,6 +104,13 @@ class Command(BaseCommand):
             help="path to a directory with a Python program",
         )
         parser.add_argument(
+            "--exclude",
+            dest="exclude",
+            nargs="+",
+            default=[],
+            help="exclude files and directories from a Python app package",
+        )
+        parser.add_argument(
             "-o",
             "--output",
             dest="output_dir",
@@ -634,6 +641,11 @@ class Command(BaseCommand):
 
             print("[spring_green3]OK[/spring_green3]")
 
+        exclude_list = ["build"]
+
+        if options.exclude:
+            exclude_list.extend(options.exclude)
+
         # package Python app
         print(f"Packaging Python app...", end="")
         package_args = [
@@ -645,6 +657,7 @@ class Command(BaseCommand):
         ]
         if target_platform == "web":
             pip_platform, find_links_path = self.create_pyodide_find_links()
+            exclude_list.append("assets")
             package_args.extend(
                 [
                     "--web",
@@ -657,7 +670,7 @@ class Command(BaseCommand):
                     "--find-links",
                     find_links_path,
                     "--exclude",
-                    "assets,build",
+                    ",".join(exclude_list),
                 ]
             )
         else:
@@ -676,7 +689,7 @@ class Command(BaseCommand):
                     "--req-deps",
                     "flet-embed",
                     "--exclude",
-                    "build",
+                    ",".join(exclude_list),
                 ]
             )
 
