@@ -155,9 +155,7 @@ class ShaderMask(ConstrainedControl):
     @blend_mode.setter
     def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_attr(
-            "blendMode", value.value if isinstance(value, BlendMode) else value
-        )
+        self._set_enum_attr("blendMode", value, BlendMode)
 
     # shader
     @property

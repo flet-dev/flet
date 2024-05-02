@@ -175,9 +175,7 @@ class ProgressRing(ConstrainedControl):
     @stroke_cap.setter
     def stroke_cap(self, value: OptionalNumber):
         self.__stroke_cap = value
-        self._set_attr(
-            "strokeCap", value.value if isinstance(value, StrokeCap) else value
-        )
+        self._set_enum_attr("strokeCap", value, StrokeCap)
 
     # color
     @property

@@ -108,16 +108,19 @@ class MenuBar(Control):
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
+        assert (
+            len(self.__controls) > 0
+        ), "MenuBar must have at minimum one visible control"
         return self.__controls
 
     # controls
     @property
-    def controls(self):
+    def controls(self) -> List[Control]:
         return self.__controls
 
     @controls.setter
-    def controls(self, value):
-        self.__controls = value if value is not None else []
+    def controls(self, value: List[Control]):
+        self.__controls = value
 
     # clip_behavior
     @property
@@ -127,9 +130,7 @@ class MenuBar(Control):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # style
     @property

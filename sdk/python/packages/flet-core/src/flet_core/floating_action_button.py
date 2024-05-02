@@ -227,9 +227,7 @@ class FloatingActionButton(ConstrainedControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # mouse_cursor
     @property
@@ -239,9 +237,7 @@ class FloatingActionButton(ConstrainedControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr(
-            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # on_click
     @property
@@ -295,20 +291,22 @@ class FloatingActionButton(ConstrainedControl):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # disabled_elevation
     @property
-    def disabled_elevation(self):
+    def disabled_elevation(self) -> OptionalNumber:
         return self._get_attr("disabledElevation", data_type="float")
 
     @disabled_elevation.setter
     def disabled_elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "disabled_elevation cannot be negative"
         self._set_attr("disabledElevation", value)
 
     # enable_feedback
     @property
-    def enable_feedback(self):
+    def enable_feedback(self) -> Optional[bool]:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -317,7 +315,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # focus_color
     @property
-    def focus_color(self):
+    def focus_color(self) -> Optional[str]:
         return self._get_attr("focusColor")
 
     @focus_color.setter
@@ -326,7 +324,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # focus_elevation
     @property
-    def focus_elevation(self):
+    def focus_elevation(self) -> OptionalNumber:
         return self._get_attr("focusElevation", data_type="float")
 
     @focus_elevation.setter
@@ -335,7 +333,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # foreground_color
     @property
-    def foreground_color(self):
+    def foreground_color(self) -> Optional[str]:
         return self._get_attr("foregroundColor")
 
     @foreground_color.setter
@@ -344,7 +342,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # highlight_elevation
     @property
-    def highlight_elevation(self):
+    def highlight_elevation(self) -> OptionalNumber:
         return self._get_attr("highlightElevation", data_type="float")
 
     @highlight_elevation.setter
@@ -353,7 +351,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # hover_elevation
     @property
-    def hover_elevation(self):
+    def hover_elevation(self) -> OptionalNumber:
         return self._get_attr("hoverElevation", data_type="float")
 
     @hover_elevation.setter
@@ -368,6 +366,4 @@ class FloatingActionButton(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
