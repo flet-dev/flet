@@ -26,7 +26,7 @@ from flet_core.audio_recorder import AudioEncoder, AudioRecorder
 from flet_core.autofill_group import (
     AutofillGroup,
     AutofillGroupDisposeAction,
-    AutoFillHint,
+    AutofillHint,
 )
 from flet_core.badge import Badge
 from flet_core.banner import Banner

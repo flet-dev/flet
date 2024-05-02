@@ -5,7 +5,7 @@ from enum import Enum
 from typing import Any, Optional, Union, List
 
 from flet_core.adaptive_control import AdaptiveControl
-from flet_core.autofill_group import AutoFillHint
+from flet_core.autofill_group import AutofillHint
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
@@ -122,7 +122,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         cursor_radius: OptionalNumber = None,
         selection_color: Optional[str] = None,
         input_filter: Optional[InputFilter] = None,
-        autofill_hints: Union[None, AutoFillHint, List[AutoFillHint]] = None,
+        autofill_hints: Union[None, AutofillHint, List[AutofillHint]] = None,
         on_change=None,
         on_submit=None,
         on_focus=None,
@@ -547,20 +547,20 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # autofill_hints
     @property
-    def autofill_hints(self) -> Union[None, AutoFillHint, List[AutoFillHint]]:
+    def autofill_hints(self) -> Union[None, AutofillHint, List[AutofillHint]]:
         return self.__autofill_hints
 
     @autofill_hints.setter
-    def autofill_hints(self, value: Union[None, AutoFillHint, List[AutoFillHint]]):
+    def autofill_hints(self, value: Union[None, AutofillHint, List[AutofillHint]]):
         if value is not None:
             if isinstance(value, List):
                 value = list(
                     map(
-                        lambda x: x.value if isinstance(x, AutoFillHint) else str(x),
+                        lambda x: x.value if isinstance(x, AutofillHint) else str(x),
                         value,
                     )
                 )
-            elif isinstance(value, AutoFillHint):
+            elif isinstance(value, AutofillHint):
                 value = value.value
         self.__autofill_hints = value
 

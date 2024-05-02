@@ -5,7 +5,7 @@ from flet_core.control import Control
 from flet_core.ref import Ref
 
 
-class AutoFillHint(Enum):
+class AutofillHint(Enum):
     ADDRESS_CITY = "addressCity"
     ADDRESS_CITY_AND_STATE = "addressCityAndState"
     ADDRESS_STATE = "addressState"
