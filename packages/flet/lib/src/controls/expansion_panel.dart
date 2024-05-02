@@ -81,7 +81,7 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
             var isExpanded = panelView.control.attrBool("expanded", false)!;
             var canTapHeader =
                 panelView.control.attrBool("canTapHeader", false)!;
-            var bgColor = widget.control.attrColor("bgColor", context);
+            var bgColor = panelView.control.attrColor("bgColor", context);
 
             return ExpansionPanel(
               backgroundColor: bgColor,
