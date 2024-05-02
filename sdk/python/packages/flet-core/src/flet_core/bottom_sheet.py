@@ -118,11 +118,11 @@ class BottomSheet(Control):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
 
     # dismissible
@@ -183,11 +183,11 @@ class BottomSheet(Control):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Control):
         self.__content = value
 
     # on_dismiss

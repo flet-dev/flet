@@ -132,29 +132,29 @@ class BottomAppBar(ConstrainedControl):
 
     # surface_tint_color
     @property
-    def surface_tint_color(self):
+    def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value):
+    def surface_tint_color(self, value: Optional[str]):
         self._set_attr("surfaceTintColor", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # shadow_color
     @property
-    def shadow_color(self):
+    def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
 
     @shadow_color.setter
-    def shadow_color(self, value):
+    def shadow_color(self, value: Optional[str]):
         self._set_attr("shadowColor", value)
 
     # padding
@@ -168,13 +168,13 @@ class BottomAppBar(ConstrainedControl):
 
     # shape
     @property
-    def shape(self):
+    def shape(self) -> Optional[NotchShape]:
         return self.__shape
 
     @shape.setter
     def shape(self, value: Optional[NotchShape]):
         self.__shape = value
-        self._set_attr("shape", value.value if isinstance(value, NotchShape) else value)
+        self._set_enum_attr("shape", value, NotchShape)
 
     # clip_behavior
     @property
@@ -184,9 +184,7 @@ class BottomAppBar(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # notch_margin
     @property

@@ -271,7 +271,7 @@ class Chip(ConstrainedControl):
 
     # label_style
     @property
-    def label_style(self):
+    def label_style(self) -> Optional[TextStyle]:
         return self.__label_style
 
     @label_style.setter
@@ -298,20 +298,20 @@ class Chip(ConstrainedControl):
 
     # delete_icon_color
     @property
-    def delete_icon_color(self):
+    def delete_icon_color(self) -> Optional[str]:
         return self._get_attr("deleteIconColor")
 
     @delete_icon_color.setter
-    def delete_icon_color(self, value):
+    def delete_icon_color(self, value: Optional[str]):
         self._set_attr("deleteIconColor", value)
 
     # disabled_color
     @property
-    def disabled_color(self):
+    def disabled_color(self) -> Optional[str]:
         return self._get_attr("disabledColor")
 
     @disabled_color.setter
-    def disabled_color(self, value):
+    def disabled_color(self, value: Optional[str]):
         self._set_attr("disabledColor", value)
 
     # color

@@ -161,11 +161,11 @@ class Draggable(Control):
 
     # group
     @property
-    def group(self):
+    def group(self) -> Optional[str]:
         return self._get_attr("group")
 
     @group.setter
-    def group(self, value):
+    def group(self, value: Optional[str]):
         self._set_attr("group", value)
 
     # content
@@ -179,20 +179,20 @@ class Draggable(Control):
 
     # content_when_dragging
     @property
-    def content_when_dragging(self):
+    def content_when_dragging(self) -> Optional[Control]:
         return self.__content_when_dragging
 
     @content_when_dragging.setter
-    def content_when_dragging(self, value):
+    def content_when_dragging(self, value: Optional[Control]):
         self.__content_when_dragging = value
 
     # content_feedback
     @property
-    def content_feedback(self):
+    def content_feedback(self) -> Optional[Control]:
         return self.__content_feedback
 
     @content_feedback.setter
-    def content_feedback(self, value):
+    def content_feedback(self, value: Optional[Control]):
         self.__content_feedback = value
 
     # on_drag_start

@@ -185,38 +185,38 @@ class FloatingActionButton(ConstrainedControl):
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
     # icon
     @property
-    def icon(self):
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # url
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         return self._get_attr("url")
 
     @url.setter
-    def url(self, value):
+    def url(self, value: Optional[str]):
         self._set_attr("url", value)
 
     # url_target

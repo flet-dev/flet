@@ -166,7 +166,7 @@ class ProgressBar(ConstrainedControl):
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
@@ -175,7 +175,7 @@ class ProgressBar(ConstrainedControl):
 
     # semantics_label
     @property
-    def semantics_label(self):
+    def semantics_label(self) -> Optional[str]:
         return self._get_attr("semanticsLabel")
 
     @semantics_label.setter
@@ -184,7 +184,7 @@ class ProgressBar(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter

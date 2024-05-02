@@ -223,16 +223,18 @@ class DataCell(Control):
 class DataRow(Control):
     def __init__(
         self,
-        cells: Optional[List[Control]] = None,
-        ref=None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-        # specific
+        cells: List[Control],
         color: Union[None, str, Dict[MaterialState, str]] = None,
         selected: Optional[bool] = None,
         on_long_press=None,
         on_select_changed=None,
+        #
+        # Control
+        #
+        ref=None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
         Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
@@ -254,12 +256,12 @@ class DataRow(Control):
 
     # cells
     @property
-    def cells(self):
+    def cells(self) -> List[Control]:
         return self.__cells
 
     @cells.setter
-    def cells(self, value):
-        self.__cells = value if value is not None else []
+    def cells(self, value: List[Control]):
+        self.__cells = value
 
     # color
     @property
@@ -303,7 +305,7 @@ class DataRow(Control):
 class DataTable(ConstrainedControl):
     def __init__(
         self,
-        columns: Optional[List[DataColumn]] = None,
+        columns: List[DataColumn],
         rows: Optional[List[DataRow]] = None,
         sort_ascending: Optional[bool] = None,
         show_checkbox_column: Optional[bool] = None,
@@ -432,23 +434,21 @@ class DataTable(ConstrainedControl):
         self._set_attr_json("headingTextStyle", self.__heading_text_style)
 
     def _get_children(self):
-        children = []
-        children.extend(self.__columns)
-        children.extend(self.__rows)
-        return children
+        return self.__columns + self.__rows
 
     # columns
     @property
-    def columns(self):
+    def columns(self) -> List[DataColumn]:
         return self.__columns
 
     @columns.setter
-    def columns(self, value: Optional[List[DataColumn]]):
-        self.__columns = value if value is not None else []
+    def columns(self, value: List[DataColumn]):
+        assert len(value) > 0, "columns cannot be empty"
+        self.__columns = value
 
     # rows
     @property
-    def rows(self):
+    def rows(self) -> Optional[List[DataRow]]:
         return self.__rows
 
     @rows.setter
@@ -556,7 +556,7 @@ class DataTable(ConstrainedControl):
 
     # data_text_style
     @property
-    def data_text_style(self):
+    def data_text_style(self) -> Optional[TextStyle]:
         return self.__data_text_style
 
     @data_text_style.setter
@@ -565,11 +565,11 @@ class DataTable(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
 
     # gradient
@@ -601,7 +601,7 @@ class DataTable(ConstrainedControl):
 
     # heading_text_style
     @property
-    def heading_text_style(self):
+    def heading_text_style(self) -> Optional[TextStyle]:
         return self.__heading_text_style
 
     @heading_text_style.setter

@@ -108,11 +108,11 @@ class CupertinoActionSheetAction(ConstrainedControl):
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
     # is_default_action

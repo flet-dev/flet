@@ -101,7 +101,7 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
         _value = value;
       }
 
-      var swtch = Switch(
+      var s = Switch(
           autofocus: autofocus,
           focusNode: _focusNode,
           activeColor: widget.control.attrColor("activeColor", context),
@@ -137,7 +137,7 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
         _onChange(!_value);
       });
 
-      Widget result = swtch;
+      Widget result = s;
       if (label != "") {
         var labelWidget = disabled
             ? Text(label, style: labelStyle)
@@ -152,8 +152,8 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
                       }
                     : null,
                 child: labelPosition == LabelPosition.right
-                    ? Row(children: [swtch, labelWidget])
-                    : Row(children: [labelWidget, swtch])));
+                    ? Row(children: [s, labelWidget])
+                    : Row(children: [labelWidget, s])));
       }
 
       return constrainedControl(context, result, widget.parent, widget.control);
